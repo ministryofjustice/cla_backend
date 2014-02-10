@@ -1,6 +1,9 @@
 from django.contrib import admin
-from .models import Category, Question, Answer, Case, EligibilityCheck, PersonalDetails, Property, Savings
-# Register your models here.
+
+from .models import Category, Question, Answer, Case, EligibilityCheck, \
+    PersonalDetails, Property, Savings
+
+
 admin.site.register(Category)
 admin.site.register(Question)
 admin.site.register(Answer)

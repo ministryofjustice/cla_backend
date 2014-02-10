@@ -1,14 +1,12 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator
 from django.db import models
+
 from model_utils.models import TimeStampedModel
+
 from jsonfield import JSONField
 
+from .constants import STATE_MAYBE, STATE_CHOICES
 
-STATE_CHOICES = (
-    (0, 'Maybe'),
-    (1, 'Yes'),
-    (2, 'No'),
-)
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=500)
@@ -17,6 +15,7 @@ class Category(TimeStampedModel):
 
     class Meta:
         ordering = ['order']
+        verbose_name_plural = "categories"
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -42,6 +41,8 @@ class Savings(TimeStampedModel):
     asset_balance = models.PositiveIntegerField(default=0)
     credit_balance = models.PositiveIntegerField(default=0)
 
+    class Meta:
+        verbose_name_plural = "savings"
 
 
 class PersonalDetails(TimeStampedModel):
@@ -54,12 +55,17 @@ class PersonalDetails(TimeStampedModel):
     home_phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
 
+    class Meta:
+        verbose_name_plural = "personal details"
+
+
 class EligibilityCheck(TimeStampedModel):
     category = models.ForeignKey(Category)
     your_savings = models.ForeignKey(Savings, related_name='your_savings')
     partner_savings = models.ForeignKey(Savings, blank=True, null=True, related_name='partner_savings')
     notes = models.TextField(blank=True)
-    state = models.PositiveSmallIntegerField(default=0, choices=STATE_CHOICES)
+    state = models.PositiveSmallIntegerField(default=STATE_MAYBE, choices=STATE_CHOICES)
+
 
 class Property(TimeStampedModel):
     value = models.PositiveIntegerField(default=0)
@@ -67,12 +73,14 @@ class Property(TimeStampedModel):
     share = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     eligibility_check = models.ForeignKey(EligibilityCheck)
 
+    class Meta:
+        verbose_name_plural = "properties"
+
+
 class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True)
     eligibility_check = models.ForeignKey(EligibilityCheck)
     personal_details = models.ForeignKey(PersonalDetails)
-
-
 
 
 class Answer(TimeStampedModel):

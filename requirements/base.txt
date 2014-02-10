@@ -4,10 +4,11 @@
 
 Django==1.6.2
 
-#django-model-utils
+django-model-utils
 
 psycopg2==2.5.2
 South==0.8.4
 
 Pillow==2.3.0
 djangorestframework==2.3.12
+jsonfield==0.9.20

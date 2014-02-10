@@ -125,7 +125,9 @@ INSTALLED_APPS = (
     'rest_framework'
 )
 
-PROJECT_APPS = ()
+PROJECT_APPS = (
+    'legalaid',
+)
 
 INSTALLED_APPS += PROJECT_APPS
 

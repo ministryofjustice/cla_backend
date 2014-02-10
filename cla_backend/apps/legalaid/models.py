@@ -18,6 +18,10 @@ class Category(TimeStampedModel):
     class Meta:
         ordering = ['order']
 
+    def __unicode__(self):
+        return u'%s' % self.name
+
+
 class Question(TimeStampedModel):
     name = models.CharField(max_length=500)
     description = models.TextField(blank=True)
@@ -27,6 +31,9 @@ class Question(TimeStampedModel):
 
     class Meta:
         ordering = ['order']
+
+    def __unicode__(self):
+        return u'%s' % self.name
 
 
 class Savings(TimeStampedModel):

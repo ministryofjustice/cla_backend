@@ -7,13 +7,15 @@ from rest_framework.test import APITestCase
 
 from ..models import Category
 
+from .test_base import CLABaseApiTestMixin
+
 
 category_recipe = Recipe(Category,
     name=seq('Name'), order = seq(0)
 )
 
 
-class CategoryTests(APITestCase):
+class CategoryTests(CLABaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CategoryTests, self).setUp()
 
@@ -43,29 +45,11 @@ class CategoryTests(APITestCase):
         """
 
         ### LIST
-
-        # POST
-        response = self.client.post(self.list_url, {}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-        # PUT
-        response = self.client.put(self.list_url, {}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-        # DELETE
-        response = self.client.delete(self.list_url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self._test_post_not_allowed(self.list_url)
+        self._test_put_not_allowed(self.list_url)
+        self._test_delete_not_allowed(self.list_url)
 
         ### DETAIL
-
-        # POST
-        response = self.client.post(self.detail_url, {}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-        # PUT
-        response = self.client.put(self.detail_url, {}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-        # DELETE
-        response = self.client.delete(self.detail_url, {}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self._test_post_not_allowed(self.detail_url)
+        self._test_put_not_allowed(self.detail_url)
+        self._test_delete_not_allowed(self.detail_url)

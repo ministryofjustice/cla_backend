@@ -3,7 +3,7 @@ from django.db import models
 
 from model_utils.models import TimeStampedModel
 
-from jsonfield import JSONField
+# from jsonfield import JSONField
 
 from .constants import STATE_MAYBE, STATE_CHOICES
 
@@ -21,18 +21,18 @@ class Category(TimeStampedModel):
         return u'%s' % self.name
 
 
-class Question(TimeStampedModel):
-    name = models.CharField(max_length=500)
-    description = models.TextField(blank=True)
-    guidance = models.TextField(blank=True)
-    config = JSONField(blank=True, null=True)
-    order = models.PositiveIntegerField(default=0)
+# class Question(TimeStampedModel):
+#     name = models.CharField(max_length=500)
+#     description = models.TextField(blank=True)
+#     guidance = models.TextField(blank=True)
+#     config = JSONField(blank=True, null=True)
+#     order = models.PositiveIntegerField(default=0)
 
-    class Meta:
-        ordering = ['order']
+#     class Meta:
+#         ordering = ['order']
 
-    def __unicode__(self):
-        return u'%s' % self.name
+#     def __unicode__(self):
+#         return u'%s' % self.name
 
 
 class Savings(TimeStampedModel):
@@ -53,7 +53,7 @@ class PersonalDetails(TimeStampedModel):
     town = models.CharField(max_length=255)
     mobile_phone = models.CharField(max_length=20, blank=True)
     home_phone = models.CharField(max_length=20, blank=True)
-    email = models.EmailField(blank=True)
+    # email = models.EmailField(blank=True)
 
     class Meta:
         verbose_name_plural = "personal details"
@@ -83,7 +83,7 @@ class Case(TimeStampedModel):
     personal_details = models.ForeignKey(PersonalDetails)
 
 
-class Answer(TimeStampedModel):
-    question = models.ForeignKey(Question)
-    value = JSONField()
-    eligibility_check = models.ForeignKey(EligibilityCheck)
+# class Answer(TimeStampedModel):
+#     question = models.ForeignKey(Question)
+#     value = JSONField()
+#     eligibility_check = models.ForeignKey(EligibilityCheck)

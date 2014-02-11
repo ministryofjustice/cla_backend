@@ -19,19 +19,6 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'legalaid', ['Category'])
 
-        # Adding model 'Question'
-        db.create_table(u'legalaid_question', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
-            ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=500)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('guidance', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('config', self.gf('jsonfield.fields.JSONField')(null=True, blank=True)),
-            ('order', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-        ))
-        db.send_create_signal(u'legalaid', ['Question'])
-
         # Adding model 'Savings'
         db.create_table(u'legalaid_savings', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -56,7 +43,6 @@ class Migration(SchemaMigration):
             ('town', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('mobile_phone', self.gf('django.db.models.fields.CharField')(max_length=20, blank=True)),
             ('home_phone', self.gf('django.db.models.fields.CharField')(max_length=20, blank=True)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75, blank=True)),
         ))
         db.send_create_signal(u'legalaid', ['PersonalDetails'])
 
@@ -96,24 +82,10 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'legalaid', ['Case'])
 
-        # Adding model 'Answer'
-        db.create_table(u'legalaid_answer', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
-            ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
-            ('question', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['legalaid.Question'])),
-            ('value', self.gf('jsonfield.fields.JSONField')()),
-            ('eligibility_check', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['legalaid.EligibilityCheck'])),
-        ))
-        db.send_create_signal(u'legalaid', ['Answer'])
-
 
     def backwards(self, orm):
         # Deleting model 'Category'
         db.delete_table(u'legalaid_category')
-
-        # Deleting model 'Question'
-        db.delete_table(u'legalaid_question')
 
         # Deleting model 'Savings'
         db.delete_table(u'legalaid_savings')
@@ -130,20 +102,8 @@ class Migration(SchemaMigration):
         # Deleting model 'Case'
         db.delete_table(u'legalaid_case')
 
-        # Deleting model 'Answer'
-        db.delete_table(u'legalaid_answer')
-
 
     models = {
-        u'legalaid.answer': {
-            'Meta': {'object_name': 'Answer'},
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'eligibility_check': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.EligibilityCheck']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'question': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Question']"}),
-            'value': ('jsonfield.fields.JSONField', [], {})
-        },
         u'legalaid.case': {
             'Meta': {'object_name': 'Case'},
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
@@ -176,7 +136,6 @@ class Migration(SchemaMigration):
         u'legalaid.personaldetails': {
             'Meta': {'object_name': 'PersonalDetails'},
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'full_name': ('django.db.models.fields.CharField', [], {'max_length': '400'}),
             'home_phone': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -196,17 +155,6 @@ class Migration(SchemaMigration):
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
             'share': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'value': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
-        },
-        u'legalaid.question': {
-            'Meta': {'ordering': "['order']", 'object_name': 'Question'},
-            'config': ('jsonfield.fields.JSONField', [], {'null': 'True', 'blank': 'True'}),
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'guidance': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'order': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
         },
         u'legalaid.savings': {
             'Meta': {'object_name': 'Savings'},

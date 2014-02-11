@@ -1,3 +1,5 @@
+from uuidfield import UUIDField
+
 from django.core.validators import MaxValueValidator
 from django.db import models
 
@@ -60,8 +62,10 @@ class PersonalDetails(TimeStampedModel):
 
 
 class EligibilityCheck(TimeStampedModel):
-    category = models.ForeignKey(Category)
-    your_savings = models.ForeignKey(Savings, related_name='your_savings')
+    reference = UUIDField(auto=True, unique=True)
+
+    category = models.ForeignKey(Category, blank=True, null=True)
+    your_savings = models.ForeignKey(Savings, blank=True, null=True, related_name='your_savings')
     partner_savings = models.ForeignKey(Savings, blank=True, null=True, related_name='partner_savings')
     notes = models.TextField(blank=True)
     state = models.PositiveSmallIntegerField(default=STATE_MAYBE, choices=STATE_CHOICES)

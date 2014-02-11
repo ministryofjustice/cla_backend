@@ -6,6 +6,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)
+router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_name='eligibilitycheck')
 
 
 urlpatterns = patterns('',

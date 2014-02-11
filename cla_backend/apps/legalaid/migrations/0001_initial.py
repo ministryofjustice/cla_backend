@@ -51,8 +51,9 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
             ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
-            ('category', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['legalaid.Category'])),
-            ('your_savings', self.gf('django.db.models.fields.related.ForeignKey')(related_name='your_savings', to=orm['legalaid.Savings'])),
+            ('reference', self.gf('uuidfield.fields.UUIDField')(unique=True, max_length=32, blank=True)),
+            ('category', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['legalaid.Category'], null=True, blank=True)),
+            ('your_savings', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='your_savings', null=True, to=orm['legalaid.Savings'])),
             ('partner_savings', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='partner_savings', null=True, to=orm['legalaid.Savings'])),
             ('notes', self.gf('django.db.models.fields.TextField')(blank=True)),
             ('state', self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0)),
@@ -124,14 +125,15 @@ class Migration(SchemaMigration):
         },
         u'legalaid.eligibilitycheck': {
             'Meta': {'object_name': 'EligibilityCheck'},
-            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Category']"}),
+            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Category']", 'null': 'True', 'blank': 'True'}),
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
             'notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'partner_savings': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'partner_savings'", 'null': 'True', 'to': u"orm['legalaid.Savings']"}),
+            'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'}),
             'state': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
-            'your_savings': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'your_savings'", 'to': u"orm['legalaid.Savings']"})
+            'your_savings': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'your_savings'", 'null': 'True', 'to': u"orm['legalaid.Savings']"})
         },
         u'legalaid.personaldetails': {
             'Meta': {'object_name': 'PersonalDetails'},

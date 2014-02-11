@@ -6,7 +6,6 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)
-router.register(r'question', views.QuestionViewSet)
 
 
 urlpatterns = patterns('',

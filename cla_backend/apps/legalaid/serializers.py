@@ -10,6 +10,8 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EligibilityCheckSerializer(serializers.ModelSerializer):
+    notes = serializers.CharField(max_length=500, required=False)
+
     class Meta:
         model = EligibilityCheck
         fields = ('reference', 'category', 'notes')

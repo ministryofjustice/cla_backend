@@ -12,9 +12,12 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CategorySerializer
 
 
-class EligibilityCheckViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class EligibilityCheckViewSet(
+        mixins.CreateModelMixin,
+        mixins.UpdateModelMixin,
+        viewsets.GenericViewSet
+    ):
     model = EligibilityCheck
     serializer_class = EligibilityCheckSerializer
 
     lookup_field = 'reference'
-    pk_url_kwarg = 'reference'

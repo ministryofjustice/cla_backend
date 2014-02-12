@@ -7,6 +7,10 @@ class CLABaseApiTestMixin(object):
     """
     Useful testing methods
     """
+    def _test_get_not_allowed(self, url):
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
     def _test_post_not_allowed(self, url, data={}):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)

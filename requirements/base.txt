@@ -12,3 +12,4 @@ South==0.8.4
 Pillow==2.3.0
 djangorestframework==2.3.12
 jsonfield==0.9.20
+django-uuidfield==0.4.0

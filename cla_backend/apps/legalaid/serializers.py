@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, EligibilityCheck
+from .models import Category, EligibilityCheck, Property
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
@@ -15,3 +15,10 @@ class EligibilityCheckSerializer(serializers.ModelSerializer):
     class Meta:
         model = EligibilityCheck
         fields = ('reference', 'category', 'notes')
+
+
+class PropertySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Property
+        fields = ('value', 'equity', 'share',)

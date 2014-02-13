@@ -1,11 +1,11 @@
-from model_mommy.recipe import Recipe, seq
+from model_mommy.recipe import Recipe, seq, foreign_key
 
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from ..models import Category, EligibilityCheck
+from ..models import Category, EligibilityCheck, Property
 
 from .test_base import CLABaseApiTestMixin
 
@@ -15,6 +15,9 @@ category_recipe = Recipe(Category,
 )
 
 eligibility_check_recipe = Recipe(EligibilityCheck)
+
+property_recipe = Recipe(Property,
+                         eligibility_check=foreign_key(eligibility_check_recipe))
 
 
 class CategoryTests(CLABaseApiTestMixin, APITestCase):
@@ -175,3 +178,30 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertEqual(response.data['reference'], str(self.check.reference))
         self.assertEqual(response.data['category'], data['category'])
         self.assertEqual(response.data['notes'], data['notes'])
+
+
+class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
+    def setUp(self):
+        super(EligibilityCheckPropertyTests, self).setUp()
+
+        self.check = property_recipe.make(
+            value=100000,
+            equity=20000,
+            share=50,
+        )
+        parent_ref = str(self.check.eligibility_check.reference)
+        self.list_url = reverse('property-list',
+                                args=[parent_ref])
+
+        self.detail_url = reverse(
+            'property-detail', args=[parent_ref, self.check.id]
+        )
+
+
+    def test_create_no_data(self):
+        """
+        CREATE data is empty
+        """
+        response = self.client.post(self.list_url, data={}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+

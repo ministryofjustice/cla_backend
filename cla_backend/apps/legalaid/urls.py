@@ -12,7 +12,11 @@ router.register(r'eligibility_check', views.EligibilityCheckViewSet,
     base_name='eligibility_check'
 )
 
-eligibility_check_router = NestedSimpleRouter(router, 'eligibility_check')
+eligibility_check_router = \
+    NestedSimpleRouter(router,
+                       'eligibility_check',
+                       lookup='eligibility_check_')
+
 eligibility_check_router.register(r'property',
                                   views.PropertyViewSet,
                                   base_name='property',

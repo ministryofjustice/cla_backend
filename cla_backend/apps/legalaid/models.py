@@ -37,14 +37,14 @@ class Category(TimeStampedModel):
 #         return u'%s' % self.name
 
 
-class Savings(TimeStampedModel):
+class Finance(TimeStampedModel):
     bank_balance = models.PositiveIntegerField(default=0)
     investment_balance = models.PositiveIntegerField(default=0)
     asset_balance = models.PositiveIntegerField(default=0)
     credit_balance = models.PositiveIntegerField(default=0)
-
-    class Meta:
-        verbose_name_plural = "savings"
+    earnings = models.PositiveIntegerField(default=0)
+    other_income = models.PositiveIntegerField(default=0)
+    self_employed = models.BooleanField(default=False)
 
 
 class PersonalDetails(TimeStampedModel):
@@ -65,10 +65,12 @@ class EligibilityCheck(TimeStampedModel):
     reference = UUIDField(auto=True, unique=True)
 
     category = models.ForeignKey(Category, blank=True, null=True)
-    your_savings = models.ForeignKey(Savings, blank=True, null=True, related_name='your_savings')
-    partner_savings = models.ForeignKey(Savings, blank=True, null=True, related_name='partner_savings')
+    your_finances = models.ForeignKey(Finance, blank=True, null=True, related_name='your_savings')
+    partner_finances = models.ForeignKey(Finance, blank=True, null=True, related_name='partner_savings')
     notes = models.TextField(blank=True)
     state = models.PositiveSmallIntegerField(default=STATE_MAYBE, choices=STATE_CHOICES)
+    dependant_young = models.PositiveIntegerField(default=0)
+    dependants_old = models.PositiveIntegerField(default=0)
 
 
 class Property(TimeStampedModel):

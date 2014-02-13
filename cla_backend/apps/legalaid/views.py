@@ -14,6 +14,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 class EligibilityCheckViewSet(
         mixins.CreateModelMixin,
         mixins.UpdateModelMixin,
+        mixins.RetrieveModelMixin,
         viewsets.GenericViewSet
     ):
     model = EligibilityCheck

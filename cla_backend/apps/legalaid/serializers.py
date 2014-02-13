@@ -23,4 +23,3 @@ class EligibilityCheckSerializer(serializers.ModelSerializer):
     class Meta:
         model = EligibilityCheck
         fields = ('reference', 'category', 'notes', 'property_set')
-

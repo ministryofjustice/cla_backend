@@ -150,6 +150,35 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertItemsEqual([p['equity'] for p in response.data['property_set']], [222, 888])
         self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
 
+    def test_create_in_error(self):
+        data={
+            'category': -1,
+            'notes': 'a'*501,
+            'property_set': [
+                {'value': 111, 'equity': 222, 'share': 33},  # valid
+                {'value': -1, 'equity': -1, 'share': -1},  # invalid
+                {'value': 0, 'equity': 0, 'share': 101},  # invalid
+            ]
+        }
+        response = self.client.post(
+            self.list_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        errors = response.data
+        self.assertItemsEqual(errors.keys(), ['category', 'notes', 'property_set'])
+        self.assertEqual(errors['category'], [u"Invalid pk '-1' - object does not exist."])
+        self.assertEqual(errors['notes'], [u'Ensure this value has at most 500 characters (it has 501).'])
+        self.assertItemsEqual(errors['property_set'], [
+            {},
+            {
+                'share': [u'Ensure this value is greater than or equal to 0.'],
+                'value': [u'Ensure this value is greater than or equal to 0.'],
+                'equity': [u'Ensure this value is greater than or equal to 0.']
+            },
+            {'share': [u'Ensure this value is less than or equal to 100.']}
+        ])
+
     # GET OBJECT
 
     def test_get_not_found(self):
@@ -257,6 +286,57 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
 
         # checking the db just in case
         self.assertItemsEqual(self.check.property_set.values_list('id', flat=True), [1,10])
+
+    def test_patch_in_error(self):
+        data={
+            'category': -1,
+            'notes': 'a'*501,
+            'property_set': [
+                {'value': 111, 'equity': 222, 'share': 33},  # valid
+                {'value': -1, 'equity': -1, 'share': -1},  # invalid
+                {'value': 0, 'equity': 0, 'share': 101},  # invalid
+            ]
+        }
+        response = self.client.patch(
+            self.detail_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        errors = response.data
+        self.assertItemsEqual(errors.keys(), ['category', 'notes', 'property_set'])
+        self.assertEqual(errors['category'], [u"Invalid pk '-1' - object does not exist."])
+        self.assertEqual(errors['notes'], [u'Ensure this value has at most 500 characters (it has 501).'])
+        self.assertItemsEqual(errors['property_set'], [
+            {},
+            {
+                'share': [u'Ensure this value is greater than or equal to 0.'],
+                'value': [u'Ensure this value is greater than or equal to 0.'],
+                'equity': [u'Ensure this value is greater than or equal to 0.']
+            },
+            {'share': [u'Ensure this value is less than or equal to 100.']}
+        ])
+
+    def test_others_property_cannot_be_set(self):
+        """
+        other_property is assigned to another eligibility_check.
+
+        We try to assign this other_property to our self.check.
+
+        The endpoint should NOT change the other_property and our self.check.property_set
+        should NOT point to other_property.
+        """
+        other_property = property_recipe.make(id=1)
+        data={
+            'property_set': [
+                {'value': 0, 'equity': 0, 'share': 0, 'id': other_property.pk}
+            ]
+        }
+        response = self.client.patch(
+            self.detail_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['property_set'][0]['id'], 2)
+        self.assertNotEqual(other_property.eligibility_check.pk, self.check.pk)
 
     # PUT
 

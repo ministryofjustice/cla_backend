@@ -204,4 +204,93 @@ class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
         """
         response = self.client.post(self.list_url, data={}, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertItemsEqual(response.data.keys(), ['value', 'equity', 'share', 'id'])
+        self.assertTrue(response.data['id'] > self.check.id)
+        self.assertEqual(response.data['value'], 0)
+        self.assertEqual(response.data['equity'], 0)
+        self.assertEqual(response.data['share'], 0)
+
+    def test_post_full_data(self):
+        response = self.client.post(self.list_url,
+                                    data=
+                                    {
+                                        'value': self.check.value,
+                                        'equity': self.check.equity,
+                                        'share': self.check.share
+                                    })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.data['id'] > self.check.id)
+        self.assertEqual(response.data['value'], self.check.value)
+        self.assertEqual(response.data['equity'], self.check.equity)
+        self.assertEqual(response.data['share'], self.check.share)
+
+
+    def test_patch_full_data(self):
+        response = self.client.patch(self.detail_url,
+                                     data=
+                                     {
+                                         'value': self.check.value-1,
+                                         'share': self.check.share-1,
+                                         'equity': self.check.equity-1
+                                     })
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['id'] == self.check.id)
+        self.assertTrue(response.data['value'] == self.check.value-1)
+        self.assertTrue(response.data['share'] == self.check.share-1)
+        self.assertTrue(response.data['equity'] == self.check.equity-1)
+
+        # make sure it actually saved
+        response2 = self.client.get(self.detail_url)
+        self.assertEqual(response.data, response2.data)
+
+
+
+    def test_put_full_data(self):
+        response = self.client.put(self.detail_url,
+                                     data=
+                                     {
+                                         'value': self.check.value-1,
+                                         'share': self.check.share-1,
+                                         'equity': self.check.equity-1
+                                     })
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['id'] == self.check.id)
+        self.assertTrue(response.data['value'] == self.check.value-1)
+        self.assertTrue(response.data['share'] == self.check.share-1)
+        self.assertTrue(response.data['equity'] == self.check.equity-1)
+
+        # make sure it actually saved
+        response2 = self.client.get(self.detail_url)
+        self.assertEqual(response.data, response2.data)
+
+
+    def test_put_partial_data(self):
+        response = self.client.put(self.detail_url,
+                                   data=
+                                   {
+                                       'value': self.check.value-1,
+                                   })
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['id'] == self.check.id)
+        self.assertTrue(response.data['value'] == self.check.value-1)
+
+        # was not sent by us so should be default
+        self.assertTrue(response.data['share'] == 0)
+        self.assertTrue(response.data['equity'] == 0)
+
+        # make sure it actually saved
+        response2 = self.client.get(self.detail_url)
+        self.assertEqual(response.data, response2.data)
+
+    def test_delete_object(self):
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertIsNone(response.data)
+
+        response2 = self.client.get(self.detail_url)
+        self.assertEqual(response2.status_code, status.HTTP_404_NOT_FOUND)
+
 

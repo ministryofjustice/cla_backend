@@ -1,11 +1,6 @@
-from uuid import UUID
-from django import http
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import status
 from rest_framework import viewsets, mixins
-from rest_framework.decorators import action
-from rest_framework.response import Response
 
 from .models import Category, EligibilityCheck, Property
 from .serializers import CategorySerializer, EligibilityCheckSerializer, PropertySerializer
@@ -57,7 +52,9 @@ class PropertyViewSet(
     NestedModelMixin,
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
     viewsets.GenericViewSet
     ):
 
@@ -65,6 +62,6 @@ class PropertyViewSet(
     parent_lookup = 'eligibility_check'
     parent_model = EligibilityCheck
 
-
     model = Property
     serializer_class = PropertySerializer
+

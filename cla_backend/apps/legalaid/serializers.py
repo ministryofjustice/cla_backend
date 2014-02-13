@@ -21,4 +21,4 @@ class PropertySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Property
-        fields = ('value', 'equity', 'share')
+        fields = ('value', 'equity', 'share', 'id')

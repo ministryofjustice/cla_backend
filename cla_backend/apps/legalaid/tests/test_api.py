@@ -1,9 +1,10 @@
+import uuid
 from model_mommy.recipe import Recipe, seq, foreign_key
 
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APITransactionTestCase
 
 from ..models import Category, EligibilityCheck, Property
 
@@ -80,7 +81,10 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
     def assertResponseKeys(self, response):
         self.assertItemsEqual(
             response.data.keys(),
-            ['reference', 'category', 'notes', 'property_set', 'dependants_young', 'dependants_old']
+            ['reference', 'category', 'notes',
+             'property_set', 'dependants_young',
+             'dependants_old', 'your_finances',
+             'partner_finances']
         )
 
     def test_methods_not_allowed(self):
@@ -207,7 +211,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         not_found_detail_url = reverse(
             'eligibility_check-detail', args=(),
-            kwargs={'reference': 'invalid'}
+            kwargs={'reference': uuid.uuid4()}
         )
 
         response = self.client.get(not_found_detail_url, format='json')

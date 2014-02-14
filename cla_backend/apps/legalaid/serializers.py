@@ -15,6 +15,7 @@ class PropertySerializer(serializers.ModelSerializer):
         model = Property
         fields = ('value', 'equity', 'share', 'id')
 
+
 class FinanceSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -44,6 +45,7 @@ class EligibilityCheckSerializer(serializers.ModelSerializer):
             'notes',
             'property_set',
             'your_finances',
-            'partner_finances'
+            'partner_finances',
+            'dependants_young',
+            'dependants_old'
         )
-

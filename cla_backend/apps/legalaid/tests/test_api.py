@@ -14,10 +14,13 @@ category_recipe = Recipe(Category,
     name=seq('Name'), order = seq(0)
 )
 
-eligibility_check_recipe = Recipe(EligibilityCheck)
+eligibility_check_recipe = Recipe(EligibilityCheck,
+    dependants_young=5, dependants_old=6
+)
 
 property_recipe = Recipe(Property,
-                         eligibility_check=foreign_key(eligibility_check_recipe))
+    eligibility_check=foreign_key(eligibility_check_recipe)
+)
 
 
 class CategoryTests(CLABaseApiTestMixin, APITestCase):
@@ -74,40 +77,11 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             kwargs={'reference': str(self.check.reference)}
         )
 
-
-    def test_create_no_data(self):
-        """
-        CREATE data is empty
-        """
-        response = self.client.post(
-            self.list_url, data={}, format='json'
+    def assertResponseKeys(self, response):
+        self.assertItemsEqual(
+            response.data.keys(),
+            ['reference', 'category', 'notes', 'property_set', 'dependants_young', 'dependants_old']
         )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        self.assertItemsEqual(response.data.keys(), ['reference', 'category', 'notes'])
-        self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEqual(response.data['category'], None)
-        self.assertEqual(response.data['notes'], '')
-
-    def test_create_full_data(self):
-        """
-        CREATE data is not empty
-        """
-        category_recipe.make()
-
-        data={
-            'category': Category.objects.all()[0].pk,
-            'notes': 'lorem'
-        }
-        response = self.client.post(
-            self.list_url, data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        self.assertItemsEqual(response.data.keys(), ['reference', 'category', 'notes'])
-        self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEqual(response.data['category'], data['category'])
-        self.assertEqual(response.data['notes'], data['notes'])
 
     def test_methods_not_allowed(self):
         """
@@ -119,9 +93,148 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self._test_delete_not_allowed(self.list_url)
 
         ### DETAIL
-        self._test_get_not_allowed(self.detail_url)
         self._test_post_not_allowed(self.detail_url)
         self._test_delete_not_allowed(self.detail_url)
+
+    # CREATE
+
+    def test_create_no_data(self):
+        """
+        CREATE data is empty
+        """
+        response = self.client.post(
+            self.list_url, data={}, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertResponseKeys(response)
+        self.assertTrue(len(response.data['reference']) > 30)
+        self.assertEqual(response.data['category'], None)
+        self.assertEqual(response.data['notes'], '')
+        self.assertEqual(response.data['dependants_young'], 0)
+        self.assertEqual(response.data['dependants_old'], 0)
+
+    def test_create_basic_data(self):
+        """
+        CREATE data is not empty
+        """
+        category_recipe.make()
+
+        data={
+            'category': Category.objects.all()[0].pk,
+            'notes': 'lorem',
+            'dependants_young': 2,
+            'dependants_old': 3,
+        }
+        response = self.client.post(
+            self.list_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertResponseKeys(response)
+        self.assertTrue(len(response.data['reference']) > 30)
+        self.assertEqual(response.data['category'], data['category'])
+        self.assertEqual(response.data['notes'], data['notes'])
+        self.assertEqual(response.data['property_set'], [])
+        self.assertEqual(response.data['dependants_young'], 2)
+        self.assertEqual(response.data['dependants_old'], 3)
+
+    def test_create_with_properties(self):
+        """
+        CREATE data with properties
+        """
+        data={
+            'property_set': [
+                {'value': 111, 'equity': 222, 'share': 33},
+                {'value': 999, 'equity': 888, 'share': 77}
+            ]
+        }
+        response = self.client.post(
+            self.list_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertResponseKeys(response)
+        self.assertTrue(len(response.data['reference']) > 30)
+        self.assertEqual(response.data['category'], None)
+        self.assertEqual(response.data['notes'], '')
+        self.assertEqual(len(response.data['property_set']), 2)
+        self.assertEqual(response.data['dependants_young'], 0)
+        self.assertEqual(response.data['dependants_old'], 0)
+        self.assertItemsEqual([p['id'] for p in response.data['property_set']], [1,2])
+        self.assertItemsEqual([p['value'] for p in response.data['property_set']], [111, 999])
+        self.assertItemsEqual([p['equity'] for p in response.data['property_set']], [222, 888])
+        self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
+
+    def test_create_in_error(self):
+        data={
+            'category': -1,
+            'notes': 'a'*501,
+            'property_set': [
+                {'value': 111, 'equity': 222, 'share': 33},  # valid
+                {'value': -1, 'equity': -1, 'share': -1},  # invalid
+                {'value': 0, 'equity': 0, 'share': 101},  # invalid
+            ],
+            'dependants_young': -1,
+            'dependants_old': -1,
+        }
+        response = self.client.post(
+            self.list_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        errors = response.data
+        self.assertItemsEqual(errors.keys(), ['category', 'notes', 'property_set', 'dependants_young', 'dependants_old'])
+        self.assertEqual(errors['category'], [u"Invalid pk '-1' - object does not exist."])
+        self.assertEqual(errors['notes'], [u'Ensure this value has at most 500 characters (it has 501).'])
+        self.assertItemsEqual(errors['property_set'], [
+            {},
+            {
+                'share': [u'Ensure this value is greater than or equal to 0.'],
+                'value': [u'Ensure this value is greater than or equal to 0.'],
+                'equity': [u'Ensure this value is greater than or equal to 0.']
+            },
+            {'share': [u'Ensure this value is less than or equal to 100.']}
+        ])
+        self.assertEqual(errors['dependants_young'], [u'Ensure this value is greater than or equal to 0.'])
+        self.assertEqual(errors['dependants_old'], [u'Ensure this value is greater than or equal to 0.'])
+
+    # GET OBJECT
+
+    def test_get_not_found(self):
+        """
+        Invalid reference => 404
+        """
+        not_found_detail_url = reverse(
+            'eligibility_check-detail', args=(),
+            kwargs={'reference': 'invalid'}
+        )
+
+        response = self.client.get(not_found_detail_url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_object(self):
+        """
+        GET should not return properties of other eligibility check objects
+        """
+        property_recipe.make(eligibility_check=self.check, _quantity=4)
+
+        # making extra properties
+        property_recipe.make(_quantity=5)
+
+        self.assertEqual(Property.objects.count(), 9)
+
+        response = self.client.get(self.detail_url, format='json')
+        self.assertResponseKeys(response)
+        self.assertEqual(response.data['reference'], str(self.check.reference))
+        self.assertEqual(response.data['category'], 1)
+        self.assertEqual(response.data['notes'], 'lorem ipsum')
+        self.assertEqual(len(response.data['property_set']), 4)
+        self.assertEqual(len(response.data['property_set']), 4)
+        self.assertEqual(response.data['dependants_young'], 5)
+        self.assertEqual(response.data['dependants_old'], 6)
+
+    # PATCH
 
     def test_patch_no_data(self):
         """
@@ -132,12 +245,15 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertItemsEqual(response.data.keys(), ['reference', 'category', 'notes'])
-        self.assertTrue(response.data['reference'] > self.check.reference)
+        self.assertResponseKeys(response)
+        self.assertEqual(response.data['reference'], str(self.check.reference))
         self.assertEqual(response.data['category'], self.check.category.pk)
         self.assertEqual(response.data['notes'], self.check.notes)
+        self.assertEqual(response.data['property_set'], [])
+        self.assertEqual(response.data['dependants_young'], self.check.dependants_young)
+        self.assertEqual(response.data['dependants_old'], self.check.dependants_old)
 
-    def test_patch_full_data(self):
+    def test_patch_basic_data(self):
         """
         PATCH data is not empty so the object should change
         """
@@ -146,38 +262,147 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         data={
             'reference': 'just-trying...', # reference should never change
             'category': category2.pk,
-            'notes': 'lorem ipsum2'
+            'notes': 'lorem ipsum2',
+            'dependants_young': 10,
+            'dependants_old': 10,
         }
         response = self.client.patch(
             self.detail_url, data=data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertItemsEqual(response.data.keys(), ['reference', 'category', 'notes'])
         self.assertEqual(response.data['reference'], str(self.check.reference))
         self.assertEqual(response.data['category'], data['category'])
         self.assertEqual(response.data['notes'], data['notes'])
+        self.assertEqual(response.data['property_set'], [])
+        self.assertEqual(response.data['dependants_young'], data['dependants_young'])
+        self.assertEqual(response.data['dependants_old'], data['dependants_old'])
 
-    def test_put_full_data(self):
+    def test_patch_properties(self):
         """
-        PUT data is not empty so the object should change
+        PATCH should add/remove/change properties.
         """
+        property_recipe.make(eligibility_check=self.check, _quantity=4)
+
+        # making extra properties
+        property_recipe.make(_quantity=5)
+
+        self.assertItemsEqual(self.check.property_set.values_list('id', flat=True), [1,2,3,4])
+
+        # changing property with id == 1, removing all the others and adding
+        # an extra one
+        data={
+            'property_set': [
+                {'value': 111, 'equity': 222, 'share': 33, 'id': 1},
+                {'value': 999, 'equity': 888, 'share': 77}
+            ]
+        }
+        response = self.client.patch(
+            self.detail_url, data=data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # nothing should have changed here
+        self.assertEqual(response.data['reference'], str(self.check.reference))
+        self.assertEqual(response.data['category'], self.check.category.id)
+        self.assertEqual(response.data['notes'], self.check.notes)
+        self.assertEqual(response.data['dependants_young'], self.check.dependants_young)
+        self.assertEqual(response.data['dependants_old'], self.check.dependants_old)
+
+        # properties should have changed. The new property should have id == 10
+        self.assertEqual(len(response.data['property_set']), 2)
+        self.assertItemsEqual([p['id'] for p in response.data['property_set']], [1,10])
+        self.assertItemsEqual([p['value'] for p in response.data['property_set']], [111, 999])
+        self.assertItemsEqual([p['equity'] for p in response.data['property_set']], [222, 888])
+        self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
+
+        # checking the db just in case
+        self.assertItemsEqual(self.check.property_set.values_list('id', flat=True), [1,10])
+
+    def test_patch_in_error(self):
+        data={
+            'category': -1,
+            'notes': 'a'*501,
+            'property_set': [
+                {'value': 111, 'equity': 222, 'share': 33},  # valid
+                {'value': -1, 'equity': -1, 'share': -1},  # invalid
+                {'value': 0, 'equity': 0, 'share': 101},  # invalid
+            ],
+            'dependants_young': -1,
+            'dependants_old': -1,
+        }
+        response = self.client.patch(
+            self.detail_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        errors = response.data
+        self.assertItemsEqual(errors.keys(), ['category', 'notes', 'property_set', 'dependants_young', 'dependants_old'])
+        self.assertEqual(errors['category'], [u"Invalid pk '-1' - object does not exist."])
+        self.assertEqual(errors['notes'], [u'Ensure this value has at most 500 characters (it has 501).'])
+        self.assertItemsEqual(errors['property_set'], [
+            {},
+            {
+                'share': [u'Ensure this value is greater than or equal to 0.'],
+                'value': [u'Ensure this value is greater than or equal to 0.'],
+                'equity': [u'Ensure this value is greater than or equal to 0.']
+            },
+            {'share': [u'Ensure this value is less than or equal to 100.']}
+        ])
+        self.assertEqual(errors['dependants_young'], [u'Ensure this value is greater than or equal to 0.'])
+        self.assertEqual(errors['dependants_old'], [u'Ensure this value is greater than or equal to 0.'])
+
+    def test_others_property_cannot_be_set(self):
+        """
+        other_property is assigned to another eligibility_check.
+
+        We try to assign this other_property to our self.check.
+
+        The endpoint should NOT change the other_property and our self.check.property_set
+        should NOT point to other_property.
+        """
+        other_property = property_recipe.make(id=1)
+        data={
+            'property_set': [
+                {'value': 0, 'equity': 0, 'share': 0, 'id': other_property.pk}
+            ]
+        }
+        response = self.client.patch(
+            self.detail_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['property_set'][0]['id'], 2)
+        self.assertNotEqual(other_property.eligibility_check.pk, self.check.pk)
+
+    # PUT
+
+    def test_put_basic_data(self):
+        """
+        PUT should override the values
+        """
+        property_recipe.make(eligibility_check=self.check, _quantity=4)
+
         category2 = category_recipe.make()
 
         data={
             'reference': 'just-trying...', # reference should never change
             'category': category2.pk,
-            'notes': 'lorem ipsum2'
+            'notes': 'lorem2',
+            'property_set': [],
+            'dependants_young': 1,
+            'dependants_old': 2,
         }
         response = self.client.put(
             self.detail_url, data=data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertItemsEqual(response.data.keys(), ['reference', 'category', 'notes'])
+        self.assertResponseKeys(response)
         self.assertEqual(response.data['reference'], str(self.check.reference))
         self.assertEqual(response.data['category'], data['category'])
-        self.assertEqual(response.data['notes'], data['notes'])
+        self.assertEqual(response.data['notes'], 'lorem2')
+        self.assertEqual(response.data['property_set'], [])
+        self.assertEqual(response.data['dependants_young'], data['dependants_young'])
+        self.assertEqual(response.data['dependants_old'], data['dependants_old'])
 
 
 class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):

@@ -227,13 +227,14 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
 
         self.assertResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEqual(response.data['category'], None)
-        self.assertEqual(response.data['notes'], '')
-        self.assertEqual(len(response.data['property_set']), 0)
-        self.assertEqual(response.data['dependants_young'], 0)
-        self.assertEqual(response.data['dependants_old'], 0)
-        self.assertDictEqual(response.data['your_finances'], data['your_finances'])
-        self.assertDictEqual(response.data['partner_finances'], data['partner_finances'])
+        self.assertEligibilityCheckEqual(
+            response.data,
+            EligibilityCheck(
+                reference=response.data['reference'],
+                your_finances=Finance(**data['your_finances']),
+                partner_finances=Finance(**data['partner_finances'])
+            )
+        )
 
     def _test_method_in_error(self, method, url):
         """
@@ -384,14 +385,12 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.data['reference'], str(self.check.reference))
-        self.assertEqual(response.data['category'], data['category'])
-        self.assertEqual(response.data['notes'], data['notes'])
-        self.assertEqual(response.data['property_set'], [])
-        self.assertEqual(response.data['dependants_young'], data['dependants_young'])
-        self.assertEqual(response.data['dependants_old'], data['dependants_old'])
-        self.assertFinanceEqual(response.data['your_finances'], Finance())
-        self.assertFinanceEqual(response.data['partner_finances'], Finance())
+        # checking the changed properties
+        self.check.category = category2
+        self.check.notes = data['notes']
+        self.check.dependants_young = data['dependants_young']
+        self.check.dependants_old = data['dependants_old']
+        self.assertEligibilityCheckEqual(response.data, self.check)
 
     def test_patch_properties(self):
         """
@@ -462,14 +461,10 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.data['reference'], str(self.check.reference))
-        self.assertEqual(response.data['category'], self.check.category.id)
-        self.assertEqual(response.data['notes'], self.check.notes)
-        self.assertEqual(response.data['dependants_young'], self.check.dependants_young)
-        self.assertEqual(response.data['dependants_old'], self.check.dependants_old)
-
-        self.assertDictEqual(response.data['your_finances'], data['your_finances'])
-        self.assertDictEqual(response.data['partner_finances'], data['partner_finances'])
+        # finances props should have changed
+        self.check.your_finances = Finance(**data['your_finances'])
+        self.check.partner_finances = Finance(**data['partner_finances'])
+        self.assertEligibilityCheckEqual(response.data, self.check)
 
     def test_patch_in_error(self):
         self._test_method_in_error('patch', self.detail_url)
@@ -520,14 +515,13 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertResponseKeys(response)
-        self.assertEqual(response.data['reference'], str(self.check.reference))
-        self.assertEqual(response.data['category'], data['category'])
-        self.assertEqual(response.data['notes'], 'lorem2')
-        self.assertEqual(response.data['property_set'], [])
-        self.assertEqual(response.data['dependants_young'], data['dependants_young'])
-        self.assertEqual(response.data['dependants_old'], data['dependants_old'])
-        self.assertFinanceEqual(response.data['your_finances'], Finance())
-        self.assertFinanceEqual(response.data['partner_finances'], Finance())
+
+        # checking the changed properties
+        self.check.category = category2
+        self.check.notes = data['notes']
+        self.check.dependants_young = data['dependants_young']
+        self.check.dependants_old = data['dependants_old']
+        self.assertEligibilityCheckEqual(response.data, self.check)
 
 
 class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):

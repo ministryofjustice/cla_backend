@@ -1,6 +1,9 @@
 from rest_framework import serializers
 
-from .models import Category, EligibilityCheck, Property, Finance
+from core.serializers import UUIDSerializer
+
+from .models import Category, EligibilityCheck, Property, Finance, \
+    PersonalDetails, Case
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
@@ -48,4 +51,24 @@ class EligibilityCheckSerializer(serializers.ModelSerializer):
             'partner_finances',
             'dependants_young',
             'dependants_old'
+        )
+
+
+class PersonalDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PersonalDetails
+        fields = (
+            'title', 'full_name', 'postcode', 'street', 'town',
+            'mobile_phone', 'home_phone'
+        )
+
+
+class CaseSerializer(serializers.ModelSerializer):
+    eligibility_check = UUIDSerializer(slug_field='reference')
+    personal_details = PersonalDetailsSerializer()
+
+    class Meta:
+        model = Case
+        fields = (
+            'eligibility_check', 'personal_details', 'reference'
         )

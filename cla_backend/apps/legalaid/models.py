@@ -84,9 +84,23 @@ class Property(TimeStampedModel):
 
 
 class Case(TimeStampedModel):
-    reference = models.CharField(max_length=128, unique=True)
-    eligibility_check = models.ForeignKey(EligibilityCheck)
+    reference = models.CharField(max_length=128, unique=True, editable=False)
+    eligibility_check = models.OneToOneField(EligibilityCheck)
     personal_details = models.ForeignKey(PersonalDetails)
+
+    def _set_reference_if_necessary(self):
+        if not self.reference:
+            # TODO make it better
+            from django.utils.crypto import get_random_string
+            self.reference = u'%s-%s-%s' % (
+                get_random_string(length=2, allowed_chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'),
+                get_random_string(length=4, allowed_chars='0123456789'),
+                get_random_string(length=4, allowed_chars='0123456789')
+            )
+
+    def save(self, *args, **kwargs):
+        self._set_reference_if_necessary()
+        return super(Case, self).save(*args, **kwargs)
 
 
 # class Answer(TimeStampedModel):

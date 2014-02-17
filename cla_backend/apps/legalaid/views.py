@@ -2,8 +2,9 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, mixins
 
-from .models import Category, EligibilityCheck, Property
-from .serializers import CategorySerializer, EligibilityCheckSerializer, PropertySerializer
+from .models import Category, EligibilityCheck, Property, Case
+from .serializers import CategorySerializer, EligibilityCheckSerializer, \
+    PropertySerializer, CaseSerializer
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -50,13 +51,13 @@ class NestedModelMixin(object):
 
 
 class PropertyViewSet(
-    NestedModelMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
+        NestedModelMixin,
+        mixins.CreateModelMixin,
+        mixins.UpdateModelMixin,
+        mixins.DestroyModelMixin,
+        mixins.ListModelMixin,
+        mixins.RetrieveModelMixin,
+        viewsets.GenericViewSet
     ):
 
     nested_lookup = 'reference'
@@ -66,3 +67,11 @@ class PropertyViewSet(
     model = Property
     serializer_class = PropertySerializer
 
+
+class CaseViewSet(
+        mixins.CreateModelMixin,
+        viewsets.GenericViewSet
+    ):
+
+    model = Case
+    serializer_class = CaseSerializer

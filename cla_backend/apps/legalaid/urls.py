@@ -7,10 +7,8 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)
-
-router.register(r'eligibility_check', views.EligibilityCheckViewSet,
-    base_name='eligibility_check'
-)
+router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_name='eligibility_check')
+router.register(r'case', views.CaseViewSet)
 
 eligibility_check_router = \
     NestedSimpleRouter(router,

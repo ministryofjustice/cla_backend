@@ -24,13 +24,13 @@ class FinanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Finance
         fields = (
-            "bank_balance",
-            "investment_balance",
-            "asset_balance",
-            "credit_balance",
-            "earnings",
-            "other_income",
-            "self_employed"
+            'bank_balance',
+            'investment_balance',
+            'asset_balance',
+            'credit_balance',
+            'earnings',
+            'other_income',
+            'self_employed'
         )
 
 

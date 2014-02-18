@@ -35,6 +35,7 @@ class FinanceSerializer(serializers.ModelSerializer):
 
 
 class EligibilityCheckSerializer(serializers.ModelSerializer):
+    your_problem_notes = serializers.CharField(max_length=500, required=False)
     notes = serializers.CharField(max_length=500, required=False)
     property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
     your_finances = FinanceSerializer(required=False)
@@ -45,6 +46,7 @@ class EligibilityCheckSerializer(serializers.ModelSerializer):
         fields = (
             'reference',
             'category',
+            'your_problem_notes',
             'notes',
             'property_set',
             'your_finances',

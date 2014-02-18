@@ -93,7 +93,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
     def assertResponseKeys(self, response):
         self.assertItemsEqual(
             response.data.keys(),
-            ['reference', 'category', 'notes',
+            ['reference', 'category', 'notes', 'your_problem_notes',
              'property_set', 'dependants_young',
              'dependants_old', 'your_finances',
              'partner_finances']
@@ -109,6 +109,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
     def assertEligibilityCheckEqual(self, data, check):
         self.assertEqual(data['reference'], unicode(check.reference))
         self.assertEqual(data['category'], check.category.id if check.category else None)
+        self.assertEqual(data['your_problem_notes'], check.your_problem_notes)
         self.assertEqual(data['notes'], check.notes)
         self.assertEqual(len(data['property_set']), check.property_set.count())
         self.assertEqual(data['dependants_young'], check.dependants_young)
@@ -157,7 +158,8 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         category = Category.objects.all()[0]
         data={
             'category': category.pk,
-            'notes': 'lorem',
+            'your_problem_notes': 'lorem',
+            'notes': 'ipsum',
             'dependants_young': 2,
             'dependants_old': 3,
         }
@@ -172,6 +174,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             EligibilityCheck(
                 reference=response.data['reference'],
                 category=category, notes=data['notes'],
+                your_problem_notes=data['your_problem_notes'],
                 dependants_young=2, dependants_old=3
             )
         )
@@ -251,6 +254,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         data={
             'category': -1,
             'notes': 'a'*501,
+            'your_problem_notes': 'a'*501,
             'property_set': [
                 {'value': 111, 'equity': 222, 'share': 33},  # valid
                 {'value': -1, 'equity': -1, 'share': -1},  # invalid
@@ -284,12 +288,14 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertItemsEqual(
             errors.keys(),
             [
-                'category', 'notes', 'property_set', 'dependants_young',
-                'dependants_old', 'your_finances', 'partner_finances'
+                'category', 'notes', 'your_problem_notes', 'property_set',
+                'dependants_young', 'dependants_old', 'your_finances',
+                'partner_finances'
             ]
         )
         self.assertEqual(errors['category'], [u"Invalid pk '-1' - object does not exist."])
         self.assertEqual(errors['notes'], [u'Ensure this value has at most 500 characters (it has 501).'])
+        self.assertEqual(errors['your_problem_notes'], [u'Ensure this value has at most 500 characters (it has 501).'])
         self.assertItemsEqual(errors['property_set'], [
             {},
             {
@@ -383,6 +389,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         data={
             'reference': 'just-trying...', # reference should never change
             'category': category2.pk,
+            'your_problem_notes': 'ipsum lorem2',
             'notes': 'lorem ipsum2',
             'dependants_young': 10,
             'dependants_old': 10,
@@ -395,6 +402,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         # checking the changed properties
         self.check.category = category2
         self.check.notes = data['notes']
+        self.check.your_problem_notes = data['your_problem_notes']
         self.check.dependants_young = data['dependants_young']
         self.check.dependants_old = data['dependants_old']
         self.assertEligibilityCheckEqual(response.data, self.check)
@@ -511,7 +519,8 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         data={
             'reference': 'just-trying...', # reference should never change
             'category': category2.pk,
-            'notes': 'lorem2',
+            'your_problem_notes': 'lorem2',
+            'notes': 'ipsum2',
             'property_set': [],
             'dependants_young': 1,
             'dependants_old': 2,
@@ -526,6 +535,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         # checking the changed properties
         self.check.category = category2
         self.check.notes = data['notes']
+        self.check.your_problem_notes = data['your_problem_notes']
         self.check.dependants_young = data['dependants_young']
         self.check.dependants_old = data['dependants_old']
         self.assertEligibilityCheckEqual(response.data, self.check)

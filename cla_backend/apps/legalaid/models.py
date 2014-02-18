@@ -67,6 +67,7 @@ class EligibilityCheck(TimeStampedModel):
     category = models.ForeignKey(Category, blank=True, null=True)
     your_finances = models.ForeignKey(Finance, blank=True, null=True, related_name='your_savings')
     partner_finances = models.ForeignKey(Finance, blank=True, null=True, related_name='partner_savings')
+    your_problem_notes = models.TextField(blank=True)
     notes = models.TextField(blank=True)
     state = models.PositiveSmallIntegerField(default=STATE_MAYBE, choices=STATE_CHOICES)
     dependants_young = models.PositiveIntegerField(default=0)

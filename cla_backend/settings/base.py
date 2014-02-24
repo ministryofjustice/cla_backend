@@ -10,6 +10,26 @@ root = lambda *x: join(abspath(PROJECT_ROOT), *x)
 sys.path.insert(0, root('apps'))
 
 
+# ENVIRON values
+
+from django.core.exceptions import ImproperlyConfigured
+
+# .env_values.py contains secrets and host config values usually stored
+# in a different place
+try:
+    import env_values
+except ImportError:
+    env_values = None
+
+
+def get_env_value(var_name):
+    """ Get the env value `var_name` or return exception """
+    try:
+        return getattr(env_values, var_name)
+    except AttributeError:
+        raise ImproperlyConfigured("Environment value %s not found" % var_name)
+
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 

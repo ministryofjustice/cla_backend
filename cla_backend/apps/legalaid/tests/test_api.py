@@ -201,7 +201,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertEqual(len(response.data['property_set']), 2)
         self.assertEqual(response.data['dependants_young'], 0)
         self.assertEqual(response.data['dependants_old'], 0)
-        self.assertItemsEqual([p['id'] for p in response.data['property_set']], [1,2])
+        self.assertEqual(len(response.data['property_set']), 2)
         self.assertItemsEqual([p['value'] for p in response.data['property_set']], [111, 999])
         self.assertItemsEqual([p['equity'] for p in response.data['property_set']], [222, 888])
         self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
@@ -411,18 +411,18 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         PATCH should add/remove/change properties.
         """
-        property_recipe.make(eligibility_check=self.check, _quantity=4)
+        properties = property_recipe.make(eligibility_check=self.check, _quantity=4)
 
         # making extra properties
         property_recipe.make(_quantity=5)
 
-        self.assertItemsEqual(self.check.property_set.values_list('id', flat=True), [1,2,3,4])
+        self.assertEqual(self.check.property_set.count(), 4)
 
         # changing property with id == 1, removing all the others and adding
         # an extra one
         data={
             'property_set': [
-                {'value': 111, 'equity': 222, 'share': 33, 'id': 1},
+                {'value': 111, 'equity': 222, 'share': 33, 'id': properties[0].id},
                 {'value': 999, 'equity': 888, 'share': 77}
             ]
         }
@@ -439,13 +439,17 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
 
         # properties should have changed. The new property should have id == 10
         self.assertEqual(len(response.data['property_set']), 2)
-        self.assertItemsEqual([p['id'] for p in response.data['property_set']], [1,10])
+
+        property_ids = [p['id'] for p in response.data['property_set']]
+        self.assertTrue(properties[0].id in property_ids)
+        self.assertFalse(set([p.id for p in properties[1:]]).intersection(set(property_ids)))
+
         self.assertItemsEqual([p['value'] for p in response.data['property_set']], [111, 999])
         self.assertItemsEqual([p['equity'] for p in response.data['property_set']], [222, 888])
         self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
 
         # checking the db just in case
-        self.assertItemsEqual(self.check.property_set.values_list('id', flat=True), [1,10])
+        self.assertEqual(self.check.property_set.count(), 2)
 
     def test_patch_with_finances(self):
         """
@@ -503,7 +507,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             self.detail_url, data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['property_set'][0]['id'], 2)
+        self.assertNotEqual(response.data['property_set'][0]['id'], 1)
         self.assertNotEqual(other_property.eligibility_check.pk, self.check.pk)
 
     # PUT
@@ -739,8 +743,9 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
         Generic method called by 'create' and 'patch' to test against validation
         errors.
         """
+        invalid_uuid = str(uuid.uuid4())
         data={
-            'eligibility_check': 'invalid',
+            'eligibility_check': invalid_uuid,
             'personal_details': {
                 "title": '1'*21,
                 "full_name": None,
@@ -760,7 +765,7 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
         self.assertItemsEqual(
             errors.keys(), ['eligibility_check', 'personal_details']
         )
-        self.assertEqual(errors['eligibility_check'], [u'Object with reference=invalid does not exist.'])
+        self.assertEqual(errors['eligibility_check'], [u'Object with reference=%s does not exist.' % invalid_uuid])
         self.assertItemsEqual(
             errors['personal_details'],
             [

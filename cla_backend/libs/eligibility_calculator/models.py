@@ -7,7 +7,7 @@ class CaseData(object):
         'dependant_children',
         'savings',
         'investments',
-        'money_owned' ,
+        'money_owed' ,
         'valuable_items',
         'earnings',
         'other_income',
@@ -88,10 +88,10 @@ class CaseData(object):
         # total capital not including properies
         capital = 0
 
-        capital += self.savings + self.investments + self.money_owned + self.valuable_items
+        capital += self.savings + self.investments + self.money_owed + self.valuable_items
 
         if self.has_partner:
-            capital += self.partner_savings + self.partner_investments + self.partner_money_owned + self.partner_valuable_items
+            capital += self.partner_savings + self.partner_investments + self.partner_money_owed + self.partner_valuable_items
         return capital
 
     def get_property_capital(self):
@@ -102,6 +102,7 @@ class CaseData(object):
 
     def total_income(self):
         income = self.earnings + self.other_income
-        if not self.has_disputed_partner():
-            income += self.partner_earnings + self.partner_other_income
+        if self.has_partner:
+            if not self.has_disputed_partner():
+                income += self.partner_earnings + self.partner_other_income
         return income

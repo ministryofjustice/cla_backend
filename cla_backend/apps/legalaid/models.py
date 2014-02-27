@@ -102,7 +102,7 @@ class EligibilityCheck(TimeStampedModel):
             d['partner_other_income'] = self.partner_finances.other_income
             d['partner_self_employed'] = self.partner_finances.self_employed
 
-        d['property_data'] = self.property_set.values_list('value', 'equity', 'mortgage_left', 'share', flat=True)
+        d['property_data'] = self.property_set.values_list('value', 'equity', 'share')
         d['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
 
         # Fake

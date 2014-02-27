@@ -1,75 +1,6 @@
 from . import constants
-
 # TODO FOR TOMORROW:
 	# CASE DATA : how do we create one
-
-
-class CaseData(object):
-	on_passported_benefits = None
-	category = None
-	has_partner = None
-	is_partner_opponent = None
-
-	savings = 0
-	investments = 0
-	money_owned = 0
-	valuable_items = 0
-
-	partner_savings = 0
-	partner_investments = 0
-	partner_money_owned = 0
-	partner_valuable_items = 0
-
-	property_data = [('TODO value', 'TODO mortgage_left'), ('TODO value', 'TODO mortgage_left')]
-
-	is_over_60 = False
-	is_partner_over_60 = False
-
-	earnings = None
-	other_income = None
-
-	partner_earnings = None
-	partner_other_income = None
-
-	dependant_children = None
-
-	income_tax_and_ni = None
-	maintenance = None
-
-	mortgage_or_rent = None
-
-	is_self_employed = None
-	is_partner_self_employed = None
-
-	criminal_legalaid_contributions = None
-
-	def has_disputed_partner(self):
-		return self.has_partner and self.is_partner_opponent
-
-	def get_liquid_capital(self):
-		# total capital not including properies
-		capital = 0
-
-		capital += self.savings + self.investments + self.money_owned + self.valuable_items
-
-		if self.has_partner:
-			capital += self.partner_savings + self.partner_investments + self.partner_money_owned + self.partner_valuable_items
-		return capital
-
-	def get_property_capital(self):
-		properties_value = sum([d[0] for d in self.property_data])
-		mortgages_left = sum([d[1] for d in self.property_data])
-
-		return (properties_value, mortgages_left)
-
-	def is_you_or_your_partner_over_60(self):
-		return self.is_over_60 or self.is_partner_over_60
-
-	def total_income(self):
-		income = self.earnings + self.other_income
-		if not self.has_disputed_partner():
-			income += self.partner_earnings + self.partner_other_income
-		return income
 
 
 class EligibilityChecker(object):
@@ -88,7 +19,7 @@ class EligibilityChecker(object):
 		return (eligible, gross_income)
 
 	def _get_disposable_income(self, gross_income):
-		if has_partner:
+		if self.case_data.has_partner:
 			gross_income -= constants.disposable_income.PARTNER_ALLOWANCE
 
 		# children
@@ -126,7 +57,7 @@ class EligibilityChecker(object):
 
 		return (disposable_income <= constants.disposable_income.LIMIT, disposable_income)
 
-	def get_disposable_capital_assets(self):
+	def get_disposable_capital_assets(self, disposable_income):
 		# NOTE: problem in case of disputed partner (and joined savings/assets)
 
 		disposable_capital = 0
@@ -143,7 +74,7 @@ class EligibilityChecker(object):
 		else:
 			raise NotImplementedError('Not supported yet')
 
-		if self.case_data.is_you_or_your_partner_over_60():
+		if self.case_data.is_you_or_your_partner_over_60:
 			disposable_capital -= constants.disposable_capital.PENSIONER_DISREGARD_LIMIT_LEVELS.get(disposable_income, 0)
 
 		disposable_capital = max(disposable_capital, 0)

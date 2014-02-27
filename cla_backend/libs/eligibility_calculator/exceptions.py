@@ -1,0 +1,2 @@
+class PropertyExpectedException(Exception):
+    pass

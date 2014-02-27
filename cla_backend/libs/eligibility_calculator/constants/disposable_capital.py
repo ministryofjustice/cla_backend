@@ -1,5 +1,5 @@
 # TODO define BetweenDict
-from something import BetweenDict
+from ..util import BetweenDict
 
 
 MORTGAGE_DISREGARD = 100000
@@ -15,15 +15,14 @@ def get_limit(category):
 
 
 PENSIONER_DISREGARD_LIMIT_LEVELS = BetweenDict({
-	0: 100000,
-	26: 90000,
-	51: 80000,
-	76: 70000,
-	101: 60000,
-	126: 50000,
-	151: 40000,
-	176: 30000,
-	201: 20000,
-	226: 10000,
-	316: 0
+    (0, 26): 100000,
+    (26, 51): 90000,
+    (51, 76): 80000,
+    (76, 101): 70000,
+    (101, 126): 60000,
+    (126, 151): 50000,
+    (151, 176): 40000,
+    (176, 201): 30000,
+    (201, 226): 20000,
+    (226, 316): 10000
 })

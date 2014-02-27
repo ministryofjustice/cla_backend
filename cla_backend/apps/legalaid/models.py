@@ -1,3 +1,4 @@
+from eligibility_calculator.models import CaseData
 from uuidfield import UUIDField
 
 from django.core.validators import MaxValueValidator
@@ -72,6 +73,13 @@ class EligibilityCheck(TimeStampedModel):
     state = models.PositiveSmallIntegerField(default=STATE_MAYBE, choices=STATE_CHOICES)
     dependants_young = models.PositiveIntegerField(default=0)
     dependants_old = models.PositiveIntegerField(default=0)
+
+    # need to be moved into graph/questions format soon
+    is_you_or_your_partner_over_60 = models.BooleanField(default=False)
+    has_partner = models.BooleanField(default=False)
+
+    def to_case_data(self):
+        return CaseData()
 
 
 class Property(TimeStampedModel):

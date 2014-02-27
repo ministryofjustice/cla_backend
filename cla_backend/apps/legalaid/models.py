@@ -79,7 +79,42 @@ class EligibilityCheck(TimeStampedModel):
     has_partner = models.BooleanField(default=False)
 
     def to_case_data(self):
-        return CaseData()
+        if not self.your_finances:
+            raise ValueError("Can't do means test without specifying 'your_finances' at a minimum.")
+        d = {}
+        d['category'] = self.category.name
+        d['dependant_children'] = self.dependants_old + self.dependants_young
+        d['savings'] = self.your_finances.bank_balance
+        d['investments'] = self.your_finances.investment_balance
+        d['money_owed']  = self.your_finances.credit_balance
+        d['valuable_items'] = self.your_finances.asset_balance
+        d['earnings'] = self.your_finances.earnings
+        d['other_income'] = self.your_finances.other_income
+        d['self_employed'] = self.your_finances.self_employed
+        d['has_partner'] = self.has_partner
+
+        if self.has_partner:
+            d['partner_savings'] = self.partner_finances.bank_balance
+            d['partner_investments'] = self.partner_finances.investment_balance
+            d['partner_money_owed']  = self.partner_finances.credit_balance
+            d['partner_valuable_items'] = self.partner_finances.asset_balance
+            d['partner_earnings'] = self.partner_finances.earnings
+            d['partner_other_income'] = self.partner_finances.other_income
+            d['partner_self_employed'] = self.partner_finances.self_employed
+
+        d['property_data'] = self.property_set.values_list('value', 'equity', 'mortgage_left', 'share', flat=True)
+        d['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
+
+        # Fake
+        d['is_partner_opponent'] = False
+        d['income_tax_and_ni'] = 0
+        d['maintenance'] = 0
+        d['mortgage_or_rent'] = 0
+        d['criminal_legalaid_contributions'] = 0
+        d['on_passported_benefits'] = False
+
+
+        return CaseData(**d)
 
 
 class Property(TimeStampedModel):

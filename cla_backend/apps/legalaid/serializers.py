@@ -16,7 +16,7 @@ class PropertySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Property
-        fields = ('value', 'equity', 'share', 'id')
+        fields = ('value', 'mortgage_left', 'share', 'id')
 
 
 class FinanceSerializer(serializers.ModelSerializer):

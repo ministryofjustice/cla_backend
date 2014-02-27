@@ -102,7 +102,7 @@ class EligibilityCheck(TimeStampedModel):
             d['partner_other_income'] = self.partner_finances.other_income
             d['partner_self_employed'] = self.partner_finances.self_employed
 
-        d['property_data'] = self.property_set.values_list('value', 'equity', 'share')
+        d['property_data'] = self.property_set.values_list('value', 'mortgage_left', 'share')
         d['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
 
         # Fake
@@ -119,7 +119,7 @@ class EligibilityCheck(TimeStampedModel):
 
 class Property(TimeStampedModel):
     value = models.PositiveIntegerField(default=0)
-    equity = models.PositiveIntegerField(default=0)
+    mortgage_left = models.PositiveIntegerField(default=0)
     share = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     eligibility_check = models.ForeignKey(EligibilityCheck)
 

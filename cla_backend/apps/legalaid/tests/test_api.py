@@ -185,8 +185,8 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         data={
             'property_set': [
-                {'value': 111, 'equity': 222, 'share': 33},
-                {'value': 999, 'equity': 888, 'share': 77}
+                {'value': 111, 'mortgage_left': 222, 'share': 33},
+                {'value': 999, 'mortgage_left': 888, 'share': 77}
             ]
         }
         response = self.client.post(
@@ -203,7 +203,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertEqual(response.data['dependants_old'], 0)
         self.assertEqual(len(response.data['property_set']), 2)
         self.assertItemsEqual([p['value'] for p in response.data['property_set']], [111, 999])
-        self.assertItemsEqual([p['equity'] for p in response.data['property_set']], [222, 888])
+        self.assertItemsEqual([p['mortgage_left'] for p in response.data['property_set']], [222, 888])
         self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
 
     def test_create_with_finances(self):
@@ -256,9 +256,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             'notes': 'a'*501,
             'your_problem_notes': 'a'*501,
             'property_set': [
-                {'value': 111, 'equity': 222, 'share': 33},  # valid
-                {'value': -1, 'equity': -1, 'share': -1},  # invalid
-                {'value': 0, 'equity': 0, 'share': 101},  # invalid
+                {'value': 111, 'mortgage_left': 222, 'share': 33},  # valid
+                {'value': -1, 'mortgage_left': -1, 'share': -1},  # invalid
+                {'value': 0, 'mortgage_left': 0, 'share': 101},  # invalid
             ],
             'dependants_young': -1,
             'dependants_old': -1,
@@ -301,7 +301,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             {
                 'share': [u'Ensure this value is greater than or equal to 0.'],
                 'value': [u'Ensure this value is greater than or equal to 0.'],
-                'equity': [u'Ensure this value is greater than or equal to 0.']
+                'mortgage_left': [u'Ensure this value is greater than or equal to 0.']
             },
             {'share': [u'Ensure this value is less than or equal to 100.']}
         ])
@@ -422,8 +422,8 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         # an extra one
         data={
             'property_set': [
-                {'value': 111, 'equity': 222, 'share': 33, 'id': properties[0].id},
-                {'value': 999, 'equity': 888, 'share': 77}
+                {'value': 111, 'mortgage_left': 222, 'share': 33, 'id': properties[0].id},
+                {'value': 999, 'mortgage_left': 888, 'share': 77}
             ]
         }
         response = self.client.patch(
@@ -445,7 +445,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertFalse(set([p.id for p in properties[1:]]).intersection(set(property_ids)))
 
         self.assertItemsEqual([p['value'] for p in response.data['property_set']], [111, 999])
-        self.assertItemsEqual([p['equity'] for p in response.data['property_set']], [222, 888])
+        self.assertItemsEqual([p['mortgage_left'] for p in response.data['property_set']], [222, 888])
         self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
 
         # checking the db just in case
@@ -500,7 +500,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         other_property = property_recipe.make(id=1)
         data={
             'property_set': [
-                {'value': 0, 'equity': 0, 'share': 0, 'id': other_property.pk}
+                {'value': 0, 'mortgage_left': 0, 'share': 0, 'id': other_property.pk}
             ]
         }
         response = self.client.patch(
@@ -551,7 +551,7 @@ class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
 
         self.check = property_recipe.make(
             value=100000,
-            equity=20000,
+            mortgage_left=20000,
             share=50,
         )
         parent_ref = unicode(self.check.eligibility_check.reference)
@@ -569,10 +569,10 @@ class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
         """
         response = self.client.post(self.list_url, data={}, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertItemsEqual(response.data.keys(), ['value', 'equity', 'share', 'id'])
+        self.assertItemsEqual(response.data.keys(), ['value', 'mortgage_left', 'share', 'id'])
         self.assertTrue(response.data['id'] > self.check.id)
         self.assertEqual(response.data['value'], 0)
-        self.assertEqual(response.data['equity'], 0)
+        self.assertEqual(response.data['mortgage_left'], 0)
         self.assertEqual(response.data['share'], 0)
 
     def test_post_full_data(self):
@@ -580,13 +580,13 @@ class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
                                     data=
                                     {
                                         'value': self.check.value,
-                                        'equity': self.check.equity,
+                                        'mortgage_left': self.check.mortgage_left,
                                         'share': self.check.share
                                     })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(response.data['id'] > self.check.id)
         self.assertEqual(response.data['value'], self.check.value)
-        self.assertEqual(response.data['equity'], self.check.equity)
+        self.assertEqual(response.data['mortgage_left'], self.check.mortgage_left)
         self.assertEqual(response.data['share'], self.check.share)
 
 
@@ -596,14 +596,14 @@ class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
                                      {
                                          'value': self.check.value-1,
                                          'share': self.check.share-1,
-                                         'equity': self.check.equity-1
+                                         'mortgage_left': self.check.mortgage_left-1
                                      })
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data['id'] == self.check.id)
         self.assertTrue(response.data['value'] == self.check.value-1)
         self.assertTrue(response.data['share'] == self.check.share-1)
-        self.assertTrue(response.data['equity'] == self.check.equity-1)
+        self.assertTrue(response.data['mortgage_left'] == self.check.mortgage_left-1)
 
         # make sure it actually saved
         response2 = self.client.get(self.detail_url)
@@ -617,14 +617,14 @@ class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
                                      {
                                          'value': self.check.value-1,
                                          'share': self.check.share-1,
-                                         'equity': self.check.equity-1
+                                         'mortgage_left': self.check.mortgage_left-1
                                      })
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data['id'] == self.check.id)
         self.assertTrue(response.data['value'] == self.check.value-1)
         self.assertTrue(response.data['share'] == self.check.share-1)
-        self.assertTrue(response.data['equity'] == self.check.equity-1)
+        self.assertTrue(response.data['mortgage_left'] == self.check.mortgage_left-1)
 
         # make sure it actually saved
         response2 = self.client.get(self.detail_url)
@@ -644,7 +644,7 @@ class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
 
         # was not sent by us so should be default
         self.assertTrue(response.data['share'] == 0)
-        self.assertTrue(response.data['equity'] == 0)
+        self.assertTrue(response.data['mortgage_left'] == 0)
 
         # make sure it actually saved
         response2 = self.client.get(self.detail_url)

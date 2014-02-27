@@ -11,14 +11,14 @@ class CaseData(object):
         'valuable_items',
         'earnings',
         'other_income',
-        'is_self_employed',
+        'self_employed',
         'partner_earnings',
         'partner_other_income',
         'partner_savings',
         'partner_investments',
         'partner_money_owned',
         'partner_valuable_items',
-        'is_partner_self_employed',
+        'partner_self_employed',
         'property_data',
         'is_you_or_your_partner_over_60',
         'has_partner',
@@ -56,7 +56,7 @@ class CaseData(object):
     # valuable_items = 0 # asset balance
     # earnings = 0 # Finances.earnings
     # other_income = 0 # Finances.other_income
-    # is_self_employed = False # Finances.self_employed
+    # self_employed = False # Finances.self_employed
     #
     # partner_earnings = 0
     # partner_other_income = 0
@@ -64,7 +64,7 @@ class CaseData(object):
     # partner_investments = 0
     # partner_money_owned = 0
     # partner_valuable_items = 0
-    # is_partner_self_employed = False
+    # partner_self_employed = False
     #
     # # comes from Property model
     # property_data = [('TODO value', 'TODO mortgage_left'), ('TODO value', 'TODO mortgage_left')]

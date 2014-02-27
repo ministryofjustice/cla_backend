@@ -1,6 +1,4 @@
 from . import constants
-# TODO FOR TOMORROW:
-	# CASE DATA : how do we create one
 
 
 class EligibilityChecker(object):
@@ -39,10 +37,10 @@ class EligibilityChecker(object):
 			mortgage_or_rent = max(mortgage_or_rent, constants.disposable_income.CHILDLESS_HOUSING_CAP)
 		gross_income -= mortgage_or_rent
 
-		if not self.case_data.is_self_employed:
+		if not self.case_data.self_employed:
 			gross_income -= constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
 
-		if not self.case_data.has_disputed_partner() and not self.case_data.is_partner_self_employed:
+		if not self.case_data.has_disputed_partner() and not self.case_data.partner_self_employed:
 			gross_income -= constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
 
 		# criminal

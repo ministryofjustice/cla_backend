@@ -8,6 +8,7 @@ PROJECT_ROOT = here("..")
 root = lambda *x: join(abspath(PROJECT_ROOT), *x)
 
 sys.path.insert(0, root('apps'))
+sys.path.insert(0, root('libs'))
 
 
 # ENVIRON values

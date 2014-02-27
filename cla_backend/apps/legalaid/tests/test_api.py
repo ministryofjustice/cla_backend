@@ -10,6 +10,7 @@ from ..models import Category, EligibilityCheck, Property, Finance, \
     Case, PersonalDetails
 
 from .test_base import CLABaseApiTestMixin
+import mock
 
 
 category_recipe = Recipe(Category,
@@ -89,6 +90,13 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             'eligibility_check-detail', args=(),
             kwargs={'reference': unicode(self.check.reference)}
         )
+
+    def get_is_eligible_url(self, reference):
+        return reverse(
+            'eligibility_check-is-eligible',
+            args=(),
+            kwargs={'reference': unicode(reference)}
+            )
 
     def assertResponseKeys(self, response):
         self.assertItemsEqual(
@@ -544,6 +552,38 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.check.dependants_old = data['dependants_old']
         self.assertEligibilityCheckEqual(response.data, self.check)
 
+
+    # Just check that eligibility check endpoint responds
+    # in a sensible way
+
+    def test_eligibility_check_not_exists_is_eligible_fail(self):
+        import uuid
+        wrong_ref = uuid.uuid4()
+        response = self.client.post(self.get_is_eligible_url(wrong_ref), data={}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    @mock.patch('legalaid.views.EligibilityChecker')
+    def test_eligibility_check_is_eligible_pass(self, mocked_eligibility_checker):
+        v = mocked_eligibility_checker()
+        v.is_eligible.return_value = True
+        response = self.client.post(
+            self.get_is_eligible_url(self.check.reference),
+            data={},
+            format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['is_eligible'])
+
+    @mock.patch('legalaid.views.EligibilityChecker')
+    def test_eligibility_check_is_eligible_fail(self, mocked_eligibility_checker):
+        v = mocked_eligibility_checker()
+        v.is_eligible.return_value = False
+        response = self.client.post(
+            self.get_is_eligible_url(self.check.reference),
+            data={},
+            format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data['is_eligible'])
+        pass
 
 class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
     def setUp(self):

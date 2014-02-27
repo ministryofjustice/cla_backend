@@ -3,9 +3,11 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, mixins
 
 from .models import Category, EligibilityCheck, Property, Case
+from rest_framework.decorators import action, link
+from rest_framework.response import Response
 from .serializers import CategorySerializer, EligibilityCheckSerializer, \
     PropertySerializer, CaseSerializer
-
+from eligibility_calculator.calculator import EligibilityChecker
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     model = Category
@@ -22,6 +24,14 @@ class EligibilityCheckViewSet(
     serializer_class = EligibilityCheckSerializer
 
     lookup_field = 'reference'
+
+    @action()
+    def is_eligible(self, request, *args, **kwargs):
+        obj = self.get_object()
+        case_data = obj.to_case_data()
+        ec = EligibilityChecker(case_data)
+        result = ec.is_eligible()
+        return Response({'is_eligible': result})
 
 
 class NestedModelMixin(object):

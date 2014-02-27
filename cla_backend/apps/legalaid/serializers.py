@@ -55,7 +55,6 @@ class EligibilityCheckSerializer(serializers.ModelSerializer):
             'dependants_old'
         )
 
-
 class PersonalDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PersonalDetails

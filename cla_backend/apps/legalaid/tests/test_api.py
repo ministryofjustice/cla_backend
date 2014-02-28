@@ -187,6 +187,48 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             )
         )
 
+    def test_create_then_patch_category(self):
+        """
+        PATCHED category is applied
+        """
+        category_recipe.make(_quantity=2)
+
+        category = Category.objects.all()[0]
+        category2 = Category.objects.all()[1]
+
+        data={
+            'category': category.pk,
+            'your_problem_notes': 'lorem',
+            'notes': 'ipsum',
+            'dependants_young': 2,
+            'dependants_old': 3,
+            }
+        response = self.client.post(
+            self.list_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertResponseKeys(response)
+        self.assertTrue(len(response.data['reference']) > 30)
+        self.assertEligibilityCheckEqual(response.data,
+                                         EligibilityCheck(
+                                             reference=response.data['reference'],
+                                             category=category, notes=data['notes'],
+                                             your_problem_notes=data['your_problem_notes'],
+                                             dependants_young=2, dependants_old=3
+                                         )
+        )
+
+        data['category'] = category2.pk
+        response2 = self.client.patch(
+            self.detail_url, data=data, format='json'
+        )
+
+        self.assertEqual(response2.status_code, status.HTTP_200_OK)
+
+        self.assertResponseKeys(response2)
+        self.assertEqual(response2.data['category'], category2.pk)
+
     def test_create_with_properties(self):
         """
         CREATE data with properties
@@ -583,7 +625,6 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(response.data['is_eligible'])
-        pass
 
 class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
     def setUp(self):

@@ -1,0 +1,20 @@
+
+case_data_dict =  {'category': u'blah blah',
+                   'criminal_legalaid_contributions': 0,
+                   'dependant_children': 0,
+                   'earnings': 100,
+                   'has_partner': False,
+                   'income_tax_and_ni': 0,
+                   'investments': 2200,
+                   'is_partner_opponent': False,
+                   'is_you_or_your_partner_over_60': False,
+                   'maintenance': 0,
+                   'money_owed': 2200,
+                   'mortgage_or_rent': 0,
+                   'on_passported_benefits': False,
+                   'other_income': 100,
+                   'property_data': [(22, 0, 100)],
+                   'savings': 2200,
+                   'self_employed': False,
+                   'valuable_items': 2200}
+

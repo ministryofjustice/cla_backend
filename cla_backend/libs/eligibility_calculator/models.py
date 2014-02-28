@@ -43,7 +43,7 @@ class CaseData(object):
             if kw in self.PROPERTY_SET:
                 setattr(self, kw, v)
             else:
-                raise AttributeError('{kw} is not a valid property for Case Data'.format(kw=kw))
+                raise exceptions.PropertyExpectedException('{kw} is not a valid property for Case Data'.format(kw=kw))
 
     # # EligibilityCheck
     # category = None

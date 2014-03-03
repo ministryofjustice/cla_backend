@@ -1,7 +1,9 @@
 import unittest
+
 from ..models import CaseData
 from ..exceptions import PropertyExpectedException
 from .fixtures import get_default_case_data
+
 
 class TestCaseData(unittest.TestCase):
 

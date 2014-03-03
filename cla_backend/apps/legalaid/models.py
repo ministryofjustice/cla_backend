@@ -84,7 +84,7 @@ class EligibilityCheck(TimeStampedModel):
         if not self.your_finances:
             raise ValueError("Can't do means test without specifying 'your_finances' at a minimum.")
         d = {}
-        d['category'] = self.category.name
+        d['category'] = self.category.code
         d['dependant_children'] = self.dependants_old + self.dependants_young
         d['savings'] = self.your_finances.bank_balance
         d['investments'] = self.your_finances.investment_balance

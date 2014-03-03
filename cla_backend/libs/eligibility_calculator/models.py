@@ -16,7 +16,7 @@ class CaseData(object):
         'partner_other_income',
         'partner_savings',
         'partner_investments',
-        'partner_money_owned',
+        'partner_money_owed',
         'partner_valuable_items',
         'partner_self_employed',
         'property_data',
@@ -36,7 +36,7 @@ class CaseData(object):
             raise exceptions.PropertyExpectedException(
                 "'%s' object requires attribute '%s' and was not given at __init__" % (self.__class__.__name__, name))
 
-        raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
+        raise exceptions.PropertyExpectedException("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
 
     def __init__(self, **kwargs):
         for kw, v in kwargs.items():
@@ -85,7 +85,7 @@ class CaseData(object):
         return self.has_partner and self.is_partner_opponent
 
     def get_liquid_capital(self):
-        # total capital not including properies
+        # total capital not including properties
         capital = 0
 
         capital += self.savings + self.investments + self.money_owed + self.valuable_items

@@ -2,11 +2,12 @@ import unittest
 from ..calculator import EligibilityChecker
 from ..models import CaseData
 from ..exceptions import PropertyExpectedException
-from .fixtures import case_data_dict
+from . import fixtures
 from .. import constants
 
 
 class TestCalculator(unittest.TestCase):
+
 
     def get_default_case_data(self, **kwargs):
         """
@@ -16,9 +17,7 @@ class TestCalculator(unittest.TestCase):
         :param kwargs: things to overwrite in the default case_data
         :return: CaseData object with default values
         """
-        defaults = case_data_dict.copy()
-        defaults.update(kwargs)
-        return CaseData(**defaults)
+        return CaseData(**fixtures.get_default_case_data(**kwargs))
 
     def setUp(self):
         self.default_calculator = EligibilityChecker(self.get_default_case_data())

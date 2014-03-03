@@ -13,6 +13,7 @@ from .constants import STATE_MAYBE, STATE_CHOICES
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=500)
+    code = models.CharField(max_length=50, unique=True)
     raw_description = models.TextField(blank=True)
     description = models.TextField(blank=True, editable=False)
     order = models.PositiveIntegerField(default=0)

@@ -16,6 +16,7 @@ class CategoryModelFormTestCase(TestCase):
         data={
             'name': 'Name',
             'order': 0,
+            'code': 'code',
             'raw_description': '**strong**'
         }
         form = CategoryModelForm(instance=category, data=data)
@@ -34,6 +35,7 @@ class CategoryModelFormTestCase(TestCase):
         data={
             'name': 'Name',
             'order': 0,
+            'code': 'code',
             'raw_description': ''
         }
         form = CategoryModelForm(instance=category, data=data)

@@ -1,1 +1,110 @@
-[{"pk": 1, "model": "legalaid.category", "fields": {"description": "", "order": 0, "modified": "2014-02-24T15:35:31.906Z", "name": "Violence and abuse at home", "created": "2014-02-24T15:35:31.905Z"}}, {"pk": 2, "model": "legalaid.category", "fields": {"description": "", "order": 1, "modified": "2014-02-24T15:35:37.776Z", "name": "Housing, eviction and homelessness", "created": "2014-02-24T15:35:37.775Z"}}, {"pk": 3, "model": "legalaid.category", "fields": {"description": "", "order": 2, "modified": "2014-02-24T15:35:46.811Z", "name": "Debt, money problems and bankruptcy", "created": "2014-02-24T15:35:46.810Z"}}, {"pk": 4, "model": "legalaid.category", "fields": {"description": "You may be able to get legal aid:\r\nfor family mediation which helps to solve arguments about children and finances on the breakdown of a relationship\r\nif Social Services are involved with your children\r\nfor injunctions against a violent/abusive partner or family member or for other family problems, eg debt or homelessness, if you or your child have suffered (or are at risk of) violence or abuse\r\nif you disagree with a decision about your child\u2019s special educational needs for forced marriages\r\nfor babies injured during pregnancy or around birth due to clinical negligence if you\u2019re unhappy with the community care given for an old or disabled relative for an inquest into the death of a family member\r\nto appeal against a decision stopping you working with children and vulnerable adults", "order": 3, "modified": "2014-02-24T15:36:08.772Z", "name": "Family, marriage, separation and children", "created": "2014-02-24T15:36:08.771Z"}}, {"pk": 5, "model": "legalaid.category", "fields": {"description": "", "order": 4, "modified": "2014-02-24T15:36:16.563Z", "name": "Applying for asylum or permission to stay in the UK", "created": "2014-02-24T15:36:16.562Z"}}, {"pk": 6, "model": "legalaid.category", "fields": {"description": "", "order": 5, "modified": "2014-02-24T15:36:28.935Z", "name": "Welfare benefits appeals", "created": "2014-02-24T15:36:28.934Z"}}, {"pk": 7, "model": "legalaid.category", "fields": {"description": "", "order": 6, "modified": "2014-02-24T15:36:39.055Z", "name": "In trouble with the police", "created": "2014-02-24T15:36:39.054Z"}}, {"pk": 8, "model": "legalaid.category", "fields": {"description": "", "order": 7, "modified": "2014-02-24T15:36:44.240Z", "name": "Mental health, discrimination, disability and other issues", "created": "2014-02-24T15:36:44.239Z"}}, {"pk": 9, "model": "legalaid.category", "fields": {"description": "", "order": 8, "modified": "2014-02-24T15:36:50.027Z", "name": "None of the above", "created": "2014-02-24T15:36:50.026Z"}}]
+[
+    {
+        "pk": 1,
+        "model": "legalaid.category",
+        "fields": {
+        	"code": "violence",
+            "description": "",
+            "order": 0,
+            "modified": "2014-02-24T15:35:31.906Z",
+            "name": "Violence and abuse at home",
+            "created": "2014-02-24T15:35:31.905Z"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "legalaid.category",
+        "fields": {
+        	"code": "housing",
+            "description": "",
+            "order": 1,
+            "modified": "2014-02-24T15:35:37.776Z",
+            "name": "Housing, eviction and homelessness",
+            "created": "2014-02-24T15:35:37.775Z"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "legalaid.category",
+        "fields": {
+        	"code": "debt",
+            "description": "",
+            "order": 2,
+            "modified": "2014-02-24T15:35:46.811Z",
+            "name": "Debt, money problems and bankruptcy",
+            "created": "2014-02-24T15:35:46.810Z"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "legalaid.category",
+        "fields": {
+        	"code": "marriage",
+            "description": "You may be able to get legal aid:\r\nfor family mediation which helps to solve arguments about children and finances on the breakdown of a relationship\r\nif Social Services are involved with your children\r\nfor injunctions against a violent/abusive partner or family member or for other family problems, eg debt or homelessness, if you or your child have suffered (or are at risk of) violence or abuse\r\nif you disagree with a decision about your child’s special educational needs for forced marriages\r\nfor babies injured during pregnancy or around birth due to clinical negligence if you’re unhappy with the community care given for an old or disabled relative for an inquest into the death of a family member\r\nto appeal against a decision stopping you working with children and vulnerable adults",
+            "order": 3,
+            "modified": "2014-02-24T15:36:08.772Z",
+            "name": "Family, marriage, separation and children",
+            "created": "2014-02-24T15:36:08.771Z"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "legalaid.category",
+        "fields": {
+        	"code": "immigration",
+            "description": "",
+            "order": 4,
+            "modified": "2014-02-24T15:36:16.563Z",
+            "name": "Applying for asylum or permission to stay in the UK",
+            "created": "2014-02-24T15:36:16.562Z"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "legalaid.category",
+        "fields": {
+        	"code": "benefits",
+            "description": "",
+            "order": 5,
+            "modified": "2014-02-24T15:36:28.935Z",
+            "name": "Welfare benefits appeals",
+            "created": "2014-02-24T15:36:28.934Z"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "legalaid.category",
+        "fields": {
+        	"code": "police",
+            "description": "",
+            "order": 6,
+            "modified": "2014-02-24T15:36:39.055Z",
+            "name": "In trouble with the police",
+            "created": "2014-02-24T15:36:39.054Z"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "legalaid.category",
+        "fields": {
+        	"code": "health",
+            "description": "",
+            "order": 7,
+            "modified": "2014-02-24T15:36:44.240Z",
+            "name": "Mental health, discrimination, disability and other issues",
+            "created": "2014-02-24T15:36:44.239Z"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "legalaid.category",
+        "fields": {
+        	"code": "none",
+            "description": "",
+            "order": 8,
+            "modified": "2014-02-24T15:36:50.027Z",
+            "name": "None of the above",
+            "created": "2014-02-24T15:36:50.026Z"
+        }
+    }
+]

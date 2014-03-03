@@ -143,7 +143,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'south',
-    'rest_framework'
+    'rest_framework',
+    'pagedown',
 )
 
 PROJECT_APPS = (

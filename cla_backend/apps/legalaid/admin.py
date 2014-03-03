@@ -3,8 +3,14 @@ from django.contrib import admin
 from .models import Category, Case, EligibilityCheck, PersonalDetails, \
     Property, Finance
 
+from .admin_support.forms import CategoryModelForm
 
-admin.site.register(Category)
+
+class CategoryModelAdmin(admin.ModelAdmin):
+    form = CategoryModelForm
+
+
+admin.site.register(Category, CategoryModelAdmin)
 # admin.site.register(Question)
 # admin.site.register(Answer)
 admin.site.register(Case)

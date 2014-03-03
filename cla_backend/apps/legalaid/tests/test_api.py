@@ -44,7 +44,10 @@ class CategoryTests(CLABaseApiTestMixin, APITestCase):
         self.categories = category_recipe.make(_quantity=3)
 
         self.list_url = reverse('category-list')
-        self.detail_url = reverse('category-detail', args=(), kwargs={'pk': 1})
+        self.detail_url = reverse(
+            'category-detail', args=(),
+            kwargs={'pk': self.categories[0].pk}
+        )
 
     def test_get_allowed(self):
         """

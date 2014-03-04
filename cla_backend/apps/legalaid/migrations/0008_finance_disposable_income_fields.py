@@ -8,15 +8,39 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'EligibilityCheck.on_passported_benefits'
-        db.add_column(u'legalaid_eligibilitycheck', 'on_passported_benefits',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
+        # Adding field 'Finance.income_tax_and_ni'
+        db.add_column(u'legalaid_finance', 'income_tax_and_ni',
+                      self.gf('django.db.models.fields.PositiveIntegerField')(default=0),
+                      keep_default=False)
+
+        # Adding field 'Finance.maintenance'
+        db.add_column(u'legalaid_finance', 'maintenance',
+                      self.gf('django.db.models.fields.PositiveIntegerField')(default=0),
+                      keep_default=False)
+
+        # Adding field 'Finance.mortgage_or_rent'
+        db.add_column(u'legalaid_finance', 'mortgage_or_rent',
+                      self.gf('django.db.models.fields.PositiveIntegerField')(default=0),
+                      keep_default=False)
+
+        # Adding field 'Finance.criminal_legalaid_contributions'
+        db.add_column(u'legalaid_finance', 'criminal_legalaid_contributions',
+                      self.gf('django.db.models.fields.PositiveIntegerField')(default=0),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'EligibilityCheck.on_passported_benefits'
-        db.delete_column(u'legalaid_eligibilitycheck', 'on_passported_benefits')
+        # Deleting field 'Finance.income_tax_and_ni'
+        db.delete_column(u'legalaid_finance', 'income_tax_and_ni')
+
+        # Deleting field 'Finance.maintenance'
+        db.delete_column(u'legalaid_finance', 'maintenance')
+
+        # Deleting field 'Finance.mortgage_or_rent'
+        db.delete_column(u'legalaid_finance', 'mortgage_or_rent')
+
+        # Deleting field 'Finance.criminal_legalaid_contributions'
+        db.delete_column(u'legalaid_finance', 'criminal_legalaid_contributions')
 
 
     models = {
@@ -64,10 +88,14 @@ class Migration(SchemaMigration):
             'bank_balance': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             'credit_balance': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'criminal_legalaid_contributions': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'earnings': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'income_tax_and_ni': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'investment_balance': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'maintenance': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
+            'mortgage_or_rent': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'other_income': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'self_employed': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         },

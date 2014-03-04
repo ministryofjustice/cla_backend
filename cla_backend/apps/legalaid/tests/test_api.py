@@ -114,7 +114,12 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         if data is None or obj is None:
             self.assertEqual(data, obj)
         else:
-            for prop in ['bank_balance', 'investment_balance', 'asset_balance', 'credit_balance', 'earnings', 'other_income', 'self_employed']:
+            for prop in [
+                'bank_balance', 'investment_balance', 'asset_balance',
+                'credit_balance', 'earnings', 'other_income', 'self_employed',
+                'income_tax_and_ni', 'maintenance', 'mortgage_or_rent',
+                'criminal_legalaid_contributions'
+            ]:
                 self.assertEqual(getattr(obj, prop), data[prop])
 
     def assertEligibilityCheckEqual(self, data, check):
@@ -271,7 +276,12 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 "credit_balance": 400,
                 "earnings": 500,
                 "other_income": 600,
-                "self_employed": True
+                "self_employed": True,
+
+                "income_tax_and_ni": 700,
+                "maintenance": 710,
+                "mortgage_or_rent": 720,
+                "criminal_legalaid_contributions": 730
             },
             'partner_finances': {
                 "bank_balance": 1000,
@@ -321,7 +331,12 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 "asset_balance": -1,
                 "credit_balance": -1,
                 "earnings": -1,
-                "other_income": -1
+                "other_income": -1,
+
+                "income_tax_and_ni": -1,
+                "maintenance": -1,
+                "mortgage_or_rent": -1,
+                "criminal_legalaid_contributions": -1
             },
             'partner_finances': {
                 "bank_balance": -1,
@@ -369,7 +384,12 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     'investment_balance': [u'Ensure this value is greater than or equal to 0.'],
                     'earnings': [u'Ensure this value is greater than or equal to 0.'],
                     'bank_balance': [u'Ensure this value is greater than or equal to 0.'],
-                    'other_income': [u'Ensure this value is greater than or equal to 0.']
+                    'other_income': [u'Ensure this value is greater than or equal to 0.'],
+
+                    'income_tax_and_ni': [u'Ensure this value is greater than or equal to 0.'],
+                    'maintenance': [u'Ensure this value is greater than or equal to 0.'],
+                    'mortgage_or_rent': [u'Ensure this value is greater than or equal to 0.'],
+                    'criminal_legalaid_contributions': [u'Ensure this value is greater than or equal to 0.'],
                 }
             ]
         )
@@ -516,7 +536,12 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 "credit_balance": 400,
                 "earnings": 500,
                 "other_income": 600,
-                "self_employed": True
+                "self_employed": True,
+
+                "income_tax_and_ni": 700,
+                "maintenance": 710,
+                "mortgage_or_rent": 720,
+                "criminal_legalaid_contributions": 730
             },
             'partner_finances': {
                 "bank_balance": 1000,
@@ -536,6 +561,46 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         # finances props should have changed
         self.check.your_finances = Finance(**data['your_finances'])
         self.check.partner_finances = Finance(**data['partner_finances'])
+        self.assertEligibilityCheckEqual(response.data, self.check)
+
+    def test_patch_with_partial_finances(self):
+        """
+        PATCH should change only given finances fields whilst keeping the others.
+        """
+        # setting existing values that should NOT change after the patch
+        existing_your_finances_values = {
+            'bank_balance': 100,
+            'investment_balance': 200,
+            'asset_balance': 300,
+            'credit_balance': 400,
+            'earnings': 500,
+            'other_income': 600,
+            'self_employed': True,
+        }
+        for prop, value in existing_your_finances_values.items():
+            setattr(self.check.your_finances, prop, value)
+        self.check.your_finances.save()
+
+        # new values that should change after the patch
+        data={
+            'your_finances': {
+                "income_tax_and_ni": 700,
+                "maintenance": 710,
+                "mortgage_or_rent": 720,
+                "criminal_legalaid_contributions": 730
+            }
+        }
+        response = self.client.patch(
+            self.detail_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # only given finances props should have changed
+        expected_your_finances_values = {}
+        expected_your_finances_values.update(existing_your_finances_values)
+        expected_your_finances_values.update(data['your_finances'])
+        self.check.your_finances = Finance(**expected_your_finances_values)
+
         self.assertEligibilityCheckEqual(response.data, self.check)
 
     def test_patch_in_error(self):

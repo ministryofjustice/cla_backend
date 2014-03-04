@@ -30,7 +30,12 @@ class FinanceSerializer(serializers.ModelSerializer):
             'credit_balance',
             'earnings',
             'other_income',
-            'self_employed'
+            'self_employed',
+
+            'income_tax_and_ni',
+            'maintenance',
+            'mortgage_or_rent',
+            'criminal_legalaid_contributions'
         )
 
 

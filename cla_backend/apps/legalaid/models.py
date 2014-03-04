@@ -13,6 +13,7 @@ from .constants import STATE_MAYBE, STATE_CHOICES
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=500)
+    code = models.CharField(max_length=50, unique=True)
     raw_description = models.TextField(blank=True)
     description = models.TextField(blank=True, editable=False)
     order = models.PositiveIntegerField(default=0)
@@ -84,7 +85,7 @@ class EligibilityCheck(TimeStampedModel):
         if not self.your_finances:
             raise ValueError("Can't do means test without specifying 'your_finances' at a minimum.")
         d = {}
-        d['category'] = self.category.name
+        d['category'] = self.category.code
         d['dependant_children'] = self.dependants_old + self.dependants_young
         d['savings'] = self.your_finances.bank_balance
         d['investments'] = self.your_finances.investment_balance

@@ -9,7 +9,7 @@ from .models import Category, EligibilityCheck, Property, Finance, \
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
-        fields = ('id', 'name', 'description')
+        fields = ('code', 'name', 'description')
 
 
 class PropertySerializer(serializers.ModelSerializer):
@@ -35,6 +35,7 @@ class FinanceSerializer(serializers.ModelSerializer):
 
 
 class EligibilityCheckSerializer(serializers.ModelSerializer):
+    category = serializers.SlugRelatedField(slug_field='code', required=False)
     your_problem_notes = serializers.CharField(max_length=500, required=False)
     notes = serializers.CharField(max_length=500, required=False)
     property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
@@ -54,6 +55,7 @@ class EligibilityCheckSerializer(serializers.ModelSerializer):
             'dependants_young',
             'dependants_old'
         )
+
 
 class PersonalDetailsSerializer(serializers.ModelSerializer):
     class Meta:

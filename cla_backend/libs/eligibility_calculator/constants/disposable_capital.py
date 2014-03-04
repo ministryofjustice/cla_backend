@@ -1,17 +1,21 @@
-# TODO define BetweenDict
 from ..util import BetweenDict
 
 
 MORTGAGE_DISREGARD = 10000000
 EQUITY_DISREGARD = 10000000
 
+LIMIT_IMMIGRATION = 300000
+LIMIT_DEFAULT = 800000
+
 
 def get_limit(category):
-	# TODO category
-	if category == 'immigration':
-		return 300000
+    # TODO category:
+    #   * final codes
+    #   * no 800000 by default, return None in case of invalid codes
+    if category == 'immigration':
+        return LIMIT_IMMIGRATION
 
-	return 800000
+    return LIMIT_DEFAULT
 
 
 PENSIONER_DISREGARD_LIMIT_LEVELS = BetweenDict({

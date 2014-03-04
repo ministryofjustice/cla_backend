@@ -9,9 +9,12 @@ from .serializers import CategorySerializer, EligibilityCheckSerializer, \
     PropertySerializer, CaseSerializer
 from eligibility_calculator.calculator import EligibilityChecker
 
+
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     model = Category
     serializer_class = CategorySerializer
+
+    lookup_field = 'code'
 
 
 class EligibilityCheckViewSet(

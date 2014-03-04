@@ -8,9 +8,6 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding unique constraint on 'Category', fields ['code']
-        db.create_unique(u'legalaid_category', ['code'])
-
         # Adding field 'EligibilityCheck.on_passported_benefits'
         db.add_column(u'legalaid_eligibilitycheck', 'on_passported_benefits',
                       self.gf('django.db.models.fields.BooleanField')(default=False),
@@ -18,9 +15,6 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Removing unique constraint on 'Category', fields ['code']
-        db.delete_unique(u'legalaid_category', ['code'])
-
         # Deleting field 'EligibilityCheck.on_passported_benefits'
         db.delete_column(u'legalaid_eligibilitycheck', 'on_passported_benefits')
 

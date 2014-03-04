@@ -49,6 +49,11 @@ class Finance(TimeStampedModel):
     other_income = models.PositiveIntegerField(default=0)
     self_employed = models.BooleanField(default=False)
 
+    income_tax_and_ni = models.PositiveIntegerField(default=0)
+    maintenance = models.PositiveIntegerField(default=0)
+    mortgage_or_rent = models.PositiveIntegerField(default=0)
+    criminal_legalaid_contributions = models.PositiveIntegerField(default=0)
+
 
 class PersonalDetails(TimeStampedModel):
     title = models.CharField(max_length=20, blank=True)
@@ -84,6 +89,7 @@ class EligibilityCheck(TimeStampedModel):
     def to_case_data(self):
         if not self.your_finances:
             raise ValueError("Can't do means test without specifying 'your_finances' at a minimum.")
+
         d = {}
         d['category'] = self.category.code
         d['dependant_children'] = self.dependants_old + self.dependants_young
@@ -94,6 +100,12 @@ class EligibilityCheck(TimeStampedModel):
         d['earnings'] = self.your_finances.earnings
         d['other_income'] = self.your_finances.other_income
         d['self_employed'] = self.your_finances.self_employed
+
+        d['income_tax_and_ni'] = self.your_finances.income_tax_and_ni
+        d['maintenance'] = self.your_finances.maintenance
+        d['mortgage_or_rent'] = self.your_finances.mortgage_or_rent
+        d['criminal_legalaid_contributions'] = self.your_finances.criminal_legalaid_contributions
+
         d['has_partner'] = self.has_partner
 
         if self.has_partner:
@@ -110,12 +122,7 @@ class EligibilityCheck(TimeStampedModel):
 
         # Fake
         d['is_partner_opponent'] = False
-        d['income_tax_and_ni'] = 0
-        d['maintenance'] = 0
-        d['mortgage_or_rent'] = 0
-        d['criminal_legalaid_contributions'] = 0
         d['on_passported_benefits'] = False
-
 
         return CaseData(**d)
 

@@ -74,6 +74,7 @@ class EligibilityCheck(TimeStampedModel):
     state = models.PositiveSmallIntegerField(default=STATE_MAYBE, choices=STATE_CHOICES)
     dependants_young = models.PositiveIntegerField(default=0)
     dependants_old = models.PositiveIntegerField(default=0)
+    on_passported_benefits = models.BooleanField(default=False)
 
     # need to be moved into graph/questions format soon
     is_you_or_your_partner_over_60 = models.BooleanField(default=False)

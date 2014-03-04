@@ -36,7 +36,7 @@ class CaseData(object):
             raise exceptions.PropertyExpectedException(
                 "'%s' object requires attribute '%s' and was not given at __init__" % (self.__class__.__name__, name))
 
-        raise exceptions.PropertyExpectedException("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
+        raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
 
     def __init__(self, **kwargs):
         for kw, v in kwargs.items():

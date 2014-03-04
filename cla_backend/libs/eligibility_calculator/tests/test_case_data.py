@@ -35,7 +35,7 @@ class TestCaseData(unittest.TestCase):
             cd = CaseData(**cdd)
 
     def test_getattr_raises_if_accessing_invalid_prop(self):
-        with self.assertRaises(PropertyExpectedException):
+        with self.assertRaises(AttributeError):
             cd = CaseData()
             cd.foo
 

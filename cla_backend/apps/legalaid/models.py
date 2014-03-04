@@ -119,10 +119,10 @@ class EligibilityCheck(TimeStampedModel):
 
         d['property_data'] = self.property_set.values_list('value', 'mortgage_left', 'share')
         d['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
+        d['on_passported_benefits'] = self.on_passported_benefits
 
         # Fake
         d['is_partner_opponent'] = False
-        d['on_passported_benefits'] = False
 
         return CaseData(**d)
 

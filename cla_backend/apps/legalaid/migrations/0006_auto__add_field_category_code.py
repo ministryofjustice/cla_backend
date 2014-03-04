@@ -28,6 +28,7 @@ class Migration(SchemaMigration):
     def backwards(self, orm):
         # Deleting field 'Category.code'
         db.delete_column(u'legalaid_category', 'code')
+        db.delete_unique(u'legalaid_category', ['code'])
 
 
     models = {

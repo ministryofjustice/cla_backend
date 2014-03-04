@@ -107,7 +107,8 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             ['reference', 'category', 'notes', 'your_problem_notes',
              'property_set', 'dependants_young',
              'dependants_old', 'your_finances',
-             'partner_finances']
+             'partner_finances', 'has_partner', 'on_passported_benefits',
+             'is_you_or_your_partner_over_60']
         )
 
     def assertFinanceEqual(self, data, obj):
@@ -189,6 +190,98 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 dependants_young=2, dependants_old=3
             )
         )
+
+    def test_create_basic_data_with_partner(self):
+        """
+        CREATE data includes `has_partner`
+        """
+        category_recipe.make()
+
+        category = Category.objects.all()[0]
+        data={
+            'category': category.code,
+            'your_problem_notes': 'lorem',
+            'notes': 'ipsum',
+            'has_partner': True
+            }
+        response = self.client.post(
+            self.list_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertResponseKeys(response)
+        self.assertTrue(len(response.data['reference']) > 30)
+        self.assertEligibilityCheckEqual(response.data,
+                                         EligibilityCheck(
+                                             reference=response.data['reference'],
+                                             category=category, notes=data['notes'],
+                                             your_problem_notes=data['your_problem_notes'],
+                                             has_partner=data['has_partner']
+                                         )
+        )
+
+    def test_create_basic_data_with_over_60(self):
+        """
+        CREATE data includes over 60
+        """
+        category_recipe.make()
+
+        category = Category.objects.all()[0]
+        data={
+            'category': category.code,
+            'your_problem_notes': 'lorem',
+            'notes': 'ipsum',
+            'is_you_or_your_partner_over_60': True
+        }
+        response = self.client.post(
+            self.list_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertResponseKeys(response)
+        self.assertTrue(len(response.data['reference']) > 30)
+        self.assertEligibilityCheckEqual(
+            response.data,
+            EligibilityCheck(
+                reference=response.data['reference'],
+                category=category, notes=data['notes'],
+                your_problem_notes=data['your_problem_notes'],
+                is_you_or_your_partner_over_60=data['is_you_or_your_partner_over_60']
+            )
+        )
+
+
+
+    def test_create_basic_data_with_on_benefits(self):
+        """
+        CREATE data includes `on_passported_benefits`
+        """
+        category_recipe.make()
+
+        category = Category.objects.all()[0]
+        data={
+            'category': category.code,
+            'your_problem_notes': 'lorem',
+            'notes': 'ipsum',
+            'on_passported_benefits': True
+        }
+        response = self.client.post(
+            self.list_url, data, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertResponseKeys(response)
+        self.assertTrue(len(response.data['reference']) > 30)
+        self.assertEligibilityCheckEqual(
+            response.data,
+            EligibilityCheck(
+                reference=response.data['reference'],
+                category=category, notes=data['notes'],
+                your_problem_notes=data['your_problem_notes'],
+                on_passported_benefits=data['on_passported_benefits'],
+            )
+        )
+
 
     def test_create_then_patch_category(self):
         """

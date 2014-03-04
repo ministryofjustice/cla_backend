@@ -53,7 +53,10 @@ class EligibilityCheckSerializer(serializers.ModelSerializer):
             'your_finances',
             'partner_finances',
             'dependants_young',
-            'dependants_old'
+            'dependants_old',
+            'is_you_or_your_partner_over_60',
+            'has_partner',
+            'on_passported_benefits',
         )
 
 

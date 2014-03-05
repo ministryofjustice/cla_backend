@@ -1,13 +1,14 @@
 import unittest
+
 from ..calculator import EligibilityChecker
 from ..models import CaseData
 from ..exceptions import PropertyExpectedException
-from . import fixtures
 from .. import constants
+
+from . import fixtures
 
 
 class TestCalculator(unittest.TestCase):
-
 
     def get_default_case_data(self, **kwargs):
         """
@@ -22,15 +23,14 @@ class TestCalculator(unittest.TestCase):
     def setUp(self):
         self.default_calculator = EligibilityChecker(self.get_default_case_data())
 
-
     def test_gross_income_is_eligible(self):
-        is_elig, _ = self.default_calculator.is_gross_income_eligible()
+        is_elig = self.default_calculator.is_gross_income_eligible()
         self.assertTrue(is_elig)
 
     def test_gross_income_is_ineligible(self):
         too_much_money = constants.gross_income.BASE_LIMIT + 1
         case_data = self.get_default_case_data(earnings=too_much_money)
-        is_elig, _ = EligibilityChecker(case_data).is_gross_income_eligible()
+        is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
         self.assertFalse(is_elig)
 
     def test_base_limit_gross_income_is_ineligible(self):
@@ -44,9 +44,8 @@ class TestCalculator(unittest.TestCase):
                 earnings=too_much_money,
                 dependant_children=dep_children
             )
-            is_elig, _ = EligibilityChecker(case_data).is_gross_income_eligible()
+            is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
             self.assertFalse(is_elig)
-
 
     def test_base_limit_gross_income_is_eligible(self):
         """
@@ -58,5 +57,5 @@ class TestCalculator(unittest.TestCase):
             earnings=too_much_money,
             dependant_children=5
         )
-        is_elig, _ = EligibilityChecker(case_data).is_gross_income_eligible()
+        is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
         self.assertTrue(is_elig)

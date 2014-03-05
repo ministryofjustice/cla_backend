@@ -39,6 +39,10 @@ class CaseData(object):
         raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
 
     def __init__(self, **kwargs):
+
+        if sum([v for k,v in kwargs.items() if k.startswith('partner')]) and not kwargs.get('has_partner', False):
+            raise exceptions.InvalidStateException('You have specified partner capital fields but also specified has_partner = False')
+
         for kw, v in kwargs.items():
             if kw in self.PROPERTY_SET:
                 setattr(self, kw, v)

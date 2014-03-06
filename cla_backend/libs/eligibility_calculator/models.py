@@ -4,30 +4,46 @@ class CaseData(object):
 
     PROPERTY_SET = set([
         'category',
-        'dependant_children',
-        'savings',
-        'investments',
-        'money_owed' ,
-        'valuable_items',
-        'earnings',
-        'other_income',
-        'self_employed',
-        'partner_earnings',
-        'partner_other_income',
-        'partner_savings',
-        'partner_investments',
-        'partner_money_owed',
-        'partner_valuable_items',
-        'partner_self_employed',
-        'property_data',
+
+        #
         'is_you_or_your_partner_over_60',
+        'on_passported_benefits',
+        'dependant_children',
+
         'has_partner',
         'is_partner_opponent',
+
+        # deductions
         'income_tax_and_ni',
         'maintenance',
         'mortgage_or_rent',
         'criminal_legalaid_contributions',
-        'on_passported_benefits',
+
+        # income
+        'earnings',
+        'other_income',
+        'self_employed',
+
+        # savings
+        'savings',
+        'investments',
+        'money_owed' ,
+        'valuable_items',
+
+        # income
+        'partner_earnings',
+        'partner_other_income',
+        'partner_self_employed',
+
+        # savings
+        'partner_savings',
+        'partner_investments',
+        'partner_money_owed',
+        'partner_valuable_items',
+
+        # properties
+        'property_data',
+
     ])
 
 

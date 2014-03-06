@@ -45,6 +45,7 @@ class Finance(TimeStampedModel):
     investment_balance = models.PositiveIntegerField(default=0)
     asset_balance = models.PositiveIntegerField(default=0)
     credit_balance = models.PositiveIntegerField(default=0)
+
     earnings = models.PositiveIntegerField(default=0)
     other_income = models.PositiveIntegerField(default=0)
     self_employed = models.BooleanField(default=False)
@@ -67,6 +68,12 @@ class PersonalDetails(TimeStampedModel):
 
     class Meta:
         verbose_name_plural = "personal details"
+
+
+# class Person():
+#     income = fk
+#     savings = fk
+#     deductions = fk
 
 
 class EligibilityCheck(TimeStampedModel):

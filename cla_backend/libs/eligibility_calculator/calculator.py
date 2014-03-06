@@ -82,10 +82,10 @@ class EligibilityChecker(object):
         return self._disposable_capital_assets
 
     def is_gross_income_eligible(self):
-        if self.case_data.on_passported_benefits:
+        if self.case_data.facts['on_passported_benefits']:
             return True
 
-        limit = constants.gross_income.get_limit(self.case_data.dependant_children)
+        limit = constants.gross_income.get_limit(self.case_data.facts.get('dependant_children', 0))
         return self.gross_income <= limit
 
     def is_disposable_income_eligible(self):

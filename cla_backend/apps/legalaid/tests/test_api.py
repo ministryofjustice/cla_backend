@@ -8,8 +8,8 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from ..models import Category, EligibilityCheck, Property, Finance, \
-    Case, PersonalDetails
+from ..models import Category, EligibilityCheck, Property, \
+    Case, PersonalDetails, Person
 
 from .test_base import CLABaseApiTestMixin
 

@@ -2,8 +2,9 @@ from rest_framework import serializers
 
 from core.serializers import UUIDSerializer
 
-from .models import Category, EligibilityCheck, Property, Finance, \
-    PersonalDetails, Case
+from .models import Category, EligibilityCheck, Property, \
+    PersonalDetails, Case, Person, Income, Savings, \
+    Deductions
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
@@ -19,24 +20,53 @@ class PropertySerializer(serializers.ModelSerializer):
         fields = ('value', 'mortgage_left', 'share', 'id')
 
 
-class FinanceSerializer(serializers.ModelSerializer):
+class IncomeSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Finance
-        fields = (
-            'bank_balance',
-            'investment_balance',
-            'asset_balance',
-            'credit_balance',
-            'earnings',
-            'other_income',
-            'self_employed',
+        model = Income
 
-            'income_tax_and_ni',
-            'maintenance',
-            'mortgage_or_rent',
-            'criminal_legalaid_contributions'
+class SavingsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Savings
+
+class DeductionsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Deductions
+
+class PersonSerializer(serializers.ModelSerializer):
+
+    income = IncomeSerializer(required=False)
+    savings = SavingsSerializer(required=False)
+    deductions = DeductionsSerializer(required=False)
+
+    class Meta:
+        model = Person
+        fields = (
+            'income',
+            'savings',
+            'deductions',
         )
+
+# class FinanceSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Finance
+#         fields = (
+#             'bank_balance',
+#             'investment_balance',
+#             'asset_balance',
+#             'credit_balance',
+#             'earnings',
+#             'other_income',
+#             'self_employed',
+#
+#             'income_tax_and_ni',
+#             'maintenance',
+#             'mortgage_or_rent',
+#             'criminal_legalaid_contributions'
+#         )
 
 
 class EligibilityCheckSerializer(serializers.ModelSerializer):
@@ -44,8 +74,8 @@ class EligibilityCheckSerializer(serializers.ModelSerializer):
     your_problem_notes = serializers.CharField(max_length=500, required=False)
     notes = serializers.CharField(max_length=500, required=False)
     property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
-    your_finances = FinanceSerializer(required=False)
-    partner_finances = FinanceSerializer(required=False)
+    you = PersonSerializer(required=False)
+    partner = PersonSerializer(required=False)
 
     class Meta:
         model = EligibilityCheck

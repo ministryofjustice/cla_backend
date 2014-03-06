@@ -33,7 +33,7 @@ class TestCaseData(unittest.TestCase):
         self.assertEqual(gross_income_orig, ti)
 
     def test_bad_property_set_exception(self):
-        cdd = get_default_case_data(foo='bar')
+        cdd = get_default_case_data(foo='bar', bar__baz=24)
         with self.assertRaises(PropertyExpectedException):
             cd = CaseData(**cdd)
 

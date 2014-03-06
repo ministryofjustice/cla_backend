@@ -3,6 +3,7 @@ from django.test import TestCase
 from model_mommy import mommy, recipe
 
 from eligibility_calculator.models import CaseData
+from model_mommy.recipe import foreign_key
 
 from ..models import EligibilityCheck
 
@@ -38,14 +39,15 @@ class EligibilityCheckTestCase(TestCase):
         """
         check = make_recipe('eligibility_check',
             category=make_recipe('category', code='code'),
-            your_finances=make_recipe('finance',
-                bank_balance=100, investment_balance=200,
-                asset_balance=300, credit_balance=400,
-                earnings=500, other_income=600,
-                self_employed=True, income_tax_and_ni=700,
-                maintenance=710, mortgage_or_rent=720,
-                criminal_legalaid_contributions=730
-            ),
+            you=make_recipe('person'),
+            # your_finances=make_recipe('finance',
+            #     bank_balance=100, investment_balance=200,
+            #     asset_balance=300, credit_balance=400,
+            #     earnings=500, other_income=600,
+            #     self_employed=True, income_tax_and_ni=700,
+            #     maintenance=710, mortgage_or_rent=720,
+            #     criminal_legalaid_contributions=730
+            # ),
             dependants_young=3, dependants_old=2,
             is_you_or_your_partner_over_60=True,
             on_passported_benefits=True,
@@ -69,20 +71,42 @@ class EligibilityCheckTestCase(TestCase):
         """
         check = make_recipe('eligibility_check',
             category=make_recipe('category', code='code'),
-            your_finances=make_recipe('finance',
-                bank_balance=100, investment_balance=200,
-                asset_balance=300, credit_balance=400,
-                earnings=500, other_income=600,
-                self_employed=True, income_tax_and_ni=700,
-                maintenance=710, mortgage_or_rent=720,
-                criminal_legalaid_contributions=730
+            you= make_recipe('person',
+                            income=make_recipe('income',
+                                        earnings=500,
+                                        other_income=600,
+                                        self_employed=True
+                            )
             ),
-            partner_finances=make_recipe('finance',
-                bank_balance=101, investment_balance=201,
-                asset_balance=301, credit_balance=401,
-                earnings=501, other_income=601,
-                self_employed=True
+            partner=
+            make_recipe('person',
+                        income= make_recipe('income',
+                                            earnings=0,
+                                            other_income=0
+                        ),
+
+                        savings= make_recipe('savings',
+                                             bank_balance=101,
+                                             investment_balance=201,
+                                             asset_balance=301,
+                                             credit_balance=401,
+                                             )
+
             ),
+            # your_finances=make_recipe('finance',
+            #     bank_balance=100, investment_balance=200,
+            #     asset_balance=300, credit_balance=400,
+            #     earnings=500, other_income=600,
+            #     self_employed=True, income_tax_and_ni=700,
+            #     maintenance=710, mortgage_or_rent=720,
+            #     criminal_legalaid_contributions=730
+            # ),
+            # partner_finances=make_recipe('finance',
+            #     bank_balance=101, investment_balance=201,
+            #     asset_balance=301, credit_balance=401,
+            #     earnings=501, other_income=601,
+            #     self_employed=True
+            # ),
             dependants_young=3, dependants_old=2,
             is_you_or_your_partner_over_60=True,
             on_passported_benefits=True,

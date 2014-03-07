@@ -113,14 +113,14 @@ class TestCaseData(unittest.TestCase):
 
     def test_get_liquid_capital(self):
         cdd = get_default_case_data(
-            savings=0,
-            money_owed=0,
-            valuable_items=0,
-            investments=0,
-            partner_savings=0,
-            partner_money_owed=0,
-            partner_valuable_items=0,
-            partner_investments=0
+            you__savings__savings=0,
+            you__savings__money_owed=0,
+            you__savings__valuable_items=0,
+            you__savings__investments=0,
+            partner__savings__savings=0,
+            partner__savings__money_owed=0,
+            partner__savings__valuable_items=0,
+            partner__savings__investments=0
         )
         cd = CaseData(**cdd)
         self.assertEqual(0, cd.get_liquid_capital())

@@ -77,6 +77,28 @@ class Person(TimeStampedModel):
     savings = models.ForeignKey(Savings, blank=True, null=True)
     deductions = models.ForeignKey(Deductions, blank=True, null=True)
 
+    @classmethod
+    def from_dict(cls, d):
+        income = None
+        savings = None
+        deductions = None
+        if d:
+            income_dict = d.get('income')
+            savings_dict = d.get('savings')
+            deductions_dict = d.get('deductions')
+            if income_dict:
+                income = Income(**income_dict)
+            if savings_dict:
+                savings_dict = Savings(**savings_dict)
+            if deductions_dict:
+                deductions = Deductions(**deductions_dict)
+
+
+        return Person(
+            income=income,
+            savings=savings,
+            deductions=deductions)
+
 class EligibilityCheck(TimeStampedModel):
     reference = UUIDField(auto=True, unique=True)
 
@@ -100,34 +122,34 @@ class EligibilityCheck(TimeStampedModel):
 
         d = {}
         d['facts'] = {}
-
-        d['category'] = self.category.code
-        d['dependant_children'] = self.dependants_old + self.dependants_young
+        if self.category:
+            d['category'] = self.category.code
+        d['facts']['dependant_children'] = self.dependants_old + self.dependants_young
         if self.you:
             d['you'] = {}
 
-        if self.you.savings:
-            savings = {}
-            savings['savings'] = self.you.savings.bank_balance
-            savings['investments'] = self.you.savings.investment_balance
-            savings['money_owed']  = self.you.savings.credit_balance
-            savings['valuable_items'] = self.your_finances.asset_balance
-            d['you']['savings'] = savings
+            if self.you.savings:
+                savings = {}
+                savings['savings'] = self.you.savings.bank_balance
+                savings['investments'] = self.you.savings.investment_balance
+                savings['money_owed']  = self.you.savings.credit_balance
+                savings['valuable_items'] = self.you.savings.asset_balance
+                d['you']['savings'] = savings
 
-        if self.you.income:
-            income = {}
-            income['earnings'] = self.your_finances.earnings
-            income['other_income'] = self.your_finances.other_income
-            income['self_employed'] = self.your_finances.self_employed
-            d['you']['income'] = income
+            if self.you.income:
+                income = {}
+                income['earnings'] = self.you.income.earnings
+                income['other_income'] = self.you.income.other_income
+                income['self_employed'] = self.you.income.self_employed or False
+                d['you']['income'] = income
 
-        if self.you.deductions:
-            deductions = {}
-            deductions['income_tax_and_ni'] = self.you.deductions.income_tax_and_ni
-            deductions['maintenance'] = self.you.deductions.maintenance
-            deductions['mortgage_or_rent'] = self.you.deductions.mortgage_or_rent
-            deductions['criminal_legalaid_contributions'] = self.you.deductions.criminal_legalaid_contributions
-            d['you']['deductions'] = deductions
+            if self.you.deductions:
+                deductions = {}
+                deductions['income_tax_and_ni'] = self.you.deductions.income_tax_and_ni
+                deductions['maintenance'] = self.you.deductions.maintenance
+                deductions['mortgage_or_rent'] = self.you.deductions.mortgage_or_rent
+                deductions['criminal_legalaid_contributions'] = self.you.deductions.criminal_legalaid_contributions
+                d['you']['deductions'] = deductions
 
         d['facts']['has_partner'] = self.has_partner
 
@@ -135,25 +157,25 @@ class EligibilityCheck(TimeStampedModel):
             d['partner'] = {}
             if self.partner.savings:
                 partner_savings = {}
-                partner_savings['savings'] = self.partner_finances.bank_balance
-                partner_savings['investments'] = self.partner_finances.investment_balance
-                partner_savings['money_owed']  = self.partner_finances.credit_balance
-                partner_savings['valuable_items'] = self.partner_finances.asset_balance
+                partner_savings['savings'] = self.partner.savings.bank_balance
+                partner_savings['investments'] = self.partner.savings.investment_balance
+                partner_savings['money_owed']  = self.partner.savings.credit_balance
+                partner_savings['valuable_items'] = self.partner.savings.asset_balance
                 d['partner']['savings'] = partner_savings
 
             if self.partner.income:
                 partner_income = {}
-                partner_income['earnings'] = self.partner_finances.earnings
-                partner_income['other_income'] = self.partner_finances.other_income
-                partner_income['self_employed'] = self.partner_finances.self_employed
+                partner_income['earnings'] = self.partner.income.earnings
+                partner_income['other_income'] = self.partner.income.other_income
+                partner_income['self_employed'] = self.partner.income.self_employed
                 d['partner']['income'] = partner_income
 
         d['property_data'] = self.property_set.values_list('value', 'mortgage_left', 'share')
-        d['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
-        d['on_passported_benefits'] = self.on_passported_benefits
+        d['facts']['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
+        d['facts']['on_passported_benefits'] = self.on_passported_benefits
 
         # Fake
-        d['is_partner_opponent'] = False
+        d['facts']['is_partner_opponent'] = False
 
         return CaseData(**d)
 

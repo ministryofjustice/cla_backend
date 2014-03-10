@@ -34,7 +34,7 @@ class EligibilityCheckTestCase(TestCase):
     #     self.assertRaises(ValueError, check.to_case_data)
 
     def assertCaseDataEqual(self, obj1, obj2):
-        for prop in CaseData.PROPERTY_SET:
+        for prop in CaseData.PROPERTY_META.keys():
             if hasattr(obj1, prop) or hasattr(obj2, prop):
                 val1 = getattr(obj1, prop)
                 val2 = getattr(obj2, prop)

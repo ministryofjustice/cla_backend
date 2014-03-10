@@ -29,7 +29,7 @@ class TestCaseData(unittest.TestCase):
     def test_total_income_calculation(self):
         default_data = get_default_case_data()
         cd = CaseData(**default_data)
-        ti = cd.total_income()
+        ti = cd.total_income
         income = cd.you.income
         gross_income_orig = 0
         for prop in income.PROPERTY_META.keys():
@@ -53,7 +53,7 @@ class TestCaseData(unittest.TestCase):
         )
         cd = CaseData(**cdd)
         self.assertFalse(cd.facts.has_partner)
-        self.assertEqual(265700, cd.total_income())
+        self.assertEqual(265700, cd.total_income)
 
     def test_get_total_income_incl_other_no_partner(self):
         cdd = get_default_case_data(
@@ -62,7 +62,7 @@ class TestCaseData(unittest.TestCase):
         )
         cd = CaseData(**cdd)
         self.assertFalse(cd.facts.has_partner)
-        self.assertEqual(265800, cd.total_income())
+        self.assertEqual(265800, cd.total_income)
 
     # TODO: fix this to check nested properties
     # def test_provide_partner_earnings_required_partner_other_income(self):
@@ -74,7 +74,7 @@ class TestCaseData(unittest.TestCase):
     #             facts__has_partner=True
     #         )
     #         cd = CaseData(**cdd)
-    #         cd.total_income()
+    #         cd.total_income
 
     def test_get_total_income_with_partner(self):
         cdd = get_default_case_data(
@@ -85,7 +85,7 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
-        self.assertEqual(265800, cd.total_income())
+        self.assertEqual(265800, cd.total_income)
 
     def test_get_total_income_incl_other_with_partner(self):
         cdd = get_default_case_data(
@@ -96,27 +96,27 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
-        self.assertEqual(265900, cd.total_income())
+        self.assertEqual(265900, cd.total_income)
 
     def test_is_partner_disputed_true(self):
         cdd = get_default_case_data(facts__has_partner=True, facts__is_partner_opponent=True)
         cd = CaseData(**cdd)
-        self.assertTrue(cd.has_disputed_partner())
+        self.assertTrue(cd.facts.has_disputed_partner)
 
     def test_is_partner_disputed_false(self):
         cdd = get_default_case_data(facts__has_partner=False, facts__is_partner_opponent=True)
         cd = CaseData(**cdd)
-        self.assertFalse(cd.has_disputed_partner())
+        self.assertFalse(cd.facts.has_disputed_partner)
 
     def test_is_partner_disputed_not_opponent(self):
         cdd = get_default_case_data(facts__has_partner=True, facts__is_partner_opponent=False)
         cd = CaseData(**cdd)
-        self.assertFalse(cd.has_disputed_partner())
+        self.assertFalse(cd.facts.has_disputed_partner)
 
     def test_is_partner_disputed_no_partner_not_opponent(self):
         cdd = get_default_case_data(facts__has_partner=False, facts__is_partner_opponent=False)
         cd = CaseData(**cdd)
-        self.assertFalse(cd.has_disputed_partner())
+        self.assertFalse(cd.facts.has_disputed_partner)
 
     def test_get_liquid_capital(self):
         cdd = get_default_case_data(
@@ -130,7 +130,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__investments=0
         )
         cd = CaseData(**cdd)
-        self.assertEqual(0, cd.get_liquid_capital())
+        self.assertEqual(0, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_only(self):
         cdd = get_default_case_data(
@@ -144,7 +144,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__investments=0
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10000, cd.get_liquid_capital())
+        self.assertEqual(10000, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_money_owed(self):
         cdd = get_default_case_data(
@@ -158,7 +158,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__investments=0
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10010, cd.get_liquid_capital())
+        self.assertEqual(10010, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_valuable(self):
         cdd = get_default_case_data(
@@ -172,7 +172,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__investments=0
         )
         cd = CaseData(**cdd)
-        self.assertEqual(11000, cd.get_liquid_capital())
+        self.assertEqual(11000, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_investments(self):
         cdd = get_default_case_data(
@@ -186,7 +186,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__investments=0
         )
         cd = CaseData(**cdd)
-        self.assertEqual(15000, cd.get_liquid_capital())
+        self.assertEqual(15000, cd.liquid_capital)
 
     # TODO: Fix invalid state check
     # def test_inconsistent_state(self):
@@ -217,7 +217,7 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10001, cd.get_liquid_capital())
+        self.assertEqual(10001, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_with_partner_money_owed(self):
         cdd = get_default_case_data(
@@ -232,7 +232,7 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10020, cd.get_liquid_capital())
+        self.assertEqual(10020, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_with_partner_savings(self):
         cdd = get_default_case_data(
@@ -247,7 +247,7 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10010, cd.get_liquid_capital())
+        self.assertEqual(10010, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_with_partner_valuables(self):
         cdd = get_default_case_data(
@@ -262,7 +262,7 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
-        self.assertEqual(15000, cd.get_liquid_capital())
+        self.assertEqual(15000, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_with_partner_investments(self):
         cdd = get_default_case_data(
@@ -277,7 +277,7 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10100, cd.get_liquid_capital())
+        self.assertEqual(10100, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_only_partner_savings(self):
         cdd = get_default_case_data(
@@ -292,7 +292,7 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
-        self.assertEqual(100, cd.get_liquid_capital())
+        self.assertEqual(100, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_only_partner_money_owed(self):
         cdd = get_default_case_data(
@@ -307,7 +307,7 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
-        self.assertEqual(200, cd.get_liquid_capital())
+        self.assertEqual(200, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_random_values_no_partner(self):
         for i in range(0, 500):
@@ -324,7 +324,7 @@ class TestCaseData(unittest.TestCase):
                 you__savings__investments=steps[3],
             )
             cd = CaseData(**cdd)
-            self.assertEqual(sum(steps), cd.get_liquid_capital())
+            self.assertEqual(sum(steps), cd.liquid_capital)
 
     def test_get_liquid_capital_savings_random_values_with_partner(self):
         for i in range(0, 500):
@@ -346,7 +346,7 @@ class TestCaseData(unittest.TestCase):
                 facts__has_partner=True
                 )
             cd = CaseData(**cdd)
-            self.assertEqual(sum(steps), cd.get_liquid_capital())
+            self.assertEqual(sum(steps), cd.liquid_capital)
 
     def test_get_liquid_capital_savings_random_values_only_partner(self):
         for i in range(0, 500):
@@ -368,6 +368,6 @@ class TestCaseData(unittest.TestCase):
                 facts__has_partner=True
             )
             cd = CaseData(**cdd)
-            self.assertEqual(sum(steps), cd.get_liquid_capital())
+            self.assertEqual(sum(steps), cd.liquid_capital)
 
 

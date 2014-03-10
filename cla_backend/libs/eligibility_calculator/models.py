@@ -43,6 +43,10 @@ class Savings(ModelMixin, object):
         'valuable_items': None
     }
 
+    @property
+    def total(self):
+        return self.savings + self.investments + self.money_owed + self.valuable_items
+
 
 class Income(ModelMixin, object):
     PROPERTY_META = {
@@ -50,6 +54,10 @@ class Income(ModelMixin, object):
         'other_income': None,
         'self_employed': None
     }
+
+    @property
+    def total(self):
+        return self.earnings + self.other_income
 
 
 class Deductions(ModelMixin, object):
@@ -77,6 +85,10 @@ class Facts(ModelMixin, object):
         'is_partner_opponent': None,
         'dependant_children': None
     }
+
+    @property
+    def has_disputed_partner(self):
+        return self.has_partner and self.is_partner_opponent
 
 
 class CaseData(ModelMixin, object):
@@ -166,28 +178,28 @@ class CaseData(ModelMixin, object):
     # # comes from Property model
     # property_data = [('TODO value', 'TODO mortgage_left'), ('TODO value', 'TODO mortgage_left')]
 
-    def has_disputed_partner(self):
-        return self.facts.has_partner and self.facts.is_partner_opponent
-
-    def get_liquid_capital(self):
+    @property
+    def liquid_capital(self):
         # total capital not including properties
         capital = 0
 
-        capital += self.you.savings.savings + self.you.savings.investments + self.you.savings.money_owed + self.you.savings.valuable_items
+        capital += self.you.savings.total
 
-        if self.facts.has_partner and not self.has_disputed_partner():
-            capital += self.partner.savings.savings + self.partner.savings.investments + self.partner.savings.money_owed + self.partner.savings.valuable_items
+        if self.facts.has_partner and not self.facts.has_disputed_partner:
+            capital += self.partner.savings.total
         return capital
 
-    def get_property_capital(self):
+    @property
+    def property_capital(self):
         properties_value = sum([d[0] for d in self.property_data])
         mortgages_left = sum([d[1] for d in self.property_data])
 
         return (properties_value, mortgages_left)
 
+    @property
     def total_income(self):
-        income = self.you.income.earnings + self.you.income.other_income
+        income = self.you.income.total
         if self.facts.has_partner:
-            if not self.has_disputed_partner():
-                income += self.partner.income.earnings + self.partner.income.other_income
+            if not self.facts.has_disputed_partner:
+                income += self.partner.income.total
         return income

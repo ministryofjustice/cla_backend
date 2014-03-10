@@ -167,7 +167,7 @@ class CaseData(ModelMixin, object):
     # property_data = [('TODO value', 'TODO mortgage_left'), ('TODO value', 'TODO mortgage_left')]
 
     def has_disputed_partner(self):
-        return self.facts['has_partner'] and self.facts['is_partner_opponent']
+        return self.facts.has_partner and self.facts.is_partner_opponent
 
     def get_liquid_capital(self):
         # total capital not including properties
@@ -187,7 +187,7 @@ class CaseData(ModelMixin, object):
 
     def total_income(self):
         income = self.you.income.earnings + self.you.income.other_income
-        if self.facts['has_partner']:
+        if self.facts.has_partner:
             if not self.has_disputed_partner():
                 income += self.partner.income.earnings + self.partner.income.other_income
         return income

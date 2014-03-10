@@ -1,4 +1,4 @@
-import operator
+import copy
 
 case_data_dict = {
     'category': u'blah blah',
@@ -12,7 +12,7 @@ case_data_dict = {
     'you': {
         'income': {
             'earnings': 165700,
-            'other_income': 10000,
+            'other_income': 0,
             'self_employed': False,
         },
         'savings': {
@@ -43,18 +43,18 @@ def get_default_case_data(**kwargs):
     :param kwargs: things to overwrite in the default case_data
     :return: CaseData object with default values
     """
-    defaults = case_data_dict.copy()
+    defaults = copy.deepcopy(case_data_dict)
     if len(kwargs):
         keys_vals = sorted([(kw.split('__'), v) for kw, v in kwargs.items()], key=lambda x: len(x[0]))
         for (k, v) in keys_vals:
             level = defaults
-            for nesting in k:
-                if nesting == k[-1]:
-                    level[nesting] = v
+            for i in range(0,len(k)):
+                if k[0:i+1] == k:
+                    level[k[i]] = v
                 else:
-                    new_level = level.get(nesting)
-                    if not new_level:
-                        level[nesting] = {}
-                    level = level[nesting]
+                    new_level = level.get(k[i])
+                    if new_level == None and not i == len(k):
+                        level[k[i]] = {}
+                    level = level[k[i]]
 
     return defaults

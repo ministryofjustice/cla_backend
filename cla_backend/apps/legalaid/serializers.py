@@ -24,17 +24,29 @@ class IncomeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Income
+        fields = ('earnings', 'other_income', 'self_employed',)
 
 class SavingsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Savings
+        fields = (
+            'bank_balance',
+            'investment_balance',
+            'asset_balance',
+            'credit_balance',
+        )
 
 class DeductionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Deductions
-
+        fields = (
+            'income_tax_and_ni',
+            'maintenance',
+            'mortgage_or_rent',
+            'criminal_legalaid_contributions',
+        )
 class PersonSerializer(serializers.ModelSerializer):
 
     income = IncomeSerializer(required=False)

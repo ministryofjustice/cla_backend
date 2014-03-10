@@ -64,9 +64,6 @@ class CaseData(object):
 
     def __init__(self, **kwargs):
         for kw, v in kwargs.items():
-            setattr(self, kw, v)
-
-        for kw, v in kwargs.items():
             if kw in self.PROPERTY_SET:
                 setattr(self, kw, v)
             else:
@@ -95,8 +92,8 @@ class CaseData(object):
         return (properties_value, mortgages_left)
 
     def total_income(self):
-        income = self.you['income']['earnings'] + self.you['income']['other_income']
+        income = self.you.get('income', {}).get('earnings', 0) + self.you.get('income', {}).get('other_income', 0)
         if self.facts['has_partner']:
             if not self.has_disputed_partner():
-                income += self.partner['income']['earnings'] + self.partner['income']['other_income']
+                income += self.partner.get('income', {}).get('earnings', 0) + self.partner.get('income', {}).get('other_income', 0)
         return income

@@ -24,13 +24,14 @@ def walk(coll):
 
 
 class EligibilityCheckTestCase(TestCase):
-    def test_to_case_data_fail_without_your_finances(self):
-        """
-        Should fail as your_finances object is always needed
-        """
-        check = EligibilityCheck()
 
-        self.assertRaises(ValueError, check.to_case_data)
+    # def test_to_case_data_fail_without_your_finances(self):
+    #     """
+    #     Should fail as your_finances object is always needed
+    #     """
+    #     check = EligibilityCheck()
+    #
+    #     self.assertRaises(ValueError, check.to_case_data)
 
     def assertCaseDataEqual(self, obj1, obj2):
         for prop in CaseData.PROPERTY_SET:

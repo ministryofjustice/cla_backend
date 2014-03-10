@@ -30,8 +30,10 @@ class TestCaseData(unittest.TestCase):
         default_data = get_default_case_data()
         cd = CaseData(**default_data)
         ti = cd.total_income()
-        income = cd.you.get('income', {})
-        gross_income_orig = reduce(operator.add, income.values())
+        income = cd.you.income
+        gross_income_orig = 0
+        for prop in income.PROPERTY_META.keys():
+            gross_income_orig += getattr(income, prop, 0)
         self.assertEqual(gross_income_orig, ti)
 
     def test_bad_property_set_exception(self):
@@ -50,7 +52,7 @@ class TestCaseData(unittest.TestCase):
             you__income__other_income=0
         )
         cd = CaseData(**cdd)
-        self.assertFalse(cd.facts['has_partner'])
+        self.assertFalse(cd.facts.has_partner)
         self.assertEqual(265700, cd.total_income())
 
     def test_get_total_income_incl_other_no_partner(self):
@@ -59,7 +61,7 @@ class TestCaseData(unittest.TestCase):
             you__income__other_income=100
         )
         cd = CaseData(**cdd)
-        self.assertFalse(cd.facts['has_partner'])
+        self.assertFalse(cd.facts.has_partner)
         self.assertEqual(265800, cd.total_income())
 
     # TODO: fix this to check nested properties

@@ -175,7 +175,7 @@ class CaseData(ModelMixin, object):
 
         capital += self.you.savings.savings + self.you.savings.investments + self.you.savings.money_owed + self.you.savings.valuable_items
 
-        if not self.has_disputed_partner():
+        if self.facts.has_partner and not self.has_disputed_partner():
             capital += self.partner.savings.savings + self.partner.savings.investments + self.partner.savings.money_owed + self.partner.savings.valuable_items
         return capital
 

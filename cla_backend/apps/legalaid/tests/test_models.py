@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from model_mommy import mommy, recipe
 
-from eligibility_calculator.models import CaseData
+from eligibility_calculator.models import CaseData, ModelMixin
 from model_mommy.recipe import foreign_key
 
 from ..models import EligibilityCheck
@@ -33,8 +33,8 @@ class EligibilityCheckTestCase(TestCase):
     #
     #     self.assertRaises(ValueError, check.to_case_data)
 
-    def assertCaseDataEqual(self, obj1, obj2):
-        for prop in CaseData.PROPERTY_SET:
+    def assertModelMixinEqual(self, obj1, obj2):
+        for prop in obj1.__class__.PROPERTY_META.keys():
             if hasattr(obj1, prop) or hasattr(obj2, prop):
                 val1 = getattr(obj1, prop)
                 val2 = getattr(obj2, prop)
@@ -42,6 +42,9 @@ class EligibilityCheckTestCase(TestCase):
                 assertFunc = self.assertEqual
                 if isinstance(val1, list) or isinstance(val2, list):
                     assertFunc = self.assertItemsEqual
+                if isinstance(val1, ModelMixin) or isinstance(val2, ModelMixin):
+                    self.assertModelMixinEqual(val1, val2)
+                    continue
 
                 assertFunc(val1, val2, u"%s: %s != %s" % (prop, val1, val2))
 
@@ -78,7 +81,7 @@ class EligibilityCheckTestCase(TestCase):
         )
 
         case_data = check.to_case_data()
-        self.assertCaseDataEqual(
+        self.assertModelMixinEqual(
             case_data,
             CaseData(
                 category='code',
@@ -154,20 +157,6 @@ class EligibilityCheckTestCase(TestCase):
                                              ),
 
             ),
-            # your_finances=make_recipe('finance',
-            #     bank_balance=100, investment_balance=200,
-            #     asset_balance=300, credit_balance=400,
-            #     earnings=500, other_income=600,
-            #     self_employed=True, income_tax_and_ni=700,
-            #     maintenance=710, mortgage_or_rent=720,
-            #     criminal_legalaid_contributions=730
-            # ),
-            # partner_finances=make_recipe('finance',
-            #     bank_balance=101, investment_balance=201,
-            #     asset_balance=301, credit_balance=401,
-            #     earnings=501, other_income=601,
-            #     self_employed=True
-            # ),
             dependants_young=3, dependants_old=2,
             is_you_or_your_partner_over_60=True,
             on_passported_benefits=True,
@@ -175,7 +164,7 @@ class EligibilityCheckTestCase(TestCase):
         )
 
         case_data = check.to_case_data()
-        self.assertCaseDataEqual(case_data, CaseData(
+        self.assertModelMixinEqual(case_data, CaseData(
             category='code',
             facts={
                 'dependant_children':5,

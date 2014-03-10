@@ -1,21 +1,25 @@
 from model_mommy.recipe import Recipe, seq, foreign_key
 
-from ..models import Category, EligibilityCheck, Property, Finance, \
-    Case, PersonalDetails
+from ..models import Category, EligibilityCheck, Property, Savings, \
+    Case, PersonalDetails, Income, Deductions, Person
 
 
 category = Recipe(Category,
     name=seq('Name'), order = seq(0)
 )
 
-finance = Recipe(Finance)
+person = Recipe(Person)
 
 eligibility_check = Recipe(EligibilityCheck,
     category=foreign_key(category),
     dependants_young=5, dependants_old=6,
-    your_finances=foreign_key(finance),
-    partner_finances=foreign_key(finance)
+    you=foreign_key(person),
+    partner=foreign_key(person)
 )
+
+income = Recipe(Income)
+savings = Recipe(Savings)
+deductions = Recipe(Deductions)
 
 property = Recipe(Property,
     eligibility_check=foreign_key(eligibility_check)

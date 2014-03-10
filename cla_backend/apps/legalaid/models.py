@@ -40,16 +40,18 @@ class Category(TimeStampedModel):
 #         return u'%s' % self.name
 
 
-class Finance(TimeStampedModel):
+class Savings(TimeStampedModel):
     bank_balance = models.PositiveIntegerField(default=0)
     investment_balance = models.PositiveIntegerField(default=0)
     asset_balance = models.PositiveIntegerField(default=0)
     credit_balance = models.PositiveIntegerField(default=0)
 
+class Income(TimeStampedModel):
     earnings = models.PositiveIntegerField(default=0)
     other_income = models.PositiveIntegerField(default=0)
     self_employed = models.BooleanField(default=False)
 
+class Deductions(TimeStampedModel):
     income_tax_and_ni = models.PositiveIntegerField(default=0)
     maintenance = models.PositiveIntegerField(default=0)
     mortgage_or_rent = models.PositiveIntegerField(default=0)
@@ -70,18 +72,39 @@ class PersonalDetails(TimeStampedModel):
         verbose_name_plural = "personal details"
 
 
-# class Person():
-#     income = fk
-#     savings = fk
-#     deductions = fk
+class Person(TimeStampedModel):
+    income = models.ForeignKey(Income, blank=True, null=True)
+    savings = models.ForeignKey(Savings, blank=True, null=True)
+    deductions = models.ForeignKey(Deductions, blank=True, null=True)
 
+    @classmethod
+    def from_dict(cls, d):
+        income = None
+        savings = None
+        deductions = None
+        if d:
+            income_dict = d.get('income')
+            savings_dict = d.get('savings')
+            deductions_dict = d.get('deductions')
+            if income_dict:
+                income = Income(**income_dict)
+            if savings_dict:
+                savings = Savings(**savings_dict)
+            if deductions_dict:
+                deductions = Deductions(**deductions_dict)
+
+
+        return Person(
+            income=income,
+            savings=savings,
+            deductions=deductions)
 
 class EligibilityCheck(TimeStampedModel):
     reference = UUIDField(auto=True, unique=True)
 
     category = models.ForeignKey(Category, blank=True, null=True)
-    your_finances = models.ForeignKey(Finance, blank=True, null=True, related_name='your_savings')
-    partner_finances = models.ForeignKey(Finance, blank=True, null=True, related_name='partner_savings')
+    you = models.ForeignKey(Person, blank=True, null=True, related_name='you')
+    partner = models.ForeignKey(Person, blank=True, null=True, related_name='partner')
     your_problem_notes = models.TextField(blank=True)
     notes = models.TextField(blank=True)
     state = models.PositiveSmallIntegerField(default=STATE_MAYBE, choices=STATE_CHOICES)
@@ -94,42 +117,88 @@ class EligibilityCheck(TimeStampedModel):
     has_partner = models.BooleanField(default=False)
 
     def to_case_data(self):
-        if not self.your_finances:
-            raise ValueError("Can't do means test without specifying 'your_finances' at a minimum.")
-
         d = {}
-        d['category'] = self.category.code
-        d['dependant_children'] = self.dependants_old + self.dependants_young
-        d['savings'] = self.your_finances.bank_balance
-        d['investments'] = self.your_finances.investment_balance
-        d['money_owed']  = self.your_finances.credit_balance
-        d['valuable_items'] = self.your_finances.asset_balance
-        d['earnings'] = self.your_finances.earnings
-        d['other_income'] = self.your_finances.other_income
-        d['self_employed'] = self.your_finances.self_employed
+        d['facts'] = {}
+        if self.category:
+            d['category'] = self.category.code
+        d['facts']['dependant_children'] = self.dependants_old + self.dependants_young
 
-        d['income_tax_and_ni'] = self.your_finances.income_tax_and_ni
-        d['maintenance'] = self.your_finances.maintenance
-        d['mortgage_or_rent'] = self.your_finances.mortgage_or_rent
-        d['criminal_legalaid_contributions'] = self.your_finances.criminal_legalaid_contributions
+        d['you'] = {}
 
-        d['has_partner'] = self.has_partner
+        savings = {
+            'savings': 0,
+            'investments': 0,
+            'money_owed': 0,
+            'valuable_items': 0,
+            }
+
+        income = {'earnings': 0,
+                  'other_income': 0,
+                  'self_employed': False}
+        deductions = {
+            'income_tax_and_ni': 0,
+            'maintenance': 0,
+            'mortgage_or_rent': 0,
+            'criminal_legalaid_contributions': 9,
+        }
+
+        if self.you:
+
+            if self.you.savings:
+                savings = {}
+                savings['savings'] = self.you.savings.bank_balance
+                savings['investments'] = self.you.savings.investment_balance
+                savings['money_owed']  = self.you.savings.credit_balance
+                savings['valuable_items'] = self.you.savings.asset_balance
+
+            if self.you.income:
+                income['earnings'] = self.you.income.earnings
+                income['other_income'] = self.you.income.other_income
+                income['self_employed'] = self.you.income.self_employed or False
+
+            if self.you.deductions:
+                deductions['income_tax_and_ni'] = self.you.deductions.income_tax_and_ni
+                deductions['maintenance'] = self.you.deductions.maintenance
+                deductions['mortgage_or_rent'] = self.you.deductions.mortgage_or_rent
+                deductions['criminal_legalaid_contributions'] = self.you.deductions.criminal_legalaid_contributions
+
+        d['you']['savings'] = savings
+        d['you']['income'] = income
+        d['you']['deductions'] = deductions
+
+        d['facts']['has_partner'] = self.has_partner
 
         if self.has_partner:
-            d['partner_savings'] = self.partner_finances.bank_balance
-            d['partner_investments'] = self.partner_finances.investment_balance
-            d['partner_money_owed']  = self.partner_finances.credit_balance
-            d['partner_valuable_items'] = self.partner_finances.asset_balance
-            d['partner_earnings'] = self.partner_finances.earnings
-            d['partner_other_income'] = self.partner_finances.other_income
-            d['partner_self_employed'] = self.partner_finances.self_employed
+            d['partner'] = {}
+            if self.partner.savings:
+                partner_savings = {}
+                partner_savings['savings'] = self.partner.savings.bank_balance
+                partner_savings['investments'] = self.partner.savings.investment_balance
+                partner_savings['money_owed']  = self.partner.savings.credit_balance
+                partner_savings['valuable_items'] = self.partner.savings.asset_balance
+                d['partner']['savings'] = partner_savings
+
+            if self.partner.income:
+                partner_income = {}
+                partner_income['earnings'] = self.partner.income.earnings
+                partner_income['other_income'] = self.partner.income.other_income
+                partner_income['self_employed'] = self.partner.income.self_employed
+                d['partner']['income'] = partner_income
+
+            if self.partner.deductions:
+                partner_deductions = {}
+                partner_deductions['income_tax_and_ni'] = self.partner.deductions.income_tax_and_ni
+                partner_deductions['maintenance'] = self.partner.deductions.maintenance
+                partner_deductions['mortgage_or_rent'] = self.partner.deductions.mortgage_or_rent
+                partner_deductions['criminal_legalaid_contributions'] = self.partner.deductions.criminal_legalaid_contributions
+                d['partner']['deductions'] = partner_deductions
 
         d['property_data'] = self.property_set.values_list('value', 'mortgage_left', 'share')
-        d['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
-        d['on_passported_benefits'] = self.on_passported_benefits
+        d['facts']['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
+        d['facts']['on_passported_benefits'] = self.on_passported_benefits
 
         # Fake
-        d['is_partner_opponent'] = False
+        d['facts']['is_partner_opponent'] = False
 
         return CaseData(**d)
 

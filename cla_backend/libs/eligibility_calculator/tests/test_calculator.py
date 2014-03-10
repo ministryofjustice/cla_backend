@@ -24,12 +24,14 @@ class TestCalculator(unittest.TestCase):
         self.default_calculator = EligibilityChecker(self.get_default_case_data())
 
     def test_gross_income_is_eligible(self):
-        is_elig = self.default_calculator.is_gross_income_eligible()
+        too_little_money = constants.gross_income.BASE_LIMIT - 1
+        case_data = self.get_default_case_data(you__income__earnings=too_little_money)
+        is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
         self.assertTrue(is_elig)
 
     def test_gross_income_is_ineligible(self):
         too_much_money = constants.gross_income.BASE_LIMIT + 1
-        case_data = self.get_default_case_data(earnings=too_much_money)
+        case_data = self.get_default_case_data(you__income__earnings=too_much_money)
         is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
         self.assertFalse(is_elig)
 
@@ -41,8 +43,8 @@ class TestCalculator(unittest.TestCase):
         too_much_money = constants.gross_income.BASE_LIMIT + 1
         for dep_children in range(1,constants.gross_income.INCLUSIVE_CHILDREN_BASE+1):
             case_data = self.get_default_case_data(
-                earnings=too_much_money,
-                dependant_children=dep_children
+                you__income__earnings=too_much_money,
+                facts__dependant_children=dep_children
             )
             is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
             self.assertFalse(is_elig)
@@ -54,8 +56,8 @@ class TestCalculator(unittest.TestCase):
         """
         too_much_money = constants.gross_income.BASE_LIMIT + 1
         case_data = self.get_default_case_data(
-            earnings=too_much_money,
-            dependant_children=5
+            you__income__earnings=too_much_money,
+            facts__dependant_children=5
         )
         is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
         self.assertTrue(is_elig)

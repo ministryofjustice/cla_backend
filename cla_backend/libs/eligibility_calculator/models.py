@@ -173,10 +173,10 @@ class CaseData(ModelMixin, object):
         # total capital not including properties
         capital = 0
 
-        capital += self.you['savings']['savings'] + self.you['savings']['investments'] + self.you['savings']['money_owed'] + self.you['savings']['valuable_items']
+        capital += self.you.savings.savings + self.you.savings.investments + self.you.savings.money_owed + self.you.savings.valuable_items
 
-        if self.facts['has_partner'] and self.partner:
-            capital += self.partner['savings']['savings']+ self.partner['savings']['investments'] + self.partner['savings']['money_owed'] + self.partner['savings']['valuable_items']
+        if not self.has_disputed_partner():
+            capital += self.partner.savings.savings + self.partner.savings.investments + self.partner.savings.money_owed + self.partner.savings.valuable_items
         return capital
 
     def get_property_capital(self):
@@ -186,8 +186,8 @@ class CaseData(ModelMixin, object):
         return (properties_value, mortgages_left)
 
     def total_income(self):
-        income = self.you.get('income', {}).get('earnings', 0) + self.you.get('income', {}).get('other_income', 0)
+        income = self.you.income.earnings + self.you.income.other_income
         if self.facts['has_partner']:
             if not self.has_disputed_partner():
-                income += self.partner.get('income', {}).get('earnings', 0) + self.partner.get('income', {}).get('other_income', 0)
+                income += self.partner.income.earnings + self.partner.income.other_income
         return income

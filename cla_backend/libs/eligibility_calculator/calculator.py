@@ -17,23 +17,30 @@ class EligibilityChecker(object):
         if not hasattr(self, '_disposable_income'):
             gross_income = self.gross_income
 
-            if self.case_data.has_partner:
+            if self.case_data.facts.has_partner:
                 gross_income -= constants.disposable_income.PARTNER_ALLOWANCE
 
             # children
 
             # TODO 2 values for children...
-            gross_income -= self.case_data.dependant_children * constants.disposable_income.CHILD_ALLOWANCE
+            gross_income -= self.case_data.facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE
 
             # Tax + NI
-            gross_income -= self.case_data.income_tax_and_ni
+            gross_income -= self.case_data.you.deductions.income_tax_and_ni
+            if not self.case_data.has_disputed_partner():
+                gross_income -= self.case_data.partner.deductions.income_tax_and_ni
 
             # maintenance 6.3
             gross_income -= self.case_data.maintenance
+            if not self.case_data.has_disputed_partner():
+                gross_income -= self.case_data.partner.deductions.maintenance
 
             # housing
-            mortgage_or_rent = self.case_data.mortgage_or_rent  # excl housing benefit
-            if not self.case_data.dependant_children:
+            mortgage_or_rent = self.case_data.you.deductions.mortgage_or_rent  # excl housing benefit
+            if not self.case_data.has_disputed_partner():
+                mortgage_or_rent += self.case_data.partner.deductions.mortgage_or_rent
+
+            if not self.case_data.facts.dependant_children:
                 mortgage_or_rent = max(mortgage_or_rent, constants.disposable_income.CHILDLESS_HOUSING_CAP)
             gross_income -= mortgage_or_rent
 
@@ -45,7 +52,9 @@ class EligibilityChecker(object):
                     gross_income -= constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
 
             # criminal
-            gross_income -= self.case_data.criminal_legalaid_contributions  # not for now
+            gross_income -= self.case_data.you.deductions.criminal_legalaid_contributions  # not for now
+            if not self.case_data.has_disputed_partner():
+                gross_income -= self.case_data.partner.deductions.criminal_legalaid_contributions
 
             # NOTE ignoring childcare 6.5.2
 
@@ -82,14 +91,14 @@ class EligibilityChecker(object):
         return self._disposable_capital_assets
 
     def is_gross_income_eligible(self):
-        if self.case_data.facts['on_passported_benefits']:
+        if self.case_data.facts.on_passported_benefits:
             return True
 
-        limit = constants.gross_income.get_limit(self.case_data.facts.get('dependant_children', 0))
+        limit = constants.gross_income.get_limit(self.case_data.facts.dependant_children)
         return self.gross_income <= limit
 
     def is_disposable_income_eligible(self):
-        if self.case_data.on_passported_benefits:
+        if self.case_data.facts.on_passported_benefits:
             return True
 
         return self.disposable_income <= constants.disposable_income.LIMIT

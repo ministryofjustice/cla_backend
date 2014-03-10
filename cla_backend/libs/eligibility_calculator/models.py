@@ -10,13 +10,6 @@ class CaseData(object):
         #         'has_partner': None,
         #         'is_partner_opponent': None,
         #         'dependant_children': None
-        'deductions',
-        #         {
-        #             'income_tax_and_ni': None,
-        #             'maintenance': None,
-        #             'mortgage_or_rent': None,
-        #             'criminal_legalaid_contributions': None
-        #         },
          'you',
     # : {
     #         # income
@@ -33,7 +26,13 @@ class CaseData(object):
     #             'valuable_items',
     #             },
     #         },
-    #
+                # 'deductions',
+                #         {
+                #             'income_tax_and_ni': None,
+                #             'maintenance': None,
+                #             'mortgage_or_rent': None,
+                #             'criminal_legalaid_contributions': None
+                #         },
         'partner',
     #         {
     #             'income':
@@ -49,6 +48,14 @@ class CaseData(object):
     #                     'partner_money_owed': None,
     #                     'partner_valuable_items': None,
     #                 },
+
+                    # 'deductions',
+                    #         {
+                    #             'income_tax_and_ni': None,
+                    #             'maintenance': None,
+                    #             'mortgage_or_rent': None,
+                    #             'criminal_legalaid_contributions': None
+                    #         },
     #             },
     #     # properties
         'property_data'

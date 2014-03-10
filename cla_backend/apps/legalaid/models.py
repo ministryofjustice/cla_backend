@@ -186,10 +186,12 @@ class EligibilityCheck(TimeStampedModel):
                 d['partner']['income'] = partner_income
 
             if self.partner.deductions:
-                deductions['income_tax_and_ni'] = self.partner.deductions.income_tax_and_ni
-                deductions['maintenance'] = self.partner.deductions.maintenance
-                deductions['mortgage_or_rent'] = self.partner.deductions.mortgage_or_rent
-                deductions['criminal_legalaid_contributions'] = self.partner.deductions.criminal_legalaid_contributions
+                partner_deductions = {}
+                partner_deductions['income_tax_and_ni'] = self.partner.deductions.income_tax_and_ni
+                partner_deductions['maintenance'] = self.partner.deductions.maintenance
+                partner_deductions['mortgage_or_rent'] = self.partner.deductions.mortgage_or_rent
+                partner_deductions['criminal_legalaid_contributions'] = self.partner.deductions.criminal_legalaid_contributions
+                d['partner']['deductions'] = partner_deductions
 
         d['property_data'] = self.property_set.values_list('value', 'mortgage_left', 'share')
         d['facts']['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60

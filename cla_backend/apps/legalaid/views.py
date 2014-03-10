@@ -1,13 +1,16 @@
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+
 from rest_framework import viewsets, mixins
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+from eligibility_calculator.calculator import EligibilityChecker
+from eligibility_calculator.exceptions import PropertyExpectedException
 
 from .models import Category, EligibilityCheck, Property, Case
-from rest_framework.decorators import action, link
-from rest_framework.response import Response
 from .serializers import CategorySerializer, EligibilityCheckSerializer, \
     PropertySerializer, CaseSerializer
-from eligibility_calculator.calculator import EligibilityChecker
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -31,10 +34,20 @@ class EligibilityCheckViewSet(
     @action()
     def is_eligible(self, request, *args, **kwargs):
         obj = self.get_object()
+
         case_data = obj.to_case_data()
         ec = EligibilityChecker(case_data)
-        result = ec.is_eligible()
-        return Response({'is_eligible': result})
+
+        response = None
+        try:
+            is_eligible = ec.is_eligible()
+            response = 'yes' if is_eligible else 'no'
+        except PropertyExpectedException as e:
+            response = 'unknown'
+
+        return Response({
+            'is_eligible': response
+        })
 
 
 class NestedModelMixin(object):

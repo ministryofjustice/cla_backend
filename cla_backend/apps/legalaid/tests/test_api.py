@@ -9,6 +9,8 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from eligibility_calculator.exceptions import PropertyExpectedException
+
 from ..models import Category, EligibilityCheck, Property, \
     Case, PersonalDetails, Person, Income, Savings
 
@@ -85,7 +87,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             'eligibility_check-is-eligible',
             args=(),
             kwargs={'reference': unicode(reference)}
-            )
+        )
 
     def assertResponseKeys(self, response):
         self.assertItemsEqual(
@@ -276,8 +278,6 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 is_you_or_your_partner_over_60=data['is_you_or_your_partner_over_60']
             )
         )
-
-
 
     def test_create_basic_data_with_on_benefits(self):
         """
@@ -858,7 +858,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             data={},
             format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data['is_eligible'])
+        self.assertEqual(response.data['is_eligible'], 'yes')
 
     @mock.patch('legalaid.views.EligibilityChecker')
     def test_eligibility_check_is_eligible_fail(self, mocked_eligibility_checker):
@@ -869,7 +869,18 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             data={},
             format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFalse(response.data['is_eligible'])
+        self.assertEqual(response.data['is_eligible'], 'no')
+
+    @mock.patch('legalaid.views.EligibilityChecker')
+    def test_eligibility_check_is_eligible_unknown(self, mocked_eligibility_checker):
+        v = mocked_eligibility_checker()
+        v.is_eligible.side_effect = PropertyExpectedException
+        response = self.client.post(
+            self.get_is_eligible_url(self.check.reference),
+            data={},
+            format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['is_eligible'], 'unknown')
 
 
 class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):

@@ -125,46 +125,30 @@ class EligibilityCheck(TimeStampedModel):
 
         d['you'] = {}
 
-        savings = {
-            'savings': 0,
-            'investments': 0,
-            'money_owed': 0,
-            'valuable_items': 0,
-            }
-
-        income = {'earnings': 0,
-                  'other_income': 0,
-                  'self_employed': False}
-        deductions = {
-            'income_tax_and_ni': 0,
-            'maintenance': 0,
-            'mortgage_or_rent': 0,
-            'criminal_legalaid_contributions': 9,
-        }
-
         if self.you:
-
             if self.you.savings:
                 savings = {}
                 savings['savings'] = self.you.savings.bank_balance
                 savings['investments'] = self.you.savings.investment_balance
                 savings['money_owed']  = self.you.savings.credit_balance
                 savings['valuable_items'] = self.you.savings.asset_balance
+                d['you']['savings'] = savings
 
             if self.you.income:
+                income = {}
                 income['earnings'] = self.you.income.earnings
                 income['other_income'] = self.you.income.other_income
                 income['self_employed'] = self.you.income.self_employed or False
+                d['you']['income'] = income
 
             if self.you.deductions:
+                deductions = {}
                 deductions['income_tax_and_ni'] = self.you.deductions.income_tax_and_ni
                 deductions['maintenance'] = self.you.deductions.maintenance
                 deductions['mortgage_or_rent'] = self.you.deductions.mortgage_or_rent
                 deductions['criminal_legalaid_contributions'] = self.you.deductions.criminal_legalaid_contributions
+                d['you']['deductions'] = deductions
 
-        d['you']['savings'] = savings
-        d['you']['income'] = income
-        d['you']['deductions'] = deductions
 
         d['facts']['has_partner'] = self.has_partner
 

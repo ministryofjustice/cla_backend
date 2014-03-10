@@ -90,6 +90,13 @@ class Facts(ModelMixin, object):
     def has_disputed_partner(self):
         return self.has_partner and self.is_partner_opponent
 
+    @property
+    def should_aggregate_partner(self):
+        if self.has_partner:
+            if not self.has_disputed_partner:
+                return True
+        return False
+
 
 class CaseData(ModelMixin, object):
 
@@ -199,7 +206,6 @@ class CaseData(ModelMixin, object):
     @property
     def total_income(self):
         income = self.you.income.total
-        if self.facts.has_partner:
-            if not self.facts.has_disputed_partner:
-                income += self.partner.income.total
+        if self.facts.should_aggregate_partner:
+            income += self.partner.income.total
         return income

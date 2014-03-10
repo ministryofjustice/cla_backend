@@ -27,17 +27,17 @@ class EligibilityChecker(object):
 
             # Tax + NI
             gross_income -= self.case_data.you.deductions.income_tax_and_ni
-            if not self.case_data.facts.has_disputed_partner:
+            if self.case_data.facts.should_aggregate_partner:
                 gross_income -= self.case_data.partner.deductions.income_tax_and_ni
 
             # maintenance 6.3
             gross_income -= self.case_data.you.deductions.maintenance
-            if not self.case_data.facts.has_disputed_partner:
+            if self.case_data.facts.should_aggregate_partner:
                 gross_income -= self.case_data.partner.deductions.maintenance
 
             # housing
             mortgage_or_rent = self.case_data.you.deductions.mortgage_or_rent  # excl housing benefit
-            if not self.case_data.facts.has_disputed_partner:
+            if self.case_data.facts.should_aggregate_partner:
                 mortgage_or_rent += self.case_data.partner.deductions.mortgage_or_rent
 
             if not self.case_data.facts.dependant_children:
@@ -48,12 +48,12 @@ class EligibilityChecker(object):
                 gross_income -= constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
 
             if self.case_data.facts.has_partner:
-                if not self.case_data.facts.has_disputed_partner and not self.case_data.partner.income.self_employed:
+                if self.case_data.facts.should_aggregate_partner and not self.case_data.partner.income.self_employed:
                     gross_income -= constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
 
             # criminal
             gross_income -= self.case_data.you.deductions.criminal_legalaid_contributions  # not for now
-            if not self.case_data.facts.has_disputed_partner:
+            if self.case_data.facts.should_aggregate_partner:
                 gross_income -= self.case_data.partner.deductions.criminal_legalaid_contributions
 
             # NOTE ignoring childcare 6.5.2

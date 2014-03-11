@@ -64,6 +64,7 @@ class Deductions(ModelMixin, object):
     PROPERTY_META = {
         'income_tax_and_ni': None,
         'maintenance': None,
+        'childcare': None,
         'mortgage_or_rent': None,
         'criminal_legalaid_contributions': None
     }

@@ -89,7 +89,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             kwargs={'reference': unicode(reference)}
         )
 
-    def assertResponseKeys(self, response):
+    def assertEligibilityCheckResponseKeys(self, response):
         self.assertItemsEqual(
             response.data.keys(),
             ['reference',
@@ -106,46 +106,54 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
              'is_you_or_your_partner_over_60']
         )
 
+    def assertIncomeEqual(self, data, obj):
+        if obj is None or data is None:
+            self.assertEqual(obj, data)
+            return
+
+        for prop in [
+             'earnings', 'other_income', 'self_employed'
+        ]:
+            self.assertEqual(getattr(obj, prop), data.get(prop))
+
+    def assertSavingsEqual(self, data, obj):
+        if obj is None or data is None:
+            self.assertEqual(obj, data)
+            return
+
+        for prop in [
+            'bank_balance', 'investment_balance',
+            'asset_balance', 'credit_balance'
+        ]:
+            self.assertEqual(getattr(obj, prop), data.get(prop))
+
+    def assertDeductionsEqual(self, data, obj):
+        if obj is None or data is None:
+            self.assertEqual(obj, data)
+            return
+
+        for prop in [
+            'income_tax_and_ni', 'maintenance', 'childcare',
+            'mortgage_or_rent', 'criminal_legalaid_contributions'
+        ]:
+            self.assertEqual(getattr(obj, prop), data.get(prop))
+
     def assertFinanceEqual(self, data, obj):
         if data is None or obj is None:
             self.assertEqual(data, obj)
-        else:
-            o_income = getattr(obj, 'income')
-            d_income = data.get('income')
-            if o_income is None or d_income is None:
-                self.assertEqual(o_income, d_income)
-            else:
-                for prop in [
-                     'earnings', 'other_income', 'self_employed'
-                ]:
-                    self.assertEqual(getattr(o_income, prop), d_income.get(prop))
+            return
 
-            o_savings = getattr(obj, 'savings')
-            d_savings = data.get('savings')
-            if o_savings is None or d_savings is None:
-                self.assertEqual(o_savings, d_savings)
-            else:
-                for prop in [
-                    'bank_balance',
-                    'investment_balance',
-                    'asset_balance',
-                    'credit_balance'
-                ]:
-                    self.assertEqual(getattr(o_savings, prop), d_savings.get(prop))
+        o_income = getattr(obj, 'income')
+        d_income = data.get('income')
+        self.assertIncomeEqual(d_income, o_income)
 
-            o_deductions = getattr(obj, 'deductions')
-            d_deductions = data.get('deductions')
-            if o_deductions is None or d_income is None:
-                self.assertEqual(o_deductions, d_deductions)
-            else:
-                for prop in [
-                    'income_tax_and_ni',
-                    'maintenance',
-                    'mortgage_or_rent',
-                    'criminal_legalaid_contributions'
-                ]:
-                    self.assertEqual(getattr(o_deductions, prop), d_deductions.get(prop))
+        o_savings = getattr(obj, 'savings')
+        d_savings = data.get('savings')
+        self.assertSavingsEqual(d_savings, o_savings)
 
+        o_deductions = getattr(obj, 'deductions')
+        d_deductions = data.get('deductions')
+        self.assertDeductionsEqual(d_deductions, o_deductions)
 
     def assertEligibilityCheckEqual(self, data, check):
         self.assertEqual(data['reference'], unicode(check.reference))
@@ -182,7 +190,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
         self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
@@ -209,7 +217,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
         self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
@@ -238,15 +246,15 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
         self.assertEligibilityCheckEqual(response.data,
-                                         EligibilityCheck(
-                                             reference=response.data['reference'],
-                                             category=category, notes=data['notes'],
-                                             your_problem_notes=data['your_problem_notes'],
-                                             has_partner=data['has_partner']
-                                         )
+            EligibilityCheck(
+                reference=response.data['reference'],
+                category=category, notes=data['notes'],
+                your_problem_notes=data['your_problem_notes'],
+                has_partner=data['has_partner']
+            )
         )
 
     def test_create_basic_data_with_over_60(self):
@@ -267,10 +275,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEligibilityCheckEqual(
-            response.data,
+        self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
                 reference=response.data['reference'],
                 category=category, notes=data['notes'],
@@ -297,10 +304,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEligibilityCheckEqual(
-            response.data,
+        self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
                 reference=response.data['reference'],
                 category=category, notes=data['notes'],
@@ -308,7 +314,6 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 on_passported_benefits=data['on_passported_benefits'],
             )
         )
-
 
     def test_create_then_patch_category(self):
         """
@@ -331,15 +336,15 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
         self.assertEligibilityCheckEqual(response.data,
-                                         EligibilityCheck(
-                                             reference=response.data['reference'],
-                                             category=category, notes=data['notes'],
-                                             your_problem_notes=data['your_problem_notes'],
-                                             dependants_young=2, dependants_old=3
-                                         )
+            EligibilityCheck(
+                reference=response.data['reference'],
+                category=category, notes=data['notes'],
+                your_problem_notes=data['your_problem_notes'],
+                dependants_young=2, dependants_old=3
+            )
         )
 
         data['category'] = category2.code
@@ -349,7 +354,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
 
         self.assertEqual(response2.status_code, status.HTTP_200_OK)
 
-        self.assertResponseKeys(response2)
+        self.assertEligibilityCheckResponseKeys(response2)
         self.assertEqual(response2.data['category'], category2.code)
 
     def test_create_with_properties(self):
@@ -367,7 +372,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
         self.assertEqual(response.data['category'], None)
         self.assertEqual(response.data['notes'], '')
@@ -400,6 +405,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 'deductions': {
                     "income_tax_and_ni": 700,
                     "maintenance": 710,
+                    "childcare": 715,
                     "mortgage_or_rent": 720,
                     "criminal_legalaid_contributions": 730
                 },
@@ -424,7 +430,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
         self.assertEligibilityCheckEqual(
             response.data,
@@ -457,14 +463,15 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "investment_balance": -1,
                     "asset_balance": -1,
                     "credit_balance": -1,
-                    },
+                },
                 'income': {
                     "earnings": -1,
                     "other_income": -1,
-                    },
+                },
                 'deductions': {
                     "income_tax_and_ni": -1,
                     "maintenance": -1,
+                    "childcare": -1,
                     "mortgage_or_rent": -1,
                     "criminal_legalaid_contributions": -1
                 }
@@ -480,8 +487,15 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "earnings": -1,
                     "other_income": -1
                 },
+                'deductions': {
+                    "income_tax_and_ni": -1,
+                    "maintenance": -1,
+                    "childcare": -1,
+                    "mortgage_or_rent": -1,
+                    "criminal_legalaid_contributions": -1
+                }
             },
-            }
+        }
 
         method_callable = getattr(self.client, method)
         response = method_callable(url, data, format='json')
@@ -491,14 +505,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertItemsEqual(
             errors.keys(),
             [
-                'category',
-                'notes',
-                'your_problem_notes',
-                'property_set',
-                'dependants_young',
-                'dependants_old',
-                'you',
-                'partner'
+                'category', 'notes', 'your_problem_notes',
+                'property_set', 'dependants_young', 'dependants_old',
+                'you', 'partner'
             ]
         )
         self.assertEqual(errors['category'], [u"Object with code=-1 does not exist."])
@@ -538,6 +547,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                         {
                             'income_tax_and_ni': [u'Ensure this value is greater than or equal to 0.'],
                             'maintenance': [u'Ensure this value is greater than or equal to 0.'],
+                            'childcare': [u'Ensure this value is greater than or equal to 0.'],
                             'mortgage_or_rent': [u'Ensure this value is greater than or equal to 0.'],
                             'criminal_legalaid_contributions': [u'Ensure this value is greater than or equal to 0.'],
                         }
@@ -563,6 +573,15 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                             'other_income': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ],
+                    'deductions': [
+                        {
+                            'income_tax_and_ni': [u'Ensure this value is greater than or equal to 0.'],
+                            'maintenance': [u'Ensure this value is greater than or equal to 0.'],
+                            'childcare': [u'Ensure this value is greater than or equal to 0.'],
+                            'mortgage_or_rent': [u'Ensure this value is greater than or equal to 0.'],
+                            'criminal_legalaid_contributions': [u'Ensure this value is greater than or equal to 0.'],
+                        }
+                    ]
                 }
             ]
         )
@@ -596,7 +615,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertEqual(Property.objects.count(), 9)
 
         response = self.client.get(self.detail_url, format='json')
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
         self.assertEligibilityCheckEqual(response.data, self.check)
 
     # PATCH
@@ -610,7 +629,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
         self.assertEligibilityCheckEqual(response.data, self.check)
 
     def test_patch_basic_data(self):
@@ -704,6 +723,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 'deductions': {
                     "income_tax_and_ni": 700,
                     "maintenance": 710,
+                    "childcare": 715,
                     "mortgage_or_rent": 720,
                     "criminal_legalaid_contributions": 730
                 },
@@ -719,6 +739,13 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "investment_balance": 2000,
                     "asset_balance": 3000,
                     "credit_balance": 4000,
+                },
+                'deductions': {
+                    "income_tax_and_ni": 7000,
+                    "maintenance": 7100,
+                    "childcare": 7150,
+                    "mortgage_or_rent": 7200,
+                    "criminal_legalaid_contributions": 7300
                 },
             },
         }
@@ -764,6 +791,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 'deductions': {
                     "income_tax_and_ni": 700,
                     "maintenance": 710,
+                    "childcare": 715,
                     "mortgage_or_rent": 720,
                     "criminal_legalaid_contributions": 730
                 }
@@ -830,7 +858,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
 
         # checking the changed properties
         self.check.category = category2
@@ -1003,7 +1031,7 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
 
         self.list_url = reverse('case-list')
 
-    def assertResponseKeys(self, response):
+    def assertEligibilityCheckResponseKeys(self, response):
         self.assertItemsEqual(
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference']
@@ -1066,7 +1094,7 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
             self.list_url, data=data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertResponseKeys(response)
+        self.assertEligibilityCheckResponseKeys(response)
 
         self.assertCaseEqual(response.data,
             Case(

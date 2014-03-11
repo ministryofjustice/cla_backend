@@ -54,6 +54,7 @@ class Income(TimeStampedModel):
 class Deductions(TimeStampedModel):
     income_tax_and_ni = models.PositiveIntegerField(default=0)
     maintenance = models.PositiveIntegerField(default=0)
+    childcare = models.PositiveIntegerField(default=0)
     mortgage_or_rent = models.PositiveIntegerField(default=0)
     criminal_legalaid_contributions = models.PositiveIntegerField(default=0)
 
@@ -118,13 +119,19 @@ class EligibilityCheck(TimeStampedModel):
 
     def to_case_data(self):
         d = {}
-        d['facts'] = {}
+
         if self.category:
             d['category'] = self.category.code
+
+        d['property_data'] = self.property_set.values_list('value', 'mortgage_left', 'share')
+
+        d['facts'] = {}
         d['facts']['dependant_children'] = self.dependants_old + self.dependants_young
+        d['facts']['has_partner'] = self.has_partner
+        d['facts']['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
+        d['facts']['on_passported_benefits'] = self.on_passported_benefits
 
         d['you'] = {}
-
         if self.you:
             if self.you.savings:
                 savings = {}
@@ -145,12 +152,10 @@ class EligibilityCheck(TimeStampedModel):
                 deductions = {}
                 deductions['income_tax_and_ni'] = self.you.deductions.income_tax_and_ni
                 deductions['maintenance'] = self.you.deductions.maintenance
+                deductions['childcare'] = self.you.deductions.childcare
                 deductions['mortgage_or_rent'] = self.you.deductions.mortgage_or_rent
                 deductions['criminal_legalaid_contributions'] = self.you.deductions.criminal_legalaid_contributions
                 d['you']['deductions'] = deductions
-
-
-        d['facts']['has_partner'] = self.has_partner
 
         if self.has_partner:
             d['partner'] = {}
@@ -173,13 +178,10 @@ class EligibilityCheck(TimeStampedModel):
                 partner_deductions = {}
                 partner_deductions['income_tax_and_ni'] = self.partner.deductions.income_tax_and_ni
                 partner_deductions['maintenance'] = self.partner.deductions.maintenance
+                partner_deductions['childcare'] = self.partner.deductions.childcare
                 partner_deductions['mortgage_or_rent'] = self.partner.deductions.mortgage_or_rent
                 partner_deductions['criminal_legalaid_contributions'] = self.partner.deductions.criminal_legalaid_contributions
                 d['partner']['deductions'] = partner_deductions
-
-        d['property_data'] = self.property_set.values_list('value', 'mortgage_left', 'share')
-        d['facts']['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
-        d['facts']['on_passported_benefits'] = self.on_passported_benefits
 
         # Fake
         d['facts']['is_partner_opponent'] = False

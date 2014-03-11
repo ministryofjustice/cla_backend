@@ -1,11 +1,8 @@
 from django.test import TestCase
 
-from model_mommy import mommy, recipe
+from model_mommy import mommy
 
 from eligibility_calculator.models import CaseData, ModelMixin
-from model_mommy.recipe import foreign_key
-
-from ..models import EligibilityCheck
 
 
 def make_recipe(model_name, **kwargs):
@@ -55,25 +52,25 @@ class EligibilityCheckTestCase(TestCase):
         check = make_recipe('eligibility_check',
             category=make_recipe('category', code='code'),
             you=make_recipe('person',
-                     income= make_recipe('income',
-                                            earnings=500,
-                                            other_income=600,
-                                            self_employed=True
-                        ),
-
-                        savings= make_recipe('savings',
-                                             bank_balance=100,
-                                             investment_balance=200,
-                                             asset_balance=300,
-                                             credit_balance=400,
-                                             ),
-                        deductions=make_recipe('deductions',
-                                               income_tax_and_ni=700,
-                                               maintenance=710,
-                                               mortgage_or_rent=720,
-                                               criminal_legalaid_contributions=730
-                                               )
-                            ),
+                income= make_recipe('income',
+                    earnings=500,
+                    other_income=600,
+                    self_employed=True
+                ),
+                savings= make_recipe('savings',
+                    bank_balance=100,
+                    investment_balance=200,
+                    asset_balance=300,
+                    credit_balance=400,
+                ),
+                deductions=make_recipe('deductions',
+                    income_tax_and_ni=700,
+                    maintenance=710,
+                    childcare=715,
+                    mortgage_or_rent=720,
+                    criminal_legalaid_contributions=730
+                )
+            ),
             dependants_young=3, dependants_old=2,
             is_you_or_your_partner_over_60=True,
             on_passported_benefits=True,
@@ -107,6 +104,7 @@ class EligibilityCheckTestCase(TestCase):
                     'deductions': {
                         'income_tax_and_ni': 700,
                         'maintenance': 710,
+                        'childcare': 715,
                         'mortgage_or_rent': 720,
                         'criminal_legalaid_contributions': 730,
                     }
@@ -120,42 +118,45 @@ class EligibilityCheckTestCase(TestCase):
         """
         check = make_recipe('eligibility_check',
             category=make_recipe('category', code='code'),
-            you= make_recipe('person',
-                            income=make_recipe('income',
-                                        earnings=500,
-                                        other_income=600,
-                                        self_employed=True
-                            ),
-
-                            savings= make_recipe('savings',
-                                                 bank_balance=100,
-                                                 investment_balance=200,
-                                                 asset_balance=300,
-                                                 credit_balance=400,
-                                                 ),
-
-                            deductions=make_recipe('deductions',
-                                       income_tax_and_ni=700,
-                                       maintenance=710,
-                                       mortgage_or_rent=720,
-                                       criminal_legalaid_contributions=730
-                                                   )
+            you=make_recipe('person',
+                income=make_recipe('income',
+                    earnings=500,
+                    other_income=600,
+                    self_employed=True
+                ),
+                savings= make_recipe('savings',
+                    bank_balance=100,
+                    investment_balance=200,
+                    asset_balance=300,
+                    credit_balance=400,
+                ),
+                deductions=make_recipe('deductions',
+                    income_tax_and_ni=700,
+                    maintenance=710,
+                    childcare=715,
+                    mortgage_or_rent=720,
+                    criminal_legalaid_contributions=730
+                )
             ),
-            partner=
-            make_recipe('person',
-                        income= make_recipe('income',
-                                            earnings=501,
-                                            other_income=601,
-                                            self_employed=False
-                        ),
-
-                        savings= make_recipe('savings',
-                                             bank_balance=101,
-                                             investment_balance=201,
-                                             asset_balance=301,
-                                             credit_balance=401,
-                                             ),
-
+            partner=make_recipe('person',
+                income= make_recipe('income',
+                    earnings=501,
+                    other_income=601,
+                    self_employed=False
+                ),
+                savings= make_recipe('savings',
+                    bank_balance=101,
+                    investment_balance=201,
+                    asset_balance=301,
+                    credit_balance=401,
+                ),
+                deductions=make_recipe('deductions',
+                    income_tax_and_ni=701,
+                    maintenance=711,
+                    childcare=716,
+                    mortgage_or_rent=721,
+                    criminal_legalaid_contributions=731
+                )
             ),
             dependants_young=3, dependants_old=2,
             is_you_or_your_partner_over_60=True,
@@ -172,25 +173,26 @@ class EligibilityCheckTestCase(TestCase):
                 'on_passported_benefits':True,
                 'has_partner': True,
                 'is_partner_opponent': False,
-                },
+            },
             you={
                 'savings':{
                     'savings':100,
                     'investments': 200,
                     'money_owed':400,
                     'valuable_items': 300,
-                    },
+                },
                 'income': {
                     'earnings': 500,
                     'other_income':600,
                     'self_employed': True,
-                    },
+                },
                 'deductions': {
                     'income_tax_and_ni': 700,
                     'maintenance': 710,
+                    'childcare': 715,
                     'mortgage_or_rent': 720,
                     'criminal_legalaid_contributions': 730,
-                    }
+                }
             },
             partner={
                 'savings':{
@@ -198,12 +200,19 @@ class EligibilityCheckTestCase(TestCase):
                     'investments': 201,
                     'money_owed':401,
                     'valuable_items': 301,
-                    },
+                },
                 'income': {
                     'earnings': 501,
                     'other_income':601,
                     'self_employed': False,
-                    },
+                },
+                'deductions': {
+                    'income_tax_and_ni': 701,
+                    'maintenance': 711,
+                    'childcare': 716,
+                    'mortgage_or_rent': 721,
+                    'criminal_legalaid_contributions': 731,
+                }
             },
             property_data=[],
         ))

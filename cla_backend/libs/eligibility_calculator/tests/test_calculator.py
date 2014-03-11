@@ -1,14 +1,13 @@
 import unittest
+import random
 
 from ..calculator import EligibilityChecker
 from ..models import CaseData
-from ..exceptions import PropertyExpectedException
 from .. import constants
 
 from . import fixtures
 
-
-class TestCalculator(unittest.TestCase):
+class CalculatorTestBase(unittest.TestCase):
 
     def get_default_case_data(self, **kwargs):
         """
@@ -19,6 +18,10 @@ class TestCalculator(unittest.TestCase):
         :return: CaseData object with default values
         """
         return CaseData(**fixtures.get_default_case_data(**kwargs))
+
+
+class TestCalculator(CalculatorTestBase):
+
 
     def setUp(self):
         self.default_calculator = EligibilityChecker(self.get_default_case_data())
@@ -60,4 +63,36 @@ class TestCalculator(unittest.TestCase):
             facts__dependant_children=5
         )
         is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
+        self.assertTrue(is_elig)
+
+
+
+class TestApplicantOnBenefitsCalculator(CalculatorTestBase):
+    """
+    An applicant on passported benefits should be eligible
+    solely on their disposable capital income test.
+
+    They should not be asked income questions.
+    """
+
+    def test_applicant_on_single_benefits_no_capital_is_eligible(self):
+
+        case_data = self.get_default_case_data(
+            facts__on_passported_benefits=True,
+        )
+        checker = EligibilityChecker(case_data)
+        is_elig = checker.is_eligible()
+        self.assertEqual(case_data.you.income.total, 0)
+        self.assertEqual(case_data.total_income, 0)
+        self.assertTrue(is_elig)
+
+    def test_applicant_on_single_benefits_no_capital_has_property_is_eligible(self):
+        case_data = self.get_default_case_data(
+            facts__on_passported_benefits=True,
+            property_data=[(10800000, 0, 100,)]
+            )
+        checker = EligibilityChecker(case_data)
+        is_elig = checker.is_eligible()
+        self.assertEqual(case_data.you.income.total, 0)
+        self.assertEqual(case_data.total_income, 0)
         self.assertTrue(is_elig)

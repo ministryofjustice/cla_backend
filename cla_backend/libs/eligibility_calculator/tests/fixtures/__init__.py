@@ -11,15 +11,15 @@ case_data_dict = {
     },
     'you': {
         'income': {
-            'earnings': 165700,
+            'earnings': 0,
             'other_income': 0,
             'self_employed': False,
         },
         'savings': {
-            'savings': 220000,
-            'investments': 220000,
-            'money_owed': 220000 ,
-            'valuable_items': 220000,
+            'savings': 0,
+            'investments': 0,
+            'money_owed':  0,
+            'valuable_items': 0,
         },
         'deductions':
             {
@@ -29,7 +29,8 @@ case_data_dict = {
                 'criminal_legalaid_contributions': 0,
             },
     },
-    'property_data': [(22, 0, 100)],
+    'property_data': [],
+    # 'property_data': [(22, 0, 100)],
 }
 
 

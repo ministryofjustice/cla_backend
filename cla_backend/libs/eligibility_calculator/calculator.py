@@ -56,7 +56,10 @@ class EligibilityChecker(object):
             if self.case_data.facts.should_aggregate_partner:
                 gross_income -= self.case_data.partner.deductions.criminal_legalaid_contributions
 
-            # NOTE ignoring childcare 6.5.2
+            # childcare 6.5.2
+            gross_income -= self.case_data.you.deductions.childcare
+            if self.case_data.facts.should_aggregate_partner:
+                gross_income -= self.case_data.partner.deductions.childcare
 
             self._disposable_income = gross_income
 

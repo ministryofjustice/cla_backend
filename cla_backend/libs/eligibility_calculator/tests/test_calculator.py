@@ -459,54 +459,242 @@ class DisposableCapitalTestCase(unittest.TestCase):
 
     def test_disposable_capital_assets_over_mortgage_disregard(self):
         """
-        TEST: mock liquid capital and property capital, not disputed partner
-        property capital over MORTGAGE_DISREGARD
-        returns MORTGAGE_DISREGARD,
+        TEST:
+            mocked liquid capital and property capital
+            not disputed partner
+            mortgages left > MORTGAGE_DISREGARD
+
+        result:
+            mortgages left capped to constants.disposable_capital.MORTGAGE_DISREGARD
         """
-        pass
+        facts = mock.MagicMock(
+            has_disputed_partner=False,
+            is_you_or_your_partner_over_60=False
+        )
+
+        properties_value = constants.disposable_capital.MORTGAGE_DISREGARD + \
+            constants.disposable_capital.EQUITY_DISREGARD + \
+            random.randint(50, 1000)
+        mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD + 1000
+
+        case_data = mock.MagicMock(
+            facts=facts,
+            liquid_capital=random.randint(50, 1000),
+            property_capital=(properties_value, mortgages_left)
+        )
+
+        # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
+        with mock.patch.object(
+            constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
+        ) as mocked_pensioner_disregard:
+            ec = EligibilityChecker(case_data)
+
+            expected_value = 0 + \
+                case_data.liquid_capital + \
+                (
+                    case_data.property_capital[0] - \
+                    constants.disposable_capital.MORTGAGE_DISREGARD - \
+                    constants.disposable_capital.EQUITY_DISREGARD
+                )
+
+            self.assertEqual(expected_value, ec.disposable_capital_assets)
+            self.assertEqual(mocked_pensioner_disregard.get.called, False)
 
     def test_disposable_capital_assets_exactly_equal_mortgage_disregard(self):
         """
-        TEST: mock liquid capital and property capital, not disputed partner
-        property capital == MORTGAGE_DISREGARD
-        asserts property_capital == property_capital
+        TEST:
+            mocked liquid capital and property capital
+            not disputed partner
+            mortgages left == MORTGAGE_DISREGARD
+
+        result:
+            constants.disposable_capital.MORTGAGE_DISREGARD used
         """
-        pass
+        facts = mock.MagicMock(
+            has_disputed_partner=False,
+            is_you_or_your_partner_over_60=False
+        )
+
+        properties_value = constants.disposable_capital.MORTGAGE_DISREGARD + \
+            constants.disposable_capital.EQUITY_DISREGARD + \
+            random.randint(50, 1000)
+        mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD
+
+        case_data = mock.MagicMock(
+            facts=facts,
+            liquid_capital=random.randint(50, 1000),
+            property_capital=(properties_value, mortgages_left)
+        )
+
+        # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
+        with mock.patch.object(
+            constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
+        ) as mocked_pensioner_disregard:
+            ec = EligibilityChecker(case_data)
+
+            expected_value = 0 + \
+                case_data.liquid_capital + \
+                (
+                    case_data.property_capital[0] - \
+                    constants.disposable_capital.MORTGAGE_DISREGARD - \
+                    constants.disposable_capital.EQUITY_DISREGARD
+                )
+
+            self.assertEqual(expected_value, ec.disposable_capital_assets)
+            self.assertEqual(mocked_pensioner_disregard.get.called, False)
 
     def test_disposable_capital_assets_under_mortgage_disregard(self):
         """
-        TEST: mock liquid capital and property capital, not disputed partner
-        property capital == MORTGAGE_DISREGARD
-        asserts property_capital == property_capital
-        """
-        pass
+        TEST:
+            mocked liquid capital and property capital
+            not disputed partner
+            mortgages left < MORTGAGE_DISREGARD
 
-    def test_disposable_capital_assets_not_negative(self):
+        result:
+            mortgages left used
         """
-        TEST: mock liquid capital and property capital, not disputed partner
-        result can't be negative after subtracting equity disregard
+        facts = mock.MagicMock(
+            has_disputed_partner=False,
+            is_you_or_your_partner_over_60=False
+        )
+
+        properties_value = constants.disposable_capital.MORTGAGE_DISREGARD + \
+            constants.disposable_capital.EQUITY_DISREGARD + \
+            random.randint(50, 1000)
+        mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD
+
+        case_data = mock.MagicMock(
+            facts=facts,
+            liquid_capital=random.randint(50, 1000),
+            property_capital=(properties_value, mortgages_left)
+        )
+
+        # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
+        with mock.patch.object(
+            constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
+        ) as mocked_pensioner_disregard:
+            ec = EligibilityChecker(case_data)
+
+            expected_value = 0 + \
+                case_data.liquid_capital + \
+                (
+                    case_data.property_capital[0] - \
+                    mortgages_left - \
+                    constants.disposable_capital.EQUITY_DISREGARD
+                )
+
+            self.assertEqual(expected_value, ec.disposable_capital_assets)
+            self.assertEqual(mocked_pensioner_disregard.get.called, False)
+
+    def test_disposable_capital_assets_mortgage_not_negative(self):
         """
-        pass
+        TEST:
+            mocked liquid capital and property capital
+            not disputed partner
+            properties_value == mortgages left == MORTGAGE_DISREGARD
+
+        result:
+            EQUITY_DISREGARD not subtracted
+        """
+        facts = mock.MagicMock(
+            has_disputed_partner=False,
+            is_you_or_your_partner_over_60=False
+        )
+
+        mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD
+        properties_value = mortgages_left
+
+        case_data = mock.MagicMock(
+            facts=facts,
+            liquid_capital=random.randint(50, 1000),
+            property_capital=(properties_value, mortgages_left)
+        )
+
+        # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
+        with mock.patch.object(
+            constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
+        ) as mocked_pensioner_disregard:
+            ec = EligibilityChecker(case_data)
+
+            expected_value = case_data.liquid_capital
+
+            self.assertEqual(expected_value, ec.disposable_capital_assets)
+            self.assertEqual(mocked_pensioner_disregard.get.called, False)
 
     def test_disposable_capital_assets_subtracts_pensioner_disregard(self):
         """
-        TEST: mock liquid capital and property capital, not disputed partner
-        property capital mocked to return (0, 0),
-        disposable_capital mocked to be > pensioner_disregard
-        is_you_or_partner_over_60 = True
+        TEST:
+            mocked liquid capital and property capital
+            not disputed partner
+            is_you_or_partner_over_60 = True
+            properties_value == mortgages left == 0
+
+            liquid_capital > pensioner_disregard
+
+        result:
+            disposable_capital = liquid_capital - pensioner_disregard
         """
-        pass
+        facts = mock.MagicMock(
+            has_disputed_partner=False,
+            is_you_or_your_partner_over_60=True
+        )
+
+        case_data = mock.MagicMock(
+            facts=facts,
+            liquid_capital=random.randint(6000000, 8000000),
+            property_capital=(0, 0)
+        )
+
+        pensioner_disregard_limit = 5000000
+        with mock.patch.object(
+            constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
+        ) as mocked_pensioner_disregard:
+            mocked_pensioner_disregard.get.return_value = pensioner_disregard_limit
+            ec = EligibilityChecker(case_data)
+
+            expected_value = case_data.liquid_capital - pensioner_disregard_limit
+
+            self.assertEqual(expected_value, ec.disposable_capital_assets)
+            self.assertEqual(mocked_pensioner_disregard.get.called, True)
 
     def test_disposable_capital_assets_subtracts_pensioner_disregard_but_cant_be_negative(self):
         """
-        TEST: mock liquid capital and property capital, not disputed partner,
-        disposable capital mocked = 0
-        property capital mocked to return (0, 0),
-        is_you_or_partner_over_60 = True
+        TEST:
+            mocked liquid capital and property capital
+            not disputed partner
+            is_you_or_partner_over_60 = True
+            properties_value == mortgages left == 0
+
+            liquid_capital < pensioner_disregard
+
+        result:
+            disposable_capital = 0 (no negative numbers returned)
         """
-        pass
+        facts = mock.MagicMock(
+            has_disputed_partner=False,
+            is_you_or_your_partner_over_60=True
+        )
+
+        case_data = mock.MagicMock(
+            facts=facts,
+            liquid_capital=random.randint(50, 4999999),
+            property_capital=(0, 0)
+        )
+
+        pensioner_disregard_limit = 5000000
+        with mock.patch.object(
+            constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
+        ) as mocked_pensioner_disregard:
+            mocked_pensioner_disregard.get.return_value = pensioner_disregard_limit
+            ec = EligibilityChecker(case_data)
+
+            expected_value = 0
+
+            self.assertEqual(expected_value, ec.disposable_capital_assets)
+            self.assertEqual(mocked_pensioner_disregard.get.called, True)
 
     #here
+
     def test_disposable_capital_is_partner_opponent(self):
         """
         Should raise NotImplementedError,

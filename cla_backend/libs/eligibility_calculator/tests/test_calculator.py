@@ -113,8 +113,8 @@ class GrossIncomeTestCase(CalculatorTestBase):
         TEST: Gross income not called
         """
         case_data = mock.MagicMock()
-        case_data.facts.on_passported_benefits = True
-        case_data.total_income = mock.PropertyMock()
+        type(case_data.facts).on_passported_benefits = mock.PropertyMock(return_value=True)
+        type(case_data).total_income = mock.PropertyMock()
         with mock.patch.object(
                 EligibilityChecker,'gross_income',
                 new_callable=mock.PropertyMock) as mocked_gross_income:
@@ -123,56 +123,62 @@ class GrossIncomeTestCase(CalculatorTestBase):
             self.assertFalse(case_data.total_income.called)
             self.assertFalse(mocked_gross_income.called)
 
-    @mock.patch('eligibility_calculator.calculator.constants')
-    def test_is_gross_income_eligible_on_limit(self, constants):
+    def test_is_gross_income_eligible_on_limit(self):
         """
         TEST: eligibility depends on mocked limit
         """
-        constants.gross_income.get_limit.return_value = 500
-        case_data = mock.MagicMock()
-        case_data.facts.on_passported_benefits = False
-        with mock.patch.object(
-                EligibilityChecker,
-                'gross_income',
-                new_callable=mock.PropertyMock) as mocked_gross_income:
-            mocked_gross_income.return_value = 500
-            ec = EligibilityChecker(case_data)
-            self.assertTrue(ec.is_gross_income_eligible())
-            mocked_gross_income.assert_called_once_with()
+        with mock.patch.object(constants, 'gross_income') as mocked_constant_gross_income:
+            mocked_constant_gross_income.get_limit.return_value = 500
+            case_data = mock.MagicMock()
+            type(case_data.facts).on_passported_benefits = mock.PropertyMock(return_value=False)
+            type(case_data.facts).dependant_children = mock.PropertyMock(return_value=0)
+            with mock.patch.object(
+                    EligibilityChecker,
+                    'gross_income',
+                    new_callable=mock.PropertyMock) as mocked_gross_income:
+                mocked_gross_income.return_value = 500
+                ec = EligibilityChecker(case_data)
+                self.assertTrue(ec.is_gross_income_eligible())
+                mocked_constant_gross_income.get_limit.assert_called_with(0)
+                mocked_gross_income.assert_called_once_with()
 
-    @mock.patch('eligibility_calculator.calculator.constants')
-    def test_is_gross_income_eligible_under_limit(self, constants):
+    def test_is_gross_income_eligible_under_limit(self):
         """
         TEST: eligibility depends on mocked limit
         """
-        constants.gross_income.get_limit.return_value = 500
-        case_data = mock.MagicMock()
-        case_data.facts.on_passported_benefits = False
-        with mock.patch.object(
-                EligibilityChecker,
-                'gross_income',
-                new_callable=mock.PropertyMock) as mocked_gross_income:
-            mocked_gross_income.return_value = 499
-            ec = EligibilityChecker(case_data)
-            self.assertTrue(ec.is_gross_income_eligible())
-            mocked_gross_income.assert_called_once_with()
+        with mock.patch.object(constants, 'gross_income') as mocked_constant_gross_income:
+            mocked_constant_gross_income.get_limit.return_value = 500
+            case_data = mock.MagicMock()
+            type(case_data.facts).on_passported_benefits = mock.PropertyMock(return_value=False)
+            type(case_data.facts).dependant_children = mock.PropertyMock(return_value=0)
+            with mock.patch.object(
+                    EligibilityChecker,
+                    'gross_income',
+                    new_callable=mock.PropertyMock) as mocked_gross_income:
+                mocked_gross_income.return_value = 499
+                ec = EligibilityChecker(case_data)
+                self.assertTrue(ec.is_gross_income_eligible())
+                mocked_constant_gross_income.get_limit.assert_called_with(0)
+                mocked_gross_income.assert_called_once_with()
 
-    @mock.patch('eligibility_calculator.calculator.constants')
     def test_is_gross_income_not_eligible(self):
         """
         TEST: eligibility depends on mocked limit
         """
-        constants.gross_income.get_limit.return_value = 500
-        case_data = mock.MagicMock()
-        case_data.facts.on_passported_benefits = False
-        with mock.patch.object(
-                EligibilityChecker,
-                'gross_income',
-                new_callable=mock.PropertyMock) as mocked_gross_income:
-            mocked_gross_income.return_value = 499
-            ec = EligibilityChecker(case_data)
-            self.assertTrue(ec.is_gross_income_eligible())
-            mocked_gross_income.assert_called_once_with()
+        with mock.patch.object(constants, 'gross_income') as mocked_constant_gross_income:
+            mocked_constant_gross_income.get_limit.return_value = 500
+            case_data = mock.MagicMock()
+            type(case_data.facts).on_passported_benefits = mock.PropertyMock(return_value=False)
+            type(case_data.facts).dependant_children = mock.PropertyMock(return_value=0)
+            with mock.patch.object(
+                    EligibilityChecker,
+                    'gross_income',
+                    new_callable=mock.PropertyMock) as mocked_gross_income:
+                mocked_gross_income.return_value = 501
+                ec = EligibilityChecker(case_data)
+                self.assertFalse(ec.is_gross_income_eligible())
+                mocked_constant_gross_income.get_limit.assert_called_with(0)
+                mocked_gross_income.assert_called_once_with()
 
 
 class DisposableIncomeTestCase(unittest.TestCase):
@@ -700,21 +706,67 @@ class DisposableCapitalTestCase(unittest.TestCase):
         Should raise NotImplementedError,
         mock has_disputed_partner = True
         """
-        pass
-        # with self.assertRaises(NotImplementedError):
-        #     pass
+        case_data = mock.MagicMock()
+        mocked_has_disputed_partner = mock.PropertyMock(return_value=True)
+        type(case_data.facts).has_disputed_partner = mocked_has_disputed_partner
+        ec = EligibilityChecker(case_data)
+        with self.assertRaises(NotImplementedError):
+            _ = ec.disposable_capital_assets
+        self.assertTrue(mocked_has_disputed_partner.called)
 
-    def test_is_disposable_capital_eligible(self):
+    def test_is_disposable_capital_eligible_under_limit(self):
         """
         TEST: with mocked disposable_capital_assets and get_limit
         """
-        pass
+        with mock.patch.object(constants.disposable_capital, 'get_limit') as mocked_get_limit:
+            mocked_get_limit.return_value = 700000
+            case_data = mock.MagicMock()
+            type(case_data).category = mock.PropertyMock(return_value=u'blah blah')
+            with mock.patch.object(
+                    EligibilityChecker,
+                    'disposable_capital_assets',
+                    new_callable=mock.PropertyMock) as mocked_disposable_capital_assets:
+                mocked_disposable_capital_assets.return_value = 500
+                ec = EligibilityChecker(case_data)
+                self.assertTrue(ec.is_disposable_capital_eligible())
+                mocked_get_limit.assert_called_once_with(u'blah blah')
+                mocked_disposable_capital_assets.assert_called_once_with()
+
+    def test_is_disposable_capital_eligible_on_limit(self):
+        """
+        TEST: with mocked disposable_capital_assets and get_limit
+        """
+        with mock.patch.object(constants.disposable_capital, 'get_limit') as mocked_get_limit:
+            mocked_get_limit.return_value = 700000
+            case_data = mock.MagicMock()
+            type(case_data).category = mock.PropertyMock(return_value=u'blah blah')
+            with mock.patch.object(
+                    EligibilityChecker,
+                    'disposable_capital_assets',
+                    new_callable=mock.PropertyMock) as mocked_disposable_capital_assets:
+                mocked_disposable_capital_assets.return_value = 700000
+                ec = EligibilityChecker(case_data)
+                self.assertTrue(ec.is_disposable_capital_eligible())
+                mocked_get_limit.assert_called_once_with(u'blah blah')
+                mocked_disposable_capital_assets.assert_called_once_with()
 
     def test_is_disposable_capital_not_eligible(self):
         """
         TEST: with mocked disposable_capital_assets and get_limit
         """
-        pass
+        with mock.patch.object(constants.disposable_capital, 'get_limit') as mocked_get_limit:
+            mocked_get_limit.return_value = 700000
+            case_data = mock.MagicMock()
+            type(case_data).category = mock.PropertyMock(return_value=u'blah blah')
+            with mock.patch.object(
+                    EligibilityChecker,
+                    'disposable_capital_assets',
+                    new_callable=mock.PropertyMock) as mocked_disposable_capital_assets:
+                mocked_disposable_capital_assets.return_value = 700001
+                ec = EligibilityChecker(case_data)
+                self.assertFalse(ec.is_disposable_capital_eligible())
+                mocked_get_limit.assert_called_once_with(u'blah blah')
+                mocked_disposable_capital_assets.assert_called_once_with()
 
 
 class IsEligibleTestCase(unittest.TestCase):
@@ -725,7 +777,18 @@ class IsEligibleTestCase(unittest.TestCase):
         is_gross_income_eligible, is_disposable_income are not called
         asserts is_eligible = False
         """
-        pass
+        case_data = mock.MagicMock()
+        mocked_on_passported_benefits = mock.PropertyMock()
+        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
+        self.assertFalse(mocked_on_passported_benefits.called)
+        ec = EligibilityChecker(case_data)
+        ec.is_gross_income_eligible = mock.MagicMock()
+        ec.is_disposable_income_eligible = mock.MagicMock()
+        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=False)
+        self.assertFalse(ec.is_eligible())
+        ec.is_disposable_capital_eligible.assert_called_once_with()
+        self.assertFalse(ec.is_gross_income_eligible.called)
+        self.assertFalse(ec.is_disposable_income_eligible.called)
 
     def test_is_gross_income_not_eligible(self):
         """
@@ -736,7 +799,19 @@ class IsEligibleTestCase(unittest.TestCase):
         is_disposable_income is not called
         asserts is_eligible = False
         """
-        pass
+        case_data = mock.MagicMock()
+        mocked_on_passported_benefits = mock.PropertyMock()
+        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
+        self.assertFalse(mocked_on_passported_benefits.called)
+        ec = EligibilityChecker(case_data)
+        ec.is_disposable_income_eligible = mock.MagicMock()
+        ec.is_gross_income_eligible = mock.MagicMock(return_value=False)
+        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=True)
+
+        self.assertFalse(ec.is_eligible())
+        ec.is_disposable_capital_eligible.assert_called_once_with()
+        ec.is_gross_income_eligible.assert_called_once_with()
+        self.assertFalse(ec.is_disposable_income_eligible.called)
 
     def test_is_disposable_income_not_eligible(self):
         """
@@ -746,7 +821,19 @@ class IsEligibleTestCase(unittest.TestCase):
             is_disposable_income = False
         asserts is_eligible = False
         """
-        pass
+        case_data = mock.MagicMock()
+        mocked_on_passported_benefits = mock.PropertyMock()
+        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
+        self.assertFalse(mocked_on_passported_benefits.called)
+        ec = EligibilityChecker(case_data)
+        ec.is_disposable_income_eligible = mock.MagicMock(return_value=False)
+        ec.is_gross_income_eligible = mock.MagicMock(return_value=True)
+        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=True)
+
+        self.assertFalse(ec.is_eligible())
+        ec.is_disposable_capital_eligible.assert_called_once_with()
+        ec.is_gross_income_eligible.assert_called_once_with()
+        ec.is_disposable_capital_eligible.assert_called_once_with()
 
     def test_is_disposable_income_eligible(self):
         """
@@ -756,4 +843,17 @@ class IsEligibleTestCase(unittest.TestCase):
             is_disposable_income = True
         asserts is_eligible = True
         """
-        pass
+        case_data = mock.MagicMock()
+        mocked_on_passported_benefits = mock.PropertyMock()
+        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
+        self.assertFalse(mocked_on_passported_benefits.called)
+        ec = EligibilityChecker(case_data)
+        ec.is_disposable_income_eligible = mock.MagicMock(return_value=True)
+        ec.is_gross_income_eligible = mock.MagicMock(return_value=True)
+        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=True)
+
+        self.assertTrue(ec.is_eligible())
+        ec.is_disposable_capital_eligible.assert_called_once_with()
+        ec.is_gross_income_eligible.assert_called_once_with()
+        ec.is_disposable_capital_eligible.assert_called_once_with()
+

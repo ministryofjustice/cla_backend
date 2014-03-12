@@ -159,7 +159,62 @@ class DisposableIncomeTestCase(unittest.TestCase):
         should be equal to sum of above random values
 
         """
-        pass
+        facts = mock.MagicMock(
+            has_partner=True,
+            dependant_children=random.randint(2, 5),
+            should_aggregate_partner=True
+        )
+        you = mock.MagicMock(
+            deductions=mock.MagicMock(
+                income_tax_and_ni=random.randint(50, 1000),
+                maintenance=random.randint(50, 1000),
+                mortgage_or_rent=random.randint(50, 1000),
+                childcare=random.randint(50, 1000),
+                criminal_legalaid_contributions=random.randint(50, 1000)
+            ),
+            income=mock.MagicMock(
+                self_employed=False
+            )
+        )
+        partner = mock.MagicMock(
+            deductions=mock.MagicMock(
+                income_tax_and_ni=random.randint(50, 1000),
+                maintenance=random.randint(50, 1000),
+                mortgage_or_rent=random.randint(50, 1000),
+                childcare=random.randint(50, 1000),
+                criminal_legalaid_contributions=random.randint(50, 1000)
+            ),
+            income=mock.MagicMock(
+                self_employed=False
+            )
+        )
+
+        case_data = mock.MagicMock(
+            facts=facts, you=you, partner=partner
+        )
+
+        ec = EligibilityChecker(case_data)
+        type(ec).gross_income = mock.PropertyMock(
+            return_value=random.randint(5000, 100000)
+        )
+
+        expected_value = ec.gross_income - \
+            constants.disposable_income.PARTNER_ALLOWANCE - \
+            facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE - \
+            you.deductions.income_tax_and_ni - \
+            you.deductions.maintenance - \
+            you.deductions.mortgage_or_rent - \
+            you.deductions.childcare - \
+            you.deductions.criminal_legalaid_contributions - \
+            partner.deductions.income_tax_and_ni - \
+            partner.deductions.maintenance - \
+            partner.deductions.mortgage_or_rent - \
+            partner.deductions.childcare - \
+            partner.deductions.criminal_legalaid_contributions - \
+            constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE - \
+            constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
+
+        self.assertEqual(expected_value, ec.disposable_income)
 
     def test_disposable_income_single_without_children_below_cap(self):
         """
@@ -180,7 +235,41 @@ class DisposableIncomeTestCase(unittest.TestCase):
         should be equal to sum of above random values
 
         """
-        pass
+        facts = mock.MagicMock(
+            has_partner=False,
+            dependant_children=0,
+            should_aggregate_partner=False
+        )
+        you = mock.MagicMock(
+            deductions=mock.MagicMock(
+                income_tax_and_ni=random.randint(50, 1000),
+                maintenance=random.randint(50, 1000),
+                mortgage_or_rent=constants.disposable_income.CHILDLESS_HOUSING_CAP-1000,
+                childcare=random.randint(50, 1000),
+                criminal_legalaid_contributions=random.randint(50, 1000)
+            ),
+            income=mock.MagicMock(
+                self_employed=True
+            )
+        )
+
+        case_data = mock.MagicMock(
+            facts=facts, you=you
+        )
+
+        ec = EligibilityChecker(case_data)
+        type(ec).gross_income = mock.PropertyMock(
+            return_value=random.randint(5000, 100000)
+        )
+
+        expected_value = ec.gross_income - \
+            you.deductions.income_tax_and_ni - \
+            you.deductions.maintenance - \
+            you.deductions.mortgage_or_rent - \
+            you.deductions.childcare - \
+            you.deductions.criminal_legalaid_contributions
+
+        self.assertEqual(expected_value, ec.disposable_income)
 
     def test_disposable_income_single_without_children_above_cap(self):
         """
@@ -200,27 +289,91 @@ class DisposableIncomeTestCase(unittest.TestCase):
 
         should be equal to sum of above random values
 
+        Mortgage or rent is capped to
+            constants.disposable_income.CHILDLESS_HOUSING_CAP
         """
-        pass
+        facts = mock.MagicMock(
+            has_partner=False,
+            dependant_children=0,
+            should_aggregate_partner=False
+        )
+        you = mock.MagicMock(
+            deductions=mock.MagicMock(
+                income_tax_and_ni=random.randint(50, 1000),
+                maintenance=random.randint(50, 1000),
+                mortgage_or_rent=constants.disposable_income.CHILDLESS_HOUSING_CAP+1000,
+                childcare=random.randint(50, 1000),
+                criminal_legalaid_contributions=random.randint(50, 1000)
+            ),
+            income=mock.MagicMock(
+                self_employed=True
+            )
+        )
+
+        case_data = mock.MagicMock(
+            facts=facts, you=you
+        )
+
+        ec = EligibilityChecker(case_data)
+        type(ec).gross_income = mock.PropertyMock(
+            return_value=random.randint(5000, 100000)
+        )
+
+        expected_value = ec.gross_income - \
+            you.deductions.income_tax_and_ni - \
+            you.deductions.maintenance - \
+            constants.disposable_income.CHILDLESS_HOUSING_CAP - \
+            you.deductions.childcare - \
+            you.deductions.criminal_legalaid_contributions
+
+        self.assertEqual(expected_value, ec.disposable_income)
 
     def test_on_passported_benefits_is_disposable_income_eligible(self):
         """
         TEST: disposable income not called
         """
+        facts = mock.MagicMock(
+            on_passported_benefits=True
+        )
+        case_data = mock.MagicMock(facts=facts)
 
-        pass
+        ec = EligibilityChecker(case_data)
+        type(ec).disposable_income = mock.PropertyMock()
+
+        self.assertTrue(ec.is_disposable_income_eligible())
+        self.assertEqual(ec.disposable_income.called, False)
 
     def test_is_disposable_income_eligible(self):
         """
         TEST: mock disposable income
         """
-        pass
+        facts = mock.MagicMock(
+            on_passported_benefits=False
+        )
+        case_data = mock.MagicMock(facts=facts)
+
+        ec = EligibilityChecker(case_data)
+        type(ec).disposable_income = mock.PropertyMock(
+            return_value=constants.disposable_income.LIMIT
+        )
+
+        self.assertTrue(ec.is_disposable_income_eligible())
 
     def test_is_disposable_income_not_eligible(self):
         """
         TEST: mock disposable income
         """
-        pass
+        facts = mock.MagicMock(
+            on_passported_benefits=False
+        )
+        case_data = mock.MagicMock(facts=facts)
+
+        ec = EligibilityChecker(case_data)
+        type(ec).disposable_income = mock.PropertyMock(
+            return_value=constants.disposable_income.LIMIT+1
+        )
+
+        self.assertFalse(ec.is_disposable_income_eligible())
 
 
 class DisposableCapitalTestCase(unittest.TestCase):

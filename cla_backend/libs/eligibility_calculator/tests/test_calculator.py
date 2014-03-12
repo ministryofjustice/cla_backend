@@ -1,4 +1,5 @@
 import unittest
+import mock
 import random
 
 from ..calculator import EligibilityChecker
@@ -96,3 +97,242 @@ class TestApplicantOnBenefitsCalculator(CalculatorTestBase):
         self.assertEqual(case_data.you.income.total, 0)
         self.assertEqual(case_data.total_income, 0)
         self.assertTrue(is_elig)
+
+
+class GrossIncomeTestCase(CalculatorTestBase):
+    def test_gross_income(self):
+        """
+        TEST: Gross income == mocked total income
+        """
+        case_data = mock.MagicMock(total_income=500)
+        ec = EligibilityChecker(case_data)
+        self.assertEqual(ec.gross_income, 500)
+
+    def test_on_passported_benefits_is_gross_income_eligible(self):
+        """
+        TEST: Gross income not called
+        """
+        # case_data = mock.MagicMock(facts={'on_passported_benefits': True})
+        # ec = EligibilityChecker(case_data)
+        # ec.is_gross_income_eligible()
+        # case_data.facts.assert_has_calls()
+        pass
+
+
+    def test_is_gross_income_eligible(self):
+        """
+        TEST: eligibility depends on mocked limit
+        """
+        pass
+
+    def test_is_gross_income_not_eligible(self):
+        """
+        TEST: eligibility depends on mocked limit
+        """
+        pass
+
+
+class DisposableIncomeTestCase(unittest.TestCase):
+
+    def test_disposable_income_with_children(self):
+        """
+        TEST: with mocked gross_income,
+        has_partner = True
+
+        we check that
+        disposable capital returns gross_income minus
+        allowance for dependent children > 1,
+        income_tax_and_ni > 1,
+        maintainable > 1
+        self employed = False
+        mortgage_or_rent > 1
+        childcare > 1
+        criminal_legalaid_contributions > 1
+
+        should_aggregate_partner = True,
+            partner.income_tax_and_ni > 1
+            partner.maintenance > 1
+            partner.self_employed = False
+            partner.childcare > 1
+            partner.criminal_legalaid_contributions > 1
+
+        should be equal to sum of above random values
+
+        """
+        pass
+
+    def test_disposable_income_single_without_children_below_cap(self):
+        """
+        TEST: with mocked gross_income,
+        has_partner = False
+        dependent_children = 0
+
+        we check that
+        disposable capital returns gross_income minus
+        allowance for dependent children: 0,
+        income_tax_and_ni > 1,
+        maintainable > 1
+        self employed = True
+        mortgage_or_rent > 1  (and below childless housing cap)
+        childcare > 1
+        criminal_legalaid_contributions > 1
+
+        should be equal to sum of above random values
+
+        """
+        pass
+
+    def test_disposable_income_single_without_children_above_cap(self):
+        """
+        TEST: with mocked gross_income,
+        has_partner = False
+        dependent_children = 0
+
+        we check that
+        disposable capital returns gross_income minus
+        allowance for dependent children: 0,
+        income_tax_and_ni > 1,
+        maintainable > 1
+        self employed = True
+        mortgage_or_rent > 1  (and above childless housing cap)
+        childcare > 1
+        criminal_legalaid_contributions > 1
+
+        should be equal to sum of above random values
+
+        """
+        pass
+
+    def test_on_passported_benefits_is_disposable_income_eligible(self):
+        """
+        TEST: disposable income not called
+        """
+
+        pass
+
+    def test_is_disposable_income_eligible(self):
+        """
+        TEST: mock disposable income
+        """
+        pass
+
+    def test_is_disposable_income_not_eligible(self):
+        """
+        TEST: mock disposable income
+        """
+        pass
+
+
+class DisposableCapitalTestCase(unittest.TestCase):
+
+    def test_disposable_capital_assets_over_mortgage_disregard(self):
+        """
+        TEST: mock liquid capital and property capital, not disputed partner
+        property capital over MORTGAGE_DISREGARD
+        returns MORTGAGE_DISREGARD,
+        """
+        pass
+
+    def test_disposable_capital_assets_exactly_equal_mortgage_disregard(self):
+        """
+        TEST: mock liquid capital and property capital, not disputed partner
+        property capital == MORTGAGE_DISREGARD
+        asserts property_capital == property_capital
+        """
+        pass
+
+    def test_disposable_capital_assets_under_mortgage_disregard(self):
+        """
+        TEST: mock liquid capital and property capital, not disputed partner
+        property capital == MORTGAGE_DISREGARD
+        asserts property_capital == property_capital
+        """
+        pass
+
+    def test_disposable_capital_assets_not_negative(self):
+        """
+        TEST: mock liquid capital and property capital, not disputed partner
+        result can't be negative after subtracting equity disregard
+        """
+        pass
+
+    def test_disposable_capital_assets_subtracts_pensioner_disregard(self):
+        """
+        TEST: mock liquid capital and property capital, not disputed partner
+        property capital mocked to return (0, 0),
+        disposable_capital mocked to be > pensioner_disregard
+        is_you_or_partner_over_60 = True
+        """
+        pass
+
+    def test_disposable_capital_assets_subtracts_pensioner_disregard_but_cant_be_negative(self):
+        """
+        TEST: mock liquid capital and property capital, not disputed partner,
+        disposable capital mocked = 0
+        property capital mocked to return (0, 0),
+        is_you_or_partner_over_60 = True
+        """
+        pass
+
+    def test_disposable_capital_is_partner_opponent(self):
+        """
+        Should raise NotImplementedError,
+        mock has_disputed_partner = True
+        """
+        pass
+        # with self.assertRaises(NotImplementedError):
+        #     pass
+
+    def test_is_disposable_capital_eligible(self):
+        """
+        TEST: with mocked disposable_capital_assets and get_limit
+        """
+        pass
+
+    def test_is_disposable_capital_not_eligible(self):
+        """
+        TEST: with mocked disposable_capital_assets and get_limit
+        """
+        pass
+
+
+class IsEligibleTestCase(unittest.TestCase):
+
+    def test_is_disposable_capital_not_eligible(self):
+        """
+        TEST: with mocked is_disposable_capital_eligible = False
+        is_gross_income_eligible, is_disposable_income are not called
+        asserts is_eligible = False
+        """
+        pass
+
+    def test_is_gross_income_not_eligible(self):
+        """
+        TEST: with mocked:
+            is_gross_income_eligible = False,
+            is_disposable_capital = True
+
+        is_disposable_income is not called
+        asserts is_eligible = False
+        """
+        pass
+
+    def test_is_disposable_income_not_eligible(self):
+        """
+        TEST: with mocked:
+            is_gross_income_eligible = True,
+            is_disposable_capital = True,
+            is_disposable_income = False
+        asserts is_eligible = False
+        """
+        pass
+
+    def test_is_disposable_income_eligible(self):
+        """
+        TEST: with mocked:
+            is_gross_income_eligible = True,
+            is_disposable_capital = True,
+            is_disposable_income = True
+        asserts is_eligible = True
+        """
+        pass

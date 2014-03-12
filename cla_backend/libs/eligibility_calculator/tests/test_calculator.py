@@ -112,24 +112,67 @@ class GrossIncomeTestCase(CalculatorTestBase):
         """
         TEST: Gross income not called
         """
-        # case_data = mock.MagicMock(facts={'on_passported_benefits': True})
-        # ec = EligibilityChecker(case_data)
-        # ec.is_gross_income_eligible()
-        # case_data.facts.assert_has_calls()
-        pass
+        case_data = mock.MagicMock()
+        case_data.facts.on_passported_benefits = True
+        case_data.total_income = mock.PropertyMock()
+        with mock.patch.object(
+                EligibilityChecker,'gross_income',
+                new_callable=mock.PropertyMock) as mocked_gross_income:
+            ec = EligibilityChecker(case_data)
+            self.assertTrue(ec.is_gross_income_eligible())
+            self.assertFalse(case_data.total_income.called)
+            self.assertFalse(mocked_gross_income.called)
 
-
-    def test_is_gross_income_eligible(self):
+    @mock.patch('eligibility_calculator.calculator.constants')
+    def test_is_gross_income_eligible_on_limit(self, constants):
         """
         TEST: eligibility depends on mocked limit
         """
-        pass
+        constants.gross_income.get_limit.return_value = 500
+        case_data = mock.MagicMock()
+        case_data.facts.on_passported_benefits = False
+        with mock.patch.object(
+                EligibilityChecker,
+                'gross_income',
+                new_callable=mock.PropertyMock) as mocked_gross_income:
+            mocked_gross_income.return_value = 500
+            ec = EligibilityChecker(case_data)
+            self.assertTrue(ec.is_gross_income_eligible())
+            mocked_gross_income.assert_called_once_with()
 
+    @mock.patch('eligibility_calculator.calculator.constants')
+    def test_is_gross_income_eligible_under_limit(self, constants):
+        """
+        TEST: eligibility depends on mocked limit
+        """
+        constants.gross_income.get_limit.return_value = 500
+        case_data = mock.MagicMock()
+        case_data.facts.on_passported_benefits = False
+        with mock.patch.object(
+                EligibilityChecker,
+                'gross_income',
+                new_callable=mock.PropertyMock) as mocked_gross_income:
+            mocked_gross_income.return_value = 499
+            ec = EligibilityChecker(case_data)
+            self.assertTrue(ec.is_gross_income_eligible())
+            mocked_gross_income.assert_called_once_with()
+
+    @mock.patch('eligibility_calculator.calculator.constants')
     def test_is_gross_income_not_eligible(self):
         """
         TEST: eligibility depends on mocked limit
         """
-        pass
+        constants.gross_income.get_limit.return_value = 500
+        case_data = mock.MagicMock()
+        case_data.facts.on_passported_benefits = False
+        with mock.patch.object(
+                EligibilityChecker,
+                'gross_income',
+                new_callable=mock.PropertyMock) as mocked_gross_income:
+            mocked_gross_income.return_value = 499
+            ec = EligibilityChecker(case_data)
+            self.assertTrue(ec.is_gross_income_eligible())
+            mocked_gross_income.assert_called_once_with()
 
 
 class DisposableIncomeTestCase(unittest.TestCase):
@@ -463,6 +506,7 @@ class DisposableCapitalTestCase(unittest.TestCase):
         """
         pass
 
+    #here
     def test_disposable_capital_is_partner_opponent(self):
         """
         Should raise NotImplementedError,

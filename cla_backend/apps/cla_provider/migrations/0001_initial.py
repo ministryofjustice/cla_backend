@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'Provider'
-        db.create_table(u'provider_provider', (
+        db.create_table(u'cla_provider_provider', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
             ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
@@ -17,38 +17,38 @@ class Migration(SchemaMigration):
             ('opening_hours', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('active', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
-        db.send_create_signal(u'provider', ['Provider'])
+        db.send_create_signal(u'cla_provider', ['Provider'])
 
         # Adding M2M table for field law_category on 'Provider'
-        m2m_table_name = db.shorten_name(u'provider_provider_law_category')
+        m2m_table_name = db.shorten_name(u'cla_provider_provider_law_category')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('provider', models.ForeignKey(orm[u'provider.provider'], null=False)),
+            ('provider', models.ForeignKey(orm[u'cla_provider.provider'], null=False)),
             ('category', models.ForeignKey(orm[u'legalaid.category'], null=False))
         ))
         db.create_unique(m2m_table_name, ['provider_id', 'category_id'])
 
         # Adding model 'Staff'
-        db.create_table(u'provider_staff', (
+        db.create_table(u'cla_provider_staff', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
             ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
-            ('provider', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['provider.Provider'])),
+            ('provider', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cla_provider.Provider'])),
             ('is_staff_superuser', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
-        db.send_create_signal(u'provider', ['Staff'])
+        db.send_create_signal(u'cla_provider', ['Staff'])
 
 
     def backwards(self, orm):
         # Deleting model 'Provider'
-        db.delete_table(u'provider_provider')
+        db.delete_table(u'cla_provider_provider')
 
         # Removing M2M table for field law_category on 'Provider'
-        db.delete_table(db.shorten_name(u'provider_provider_law_category'))
+        db.delete_table(db.shorten_name(u'cla_provider_provider_law_category'))
 
         # Deleting model 'Staff'
-        db.delete_table(u'provider_staff')
+        db.delete_table(u'cla_provider_staff')
 
 
     models = {
@@ -81,6 +81,25 @@ class Migration(SchemaMigration):
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
+        u'cla_provider.provider': {
+            'Meta': {'object_name': 'Provider'},
+            'active': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'law_category': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['legalaid.Category']", 'symmetrical': 'False'}),
+            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'opening_hours': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'cla_provider.staff': {
+            'Meta': {'object_name': 'Staff'},
+            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_staff_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
+            'provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cla_provider.Provider']"}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+        },
         u'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
             'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
@@ -98,26 +117,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'order': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'raw_description': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-        },
-        u'provider.provider': {
-            'Meta': {'object_name': 'Provider'},
-            'active': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'law_category': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['legalaid.Category']", 'symmetrical': 'False'}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'opening_hours': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        u'provider.staff': {
-            'Meta': {'object_name': 'Staff'},
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_staff_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['provider.Provider']"}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
         }
     }
 
-    complete_apps = ['provider']
+    complete_apps = ['cla_provider']

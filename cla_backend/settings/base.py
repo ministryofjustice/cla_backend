@@ -145,11 +145,13 @@ INSTALLED_APPS = (
     'south',
     'rest_framework',
     'pagedown',
+    'provider',
+    'provider.oauth2'
 )
 
 PROJECT_APPS = (
     'legalaid',
-    'provider',
+    'cla_provider',
     'call_centre'
 )
 

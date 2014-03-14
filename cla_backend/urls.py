@@ -14,6 +14,6 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^legalaid/api/v1/', include('legalaid.urls'))
-    # url(r'^admin/api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^checker/api/v1/', include('checker.urls')),
+    url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

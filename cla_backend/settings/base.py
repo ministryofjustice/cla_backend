@@ -200,3 +200,14 @@ except ImportError:
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and 'test' in sys.argv[1]:
     from .testing import *
+
+
+# Django rest-framework-auth
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}

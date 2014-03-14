@@ -11,7 +11,7 @@ from rest_framework.test import APITestCase
 
 from eligibility_calculator.exceptions import PropertyExpectedException
 
-from ..models import Category, EligibilityCheck, Property, \
+from legalaid.models import Category, EligibilityCheck, Property, \
     Case, PersonalDetails, Person, Income, Savings
 
 from .test_base import CLABaseApiTestMixin
@@ -37,7 +37,6 @@ class CategoryTests(CLABaseApiTestMixin, APITestCase):
         """
         Ensure we can GET the list and it is ordered
         """
-
         # LIST
         response = self.client.get(self.list_url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -877,7 +876,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         response = self.client.post(self.get_is_eligible_url(wrong_ref), data={}, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    @mock.patch('legalaid.views.EligibilityChecker')
+    @mock.patch('checker.views.EligibilityChecker')
     def test_eligibility_check_is_eligible_pass(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
         v.is_eligible.return_value = True
@@ -888,7 +887,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'yes')
 
-    @mock.patch('legalaid.views.EligibilityChecker')
+    @mock.patch('checker.views.EligibilityChecker')
     def test_eligibility_check_is_eligible_fail(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
         v.is_eligible.return_value = False
@@ -899,7 +898,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'no')
 
-    @mock.patch('legalaid.views.EligibilityChecker')
+    @mock.patch('checker.views.EligibilityChecker')
     def test_eligibility_check_is_eligible_unknown(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
         v.is_eligible.side_effect = PropertyExpectedException

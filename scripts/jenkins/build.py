@@ -15,7 +15,7 @@ args = parser.parse_args()
 
 env = args.envname[0]
 env_name = "%s-%s" % (PROJECT_NAME, env)
-env_path = "/var/lib/jenkins/envs/%s" % env_name
+env_path = "/tmp/jenkins/envs/%s" % env_name
 bin_path = "%s/bin" % env_path
 
 

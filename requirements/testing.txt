@@ -2,3 +2,4 @@
 
 mock==1.0.1
 model-mommy==1.2
+django-pdb==0.3.2

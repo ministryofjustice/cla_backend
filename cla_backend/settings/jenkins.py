@@ -30,3 +30,8 @@ DATABASES = {
 #JENKINS_TEST_RUNNER = 'core.test_runners.AdvancedCITestSuiteRunner'
 
 #HOST_NAME = ""
+
+
+ALLOWED_HOSTS = [
+    'localhost'
+]

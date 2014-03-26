@@ -11,7 +11,7 @@ from eligibility_calculator.exceptions import PropertyExpectedException
 
 from legalaid.models import Category, EligibilityCheck, Property, Case
 from .serializers import EligibilityCheckSerializer, \
-    PropertySerializer, CaseSerializer
+    PropertySerializer, CaseSerializer, CategorySerializer
 
 from rest_framework.permissions import AllowAny
 
@@ -21,7 +21,7 @@ class PublicAPIViewSetMixin(object):
 class CategoryViewSet(PublicAPIViewSetMixin,
                       viewsets.ReadOnlyModelViewSet):
     model = Category
-    serializer_class = CategorySerializerBase
+    serializer_class = CategorySerializer
 
     lookup_field = 'code'
 

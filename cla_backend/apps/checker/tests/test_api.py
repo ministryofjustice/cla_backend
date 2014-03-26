@@ -27,9 +27,9 @@ class CategoryTests(CLABaseApiTestMixin, APITestCase):
 
         self.categories = make_recipe('category', _quantity=3)
 
-        self.list_url = reverse('category-list')
+        self.list_url = reverse('checker:category-list')
         self.detail_url = reverse(
-            'category-detail', args=(),
+            'checker:category-detail', args=(),
             kwargs={'code': self.categories[0].code}
         )
 
@@ -67,7 +67,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
     def setUp(self):
         super(EligibilityCheckTests, self).setUp()
 
-        self.list_url = reverse('eligibility_check-list')
+        self.list_url = reverse('checker:eligibility_check-list')
         self.check = make_recipe('eligibility_check',
             category=make_recipe('category'),
             notes=u'lorem ipsum',
@@ -77,13 +77,13 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                             deductions=make_recipe('deductions'))
         )
         self.detail_url = reverse(
-            'eligibility_check-detail', args=(),
+            'checker:eligibility_check-detail', args=(),
             kwargs={'reference': unicode(self.check.reference)}
         )
 
     def get_is_eligible_url(self, reference):
         return reverse(
-            'eligibility_check-is-eligible',
+            'checker:eligibility_check-is-eligible',
             args=(),
             kwargs={'reference': unicode(reference)}
         )
@@ -595,7 +595,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         Invalid reference => 404
         """
         not_found_detail_url = reverse(
-            'eligibility_check-detail', args=(),
+            'checker:eligibility_check-detail', args=(),
             kwargs={'reference': uuid.uuid4()}
         )
 
@@ -920,11 +920,11 @@ class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
             share=50,
         )
         parent_ref = unicode(self.check.eligibility_check.reference)
-        self.list_url = reverse('property-list',
+        self.list_url = reverse('checker:property-list',
                                 args=[parent_ref])
 
         self.detail_url = reverse(
-            'property-detail', args=[parent_ref, self.check.id]
+            'checker:property-detail', args=[parent_ref, self.check.id]
         )
 
 
@@ -1028,7 +1028,7 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CaseTests, self).setUp()
 
-        self.list_url = reverse('case-list')
+        self.list_url = reverse('checker:case-list')
 
     def assertEligibilityCheckResponseKeys(self, response):
         self.assertItemsEqual(

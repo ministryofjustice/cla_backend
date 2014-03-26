@@ -1,3 +1,4 @@
+from legalaid.serializers import CategorySerializerBase
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
@@ -9,7 +10,7 @@ from eligibility_calculator.calculator import EligibilityChecker
 from eligibility_calculator.exceptions import PropertyExpectedException
 
 from legalaid.models import Category, EligibilityCheck, Property, Case
-from .serializers import CategorySerializer, EligibilityCheckSerializer, \
+from .serializers import EligibilityCheckSerializer, \
     PropertySerializer, CaseSerializer
 
 from rest_framework.permissions import AllowAny
@@ -20,7 +21,7 @@ class PublicAPIViewSetMixin(object):
 class CategoryViewSet(PublicAPIViewSetMixin,
                       viewsets.ReadOnlyModelViewSet):
     model = Category
-    serializer_class = CategorySerializer
+    serializer_class = CategorySerializerBase
 
     lookup_field = 'code'
 

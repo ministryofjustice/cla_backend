@@ -28,11 +28,19 @@ Create the database inside postgres. Type `psql` to enter postgres, then enter:
 
     CREATE DATABASE cla_backend WITH ENCODING 'UTF-8';
 
-Sync and migrate the database:
+For Mac OS update the PATH and DYLD_LIBRARY_PATH environment variables:
+
+export PATH="/Applications/Postgres.app/Contents/MacOS/bin/:$PATH"
+export DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/MacOS/lib/:$DYLD_LIBRARY_PATH"
+
+Sync and migrate the database: When prompted to create an Admin user, accept all defauls and use password 'admin'.
 
     ./manage.py syncdb
-
     ./manage.py migrate
+
+Load initial data for the categories:
+
+    ./manage.py load data initial_category.json
 
 Start the server:
 

@@ -150,6 +150,7 @@ INSTALLED_APPS = (
 )
 
 PROJECT_APPS = (
+    'core',
     'legalaid',
     'cla_provider',
     'call_centre'

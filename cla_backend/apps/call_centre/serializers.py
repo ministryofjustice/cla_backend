@@ -1,3 +1,4 @@
+from legalaid.models import PersonalDetails, EligibilityCheck
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
@@ -82,10 +83,11 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
             'mobile_phone', 'home_phone'
         )
 
-
 class CaseSerializer(CaseSerializerBase):
-    eligibility_check = UUIDSerializer(slug_field='reference')
-    personal_details = PersonalDetailsSerializer()
+    eligibility_check = UUIDSerializer(slug_field='reference', required=False,
+                                       default=lambda: EligibilityCheck.objects.create().reference)
+    personal_details = PersonalDetailsSerializer(required=False)
+
 
     class Meta(CaseSerializerBase.Meta):
         fields = (

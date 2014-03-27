@@ -24,8 +24,12 @@ class EligibilityCheckViewSet(
 
 class CaseViewSet(
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
 
     model = Case
+    lookup_field = 'reference'
     serializer_class = CaseSerializer

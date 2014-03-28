@@ -29,7 +29,7 @@ class CaseViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
-
+    queryset = Case.objects.all().order_by('-modified')
     model = Case
     lookup_field = 'reference'
     serializer_class = CaseSerializer

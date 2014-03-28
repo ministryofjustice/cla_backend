@@ -1,4 +1,4 @@
-from legalaid.models import PersonalDetails, EligibilityCheck
+from legalaid.models import EligibilityCheck
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
@@ -91,5 +91,6 @@ class CaseSerializer(CaseSerializerBase):
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
-            'eligibility_check', 'personal_details', 'reference'
+            'eligibility_check', 'personal_details',
+            'reference', 'created', 'modified'
         )

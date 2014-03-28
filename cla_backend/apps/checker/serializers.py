@@ -11,6 +11,10 @@ class CategorySerializer(CategorySerializerBase):
 
 class PropertySerializer(PropertySerializerBase):
 
+    @property
+    def errors(self):
+        return super(PropertySerializer, self).errors
+
     class Meta(PropertySerializerBase.Meta):
         fields = ('value', 'mortgage_left', 'share', 'id')
 

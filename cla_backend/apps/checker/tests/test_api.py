@@ -14,7 +14,7 @@ from eligibility_calculator.exceptions import PropertyExpectedException
 from legalaid.models import Category, EligibilityCheck, Property, \
     Case, PersonalDetails, Person, Income, Savings
 
-from .test_base import CLABaseApiTestMixin
+from core.tests.test_base import CLABaseApiTestMixin
 
 
 def make_recipe(model_name, **kwargs):

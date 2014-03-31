@@ -14,14 +14,14 @@ from eligibility_calculator.exceptions import PropertyExpectedException
 from legalaid.models import Category, EligibilityCheck, Property, \
     Case, PersonalDetails, Person, Income, Savings
 
-from core.tests.test_base import CLABaseApiTestMixin
+from core.tests.test_base import CLAAuthBaseApiTestMixin
 
 
 def make_recipe(model_name, **kwargs):
     return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
 
 
-class CategoryTests(CLABaseApiTestMixin, APITestCase):
+class CategoryTests(CLAAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CategoryTests, self).setUp()
 
@@ -38,12 +38,17 @@ class CategoryTests(CLABaseApiTestMixin, APITestCase):
         Ensure we can GET the list and it is ordered
         """
         # LIST
-        response = self.client.get(self.list_url, format='json')
+        response = self.client.get(self.list_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual([d['name'] for d in response.data], ['Name1', 'Name2', 'Name3'])
 
         # DETAIL
-        response = self.client.get(self.detail_url, format='json')
+        response = self.client.get(self.detail_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], 'Name1')
 
@@ -63,7 +68,167 @@ class CategoryTests(CLABaseApiTestMixin, APITestCase):
         self._test_delete_not_allowed(self.detail_url)
 
 
-# class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
+class CaseTests(CLAAuthBaseApiTestMixin, APITestCase):
+    def setUp(self):
+        super(CaseTests, self).setUp()
+
+        self.list_url = reverse('call_centre:case-list')
+        obj = make_recipe('case')
+        self.detail_url = reverse(
+            'call_centre:case-detail', args=(),
+            kwargs={'reference': obj.reference}
+        )
+
+    def assertCaseCheckResponseKeys(self, response):
+        self.assertItemsEqual(
+            response.data.keys(),
+            ['eligibility_check', 'personal_details', 'reference',
+             'created', 'modified']
+        )
+
+    def assertPersonalDetailsEqual(self, data, obj):
+        if data is None or obj is None:
+            self.assertEqual(data, obj)
+        else:
+            for prop in ['title', 'full_name', 'postcode', 'street', 'town', 'mobile_phone', 'home_phone']:
+                self.assertEqual(getattr(obj, prop), data[prop])
+
+    def assertCaseEqual(self, data, case):
+        self.assertEqual(case.reference, data['reference'])
+        self.assertEqual(unicode(case.eligibility_check.reference), data['eligibility_check'])
+        self.assertPersonalDetailsEqual(data['personal_details'], case.personal_details)
+
+    def test_methods_not_allowed(self):
+        """
+        Ensure that we can't POST, PUT or DELETE
+        """
+         ### LIST
+        self._test_delete_not_allowed(self.list_url)
+
+        # ### DETAIL
+        self._test_delete_not_allowed(self.detail_url)
+
+
+    # CREATE
+
+    def test_create_no_data(self):
+        """
+        CREATE should raise validation error when data is empty
+        """
+        response = self.client.post(
+            self.list_url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertCaseCheckResponseKeys(response)
+
+
+    def test_create_with_data(self):
+        check = make_recipe('eligibility_check')
+
+        data = {
+            'eligibility_check': unicode(check.reference),
+            'personal_details': {
+                'title': 'MR',
+                'full_name': 'John Doe',
+                'postcode': 'SW1H 9AJ',
+                'street': '102 Petty France',
+                'town': 'London',
+                'mobile_phone': '0123456789',
+                'home_phone': '9876543210',
+            }
+        }
+        response = self.client.post(
+            self.list_url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertCaseCheckResponseKeys(response)
+
+        self.assertCaseEqual(response.data,
+            Case(
+                reference=response.data['reference'],
+                eligibility_check=check,
+                personal_details=PersonalDetails(**data['personal_details'])
+            )
+        )
+
+    def _test_method_in_error(self, method, url):
+        """
+        Generic method called by 'create' and 'patch' to test against validation
+        errors.
+        """
+        invalid_uuid = str(uuid.uuid4())
+        data={
+            'eligibility_check': invalid_uuid,
+            'personal_details': {
+                "title": '1'*21,
+                "full_name": None,
+                "postcode": '1'*13,
+                "street": '1'*256,
+                "town": '1'*256,
+                "mobile_phone": '1'*21,
+                "home_phone": '1'*21,
+            }
+        }
+
+        method_callable = getattr(self.client, method)
+        response = method_callable(url, data,
+                                   format='json',
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        errors = response.data
+        self.assertItemsEqual(
+            errors.keys(), ['eligibility_check', 'personal_details']
+        )
+        self.assertEqual(errors['eligibility_check'], [u'Object with reference=%s does not exist.' % invalid_uuid])
+        self.assertItemsEqual(
+            errors['personal_details'],
+            [
+                {
+                    'title': [u'Ensure this value has at most 20 characters (it has 21).'],
+                    'full_name': [u'This field is required.'],
+                    'postcode': [u'Ensure this value has at most 12 characters (it has 13).'],
+                    'street': [u'Ensure this value has at most 255 characters (it has 256).'],
+                    'town': [u'Ensure this value has at most 255 characters (it has 256).'],
+                    'mobile_phone': [u'Ensure this value has at most 20 characters (it has 21).'],
+                    'home_phone': [u'Ensure this value has at most 20 characters (it has 21).'],
+                }
+            ]
+        )
+
+    def test_cannot_create_with_other_reference(self):
+        """
+        Cannot create a case passing an eligibility check reference already assigned
+        to another case
+        """
+        # create a different case
+        case = make_recipe('case')
+
+        data = {
+            'eligibility_check': unicode(case.eligibility_check.reference),
+            'personal_details': {
+                'title': 'MR',
+                'full_name': 'John Doe',
+                'postcode': 'SW1H 9AJ',
+                'street': '102 Petty France',
+                'town': 'London',
+                'mobile_phone': '0123456789',
+                'home_phone': '9876543210',
+            }
+        }
+        response = self.client.post(
+            self.list_url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(
+            response.data,
+            {'eligibility_check': [u'Case with this Eligibility check already exists.']}
+        )
+
+
+# class EligibilityCheckTests(CLAAuthBaseApiTestMixin, APITestCase):
 #     def setUp(self):
 #         super(EligibilityCheckTests, self).setUp()
 #
@@ -1024,156 +1189,3 @@ class CategoryTests(CLABaseApiTestMixin, APITestCase):
 #         self.assertEqual(response2.status_code, status.HTTP_404_NOT_FOUND)
 #
 #
-# class CaseTests(CLABaseApiTestMixin, APITestCase):
-#     def setUp(self):
-#         super(CaseTests, self).setUp()
-#
-#         self.list_url = reverse('checker:case-list')
-#
-#     def assertEligibilityCheckResponseKeys(self, response):
-#         self.assertItemsEqual(
-#             response.data.keys(),
-#             ['eligibility_check', 'personal_details', 'reference']
-#         )
-#
-#     def assertPersonalDetailsEqual(self, data, obj):
-#         if data is None or obj is None:
-#             self.assertEqual(data, obj)
-#         else:
-#             for prop in ['title', 'full_name', 'postcode', 'street', 'town', 'mobile_phone', 'home_phone']:
-#                 self.assertEqual(getattr(obj, prop), data[prop])
-#
-#     def assertCaseEqual(self, data, case):
-#         self.assertEqual(case.reference, data['reference'])
-#         self.assertEqual(unicode(case.eligibility_check.reference), data['eligibility_check'])
-#         self.assertPersonalDetailsEqual(data['personal_details'], case.personal_details)
-#
-#     def test_methods_not_allowed(self):
-#         """
-#         Ensure that we can't POST, PUT or DELETE
-#         """
-#         ### LIST
-#         self._test_get_not_allowed(self.list_url)
-#         self._test_put_not_allowed(self.list_url)
-#         self._test_delete_not_allowed(self.list_url)
-#
-#     # CREATE
-#
-#     def test_create_no_data(self):
-#         """
-#         CREATE should raise validation error when data is empty
-#         """
-#         response = self.client.post(
-#             self.list_url, data={}, format='json'
-#         )
-#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-#
-#         self.assertItemsEqual(
-#             response.data.keys(), ['eligibility_check', 'personal_details']
-#         )
-#         self.assertEqual(response.data['eligibility_check'], [u'This field is required.'])
-#         self.assertEqual(response.data['personal_details'], [u'This field is required.'])
-#
-#     def test_create_with_data(self):
-#         check = make_recipe('eligibility_check')
-#
-#         data = {
-#             'eligibility_check': unicode(check.reference),
-#             'personal_details': {
-#                 'title': 'MR',
-#                 'full_name': 'John Doe',
-#                 'postcode': 'SW1H 9AJ',
-#                 'street': '102 Petty France',
-#                 'town': 'London',
-#                 'mobile_phone': '0123456789',
-#                 'home_phone': '9876543210',
-#             }
-#         }
-#         response = self.client.post(
-#             self.list_url, data=data, format='json'
-#         )
-#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-#         self.assertEligibilityCheckResponseKeys(response)
-#
-#         self.assertCaseEqual(response.data,
-#             Case(
-#                 reference=response.data['reference'],
-#                 eligibility_check=check,
-#                 personal_details=PersonalDetails(**data['personal_details'])
-#             )
-#         )
-#
-#     def _test_method_in_error(self, method, url):
-#         """
-#         Generic method called by 'create' and 'patch' to test against validation
-#         errors.
-#         """
-#         invalid_uuid = str(uuid.uuid4())
-#         data={
-#             'eligibility_check': invalid_uuid,
-#             'personal_details': {
-#                 "title": '1'*21,
-#                 "full_name": None,
-#                 "postcode": '1'*13,
-#                 "street": '1'*256,
-#                 "town": '1'*256,
-#                 "mobile_phone": '1'*21,
-#                 "home_phone": '1'*21,
-#             }
-#         }
-#
-#         method_callable = getattr(self.client, method)
-#         response = method_callable(url, data, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-#
-#         errors = response.data
-#         self.assertItemsEqual(
-#             errors.keys(), ['eligibility_check', 'personal_details']
-#         )
-#         self.assertEqual(errors['eligibility_check'], [u'Object with reference=%s does not exist.' % invalid_uuid])
-#         self.assertItemsEqual(
-#             errors['personal_details'],
-#             [
-#                 {
-#                     'title': [u'Ensure this value has at most 20 characters (it has 21).'],
-#                     'full_name': [u'This field is required.'],
-#                     'postcode': [u'Ensure this value has at most 12 characters (it has 13).'],
-#                     'street': [u'Ensure this value has at most 255 characters (it has 256).'],
-#                     'town': [u'Ensure this value has at most 255 characters (it has 256).'],
-#                     'mobile_phone': [u'Ensure this value has at most 20 characters (it has 21).'],
-#                     'home_phone': [u'Ensure this value has at most 20 characters (it has 21).'],
-#                 }
-#             ]
-#         )
-#
-#     def test_create_in_error(self):
-#         self._test_method_in_error('post', self.list_url)
-#
-#     def test_cannot_create_with_other_reference(self):
-#         """
-#         Cannot create a case passing an eligibility check reference already assigned
-#         to another case
-#         """
-#         # create a different case
-#         case = make_recipe('case')
-#
-#         data = {
-#             'eligibility_check': unicode(case.eligibility_check.reference),
-#             'personal_details': {
-#                 'title': 'MR',
-#                 'full_name': 'John Doe',
-#                 'postcode': 'SW1H 9AJ',
-#                 'street': '102 Petty France',
-#                 'town': 'London',
-#                 'mobile_phone': '0123456789',
-#                 'home_phone': '9876543210',
-#             }
-#         }
-#         response = self.client.post(
-#             self.list_url, data=data, format='json'
-#         )
-#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-#         self.assertDictEqual(
-#             response.data,
-#             {'eligibility_check': [u'Case with this Eligibility check already exists.']}
-#         )

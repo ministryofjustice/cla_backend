@@ -1,0 +1,28 @@
+[
+    {
+        "pk": 1,
+        "model": "oauth2.client",
+        "fields": {
+            "name": "operator",
+            "url": "http://localhost/",
+            "client_type": 0,
+            "redirect_uri": "http://localhost/",
+            "user": 1,
+            "client_id": "call_centre_client",
+            "client_secret": "call_centre_secret"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "oauth2.client",
+        "fields": {
+            "name": "staff",
+            "url": "http://localhost/",
+            "client_type": 0,
+            "redirect_uri": "http://localhost/",
+            "user": 1,
+            "client_id": "provider_client",
+            "client_secret": "provider_secret"
+        }
+    }
+]

@@ -1,3 +1,4 @@
+from legalaid.models import EligibilityCheck
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
@@ -10,10 +11,6 @@ class CategorySerializer(CategorySerializerBase):
 
 
 class PropertySerializer(PropertySerializerBase):
-
-    @property
-    def errors(self):
-        return super(PropertySerializer, self).errors
 
     class Meta(PropertySerializerBase.Meta):
         fields = ('value', 'mortgage_left', 'share', 'id')
@@ -86,12 +83,14 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
             'mobile_phone', 'home_phone'
         )
 
-
 class CaseSerializer(CaseSerializerBase):
-    eligibility_check = UUIDSerializer(slug_field='reference')
-    personal_details = PersonalDetailsSerializer()
+    eligibility_check = UUIDSerializer(slug_field='reference',
+                                       default=lambda: EligibilityCheck.objects.create().reference)
+    personal_details = PersonalDetailsSerializer(required=False)
+
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
-            'eligibility_check', 'personal_details', 'reference'
+            'eligibility_check', 'personal_details',
+            'reference', 'created', 'modified'
         )

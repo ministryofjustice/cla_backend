@@ -202,7 +202,7 @@ class Property(TimeStampedModel):
 class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck)
-    personal_details = models.ForeignKey(PersonalDetails)
+    personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
 
     def _set_reference_if_necessary(self):
         if not self.reference:

@@ -1,3 +1,5 @@
+from legalaid.models import Category, EligibilityCheck, Person, Property, \
+    Income, Savings, Deductions, PersonalDetails
 from rest_framework import serializers
 
 

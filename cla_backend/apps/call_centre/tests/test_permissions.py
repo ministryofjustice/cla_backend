@@ -1,3 +1,4 @@
+from core.tests.test_base import CLAAuthBaseApiTestMixin
 from django.conf.urls import patterns
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -29,36 +30,8 @@ urlpatterns = patterns('',
 )
 
 
-class CallCentreClientIDPermissionTestCase(TestCase):
+class CallCentreClientIDPermissionTestCase(CLAAuthBaseApiTestMixin, TestCase):
     urls = 'call_centre.tests.test_permissions'
-
-    def setUp(self):
-        self.csrf_client = APIClient(enforce_csrf_checks=True)
-
-        # create a user
-        self.username = 'john'
-        self.email = 'lennon@thebeatles.com'
-        self.password = 'password'
-        self.user = User.objects.create_user(self.username, self.email, self.password)
-
-        # create an API client
-        self.api_client = Client.objects.create(
-            user=self.user,
-            name='test',
-            client_type=0,
-            client_id='call_centre',
-            client_secret='secret',
-            url='http://localhost/',
-            redirect_uri='http://localhost/redirect'
-        )
-
-        # Create an access token
-        self.token = AccessToken.objects.create(
-            user=self.user,
-            client=self.api_client,
-            token='token',
-            scope=0
-        )
 
     def test_oauth2_permission_ok(self):
         response = self.client.get('/mock_view/', HTTP_AUTHORIZATION='Bearer %s' % self.token.token)

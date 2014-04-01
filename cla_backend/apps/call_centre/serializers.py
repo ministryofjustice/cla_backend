@@ -84,7 +84,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
         )
 
 class CaseSerializer(CaseSerializerBase):
-    eligibility_check = UUIDSerializer(slug_field='reference', required=False,
+    eligibility_check = UUIDSerializer(slug_field='reference',
                                        default=lambda: EligibilityCheck.objects.create().reference)
     personal_details = PersonalDetailsSerializer(required=False)
 

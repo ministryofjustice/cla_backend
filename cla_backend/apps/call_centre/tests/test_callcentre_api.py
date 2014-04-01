@@ -1,5 +1,6 @@
 import copy
 import uuid
+from call_centre.serializers import CaseSerializer
 import mock
 
 from model_mommy import mommy
@@ -197,6 +198,45 @@ class CaseTests(CLAAuthBaseApiTestMixin, APITestCase):
                 }
             ]
         )
+
+    def test_case_serializer_with_eligibility_check_reference(self):
+        eligibility_check = make_recipe('eligibility_check')
+
+        data = {u'eligibility_check': eligibility_check.reference}
+        serializer = CaseSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        self.assertDictEqual(serializer.errors, {})
+
+    def test_case_serializer_with_personal_details(self):
+        data = {u'personal_details': {u'full_name': u'John Doe',
+                                      u'home_phone': u'9876543210',
+                                      u'mobile_phone': u'0123456789',
+                                      u'postcode': u'SW1H 9AJ',
+                                      u'street': u'102 Petty France',
+                                      u'title': u'MR',
+                                      u'town': u'London'}}
+
+        serializer = CaseSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        self.assertDictEqual( serializer.errors, {})
+
+    def test_case_serializer_with_dupe_eligibility_check_reference(self):
+        case = make_recipe('case')
+
+        data = {u'eligibility_check': case.eligibility_check.reference,
+                u'personal_details': {u'full_name': u'John Doe',
+                                      u'home_phone': u'9876543210',
+                                      u'mobile_phone': u'0123456789',
+                                      u'postcode': u'SW1H 9AJ',
+                                      u'street': u'102 Petty France',
+                                      u'title': u'MR',
+                                      u'town': u'London'}}
+        serializer = CaseSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertDictEqual(
+            serializer.errors,
+            {'eligibility_check':
+                 [u'Case with this Eligibility check already exists.']})
 
     def test_cannot_create_with_other_reference(self):
         """

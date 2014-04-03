@@ -2,6 +2,7 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase
+from rest_framework.fields import IntegerField
 
 
 class CategorySerializer(CategorySerializerBase):
@@ -61,6 +62,11 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
     you = PersonSerializer(required=False)
     partner = PersonSerializer(required=False)
+    # TODO: DRF doesn't validate, fields that aren't REQ'd = True
+    # we need to figure out a way to deal with it
+
+    # dependants_young = IntegerField(default=0)
+    # dependants_old = IntegerField(default=0)
 
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (

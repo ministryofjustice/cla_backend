@@ -1,4 +1,4 @@
-# CLA
+# CLA backend
 
 Backend API for the Civil Legal Aid Tool.
 

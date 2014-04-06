@@ -4,7 +4,7 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase
 from rest_framework import serializers
-from cla_common.constants import CASE_STATE_CHOICES
+from cla_common.constants import CASE_STATE_CHOICES, CASE_STATE_OPEN
 
 
 class CategorySerializer(CategorySerializerBase):
@@ -97,12 +97,14 @@ class CaseSerializer(CaseSerializerBase):
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)
     created_by = serializers.CharField(read_only=True)
-    state = serializers.ChoiceField(choices=CASE_STATE_CHOICES, read_only=True)
+    state = serializers.ChoiceField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
+    provider = serializers.PrimaryKeyRelatedField(required=False)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details',
-            'reference', 'created', 'modified', 'created_by', 'state'
+            'reference', 'created', 'modified', 'created_by', 'state',
+            'provider'
         )
 
 

@@ -207,6 +207,7 @@ class Case(TimeStampedModel):
 
     created_by = models.ForeignKey('auth.User', blank=True, null=True)
     state = models.PositiveSmallIntegerField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
+    provider = models.ForeignKey('cla_provider.Provider', blank=True, null=True)
 
     def _set_reference_if_necessary(self):
         if not self.reference:

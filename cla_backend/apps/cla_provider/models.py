@@ -1,11 +1,19 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
 
+
+class ProviderManager(models.Manager):
+
+    def active(self):
+        return self.get_queryset().filter(active=True)
+
 class Provider(TimeStampedModel):
     name = models.CharField(max_length=255)
     opening_hours = models.CharField(max_length=100)
     law_category = models.ManyToManyField('legalaid.Category')
     active = models.BooleanField(default=False)
+
+    objects = ProviderManager()
 
 class Staff(TimeStampedModel):
     user = models.OneToOneField('auth.User')

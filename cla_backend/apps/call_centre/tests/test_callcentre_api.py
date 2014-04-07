@@ -84,7 +84,8 @@ class CaseTests(CLAAuthBaseApiTestMixin, APITestCase):
         self.assertItemsEqual(
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
-             'created', 'modified', 'state', 'created_by']
+             'created', 'modified', 'state', 'created_by',
+             'provider']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):

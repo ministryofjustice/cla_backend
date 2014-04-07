@@ -7,6 +7,8 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = [('cla_provider', '0001_initial')]
+
     def forwards(self, orm):
         # Adding field 'Case.provider'
         db.add_column(u'legalaid_case', 'provider',

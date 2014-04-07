@@ -31,3 +31,4 @@ case = Recipe(Case,
     eligibility_check=foreign_key(eligibility_check),
     personal_details=foreign_key(personal_details)
 )
+

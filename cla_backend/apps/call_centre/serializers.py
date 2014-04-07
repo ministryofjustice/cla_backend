@@ -2,7 +2,9 @@ from legalaid.models import EligibilityCheck
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, CategorySerializerBase
+    CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase
+from rest_framework import serializers
+from cla_common.constants import CASE_STATE_CHOICES, CASE_STATE_OPEN
 
 
 class CategorySerializer(CategorySerializerBase):
@@ -59,6 +61,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     you = PersonSerializer(required=False)
     partner = PersonSerializer(required=False)
 
+
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
             'reference',
@@ -73,6 +76,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'is_you_or_your_partner_over_60',
             'has_partner',
             'on_passported_benefits',
+            'state'
         )
 
 
@@ -84,13 +88,26 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
         )
 
 class CaseSerializer(CaseSerializerBase):
-    eligibility_check = UUIDSerializer(slug_field='reference',
-                                       default=lambda: EligibilityCheck.objects.create().reference)
+    eligibility_check = UUIDSerializer(
+            slug_field='reference',
+            default=lambda: EligibilityCheck.objects.create().reference)
+
     personal_details = PersonalDetailsSerializer(required=False)
 
+    created = serializers.DateTimeField(read_only=True)
+    modified = serializers.DateTimeField(read_only=True)
+    created_by = serializers.CharField(read_only=True)
+    state = serializers.ChoiceField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
+    provider = serializers.PrimaryKeyRelatedField(required=False)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details',
-            'reference', 'created', 'modified'
+            'reference', 'created', 'modified', 'created_by', 'state',
+            'provider'
         )
+
+
+class ProviderSerializer(ProviderSerializerBase):
+    class Meta(ProviderSerializerBase.Meta):
+        fields = ('name', 'id')

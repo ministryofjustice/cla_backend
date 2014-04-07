@@ -8,7 +8,8 @@ from model_utils.models import TimeStampedModel
 
 # from jsonfield import JSONField
 
-from .constants import STATE_MAYBE, STATE_CHOICES
+from cla_common.constants import STATE_MAYBE, \
+    STATE_CHOICES, CASE_STATE_CHOICES, CASE_STATE_OPEN
 
 
 class Category(TimeStampedModel):
@@ -203,6 +204,10 @@ class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck)
     personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
+
+    created_by = models.ForeignKey('auth.User', blank=True, null=True)
+    state = models.PositiveSmallIntegerField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
+    provider = models.ForeignKey('cla_provider.Provider', blank=True, null=True)
 
     def _set_reference_if_necessary(self):
         if not self.reference:

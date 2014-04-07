@@ -1,3 +1,4 @@
+from cla_provider.models import Provider
 from legalaid.models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case
 from rest_framework import serializers
@@ -7,6 +8,9 @@ class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
 
+class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Provider
 
 class PropertySerializerBase(serializers.ModelSerializer):
     class Meta:

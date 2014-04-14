@@ -40,7 +40,7 @@ class CLAAuthBaseApiTestMixin(object):
         # create an API client
         self.api_client = Client.objects.create(
             user=self.user,
-            name='test',
+            name='operator',
             client_type=0,
             client_id='call_centre',
             client_secret='secret',

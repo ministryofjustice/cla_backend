@@ -209,6 +209,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.OAuth2Authentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'core.permissions.AllowNone',
     ),
 }

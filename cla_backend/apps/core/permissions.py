@@ -20,3 +20,12 @@ class ClientIDPermission(BasePermission):
                         '`OAuth2Authentication` authentication '
                        'class to be used.')
 
+class AllowNone(BasePermission):
+    """
+    Allow no access. Paranoid.
+    Used as the default authentication class so that if we forget to set
+    any permissions then we get permission denided instead of blowing the doors
+    open.
+    """
+    def has_permission(self, request, view):
+        return False

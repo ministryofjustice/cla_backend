@@ -77,7 +77,7 @@ class CLAAuthBaseApiTestMixin(object):
         )
 
         # set default token
-        self.token = getattr(self.DEFAULT_TOKEN, self)
+        self.token = getattr(self, self.DEFAULT_TOKEN)
 
     def _test_get_not_allowed(self, url):
         response = self.client.get(url,
@@ -99,6 +99,12 @@ class CLAAuthBaseApiTestMixin(object):
 
     def _test_delete_not_allowed(self, url):
         response = self.client.delete(url,
+                                      HTTP_AUTHORIZATION="Bearer %s" % self.token,
+                                      format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def _test_patch_not_allowed(self, url):
+        response = self.client.patch(url,
                                       HTTP_AUTHORIZATION="Bearer %s" % self.token,
                                       format='json')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)

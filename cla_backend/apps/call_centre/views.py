@@ -6,6 +6,7 @@ from call_centre.serializers import EligibilityCheckSerializer, CategorySerializ
 from cla_common.constants import CASE_STATE_CLOSED, CASE_STATE_OPEN, \
     CASE_STATE_CHOICES
 from cla_provider.models import Provider
+from core.viewsets import IsEligibleActionViewSetMixin
 from django import http
 from django.contrib.auth.models import AnonymousUser
 from legalaid.models import Category, EligibilityCheck, Case
@@ -26,6 +27,7 @@ class CategoryViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
 
 class EligibilityCheckViewSet(
     CallCentrePermissionsViewSetMixin,
+    IsEligibleActionViewSetMixin,
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
@@ -68,30 +70,6 @@ class CaseViewSet(
         user = self.request.user
         if not obj.pk and not isinstance(user, AnonymousUser):
             obj.created_by = user
-
-
-    # TODO: this is not needed yet - front end can handle \
-    # this logic for now.
-
-    # @action()
-    # def assign(self, request, reference=None, **kwargs):
-    #     obj = self.get_object()
-    #     form = ProviderAllocationForm(request.POST)
-    #     if form.is_valid():
-    #         data = form.cleaned_data
-    #         obj.provider_id = data['provider']
-    #         return http.HttpResponse(status=204)
-    #     return http.HttpResponseBadRequest(content=json.dumps(form.errors))
-    #
-    # @action()
-    # def assign(self, request, reference=None, **kwargs):
-    #     obj = self.get_object()
-    #     form = ProviderAllocationForm(request.POST)
-    #     if form.is_valid():
-    #         data = form.cleaned_data
-    #         obj.provider_id = data['provider']
-    #         return http.HttpResponse(status=204)
-    #     return http.HttpResponseBadRequest(content=json.dumps(form.errors))
 
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):

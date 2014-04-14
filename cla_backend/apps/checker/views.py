@@ -1,19 +1,14 @@
+from core.viewsets import IsEligibleActionViewSetMixin
 from legalaid.serializers import CategorySerializerBase
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import viewsets, mixins
-from rest_framework.decorators import action
-from rest_framework.response import Response
-
-from eligibility_calculator.calculator import EligibilityChecker
-from eligibility_calculator.exceptions import PropertyExpectedException
 
 from legalaid.models import Category, EligibilityCheck, Property, Case
+from rest_framework.permissions import AllowAny
 from .serializers import EligibilityCheckSerializer, \
     PropertySerializer, CaseSerializer, CategorySerializer
-
-from rest_framework.permissions import AllowAny
 
 class PublicAPIViewSetMixin(object):
     permission_classes = (AllowAny,)
@@ -28,6 +23,7 @@ class CategoryViewSet(PublicAPIViewSetMixin,
 
 class EligibilityCheckViewSet(
     PublicAPIViewSetMixin,
+    IsEligibleActionViewSetMixin,
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
@@ -37,24 +33,6 @@ class EligibilityCheckViewSet(
     serializer_class = EligibilityCheckSerializer
 
     lookup_field = 'reference'
-
-    @action()
-    def is_eligible(self, request, *args, **kwargs):
-        obj = self.get_object()
-
-        case_data = obj.to_case_data()
-        ec = EligibilityChecker(case_data)
-
-        response = None
-        try:
-            is_eligible = ec.is_eligible()
-            response = 'yes' if is_eligible else 'no'
-        except PropertyExpectedException as e:
-            response = 'unknown'
-
-        return Response({
-            'is_eligible': response
-        })
 
 
 class NestedModelMixin(object):

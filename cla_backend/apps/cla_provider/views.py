@@ -3,7 +3,8 @@ from cla_provider.models import Staff
 from cla_provider.permissions import CLAProviderClientIDPermission
 from cla_provider.serializers import CategorySerializer, \
     EligibilityCheckSerializer, CaseSerializer
-from core.viewsets import DefaultStateFilterViewSetMixin
+from core.viewsets import DefaultStateFilterViewSetMixin, \
+    IsEligibleActionViewSetMixin
 from django.shortcuts import get_object_or_404
 from legalaid.models import Category, EligibilityCheck, Case
 from rest_framework import viewsets, mixins
@@ -21,6 +22,7 @@ class CategoryViewSet(CLAProviderPermissionViewSetMixin, viewsets.ReadOnlyModelV
 
 class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,
+    IsEligibleActionViewSetMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet

@@ -879,7 +879,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         response = self.client.post(self.get_is_eligible_url(wrong_ref), data={}, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    @mock.patch('checker.views.EligibilityChecker')
+    @mock.patch('core.viewsets.EligibilityChecker')
     def test_eligibility_check_is_eligible_pass(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
         v.is_eligible.return_value = True
@@ -890,7 +890,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'yes')
 
-    @mock.patch('checker.views.EligibilityChecker')
+    @mock.patch('core.viewsets.EligibilityChecker')
     def test_eligibility_check_is_eligible_fail(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
         v.is_eligible.return_value = False
@@ -901,7 +901,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'no')
 
-    @mock.patch('checker.views.EligibilityChecker')
+    @mock.patch('core.viewsets.EligibilityChecker')
     def test_eligibility_check_is_eligible_unknown(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
         v.is_eligible.side_effect = PropertyExpectedException

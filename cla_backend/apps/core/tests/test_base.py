@@ -30,6 +30,8 @@ class CLAAuthBaseApiTestMixin(object):
     """
     Useful testing methods
     """
+    DEFAULT_TOKEN = None
+
     def setUp(self):
         # create a user
         self.username = 'john'
@@ -37,8 +39,8 @@ class CLAAuthBaseApiTestMixin(object):
         self.password = 'password'
         self.user = User.objects.create_user(self.username, self.email, self.password)
 
-        # create an API client
-        self.api_client = Client.objects.create(
+        # create an operator API client
+        self.operator_api_client = Client.objects.create(
             user=self.user,
             name='operator',
             client_type=0,
@@ -48,13 +50,34 @@ class CLAAuthBaseApiTestMixin(object):
             redirect_uri='http://localhost/redirect'
         )
 
-        # Create an access token
-        self.token = AccessToken.objects.create(
+        # create an staff API client
+        self.staff_api_client = Client.objects.create(
             user=self.user,
-            client=self.api_client,
-            token='token',
+            name='staff',
+            client_type=0,
+            client_id='cla_provider',
+            client_secret='secret',
+            url='http://provider.localhost/',
+            redirect_uri='http://provider.localhost/redirect'
+        )
+        # Create an access token
+        self.operator_token = AccessToken.objects.create(
+            user=self.user,
+            client=self.operator_api_client,
+            token='operator_token',
             scope=0
         )
+
+        # Create an access token
+        self.staff_token = AccessToken.objects.create(
+            user=self.user,
+            client=self.staff_api_client,
+            token='stafF_token',
+            scope=0
+        )
+
+        # set default token
+        self.token = getattr(self.DEFAULT_TOKEN, self)
 
     def _test_get_not_allowed(self, url):
         response = self.client.get(url,
@@ -79,3 +102,9 @@ class CLAAuthBaseApiTestMixin(object):
                                       HTTP_AUTHORIZATION="Bearer %s" % self.token,
                                       format='json')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+class CLAProviderAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
+    DEFAULT_TOKEN = 'staff_token'
+
+class CLAOperatorAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
+    DEFAULT_TOKEN = 'operator_token'

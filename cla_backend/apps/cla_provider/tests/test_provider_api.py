@@ -69,6 +69,18 @@ class CategoryTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self._test_put_not_allowed(self.detail_url)
         self._test_delete_not_allowed(self.detail_url)
 
+
+    def test_methods_not_authorized(self):
+        ### LIST
+        self._test_post_not_authorized(self.list_url, self.operator_token)
+        self._test_put_not_authorized(self.list_url, self.operator_token)
+        self._test_delete_not_authorized(self.list_url, self.operator_token)
+
+        ### DETAIL
+        self._test_post_not_authorized(self.detail_url, self.operator_token)
+        self._test_put_not_authorized(self.detail_url, self.operator_token)
+        self._test_delete_not_authorized(self.detail_url, self.operator_token)
+
 class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 
     def setUp(self):

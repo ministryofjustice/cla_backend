@@ -109,6 +109,38 @@ class CLAAuthBaseApiTestMixin(object):
                                       format='json')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
+
+    def _test_get_not_authorized(self, url, token):
+        response = self.client.get(url,
+                                   HTTP_AUTHORIZATION="Bearer %s" % token,
+                                   format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_post_not_authorized(self, url, token, data={}):
+        response = self.client.post(url, data,
+                                    HTTP_AUTHORIZATION="Bearer %s" % token,
+                                    format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_put_not_authorized(self, url, token, data={}):
+        response = self.client.put(url, data,
+                                   HTTP_AUTHORIZATION="Bearer %s" % token,
+                                   format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_delete_not_authorized(self, url, token):
+        response = self.client.delete(url,
+                                      HTTP_AUTHORIZATION="Bearer %s" % token,
+                                      format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_patch_not_authorized(self, url, token):
+        response = self.client.patch(url,
+                                     HTTP_AUTHORIZATION="Bearer %s" % token,
+                                     format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
 class CLAProviderAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
     DEFAULT_TOKEN = 'staff_token'
 

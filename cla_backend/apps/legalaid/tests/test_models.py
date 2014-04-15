@@ -1,12 +1,20 @@
 from django.test import TestCase
+from django.conf import settings
 
 from model_mommy import mommy
 
 from eligibility_calculator.models import CaseData, ModelMixin
 
+from ..models import Case
+
 
 def make_recipe(model_name, **kwargs):
     return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
+
+
+def cla_provider_make_recipe(model_name, **kwargs):
+    return mommy.make_recipe('cla_provider.tests.%s' % model_name, **kwargs)
+
 
 def walk(coll):
     """Return a generator for all atomic values in coll and its subcollections.
@@ -253,3 +261,88 @@ class EligibilityCheckTestCase(TestCase):
     #         criminal_legalaid_contributions=730,
     #         on_passported_benefits=True
     #     ))
+
+
+class CaseTestCase(TestCase):
+    def test_assign_to_provider_overriding_provider(self):
+        providers = cla_provider_make_recipe('provider', _quantity=2)
+
+        case = make_recipe('case',
+            provider=providers[0],
+            locked_by=mommy.make(settings.AUTH_USER_MODEL)
+        )
+
+        self.assertTrue(case.provider)
+        self.assertTrue(case.locked_by)
+
+        case.assign_to_provider(providers[1])
+
+        self.assertEqual(case.locked_by, None)
+        self.assertEqual(case.provider, providers[1])
+
+    def test_assign_to_provider_None(self):
+        provider = cla_provider_make_recipe('provider')
+
+        case = make_recipe('case',
+            provider=None, locked_by=None
+        )
+
+        self.assertFalse(case.provider)
+        self.assertFalse(case.locked_by)
+
+        case.assign_to_provider(provider)
+
+        self.assertEqual(case.locked_by, None)
+        self.assertEqual(case.provider, provider)
+
+    def test_lock_doesnt_override_existing_lock(self):
+        users = mommy.make(settings.AUTH_USER_MODEL, _quantity=2)
+        case = make_recipe('case',
+            locked_by=users[0]
+        )
+        self.assertFalse(case.lock(users[1]))
+        self.assertEqual(case.locked_by, users[0])
+
+    def test_lock_without_saving(self):
+        user = mommy.make(settings.AUTH_USER_MODEL)
+        case = make_recipe('case')
+        self.assertTrue(case.lock(user, save=False))
+        self.assertEqual(case.locked_by, user)
+
+        db_case = Case.objects.get(pk=case.pk)
+        self.assertEqual(db_case.locked_by, None)
+
+    def test_lock_and_save(self):
+        user = mommy.make(settings.AUTH_USER_MODEL)
+        case = make_recipe('case')
+        self.assertTrue(case.lock(user))
+        self.assertEqual(case.locked_by, user)
+
+        db_case = Case.objects.get(pk=case.pk)
+        self.assertEqual(db_case.locked_by, user)
+
+    def test_unlock_when_not_locked(self):
+        case = make_recipe('case')
+
+        case.unlock()
+        self.assertEqual(case.locked_by, None)
+
+    def test_unlock_without_saving(self):
+        user = mommy.make(settings.AUTH_USER_MODEL)
+        case = make_recipe('case', locked_by=user)
+
+        case.unlock(save=False)
+        self.assertEqual(case.locked_by, None)
+
+        db_case = Case.objects.get(pk=case.pk)
+        self.assertEqual(db_case.locked_by, user)
+
+    def test_unlock_and_save(self):
+        user = mommy.make(settings.AUTH_USER_MODEL)
+        case = make_recipe('case', locked_by=user)
+
+        case.unlock()
+        self.assertEqual(case.locked_by, None)
+
+        db_case = Case.objects.get(pk=case.pk)
+        self.assertEqual(db_case.locked_by, None)

@@ -1,16 +1,26 @@
-from cla_provider.models import Provider
-from legalaid.models import Category, Property, EligibilityCheck, Income, \
-    Savings, Deductions, Person, PersonalDetails, Case
 from rest_framework import serializers
+
 from core.serializers import UUIDSerializer
+from cla_provider.models import Provider
+
+from .models import Category, Property, EligibilityCheck, Income, \
+    Savings, Deductions, Person, PersonalDetails, Case, OutcomeCode
+
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
 
+
+class OutcomeCodeSerializerBase(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = OutcomeCode
+
+
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Provider
+
 
 class PropertySerializerBase(serializers.ModelSerializer):
     class Meta:
@@ -31,6 +41,7 @@ class SavingsSerializerBase(serializers.ModelSerializer):
         model = Savings
         fields = ()
 
+
 class DeductionsSerializerBase(serializers.ModelSerializer):
 
     class Meta:
@@ -43,8 +54,8 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
         model = PersonalDetails
         fields = ()
 
-class PersonSerializerBase(serializers.ModelSerializer):
 
+class PersonSerializerBase(serializers.ModelSerializer):
     income = IncomeSerializerBase(required=False)
     savings = SavingsSerializerBase(required=False)
     deductions = DeductionsSerializerBase(required=False)
@@ -52,6 +63,7 @@ class PersonSerializerBase(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = ()
+
 
 class EligibilityCheckSerializerBase(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(slug_field='code', required=False)
@@ -64,6 +76,7 @@ class EligibilityCheckSerializerBase(serializers.ModelSerializer):
     class Meta:
         model = EligibilityCheck
         fields = ()
+
 
 class CaseSerializerBase(serializers.ModelSerializer):
     eligibility_check = UUIDSerializer(slug_field='reference')

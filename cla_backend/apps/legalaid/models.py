@@ -1,8 +1,9 @@
-from eligibility_calculator.models import CaseData
-from uuidfield import UUIDField
-
 from django.core.validators import MaxValueValidator
 from django.db import models
+from django.conf import settings
+
+from eligibility_calculator.models import CaseData
+from uuidfield import UUIDField
 
 from model_utils.models import TimeStampedModel
 
@@ -47,10 +48,12 @@ class Savings(TimeStampedModel):
     asset_balance = models.PositiveIntegerField(default=0)
     credit_balance = models.PositiveIntegerField(default=0)
 
+
 class Income(TimeStampedModel):
     earnings = models.PositiveIntegerField(default=0)
     other_income = models.PositiveIntegerField(default=0)
     self_employed = models.BooleanField(default=False)
+
 
 class Deductions(TimeStampedModel):
     income_tax_and_ni = models.PositiveIntegerField(default=0)
@@ -100,6 +103,7 @@ class Person(TimeStampedModel):
             income=income,
             savings=savings,
             deductions=deductions)
+
 
 class EligibilityCheck(TimeStampedModel):
     reference = UUIDField(auto=True, unique=True)
@@ -200,13 +204,28 @@ class Property(TimeStampedModel):
         verbose_name_plural = "properties"
 
 
+class OutcomeCode(TimeStampedModel):
+    code = models.CharField(max_length=50, unique=True)
+    description = models.TextField()
+
+    def __unicode__(self):
+        return u'%s' % self.code
+
+    class Meta:
+        ordering = ['code']
+
+
 class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck)
     personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
 
-    created_by = models.ForeignKey('auth.User', blank=True, null=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     state = models.PositiveSmallIntegerField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
+    locked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, blank=True, null=True,
+        related_name='case_locked'
+    )
     provider = models.ForeignKey('cla_provider.Provider', blank=True, null=True)
 
     def _set_reference_if_necessary(self):
@@ -222,6 +241,41 @@ class Case(TimeStampedModel):
     def save(self, *args, **kwargs):
         self._set_reference_if_necessary()
         return super(Case, self).save(*args, **kwargs)
+
+    def assign_to_provider(self, provider):
+        self.provider = provider
+        self.unlock(save=False)
+        self.save()
+
+    def lock(self, user, save=True):
+        if not self.locked_by:
+            self.locked_by = user
+
+            if save:
+                self.save()
+            return True
+        return False
+
+    def unlock(self, save=True):
+        if self.locked_by:
+            self.locked_by = None
+
+            if save:
+                self.save()
+
+
+class CaseOutcome(TimeStampedModel):
+    case = models.ForeignKey(Case)
+    outcome_code = models.ForeignKey(OutcomeCode)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    notes = models.TextField()
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.case, self.outcome_code)
+
+    def save(self, *args, **kwargs):
+        super(CaseOutcome, self).save(*args, **kwargs)
+        self.case.unlock()
 
 
 # class Answer(TimeStampedModel):

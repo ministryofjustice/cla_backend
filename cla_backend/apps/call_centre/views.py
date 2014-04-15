@@ -1,25 +1,39 @@
 import json
-from call_centre.forms import ProviderAllocationForm
-from call_centre.permissions import CallCentreClientIDPermission
-from call_centre.serializers import EligibilityCheckSerializer, CategorySerializer, \
-    CaseSerializer, ProviderSerializer
-from cla_common.constants import CASE_STATE_CLOSED, CASE_STATE_OPEN, \
+
+from django.contrib.auth.models import AnonymousUser
+
+from rest_framework import viewsets, mixins, status
+from rest_framework.decorators import action
+from rest_framework.response import Response as DRFResponse
+from rest_framework.filters import OrderingFilter, SearchFilter
+
+from django import http
+
+from cla_common.constants import CASE_STATE_OPEN, \
     CASE_STATE_CHOICES
 from cla_provider.models import Provider
-from django import http
-from django.contrib.auth.models import AnonymousUser
-from legalaid.models import Category, EligibilityCheck, Case
-from rest_framework import viewsets, mixins
-# from rest_framework.decorators import action
-from rest_framework.filters import OrderingFilter, SearchFilter
+from legalaid.models import Category, EligibilityCheck, Case, OutcomeCode
+
+from .permissions import CallCentreClientIDPermission
+from .serializers import EligibilityCheckSerializer, CategorySerializer, \
+    CaseSerializer, ProviderSerializer, OutcomeCodeSerializer
+from .forms import ProviderAllocationForm
 
 
 class CallCentrePermissionsViewSetMixin(object):
     permission_classes = (CallCentreClientIDPermission,)
 
+
 class CategoryViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Category
     serializer_class = CategorySerializer
+
+    lookup_field = 'code'
+
+
+class OutcomeCodeViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
+    model = OutcomeCode
+    serializer_class = OutcomeCodeSerializer
 
     lookup_field = 'code'
 
@@ -69,32 +83,27 @@ class CaseViewSet(
         if not obj.pk and not isinstance(user, AnonymousUser):
             obj.created_by = user
 
+    # def retrieve(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     self.object.lock(request.user)
+    #     serializer = self.get_serializer(self.object)
+    #     return DRFResponse(serializer.data)
 
-    # TODO: this is not needed yet - front end can handle \
-    # this logic for now.
+    @action()
+    def assign(self, request, reference=None, **kwargs):
+        obj = self.get_object()
+        form = ProviderAllocationForm(request.DATA)
+        if form.is_valid():
+            form.save(obj, request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
-    # @action()
-    # def assign(self, request, reference=None, **kwargs):
-    #     obj = self.get_object()
-    #     form = ProviderAllocationForm(request.POST)
-    #     if form.is_valid():
-    #         data = form.cleaned_data
-    #         obj.provider_id = data['provider']
-    #         return http.HttpResponse(status=204)
-    #     return http.HttpResponseBadRequest(content=json.dumps(form.errors))
-    #
-    # @action()
-    # def assign(self, request, reference=None, **kwargs):
-    #     obj = self.get_object()
-    #     form = ProviderAllocationForm(request.POST)
-    #     if form.is_valid():
-    #         data = form.cleaned_data
-    #         obj.provider_id = data['provider']
-    #         return http.HttpResponse(status=204)
-    #     return http.HttpResponseBadRequest(content=json.dumps(form.errors))
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Provider
     serializer_class = ProviderSerializer
 
+    queryset = Provider.objects.active()

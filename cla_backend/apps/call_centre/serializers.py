@@ -1,15 +1,23 @@
+from rest_framework import serializers
+
+from cla_common.constants import CASE_STATE_CHOICES, CASE_STATE_OPEN
+
 from legalaid.models import EligibilityCheck
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase
-from rest_framework import serializers
-from cla_common.constants import CASE_STATE_CHOICES, CASE_STATE_OPEN
+    CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
+    OutcomeCodeSerializerBase
 
 
 class CategorySerializer(CategorySerializerBase):
     class Meta(CategorySerializerBase.Meta):
         fields = ('code', 'name', 'description')
+
+
+class OutcomeCodeSerializer(OutcomeCodeSerializerBase):
+    class Meta(OutcomeCodeSerializerBase.Meta):
+        fields = ('code', 'description')
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -99,12 +107,13 @@ class CaseSerializer(CaseSerializerBase):
     created_by = serializers.CharField(read_only=True)
     state = serializers.ChoiceField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
     provider = serializers.PrimaryKeyRelatedField(required=False)
+    locked_by = serializers.CharField(read_only=True)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details',
             'reference', 'created', 'modified', 'created_by', 'state',
-            'provider'
+            'provider', 'locked_by'
         )
 
 

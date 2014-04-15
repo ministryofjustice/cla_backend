@@ -1,7 +1,7 @@
 from model_mommy.recipe import Recipe, seq, foreign_key
 
 from ..models import Category, EligibilityCheck, Property, Savings, \
-    Case, PersonalDetails, Income, Deductions, Person
+    Case, PersonalDetails, Income, Deductions, Person, OutcomeCode, CaseOutcome
 
 
 category = Recipe(Category,
@@ -32,3 +32,9 @@ case = Recipe(Case,
     personal_details=foreign_key(personal_details)
 )
 
+outcome_code = Recipe(OutcomeCode)
+
+case_outcome = Recipe(CaseOutcome,
+    case=foreign_key(case),
+    outcome_code=foreign_key(outcome_code)
+)

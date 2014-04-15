@@ -439,7 +439,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
              'partner',
              'has_partner',
              'on_passported_benefits',
-             'is_you_or_your_partner_over_60']
+             'is_you_or_your_partner_over_60',
+             'state']
         )
 
     def assertIncomeEqual(self, data, obj):
@@ -785,6 +786,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         errors.
         """
         data={
+            'state': 0,
             'category': -1,
             'notes': 'a'*501,
             'your_problem_notes': 'a'*501,
@@ -835,7 +837,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         }
 
         method_callable = getattr(self.client, method)
-        response = method_callable(url, data, format='json')
+        response = method_callable(url, data, format='json',
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         errors = response.data
@@ -951,7 +954,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         self.assertEqual(Property.objects.count(), 9)
 
-        response = self.client.get(self.detail_url, format='json')
+        response = self.client.get(self.detail_url, format='json',
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEligibilityCheckResponseKeys(response)
         self.assertEligibilityCheckEqual(response.data, self.check)
 
@@ -962,8 +966,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         PATCH data is empty so the object shouldn't change
         """
         response = self.client.patch(
-            self.detail_url, data={}, format='json'
-        )
+            self.detail_url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertEligibilityCheckResponseKeys(response)
@@ -984,8 +988,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'dependants_old': 10,
         }
         response = self.client.patch(
-            self.detail_url, data=data, format='json'
-        )
+            self.detail_url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # checking the changed properties
@@ -1016,8 +1020,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             ]
         }
         response = self.client.patch(
-            self.detail_url, data=data, format='json'
-        )
+            self.detail_url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # nothing should have changed here
         self.assertEqual(response.data['reference'], unicode(self.check.reference))
@@ -1087,8 +1091,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             },
         }
         response = self.client.patch(
-            self.detail_url, data, format='json'
-        )
+            self.detail_url, data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # finances props should have changed
@@ -1135,8 +1139,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             }
         }
         response = self.client.patch(
-            self.detail_url, data, format='json'
-        )
+            self.detail_url, data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # only given finances props should have changed
@@ -1158,8 +1162,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'category': categories[1].code
         }
         response = self.client.patch(
-            self.detail_url, data, format='json'
-        )
+            self.detail_url, data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # only given category prop should have changed
@@ -1185,8 +1189,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             ]
         }
         response = self.client.patch(
-            self.detail_url, data, format='json'
-        )
+            self.detail_url, data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotEqual(response.data['property_set'][0]['id'], other_property.pk)
         self.assertNotEqual(other_property.eligibility_check.pk, self.check.pk)
@@ -1211,8 +1215,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'dependants_old': 2,
         }
         response = self.client.put(
-            self.detail_url, data=data, format='json'
-        )
+            self.detail_url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertEligibilityCheckResponseKeys(response)
@@ -1242,7 +1246,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         response = self.client.post(
             self.get_is_eligible_url(self.check.reference),
             data={},
-            format='json')
+            format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'yes')
 
@@ -1253,7 +1258,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         response = self.client.post(
             self.get_is_eligible_url(self.check.reference),
             data={},
-            format='json')
+            format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'no')
 
@@ -1264,7 +1270,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         response = self.client.post(
             self.get_is_eligible_url(self.check.reference),
             data={},
-            format='json')
+            format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'unknown')
 

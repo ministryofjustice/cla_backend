@@ -13,6 +13,7 @@ from cla_common.constants import CASE_STATE_OPEN, \
     CASE_STATE_CHOICES
 from cla_provider.models import Provider
 from legalaid.models import Category, EligibilityCheck, Case, OutcomeCode
+from core.viewsets import IsEligibleActionViewSetMixin
 
 from .permissions import CallCentreClientIDPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
@@ -40,6 +41,7 @@ class OutcomeCodeViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyMod
 
 class EligibilityCheckViewSet(
     CallCentrePermissionsViewSetMixin,
+    IsEligibleActionViewSetMixin,
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,

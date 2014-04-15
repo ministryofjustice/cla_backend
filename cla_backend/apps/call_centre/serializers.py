@@ -95,6 +95,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
             'mobile_phone', 'home_phone'
         )
 
+
 class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(
             slug_field='reference',
@@ -106,7 +107,7 @@ class CaseSerializer(CaseSerializerBase):
     modified = serializers.DateTimeField(read_only=True)
     created_by = serializers.CharField(read_only=True)
     state = serializers.ChoiceField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
-    provider = serializers.PrimaryKeyRelatedField(required=False)
+    provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     locked_by = serializers.CharField(read_only=True)
 
     class Meta(CaseSerializerBase.Meta):

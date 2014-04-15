@@ -1,4 +1,4 @@
-from core.tests.test_base import CLAAuthBaseApiTestMixin
+from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from django.conf.urls import patterns
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -30,7 +30,7 @@ urlpatterns = patterns('',
 )
 
 
-class CallCentreClientIDPermissionTestCase(CLAAuthBaseApiTestMixin, TestCase):
+class CallCentreClientIDPermissionTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
     urls = 'call_centre.tests.test_permissions'
 
     def test_oauth2_permission_ok(self):

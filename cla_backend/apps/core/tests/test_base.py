@@ -30,6 +30,8 @@ class CLAAuthBaseApiTestMixin(object):
     """
     Useful testing methods
     """
+    DEFAULT_TOKEN = None
+
     def setUp(self):
         # create a user
         self.username = 'john'
@@ -37,8 +39,8 @@ class CLAAuthBaseApiTestMixin(object):
         self.password = 'password'
         self.user = User.objects.create_user(self.username, self.email, self.password)
 
-        # create an API client
-        self.api_client = Client.objects.create(
+        # create an operator API client
+        self.operator_api_client = Client.objects.create(
             user=self.user,
             name='operator',
             client_type=0,
@@ -48,13 +50,34 @@ class CLAAuthBaseApiTestMixin(object):
             redirect_uri='http://localhost/redirect'
         )
 
-        # Create an access token
-        self.token = AccessToken.objects.create(
+        # create an staff API client
+        self.staff_api_client = Client.objects.create(
             user=self.user,
-            client=self.api_client,
-            token='token',
+            name='staff',
+            client_type=0,
+            client_id='cla_provider',
+            client_secret='secret',
+            url='http://provider.localhost/',
+            redirect_uri='http://provider.localhost/redirect'
+        )
+        # Create an access token
+        self.operator_token = AccessToken.objects.create(
+            user=self.user,
+            client=self.operator_api_client,
+            token='operator_token',
             scope=0
         )
+
+        # Create an access token
+        self.staff_token = AccessToken.objects.create(
+            user=self.user,
+            client=self.staff_api_client,
+            token='stafF_token',
+            scope=0
+        )
+
+        # set default token
+        self.token = getattr(self, self.DEFAULT_TOKEN)
 
     def _test_get_not_allowed(self, url):
         response = self.client.get(url,
@@ -79,3 +102,47 @@ class CLAAuthBaseApiTestMixin(object):
                                       HTTP_AUTHORIZATION="Bearer %s" % self.token,
                                       format='json')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def _test_patch_not_allowed(self, url):
+        response = self.client.patch(url,
+                                      HTTP_AUTHORIZATION="Bearer %s" % self.token,
+                                      format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+    def _test_get_not_authorized(self, url, token):
+        response = self.client.get(url,
+                                   HTTP_AUTHORIZATION="Bearer %s" % token,
+                                   format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_post_not_authorized(self, url, token, data={}):
+        response = self.client.post(url, data,
+                                    HTTP_AUTHORIZATION="Bearer %s" % token,
+                                    format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_put_not_authorized(self, url, token, data={}):
+        response = self.client.put(url, data,
+                                   HTTP_AUTHORIZATION="Bearer %s" % token,
+                                   format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_delete_not_authorized(self, url, token):
+        response = self.client.delete(url,
+                                      HTTP_AUTHORIZATION="Bearer %s" % token,
+                                      format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_patch_not_authorized(self, url, token):
+        response = self.client.patch(url,
+                                     HTTP_AUTHORIZATION="Bearer %s" % token,
+                                     format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class CLAProviderAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
+    DEFAULT_TOKEN = 'staff_token'
+
+class CLAOperatorAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
+    DEFAULT_TOKEN = 'operator_token'

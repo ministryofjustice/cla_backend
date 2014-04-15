@@ -516,6 +516,17 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self._test_post_not_allowed(self.detail_url)
         self._test_delete_not_allowed(self.detail_url)
 
+    def test_methods_not_authorized(self):
+        ### LIST
+        self._test_post_not_authorized(self.list_url, self.staff_token)
+        self._test_put_not_authorized(self.list_url, self.staff_token)
+        self._test_delete_not_authorized(self.list_url, self.staff_token)
+
+        ### DETAIL
+        self._test_post_not_authorized(self.detail_url, self.staff_token)
+        self._test_delete_not_authorized(self.detail_url, self.staff_token)
+
+
     # CREATE
 
     def test_create_no_data(self):

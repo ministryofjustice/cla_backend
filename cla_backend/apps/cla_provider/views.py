@@ -23,7 +23,6 @@ class CategoryViewSet(CLAProviderPermissionViewSetMixin, viewsets.ReadOnlyModelV
 class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,
     IsEligibleActionViewSetMixin,
-    mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet
 ):

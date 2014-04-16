@@ -13,3 +13,7 @@ class ProviderAllocationForm(OutcomeForm):
 
         case.assign_to_provider(data['provider'])
         super(ProviderAllocationForm, self).save(case, user)
+
+
+class UnlockCaseForm(OutcomeForm):
+    pass

@@ -1,13 +1,9 @@
-import json
-
 from django.contrib.auth.models import AnonymousUser
 
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter
-
-from django import http
 
 from cla_common.constants import CASE_STATE_OPEN, \
     CASE_STATE_CHOICES
@@ -18,7 +14,7 @@ from core.viewsets import IsEligibleActionViewSetMixin
 from .permissions import CallCentreClientIDPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, OutcomeCodeSerializer
-from .forms import ProviderAllocationForm
+from .forms import ProviderAllocationForm, UnlockCaseForm
 
 
 class CallCentrePermissionsViewSetMixin(object):
@@ -113,6 +109,21 @@ class CaseViewSet(
         """
         obj = self.get_object()
         form = ProviderAllocationForm(request.DATA)
+        if form.is_valid():
+            form.save(obj, request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
+    @action()
+    def unlock(self, request, reference=None, **kwargs):
+        """
+        Unlocks a case
+        """
+        obj = self.get_object()
+        form = UnlockCaseForm(request.DATA)
         if form.is_valid():
             form.save(obj, request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)

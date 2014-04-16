@@ -439,13 +439,10 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             }
         )
 
-    def _get_assign_default_post_data(self, data={}):
+    def _get_outcome_default_post_data(self, data={}):
         if 'outcome_code' not in data:
             outcome_codes = make_recipe('outcome_code', _quantity=2)
             data['outcome_code'] = outcome_codes[0].code
-        if 'provider' not in data:
-            provider = cla_provider_make_recipe('provider', active=True)
-            data['provider'] = provider.pk
 
         default_data = {
             'outcome_notes': 'lorem ipsum',
@@ -453,6 +450,13 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         default_data.update(data)
         return default_data
+
+    def _get_assign_default_post_data(self, data={}):
+        data = self._get_outcome_default_post_data(data)
+        if 'provider' not in data:
+            provider = cla_provider_make_recipe('provider', active=True)
+            data['provider'] = provider.pk
+        return data
 
     def test_assign_successful(self):
         case = make_recipe('case')
@@ -508,6 +512,72 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['provider'], None)
+
+    # UNLOCK
+
+    def test_unlock_invalid_case_reference(self):
+        url = reverse('call_centre:case-unlock', args=(), kwargs={'reference': 'invalid'})
+
+        response = self.client.post(
+            url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_unlock_in_error(self):
+        data = self._get_outcome_default_post_data({
+            'outcome_code': None,
+            'outcome_notes': '*'*501
+        })
+        case = make_recipe('case')
+
+        url = reverse('call_centre:case-unlock', args=(), kwargs={'reference': case.reference})
+
+        response = self.client.post(
+            url, data=data,
+            HTTP_AUTHORIZATION='Bearer %s' % self.token,
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(
+            response.data,
+            {
+                'outcome_notes': [u'Ensure this value has at most 500 characters (it has 501).'],
+                'outcome_code': [u'This field is required.']
+            }
+        )
+
+    def test_unlock_successful(self):
+        user = mommy.make(settings.AUTH_USER_MODEL)
+
+        case = make_recipe('case', locked_by=user)
+
+        self.assertEqual(case.locked_by, user)
+
+        # unlocking the case
+
+        url = reverse('call_centre:case-unlock', args=(), kwargs={'reference': case.reference})
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+        data = self._get_outcome_default_post_data()
+        response = self.client.post(
+            url, data=data,
+            HTTP_AUTHORIZATION='Bearer %s' % self.token,
+            format='json'
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # new outcome created and case.locked_by empty
+
+        self.assertEqual(CaseOutcome.objects.count(), 1)
+        case = Case.objects.get(pk=case.pk)
+        case_outcome = CaseOutcome.objects.all()[0]
+
+        self.assertEqual(case_outcome.outcome_code.code, data['outcome_code'])
+        self.assertEqual(case_outcome.notes, data['outcome_notes'])
+        self.assertEqual(case.locked_by, None)
 
     # LOCKED BY
 

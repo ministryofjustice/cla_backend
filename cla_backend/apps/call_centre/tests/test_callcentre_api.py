@@ -4,6 +4,7 @@ import mock
 from model_mommy import mommy
 
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -124,10 +125,10 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         super(CaseTests, self).setUp()
 
         self.list_url = reverse('call_centre:case-list')
-        obj = make_recipe('case')
+        self.case_obj = make_recipe('case')
         self.detail_url = reverse(
             'call_centre:case-detail', args=(),
-            kwargs={'reference': obj.reference}
+            kwargs={'reference': self.case_obj.reference}
         )
 
     def assertCaseCheckResponseKeys(self, response):
@@ -159,7 +160,6 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         # ### DETAIL
         self._test_delete_not_allowed(self.detail_url)
-
 
     # CREATE
 
@@ -508,6 +508,53 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['provider'], None)
+
+    # LOCKED BY
+
+    def test_locked_by_after_creation(self):
+        response = self.client.post(
+            self.list_url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.data['locked_by'], 'john')
+        case = Case.objects.get(reference=response.data['reference'])
+        self.assertEqual(case.locked_by.username, 'john')
+
+    def test_locked_by_after_patching(self):
+        self.assertEqual(self.case_obj.locked_by, None)
+
+        response = self.client.patch(self.detail_url,
+            data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.data['locked_by'], 'john')
+        case = Case.objects.get(pk=self.case_obj.pk)
+        self.assertEqual(case.locked_by.username, 'john')
+
+    def test_locked_by_when_getting_case(self):
+        """
+        After each detail GET, the locked_by gets set to the logged in User.
+        """
+        self.assertEqual(self.case_obj.locked_by, None)
+        response = self.client.get(
+            self.detail_url, HTTP_AUTHORIZATION='Bearer %s' % self.token,
+            format='json'
+        )
+
+        self.assertEqual(response.data['locked_by'], 'john')
+        case = Case.objects.get(pk=self.case_obj.pk)
+        self.assertEqual(case.locked_by.username, 'john')
+
+    def test_cannot_patch_locked_by_directly(self):
+        user = mommy.make(settings.AUTH_USER_MODEL)
+        response = self.client.patch(self.detail_url, data={
+                'locked_by': user.pk
+            }, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.data['locked_by'], 'john')
+        case = Case.objects.get(pk=self.case_obj.pk)
+        self.assertEqual(case.locked_by.username, 'john')
 
 
 class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):

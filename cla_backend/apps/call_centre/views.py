@@ -80,19 +80,37 @@ class CaseViewSet(
     default_state_filter = CASE_STATE_OPEN
     all_states = dict(CASE_STATE_CHOICES).keys()
 
-    def pre_save(self, obj):
+    def _lock_case(self, obj):
+        if self.request:
+            obj.lock(self.request.user)
+
+    def pre_save(self, obj, *args, **kwargs):
+        super(CaseViewSet, self).pre_save(obj, *args, **kwargs)
+
         user = self.request.user
         if not obj.pk and not isinstance(user, AnonymousUser):
             obj.created_by = user
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     self.object.lock(request.user)
-    #     serializer = self.get_serializer(self.object)
-    #     return DRFResponse(serializer.data)
+    def post_save(self, obj, *args, **kwargs):
+        """
+        Lock the object after each save
+        """
+        super(CaseViewSet, self).post_save(obj, *args, **kwargs)
+        self._lock_case(obj)
+
+    def get_object(self, *args, **kwargs):
+        """
+        Lock the object every time it's requested
+        """
+        obj = super(CaseViewSet, self).get_object(*args, **kwargs)
+        self._lock_case(obj)
+        return obj
 
     @action()
     def assign(self, request, reference=None, **kwargs):
+        """
+        Assigns the case to a provider
+        """
         obj = self.get_object()
         form = ProviderAllocationForm(request.DATA)
         if form.is_valid():

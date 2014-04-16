@@ -5,6 +5,8 @@ from model_mommy import mommy
 
 from eligibility_calculator.models import CaseData, ModelMixin
 
+from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED
+
 from ..models import Case
 
 
@@ -354,3 +356,47 @@ class CaseTestCase(TestCase):
 
         db_case = Case.objects.get(pk=case.pk)
         self.assertEqual(db_case.locked_by, None)
+
+    def test_is_open(self):
+        # False
+        case1 = make_recipe('case', state=CASE_STATE_CLOSED)
+        self.assertFalse(case1.is_open())
+
+        # True
+        case2 = make_recipe('case', state=CASE_STATE_OPEN)
+        self.assertTrue(case2.is_open())
+
+    def test_is_closed(self):
+        # False
+        case1 = make_recipe('case', state=CASE_STATE_CLOSED)
+        self.assertTrue(case1.is_closed())
+
+        # True
+        case2 = make_recipe('case', state=CASE_STATE_OPEN)
+        self.assertFalse(case2.is_closed())
+
+    def test_close_open_case(self):
+        case = make_recipe('case', state=CASE_STATE_OPEN)
+        self.assertEqual(case.state, CASE_STATE_OPEN)
+
+        self.assertTrue(case.close())
+
+        case = Case.objects.get(pk=case.pk)
+        self.assertEqual(case.state, CASE_STATE_CLOSED)
+
+    def test_close_closed_case(self):
+        import logging
+
+        # disabling logging temporarily
+        logging.disable(logging.CRITICAL)
+
+        case = make_recipe('case', state=CASE_STATE_CLOSED)
+        self.assertEqual(case.state, CASE_STATE_CLOSED)
+
+        self.assertFalse(case.close())
+
+        case = Case.objects.get(pk=case.pk)
+        self.assertEqual(case.state, CASE_STATE_CLOSED)
+
+        # enabling logging back
+        logging.disable(logging.NOTSET)

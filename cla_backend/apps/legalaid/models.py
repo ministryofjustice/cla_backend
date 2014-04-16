@@ -12,7 +12,7 @@ from model_utils.models import TimeStampedModel
 # from jsonfield import JSONField
 
 from cla_common.constants import STATE_MAYBE, \
-    STATE_CHOICES, CASE_STATE_CHOICES, CASE_STATE_OPEN
+    STATE_CHOICES, CASE_STATE_CHOICES, CASE_STATE_OPEN, CASE_STATE_CLOSED
 
 
 logger = logging.getLogger(__name__)
@@ -262,7 +262,7 @@ class Case(TimeStampedModel):
         else:
             if self.locked_by != user:
                 logger.warning(u'User %s tried to lock case %s locked already by %s' % (
-                    user, self, self.locked_by
+                    user, self.reference, self.locked_by
                 ))
 
         return False
@@ -273,6 +273,24 @@ class Case(TimeStampedModel):
 
             if save:
                 self.save()
+
+    def is_open(self):
+        return self.state == CASE_STATE_OPEN
+
+    def is_closed(self):
+        return self.state == CASE_STATE_CLOSED
+
+    def close(self):
+        if not self.is_closed():
+            self.state = CASE_STATE_CLOSED
+            self.save()
+
+            return True
+
+        logger.warning(u'Trying to close case %s that has already been closed' % (
+            self.reference
+        ))
+        return False
 
 
 class CaseOutcome(TimeStampedModel):

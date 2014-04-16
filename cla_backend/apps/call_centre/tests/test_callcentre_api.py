@@ -240,57 +240,6 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                              )
         )
 
-    def test_create_then_close_gone_from_queue(self):
-
-        data = {
-            'personal_details': {
-                'title': 'MR',
-                'full_name': 'John Doe',
-                'postcode': 'SW1H 9AJ',
-                'street': '102 Petty France',
-                'town': 'London',
-                'mobile_phone': '0123456789',
-                'home_phone': '9876543210',
-                }
-        }
-        response = self.client.post(
-            self.list_url, data=data, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        # check initial state is correct
-        self.assertEqual(response.data['state'], CASE_STATE_OPEN)
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCaseCheckResponseKeys(response)
-
-        self.assertCaseEqual(response.data,
-                             Case(
-                                 reference=response.data['reference'],
-                                 eligibility_check=EligibilityCheck.objects.get(reference=response.data['eligibility_check']),
-                                 personal_details=PersonalDetails(**data['personal_details'])
-                             )
-        )
-        data2 = {
-            'state': CASE_STATE_CLOSED
-        }
-
-        detail_url = reverse(
-            'call_centre:case-detail', args=(),
-            kwargs={'reference': response.data['reference']})
-
-        response2 = self.client.patch(detail_url, data=data2, format='json',
-        HTTP_AUTHORIZATION='Bearer %s' % self.token)
-
-        self.assertEqual(response2.data['state'], CASE_STATE_CLOSED)
-
-        case_list = self.client.get(
-            self.list_url, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        ).data
-
-        # when a case is not open it's no longer in operator queue
-        self.assertFalse(response2.data['reference'] in [x.get('reference') for x in case_list])
-
     def _test_method_in_error(self, method, url):
         """
         Generic method called by 'create' and 'patch' to test against validation
@@ -441,6 +390,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
 
     def _get_outcome_default_post_data(self, data={}):
+        data = dict(data)
         if 'outcome_code' not in data:
             outcome_codes = make_recipe('outcome_code', _quantity=2)
             data['outcome_code'] = outcome_codes[0].code
@@ -627,6 +577,95 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         case = Case.objects.get(pk=self.case_obj.pk)
         self.assertEqual(case.locked_by.username, 'john')
 
+    # CLOSE
+
+    def test_close_invalid_case_reference(self):
+        url = reverse('call_centre:case-close', args=(), kwargs={'reference': 'invalid'})
+
+        response = self.client.post(
+            url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_close_in_error(self):
+        data = self._get_outcome_default_post_data({
+            'outcome_code': None,
+            'outcome_notes': '*'*501,
+        })
+        case = make_recipe('case')
+
+        url = reverse('call_centre:case-close', args=(), kwargs={'reference': case.reference})
+
+        response = self.client.post(
+            url, data=data,
+            HTTP_AUTHORIZATION='Bearer %s' % self.token,
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(
+            response.data,
+            {
+                'outcome_notes': [u'Ensure this value has at most 500 characters (it has 501).'],
+                'outcome_code': [u'This field is required.'],
+            }
+        )
+
+    def test_close_successful(self):
+        case = make_recipe('case')
+
+        # before being closed, case in the list
+        case_list = self.client.get(
+            self.list_url, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        ).data
+
+        self.assertTrue(case.reference in [x.get('reference') for x in case_list])
+
+        # close
+
+        url = reverse('call_centre:case-close', args=(), kwargs={'reference': case.reference})
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+        data = self._get_outcome_default_post_data()
+        response = self.client.post(
+            url, data=data,
+            HTTP_AUTHORIZATION='Bearer %s' % self.token,
+            format='json'
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        self.assertEqual(CaseOutcome.objects.count(), 1)
+        case = Case.objects.get(pk=case.pk)
+        case_outcome = CaseOutcome.objects.all()[0]
+
+        self.assertEqual(case_outcome.outcome_code.code, data['outcome_code'])
+        self.assertEqual(case_outcome.notes, data['outcome_notes'])
+
+        # after being closed, it's gone from the queue
+        case_list = self.client.get(
+            self.list_url, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        ).data
+
+        self.assertFalse(case.reference in [x.get('reference') for x in case_list])
+
+    def test_cannot_patch_state_directly(self):
+        """
+        Need to use close action instead
+        """
+
+        self.assertEqual(self.case_obj.state, CASE_STATE_OPEN)
+
+        response = self.client.patch(self.detail_url, data={
+            'state': CASE_STATE_CLOSED
+        }, format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['state'], CASE_STATE_OPEN)
+
 
 class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
@@ -667,8 +706,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
              'partner',
              'has_partner',
              'on_passported_benefits',
-             'is_you_or_your_partner_over_60',
-             'state']
+             'is_you_or_your_partner_over_60'
+            ]
         )
 
     def assertIncomeEqual(self, data, obj):

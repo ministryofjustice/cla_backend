@@ -17,3 +17,9 @@ class ProviderAllocationForm(OutcomeForm):
 
 class UnlockCaseForm(OutcomeForm):
     pass
+
+
+class CloseCaseForm(OutcomeForm):
+    def save(self, case, user):
+        case.close()
+        super(CloseCaseForm, self).save(case, user)

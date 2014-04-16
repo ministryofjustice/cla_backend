@@ -4,8 +4,9 @@ from django.conf import settings
 from model_mommy import mommy
 
 from legalaid.models import CaseOutcome
+from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED
 
-from ..forms import ProviderAllocationForm
+from ..forms import ProviderAllocationForm, CloseCaseForm
 
 
 def make_recipe(model_name, **kwargs):
@@ -52,3 +53,24 @@ class ProviderAllocationFormTestCase(TestCase):
         self.assertDictEqual(form.errors,
             {'provider': [u'Select a valid choice. That choice is not one of the available choices.']}
         )
+
+
+class CloseCaseFormTestCase(TestCase):
+    def test_save(self):
+        outcome_codes = make_recipe('outcome_code', _quantity=2)
+        user = mommy.make(settings.AUTH_USER_MODEL)
+        case = make_recipe('case', state=CASE_STATE_OPEN)
+
+        form = CloseCaseForm(data={
+            'outcome_code': outcome_codes[0].code,
+            'outcome_notes': 'lorem ipsum',
+        })
+
+        self.assertTrue(form.is_valid())
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+        form.save(case, user)
+
+        self.assertEqual(CaseOutcome.objects.count(), 1)
+        self.assertEqual(CaseOutcome.objects.all()[0].case, case)
+        self.assertEqual(case.state, CASE_STATE_CLOSED)

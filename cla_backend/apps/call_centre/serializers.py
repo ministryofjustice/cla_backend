@@ -84,7 +84,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'is_you_or_your_partner_over_60',
             'has_partner',
             'on_passported_benefits',
-            'state'
+            # 'state'  #TODO not sure why we need this here?
         )
 
 
@@ -106,7 +106,7 @@ class CaseSerializer(CaseSerializerBase):
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)
     created_by = serializers.CharField(read_only=True)
-    state = serializers.ChoiceField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
+    state = serializers.ChoiceField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN, read_only=True)
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     locked_by = serializers.CharField(read_only=True)
 

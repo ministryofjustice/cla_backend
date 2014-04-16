@@ -14,7 +14,7 @@ from core.viewsets import IsEligibleActionViewSetMixin
 from .permissions import CallCentreClientIDPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, OutcomeCodeSerializer
-from .forms import ProviderAllocationForm, UnlockCaseForm
+from .forms import ProviderAllocationForm, UnlockCaseForm, CloseCaseForm
 
 
 class CallCentrePermissionsViewSetMixin(object):
@@ -124,6 +124,21 @@ class CaseViewSet(
         """
         obj = self.get_object()
         form = UnlockCaseForm(request.DATA)
+        if form.is_valid():
+            form.save(obj, request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
+    @action()
+    def close(self, request, reference=None, **kwargs):
+        """
+        Closes a case
+        """
+        obj = self.get_object()
+        form = CloseCaseForm(request.DATA)
         if form.is_valid():
             form.save(obj, request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)

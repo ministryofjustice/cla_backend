@@ -4,7 +4,7 @@ from core.serializers import UUIDSerializer
 from cla_provider.models import Provider
 
 from .models import Category, Property, EligibilityCheck, Income, \
-    Savings, Deductions, Person, PersonalDetails, Case, OutcomeCode
+    Savings, Deductions, Person, PersonalDetails, Case, OutcomeCode, CaseOutcome
 
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
@@ -75,6 +75,12 @@ class EligibilityCheckSerializerBase(serializers.ModelSerializer):
 
     class Meta:
         model = EligibilityCheck
+        fields = ()
+
+
+class CaseOutcomeSerializerBase(serializers.ModelSerializer):
+    class Meta:
+        model = CaseOutcome
         fields = ()
 
 

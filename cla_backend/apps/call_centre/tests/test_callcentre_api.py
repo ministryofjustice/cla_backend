@@ -137,7 +137,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
              'created', 'modified', 'state', 'created_by',
-             'provider', 'locked_by']
+             'provider', 'locked_by', 'caseoutcome_set']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):

@@ -5,6 +5,7 @@ from model_mommy import mommy
 
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.contrib.auth.models import User
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -548,7 +549,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
 
     def test_unlock_successful(self):
-        user = mommy.make(settings.AUTH_USER_MODEL)
+        user = User.objects.all()[0]
 
         case = make_recipe('case', locked_by=user)
 

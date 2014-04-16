@@ -1,3 +1,5 @@
+import logging
+
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.conf import settings
@@ -11,6 +13,9 @@ from model_utils.models import TimeStampedModel
 
 from cla_common.constants import STATE_MAYBE, \
     STATE_CHOICES, CASE_STATE_CHOICES, CASE_STATE_OPEN
+
+
+logger = logging.getLogger(__name__)
 
 
 class Category(TimeStampedModel):
@@ -254,6 +259,12 @@ class Case(TimeStampedModel):
             if save:
                 self.save()
             return True
+        else:
+            if self.locked_by != user:
+                logger.warning(u'User %s tried to lock case %s locked already by %s' % (
+                    user, self, self.locked_by
+                ))
+
         return False
 
     def unlock(self, save=True):

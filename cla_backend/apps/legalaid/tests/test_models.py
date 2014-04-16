@@ -296,12 +296,20 @@ class CaseTestCase(TestCase):
         self.assertEqual(case.provider, provider)
 
     def test_lock_doesnt_override_existing_lock(self):
+        import logging
+
+        # disabling logging temporarily
+        logging.disable(logging.CRITICAL)
+
         users = mommy.make(settings.AUTH_USER_MODEL, _quantity=2)
         case = make_recipe('case',
             locked_by=users[0]
         )
         self.assertFalse(case.lock(users[1]))
         self.assertEqual(case.locked_by, users[0])
+
+        # enabling logging back
+        logging.disable(logging.NOTSET)
 
     def test_lock_without_saving(self):
         user = mommy.make(settings.AUTH_USER_MODEL)

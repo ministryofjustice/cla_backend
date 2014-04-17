@@ -207,7 +207,7 @@ class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CaseTests, self).setUp()
-        self.case_obj = make_recipe('case', provider=self.staff.provider)
+        self.case_obj = make_recipe('case', provider=self.staff_user.provider)
         self.list_url = reverse('cla_provider:case-list')
         obj = make_recipe('case')
         self.detail_url = reverse(
@@ -269,7 +269,7 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 #             self.detail_url, HTTP_AUTHORIZATION='Bearer %s' % self.token,
 #             format='json'
 #         )
-#  
+#   
 #         self.assertEqual(response.data['locked_by'], 'john')
 #         case = Case.objects.get(pk=self.case_obj.pk)
 #         self.assertEqual(case.locked_by.username, 'john')

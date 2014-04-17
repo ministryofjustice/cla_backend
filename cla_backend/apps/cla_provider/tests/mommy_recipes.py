@@ -4,3 +4,4 @@ from ..models import Provider
 provider = Recipe(Provider,
     name=seq('Name'),
 )
+

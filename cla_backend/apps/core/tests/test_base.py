@@ -1,3 +1,4 @@
+from model_mommy import mommy
 from django.contrib.auth.models import User
 from provider.oauth2.models import Client, AccessToken
 
@@ -69,11 +70,9 @@ class CLAAuthBaseApiTestMixin(object):
         )
 
         # Create an access token
-        #self.staff_user = User.objects.create_user(self.username, self.email, self.password)
-        from model_mommy import mommy
-        self.staff = mommy.make('cla_provider.Staff')
+        self.staff_user = mommy.make('cla_provider.Staff')
         self.staff_token = AccessToken.objects.create(
-            user=self.staff.user,
+            user=self.staff_user.user,
             client=self.staff_api_client,
             token='stafF_token',
             scope=0

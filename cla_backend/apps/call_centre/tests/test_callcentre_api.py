@@ -96,14 +96,14 @@ class ProviderTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                                    format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual([d['name'] for d in response.data], ['Name1', 'Name2', 'Name3'])
+        self.assertEqual([d['name'] for d in response.data], ['Name3', 'Name4', 'Name5'])
 
         # DETAIL
         response = self.client.get(self.detail_url,
                                    HTTP_AUTHORIZATION='Bearer %s' % self.token,
                                    format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], 'Name1')
+        self.assertEqual(response.data['name'], 'Name3')
 
     def test_methods_not_allowed(self):
         """

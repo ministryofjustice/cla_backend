@@ -69,8 +69,11 @@ class CLAAuthBaseApiTestMixin(object):
         )
 
         # Create an access token
+        #self.staff_user = User.objects.create_user(self.username, self.email, self.password)
+        from model_mommy import mommy
+        self.staff = mommy.make('cla_provider.Staff')
         self.staff_token = AccessToken.objects.create(
-            user=self.user,
+            user=self.staff.user,
             client=self.staff_api_client,
             token='stafF_token',
             scope=0

@@ -23,6 +23,10 @@ def make_recipe(model_name, **kwargs):
     return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
 
 
+def cla_provider_make_recipe(model_name, **kwargs):
+    return mommy.make_recipe('cla_provider.tests.%s' % model_name, **kwargs)
+
+
 class CategoryTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CategoryTests, self).setUp()
@@ -203,7 +207,7 @@ class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CaseTests, self).setUp()
-
+        self.case_obj = make_recipe('case', provider=self.staff.provider)
         self.list_url = reverse('cla_provider:case-list')
         obj = make_recipe('case')
         self.detail_url = reverse(
@@ -216,7 +220,7 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
              'created', 'modified', 'state', 'created_by',
-             'provider']
+             'provider', 'locked_by']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -244,4 +248,30 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         ### CREATE
         self._test_post_not_allowed(self.list_url)
 
+    def test_get_allowed(self):
+        """
+        Ensure we can GET the list and it is ordered
+        """
+        # LIST
+        response = self.client.get(self.list_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+#     def test_locked_by_when_getting_case(self):
+#         """
+#         After each detail GET, the locked_by gets set to the logged in User.
+#         """
+#         self.assertEqual(self.case_obj.locked_by, None)
+#         response = self.client.get(
+#             self.detail_url, HTTP_AUTHORIZATION='Bearer %s' % self.token,
+#             format='json'
+#         )
+#  
+#         self.assertEqual(response.data['locked_by'], 'john')
+#         case = Case.objects.get(pk=self.case_obj.pk)
+#         self.assertEqual(case.locked_by.username, 'john')
+#         self.assertCaseCheckResponseKeys(response)
 

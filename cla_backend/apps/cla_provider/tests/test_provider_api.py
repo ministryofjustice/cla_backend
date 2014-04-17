@@ -207,7 +207,7 @@ class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CaseTests, self).setUp()
-        self.case_obj = make_recipe('case', provider=self.staff_user.provider)
+        self.case_obj = make_recipe('case', provider=self.provider)
         self.list_url = reverse('cla_provider:case-list')
         obj = make_recipe('case')
         self.detail_url = reverse(
@@ -259,6 +259,13 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+        # DETAIL
+        response = self.client.get(self.detail_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], 'Name1')
+
 
 #     def test_locked_by_when_getting_case(self):
 #         """
@@ -269,9 +276,9 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 #             self.detail_url, HTTP_AUTHORIZATION='Bearer %s' % self.token,
 #             format='json'
 #         )
-#   
-#         self.assertEqual(response.data['locked_by'], 'john')
+#    
+#         self.assertEqual(response.data['locked_by'], 'Bob')
 #         case = Case.objects.get(pk=self.case_obj.pk)
-#         self.assertEqual(case.locked_by.username, 'john')
+#         self.assertEqual(case.locked_by.username, 'Bob')
 #         self.assertCaseCheckResponseKeys(response)
 

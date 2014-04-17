@@ -299,6 +299,9 @@ class CaseOutcome(TimeStampedModel):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
     notes = models.TextField()
 
+    class Meta:
+        ordering = ['-created']
+
     def __unicode__(self):
         return u'%s - %s' % (self.case, self.outcome_code)
 

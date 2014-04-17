@@ -1,5 +1,6 @@
 import copy
 import uuid
+from cla_provider.models import Staff
 from cla_provider.serializers import CaseSerializer, EligibilityCheckSerializer
 from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED
 import mock
@@ -16,18 +17,14 @@ from eligibility_calculator.exceptions import PropertyExpectedException
 from legalaid.models import Category, EligibilityCheck, Property, \
     Case, PersonalDetails, Person, Income, Savings
 
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
-
-
-def make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
+from core.tests.test_base import CLAProviderAuthBaseApiTestMixin, make_recipe
 
 
 class CategoryTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CategoryTests, self).setUp()
 
-        self.categories = make_recipe('category', _quantity=3)
+        self.categories = make_recipe('legalaid.tests.category', _quantity=3)
 
         self.list_url = reverse('cla_provider:category-list')
         self.detail_url = reverse(
@@ -86,7 +83,7 @@ class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(EligibilityCheckTests, self).setUp()
 
-        self.check = make_recipe('eligibility_check')
+        self.check = make_recipe('legalaid.tests.eligibility_check')
         self.detail_url = reverse(
             'cla_provider:eligibility_check-detail', args=(),
             kwargs={'reference': self.check.reference}
@@ -205,7 +202,10 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         super(CaseTests, self).setUp()
 
         self.list_url = reverse('cla_provider:case-list')
-        obj = make_recipe('case')
+        obj = make_recipe('legalaid.tests.case')
+        obj.provider = self.provider
+        obj.save()
+        self.check = obj
         self.detail_url = reverse(
             'cla_provider:case-detail', args=(),
             kwargs={'reference': obj.reference}
@@ -244,4 +244,136 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         ### CREATE
         self._test_post_not_allowed(self.list_url)
 
+    def test_methods_not_authorized_operator_key(self):
+        """
+        Ensure that we can't POST, PUT or DELETE using operator
+        token
+        """
+        ### LIST
+        self._test_delete_not_authorized(self.list_url, self.operator_token)
 
+        ### DETAIL
+        self._test_delete_not_authorized(self.detail_url, self.operator_token)
+
+        ### CREATE
+        self._test_post_not_authorized(self.list_url, self.operator_token)
+
+
+    def test_list_allowed(self):
+        """
+        GET list-url should work
+        """
+
+        obj = make_recipe('case')
+        obj.provider = self.provider
+        obj.save()
+
+        response = self.client.get(
+            self.list_url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(2, len(response.data))
+        self.assertCaseEqual(response.data[0], obj)
+        self.assertCaseEqual(response.data[1], self.check)
+
+    def test_get_allowed(self):
+        response = self.client.get(
+            self.detail_url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertCaseCheckResponseKeys(response)
+        self.assertCaseEqual(response.data, self.check)
+
+    def test_search_find_one_result_by_name(self):
+        """
+        GET search by name should work
+        """
+
+        obj = make_recipe('case')
+        obj.provider = self.provider
+        obj.personal_details.full_name = 'xyz'
+        obj.save()
+
+        self.check.personal_details.full_name = 'abc'
+        self.check.personal_details.save()
+
+        response = self.client.get(
+            self.list_url, data={'search':'abc'}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data))
+        self.assertCaseEqual(response.data[0], self.check)
+
+    def test_search_find_one_result_by_ref(self):
+        """
+        GET search by name should work
+        """
+
+        obj = make_recipe('case', provider=self.provider)
+
+
+        response = self.client.get(
+            self.list_url, data={'search':self.check.reference}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data))
+        self.assertCaseEqual(response.data[0], self.check)
+
+    def test_search_find_one_result_by_postcode(self):
+        """
+        GET search by name should work
+        """
+
+        obj = make_recipe('case', provider=self.provider)
+
+        response = self.client.get(
+            self.list_url, data={'search': self.check.personal_details.postcode},
+            format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data))
+        self.assertCaseEqual(response.data[0], self.check)
+
+    def test_search_find_none_result_by_postcode(self):
+        """
+        GET search by name should work
+        """
+
+        response = self.client.get(
+            self.list_url, data={'search': self.check.personal_details.postcode+'ss'},
+            format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(0, len(response.data))
+
+
+    def test_search_find_none_result_by_fullname(self):
+        """
+        GET search by name should work
+        """
+        response = self.client.get(
+            self.list_url, data={'search': self.check.personal_details.full_name+'ss'},
+            format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(0, len(response.data))
+
+
+    def test_search_find_none_result_by_ref(self):
+        """
+        GET search by name should work
+        """
+        response = self.client.get(
+            self.list_url, data={'search': self.check.reference+'ss'},
+            format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(0, len(response.data))

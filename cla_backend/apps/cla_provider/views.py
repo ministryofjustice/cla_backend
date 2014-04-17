@@ -8,7 +8,7 @@ from core.viewsets import DefaultStateFilterViewSetMixin, \
 from django.shortcuts import get_object_or_404
 from legalaid.models import Category, EligibilityCheck, Case
 from rest_framework import viewsets, mixins
-from rest_framework.filters import OrderingFilter
+from rest_framework.filters import OrderingFilter, SearchFilter
 
 
 class CLAProviderPermissionViewSetMixin(object):
@@ -47,7 +47,12 @@ class CaseViewSet(
 
     filter_backends = (
         OrderingFilter,
+        SearchFilter,
     )
+
+    search_fields = ('personal_details__full_name',
+                     'personal_details__postcode',
+                     'reference' )
 
     ordering_fields = ('modified', 'created')
     ordering = '-modified'

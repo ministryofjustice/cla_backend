@@ -71,7 +71,8 @@ class CaseViewSet(
     ordering = '-modified'
 
     search_fields = ('personal_details__full_name',
-                     'personal_details__postcode',)
+                     'personal_details__postcode',
+                     'reference')
 
     default_state_filter = CASE_STATE_OPEN
     all_states = dict(CASE_STATE_CHOICES).keys()

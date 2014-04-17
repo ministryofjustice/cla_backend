@@ -202,9 +202,7 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         super(CaseTests, self).setUp()
 
         self.list_url = reverse('cla_provider:case-list')
-        obj = make_recipe('legalaid.tests.case')
-        obj.provider = self.provider
-        obj.save()
+        obj = make_recipe('legalaid.tests.case', provider=self.provider)
         self.check = obj
         self.detail_url = reverse(
             'cla_provider:case-detail', args=(),

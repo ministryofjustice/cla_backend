@@ -183,10 +183,10 @@ class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         """
         GET should not return properties of other eligibility check objects
         """
-        make_recipe('property', eligibility_check=self.check, _quantity=4)
+        make_recipe('legalaid.tests.property', eligibility_check=self.check, _quantity=4)
 
         # making extra properties
-        make_recipe('property', eligibility_check=self.check, _quantity=5)
+        make_recipe('legalaid.tests.property', eligibility_check=self.check, _quantity=5)
 
         self.assertEqual(Property.objects.count(), 9)
 
@@ -264,7 +264,7 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         GET list-url should work
         """
 
-        obj = make_recipe('case')
+        obj = make_recipe('legalaid.tests.case')
         obj.provider = self.provider
         obj.save()
 
@@ -291,7 +291,7 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         GET search by name should work
         """
 
-        obj = make_recipe('case')
+        obj = make_recipe('legalaid.tests.case')
         obj.provider = self.provider
         obj.personal_details.full_name = 'xyz'
         obj.save()
@@ -312,7 +312,7 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         GET search by name should work
         """
 
-        obj = make_recipe('case', provider=self.provider)
+        obj = make_recipe('legalaid.tests.case', provider=self.provider)
 
 
         response = self.client.get(
@@ -328,7 +328,7 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         GET search by name should work
         """
 
-        obj = make_recipe('case', provider=self.provider)
+        obj = make_recipe('legalaid.tests.case', provider=self.provider)
 
         response = self.client.get(
             self.list_url, data={'search': self.check.personal_details.postcode},

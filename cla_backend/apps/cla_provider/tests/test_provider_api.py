@@ -4,10 +4,12 @@ from cla_provider.models import Staff
 from cla_provider.serializers import CaseSerializer, EligibilityCheckSerializer
 from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED
 import mock
+from datetime import datetime
 
 from model_mommy import mommy
 
 from django.core.urlresolvers import reverse
+from django.utils.timezone import utc
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -214,7 +216,7 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
              'created', 'modified', 'state', 'created_by',
-             'provider']
+             'provider', 'locked_by', 'locked_at']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -241,6 +243,7 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 
         ### CREATE
         self._test_post_not_allowed(self.list_url)
+
 
     def test_methods_not_authorized_operator_key(self):
         """
@@ -283,6 +286,24 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertCaseCheckResponseKeys(response)
         self.assertCaseEqual(response.data, self.check)
+
+
+    def test_locked_by_when_getting_case(self):
+
+        self.assertEqual(self.check.locked_by, None)
+        self.assertEqual(self.check.locked_at, None)
+        response = self.client.get(
+            self.detail_url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['locked_by'], 'john')
+        
+        # check the time was set by this test
+        self.assertFalse(response.data['locked_at'] == None)
+        time_diff = datetime.utcnow().replace(tzinfo=utc)-response.data['locked_at']
+        self.assertTrue(time_diff.seconds<3)
+
 
     def test_search_find_one_result_by_name(self):
         """

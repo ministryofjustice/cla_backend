@@ -4,7 +4,6 @@ from django.test import SimpleTestCase
 from model_mommy import mommy
 from model_mommy.mommy import make_recipe
 from provider.oauth2.models import Client, AccessToken
-
 from rest_framework import status
 
 
@@ -42,7 +41,7 @@ class CLAAuthBaseApiTestMixin(object):
         self.email = 'lennon@thebeatles.com'
         self.password = 'password'
         self.user = User.objects.create_user(self.username, self.email, self.password)
-
+        
         # create an operator API client
         self.operator_api_client = Client.objects.create(
             user=self.user,

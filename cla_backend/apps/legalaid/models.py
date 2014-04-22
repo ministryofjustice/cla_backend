@@ -249,7 +249,6 @@ class Case(TimeStampedModel):
 
     def assign_to_provider(self, provider):
         self.provider = provider
-        self.unlock(save=False)
         self.save()
 
     def lock(self, user, save=True):
@@ -266,13 +265,6 @@ class Case(TimeStampedModel):
                 ))
 
         return False
-
-    def unlock(self, save=True):
-        if self.locked_by:
-            self.locked_by = None
-
-            if save:
-                self.save()
 
     def is_open(self):
         return self.state == CASE_STATE_OPEN
@@ -304,10 +296,6 @@ class CaseOutcome(TimeStampedModel):
 
     def __unicode__(self):
         return u'%s - %s' % (self.case, self.outcome_code)
-
-    def save(self, *args, **kwargs):
-        super(CaseOutcome, self).save(*args, **kwargs)
-        self.case.unlock()
 
 
 # class Answer(TimeStampedModel):

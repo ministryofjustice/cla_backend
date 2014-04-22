@@ -14,7 +14,7 @@ from core.viewsets import IsEligibleActionViewSetMixin
 from .permissions import CallCentreClientIDPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, OutcomeCodeSerializer
-from .forms import ProviderAllocationForm, UnlockCaseForm, CloseCaseForm
+from .forms import ProviderAllocationForm, CloseCaseForm
 
 
 class CallCentrePermissionsViewSetMixin(object):
@@ -77,31 +77,12 @@ class CaseViewSet(
     default_state_filter = CASE_STATE_OPEN
     all_states = dict(CASE_STATE_CHOICES).keys()
 
-    def _lock_case(self, obj):
-        if self.request:
-            obj.lock(self.request.user)
-
     def pre_save(self, obj, *args, **kwargs):
         super(CaseViewSet, self).pre_save(obj, *args, **kwargs)
 
         user = self.request.user
         if not obj.pk and not isinstance(user, AnonymousUser):
             obj.created_by = user
-
-    def post_save(self, obj, *args, **kwargs):
-        """
-        Lock the object after each save
-        """
-        super(CaseViewSet, self).post_save(obj, *args, **kwargs)
-        self._lock_case(obj)
-
-    def get_object(self, *args, **kwargs):
-        """
-        Lock the object every time it's requested
-        """
-        obj = super(CaseViewSet, self).get_object(*args, **kwargs)
-        self._lock_case(obj)
-        return obj
 
     @action()
     def assign(self, request, reference=None, **kwargs):
@@ -110,21 +91,6 @@ class CaseViewSet(
         """
         obj = self.get_object()
         form = ProviderAllocationForm(request.DATA)
-        if form.is_valid():
-            form.save(obj, request.user)
-            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
-
-    @action()
-    def unlock(self, request, reference=None, **kwargs):
-        """
-        Unlocks a case
-        """
-        obj = self.get_object()
-        form = UnlockCaseForm(request.DATA)
         if form.is_valid():
             form.save(obj, request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)

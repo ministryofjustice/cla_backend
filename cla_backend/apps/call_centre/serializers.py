@@ -118,14 +118,13 @@ class CaseSerializer(CaseSerializerBase):
     created_by = serializers.CharField(read_only=True)
     state = serializers.ChoiceField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN, read_only=True)
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
-    locked_by = serializers.CharField(read_only=True)
     caseoutcome_set = CaseOutcomeSerializer(many=True, required=False, read_only=True)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details',
             'reference', 'created', 'modified', 'created_by', 'state',
-            'provider', 'locked_by', 'caseoutcome_set'
+            'provider', 'caseoutcome_set',
         )
 
 

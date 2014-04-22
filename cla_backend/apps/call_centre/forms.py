@@ -2,24 +2,16 @@ from django import forms
 
 from cla_provider.models import Provider
 
-from legalaid.forms import OutcomeForm
 
-
-class ProviderAllocationForm(OutcomeForm):
+class ProviderAllocationForm(forms.Form):
     provider = forms.ModelChoiceField(queryset=Provider.objects.active())
 
     def save(self, case, user):
         data = self.cleaned_data
 
         case.assign_to_provider(data['provider'])
-        super(ProviderAllocationForm, self).save(case, user)
 
 
-class UnlockCaseForm(OutcomeForm):
-    pass
-
-
-class CloseCaseForm(OutcomeForm):
+class CloseCaseForm(forms.Form):
     def save(self, case, user):
         case.close()
-        super(CloseCaseForm, self).save(case, user)

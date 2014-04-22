@@ -4,9 +4,7 @@ from django.test import SimpleTestCase
 from model_mommy import mommy
 from model_mommy.mommy import make_recipe
 from provider.oauth2.models import Client, AccessToken
-from cla_provider.models import Staff
 from rest_framework import status
-from model_mommy import mommy
 
 
 class CLABaseApiTestMixin(object):
@@ -44,10 +42,6 @@ class CLAAuthBaseApiTestMixin(object):
         self.password = 'password'
         self.user = User.objects.create_user(self.username, self.email, self.password)
         
-        self.staff_user = User.objects.create_user("Bob", self.email, self.password)
-        self.provider = mommy.make('cla_provider.provider')
-        Staff.objects.create(user=self.staff_user, provider=self.provider)
-
         # create an operator API client
         self.operator_api_client = Client.objects.create(
             user=self.user,
@@ -84,7 +78,7 @@ class CLAAuthBaseApiTestMixin(object):
 
         # Create an access token
         self.staff_token = AccessToken.objects.create(
-            user=self.staff_user,
+            user=self.user,
             client=self.staff_api_client,
             token='stafF_token',
             scope=0

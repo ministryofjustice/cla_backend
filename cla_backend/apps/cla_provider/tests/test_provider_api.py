@@ -20,10 +20,6 @@ from legalaid.models import Category, EligibilityCheck, Property, \
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin, make_recipe
 
 
-def cla_provider_make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('cla_provider.tests.%s' % model_name, **kwargs)
-
-
 class CategoryTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CategoryTests, self).setUp()
@@ -247,21 +243,6 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self._test_post_not_allowed(self.list_url)
 
 
-#     def test_locked_by_when_getting_case(self):
-#         """
-#         After each detail GET, the locked_by gets set to the logged in User.
-#         """
-#         self.assertEqual(self.case_obj.locked_by, None)
-#         response = self.client.get(
-#             self.detail_url, HTTP_AUTHORIZATION='Bearer %s' % self.token,
-#             format='json'
-#         )
-#    
-#         self.assertEqual(response.data['locked_by'], 'Bob')
-#         case = Case.objects.get(pk=self.case_obj.pk)
-#         self.assertEqual(case.locked_by.username, 'Bob')
-#         self.assertCaseCheckResponseKeys(response)
-
     def test_methods_not_authorized_operator_key(self):
         """
         Ensure that we can't POST, PUT or DELETE using operator
@@ -305,15 +286,15 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertCaseEqual(response.data, self.check)
 
 
-    def test_locked_by_when_getting_case(self):
-        
-        self.assertEqual(self.check.locked_by, None)
-        response = self.client.get(
-            self.detail_url, data={}, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['locked_by'], 'john')
+#     def test_locked_by_when_getting_case(self):
+#         
+#         self.assertEqual(self.check.locked_by, None)
+#         response = self.client.get(
+#             self.detail_url, data={}, format='json',
+#             HTTP_AUTHORIZATION='Bearer %s' % self.token
+#         )
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         self.assertEqual(response.data['locked_by'], 'john')
 
 
     def test_search_find_one_result_by_name(self):

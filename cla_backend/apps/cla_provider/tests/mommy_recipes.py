@@ -1,4 +1,4 @@
-from model_mommy.recipe import Recipe, seq, foreign_key
+from model_mommy.recipe import Recipe, seq
 from ..models import Provider
 
 provider = Recipe(Provider,

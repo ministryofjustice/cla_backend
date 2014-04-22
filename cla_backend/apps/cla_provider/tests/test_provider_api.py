@@ -200,7 +200,7 @@ class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CaseTests, self).setUp()
-        self.case_obj = make_recipe('case', provider=self.provider)
+
         self.list_url = reverse('cla_provider:case-list')
         obj = make_recipe('legalaid.tests.case', provider=self.provider)
         self.check = obj
@@ -286,15 +286,15 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertCaseEqual(response.data, self.check)
 
 
-#     def test_locked_by_when_getting_case(self):
-#         
-#         self.assertEqual(self.check.locked_by, None)
-#         response = self.client.get(
-#             self.detail_url, data={}, format='json',
-#             HTTP_AUTHORIZATION='Bearer %s' % self.token
-#         )
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertEqual(response.data['locked_by'], 'john')
+    def test_locked_by_when_getting_case(self):
+         
+        self.assertEqual(self.check.locked_by, None)
+        response = self.client.get(
+            self.detail_url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['locked_by'], 'john')
 
 
     def test_search_find_one_result_by_name(self):

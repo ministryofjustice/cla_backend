@@ -304,6 +304,18 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertCaseCheckResponseKeys(response)
         self.assertCaseEqual(response.data, self.check)
 
+
+    def test_locked_by_when_getting_case(self):
+        
+        self.assertEqual(self.check.locked_by, None)
+        response = self.client.get(
+            self.detail_url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['locked_by'], 'john')
+
+
     def test_search_find_one_result_by_name(self):
         """
         GET search by name should work

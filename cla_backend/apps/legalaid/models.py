@@ -1,8 +1,10 @@
 import logging
+import datetime
 
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.conf import settings
+from django.utils.timezone import utc
 
 from eligibility_calculator.models import CaseData
 from uuidfield import UUIDField
@@ -231,6 +233,7 @@ class Case(TimeStampedModel):
         settings.AUTH_USER_MODEL, blank=True, null=True,
         related_name='case_locked'
     )
+    locked_at = models.DateTimeField(auto_now=False, blank=True, null=True)
     provider = models.ForeignKey('cla_provider.Provider', blank=True, null=True)
 
     def _set_reference_if_necessary(self):
@@ -255,7 +258,7 @@ class Case(TimeStampedModel):
     def lock(self, user, save=True):
         if not self.locked_by:
             self.locked_by = user
-
+            self.locked_at = datetime.datetime.utcnow().replace(tzinfo=utc)
             if save:
                 self.save()
             return True

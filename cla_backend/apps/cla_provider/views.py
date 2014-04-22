@@ -65,11 +65,11 @@ class CaseViewSet(
         qs = super(CaseViewSet, self).get_queryset().filter(provider=this_provider)
         return qs
 
-#     def get_object(self, *args, **kwargs):
-#         """
-#         Lock the object every time it's requested
-#         """
-#         obj = super(CaseViewSet, self).get_object(*args, **kwargs)
-#         if self.request:
-#             obj.lock(self.request.user)
-#         return obj
+    def get_object(self, *args, **kwargs):
+        """
+        Lock the object every time it's requested
+        """
+        obj = super(CaseViewSet, self).get_object(*args, **kwargs)
+        if self.request:
+            obj.lock(self.request.user)
+        return obj

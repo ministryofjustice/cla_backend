@@ -87,6 +87,7 @@ class CaseOutcomeSerializerBase(serializers.ModelSerializer):
 class CaseSerializerBase(serializers.ModelSerializer):
     eligibility_check = UUIDSerializer(slug_field='reference')
     personal_details = PersonalDetailsSerializerBase()
+    notes = serializers.CharField(max_length=500, required=False)
 
     class Meta:
         model = Case

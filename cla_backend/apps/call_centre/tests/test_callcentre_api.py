@@ -137,7 +137,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
              'created', 'modified', 'state', 'created_by',
-             'provider', 'caseoutcome_set']
+             'provider', 'caseoutcome_set', 'notes']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -748,7 +748,6 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         data={
             'category': category.code,
             'your_problem_notes': 'lorem',
-            'notes': 'ipsum',
             'dependants_young': 2,
             'dependants_old': 3,
         }
@@ -762,7 +761,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
                 reference=response.data['reference'],
-                category=category, notes=data['notes'],
+                category=category,
                 your_problem_notes=data['your_problem_notes'],
                 dependants_young=2, dependants_old=3
             )
@@ -778,7 +777,6 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         data={
             'category': category.code,
             'your_problem_notes': 'lorem',
-            'notes': 'ipsum',
             'has_partner': True
             }
         response = self.client.post(
@@ -792,7 +790,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
                 reference=response.data['reference'],
-                category=category, notes=data['notes'],
+                category=category,
                 your_problem_notes=data['your_problem_notes'],
                 has_partner=data['has_partner']
             )
@@ -808,7 +806,6 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         data={
             'category': category.code,
             'your_problem_notes': 'lorem',
-            'notes': 'ipsum',
             'is_you_or_your_partner_over_60': True
         }
         response = self.client.post(
@@ -822,7 +819,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
                 reference=response.data['reference'],
-                category=category, notes=data['notes'],
+                category=category,
                 your_problem_notes=data['your_problem_notes'],
                 is_you_or_your_partner_over_60=data['is_you_or_your_partner_over_60']
             )
@@ -838,7 +835,6 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         data={
             'category': category.code,
             'your_problem_notes': 'lorem',
-            'notes': 'ipsum',
             'on_passported_benefits': True
         }
         response = self.client.post(
@@ -851,7 +847,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
                 reference=response.data['reference'],
-                category=category, notes=data['notes'],
+                category=category,
                 your_problem_notes=data['your_problem_notes'],
                 on_passported_benefits=data['on_passported_benefits'],
             )
@@ -869,7 +865,6 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         data={
             'category': category.code,
             'your_problem_notes': 'lorem',
-            'notes': 'ipsum',
             'dependants_young': 2,
             'dependants_old': 3,
             }
@@ -883,7 +878,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
                 reference=response.data['reference'],
-                category=category, notes=data['notes'],
+                category=category,
                 your_problem_notes=data['your_problem_notes'],
                 dependants_young=2, dependants_old=3
             )
@@ -1048,13 +1043,12 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertItemsEqual(
             errors.keys(),
             [
-                'category', 'notes', 'your_problem_notes',
+                'category', 'your_problem_notes',
                 'property_set', 'dependants_young', 'dependants_old',
                 'you', 'partner'
             ]
         )
         self.assertEqual(errors['category'], [u"Object with code=-1 does not exist."])
-        self.assertEqual(errors['notes'], [u'Ensure this value has at most 500 characters (it has 501).'])
         self.assertEqual(errors['your_problem_notes'], [u'Ensure this value has at most 500 characters (it has 501).'])
         self.assertItemsEqual(errors['property_set'], [
             {},
@@ -1186,7 +1180,6 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'reference': 'just-trying...', # reference should never change
             'category': category2.code,
             'your_problem_notes': 'ipsum lorem2',
-            'notes': 'lorem ipsum2',
             'dependants_young': 10,
             'dependants_old': 10,
         }
@@ -1197,7 +1190,6 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         # checking the changed properties
         self.check.category = category2
-        self.check.notes = data['notes']
         self.check.your_problem_notes = data['your_problem_notes']
         self.check.dependants_young = data['dependants_young']
         self.check.dependants_old = data['dependants_old']
@@ -1412,7 +1404,6 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'reference': 'just-trying...', # reference should never change
             'category': category2.code,
             'your_problem_notes': 'lorem2',
-            'notes': 'ipsum2',
             'property_set': [],
             'dependants_young': 1,
             'dependants_old': 2,
@@ -1426,7 +1417,6 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         # checking the changed properties
         self.check.category = category2
-        self.check.notes = data['notes']
         self.check.your_problem_notes = data['your_problem_notes']
         self.check.dependants_young = data['dependants_young']
         self.check.dependants_old = data['dependants_old']

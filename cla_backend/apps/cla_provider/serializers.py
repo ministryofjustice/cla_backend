@@ -19,7 +19,7 @@ class PropertySerializer(PropertySerializerBase):
 class IncomeSerializer(IncomeSerializerBase):
 
     class Meta(IncomeSerializerBase.Meta):
-        fields = ('earnings', 'other_income', 'self_employed',)
+        fields = ('earnings', 'other_income', 'self_employed', 'total')
 
 
 class SavingsSerializer(SavingsSerializerBase):
@@ -30,6 +30,7 @@ class SavingsSerializer(SavingsSerializerBase):
             'investment_balance',
             'asset_balance',
             'credit_balance',
+            'total',
         )
 
 class DeductionsSerializer(DeductionsSerializerBase):
@@ -39,6 +40,7 @@ class DeductionsSerializer(DeductionsSerializerBase):
             'income_tax_and_ni', 'maintenance',
             'childcare', 'mortgage_or_rent',
             'criminal_legalaid_contributions',
+            'total',
         )
 
 class PersonSerializer(PersonSerializerBase):

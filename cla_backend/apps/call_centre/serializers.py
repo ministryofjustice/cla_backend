@@ -131,4 +131,4 @@ class CaseSerializer(CaseSerializerBase):
 
 class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
-        fields = ('name', 'id')
+        fields = ('name', 'id', 'short_code')

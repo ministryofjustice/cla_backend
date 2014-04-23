@@ -53,6 +53,10 @@ class DeductionsSerializer(DeductionsSerializerBase):
 
 class PersonSerializer(PersonSerializerBase):
 
+    income = IncomeSerializer(required=False)
+    savings = SavingsSerializer(required=False)
+    deductions = DeductionsSerializer(required=False)
+
     class Meta(PersonSerializerBase.Meta):
         fields = (
             'income',

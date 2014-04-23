@@ -18,6 +18,8 @@ from cla_common.constants import STATE_MAYBE, \
     CASE_STATE_REJECTED, CASE_STATE_ACCEPTED
 
 
+from legalaid.exceptions import InvalidMutationException
+
 logger = logging.getLogger(__name__)
 
 
@@ -296,22 +298,24 @@ class Case(TimeStampedModel):
         return False
 
     def reject(self):
-        if self.is_open():
-            return self._set_state(CASE_STATE_REJECTED)
+        if not self.is_open():
+            raise InvalidMutationException(
+                u"Case should be 'OPEN' to be rejected but it's currently '%s'" % (
+                    self.get_state_display()
+                )
+            )
 
-        logger.warning(u"Trying to reject case %s that is not 'OPEN' but '%s'" % (
-            self.reference, self.get_state_display()
-        ))
-        return False
+        self._set_state(CASE_STATE_REJECTED)
 
     def accept(self):
-        if self.is_open():
-            return self._set_state(CASE_STATE_ACCEPTED)
+        if not self.is_open():
+            raise InvalidMutationException(
+                u"Case should be 'OPEN' to be accepted but it's currently '%s'" % (
+                    self.get_state_display()
+                )
+            )
 
-        logger.warning(u"Trying to accept case %s that is not 'OPEN' but '%s'" % (
-            self.reference, self.get_state_display()
-        ))
-        return False
+        self._set_state(CASE_STATE_ACCEPTED)
 
 
 class CaseOutcome(TimeStampedModel):

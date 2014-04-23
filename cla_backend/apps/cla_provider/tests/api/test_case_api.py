@@ -6,12 +6,17 @@ from django.utils.timezone import utc
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_ACCEPTED, \
+    CASE_STATE_REJECTED
+
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin, make_recipe
 
+from legalaid.models import Case, CaseOutcome
 
-class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
+
+class BaseCaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
-        super(CaseTests, self).setUp()
+        super(BaseCaseTests, self).setUp()
 
         self.list_url = reverse('cla_provider:case-list')
         obj = make_recipe('legalaid.tests.case', provider=self.provider)
@@ -41,6 +46,8 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(unicode(case.eligibility_check.reference), data['eligibility_check'])
         self.assertPersonalDetailsEqual(data['personal_details'], case.personal_details)
 
+
+class CaseTests(BaseCaseTests):
     def test_methods_not_allowed(self):
         """
         Ensure that we can't POST, PUT or DELETE
@@ -114,6 +121,7 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         time_diff = datetime.utcnow().replace(tzinfo=utc)-response.data['locked_at']
         self.assertTrue(time_diff.seconds<3)
 
+    # SEARCH
 
     def test_search_find_one_result_by_name(self):
         """
@@ -206,3 +214,223 @@ class CaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, len(response.data))
+
+
+class StateChangeMixin(object):
+    def setUp(self):
+        super(StateChangeMixin, self).setUp()
+
+        self.outcome_codes = [
+            make_recipe('legalaid.tests.outcome_code', code="CODE_OPEN", case_state=CASE_STATE_OPEN),
+            make_recipe('legalaid.tests.outcome_code', code="CODE_ACCEPTED", case_state=CASE_STATE_ACCEPTED),
+            make_recipe('legalaid.tests.outcome_code', code="CODE_REJECTED", case_state=CASE_STATE_REJECTED),
+        ]
+        self.state_change_url = self.get_state_change_url()
+
+    def get_state_change_url(self, reference=None):
+        raise NotImplementedError()
+
+    def test_methods_not_allowed(self):
+        self._test_get_not_allowed(self.state_change_url)
+        self._test_patch_not_allowed(self.state_change_url)
+        self._test_delete_not_allowed(self.state_change_url)
+
+    def test_invalid_reference(self):
+        url = self.get_state_change_url(reference='invalid')
+
+        response = self.client.post(url, data={},
+            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class RejectCaseTests(StateChangeMixin, BaseCaseTests):
+    def get_state_change_url(self, reference=None):
+        reference = reference or self.check.reference
+        return reverse(
+            'cla_provider:case-reject', args=(),
+            kwargs={'reference': reference}
+        )
+
+    def test_successful(self):
+        # before, case open and no outcomes
+        self.assertEqual(self.check.state, CASE_STATE_OPEN)
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+        # reject
+        data={
+                'outcome_code': 'CODE_REJECTED',
+                'outcome_notes': 'lorem ipsum'
+            }
+        response = self.client.post(
+            self.state_change_url, data=data,
+            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # after, case rejected and outcome created
+        case = Case.objects.get(pk=self.check.pk)
+        self.assertEqual(case.state, CASE_STATE_REJECTED)
+
+        self.assertEqual(CaseOutcome.objects.count(), 1)
+        outcome = CaseOutcome.objects.all()[0]
+
+        self.assertEqual(outcome.case, self.check)
+        self.assertEqual(outcome.outcome_code.code, data['outcome_code'])
+        self.assertEqual(outcome.notes, data['outcome_notes'])
+
+    def test_invalid_mutation(self):
+        # before, case rejected and no outcomes
+        self.check.state = CASE_STATE_REJECTED
+        self.check.save()
+        self.assertEqual(self.check.state, CASE_STATE_REJECTED)
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+        # reject
+        data={
+                'outcome_code': 'CODE_REJECTED',
+                'outcome_notes': 'lorem ipsum'
+            }
+        response = self.client.post(
+            self.state_change_url, data=data,
+            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(
+            response.data,
+            {'case_state': [u"Case should be 'OPEN' to be rejected but it's currently 'REJECTED'"]}
+        )
+
+        # after, case didn't change and no outcome created
+        case = Case.objects.get(pk=self.check.pk)
+        self.assertEqual(case.state, CASE_STATE_REJECTED)
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+    def test_invalid_outcome_code(self):
+        # before, case open and no outcomes
+        self.assertEqual(self.check.state, CASE_STATE_OPEN)
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+        # reject
+        data={
+                'outcome_code': 'invalid',
+                'outcome_notes': 'lorem ipsum'
+            }
+        response = self.client.post(
+            self.state_change_url, data=data,
+            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(
+            response.data,
+            {'outcome_code': [u'Select a valid choice. That choice is not one of the available choices.']}
+        )
+
+        # after, case didn't change and no outcome created
+        case = Case.objects.get(pk=self.check.pk)
+        self.assertEqual(case.state, CASE_STATE_OPEN)
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+
+class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
+    def get_state_change_url(self, reference=None):
+        reference = reference or self.check.reference
+        return reverse(
+            'cla_provider:case-accept', args=(),
+            kwargs={'reference': reference}
+        )
+
+    def test_successful(self):
+        # before, case open and no outcomes
+        self.assertEqual(self.check.state, CASE_STATE_OPEN)
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+        # reject
+        data={
+                'outcome_code': 'CODE_ACCEPTED',
+                'outcome_notes': 'lorem ipsum'
+            }
+        response = self.client.post(
+            self.state_change_url, data=data,
+            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # after, case rejected and outcome created
+        case = Case.objects.get(pk=self.check.pk)
+        self.assertEqual(case.state, CASE_STATE_ACCEPTED)
+
+        self.assertEqual(CaseOutcome.objects.count(), 1)
+        outcome = CaseOutcome.objects.all()[0]
+
+        self.assertEqual(outcome.case, self.check)
+        self.assertEqual(outcome.outcome_code.code, data['outcome_code'])
+        self.assertEqual(outcome.notes, data['outcome_notes'])
+
+    def test_invalid_mutation(self):
+        # before, case rejected and no outcomes
+        self.check.state = CASE_STATE_REJECTED
+        self.check.save()
+        self.assertEqual(self.check.state, CASE_STATE_REJECTED)
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+        # reject
+        data={
+                'outcome_code': 'CODE_ACCEPTED',
+                'outcome_notes': 'lorem ipsum'
+            }
+        response = self.client.post(
+            self.state_change_url, data=data,
+            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(
+            response.data,
+            {'case_state': [u"Case should be 'OPEN' to be accepted but it's currently 'REJECTED'"]}
+        )
+
+        # after, case didn't change and no outcome created
+        case = Case.objects.get(pk=self.check.pk)
+        self.assertEqual(case.state, CASE_STATE_REJECTED)
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+    def test_invalid_outcome_code(self):
+        # before, case open and no outcomes
+        self.assertEqual(self.check.state, CASE_STATE_OPEN)
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)
+
+        # reject
+        data={
+                'outcome_code': 'invalid',
+                'outcome_notes': 'lorem ipsum'
+            }
+        response = self.client.post(
+            self.state_change_url, data=data,
+            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(
+            response.data,
+            {'outcome_code': [u'Select a valid choice. That choice is not one of the available choices.']}
+        )
+
+        # after, case didn't change and no outcome created
+        case = Case.objects.get(pk=self.check.pk)
+        self.assertEqual(case.state, CASE_STATE_OPEN)
+
+        self.assertEqual(CaseOutcome.objects.count(), 0)

@@ -1,17 +1,22 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.decorators import action
+from rest_framework.response import Response as DRFResponse
 
 from core.viewsets import DefaultStateFilterViewSetMixin, \
     IsEligibleActionViewSetMixin
 from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CHOICES
+
+from legalaid.exceptions import InvalidMutationException
 from legalaid.models import Category, EligibilityCheck, Case, OutcomeCode
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import CategorySerializer, \
     EligibilityCheckSerializer, CaseSerializer, OutcomeCodeSerializer
+from .forms import RejectCaseForm, AcceptCaseForm
 
 
 class CLAProviderPermissionViewSetMixin(object):
@@ -94,3 +99,34 @@ class CaseViewSet(
         if self.request:
             obj.lock(self.request.user)
         return obj
+
+    def _state_form_action(self, request, Form):
+        obj = self.get_object()
+        form = Form(request.DATA)
+        if form.is_valid():
+            try:
+                form.save(obj, request.user)
+            except InvalidMutationException as e:
+                return DRFResponse(
+                    {'case_state': [unicode(e)]},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
+    @action()
+    def reject(self, request, reference=None, **kwargs):
+        """
+        Rejects a case
+        """
+        return self._state_form_action(request, Form=RejectCaseForm)
+
+    @action()
+    def accept(self, request, reference=None, **kwargs):
+        """
+        Accepts a case
+        """
+        return self._state_form_action(request, Form=AcceptCaseForm)

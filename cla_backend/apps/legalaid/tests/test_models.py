@@ -8,6 +8,7 @@ from eligibility_calculator.models import CaseData, ModelMixin
 from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED, \
     CASE_STATE_REJECTED, CASE_STATE_ACCEPTED
 
+from legalaid.exceptions import InvalidMutationException
 from ..models import Case
 
 
@@ -370,6 +371,8 @@ class CaseTestCase(TestCase):
         # enabling logging back
         logging.disable(logging.NOTSET)
 
+    # REJECT
+
     def test_reject_open_case(self):
         """
         Reject successfull
@@ -377,30 +380,25 @@ class CaseTestCase(TestCase):
         case = make_recipe('case', state=CASE_STATE_OPEN)
         self.assertEqual(case.state, CASE_STATE_OPEN)
 
-        self.assertTrue(case.reject())
+        case.reject()
 
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, CASE_STATE_REJECTED)
 
     def test_reject_closed_case(self):
         """
-            Shouldn't do anything apart from logging the event
+            Should raise InvalidMutationException
         """
-        import logging
-
-        # disabling logging temporarily
-        logging.disable(logging.CRITICAL)
-
         case = make_recipe('case', state=CASE_STATE_CLOSED)
         self.assertEqual(case.state, CASE_STATE_CLOSED)
 
-        self.assertFalse(case.reject())
+        with self.assertRaises(InvalidMutationException):
+            case.reject()
 
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, CASE_STATE_CLOSED)
 
-        # enabling logging back
-        logging.disable(logging.NOTSET)
+    # ACCEPT
 
     def test_accept_open_case(self):
         """
@@ -409,27 +407,21 @@ class CaseTestCase(TestCase):
         case = make_recipe('case', state=CASE_STATE_OPEN)
         self.assertEqual(case.state, CASE_STATE_OPEN)
 
-        self.assertTrue(case.accept())
+        case.accept()
 
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, CASE_STATE_ACCEPTED)
 
     def test_accept_closed_case(self):
         """
-            Shouldn't do anything apart from logging the event
+            Should raise InvalidMutationException
         """
-        import logging
-
-        # disabling logging temporarily
-        logging.disable(logging.CRITICAL)
 
         case = make_recipe('case', state=CASE_STATE_CLOSED)
         self.assertEqual(case.state, CASE_STATE_CLOSED)
 
-        self.assertFalse(case.accept())
+        with self.assertRaises(InvalidMutationException):
+            case.accept()
 
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, CASE_STATE_CLOSED)
-
-        # enabling logging back
-        logging.disable(logging.NOTSET)

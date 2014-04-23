@@ -2,6 +2,7 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase
+from rest_framework import serializers
 from rest_framework.fields import IntegerField
 
 
@@ -96,8 +97,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
 class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field='reference')
     personal_details = PersonalDetailsSerializer()
-
     class Meta(CaseSerializerBase.Meta):
         fields = (
-            'eligibility_check', 'personal_details', 'reference'
+            'eligibility_check', 'personal_details', 'reference',
         )

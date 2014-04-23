@@ -125,6 +125,7 @@ class EligibilityCheck(TimeStampedModel):
     dependants_old = models.PositiveIntegerField(default=0)
     on_passported_benefits = models.BooleanField(default=False)
 
+
     # need to be moved into graph/questions format soon
     is_you_or_your_partner_over_60 = models.BooleanField(default=False)
     has_partner = models.BooleanField(default=False)
@@ -235,6 +236,7 @@ class Case(TimeStampedModel):
     )
     locked_at = models.DateTimeField(auto_now=False, blank=True, null=True)
     provider = models.ForeignKey('cla_provider.Provider', blank=True, null=True)
+    notes = models.TextField(blank=True)
 
     def _set_reference_if_necessary(self):
         if not self.reference:

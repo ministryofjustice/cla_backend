@@ -58,6 +58,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
     you = PersonSerializer(required=False)
     partner = PersonSerializer(required=False)
+    notes = serializers.CharField(max_length=500, required=False, read_only=True)
 
 
     class Meta(EligibilityCheckSerializerBase.Meta):
@@ -103,7 +104,7 @@ class CaseSerializer(CaseSerializerBase):
         fields = (
             'eligibility_check', 'personal_details',
             'reference', 'created', 'modified', 'created_by', 'state',
-            'provider', 'locked_by', 'locked_at'
+            'provider', 'locked_by', 'locked_at', 'notes'
         )
 
 

@@ -53,10 +53,6 @@ class DeductionsSerializer(DeductionsSerializerBase):
 
 class PersonSerializer(PersonSerializerBase):
 
-    income = IncomeSerializer(required=False)
-    savings = SavingsSerializer(required=False)
-    deductions = DeductionsSerializer(required=False)
-
     class Meta(PersonSerializerBase.Meta):
         fields = (
             'income',
@@ -68,6 +64,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
     you = PersonSerializer(required=False)
     partner = PersonSerializer(required=False)
+    notes = serializers.CharField(max_length=500, required=False, read_only=True)
 
 
     class Meta(EligibilityCheckSerializerBase.Meta):
@@ -124,7 +121,7 @@ class CaseSerializer(CaseSerializerBase):
         fields = (
             'eligibility_check', 'personal_details',
             'reference', 'created', 'modified', 'created_by', 'state',
-            'provider', 'caseoutcome_set',
+            'provider', 'caseoutcome_set', 'notes'
         )
 
 

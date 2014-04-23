@@ -1,9 +1,10 @@
-from legalaid.models import EligibilityCheck
+from rest_framework import serializers
+
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase
-from rest_framework import serializers
+    CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
+    OutcomeCodeSerializerBase
 from cla_common.constants import CASE_STATE_CHOICES, CASE_STATE_OPEN
 
 
@@ -11,10 +12,17 @@ class CategorySerializer(CategorySerializerBase):
     class Meta(CategorySerializerBase.Meta):
         fields = ('code', 'name', 'description')
 
+
 class PropertySerializer(PropertySerializerBase):
 
     class Meta(PropertySerializerBase.Meta):
         fields = ('value', 'mortgage_left', 'share', 'id')
+
+
+class OutcomeCodeSerializer(OutcomeCodeSerializerBase):
+    class Meta(OutcomeCodeSerializerBase.Meta):
+        fields = ('code', 'case_state', 'description')
+
 
 class IncomeSerializer(IncomeSerializerBase):
 
@@ -32,6 +40,7 @@ class SavingsSerializer(SavingsSerializerBase):
             'credit_balance',
         )
 
+
 class DeductionsSerializer(DeductionsSerializerBase):
 
     class Meta(DeductionsSerializerBase.Meta):
@@ -40,6 +49,7 @@ class DeductionsSerializer(DeductionsSerializerBase):
             'childcare', 'mortgage_or_rent',
             'criminal_legalaid_contributions',
         )
+
 
 class PersonSerializer(PersonSerializerBase):
 
@@ -53,6 +63,7 @@ class PersonSerializer(PersonSerializerBase):
             'savings',
             'deductions',
         )
+
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
@@ -85,6 +96,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
             'title', 'full_name', 'postcode', 'street', 'town',
             'mobile_phone', 'home_phone'
         )
+
 
 class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(

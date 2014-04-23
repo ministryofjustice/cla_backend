@@ -1,24 +1,45 @@
-from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CHOICES
-from cla_provider.models import Staff
-from cla_provider.permissions import CLAProviderClientIDPermission
-from cla_provider.serializers import CategorySerializer, \
-    EligibilityCheckSerializer, CaseSerializer
-from core.viewsets import DefaultStateFilterViewSetMixin, \
-    IsEligibleActionViewSetMixin
 from django.shortcuts import get_object_or_404
-from legalaid.models import Category, EligibilityCheck, Case
+
 from rest_framework import viewsets, mixins
 from rest_framework.filters import OrderingFilter, SearchFilter
+
+from core.viewsets import DefaultStateFilterViewSetMixin, \
+    IsEligibleActionViewSetMixin
+from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CHOICES
+from legalaid.models import Category, EligibilityCheck, Case, OutcomeCode
+
+from .models import Staff
+from .permissions import CLAProviderClientIDPermission
+from .serializers import CategorySerializer, \
+    EligibilityCheckSerializer, CaseSerializer, OutcomeCodeSerializer
 
 
 class CLAProviderPermissionViewSetMixin(object):
     permission_classes = (CLAProviderClientIDPermission,)
+
 
 class CategoryViewSet(CLAProviderPermissionViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Category
     serializer_class = CategorySerializer
 
     lookup_field = 'code'
+
+
+class OutcomeCodeViewSet(
+    CLAProviderPermissionViewSetMixin,
+    DefaultStateFilterViewSetMixin,
+    viewsets.ReadOnlyModelViewSet
+):
+    model = OutcomeCode
+    serializer_class = OutcomeCodeSerializer
+
+    lookup_field = 'code'
+
+    default_state_filter = None
+    all_states = dict(CASE_STATE_CHOICES).keys()
+    state_field = 'case_state'
+
+
 
 class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,

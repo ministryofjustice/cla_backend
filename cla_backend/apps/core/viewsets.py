@@ -1,5 +1,6 @@
 from eligibility_calculator.calculator import EligibilityChecker
 from eligibility_calculator.exceptions import PropertyExpectedException
+
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -15,9 +16,11 @@ class DefaultStateFilterViewSetMixin(object):
         state = self.request.QUERY_PARAMS.get(self.state_field, None)
         if state in ['all', '*']:
             return qs
-        if state is not None and state in self.all_states:
+        if state is not None:
             return qs.filter(**{self.state_field:state})
-        return qs.filter(**{self.state_field: self.default_state_filter})
+        if self.default_state_filter:
+            return qs.filter(**{self.state_field: self.default_state_filter})
+        return qs
 
 
 class IsEligibleActionViewSetMixin(object):

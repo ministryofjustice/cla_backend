@@ -5,7 +5,8 @@ from model_mommy import mommy
 
 from eligibility_calculator.models import CaseData, ModelMixin
 
-from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED
+from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED, \
+    CASE_STATE_REJECTED, CASE_STATE_ACCEPTED
 
 from ..models import Case
 
@@ -350,6 +351,9 @@ class CaseTestCase(TestCase):
         self.assertEqual(case.state, CASE_STATE_CLOSED)
 
     def test_close_closed_case(self):
+        """
+            Shouldn't do anything apart from logging the event
+        """
         import logging
 
         # disabling logging temporarily
@@ -359,6 +363,70 @@ class CaseTestCase(TestCase):
         self.assertEqual(case.state, CASE_STATE_CLOSED)
 
         self.assertFalse(case.close())
+
+        case = Case.objects.get(pk=case.pk)
+        self.assertEqual(case.state, CASE_STATE_CLOSED)
+
+        # enabling logging back
+        logging.disable(logging.NOTSET)
+
+    def test_reject_open_case(self):
+        """
+        Reject successfull
+        """
+        case = make_recipe('case', state=CASE_STATE_OPEN)
+        self.assertEqual(case.state, CASE_STATE_OPEN)
+
+        self.assertTrue(case.reject())
+
+        case = Case.objects.get(pk=case.pk)
+        self.assertEqual(case.state, CASE_STATE_REJECTED)
+
+    def test_reject_closed_case(self):
+        """
+            Shouldn't do anything apart from logging the event
+        """
+        import logging
+
+        # disabling logging temporarily
+        logging.disable(logging.CRITICAL)
+
+        case = make_recipe('case', state=CASE_STATE_CLOSED)
+        self.assertEqual(case.state, CASE_STATE_CLOSED)
+
+        self.assertFalse(case.reject())
+
+        case = Case.objects.get(pk=case.pk)
+        self.assertEqual(case.state, CASE_STATE_CLOSED)
+
+        # enabling logging back
+        logging.disable(logging.NOTSET)
+
+    def test_accept_open_case(self):
+        """
+        Accept successfull
+        """
+        case = make_recipe('case', state=CASE_STATE_OPEN)
+        self.assertEqual(case.state, CASE_STATE_OPEN)
+
+        self.assertTrue(case.accept())
+
+        case = Case.objects.get(pk=case.pk)
+        self.assertEqual(case.state, CASE_STATE_ACCEPTED)
+
+    def test_accept_closed_case(self):
+        """
+            Shouldn't do anything apart from logging the event
+        """
+        import logging
+
+        # disabling logging temporarily
+        logging.disable(logging.CRITICAL)
+
+        case = make_recipe('case', state=CASE_STATE_CLOSED)
+        self.assertEqual(case.state, CASE_STATE_CLOSED)
+
+        self.assertFalse(case.accept())
 
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, CASE_STATE_CLOSED)

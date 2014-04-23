@@ -27,22 +27,48 @@ class PropertySerializerBase(serializers.ModelSerializer):
         model = Property
         fields = ()
 
+class TotalsModelSerializer(serializers.ModelSerializer):
+    total_fields = set()
 
-class IncomeSerializerBase(serializers.ModelSerializer):
+    total = serializers.SerializerMethodField('get_total')
+
+    def get_total(self, obj):
+        total = 0
+        for f in self.total_fields:
+            total += getattr(obj, f, 0)
+        return total
+
+class IncomeSerializerBase(TotalsModelSerializer):
+    total_fields = {'earnings', 'other_income'}
 
     class Meta:
         model = Income
         fields = ()
 
 
-class SavingsSerializerBase(serializers.ModelSerializer):
+class SavingsSerializerBase(TotalsModelSerializer):
+    total_fields = \
+        {'bank_balance',
+         'investment_balance',
+         'asset_balance',
+         'credit_balance'}
+
 
     class Meta:
         model = Savings
         fields = ()
 
 
-class DeductionsSerializerBase(serializers.ModelSerializer):
+class DeductionsSerializerBase(TotalsModelSerializer):
+    total_fields = \
+        {
+            'criminal_legalaid_contributions',
+            'income_tax_and_ni',
+            'maintenance',
+            'childcare',
+            'mortgage_or_rent',
+
+        }
 
     class Meta:
         model = Deductions

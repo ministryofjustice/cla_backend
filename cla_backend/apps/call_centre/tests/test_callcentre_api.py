@@ -120,6 +120,18 @@ class ProviderTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self._test_put_not_allowed(self.detail_url)
         self._test_delete_not_allowed(self.detail_url)
 
+    def test_provider_response_fields(self):
+
+        response = self.client.get(self.detail_url,
+                           HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                           format='json')
+        self.assertItemsEqual(
+            response.data.keys(),
+            ['name',
+             'id',
+             'short_code'
+             ]
+        )
 
 class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
@@ -631,7 +643,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
              'partner',
              'has_partner',
              'on_passported_benefits',
-             'is_you_or_your_partner_over_60'
+             'is_you_or_your_partner_over_60',
+             'state'
             ]
         )
 

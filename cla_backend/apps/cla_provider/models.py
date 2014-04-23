@@ -12,8 +12,12 @@ class Provider(TimeStampedModel):
     opening_hours = models.CharField(max_length=100)
     law_category = models.ManyToManyField('legalaid.Category')
     active = models.BooleanField(default=False)
+    short_code = models.CharField(max_length=100, blank=True)
 
     objects = ProviderManager()
+
+    def __unicode__(self):
+        return u'%s' % self.name
 
 class Staff(TimeStampedModel):
     user = models.OneToOneField('auth.User')

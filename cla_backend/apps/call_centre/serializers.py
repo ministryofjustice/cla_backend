@@ -53,6 +53,10 @@ class DeductionsSerializer(DeductionsSerializerBase):
 
 class PersonSerializer(PersonSerializerBase):
 
+    income = IncomeSerializer(required=False)
+    savings = SavingsSerializer(required=False)
+    deductions = DeductionsSerializer(required=False)
+
     class Meta(PersonSerializerBase.Meta):
         fields = (
             'income',
@@ -81,7 +85,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'is_you_or_your_partner_over_60',
             'has_partner',
             'on_passported_benefits',
-            # 'state'  #TODO not sure why we need this here?
+            'state'
         )
 
 
@@ -127,4 +131,4 @@ class CaseSerializer(CaseSerializerBase):
 
 class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
-        fields = ('name', 'id')
+        fields = ('name', 'id', 'short_code')

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from core.serializers import UUIDSerializer
-from cla_provider.models import Provider
+from cla_provider.models import Provider, ProviderAllocation
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, OutcomeCode, CaseOutcome
@@ -21,6 +21,9 @@ class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Provider
 
+class ProviderAllocationSerializerBase(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProviderAllocation
 
 class PropertySerializerBase(serializers.ModelSerializer):
     class Meta:

@@ -128,13 +128,18 @@ class CaseTests(BaseCaseTests):
         GET search by name should work
         """
 
-        obj = make_recipe('legalaid.tests.case')
-        obj.provider = self.provider
-        obj.personal_details.full_name = 'xyz'
-        obj.save()
+        obj = make_recipe('legalaid.tests.case',
+                          reference='ref1',
+                          personal_details__full_name='xyz',
+                          personal_details__postcode='123',
+                          provider=self.provider,
+                          )
 
         self.check.personal_details.full_name = 'abc'
+        self.check.personal_details.postcode = '123'
         self.check.personal_details.save()
+        self.check.reference = 'ref2'
+        self.check.save()
 
         response = self.client.get(
             self.list_url, data={'search':'abc'}, format='json',
@@ -146,10 +151,12 @@ class CaseTests(BaseCaseTests):
 
     def test_search_find_one_result_by_ref(self):
         """
-        GET search by name should work
+        GET search by ref should work
         """
 
-        obj = make_recipe('legalaid.tests.case', provider=self.provider)
+        obj = make_recipe('legalaid.tests.case', provider=self.provider,
+                          personal_details__full_name='abc',
+                          personal_details__postcode='123')
 
 
         response = self.client.get(
@@ -165,7 +172,9 @@ class CaseTests(BaseCaseTests):
         GET search by name should work
         """
 
-        obj = make_recipe('legalaid.tests.case', provider=self.provider)
+        obj = make_recipe('legalaid.tests.case', provider=self.provider,
+                          personal_details__postcode='123',
+                          personal__details__full_name='abc')
 
         response = self.client.get(
             self.list_url, data={'search': self.check.personal_details.postcode},

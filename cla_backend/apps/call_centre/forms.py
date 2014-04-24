@@ -10,6 +10,7 @@ class ProviderAllocationForm(forms.Form):
         data = self.cleaned_data
 
         case.assign_to_provider(data['provider'])
+        return data['provider']
 
 
 class CloseCaseForm(forms.Form):

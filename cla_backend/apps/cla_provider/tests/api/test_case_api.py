@@ -282,10 +282,10 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
         self.assertEqual(outcome.notes, data['outcome_notes'])
 
     def test_invalid_mutation(self):
-        # before, case rejected and no outcomes
-        self.check.state = CASE_STATE_REJECTED
+        # before, case accepted and no outcomes
+        self.check.state = CASE_STATE_ACCEPTED
         self.check.save()
-        self.assertEqual(self.check.state, CASE_STATE_REJECTED)
+        self.assertEqual(self.check.state, CASE_STATE_ACCEPTED)
 
         self.assertEqual(CaseOutcome.objects.count(), 0)
 
@@ -302,12 +302,12 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(
             response.data,
-            {'case_state': [u"Case should be 'OPEN' to be rejected but it's currently 'REJECTED'"]}
+            {'case_state': [u"Case should be 'OPEN' to be rejected but it's currently 'ACCEPTED'"]}
         )
 
         # after, case didn't change and no outcome created
         case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATE_REJECTED)
+        self.assertEqual(case.state, CASE_STATE_ACCEPTED)
 
         self.assertEqual(CaseOutcome.objects.count(), 0)
 
@@ -378,10 +378,10 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
         self.assertEqual(outcome.notes, data['outcome_notes'])
 
     def test_invalid_mutation(self):
-        # before, case rejected and no outcomes
-        self.check.state = CASE_STATE_REJECTED
+        # before, case accepted and no outcomes
+        self.check.state = CASE_STATE_ACCEPTED
         self.check.save()
-        self.assertEqual(self.check.state, CASE_STATE_REJECTED)
+        self.assertEqual(self.check.state, CASE_STATE_ACCEPTED)
 
         self.assertEqual(CaseOutcome.objects.count(), 0)
 
@@ -398,12 +398,12 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(
             response.data,
-            {'case_state': [u"Case should be 'OPEN' to be accepted but it's currently 'REJECTED'"]}
+            {'case_state': [u"Case should be 'OPEN' to be accepted but it's currently 'ACCEPTED'"]}
         )
 
         # after, case didn't change and no outcome created
         case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATE_REJECTED)
+        self.assertEqual(case.state, CASE_STATE_ACCEPTED)
 
         self.assertEqual(CaseOutcome.objects.count(), 0)
 

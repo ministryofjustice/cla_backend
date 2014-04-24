@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 
 class DefaultStateFilterViewSetMixin(object):
-    default_state_filter = None
+    default_state_filter = []
     all_states = None
     state_field = 'state'
 
@@ -19,7 +19,9 @@ class DefaultStateFilterViewSetMixin(object):
         if state is not None:
             return qs.filter(**{self.state_field:state})
         if self.default_state_filter:
-            return qs.filter(**{self.state_field: self.default_state_filter})
+            return qs.filter(**{
+                u'%s__in' % self.state_field: self.default_state_filter
+            })
         return qs
 
 

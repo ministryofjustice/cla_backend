@@ -92,8 +92,9 @@ class CaseViewSet(
         obj = self.get_object()
         form = ProviderAllocationForm(request.DATA)
         if form.is_valid():
-            form.save(obj, request.user)
-            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+            provider = form.save(obj, request.user)
+            provider_serialised = ProviderSerializer(provider)
+            return DRFResponse(data=provider_serialised.data)
 
         return DRFResponse(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST

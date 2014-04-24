@@ -74,7 +74,7 @@ class CaseViewSet(
                      'personal_details__postcode',
                      'reference')
 
-    default_state_filter = CASE_STATE_OPEN
+    default_state_filter = [CASE_STATE_OPEN]
     all_states = dict(CASE_STATE_CHOICES).keys()
 
     def pre_save(self, obj, *args, **kwargs):

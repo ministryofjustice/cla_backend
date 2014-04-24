@@ -3,8 +3,9 @@
     "pk": 1,
     "model": "legalaid.outcomecode",
     "fields": {
-        "description": "Call abandoned by the client",
-        "code": "ABND",
+        "description": "Misdiagnosed, out of scope",
+        "code": "MIS-OOS",
+        "case_state": 2,
         "modified": "2014-04-14T15:48:14.316Z",
         "created": "2014-04-14T15:48:14.314Z"
     }
@@ -13,8 +14,9 @@
     "pk": 2,
     "model": "legalaid.outcomecode",
     "fields": {
-        "description": "Operator terminated the call",
-        "code": "TERM",
+        "description": "Misdiagnosed, case lacks sufficient merit",
+        "code": "MIS-MER",
+        "case_state": 2,
         "modified": "2014-04-14T15:48:22.898Z",
         "created": "2014-04-14T15:48:22.896Z"
     }
@@ -23,8 +25,31 @@
     "pk": 3,
     "model": "legalaid.outcomecode",
     "fields": {
-        "description": "Callback 1 (unsuccessful)",
-        "code": "CB1",
+        "description": "Misdiagnosed, means test isn't correct",
+        "code": "MIS-MEANS",
+        "case_state": 2,
+        "modified": "2014-04-14T15:59:59.227Z",
+        "created": "2014-04-14T15:59:59.225Z"
+    }
+},
+{
+    "pk": 4,
+    "model": "legalaid.outcomecode",
+    "fields": {
+        "description": "Misdiagnosed, case not suitable for telephone advice",
+        "code": "MIS-TEL",
+        "case_state": 2,
+        "modified": "2014-04-14T15:59:59.227Z",
+        "created": "2014-04-14T15:59:59.225Z"
+    }
+},
+{
+    "pk": 5,
+    "model": "legalaid.outcomecode",
+    "fields": {
+        "description": "Case taken",
+        "code": "CLOP",
+        "case_state": 3,
         "modified": "2014-04-14T15:59:59.227Z",
         "created": "2014-04-14T15:59:59.225Z"
     }

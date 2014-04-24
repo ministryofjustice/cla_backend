@@ -14,8 +14,11 @@ from model_utils.models import TimeStampedModel
 # from jsonfield import JSONField
 
 from cla_common.constants import STATE_MAYBE, \
-    STATE_CHOICES, CASE_STATE_CHOICES, CASE_STATE_OPEN, CASE_STATE_CLOSED
+    STATE_CHOICES, CASE_STATE_CHOICES, CASE_STATE_OPEN, CASE_STATE_CLOSED, \
+    CASE_STATE_REJECTED, CASE_STATE_ACCEPTED
 
+
+from legalaid.exceptions import InvalidMutationException
 
 logger = logging.getLogger(__name__)
 
@@ -215,6 +218,9 @@ class Property(TimeStampedModel):
 class OutcomeCode(TimeStampedModel):
     code = models.CharField(max_length=50, unique=True)
     description = models.TextField()
+    case_state = models.PositiveSmallIntegerField(
+        choices=CASE_STATE_CHOICES, null=True, blank=True
+    )
 
     def __unicode__(self):
         return u'%s' % self.code
@@ -277,17 +283,39 @@ class Case(TimeStampedModel):
     def is_closed(self):
         return self.state == CASE_STATE_CLOSED
 
+    def _set_state(self, state):
+        self.state = state
+        self.save()
+        return True
+
     def close(self):
         if not self.is_closed():
-            self.state = CASE_STATE_CLOSED
-            self.save()
-
-            return True
+            return self._set_state(CASE_STATE_CLOSED)
 
         logger.warning(u'Trying to close case %s that has already been closed' % (
             self.reference
         ))
         return False
+
+    def reject(self):
+        if not self.is_open():
+            raise InvalidMutationException(
+                u"Case should be 'OPEN' to be rejected but it's currently '%s'" % (
+                    self.get_state_display()
+                )
+            )
+
+        self._set_state(CASE_STATE_REJECTED)
+
+    def accept(self):
+        if not self.is_open():
+            raise InvalidMutationException(
+                u"Case should be 'OPEN' to be accepted but it's currently '%s'" % (
+                    self.get_state_display()
+                )
+            )
+
+        self._set_state(CASE_STATE_ACCEPTED)
 
 
 class CaseOutcome(TimeStampedModel):

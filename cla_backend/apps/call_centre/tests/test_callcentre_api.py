@@ -516,13 +516,18 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         GET search by name should work
         """
 
-        obj = make_recipe('case')
-        obj.provider = self.provider
-        obj.personal_details.full_name = 'xyz'
-        obj.save()
+        obj = make_recipe('case',
+              reference='ref1',
+              personal_details__full_name='xyz',
+              personal_details__postcode='123',
+              provider=self.provider,
+        )
 
         self.case_obj.personal_details.full_name = 'abc'
+        self.case_obj.personal_details.postcode = '123'
         self.case_obj.personal_details.save()
+        self.case_obj.reference = 'ref2'
+        self.case_obj.save()
 
         response = self.client.get(
             self.list_url, data={'search':'abc'}, format='json',
@@ -537,7 +542,9 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         GET search by name should work
         """
 
-        obj = make_recipe('case', provider=self.provider)
+        obj = make_recipe('case', provider=self.provider,
+                          personal_details__full_name='abc',
+                          personal_details__postcode='123')
 
 
         response = self.client.get(
@@ -553,7 +560,9 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         GET search by name should work
         """
 
-        obj = make_recipe('case', provider=self.provider)
+        obj = make_recipe('case', provider=self.provider,
+                          personal_details__postcode='123',
+                          personal__details__full_name='abc')
 
         response = self.client.get(
             self.list_url, data={'search': self.case_obj.personal_details.postcode},

@@ -81,7 +81,7 @@ class CaseViewSet(
                      'personal_details__postcode',
                      'reference' )
 
-    ordering_fields = ('modified', 'created')
+    ordering_fields = ('-state', 'modified', 'created')
     ordering = '-modified'
 
     default_state_filter = [CASE_STATE_OPEN, CASE_STATE_ACCEPTED]

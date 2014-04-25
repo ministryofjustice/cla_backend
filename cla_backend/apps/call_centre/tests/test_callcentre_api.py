@@ -425,7 +425,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             format='json'
         )
 
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.provider.pk, data['provider'])

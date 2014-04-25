@@ -121,7 +121,7 @@ class CaseSerializer(CaseSerializerBase):
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     caseoutcome_set = CaseOutcomeSerializer(many=True, required=False, read_only=True)
 
-    provider_notes = serializers.CharField(max_length=500, required=False)
+    provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (

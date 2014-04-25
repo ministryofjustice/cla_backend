@@ -24,6 +24,7 @@ class ProviderAllocationHelper(object):
     def get_random_provider(self, category):
         """
         @return: Randomly chosen provider who offers this category of service
+                 or None if there are no providers with this category of service
         """
         # the score_card is only built to make inspecting this procedure easier.
         # The alternative is to only store a single winner which is updated on
@@ -32,6 +33,8 @@ class ProviderAllocationHelper(object):
         for pa in self.get_qualifying_providers_allocation(category):
             # calculate score for each provider
             score_card.append((pa.provider.id, float(pa.weighted_distribution) * random()))
+        else:
+            return None
 
         # the highest score wins
         winner = sorted(score_card, key=itemgetter(1), reverse=True)[0]

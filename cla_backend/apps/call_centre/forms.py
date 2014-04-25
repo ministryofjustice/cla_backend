@@ -8,7 +8,8 @@ class ProviderAllocationForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.providers = kwargs.pop('providers', None)
-        self.base_fields['provider'].choices = [(p.pk, p.name) for p in self.providers]
+        if self.providers:
+            self.base_fields['provider'].choices = [(p.pk, p.name) for p in self.providers]
         super(ProviderAllocationForm, self).__init__(*args, **kwargs)
 
     def clean_provider(self):

@@ -114,11 +114,14 @@ class CaseSerializer(CaseSerializerBase):
     locked_by = serializers.CharField(read_only=True)
     locked_at = serializers.DateTimeField(read_only=True)
 
+    notes = serializers.CharField(max_length=500, required=False, read_only=True)
+    provider_notes = serializers.CharField(max_length=500, required=False)
+
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details',
             'reference', 'created', 'modified', 'created_by', 'state',
-            'provider', 'locked_by', 'locked_at', 'notes'
+            'provider', 'locked_by', 'locked_at', 'notes', 'provider_notes'
         )
 
 

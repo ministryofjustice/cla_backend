@@ -121,11 +121,13 @@ class CaseSerializer(CaseSerializerBase):
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     caseoutcome_set = CaseOutcomeSerializer(many=True, required=False, read_only=True)
 
+    provider_notes = serializers.CharField(max_length=500, required=False)
+
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details',
             'reference', 'created', 'modified', 'created_by', 'state',
-            'provider', 'caseoutcome_set', 'notes'
+            'provider', 'caseoutcome_set', 'notes', 'provider_notes'
         )
 
 

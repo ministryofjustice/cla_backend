@@ -149,7 +149,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
              'created', 'modified', 'state', 'created_by',
-             'provider', 'caseoutcome_set', 'notes']
+             'provider', 'caseoutcome_set', 'notes', 'provider_notes']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -398,7 +398,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             format='json'
         )
 
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         case = Case.objects.get(pk=case.pk)
         self.assertTrue(case.provider.pk!=None)
@@ -584,6 +584,18 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, len(response.data))
+
+
+    def test_patch_provider_notes_not_allowed(self):
+        """
+        Test that provider can post provider notes
+        """
+        response = self.client.patch(self.detail_url, data={'provider_notes': 'abc123'},
+                                     format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['provider_notes'], self.case_obj.provider_notes)
+        self.assertNotEqual(response.data['provider_notes'], 'abc123')
+
 
 
 class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):

@@ -243,6 +243,7 @@ class Case(TimeStampedModel):
     locked_at = models.DateTimeField(auto_now=False, blank=True, null=True)
     provider = models.ForeignKey('cla_provider.Provider', blank=True, null=True)
     notes = models.TextField(blank=True)
+    provider_notes = models.TextField(blank=True)
 
     def _set_reference_if_necessary(self):
         if not self.reference:

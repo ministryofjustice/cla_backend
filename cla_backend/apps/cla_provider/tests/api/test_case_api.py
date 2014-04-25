@@ -31,7 +31,7 @@ class BaseCaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
              'created', 'modified', 'state', 'created_by',
-             'provider', 'locked_by', 'locked_at', 'notes']
+             'provider', 'locked_by', 'locked_at', 'notes', 'provider_notes']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -223,6 +223,16 @@ class CaseTests(BaseCaseTests):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, len(response.data))
+
+    def test_patch_provider_notes_allowed(self):
+        """
+        Test that provider can post provider notes
+        """
+        response = self.client.patch(self.detail_url, data={'provider_notes': 'abc123'},
+                                     format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['provider_notes'], 'abc123')
+
 
 
 class StateChangeMixin(object):

@@ -379,6 +379,14 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
     def test_assign_successful(self):
         case = make_recipe('case')
 
+        category = case.eligibility_check.category
+        user = mommy.make(settings.AUTH_USER_MODEL)
+        provider = cla_provider_make_recipe('provider', active=True)
+        cla_provider_make_recipe('provider_allocation',
+                                 weighted_distribution=0.5,
+                                 provider=provider,
+                                 category=category)
+
         # before being assigned, case in the list
         case_list = self.client.get(
             self.list_url, format='json',

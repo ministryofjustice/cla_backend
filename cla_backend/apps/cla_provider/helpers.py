@@ -33,7 +33,7 @@ class ProviderAllocationHelper(object):
         for pa in self.get_qualifying_providers_allocation(category):
             # calculate score for each provider
             score_card.append((pa.provider.id, float(pa.weighted_distribution) * random()))
-        else:
+        if not score_card:
             return None
 
         # the highest score wins

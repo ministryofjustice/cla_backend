@@ -1,3 +1,4 @@
+from cla_provider.helpers import ProviderAllocationHelper
 from django.contrib.auth.models import AnonymousUser
 
 from rest_framework import viewsets, mixins, status

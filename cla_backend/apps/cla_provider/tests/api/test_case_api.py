@@ -121,6 +121,55 @@ class CaseTests(BaseCaseTests):
         time_diff = datetime.utcnow().replace(tzinfo=utc)-response.data['locked_at']
         self.assertTrue(time_diff.seconds<3)
 
+    # CASE LIST ORDERING
+    def test_case_list_ordering(self):
+        """
+            Should return:
+                "1. open not locked" (state == open, locked_by == None)
+                "2. open locked a" (state == open, locked_by != None, modified at == recent)
+                "3. open locked b" (state == open, locked_by != None, modified at == far in the past)
+                "4. accepted a" (state == accepted, modified at == recent)
+                "5. accepted b" (state == accepted, modified at == far in the past)
+        """
+        Case.objects.all().delete()  # deleting all existing cases just in case
+
+        def create_case(state, reference, locked_by, modified=None):
+            case = make_recipe(
+                'legalaid.tests.case', provider=self.provider,
+                state=state, reference=reference, locked_by=locked_by
+            )
+
+            if modified:
+                # need to update it manually otherwise django does it for us
+                Case.objects.filter(pk=case.pk).update(modified=modified)
+            return case
+
+        from django.utils import timezone
+        from datetime import timedelta
+
+        now = timezone.now()
+        self.cases = [
+            create_case(CASE_STATE_ACCEPTED, reference='5. accepted b', locked_by=self.user, modified=now-timedelta(days=2)),
+            create_case(CASE_STATE_OPEN, reference='3. open locked b', locked_by=self.user, modified=now-timedelta(days=3)),
+            create_case(CASE_STATE_OPEN, reference='1. open not locked', locked_by=None),
+            create_case(CASE_STATE_ACCEPTED, reference='4. accepted a', locked_by=self.user, modified=now-timedelta(minutes=2)),
+            create_case(CASE_STATE_OPEN, reference='2. open locked a', locked_by=self.user, modified=now-timedelta(minutes=1)),
+        ]
+
+        response = self.client.get(
+            self.list_url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(5, len(response.data))
+        self.assertEqual(
+            [case['reference'] for case in response.data],
+            [
+                '1. open not locked', '2. open locked a', '3. open locked b',
+                '4. accepted a', '5. accepted b'
+            ]
+        )
+
     # SEARCH
 
     def test_search_find_one_result_by_name(self):

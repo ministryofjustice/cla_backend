@@ -284,19 +284,22 @@ class Case(TimeStampedModel):
     def is_closed(self):
         return self.state == CASE_STATE_CLOSED
 
+    def is_accepted(self):
+        return self.state == CASE_STATE_ACCEPTED
+
     def _set_state(self, state):
         self.state = state
         self.save()
         return True
 
     def close(self):
-        if not self.is_closed():
-            return self._set_state(CASE_STATE_CLOSED)
-
-        logger.warning(u'Trying to close case %s that has already been closed' % (
-            self.reference
-        ))
-        return False
+        if not self.is_open() and not self.is_accepted():
+            raise InvalidMutationException(
+                u"Case should be 'OPEN' or 'ACCEPTED' to be closed but it's currently '%s'" % (
+                    self.get_state_display()
+                )
+            )
+        return self._set_state(CASE_STATE_CLOSED)
 
     def reject(self):
         if not self.is_open():

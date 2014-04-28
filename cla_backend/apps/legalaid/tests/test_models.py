@@ -353,23 +353,27 @@ class CaseTestCase(TestCase):
 
     def test_close_closed_case(self):
         """
-            Shouldn't do anything apart from logging the event
+            Should raise InvalidMutationException
         """
-        import logging
-
-        # disabling logging temporarily
-        logging.disable(logging.CRITICAL)
-
+        # case closed already
         case = make_recipe('case', state=CASE_STATE_CLOSED)
         self.assertEqual(case.state, CASE_STATE_CLOSED)
 
-        self.assertFalse(case.close())
+        with self.assertRaises(InvalidMutationException):
+            case.close()
 
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, CASE_STATE_CLOSED)
 
-        # enabling logging back
-        logging.disable(logging.NOTSET)
+        # case closed rejected
+        case = make_recipe('case', state=CASE_STATE_REJECTED)
+        self.assertEqual(case.state, CASE_STATE_REJECTED)
+
+        with self.assertRaises(InvalidMutationException):
+            case.close()
+
+        case = Case.objects.get(pk=case.pk)
+        self.assertEqual(case.state, CASE_STATE_REJECTED)
 
     # REJECT
 

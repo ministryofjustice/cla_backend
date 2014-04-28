@@ -35,11 +35,7 @@
             "created": "2014-03-20T14:13:31.600Z",
             "opening_hours": "test",
             "modified": "2014-03-20T14:13:31.615Z",
-            "law_category": [
-                3,
-                4
-            ],
-            "active": false
+            "active": true
         }
     },
 
@@ -99,6 +95,28 @@
             "is_operator_superuser": false,
             "modified": "2014-03-19T16:27:32.004Z",
             "created": "2014-03-19T16:27:31.999Z"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 3,
+            "provider": 1,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-28T11:18:37.447Z",
+            "created": "2014-04-28T11:18:37.441Z"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 4,
+            "provider": 1,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-28T11:18:37.447Z",
+            "created": "2014-04-28T11:18:37.441Z"
         }
     }
 ]

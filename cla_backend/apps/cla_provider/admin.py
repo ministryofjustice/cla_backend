@@ -14,5 +14,5 @@ class ProviderAdmin(admin.ModelAdmin):
         ]
 
 admin.site.register(Provider, ProviderAdmin)
-admin.site.register(ProviderAllocation, ProviderAdmin)
+admin.site.register(ProviderAllocation)
 admin.site.register(Staff)

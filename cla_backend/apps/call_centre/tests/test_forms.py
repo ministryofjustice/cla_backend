@@ -17,6 +17,7 @@ def cla_provider_make_recipe(model_name, **kwargs):
 
 
 class ProviderAllocationFormTestCase(TestCase):
+
     def test_save(self):
         case = make_recipe('case')
         category = case.eligibility_check.category
@@ -31,7 +32,7 @@ class ProviderAllocationFormTestCase(TestCase):
 
         helper = ProviderAllocationHelper()
 
-        form = ProviderAllocationForm({'provider' : helper.get_random_provider(category)},
+        form = ProviderAllocationForm(data={'provider' : helper.get_random_provider(category)},
                                       providers=helper.get_qualifying_providers(category))
 
         self.assertTrue(form.is_valid())
@@ -39,6 +40,18 @@ class ProviderAllocationFormTestCase(TestCase):
         form.save(case, user)
 
         self.assertEqual(case.provider, provider)
+
+    def test_not_valid_with_no_valid_provider_for_category(self):
+        case = make_recipe('case')
+        category = case.eligibility_check.category
+        user = mommy.make(settings.AUTH_USER_MODEL)
+        helper = ProviderAllocationHelper()
+
+        form = ProviderAllocationForm(data={},
+                                      providers=[])
+
+        self.assertFalse(form.is_valid())
+
 
 
 class CloseCaseFormTestCase(TestCase):

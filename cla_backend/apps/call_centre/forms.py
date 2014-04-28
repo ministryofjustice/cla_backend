@@ -23,12 +23,14 @@ class ProviderAllocationForm(forms.Form):
         return provider
 
     def clean(self):
+        cleaned_data = super(ProviderAllocationForm,self).clean()
         if not self.providers:
             self._errors[NON_FIELD_ERRORS] = ErrorList([
                 _(u'There is no provider specified in '
                   u'the system to handle cases of this law category.')
             ])
             del self._errors['provider']
+        return cleaned_data
 
     def save(self, case, user):
         data = self.cleaned_data

@@ -3,8 +3,8 @@ from rest_framework import serializers
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
-    ProviderAllocationSerializerBase, OutcomeCodeSerializerBase
+    CaseSerializerBase, CategorySerializerBase, \
+    OutcomeCodeSerializerBase, ProviderSerializerBase
 from rest_framework import serializers
 from cla_common.constants import CASE_STATE_CHOICES, CASE_STATE_OPEN
 
@@ -119,7 +119,7 @@ class CaseSerializer(CaseSerializerBase):
         fields = (
             'eligibility_check', 'personal_details',
             'reference', 'created', 'modified', 'created_by', 'state',
-            'provider', 'locked_by', 'locked_at', 'notes'
+            'provider', 'locked_by', 'locked_at', 'notes', 'provider_notes'
         )
 
 
@@ -127,6 +127,5 @@ class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
         fields = ('name', 'id')
 
-class ProviderAllocationSerializer(ProviderAllocationSerializerBase):
-    class Meta(ProviderAllocationSerializerBase.Meta):
-        fields = ('name', 'id')
+
+

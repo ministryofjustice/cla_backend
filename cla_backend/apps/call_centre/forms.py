@@ -1,6 +1,9 @@
 from django import forms
+from django.core.exceptions import NON_FIELD_ERRORS
+from django.utils.translation import ugettext_lazy as _
 
 from cla_provider.models import Provider
+from django.forms.util import ErrorList
 
 
 class ProviderAllocationForm(forms.Form):
@@ -18,6 +21,14 @@ class ProviderAllocationForm(forms.Form):
         provider_obj = Provider.objects.get(pk=provider)
         self.cleaned_data['provider_obj'] = provider_obj
         return provider
+
+    def clean(self):
+        if not self.providers:
+            self._errors[NON_FIELD_ERRORS] = ErrorList([
+                _(u'There is no provider specified in '
+                  u'the system to handle cases of this law category.')
+            ])
+            del self._errors['provider']
 
     def save(self, case, user):
         data = self.cleaned_data

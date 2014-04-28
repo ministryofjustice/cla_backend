@@ -376,33 +376,6 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-    def test_assign_in_error(self):
-        data = self._get_assign_default_post_data({
-            'provider': None
-        })
-        case = make_recipe('case')
-
-        url = reverse('call_centre:case-assign', args=(), kwargs={'reference': case.reference})
-
-        response = self.client.post(
-            url, data=data,
-            HTTP_AUTHORIZATION='Bearer %s' % self.token,
-            format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(
-            response.data,
-            {
-                'provider': [u'This field is required.']
-            }
-        )
-
-    def _get_assign_default_post_data(self, data={}):
-        if 'provider' not in data:
-            provider = cla_provider_make_recipe('provider', active=True)
-            data['provider'] = provider.pk
-        return data
-
     def test_assign_successful(self):
         case = make_recipe('case')
 
@@ -418,9 +391,9 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         url = reverse('call_centre:case-assign', args=(), kwargs={'reference': case.reference})
 
-        data = self._get_assign_default_post_data()
+#         data = self._get_assign_default_post_data()
         response = self.client.post(
-            url, data=data,
+            url, data=None,
             HTTP_AUTHORIZATION='Bearer %s' % self.token,
             format='json'
         )
@@ -428,7 +401,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.provider.pk, data['provider'])
+        self.assertTrue(case.provider.pk!=None)
 
         # after being assigned, it's gone from the queue
         case_list = self.client.get(

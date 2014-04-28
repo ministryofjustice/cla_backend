@@ -17,7 +17,7 @@ from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import CategorySerializer, \
     EligibilityCheckSerializer, CaseSerializer, OutcomeCodeSerializer
-from .forms import RejectCaseForm, AcceptCaseForm
+from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
 
 
 class CLAProviderPermissionViewSetMixin(object):
@@ -131,3 +131,10 @@ class CaseViewSet(
         Accepts a case
         """
         return self._state_form_action(request, Form=AcceptCaseForm)
+
+    @action()
+    def close(self, request, reference=None, **kwargs):
+        """
+        Closes a case
+        """
+        return self._state_form_action(request, Form=CloseCaseForm)

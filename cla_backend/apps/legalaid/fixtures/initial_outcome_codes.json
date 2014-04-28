@@ -48,8 +48,19 @@
     "model": "legalaid.outcomecode",
     "fields": {
         "description": "Case taken",
-        "code": "CLOP",
+        "code": "SPOP",
         "case_state": 3,
+        "modified": "2014-04-14T15:59:59.227Z",
+        "created": "2014-04-14T15:59:59.225Z"
+    }
+},
+{
+    "pk": 6,
+    "model": "legalaid.outcomecode",
+    "fields": {
+        "description": "Closed SP Case",
+        "code": "CLSP",
+        "case_state": 1,
         "modified": "2014-04-14T15:59:59.227Z",
         "created": "2014-04-14T15:59:59.225Z"
     }

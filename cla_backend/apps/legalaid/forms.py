@@ -4,7 +4,9 @@ from legalaid.models import OutcomeCode, CaseOutcome
 
 
 class OutcomeForm(forms.Form):
-    outcome_code = forms.ModelChoiceField(queryset=OutcomeCode.objects, to_field_name='code')
+    outcome_code = forms.ModelChoiceField(
+        queryset=OutcomeCode.objects, to_field_name='code', empty_label=None
+    )
     outcome_notes = forms.CharField(required=False, max_length=500)
 
     def __init__(self, *args, **kwargs):

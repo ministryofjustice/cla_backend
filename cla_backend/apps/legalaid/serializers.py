@@ -16,11 +16,9 @@ class OutcomeCodeSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OutcomeCode
 
-
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Provider
-
 
 class PropertySerializerBase(serializers.ModelSerializer):
     class Meta:

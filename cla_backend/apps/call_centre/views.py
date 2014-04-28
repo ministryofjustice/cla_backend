@@ -90,7 +90,13 @@ class CaseViewSet(
         Assigns the case to a provider
         """
         obj = self.get_object()
-        form = ProviderAllocationForm(request.DATA)
+
+        helper = ProviderAllocationHelper()
+        category = obj.eligibility_check.category
+
+        # Randomly assign to provider who offers this category of service
+        form = ProviderAllocationForm({'provider' : helper.get_random_provider(category)},
+                                      providers=helper.get_qualifying_providers(category))
         if form.is_valid():
             provider = form.save(obj, request.user)
             provider_serialised = ProviderSerializer(provider)

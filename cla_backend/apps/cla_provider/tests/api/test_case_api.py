@@ -30,7 +30,7 @@ class BaseCaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertItemsEqual(
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
-             'created', 'modified', 'state', 'created_by',
+             'created', 'modified', 'state', 'created_by', 'caseoutcome_set',
              'provider', 'locked_by', 'locked_at', 'notes', 'provider_notes']
         )
 

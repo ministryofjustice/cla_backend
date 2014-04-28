@@ -3,8 +3,8 @@ from rest_framework import serializers
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, CategorySerializerBase, \
-    OutcomeCodeSerializerBase, ProviderSerializerBase
+    CaseSerializerBase, CategorySerializerBase, OutcomeCodeSerializerBase, \
+    ProviderSerializerBase, CaseOutcomeSerializerBase
 from rest_framework import serializers
 from cla_common.constants import CASE_STATE_CHOICES, CASE_STATE_OPEN
 
@@ -101,6 +101,16 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
         )
 
 
+class CaseOutcomeSerializer(CaseOutcomeSerializerBase):
+    outcome_code = serializers.CharField(read_only=True, source='outcome_code.code')
+    created_by = serializers.CharField(read_only=True, source='created_by.username')
+    created = serializers.DateTimeField(read_only=True)
+    notes = serializers.CharField(read_only=True)
+
+    class Meta(CaseOutcomeSerializerBase.Meta):
+        fields = ('outcome_code', 'created_by', 'created', 'notes')
+
+
 class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(
             slug_field='reference')
@@ -112,6 +122,7 @@ class CaseSerializer(CaseSerializerBase):
     created_by = serializers.CharField(read_only=True)
     state = serializers.ChoiceField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
     provider = serializers.PrimaryKeyRelatedField(required=False)
+    caseoutcome_set = CaseOutcomeSerializer(many=True, required=False, read_only=True)
     locked_by = serializers.CharField(read_only=True)
     locked_at = serializers.DateTimeField(read_only=True)
 
@@ -119,7 +130,8 @@ class CaseSerializer(CaseSerializerBase):
         fields = (
             'eligibility_check', 'personal_details',
             'reference', 'created', 'modified', 'created_by', 'state',
-            'provider', 'locked_by', 'locked_at', 'notes', 'provider_notes'
+            'provider', 'caseoutcome_set', 'locked_by', 'locked_at',
+            'notes', 'provider_notes'
         )
 
 

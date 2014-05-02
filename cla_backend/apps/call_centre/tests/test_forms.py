@@ -43,9 +43,6 @@ class ProviderAllocationFormTestCase(TestCase):
 
     def test_not_valid_with_no_valid_provider_for_category(self):
         case = make_recipe('case')
-        category = case.eligibility_check.category
-        user = mommy.make(settings.AUTH_USER_MODEL)
-        helper = ProviderAllocationHelper()
 
         form = ProviderAllocationForm(data={},
                                       providers=[])

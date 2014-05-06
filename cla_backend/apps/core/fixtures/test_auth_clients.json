@@ -25,20 +25,6 @@
             "client_secret": "0494287c65bdf61d29f0eeed467ec8e090f0d80f"
         }
     },
-
-
-    {
-        "pk": 1,
-        "model": "cla_provider.provider",
-        "fields": {
-            "name": "Test Provider",
-            "created": "2014-03-20T14:13:31.600Z",
-            "opening_hours": "test",
-            "modified": "2014-03-20T14:13:31.615Z",
-            "active": true
-        }
-    },
-
     {
         "pk": 3,
         "model": "auth.user",

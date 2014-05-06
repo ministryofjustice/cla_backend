@@ -113,6 +113,7 @@ class CaseSerializerBase(serializers.ModelSerializer):
     personal_details = PersonalDetailsSerializerBase()
     notes = serializers.CharField(max_length=500, required=False)
     provider_notes = serializers.CharField(max_length=500, required=False)
+    in_scope = serializers.BooleanField(required=False)
 
     class Meta:
         model = Case

@@ -149,7 +149,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
              'created', 'modified', 'state', 'created_by',
-             'provider', 'caseoutcome_set', 'notes', 'provider_notes']
+             'provider', 'caseoutcome_set', 'notes', 'provider_notes', 'in_scope']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -219,6 +219,78 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 eligibility_check=check,
                 personal_details=PersonalDetails(**data['personal_details'])
             )
+        )
+        self.assertEqual(response.data['in_scope'], None)
+
+    def test_create_with_data_in_scope(self):
+        check = make_recipe('eligibility_check')
+
+        data = {
+            'eligibility_check': unicode(check.reference),
+            'personal_details': {
+                'title': 'MR',
+                'full_name': 'John Doe',
+                'postcode': 'SW1H 9AJ',
+                'street': '102 Petty France',
+                'town': 'London',
+                'mobile_phone': '0123456789',
+                'home_phone': '9876543210',
+                },
+            'in_scope': True,
+        }
+        response = self.client.post(
+            self.list_url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        # check initial state is correct
+        self.assertEqual(response.data['state'], CASE_STATE_OPEN)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertCaseCheckResponseKeys(response)
+
+        self.assertCaseEqual(response.data,
+                             Case(
+                                 reference=response.data['reference'],
+                                 eligibility_check=check,
+                                 personal_details=PersonalDetails(**data['personal_details']),
+                                 in_scope=True
+                             )
+        )
+
+
+    def test_create_with_data_out_scope(self):
+        check = make_recipe('eligibility_check')
+
+        data = {
+            'eligibility_check': unicode(check.reference),
+            'personal_details': {
+                'title': 'MR',
+                'full_name': 'John Doe',
+                'postcode': 'SW1H 9AJ',
+                'street': '102 Petty France',
+                'town': 'London',
+                'mobile_phone': '0123456789',
+                'home_phone': '9876543210',
+                },
+            'in_scope': False,
+            }
+        response = self.client.post(
+            self.list_url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        # check initial state is correct
+        self.assertEqual(response.data['state'], CASE_STATE_OPEN)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertCaseCheckResponseKeys(response)
+
+        self.assertCaseEqual(response.data,
+                             Case(
+                                 reference=response.data['reference'],
+                                 eligibility_check=check,
+                                 personal_details=PersonalDetails(**data['personal_details']),
+                                 in_scope=False
+                             )
         )
 
     def test_create_without_eligibility_check(self):

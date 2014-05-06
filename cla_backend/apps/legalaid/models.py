@@ -244,6 +244,7 @@ class Case(TimeStampedModel):
     provider = models.ForeignKey('cla_provider.Provider', blank=True, null=True)
     notes = models.TextField(blank=True)
     provider_notes = models.TextField(blank=True)
+    in_scope = models.NullBooleanField(default=None, null=True, blank=True)
 
     def _set_reference_if_necessary(self):
         if not self.reference:

@@ -127,7 +127,7 @@ class CaseSerializer(CaseSerializerBase):
         fields = (
             'eligibility_check', 'personal_details',
             'reference', 'created', 'modified', 'created_by', 'state',
-            'provider', 'caseoutcome_set', 'notes', 'provider_notes'
+            'provider', 'caseoutcome_set', 'notes', 'provider_notes', 'in_scope'
         )
 
 

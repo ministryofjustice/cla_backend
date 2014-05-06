@@ -1,0 +1,86 @@
+[
+    {
+        "pk": 1,
+        "model": "oauth2.client",
+        "fields": {
+            "name": "operator",
+            "url": "http://localhost/",
+            "client_type": 0,
+            "redirect_uri": "http://operator.localhost/",
+            "user": null,
+            "client_id": "b4b9220ffcb11ebfdab1",
+            "client_secret": "2df71313bdd38a2e1b815015e1b14387e7681d41"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "oauth2.client",
+        "fields": {
+            "name": "staff",
+            "url": "http://localhost/",
+            "client_type": 0,
+            "redirect_uri": "http://staff.localhost/",
+            "user": null,
+            "client_id": "59657ed22d980251cdd3",
+            "client_secret": "0494287c65bdf61d29f0eeed467ec8e090f0d80f"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "auth.user",
+        "fields": {
+            "username": "test_staff",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "last_login": "2014-03-20T14:12:16Z",
+            "groups": [],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$12000$8zY9UFaR6zm8$FeWdkxAx+jz7oVMTGBiRmAhRlCG5814SqZk9L0ihBdw=",
+            "email": "",
+            "date_joined": "2014-03-20T14:12:16Z"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "cla_provider.staff",
+        "fields": {
+            "is_staff_superuser": false,
+            "user": 3,
+            "provider": 1,
+            "modified": "2014-03-20T14:13:31.624Z",
+            "created": "2014-03-20T14:13:31.607Z"
+        }
+    },
+
+    {
+        "pk": 2,
+        "model": "auth.user",
+        "fields": {
+            "username": "test_operator",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "last_login": "2014-03-19T16:26:31.018Z",
+            "groups": [],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$12000$WYn2LhKp2uoF$74h6n/fbwLLVJu5b8plAAQ1lz7ojKpsxejXmTZirGaM=",
+            "email": "",
+            "date_joined": "2014-03-19T16:26:31.018Z"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "call_centre.operator",
+        "fields": {
+            "user": 2,
+            "is_operator_superuser": false,
+            "modified": "2014-03-19T16:27:32.004Z",
+            "created": "2014-03-19T16:27:31.999Z"
+        }
+    }
+]

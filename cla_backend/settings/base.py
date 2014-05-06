@@ -8,6 +8,27 @@ PROJECT_ROOT = here("..")
 root = lambda *x: join(abspath(PROJECT_ROOT), *x)
 
 sys.path.insert(0, root('apps'))
+sys.path.insert(0, root('libs'))
+
+
+# ENVIRON values
+
+from django.core.exceptions import ImproperlyConfigured
+
+# .env_values.py contains secrets and host config values usually stored
+# in a different place
+try:
+    import env_values
+except ImportError:
+    env_values = None
+
+
+def get_env_value(var_name):
+    """ Get the env value `var_name` or return exception """
+    try:
+        return getattr(env_values, var_name)
+    except AttributeError:
+        raise ImproperlyConfigured("Environment value %s not found" % var_name)
 
 
 DEBUG = True
@@ -122,9 +143,18 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'south',
+    'rest_framework',
+    'pagedown',
+    'provider',
+    'provider.oauth2'
 )
 
-PROJECT_APPS = ()
+PROJECT_APPS = (
+    'core',
+    'legalaid',
+    'cla_provider',
+    'call_centre'
+)
 
 INSTALLED_APPS += PROJECT_APPS
 
@@ -171,3 +201,14 @@ except ImportError:
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and 'test' in sys.argv[1]:
     from .testing import *
+
+
+# Django rest-framework-auth
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'core.permissions.AllowNone',
+    ),
+}

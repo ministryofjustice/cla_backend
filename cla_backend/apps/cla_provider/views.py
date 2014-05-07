@@ -1,3 +1,4 @@
+from call_centre.serializers import CaseLogTypeSerializer
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, mixins, status
@@ -11,14 +12,14 @@ from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_ACCEPTED, \
     CASE_STATE_CHOICES
 
 from legalaid.exceptions import InvalidMutationException
-from legalaid.models import Category, EligibilityCheck, Case, OutcomeCode
+from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import CategorySerializer, \
-    EligibilityCheckSerializer, CaseSerializer, OutcomeCodeSerializer
+    EligibilityCheckSerializer, CaseSerializer, CaseLogTypeSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
-
+from legalaid.constants import CASELOGTYPE_SUBTYPES
 
 class CLAProviderPermissionViewSetMixin(object):
     permission_classes = (CLAProviderClientIDPermission,)
@@ -31,13 +32,13 @@ class CategoryViewSet(CLAProviderPermissionViewSetMixin, viewsets.ReadOnlyModelV
     lookup_field = 'code'
 
 
-class OutcomeCodeViewSet(
+class CaseLogTypeViewSet(
     CLAProviderPermissionViewSetMixin,
     DefaultStateFilterViewSetMixin,
     viewsets.ReadOnlyModelViewSet
 ):
-    model = OutcomeCode
-    serializer_class = OutcomeCodeSerializer
+    model = CaseLogType
+    serializer_class = CaseLogTypeSerializer
 
     lookup_field = 'code'
 
@@ -45,7 +46,21 @@ class OutcomeCodeViewSet(
     all_states = dict(CASE_STATE_CHOICES).keys()
     state_field = 'case_state'
 
+class OutcomeCodeViewSet(
+    CLAProviderPermissionViewSetMixin,
+    DefaultStateFilterViewSetMixin,
+    viewsets.ReadOnlyModelViewSet
+):
+    model = CaseLogType
+    serializer_class = CaseLogTypeSerializer
 
+    lookup_field = 'code'
+
+    default_state_filter = []
+    all_states = dict(CASE_STATE_CHOICES).keys()
+    state_field = 'case_state'
+
+    queryset =  CaseLogType.objects.filter(subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
 
 class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,

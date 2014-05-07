@@ -11,7 +11,7 @@ from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_ACCEPTED, \
 
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin, make_recipe
 
-from legalaid.models import Case, CaseOutcome
+from legalaid.models import Case, CaseLog
 
 
 class BaseCaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
@@ -325,7 +325,7 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
         # before, case open and no outcomes
         self.assertEqual(self.check.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
         # reject
         data={
@@ -343,11 +343,11 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
         case = Case.objects.get(pk=self.check.pk)
         self.assertEqual(case.state, CASE_STATE_REJECTED)
 
-        self.assertEqual(CaseOutcome.objects.count(), 1)
-        outcome = CaseOutcome.objects.all()[0]
+        self.assertEqual(CaseLog.objects.count(), 1)
+        outcome = CaseLog.objects.all()[0]
 
         self.assertEqual(outcome.case, self.check)
-        self.assertEqual(outcome.outcome_code.code, data['outcome_code'])
+        self.assertEqual(outcome.logtype.code, data['outcome_code'])
         self.assertEqual(outcome.notes, data['outcome_notes'])
 
     def test_invalid_mutation(self):
@@ -356,7 +356,7 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
         self.check.save()
         self.assertEqual(self.check.state, CASE_STATE_ACCEPTED)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
         # reject
         data={
@@ -378,13 +378,13 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
         case = Case.objects.get(pk=self.check.pk)
         self.assertEqual(case.state, CASE_STATE_ACCEPTED)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
     def test_invalid_outcome_code(self):
         # before, case open and no outcomes
         self.assertEqual(self.check.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
         # reject
         data={
@@ -406,7 +406,7 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
         case = Case.objects.get(pk=self.check.pk)
         self.assertEqual(case.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
 
 class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
@@ -421,7 +421,7 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
         # before, case open and no outcomes
         self.assertEqual(self.check.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
         # reject
         data={
@@ -439,11 +439,11 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
         case = Case.objects.get(pk=self.check.pk)
         self.assertEqual(case.state, CASE_STATE_ACCEPTED)
 
-        self.assertEqual(CaseOutcome.objects.count(), 1)
-        outcome = CaseOutcome.objects.all()[0]
+        self.assertEqual(CaseLog.objects.count(), 1)
+        outcome = CaseLog.objects.all()[0]
 
         self.assertEqual(outcome.case, self.check)
-        self.assertEqual(outcome.outcome_code.code, data['outcome_code'])
+        self.assertEqual(outcome.logtype.code, data['outcome_code'])
         self.assertEqual(outcome.notes, data['outcome_notes'])
 
     def test_invalid_mutation(self):
@@ -452,7 +452,7 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
         self.check.save()
         self.assertEqual(self.check.state, CASE_STATE_ACCEPTED)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
         # reject
         data={
@@ -474,13 +474,13 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
         case = Case.objects.get(pk=self.check.pk)
         self.assertEqual(case.state, CASE_STATE_ACCEPTED)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
     def test_invalid_outcome_code(self):
         # before, case open and no outcomes
         self.assertEqual(self.check.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
         # reject
         data={
@@ -502,7 +502,7 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
         case = Case.objects.get(pk=self.check.pk)
         self.assertEqual(case.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
 
 class CloseCaseTests(StateChangeMixin, BaseCaseTests):
@@ -517,7 +517,7 @@ class CloseCaseTests(StateChangeMixin, BaseCaseTests):
         # before, case open and no outcomes
         self.assertEqual(self.check.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
         # close
         data={
@@ -535,18 +535,18 @@ class CloseCaseTests(StateChangeMixin, BaseCaseTests):
         case = Case.objects.get(pk=self.check.pk)
         self.assertEqual(case.state, CASE_STATE_CLOSED)
 
-        self.assertEqual(CaseOutcome.objects.count(), 1)
-        outcome = CaseOutcome.objects.all()[0]
+        self.assertEqual(CaseLog.objects.count(), 1)
+        outcome = CaseLog.objects.all()[0]
 
         self.assertEqual(outcome.case, self.check)
-        self.assertEqual(outcome.outcome_code.code, data['outcome_code'])
+        self.assertEqual(outcome.logtype.code, data['outcome_code'])
         self.assertEqual(outcome.notes, data['outcome_notes'])
 
     def test_invalid_outcome_code(self):
         # before, case open and no outcomes
         self.assertEqual(self.check.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
         # close
         data={
@@ -568,4 +568,4 @@ class CloseCaseTests(StateChangeMixin, BaseCaseTests):
         case = Case.objects.get(pk=self.check.pk)
         self.assertEqual(case.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)

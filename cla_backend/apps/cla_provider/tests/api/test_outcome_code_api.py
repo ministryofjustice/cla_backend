@@ -9,19 +9,19 @@ from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_REJECTED, \
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin, make_recipe
 
 
-class OutcomeCodesTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
+class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
-        super(OutcomeCodesTests, self).setUp()
+        super(CaseLogTests, self).setUp()
 
         self.outcome_codes = [
-            make_recipe('legalaid.tests.outcome_code', code="CODE_OPEN", case_state=CASE_STATE_OPEN),
-            make_recipe('legalaid.tests.outcome_code', code="CODE_ACCEPTED", case_state=CASE_STATE_ACCEPTED),
-            make_recipe('legalaid.tests.outcome_code', code="CODE_REJECTED", case_state=CASE_STATE_REJECTED),
+            make_recipe('legalaid.tests.logtype', code="CODE_OPEN", case_state=CASE_STATE_OPEN, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_ACCEPTED", case_state=CASE_STATE_ACCEPTED, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_REJECTED", case_state=CASE_STATE_REJECTED, subtype='outcome'),
         ]
 
-        self.list_url = reverse('cla_provider:outcomecode-list')
+        self.list_url = reverse('cla_provider:caselogtype-list')
         self.detail_url = reverse(
-            'cla_provider:outcomecode-detail', args=(),
+            'cla_provider:caselogtype-detail', args=(),
             kwargs={'code': self.outcome_codes[0].code}
         )
 

@@ -12,7 +12,8 @@ from rest_framework.test import APITestCase
 
 from eligibility_calculator.exceptions import PropertyExpectedException
 from legalaid.models import Category, EligibilityCheck, Property, \
-    Case, PersonalDetails, Person, Income, Savings, CaseOutcome
+    Case, PersonalDetails, Person, Income, Savings, CaseLog
+
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED
 

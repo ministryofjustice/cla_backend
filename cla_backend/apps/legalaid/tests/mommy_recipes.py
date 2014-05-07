@@ -1,7 +1,8 @@
 from model_mommy.recipe import Recipe, seq, foreign_key
 
 from ..models import Category, EligibilityCheck, Property, Savings, \
-    Case, PersonalDetails, Income, Deductions, Person, OutcomeCode, CaseOutcome
+    Case, PersonalDetails, Income, Deductions, Person,\
+    CaseLogType, CaseLog
 
 
 category = Recipe(Category,
@@ -32,9 +33,11 @@ case = Recipe(Case,
     personal_details=foreign_key(personal_details)
 )
 
-outcome_code = Recipe(OutcomeCode)
+logtype = Recipe(CaseLogType)
 
-case_outcome = Recipe(CaseOutcome,
+outcome_code = Recipe(CaseLogType, subtype='outcome')
+
+case_log = Recipe(CaseLog,
     case=foreign_key(case),
-    outcome_code=foreign_key(outcome_code)
+    logtype=foreign_key(logtype)
 )

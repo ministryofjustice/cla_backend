@@ -1,11 +1,11 @@
 from django import forms
 
-from legalaid.models import OutcomeCode, CaseOutcome
+from legalaid.models import CaseLog, CaseLogType
 
 
 class OutcomeForm(forms.Form):
     outcome_code = forms.ModelChoiceField(
-        queryset=OutcomeCode.objects, to_field_name='code', empty_label=None
+        queryset=CaseLogType.objects, to_field_name='code', empty_label=None
     )
     outcome_notes = forms.CharField(required=False, max_length=500)
 
@@ -15,12 +15,12 @@ class OutcomeForm(forms.Form):
         self.fields['outcome_code'].queryset = self.get_outcome_code_queryset()
 
     def get_outcome_code_queryset(self):
-        return OutcomeCode.objects
+        return CaseLogType.objects.filter(subtype='outcome')
 
     def save(self, case, user):
         data = self.cleaned_data
 
-        CaseOutcome.objects.create(
+        CaseLog.objects.create(
             case=case, created_by=user,
-            outcome_code=data['outcome_code'], notes=data['outcome_notes']
+            logtype=data['outcome_code'], notes=data['outcome_notes']
         )

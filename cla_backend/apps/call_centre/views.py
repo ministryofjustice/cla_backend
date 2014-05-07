@@ -9,12 +9,12 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from cla_common.constants import CASE_STATE_OPEN, \
     CASE_STATE_CHOICES
 from cla_provider.models import Provider
-from legalaid.models import Category, EligibilityCheck, Case, OutcomeCode
+from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
 from core.viewsets import IsEligibleActionViewSetMixin
 
 from .permissions import CallCentreClientIDPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
-    CaseSerializer, ProviderSerializer, OutcomeCodeSerializer
+    CaseSerializer, ProviderSerializer, CaseLogSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm
 
 
@@ -29,9 +29,9 @@ class CategoryViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
     lookup_field = 'code'
 
 
-class OutcomeCodeViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
-    model = OutcomeCode
-    serializer_class = OutcomeCodeSerializer
+class CaseLogTypeViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
+    model = CaseLogType
+    serializer_class = CaseLogSerializer
 
     lookup_field = 'code'
 
@@ -58,7 +58,7 @@ class CaseViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = Case.objects.filter(state=CASE_STATE_OPEN, provider=None)
+    queryset = Case.objects.filter(state=CASE_STATE_OPEN)
     model = Case
     lookup_field = 'reference'
     serializer_class = CaseSerializer

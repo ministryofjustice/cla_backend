@@ -1,10 +1,11 @@
+from legalaid.constants import CASELOGTYPE_SUBTYPES
 from rest_framework import serializers
 
 from core.serializers import UUIDSerializer
 from cla_provider.models import Provider
 
 from .models import Category, Property, EligibilityCheck, Income, \
-    Savings, Deductions, Person, PersonalDetails, Case, OutcomeCode, CaseOutcome
+    Savings, Deductions, Person, PersonalDetails, Case, CaseLog, CaseLogType
 
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
@@ -12,9 +13,9 @@ class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
         model = Category
 
 
-class OutcomeCodeSerializerBase(serializers.HyperlinkedModelSerializer):
+class CaseLogTypeSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = OutcomeCode
+        model = CaseLogType
 
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -102,10 +103,10 @@ class EligibilityCheckSerializerBase(serializers.ModelSerializer):
         fields = ()
 
 
-class CaseOutcomeSerializerBase(serializers.ModelSerializer):
+class CaseLogSerializerBase(serializers.ModelSerializer):
     class Meta:
-        model = CaseOutcome
-        fields = ()
+        model = CaseLog
+        fields = None
 
 
 class CaseSerializerBase(serializers.ModelSerializer):

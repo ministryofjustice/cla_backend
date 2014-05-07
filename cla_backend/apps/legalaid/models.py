@@ -127,6 +127,7 @@ class EligibilityCheck(TimeStampedModel):
     dependants_young = models.PositiveIntegerField(default=0)
     dependants_old = models.PositiveIntegerField(default=0)
     on_passported_benefits = models.BooleanField(default=False)
+    on_nass_benefits = models.BooleanField(default=False)
 
 
     # need to be moved into graph/questions format soon
@@ -146,6 +147,7 @@ class EligibilityCheck(TimeStampedModel):
         d['facts']['has_partner'] = self.has_partner
         d['facts']['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
         d['facts']['on_passported_benefits'] = self.on_passported_benefits
+        d['facts']['on_nass_benefits'] = self.on_nass_benefits
 
         d['you'] = {}
         if self.you:

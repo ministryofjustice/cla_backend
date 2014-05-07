@@ -5,6 +5,7 @@ case_data_dict = {
     'facts': {
         'is_you_or_your_partner_over_60': False,
         'on_passported_benefits': False,
+        'on_nass_benefits' : False,
         'has_partner': False,
         'is_partner_opponent': False,
         'dependant_children': 0

@@ -13,7 +13,7 @@ class Migration(DataMigration):
         # Use orm.ModelName to refer to models in this application,
         # and orm['appname.ModelName'] for models in other applications.
 
-        old_data = orm.CaseLog.objects.values('notes', 'case_id', 'logtype__code')
+        old_data = list(orm.CaseLog.objects.values('notes', 'case_id', 'logtype__code', 'created_by_id'))
 
         orm.CaseLog.objects.all().delete()
         orm.CaseLogType.objects.all().delete()
@@ -22,8 +22,11 @@ class Migration(DataMigration):
         call_command('loaddata', 'initial_outcome_codes.json')
 
         for data in old_data:
-            logtype = orm.CaseLog.objects.get(code=data['logtype__code'])
-            orm.CaseLog.objects.create(case_id=data['case_id'], notes=data['nodes'], logtype=logtype)
+            logtype = orm.CaseLogType.objects.get(code=data['logtype__code'])
+            orm.CaseLog.objects.create(
+                case_id=data['case_id'], notes=data['notes'], logtype=logtype,
+                created_by_id=data['created_by_id']
+            )
 
     def backwards(self, orm):
         "Write your backwards methods here."

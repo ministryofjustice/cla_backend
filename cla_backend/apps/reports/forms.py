@@ -5,8 +5,9 @@ from django.utils import timezone
 from django.contrib.admin import widgets
 
 from cla_common.constants import CASE_STATE_CLOSED
+from legalaid.constants import CASELOGTYPE_SUBTYPES
 
-from legalaid.models import CaseOutcome, OutcomeCode
+from legalaid.models import CaseLog, CaseLogType
 
 from cla_provider.models import Provider
 
@@ -25,12 +26,12 @@ class ProviderCaseClosureReportForm(forms.Form):
         date_from = self._convert_date(self.cleaned_data['date_from'])
         date_to = self._convert_date(self.cleaned_data['date_to'] + timedelta(days=1))
 
-        return CaseOutcome.objects.filter(
+        return CaseLog.objects.filter(
             created__range=(date_from, date_to),
-            outcome_code__in=[oc.pk for oc in OutcomeCode.objects.filter(case_state=CASE_STATE_CLOSED)],
+            logtype__in=[oc.pk for oc in CaseLogType.objects.filter(case_state=CASE_STATE_CLOSED, subtype=CASELOGTYPE_SUBTYPES.OUTCOME)],
             case__provider=self.cleaned_data['provider'],
         ).order_by('created').values_list(
-            'case__reference', 'created', 'outcome_code__code',
+            'case__reference', 'created', 'logtype__code',
             'case__eligibility_check__category__name'
         )
 

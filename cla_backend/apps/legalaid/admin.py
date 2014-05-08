@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import Category, Case, EligibilityCheck, PersonalDetails, \
-    Property, Person, OutcomeCode
+    Property, Person, CaseLog, CaseLogType
 
 from .admin_support.forms import CategoryModelForm
 
@@ -18,4 +18,5 @@ admin.site.register(EligibilityCheck)
 admin.site.register(PersonalDetails)
 admin.site.register(Property)
 admin.site.register(Person)
-admin.site.register(OutcomeCode)
+admin.site.register(CaseLog)
+admin.site.register(CaseLogType)

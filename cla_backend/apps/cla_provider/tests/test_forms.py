@@ -6,7 +6,7 @@ from model_mommy import mommy
 from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_ACCEPTED, \
     CASE_STATE_REJECTED, CASE_STATE_CLOSED
 
-from legalaid.models import CaseOutcome, Case
+from legalaid.models import CaseLog, Case
 
 from core.tests.test_base import make_recipe
 
@@ -23,10 +23,10 @@ class BaseStateFormTestCase(object):
 
         self.user = mommy.make(settings.AUTH_USER_MODEL)
         self.outcome_codes = [
-            make_recipe('legalaid.tests.outcome_code', code="CODE_OPEN", case_state=CASE_STATE_OPEN),
-            make_recipe('legalaid.tests.outcome_code', code="CODE_ACCEPTED", case_state=CASE_STATE_ACCEPTED),
-            make_recipe('legalaid.tests.outcome_code', code="CODE_REJECTED", case_state=CASE_STATE_REJECTED),
-            make_recipe('legalaid.tests.outcome_code', code="CODE_CLOSED", case_state=CASE_STATE_CLOSED),
+            make_recipe('legalaid.tests.logtype', code="CODE_OPEN", case_state=CASE_STATE_OPEN, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_ACCEPTED", case_state=CASE_STATE_ACCEPTED, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_REJECTED", case_state=CASE_STATE_REJECTED, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_CLOSED", case_state=CASE_STATE_CLOSED, subtype='outcome'),
         ]
 
     def test_choices(self):
@@ -41,7 +41,7 @@ class BaseStateFormTestCase(object):
 
         self.assertEqual(case.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
         form = self.FORM(data={
             'outcome_code': self.VALID_OUTCOME_CODE,
@@ -55,10 +55,10 @@ class BaseStateFormTestCase(object):
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, self.EXPECTED_CASE_STATE)
 
-        self.assertEqual(CaseOutcome.objects.count(), 1)
-        outcome = CaseOutcome.objects.all()[0]
+        self.assertEqual(CaseLog.objects.count(), 1)
+        outcome = CaseLog.objects.all()[0]
 
-        self.assertEqual(outcome.outcome_code.code, self.VALID_OUTCOME_CODE)
+        self.assertEqual(outcome.logtype.code, self.VALID_OUTCOME_CODE)
         self.assertEqual(outcome.notes, 'lorem ipsum')
 
     def test_invalid_form(self):
@@ -66,7 +66,7 @@ class BaseStateFormTestCase(object):
 
         self.assertEqual(case.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
         form = self.FORM(data={
             'outcome_code': 'invalid',
@@ -86,7 +86,7 @@ class BaseStateFormTestCase(object):
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, CASE_STATE_OPEN)
 
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
 
 class AcceptCaseFormTestCase(BaseStateFormTestCase, TestCase):

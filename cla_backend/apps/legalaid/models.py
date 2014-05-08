@@ -139,7 +139,9 @@ class EligibilityCheck(TimeStampedModel):
         if self.category:
             d['category'] = self.category.code
 
-        d['property_data'] = self.property_set.values_list('value', 'mortgage_left', 'share')
+        d['property_data'] = self.property_set.values_list(
+            'value', 'mortgage_left', 'share', 'disputed'
+        )
 
         d['facts'] = {}
         d['facts']['dependant_children'] = self.dependants_old + self.dependants_young
@@ -210,6 +212,7 @@ class Property(TimeStampedModel):
     mortgage_left = models.PositiveIntegerField(default=0)
     share = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     eligibility_check = models.ForeignKey(EligibilityCheck)
+    disputed = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = "properties"

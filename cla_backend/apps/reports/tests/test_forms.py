@@ -6,10 +6,11 @@ from django.test import TestCase
 from django.conf import settings
 from django.utils import timezone
 from cla_common.constants import CASE_STATE_CLOSED, CASE_STATE_OPEN
+from legalaid.constants import CASELOGTYPE_SUBTYPES
 
 from model_mommy import mommy
 
-from legalaid.models import CaseOutcome
+from legalaid.models import CaseLog
 
 from ..forms import ProviderCaseClosureReportForm
 
@@ -46,11 +47,12 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
         providers = cla_provider_make_recipe('provider', active=True, _quantity=2)
 
         def create_db_record(case_ref, closure_date, provider, case_state=CASE_STATE_CLOSED):
-            case_outcome = make_recipe('case_outcome',
-                outcome_code__case_state=CASE_STATE_CLOSED,
+            case_outcome = make_recipe('case_log',
+                logtype__case_state=case_state,
                 case__provider=provider,
                 case__reference=case_ref,
-                outcome_code__code='outcome_%s' % case_ref,
+                logtype__code='outcome_%s' % case_ref,
+                logtype__subtype=CASELOGTYPE_SUBTYPES.OUTCOME,
                 case__eligibility_check__category__name='Category_%s' % case_ref
             )
             closure_date = parser.parse(closure_date)

@@ -58,7 +58,7 @@ class CaseViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = Case.objects.filter(state=CASE_STATE_OPEN)
+    queryset = Case.objects.filter(state=CASE_STATE_OPEN, provider=None)
     model = Case
     lookup_field = 'reference'
     serializer_class = CaseSerializer

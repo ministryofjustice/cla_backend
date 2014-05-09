@@ -1,9 +1,9 @@
 from django.test import TestCase
 from django.conf import settings
+from legalaid.models import CaseLog
 
 from model_mommy import mommy
 
-from legalaid.models import CaseOutcome
 
 from ..forms import OutcomeForm
 
@@ -14,7 +14,7 @@ def make_recipe(model_name, **kwargs):
 
 class OutcomeFormTestCase(TestCase):
     def test_save(self):
-        outcome_codes = make_recipe('outcome_code', _quantity=2)
+        outcome_codes = make_recipe('logtype', _quantity=2, subtype='outcome')
         case = make_recipe('case')
         user = mommy.make(settings.AUTH_USER_MODEL)
 
@@ -24,9 +24,9 @@ class OutcomeFormTestCase(TestCase):
         })
 
         self.assertTrue(form.is_valid())
-        self.assertEqual(CaseOutcome.objects.count(), 0)
+        self.assertEqual(CaseLog.objects.count(), 0)
 
         form.save(case, user)
 
-        self.assertEqual(CaseOutcome.objects.count(), 1)
-        self.assertEqual(CaseOutcome.objects.all()[0].case, case)
+        self.assertEqual(CaseLog.objects.count(), 1)
+        self.assertEqual(CaseLog.objects.all()[0].case, case)

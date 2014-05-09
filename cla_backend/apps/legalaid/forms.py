@@ -1,11 +1,32 @@
 from django import forms
 
-from legalaid.models import OutcomeCode, CaseOutcome
+from legalaid.models import CaseLog, CaseLogType
 
 
-class OutcomeForm(forms.Form):
+class BaseCaseLogForm(forms.Form):
+    CASELOGTYPE_CODE = None
+
+    def get_logtype(self):
+        if self.CASELOGTYPE_CODE:
+            return CaseLogType.objects.get(code=self.CASELOGTYPE_CODE)
+        else:
+            raise ValueError(
+                'CASELOGTYPE_CODE must be set or this method must be '
+                'overridden in a subclass to return the correct CaseLogType instance')
+
+    def get_notes(self):
+        raise NotImplementedError
+
+    def save(self, case, user):
+        CaseLog.objects.create(
+            case=case, created_by=user,
+            logtype=self.get_logtype(), notes=self.get_notes()
+        )
+
+
+class OutcomeForm(BaseCaseLogForm):
     outcome_code = forms.ModelChoiceField(
-        queryset=OutcomeCode.objects, to_field_name='code', empty_label=None
+        queryset=CaseLogType.objects, to_field_name='code', empty_label=None
     )
     outcome_notes = forms.CharField(required=False, max_length=500)
 
@@ -15,12 +36,10 @@ class OutcomeForm(forms.Form):
         self.fields['outcome_code'].queryset = self.get_outcome_code_queryset()
 
     def get_outcome_code_queryset(self):
-        return OutcomeCode.objects
+        return CaseLogType.objects.filter(subtype='outcome')
 
-    def save(self, case, user):
-        data = self.cleaned_data
+    def get_logtype(self):
+        return self.cleaned_data['outcome_code']
 
-        CaseOutcome.objects.create(
-            case=case, created_by=user,
-            outcome_code=data['outcome_code'], notes=data['outcome_notes']
-        )
+    def get_notes(self):
+        return self.cleaned_data['outcome_notes']

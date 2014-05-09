@@ -12,7 +12,8 @@ from rest_framework.test import APITestCase
 
 from eligibility_calculator.exceptions import PropertyExpectedException
 from legalaid.models import Category, EligibilityCheck, Property, \
-    Case, PersonalDetails, Person, Income, Savings, CaseOutcome
+    Case, PersonalDetails, Person, Income, Savings, CaseLog
+
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED
 
@@ -453,6 +454,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         category = case.eligibility_check.category
         user = mommy.make(settings.AUTH_USER_MODEL)
+        make_recipe('assign_logtype')
         provider = cla_provider_make_recipe('provider', active=True)
         cla_provider_make_recipe('provider_allocation',
                                  weighted_distribution=0.5,
@@ -988,8 +990,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         """
         data={
             'property_set': [
-                {'value': 111, 'mortgage_left': 222, 'share': 33},
-                {'value': 999, 'mortgage_left': 888, 'share': 77}
+                {'value': 111, 'mortgage_left': 222, 'share': 33, 'disputed': True},
+                {'value': 999, 'mortgage_left': 888, 'share': 77, 'disputed': False}
             ]
         }
         response = self.client.post(
@@ -1008,6 +1010,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertItemsEqual([p['value'] for p in response.data['property_set']], [111, 999])
         self.assertItemsEqual([p['mortgage_left'] for p in response.data['property_set']], [222, 888])
         self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
+        self.assertItemsEqual([p['disputed'] for p in response.data['property_set']], [True, False])
 
     def test_create_with_finances(self):
         """
@@ -1077,8 +1080,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'notes': 'a'*501,
             'your_problem_notes': 'a'*501,
             'property_set': [
-                {'value': 111, 'mortgage_left': 222, 'share': 33},  # valid
-                {'value': -1, 'mortgage_left': -1, 'share': -1},  # invalid
+                {'value': 111, 'mortgage_left': 222, 'share': 33, 'disputed': True},  # valid
+                {'value': -1, 'mortgage_left': -1, 'share': -1, 'disputed': False},  # invalid
             ],
             'dependants_young': -1,
             'dependants_old': -1,
@@ -1290,7 +1293,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         properties = make_recipe('property', eligibility_check=self.check, _quantity=4)
 
         # making extra properties
-        make_recipe('property', _quantity=5)
+        make_recipe('property', _quantity=5, disputed=False)
 
         self.assertEqual(self.check.property_set.count(), 4)
 
@@ -1298,8 +1301,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         # an extra one
         data={
             'property_set': [
-                {'value': 111, 'mortgage_left': 222, 'share': 33, 'id': properties[0].id},
-                {'value': 999, 'mortgage_left': 888, 'share': 77}
+                {'value': 111, 'mortgage_left': 222, 'share': 33, 'id': properties[0].id, 'disputed': True},
+                {'value': 999, 'mortgage_left': 888, 'share': 77, 'disputed': True}
             ]
         }
         response = self.client.patch(
@@ -1323,6 +1326,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertItemsEqual([p['value'] for p in response.data['property_set']], [111, 999])
         self.assertItemsEqual([p['mortgage_left'] for p in response.data['property_set']], [222, 888])
         self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
+        self.assertItemsEqual([p['disputed'] for p in response.data['property_set']], [True, True])
 
         # checking the db just in case
         self.assertEqual(self.check.property_set.count(), 2)
@@ -1465,10 +1469,10 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         The endpoint should NOT change the other_property and our self.check.property_set
         should NOT point to other_property.
         """
-        other_property = make_recipe('property')
+        other_property = make_recipe('property', disputed=True)
         data={
             'property_set': [
-                {'value': 0, 'mortgage_left': 0, 'share': 0, 'id': other_property.pk}
+                {'value': 0, 'mortgage_left': 0, 'share': 0, 'id': other_property.pk, 'disputed': False}
             ]
         }
         response = self.client.patch(

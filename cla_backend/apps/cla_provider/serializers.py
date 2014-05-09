@@ -1,10 +1,11 @@
+from legalaid.constants import CASELOGTYPE_SUBTYPES
 from rest_framework import serializers
 
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, CategorySerializerBase, OutcomeCodeSerializerBase, \
-    ProviderSerializerBase, CaseOutcomeSerializerBase
+    CaseSerializerBase, CategorySerializerBase, CaseLogTypeSerializerBase, \
+    ProviderSerializerBase, CaseLogSerializerBase
 from rest_framework import serializers
 from cla_common.constants import CASE_STATE_CHOICES, CASE_STATE_OPEN
 
@@ -20,8 +21,8 @@ class PropertySerializer(PropertySerializerBase):
         fields = ('value', 'mortgage_left', 'share', 'id')
 
 
-class OutcomeCodeSerializer(OutcomeCodeSerializerBase):
-    class Meta(OutcomeCodeSerializerBase.Meta):
+class CaseLogTypeSerializer(CaseLogTypeSerializerBase):
+    class Meta(CaseLogTypeSerializerBase.Meta):
         fields = ('code', 'case_state', 'description')
 
 
@@ -102,14 +103,14 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
         )
 
 
-class CaseOutcomeSerializer(CaseOutcomeSerializerBase):
-    outcome_code = serializers.CharField(read_only=True, source='outcome_code.code')
+class CaseLogSerializer(CaseLogSerializerBase):
+    code = serializers.CharField(read_only=True, source='logtype.code')
     created_by = serializers.CharField(read_only=True, source='created_by.username')
     created = serializers.DateTimeField(read_only=True)
     notes = serializers.CharField(read_only=True)
 
-    class Meta(CaseOutcomeSerializerBase.Meta):
-        fields = ('outcome_code', 'created_by', 'created', 'notes')
+    class Meta(CaseLogSerializerBase.Meta):
+        fields = ('code', 'created_by', 'created', 'notes')
 
 
 class CaseSerializer(CaseSerializerBase):
@@ -123,9 +124,15 @@ class CaseSerializer(CaseSerializerBase):
     created_by = serializers.CharField(read_only=True)
     state = serializers.ChoiceField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
     provider = serializers.PrimaryKeyRelatedField(required=False)
-    caseoutcome_set = CaseOutcomeSerializer(many=True, required=False, read_only=True)
     locked_by = serializers.CharField(read_only=True)
     locked_at = serializers.DateTimeField(read_only=True)
+
+    caseoutcome_set = serializers.SerializerMethodField('get_caseoutcome_set')
+
+    def get_caseoutcome_set(self, case):
+        case_outcomes = case.caselog_set.filter(logtype__subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
+        serializer = CaseLogSerializer(instance=case_outcomes, many=True, required=False, read_only=True)
+        return serializer.data
 
     class Meta(CaseSerializerBase.Meta):
         fields = (

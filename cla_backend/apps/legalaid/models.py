@@ -140,7 +140,9 @@ class EligibilityCheck(TimeStampedModel):
         if self.category:
             d['category'] = self.category.code
 
-        d['property_data'] = self.property_set.values_list('value', 'mortgage_left', 'share')
+        d['property_data'] = self.property_set.values_list(
+            'value', 'mortgage_left', 'share', 'disputed'
+        )
 
         d['facts'] = {}
         d['facts']['dependant_children'] = self.dependants_old + self.dependants_young
@@ -213,23 +215,24 @@ class Property(TimeStampedModel):
     mortgage_left = models.PositiveIntegerField(default=0)
     share = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     eligibility_check = models.ForeignKey(EligibilityCheck)
+    disputed = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = "properties"
 
 
-class OutcomeCode(TimeStampedModel):
-    code = models.CharField(max_length=50, unique=True)
-    description = models.TextField()
-    case_state = models.PositiveSmallIntegerField(
-        choices=CASE_STATE_CHOICES, null=True, blank=True
-    )
-
-    def __unicode__(self):
-        return u'%s' % self.code
-
-    class Meta:
-        ordering = ['code']
+# class OutcomeCode(TimeStampedModel):
+#     code = models.CharField(max_length=50, unique=True)
+#     description = models.TextField()
+#     case_state = models.PositiveSmallIntegerField(
+#         choices=CASE_STATE_CHOICES, null=True, blank=True
+#     )
+#
+#     def __unicode__(self):
+#         return u'%s' % self.code
+#
+#     class Meta:
+#         ordering = ['code']
 
 
 class Case(TimeStampedModel):
@@ -326,20 +329,40 @@ class Case(TimeStampedModel):
         self._set_state(CASE_STATE_ACCEPTED)
 
 
-class CaseOutcome(TimeStampedModel):
-    case = models.ForeignKey(Case)
-    outcome_code = models.ForeignKey(OutcomeCode)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
-    notes = models.TextField()
+# class CaseOutcome(TimeStampedModel):
+#     case = models.ForeignKey(Case)
+#     outcome_code = models.ForeignKey(OutcomeCode)
+#     created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+#     notes = models.TextField()
+#
+#     class Meta:
+#         ordering = ['-created']
+#
+#     def __unicode__(self):
+#         return u'%s - %s' % (self.case, self.outcome_code)
 
-    class Meta:
-        ordering = ['-created']
+
+
+class CaseLogType(TimeStampedModel):
+    code = models.CharField(max_length=50, unique=True)
+    subtype = models.CharField(max_length=50)
+    description = models.TextField()
+    case_state = models.PositiveSmallIntegerField(
+        choices=CASE_STATE_CHOICES, null=True, blank=True
+    )
 
     def __unicode__(self):
-        return u'%s - %s' % (self.case, self.outcome_code)
+        return u'%s' % self.code
+
+    class Meta:
+        ordering = ['code']
 
 
-# class Answer(TimeStampedModel):
-#     question = models.ForeignKey(Question)
-#     value = JSONField()
-#     eligibility_check = models.ForeignKey(EligibilityCheck)
+class CaseLog(TimeStampedModel):
+    case = models.ForeignKey(Case)
+    logtype = models.ForeignKey(CaseLogType)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    notes = models.TextField(null=True, blank=True)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.case, self.logtype)

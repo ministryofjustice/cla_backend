@@ -177,29 +177,30 @@ class EligibilityCheck(TimeStampedModel):
 
         if self.has_partner:
             d['partner'] = {}
-            if self.partner.savings:
-                partner_savings = {}
-                partner_savings['savings'] = self.partner.savings.bank_balance
-                partner_savings['investments'] = self.partner.savings.investment_balance
-                partner_savings['money_owed']  = self.partner.savings.credit_balance
-                partner_savings['valuable_items'] = self.partner.savings.asset_balance
-                d['partner']['savings'] = partner_savings
-
-            if self.partner.income:
-                partner_income = {}
-                partner_income['earnings'] = self.partner.income.earnings
-                partner_income['other_income'] = self.partner.income.other_income
-                partner_income['self_employed'] = self.partner.income.self_employed
-                d['partner']['income'] = partner_income
-
-            if self.partner.deductions:
-                partner_deductions = {}
-                partner_deductions['income_tax_and_ni'] = self.partner.deductions.income_tax_and_ni
-                partner_deductions['maintenance'] = self.partner.deductions.maintenance
-                partner_deductions['childcare'] = self.partner.deductions.childcare
-                partner_deductions['mortgage_or_rent'] = self.partner.deductions.mortgage_or_rent
-                partner_deductions['criminal_legalaid_contributions'] = self.partner.deductions.criminal_legalaid_contributions
-                d['partner']['deductions'] = partner_deductions
+            if self.partner:
+                if self.partner.savings:
+                    partner_savings = {}
+                    partner_savings['savings'] = self.partner.savings.bank_balance
+                    partner_savings['investments'] = self.partner.savings.investment_balance
+                    partner_savings['money_owed']  = self.partner.savings.credit_balance
+                    partner_savings['valuable_items'] = self.partner.savings.asset_balance
+                    d['partner']['savings'] = partner_savings
+    
+                if self.partner.income:
+                    partner_income = {}
+                    partner_income['earnings'] = self.partner.income.earnings
+                    partner_income['other_income'] = self.partner.income.other_income
+                    partner_income['self_employed'] = self.partner.income.self_employed
+                    d['partner']['income'] = partner_income
+    
+                if self.partner.deductions:
+                    partner_deductions = {}
+                    partner_deductions['income_tax_and_ni'] = self.partner.deductions.income_tax_and_ni
+                    partner_deductions['maintenance'] = self.partner.deductions.maintenance
+                    partner_deductions['childcare'] = self.partner.deductions.childcare
+                    partner_deductions['mortgage_or_rent'] = self.partner.deductions.mortgage_or_rent
+                    partner_deductions['criminal_legalaid_contributions'] = self.partner.deductions.criminal_legalaid_contributions
+                    d['partner']['deductions'] = partner_deductions
 
         # Fake
         d['facts']['is_partner_opponent'] = False

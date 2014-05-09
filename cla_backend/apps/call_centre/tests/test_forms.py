@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.conf import settings
+from legalaid.models import CaseLog
 
 from model_mommy import mommy
 
@@ -39,7 +40,9 @@ class ProviderAllocationFormTestCase(TestCase):
 
         form.save(case, user)
 
+        self.assertEqual(CaseLog.objects.count(),0)
         self.assertEqual(case.provider, provider)
+        self.assertEqual(CaseLog.objects.count(),1)
 
     def test_not_valid_with_no_valid_provider_for_category(self):
         case = make_recipe('case')

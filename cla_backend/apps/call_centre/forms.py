@@ -4,9 +4,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from cla_provider.models import Provider
 from django.forms.util import ErrorList
+from legalaid.forms import BaseCaseLogForm
 
 
-class ProviderAllocationForm(forms.Form):
+class ProviderAllocationForm(BaseCaseLogForm):
+
+    CASELOGTYPE_CODE = 'ASSIGN'
+
     provider = forms.ChoiceField()
 
     def __init__(self, *args, **kwargs):
@@ -32,10 +36,15 @@ class ProviderAllocationForm(forms.Form):
             del self._errors['provider']
         return cleaned_data
 
+    def get_notes(self):
+        return u"Assigned to {provider}".format(provider=self.cleaned_data['provider_obj'].name)
+
     def save(self, case, user):
         data = self.cleaned_data
 
         case.assign_to_provider(data['provider_obj'])
+
+        super(ProviderAllocationForm, self).save(case, user)
         return data['provider_obj']
 
 

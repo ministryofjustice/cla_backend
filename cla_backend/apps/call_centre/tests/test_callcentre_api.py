@@ -454,6 +454,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         category = case.eligibility_check.category
         user = mommy.make(settings.AUTH_USER_MODEL)
+        make_recipe('assign_logtype')
         provider = cla_provider_make_recipe('provider', active=True)
         cla_provider_make_recipe('provider_allocation',
                                  weighted_distribution=0.5,

@@ -70,5 +70,17 @@
         "modified": "2014-04-14T15:59:59.227Z",
         "created": "2014-04-14T15:59:59.225Z"
     }
+},
+{
+    "pk": 7,
+    "model": "legalaid.caselogtype",
+    "fields": {
+        "description": "Assigned to Provider",
+        "code": "ASSIGN",
+        "case_state": 1,
+        "subtype": "system",
+        "modified": "2014-04-14T15:59:59.227Z",
+        "created": "2014-04-14T15:59:59.225Z"
+    }
 }
 ]

@@ -1,0 +1,9 @@
+{% extends "admin/reports/base.html" %}
+
+{% block inner_form %}
+  {{ form.as_p }}
+
+  <div class="form_submit submit-row">
+    <input type="submit" name="action" value="Export" class="button default">
+  </div>
+{% endblock inner_form %}

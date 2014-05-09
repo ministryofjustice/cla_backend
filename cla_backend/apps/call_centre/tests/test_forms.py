@@ -18,6 +18,8 @@ def cla_provider_make_recipe(model_name, **kwargs):
 
 
 class ProviderAllocationFormTestCase(TestCase):
+    def setUp(self):
+        make_recipe('assign_logtype')
 
     def test_save(self):
         case = make_recipe('case')
@@ -38,9 +40,9 @@ class ProviderAllocationFormTestCase(TestCase):
 
         self.assertTrue(form.is_valid())
 
+        self.assertEqual(CaseLog.objects.count(),0)
         form.save(case, user)
 
-        self.assertEqual(CaseLog.objects.count(),0)
         self.assertEqual(case.provider, provider)
         self.assertEqual(CaseLog.objects.count(),1)
 

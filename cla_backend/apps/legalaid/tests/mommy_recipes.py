@@ -1,3 +1,4 @@
+from legalaid.constants import CASELOGTYPE_SUBTYPES
 from model_mommy.recipe import Recipe, seq, foreign_key
 
 from ..models import Category, EligibilityCheck, Property, Savings, \
@@ -35,9 +36,11 @@ case = Recipe(Case,
 
 logtype = Recipe(CaseLogType)
 
-outcome_code = Recipe(CaseLogType, subtype='outcome')
+outcome_code = Recipe(CaseLogType, subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
+assign_logtype = Recipe(CaseLogType, code='ASSIGN', subtype=CASELOGTYPE_SUBTYPES.SYSTEM)
 
 case_log = Recipe(CaseLog,
     case=foreign_key(case),
     logtype=foreign_key(logtype)
 )
+

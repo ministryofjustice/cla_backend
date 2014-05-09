@@ -155,4 +155,3 @@ class CLAProviderAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
 class CLAOperatorAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
     DEFAULT_TOKEN = 'operator_token'
 
-

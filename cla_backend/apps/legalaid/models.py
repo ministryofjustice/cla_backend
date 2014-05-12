@@ -123,7 +123,9 @@ class EligibilityCheck(TimeStampedModel):
     partner = models.ForeignKey(Person, blank=True, null=True, related_name='partner')
     your_problem_notes = models.TextField(blank=True)
     notes = models.TextField(blank=True)
-    state = models.PositiveSmallIntegerField(default=STATE_MAYBE, choices=STATE_CHOICES)
+    state = models.CharField(
+        max_length=50, default=STATE_MAYBE, choices=STATE_CHOICES
+    )
     dependants_young = models.PositiveIntegerField(default=0)
     dependants_old = models.PositiveIntegerField(default=0)
     on_passported_benefits = models.BooleanField(default=False)
@@ -187,14 +189,14 @@ class EligibilityCheck(TimeStampedModel):
                     partner_savings['money_owed']  = self.partner.savings.credit_balance
                     partner_savings['valuable_items'] = self.partner.savings.asset_balance
                     d['partner']['savings'] = partner_savings
-    
+
                 if self.partner.income:
                     partner_income = {}
                     partner_income['earnings'] = self.partner.income.earnings
                     partner_income['other_income'] = self.partner.income.other_income
                     partner_income['self_employed'] = self.partner.income.self_employed
                     d['partner']['income'] = partner_income
-    
+
                 if self.partner.deductions:
                     partner_deductions = {}
                     partner_deductions['income_tax_and_ni'] = self.partner.deductions.income_tax_and_ni

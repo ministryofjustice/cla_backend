@@ -4,7 +4,6 @@ from south.db import db
 from south.v2 import DataMigration
 from django.db import models
 
-
 CASE_STATE_MAPPING = {
     '0': 'open',
     '1': 'closed',
@@ -20,11 +19,6 @@ CASE_STATE_MAPPING_REVERSE = {
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-        # Note: Don't use "from appname.models import ModelName".
-        # Use orm.ModelName to refer to models in this application,
-        # and orm['appname.ModelName'] for models in other applications.
-
         # migrating case records
         for case in orm.Case.objects.all():
             if case.state in CASE_STATE_MAPPING.values():
@@ -46,7 +40,7 @@ class Migration(DataMigration):
             if case.state in CASE_STATE_MAPPING_REVERSE.values():
                 continue
 
-            case.state = CASE_STATE_MAPPING.get(case.state)
+            case.state = CASE_STATE_MAPPING_REVERSE.get(case.state)
             case.save()
 
         # migrating
@@ -54,7 +48,7 @@ class Migration(DataMigration):
             if case_log_type.case_state in CASE_STATE_MAPPING_REVERSE.values():
                 continue
 
-            case_log_type.case_state = CASE_STATE_MAPPING.get(case_log_type.case_state)
+            case_log_type.case_state = CASE_STATE_MAPPING_REVERSE.get(case_log_type.case_state)
             case_log_type.save()
 
     models = {
@@ -184,10 +178,11 @@ class Migration(DataMigration):
             'is_you_or_your_partner_over_60': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
             'notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'on_nass_benefits': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'on_passported_benefits': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'partner'", 'null': 'True', 'to': u"orm['legalaid.Person']"}),
             'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'}),
-            'state': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
+            'state': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': "'maybe'"}),
             'you': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'you'", 'null': 'True', 'to': u"orm['legalaid.Person']"}),
             'your_problem_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'})
         },

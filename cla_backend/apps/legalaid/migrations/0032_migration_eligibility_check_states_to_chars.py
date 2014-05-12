@@ -1,27 +1,45 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
 
-class Migration(SchemaMigration):
+ELIGIBILITY_STATE_MAPPING = {
+    '0': 'maybe',
+    '1': 'yes',
+    '2': 'no',
+}
+
+ELIGIBILITY_STATE_MAPPING_REVERSE = {
+    v:k for k,v in ELIGIBILITY_STATE_MAPPING.items()
+}
+
+
+class Migration(DataMigration):
 
     def forwards(self, orm):
+        "Write your forwards methods here."
+        # Note: Don't use "from appname.models import ModelName".
+        # Use orm.ModelName to refer to models in this application,
+        # and orm['appname.ModelName'] for models in other applications.
 
-        # Changing field 'CaseLogType.case_state'
-        db.alter_column(u'legalaid_caselogtype', 'case_state', self.gf('django.db.models.fields.CharField')(max_length=50, null=True))
+        # migrating eligibility_check records
+        for el_check in orm.EligibilityCheck.objects.all():
+            if el_check.state in ELIGIBILITY_STATE_MAPPING.values():
+                continue
 
-        # Changing field 'Case.state'
-        db.alter_column(u'legalaid_case', 'state', self.gf('django.db.models.fields.CharField')(max_length=50))
+            el_check.state = ELIGIBILITY_STATE_MAPPING.get(el_check.state)
+            el_check.save()
 
     def backwards(self, orm):
+        "Write your backwards methods here."
+        for el_check in orm.EligibilityCheck.objects.all():
+            if el_check.state in ELIGIBILITY_STATE_MAPPING_REVERSE.values():
+                continue
 
-        # Changing field 'CaseLogType.case_state'
-        db.alter_column(u'legalaid_caselogtype', 'case_state', self.gf('django.db.models.fields.PositiveSmallIntegerField')(null=True))
-
-        # Changing field 'Case.state'
-        db.alter_column(u'legalaid_case', 'state', self.gf('django.db.models.fields.PositiveSmallIntegerField')())
+            el_check.state = ELIGIBILITY_STATE_MAPPING_REVERSE.get(el_check.state)
+            el_check.save()
 
     models = {
         u'auth.group': {
@@ -95,7 +113,7 @@ class Migration(SchemaMigration):
             'provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cla_provider.Provider']", 'null': 'True', 'blank': 'True'}),
             'provider_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'reference': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
-            'state': ('django.db.models.fields.CharField', [], {'default': "'OPEN'", 'max_length': '50'})
+            'state': ('django.db.models.fields.CharField', [], {'default': "'open'", 'max_length': '50'})
         },
         u'legalaid.caselog': {
             'Meta': {'object_name': 'CaseLog'},
@@ -150,10 +168,11 @@ class Migration(SchemaMigration):
             'is_you_or_your_partner_over_60': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
             'notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'on_nass_benefits': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'on_passported_benefits': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'partner'", 'null': 'True', 'to': u"orm['legalaid.Person']"}),
             'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'}),
-            'state': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
+            'state': ('django.db.models.fields.CharField', [], {'default': "'maybe'", 'max_length': '50'}),
             'you': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'you'", 'null': 'True', 'to': u"orm['legalaid.Person']"}),
             'your_problem_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'})
         },
@@ -212,3 +231,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['legalaid']
+    symmetrical = True

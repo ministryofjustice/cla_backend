@@ -238,7 +238,9 @@ class Case(TimeStampedModel):
     personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
-    state = models.PositiveSmallIntegerField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
+    state = models.CharField(
+        max_length=50, choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN
+    )
     locked_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, blank=True, null=True,
         related_name='case_locked'
@@ -344,8 +346,8 @@ class CaseLogType(TimeStampedModel):
     code = models.CharField(max_length=50, unique=True)
     subtype = models.CharField(max_length=50)
     description = models.TextField()
-    case_state = models.PositiveSmallIntegerField(
-        choices=CASE_STATE_CHOICES, null=True, blank=True
+    case_state = models.CharField(
+        choices=CASE_STATE_CHOICES, max_length=50, null=True, blank=True
     )
 
     def __unicode__(self):

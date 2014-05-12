@@ -82,6 +82,7 @@ class Facts(ModelMixin, object):
     PROPERTY_META = {
         'is_you_or_your_partner_over_60': None,
         'on_passported_benefits': None,
+        'on_nass_benefits': None,
         'has_partner': None,
         'is_partner_opponent': None,
         'dependant_children': None

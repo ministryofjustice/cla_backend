@@ -860,3 +860,16 @@ class IsEligibleTestCase(unittest.TestCase):
         ec.is_gross_income_eligible.assert_called_once_with()
         ec.is_disposable_capital_eligible.assert_called_once_with()
 
+    def test_nass_benefit_is_eligible(self):
+        """
+        TEST: if citizen is on NASS benefit income and capital are not
+        tested so the citizen should be eligible.
+        """
+        case_data = mock.MagicMock()
+        mocked_on_passported_benefits = mock.PropertyMock()
+        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
+        case_data.facts.on_nass_benefits = True
+
+        ec = EligibilityChecker(case_data)
+        self.assertTrue(ec.is_eligible())
+

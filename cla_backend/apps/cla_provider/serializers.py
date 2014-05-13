@@ -7,7 +7,7 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     CaseSerializerBase, CategorySerializerBase, CaseLogTypeSerializerBase, \
     ProviderSerializerBase, CaseLogSerializerBase
 from rest_framework import serializers
-from cla_common.constants import CASE_STATE_CHOICES, CASE_STATE_OPEN
+from cla_common.constants import CASE_STATES
 
 
 class CategorySerializer(CategorySerializerBase):
@@ -122,7 +122,7 @@ class CaseSerializer(CaseSerializerBase):
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)
     created_by = serializers.CharField(read_only=True)
-    state = serializers.ChoiceField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
+    state = serializers.ChoiceField(choices=CASE_STATES.CHOICES, default=CASE_STATES.OPEN)
     provider = serializers.PrimaryKeyRelatedField(required=False)
     locked_by = serializers.CharField(read_only=True)
     locked_at = serializers.DateTimeField(read_only=True)

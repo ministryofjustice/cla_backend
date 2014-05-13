@@ -3,8 +3,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_REJECTED, \
-    CASE_STATE_ACCEPTED
+from cla_common.constants import CASE_STATES
 
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin, make_recipe
 
@@ -14,9 +13,9 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         super(CaseLogTests, self).setUp()
 
         self.outcome_codes = [
-            make_recipe('legalaid.tests.logtype', code="CODE_OPEN", case_state=CASE_STATE_OPEN, subtype='outcome'),
-            make_recipe('legalaid.tests.logtype', code="CODE_ACCEPTED", case_state=CASE_STATE_ACCEPTED, subtype='outcome'),
-            make_recipe('legalaid.tests.logtype', code="CODE_REJECTED", case_state=CASE_STATE_REJECTED, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_OPEN", case_state=CASE_STATES.OPEN, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED, subtype='outcome'),
         ]
 
         self.list_url = reverse('cla_provider:caselogtype-list')
@@ -56,7 +55,7 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         """
         # LIST
         response = self.client.get(self.list_url,
-            { 'case_state': CASE_STATE_ACCEPTED },
+            { 'case_state': CASE_STATES.ACCEPTED },
             HTTP_AUTHORIZATION='Bearer %s' % self.token,
             format='json'
         )
@@ -68,7 +67,7 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 
         # DETAIL
         response = self.client.get(self.detail_url,
-            { 'case_state': CASE_STATE_OPEN },
+            { 'case_state': CASE_STATES.OPEN },
             HTTP_AUTHORIZATION='Bearer %s' % self.token,
             format='json'
         )
@@ -77,7 +76,7 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 
         # DETAIL not found (the outcomecode.case_state is OPEN but we're filtering by REJECTED)
         response = self.client.get(self.detail_url,
-            { 'case_state': CASE_STATE_REJECTED },
+            { 'case_state': CASE_STATES.REJECTED },
             HTTP_AUTHORIZATION='Bearer %s' % self.token,
             format='json'
         )

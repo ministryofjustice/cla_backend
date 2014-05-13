@@ -8,8 +8,7 @@ from rest_framework.response import Response as DRFResponse
 
 from core.viewsets import DefaultStateFilterViewSetMixin, \
     IsEligibleActionViewSetMixin
-from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_ACCEPTED, \
-    CASE_STATE_CHOICES
+from cla_common.constants import CASE_STATES
 
 from legalaid.exceptions import InvalidMutationException
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
@@ -43,7 +42,7 @@ class CaseLogTypeViewSet(
     lookup_field = 'code'
 
     default_state_filter = []
-    all_states = dict(CASE_STATE_CHOICES).keys()
+    all_states = dict(CASE_STATES.CHOICES).keys()
     state_field = 'case_state'
 
 class OutcomeCodeViewSet(
@@ -57,7 +56,7 @@ class OutcomeCodeViewSet(
     lookup_field = 'code'
 
     default_state_filter = []
-    all_states = dict(CASE_STATE_CHOICES).keys()
+    all_states = dict(CASE_STATES.CHOICES).keys()
     state_field = 'case_state'
 
     queryset =  CaseLogType.objects.filter(subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
@@ -99,8 +98,8 @@ class CaseViewSet(
     ordering_fields = ('state', 'modified', 'created')
     ordering = ('-state', '-locked_by', '-modified', '-created')
 
-    default_state_filter = [CASE_STATE_OPEN, CASE_STATE_ACCEPTED]
-    all_states = dict(CASE_STATE_CHOICES).keys()
+    default_state_filter = [CASE_STATES.OPEN, CASE_STATES.ACCEPTED]
+    all_states = dict(CASE_STATES.CHOICES).keys()
 
     def get_queryset(self):
         this_provider = get_object_or_404(Staff, user=self.request.user).provider

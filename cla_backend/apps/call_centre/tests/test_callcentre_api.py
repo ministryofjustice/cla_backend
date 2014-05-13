@@ -15,7 +15,7 @@ from legalaid.models import Category, EligibilityCheck, Property, \
     Case, PersonalDetails, Person, Income, Savings, CaseLog
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
-from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED
+from cla_common.constants import CASE_STATES
 
 from ..serializers import CaseSerializer, EligibilityCheckSerializer
 
@@ -209,7 +209,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         # check initial state is correct
-        self.assertEqual(response.data['state'], CASE_STATE_OPEN)
+        self.assertEqual(response.data['state'], CASE_STATES.OPEN)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCaseCheckResponseKeys(response)
@@ -244,7 +244,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         # check initial state is correct
-        self.assertEqual(response.data['state'], CASE_STATE_OPEN)
+        self.assertEqual(response.data['state'], CASE_STATES.OPEN)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCaseCheckResponseKeys(response)
@@ -280,7 +280,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         # check initial state is correct
-        self.assertEqual(response.data['state'], CASE_STATE_OPEN)
+        self.assertEqual(response.data['state'], CASE_STATES.OPEN)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCaseCheckResponseKeys(response)
@@ -312,7 +312,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         # check initial state is correct
-        self.assertEqual(response.data['state'], CASE_STATE_OPEN)
+        self.assertEqual(response.data['state'], CASE_STATES.OPEN)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCaseCheckResponseKeys(response)
@@ -555,14 +555,14 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         Need to use close action instead
         """
 
-        self.assertEqual(self.case_obj.state, CASE_STATE_OPEN)
+        self.assertEqual(self.case_obj.state, CASE_STATES.OPEN)
 
         response = self.client.patch(self.detail_url, data={
-            'state': CASE_STATE_CLOSED
+            'state': CASE_STATES.CLOSED
         }, format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['state'], CASE_STATE_OPEN)
+        self.assertEqual(response.data['state'], CASE_STATES.OPEN)
 
     # SEARCH
 

@@ -61,3 +61,4 @@ If you are experiencing errors when creating and sycning the database, make sure
 
     export PATH="/Applications/Postgres.app/Contents/MacOS/bin/:$PATH"
     export DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/MacOS/lib/
+

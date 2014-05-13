@@ -86,6 +86,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'is_you_or_your_partner_over_60',
             'has_partner',
             'on_passported_benefits',
+            'on_nass_benefits',
             'state'
         )
 

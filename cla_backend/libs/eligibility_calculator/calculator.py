@@ -111,6 +111,10 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
+
+        if self.case_data.facts.on_nass_benefits:
+            return True
+
         if not self.is_disposable_capital_eligible():
             return False
 

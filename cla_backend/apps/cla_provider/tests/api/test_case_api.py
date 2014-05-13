@@ -6,8 +6,7 @@ from django.utils.timezone import utc
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_ACCEPTED, \
-    CASE_STATE_REJECTED, CASE_STATE_CLOSED
+from cla_common.constants import CASE_STATES
 
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin, make_recipe
 
@@ -149,11 +148,11 @@ class CaseTests(BaseCaseTests):
 
         now = timezone.now()
         self.cases = [
-            create_case(CASE_STATE_ACCEPTED, reference='5. accepted b', locked_by=self.user, modified=now-timedelta(days=2)),
-            create_case(CASE_STATE_OPEN, reference='3. open locked b', locked_by=self.user, modified=now-timedelta(days=3)),
-            create_case(CASE_STATE_OPEN, reference='1. open not locked', locked_by=None),
-            create_case(CASE_STATE_ACCEPTED, reference='4. accepted a', locked_by=self.user, modified=now-timedelta(minutes=2)),
-            create_case(CASE_STATE_OPEN, reference='2. open locked a', locked_by=self.user, modified=now-timedelta(minutes=1)),
+            create_case(CASE_STATES.ACCEPTED, reference='5. accepted b', locked_by=self.user, modified=now-timedelta(days=2)),
+            create_case(CASE_STATES.OPEN, reference='3. open locked b', locked_by=self.user, modified=now-timedelta(days=3)),
+            create_case(CASE_STATES.OPEN, reference='1. open not locked', locked_by=None),
+            create_case(CASE_STATES.ACCEPTED, reference='4. accepted a', locked_by=self.user, modified=now-timedelta(minutes=2)),
+            create_case(CASE_STATES.OPEN, reference='2. open locked a', locked_by=self.user, modified=now-timedelta(minutes=1)),
         ]
 
         response = self.client.get(
@@ -289,10 +288,10 @@ class StateChangeMixin(object):
         super(StateChangeMixin, self).setUp()
 
         self.outcome_codes = [
-            make_recipe('legalaid.tests.outcome_code', code="CODE_OPEN", case_state=CASE_STATE_OPEN),
-            make_recipe('legalaid.tests.outcome_code', code="CODE_ACCEPTED", case_state=CASE_STATE_ACCEPTED),
-            make_recipe('legalaid.tests.outcome_code', code="CODE_REJECTED", case_state=CASE_STATE_REJECTED),
-            make_recipe('legalaid.tests.outcome_code', code="CODE_CLOSED", case_state=CASE_STATE_CLOSED),
+            make_recipe('legalaid.tests.outcome_code', code="CODE_OPEN", case_state=CASE_STATES.OPEN),
+            make_recipe('legalaid.tests.outcome_code', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED),
+            make_recipe('legalaid.tests.outcome_code', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED),
+            make_recipe('legalaid.tests.outcome_code', code="CODE_CLOSED", case_state=CASE_STATES.CLOSED),
         ]
         self.state_change_url = self.get_state_change_url()
 
@@ -323,7 +322,7 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
 
     def test_successful(self):
         # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATE_OPEN)
+        self.assertEqual(self.check.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -341,7 +340,7 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
 
         # after, case rejected and outcome created
         case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATE_REJECTED)
+        self.assertEqual(case.state, CASE_STATES.REJECTED)
 
         self.assertEqual(CaseLog.objects.count(), 1)
         outcome = CaseLog.objects.all()[0]
@@ -352,9 +351,9 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
 
     def test_invalid_mutation(self):
         # before, case accepted and no outcomes
-        self.check.state = CASE_STATE_ACCEPTED
+        self.check.state = CASE_STATES.ACCEPTED
         self.check.save()
-        self.assertEqual(self.check.state, CASE_STATE_ACCEPTED)
+        self.assertEqual(self.check.state, CASE_STATES.ACCEPTED)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -371,18 +370,18 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(
             response.data,
-            {'case_state': [u"Case should be 'OPEN' to be rejected but it's currently 'ACCEPTED'"]}
+            {'case_state': [u"Case should be 'OPEN' to be rejected but it's currently 'Accepted'"]}
         )
 
         # after, case didn't change and no outcome created
         case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATE_ACCEPTED)
+        self.assertEqual(case.state, CASE_STATES.ACCEPTED)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
     def test_invalid_outcome_code(self):
         # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATE_OPEN)
+        self.assertEqual(self.check.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -404,7 +403,7 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
 
         # after, case didn't change and no outcome created
         case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATE_OPEN)
+        self.assertEqual(case.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -419,7 +418,7 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
 
     def test_successful(self):
         # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATE_OPEN)
+        self.assertEqual(self.check.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -437,7 +436,7 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
 
         # after, case rejected and outcome created
         case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATE_ACCEPTED)
+        self.assertEqual(case.state, CASE_STATES.ACCEPTED)
 
         self.assertEqual(CaseLog.objects.count(), 1)
         outcome = CaseLog.objects.all()[0]
@@ -448,9 +447,9 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
 
     def test_invalid_mutation(self):
         # before, case accepted and no outcomes
-        self.check.state = CASE_STATE_ACCEPTED
+        self.check.state = CASE_STATES.ACCEPTED
         self.check.save()
-        self.assertEqual(self.check.state, CASE_STATE_ACCEPTED)
+        self.assertEqual(self.check.state, CASE_STATES.ACCEPTED)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -467,18 +466,18 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(
             response.data,
-            {'case_state': [u"Case should be 'OPEN' to be accepted but it's currently 'ACCEPTED'"]}
+            {'case_state': [u"Case should be 'OPEN' to be accepted but it's currently 'Accepted'"]}
         )
 
         # after, case didn't change and no outcome created
         case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATE_ACCEPTED)
+        self.assertEqual(case.state, CASE_STATES.ACCEPTED)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
     def test_invalid_outcome_code(self):
         # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATE_OPEN)
+        self.assertEqual(self.check.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -500,7 +499,7 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
 
         # after, case didn't change and no outcome created
         case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATE_OPEN)
+        self.assertEqual(case.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -515,7 +514,7 @@ class CloseCaseTests(StateChangeMixin, BaseCaseTests):
 
     def test_successful(self):
         # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATE_OPEN)
+        self.assertEqual(self.check.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -533,7 +532,7 @@ class CloseCaseTests(StateChangeMixin, BaseCaseTests):
 
         # after, case rejected and outcome created
         case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATE_CLOSED)
+        self.assertEqual(case.state, CASE_STATES.CLOSED)
 
         self.assertEqual(CaseLog.objects.count(), 1)
         outcome = CaseLog.objects.all()[0]
@@ -544,7 +543,7 @@ class CloseCaseTests(StateChangeMixin, BaseCaseTests):
 
     def test_invalid_outcome_code(self):
         # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATE_OPEN)
+        self.assertEqual(self.check.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -566,6 +565,6 @@ class CloseCaseTests(StateChangeMixin, BaseCaseTests):
 
         # after, case didn't change and no outcome created
         case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATE_OPEN)
+        self.assertEqual(case.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)

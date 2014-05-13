@@ -5,8 +5,7 @@ from model_mommy import mommy
 
 from eligibility_calculator.models import CaseData, ModelMixin
 
-from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED, \
-    CASE_STATE_REJECTED, CASE_STATE_ACCEPTED
+from cla_common.constants import CASE_STATES
 
 from legalaid.exceptions import InvalidMutationException
 from ..models import Case
@@ -328,54 +327,54 @@ class CaseTestCase(TestCase):
 
     def test_is_open(self):
         # False
-        case1 = make_recipe('case', state=CASE_STATE_CLOSED)
+        case1 = make_recipe('case', state=CASE_STATES.CLOSED)
         self.assertFalse(case1.is_open())
 
         # True
-        case2 = make_recipe('case', state=CASE_STATE_OPEN)
+        case2 = make_recipe('case', state=CASE_STATES.OPEN)
         self.assertTrue(case2.is_open())
 
     def test_is_closed(self):
         # False
-        case1 = make_recipe('case', state=CASE_STATE_CLOSED)
+        case1 = make_recipe('case', state=CASE_STATES.CLOSED)
         self.assertTrue(case1.is_closed())
 
         # True
-        case2 = make_recipe('case', state=CASE_STATE_OPEN)
+        case2 = make_recipe('case', state=CASE_STATES.OPEN)
         self.assertFalse(case2.is_closed())
 
     def test_close_open_case(self):
-        case = make_recipe('case', state=CASE_STATE_OPEN)
-        self.assertEqual(case.state, CASE_STATE_OPEN)
+        case = make_recipe('case', state=CASE_STATES.OPEN)
+        self.assertEqual(case.state, CASE_STATES.OPEN)
 
         self.assertTrue(case.close())
 
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, CASE_STATE_CLOSED)
+        self.assertEqual(case.state, CASE_STATES.CLOSED)
 
     def test_close_closed_case(self):
         """
             Should raise InvalidMutationException
         """
         # case closed already
-        case = make_recipe('case', state=CASE_STATE_CLOSED)
-        self.assertEqual(case.state, CASE_STATE_CLOSED)
+        case = make_recipe('case', state=CASE_STATES.CLOSED)
+        self.assertEqual(case.state, CASE_STATES.CLOSED)
 
         with self.assertRaises(InvalidMutationException):
             case.close()
 
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, CASE_STATE_CLOSED)
+        self.assertEqual(case.state, CASE_STATES.CLOSED)
 
         # case closed rejected
-        case = make_recipe('case', state=CASE_STATE_REJECTED)
-        self.assertEqual(case.state, CASE_STATE_REJECTED)
+        case = make_recipe('case', state=CASE_STATES.REJECTED)
+        self.assertEqual(case.state, CASE_STATES.REJECTED)
 
         with self.assertRaises(InvalidMutationException):
             case.close()
 
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, CASE_STATE_REJECTED)
+        self.assertEqual(case.state, CASE_STATES.REJECTED)
 
     # REJECT
 
@@ -383,26 +382,26 @@ class CaseTestCase(TestCase):
         """
         Reject successfull
         """
-        case = make_recipe('case', state=CASE_STATE_OPEN)
-        self.assertEqual(case.state, CASE_STATE_OPEN)
+        case = make_recipe('case', state=CASE_STATES.OPEN)
+        self.assertEqual(case.state, CASE_STATES.OPEN)
 
         case.reject()
 
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, CASE_STATE_REJECTED)
+        self.assertEqual(case.state, CASE_STATES.REJECTED)
 
     def test_reject_closed_case(self):
         """
             Should raise InvalidMutationException
         """
-        case = make_recipe('case', state=CASE_STATE_CLOSED)
-        self.assertEqual(case.state, CASE_STATE_CLOSED)
+        case = make_recipe('case', state=CASE_STATES.CLOSED)
+        self.assertEqual(case.state, CASE_STATES.CLOSED)
 
         with self.assertRaises(InvalidMutationException):
             case.reject()
 
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, CASE_STATE_CLOSED)
+        self.assertEqual(case.state, CASE_STATES.CLOSED)
 
     # ACCEPT
 
@@ -410,24 +409,24 @@ class CaseTestCase(TestCase):
         """
         Accept successfull
         """
-        case = make_recipe('case', state=CASE_STATE_OPEN)
-        self.assertEqual(case.state, CASE_STATE_OPEN)
+        case = make_recipe('case', state=CASE_STATES.OPEN)
+        self.assertEqual(case.state, CASE_STATES.OPEN)
 
         case.accept()
 
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, CASE_STATE_ACCEPTED)
+        self.assertEqual(case.state, CASE_STATES.ACCEPTED)
 
     def test_accept_closed_case(self):
         """
             Should raise InvalidMutationException
         """
 
-        case = make_recipe('case', state=CASE_STATE_CLOSED)
-        self.assertEqual(case.state, CASE_STATE_CLOSED)
+        case = make_recipe('case', state=CASE_STATES.CLOSED)
+        self.assertEqual(case.state, CASE_STATES.CLOSED)
 
         with self.assertRaises(InvalidMutationException):
             case.accept()
 
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, CASE_STATE_CLOSED)
+        self.assertEqual(case.state, CASE_STATES.CLOSED)

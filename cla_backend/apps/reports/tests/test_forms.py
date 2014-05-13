@@ -5,7 +5,7 @@ import dateutil.parser as parser
 from django.test import TestCase
 from django.conf import settings
 from django.utils import timezone
-from cla_common.constants import CASE_STATE_CLOSED, CASE_STATE_OPEN
+from cla_common.constants import CASE_STATES
 from legalaid.constants import CASELOGTYPE_SUBTYPES
 
 from model_mommy import mommy
@@ -47,7 +47,7 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
         """
         providers = cla_provider_make_recipe('provider', active=True, _quantity=2)
 
-        def create_db_record(case_ref, closure_date, provider, case_state=CASE_STATE_CLOSED):
+        def create_db_record(case_ref, closure_date, provider, case_state=CASE_STATES.CLOSED):
             case_outcome = make_recipe('case_log',
                 logtype__case_state=case_state,
                 case__provider=provider,
@@ -67,7 +67,7 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
         create_db_record('4', '2014-04-02T01:01', providers[0])
         create_db_record('5', '2014-04-02T01:00', providers[0])
         create_db_record('6', '2014-04-01T00:59', providers[0])
-        create_db_record('7', '2014-04-01T00:59', providers[0], case_state=CASE_STATE_OPEN)
+        create_db_record('7', '2014-04-01T00:59', providers[0], case_state=CASE_STATES.OPEN)
 
 
         # form, non-empty result
@@ -159,7 +159,7 @@ class OperatorCaseClosureReportFormTestCase(TestCase):
 
 
 
-        def create_db_record(case_ref, assign_date, provider, case_state=CASE_STATE_OPEN):
+        def create_db_record(case_ref, assign_date, provider, case_state=CASE_STATES.OPEN):
             assign_date = parser.parse(assign_date).replace(tzinfo=timezone.utc)
             case_outcome = make_recipe('case_log',
                                        logtype__case_state=case_state,

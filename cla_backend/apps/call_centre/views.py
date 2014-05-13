@@ -6,8 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter
 
-from cla_common.constants import CASE_STATE_OPEN, \
-    CASE_STATE_CHOICES
+from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
 from core.viewsets import IsEligibleActionViewSetMixin
@@ -58,7 +57,7 @@ class CaseViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = Case.objects.filter(state=CASE_STATE_OPEN, provider=None)
+    queryset = Case.objects.filter(state=CASE_STATES.OPEN, provider=None)
     model = Case
     lookup_field = 'reference'
     serializer_class = CaseSerializer
@@ -75,8 +74,8 @@ class CaseViewSet(
                      'personal_details__postcode',
                      'reference')
 
-    default_state_filter = [CASE_STATE_OPEN]
-    all_states = dict(CASE_STATE_CHOICES).keys()
+    default_state_filter = [CASE_STATES.OPEN]
+    all_states = dict(CASE_STATES.CHOICES).keys()
 
     def pre_save(self, obj, *args, **kwargs):
         super(CaseViewSet, self).pre_save(obj, *args, **kwargs)

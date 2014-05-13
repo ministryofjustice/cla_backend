@@ -3,8 +3,7 @@ from django.conf import settings
 
 from model_mommy import mommy
 
-from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_ACCEPTED, \
-    CASE_STATE_REJECTED, CASE_STATE_CLOSED
+from cla_common.constants import CASE_STATES
 
 from legalaid.models import CaseLog, Case
 
@@ -23,10 +22,10 @@ class BaseStateFormTestCase(object):
 
         self.user = mommy.make(settings.AUTH_USER_MODEL)
         self.outcome_codes = [
-            make_recipe('legalaid.tests.logtype', code="CODE_OPEN", case_state=CASE_STATE_OPEN, subtype='outcome'),
-            make_recipe('legalaid.tests.logtype', code="CODE_ACCEPTED", case_state=CASE_STATE_ACCEPTED, subtype='outcome'),
-            make_recipe('legalaid.tests.logtype', code="CODE_REJECTED", case_state=CASE_STATE_REJECTED, subtype='outcome'),
-            make_recipe('legalaid.tests.logtype', code="CODE_CLOSED", case_state=CASE_STATE_CLOSED, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_OPEN", case_state=CASE_STATES.OPEN, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED, subtype='outcome'),
+            make_recipe('legalaid.tests.logtype', code="CODE_CLOSED", case_state=CASE_STATES.CLOSED, subtype='outcome'),
         ]
 
     def test_choices(self):
@@ -37,9 +36,9 @@ class BaseStateFormTestCase(object):
         )
 
     def test_save_successfull(self):
-        case = make_recipe('legalaid.tests.case', state=CASE_STATE_OPEN)
+        case = make_recipe('legalaid.tests.case', state=CASE_STATES.OPEN)
 
-        self.assertEqual(case.state, CASE_STATE_OPEN)
+        self.assertEqual(case.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -62,9 +61,9 @@ class BaseStateFormTestCase(object):
         self.assertEqual(outcome.notes, 'lorem ipsum')
 
     def test_invalid_form(self):
-        case = make_recipe('legalaid.tests.case', state=CASE_STATE_OPEN)
+        case = make_recipe('legalaid.tests.case', state=CASE_STATES.OPEN)
 
-        self.assertEqual(case.state, CASE_STATE_OPEN)
+        self.assertEqual(case.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -84,7 +83,7 @@ class BaseStateFormTestCase(object):
 
         # nothing has changed
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, CASE_STATE_OPEN)
+        self.assertEqual(case.state, CASE_STATES.OPEN)
 
         self.assertEqual(CaseLog.objects.count(), 0)
 
@@ -92,16 +91,16 @@ class BaseStateFormTestCase(object):
 class AcceptCaseFormTestCase(BaseStateFormTestCase, TestCase):
     FORM = AcceptCaseForm
     VALID_OUTCOME_CODE = 'CODE_ACCEPTED'
-    EXPECTED_CASE_STATE = CASE_STATE_ACCEPTED
+    EXPECTED_CASE_STATE = CASE_STATES.ACCEPTED
 
 
 class RejectCaseFormTestCase(BaseStateFormTestCase, TestCase):
     FORM = RejectCaseForm
     VALID_OUTCOME_CODE = 'CODE_REJECTED'
-    EXPECTED_CASE_STATE = CASE_STATE_REJECTED
+    EXPECTED_CASE_STATE = CASE_STATES.REJECTED
 
 
 class CloseCaseFormTestCase(BaseStateFormTestCase, TestCase):
     FORM = CloseCaseForm
     VALID_OUTCOME_CODE = 'CODE_CLOSED'
-    EXPECTED_CASE_STATE = CASE_STATE_CLOSED
+    EXPECTED_CASE_STATE = CASE_STATES.CLOSED

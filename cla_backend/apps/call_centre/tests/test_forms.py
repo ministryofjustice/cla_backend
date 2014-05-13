@@ -4,7 +4,7 @@ from legalaid.models import CaseLog
 
 from model_mommy import mommy
 
-from cla_common.constants import CASE_STATE_OPEN, CASE_STATE_CLOSED
+from cla_common.constants import CASE_STATES
 
 from ..forms import ProviderAllocationForm, CloseCaseForm
 from cla_provider.helpers import ProviderAllocationHelper
@@ -59,7 +59,7 @@ class ProviderAllocationFormTestCase(TestCase):
 class CloseCaseFormTestCase(TestCase):
     def test_save(self):
         user = mommy.make(settings.AUTH_USER_MODEL)
-        case = make_recipe('case', state=CASE_STATE_OPEN)
+        case = make_recipe('case', state=CASE_STATES.OPEN)
 
         form = CloseCaseForm(data={})
 
@@ -67,4 +67,4 @@ class CloseCaseFormTestCase(TestCase):
 
         form.save(case, user)
 
-        self.assertEqual(case.state, CASE_STATE_CLOSED)
+        self.assertEqual(case.state, CASE_STATES.CLOSED)

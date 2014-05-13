@@ -13,9 +13,7 @@ from model_utils.models import TimeStampedModel
 
 # from jsonfield import JSONField
 
-from cla_common.constants import STATE_MAYBE, \
-    STATE_CHOICES, CASE_STATE_CHOICES, CASE_STATE_OPEN, CASE_STATE_CLOSED, \
-    CASE_STATE_REJECTED, CASE_STATE_ACCEPTED
+from cla_common.constants import ELIGIBILITY_STATES, CASE_STATES
 
 
 from legalaid.exceptions import InvalidMutationException
@@ -123,7 +121,10 @@ class EligibilityCheck(TimeStampedModel):
     partner = models.ForeignKey(Person, blank=True, null=True, related_name='partner')
     your_problem_notes = models.TextField(blank=True)
     notes = models.TextField(blank=True)
-    state = models.PositiveSmallIntegerField(default=STATE_MAYBE, choices=STATE_CHOICES)
+    state = models.CharField(
+        max_length=50, default=ELIGIBILITY_STATES.MAYBE,
+        choices=ELIGIBILITY_STATES.CHOICES
+    )
     dependants_young = models.PositiveIntegerField(default=0)
     dependants_old = models.PositiveIntegerField(default=0)
     on_passported_benefits = models.BooleanField(default=False)
@@ -187,14 +188,14 @@ class EligibilityCheck(TimeStampedModel):
                     partner_savings['money_owed']  = self.partner.savings.credit_balance
                     partner_savings['valuable_items'] = self.partner.savings.asset_balance
                     d['partner']['savings'] = partner_savings
-    
+
                 if self.partner.income:
                     partner_income = {}
                     partner_income['earnings'] = self.partner.income.earnings
                     partner_income['other_income'] = self.partner.income.other_income
                     partner_income['self_employed'] = self.partner.income.self_employed
                     d['partner']['income'] = partner_income
-    
+
                 if self.partner.deductions:
                     partner_deductions = {}
                     partner_deductions['income_tax_and_ni'] = self.partner.deductions.income_tax_and_ni
@@ -225,7 +226,7 @@ class Property(TimeStampedModel):
 #     code = models.CharField(max_length=50, unique=True)
 #     description = models.TextField()
 #     case_state = models.PositiveSmallIntegerField(
-#         choices=CASE_STATE_CHOICES, null=True, blank=True
+#         choices=CASE_STATES.CHOICES, null=True, blank=True
 #     )
 #
 #     def __unicode__(self):
@@ -241,7 +242,9 @@ class Case(TimeStampedModel):
     personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
-    state = models.PositiveSmallIntegerField(choices=CASE_STATE_CHOICES, default=CASE_STATE_OPEN)
+    state = models.CharField(
+        max_length=50, choices=CASE_STATES.CHOICES, default=CASE_STATES.OPEN
+    )
     locked_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, blank=True, null=True,
         related_name='case_locked'
@@ -286,13 +289,13 @@ class Case(TimeStampedModel):
         return False
 
     def is_open(self):
-        return self.state == CASE_STATE_OPEN
+        return self.state == CASE_STATES.OPEN
 
     def is_closed(self):
-        return self.state == CASE_STATE_CLOSED
+        return self.state == CASE_STATES.CLOSED
 
     def is_accepted(self):
-        return self.state == CASE_STATE_ACCEPTED
+        return self.state == CASE_STATES.ACCEPTED
 
     def _set_state(self, state):
         self.state = state
@@ -306,7 +309,7 @@ class Case(TimeStampedModel):
                     self.get_state_display()
                 )
             )
-        return self._set_state(CASE_STATE_CLOSED)
+        return self._set_state(CASE_STATES.CLOSED)
 
     def reject(self):
         if not self.is_open():
@@ -316,7 +319,7 @@ class Case(TimeStampedModel):
                 )
             )
 
-        self._set_state(CASE_STATE_REJECTED)
+        self._set_state(CASE_STATES.REJECTED)
 
     def accept(self):
         if not self.is_open():
@@ -326,7 +329,7 @@ class Case(TimeStampedModel):
                 )
             )
 
-        self._set_state(CASE_STATE_ACCEPTED)
+        self._set_state(CASE_STATES.ACCEPTED)
 
 
 # class CaseOutcome(TimeStampedModel):
@@ -347,8 +350,8 @@ class CaseLogType(TimeStampedModel):
     code = models.CharField(max_length=50, unique=True)
     subtype = models.CharField(max_length=50)
     description = models.TextField()
-    case_state = models.PositiveSmallIntegerField(
-        choices=CASE_STATE_CHOICES, null=True, blank=True
+    case_state = models.CharField(
+        choices=CASE_STATES.CHOICES, max_length=50, null=True, blank=True
     )
 
     def __unicode__(self):

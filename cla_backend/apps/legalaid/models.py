@@ -52,24 +52,24 @@ class Category(TimeStampedModel):
 
 
 class Savings(TimeStampedModel):
-    bank_balance = models.PositiveIntegerField(default=0)
-    investment_balance = models.PositiveIntegerField(default=0)
-    asset_balance = models.PositiveIntegerField(default=0)
-    credit_balance = models.PositiveIntegerField(default=0)
+    bank_balance = MoneyField(default=0)
+    investment_balance = MoneyField(default=0)
+    asset_balance = MoneyField(default=0)
+    credit_balance = MoneyField(default=0)
 
 
 class Income(TimeStampedModel):
-    earnings = MoneyField(default=0, max_value=99999999, min_value=0)
-    other_income = models.PositiveIntegerField(default=0)
+    earnings = MoneyField(default=0)
+    other_income = MoneyField(default=0)
     self_employed = models.BooleanField(default=False)
 
 
 class Deductions(TimeStampedModel):
-    income_tax_and_ni = models.PositiveIntegerField(default=0)
-    maintenance = models.PositiveIntegerField(default=0)
-    childcare = models.PositiveIntegerField(default=0)
-    mortgage_or_rent = models.PositiveIntegerField(default=0)
-    criminal_legalaid_contributions = models.PositiveIntegerField(default=0)
+    income_tax_and_ni = MoneyField(default=0)
+    maintenance = MoneyField(default=0)
+    childcare = MoneyField(default=0)
+    mortgage_or_rent = MoneyField(default=0)
+    criminal_legalaid_contributions = MoneyField(default=0)
 
 
 class PersonalDetails(TimeStampedModel):
@@ -213,8 +213,8 @@ class EligibilityCheck(TimeStampedModel):
 
 
 class Property(TimeStampedModel):
-    value = models.PositiveIntegerField(default=0)
-    mortgage_left = models.PositiveIntegerField(default=0)
+    value = MoneyField(default=0)
+    mortgage_left = MoneyField(default=0)
     share = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
     eligibility_check = models.ForeignKey(EligibilityCheck)
     disputed = models.BooleanField(default=False)

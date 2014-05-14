@@ -468,7 +468,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": -1,
                 },
                 'income': {
-                    "earnings": 99999999+1,
+                    "earnings": 9999999999+1,
                     "other_income": -1,
                 },
                 'deductions': {
@@ -487,7 +487,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": -1,
                 },
                 'income': {
-                    "earnings": 99999999+1,
+                    "earnings": 9999999999+1,
                     "other_income": -1
                 },
                 'deductions': {

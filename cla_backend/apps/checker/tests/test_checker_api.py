@@ -542,7 +542,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     ],
                     'income': [
                         {
-                            'earnings': [u'Ensure this value is less than or equal to 99999999.'],
+                            'earnings': [u'Ensure this value is less than or equal to 9999999999.'],
                             'other_income': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ],
@@ -572,7 +572,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     ],
                     'income': [
                         {
-                            'earnings': [u'Ensure this value is less than or equal to 99999999.'],
+                            'earnings': [u'Ensure this value is less than or equal to 9999999999.'],
                             'other_income': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ],

@@ -468,7 +468,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": -1,
                 },
                 'income': {
-                    "earnings": -1,
+                    "earnings": 9999999999+1,
                     "other_income": -1,
                 },
                 'deductions': {
@@ -487,7 +487,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": -1,
                 },
                 'income': {
-                    "earnings": -1,
+                    "earnings": 9999999999+1,
                     "other_income": -1
                 },
                 'deductions': {
@@ -542,7 +542,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     ],
                     'income': [
                         {
-                            'earnings': [u'Ensure this value is greater than or equal to 0.'],
+                            'earnings': [u'Ensure this value is less than or equal to 9999999999.'],
                             'other_income': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ],
@@ -572,7 +572,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     ],
                     'income': [
                         {
-                            'earnings': [u'Ensure this value is greater than or equal to 0.'],
+                            'earnings': [u'Ensure this value is less than or equal to 9999999999.'],
                             'other_income': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ],

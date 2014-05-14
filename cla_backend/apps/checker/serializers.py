@@ -1,3 +1,4 @@
+from django.utils.translation import ugettext_lazy as _
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
@@ -25,6 +26,7 @@ class IncomeSerializer(IncomeSerializerBase):
 
     class Meta(IncomeSerializerBase.Meta):
         fields = ('earnings', 'other_income', 'self_employed', 'total')
+
 
 
 class SavingsSerializer(SavingsSerializerBase):

@@ -13,6 +13,8 @@ class Provider(TimeStampedModel):
     law_category = models.ManyToManyField('legalaid.Category', through='ProviderAllocation')
     active = models.BooleanField(default=False)
     short_code = models.CharField(max_length=100, blank=True)
+    telephone_frontdoor = models.CharField(max_length=100, blank=True)
+    telephone_backdoor = models.CharField(max_length=100, blank=True)
 
     objects = ProviderManager()
 

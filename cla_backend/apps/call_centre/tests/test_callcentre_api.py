@@ -130,7 +130,9 @@ class ProviderTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             response.data.keys(),
             ['name',
              'id',
-             'short_code'
+             'short_code',
+             'telephone_frontdoor',
+             'telephone_backdoor'
              ]
         )
 

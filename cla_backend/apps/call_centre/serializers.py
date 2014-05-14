@@ -139,5 +139,5 @@ class CaseSerializer(CaseSerializerBase):
 
 class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
-        fields = ('name', 'id', 'short_code')
+        fields = ('name', 'id', 'short_code', 'telephone_frontdoor', 'telephone_backdoor')
 

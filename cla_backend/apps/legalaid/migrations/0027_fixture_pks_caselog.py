@@ -19,7 +19,7 @@ class Migration(DataMigration):
         orm.CaseLogType.objects.all().delete()
 
         # import fixtures
-        call_command('loaddata', 'cla_backend/apps/legalaid/fixtures/initial_outcome_codes.json')
+        # call_command('loaddata', 'cla_backend/apps/legalaid/fixtures/initial_outcome_codes.json')
 
         for data in old_data:
             logtype = orm.CaseLogType.objects.get(code=data['logtype__code'])

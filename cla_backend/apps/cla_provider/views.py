@@ -1,4 +1,3 @@
-from call_centre.serializers import CaseLogTypeSerializer
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, mixins, status
@@ -12,13 +11,15 @@ from cla_common.constants import CASE_STATES
 
 from legalaid.exceptions import InvalidMutationException
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
+from call_centre.serializers import CaseLogTypeSerializer
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import CategorySerializer, \
-    EligibilityCheckSerializer, CaseSerializer, CaseLogTypeSerializer
+    EligibilityCheckSerializer, CaseSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
 from legalaid.constants import CASELOGTYPE_SUBTYPES
+
 
 class CLAProviderPermissionViewSetMixin(object):
     permission_classes = (CLAProviderClientIDPermission,)
@@ -45,6 +46,7 @@ class CaseLogTypeViewSet(
     all_states = dict(CASE_STATES.CHOICES).keys()
     state_field = 'case_state'
 
+
 class OutcomeCodeViewSet(
     CLAProviderPermissionViewSetMixin,
     DefaultStateFilterViewSetMixin,
@@ -60,6 +62,7 @@ class OutcomeCodeViewSet(
     state_field = 'case_state'
 
     queryset =  CaseLogType.objects.filter(subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
+
 
 class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,

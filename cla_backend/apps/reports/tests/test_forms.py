@@ -1,27 +1,16 @@
 import datetime
-
 import dateutil.parser as parser
 
 from django.test import TestCase
-from django.conf import settings
 from django.utils import timezone
+
 from cla_common.constants import CASE_STATES
 from legalaid.constants import CASELOGTYPE_SUBTYPES
 
-from model_mommy import mommy
-
-from legalaid.models import CaseLog
+from core.tests.mommy_utils import make_recipe
 
 from ..forms import ProviderCaseClosureReportForm, \
     OperatorCaseClosureReportForm
-
-
-def make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
-
-
-def cla_provider_make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('cla_provider.tests.%s' % model_name, **kwargs)
 
 
 class ProviderCaseClosureReportFormTestCase(TestCase):
@@ -45,10 +34,10 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
                 [5, 4, 2] - [Total: 3]
 
         """
-        providers = cla_provider_make_recipe('provider', active=True, _quantity=2)
+        providers = make_recipe('cla_provider.provider', active=True, _quantity=2)
 
         def create_db_record(case_ref, closure_date, provider, case_state=CASE_STATES.CLOSED):
-            case_outcome = make_recipe('case_log',
+            case_outcome = make_recipe('legalaid.case_log',
                 logtype__case_state=case_state,
                 case__provider=provider,
                 case__reference=case_ref,
@@ -116,7 +105,6 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
         )
 
 
-
 class OperatorCaseClosureReportFormTestCase(TestCase):
     def test_rows(self):
         """
@@ -137,8 +125,8 @@ class OperatorCaseClosureReportFormTestCase(TestCase):
                 [5, 4, 2] - [Total: 3] - [Average: 100]
 
         """
-        providers = cla_provider_make_recipe('provider', active=True, _quantity=2)
-        caselogtype = make_recipe('logtype', code='ASSIGN', subtype=CASELOGTYPE_SUBTYPES.SYSTEM)
+        providers = make_recipe('cla_provider.provider', active=True, _quantity=2)
+        caselogtype = make_recipe('legalaid.logtype', code='ASSIGN', subtype=CASELOGTYPE_SUBTYPES.SYSTEM)
 
         # form, empty results
         form = OperatorCaseClosureReportForm({
@@ -161,7 +149,7 @@ class OperatorCaseClosureReportFormTestCase(TestCase):
 
         def create_db_record(case_ref, assign_date, provider, case_state=CASE_STATES.OPEN):
             assign_date = parser.parse(assign_date).replace(tzinfo=timezone.utc)
-            case_outcome = make_recipe('case_log',
+            case_outcome = make_recipe('legalaid.case_log',
                                        logtype__case_state=case_state,
                                        case__provider=provider,
                                        case__reference=case_ref,

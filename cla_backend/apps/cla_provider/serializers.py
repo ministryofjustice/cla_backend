@@ -1,13 +1,13 @@
-from legalaid.constants import CASELOGTYPE_SUBTYPES
 from rest_framework import serializers
+
+from cla_common.constants import CASE_STATES
+from legalaid.constants import CASELOGTYPE_SUBTYPES
 
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase, CaseLogTypeSerializerBase, \
     ProviderSerializerBase, CaseLogSerializerBase
-from rest_framework import serializers
-from cla_common.constants import CASE_STATES
 
 
 class CategorySerializer(CategorySerializerBase):
@@ -146,6 +146,3 @@ class CaseSerializer(CaseSerializerBase):
 class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
         fields = ('name', 'id')
-
-
-

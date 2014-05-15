@@ -1,4 +1,5 @@
 from django.db import models
+
 from model_utils.models import TimeStampedModel
 
 
@@ -6,6 +7,7 @@ class ProviderManager(models.Manager):
 
     def active(self):
         return self.get_queryset().filter(active=True)
+
 
 class Provider(TimeStampedModel):
     name = models.CharField(max_length=255)
@@ -21,6 +23,7 @@ class Provider(TimeStampedModel):
     def __unicode__(self):
         return u'%s' % self.name
 
+
 class ProviderAllocationManager(models.Manager):
 
     def has_category(self, category):
@@ -29,15 +32,17 @@ class ProviderAllocationManager(models.Manager):
         """
         return self.get_queryset().filter(category=category)
 
+
 class ProviderAllocation(TimeStampedModel):
     provider = models.ForeignKey(Provider)
     category = models.ForeignKey('legalaid.Category')
     weighted_distribution = models.FloatField() # see XXXXXXXXXXXX
-    
+
     objects = ProviderAllocationManager()
 
     def __unicode__(self):
         return u'%s provides %s' % (self.provider, self.category)
+
 
 class Staff(TimeStampedModel):
     user = models.OneToOneField('auth.User')

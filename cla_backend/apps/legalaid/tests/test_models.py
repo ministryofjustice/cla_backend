@@ -1,22 +1,13 @@
 from django.test import TestCase
-from django.conf import settings
-
-from model_mommy import mommy
 
 from eligibility_calculator.models import CaseData, ModelMixin
 
 from cla_common.constants import CASE_STATES
 
+from core.tests.mommy_utils import make_recipe, make_user
+
 from legalaid.exceptions import InvalidMutationException
 from ..models import Case
-
-
-def make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
-
-
-def cla_provider_make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('cla_provider.tests.%s' % model_name, **kwargs)
 
 
 def walk(coll):
@@ -60,21 +51,21 @@ class EligibilityCheckTestCase(TestCase):
         """
         EligibilityCheck partner data won't be used during CaseData creation
         """
-        check = make_recipe('eligibility_check',
-            category=make_recipe('category', code='code'),
-            you=make_recipe('person',
-                income= make_recipe('income',
+        check = make_recipe('legalaid.eligibility_check',
+            category=make_recipe('legalaid.category', code='code'),
+            you=make_recipe('legalaid.person',
+                income= make_recipe('legalaid.income',
                     earnings=500,
                     other_income=600,
                     self_employed=True
                 ),
-                savings= make_recipe('savings',
+                savings=make_recipe('legalaid.savings',
                     bank_balance=100,
                     investment_balance=200,
                     asset_balance=300,
                     credit_balance=400,
                 ),
-                deductions=make_recipe('deductions',
+                deductions=make_recipe('legalaid.deductions',
                     income_tax_and_ni=700,
                     maintenance=710,
                     childcare=715,
@@ -128,21 +119,21 @@ class EligibilityCheckTestCase(TestCase):
         """
         EligibilityCheck partner data is used during CaseData creation
         """
-        check = make_recipe('eligibility_check',
-            category=make_recipe('category', code='code'),
-            you=make_recipe('person',
-                income=make_recipe('income',
+        check = make_recipe('legalaid.eligibility_check',
+            category=make_recipe('legalaid.category', code='code'),
+            you=make_recipe('legalaid.person',
+                income=make_recipe('legalaid.income',
                     earnings=500,
                     other_income=600,
                     self_employed=True
                 ),
-                savings= make_recipe('savings',
+                savings=make_recipe('legalaid.savings',
                     bank_balance=100,
                     investment_balance=200,
                     asset_balance=300,
                     credit_balance=400,
                 ),
-                deductions=make_recipe('deductions',
+                deductions=make_recipe('legalaid.deductions',
                     income_tax_and_ni=700,
                     maintenance=710,
                     childcare=715,
@@ -150,19 +141,19 @@ class EligibilityCheckTestCase(TestCase):
                     criminal_legalaid_contributions=730
                 )
             ),
-            partner=make_recipe('person',
-                income= make_recipe('income',
+            partner=make_recipe('legalaid.person',
+                income= make_recipe('legalaid.income',
                     earnings=501,
                     other_income=601,
                     self_employed=False
                 ),
-                savings= make_recipe('savings',
+                savings= make_recipe('legalaid.savings',
                     bank_balance=101,
                     investment_balance=201,
                     asset_balance=301,
                     credit_balance=401,
                 ),
-                deductions=make_recipe('deductions',
+                deductions=make_recipe('legalaid.deductions',
                     income_tax_and_ni=701,
                     maintenance=711,
                     childcare=716,
@@ -234,7 +225,7 @@ class EligibilityCheckTestCase(TestCase):
     #     """
     #     Tests with non-empty property set
     #     """
-    #     check = make_recipe('eligibility_check',
+    #     check = make_recipe('legalaid.eligibility_check',
     #         category=make_recipe('category', code='code'),
     #         your_finances=make_recipe('finance',
     #             bank_balance=100, investment_balance=200,
@@ -249,7 +240,7 @@ class EligibilityCheckTestCase(TestCase):
     #         on_passported_benefits=True,
     #         has_partner=False,
     #     )
-    #     make_recipe('property',
+    #     make_recipe('legalaid.property',
     #         eligibility_check=check,
     #         value=recipe.seq(30), mortgage_left=recipe.seq(40),
     #         share=recipe.seq(50), _quantity=3
@@ -270,9 +261,9 @@ class EligibilityCheckTestCase(TestCase):
 
 class CaseTestCase(TestCase):
     def test_assign_to_provider_overriding_provider(self):
-        providers = cla_provider_make_recipe('provider', _quantity=2)
+        providers = make_recipe('cla_provider.provider', _quantity=2)
 
-        case = make_recipe('case', provider=providers[0])
+        case = make_recipe('legalaid.case', provider=providers[0])
 
         self.assertTrue(case.provider)
 
@@ -281,9 +272,9 @@ class CaseTestCase(TestCase):
         self.assertEqual(case.provider, providers[1])
 
     def test_assign_to_provider_None(self):
-        provider = cla_provider_make_recipe('provider')
+        provider = make_recipe('cla_provider.provider')
 
-        case = make_recipe('case', provider=None)
+        case = make_recipe('legalaid.case', provider=None)
 
         self.assertFalse(case.provider)
 
@@ -297,8 +288,8 @@ class CaseTestCase(TestCase):
         # disabling logging temporarily
         logging.disable(logging.CRITICAL)
 
-        users = mommy.make(settings.AUTH_USER_MODEL, _quantity=2)
-        case = make_recipe('case',
+        users = make_user(_quantity=2)
+        case = make_recipe('legalaid.case',
             locked_by=users[0]
         )
         self.assertFalse(case.lock(users[1]))
@@ -308,8 +299,8 @@ class CaseTestCase(TestCase):
         logging.disable(logging.NOTSET)
 
     def test_lock_without_saving(self):
-        user = mommy.make(settings.AUTH_USER_MODEL)
-        case = make_recipe('case')
+        user = make_user()
+        case = make_recipe('legalaid.case')
         self.assertTrue(case.lock(user, save=False))
         self.assertEqual(case.locked_by, user)
 
@@ -317,8 +308,8 @@ class CaseTestCase(TestCase):
         self.assertEqual(db_case.locked_by, None)
 
     def test_lock_and_save(self):
-        user = mommy.make(settings.AUTH_USER_MODEL)
-        case = make_recipe('case')
+        user = make_user()
+        case = make_recipe('legalaid.case')
         self.assertTrue(case.lock(user))
         self.assertEqual(case.locked_by, user)
 
@@ -327,24 +318,24 @@ class CaseTestCase(TestCase):
 
     def test_is_open(self):
         # False
-        case1 = make_recipe('case', state=CASE_STATES.CLOSED)
+        case1 = make_recipe('legalaid.case', state=CASE_STATES.CLOSED)
         self.assertFalse(case1.is_open())
 
         # True
-        case2 = make_recipe('case', state=CASE_STATES.OPEN)
+        case2 = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
         self.assertTrue(case2.is_open())
 
     def test_is_closed(self):
         # False
-        case1 = make_recipe('case', state=CASE_STATES.CLOSED)
+        case1 = make_recipe('legalaid.case', state=CASE_STATES.CLOSED)
         self.assertTrue(case1.is_closed())
 
         # True
-        case2 = make_recipe('case', state=CASE_STATES.OPEN)
+        case2 = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
         self.assertFalse(case2.is_closed())
 
     def test_close_open_case(self):
-        case = make_recipe('case', state=CASE_STATES.OPEN)
+        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
         self.assertEqual(case.state, CASE_STATES.OPEN)
 
         self.assertTrue(case.close())
@@ -357,7 +348,7 @@ class CaseTestCase(TestCase):
             Should raise InvalidMutationException
         """
         # case closed already
-        case = make_recipe('case', state=CASE_STATES.CLOSED)
+        case = make_recipe('legalaid.case', state=CASE_STATES.CLOSED)
         self.assertEqual(case.state, CASE_STATES.CLOSED)
 
         with self.assertRaises(InvalidMutationException):
@@ -367,7 +358,7 @@ class CaseTestCase(TestCase):
         self.assertEqual(case.state, CASE_STATES.CLOSED)
 
         # case closed rejected
-        case = make_recipe('case', state=CASE_STATES.REJECTED)
+        case = make_recipe('legalaid.case', state=CASE_STATES.REJECTED)
         self.assertEqual(case.state, CASE_STATES.REJECTED)
 
         with self.assertRaises(InvalidMutationException):
@@ -382,7 +373,7 @@ class CaseTestCase(TestCase):
         """
         Reject successfull
         """
-        case = make_recipe('case', state=CASE_STATES.OPEN)
+        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
         self.assertEqual(case.state, CASE_STATES.OPEN)
 
         case.reject()
@@ -394,7 +385,7 @@ class CaseTestCase(TestCase):
         """
             Should raise InvalidMutationException
         """
-        case = make_recipe('case', state=CASE_STATES.CLOSED)
+        case = make_recipe('legalaid.case', state=CASE_STATES.CLOSED)
         self.assertEqual(case.state, CASE_STATES.CLOSED)
 
         with self.assertRaises(InvalidMutationException):
@@ -409,7 +400,7 @@ class CaseTestCase(TestCase):
         """
         Accept successfull
         """
-        case = make_recipe('case', state=CASE_STATES.OPEN)
+        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
         self.assertEqual(case.state, CASE_STATES.OPEN)
 
         case.accept()
@@ -422,7 +413,7 @@ class CaseTestCase(TestCase):
             Should raise InvalidMutationException
         """
 
-        case = make_recipe('case', state=CASE_STATES.CLOSED)
+        case = make_recipe('legalaid.case', state=CASE_STATES.CLOSED)
         self.assertEqual(case.state, CASE_STATES.CLOSED)
 
         with self.assertRaises(InvalidMutationException):

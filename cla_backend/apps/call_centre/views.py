@@ -1,4 +1,3 @@
-from cla_provider.helpers import ProviderAllocationHelper
 from django.contrib.auth.models import AnonymousUser
 
 from rest_framework import viewsets, mixins, status
@@ -8,6 +7,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider
+from cla_provider.helpers import ProviderAllocationHelper
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
 from core.viewsets import IsEligibleActionViewSetMixin
 

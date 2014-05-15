@@ -4,6 +4,7 @@ from django.db import models
 
 from south.modelsinspector import add_introspection_rules
 
+
 class MoneyField(models.BigIntegerField):
     """
     Stores money to nearest penny as integer. e.g. £10.22 would be 1022

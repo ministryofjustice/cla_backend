@@ -1,10 +1,7 @@
-from django.utils.translation import ugettext_lazy as _
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase
-from rest_framework import serializers
-from rest_framework.fields import IntegerField
 
 
 class CategorySerializer(CategorySerializerBase):
@@ -28,7 +25,6 @@ class IncomeSerializer(IncomeSerializerBase):
         fields = ('earnings', 'other_income', 'self_employed', 'total')
 
 
-
 class SavingsSerializer(SavingsSerializerBase):
 
     class Meta(SavingsSerializerBase.Meta):
@@ -40,6 +36,7 @@ class SavingsSerializer(SavingsSerializerBase):
             'total'
         )
 
+
 class DeductionsSerializer(DeductionsSerializerBase):
 
     class Meta(DeductionsSerializerBase.Meta):
@@ -48,6 +45,7 @@ class DeductionsSerializer(DeductionsSerializerBase):
             'childcare', 'mortgage_or_rent',
             'criminal_legalaid_contributions', 'total'
         )
+
 
 class PersonSerializer(PersonSerializerBase):
 
@@ -61,6 +59,7 @@ class PersonSerializer(PersonSerializerBase):
             'savings',
             'deductions',
         )
+
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)

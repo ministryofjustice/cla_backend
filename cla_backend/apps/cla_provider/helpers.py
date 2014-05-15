@@ -1,7 +1,8 @@
-from cla_provider.models import Provider, ProviderAllocation
-
 from random import random
 from operator import itemgetter
+
+from cla_provider.models import ProviderAllocation
+
 
 class ProviderAllocationHelper(object):
 

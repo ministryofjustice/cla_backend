@@ -5,6 +5,7 @@ from rest_framework_nested.routers import NestedSimpleRouter
 
 from . import views
 
+
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)
 router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_name='eligibility_check')

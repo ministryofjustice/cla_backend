@@ -1,17 +1,19 @@
-from core.viewsets import IsEligibleActionViewSetMixin
-from legalaid.serializers import CategorySerializerBase
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
+from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, mixins
 
+from core.viewsets import IsEligibleActionViewSetMixin
 from legalaid.models import Category, EligibilityCheck, Property, Case
-from rest_framework.permissions import AllowAny
+
 from .serializers import EligibilityCheckSerializer, \
     PropertySerializer, CaseSerializer, CategorySerializer
 
+
 class PublicAPIViewSetMixin(object):
     permission_classes = (AllowAny,)
+
 
 class CategoryViewSet(PublicAPIViewSetMixin,
                       viewsets.ReadOnlyModelViewSet):

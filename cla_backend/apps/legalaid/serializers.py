@@ -17,14 +17,17 @@ class CaseLogTypeSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CaseLogType
 
+
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Provider
+
 
 class PropertySerializerBase(serializers.ModelSerializer):
     class Meta:
         model = Property
         fields = ()
+
 
 class TotalsModelSerializer(serializers.ModelSerializer):
     total_fields = set()
@@ -36,6 +39,7 @@ class TotalsModelSerializer(serializers.ModelSerializer):
         for f in self.total_fields:
             total += getattr(obj, f, 0)
         return total
+
 
 class IncomeSerializerBase(TotalsModelSerializer):
     total_fields = {'earnings', 'other_income'}
@@ -51,7 +55,6 @@ class SavingsSerializerBase(TotalsModelSerializer):
          'investment_balance',
          'asset_balance',
          'credit_balance'}
-
 
     class Meta:
         model = Savings

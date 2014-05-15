@@ -1,7 +1,6 @@
 import copy
 import uuid
 import mock
-from model_mommy import mommy
 
 from django.core.urlresolvers import reverse
 
@@ -13,12 +12,9 @@ from legalaid.models import Category, EligibilityCheck, Property, \
     Person, Income, Savings
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
-
+from core.tests.mommy_utils import make_recipe
 from call_centre.serializers import EligibilityCheckSerializer
 
-
-def make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
 
 
 class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
@@ -26,13 +22,13 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         super(EligibilityCheckTests, self).setUp()
 
         self.list_url = reverse('call_centre:eligibility_check-list')
-        self.check = make_recipe('eligibility_check',
-            category=make_recipe('category'),
+        self.check = make_recipe('legalaid.eligibility_check',
+            category=make_recipe('legalaid.category'),
             notes=u'lorem ipsum',
-            you=make_recipe('person',
-                            income=make_recipe('income'),
-                            savings=make_recipe('savings'),
-                            deductions=make_recipe('deductions'))
+            you=make_recipe('legalaid.person',
+                            income=make_recipe('legalaid.income'),
+                            savings=make_recipe('legalaid.savings'),
+                            deductions=make_recipe('legalaid.deductions'))
         )
         self.detail_url = reverse(
             'call_centre:eligibility_check-detail', args=(),
@@ -173,7 +169,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         """
         CREATE data is not empty
         """
-        make_recipe('category')
+        make_recipe('legalaid.category')
 
         category = Category.objects.all()[0]
         data={
@@ -202,7 +198,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         """
         CREATE data includes `has_partner`
         """
-        make_recipe('category')
+        make_recipe('legalaid.category')
 
         category = Category.objects.all()[0]
         data={
@@ -231,7 +227,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         """
         CREATE data includes over 60
         """
-        make_recipe('category')
+        make_recipe('legalaid.category')
 
         category = Category.objects.all()[0]
         data={
@@ -260,7 +256,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         """
         CREATE data includes `on_passported_benefits`
         """
-        make_recipe('category')
+        make_recipe('legalaid.category')
 
         category = Category.objects.all()[0]
         data={
@@ -288,7 +284,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         """
         PATCHED category is applied
         """
-        make_recipe('category', _quantity=2)
+        make_recipe('legalaid.category', _quantity=2)
 
         category = Category.objects.all()[0]
         category2 = Category.objects.all()[1]
@@ -576,10 +572,10 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         """
         GET should not return properties of other eligibility check objects
         """
-        make_recipe('property', eligibility_check=self.check, _quantity=4)
+        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4)
 
         # making extra properties
-        make_recipe('property', eligibility_check=self.check, _quantity=5)
+        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=5)
 
         self.assertEqual(Property.objects.count(), 9)
 
@@ -606,7 +602,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         """
         PATCH data is not empty so the object should change
         """
-        category2 = make_recipe('category')
+        category2 = make_recipe('legalaid.category')
 
         data={
             'reference': 'just-trying...', # reference should never change
@@ -631,10 +627,10 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         """
         PATCH should add/remove/change properties.
         """
-        properties = make_recipe('property', eligibility_check=self.check, _quantity=4)
+        properties = make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4)
 
         # making extra properties
-        make_recipe('property', _quantity=5, disputed=False)
+        make_recipe('legalaid.property', _quantity=5, disputed=False)
 
         self.assertEqual(self.check.property_set.count(), 4)
 
@@ -784,7 +780,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         """
         initial = EligibilityCheckSerializer(instance=self.check).data
         # existing values that should NOT change after the patch
-        categories = mommy.make_recipe('legalaid.tests.category', _quantity=3)
+        categories = make_recipe('legalaid.category', _quantity=3)
         # new values that should change after the patch
         data={
             'category': categories[1].code
@@ -810,7 +806,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         The endpoint should NOT change the other_property and our self.check.property_set
         should NOT point to other_property.
         """
-        other_property = make_recipe('property', disputed=True)
+        other_property = make_recipe('legalaid.property', disputed=True)
         data={
             'property_set': [
                 {'value': 0, 'mortgage_left': 0, 'share': 0, 'id': other_property.pk, 'disputed': False}
@@ -829,9 +825,9 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         """
         PUT should override the values
         """
-        make_recipe('property', eligibility_check=self.check, _quantity=4)
+        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4)
 
-        category2 = make_recipe('category')
+        category2 = make_recipe('legalaid.category')
 
         data={
             'reference': 'just-trying...', # reference should never change

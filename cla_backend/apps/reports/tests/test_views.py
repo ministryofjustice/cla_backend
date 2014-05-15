@@ -1,10 +1,10 @@
 import mock
-from model_mommy import mommy
 
 from django.utils.crypto import get_random_string
 from django.test import SimpleTestCase
-from django.conf import settings
 from django.core.urlresolvers import reverse
+
+from core.tests.mommy_utils import make_user
 
 from ..forms import ProviderCaseClosureReportForm
 
@@ -21,7 +21,7 @@ class ProviderClosureVolumeViewTestCase(SimpleTestCase):
 
     def create_and_login_user(self, is_staff=True):
         random_username = get_random_string(length=10)
-        user = mommy.make(settings.AUTH_USER_MODEL, is_staff=is_staff, is_active=True, username=random_username)
+        user = make_user(is_staff=is_staff, is_active=True, username=random_username)
         user.set_password('password')
         user.save()
 

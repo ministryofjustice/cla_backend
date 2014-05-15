@@ -4,8 +4,6 @@ from checker.serializers import CaseSerializer
 from django.utils.unittest.case import skip
 import mock
 
-from model_mommy import mommy
-
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
@@ -17,17 +15,14 @@ from legalaid.models import Category, EligibilityCheck, Property, \
     Case, PersonalDetails, Person, Income, Savings
 
 from core.tests.test_base import CLABaseApiTestMixin
-
-
-def make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
+from core.tests.mommy_utils import make_recipe
 
 
 class CategoryTests(CLABaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CategoryTests, self).setUp()
 
-        self.categories = make_recipe('category', _quantity=3)
+        self.categories = make_recipe('legalaid.category', _quantity=3)
 
         self.list_url = reverse('checker:category-list')
         self.detail_url = reverse(
@@ -70,13 +65,13 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         super(EligibilityCheckTests, self).setUp()
 
         self.list_url = reverse('checker:eligibility_check-list')
-        self.check = make_recipe('eligibility_check',
-            category=make_recipe('category'),
+        self.check = make_recipe('legalaid.eligibility_check',
+            category=make_recipe('legalaid.category'),
             notes=u'lorem ipsum',
-            you=make_recipe('person',
-                            income=make_recipe('income'),
-                            savings=make_recipe('savings'),
-                            deductions=make_recipe('deductions'))
+            you=make_recipe('legalaid.person',
+                            income=make_recipe('legalaid.income'),
+                            savings=make_recipe('legalaid.savings'),
+                            deductions=make_recipe('legalaid.deductions'))
         )
         self.detail_url = reverse(
             'checker:eligibility_check-detail', args=(),
@@ -204,7 +199,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         CREATE data is not empty
         """
-        make_recipe('category')
+        make_recipe('legalaid.category')
 
         category = Category.objects.all()[0]
         data={
@@ -234,7 +229,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         CREATE data includes `has_partner`
         """
-        make_recipe('category')
+        make_recipe('legalaid.category')
 
         category = Category.objects.all()[0]
         data={
@@ -263,7 +258,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         CREATE data includes over 60
         """
-        make_recipe('category')
+        make_recipe('legalaid.category')
 
         category = Category.objects.all()[0]
         data={
@@ -292,7 +287,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         CREATE data includes `on_passported_benefits`
         """
-        make_recipe('category')
+        make_recipe('legalaid.category')
 
         category = Category.objects.all()[0]
         data={
@@ -321,7 +316,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         PATCHED category is applied
         """
-        make_recipe('category', _quantity=2)
+        make_recipe('legalaid.category', _quantity=2)
 
         category = Category.objects.all()[0]
         category2 = Category.objects.all()[1]
@@ -610,10 +605,10 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         GET should not return properties of other eligibility check objects
         """
-        make_recipe('property', eligibility_check=self.check, _quantity=4)
+        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4)
 
         # making extra properties
-        make_recipe('property', eligibility_check=self.check, _quantity=5)
+        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=5)
 
         self.assertEqual(Property.objects.count(), 9)
 
@@ -639,7 +634,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         PATCH data is not empty so the object should change
         """
-        category2 = make_recipe('category')
+        category2 = make_recipe('legalaid.category')
 
         data={
             'reference': 'just-trying...', # reference should never change
@@ -666,10 +661,10 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         PATCH should add/remove/change properties.
         """
-        properties = make_recipe('property', eligibility_check=self.check, _quantity=4, disputed=False)
+        properties = make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4, disputed=False)
 
         # making extra properties
-        make_recipe('property', _quantity=5)
+        make_recipe('legalaid.property', _quantity=5)
 
         self.assertEqual(self.check.property_set.count(), 4)
 
@@ -826,7 +821,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         The endpoint should NOT change the other_property and our self.check.property_set
         should NOT point to other_property.
         """
-        other_property = make_recipe('property')
+        other_property = make_recipe('legalaid.property')
         data={
             'property_set': [
                 {'value': 0, 'mortgage_left': 0, 'share': 0, 'id': other_property.pk, 'disputed': False}
@@ -845,9 +840,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         PUT should override the values
         """
-        make_recipe('property', eligibility_check=self.check, _quantity=4)
+        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4)
 
-        category2 = make_recipe('category')
+        category2 = make_recipe('legalaid.category')
 
         data={
             'reference': 'just-trying...', # reference should never change
@@ -920,7 +915,7 @@ class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
     def setUp(self):
         super(EligibilityCheckPropertyTests, self).setUp()
 
-        self.check = make_recipe('property',
+        self.check = make_recipe('legalaid.property',
             value=100000,
             mortgage_left=20000,
             share=50,
@@ -1077,7 +1072,7 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
         )
 
     def test_create_with_data(self):
-        check = make_recipe('eligibility_check')
+        check = make_recipe('legalaid.eligibility_check')
 
         data = {
             'eligibility_check': unicode(check.reference),
@@ -1157,7 +1152,7 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
         to another case
         """
         # create a different case
-        case = make_recipe('case')
+        case = make_recipe('legalaid.case')
 
         data = {
             'eligibility_check': unicode(case.eligibility_check.reference),
@@ -1181,7 +1176,7 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
         )
 
     def test_case_serializer_with_dupe_eligibility_check_reference(self):
-        case = make_recipe('case')
+        case = make_recipe('legalaid.case')
 
         data = {u'eligibility_check': case.eligibility_check.reference,
                 u'personal_details': {u'full_name': u'John Doe',

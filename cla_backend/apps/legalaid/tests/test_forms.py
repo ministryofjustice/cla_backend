@@ -1,22 +1,16 @@
 from django.test import TestCase
-from django.conf import settings
 from legalaid.models import CaseLog
 
-from model_mommy import mommy
-
+from core.tests.mommy_utils import make_recipe, make_user
 
 from ..forms import OutcomeForm
 
 
-def make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
-
-
 class OutcomeFormTestCase(TestCase):
     def test_save(self):
-        outcome_codes = make_recipe('logtype', _quantity=2, subtype='outcome')
-        case = make_recipe('case')
-        user = mommy.make(settings.AUTH_USER_MODEL)
+        outcome_codes = make_recipe('legalaid.logtype', _quantity=2, subtype='outcome')
+        case = make_recipe('legalaid.case')
+        user = make_user()
 
         form = OutcomeForm(data={
             'outcome_code': outcome_codes[0].code,

@@ -1,13 +1,10 @@
 from django.test import TestCase
-from django.conf import settings
-
-from model_mommy import mommy
 
 from cla_common.constants import CASE_STATES
 
 from legalaid.models import CaseLog, Case
 
-from core.tests.test_base import make_recipe
+from core.tests.mommy_utils import make_recipe, make_user
 
 from ..forms import CloseCaseForm, AcceptCaseForm, RejectCaseForm
 
@@ -20,12 +17,12 @@ class BaseStateFormTestCase(object):
     def setUp(self):
         super(BaseStateFormTestCase, self).setUp()
 
-        self.user = mommy.make(settings.AUTH_USER_MODEL)
+        self.user = make_user()
         self.outcome_codes = [
-            make_recipe('legalaid.tests.logtype', code="CODE_OPEN", case_state=CASE_STATES.OPEN, subtype='outcome'),
-            make_recipe('legalaid.tests.logtype', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED, subtype='outcome'),
-            make_recipe('legalaid.tests.logtype', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED, subtype='outcome'),
-            make_recipe('legalaid.tests.logtype', code="CODE_CLOSED", case_state=CASE_STATES.CLOSED, subtype='outcome'),
+            make_recipe('legalaid.logtype', code="CODE_OPEN", case_state=CASE_STATES.OPEN, subtype='outcome'),
+            make_recipe('legalaid.logtype', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED, subtype='outcome'),
+            make_recipe('legalaid.logtype', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED, subtype='outcome'),
+            make_recipe('legalaid.logtype', code="CODE_CLOSED", case_state=CASE_STATES.CLOSED, subtype='outcome'),
         ]
 
     def test_choices(self):
@@ -36,7 +33,7 @@ class BaseStateFormTestCase(object):
         )
 
     def test_save_successfull(self):
-        case = make_recipe('legalaid.tests.case', state=CASE_STATES.OPEN)
+        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
 
         self.assertEqual(case.state, CASE_STATES.OPEN)
 
@@ -61,7 +58,7 @@ class BaseStateFormTestCase(object):
         self.assertEqual(outcome.notes, 'lorem ipsum')
 
     def test_invalid_form(self):
-        case = make_recipe('legalaid.tests.case', state=CASE_STATES.OPEN)
+        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
 
         self.assertEqual(case.state, CASE_STATES.OPEN)
 

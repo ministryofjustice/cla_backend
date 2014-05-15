@@ -1,8 +1,6 @@
 import uuid
-from model_mommy import mommy
 
 from django.core.urlresolvers import reverse
-from django.conf import settings
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -11,17 +9,11 @@ from legalaid.models import EligibilityCheck, \
     Case, PersonalDetails
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
+from core.tests.mommy_utils import make_recipe, make_user
 from cla_common.constants import CASE_STATES
 
 from call_centre.serializers import CaseSerializer
 
-
-def make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
-
-
-def cla_provider_make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('cla_provider.tests.%s' % model_name, **kwargs)
 
 
 class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
@@ -29,7 +21,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         super(CaseTests, self).setUp()
 
         self.list_url = reverse('call_centre:case-list')
-        self.case_obj = make_recipe('case')
+        self.case_obj = make_recipe('legalaid.case')
         self.detail_url = reverse(
             'call_centre:case-detail', args=(),
             kwargs={'reference': self.case_obj.reference}
@@ -80,7 +72,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
 
     def test_create_with_data(self):
-        check = make_recipe('eligibility_check')
+        check = make_recipe('legalaid.eligibility_check')
 
         data = {
             'eligibility_check': unicode(check.reference),
@@ -114,7 +106,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.data['in_scope'], None)
 
     def test_create_with_data_in_scope(self):
-        check = make_recipe('eligibility_check')
+        check = make_recipe('legalaid.eligibility_check')
 
         data = {
             'eligibility_check': unicode(check.reference),
@@ -150,7 +142,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
 
     def test_create_with_data_out_scope(self):
-        check = make_recipe('eligibility_check')
+        check = make_recipe('legalaid.eligibility_check')
 
         data = {
             'eligibility_check': unicode(check.reference),
@@ -261,7 +253,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
 
     def test_case_serializer_with_eligibility_check_reference(self):
-        eligibility_check = make_recipe('eligibility_check')
+        eligibility_check = make_recipe('legalaid.eligibility_check')
 
         data = {u'eligibility_check': eligibility_check.reference}
         serializer = CaseSerializer(data=data)
@@ -282,7 +274,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertDictEqual( serializer.errors, {})
 
     def test_case_serializer_with_dupe_eligibility_check_reference(self):
-        case = make_recipe('case')
+        case = make_recipe('legalaid.case')
 
         data = {u'eligibility_check': case.eligibility_check.reference,
                 u'personal_details': {u'full_name': u'John Doe',
@@ -305,7 +297,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         to another case
         """
         # create a different case
-        case = make_recipe('case')
+        case = make_recipe('legalaid.case')
 
         data = {
             'eligibility_check': unicode(case.eligibility_check.reference),
@@ -340,13 +332,13 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_assign_successful(self):
-        case = make_recipe('case')
+        case = make_recipe('legalaid.case')
 
         category = case.eligibility_check.category
-        user = mommy.make(settings.AUTH_USER_MODEL)
-        make_recipe('assign_logtype')
-        provider = cla_provider_make_recipe('provider', active=True)
-        cla_provider_make_recipe('provider_allocation',
+        user = make_user()
+        make_recipe('legalaid.assign_logtype')
+        provider = make_recipe('cla_provider.provider', active=True)
+        make_recipe('cla_provider.provider_allocation',
                                  weighted_distribution=0.5,
                                  provider=provider,
                                  category=category)
@@ -388,7 +380,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         Need to use assign action instead
         """
 
-        provider = cla_provider_make_recipe('provider', active=True)
+        provider = make_recipe('cla_provider.provider', active=True)
         response = self.client.patch(self.detail_url, data={
             'provider': provider.pk
         }, format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token)
@@ -408,7 +400,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_close_successful(self):
-        case = make_recipe('case')
+        case = make_recipe('legalaid.case')
 
         # before being closed, case in the list
         case_list = self.client.get(
@@ -461,7 +453,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         GET search by name should work
         """
 
-        obj = make_recipe('case',
+        obj = make_recipe('legalaid.case',
               reference='ref1',
               personal_details__full_name='xyz',
               personal_details__postcode='123',
@@ -487,7 +479,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         GET search by name should work
         """
 
-        obj = make_recipe('case', provider=self.provider,
+        obj = make_recipe('legalaid.case', provider=self.provider,
                           personal_details__full_name='abc',
                           personal_details__postcode='123')
 
@@ -505,7 +497,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         GET search by name should work
         """
 
-        obj = make_recipe('case', provider=self.provider,
+        obj = make_recipe('legalaid.case', provider=self.provider,
                           personal_details__postcode='123',
                           personal__details__full_name='abc')
 

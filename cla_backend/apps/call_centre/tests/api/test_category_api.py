@@ -1,22 +1,17 @@
-from model_mommy import mommy
-
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
-
-
-def make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
+from core.tests.mommy_utils import make_recipe
 
 
 class CategoryTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CategoryTests, self).setUp()
 
-        self.categories = make_recipe('category', _quantity=3)
+        self.categories = make_recipe('legalaid.category', _quantity=3)
 
         self.list_url = reverse('call_centre:category-list')
         self.detail_url = reverse(

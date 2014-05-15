@@ -1,32 +1,24 @@
 from django.test import TestCase
-from django.conf import settings
 from legalaid.models import CaseLog
-
-from model_mommy import mommy
 
 from cla_common.constants import CASE_STATES
 
-from ..forms import ProviderAllocationForm, CloseCaseForm
+from core.tests.mommy_utils import make_recipe, make_user
 from cla_provider.helpers import ProviderAllocationHelper
 
-def make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('legalaid.tests.%s' % model_name, **kwargs)
-
-
-def cla_provider_make_recipe(model_name, **kwargs):
-    return mommy.make_recipe('cla_provider.tests.%s' % model_name, **kwargs)
+from ..forms import ProviderAllocationForm, CloseCaseForm
 
 
 class ProviderAllocationFormTestCase(TestCase):
     def setUp(self):
-        make_recipe('assign_logtype')
+        make_recipe('legalaid.assign_logtype')
 
     def test_save(self):
-        case = make_recipe('case')
+        case = make_recipe('legalaid.case')
         category = case.eligibility_check.category
-        user = mommy.make(settings.AUTH_USER_MODEL)
-        provider = cla_provider_make_recipe('provider', active=True)
-        cla_provider_make_recipe('provider_allocation',
+        user = make_user()
+        provider = make_recipe('cla_provider.provider', active=True)
+        make_recipe('cla_provider.provider_allocation',
                                       weighted_distribution=0.5,
                                       provider=provider,
                                       category=category)
@@ -47,7 +39,7 @@ class ProviderAllocationFormTestCase(TestCase):
         self.assertEqual(CaseLog.objects.count(),1)
 
     def test_not_valid_with_no_valid_provider_for_category(self):
-        case = make_recipe('case')
+        case = make_recipe('legalaid.case')
 
         form = ProviderAllocationForm(data={},
                                       providers=[])
@@ -58,8 +50,8 @@ class ProviderAllocationFormTestCase(TestCase):
 
 class CloseCaseFormTestCase(TestCase):
     def test_save(self):
-        user = mommy.make(settings.AUTH_USER_MODEL)
-        case = make_recipe('case', state=CASE_STATES.OPEN)
+        user = make_user()
+        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
 
         form = CloseCaseForm(data={})
 

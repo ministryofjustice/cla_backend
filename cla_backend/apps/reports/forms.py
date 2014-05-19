@@ -3,6 +3,7 @@ from datetime import timedelta, time, datetime
 from django import forms
 from django.utils import timezone
 from django.contrib.admin import widgets
+from django.template.defaulttags import date
 
 from cla_common.constants import CASE_STATES
 from legalaid.constants import CASELOGTYPE_SUBTYPES
@@ -31,7 +32,8 @@ class ProviderCaseClosureReportForm(ConvertDateMixin, forms.Form):
 
         return CaseLog.objects.filter(
             created__range=(date_from, date_to),
-            logtype__in=[oc.pk for oc in CaseLogType.objects.filter(case_state=CASE_STATES.CLOSED, subtype=CASELOGTYPE_SUBTYPES.OUTCOME)],
+            logtype__subtype=CASELOGTYPE_SUBTYPES.OUTCOME,
+            logtype__case_state__in=[CASE_STATES.CLOSED, CASE_STATES.REJECTED],
             case__provider=self.cleaned_data['provider'],
         ).order_by('created').values_list(
             'case__reference', 'created', 'logtype__code',
@@ -46,8 +48,9 @@ class ProviderCaseClosureReportForm(ConvertDateMixin, forms.Form):
         qs = self.get_queryset()
         for outcome_data in qs:
             total += 1
+            local_dt = timezone.localtime(outcome_data[1])
             yield [
-                outcome_data[0], outcome_data[1].strftime('%d/%m/%Y %H:%M'),
+                outcome_data[0], date(local_dt, "d/m/o H:i"),
                 outcome_data[2], outcome_data[3]
             ]
 

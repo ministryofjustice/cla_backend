@@ -22,16 +22,19 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
                 date to: 15/04/2014
 
             Cases / Outcomes:
-                ref '1': provider 1, closure date (16/04/2014 00:00) => excluded
+                ref '1': provider 1, closure date (16/04/2014 00:01) => excluded
                 ref '2': provider 1, closure date (15/04/2014 23:59) => included
-                ref '3': provider 2, closure date (02/04/2014 00:01) => excluded
-                ref '4': provider 1, closure date (02/04/2014 00:01) => included
-                ref '5': provider 1, closure date (02/04/2014 00:00) => included
-                ref '6': provider 1, closure date (01/04/2014 23:59) => excluded
-                ref '7': provider 1, no closure => excluded
+                ref '3': provider 1, rejected date (15/04/2014 23:59) => included
+                ref '4': provider 1, accepted date (15/04/2014 23:59) => excluded
+                ref '5': provider 2, closure date (02/04/2014 00:01) => excluded
+                ref '6': provider 1, closure date (02/04/2014 00:01) => included
+                ref '7': provider 1, closure date (02/04/2014 00:00) => included
+                ref '8': provider 1, closure date (01/04/2014 23:59) => excluded
+                ref '9': provider 1, rejected date (01/04/2014 23:59) => excluded
+                ref '10': provider 1, no closure => excluded
 
             Result:
-                [5, 4, 2] - [Total: 3]
+                [7, 6, 3, 2] - [Total: 4]
 
         """
         providers = make_recipe('cla_provider.provider', active=True, _quantity=2)
@@ -50,13 +53,16 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
                 created=closure_date.replace(tzinfo=timezone.utc)
             )
 
-        create_db_record('1', '2014-04-16T01:00', providers[0])
-        create_db_record('2', '2014-04-15T00:59', providers[0])
-        create_db_record('3', '2014-04-02T01:01', providers[1])
-        create_db_record('4', '2014-04-02T01:01', providers[0])
-        create_db_record('5', '2014-04-02T01:00', providers[0])
-        create_db_record('6', '2014-04-01T00:59', providers[0])
-        create_db_record('7', '2014-04-01T00:59', providers[0], case_state=CASE_STATES.OPEN)
+        create_db_record('1', '2014-04-15T23:01', providers[0], case_state=CASE_STATES.CLOSED)
+        create_db_record('2', '2014-04-15T22:59', providers[0], case_state=CASE_STATES.CLOSED)
+        create_db_record('3', '2014-04-15T22:59', providers[0], case_state=CASE_STATES.REJECTED)
+        create_db_record('4', '2014-04-15T22:59', providers[0], case_state=CASE_STATES.ACCEPTED)
+        create_db_record('5', '2014-04-01T23:01', providers[1], case_state=CASE_STATES.CLOSED)
+        create_db_record('6', '2014-04-01T23:01', providers[0], case_state=CASE_STATES.CLOSED)
+        create_db_record('7', '2014-04-01T23:00', providers[0], case_state=CASE_STATES.CLOSED)
+        create_db_record('8', '2014-04-01T22:59', providers[0], case_state=CASE_STATES.CLOSED)
+        create_db_record('9', '2014-04-01T22:59', providers[0], case_state=CASE_STATES.REJECTED)
+        create_db_record('10', '2014-04-01T22:59', providers[0], case_state=CASE_STATES.OPEN)
 
 
         # form, non-empty result
@@ -71,11 +77,12 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
         rows = list(form.get_rows())
         self.assertEqual(rows,
             [
-                [u'5', '02/04/2014 01:00', u'outcome_5', u'Category_5'],
-                [u'4', '02/04/2014 01:01', u'outcome_4', u'Category_4'],
-                [u'2', '15/04/2014 00:59', u'outcome_2', u'Category_2'],
+                [u'7', '02/04/2014 00:00', u'outcome_7', u'Category_7'],
+                [u'6', '02/04/2014 00:01', u'outcome_6', u'Category_6'],
+                [u'3', '15/04/2014 23:59', u'outcome_3', u'Category_3'],
+                [u'2', '15/04/2014 23:59', u'outcome_2', u'Category_2'],
                 [],
-                ['Total: 3']
+                ['Total: 4']
             ]
         )
 

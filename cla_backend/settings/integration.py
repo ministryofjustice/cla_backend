@@ -22,4 +22,12 @@ DATABASES = {
     }
 }
 
+RAVEN_CONFIG = {
+    'dsn': 'https://298cb46e45fd412ebb49ac1f243db641:21c7e1c2d56b43d093737de1f7cc3019@app.getsentry.com/23077',
+}
+
+INSTALLED_APPS += (
+    'raven.contrib.django.raven_compat',
+)
+
 #HOST_NAME = "http://"

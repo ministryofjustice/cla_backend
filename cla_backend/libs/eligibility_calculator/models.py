@@ -1,5 +1,5 @@
 from . import exceptions
-
+from legalaid.fields import MoneyInterval
 
 class ModelMixin(object):
     PROPERTY_META = None
@@ -57,7 +57,12 @@ class Income(ModelMixin, object):
 
     @property
     def total(self):
-        return self.earnings + self.other_income
+        if isinstance(self.earnings, MoneyInterval):
+            earnings = self.earnings.as_monthly()
+        else:
+            earnings = self.earnings
+
+        return earnings + self.other_income
 
 
 class Deductions(ModelMixin, object):

@@ -421,3 +421,23 @@ class CaseTestCase(TestCase):
 
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, CASE_STATES.CLOSED)
+
+
+from cla_backend.apps.legalaid.models import Income
+from cla_backend.apps.legalaid.fields import MoneyInterval
+
+class MoneyFieldTestCase(TestCase):
+    def test_assign_to_provider_overriding_provider(self):
+
+        ei = MoneyInterval(interval_period='per_week')
+        ei.set_as_pennies(5000)
+
+        i = Income(earnings=ei, other_income=200, self_employed=True)
+        self.assertEqual(i.earnings.interval_period, 'per_week')
+        i.save()
+
+        ix = Income.objects.get(id=i.id)
+        eix = ix.earnings
+        self.assertEqual(eix.interval_period, 'per_week')
+        self.assertEqual(eix.per_interval_value, 5000)
+        self.assertEqual(eix.value, 20000)

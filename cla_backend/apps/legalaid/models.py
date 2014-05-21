@@ -17,7 +17,7 @@ from cla_common.constants import ELIGIBILITY_STATES, CASE_STATES
 
 
 from legalaid.exceptions import InvalidMutationException
-from legalaid.fields import MoneyField
+from legalaid.fields import MoneyField, MoneyIntervalField
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ class Savings(TimeStampedModel):
 
 
 class Income(TimeStampedModel):
-    earnings = MoneyField(default=0)
+    earnings = MoneyIntervalField()
     other_income = MoneyField(default=0)
     self_employed = models.BooleanField(default=False)
 

@@ -48,3 +48,18 @@ class Staff(TimeStampedModel):
     user = models.OneToOneField('auth.User')
     provider = models.ForeignKey(Provider)
     is_staff_superuser = models.BooleanField(default=False)
+
+class OutOfHoursRota(TimeStampedModel):
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    category = models.ForeignKey('legalaid.Category')
+    provider = models.ForeignKey(Provider)
+
+    def __unicode__(self):
+        return u'%s provides out of hours service for %s between %s - %s' \
+               % (
+            self.provider,
+            self.category.code,
+            self.start_date,
+            self.end_date
+        )

@@ -6,14 +6,15 @@ from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter
 
 from cla_common.constants import CASE_STATES
-from cla_provider.models import Provider
+from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
 from core.viewsets import IsEligibleActionViewSetMixin
 
 from .permissions import CallCentreClientIDPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
-    CaseSerializer, ProviderSerializer, CaseLogSerializer
+    CaseSerializer, ProviderSerializer, CaseLogSerializer, \
+    OutOfHoursRotaSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm
 
 
@@ -126,3 +127,14 @@ class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
     serializer_class = ProviderSerializer
 
     queryset = Provider.objects.active()
+
+class OutOfHoursRotaViewSet(
+    CallCentrePermissionsViewSetMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet):
+
+    serializer_class = OutOfHoursRotaSerializer
+    model = OutOfHoursRota

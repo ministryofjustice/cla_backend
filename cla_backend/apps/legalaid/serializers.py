@@ -1,8 +1,7 @@
-from legalaid.constants import CASELOGTYPE_SUBTYPES
 from rest_framework import serializers
 
 from core.serializers import UUIDSerializer
-from cla_provider.models import Provider
+from cla_provider.models import Provider, OutOfHoursRota
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, CaseLog, CaseLogType
@@ -21,6 +20,14 @@ class CaseLogTypeSerializerBase(serializers.HyperlinkedModelSerializer):
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Provider
+
+class OutOfHoursRotaSerializerBase(serializers.ModelSerializer):
+
+    category = serializers.SlugRelatedField(slug_field='code')
+    provider = serializers.PrimaryKeyRelatedField()
+
+    class Meta:
+        model = OutOfHoursRota
 
 
 class PropertySerializerBase(serializers.ModelSerializer):

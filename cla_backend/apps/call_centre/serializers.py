@@ -8,7 +8,8 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
-    CaseLogSerializerBase, CaseLogTypeSerializerBase
+    CaseLogSerializerBase, CaseLogTypeSerializerBase, \
+    OutOfHoursRotaSerializerBase
 
 
 class CategorySerializer(CategorySerializerBase):
@@ -141,3 +142,12 @@ class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
         fields = ('name', 'id', 'short_code', 'telephone_frontdoor', 'telephone_backdoor')
 
+class OutOfHoursRotaSerializer(OutOfHoursRotaSerializerBase):
+    class Meta(OutOfHoursRotaSerializerBase.Meta):
+        fields = (
+            'id',
+            'start_date',
+            'end_date',
+            'category',
+            'provider',
+        )

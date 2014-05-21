@@ -7,7 +7,7 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase, CaseLogTypeSerializerBase, \
-    ProviderSerializerBase, CaseLogSerializerBase
+    ProviderSerializerBase, CaseLogSerializerBase, OutOfHoursRotaSerializerBase
 
 
 class CategorySerializer(CategorySerializerBase):
@@ -142,7 +142,7 @@ class CaseSerializer(CaseSerializerBase):
             'notes', 'provider_notes'
         )
 
-
 class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
         fields = ('name', 'id')
+

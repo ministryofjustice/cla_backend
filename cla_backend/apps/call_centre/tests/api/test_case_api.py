@@ -336,7 +336,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         category = case.eligibility_check.category
         user = make_user()
-        make_recipe('legalaid.assign_logtype')
+        make_recipe('legalaid.refsp_logtype')
         provider = make_recipe('cla_provider.provider', active=True)
         make_recipe('cla_provider.provider_allocation',
                                  weighted_distribution=0.5,

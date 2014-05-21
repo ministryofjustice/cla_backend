@@ -133,7 +133,7 @@ class OperatorCaseClosureReportFormTestCase(TestCase):
 
         """
         providers = make_recipe('cla_provider.provider', active=True, _quantity=2)
-        caselogtype = make_recipe('legalaid.logtype', code='ASSIGN', subtype=CASELOGTYPE_SUBTYPES.SYSTEM)
+        caselogtype = make_recipe('legalaid.refsp_logtype')
 
         # form, empty results
         form = OperatorCaseClosureReportForm({
@@ -191,10 +191,10 @@ class OperatorCaseClosureReportFormTestCase(TestCase):
         rows = list(form.get_rows())
         self.assertEqual(rows,
                          [
-                             [u'5', '02/04/2014 00:56', '02/04/2014 01:00', 200, u'ASSIGN', u'Name1'],
-                             [u'3', '02/04/2014 00:57', '02/04/2014 01:01', 200, u'ASSIGN', u'Name2'],
-                             [u'4', '02/04/2014 00:57', '02/04/2014 01:01', 200, u'ASSIGN', u'Name1'],
-                             [u'2', '15/04/2014 00:55', '15/04/2014 00:59', 200, u'ASSIGN', u'Name1'],
+                             [u'5', '02/04/2014 00:56', '02/04/2014 01:00', 200, u'REFSP', u'Name1'],
+                             [u'3', '02/04/2014 00:57', '02/04/2014 01:01', 200, u'REFSP', u'Name2'],
+                             [u'4', '02/04/2014 00:57', '02/04/2014 01:01', 200, u'REFSP', u'Name1'],
+                             [u'2', '15/04/2014 00:55', '15/04/2014 00:59', 200, u'REFSP', u'Name1'],
                              [],
                              ['Total: 4'],
                              ['Average Duration: 200']

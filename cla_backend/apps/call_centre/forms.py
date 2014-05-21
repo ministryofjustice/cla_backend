@@ -9,7 +9,7 @@ from legalaid.forms import BaseCaseLogForm
 
 class ProviderAllocationForm(BaseCaseLogForm):
 
-    CASELOGTYPE_CODE = 'ASSIGN'
+    CASELOGTYPE_CODE = 'REFSP'
 
     provider = forms.ChoiceField()
 

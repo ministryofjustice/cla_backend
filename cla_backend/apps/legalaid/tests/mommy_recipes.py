@@ -37,7 +37,7 @@ case = Recipe(Case,
 logtype = Recipe(CaseLogType)
 
 outcome_code = Recipe(CaseLogType, subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
-assign_logtype = Recipe(CaseLogType, code='ASSIGN', subtype=CASELOGTYPE_SUBTYPES.SYSTEM)
+refsp_logtype = Recipe(CaseLogType, code='REFSP', subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
 
 case_log = Recipe(CaseLog,
     case=foreign_key(case),

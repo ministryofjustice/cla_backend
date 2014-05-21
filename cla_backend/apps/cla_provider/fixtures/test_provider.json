@@ -1,139 +1,392 @@
 [
 	{
-	    "pk": 1, 
-	    "model": "cla_provider.provider", 
+	    "pk": 1,
+	    "model": "cla_provider.provider",
 	    "fields": {
-	        "name": "SnakeOil Legal Services", 
-	        "created": "2014-04-04T16:42:53.828Z", 
-	        "short_code": "*035#", 
-	        "opening_hours": "9-5M-F", 
-	        "telephone_frontdoor": "0845 111 1111", 
-	        "telephone_backdoor": "0845 111 1112", 
-	        "modified": "2014-05-14T14:37:48.781Z", 
+	        "name": "Duncan Lewis",
+	        "created": "2014-04-04T16:42:53.828Z",
+	        "short_code": "*001#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "0845 111 1111",
+	        "telephone_backdoor": "0845 111 1112",
+	        "modified": "2014-05-14T14:37:48.781Z",
 	        "active": true
 	    }
 	},
 	{
-	    "pk": 2, 
-	    "model": "cla_provider.provider", 
+	    "pk": 2,
+	    "model": "cla_provider.provider",
 	    "fields": {
-	        "name": "Better Call Saul LLP", 
-	        "created": "2014-04-23T14:59:44.417Z", 
-	        "short_code": "*001#", 
-	        "opening_hours": "9-5M-F", 
-	        "telephone_frontdoor": "1-800-helpdesk", 
-	        "telephone_backdoor": "1-800-receiption", 
-	        "modified": "2014-05-14T14:37:26.176Z", 
+	        "name": "DHA",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*002#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
 	        "active": true
 	    }
 	},
 	{
-	    "pk": 1, 
-	    "model": "cla_provider.providerallocation", 
+	    "pk": 3,
+	    "model": "cla_provider.provider",
 	    "fields": {
-	        "category": 1, 
-	        "provider": 1, 
-	        "weighted_distribution": 0.5, 
-	        "modified": "2014-04-23T14:47:01.468Z", 
+	        "name": "CES",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*003#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
+	        "active": true
+	    }
+	},
+	{
+	    "pk": 4,
+	    "model": "cla_provider.provider",
+	    "fields": {
+	        "name": "Shelter",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*004#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
+	        "active": true
+	    }
+	},
+	{
+	    "pk": 5,
+	    "model": "cla_provider.provider",
+	    "fields": {
+	        "name": "Ty Arian",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*005#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
+	        "active": true
+	    }
+	},
+	{
+	    "pk": 6,
+	    "model": "cla_provider.provider",
+	    "fields": {
+	        "name": "Coop",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*006#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
+	        "active": true
+	    }
+	},
+	{
+	    "pk": 7,
+	    "model": "cla_provider.provider",
+	    "fields": {
+	        "name": "FLG",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*007#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
+	        "active": true
+	    }
+	},
+	{
+	    "pk": 8,
+	    "model": "cla_provider.provider",
+	    "fields": {
+	        "name": "MG Law",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*008#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
+	        "active": true
+	    }
+	},
+	{
+	    "pk": 9,
+	    "model": "cla_provider.provider",
+	    "fields": {
+	        "name": "CLC",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*009#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
+	        "active": true
+	    }
+	},
+	{
+	    "pk": 10,
+	    "model": "cla_provider.provider",
+	    "fields": {
+	        "name": "THLC",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*010#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
+	        "active": true
+	    }
+	},
+	{
+	    "pk": 11,
+	    "model": "cla_provider.provider",
+	    "fields": {
+	        "name": "Howells",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*011#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
+	        "active": true
+	    }
+	},
+	{
+	    "pk": 12,
+	    "model": "cla_provider.provider",
+	    "fields": {
+	        "name": "MEL",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*012#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
+	        "active": true
+	    }
+	},
+	{
+	    "pk": 13,
+	    "model": "cla_provider.provider",
+	    "fields": {
+	        "name": "Stephensons",
+	        "created": "2014-04-23T14:59:44.417Z",
+	        "short_code": "*013#",
+	        "opening_hours": "9-5M-F",
+	        "telephone_frontdoor": "1-800-helpdesk",
+	        "telephone_backdoor": "1-800-receiption",
+	        "modified": "2014-05-14T14:37:26.176Z",
+	        "active": true
+	    }
+	},
+	{
+	    "pk": 1,
+	    "model": "cla_provider.providerallocation",
+	    "fields": {
+	        "category": 3,
+	        "provider": 1,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:47:01.468Z",
 	        "created": "2014-04-23T14:47:01.438Z"
 	    }
 	},
 	{
-	    "pk": 2, 
-	    "model": "cla_provider.providerallocation", 
+	    "pk": 2,
+	    "model": "cla_provider.providerallocation",
 	    "fields": {
-	        "category": 2, 
-	        "provider": 1, 
-	        "weighted_distribution": 0.5, 
-	        "modified": "2014-04-23T14:47:01.472Z", 
+	        "category": 2,
+	        "provider": 1,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:47:01.472Z",
 	        "created": "2014-04-23T14:47:01.442Z"
 	    }
 	},
 	{
-	    "pk": 3, 
-	    "model": "cla_provider.providerallocation", 
+	    "pk": 3,
+	    "model": "cla_provider.providerallocation",
 	    "fields": {
-	        "category": 3, 
-	        "provider": 1, 
-	        "weighted_distribution": 0.5, 
-	        "modified": "2014-04-23T14:47:01.472Z", 
+	        "category": 4,
+	        "provider": 1,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:47:01.472Z",
 	        "created": "2014-04-23T14:47:01.442Z"
 	    }
 	},
 	{
-	    "pk": 4, 
-	    "model": "cla_provider.providerallocation", 
+	    "pk": 4,
+	    "model": "cla_provider.providerallocation",
 	    "fields": {
-	        "category": 4, 
-	        "provider": 1, 
-	        "weighted_distribution": 0.5, 
-	        "modified": "2014-04-23T14:47:01.472Z", 
+	        "category": 3,
+	        "provider": 2,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:47:01.472Z",
 	        "created": "2014-04-23T14:47:01.442Z"
 	    }
 	},
 	{
-	    "pk": 5, 
-	    "model": "cla_provider.providerallocation", 
+	    "pk": 5,
+	    "model": "cla_provider.providerallocation",
 	    "fields": {
-	        "category": 5, 
-	        "provider": 1, 
-	        "weighted_distribution": 0.5, 
-	        "modified": "2014-04-23T14:47:01.472Z", 
+	        "category": 2,
+	        "provider": 2,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:47:01.472Z",
 	        "created": "2014-04-23T14:47:01.442Z"
 	    }
 	},
 	{
-	    "pk": 6, 
-	    "model": "cla_provider.providerallocation", 
+	    "pk": 6,
+	    "model": "cla_provider.providerallocation",
 	    "fields": {
-	        "category": 6, 
-	        "provider": 1, 
-	        "weighted_distribution": 0.5, 
-	        "modified": "2014-04-23T14:47:01.472Z", 
+	        "category": 3,
+	        "provider": 3,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:47:01.472Z",
 	        "created": "2014-04-23T14:47:01.442Z"
 	    }
 	},
 	{
-	    "pk": 7, 
-	    "model": "cla_provider.providerallocation", 
+	    "pk": 7,
+	    "model": "cla_provider.providerallocation",
 	    "fields": {
-	        "category": 7, 
-	        "provider": 1, 
-	        "weighted_distribution": 0.5, 
-	        "modified": "2014-04-23T14:47:01.472Z", 
+	        "category": 2,
+	        "provider": 3,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:47:01.472Z",
 	        "created": "2014-04-23T14:47:01.442Z"
 	    }
 	},
 	{
-	    "pk": 8, 
-	    "model": "cla_provider.providerallocation", 
+	    "pk": 8,
+	    "model": "cla_provider.providerallocation",
 	    "fields": {
-	        "category": 8, 
-	        "provider": 1, 
-	        "weighted_distribution": 0.5, 
-	        "modified": "2014-04-23T14:47:01.472Z", 
+	        "category": 3,
+	        "provider": 4,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:47:01.472Z",
 	        "created": "2014-04-23T14:47:01.442Z"
 	    }
 	},
 	{
-	    "pk": 9, 
-	    "model": "cla_provider.providerallocation", 
+	    "pk": 9,
+	    "model": "cla_provider.providerallocation",
 	    "fields": {
-	        "category": 4, 
-	        "provider": 2, 
-	        "weighted_distribution": 3.0, 
-	        "modified": "2014-04-23T14:59:44.467Z", 
+	        "category": 2,
+	        "provider": 4,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:59:44.467Z",
 	        "created": "2014-04-23T14:59:44.430Z"
 	    }
 	},
 	{
-	    "pk": 10, 
-	    "model": "cla_provider.providerallocation", 
+	    "pk": 10,
+	    "model": "cla_provider.providerallocation",
 	    "fields": {
-	        "category": 7, 
-	        "provider": 2, 
-	        "weighted_distribution": 0.3, 
-	        "modified": "2014-04-23T14:59:44.468Z", 
+	        "category": 3,
+	        "provider": 5,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:59:44.468Z",
+	        "created": "2014-04-23T14:59:44.434Z"
+	    }
+	},
+	{
+	    "pk": 11,
+	    "model": "cla_provider.providerallocation",
+	    "fields": {
+	        "category": 2,
+	        "provider": 5,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:59:44.468Z",
+	        "created": "2014-04-23T14:59:44.434Z"
+	    }
+	},
+	{
+	    "pk": 12,
+	    "model": "cla_provider.providerallocation",
+	    "fields": {
+	        "category": 4,
+	        "provider": 6,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:59:44.468Z",
+	        "created": "2014-04-23T14:59:44.434Z"
+	    }
+	},
+	{
+	    "pk": 13,
+	    "model": "cla_provider.providerallocation",
+	    "fields": {
+	        "category": 4,
+	        "provider": 7,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:59:44.468Z",
+	        "created": "2014-04-23T14:59:44.434Z"
+	    }
+	},
+	{
+	    "pk": 14,
+	    "model": "cla_provider.providerallocation",
+	    "fields": {
+	        "category": 7,
+	        "provider": 8,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:59:44.468Z",
+	        "created": "2014-04-23T14:59:44.434Z"
+	    }
+	},
+	{
+	    "pk": 15,
+	    "model": "cla_provider.providerallocation",
+	    "fields": {
+	        "category": 7,
+	        "provider": 9,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:59:44.468Z",
+	        "created": "2014-04-23T14:59:44.434Z"
+	    }
+	},
+	{
+	    "pk": 16,
+	    "model": "cla_provider.providerallocation",
+	    "fields": {
+	        "category": 7,
+	        "provider": 10,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:59:44.468Z",
+	        "created": "2014-04-23T14:59:44.434Z"
+	    }
+	},
+	{
+	    "pk": 17,
+	    "model": "cla_provider.providerallocation",
+	    "fields": {
+	        "category": 8,
+	        "provider": 11,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:59:44.468Z",
+	        "created": "2014-04-23T14:59:44.434Z"
+	    }
+	},
+	{
+	    "pk": 18,
+	    "model": "cla_provider.providerallocation",
+	    "fields": {
+	        "category": 8,
+	        "provider": 12,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:59:44.468Z",
+	        "created": "2014-04-23T14:59:44.434Z"
+	    }
+	},
+	{
+	    "pk": 19,
+	    "model": "cla_provider.providerallocation",
+	    "fields": {
+	        "category": 8,
+	        "provider": 13,
+	        "weighted_distribution": 0.5,
+	        "modified": "2014-04-23T14:59:44.468Z",
 	        "created": "2014-04-23T14:59:44.434Z"
 	    }
 	},
@@ -174,24 +427,24 @@
         }
     },
 	{
-	    "pk": 2, 
-	    "model": "cla_provider.staff", 
+	    "pk": 2,
+	    "model": "cla_provider.staff",
 	    "fields": {
-	        "is_staff_superuser": false, 
-	        "user": 4, 
-	        "provider": 2, 
-	        "modified": "2014-05-02T11:10:02.439Z", 
+	        "is_staff_superuser": false,
+	        "user": 4,
+	        "provider": 2,
+	        "modified": "2014-05-02T11:10:02.439Z",
 	        "created": "2014-05-02T11:10:02.420Z"
 	    }
 	},
 	{
-	    "pk": 3, 
-	    "model": "cla_provider.staff", 
+	    "pk": 3,
+	    "model": "cla_provider.staff",
 	    "fields": {
-	        "is_staff_superuser": false, 
-	        "user": 5, 
-	        "provider": 1, 
-	        "modified": "2014-05-02T11:10:32.044Z", 
+	        "is_staff_superuser": false,
+	        "user": 5,
+	        "provider": 1,
+	        "modified": "2014-05-02T11:10:32.044Z",
 	        "created": "2014-05-02T11:10:31.961Z"
 	    }
 	}

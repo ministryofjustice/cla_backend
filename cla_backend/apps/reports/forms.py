@@ -68,7 +68,7 @@ class OperatorCaseClosureReportForm(ConvertDateMixin, forms.Form):
 
         return CaseLog.objects.filter(
             created__range=(date_from, date_to),
-            logtype=CaseLogType.objects.get(code='ASSIGN'),
+            logtype=CaseLogType.objects.get(code='REFSP'),
             ).order_by('created').values_list(
             'case__reference', 'case__created', 'created', 'logtype__code', 'case__provider__name'
         )

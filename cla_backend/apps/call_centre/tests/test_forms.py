@@ -11,7 +11,7 @@ from ..forms import ProviderAllocationForm, CloseCaseForm
 
 class ProviderAllocationFormTestCase(TestCase):
     def setUp(self):
-        make_recipe('legalaid.assign_logtype')
+        make_recipe('legalaid.refsp_logtype')
 
     def test_save(self):
         case = make_recipe('legalaid.case')

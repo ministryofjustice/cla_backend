@@ -94,7 +94,7 @@ class MoneyIntervalField(models.BigIntegerField):
         'invalid': _("'%(value)s' value must be an MoneyInterval dictionary."),
     }
         
-    def __init__(self, max_value=9999999997, min_value=0, *args, **kwargs):
+    def __init__(self, max_value=9999999999, min_value=0, *args, **kwargs):
         #self.max_value, self.min_value = max_value, min_value
         #kwargs['coerce'] = kwargs.pop('coerce', int)
         #kwargs['widget'] = forms.NumberInput
@@ -177,17 +177,17 @@ class MoneyIntervalField(models.BigIntegerField):
     # implement it here, as the DateField baseclass will just call strftime on
     # our FuzzyDate object, which is something we support.
 
-# 
-# add_introspection_rules([
-#     (
-#         [MoneyField], # Class(es) these apply to
-#         [],         # Positional arguments (not used)
-#         {           # Keyword argument
-#             "min_value": ["min_value", {"default": None}],
-#             "max_value": ["max_value", {"default": None}],
-#         },
-#     ),
-# ], ["^legalaid\.fields\.MoneyField"])
+ 
+add_introspection_rules([
+    (
+        [MoneyIntervalField], # Class(es) these apply to
+        [],         # Positional arguments (not used)
+        {           # Keyword argument
+            #"min_value": ["min_value", {"default": None}],
+            #"max_value": ["max_value", {"default": None}],
+        },
+    ),
+], ["^legalaid\.fields\.MoneyIntervalField"])
 
 
 

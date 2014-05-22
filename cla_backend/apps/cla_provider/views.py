@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 
 from rest_framework import viewsets, mixins, status
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.decorators import action
+from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
 
 from core.viewsets import DefaultStateFilterViewSetMixin, \
@@ -11,12 +12,13 @@ from cla_common.constants import CASE_STATES
 
 from legalaid.exceptions import InvalidMutationException
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
+from legalaid.views import BaseUserViewSet
 from call_centre.serializers import CaseLogTypeSerializer
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import CategorySerializer, \
-    EligibilityCheckSerializer, CaseSerializer
+    EligibilityCheckSerializer, CaseSerializer, StaffSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
 from legalaid.constants import CASELOGTYPE_SUBTYPES
 
@@ -155,3 +157,19 @@ class CaseViewSet(
         Closes a case
         """
         return self._state_form_action(request, Form=CloseCaseForm)
+
+
+class UserViewSet(
+    CLAProviderPermissionViewSetMixin,
+    BaseUserViewSet
+):
+    model = Staff
+    serializer_class = StaffSerializer
+
+    def get_queryset(self):
+        this_provider = get_object_or_404(Staff, user=self.request.user).provider
+        qs = super(UserViewSet, self).get_queryset().filter(provider=this_provider)
+        return qs
+
+    def get_logged_in_user_model(self):
+        return self.request.user.staff

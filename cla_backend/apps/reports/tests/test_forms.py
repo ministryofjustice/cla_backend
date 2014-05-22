@@ -54,7 +54,7 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
             )
 
         create_db_record('1', '2014-04-15T23:01', providers[0], case_state=CASE_STATES.CLOSED)
-        create_db_record('2', '2014-04-15T22:59', providers[0], case_state=CASE_STATES.CLOSED)
+        create_db_record('2', '2014-04-15T22:59:01', providers[0], case_state=CASE_STATES.CLOSED)
         create_db_record('3', '2014-04-15T22:59', providers[0], case_state=CASE_STATES.REJECTED)
         create_db_record('4', '2014-04-15T22:59', providers[0], case_state=CASE_STATES.ACCEPTED)
         create_db_record('5', '2014-04-01T23:01', providers[1], case_state=CASE_STATES.CLOSED)

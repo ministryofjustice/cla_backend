@@ -1,0 +1,34 @@
+from django.http import Http404
+
+from rest_framework import viewsets, mixins
+
+
+class BaseUserViewSet(
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
+
+    me_lookup_url_kwargs = 'me'
+
+    def get_queryset(self):
+        qs = super(BaseUserViewSet, self).get_queryset()
+        return qs.filter(user__is_active=True)
+
+    def get_logged_in_user_model(self):
+        raise NotImplementedError()
+
+    def get_object(self, *args, **kwargs):
+        """
+        Lock the object every time it's requested
+        """
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        lookup = self.kwargs.get(lookup_url_kwarg, None)
+
+        # for now, you can only access to the user/me/ object, for security
+        # reasons. We'll probably change this in the future to allow service
+        # managers to add/update/delete users from their area.
+        if lookup != self.me_lookup_url_kwargs:
+            raise Http404
+
+        self.kwargs[lookup_url_kwarg] = self.get_logged_in_user_model().pk
+        return super(BaseUserViewSet, self).get_object(*args, **kwargs)

@@ -7,7 +7,9 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase, CaseLogTypeSerializerBase, \
-    ProviderSerializerBase, CaseLogSerializerBase
+    ProviderSerializerBase, CaseLogSerializerBase, ExtendedUserSerializerBase
+
+from .models import Staff
 
 
 class CategorySerializer(CategorySerializerBase):
@@ -146,3 +148,14 @@ class CaseSerializer(CaseSerializerBase):
 class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
         fields = ('name', 'id')
+
+
+class StaffSerializer(ExtendedUserSerializerBase):
+    provider = ProviderSerializer(read_only=True)
+
+    class Meta:
+        model = Staff
+        fields = (
+            'username', 'first_name', 'last_name', 'email', 'provider',
+            'is_staff_superuser'
+        )

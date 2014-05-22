@@ -394,7 +394,7 @@
         "pk": 4,
         "model": "auth.user",
         "fields": {
-            "username": "test_saul",
+            "username": "test_dha",
             "first_name": "",
             "last_name": "",
             "is_active": true,
@@ -403,7 +403,7 @@
             "last_login": "2014-05-02T11:09:56.986Z",
             "groups": [],
             "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$hLPjhn97nZFU$YaUjODDJyTrqYJrTi9D78Schsnrt4PXj/Zoow1rbKbo=",
+            "password": "pbkdf2_sha256$12000$7HdnXaKnil02$bLpukK5YwJ1IK6/cn9WyRSJ/6tj0VgpzXQT3HR/Avfw=",
             "email": "",
             "date_joined": "2014-05-02T11:09:56.986Z"
         }

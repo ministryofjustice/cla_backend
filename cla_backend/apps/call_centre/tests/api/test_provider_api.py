@@ -1,4 +1,6 @@
 from datetime import timedelta
+from itertools import cycle
+from dateutil import parser
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 
@@ -87,7 +89,10 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
     def setUp(self):
         super(OutOfHoursRotaTests, self).setUp()
-        self.providers = make_recipe('cla_provider.provider', active=True, _quantity=3)
+        self.categories = make_recipe('legalaid.category', _quantity=3)
+        self.providers = make_recipe('cla_provider.provider',
+                                     active=True,
+                                     law_category=self.categories, _quantity=3)
         self.rotas = []
 
 
@@ -111,11 +116,19 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
     def _get_default_post_data(self):
         return {
-            'start_date': '',
-            'end_date': '',
+            'start_date': '2014-01-01T00:00:00Z',
+            'end_date': '2014-01-07T00:00:00Z',
             'provider': self.providers[0].pk,
-            'category': self.providers
+            'category': self.providers[0].law_category.all().first().code
         }
+
+    def assertOutOfHoursRotaEqual(self, post_data, response_data):
+        self.assertEqual(response_data.data['start_date'],
+                         parser.parse(post_data['start_date']))
+        self.assertEqual(response_data.data['end_date'],
+                         parser.parse(post_data['end_date']))
+        self.assertEqual(response_data.data['category'], post_data['category'])
+        self.assertEqual(response_data.data['provider'], post_data['provider'])
 
     def test_get_allowed(self):
         """
@@ -145,14 +158,38 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], self.rotas[0].id)
 
+
+
     def test_post_allowed(self):
 
         response1 = self.client.get(self.list_url,
                                    HTTP_AUTHORIZATION='Bearer %s' % self.token,
                                    format='json')
+        self.assertEqual(response1.status_code, status.HTTP_200_OK)
         before_len = len(response1.data)
 
+
+        post_data = self._get_default_post_data()
         response2 = self.client.post(self.list_url,
                                      HTTP_AUTHORIZATION='Bearer %s' % self.token,
                                      format='json',
-                                     data=self._get_default_post_data())
+                                     data=post_data)
+        self.assertEqual(response2.status_code, status.HTTP_200_OK)
+        self.assertOutOfHoursRotaCheckResponseKeys(response2)
+
+        self.assertOutOfHoursRotaEqual(post_data, response2.data)
+
+        response3 = self.client.get(self.list_url,
+                                    HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                    format='json')
+
+        self.assertEqual(response3.status_code, status.HTTP_200_OK)
+        self.assertEqual(before_len + 1, len(response3.data))
+
+    def test_patch_allowed(self):
+        response = self.client.get(self.detail_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json')
+        self.assertOutOfHoursRotaCheckResponseKeys(response)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], self.rotas[0].id)

@@ -63,3 +63,4 @@ class OutOfHoursRota(TimeStampedModel):
             self.start_date,
             self.end_date
         )
+

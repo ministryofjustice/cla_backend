@@ -61,17 +61,25 @@ class MoneyIntervalFieldCreator(object):
 
         value = obj.__dict__[self.field.name]
         if value is None: return None
-        else:
+        elif isinstance(value, dict):
+            mi = MoneyInterval(interval_period=value[self.interval_period_field_name])
+            mi.set_as_pennies(value[self.per_interval_value_field_name])
+            return mi
+        elif isinstance(value, MoneyInterval):
+            return value
+        elif hasattr(obj, self.interval_period_field_name) and hasattr(obj, self.per_interval_value_field_name):
             mi = MoneyInterval(interval_period=getattr(obj, self.interval_period_field_name))
             mi.set_as_pennies(getattr(obj, self.per_interval_value_field_name))
             return mi
+        else:
+            raise Exception("probably needs to instantiate from something else")
 
     def __set__(self, obj, value):
 
         #if isinstance(value, MoneyInterval): ???????????????
         if value.__class__.__name__ == "MoneyInterval":
             # MoneyInterval is assigned: take over it's values
-            obj.__dict__[self.field.name] = value.value
+            obj.__dict__[self.field.name] = value.as_monthly()
             setattr(obj, self.interval_period_field_name, value.interval_period)
             setattr(obj, self.per_interval_value_field_name, value.per_interval_value)
         else:
@@ -79,9 +87,13 @@ class MoneyIntervalFieldCreator(object):
             obj.__dict__[self.field.name] = value
 
 
+def validate_xxx(value):
+    if value % 2 != 0:
+        raise exceptions.ValidationError(u'%s is not an even number' % value)
+
 class MoneyIntervalField(models.BigIntegerField):
     """
-    Stores money to nearest penny as integer. e.g. ��10.22 would be 1022
+    Stores money to nearest penny as integer. e.g. £10.22 would be 1022
     """
     
     """
@@ -102,7 +114,7 @@ class MoneyIntervalField(models.BigIntegerField):
         super(MoneyIntervalField, self).__init__(*args, **kwargs)
 
 #         if max_value is not None:
-#             self.validators.append(validators.MaxValueValidator(max_value))
+#             self.validators.append(validate_xxx)
 #         if min_value is not None:
 #             self.validators.append(validators.MinValueValidator(min_value))
 
@@ -153,9 +165,11 @@ class MoneyIntervalField(models.BigIntegerField):
     def to_python(self, value):
 
         try:
-            if( isinstance(value, dict) ):
+            if isinstance(value, dict):
                 mi = MoneyInterval(interval_period=value['earnings_interval_period'])
                 mi.set_as_pennies(value['earnings_per_interval_value'])
+            elif isinstance(value, MoneyInterval):
+                return value
             else:
                 mi = MoneyInterval(interval_period='per_month')
                 mi.set_as_pennies(value)
@@ -166,6 +180,8 @@ class MoneyIntervalField(models.BigIntegerField):
                 code='invalid',
                 params={'value': value},
             )
+
+
 
 
 #     def formfield(self, **kwargs):

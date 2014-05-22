@@ -5,6 +5,8 @@ from rest_framework import serializers
 from core.serializers import UUIDSerializer
 from cla_provider.models import Provider
 
+from cla_common.helpers import MoneyInterval
+
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, CaseLog, CaseLogType
 
@@ -36,25 +38,6 @@ from django.db.models import Field
 from legalaid.fields import MoneyIntervalField
 from django.utils.translation import ugettext as _
 
-class MoneyIntervalsModelField(Field):
-    #default_validators = [validators.validate_email]
-    description = _("MoneyIntervalsModelField")
- 
-    def __init__(self, *args, **kwargs):
-        # max_length should be overridden to 254 characters to be fully
-        # compliant with RFCs 3696 and 5321
- 
-        #kwargs['max_length'] = kwargs.get('max_length', 75)
-        Field.__init__(self, *args, **kwargs)
- 
-#     def formfield(self, **kwargs):
-#         # As with CharField, this will cause email validation to be performed
-#         # twice.
-#         defaults = {
-#             'form_class': forms.EmailField,
-#         }
-#         defaults.update(kwargs)
-#         return super(EmailField, self).formfield(**defaults)
  
 class MoneyIntervalDRFField(WritableField):
     type_name = 'MoneyIntervalDRFField'
@@ -62,16 +45,28 @@ class MoneyIntervalDRFField(WritableField):
     form_field_class = MoneyIntervalField
  
     default_error_messages = {
-        'invalid': _('Enter a valid email address.'),
+        'invalid': _('Enter a valid XXXXXXXXXXXXXXXXX.'),
     }
 #     default_validators = [validators.validate_email]
- 
-    def from_native(self, value):
-        ret = super(MoneyIntervalDRFField, self).from_native(value)
-        if ret is None:
-            return None
-        return ret.strip()
 
+
+    def field_to_native(self, obj, field_name):
+ 
+        moneyIntervalField = getattr(obj, field_name)
+        return {'interval_period' : moneyIntervalField.interval_period,
+                'per_interval_value' : moneyIntervalField.per_interval_value,
+                }
+
+    def from_native(self, value):
+        # TODO remove word earnings and find it as field
+        if isinstance(value, dict):
+            mi = MoneyInterval(value['earnings_interval_period'])
+            mi.set_as_pennies(value['earnings_per_interval_value'])
+        else:
+            # TODO - remove - only here for mock test - temporary
+            mi = MoneyInterval('per_month')
+            mi.set_as_pennies(value)
+        return mi
 
 class TotalsModelSerializer(ModelSerializer):
     total_fields = set()
@@ -80,7 +75,7 @@ class TotalsModelSerializer(ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         # add a model serializer which is used throughout this project
-        self.field_mapping[MoneyIntervalsModelField] = MoneyIntervalDRFField
+        self.field_mapping[MoneyIntervalField] = MoneyIntervalDRFField
         super(TotalsModelSerializer, self).__init__(*args, **kwargs)
 
 
@@ -94,6 +89,9 @@ class TotalsModelSerializer(ModelSerializer):
             else:
                 total += getattr(obj, f, 0)
         return total
+    
+#     def to_native(self, value):
+#         print "x"
 
 
 class IncomeSerializerBase(TotalsModelSerializer):

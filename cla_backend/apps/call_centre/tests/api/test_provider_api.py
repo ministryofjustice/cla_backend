@@ -1,4 +1,6 @@
+from datetime import timedelta
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -67,3 +69,90 @@ class ProviderTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
              'telephone_backdoor'
              ]
         )
+
+class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
+
+
+    def assertOutOfHoursRotaCheckResponseKeys(self, response):
+        self.assertItemsEqual(
+            response.data.keys(),
+            [
+                'id',
+                'start_date',
+                'end_date',
+                'category',
+                'provider'
+            ]
+        )
+
+    def setUp(self):
+        super(OutOfHoursRotaTests, self).setUp()
+        self.providers = make_recipe('cla_provider.provider', active=True, _quantity=3)
+        self.rotas = []
+
+
+        start_date = timezone.now()
+        for provider in self.providers:
+            end_date = start_date + timedelta(days=7)
+            self.rotas.append(
+                make_recipe('cla_provider.outofhoursrota',
+                            provider=provider,
+                            start_date=start_date,
+                            end_date=end_date))
+            start_date = end_date
+
+        self.list_url = reverse('call_centre:outofhoursrota-list')
+        self.provider_list_url = reverse('call_centre:provider-list')
+        self.detail_url = reverse(
+            'call_centre:outofhoursrota-detail', args=(),
+            kwargs={'pk': self.rotas[0].pk}
+        )
+
+
+    def _get_default_post_data(self):
+        return {
+            'start_date': '',
+            'end_date': '',
+            'provider': self.providers[0].pk,
+            'category': self.providers
+        }
+
+    def test_get_allowed(self):
+        """
+        Test that we can get a rota list and an rota detail
+        """
+
+        # LIST
+        response = self.client.get(self.list_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertItemsEqual(response.data,
+            [{
+                'id': rota.id,
+                'start_date': rota.start_date,
+                'end_date': rota.end_date,
+                'category': rota.category.code,
+                'provider': rota.provider_id
+            } for rota in self.rotas])
+
+        # DETAIL
+        response = self.client.get(self.detail_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json')
+        self.assertOutOfHoursRotaCheckResponseKeys(response)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], self.rotas[0].id)
+
+    def test_post_allowed(self):
+
+        response1 = self.client.get(self.list_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json')
+        before_len = len(response1.data)
+
+        response2 = self.client.post(self.list_url,
+                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                     format='json',
+                                     data=self._get_default_post_data())

@@ -62,8 +62,11 @@ class MoneyIntervalFieldCreator(object):
         value = obj.__dict__[self.field.name]
         if value is None: return None
         elif isinstance(value, dict):
-            mi = MoneyInterval(interval_period=value[self.interval_period_field_name])
-            mi.set_as_pennies(value[self.per_interval_value_field_name])
+            try:
+                mi = MoneyInterval(interval_period=value['interval_period'])
+                mi.set_as_pennies(value['per_interval_value'])
+            except:
+                pass
             return mi
         elif isinstance(value, MoneyInterval):
             return value

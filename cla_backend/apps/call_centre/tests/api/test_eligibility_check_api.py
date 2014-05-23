@@ -363,8 +363,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                     "credit_balance": 400,
                 },
                 'income': {
-                    "earnings": {"earnings_interval_period": "per_month",
-                                 "earnings_per_interval_value": 500,
+                    "earnings": {"interval_period": "per_month",
+                                 "per_interval_value": 500,
                                 },
                     "other_income": 600,
                     "self_employed": True,
@@ -385,8 +385,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                     "credit_balance": 4000,
                     },
                 'income': {
-                    "earnings": {"earnings_interval_period": "per_month",
-                                 "earnings_per_interval_value": 5000,
+                    "earnings": {"interval_period": "per_month",
+                                 "per_interval_value": 5000,
                                 },
                     "other_income": 6000,
                     "self_employed": False
@@ -441,8 +441,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                     "credit_balance": -1,
                 },
                 'income': {
-                    "earnings": { "earnings_interval_period": "per_month",
-                                  "earnings_per_interval_value": -1,
+                    "earnings": { "interval_period": "per_month",
+                                  "per_interval_value": -1,
                                 },
                     "other_income": -1,
                 },
@@ -462,8 +462,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                     "credit_balance": -1,
                 },
                 'income': {
-                    "earnings": {"earnings_interval_period": "per_month",
-                                 "earnings_per_interval_value": -1,
+                    "earnings": {"interval_period": "per_month",
+                                 "per_interval_value": -1,
                                  },
                     "other_income": -1
                 },
@@ -575,8 +575,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             {
                 'error': {'you': [{'income': [{'earnings': [u'Ensure this value is greater than or equal to 0.']}]}]},
                 'data': {   "you" : { "income" : { "earnings": 
-                                                    {"earnings_interval_period": "per_month",
-                                                     "earnings_per_interval_value": -1,
+                                                    {"interval_period": "per_month",
+                                                     "per_interval_value": -1,
                                     }}}
                         }
             },
@@ -717,8 +717,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         data={
             'you': {
                 'income': {
-                    "earnings": {"earnings_interval_period": "per_month",
-                                 "earnings_per_interval_value": 500,
+                    "earnings": {"interval_period": "per_month",
+                                 "per_interval_value": 500,
                                 },
                     "other_income": 600,
                     "self_employed": True,
@@ -739,8 +739,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             },
             'partner': {
                 'income': {
-                    "earnings": {"earnings_interval_period": "per_month",
-                                 "earnings_per_interval_value": 5000,
+                    "earnings": {"interval_period": "per_month",
+                                 "per_interval_value": 5000,
                                 },
                     "other_income": 6000,
                     "self_employed": False
@@ -783,8 +783,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 'credit_balance': 0,
             },
             'income':{
-                'earnings': {"earnings_interval_period": "per_month",
-                             "earnings_per_interval_value": 2200
+                'earnings': {"interval_period": "per_month",
+                             "per_interval_value": 2200
                             },
                 'other_income': 0,
                 'self_employed': False,

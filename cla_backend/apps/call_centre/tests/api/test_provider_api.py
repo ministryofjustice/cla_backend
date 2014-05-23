@@ -174,10 +174,10 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                                      HTTP_AUTHORIZATION='Bearer %s' % self.token,
                                      format='json',
                                      data=post_data)
-        self.assertEqual(response2.status_code, status.HTTP_200_OK)
+        self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
         self.assertOutOfHoursRotaCheckResponseKeys(response2)
 
-        self.assertOutOfHoursRotaEqual(post_data, response2.data)
+        self.assertOutOfHoursRotaEqual(post_data, response2)
 
         response3 = self.client.get(self.list_url,
                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
@@ -192,4 +192,62 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                                    format='json')
         self.assertOutOfHoursRotaCheckResponseKeys(response)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], self.rotas[0].id)
+
+        self.assertEqual(response.data['start_date'], self.rotas[0].start_date)
+
+        # PATCH start date
+        new_start_date = self.rotas[0].start_date + timedelta(days=1)
+        response2 = self.client.patch(self.detail_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json',
+                                   data={
+                                       'start_date': str(new_start_date)
+                                   })
+
+        self.assertOutOfHoursRotaCheckResponseKeys(response2)
+        self.assertEqual(response2.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(response2.data['start_date'], new_start_date)
+
+    def test_delete_allowed(self):
+        # CHECK ITEM EXISTS
+        response = self.client.get(self.detail_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json')
+        self.assertOutOfHoursRotaCheckResponseKeys(response)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+        # DELETE IT
+        response = self.client.delete(self.detail_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # CHECK LIST LEN =- 1
+
+
+        response = self.client.get(self.list_url,
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                   format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), len(self.rotas)-1)
+
+    def test_post_bad_category_not_allowed(self):
+        """
+        don't allow setting the category to one that
+        the underlying provider isn't able to provide.
+        """
+        pass
+
+    def test_post_overlapping_timespan_not_allowed(self):
+        """
+        don't allow posting new rota entries that overlap other
+            -   operator_id
+            -   law category
+            -   time span
+
+        """
+        pass
+

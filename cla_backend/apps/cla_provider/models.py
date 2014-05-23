@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from model_utils.models import TimeStampedModel
@@ -64,3 +65,6 @@ class OutOfHoursRota(TimeStampedModel):
             self.end_date
         )
 
+    def clean(self):
+        #qs = self.__class__._default_manager.filter()
+        pass

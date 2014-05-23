@@ -87,9 +87,6 @@ class MoneyIntervalFieldCreator(object):
             obj.__dict__[self.field.name] = value
 
 
-def validate_xxx(value):
-    if value % 2 != 0:
-        raise exceptions.ValidationError(u'%s is not an even number' % value)
 
 class MoneyIntervalField(models.BigIntegerField):
     """
@@ -107,16 +104,16 @@ class MoneyIntervalField(models.BigIntegerField):
     }
         
     def __init__(self, max_value=9999999999, min_value=0, *args, **kwargs):
-        #self.max_value, self.min_value = max_value, min_value
+        self.max_value, self.min_value = max_value, min_value
         #kwargs['coerce'] = kwargs.pop('coerce', int)
         #kwargs['widget'] = forms.NumberInput
 
         super(MoneyIntervalField, self).__init__(*args, **kwargs)
 
-#         if max_value is not None:
-#             self.validators.append(validate_xxx)
-#         if min_value is not None:
-#             self.validators.append(validators.MinValueValidator(min_value))
+        if max_value is not None:
+            self.validators.append(validators.MaxValueValidator(max_value))
+        if min_value is not None:
+            self.validators.append(validators.MinValueValidator(min_value))
 
     def contribute_to_class(self, cls, name):
         # first, create the hidden fields. It is *crucial* that these
@@ -181,7 +178,30 @@ class MoneyIntervalField(models.BigIntegerField):
                 params={'value': value},
             )
 
+    def clean(self, value, model_instance):
+        value = self.to_python(value)
+        self.validate(value, model_instance)
+        #self.run_validators(value)
+        return value
 
+    def validate(self, value, model_instance):
+
+        # Ideally the serialiser should validate this - the MoneyInterval class
+        # wont initialise with an invalid value so that will have to do.
+        #if not value.is_valid_interval_period(value.interval_period):
+        #    raise exceptions.ValidationError(self.error_messages['invalid'], code='invalid')
+
+        errors = []
+        for v in self.validators:
+            try:
+                v(value.per_interval_value)
+            except exceptions.ValidationError as e:
+                if hasattr(e, 'code') and e.code in self.error_messages:
+                    e.message = self.error_messages[e.code]
+                errors.extend(e.error_list)
+
+        if errors:
+            raise exceptions.ValidationError(errors)
 
 
 #     def formfield(self, **kwargs):

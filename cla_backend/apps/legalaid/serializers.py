@@ -1,11 +1,15 @@
 from legalaid.constants import CASELOGTYPE_SUBTYPES
-from legalaid.fields import MoneyInterval
+from legalaid.fields import MoneyIntervalField
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, WritableField
 
 from core.serializers import UUIDSerializer
 from cla_provider.models import Provider
 
 from cla_common.helpers import MoneyInterval
+ 
+from django.utils.translation import ugettext as _
+
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, CaseLog, CaseLogType
@@ -32,13 +36,6 @@ class PropertySerializerBase(serializers.ModelSerializer):
         fields = ()
 
 
-
-from rest_framework.serializers import ModelSerializer, WritableField
-from django.db.models import Field
-from legalaid.fields import MoneyIntervalField
-from django.utils.translation import ugettext as _
-
- 
 class MoneyIntervalDRFField(WritableField):
     type_name = 'MoneyIntervalDRFField'
     type_label = 'moneyIntervalDRFField'
@@ -67,6 +64,7 @@ class MoneyIntervalDRFField(WritableField):
             mi = MoneyInterval('per_month')
             mi.set_as_pennies(value)
         return mi
+
 
 class TotalsModelSerializer(ModelSerializer):
     total_fields = set()

@@ -40,12 +40,6 @@ class MoneyIntervalDRFField(WritableField):
     type_name = 'MoneyIntervalDRFField'
     type_label = 'moneyIntervalDRFField'
     form_field_class = MoneyIntervalField
- 
-    default_error_messages = {
-        'invalid': _('Enter a valid XXXXXXXXXXXXXXXXX.'),
-    }
-#     default_validators = [validators.validate_email]
-
 
     def field_to_native(self, obj, field_name):
  
@@ -57,8 +51,8 @@ class MoneyIntervalDRFField(WritableField):
     def from_native(self, value):
         # TODO remove word earnings and find it as field
         if isinstance(value, dict):
-            mi = MoneyInterval(value['earnings_interval_period'])
-            mi.set_as_pennies(value['earnings_per_interval_value'])
+            mi = MoneyInterval(value[self.label+'_interval_period'])
+            mi.set_as_pennies(value[self.label+'_per_interval_value'])
         else:
             # TODO - remove - only here for mock test - temporary
             mi = MoneyInterval('per_month')
@@ -66,16 +60,16 @@ class MoneyIntervalDRFField(WritableField):
         return mi
 
 
-class TotalsModelSerializer(ModelSerializer):
-    total_fields = set()
-
-    total = serializers.SerializerMethodField('get_total')
-
+class ClaModelSerializer(ModelSerializer):
     def __init__(self, *args, **kwargs):
         # add a model serializer which is used throughout this project
         self.field_mapping[MoneyIntervalField] = MoneyIntervalDRFField
-        super(TotalsModelSerializer, self).__init__(*args, **kwargs)
+        super(ClaModelSerializer, self).__init__(*args, **kwargs)
 
+
+class TotalsModelSerializer(ClaModelSerializer):
+    total_fields = set()
+    total = serializers.SerializerMethodField('get_total')
 
     def get_total(self, obj):
         total = 0

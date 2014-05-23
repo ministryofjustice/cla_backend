@@ -7,10 +7,10 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase, CaseLogTypeSerializerBase, \
-    ProviderSerializerBase, CaseLogSerializerBase, ExtendedUserSerializerBase
+    ProviderSerializerBase, \
+    CaseLogSerializerBase, ExtendedUserSerializerBase
 
 from .models import Staff
-
 
 class CategorySerializer(CategorySerializerBase):
     class Meta(CategorySerializerBase.Meta):
@@ -143,7 +143,6 @@ class CaseSerializer(CaseSerializerBase):
             'provider', 'caseoutcome_set', 'locked_by', 'locked_at',
             'notes', 'provider_notes'
         )
-
 
 class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):

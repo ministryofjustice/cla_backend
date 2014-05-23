@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Provider, ProviderAllocation, Staff
+from .models import Provider, ProviderAllocation, Staff, OutOfHoursRota
 
 
 class StaffInline(admin.TabularInline):
@@ -27,4 +27,5 @@ class ProviderAdmin(admin.ModelAdmin):
 
 admin.site.register(Provider, ProviderAdmin)
 admin.site.register(ProviderAllocation)
+admin.site.register(OutOfHoursRota)
 admin.site.register(Staff)

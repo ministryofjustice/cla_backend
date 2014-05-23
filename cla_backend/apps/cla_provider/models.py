@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from model_utils.models import TimeStampedModel
@@ -48,3 +49,22 @@ class Staff(TimeStampedModel):
     user = models.OneToOneField('auth.User')
     provider = models.ForeignKey(Provider)
     is_staff_superuser = models.BooleanField(default=False)
+
+class OutOfHoursRota(TimeStampedModel):
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    category = models.ForeignKey('legalaid.Category')
+    provider = models.ForeignKey(Provider)
+
+    def __unicode__(self):
+        return u'%s provides out of hours service for %s between %s - %s' \
+               % (
+            self.provider,
+            self.category.code,
+            self.start_date,
+            self.end_date
+        )
+
+    def clean(self):
+        #qs = self.__class__._default_manager.filter()
+        pass

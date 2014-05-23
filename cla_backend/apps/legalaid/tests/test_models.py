@@ -9,6 +9,10 @@ from core.tests.mommy_utils import make_recipe, make_user
 from legalaid.exceptions import InvalidMutationException
 from ..models import Case
 
+from cla_backend.apps.legalaid.models import Income
+from cla_backend.apps.legalaid.fields import MoneyInterval
+
+
 
 def walk(coll):
     """Return a generator for all atomic values in coll and its subcollections.
@@ -423,11 +427,8 @@ class CaseTestCase(TestCase):
         self.assertEqual(case.state, CASE_STATES.CLOSED)
 
 
-from cla_backend.apps.legalaid.models import Income
-from cla_backend.apps.legalaid.fields import MoneyInterval
-
-class MoneyFieldTestCase(TestCase):
-    def test_assign_to_provider_overriding_provider(self):
+class MoneyIntervalFieldTestCase(TestCase):
+    def test_create_save_moneyinterval(self):
 
         ei = MoneyInterval(interval_period='per_week')
         ei.set_as_pennies(5000)

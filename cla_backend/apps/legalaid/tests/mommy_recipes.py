@@ -19,7 +19,11 @@ eligibility_check = Recipe(EligibilityCheck,
     partner=foreign_key(person)
 )
 
-income = Recipe(Income)
+from cla_common.helpers import MoneyInterval
+mi = MoneyInterval('per_month')
+mi.set_as_pennies(2200)
+
+income = Recipe(Income, earnings=mi)
 savings = Recipe(Savings)
 deductions = Recipe(Deductions)
 

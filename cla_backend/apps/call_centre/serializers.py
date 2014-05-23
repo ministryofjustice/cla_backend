@@ -8,7 +8,9 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
-    CaseLogSerializerBase, CaseLogTypeSerializerBase
+    CaseLogSerializerBase, CaseLogTypeSerializerBase, ExtendedUserSerializerBase
+
+from .models import Operator
 
 
 class CategorySerializer(CategorySerializerBase):
@@ -141,3 +143,11 @@ class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
         fields = ('name', 'id', 'short_code', 'telephone_frontdoor', 'telephone_backdoor')
 
+
+class OperatorSerializer(ExtendedUserSerializerBase):
+    class Meta:
+        model = Operator
+        fields = (
+            'username', 'first_name', 'last_name', 'email',
+            'is_operator_superuser'
+        )

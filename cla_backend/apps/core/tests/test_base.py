@@ -1,10 +1,12 @@
-from cla_provider.models import Staff
 from django.contrib.auth.models import User
-from django.test import SimpleTestCase
-from model_mommy import mommy
-from model_mommy.mommy import make_recipe
-from provider.oauth2.models import Client, AccessToken
+
 from rest_framework import status
+
+from provider.oauth2.models import Client, AccessToken
+from core.tests.mommy_utils import make_recipe
+
+from cla_provider.models import Staff
+from call_centre.models import Operator
 
 
 class CLABaseApiTestMixin(object):
@@ -41,7 +43,7 @@ class CLAAuthBaseApiTestMixin(object):
         self.email = 'lennon@thebeatles.com'
         self.password = 'password'
         self.user = User.objects.create_user(self.username, self.email, self.password)
-        
+
         # create an operator API client
         self.operator_api_client = Client.objects.create(
             user=self.user,
@@ -64,9 +66,13 @@ class CLAAuthBaseApiTestMixin(object):
             redirect_uri='http://provider.localhost/redirect'
         )
 
-        self.provider = make_recipe('cla_provider.tests.provider')
+        # create provider and staff user
+        self.provider = make_recipe('cla_provider.provider')
         self.provider.staff_set.add(Staff(user=self.user))
         self.provider.save()
+
+        # create operator user
+        Operator.objects.create(user=self.user)
 
         # Create an access token
         self.operator_token = AccessToken.objects.create(

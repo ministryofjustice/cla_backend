@@ -2,7 +2,8 @@ from django.core.urlresolvers import reverse
 
 from rest_framework.test import APITestCase
 
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin, make_recipe
+from core.tests.mommy_utils import make_recipe
+from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
 
 from legalaid.models import Property
 
@@ -12,7 +13,7 @@ class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(EligibilityCheckTests, self).setUp()
 
-        self.check = make_recipe('legalaid.tests.eligibility_check')
+        self.check = make_recipe('legalaid.eligibility_check')
         self.detail_url = reverse(
             'cla_provider:eligibility_check-detail', args=(),
             kwargs={'reference': self.check.reference}
@@ -113,10 +114,10 @@ class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         """
         GET should not return properties of other eligibility check objects
         """
-        make_recipe('legalaid.tests.property', eligibility_check=self.check, _quantity=4)
+        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4)
 
         # making extra properties
-        make_recipe('legalaid.tests.property', eligibility_check=self.check, _quantity=5)
+        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=5)
 
         self.assertEqual(Property.objects.count(), 9)
 

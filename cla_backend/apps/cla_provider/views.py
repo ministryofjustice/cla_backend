@@ -159,10 +159,7 @@ class CaseViewSet(
         return self._state_form_action(request, Form=CloseCaseForm)
 
 
-class UserViewSet(
-    CLAProviderPermissionViewSetMixin,
-    BaseUserViewSet
-):
+class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
     model = Staff
     serializer_class = StaffSerializer
 

@@ -8,7 +8,8 @@ from rest_framework.test import APITestCase
 
 from cla_common.constants import CASE_STATES
 
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin, make_recipe
+from core.tests.mommy_utils import make_recipe
+from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
 
 from legalaid.models import Case, CaseLog
 
@@ -18,7 +19,7 @@ class BaseCaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         super(BaseCaseTests, self).setUp()
 
         self.list_url = reverse('cla_provider:case-list')
-        obj = make_recipe('legalaid.tests.case', provider=self.provider)
+        obj = make_recipe('legalaid.case', provider=self.provider)
         self.check = obj
         self.detail_url = reverse(
             'cla_provider:case-detail', args=(),
@@ -81,7 +82,7 @@ class CaseTests(BaseCaseTests):
         GET list-url should work
         """
 
-        obj = make_recipe('legalaid.tests.case')
+        obj = make_recipe('legalaid.case')
         obj.provider = self.provider
         obj.save()
 
@@ -134,7 +135,7 @@ class CaseTests(BaseCaseTests):
 
         def create_case(state, reference, locked_by, modified=None):
             case = make_recipe(
-                'legalaid.tests.case', provider=self.provider,
+                'legalaid.case', provider=self.provider,
                 state=state, reference=reference, locked_by=locked_by
             )
 
@@ -176,7 +177,7 @@ class CaseTests(BaseCaseTests):
         GET search by name should work
         """
 
-        obj = make_recipe('legalaid.tests.case',
+        obj = make_recipe('legalaid.case',
                           reference='ref1',
                           personal_details__full_name='xyz',
                           personal_details__postcode='123',
@@ -202,7 +203,7 @@ class CaseTests(BaseCaseTests):
         GET search by ref should work
         """
 
-        obj = make_recipe('legalaid.tests.case', provider=self.provider,
+        obj = make_recipe('legalaid.case', provider=self.provider,
                           personal_details__full_name='abc',
                           personal_details__postcode='123')
 
@@ -220,7 +221,7 @@ class CaseTests(BaseCaseTests):
         GET search by name should work
         """
 
-        obj = make_recipe('legalaid.tests.case', provider=self.provider,
+        obj = make_recipe('legalaid.case', provider=self.provider,
                           personal_details__postcode='123',
                           personal__details__full_name='abc')
 
@@ -288,10 +289,10 @@ class StateChangeMixin(object):
         super(StateChangeMixin, self).setUp()
 
         self.outcome_codes = [
-            make_recipe('legalaid.tests.outcome_code', code="CODE_OPEN", case_state=CASE_STATES.OPEN),
-            make_recipe('legalaid.tests.outcome_code', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED),
-            make_recipe('legalaid.tests.outcome_code', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED),
-            make_recipe('legalaid.tests.outcome_code', code="CODE_CLOSED", case_state=CASE_STATES.CLOSED),
+            make_recipe('legalaid.outcome_code', code="CODE_OPEN", case_state=CASE_STATES.OPEN),
+            make_recipe('legalaid.outcome_code', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED),
+            make_recipe('legalaid.outcome_code', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED),
+            make_recipe('legalaid.outcome_code', code="CODE_CLOSED", case_state=CASE_STATES.CLOSED),
         ]
         self.state_change_url = self.get_state_change_url()
 

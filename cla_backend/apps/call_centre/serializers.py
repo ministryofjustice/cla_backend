@@ -8,14 +8,10 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
-<<<<<<< HEAD
     CaseLogSerializerBase, CaseLogTypeSerializerBase, \
-    OutOfHoursRotaSerializerBase
-=======
-    CaseLogSerializerBase, CaseLogTypeSerializerBase, ExtendedUserSerializerBase
+    OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase
 
 from .models import Operator
->>>>>>> 1bc1f03d20de9449561a1aea315abbb97bbb7b93
 
 
 class CategorySerializer(CategorySerializerBase):
@@ -148,7 +144,6 @@ class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
         fields = ('name', 'id', 'short_code', 'telephone_frontdoor', 'telephone_backdoor')
 
-<<<<<<< HEAD
 class OutOfHoursRotaSerializer(OutOfHoursRotaSerializerBase):
     class Meta(OutOfHoursRotaSerializerBase.Meta):
         fields = (
@@ -158,7 +153,6 @@ class OutOfHoursRotaSerializer(OutOfHoursRotaSerializerBase):
             'category',
             'provider',
         )
-=======
 
 class OperatorSerializer(ExtendedUserSerializerBase):
     class Meta:
@@ -167,4 +161,3 @@ class OperatorSerializer(ExtendedUserSerializerBase):
             'username', 'first_name', 'last_name', 'email',
             'is_operator_superuser'
         )
->>>>>>> 1bc1f03d20de9449561a1aea315abbb97bbb7b93

@@ -67,10 +67,13 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             self.assertEqual(obj, data)
             return
 
-        for prop in [
-             'earnings', 'other_income', 'self_employed'
-        ]:
+        for prop in ['other_income', 'self_employed']:
             self.assertEqual(getattr(obj, prop), data.get(prop))
+
+        for prop in ['earnings',]:
+            moneyInterval = getattr(obj, prop)
+            self.assertEqual(moneyInterval.per_interval_value, data.get(prop)['per_interval_value'])
+            self.assertEqual(moneyInterval.interval_period, data.get(prop)['interval_period'])
 
     def assertSavingsEqual(self, data, obj):
         if obj is None or data is None:
@@ -349,10 +352,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
         self.assertItemsEqual([p['disputed'] for p in response.data['property_set']], [True, False])
 
-    def test_create_with_finances(self):
-        """
-        CREATE data with finances
-        """
+    def _get_valid_post_data(self):
         data={
             'has_partner': True,
             'you': {
@@ -394,6 +394,13 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
             },
         }
+        return data
+
+    def test_create_with_finances(self):
+        """
+        CREATE data with finances
+        """
+        data = self._get_valid_post_data()
         response = self.client.post(
             self.list_url, data, format='json',
             HTTP_AUTHORIZATION='Bearer %s' % self.token)
@@ -434,8 +441,8 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                     "credit_balance": -1,
                 },
                 'income': {
-                    "earnings": {"earnings_interval_period": "per_month",
-                                 "earnings_per_interval_value": -1,
+                    "earnings": { "earnings_interval_period": "per_month",
+                                  "earnings_per_interval_value": -1,
                                 },
                     "other_income": -1,
                 },
@@ -457,7 +464,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 'income': {
                     "earnings": {"earnings_interval_period": "per_month",
                                  "earnings_per_interval_value": -1,
-                                },
+                                 },
                     "other_income": -1
                 },
                 'deductions': {
@@ -511,7 +518,6 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                     ],
                     'income': [
                         {
-                            'earnings': [u'Ensure this value is greater than or equal to 0.'],
                             'other_income': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ],
@@ -541,7 +547,6 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                     ],
                     'income': [
                         {
-                            'earnings': [u'Ensure this value is greater than or equal to 0.'],
                             'other_income': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ],
@@ -557,6 +562,35 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 }
             ]
         )
+    
+    def test_errors_masked_by_drf(self):
+        """
+        Django REST Framework only validates fields if there are no errors in the model.
+        The test_create_in_error() method expects all errors to be returned so model fields
+        which need to do their own validation wont be validated if they come second to
+        model errors. Those fields are here.
+        """
+        valid_data = self._get_valid_post_data()
+        ERRORS_DATA = [
+            {
+                'error': {'you': [{'income': [{'earnings': [u'Ensure this value is greater than or equal to 0.']}]}]},
+                'data': {   "you" : { "income" : { "earnings": 
+                                                    {"earnings_interval_period": "per_month",
+                                                     "earnings_per_interval_value": -1,
+                                    }}}
+                        }
+            },
+        ]
+
+        for error_data in ERRORS_DATA:
+            data = dict(valid_data)
+            data.update(error_data['data'])
+
+            response = self.client.post(self.list_url, data, format='json',
+                                       HTTP_AUTHORIZATION='Bearer %s' % self.token)
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertItemsEqual(error_data['error'], response.data)
+
 
     def test_create_in_error(self):
         self._test_method_in_error('post', self.list_url)
@@ -750,7 +784,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             },
             'income':{
                 'earnings': {"earnings_interval_period": "per_month",
-                             "earnings_per_interval_value": 0
+                             "earnings_per_interval_value": 2200
                             },
                 'other_income': 0,
                 'self_employed': False,

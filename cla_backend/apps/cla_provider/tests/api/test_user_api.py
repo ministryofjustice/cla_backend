@@ -46,7 +46,7 @@ class UserTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
             'last_name': u'',
             'email': u'lennon@thebeatles.com',
             'provider': {'name': u'Name1'},
-            'is_staff_superuser': False
+            'is_manager': False
         })
 
     def test_get_different_user_not_allowed(self):

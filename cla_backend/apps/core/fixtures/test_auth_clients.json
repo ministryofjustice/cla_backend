@@ -47,7 +47,7 @@
         "pk": 1,
         "model": "cla_provider.staff",
         "fields": {
-            "is_staff_superuser": false,
+            "is_manager": false,
             "user": 3,
             "provider": 1,
             "modified": "2014-03-20T14:13:31.624Z",
@@ -78,7 +78,7 @@
         "model": "call_centre.operator",
         "fields": {
             "user": 2,
-            "is_operator_superuser": false,
+            "is_manager": false,
             "modified": "2014-03-19T16:27:32.004Z",
             "created": "2014-03-19T16:27:31.999Z"
         }

@@ -158,6 +158,5 @@ class OperatorSerializer(ExtendedUserSerializerBase):
     class Meta:
         model = Operator
         fields = (
-            'username', 'first_name', 'last_name', 'email',
-            'is_operator_superuser'
+            'username', 'first_name', 'last_name', 'email', 'is_manager'
         )

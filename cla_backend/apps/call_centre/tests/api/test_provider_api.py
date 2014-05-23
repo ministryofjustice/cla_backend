@@ -1,5 +1,6 @@
 from datetime import timedelta
 from itertools import cycle
+from cla_provider.models import ProviderAllocation
 from dateutil import parser
 from django.core.urlresolvers import reverse
 from django.utils import timezone
@@ -92,10 +93,10 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.categories = make_recipe('legalaid.category', _quantity=3)
         self.providers = make_recipe('cla_provider.provider',
                                      active=True,
-                                     law_category=self.categories, _quantity=3)
+                                     law_category=list(self.categories), _quantity=3)
         self.rotas = []
 
-
+        category_generator = cycle(list(self.categories))
         start_date = timezone.now()
         for provider in self.providers:
             end_date = start_date + timedelta(days=7)
@@ -103,7 +104,8 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 make_recipe('cla_provider.outofhoursrota',
                             provider=provider,
                             start_date=start_date,
-                            end_date=end_date))
+                            end_date=end_date,
+                            category=next(category_generator)))
             start_date = end_date
 
         self.list_url = reverse('call_centre:outofhoursrota-list')
@@ -239,9 +241,23 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         don't allow setting the category to one that
         the underlying provider isn't able to provide.
         """
-        pass
 
-    def test_post_overlapping_timespan_not_allowed(self):
+        post_data = self._get_default_post_data()
+        first_category = self.providers[0].law_category.all().first()
+        ProviderAllocation.objects.filter(provider=self.providers[0],
+                                          category=first_category).delete()
+
+
+        response2 = self.client.post(self.list_url,
+                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                     format='json',
+                                     data=post_data)
+        self.assertEqual(response2.data,
+                         {'__all__':
+                              [u"Provider Name2 doesn't offer help for Name1"]})
+        self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_post_overlapping_timespan_not_allowed_overlaps_exactly(self):
         """
         don't allow posting new rota entries that overlap other
             -   operator_id
@@ -249,5 +265,94 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             -   time span
 
         """
-        pass
+        post_data = self._get_default_post_data()
+
+
+        response2 = self.client.post(self.list_url,
+                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                     format='json',
+                                     data=post_data)
+        self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
+        self.assertOutOfHoursRotaCheckResponseKeys(response2)
+
+        self.assertOutOfHoursRotaEqual(post_data, response2)
+
+        response2 = self.client.post(self.list_url,
+                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                     format='json',
+                                     data=post_data)
+        self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response2.data,
+                         {'__all__':
+                              [u"Overlapping rota allocation not allowed"]})
+
+
+    def test_post_overlapping_timespan_not_allowed_overlaps_end(self):
+        """
+        don't allow posting new rota entries that overlap other
+            -   operator_id
+            -   law category
+            -   time span
+
+        """
+        post_data = self._get_default_post_data()
+
+
+        response2 = self.client.post(self.list_url,
+                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                     format='json',
+                                     data=post_data)
+        self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
+        self.assertOutOfHoursRotaCheckResponseKeys(response2)
+
+        self.assertOutOfHoursRotaEqual(post_data, response2)
+
+        post_data.update({
+            'start_date': '2014-01-06T00:00:00Z',
+            'end_date': '2014-01-08T00:00:00Z',
+            })
+
+        response2 = self.client.post(self.list_url,
+                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                     format='json',
+                                     data=post_data)
+
+        self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response2.data,
+                         {'__all__':
+                              [u"Overlapping rota allocation not allowed"]})
+
+    def test_post_overlapping_timespan_not_allowed_overlaps_start(self):
+        """
+        don't allow posting new rota entries that overlap other
+            -   operator_id
+            -   law category
+            -   time span
+
+        """
+        post_data = self._get_default_post_data()
+
+        response2 = self.client.post(self.list_url,
+                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                     format='json',
+                                     data=post_data)
+        self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
+        self.assertOutOfHoursRotaCheckResponseKeys(response2)
+
+        self.assertOutOfHoursRotaEqual(post_data, response2)
+
+        post_data.update({
+            'start_date': '2013-12-30T00:00:00Z',
+            'end_date': '2014-01-02T00:00:00Z',
+            })
+
+        response2 = self.client.post(self.list_url,
+                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                     format='json',
+                                     data=post_data)
+
+        self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response2.data,
+                         {'__all__':
+                              [u"Overlapping rota allocation not allowed"]})
 

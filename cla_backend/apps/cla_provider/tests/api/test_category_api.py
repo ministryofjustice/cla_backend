@@ -4,14 +4,15 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin, make_recipe
+from core.tests.mommy_utils import make_recipe
+from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
 
 
 class CategoryTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
         super(CategoryTests, self).setUp()
 
-        self.categories = make_recipe('legalaid.tests.category', _quantity=3)
+        self.categories = make_recipe('legalaid.category', _quantity=3)
 
         self.list_url = reverse('cla_provider:category-list')
         self.detail_url = reverse(

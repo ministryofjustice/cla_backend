@@ -129,3 +129,13 @@ class CaseSerializerBase(serializers.ModelSerializer):
     class Meta:
         model = Case
         fields = ()
+
+
+class ExtendedUserSerializerBase(serializers.ModelSerializer):
+    username = serializers.CharField(read_only=True, source='user.username')
+    first_name = serializers.CharField(read_only=True, source='user.first_name')
+    last_name = serializers.CharField(read_only=True, source='user.last_name')
+    email = serializers.CharField(read_only=True, source='user.email')
+
+    class Meta:
+        fields = ()

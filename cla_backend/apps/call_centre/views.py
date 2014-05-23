@@ -8,14 +8,16 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
-from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
 from core.viewsets import IsEligibleActionViewSetMixin
+from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
+from legalaid.views import BaseUserViewSet
 
 from .permissions import CallCentreClientIDPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
-    OutOfHoursRotaSerializer
+    OutOfHoursRotaSerializer, OperatorSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm
+from .models import Operator
 
 
 class CallCentrePermissionsViewSetMixin(object):
@@ -139,3 +141,10 @@ class OutOfHoursRotaViewSet(
 
     serializer_class = OutOfHoursRotaSerializer
     model = OutOfHoursRota
+
+class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
+    model = Operator
+    serializer_class = OperatorSerializer
+
+    def get_logged_in_user_model(self):
+        return self.request.user.operator

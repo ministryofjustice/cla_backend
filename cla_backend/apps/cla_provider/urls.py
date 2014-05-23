@@ -12,6 +12,7 @@ router.register(r'caselog', views.CaseLogTypeViewSet)
 router.register(r'outcome_code', views.OutcomeCodeViewSet)
 router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_name='eligibility_check')
 router.register(r'case', views.CaseViewSet)
+router.register(r'user', views.UserViewSet, base_name='user')
 
 
 urlpatterns = patterns('',

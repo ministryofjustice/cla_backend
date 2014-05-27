@@ -3,7 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.filters import OrderingFilter, SearchFilter, DjangoFilterBackend
 
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
@@ -133,6 +133,10 @@ class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
 
     queryset = Provider.objects.active()
 
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('law_category__code',)
+
+
 class OutOfHoursRotaViewSet(
     CallCentreManagerPermissionsViewSetMixin,
     mixins.CreateModelMixin,
@@ -144,6 +148,7 @@ class OutOfHoursRotaViewSet(
 
     serializer_class = OutOfHoursRotaSerializer
     model = OutOfHoursRota
+
 
 class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     model = Operator

@@ -34,7 +34,7 @@ class ProviderTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                                    format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual([d['name'] for d in response.data], [x.name for x in self.providers])
+        self.assertItemsEqual([d['name'] for d in response.data], [x.name for x in self.providers])
 
         # DETAIL
         response = self.client.get(self.detail_url,

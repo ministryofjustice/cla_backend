@@ -78,8 +78,8 @@ class MoneyIntervalFieldCreator(object):
 
     def __set__(self, obj, value):
 
-        #if isinstance(value, MoneyInterval): ???????????????
-        if value.__class__.__name__ == "MoneyInterval":
+        if isinstance(value, MoneyInterval):
+        #if value.__class__.__name__ == "MoneyInterval":
             # MoneyInterval is assigned: take over it's values
             obj.__dict__[self.field.name] = value.as_monthly()
             setattr(obj, self.interval_period_field_name, value.interval_period)

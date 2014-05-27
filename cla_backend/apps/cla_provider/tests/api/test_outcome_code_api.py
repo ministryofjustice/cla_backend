@@ -5,7 +5,8 @@ from rest_framework.test import APITestCase
 
 from cla_common.constants import CASE_STATES
 
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin, make_recipe
+from core.tests.test_base import make_recipe
+from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
 
 
 class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
@@ -13,9 +14,9 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         super(CaseLogTests, self).setUp()
 
         self.outcome_codes = [
-            make_recipe('legalaid.tests.logtype', code="CODE_OPEN", case_state=CASE_STATES.OPEN, subtype='outcome'),
-            make_recipe('legalaid.tests.logtype', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED, subtype='outcome'),
-            make_recipe('legalaid.tests.logtype', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED, subtype='outcome'),
+            make_recipe('legalaid.logtype', code="CODE_OPEN", case_state=CASE_STATES.OPEN, subtype='outcome'),
+            make_recipe('legalaid.logtype', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED, subtype='outcome'),
+            make_recipe('legalaid.logtype', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED, subtype='outcome'),
         ]
 
         self.list_url = reverse('cla_provider:caselogtype-list')

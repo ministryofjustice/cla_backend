@@ -6,20 +6,26 @@ from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter
 
 from cla_common.constants import CASE_STATES
-from cla_provider.models import Provider
+from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
-from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
 from core.viewsets import IsEligibleActionViewSetMixin
+from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
+from legalaid.views import BaseUserViewSet
 
-from .permissions import CallCentreClientIDPermission
+from .permissions import CallCentreClientIDPermission, \
+    OperatorManagerPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
-    CaseSerializer, ProviderSerializer, CaseLogSerializer
+    CaseSerializer, ProviderSerializer, CaseLogSerializer, \
+    OutOfHoursRotaSerializer, OperatorSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm
+from .models import Operator
 
 
 class CallCentrePermissionsViewSetMixin(object):
     permission_classes = (CallCentreClientIDPermission,)
 
+class CallCentreManagerPermissionsViewSetMixin(object):
+    permission_classes = (CallCentreClientIDPermission, OperatorManagerPermission)
 
 class CategoryViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Category
@@ -126,3 +132,22 @@ class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
     serializer_class = ProviderSerializer
 
     queryset = Provider.objects.active()
+
+class OutOfHoursRotaViewSet(
+    CallCentreManagerPermissionsViewSetMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet):
+
+    serializer_class = OutOfHoursRotaSerializer
+    model = OutOfHoursRota
+
+class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
+    model = Operator
+    serializer_class = OperatorSerializer
+
+    def get_logged_in_user_model(self):
+        return self.request.user.operator

@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, WritableField
 
 from core.serializers import UUIDSerializer
-from cla_provider.models import Provider
+from cla_provider.models import Provider, OutOfHoursRota
 
 from cla_common.helpers import MoneyInterval
  
@@ -28,6 +28,14 @@ class CaseLogTypeSerializerBase(serializers.HyperlinkedModelSerializer):
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Provider
+
+class OutOfHoursRotaSerializerBase(serializers.ModelSerializer):
+
+    category = serializers.SlugRelatedField(slug_field='code')
+    provider = serializers.PrimaryKeyRelatedField()
+
+    class Meta:
+        model = OutOfHoursRota
 
 
 class PropertySerializerBase(serializers.ModelSerializer):
@@ -166,4 +174,14 @@ class CaseSerializerBase(serializers.ModelSerializer):
 
     class Meta:
         model = Case
+        fields = ()
+
+
+class ExtendedUserSerializerBase(serializers.ModelSerializer):
+    username = serializers.CharField(read_only=True, source='user.username')
+    first_name = serializers.CharField(read_only=True, source='user.first_name')
+    last_name = serializers.CharField(read_only=True, source='user.last_name')
+    email = serializers.CharField(read_only=True, source='user.email')
+
+    class Meta:
         fields = ()

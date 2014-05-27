@@ -144,7 +144,8 @@ class OutOfHoursRotaViewSet(
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
-    viewsets.GenericViewSet):
+    viewsets.GenericViewSet
+):
 
     serializer_class = OutOfHoursRotaSerializer
     model = OutOfHoursRota

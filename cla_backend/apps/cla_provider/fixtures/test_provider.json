@@ -430,7 +430,7 @@
 	    "pk": 2,
 	    "model": "cla_provider.staff",
 	    "fields": {
-	        "is_staff_superuser": false,
+	        "is_manager": false,
 	        "user": 4,
 	        "provider": 2,
 	        "modified": "2014-05-02T11:10:02.439Z",
@@ -441,7 +441,7 @@
 	    "pk": 3,
 	    "model": "cla_provider.staff",
 	    "fields": {
-	        "is_staff_superuser": false,
+	        "is_manager": false,
 	        "user": 5,
 	        "provider": 1,
 	        "modified": "2014-05-02T11:10:32.044Z",

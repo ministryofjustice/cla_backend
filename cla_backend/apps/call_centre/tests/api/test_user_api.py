@@ -43,7 +43,7 @@ class UserTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'first_name': u'',
             'last_name': u'',
             'email': u'lennon@thebeatles.com',
-            'is_operator_superuser': False
+            'is_manager': False
         })
 
     def test_get_different_user_not_allowed(self):

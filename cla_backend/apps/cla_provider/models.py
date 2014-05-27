@@ -49,7 +49,8 @@ class ProviderAllocation(TimeStampedModel):
 class Staff(TimeStampedModel):
     user = models.OneToOneField('auth.User')
     provider = models.ForeignKey(Provider)
-    is_staff_superuser = models.BooleanField(default=False)
+    is_manager = models.BooleanField(default=False)
+
 
 
 class OutOfHoursRota(TimeStampedModel):

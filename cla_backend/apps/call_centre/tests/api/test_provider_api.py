@@ -83,7 +83,8 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 'start_date',
                 'end_date',
                 'category',
-                'provider'
+                'provider',
+                'provider_name'
             ]
         )
 
@@ -150,7 +151,8 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 'start_date': rota.start_date,
                 'end_date': rota.end_date,
                 'category': rota.category.code,
-                'provider': rota.provider_id
+                'provider': rota.provider_id,
+                'provider_name': rota.provider.name
             } for rota in self.rotas])
 
         # DETAIL

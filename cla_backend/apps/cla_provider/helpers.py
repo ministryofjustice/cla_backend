@@ -7,13 +7,16 @@ from cla_provider.models import ProviderAllocation
 class ProviderAllocationHelper(object):
 
     def __init__(self):
-        pass
+        self._providers_in_category = None
 
     def get_qualifying_providers_allocation(self, category):
         """
         @return: list
         """
-        return ProviderAllocation.objects.filter(category=category)
+        if not self._providers_in_category:
+            self._providers_in_category = ProviderAllocation.objects.filter(category=category)
+
+        return self._providers_in_category
 
 
     def get_qualifying_providers(self, category):

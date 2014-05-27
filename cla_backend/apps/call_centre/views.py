@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AnonymousUser
 
 from rest_framework import viewsets, mixins, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter
 
@@ -86,6 +86,23 @@ class CaseViewSet(
         user = self.request.user
         if not obj.pk and not isinstance(user, AnonymousUser):
             obj.created_by = user
+
+    @link()
+    def assign_suggest(self, request, reference=None, **kwargs):
+        """
+        return single randomly chosen provider and list of other suitable
+        providers.
+        """
+        obj = self.get_object()
+
+        helper = ProviderAllocationHelper()
+        category = obj.eligibility_check.category
+        suggestions = { 'suggested_provider' : helper.get_random_provider(category),
+                        'other_providers' : helper.get_qualifying_providers(category) 
+                      }
+
+        return DRFResponse(suggestions)
+
 
     @action()
     def assign(self, request, reference=None, **kwargs):

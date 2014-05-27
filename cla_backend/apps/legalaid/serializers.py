@@ -90,9 +90,6 @@ class TotalsModelSerializer(ClaModelSerializer):
                 total += getattr(obj, f, 0)
         return total
     
-#     def to_native(self, value):
-#         print "x"
-
 
 class IncomeSerializerBase(TotalsModelSerializer):
     total_fields = {'earnings', 'other_income'}

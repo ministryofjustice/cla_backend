@@ -7,7 +7,7 @@ from ..models import Category, EligibilityCheck, Property, Savings, \
 
 
 category = Recipe(Category,
-    name=seq('Name'), order = seq(0)
+    name=seq('Name'), code=seq('Code'), order = seq(0)
 )
 
 person = Recipe(Person)

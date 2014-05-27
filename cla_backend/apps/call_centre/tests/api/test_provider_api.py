@@ -356,3 +356,33 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                          {'__all__':
                               [u"Overlapping rota allocation not allowed"]})
 
+    def test_end_date_must_be_greater_than_start_date(self):
+
+        post_data = self._get_default_post_data()
+        post_data.update({
+            'start_date': '2014-01-07T00:00:00Z',
+            'end_date': '2014-01-01T00:00:00Z',
+        })
+        response = self.client.post(self.list_url,
+                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                     format='json',
+                                     data=post_data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data,
+                         {'__all__': [u'End date must be after start date.']})
+
+        # can't set same
+        post_data = self._get_default_post_data()
+        post_data.update({
+            'start_date': '2014-01-07T00:00:00Z',
+            'end_date': '2014-01-07T00:00:00Z',
+        })
+        response = self.client.post(self.list_url,
+                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                     format='json',
+                                     data=post_data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data,
+                         {'__all__': [u'End date must be after start date.']})

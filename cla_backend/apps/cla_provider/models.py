@@ -69,6 +69,9 @@ class OutOfHoursRota(TimeStampedModel):
 
     def clean(self):
 
+        if not self.end_date > self.start_date:
+            raise ValidationError("End date must be after start date.")
+
         # make sure you can't set a category that a provider
         # is not able to provide.
         if self.category not in self.provider.law_category.all():

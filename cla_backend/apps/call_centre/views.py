@@ -12,7 +12,8 @@ from core.viewsets import IsEligibleActionViewSetMixin
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
 from legalaid.views import BaseUserViewSet
 
-from .permissions import CallCentreClientIDPermission
+from .permissions import CallCentreClientIDPermission, \
+    OperatorManagerPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer
@@ -23,6 +24,8 @@ from .models import Operator
 class CallCentrePermissionsViewSetMixin(object):
     permission_classes = (CallCentreClientIDPermission,)
 
+class CallCentreManagerPermissionsViewSetMixin(object):
+    permission_classes = (CallCentreClientIDPermission, OperatorManagerPermission)
 
 class CategoryViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Category
@@ -131,7 +134,7 @@ class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
     queryset = Provider.objects.active()
 
 class OutOfHoursRotaViewSet(
-    CallCentrePermissionsViewSetMixin,
+    CallCentreManagerPermissionsViewSetMixin,
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,

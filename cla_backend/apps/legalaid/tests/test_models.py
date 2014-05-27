@@ -442,8 +442,7 @@ class CaseTestCase(TestCase):
 class MoneyIntervalFieldTestCase(TestCase):
     def test_create_save_moneyinterval(self):
 
-        ei = MoneyInterval(interval_period='per_week')
-        ei.set_as_pennies(5000)
+        ei = MoneyInterval('per_week', pennies=5000)
         per_month = int((5000.0 * 52.0) / 12.0)
 
         i = Income(earnings=ei, other_income=200, self_employed=True)
@@ -458,7 +457,6 @@ class MoneyIntervalFieldTestCase(TestCase):
 
     def test_annual_moneyinterval(self):
 
-        ei = MoneyInterval(interval_period='per_year')
-        ei.set_as_pennies(1200000)
+        ei = MoneyInterval(interval_period='per_year', pennies=1200000)
         self.assertEqual(ei.as_monthly(), 100000)
 

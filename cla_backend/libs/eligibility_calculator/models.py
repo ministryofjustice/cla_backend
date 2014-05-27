@@ -58,8 +58,8 @@ class Income(ModelMixin, object):
     @property
     def total(self):
         if isinstance(self.earnings, dict):
-            mi = MoneyInterval(self.earnings['interval_period'])
-            mi.set_as_pennies(self.earnings['per_interval_value'])
+            mi = MoneyInterval(self.earnings['interval_period'],\
+                               pennies=self.earnings['per_interval_value'])
             earnings = mi.as_monthly()
         else:
             earnings = self.earnings

@@ -63,16 +63,15 @@ class MoneyIntervalFieldCreator(object):
         if value is None: return None
         elif isinstance(value, dict):
             try:
-                mi = MoneyInterval(interval_period=value['interval_period'])
-                mi.set_as_pennies(value['per_interval_value'])
+                mi = MoneyInterval(value['interval_period'], pennies=value['per_interval_value'])
             except:
                 pass
             return mi
         elif isinstance(value, MoneyInterval):
             return value
         elif hasattr(obj, self.interval_period_field_name) and hasattr(obj, self.per_interval_value_field_name):
-            mi = MoneyInterval(interval_period=getattr(obj, self.interval_period_field_name))
-            mi.set_as_pennies(getattr(obj, self.per_interval_value_field_name))
+            mi = MoneyInterval(getattr(obj, self.interval_period_field_name),\
+                               pennies=getattr(obj, self.per_interval_value_field_name))
             return mi
         else:
             raise Exception("probably needs to instantiate from something else")
@@ -166,13 +165,12 @@ class MoneyIntervalField(models.BigIntegerField):
 
         try:
             if isinstance(value, dict):
-                mi = MoneyInterval(interval_period=value['earnings_interval_period'])
-                mi.set_as_pennies(value['earnings_per_interval_value'])
+                mi = MoneyInterval(value['earnings_interval_period'],\
+                                   pennies=value['earnings_per_interval_value'])
             elif isinstance(value, MoneyInterval):
                 return value
             else:
-                mi = MoneyInterval(interval_period='per_month')
-                mi.set_as_pennies(value)
+                mi = MoneyInterval('per_month', pennies=value)
             return mi
         except (TypeError, ValueError):
             raise exceptions.ValidationError(

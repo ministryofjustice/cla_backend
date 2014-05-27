@@ -20,8 +20,7 @@ eligibility_check = Recipe(EligibilityCheck,
 )
 
 from cla_common.helpers import MoneyInterval
-mi = MoneyInterval('per_month')
-mi.set_as_pennies(2200)
+mi = MoneyInterval('per_month', pennies=2200)
 
 income = Recipe(Income, earnings=mi)
 savings = Recipe(Savings)

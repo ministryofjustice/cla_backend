@@ -1,5 +1,8 @@
-from legalaid.constants import CASELOGTYPE_SUBTYPES
 from model_mommy.recipe import Recipe, seq, foreign_key
+
+from legalaid.constants import CASELOGTYPE_SUBTYPES
+
+from cla_common.money_interval.models import MoneyInterval
 
 from ..models import Category, EligibilityCheck, Property, Savings, \
     Case, PersonalDetails, Income, Deductions, Person,\
@@ -19,7 +22,8 @@ eligibility_check = Recipe(EligibilityCheck,
     partner=foreign_key(person)
 )
 
-income = Recipe(Income)
+
+income = Recipe(Income, earnings=MoneyInterval('per_month', pennies=2200))
 savings = Recipe(Savings)
 deductions = Recipe(Deductions)
 

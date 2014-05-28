@@ -3,11 +3,15 @@ from django.test import TestCase
 from eligibility_calculator.models import CaseData, ModelMixin
 
 from cla_common.constants import CASE_STATES
+from cla_common.money_interval.models import MoneyInterval
 
 from core.tests.mommy_utils import make_recipe, make_user
 
 from legalaid.exceptions import InvalidMutationException
 from ..models import Case
+
+from cla_backend.apps.legalaid.models import Income
+
 
 
 def walk(coll):
@@ -55,7 +59,9 @@ class EligibilityCheckTestCase(TestCase):
             category=make_recipe('legalaid.category', code='code'),
             you=make_recipe('legalaid.person',
                 income= make_recipe('legalaid.income',
-                    earnings=500,
+                    earnings= {"interval_period": "per_month",
+                               "per_interval_value": 500,
+                                },
                     other_income=600,
                     self_employed=True
                 ),
@@ -100,7 +106,9 @@ class EligibilityCheckTestCase(TestCase):
                         'valuable_items': 300,
                     },
                     'income': {
-                        'earnings': 500,
+                        'earnings': {"interval_period": "per_month",
+                                     "per_interval_value": 500,
+                                    },
                         'other_income':600,
                         'self_employed': True,
                     },
@@ -123,7 +131,9 @@ class EligibilityCheckTestCase(TestCase):
             category=make_recipe('legalaid.category', code='code'),
             you=make_recipe('legalaid.person',
                 income=make_recipe('legalaid.income',
-                    earnings=500,
+                    earnings={"interval_period": "per_month",
+                              "per_interval_value": 500,
+                              },
                     other_income=600,
                     self_employed=True
                 ),
@@ -143,7 +153,9 @@ class EligibilityCheckTestCase(TestCase):
             ),
             partner=make_recipe('legalaid.person',
                 income= make_recipe('legalaid.income',
-                    earnings=501,
+                    earnings={"interval_period": "per_month",
+                              "per_interval_value": 501,
+                              },
                     other_income=601,
                     self_employed=False
                 ),
@@ -186,7 +198,9 @@ class EligibilityCheckTestCase(TestCase):
                     'valuable_items': 300,
                 },
                 'income': {
-                    'earnings': 500,
+                    'earnings': {"interval_period": "per_month",
+                                 "per_interval_value": 500,
+                                 },
                     'other_income':600,
                     'self_employed': True,
                 },
@@ -206,7 +220,9 @@ class EligibilityCheckTestCase(TestCase):
                     'valuable_items': 301,
                 },
                 'income': {
-                    'earnings': 501,
+                    'earnings': {"interval_period": "per_month",
+                                 "per_interval_value": 501,
+                                 },
                     'other_income':601,
                     'self_employed': False,
                 },
@@ -421,3 +437,26 @@ class CaseTestCase(TestCase):
 
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, CASE_STATES.CLOSED)
+
+
+class MoneyIntervalFieldTestCase(TestCase):
+    def test_create_save_moneyinterval(self):
+
+        ei = MoneyInterval('per_week', pennies=5000)
+        per_month = int((5000.0 * 52.0) / 12.0)
+
+        i = Income(earnings=ei, other_income=200, self_employed=True)
+        self.assertEqual(i.earnings.interval_period, 'per_week')
+        i.save()
+
+        ix = Income.objects.get(id=i.id)
+        eix = ix.earnings
+        self.assertEqual(eix.interval_period, 'per_week')
+        self.assertEqual(eix.per_interval_value, 5000)
+        self.assertEqual(eix.as_monthly(), per_month)
+
+    def test_annual_moneyinterval(self):
+
+        ei = MoneyInterval(interval_period='per_year', pennies=1200000)
+        self.assertEqual(ei.as_monthly(), 100000)
+

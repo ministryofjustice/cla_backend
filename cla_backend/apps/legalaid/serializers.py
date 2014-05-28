@@ -1,14 +1,11 @@
-from legalaid.constants import CASELOGTYPE_SUBTYPES
-from legalaid.fields import MoneyIntervalField
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer, WritableField
+from rest_framework.serializers import ModelSerializer
 
 from core.serializers import UUIDSerializer
 from cla_provider.models import Provider, OutOfHoursRota
 
-from cla_common.helpers import MoneyInterval
- 
-from django.utils.translation import ugettext as _
+from cla_common.money_interval.models import MoneyInterval
+from cla_common.money_interval.serializers import MoneyIntervalModelSerializerMixin
 
 
 from .models import Category, Property, EligibilityCheck, Income, \
@@ -44,33 +41,8 @@ class PropertySerializerBase(serializers.ModelSerializer):
         fields = ()
 
 
-class MoneyIntervalDRFField(WritableField):
-    type_name = 'MoneyIntervalDRFField'
-    type_label = 'moneyIntervalDRFField'
-    form_field_class = MoneyIntervalField
-
-    def field_to_native(self, obj, field_name):
- 
-        moneyIntervalField = getattr(obj, field_name)
-        return {'interval_period' : moneyIntervalField.interval_period,
-                'per_interval_value' : moneyIntervalField.per_interval_value,
-                }
-
-    def from_native(self, value):
-        # TODO remove word earnings and find it as field
-        if isinstance(value, dict):
-            mi = MoneyInterval(value['interval_period'], pennies=value['per_interval_value'])
-        else:
-            # TODO - remove - only here for mock test - temporary
-            mi = MoneyInterval('per_month', pennies=value)
-        return mi
-
-
-class ClaModelSerializer(ModelSerializer):
-    def __init__(self, *args, **kwargs):
-        # add a model serializer which is used throughout this project
-        self.field_mapping[MoneyIntervalField] = MoneyIntervalDRFField
-        super(ClaModelSerializer, self).__init__(*args, **kwargs)
+class ClaModelSerializer(MoneyIntervalModelSerializerMixin, ModelSerializer):
+    pass
 
 
 class TotalsModelSerializer(ClaModelSerializer):
@@ -81,13 +53,13 @@ class TotalsModelSerializer(ClaModelSerializer):
         total = 0
         for f in self.total_fields:
             value = getattr(obj, f, 0)
-            
+
             if isinstance(value, MoneyInterval):
                 total += value.as_monthly()
             else:
                 total += getattr(obj, f, 0)
         return total
-    
+
 
 class IncomeSerializerBase(TotalsModelSerializer):
     total_fields = {'earnings', 'other_income'}

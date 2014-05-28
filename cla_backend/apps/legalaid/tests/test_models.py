@@ -3,6 +3,7 @@ from django.test import TestCase
 from eligibility_calculator.models import CaseData, ModelMixin
 
 from cla_common.constants import CASE_STATES
+from cla_common.money_interval.models import MoneyInterval
 
 from core.tests.mommy_utils import make_recipe, make_user
 
@@ -10,7 +11,6 @@ from legalaid.exceptions import InvalidMutationException
 from ..models import Case
 
 from cla_backend.apps.legalaid.models import Income
-from cla_backend.apps.legalaid.fields import MoneyInterval
 
 
 

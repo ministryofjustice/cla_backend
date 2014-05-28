@@ -13,11 +13,13 @@ from model_utils.models import TimeStampedModel
 
 # from jsonfield import JSONField
 
+from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.constants import ELIGIBILITY_STATES, CASE_STATES
 
 
 from legalaid.exceptions import InvalidMutationException
-from legalaid.fields import MoneyField, MoneyIntervalField
+from legalaid.fields import MoneyField
+
 
 logger = logging.getLogger(__name__)
 

@@ -20,7 +20,7 @@ class Migration(SchemaMigration):
 
 
         # Changing field 'Income.earnings'
-        db.alter_column(u'legalaid_income', 'earnings', self.gf('legalaid.fields.MoneyIntervalField')())
+        db.alter_column(u'legalaid_income', 'earnings', self.gf('money_interval.fields.MoneyIntervalField')())
 
         # Changing field 'Income.other_income'
         db.alter_column(u'legalaid_income', 'other_income', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0))
@@ -245,7 +245,7 @@ class Migration(SchemaMigration):
         u'legalaid.income': {
             'Meta': {'object_name': 'Income'},
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'earnings': ('legalaid.fields.MoneyIntervalField', [], {}),
+            'earnings': ('money_interval.fields.MoneyIntervalField', [], {}),
             'earnings_interval_period': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'earnings_per_interval_value': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

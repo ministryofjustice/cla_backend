@@ -1,5 +1,7 @@
+from cla_common.money_interval.models import MoneyInterval
+
 from . import exceptions
-from legalaid.fields import MoneyInterval
+
 
 class ModelMixin(object):
     PROPERTY_META = None
@@ -58,8 +60,7 @@ class Income(ModelMixin, object):
     @property
     def total(self):
         if isinstance(self.earnings, dict):
-            mi = MoneyInterval(self.earnings['interval_period'],\
-                               pennies=self.earnings['per_interval_value'])
+            mi = MoneyInterval.from_dict(self.earnings)
             earnings = mi.as_monthly()
         else:
             earnings = self.earnings

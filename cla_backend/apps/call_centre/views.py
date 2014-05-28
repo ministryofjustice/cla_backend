@@ -103,13 +103,9 @@ class CaseViewSet(
 
         # if we're inside office hours then:
         # Randomly assign to provider who offers this category of service
-        if True:
-            form = ProviderAllocationForm({'provider' : helper.get_random_provider(category)},
-                                          providers=helper.get_qualifying_providers(category))
         # else it should be the on duty provider
-        else:
-            form = ProviderAllocationForm({'provider' : helper.get_rota_provider(category)},
-                                          providers=helper.get_qualifying_providers(category))
+        form = ProviderAllocationForm({'provider' : helper.get_suggested_provider(category)},
+                                      providers=helper.get_qualifying_providers(category))
 
         if form.is_valid():
             provider = form.save(obj, request.user)

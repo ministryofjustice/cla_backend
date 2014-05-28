@@ -10,6 +10,5 @@ def make_recipe(model_def, **kwargs):
         **kwargs
     )
 
-
 def make_user(**kwargs):
     return mommy.make(settings.AUTH_USER_MODEL, **kwargs)

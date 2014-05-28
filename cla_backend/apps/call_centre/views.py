@@ -90,22 +90,18 @@ class CaseViewSet(
     @link()
     def assign_suggest(self, request, reference=None, **kwargs):
         """
-        @return: dict - 'suggested_provider' (single item) ; 'other_providers' list
-        providers.
+        @return: dict - 'suggested_provider' (single item) ; 
+                        'suitable_providers' all possible providers for this category.
         """
         obj = self.get_object()
 
         helper = ProviderAllocationHelper()
         category = obj.eligibility_check.category
         suggested = helper.get_random_provider(category)
-        provider_serialized = ProviderSerializer(suggested)
-        other_providers = [ProviderSerializer(p).data
-                           for p in helper.get_qualifying_providers(category)\
-                           if p.id != suggested.id
-                          ]
+        suitable_providers = [ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
 
-        suggestions = { 'suggested_provider' : provider_serialized.data,
-                        'other_providers' : other_providers
+        suggestions = { 'suggested_provider' : ProviderSerializer(suggested).data,
+                        'suitable_providers' : suitable_providers
                       }
 
         return DRFResponse(suggestions)

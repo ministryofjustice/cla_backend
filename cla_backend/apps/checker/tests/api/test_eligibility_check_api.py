@@ -816,7 +816,6 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
 
         self.assertEligibilityCheckEqual(response.data, self.check)
 
-    @skip('broken until next version of django rest_framework')
     def test_patch_in_error(self):
         self._test_method_in_error('patch', self.detail_url)
 

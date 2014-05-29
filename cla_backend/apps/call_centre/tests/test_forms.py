@@ -32,9 +32,8 @@ class ProviderAllocationFormTestCase(TestCase):
                                       category=category)
 
         helper = ProviderAllocationHelper()
-
-        form = ProviderAllocationForm(case=case, data={'provider' : helper.get_suggested_provider(category)},
-                                      providers=helper.get_qualifying_providers(category))
+        form = ProviderAllocationForm(case=case, data={'provider' : helper.get_suggested_provider(category).pk},
+                                          providers=helper.get_qualifying_providers(category))
 
         self.assertTrue(form.is_valid())
 

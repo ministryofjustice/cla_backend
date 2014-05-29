@@ -23,11 +23,6 @@ class PropertySerializer(PropertySerializerBase):
         fields = ('value', 'mortgage_left', 'share', 'id')
 
 
-class CaseLogTypeSerializer(CaseLogTypeSerializerBase):
-    class Meta(CaseLogTypeSerializerBase.Meta):
-        fields = ('code', 'case_state', 'description')
-
-
 class IncomeSerializer(IncomeSerializerBase):
 
     class Meta(IncomeSerializerBase.Meta):

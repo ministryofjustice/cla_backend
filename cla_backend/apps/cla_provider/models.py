@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from model_utils.models import TimeStampedModel
@@ -52,12 +53,21 @@ class Staff(TimeStampedModel):
     is_manager = models.BooleanField(default=False)
 
 
+class OutOfHoursRotaManager(models.Manager):
+    def get_current(self, category, as_of=None):
+        if not as_of: as_of = timezone.localtime(timezone.now())
+
+        return self.get_queryset().get(category=category,
+                                 start_date__lte=as_of,
+                                 end_date__gte=as_of)
 
 class OutOfHoursRota(TimeStampedModel):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     category = models.ForeignKey('legalaid.Category')
     provider = models.ForeignKey(Provider)
+
+    objects = OutOfHoursRotaManager()
 
     def __unicode__(self):
         return u'%s provides out of hours service for %s between %s - %s' \
@@ -83,7 +93,6 @@ class OutOfHoursRota(TimeStampedModel):
         overlapping = self.__class__._default_manager.filter(
             Q(start_date__range=[self.start_date, self.end_date]) |
             Q(end_date__range=[self.start_date, self.end_date]),
-            provider=self.provider,
             category=self.category,
         )
         if self.pk:

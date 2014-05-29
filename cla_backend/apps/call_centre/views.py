@@ -3,26 +3,30 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.filters import OrderingFilter, SearchFilter, DjangoFilterBackend
 
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from core.viewsets import IsEligibleActionViewSetMixin
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
-from legalaid.views import BaseUserViewSet
+from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
 
-from .permissions import CallCentreClientIDPermission
+from .permissions import CallCentreClientIDPermission, \
+    OperatorManagerPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer
-from .forms import ProviderAllocationForm, CloseCaseForm
+from .forms import ProviderAllocationForm, CloseCaseForm, \
+    DeclineAllSpecialistsCaseForm
 from .models import Operator
 
 
 class CallCentrePermissionsViewSetMixin(object):
     permission_classes = (CallCentreClientIDPermission,)
 
+class CallCentreManagerPermissionsViewSetMixin(object):
+    permission_classes = (CallCentreClientIDPermission, OperatorManagerPermission)
 
 class CategoryViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Category
@@ -36,6 +40,12 @@ class CaseLogTypeViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyMod
     serializer_class = CaseLogSerializer
 
     lookup_field = 'code'
+
+
+class OutcomeCodeViewSet(
+    CallCentrePermissionsViewSetMixin, BaseOutcomeCodeViewSet
+):
+    pass
 
 
 class EligibilityCheckViewSet(
@@ -58,6 +68,7 @@ class CaseViewSet(
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
+    StateFromActionMixin,
     viewsets.GenericViewSet
 ):
     queryset = Case.objects.filter(state=CASE_STATES.OPEN, provider=None)
@@ -115,6 +126,7 @@ class CaseViewSet(
         obj = self.get_object()
         helper = ProviderAllocationHelper()
         category = obj.eligibility_check.category
+
         suitable_providers = helper.get_qualifying_providers(category)
         
         # TODO - when Marco is ready, use these to populate case log 
@@ -129,11 +141,15 @@ class CaseViewSet(
                 break
         else:
             raise ValueError("Provider not found")
- 
+
+        # if we're inside office hours then:
+        # Randomly assign to provider who offers this category of service
+        # else it should be the on duty provider 
         form = ProviderAllocationForm(data={'provider' : p.pk},
                                       providers=suitable_providers)
+
         if form.is_valid():
-            provider = form.save(obj, request.user)
+            provider = form.save(request.user)
             provider_serialised = ProviderSerializer(provider)
             return DRFResponse(data=provider_serialised.data)
  
@@ -142,14 +158,18 @@ class CaseViewSet(
         )
 
     @action()
+    def decline_all_specialists(self, request, reference=None, **kwargs):
+        return self._state_form_action(request, DeclineAllSpecialistsCaseForm)
+
+    @action()
     def close(self, request, reference=None, **kwargs):
         """
         Closes a case
         """
         obj = self.get_object()
-        form = CloseCaseForm(request.DATA)
+        form = CloseCaseForm(case=obj, data=request.DATA)
         if form.is_valid():
-            form.save(obj, request.user)
+            form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
         return DRFResponse(
@@ -163,17 +183,23 @@ class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
 
     queryset = Provider.objects.active()
 
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('law_category__code',)
+
+
 class OutOfHoursRotaViewSet(
-    CallCentrePermissionsViewSetMixin,
+    CallCentreManagerPermissionsViewSetMixin,
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
-    viewsets.GenericViewSet):
+    viewsets.GenericViewSet
+):
 
     serializer_class = OutOfHoursRotaSerializer
     model = OutOfHoursRota
+
 
 class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     model = Operator

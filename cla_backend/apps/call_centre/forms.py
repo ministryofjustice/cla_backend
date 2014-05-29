@@ -1,10 +1,12 @@
 from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.utils.translation import ugettext_lazy as _
+from django.forms.util import ErrorList
+
+from cla_common.constants import CASELOGTYPE_ACTION_KEYS
 
 from cla_provider.models import Provider
-from django.forms.util import ErrorList
-from legalaid.forms import BaseCaseLogForm
+from legalaid.forms import BaseCaseLogForm, OutcomeForm
 
 
 class ProviderAllocationForm(BaseCaseLogForm):
@@ -39,15 +41,40 @@ class ProviderAllocationForm(BaseCaseLogForm):
     def get_notes(self):
         return u"Assigned to {provider}".format(provider=self.cleaned_data['provider_obj'].name)
 
-    def save(self, case, user):
+    def save(self, user):
         data = self.cleaned_data
 
-        case.assign_to_provider(data['provider_obj'])
+        self.case.assign_to_provider(data['provider_obj'])
 
-        super(ProviderAllocationForm, self).save(case, user)
+        super(ProviderAllocationForm, self).save(user)
         return data['provider_obj']
 
 
 class CloseCaseForm(forms.Form):
-    def save(self, case, user):
-        case.close()
+    def __init__(self, *args, **kwargs):
+        self.case = kwargs.pop('case')
+        super(CloseCaseForm, self).__init__(*args, **kwargs)
+
+    def save(self, user):
+        self.case.close()
+
+
+class DeclineAllSpecialistsCaseForm(OutcomeForm):
+    def get_outcome_code_queryset(self):
+        qs = super(DeclineAllSpecialistsCaseForm, self).get_outcome_code_queryset()
+        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.DECLINE_SPECIALISTS)
+
+    def clean(self):
+        cleaned_data = super(DeclineAllSpecialistsCaseForm, self).clean()
+        if self._errors:  # skip if already in error
+            return cleaned_data
+
+        # checking that the case is in a consistent state
+        if self.case.provider:
+            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
+        return cleaned_data
+
+    def save(self, user):
+        self.case.close()
+
+        super(DeclineAllSpecialistsCaseForm, self).save(user)  # saves the outcome

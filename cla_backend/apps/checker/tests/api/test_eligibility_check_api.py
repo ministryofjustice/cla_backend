@@ -64,10 +64,14 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             self.assertEqual(obj, data)
             return
 
-        for prop in [
-             'earnings', 'other_income', 'self_employed'
-        ]:
+        for prop in ['other_income', 'self_employed']:
             self.assertEqual(getattr(obj, prop), data.get(prop))
+
+        for prop in ['earnings',]:
+            moneyInterval = getattr(obj, prop)
+            self.assertEqual(moneyInterval.per_interval_value, data.get(prop)['per_interval_value'])
+            self.assertEqual(moneyInterval.interval_period, data.get(prop)['interval_period'])
+        
 
     def assertSavingsEqual(self, data, obj):
         if obj is None or data is None:
@@ -338,10 +342,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
         self.assertItemsEqual([p['disputed'] for p in response.data['property_set']], [True, False])
 
-    def test_create_with_finances(self):
-        """
-        CREATE data with finances
-        """
+    def _get_valid_post_data(self):
         data={
             'has_partner': True,
             'you': {
@@ -352,7 +353,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": 400,
                 },
                 'income': {
-                    "earnings": 500,
+                    "earnings": {"interval_period": "per_month",
+                                 "per_interval_value": 500,
+                                },
                     "other_income": 600,
                     "self_employed": True,
                 },
@@ -372,13 +375,21 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": 4000,
                     },
                 'income': {
-                    "earnings": 5000,
+                    "earnings": {"interval_period": "per_month",
+                                 "per_interval_value": 5000,
+                                },
                     "other_income": 6000,
                     "self_employed": False
                 },
 
             },
         }
+        return data
+    def test_create_with_finances(self):
+        """
+        CREATE data with finances
+        """
+        data = self._get_valid_post_data()
         response = self.client.post(
             self.list_url, data, format='json'
         )
@@ -419,7 +430,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": -1,
                 },
                 'income': {
-                    "earnings": 9999999999+1,
+                   "earnings": {"interval_period": "per_month",
+                                "per_interval_value": 0,
+                                },
                     "other_income": -1,
                 },
                 'deductions': {
@@ -438,7 +451,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": -1,
                 },
                 'income': {
-                    "earnings": 9999999999+1,
+                   "earnings": {"interval_period": "per_month",
+                                "per_interval_value": 0,
+                                },
                     "other_income": -1
                 },
                 'deductions': {
@@ -493,7 +508,6 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     ],
                     'income': [
                         {
-                            'earnings': [u'Ensure this value is less than or equal to 9999999999.'],
                             'other_income': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ],
@@ -523,7 +537,6 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     ],
                     'income': [
                         {
-                            'earnings': [u'Ensure this value is less than or equal to 9999999999.'],
                             'other_income': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ],
@@ -539,6 +552,39 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 }
             ]
         )
+
+    def test_errors_masked_by_drf(self):
+        """
+        @see note in cla_backend/apps/call_centre/tests/api/test_eligibility_check_api.py
+                     test_errors_masked_by_drf(self):
+        """
+        valid_data = self._get_valid_post_data()
+        ERRORS_DATA = [
+            {
+                'error': {'you': [{'income': [{'earnings': [u'Ensure this value is less than or equal to 9999999999.']}]}]},
+                'data': {   "you" : { "income" : { "earnings": 
+                                                    {"interval_period": "per_month",
+                                                     "per_interval_value": 9999999999+1,
+                                    }}}
+                        }
+            },
+            {
+                'error': {'partner': [{'income': [{'earnings': [u'Ensure this value is less than or equal to 9999999999.']}]}]},
+                'data': {   "partner" : { "income" : { "earnings": 
+                                                    {"interval_period": "per_month",
+                                                     "per_interval_value": 9999999999+1,
+                                    }}}
+                        }
+            },
+
+        ]
+
+        for error_data in ERRORS_DATA:
+            data = dict(valid_data)
+            data.update(error_data['data'])
+            response = self.client.post(self.list_url, data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertItemsEqual(error_data['error'], response.data)
 
     def test_create_in_error(self):
         self._test_method_in_error('post', self.list_url)
@@ -665,7 +711,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         data={
             'you': {
                 'income': {
-                    "earnings": 500,
+                    "earnings": {"interval_period": "per_month",
+                                 "per_interval_value": 500,
+                                 },
                     "other_income": 600,
                     "self_employed": True,
                 },
@@ -685,7 +733,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             },
             'partner': {
                 'income': {
-                    "earnings": 5000,
+                    "earnings": {"interval_period": "per_month",
+                                 "per_interval_value": 5000,
+                                 },
                     "other_income": 6000,
                     "self_employed": False
                 },
@@ -727,7 +777,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 'credit_balance': 0,
             },
             'income':{
-                'earnings': 0,
+                'earnings': {"interval_period": "per_month",
+                             "per_interval_value": 2200,
+                            },
                 'other_income': 0,
                 'self_employed': False,
             },
@@ -764,7 +816,6 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
 
         self.assertEligibilityCheckEqual(response.data, self.check)
 
-    @skip('broken until next version of django rest_framework')
     def test_patch_in_error(self):
         self._test_method_in_error('patch', self.detail_url)
 

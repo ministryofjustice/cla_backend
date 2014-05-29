@@ -1,29 +1,24 @@
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
-from rest_framework.test import APITestCase
 
-from cla_common.constants import CASE_STATES
+from cla_common.constants import CASE_STATES, CASELOGTYPE_ACTION_KEYS
 
-from core.tests.test_base import make_recipe
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
+from core.tests.test_base import CLAAuthBaseApiTestMixin
+from legalaid.constants import CASELOGTYPE_SUBTYPES
 
-from legalaid.tests.views.outcome_code_api import OutcomeCodeAPIMixin
+from ..base import generate_outcome_codes
 
 
-class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
+class OutcomeCodeAPIMixin(CLAAuthBaseApiTestMixin):
     def setUp(self):
-        super(CaseLogTests, self).setUp()
+        super(OutcomeCodeAPIMixin, self).setUp()
 
-        self.outcome_codes = [
-            make_recipe('legalaid.logtype', code="CODE_OPEN", case_state=CASE_STATES.OPEN, subtype='outcome'),
-            make_recipe('legalaid.logtype', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED, subtype='outcome'),
-            make_recipe('legalaid.logtype', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED, subtype='outcome'),
-        ]
+        self.outcome_codes = generate_outcome_codes()
 
-        self.list_url = reverse('cla_provider:caselogtype-list')
+        self.list_url = reverse('%s:outcome_code-list' % self.API_URL_NAMESPACE)
         self.detail_url = reverse(
-            'cla_provider:caselogtype-detail', args=(),
+            '%s:outcome_code-detail' % self.API_URL_NAMESPACE, args=(),
             kwargs={'code': self.outcome_codes[0].code}
         )
 
@@ -41,7 +36,7 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertItemsEqual(
             [d['code'] for d in response.data],
-            ['CODE_OPEN', 'CODE_REJECTED', 'CODE_ACCEPTED']
+            [outcome.code for outcome in self.outcome_codes if outcome.subtype == CASELOGTYPE_SUBTYPES.OUTCOME]
         )
 
         # DETAIL
@@ -52,7 +47,7 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['code'], 'CODE_OPEN')
 
-    def test_get_with_filtering(self):
+    def test_get_with_case_state_filtering(self):
         """
         GET with case_state filtering.
         """
@@ -85,6 +80,23 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_get_with_action_key_filtering(self):
+        """
+        GET with action_key filtering.
+        """
+        # LIST
+        action_key = CASELOGTYPE_ACTION_KEYS.DECLINE_SPECIALISTS
+        response = self.client.get(self.list_url,
+            { 'action_key': action_key },
+            HTTP_AUTHORIZATION='Bearer %s' % self.token,
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertItemsEqual(
+            [d['code'] for d in response.data],
+            [outcome.code for outcome in self.outcome_codes if outcome.action_key == action_key]
+        )
+
     def test_methods_not_allowed(self):
         """
         Ensure that we can't POST, PUT or DELETE
@@ -101,19 +113,16 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self._test_delete_not_allowed(self.detail_url)
 
     def test_methods_not_authorized(self):
+        invalid_token = self.get_invalid_token()
+
         ### LIST
-        self._test_get_not_authorized(self.list_url, self.operator_token)
-        self._test_post_not_authorized(self.list_url, self.operator_token)
-        self._test_put_not_authorized(self.list_url, self.operator_token)
-        self._test_delete_not_authorized(self.list_url, self.operator_token)
+        self._test_get_not_authorized(self.list_url, invalid_token)
+        self._test_post_not_authorized(self.list_url, invalid_token)
+        self._test_put_not_authorized(self.list_url, invalid_token)
+        self._test_delete_not_authorized(self.list_url, invalid_token)
 
         ### DETAIL
-        self._test_get_not_authorized(self.detail_url, self.operator_token)
-        self._test_post_not_authorized(self.detail_url, self.operator_token)
-        self._test_put_not_authorized(self.detail_url, self.operator_token)
-        self._test_delete_not_authorized(self.detail_url, self.operator_token)
-
-
-class OutcomeCodeTests(CLAProviderAuthBaseApiTestMixin, OutcomeCodeAPIMixin, APITestCase):
-    def get_invalid_token(self):
-        return self.operator_token
+        self._test_get_not_authorized(self.detail_url, invalid_token)
+        self._test_post_not_authorized(self.detail_url, invalid_token)
+        self._test_put_not_authorized(self.detail_url, invalid_token)
+        self._test_delete_not_authorized(self.detail_url, invalid_token)

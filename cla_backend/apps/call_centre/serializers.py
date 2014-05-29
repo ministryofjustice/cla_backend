@@ -19,11 +19,6 @@ class CategorySerializer(CategorySerializerBase):
         fields = ('code', 'name', 'description')
 
 
-class CaseLogTypeSerializer(CaseLogTypeSerializerBase):
-    class Meta(CaseLogTypeSerializerBase.Meta):
-        fields = ('code', 'description')
-
-
 class PropertySerializer(PropertySerializerBase):
 
     class Meta(PropertySerializerBase.Meta):
@@ -144,7 +139,10 @@ class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
         fields = ('name', 'id', 'short_code', 'telephone_frontdoor', 'telephone_backdoor')
 
+
 class OutOfHoursRotaSerializer(OutOfHoursRotaSerializerBase):
+    provider_name = serializers.CharField(read_only=True, source='provider.name')
+
     class Meta(OutOfHoursRotaSerializerBase.Meta):
         fields = (
             'id',
@@ -152,6 +150,7 @@ class OutOfHoursRotaSerializer(OutOfHoursRotaSerializerBase):
             'end_date',
             'category',
             'provider',
+            'provider_name',
         )
 
 class OperatorSerializer(ExtendedUserSerializerBase):

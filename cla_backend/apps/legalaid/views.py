@@ -1,6 +1,18 @@
 from django.http import Http404
 
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
+from rest_framework.response import Response as DRFResponse
+from rest_framework.filters import DjangoFilterBackend
+
+from cla_common.constants import CASE_STATES
+
+from core.viewsets import DefaultStateFilterViewSetMixin
+
+from legalaid.serializers import CaseLogTypeSerializerBase
+from legalaid.constants import CASELOGTYPE_SUBTYPES
+from legalaid.models import CaseLogType
+
+from .exceptions import InvalidMutationException
 
 
 class BaseUserViewSet(
@@ -32,3 +44,41 @@ class BaseUserViewSet(
 
         self.kwargs[lookup_url_kwarg] = self.get_logged_in_user_model().pk
         return super(BaseUserViewSet, self).get_object(*args, **kwargs)
+
+
+class StateFromActionMixin(object):
+    def _state_form_action(self, request, Form):
+        obj = self.get_object()
+        form = Form(case=obj, data=request.DATA)
+        if form.is_valid():
+            try:
+                form.save(request.user)
+            except InvalidMutationException as e:
+                return DRFResponse(
+                    {'case_state': [unicode(e)]},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+class BaseOutcomeCodeViewSet(
+    DefaultStateFilterViewSetMixin,
+    viewsets.ReadOnlyModelViewSet
+):
+    model = CaseLogType
+    serializer_class = CaseLogTypeSerializerBase
+
+    lookup_field = 'code'
+
+    default_state_filter = []
+    all_states = dict(CASE_STATES.CHOICES).keys()
+    state_field = 'case_state'
+
+    queryset =  CaseLogType.objects.filter(subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('action_key',)

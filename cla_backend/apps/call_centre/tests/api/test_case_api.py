@@ -1,12 +1,16 @@
+import datetime
 import uuid
 
 from django.core.urlresolvers import reverse
+from django.utils import timezone
+import mock
 
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from legalaid.models import EligibilityCheck, \
     Case, PersonalDetails
+from legalaid.tests.base import StateChangeAPIMixin
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe, make_user
@@ -15,18 +19,20 @@ from cla_common.constants import CASE_STATES
 from call_centre.serializers import CaseSerializer
 
 
-
-class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
+class BaseCaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
-        super(CaseTests, self).setUp()
+        super(BaseCaseTests, self).setUp()
 
         self.list_url = reverse('call_centre:case-list')
         self.case_obj = make_recipe('legalaid.case')
+        self.check = self.case_obj
         self.detail_url = reverse(
             'call_centre:case-detail', args=(),
             kwargs={'reference': self.case_obj.reference}
         )
 
+
+class CaseTests(BaseCaseTests):
     def assertCaseCheckResponseKeys(self, response):
         self.assertItemsEqual(
             response.data.keys(),
@@ -331,7 +337,14 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-    def test_assign_provider_successful(self):
+    @mock.patch('cla_provider.models.timezone.now')
+    @mock.patch('cla_provider.helpers.timezone.now')
+    def test_assign_successful(self, tz_model_mock, tz_helper_tz):
+
+        fake_day = datetime.datetime(2014, 1, 2, 9, 1, 0).replace(tzinfo=timezone.get_current_timezone())
+        tz_model_mock.return_value = fake_day
+        tz_helper_tz.return_value = fake_day
+
         case = make_recipe('legalaid.case')
 
         category = case.eligibility_check.category
@@ -558,3 +571,21 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['provider_notes'], self.case_obj.provider_notes)
         self.assertNotEqual(response.data['provider_notes'], 'abc123')
+
+
+class DeclineAllSpecialistsCaseTests(StateChangeAPIMixin, BaseCaseTests):
+    VALID_OUTCOME_CODE = 'CODE_DECLINED_ALL_SPECIALISTS'
+    EXPECTED_CASE_STATE = CASE_STATES.CLOSED
+
+    def get_state_change_url(self, reference=None):
+        reference = reference or self.check.reference
+        return reverse(
+            'call_centre:case-decline-all-specialists', args=(),
+            kwargs={'reference': reference}
+        )
+
+    def test_invalid_mutation(self):
+        """
+            Overriding as not possible to test
+        """
+        pass

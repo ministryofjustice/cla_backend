@@ -12,6 +12,7 @@ from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
 
 from legalaid.models import Case, CaseLog
+from legalaid.tests.base import StateChangeAPIMixin
 
 
 class BaseCaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
@@ -283,37 +284,10 @@ class CaseTests(BaseCaseTests):
         self.assertEqual(response.data['provider_notes'], 'abc123')
 
 
+class RejectCaseTests(StateChangeAPIMixin, BaseCaseTests):
+    VALID_OUTCOME_CODE = 'CODE_REJECTED'
+    EXPECTED_CASE_STATE = CASE_STATES.REJECTED
 
-class StateChangeMixin(object):
-    def setUp(self):
-        super(StateChangeMixin, self).setUp()
-
-        self.outcome_codes = [
-            make_recipe('legalaid.outcome_code', code="CODE_OPEN", case_state=CASE_STATES.OPEN),
-            make_recipe('legalaid.outcome_code', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED),
-            make_recipe('legalaid.outcome_code', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED),
-            make_recipe('legalaid.outcome_code', code="CODE_CLOSED", case_state=CASE_STATES.CLOSED),
-        ]
-        self.state_change_url = self.get_state_change_url()
-
-    def get_state_change_url(self, reference=None):
-        raise NotImplementedError()
-
-    def test_methods_not_allowed(self):
-        self._test_get_not_allowed(self.state_change_url)
-        self._test_patch_not_allowed(self.state_change_url)
-        self._test_delete_not_allowed(self.state_change_url)
-
-    def test_invalid_reference(self):
-        url = self.get_state_change_url(reference='invalid')
-
-        response = self.client.post(url, data={},
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-
-class RejectCaseTests(StateChangeMixin, BaseCaseTests):
     def get_state_change_url(self, reference=None):
         reference = reference or self.check.reference
         return reverse(
@@ -321,95 +295,11 @@ class RejectCaseTests(StateChangeMixin, BaseCaseTests):
             kwargs={'reference': reference}
         )
 
-    def test_successful(self):
-        # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATES.OPEN)
 
-        self.assertEqual(CaseLog.objects.count(), 0)
+class AcceptCaseTests(StateChangeAPIMixin, BaseCaseTests):
+    VALID_OUTCOME_CODE = 'CODE_ACCEPTED'
+    EXPECTED_CASE_STATE = CASE_STATES.ACCEPTED
 
-        # reject
-        data={
-                'outcome_code': 'CODE_REJECTED',
-                'outcome_notes': 'lorem ipsum'
-            }
-        response = self.client.post(
-            self.state_change_url, data=data,
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-        # after, case rejected and outcome created
-        case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATES.REJECTED)
-
-        self.assertEqual(CaseLog.objects.count(), 1)
-        outcome = CaseLog.objects.all()[0]
-
-        self.assertEqual(outcome.case, self.check)
-        self.assertEqual(outcome.logtype.code, data['outcome_code'])
-        self.assertEqual(outcome.notes, data['outcome_notes'])
-
-    def test_invalid_mutation(self):
-        # before, case accepted and no outcomes
-        self.check.state = CASE_STATES.ACCEPTED
-        self.check.save()
-        self.assertEqual(self.check.state, CASE_STATES.ACCEPTED)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-        # reject
-        data={
-                'outcome_code': 'CODE_REJECTED',
-                'outcome_notes': 'lorem ipsum'
-            }
-        response = self.client.post(
-            self.state_change_url, data=data,
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(
-            response.data,
-            {'case_state': [u"Case should be 'OPEN' to be rejected but it's currently 'Accepted'"]}
-        )
-
-        # after, case didn't change and no outcome created
-        case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATES.ACCEPTED)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-    def test_invalid_outcome_code(self):
-        # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATES.OPEN)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-        # reject
-        data={
-                'outcome_code': 'invalid',
-                'outcome_notes': 'lorem ipsum'
-            }
-        response = self.client.post(
-            self.state_change_url, data=data,
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(
-            response.data,
-            {'outcome_code': [u'Select a valid choice. That choice is not one of the available choices.']}
-        )
-
-        # after, case didn't change and no outcome created
-        case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATES.OPEN)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-
-class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
     def get_state_change_url(self, reference=None):
         reference = reference or self.check.reference
         return reverse(
@@ -417,95 +307,11 @@ class AcceptCaseTests(StateChangeMixin, BaseCaseTests):
             kwargs={'reference': reference}
         )
 
-    def test_successful(self):
-        # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATES.OPEN)
 
-        self.assertEqual(CaseLog.objects.count(), 0)
+class CloseCaseTests(StateChangeAPIMixin, BaseCaseTests):
+    VALID_OUTCOME_CODE = 'CODE_CLOSED'
+    EXPECTED_CASE_STATE = CASE_STATES.CLOSED
 
-        # reject
-        data={
-                'outcome_code': 'CODE_ACCEPTED',
-                'outcome_notes': 'lorem ipsum'
-            }
-        response = self.client.post(
-            self.state_change_url, data=data,
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-        # after, case rejected and outcome created
-        case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATES.ACCEPTED)
-
-        self.assertEqual(CaseLog.objects.count(), 1)
-        outcome = CaseLog.objects.all()[0]
-
-        self.assertEqual(outcome.case, self.check)
-        self.assertEqual(outcome.logtype.code, data['outcome_code'])
-        self.assertEqual(outcome.notes, data['outcome_notes'])
-
-    def test_invalid_mutation(self):
-        # before, case accepted and no outcomes
-        self.check.state = CASE_STATES.ACCEPTED
-        self.check.save()
-        self.assertEqual(self.check.state, CASE_STATES.ACCEPTED)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-        # reject
-        data={
-                'outcome_code': 'CODE_ACCEPTED',
-                'outcome_notes': 'lorem ipsum'
-            }
-        response = self.client.post(
-            self.state_change_url, data=data,
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(
-            response.data,
-            {'case_state': [u"Case should be 'OPEN' to be accepted but it's currently 'Accepted'"]}
-        )
-
-        # after, case didn't change and no outcome created
-        case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATES.ACCEPTED)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-    def test_invalid_outcome_code(self):
-        # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATES.OPEN)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-        # reject
-        data={
-                'outcome_code': 'invalid',
-                'outcome_notes': 'lorem ipsum'
-            }
-        response = self.client.post(
-            self.state_change_url, data=data,
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(
-            response.data,
-            {'outcome_code': [u'Select a valid choice. That choice is not one of the available choices.']}
-        )
-
-        # after, case didn't change and no outcome created
-        case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATES.OPEN)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-
-class CloseCaseTests(StateChangeMixin, BaseCaseTests):
     def get_state_change_url(self, reference=None):
         reference = reference or self.check.reference
         return reverse(
@@ -513,59 +319,8 @@ class CloseCaseTests(StateChangeMixin, BaseCaseTests):
             kwargs={'reference': reference}
         )
 
-    def test_successful(self):
-        # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATES.OPEN)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-        # close
-        data={
-                'outcome_code': 'CODE_CLOSED',
-                'outcome_notes': 'lorem ipsum'
-            }
-        response = self.client.post(
-            self.state_change_url, data=data,
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-        # after, case rejected and outcome created
-        case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATES.CLOSED)
-
-        self.assertEqual(CaseLog.objects.count(), 1)
-        outcome = CaseLog.objects.all()[0]
-
-        self.assertEqual(outcome.case, self.check)
-        self.assertEqual(outcome.logtype.code, data['outcome_code'])
-        self.assertEqual(outcome.notes, data['outcome_notes'])
-
-    def test_invalid_outcome_code(self):
-        # before, case open and no outcomes
-        self.assertEqual(self.check.state, CASE_STATES.OPEN)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-        # close
-        data={
-                'outcome_code': 'invalid',
-                'outcome_notes': 'lorem ipsum'
-            }
-        response = self.client.post(
-            self.state_change_url, data=data,
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(
-            response.data,
-            {'outcome_code': [u'Select a valid choice. That choice is not one of the available choices.']}
-        )
-
-        # after, case didn't change and no outcome created
-        case = Case.objects.get(pk=self.check.pk)
-        self.assertEqual(case.state, CASE_STATES.OPEN)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
+    def test_invalid_mutation(self):
+        """
+            Overriding as not possible to test
+        """
+        pass

@@ -1,7 +1,12 @@
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 
 from core.serializers import UUIDSerializer
 from cla_provider.models import Provider, OutOfHoursRota
+
+from cla_common.money_interval.models import MoneyInterval
+from cla_common.money_interval.serializers import MoneyIntervalModelSerializerMixin
+
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, CaseLog, CaseLogType
@@ -15,6 +20,7 @@ class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
 class CaseLogTypeSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CaseLogType
+        fields = ('code', 'description')
 
 
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
@@ -36,15 +42,23 @@ class PropertySerializerBase(serializers.ModelSerializer):
         fields = ()
 
 
-class TotalsModelSerializer(serializers.ModelSerializer):
-    total_fields = set()
+class ClaModelSerializer(MoneyIntervalModelSerializerMixin, ModelSerializer):
+    pass
 
+
+class TotalsModelSerializer(ClaModelSerializer):
+    total_fields = set()
     total = serializers.SerializerMethodField('get_total')
 
     def get_total(self, obj):
         total = 0
         for f in self.total_fields:
-            total += getattr(obj, f, 0)
+            value = getattr(obj, f, 0)
+
+            if isinstance(value, MoneyInterval):
+                total += value.as_monthly()
+            else:
+                total += getattr(obj, f, 0)
         return total
 
 

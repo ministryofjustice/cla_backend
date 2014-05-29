@@ -34,7 +34,7 @@ class ProviderTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                                    format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual([d['name'] for d in response.data], [x.name for x in self.providers])
+        self.assertItemsEqual([d['name'] for d in response.data], [x.name for x in self.providers])
 
         # DETAIL
         response = self.client.get(self.detail_url,
@@ -75,7 +75,6 @@ class ProviderTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
 class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
-
     def assertOutOfHoursRotaCheckResponseKeys(self, response):
         self.assertItemsEqual(
             response.data.keys(),
@@ -84,12 +83,15 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 'start_date',
                 'end_date',
                 'category',
-                'provider'
+                'provider',
+                'provider_name'
             ]
         )
 
     def setUp(self):
         super(OutOfHoursRotaTests, self).setUp()
+        self.operator.is_manager = True
+        self.operator.save()
         self.categories = make_recipe('legalaid.category', _quantity=3)
         self.providers = make_recipe('cla_provider.provider',
                                      active=True,
@@ -149,7 +151,8 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 'start_date': rota.start_date,
                 'end_date': rota.end_date,
                 'category': rota.category.code,
-                'provider': rota.provider_id
+                'provider': rota.provider_id,
+                'provider_name': rota.provider.name
             } for rota in self.rotas])
 
         # DETAIL
@@ -216,8 +219,8 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         response = self.client.get(self.detail_url,
                                    HTTP_AUTHORIZATION='Bearer %s' % self.token,
                                    format='json')
-        self.assertOutOfHoursRotaCheckResponseKeys(response)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertOutOfHoursRotaCheckResponseKeys(response)
 
 
         # DELETE IT
@@ -386,3 +389,13 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data,
                          {'__all__': [u'End date must be after start date.']})
+
+    def test_non_manager_not_authorized(self):
+        self.operator.is_manager = False
+        self.operator.save()
+
+        self._test_get_not_authorized(self.detail_url, self.token)
+        self._test_get_not_authorized(self.list_url, self.token)
+        self._test_post_not_authorized(self.list_url, self.token, self._get_default_post_data())
+        self._test_patch_not_authorized(self.detail_url, self.token, self._get_default_post_data())
+        self._test_delete_not_authorized(self.detail_url, self.token)

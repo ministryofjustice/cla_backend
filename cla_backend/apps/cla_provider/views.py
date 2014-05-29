@@ -1,26 +1,22 @@
 from django.shortcuts import get_object_or_404
-from django.http import Http404
 
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.decorators import action, link
-from rest_framework.response import Response as DRFResponse
+from rest_framework.decorators import action
 
 from core.viewsets import DefaultStateFilterViewSetMixin, \
     IsEligibleActionViewSetMixin
 from cla_common.constants import CASE_STATES
+from legalaid.serializers import CaseLogTypeSerializerBase
 
-from legalaid.exceptions import InvalidMutationException
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
-from legalaid.views import BaseUserViewSet
-from call_centre.serializers import CaseLogTypeSerializer
+from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import CategorySerializer, \
     EligibilityCheckSerializer, CaseSerializer, StaffSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
-from legalaid.constants import CASELOGTYPE_SUBTYPES
 
 
 class CLAProviderPermissionViewSetMixin(object):
@@ -40,30 +36,13 @@ class CaseLogTypeViewSet(
     viewsets.ReadOnlyModelViewSet
 ):
     model = CaseLogType
-    serializer_class = CaseLogTypeSerializer
+    serializer_class = CaseLogTypeSerializerBase
 
     lookup_field = 'code'
 
     default_state_filter = []
     all_states = dict(CASE_STATES.CHOICES).keys()
     state_field = 'case_state'
-
-
-class OutcomeCodeViewSet(
-    CLAProviderPermissionViewSetMixin,
-    DefaultStateFilterViewSetMixin,
-    viewsets.ReadOnlyModelViewSet
-):
-    model = CaseLogType
-    serializer_class = CaseLogTypeSerializer
-
-    lookup_field = 'code'
-
-    default_state_filter = []
-    all_states = dict(CASE_STATES.CHOICES).keys()
-    state_field = 'case_state'
-
-    queryset =  CaseLogType.objects.filter(subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
 
 
 class EligibilityCheckViewSet(
@@ -78,12 +57,19 @@ class EligibilityCheckViewSet(
     lookup_field = 'reference'
 
 
+class OutcomeCodeViewSet(
+    CLAProviderPermissionViewSetMixin, BaseOutcomeCodeViewSet
+):
+    pass
+
+
 class CaseViewSet(
     CLAProviderPermissionViewSetMixin,
     DefaultStateFilterViewSetMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
+    StateFromActionMixin,
     viewsets.GenericViewSet
 ):
     queryset = Case.objects.exclude(provider=None)
@@ -119,23 +105,6 @@ class CaseViewSet(
         if self.request:
             obj.lock(self.request.user)
         return obj
-
-    def _state_form_action(self, request, Form):
-        obj = self.get_object()
-        form = Form(request.DATA)
-        if form.is_valid():
-            try:
-                form.save(obj, request.user)
-            except InvalidMutationException as e:
-                return DRFResponse(
-                    {'case_state': [unicode(e)]},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
 
     @action()
     def reject(self, request, reference=None, **kwargs):

@@ -2,87 +2,9 @@ from django.test import TestCase
 
 from cla_common.constants import CASE_STATES
 
-from legalaid.models import CaseLog, Case
-
-from core.tests.mommy_utils import make_recipe, make_user
+from legalaid.tests.base import BaseStateFormTestCase
 
 from ..forms import CloseCaseForm, AcceptCaseForm, RejectCaseForm
-
-
-class BaseStateFormTestCase(object):
-    FORM = None,
-    VALID_OUTCOME_CODE = None
-    EXPECTED_CASE_STATE = None
-
-    def setUp(self):
-        super(BaseStateFormTestCase, self).setUp()
-
-        self.user = make_user()
-        self.outcome_codes = [
-            make_recipe('legalaid.logtype', code="CODE_OPEN", case_state=CASE_STATES.OPEN, subtype='outcome'),
-            make_recipe('legalaid.logtype', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED, subtype='outcome'),
-            make_recipe('legalaid.logtype', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED, subtype='outcome'),
-            make_recipe('legalaid.logtype', code="CODE_CLOSED", case_state=CASE_STATES.CLOSED, subtype='outcome'),
-        ]
-
-    def test_choices(self):
-        form = self.FORM()
-
-        self.assertItemsEqual(
-            [f[1] for f in form.fields['outcome_code'].choices], [self.VALID_OUTCOME_CODE]
-        )
-
-    def test_save_successfull(self):
-        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
-
-        self.assertEqual(case.state, CASE_STATES.OPEN)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-        form = self.FORM(data={
-            'outcome_code': self.VALID_OUTCOME_CODE,
-            'outcome_notes': 'lorem ipsum'
-        })
-
-        self.assertTrue(form.is_valid())
-
-        form.save(case, self.user)
-
-        case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, self.EXPECTED_CASE_STATE)
-
-        self.assertEqual(CaseLog.objects.count(), 1)
-        outcome = CaseLog.objects.all()[0]
-
-        self.assertEqual(outcome.logtype.code, self.VALID_OUTCOME_CODE)
-        self.assertEqual(outcome.notes, 'lorem ipsum')
-
-    def test_invalid_form(self):
-        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
-
-        self.assertEqual(case.state, CASE_STATES.OPEN)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-        form = self.FORM(data={
-            'outcome_code': 'invalid',
-            'outcome_notes': 'l'*501
-        })
-
-        self.assertFalse(form.is_valid())
-
-        self.assertItemsEqual(
-            form.errors, {
-                'outcome_code': [u'Select a valid choice. That choice is not one of the available choices.'],
-                'outcome_notes': [u'Ensure this value has at most 500 characters (it has 501).']
-            }
-        )
-
-        # nothing has changed
-        case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, CASE_STATES.OPEN)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
 
 
 class AcceptCaseFormTestCase(BaseStateFormTestCase, TestCase):

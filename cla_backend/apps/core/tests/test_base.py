@@ -36,6 +36,7 @@ class CLAAuthBaseApiTestMixin(object):
     Useful testing methods
     """
     DEFAULT_TOKEN = None
+    API_URL_NAMESPACE = None
 
     def setUp(self):
         # create a user
@@ -72,7 +73,7 @@ class CLAAuthBaseApiTestMixin(object):
         self.provider.save()
 
         # create operator user
-        Operator.objects.create(user=self.user)
+        self.operator = Operator.objects.create(user=self.user)
 
         # Create an access token
         self.operator_token = AccessToken.objects.create(
@@ -130,13 +131,15 @@ class CLAAuthBaseApiTestMixin(object):
                                    format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def _test_post_not_authorized(self, url, token, data={}):
+    def _test_post_not_authorized(self, url, token, data=None):
+        if not data: data = {}
         response = self.client.post(url, data,
                                     HTTP_AUTHORIZATION="Bearer %s" % token,
                                     format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def _test_put_not_authorized(self, url, token, data={}):
+    def _test_put_not_authorized(self, url, token, data=None):
+        if not data: data = {}
         response = self.client.put(url, data,
                                    HTTP_AUTHORIZATION="Bearer %s" % token,
                                    format='json')
@@ -148,8 +151,9 @@ class CLAAuthBaseApiTestMixin(object):
                                       format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def _test_patch_not_authorized(self, url, token):
-        response = self.client.patch(url,
+    def _test_patch_not_authorized(self, url, token, data=None):
+        if not data: data = {}
+        response = self.client.patch(url, data,
                                      HTTP_AUTHORIZATION="Bearer %s" % token,
                                      format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -157,7 +161,10 @@ class CLAAuthBaseApiTestMixin(object):
 
 class CLAProviderAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
     DEFAULT_TOKEN = 'staff_token'
+    API_URL_NAMESPACE = 'cla_provider'
+
 
 class CLAOperatorAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
     DEFAULT_TOKEN = 'operator_token'
+    API_URL_NAMESPACE = 'call_centre'
 

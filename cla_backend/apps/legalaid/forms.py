@@ -6,6 +6,10 @@ from legalaid.models import CaseLog, CaseLogType
 class BaseCaseLogForm(forms.Form):
     CASELOGTYPE_CODE = None
 
+    def __init__(self, *args, **kwargs):
+        self.case = kwargs.pop('case')
+        super(BaseCaseLogForm, self).__init__(*args, **kwargs)
+
     def get_logtype(self):
         if self.CASELOGTYPE_CODE:
             return CaseLogType.objects.get(code=self.CASELOGTYPE_CODE)
@@ -17,9 +21,9 @@ class BaseCaseLogForm(forms.Form):
     def get_notes(self):
         raise NotImplementedError
 
-    def save(self, case, user):
+    def save(self, user):
         CaseLog.objects.create(
-            case=case, created_by=user,
+            case=self.case, created_by=user,
             logtype=self.get_logtype(), notes=self.get_notes()
         )
 

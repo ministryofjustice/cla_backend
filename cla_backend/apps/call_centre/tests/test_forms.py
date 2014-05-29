@@ -14,6 +14,10 @@ class ProviderAllocationFormTestCase(TestCase):
         make_recipe('legalaid.refsp_logtype')
 
     def test_save(self):
+        """
+        ProviderAllocationHelper.get_random_provider(..) should provide a provider for
+        the given category; update case with this and save.
+        """
         case = make_recipe('legalaid.case')
         category = case.eligibility_check.category
         user = make_user()
@@ -22,12 +26,9 @@ class ProviderAllocationFormTestCase(TestCase):
                                       weighted_distribution=0.5,
                                       provider=provider,
                                       category=category)
-        # TODO - create a ProviderAllocation for this provider with the
-        #        same category as the case and a positive weighted_distribution
 
         helper = ProviderAllocationHelper()
-
-        form = ProviderAllocationForm(data={'provider' : helper.get_random_provider(category)},
+        form = ProviderAllocationForm(data={'provider' : helper.get_random_provider(category).pk},
                                       providers=helper.get_qualifying_providers(category))
 
         self.assertTrue(form.is_valid())

@@ -113,17 +113,30 @@ class CaseViewSet(
         Assigns the case to a provider
         """
         obj = self.get_object()
-
         helper = ProviderAllocationHelper()
         category = obj.eligibility_check.category
-        # Randomly assign to provider who offers this category of service
-        form = ProviderAllocationForm({'provider' : helper.get_random_provider(category)},
-                                      providers=helper.get_qualifying_providers(category))
+        suitable_providers = helper.get_qualifying_providers(category)
+        
+        # TODO - when Marco is ready, use these to populate case log 
+        # request.DATA['is_manual']
+        # request.DATA['assign_notes']
+ 
+        # find given provider in suitable - avoid extra lookup and ensures
+        # valid provider
+        for sp in suitable_providers:
+            if sp.id == request.DATA['provider_id']:
+                p = sp
+                break
+        else:
+            raise ValueError("Provider not found")
+ 
+        form = ProviderAllocationForm(data={'provider' : p.pk},
+                                      providers=suitable_providers)
         if form.is_valid():
             provider = form.save(obj, request.user)
             provider_serialised = ProviderSerializer(provider)
             return DRFResponse(data=provider_serialised.data)
-
+ 
         return DRFResponse(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )

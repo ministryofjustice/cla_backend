@@ -331,11 +331,10 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-    def test_assign_successful(self):
+    def test_assign_provider_successful(self):
         case = make_recipe('legalaid.case')
 
         category = case.eligibility_check.category
-        user = make_user()
         make_recipe('legalaid.refsp_logtype')
         provider = make_recipe('cla_provider.provider', active=True)
         make_recipe('cla_provider.provider_allocation',
@@ -343,7 +342,7 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                                  provider=provider,
                                  category=category)
 
-        # before being assigned, case in the list
+        # before being assigned, case is in the list
         case_list = self.client.get(
             self.list_url, format='json',
             HTTP_AUTHORIZATION='Bearer %s' % self.token
@@ -355,9 +354,9 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         url = reverse('call_centre:case-assign', args=(), kwargs={'reference': case.reference})
 
-#         data = self._get_assign_default_post_data()
+        data = {'suggested_provider': provider.pk, 'provider_id': provider.pk}
         response = self.client.post(
-            url, data=None,
+            url, data=data,
             HTTP_AUTHORIZATION='Bearer %s' % self.token,
             format='json'
         )

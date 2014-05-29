@@ -113,16 +113,14 @@ class OutcomeCodeAPIMixin(CLAAuthBaseApiTestMixin):
         self._test_delete_not_allowed(self.detail_url)
 
     def test_methods_not_authorized(self):
-        invalid_token = self.get_invalid_token()
-
         ### LIST
-        self._test_get_not_authorized(self.list_url, invalid_token)
-        self._test_post_not_authorized(self.list_url, invalid_token)
-        self._test_put_not_authorized(self.list_url, invalid_token)
-        self._test_delete_not_authorized(self.list_url, invalid_token)
+        self._test_get_not_authorized(self.list_url, self.invalid_token)
+        self._test_post_not_authorized(self.list_url, self.invalid_token)
+        self._test_put_not_authorized(self.list_url, self.invalid_token)
+        self._test_delete_not_authorized(self.list_url, self.invalid_token)
 
         ### DETAIL
-        self._test_get_not_authorized(self.detail_url, invalid_token)
-        self._test_post_not_authorized(self.detail_url, invalid_token)
-        self._test_put_not_authorized(self.detail_url, invalid_token)
-        self._test_delete_not_authorized(self.detail_url, invalid_token)
+        self._test_get_not_authorized(self.detail_url, self.invalid_token)
+        self._test_post_not_authorized(self.detail_url, self.invalid_token)
+        self._test_put_not_authorized(self.detail_url, self.invalid_token)
+        self._test_delete_not_authorized(self.detail_url, self.invalid_token)

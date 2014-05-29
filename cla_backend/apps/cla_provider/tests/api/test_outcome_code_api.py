@@ -115,5 +115,4 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 
 
 class OutcomeCodeTests(CLAProviderAuthBaseApiTestMixin, OutcomeCodeAPIMixin, APITestCase):
-    def get_invalid_token(self):
-        return self.operator_token
+    pass

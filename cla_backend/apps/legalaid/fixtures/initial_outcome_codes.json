@@ -95,5 +95,18 @@
         "modified": "2014-04-14T15:59:59.227Z",
         "created": "2014-04-14T15:59:59.225Z"
     }
+},
+    {
+    "pk": 9,
+    "model": "legalaid.caselogtype",
+    "fields": {
+        "description": "Deferred assignment to specialist",
+        "code": "CBSP",
+        "case_state": null,
+        "subtype": "outcome",
+        "action_key": "defer_assign",
+        "modified": "2014-04-14T16:29:59.227Z",
+        "created": "2014-04-14T16:29:59.225Z"
+    }
 }
 ]

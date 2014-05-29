@@ -335,28 +335,11 @@ class Case(TimeStampedModel):
         self._set_state(CASE_STATES.ACCEPTED)
 
 
-# class CaseOutcome(TimeStampedModel):
-#     case = models.ForeignKey(Case)
-#     outcome_code = models.ForeignKey(OutcomeCode)
-#     created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
-#     notes = models.TextField()
-#
-#     class Meta:
-#         ordering = ['-created']
-#
-#     def __unicode__(self):
-#         return u'%s - %s' % (self.case, self.outcome_code)
-
-
-
 class CaseLogType(TimeStampedModel):
     code = models.CharField(max_length=50, unique=True)
     subtype = models.CharField(max_length=50)
     description = models.TextField()
     action_key = models.CharField(max_length=50, blank=True)
-    case_state = models.CharField(
-        choices=CASE_STATES.CHOICES, max_length=50, null=True, blank=True
-    )
 
     def __unicode__(self):
         return u'%s' % self.code

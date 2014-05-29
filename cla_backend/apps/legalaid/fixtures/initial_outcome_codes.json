@@ -6,7 +6,7 @@
         "description": "Misdiagnosed, out of scope",
         "code": "MIS-OOS",
         "subtype": "outcome",
-        "case_state": "rejected",
+        "action_key": "provider_reject",
         "modified": "2014-04-14T15:48:14.316Z",
         "created": "2014-04-14T15:48:14.314Z"
     }
@@ -18,7 +18,7 @@
         "description": "Misdiagnosed, case lacks sufficient merit",
         "code": "MIS-MER",
         "subtype": "outcome",
-        "case_state": "rejected",
+        "action_key": "provider:reject_case",
         "modified": "2014-04-14T15:48:22.898Z",
         "created": "2014-04-14T15:48:22.896Z"
     }
@@ -29,7 +29,7 @@
     "fields": {
         "description": "Misdiagnosed, means test isn't correct",
         "code": "MIS-MEANS",
-        "case_state": "rejected",
+        "action_key": "provider:reject_case",
         "subtype": "outcome",
         "modified": "2014-04-14T15:59:59.227Z",
         "created": "2014-04-14T15:59:59.225Z"
@@ -41,7 +41,7 @@
     "fields": {
         "description": "Misdiagnosed, case not suitable for telephone advice",
         "code": "MIS-TEL",
-        "case_state": "rejected",
+        "action_key": "provider:reject_case",
         "subtype": "outcome",
         "modified": "2014-04-14T15:59:59.227Z",
         "created": "2014-04-14T15:59:59.225Z"
@@ -53,7 +53,7 @@
     "fields": {
         "description": "Case taken",
         "code": "SPOP",
-        "case_state": "accepted",
+        "action_key": "provider:accept_case",
         "subtype": "outcome",
         "modified": "2014-04-14T15:59:59.227Z",
         "created": "2014-04-14T15:59:59.225Z"
@@ -65,7 +65,7 @@
     "fields": {
         "description": "Closed SP Case",
         "code": "CLSP",
-        "case_state": "closed",
+        "action_key": "provider:close_case",
         "subtype": "outcome",
         "modified": "2014-04-14T15:59:59.227Z",
         "created": "2014-04-14T15:59:59.225Z"
@@ -77,7 +77,6 @@
     "fields": {
         "description": "Assigned to Provider",
         "code": "REFSP",
-        "case_state": null,
         "subtype": "outcome",
         "modified": "2014-04-14T15:59:59.227Z",
         "created": "2014-04-14T15:59:59.225Z"
@@ -89,7 +88,6 @@
     "fields": {
         "description": "Declined all specialists",
         "code": "DECL",
-        "case_state": null,
         "subtype": "outcome",
         "action_key": "decline_specialists",
         "modified": "2014-04-14T15:59:59.227Z",

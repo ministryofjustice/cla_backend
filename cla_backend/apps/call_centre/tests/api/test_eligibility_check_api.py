@@ -562,7 +562,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 }
             ]
         )
-    
+
     def test_errors_masked_by_drf(self):
         """
         Django REST Framework only validates fields if there are no errors in the model.
@@ -574,7 +574,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         ERRORS_DATA = [
             {
                 'error': {'you': [{'income': [{'earnings': [u'Ensure this value is greater than or equal to 0.']}]}]},
-                'data': {   "you" : { "income" : { "earnings": 
+                'data': {   "you" : { "income" : { "earnings":
                                                     {"interval_period": "per_month",
                                                      "per_interval_value": -1,
                                     }}}

@@ -10,7 +10,7 @@ from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from core.viewsets import IsEligibleActionViewSetMixin
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
-from legalaid.views import BaseUserViewSet, StateFromActionMixin
+from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
@@ -40,6 +40,12 @@ class CaseLogTypeViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyMod
     serializer_class = CaseLogSerializer
 
     lookup_field = 'code'
+
+
+class OutcomeCodeViewSet(
+    CallCentrePermissionsViewSetMixin, BaseOutcomeCodeViewSet
+):
+    pass
 
 
 class EligibilityCheckViewSet(

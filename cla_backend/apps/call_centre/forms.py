@@ -3,7 +3,7 @@ from django.core.exceptions import NON_FIELD_ERRORS
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 
-from cla_common.constants import CASE_LOGTYPE_ACTION_KEYS
+from cla_common.constants import CASELOGTYPE_ACTION_KEYS
 
 from cla_provider.models import Provider
 from legalaid.forms import BaseCaseLogForm, OutcomeForm
@@ -62,7 +62,7 @@ class CloseCaseForm(forms.Form):
 class DeclineAllSpecialistsCaseForm(OutcomeForm):
     def get_outcome_code_queryset(self):
         qs = super(DeclineAllSpecialistsCaseForm, self).get_outcome_code_queryset()
-        return qs.filter(action_key=CASE_LOGTYPE_ACTION_KEYS.DECLINE_SPECIALISTS)
+        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.DECLINE_SPECIALISTS)
 
     def clean(self):
         cleaned_data = super(DeclineAllSpecialistsCaseForm, self).clean()

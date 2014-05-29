@@ -1,19 +1,16 @@
 from django.shortcuts import get_object_or_404
-from django.http import Http404
 
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.decorators import action, link
-from rest_framework.response import Response as DRFResponse
+from rest_framework.decorators import action
 
 from core.viewsets import DefaultStateFilterViewSetMixin, \
     IsEligibleActionViewSetMixin
 from cla_common.constants import CASE_STATES
-from call_centre.serializers import CaseLogTypeSerializer
+from legalaid.serializers import CaseLogTypeSerializerBase
 
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
-from legalaid.views import BaseUserViewSet, StateFromActionMixin
-from legalaid.constants import CASELOGTYPE_SUBTYPES
+from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
@@ -39,30 +36,13 @@ class CaseLogTypeViewSet(
     viewsets.ReadOnlyModelViewSet
 ):
     model = CaseLogType
-    serializer_class = CaseLogTypeSerializer
+    serializer_class = CaseLogTypeSerializerBase
 
     lookup_field = 'code'
 
     default_state_filter = []
     all_states = dict(CASE_STATES.CHOICES).keys()
     state_field = 'case_state'
-
-
-class OutcomeCodeViewSet(
-    CLAProviderPermissionViewSetMixin,
-    DefaultStateFilterViewSetMixin,
-    viewsets.ReadOnlyModelViewSet
-):
-    model = CaseLogType
-    serializer_class = CaseLogTypeSerializer
-
-    lookup_field = 'code'
-
-    default_state_filter = []
-    all_states = dict(CASE_STATES.CHOICES).keys()
-    state_field = 'case_state'
-
-    queryset =  CaseLogType.objects.filter(subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
 
 
 class EligibilityCheckViewSet(
@@ -75,6 +55,12 @@ class EligibilityCheckViewSet(
     serializer_class = EligibilityCheckSerializer
 
     lookup_field = 'reference'
+
+
+class OutcomeCodeViewSet(
+    CLAProviderPermissionViewSetMixin, BaseOutcomeCodeViewSet
+):
+    pass
 
 
 class CaseViewSet(

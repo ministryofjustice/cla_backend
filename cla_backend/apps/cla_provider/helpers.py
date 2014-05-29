@@ -5,7 +5,7 @@ from cla_provider.models import ProviderAllocation, OutOfHoursRota
 from django.utils import timezone
 
 def today_at(hour, minute=0, second=0, microsecond=0):
-    t = timezone.now()
+    t = timezone.localtime(timezone.now())
     return t.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
 
 
@@ -67,7 +67,7 @@ class ProviderAllocationHelper(object):
 
     @property
     def is_out_of_hours(self):
-        today = timezone.now()
+        today = timezone.localtime(timezone.now())
         weekday = today.date().weekday()
 
         # not open on bank holiday

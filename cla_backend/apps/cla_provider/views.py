@@ -32,17 +32,12 @@ class CategoryViewSet(CLAProviderPermissionViewSetMixin, viewsets.ReadOnlyModelV
 
 class CaseLogTypeViewSet(
     CLAProviderPermissionViewSetMixin,
-    DefaultStateFilterViewSetMixin,
     viewsets.ReadOnlyModelViewSet
 ):
     model = CaseLogType
     serializer_class = CaseLogTypeSerializerBase
 
     lookup_field = 'code'
-
-    default_state_filter = []
-    all_states = dict(CASE_STATES.CHOICES).keys()
-    state_field = 'case_state'
 
 
 class EligibilityCheckViewSet(

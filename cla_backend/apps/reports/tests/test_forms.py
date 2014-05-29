@@ -4,7 +4,7 @@ import dateutil.parser as parser
 from django.test import TestCase
 from django.utils import timezone
 
-from cla_common.constants import CASE_STATES
+from cla_common.constants import CASE_STATES, CASELOGTYPE_ACTION_KEYS
 from legalaid.constants import CASELOGTYPE_SUBTYPES
 
 from core.tests.mommy_utils import make_recipe
@@ -39,9 +39,11 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
         """
         providers = make_recipe('cla_provider.provider', active=True, _quantity=2)
 
-        def create_db_record(case_ref, closure_date, provider, case_state=CASE_STATES.CLOSED):
+        def create_db_record(case_ref, closure_date, provider,
+            action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE
+        ):
             case_outcome = make_recipe('legalaid.case_log',
-                logtype__case_state=case_state,
+                logtype__action_key=action_key,
                 case__provider=provider,
                 case__reference=case_ref,
                 logtype__code='outcome_%s' % case_ref,
@@ -53,16 +55,16 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
                 created=closure_date.replace(tzinfo=timezone.utc)
             )
 
-        create_db_record('1', '2014-04-15T23:01', providers[0], case_state=CASE_STATES.CLOSED)
-        create_db_record('2', '2014-04-15T22:59:01', providers[0], case_state=CASE_STATES.CLOSED)
-        create_db_record('3', '2014-04-15T22:59', providers[0], case_state=CASE_STATES.REJECTED)
-        create_db_record('4', '2014-04-15T22:59', providers[0], case_state=CASE_STATES.ACCEPTED)
-        create_db_record('5', '2014-04-01T23:01', providers[1], case_state=CASE_STATES.CLOSED)
-        create_db_record('6', '2014-04-01T23:01', providers[0], case_state=CASE_STATES.CLOSED)
-        create_db_record('7', '2014-04-01T23:00', providers[0], case_state=CASE_STATES.CLOSED)
-        create_db_record('8', '2014-04-01T22:59', providers[0], case_state=CASE_STATES.CLOSED)
-        create_db_record('9', '2014-04-01T22:59', providers[0], case_state=CASE_STATES.REJECTED)
-        create_db_record('10', '2014-04-01T22:59', providers[0], case_state=CASE_STATES.OPEN)
+        create_db_record('1', '2014-04-15T23:01', providers[0], action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE)
+        create_db_record('2', '2014-04-15T22:59:01', providers[0], action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE)
+        create_db_record('3', '2014-04-15T22:59', providers[0], action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_REJECT_CASE)
+        create_db_record('4', '2014-04-15T22:59', providers[0], action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_ACCEPT_CASE)
+        create_db_record('5', '2014-04-01T23:01', providers[1], action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE)
+        create_db_record('6', '2014-04-01T23:01', providers[0], action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE)
+        create_db_record('7', '2014-04-01T23:00', providers[0], action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE)
+        create_db_record('8', '2014-04-01T22:59', providers[0], action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE)
+        create_db_record('9', '2014-04-01T22:59', providers[0], action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_REJECT_CASE)
+        create_db_record('10', '2014-04-01T22:59', providers[0], action_key='other')
 
 
         # form, non-empty result
@@ -154,10 +156,12 @@ class OperatorCaseClosureReportFormTestCase(TestCase):
 
 
 
-        def create_db_record(case_ref, assign_date, provider, case_state=CASE_STATES.OPEN):
+        def create_db_record(case_ref, assign_date, provider,
+            action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE
+        ):
             assign_date = parser.parse(assign_date).replace(tzinfo=timezone.utc)
             case_outcome = make_recipe('legalaid.case_log',
-                                       logtype__case_state=case_state,
+                                       logtype__action_key=action_key,
                                        case__provider=provider,
                                        case__reference=case_ref,
                                        case__created=assign_date - datetime.timedelta(seconds=200),

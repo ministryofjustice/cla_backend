@@ -12,15 +12,24 @@ from core.tests.mommy_utils import make_recipe, make_user
 
 def generate_outcome_codes():
     return [
-        make_recipe('legalaid.outcome_code', code="CODE_OPEN", case_state=CASE_STATES.OPEN),
-        make_recipe('legalaid.outcome_code', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED),
-        make_recipe('legalaid.outcome_code', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED),
-        make_recipe('legalaid.outcome_code', code="CODE_CLOSED", case_state=CASE_STATES.CLOSED),
-        make_recipe(
-            'legalaid.outcome_code', code="CODE_DECLINED_ALL_SPECIALISTS",
-            case_state=None, action_key=CASELOGTYPE_ACTION_KEYS.DECLINE_SPECIALISTS
+        make_recipe('legalaid.outcome_code', code="CODE_OPEN",
+            action_key='other'
         ),
-        make_recipe('legalaid.logtype', code="CODE_LOGTYPE", subtype=CASELOGTYPE_SUBTYPES.SYSTEM)
+        make_recipe('legalaid.outcome_code', code="CODE_ACCEPTED",
+            action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_ACCEPT_CASE
+        ),
+        make_recipe('legalaid.outcome_code', code="CODE_REJECTED",
+            action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_REJECT_CASE
+        ),
+        make_recipe('legalaid.outcome_code', code="CODE_CLOSED",
+            action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE
+        ),
+        make_recipe('legalaid.outcome_code', code="CODE_DECLINED_ALL_SPECIALISTS",
+            action_key=CASELOGTYPE_ACTION_KEYS.DECLINE_SPECIALISTS
+        ),
+        make_recipe('legalaid.logtype', code="CODE_LOGTYPE",
+            subtype=CASELOGTYPE_SUBTYPES.SYSTEM
+        )
     ]
 
 

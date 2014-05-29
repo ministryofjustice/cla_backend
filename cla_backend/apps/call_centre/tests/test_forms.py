@@ -16,9 +16,9 @@ class ProviderAllocationFormTestCase(TestCase):
     def setUp(self):
         make_recipe('legalaid.refsp_logtype')
 
-    @mock.patch('cla_provider.helpers.timezone')
+    @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_in_office_hours(self, timezone_mock):
-        timezone_mock.now.return_value = datetime.datetime(2014,1,1,9,1,0).replace(tzinfo=timezone.utc)
+        timezone_mock.return_value = datetime.datetime(2014,1,1,9,1,0).replace(tzinfo=timezone.get_current_timezone())
         case = make_recipe('legalaid.case')
         category = case.eligibility_check.category
         user = make_user()
@@ -44,13 +44,13 @@ class ProviderAllocationFormTestCase(TestCase):
         self.assertEqual(CaseLog.objects.count(),1)
 
 
-    @mock.patch('cla_provider.models.timezone')
-    @mock.patch('cla_provider.helpers.timezone')
+    @mock.patch('cla_provider.models.timezone.now')
+    @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_out_office_hours(self, timezone_mock, models_timezone_mock):
 
         fake_day = datetime.datetime(2014,1,1,8,59,0).replace(tzinfo=timezone.utc)
-        timezone_mock.now.return_value = fake_day
-        models_timezone_mock.now.return_value = fake_day
+        timezone_mock.return_value = fake_day
+        models_timezone_mock.return_value = fake_day
 
         case = make_recipe('legalaid.case')
         category = case.eligibility_check.category
@@ -58,8 +58,8 @@ class ProviderAllocationFormTestCase(TestCase):
         provider = make_recipe('cla_provider.provider', active=True)
         make_recipe('cla_provider.outofhoursrota',
                                         provider=provider,
-                                        start_date=datetime.datetime(2013,12,30).replace(tzinfo=timezone.utc),
-                                        end_date=datetime.datetime(2014,1,2).replace(tzinfo=timezone.utc),
+                                        start_date=datetime.datetime(2013,12,30).replace(tzinfo=timezone.get_current_timezone()),
+                                        end_date=datetime.datetime(2014,1,2).replace(tzinfo=timezone.get_current_timezone()),
                                         category=category
         )
 
@@ -83,13 +83,13 @@ class ProviderAllocationFormTestCase(TestCase):
         self.assertEqual(case.provider, provider)
         self.assertEqual(CaseLog.objects.count(),1)
 
-    @mock.patch('cla_provider.models.timezone')
-    @mock.patch('cla_provider.helpers.timezone')
+    @mock.patch('cla_provider.models.timezone.now')
+    @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_out_office_hours_no_valid_provider(self, timezone_mock, models_timezone_mock):
 
         fake_day = datetime.datetime(2014,1,1,8,59,0).replace(tzinfo=timezone.utc)
-        timezone_mock.now.return_value = fake_day
-        models_timezone_mock.now.return_value = fake_day
+        timezone_mock.return_value = fake_day
+        models_timezone_mock.return_value = fake_day
 
         case = make_recipe('legalaid.case')
         category = case.eligibility_check.category

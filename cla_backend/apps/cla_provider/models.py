@@ -55,7 +55,7 @@ class Staff(TimeStampedModel):
 
 class OutOfHoursRotaManager(models.Manager):
     def get_current(self, category, as_of=None):
-        if not as_of: as_of = timezone.now()
+        if not as_of: as_of = timezone.localtime(timezone.now())
 
         return self.get_queryset().get(category=category,
                                  start_date__lte=as_of,

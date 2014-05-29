@@ -1,6 +1,9 @@
+import datetime
 import uuid
 
 from django.core.urlresolvers import reverse
+from django.utils import timezone
+import mock
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -331,7 +334,14 @@ class CaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-    def test_assign_successful(self):
+    @mock.patch('cla_provider.models.timezone.now')
+    @mock.patch('cla_provider.helpers.timezone.now')
+    def test_assign_successful(self, tz_model_mock, tz_helper_tz):
+
+        fake_day = datetime.datetime(2014, 1, 2, 9, 1, 0).replace(tzinfo=timezone.get_current_timezone())
+        tz_model_mock.return_value = fake_day
+        tz_helper_tz.return_value = fake_day
+
         case = make_recipe('legalaid.case')
 
         category = case.eligibility_check.category

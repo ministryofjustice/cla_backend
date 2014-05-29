@@ -48,7 +48,7 @@ class ProviderAllocationFormTestCase(TestCase):
     @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_out_office_hours(self, timezone_mock, models_timezone_mock):
 
-        fake_day = datetime.datetime(2014,1,1,8,59,0).replace(tzinfo=timezone.utc)
+        fake_day = datetime.datetime(2014,1,1,8,59,0).replace(tzinfo=timezone.get_current_timezone())
         timezone_mock.return_value = fake_day
         models_timezone_mock.return_value = fake_day
 
@@ -87,7 +87,7 @@ class ProviderAllocationFormTestCase(TestCase):
     @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_out_office_hours_no_valid_provider(self, timezone_mock, models_timezone_mock):
 
-        fake_day = datetime.datetime(2014,1,1,8,59,0).replace(tzinfo=timezone.utc)
+        fake_day = datetime.datetime(2014,1,1,8,59,0).replace(tzinfo=timezone.get_current_timezone())
         timezone_mock.return_value = fake_day
         models_timezone_mock.return_value = fake_day
 

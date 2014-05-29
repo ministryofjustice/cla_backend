@@ -10,10 +10,10 @@ class RejectCaseForm(OutcomeForm):
         qs = super(RejectCaseForm, self).get_outcome_code_queryset()
         return qs.filter(case_state=CASE_STATES.REJECTED)
 
-    def save(self, case, user):
-        case.reject()
+    def save(self, user):
+        self.case.reject()
 
-        super(RejectCaseForm, self).save(case, user)  # saves the outcome
+        super(RejectCaseForm, self).save(user)  # saves the outcome
 
 
 class AcceptCaseForm(OutcomeForm):
@@ -21,10 +21,10 @@ class AcceptCaseForm(OutcomeForm):
         qs = super(AcceptCaseForm, self).get_outcome_code_queryset()
         return qs.filter(case_state=CASE_STATES.ACCEPTED)
 
-    def save(self, case, user):
-        case.accept()
+    def save(self, user):
+        self.case.accept()
 
-        super(AcceptCaseForm, self).save(case, user)  # saves the outcome
+        super(AcceptCaseForm, self).save(user)  # saves the outcome
 
 
 class CloseCaseForm(OutcomeForm):
@@ -32,7 +32,7 @@ class CloseCaseForm(OutcomeForm):
         qs = super(CloseCaseForm, self).get_outcome_code_queryset()
         return qs.filter(case_state=CASE_STATES.CLOSED)
 
-    def save(self, case, user):
-        case.close()
+    def save(self, user):
+        self.case.close()
 
-        super(CloseCaseForm, self).save(case, user)  # saves the outcome
+        super(CloseCaseForm, self).save(user)  # saves the outcome

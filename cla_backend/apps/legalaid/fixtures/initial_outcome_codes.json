@@ -82,5 +82,18 @@
         "modified": "2014-04-14T15:59:59.227Z",
         "created": "2014-04-14T15:59:59.225Z"
     }
+},
+{
+    "pk": 8,
+    "model": "legalaid.caselogtype",
+    "fields": {
+        "description": "Declined all specialists",
+        "code": "DECL",
+        "case_state": null,
+        "subtype": "outcome",
+        "action_key": "decline_specialists",
+        "modified": "2014-04-14T15:59:59.227Z",
+        "created": "2014-04-14T15:59:59.225Z"
+    }
 }
 ]

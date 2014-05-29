@@ -9,18 +9,17 @@ from rest_framework.response import Response as DRFResponse
 from core.viewsets import DefaultStateFilterViewSetMixin, \
     IsEligibleActionViewSetMixin
 from cla_common.constants import CASE_STATES
-
-from legalaid.exceptions import InvalidMutationException
-from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
-from legalaid.views import BaseUserViewSet
 from call_centre.serializers import CaseLogTypeSerializer
+
+from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
+from legalaid.views import BaseUserViewSet, StateFromActionMixin
+from legalaid.constants import CASELOGTYPE_SUBTYPES
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import CategorySerializer, \
     EligibilityCheckSerializer, CaseSerializer, StaffSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
-from legalaid.constants import CASELOGTYPE_SUBTYPES
 
 
 class CLAProviderPermissionViewSetMixin(object):
@@ -84,6 +83,7 @@ class CaseViewSet(
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
+    StateFromActionMixin,
     viewsets.GenericViewSet
 ):
     queryset = Case.objects.exclude(provider=None)
@@ -119,23 +119,6 @@ class CaseViewSet(
         if self.request:
             obj.lock(self.request.user)
         return obj
-
-    def _state_form_action(self, request, Form):
-        obj = self.get_object()
-        form = Form(request.DATA)
-        if form.is_valid():
-            try:
-                form.save(obj, request.user)
-            except InvalidMutationException as e:
-                return DRFResponse(
-                    {'case_state': [unicode(e)]},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
 
     @action()
     def reject(self, request, reference=None, **kwargs):

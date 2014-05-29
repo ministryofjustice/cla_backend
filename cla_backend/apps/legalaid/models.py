@@ -353,6 +353,7 @@ class CaseLogType(TimeStampedModel):
     code = models.CharField(max_length=50, unique=True)
     subtype = models.CharField(max_length=50)
     description = models.TextField()
+    action_key = models.CharField(max_length=50, blank=True)
     case_state = models.CharField(
         choices=CASE_STATES.CHOICES, max_length=50, null=True, blank=True
     )

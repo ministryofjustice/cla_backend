@@ -1,6 +1,9 @@
 from django.http import Http404
 
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
+from rest_framework.response import Response as DRFResponse
+
+from .exceptions import InvalidMutationException
 
 
 class BaseUserViewSet(
@@ -32,3 +35,22 @@ class BaseUserViewSet(
 
         self.kwargs[lookup_url_kwarg] = self.get_logged_in_user_model().pk
         return super(BaseUserViewSet, self).get_object(*args, **kwargs)
+
+
+class StateFromActionMixin(object):
+    def _state_form_action(self, request, Form):
+        obj = self.get_object()
+        form = Form(case=obj, data=request.DATA)
+        if form.is_valid():
+            try:
+                form.save(request.user)
+            except InvalidMutationException as e:
+                return DRFResponse(
+                    {'case_state': [unicode(e)]},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )

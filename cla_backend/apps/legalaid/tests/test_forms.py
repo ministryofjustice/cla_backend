@@ -12,7 +12,7 @@ class OutcomeFormTestCase(TestCase):
         case = make_recipe('legalaid.case')
         user = make_user()
 
-        form = OutcomeForm(data={
+        form = OutcomeForm(case=case, data={
             'outcome_code': outcome_codes[0].code,
             'outcome_notes': 'lorem ipsum',
         })
@@ -20,7 +20,7 @@ class OutcomeFormTestCase(TestCase):
         self.assertTrue(form.is_valid())
         self.assertEqual(CaseLog.objects.count(), 0)
 
-        form.save(case, user)
+        form.save(user)
 
         self.assertEqual(CaseLog.objects.count(), 1)
         self.assertEqual(CaseLog.objects.all()[0].case, case)

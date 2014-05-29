@@ -10,14 +10,15 @@ from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from core.viewsets import IsEligibleActionViewSetMixin
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
-from legalaid.views import BaseUserViewSet
+from legalaid.views import BaseUserViewSet, StateFromActionMixin
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer
-from .forms import ProviderAllocationForm, CloseCaseForm
+from .forms import ProviderAllocationForm, CloseCaseForm, \
+    DeclineAllSpecialistsCaseForm
 from .models import Operator
 
 
@@ -61,6 +62,7 @@ class CaseViewSet(
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
+    StateFromActionMixin,
     viewsets.GenericViewSet
 ):
     queryset = Case.objects.filter(state=CASE_STATES.OPEN, provider=None)
@@ -100,10 +102,14 @@ class CaseViewSet(
         helper = ProviderAllocationHelper()
         category = obj.eligibility_check.category
         # Randomly assign to provider who offers this category of service
-        form = ProviderAllocationForm({'provider' : helper.get_random_provider(category)},
-                                      providers=helper.get_qualifying_providers(category))
+        form = ProviderAllocationForm(
+            case=obj, providers=helper.get_qualifying_providers(category),
+            data={
+                'provider' : helper.get_random_provider(category)
+            }
+        )
         if form.is_valid():
-            provider = form.save(obj, request.user)
+            provider = form.save(request.user)
             provider_serialised = ProviderSerializer(provider)
             return DRFResponse(data=provider_serialised.data)
 
@@ -112,14 +118,18 @@ class CaseViewSet(
         )
 
     @action()
+    def decline_all_specialists(self, request, reference=None, **kwargs):
+        return self._state_form_action(request, DeclineAllSpecialistsCaseForm)
+
+    @action()
     def close(self, request, reference=None, **kwargs):
         """
         Closes a case
         """
         obj = self.get_object()
-        form = CloseCaseForm(request.DATA)
+        form = CloseCaseForm(case=obj, data=request.DATA)
         if form.is_valid():
-            form.save(obj, request.user)
+            form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
         return DRFResponse(

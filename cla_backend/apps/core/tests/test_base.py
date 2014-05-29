@@ -36,6 +36,7 @@ class CLAAuthBaseApiTestMixin(object):
     Useful testing methods
     """
     DEFAULT_TOKEN = None
+    API_URL_NAMESPACE = None
 
     def setUp(self):
         # create a user
@@ -160,7 +161,10 @@ class CLAAuthBaseApiTestMixin(object):
 
 class CLAProviderAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
     DEFAULT_TOKEN = 'staff_token'
+    API_URL_NAMESPACE = 'cla_provider'
+
 
 class CLAOperatorAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
     DEFAULT_TOKEN = 'operator_token'
+    API_URL_NAMESPACE = 'call_centre'
 

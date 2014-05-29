@@ -20,6 +20,7 @@ class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
 class CaseLogTypeSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CaseLogType
+        fields = ('code', 'description')
 
 
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):

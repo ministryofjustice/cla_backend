@@ -19,11 +19,6 @@ class CategorySerializer(CategorySerializerBase):
         fields = ('code', 'name', 'description')
 
 
-class CaseLogTypeSerializer(CaseLogTypeSerializerBase):
-    class Meta(CaseLogTypeSerializerBase.Meta):
-        fields = ('code', 'description')
-
-
 class PropertySerializer(PropertySerializerBase):
 
     class Meta(PropertySerializerBase.Meta):

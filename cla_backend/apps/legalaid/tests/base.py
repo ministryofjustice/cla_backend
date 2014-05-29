@@ -2,8 +2,9 @@ import mock
 
 from rest_framework import status
 
-from cla_common.constants import CASE_STATES, CASE_LOGTYPE_ACTION_KEYS
+from cla_common.constants import CASE_STATES, CASELOGTYPE_ACTION_KEYS
 
+from legalaid.constants import CASELOGTYPE_SUBTYPES
 from legalaid.models import CaseLog, Case
 
 from core.tests.mommy_utils import make_recipe, make_user
@@ -17,8 +18,9 @@ def generate_outcome_codes():
         make_recipe('legalaid.outcome_code', code="CODE_CLOSED", case_state=CASE_STATES.CLOSED),
         make_recipe(
             'legalaid.outcome_code', code="CODE_DECLINED_ALL_SPECIALISTS",
-            case_state=None, action_key=CASE_LOGTYPE_ACTION_KEYS.DECLINE_SPECIALISTS
+            case_state=None, action_key=CASELOGTYPE_ACTION_KEYS.DECLINE_SPECIALISTS
         ),
+        make_recipe('legalaid.logtype', code="CODE_LOGTYPE", subtype=CASELOGTYPE_SUBTYPES.SYSTEM)
     ]
 
 

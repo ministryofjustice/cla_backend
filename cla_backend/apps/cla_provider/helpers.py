@@ -53,8 +53,8 @@ class ProviderAllocationHelper(object):
 
     def _get_rota_provider(self, category):
         try:
-            rota_provider = OutOfHoursRota.objects.get_current(category)
-            return rota_provider.provider.pk if rota_provider else None
+            rota = OutOfHoursRota.objects.get_current(category)
+            return rota.provider if rota else None
         except OutOfHoursRota.MultipleObjectsReturned:
             # this should be prevented by OutOfHoursRota.clean but what
             # if something slipped the net. How should it be handled?

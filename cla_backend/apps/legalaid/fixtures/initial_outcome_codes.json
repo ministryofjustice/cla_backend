@@ -95,5 +95,17 @@
         "modified": "2014-04-14T15:59:59.227Z",
         "created": "2014-04-14T15:59:59.225Z"
     }
+},
+{
+    "pk": 10,
+    "model": "legalaid.caselogtype",
+    "fields": {
+        "description": "Manually allocated specialist",
+        "code": "MANALC",
+        "subtype": "outcome",
+        "action_key": "manual_allocation",
+        "modified": "2014-05-30T11:38:00.000Z",
+        "created": "2014-05-30T11:38:00.000Z"
+    }
 }
 ]

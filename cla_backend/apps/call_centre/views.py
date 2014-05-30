@@ -9,7 +9,7 @@ from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from core.viewsets import IsEligibleActionViewSetMixin
-from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
+from legalaid.models import Category, EligibilityCheck, Case, CaseLog, CaseLogType
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
 
 from .permissions import CallCentreClientIDPermission, \
@@ -128,11 +128,7 @@ class CaseViewSet(
         category = obj.eligibility_check.category
 
         suitable_providers = helper.get_qualifying_providers(category)
-        
-        # TODO - when Marco is ready, use these to populate case log 
-        # request.DATA['is_manual']
-        # request.DATA['assign_notes']
- 
+
         # find given provider in suitable - avoid extra lookup and ensures
         # valid provider
         for sp in suitable_providers:
@@ -152,6 +148,17 @@ class CaseViewSet(
         if form.is_valid():
             provider = form.save(request.user)
             provider_serialised = ProviderSerializer(provider)
+
+            notes = request.DATA['assign_notes'] if 'assign_notes' in request.DATA else None
+
+            # TODO - caselog is about to change. This is a simple way of completing
+            #        current story before caselog refactor
+            if request.DATA['is_manual']:
+                logType = CaseLogType.objects.get(code='MANALC')
+                CaseLog.objects.create( case=obj, created_by=self.request.user,
+                                        logtype=logType, notes=notes
+                                      )
+
             return DRFResponse(data=provider_serialised.data)
  
         return DRFResponse(

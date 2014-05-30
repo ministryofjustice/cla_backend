@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from legalaid.models import EligibilityCheck, \
-    Case, PersonalDetails
+    Case, PersonalDetails, CaseLog, CaseLogType
 from legalaid.tests.base import StateChangeAPIMixin
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
@@ -349,6 +349,7 @@ class CaseTests(BaseCaseTests):
 
         category = case.eligibility_check.category
         make_recipe('legalaid.refsp_logtype')
+        make_recipe('legalaid.manalc_logtype')
         provider = make_recipe('cla_provider.provider', active=True)
         make_recipe('cla_provider.provider_allocation',
                                  weighted_distribution=0.5,
@@ -363,11 +364,17 @@ class CaseTests(BaseCaseTests):
 
         self.assertTrue(case.reference in [x.get('reference') for x in case_list])
 
+        # no manual allocation outcome codes should exist at this point
+        clt = CaseLogType.objects.get(code='MANALC')
+        manual_alloc_records_count = CaseLog.objects.filter(logtype=clt).count()
+        self.assertEqual(manual_alloc_records_count, 0)
+
+
         # assign
 
         url = reverse('call_centre:case-assign', args=(), kwargs={'reference': case.reference})
 
-        data = {'suggested_provider': provider.pk, 'provider_id': provider.pk}
+        data = {'suggested_provider': provider.pk, 'provider_id': provider.pk, 'is_manual': True}
         response = self.client.post(
             url, data=data,
             HTTP_AUTHORIZATION='Bearer %s' % self.token,
@@ -386,6 +393,9 @@ class CaseTests(BaseCaseTests):
         ).data
 
         self.assertFalse(case.reference in [x.get('reference') for x in case_list])
+
+        manual_alloc_records_count = CaseLog.objects.filter(logtype=clt).count()
+        self.assertEqual(manual_alloc_records_count, 1)
 
     def test_cannot_patch_provider_directly(self):
         """

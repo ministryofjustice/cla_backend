@@ -58,6 +58,24 @@ class CloseCaseForm(forms.Form):
     def save(self, user):
         self.case.close()
 
+class CaseAssignDeferForm(OutcomeForm):
+
+    CASELOGTYPE_CODE = 'CBSP'
+
+    def get_outcome_code_queryset(self):
+        qs = super(CaseAssignDeferForm, self).get_outcome_code_queryset()
+        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.DEFER_ASSIGNMENT)
+
+    def clean(self):
+        cleaned_data = super(CaseAssignDeferForm, self).clean()
+        if self._errors:  # skip if already in error
+            return cleaned_data
+
+        # checking that the case is in a consistent state
+        if self.case.provider:
+            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
+        return cleaned_data
+
 
 class DeclineAllSpecialistsCaseForm(OutcomeForm):
     def get_outcome_code_queryset(self):

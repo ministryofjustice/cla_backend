@@ -18,7 +18,7 @@ from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm, \
-    DeclineAllSpecialistsCaseForm
+    DeclineAllSpecialistsCaseForm, CaseAssignDeferForm
 from .models import Operator
 
 
@@ -164,6 +164,20 @@ class CaseViewSet(
         return DRFResponse(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
+
+    @action()
+    def defer_assignment(self, request, **kwargs):
+        obj = self.get_object()
+        form = CaseAssignDeferForm(case=obj, data=request.DATA)
+        if form.is_valid():
+            form.save(request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
+
 
     @action()
     def decline_all_specialists(self, request, reference=None, **kwargs):

@@ -93,6 +93,7 @@ class CLAAuthBaseApiTestMixin(object):
 
         # set default token
         self.token = getattr(self, self.DEFAULT_TOKEN)
+        self.invalid_token = getattr(self, self.INVALID_TOKEN)
 
     def _test_get_not_allowed(self, url):
         response = self.client.get(url,
@@ -161,10 +162,12 @@ class CLAAuthBaseApiTestMixin(object):
 
 class CLAProviderAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
     DEFAULT_TOKEN = 'staff_token'
+    INVALID_TOKEN = 'operator_token'
     API_URL_NAMESPACE = 'cla_provider'
 
 
 class CLAOperatorAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
     DEFAULT_TOKEN = 'operator_token'
+    INVALID_TOKEN = 'staff_token'
     API_URL_NAMESPACE = 'call_centre'
 

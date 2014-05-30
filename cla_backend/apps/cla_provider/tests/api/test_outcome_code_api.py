@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from cla_common.constants import CASE_STATES
+from cla_common.constants import CASE_STATES, CASELOGTYPE_ACTION_KEYS
 
 from core.tests.test_base import make_recipe
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
@@ -16,9 +16,15 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         super(CaseLogTests, self).setUp()
 
         self.outcome_codes = [
-            make_recipe('legalaid.logtype', code="CODE_OPEN", case_state=CASE_STATES.OPEN, subtype='outcome'),
-            make_recipe('legalaid.logtype', code="CODE_ACCEPTED", case_state=CASE_STATES.ACCEPTED, subtype='outcome'),
-            make_recipe('legalaid.logtype', code="CODE_REJECTED", case_state=CASE_STATES.REJECTED, subtype='outcome'),
+            make_recipe('legalaid.outcome_code', code="CODE_OPEN",
+                action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE
+            ),
+            make_recipe('legalaid.outcome_code', code="CODE_ACCEPTED",
+                action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_ACCEPT_CASE
+            ),
+            make_recipe('legalaid.outcome_code', code="CODE_REJECTED",
+                action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_REJECT_CASE
+            ),
         ]
 
         self.list_url = reverse('cla_provider:caselogtype-list')
@@ -52,39 +58,6 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['code'], 'CODE_OPEN')
 
-    def test_get_with_filtering(self):
-        """
-        GET with case_state filtering.
-        """
-        # LIST
-        response = self.client.get(self.list_url,
-            { 'case_state': CASE_STATES.ACCEPTED },
-            HTTP_AUTHORIZATION='Bearer %s' % self.token,
-            format='json'
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertItemsEqual(
-            [d['code'] for d in response.data], ['CODE_ACCEPTED']
-        )
-
-        # DETAIL
-        response = self.client.get(self.detail_url,
-            { 'case_state': CASE_STATES.OPEN },
-            HTTP_AUTHORIZATION='Bearer %s' % self.token,
-            format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['code'], 'CODE_OPEN')
-
-        # DETAIL not found (the outcomecode.case_state is OPEN but we're filtering by REJECTED)
-        response = self.client.get(self.detail_url,
-            { 'case_state': CASE_STATES.REJECTED },
-            HTTP_AUTHORIZATION='Bearer %s' % self.token,
-            format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
     def test_methods_not_allowed(self):
         """
         Ensure that we can't POST, PUT or DELETE
@@ -115,5 +88,4 @@ class CaseLogTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
 
 
 class OutcomeCodeTests(CLAProviderAuthBaseApiTestMixin, OutcomeCodeAPIMixin, APITestCase):
-    def get_invalid_token(self):
-        return self.operator_token
+    pass

@@ -1,6 +1,4 @@
-from django import forms
-
-from cla_common.constants import CASE_STATES
+from cla_common.constants import CASELOGTYPE_ACTION_KEYS
 
 from legalaid.forms import OutcomeForm
 
@@ -8,7 +6,7 @@ from legalaid.forms import OutcomeForm
 class RejectCaseForm(OutcomeForm):
     def get_outcome_code_queryset(self):
         qs = super(RejectCaseForm, self).get_outcome_code_queryset()
-        return qs.filter(case_state=CASE_STATES.REJECTED)
+        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_REJECT_CASE)
 
     def save(self, user):
         self.case.reject()
@@ -19,7 +17,7 @@ class RejectCaseForm(OutcomeForm):
 class AcceptCaseForm(OutcomeForm):
     def get_outcome_code_queryset(self):
         qs = super(AcceptCaseForm, self).get_outcome_code_queryset()
-        return qs.filter(case_state=CASE_STATES.ACCEPTED)
+        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_ACCEPT_CASE)
 
     def save(self, user):
         self.case.accept()
@@ -30,7 +28,7 @@ class AcceptCaseForm(OutcomeForm):
 class CloseCaseForm(OutcomeForm):
     def get_outcome_code_queryset(self):
         qs = super(CloseCaseForm, self).get_outcome_code_queryset()
-        return qs.filter(case_state=CASE_STATES.CLOSED)
+        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE)
 
     def save(self, user):
         self.case.close()

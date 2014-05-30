@@ -4,10 +4,6 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import DjangoFilterBackend
 
-from cla_common.constants import CASE_STATES
-
-from core.viewsets import DefaultStateFilterViewSetMixin
-
 from legalaid.serializers import CaseLogTypeSerializerBase
 from legalaid.constants import CASELOGTYPE_SUBTYPES
 from legalaid.models import CaseLogType
@@ -66,17 +62,12 @@ class StateFromActionMixin(object):
 
 
 class BaseOutcomeCodeViewSet(
-    DefaultStateFilterViewSetMixin,
     viewsets.ReadOnlyModelViewSet
 ):
     model = CaseLogType
     serializer_class = CaseLogTypeSerializerBase
 
     lookup_field = 'code'
-
-    default_state_filter = []
-    all_states = dict(CASE_STATES.CHOICES).keys()
-    state_field = 'case_state'
 
     queryset =  CaseLogType.objects.filter(subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
 

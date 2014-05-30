@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.contrib.admin import widgets
 from django.template.defaulttags import date
 
-from cla_common.constants import CASE_STATES
+from cla_common.constants import CASE_STATES, CASELOGTYPE_ACTION_KEYS
 from legalaid.constants import CASELOGTYPE_SUBTYPES
 
 from legalaid.models import CaseLog, CaseLogType
@@ -33,7 +33,10 @@ class ProviderCaseClosureReportForm(ConvertDateMixin, forms.Form):
         return CaseLog.objects.filter(
             created__range=(date_from, date_to),
             logtype__subtype=CASELOGTYPE_SUBTYPES.OUTCOME,
-            logtype__case_state__in=[CASE_STATES.CLOSED, CASE_STATES.REJECTED],
+            logtype__action_key__in=[
+                CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE,
+                CASELOGTYPE_ACTION_KEYS.PROVIDER_REJECT_CASE
+            ],
             case__provider=self.cleaned_data['provider'],
         ).order_by('created').values_list(
             'case__reference', 'created', 'logtype__code',

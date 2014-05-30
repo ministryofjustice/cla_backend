@@ -100,7 +100,6 @@
     "fields": {
         "description": "Deferred assignment to specialist",
         "code": "CBSP",
-        "case_state": null,
         "subtype": "outcome",
         "action_key": "defer_assign",
         "modified": "2014-04-14T16:29:59.227Z",

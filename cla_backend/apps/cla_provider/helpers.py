@@ -12,13 +12,16 @@ def today_at(hour, minute=0, second=0, microsecond=0):
 class ProviderAllocationHelper(object):
 
     def __init__(self):
-        pass
+        self._providers_in_category = None
 
     def get_qualifying_providers_allocation(self, category):
         """
         @return: list
         """
-        return ProviderAllocation.objects.filter(category=category)
+        if not self._providers_in_category:
+            self._providers_in_category = ProviderAllocation.objects.filter(category=category)
+
+        return self._providers_in_category
 
 
     def get_qualifying_providers(self, category):
@@ -36,15 +39,17 @@ class ProviderAllocationHelper(object):
         # The alternative is to only store a single winner which is updated on
         # each iteration
         score_card = [] # of (provider.id => weighted_score)
+        provider_lookup = {}
         for pa in self.get_qualifying_providers_allocation(category):
             # calculate score for each provider
             score_card.append((pa.provider.id, float(pa.weighted_distribution) * random()))
+            provider_lookup[pa.provider.id] = pa.provider
         if not score_card:
             return None
 
         # the highest score wins
         winner = sorted(score_card, key=itemgetter(1), reverse=True)[0]
-        return winner[0]
+        return provider_lookup[winner[0]]
 
     def _get_rota_provider(self, category):
         try:
@@ -95,3 +100,4 @@ class ProviderAllocationHelper(object):
             return self._get_rota_provider(category)
         else:
             return self._get_random_provider(category)
+

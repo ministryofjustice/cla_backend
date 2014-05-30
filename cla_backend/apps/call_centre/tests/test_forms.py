@@ -30,14 +30,10 @@ class ProviderAllocationFormTestCase(TestCase):
                                       weighted_distribution=0.5,
                                       provider=provider,
                                       category=category)
-        # TODO - create a ProviderAllocation for this provider with the
-        #        same category as the case and a positive weighted_distribution
 
         helper = ProviderAllocationHelper()
-
-
-        form = ProviderAllocationForm(case=case, data={'provider' : helper.get_suggested_provider(category)},
-                                      providers=helper.get_qualifying_providers(category))
+        form = ProviderAllocationForm(case=case, data={'provider' : helper.get_suggested_provider(category).pk},
+                                          providers=helper.get_qualifying_providers(category))
 
         self.assertTrue(form.is_valid())
 

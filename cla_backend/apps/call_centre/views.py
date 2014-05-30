@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AnonymousUser
 
 from rest_framework import viewsets, mixins, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter, DjangoFilterBackend
 
@@ -9,7 +9,7 @@ from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from core.viewsets import IsEligibleActionViewSetMixin
-from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
+from legalaid.models import Category, EligibilityCheck, Case, CaseLog, CaseLogType
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
 
 from .permissions import CallCentreClientIDPermission, \
@@ -98,28 +98,69 @@ class CaseViewSet(
         if not obj.pk and not isinstance(user, AnonymousUser):
             obj.created_by = user
 
+    @link()
+    def assign_suggest(self, request, reference=None, **kwargs):
+        """
+        @return: dict - 'suggested_provider' (single item) ; 
+                        'suitable_providers' all possible providers for this category.
+        """
+        obj = self.get_object()
+
+        helper = ProviderAllocationHelper()
+        category = obj.eligibility_check.category
+        suggested = helper.get_suggested_provider(category)
+        suitable_providers = [ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
+
+        suggestions = { 'suggested_provider' : ProviderSerializer(suggested).data,
+                        'suitable_providers' : suitable_providers
+                      }
+
+        return DRFResponse(suggestions)
+
+
     @action()
     def assign(self, request, reference=None, **kwargs):
         """
         Assigns the case to a provider
         """
         obj = self.get_object()
-
         helper = ProviderAllocationHelper()
         category = obj.eligibility_check.category
 
+        suitable_providers = helper.get_qualifying_providers(category)
+
+        # find given provider in suitable - avoid extra lookup and ensures
+        # valid provider
+        for sp in suitable_providers:
+            if sp.id == request.DATA['provider_id']:
+                p = sp
+                break
+        else:
+            raise ValueError("Provider not found")
 
         # if we're inside office hours then:
         # Randomly assign to provider who offers this category of service
-        # else it should be the on duty provider
-        form = ProviderAllocationForm(case=obj, data={'provider' : helper.get_suggested_provider(category)},
-                                      providers=helper.get_qualifying_providers(category))
+        # else it should be the on duty provider 
+        form = ProviderAllocationForm(case=obj,
+                                      data={'provider' : p.pk},
+                                      providers=suitable_providers)
 
         if form.is_valid():
             provider = form.save(request.user)
             provider_serialised = ProviderSerializer(provider)
-            return DRFResponse(data=provider_serialised.data)
 
+            notes = request.DATA['assign_notes'] if 'assign_notes' in request.DATA else None
+
+            # TODO - caselog is about to change. This is a simple way of completing
+            #        current story before caselog refactor
+            if request.DATA['is_manual']:
+                logType = CaseLogType.objects.get(code='MANALC')
+                CaseLog.objects.create( case=obj, created_by=self.request.user,
+                                        logtype=logType, notes=notes
+                                      )
+
+            return DRFResponse(data=provider_serialised.data)
+ 
         return DRFResponse(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )

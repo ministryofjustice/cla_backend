@@ -39,7 +39,7 @@ class BaseCaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         if data is None or obj is None:
             self.assertEqual(data, obj)
         else:
-            for prop in ['title', 'full_name', 'postcode', 'street', 'town', 'mobile_phone', 'home_phone']:
+            for prop in ['title', 'full_name', 'postcode', 'street', 'mobile_phone', 'home_phone']:
                 self.assertEqual(getattr(obj, prop), data[prop])
 
     def assertCaseEqual(self, data, case):

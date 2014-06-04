@@ -79,7 +79,6 @@ class PersonalDetails(TimeStampedModel):
     full_name = models.CharField(max_length=400)
     postcode = models.CharField(max_length=12)
     street = models.CharField(max_length=255)
-    town = models.CharField(max_length=255)
     mobile_phone = models.CharField(max_length=20, blank=True)
     home_phone = models.CharField(max_length=20, blank=True)
     # email = models.EmailField(blank=True)

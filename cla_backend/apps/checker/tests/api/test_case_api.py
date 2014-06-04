@@ -28,7 +28,7 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
         if data is None or obj is None:
             self.assertEqual(data, obj)
         else:
-            for prop in ['title', 'full_name', 'postcode', 'street', 'town', 'mobile_phone', 'home_phone']:
+            for prop in ['title', 'full_name', 'postcode', 'street', 'mobile_phone', 'home_phone']:
                 self.assertEqual(getattr(obj, prop), data[prop])
 
     def assertCaseEqual(self, data, case):
@@ -68,7 +68,6 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
                 'full_name': 'John Doe',
                 'postcode': 'SW1H 9AJ',
                 'street': '102 Petty France',
-                'town': 'London',
                 'mobile_phone': '0123456789',
                 'home_phone': '9876543210',
             }
@@ -100,7 +99,6 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
                 "full_name": None,
                 "postcode": '1'*13,
                 "street": '1'*256,
-                "town": '1'*256,
                 "mobile_phone": '1'*21,
                 "home_phone": '1'*21,
             }
@@ -123,7 +121,6 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
                     'full_name': [u'This field is required.'],
                     'postcode': [u'Ensure this value has at most 12 characters (it has 13).'],
                     'street': [u'Ensure this value has at most 255 characters (it has 256).'],
-                    'town': [u'Ensure this value has at most 255 characters (it has 256).'],
                     'mobile_phone': [u'Ensure this value has at most 20 characters (it has 21).'],
                     'home_phone': [u'Ensure this value has at most 20 characters (it has 21).'],
                 }
@@ -148,7 +145,6 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
                 'full_name': 'John Doe',
                 'postcode': 'SW1H 9AJ',
                 'street': '102 Petty France',
-                'town': 'London',
                 'mobile_phone': '0123456789',
                 'home_phone': '9876543210',
             }
@@ -171,8 +167,7 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
                                       u'mobile_phone': u'0123456789',
                                       u'postcode': u'SW1H 9AJ',
                                       u'street': u'102 Petty France',
-                                      u'title': u'MR',
-                                      u'town': u'London'}}
+                                      u'title': u'MR'}}
         serializer = CaseSerializer(data=data)
         self.assertFalse(serializer.is_valid())
         self.assertDictEqual(

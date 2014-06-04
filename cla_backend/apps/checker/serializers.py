@@ -92,7 +92,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
 class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
     class Meta(PersonalDetailsSerializerBase.Meta):
         fields = (
-            'title', 'full_name', 'postcode', 'street', 'town',
+            'title', 'full_name', 'postcode', 'street',
             'mobile_phone', 'home_phone'
         )
 

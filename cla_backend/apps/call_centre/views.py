@@ -132,7 +132,7 @@ class CaseViewSet(
         # find given provider in suitable - avoid extra lookup and ensures
         # valid provider
         for sp in suitable_providers:
-            if sp.id == request.DATA['provider_id']:
+            if sp.id == int(request.DATA['provider_id']):
                 p = sp
                 break
         else:

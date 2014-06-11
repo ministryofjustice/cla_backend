@@ -358,3 +358,6 @@ class CaseLog(TimeStampedModel):
 
     def __unicode__(self):
         return u'%s - %s' % (self.case, self.logtype)
+
+    class Meta:
+        ordering = ['-created']

@@ -29,7 +29,7 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
             self.assertEqual(data, obj)
         else:
             for prop in ['title', 'full_name', 'postcode', 'street', 'mobile_phone', 'home_phone']:
-                self.assertEqual(getattr(obj, prop), data[prop])
+                self.assertEqual(unicode(getattr(obj, prop)), data[prop])
 
     def assertCaseEqual(self, data, case):
         self.assertEqual(case.reference, data['reference'])
@@ -118,7 +118,6 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
             [
                 {
                     'title': [u'Ensure this value has at most 20 characters (it has 21).'],
-                    'full_name': [u'This field is required.'],
                     'postcode': [u'Ensure this value has at most 12 characters (it has 13).'],
                     'street': [u'Ensure this value has at most 255 characters (it has 256).'],
                     'mobile_phone': [u'Ensure this value has at most 20 characters (it has 21).'],

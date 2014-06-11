@@ -9,14 +9,15 @@ from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from core.viewsets import IsEligibleActionViewSetMixin
-from legalaid.models import Category, EligibilityCheck, Case, CaseLog, CaseLogType
+from legalaid.models import Category, EligibilityCheck, Case, CaseLog, CaseLogType, \
+    PersonalDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
-    OutOfHoursRotaSerializer, OperatorSerializer
+    OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm, \
     DeclineAllSpecialistsCaseForm, CaseAssignDeferForm
 from .models import Operator
@@ -229,3 +230,12 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
 
     def get_logged_in_user_model(self):
         return self.request.user.operator
+
+class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin,
+                             mixins.CreateModelMixin,
+                             mixins.UpdateModelMixin,
+                             mixins.RetrieveModelMixin,
+                             viewsets.GenericViewSet):
+    model = PersonalDetails
+    serializer_class = PersonalDetailsSerializer
+    lookup_field = 'reference'

@@ -42,11 +42,14 @@ class CaseTests(BaseCaseTests):
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
+        if isinstance(data, basestring):
+            self.assertEqual(unicode(data), unicode(obj.reference))
+            return
         if data is None or obj is None:
             self.assertEqual(data, obj)
         else:
             for prop in ['title', 'full_name', 'postcode', 'street', 'mobile_phone', 'home_phone']:
-                self.assertEqual(getattr(obj, prop), data[prop])
+                self.assertEqual(unicode(getattr(obj, prop)), data[prop])
 
     def assertCaseEqual(self, data, case):
         self.assertEqual(case.reference, data['reference'])
@@ -79,17 +82,17 @@ class CaseTests(BaseCaseTests):
 
     def test_create_with_data(self):
         check = make_recipe('legalaid.eligibility_check')
-
-        data = {
-            'eligibility_check': unicode(check.reference),
-            'personal_details': {
+        pd = make_recipe('legalaid.personal_details', **{
                 'title': 'MR',
                 'full_name': 'John Doe',
                 'postcode': 'SW1H 9AJ',
                 'street': '102 Petty France',
                 'mobile_phone': '0123456789',
                 'home_phone': '9876543210',
-            }
+            })
+        data = {
+            'eligibility_check': unicode(check.reference),
+            'personal_details': unicode(pd.reference)
         }
         response = self.client.post(
             self.list_url, data=data, format='json',
@@ -105,24 +108,24 @@ class CaseTests(BaseCaseTests):
             Case(
                 reference=response.data['reference'],
                 eligibility_check=check,
-                personal_details=PersonalDetails(**data['personal_details'])
+                personal_details=pd
             )
         )
         self.assertEqual(response.data['in_scope'], None)
 
     def test_create_with_data_in_scope(self):
         check = make_recipe('legalaid.eligibility_check')
-
+        pd = make_recipe('legalaid.personal_details', **{
+            'title': 'MR',
+            'full_name': 'John Doe',
+            'postcode': 'SW1H 9AJ',
+            'street': '102 Petty France',
+            'mobile_phone': '0123456789',
+            'home_phone': '9876543210',
+            })
         data = {
             'eligibility_check': unicode(check.reference),
-            'personal_details': {
-                'title': 'MR',
-                'full_name': 'John Doe',
-                'postcode': 'SW1H 9AJ',
-                'street': '102 Petty France',
-                'mobile_phone': '0123456789',
-                'home_phone': '9876543210',
-                },
+            'personal_details': unicode(pd.reference),
             'in_scope': True,
         }
         response = self.client.post(
@@ -139,7 +142,7 @@ class CaseTests(BaseCaseTests):
                              Case(
                                  reference=response.data['reference'],
                                  eligibility_check=check,
-                                 personal_details=PersonalDetails(**data['personal_details']),
+                                 personal_details=pd,
                                  in_scope=True
                              )
         )
@@ -148,16 +151,18 @@ class CaseTests(BaseCaseTests):
     def test_create_with_data_out_scope(self):
         check = make_recipe('legalaid.eligibility_check')
 
+        pd = make_recipe('legalaid.personal_details', **{
+            'title': 'MR',
+            'full_name': 'John Doe',
+            'postcode': 'SW1H 9AJ',
+            'street': '102 Petty France',
+            'mobile_phone': '0123456789',
+            'home_phone': '9876543210',
+            })
+
         data = {
             'eligibility_check': unicode(check.reference),
-            'personal_details': {
-                'title': 'MR',
-                'full_name': 'John Doe',
-                'postcode': 'SW1H 9AJ',
-                'street': '102 Petty France',
-                'mobile_phone': '0123456789',
-                'home_phone': '9876543210',
-                },
+            'personal_details': unicode(pd.reference),
             'in_scope': False,
             }
         response = self.client.post(
@@ -174,22 +179,23 @@ class CaseTests(BaseCaseTests):
                              Case(
                                  reference=response.data['reference'],
                                  eligibility_check=check,
-                                 personal_details=PersonalDetails(**data['personal_details']),
+                                 personal_details=pd,
                                  in_scope=False
                              )
         )
 
     def test_create_without_eligibility_check(self):
+        pd = make_recipe('legalaid.personal_details', **{
+            'title': 'MR',
+            'full_name': 'John Doe',
+            'postcode': 'SW1H 9AJ',
+            'street': '102 Petty France',
+            'mobile_phone': '0123456789',
+            'home_phone': '9876543210',
+            })
 
         data = {
-            'personal_details': {
-                'title': 'MR',
-                'full_name': 'John Doe',
-                'postcode': 'SW1H 9AJ',
-                'street': '102 Petty France',
-                'mobile_phone': '0123456789',
-                'home_phone': '9876543210',
-                }
+            'personal_details': unicode(pd.reference),
         }
         response = self.client.post(
             self.list_url, data=data, format='json',
@@ -205,7 +211,7 @@ class CaseTests(BaseCaseTests):
                              Case(
                                  reference=response.data['reference'],
                                  eligibility_check=EligibilityCheck.objects.get(reference=response.data['eligibility_check']),
-                                 personal_details=PersonalDetails(**data['personal_details'])
+                                 personal_details=pd
                              )
         )
 
@@ -260,13 +266,14 @@ class CaseTests(BaseCaseTests):
         self.assertTrue(serializer.is_valid())
         self.assertDictEqual(serializer.errors, {})
 
-    def test_case_serializer_with_personal_details(self):
-        data = {u'personal_details': {u'full_name': u'John Doe',
+    def test_case_serializer_with_personal_details_reference(self):
+        personal_details = make_recipe('legalaid.personal_details', **{u'full_name': u'John Doe',
                                       u'home_phone': u'9876543210',
                                       u'mobile_phone': u'0123456789',
                                       u'postcode': u'SW1H 9AJ',
                                       u'street': u'102 Petty France',
-                                      u'title': u'MR'}}
+                                      u'title': u'MR'})
+        data = {u'personal_details': unicode(personal_details.reference)}
 
         serializer = CaseSerializer(data=data)
         self.assertTrue(serializer.is_valid())
@@ -274,14 +281,14 @@ class CaseTests(BaseCaseTests):
 
     def test_case_serializer_with_dupe_eligibility_check_reference(self):
         case = make_recipe('legalaid.case')
-
-        data = {u'eligibility_check': case.eligibility_check.reference,
-                u'personal_details': {u'full_name': u'John Doe',
+        personal_details = make_recipe('legalaid.personal_details', **{u'full_name': u'John Doe',
                                       u'home_phone': u'9876543210',
                                       u'mobile_phone': u'0123456789',
                                       u'postcode': u'SW1H 9AJ',
                                       u'street': u'102 Petty France',
-                                      u'title': u'MR'}}
+                                      u'title': u'MR'})
+        data = {u'eligibility_check': case.eligibility_check.reference,
+                u'personal_details': unicode(personal_details.reference)}
         serializer = CaseSerializer(data=data)
         self.assertFalse(serializer.is_valid())
         self.assertDictEqual(
@@ -296,17 +303,18 @@ class CaseTests(BaseCaseTests):
         """
         # create a different case
         case = make_recipe('legalaid.case')
-
-        data = {
-            'eligibility_check': unicode(case.eligibility_check.reference),
-            'personal_details': {
+        pd = make_recipe('legalaid.personal_details', **{
                 'title': 'MR',
                 'full_name': 'John Doe',
                 'postcode': 'SW1H 9AJ',
                 'street': '102 Petty France',
                 'mobile_phone': '0123456789',
                 'home_phone': '9876543210',
-            }
+            })
+
+        data = {
+            'eligibility_check': unicode(case.eligibility_check.reference),
+            'personal_details':  unicode(pd.reference)
         }
         response = self.client.post(
             self.list_url, data=data, format='json',

@@ -1,5 +1,6 @@
 import logging
 import datetime
+import uuid
 
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -75,13 +76,15 @@ class Deductions(TimeStampedModel):
 
 
 class PersonalDetails(TimeStampedModel):
-    title = models.CharField(max_length=20, blank=True)
-    full_name = models.CharField(max_length=400)
-    postcode = models.CharField(max_length=12)
-    street = models.CharField(max_length=255)
-    mobile_phone = models.CharField(max_length=20, blank=True)
+    title = models.CharField(max_length=20, blank=True, null=True)
+    full_name = models.CharField(max_length=400, blank=True, null=True)
+    postcode = models.CharField(max_length=12, blank=True, null=True)
+    street = models.CharField(max_length=255, blank=True, null=True)
+    mobile_phone = models.CharField(max_length=20, blank=True, null=True)
     home_phone = models.CharField(max_length=20, blank=True)
     # email = models.EmailField(blank=True)
+
+    reference = UUIDField(auto=True, unique=True)
 
     class Meta:
         verbose_name_plural = "personal details"

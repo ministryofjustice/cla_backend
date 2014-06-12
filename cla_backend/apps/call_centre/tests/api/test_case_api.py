@@ -361,7 +361,7 @@ class CaseTests(BaseCaseTests):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         ).data
 
-        self.assertTrue(case.reference in [x.get('reference') for x in case_list])
+        self.assertTrue(case.reference in [x.get('reference') for x in case_list['results']])
 
         # no manual allocation outcome codes should exist at this point
         clt = CaseLogType.objects.get(code='MANALC')
@@ -391,7 +391,7 @@ class CaseTests(BaseCaseTests):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         ).data
 
-        self.assertFalse(case.reference in [x.get('reference') for x in case_list])
+        self.assertFalse(case.reference in [x.get('reference') for x in case_list['results']])
 
         manual_alloc_records_count = CaseLog.objects.filter(logtype=clt).count()
         self.assertEqual(manual_alloc_records_count, 1)
@@ -429,7 +429,7 @@ class CaseTests(BaseCaseTests):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         ).data
 
-        self.assertTrue(case.reference in [x.get('reference') for x in case_list])
+        self.assertTrue(case.reference in [x.get('reference') for x in case_list['results']])
 
         # close
 
@@ -451,7 +451,7 @@ class CaseTests(BaseCaseTests):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         ).data
 
-        self.assertFalse(case.reference in [x.get('reference') for x in case_list])
+        self.assertFalse(case.reference in [x.get('reference') for x in case_list['results']])
 
     def test_cannot_patch_state_directly(self):
         """
@@ -492,8 +492,8 @@ class CaseTests(BaseCaseTests):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, len(response.data))
-        self.assertCaseEqual(response.data[0], self.case_obj)
+        self.assertEqual(1, len(response.data['results']))
+        self.assertCaseEqual(response.data['results'][0], self.case_obj)
 
     def test_search_find_one_result_by_ref(self):
         """
@@ -510,8 +510,8 @@ class CaseTests(BaseCaseTests):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, len(response.data))
-        self.assertCaseEqual(response.data[0], self.case_obj)
+        self.assertEqual(1, len(response.data['results']))
+        self.assertCaseEqual(response.data['results'][0], self.case_obj)
 
     def test_search_find_one_result_by_postcode(self):
         """
@@ -528,8 +528,8 @@ class CaseTests(BaseCaseTests):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, len(response.data))
-        self.assertCaseEqual(response.data[0], self.case_obj)
+        self.assertEqual(1, len(response.data['results']))
+        self.assertCaseEqual(response.data['results'][0], self.case_obj)
 
     def test_search_find_none_result_by_postcode(self):
         """
@@ -542,7 +542,7 @@ class CaseTests(BaseCaseTests):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(0, len(response.data))
+        self.assertEqual(0, len(response.data['results']))
 
 
     def test_search_find_none_result_by_fullname(self):
@@ -555,7 +555,7 @@ class CaseTests(BaseCaseTests):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(0, len(response.data))
+        self.assertEqual(0, len(response.data['results']))
 
 
     def test_search_find_none_result_by_ref(self):
@@ -568,7 +568,7 @@ class CaseTests(BaseCaseTests):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(0, len(response.data))
+        self.assertEqual(0, len(response.data['results']))
 
 
     def test_patch_provider_notes_not_allowed(self):

@@ -89,6 +89,10 @@ class CaseViewSet(
                      'personal_details__postcode',
                      'reference')
 
+    paginate_by = 10
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
     default_state_filter = [CASE_STATES.OPEN]
     all_states = dict(CASE_STATES.CHOICES).keys()
 
@@ -102,7 +106,7 @@ class CaseViewSet(
     @link()
     def assign_suggest(self, request, reference=None, **kwargs):
         """
-        @return: dict - 'suggested_provider' (single item) ; 
+        @return: dict - 'suggested_provider' (single item) ;
                         'suitable_providers' all possible providers for this category.
         """
         obj = self.get_object()
@@ -141,7 +145,7 @@ class CaseViewSet(
 
         # if we're inside office hours then:
         # Randomly assign to provider who offers this category of service
-        # else it should be the on duty provider 
+        # else it should be the on duty provider
         form = ProviderAllocationForm(case=obj,
                                       data={'provider' : p.pk},
                                       providers=suitable_providers)
@@ -161,7 +165,7 @@ class CaseViewSet(
                                       )
 
             return DRFResponse(data=provider_serialised.data)
- 
+
         return DRFResponse(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )

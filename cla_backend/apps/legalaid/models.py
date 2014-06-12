@@ -278,6 +278,10 @@ class Case(TimeStampedModel):
         self.provider = provider
         self.save()
 
+    def associate_personal_details(self, ref):
+        self.personal_details = PersonalDetails.objects.get(reference=ref)
+        self.save()
+
     def lock(self, user, save=True):
         if not self.locked_by:
             self.locked_by = user

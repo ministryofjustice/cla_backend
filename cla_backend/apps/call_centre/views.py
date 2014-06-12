@@ -19,7 +19,7 @@ from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm, \
-    DeclineAllSpecialistsCaseForm, CaseAssignDeferForm
+    DeclineAllSpecialistsCaseForm, CaseAssignDeferForm, AssociatePersonalDetailsCaseForm
 from .models import Operator
 
 
@@ -195,6 +195,23 @@ class CaseViewSet(
             form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
+    @action()
+    def associate_personal_details(self, request, *args, **kwargs):
+        """
+        Associates a case with a a personal details object. Will throw an error
+        if the case already has a personal details object associated.
+        """
+
+        obj = self.get_object()
+
+        form = AssociatePersonalDetailsCaseForm(case=obj, data=request.DATA)
+        if form.is_valid():
+            form.save(request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
         return DRFResponse(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )

@@ -27,7 +27,7 @@ class EligibilityChecker(object):
 
             # Tax + NI
             income_tax_and_ni = self.case_data.you.deductions.income_tax['per_month'] \
-                              + self.case_data.you.deductions.national_insurance['per_month'] 
+                              + self.case_data.you.deductions.national_insurance['per_month']
             gross_income -= income_tax_and_ni
             if self.case_data.facts.should_aggregate_partner:
                 income_tax_and_ni = self.case_data.partner.deductions.income_tax['per_month'] \

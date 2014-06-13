@@ -30,16 +30,27 @@ case_data_dict = {
             {
                 'income_tax': {"interval_period": "per_month",
                                "per_interval_value": 0,
+                               "per_month": 0
                                },
                 'national_insurance': {"interval_period": "per_month",
                                        "per_interval_value": 0,
+                                       "per_month": 0
                                        },
-                'maintenance': None,
+                'maintenance': {"interval_period": "per_month",
+                               "per_interval_value": 0,
+                               "per_month": 0
+                                },
                 'mortgage': {"interval_period": "per_month",
                              "per_interval_value": 0,
+                             "per_month": 0
                              },
                 'rent': {"interval_period": "per_month",
                          "per_interval_value": 0,
+                         "per_month": 0
+                         },
+                'childcare': {"interval_period": "per_month",
+                         "per_interval_value": 0,
+                         "per_month": 0
                          },
                 'criminal_legalaid_contributions': 0,
             },

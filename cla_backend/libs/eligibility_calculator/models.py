@@ -59,21 +59,23 @@ class Income(ModelMixin, object):
 
     @property
     def total(self):
-        if isinstance(self.earnings, dict):
-            mi = MoneyInterval.from_dict(self.earnings)
-            earnings = mi.as_monthly()
-        else:
-            earnings = self.earnings
+        mi = MoneyInterval.from_dict(self.earnings)
+        earnings = mi.as_monthly()
 
-        return earnings + self.other_income
+        mi = MoneyInterval.from_dict(self.other_income)
+        other_income = mi.as_monthly()
+
+        return earnings + other_income
 
 
 class Deductions(ModelMixin, object):
     PROPERTY_META = {
-        'income_tax_and_ni': None,
+        'income_tax': None,
+        'national_insurance' : None,
         'maintenance': None,
         'childcare': None,
-        'mortgage_or_rent': None,
+        'mortgage': None,
+        'rent' : None,
         'criminal_legalaid_contributions': None
     }
 

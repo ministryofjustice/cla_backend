@@ -23,9 +23,18 @@ eligibility_check = Recipe(EligibilityCheck,
 )
 
 
-income = Recipe(Income, earnings=MoneyInterval('per_month', pennies=2200))
+income = Recipe(Income, earnings=MoneyInterval('per_month', pennies=2200),
+                other_income=MoneyInterval('per_week', pennies=2200)
+                )
 savings = Recipe(Savings)
-deductions = Recipe(Deductions)
+deductions = Recipe(Deductions,
+                    income_tax = MoneyInterval('per_week', pennies=2200),
+                    national_insurance = MoneyInterval('per_4week', pennies=2200),
+                    maintenance = MoneyInterval('per_year', pennies=2200),
+                    childcare = MoneyInterval('per_week', pennies=2200),
+                    mortgage = MoneyInterval('per_week', pennies=2200),
+                    rent = MoneyInterval('per_week', pennies=2200)
+                    )
 
 property = Recipe(Property,
     eligibility_check=foreign_key(eligibility_check)

@@ -61,8 +61,8 @@ class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
             return
 
         for prop in [
-            'income_tax_and_ni', 'maintenance', 'childcare',
-            'mortgage_or_rent', 'criminal_legalaid_contributions'
+            'income_tax', 'national_insurance', 'maintenance', 'childcare',
+            'mortgage', 'rent', 'criminal_legalaid_contributions'
         ]:
             self.assertEqual(getattr(obj, prop), data.get(prop))
 

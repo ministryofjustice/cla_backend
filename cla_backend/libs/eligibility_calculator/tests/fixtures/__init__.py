@@ -12,8 +12,12 @@ case_data_dict = {
     },
     'you': {
         'income': {
-            'earnings': 0,
-            'other_income': 0,
+            'earnings': {"interval_period": "per_month",
+                         "per_interval_value": 0,
+                         },
+            'other_income': {"interval_period": "per_month",
+                             "per_interval_value": 0,
+                             },
             'self_employed': False,
         },
         'savings': {
@@ -24,9 +28,19 @@ case_data_dict = {
         },
         'deductions':
             {
-                'income_tax_and_ni': 0,
+                'income_tax': {"interval_period": "per_month",
+                               "per_interval_value": 0,
+                               },
+                'national_insurance': {"interval_period": "per_month",
+                                       "per_interval_value": 0,
+                                       },
                 'maintenance': None,
-                'mortgage_or_rent': 0,
+                'mortgage': {"interval_period": "per_month",
+                             "per_interval_value": 0,
+                             },
+                'rent': {"interval_period": "per_month",
+                         "per_interval_value": 0,
+                         },
                 'criminal_legalaid_contributions': 0,
             },
     },

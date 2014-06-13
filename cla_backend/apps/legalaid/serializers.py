@@ -86,10 +86,10 @@ class DeductionsSerializerBase(TotalsModelSerializer):
     total_fields = \
         {
             'criminal_legalaid_contributions',
-            'income_tax_and_ni',
+            'income_tax', 'national_insurance',
             'maintenance',
             'childcare',
-            'mortgage_or_rent',
+            'mortgage', 'rent',
 
         }
 

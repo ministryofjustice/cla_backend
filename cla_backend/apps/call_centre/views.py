@@ -72,7 +72,6 @@ class CaseViewSet(
     StateFromActionMixin,
     viewsets.GenericViewSet
 ):
-    queryset = Case.objects.filter(state=CASE_STATES.OPEN, provider=None)
     model = Case
     lookup_field = 'reference'
     serializer_class = CaseSerializer
@@ -93,8 +92,12 @@ class CaseViewSet(
     paginate_by_param = 'page_size'
     max_paginate_by = 100
 
-    default_state_filter = [CASE_STATES.OPEN]
-    all_states = dict(CASE_STATES.CHOICES).keys()
+    def get_queryset(self):
+        qs = super(CaseViewSet, self).get_queryset()
+        dashboard_param = self.request.QUERY_PARAMS.get('dashboard', None)
+        if dashboard_param:
+            qs = qs.filter(state=CASE_STATES.OPEN, provider=None)
+        return qs
 
     def pre_save(self, obj, *args, **kwargs):
         super(CaseViewSet, self).pre_save(obj, *args, **kwargs)

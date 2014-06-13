@@ -1,7 +1,7 @@
 import datetime
 import uuid
 
-from django.core.urlresolvers import reverse, NoReverseMatch
+from django.core.urlresolvers import reverse
 from django.utils import timezone
 import mock
 
@@ -9,19 +9,19 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from legalaid.models import EligibilityCheck, \
-    Case, PersonalDetails, CaseLog, CaseLogType
+    Case, CaseLog, CaseLogType
 from legalaid.tests.base import StateChangeAPIMixin
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
-from core.tests.mommy_utils import make_recipe, make_user
+from core.tests.mommy_utils import make_recipe
 from cla_common.constants import CASE_STATES
 
 from call_centre.serializers import CaseSerializer
 
 
-class BaseCaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
+class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
-        super(BaseCaseTests, self).setUp()
+        super(BaseCaseTestCase, self).setUp()
 
         self.list_url = reverse('call_centre:case-list')
         self.list_dashboard_url = u'%s?dashboard=1' % reverse('call_centre:case-list')
@@ -32,8 +32,6 @@ class BaseCaseTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             kwargs={'reference': self.case_obj.reference}
         )
 
-
-class CaseTests(BaseCaseTests):
     def assertCaseCheckResponseKeys(self, response):
         self.assertItemsEqual(
             response.data.keys(),
@@ -57,6 +55,8 @@ class CaseTests(BaseCaseTests):
         self.assertEqual(unicode(case.eligibility_check.reference), data['eligibility_check'])
         self.assertPersonalDetailsEqual(data['personal_details'], case.personal_details)
 
+
+class CaseGeneralTestCase(BaseCaseTestCase):
     def test_methods_not_allowed(self):
         """
         Ensure that we can't POST, PUT or DELETE
@@ -67,7 +67,8 @@ class CaseTests(BaseCaseTests):
         # ### DETAIL
         self._test_delete_not_allowed(self.detail_url)
 
-    # CREATE
+
+class CreateCaseTestCase(BaseCaseTestCase):
 
     def test_create_no_data(self):
         """
@@ -214,8 +215,6 @@ class CaseTests(BaseCaseTests):
                              )
         )
 
-
-
     def test_case_serializer_with_eligibility_check_reference(self):
         eligibility_check = make_recipe('legalaid.eligibility_check')
 
@@ -283,7 +282,8 @@ class CaseTests(BaseCaseTests):
             {'eligibility_check': [u'Case with this Eligibility check already exists.']}
         )
 
-    # ASSIGN
+
+class AssignCaseTestCase(BaseCaseTestCase):
 
     def test_assign_invalid_case_reference(self):
         url = reverse('call_centre:case-assign', args=(), kwargs={'reference': 'invalid'})
@@ -325,7 +325,6 @@ class CaseTests(BaseCaseTests):
         clt = CaseLogType.objects.get(code='MANALC')
         manual_alloc_records_count = CaseLog.objects.filter(logtype=clt).count()
         self.assertEqual(manual_alloc_records_count, 0)
-
 
         # assign
 
@@ -375,7 +374,8 @@ class CaseTests(BaseCaseTests):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['provider'], None)
 
-    # CLOSE
+
+class CloseCaseTestCase(BaseCaseTestCase):
 
     def test_close_invalid_case_reference(self):
         url = reverse('call_centre:case-close', args=(), kwargs={'reference': 'invalid'})
@@ -442,7 +442,8 @@ class CaseTests(BaseCaseTests):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['state'], CASE_STATES.OPEN)
 
-    # SEARCH
+
+class SearchCaseTestCase(BaseCaseTestCase):
 
     def test_list_with_dashboard_param(self):
         """
@@ -602,7 +603,7 @@ class CaseTests(BaseCaseTests):
         self.assertNotEqual(response.data['provider_notes'], 'abc123')
 
 
-class DeclineAllSpecialistsCaseTests(StateChangeAPIMixin, BaseCaseTests):
+class DeclineAllSpecialistsTestCase(StateChangeAPIMixin, BaseCaseTestCase):
     VALID_OUTCOME_CODE = 'CODE_DECLINED_ALL_SPECIALISTS'
     EXPECTED_CASE_STATE = CASE_STATES.CLOSED
 
@@ -620,7 +621,7 @@ class DeclineAllSpecialistsCaseTests(StateChangeAPIMixin, BaseCaseTests):
         pass
 
 
-class PersonalDetailsTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
+class PersonalDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
     def assertPersonalDetailsCheckResponseKeys(self, response):
         self.assertItemsEqual(
@@ -637,7 +638,7 @@ class PersonalDetailsTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
 
     def setUp(self):
-        super(PersonalDetailsTests, self).setUp()
+        super(PersonalDetailsTestCase, self).setUp()
 
         self.list_url = reverse('call_centre:personaldetails-list')
         self.personal_details_obj = make_recipe('legalaid.personal_details')
@@ -646,7 +647,6 @@ class PersonalDetailsTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'call_centre:personaldetails-detail', args=(),
             kwargs={'reference': unicode(self.personal_details_obj.reference)}
         )
-
 
     def _get_default_post_data(self):
         return {
@@ -658,14 +658,11 @@ class PersonalDetailsTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'home_phone': '9876543210',
             }
 
-
-
     def _test_method_in_error(self, method, url):
         """
         Generic method called by 'create' and 'patch' to test against validation
         errors.
         """
-        invalid_uuid = str(uuid.uuid4())
         data={
             "title": '1'*21,
             "full_name": '1'*456,
@@ -714,7 +711,6 @@ class PersonalDetailsTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         ### LIST
         self._test_delete_not_allowed(self.list_url)
 
-
     def test_methods_in_error(self):
         self._test_method_in_error('post', self.list_url)
         self._test_method_in_error('patch', self.detail_url)
@@ -732,7 +728,6 @@ class PersonalDetailsTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertPersonalDetailsCheckResponseKeys(response)
-
 
     def test_create_with_data(self):
         data = self._get_default_post_data()

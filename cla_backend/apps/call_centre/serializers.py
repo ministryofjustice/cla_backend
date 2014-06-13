@@ -92,7 +92,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
 class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
     class Meta(PersonalDetailsSerializerBase.Meta):
         fields = (
-            'title', 'full_name', 'postcode', 'street',
+            'reference', 'title', 'full_name', 'postcode', 'street',
             'mobile_phone', 'home_phone'
         )
 
@@ -112,7 +112,7 @@ class CaseSerializer(CaseSerializerBase):
             slug_field='reference',
             default=lambda: EligibilityCheck.objects.create().reference)
 
-    personal_details = PersonalDetailsSerializer(required=False)
+    personal_details = UUIDSerializer(required=False, slug_field='reference')
 
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)
@@ -121,6 +121,7 @@ class CaseSerializer(CaseSerializerBase):
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
     caseoutcome_set = serializers.SerializerMethodField('get_caseoutcome_set')
+    full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
 
     def get_caseoutcome_set(self, case):
         case_outcomes = case.caselog_set.filter(logtype__subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
@@ -131,7 +132,7 @@ class CaseSerializer(CaseSerializerBase):
         fields = (
             'eligibility_check', 'personal_details',
             'reference', 'created', 'modified', 'created_by', 'state',
-            'provider', 'caseoutcome_set', 'notes', 'provider_notes', 'in_scope'
+            'provider', 'caseoutcome_set', 'notes', 'provider_notes', 'in_scope', 'full_name'
         )
 
 

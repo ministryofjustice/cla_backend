@@ -91,7 +91,7 @@ class EligibilityChecker(object):
                 raise NotImplementedError('Not supported yet')
 
             if self.case_data.facts.is_you_or_your_partner_over_60:
-                disposable_capital -= constants.disposable_capital.PENSIONER_DISREGARD_LIMIT_LEVELS.get(self.disposable_income, 0)
+                disposable_capital -= constants.disposable_capital.PENSIONER_DISREGARD_LIMIT_LEVELS.get(max(self.disposable_income, 0), 0)
 
             disposable_capital = max(disposable_capital, 0)
 

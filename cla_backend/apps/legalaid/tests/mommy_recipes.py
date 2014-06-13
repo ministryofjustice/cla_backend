@@ -40,7 +40,13 @@ property = Recipe(Property,
     eligibility_check=foreign_key(eligibility_check)
 )
 
-personal_details = Recipe(PersonalDetails)
+personal_details = Recipe(PersonalDetails,
+                          mobile_phone=seq(555),
+                          home_phone=seq(7777),
+                          title='Dr',
+                          street=seq('Street'),
+                          postcode=seq('postcode'),
+                          full_name=seq('fullname'))
 
 case = Recipe(Case,
     eligibility_check=foreign_key(eligibility_check),

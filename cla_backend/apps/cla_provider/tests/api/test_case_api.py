@@ -40,7 +40,7 @@ class BaseCaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
             self.assertEqual(data, obj)
         else:
             for prop in ['title', 'full_name', 'postcode', 'street', 'mobile_phone', 'home_phone']:
-                self.assertEqual(getattr(obj, prop), data[prop])
+                self.assertEqual(unicode(getattr(obj, prop)), data[prop])
 
     def assertCaseEqual(self, data, case):
         self.assertEqual(case.reference, data['reference'])
@@ -324,3 +324,6 @@ class CloseCaseTests(StateChangeAPIMixin, BaseCaseTests):
             Overriding as not possible to test
         """
         pass
+
+
+

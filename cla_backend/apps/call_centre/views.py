@@ -9,16 +9,17 @@ from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from core.viewsets import IsEligibleActionViewSetMixin
-from legalaid.models import Category, EligibilityCheck, Case, CaseLog, CaseLogType
+from legalaid.models import Category, EligibilityCheck, Case, CaseLog, CaseLogType, \
+    PersonalDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
-    OutOfHoursRotaSerializer, OperatorSerializer
+    OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm, \
-    DeclineAllSpecialistsCaseForm, CaseAssignDeferForm
+    DeclineAllSpecialistsCaseForm, CaseAssignDeferForm, AssociatePersonalDetailsCaseForm
 from .models import Operator
 
 
@@ -71,7 +72,6 @@ class CaseViewSet(
     StateFromActionMixin,
     viewsets.GenericViewSet
 ):
-    queryset = Case.objects.filter(state=CASE_STATES.OPEN, provider=None)
     model = Case
     lookup_field = 'reference'
     serializer_class = CaseSerializer
@@ -88,8 +88,16 @@ class CaseViewSet(
                      'personal_details__postcode',
                      'reference')
 
-    default_state_filter = [CASE_STATES.OPEN]
-    all_states = dict(CASE_STATES.CHOICES).keys()
+    paginate_by = 10
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
+    def get_queryset(self):
+        qs = super(CaseViewSet, self).get_queryset()
+        dashboard_param = self.request.QUERY_PARAMS.get('dashboard', None)
+        if dashboard_param:
+            qs = qs.filter(state=CASE_STATES.OPEN, provider=None)
+        return qs
 
     def pre_save(self, obj, *args, **kwargs):
         super(CaseViewSet, self).pre_save(obj, *args, **kwargs)
@@ -101,7 +109,7 @@ class CaseViewSet(
     @link()
     def assign_suggest(self, request, reference=None, **kwargs):
         """
-        @return: dict - 'suggested_provider' (single item) ; 
+        @return: dict - 'suggested_provider' (single item) ;
                         'suitable_providers' all possible providers for this category.
         """
         obj = self.get_object()
@@ -140,7 +148,7 @@ class CaseViewSet(
 
         # if we're inside office hours then:
         # Randomly assign to provider who offers this category of service
-        # else it should be the on duty provider 
+        # else it should be the on duty provider
         form = ProviderAllocationForm(case=obj,
                                       data={'provider' : p.pk},
                                       providers=suitable_providers)
@@ -160,7 +168,7 @@ class CaseViewSet(
                                       )
 
             return DRFResponse(data=provider_serialised.data)
- 
+
         return DRFResponse(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
@@ -198,6 +206,23 @@ class CaseViewSet(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
 
+    @action()
+    def associate_personal_details(self, request, *args, **kwargs):
+        """
+        Associates a case with a a personal details object. Will throw an error
+        if the case already has a personal details object associated.
+        """
+
+        obj = self.get_object()
+
+        form = AssociatePersonalDetailsCaseForm(case=obj, data=request.DATA)
+        if form.is_valid():
+            form.save(request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Provider
@@ -229,3 +254,12 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
 
     def get_logged_in_user_model(self):
         return self.request.user.operator
+
+class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin,
+                             mixins.CreateModelMixin,
+                             mixins.UpdateModelMixin,
+                             mixins.RetrieveModelMixin,
+                             viewsets.GenericViewSet):
+    model = PersonalDetails
+    serializer_class = PersonalDetailsSerializer
+    lookup_field = 'reference'

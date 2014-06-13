@@ -25,7 +25,8 @@ case_data_dict = {
         'deductions':
             {
                 'income_tax_and_ni': 0,
-                'maintenance': None,
+                'childcare': 0,
+                'maintenance': 0,
                 'mortgage_or_rent': 0,
                 'criminal_legalaid_contributions': 0,
             },

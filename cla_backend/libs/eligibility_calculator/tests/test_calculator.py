@@ -99,6 +99,43 @@ class TestApplicantOnBenefitsCalculator(CalculatorTestBase):
         self.assertTrue(is_elig)
 
 
+class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
+
+    def _test_pensioner_on_benefits(self, property_value, mortgage, other_assets):
+        case_data = self.get_default_case_data(
+            facts__on_passported_benefits=True,
+            facts__is_you_or_your_partner_over_60=True,
+            property_data=[(25800000, 10000000, 100,)]
+        )
+
+        checker = EligibilityChecker(case_data)
+        is_elig = checker.is_eligible()
+        return is_elig
+
+
+    def test_pensioner_250k_house_100k_mort_0_savings(self):
+        """
+        if over 60 and on benefits 250k house with 100k mortgage should pass
+        """
+        is_elig = self._test_pensioner_on_benefits(25000000, 10000000, 0)
+        self.assertTrue(is_elig)
+
+    def test_pensioner_300k1p_house_100k1p_mort_799999_savings(self):
+        """
+        if over 60 and on benefits, 300K.01 house with 100K.01 mortgage and
+        7999.99 of other assets should pass.
+        """
+        is_elig = self._test_pensioner_on_benefits(30000001, 10000001, 79999)
+        self.assertTrue(is_elig)
+
+    def test_pensioner_300k2p_house_100k1p_mort_799999_savings(self):
+        """
+        if over 60 and on benefits, 300K.02 house with 100K.01 mortgage and
+        7999.99 of other assets should fail.
+        """
+        is_elig = self._test_pensioner_on_benefits(30000002, 10000001, 79999)
+        self.assertTrue(is_elig)
+
 class GrossIncomeTestCase(CalculatorTestBase):
     def test_gross_income(self):
         """
@@ -827,6 +864,7 @@ class IsEligibleTestCase(unittest.TestCase):
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
         case_data.facts.on_nass_benefits = False
         self.assertFalse(mocked_on_passported_benefits.called)
+        self.assertFalse(mocked_on_passported_benefits.called)
         ec = EligibilityChecker(case_data)
         ec.is_disposable_income_eligible = mock.MagicMock(return_value=False)
         ec.is_gross_income_eligible = mock.MagicMock(return_value=True)
@@ -867,9 +905,13 @@ class IsEligibleTestCase(unittest.TestCase):
         """
         case_data = mock.MagicMock()
         mocked_on_passported_benefits = mock.PropertyMock()
+        mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
-        case_data.facts.on_nass_benefits = True
+        type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
 
         ec = EligibilityChecker(case_data)
         self.assertTrue(ec.is_eligible())
+
+        self.assertFalse(mocked_on_passported_benefits.called)
+        self.assertTrue(mocked_on_nass_benefits.called)
 

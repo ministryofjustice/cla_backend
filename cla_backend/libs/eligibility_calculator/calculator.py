@@ -44,11 +44,11 @@ class EligibilityChecker(object):
                 mortgage_or_rent = min(mortgage_or_rent, constants.disposable_income.CHILDLESS_HOUSING_CAP)
             gross_income -= mortgage_or_rent
 
-            if not self.case_data.you.income.self_employed:
+            if self.case_data.you.income.has_employment_earnings and not self.case_data.you.income.self_employed:
                 gross_income -= constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
 
-            if self.case_data.facts.has_partner:
-                if self.case_data.facts.should_aggregate_partner and not self.case_data.partner.income.self_employed:
+            if self.case_data.facts.has_partner and self.case_data.facts.should_aggregate_partner:
+                if self.case_data.partner.income.has_employment_earnings and not self.case_data.partner.income.self_employed:
                     gross_income -= constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
 
             # criminal
@@ -111,7 +111,6 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
-
         if self.case_data.facts.on_nass_benefits:
             return True
 

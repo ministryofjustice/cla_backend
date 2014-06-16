@@ -230,6 +230,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
         allowance for dependent children > 1,
         income_tax_and_ni > 1,
         maintainable > 1
+        has_employment_earnings True
         self employed = False
         mortgage_or_rent > 1
         childcare > 1
@@ -238,6 +239,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
         should_aggregate_partner = True,
             partner.income_tax_and_ni > 1
             partner.maintenance > 1
+            partner.has_employment_earnings True
             partner.self_employed = False
             partner.childcare > 1
             partner.criminal_legalaid_contributions > 1
@@ -259,7 +261,8 @@ class DisposableIncomeTestCase(unittest.TestCase):
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
             income=mock.MagicMock(
-                self_employed=False
+                self_employed=False,
+                has_employment_earnings=True
             )
         )
         partner = mock.MagicMock(
@@ -271,7 +274,8 @@ class DisposableIncomeTestCase(unittest.TestCase):
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
             income=mock.MagicMock(
-                self_employed=False
+                self_employed=False,
+                has_employment_earnings=True
             )
         )
 
@@ -316,6 +320,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
         allowance for dependent children: 0,
         income_tax_and_ni > 1,
         maintainable > 1
+        has_employment_earnings True
         self employed = True
         mortgage_or_rent > 1  (and below childless housing cap)
         childcare > 1
@@ -338,7 +343,8 @@ class DisposableIncomeTestCase(unittest.TestCase):
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
             income=mock.MagicMock(
-                self_employed=True
+                self_employed=True,
+                has_employment_earnings=True
             )
         )
 
@@ -374,6 +380,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
         allowance for dependent children: 0,
         income_tax_and_ni > 1,
         maintainable > 1
+        has_employment_earnings = True
         self employed = True
         mortgage_or_rent > 1  (and above childless housing cap)
         childcare > 1
@@ -398,7 +405,8 @@ class DisposableIncomeTestCase(unittest.TestCase):
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
             income=mock.MagicMock(
-                self_employed=True
+                self_employed=True,
+                has_employment_earnings=True
             )
         )
 
@@ -419,6 +427,93 @@ class DisposableIncomeTestCase(unittest.TestCase):
                 constants.disposable_income.CHILDLESS_HOUSING_CAP - \
                 you.deductions.childcare - \
                 you.deductions.criminal_legalaid_contributions
+
+            self.assertEqual(expected_value, ec.disposable_income)
+
+    def test_disposable_income_no_employment_allowance_if_no_earnings(self):
+        """
+        TEST: with mocked gross_income.
+        The final value should NOT detract EMPLOYMENT ALLOWANCE*2 because
+            has_employment_earnings = False for 'you' and 'partner'
+
+        has_partner = True
+        allowance for dependent children > 1,
+        income_tax_and_ni > 1,
+        maintainable > 1
+        has_employment_earnings = False
+        self employed = False
+        mortgage_or_rent > 1
+        childcare > 1
+        criminal_legalaid_contributions > 1
+
+        should_aggregate_partner = True,
+            partner.income_tax_and_ni > 1
+            partner.maintenance > 1
+            partner.has_employment_earnings = False
+            partner.self_employed = False
+            partner.childcare > 1
+            partner.criminal_legalaid_contributions > 1
+
+        Disposable income should be equal to the sum of above random values
+
+        """
+        facts = mock.MagicMock(
+            has_partner=True,
+            dependant_children=random.randint(2, 5),
+            should_aggregate_partner=True
+        )
+        you = mock.MagicMock(
+            deductions=mock.MagicMock(
+                income_tax_and_ni=random.randint(50, 1000),
+                maintenance=random.randint(50, 1000),
+                mortgage_or_rent=random.randint(50, 1000),
+                childcare=random.randint(50, 1000),
+                criminal_legalaid_contributions=random.randint(50, 1000)
+            ),
+            income=mock.MagicMock(
+                self_employed=False,
+                has_employment_earnings=False
+            )
+        )
+        partner = mock.MagicMock(
+            deductions=mock.MagicMock(
+                income_tax_and_ni=random.randint(50, 1000),
+                maintenance=random.randint(50, 1000),
+                mortgage_or_rent=random.randint(50, 1000),
+                childcare=random.randint(50, 1000),
+                criminal_legalaid_contributions=random.randint(50, 1000)
+            ),
+            income=mock.MagicMock(
+                self_employed=False,
+                has_employment_earnings=False
+            )
+        )
+
+        case_data = mock.MagicMock(
+            facts=facts, you=you, partner=partner
+        )
+
+        with mock.patch.object(
+            EligibilityChecker, 'gross_income', new_callable=mock.PropertyMock
+        ) as mocked_gross_income:
+
+            mocked_gross_income.return_value = random.randint(5000, 100000)
+
+            ec = EligibilityChecker(case_data)
+
+            expected_value = ec.gross_income - \
+                constants.disposable_income.PARTNER_ALLOWANCE - \
+                facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE - \
+                you.deductions.income_tax_and_ni - \
+                you.deductions.maintenance - \
+                you.deductions.mortgage_or_rent - \
+                you.deductions.childcare - \
+                you.deductions.criminal_legalaid_contributions - \
+                partner.deductions.income_tax_and_ni - \
+                partner.deductions.maintenance - \
+                partner.deductions.mortgage_or_rent - \
+                partner.deductions.childcare - \
+                partner.deductions.criminal_legalaid_contributions
 
             self.assertEqual(expected_value, ec.disposable_income)
 

@@ -26,25 +26,25 @@ class EligibilityChecker(object):
             gross_income -= self.case_data.facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE
 
             # Tax + NI
-            income_tax_and_ni = self.case_data.you.deductions.income_tax['per_month'] \
-                              + self.case_data.you.deductions.national_insurance['per_month']
+            income_tax_and_ni = self.case_data.you.deductions.income_tax \
+                              + self.case_data.you.deductions.national_insurance
             gross_income -= income_tax_and_ni
             if self.case_data.facts.should_aggregate_partner:
-                income_tax_and_ni = self.case_data.partner.deductions.income_tax['per_month'] \
-                                  + self.case_data.partner.deductions.national_insurance['per_month'] 
+                income_tax_and_ni = self.case_data.partner.deductions.income_tax \
+                                  + self.case_data.partner.deductions.national_insurance
                 gross_income -= income_tax_and_ni
 
             # maintenance 6.3
-            gross_income -= self.case_data.you.deductions.maintenance['per_month']
+            gross_income -= self.case_data.you.deductions.maintenance
             if self.case_data.facts.should_aggregate_partner:
-                gross_income -= self.case_data.partner.deductions.maintenance['per_month']
+                gross_income -= self.case_data.partner.deductions.maintenance
 
             # housing
-            mortgage_or_rent = self.case_data.you.deductions.mortgage['per_month']  # excl housing benefit
-            mortgage_or_rent += self.case_data.you.deductions.rent['per_month']
+            mortgage_or_rent = self.case_data.you.deductions.mortgage  # excl housing benefit
+            mortgage_or_rent += self.case_data.you.deductions.rent
             if self.case_data.facts.should_aggregate_partner:
-                mortgage_or_rent += self.case_data.partner.deductions.mortgage['per_month']
-                mortgage_or_rent += self.case_data.partner.deductions.rent['per_month']
+                mortgage_or_rent += self.case_data.partner.deductions.mortgage
+                mortgage_or_rent += self.case_data.partner.deductions.rent
 
             if not self.case_data.facts.dependant_children:
                 mortgage_or_rent = min(mortgage_or_rent, constants.disposable_income.CHILDLESS_HOUSING_CAP)
@@ -63,9 +63,9 @@ class EligibilityChecker(object):
                 gross_income -= self.case_data.partner.deductions.criminal_legalaid_contributions
 
             # childcare 6.5.2
-            gross_income -= self.case_data.you.deductions.childcare['per_month']
+            gross_income -= self.case_data.you.deductions.childcare
             if self.case_data.facts.should_aggregate_partner:
-                gross_income -= self.case_data.partner.deductions.childcare['per_month']
+                gross_income -= self.case_data.partner.deductions.childcare
 
             self._disposable_income = gross_income
 

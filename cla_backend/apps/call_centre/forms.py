@@ -1,5 +1,6 @@
 from django import forms
-from django.core.exceptions import NON_FIELD_ERRORS
+from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 
@@ -7,6 +8,7 @@ from cla_common.constants import CASELOGTYPE_ACTION_KEYS
 
 from cla_provider.models import Provider
 from legalaid.forms import BaseCaseLogForm, OutcomeForm
+from uuidfield import UUIDField
 
 
 class ProviderAllocationForm(BaseCaseLogForm):
@@ -48,6 +50,25 @@ class ProviderAllocationForm(BaseCaseLogForm):
 
         super(ProviderAllocationForm, self).save(user)
         return data['provider_obj']
+
+class AssociatePersonalDetailsCaseForm(forms.Form):
+
+
+    reference = forms.CharField(required=True, max_length=32)
+
+
+    def __init__(self, *args, **kwargs):
+        self.case = kwargs.pop('case')
+        super(AssociatePersonalDetailsCaseForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        if self.case.personal_details:
+            raise ValidationError(u'There is already a person associated to this case.')
+        return self.cleaned_data
+
+    def save(self, user):
+        ref = self.cleaned_data['reference']
+        self.case.associate_personal_details(ref)
 
 
 class CloseCaseForm(forms.Form):

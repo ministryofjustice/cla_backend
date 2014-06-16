@@ -88,7 +88,7 @@ class CaseViewSet(
                      'personal_details__postcode',
                      'reference')
 
-    paginate_by = 10
+    paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
 

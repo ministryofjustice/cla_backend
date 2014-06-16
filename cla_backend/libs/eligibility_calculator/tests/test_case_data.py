@@ -15,13 +15,13 @@ class TestCaseData(unittest.TestCase):
 
     GROSS_CAPITAL_FIELDS = [
         'savings',
-        'investments',
-        'money_owed',
-        'valuable_items',
+        'investment_balance',
+        'credit_balance',
+        'asset_balance',
         'partner_savings',
-        'partner_investments',
-        'partner_money_owed',
-        'partner_valuable_items'
+        'partner_investment_balance',
+        'partner_credit_balance',
+        'partner_asset_balance'
     ]
 
     def test_total_income_calculation(self):
@@ -149,70 +149,70 @@ class TestCaseData(unittest.TestCase):
 
     def test_get_liquid_capital(self):
         cdd = get_default_case_data(
-            you__savings__savings=0,
-            you__savings__money_owed=0,
-            you__savings__valuable_items=0,
-            you__savings__investments=0,
-            partner__savings__savings=0,
-            partner__savings__money_owed=0,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=0
+            you__savings__bank_balance=0,
+            you__savings__credit_balance=0,
+            you__savings__asset_balance=0,
+            you__savings__investment_balance=0,
+            partner__savings__bank_balance=0,
+            partner__savings__credit_balance=0,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=0
         )
         cd = CaseData(**cdd)
         self.assertEqual(0, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_only(self):
         cdd = get_default_case_data(
-            you__savings__savings=10000,
-            you__savings__money_owed=0,
-            you__savings__valuable_items=0,
-            you__savings__investments=0,
-            partner__savings__savings=0,
-            partner__savings__money_owed=0,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=0
+            you__savings__bank_balance=10000,
+            you__savings__credit_balance=0,
+            you__savings__asset_balance=0,
+            you__savings__investment_balance=0,
+            partner__savings__bank_balance=0,
+            partner__savings__credit_balance=0,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=0
         )
         cd = CaseData(**cdd)
         self.assertEqual(10000, cd.liquid_capital)
 
-    def test_get_liquid_capital_savings_money_owed(self):
+    def test_get_liquid_capital_savings_credit_balance(self):
         cdd = get_default_case_data(
-            you__savings__savings=10000,
-            you__savings__money_owed=10,
-            you__savings__valuable_items=0,
-            you__savings__investments=0,
-            partner__savings__savings=0,
-            partner__savings__money_owed=0,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=0
+            you__savings__bank_balance=10000,
+            you__savings__credit_balance=10,
+            you__savings__asset_balance=0,
+            you__savings__investment_balance=0,
+            partner__savings__bank_balance=0,
+            partner__savings__credit_balance=0,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=0
         )
         cd = CaseData(**cdd)
         self.assertEqual(10010, cd.liquid_capital)
 
     def test_get_liquid_capital_savings_valuable(self):
         cdd = get_default_case_data(
-            you__savings__savings=10000,
-            you__savings__money_owed=0,
-            you__savings__valuable_items=1000,
-            you__savings__investments=0,
-            partner__savings__savings=0,
-            partner__savings__money_owed=0,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=0
+            you__savings__bank_balance=10000,
+            you__savings__credit_balance=0,
+            you__savings__asset_balance=1000,
+            you__savings__investment_balance=0,
+            partner__savings__bank_balance=0,
+            partner__savings__credit_balance=0,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=0
         )
         cd = CaseData(**cdd)
         self.assertEqual(11000, cd.liquid_capital)
 
-    def test_get_liquid_capital_savings_investments(self):
+    def test_get_liquid_capital_savings_investment_balance(self):
         cdd = get_default_case_data(
-            you__savings__savings=10000,
-            you__savings__money_owed=0,
-            you__savings__valuable_items=0,
-            you__savings__investments=5000,
-            partner__savings__savings=0,
-            partner__savings__money_owed=0,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=0
+            you__savings__bank_balance=10000,
+            you__savings__credit_balance=0,
+            you__savings__asset_balance=0,
+            you__savings__investment_balance=5000,
+            partner__savings__bank_balance=0,
+            partner__savings__credit_balance=0,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=0
         )
         cd = CaseData(**cdd)
         self.assertEqual(15000, cd.liquid_capital)
@@ -220,14 +220,14 @@ class TestCaseData(unittest.TestCase):
     # TODO: Fix invalid state check
     # def test_inconsistent_state(self):
     #     cdd = get_default_case_data(
-    #         you__savings__savings=10000,
-    #         you__savings__money_owed=0,
-    #         you__savings__valuable_items=0,
-    #         you__savings__investments=0,
-    #         partner__savings__savings=10000,
-    #         partner__savings__money_owed=0,
-    #         partner__savings__valuable_items=0,
-    #         partner__savings__investments=0,
+    #         you__savings__bank_balance=10000,
+    #         you__savings__credit_balance=0,
+    #         you__savings__asset_balance=0,
+    #         you__savings__investment_balance=0,
+    #         partner__savings__bank_balance=10000,
+    #         partner__savings__credit_balance=0,
+    #         partner__savings__asset_balance=0,
+    #         partner__savings__investment_balance=0,
     #         facts__has_partner=False,
     #     )
     #     with self.assertRaises(InvalidStateException):
@@ -235,29 +235,29 @@ class TestCaseData(unittest.TestCase):
 
     def test_get_liquid_capital_savings_with_partner(self):
         cdd = get_default_case_data(
-            you__savings__savings=10000,
-            you__savings__money_owed=0,
-            you__savings__valuable_items=0,
-            you__savings__investments=0,
-            partner__savings__savings=1,
-            partner__savings__money_owed=0,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=0,
+            you__savings__bank_balance=10000,
+            you__savings__credit_balance=0,
+            you__savings__asset_balance=0,
+            you__savings__investment_balance=0,
+            partner__savings__bank_balance=1,
+            partner__savings__credit_balance=0,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=0,
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
         self.assertEqual(10001, cd.liquid_capital)
 
-    def test_get_liquid_capital_savings_with_partner_money_owed(self):
+    def test_get_liquid_capital_savings_with_partner_credit_balance(self):
         cdd = get_default_case_data(
-            you__savings__savings=10000,
-            you__savings__money_owed=00,
-            you__savings__valuable_items=0,
-            you__savings__investments=0,
-            partner__savings__savings=0,
-            partner__savings__money_owed=20,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=0,
+            you__savings__bank_balance=10000,
+            you__savings__credit_balance=00,
+            you__savings__asset_balance=0,
+            you__savings__investment_balance=0,
+            partner__savings__bank_balance=0,
+            partner__savings__credit_balance=20,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=0,
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
@@ -265,14 +265,14 @@ class TestCaseData(unittest.TestCase):
 
     def test_get_liquid_capital_savings_with_partner_savings(self):
         cdd = get_default_case_data(
-            you__savings__savings=10000,
-            you__savings__money_owed=00,
-            you__savings__valuable_items=0,
-            you__savings__investments=0,
-            partner__savings__savings=10,
-            partner__savings__money_owed=0,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=0,
+            you__savings__bank_balance=10000,
+            you__savings__credit_balance=00,
+            you__savings__asset_balance=0,
+            you__savings__investment_balance=0,
+            partner__savings__bank_balance=10,
+            partner__savings__credit_balance=0,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=0,
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
@@ -280,29 +280,29 @@ class TestCaseData(unittest.TestCase):
 
     def test_get_liquid_capital_savings_with_partner_valuables(self):
         cdd = get_default_case_data(
-            you__savings__savings=10000,
-            you__savings__money_owed=00,
-            you__savings__valuable_items=5000,
-            you__savings__investments=0,
-            partner__savings__savings=0,
-            partner__savings__money_owed=0,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=0,
+            you__savings__bank_balance=10000,
+            you__savings__credit_balance=00,
+            you__savings__asset_balance=5000,
+            you__savings__investment_balance=0,
+            partner__savings__bank_balance=0,
+            partner__savings__credit_balance=0,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=0,
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
         self.assertEqual(15000, cd.liquid_capital)
 
-    def test_get_liquid_capital_savings_with_partner_investments(self):
+    def test_get_liquid_capital_savings_with_partner_investment_balance(self):
         cdd = get_default_case_data(
-            you__savings__savings=10000,
-            you__savings__money_owed=00,
-            you__savings__valuable_items=0,
-            you__savings__investments=0,
-            partner__savings__savings=0,
-            partner__savings__money_owed=0,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=100,
+            you__savings__bank_balance=10000,
+            you__savings__credit_balance=00,
+            you__savings__asset_balance=0,
+            you__savings__investment_balance=0,
+            partner__savings__bank_balance=0,
+            partner__savings__credit_balance=0,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=100,
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
@@ -310,29 +310,29 @@ class TestCaseData(unittest.TestCase):
 
     def test_get_liquid_capital_savings_only_partner_savings(self):
         cdd = get_default_case_data(
-            you__savings__savings=0,
-            you__savings__money_owed=0,
-            you__savings__valuable_items=0,
-            you__savings__investments=0,
-            partner__savings__savings=0,
-            partner__savings__money_owed=0,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=100,
+            you__savings__bank_balance=0,
+            you__savings__credit_balance=0,
+            you__savings__asset_balance=0,
+            you__savings__investment_balance=0,
+            partner__savings__bank_balance=0,
+            partner__savings__credit_balance=0,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=100,
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
         self.assertEqual(100, cd.liquid_capital)
 
-    def test_get_liquid_capital_savings_only_partner_money_owed(self):
+    def test_get_liquid_capital_savings_only_partner_credit_balance(self):
         cdd = get_default_case_data(
-            you__savings__savings=0,
-            you__savings__money_owed=200,
-            you__savings__valuable_items=0,
-            you__savings__investments=0,
-            partner__savings__savings=0,
-            partner__savings__money_owed=0,
-            partner__savings__valuable_items=0,
-            partner__savings__investments=0,
+            you__savings__bank_balance=0,
+            you__savings__credit_balance=200,
+            you__savings__asset_balance=0,
+            you__savings__investment_balance=0,
+            partner__savings__bank_balance=0,
+            partner__savings__credit_balance=0,
+            partner__savings__asset_balance=0,
+            partner__savings__investment_balance=0,
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
@@ -347,10 +347,10 @@ class TestCaseData(unittest.TestCase):
                 steps.append(step)
 
             cdd = get_default_case_data(
-                you__savings__savings=steps[0],
-                you__savings__money_owed=steps[1],
-                you__savings__valuable_items=steps[2],
-                you__savings__investments=steps[3],
+                you__savings__bank_balance=steps[0],
+                you__savings__credit_balance=steps[1],
+                you__savings__asset_balance=steps[2],
+                you__savings__investment_balance=steps[3],
             )
             cd = CaseData(**cdd)
             self.assertEqual(sum(steps), cd.liquid_capital)
@@ -364,14 +364,14 @@ class TestCaseData(unittest.TestCase):
                 steps.append(step)
 
             cdd = get_default_case_data(
-                you__savings__savings=steps[0],
-                you__savings__money_owed=steps[1],
-                you__savings__valuable_items=steps[2],
-                you__savings__investments=steps[3],
-                partner__savings__savings=steps[4],
-                partner__savings__money_owed=steps[5],
-                partner__savings__valuable_items=steps[6],
-                partner__savings__investments=steps[7],
+                you__savings__bank_balance=steps[0],
+                you__savings__credit_balance=steps[1],
+                you__savings__asset_balance=steps[2],
+                you__savings__investment_balance=steps[3],
+                partner__savings__bank_balance=steps[4],
+                partner__savings__credit_balance=steps[5],
+                partner__savings__asset_balance=steps[6],
+                partner__savings__investment_balance=steps[7],
                 facts__has_partner=True
                 )
             cd = CaseData(**cdd)
@@ -386,14 +386,14 @@ class TestCaseData(unittest.TestCase):
                 steps.append(step)
 
             cdd = get_default_case_data(
-                you__savings__savings=0,
-                you__savings__money_owed=0,
-                you__savings__valuable_items=0,
-                you__savings__investments=0,
-                partner__savings__savings=steps[0],
-                partner__savings__money_owed=steps[1],
-                partner__savings__valuable_items=steps[2],
-                partner__savings__investments=steps[3],
+                you__savings__bank_balance=0,
+                you__savings__credit_balance=0,
+                you__savings__asset_balance=0,
+                you__savings__investment_balance=0,
+                partner__savings__bank_balance=steps[0],
+                partner__savings__credit_balance=steps[1],
+                partner__savings__asset_balance=steps[2],
+                partner__savings__investment_balance=steps[3],
                 facts__has_partner=True
             )
             cd = CaseData(**cdd)

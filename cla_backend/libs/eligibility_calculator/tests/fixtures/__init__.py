@@ -17,10 +17,10 @@ case_data_dict = {
             'self_employed': False,
         },
         'savings': {
-            'savings': 0,
-            'investments': 0,
-            'money_owed':  0,
-            'valuable_items': 0,
+            'bank_balance': 0,
+            'investment_balance': 0,
+            'credit_balance':  0,
+            'asset_balance': 0,
         },
         'deductions':
             {

@@ -5,6 +5,7 @@ import uuid
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.conf import settings
+from django.db.models import F
 from django.utils.timezone import utc
 
 from eligibility_calculator.models import CaseData
@@ -267,6 +268,8 @@ class Case(TimeStampedModel):
     provider_notes = models.TextField(blank=True)
     in_scope = models.NullBooleanField(default=None, null=True, blank=True)
 
+    laa_reference = models.BigIntegerField(null=True, blank=True, unique=True)
+
     def _set_reference_if_necessary(self):
         if not self.reference:
             # TODO make it better
@@ -279,6 +282,13 @@ class Case(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         self._set_reference_if_necessary()
+
+        if not self.pk:
+            super(Case, self).save(*args, **kwargs)
+            self.laa_reference = self.pk + settings.LAA_REFERENCE_SEED
+            kwargs['force_insert'] = False
+            return self.save(*args, **kwargs)
+
         return super(Case, self).save(*args, **kwargs)
 
     def assign_to_provider(self, provider):

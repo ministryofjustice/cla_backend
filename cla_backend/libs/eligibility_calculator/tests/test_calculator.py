@@ -8,6 +8,8 @@ from .. import constants
 
 from . import fixtures
 
+from cla_common.money_interval.models import MoneyInterval
+
 class CalculatorTestBase(unittest.TestCase):
 
     def get_default_case_data(self, **kwargs):
@@ -28,13 +30,17 @@ class TestCalculator(CalculatorTestBase):
         self.default_calculator = EligibilityChecker(self.get_default_case_data())
 
     def test_gross_income_is_eligible(self):
-        too_little_money = constants.gross_income.BASE_LIMIT - 1
+        too_little_money = {"interval_period": "per_month",
+                            "per_interval_value": constants.gross_income.BASE_LIMIT - 1,
+                           }
         case_data = self.get_default_case_data(you__income__earnings=too_little_money)
         is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
         self.assertTrue(is_elig)
 
     def test_gross_income_is_ineligible(self):
-        too_much_money = constants.gross_income.BASE_LIMIT + 1
+        too_much_money = {"interval_period": "per_month",
+                         "per_interval_value": constants.gross_income.BASE_LIMIT + 1,
+                         }
         case_data = self.get_default_case_data(you__income__earnings=too_much_money)
         is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
         self.assertFalse(is_elig)
@@ -44,7 +50,9 @@ class TestCalculator(CalculatorTestBase):
         TEST: gross_income limit doesn't rise for 1-4 children.
         Should reject someone for having income more than 2657
         """
-        too_much_money = constants.gross_income.BASE_LIMIT + 1
+        too_much_money = {"interval_period": "per_month",
+                          "per_interval_value": constants.gross_income.BASE_LIMIT + 1,
+                         }
         for dep_children in range(1,constants.gross_income.INCLUSIVE_CHILDREN_BASE+1):
             case_data = self.get_default_case_data(
                 you__income__earnings=too_much_money,
@@ -58,7 +66,9 @@ class TestCalculator(CalculatorTestBase):
         if you have > 4 children then earning 1 more than base limit
         should be fine.
         """
-        too_much_money = constants.gross_income.BASE_LIMIT + 1
+        too_much_money = {"interval_period": "per_month",
+                         "per_interval_value": constants.gross_income.BASE_LIMIT + 1,
+                         }
         case_data = self.get_default_case_data(
             you__income__earnings=too_much_money,
             facts__dependant_children=5
@@ -254,10 +264,12 @@ class DisposableIncomeTestCase(unittest.TestCase):
         )
         you = mock.MagicMock(
             deductions=mock.MagicMock(
-                income_tax_and_ni=random.randint(50, 1000),
-                maintenance=random.randint(50, 1000),
-                mortgage_or_rent=random.randint(50, 1000),
-                childcare=random.randint(50, 1000),
+                income_tax=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                national_insurance=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                maintenance=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                mortgage=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                rent=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                childcare=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
             income=mock.MagicMock(
@@ -267,10 +279,12 @@ class DisposableIncomeTestCase(unittest.TestCase):
         )
         partner = mock.MagicMock(
             deductions=mock.MagicMock(
-                income_tax_and_ni=random.randint(50, 1000),
-                maintenance=random.randint(50, 1000),
-                mortgage_or_rent=random.randint(50, 1000),
-                childcare=random.randint(50, 1000),
+                income_tax=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                national_insurance=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                maintenance=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                mortgage=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                rent=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                childcare=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
             income=mock.MagicMock(
@@ -294,15 +308,19 @@ class DisposableIncomeTestCase(unittest.TestCase):
             expected_value = ec.gross_income - \
                 constants.disposable_income.PARTNER_ALLOWANCE - \
                 facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE - \
-                you.deductions.income_tax_and_ni - \
-                you.deductions.maintenance - \
-                you.deductions.mortgage_or_rent - \
-                you.deductions.childcare - \
+                you.deductions.income_tax['per_month'] - \
+                you.deductions.national_insurance['per_month'] - \
+                you.deductions.maintenance['per_month'] - \
+                you.deductions.mortgage['per_month'] - \
+                you.deductions.rent['per_month'] - \
+                you.deductions.childcare['per_month'] - \
                 you.deductions.criminal_legalaid_contributions - \
-                partner.deductions.income_tax_and_ni - \
-                partner.deductions.maintenance - \
-                partner.deductions.mortgage_or_rent - \
-                partner.deductions.childcare - \
+                partner.deductions.income_tax['per_month'] - \
+                partner.deductions.national_insurance['per_month'] - \
+                partner.deductions.maintenance['per_month'] - \
+                partner.deductions.mortgage['per_month'] - \
+                partner.deductions.rent['per_month'] - \
+                partner.deductions.childcare['per_month'] - \
                 partner.deductions.criminal_legalaid_contributions - \
                 constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE - \
                 constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
@@ -336,10 +354,12 @@ class DisposableIncomeTestCase(unittest.TestCase):
         )
         you = mock.MagicMock(
             deductions=mock.MagicMock(
-                income_tax_and_ni=random.randint(50, 1000),
-                maintenance=random.randint(50, 1000),
-                mortgage_or_rent=constants.disposable_income.CHILDLESS_HOUSING_CAP-1000,
-                childcare=random.randint(50, 1000),
+                income_tax=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                national_insurance=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                maintenance=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                mortgage=MoneyInterval('per_month', pennies=constants.disposable_income.CHILDLESS_HOUSING_CAP-1000).as_dict(),
+                rent=MoneyInterval('per_month', pennies=0).as_dict(),
+                childcare=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
             income=mock.MagicMock(
@@ -361,10 +381,12 @@ class DisposableIncomeTestCase(unittest.TestCase):
             ec = EligibilityChecker(case_data)
 
             expected_value = ec.gross_income - \
-                you.deductions.income_tax_and_ni - \
-                you.deductions.maintenance - \
-                you.deductions.mortgage_or_rent - \
-                you.deductions.childcare - \
+                you.deductions.income_tax['per_month'] - \
+                you.deductions.national_insurance['per_month'] - \
+                you.deductions.maintenance['per_month'] - \
+                you.deductions.mortgage['per_month'] - \
+                you.deductions.rent['per_month'] - \
+                you.deductions.childcare['per_month'] - \
                 you.deductions.criminal_legalaid_contributions
 
             self.assertEqual(expected_value, ec.disposable_income)
@@ -398,10 +420,12 @@ class DisposableIncomeTestCase(unittest.TestCase):
         )
         you = mock.MagicMock(
             deductions=mock.MagicMock(
-                income_tax_and_ni=random.randint(50, 1000),
-                maintenance=random.randint(50, 1000),
-                mortgage_or_rent=constants.disposable_income.CHILDLESS_HOUSING_CAP+1000,
-                childcare=random.randint(50, 1000),
+                income_tax=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                national_insurance=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                maintenance=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
+                mortgage=MoneyInterval('per_month', pennies=constants.disposable_income.CHILDLESS_HOUSING_CAP+1000,).as_dict(),
+                rent=MoneyInterval('per_month', pennies=0).as_dict(),
+                childcare=MoneyInterval('per_month', pennies=random.randint(50, 1000)).as_dict(),
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
             income=mock.MagicMock(
@@ -422,10 +446,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
             ec = EligibilityChecker(case_data)
 
             expected_value = ec.gross_income - \
-                you.deductions.income_tax_and_ni - \
-                you.deductions.maintenance - \
+                you.deductions.income_tax['per_month'] - \
+                you.deductions.national_insurance['per_month'] - \
+                you.deductions.maintenance['per_month'] - \
                 constants.disposable_income.CHILDLESS_HOUSING_CAP - \
-                you.deductions.childcare - \
+                you.deductions.childcare['per_month'] - \
                 you.deductions.criminal_legalaid_contributions
 
             self.assertEqual(expected_value, ec.disposable_income)

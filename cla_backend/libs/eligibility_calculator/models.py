@@ -56,7 +56,6 @@ class Income(ModelMixin, object):
         'other_income': None,
         'self_employed': None
     }
-
     @property
     def _earnings_per_month(self):
         if isinstance(self.earnings, dict):
@@ -65,23 +64,28 @@ class Income(ModelMixin, object):
         else:
             earnings = self.earnings
         return earnings
-
-    @property
-    def total(self):
-        earnings = self._earnings_per_month
-        return earnings + self.other_income
-
+    
     @property
     def has_employment_earnings(self):
         return self._earnings_per_month
+    
+    @property
+    def total(self):
+        earnings = self._earnings_per_month
+        mi = MoneyInterval.from_dict(self.other_income)
+        other_income = mi.as_monthly()
+
+        return earnings + other_income
 
 
 class Deductions(ModelMixin, object):
     PROPERTY_META = {
-        'income_tax_and_ni': None,
+        'income_tax': None,
+        'national_insurance' : None,
         'maintenance': None,
         'childcare': None,
-        'mortgage_or_rent': None,
+        'mortgage': None,
+        'rent' : None,
         'criminal_legalaid_contributions': None
     }
 

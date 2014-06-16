@@ -26,33 +26,34 @@ class TestCaseData(unittest.TestCase):
 
     def test_total_income_calculation(self):
         default_data = get_default_case_data(
-            you__income__earnings=0,
-            you__income__other_income=0)
+            you__income__earnings={"interval_period": "per_month", "per_interval_value": 0},
+            you__income__other_income={"interval_period": "per_month", "per_interval_value": 0})
 
         cd = CaseData(**default_data)
         ti = cd.total_income
         income = cd.you.income
         gross_income_orig = 0
         for prop in income.PROPERTY_META.keys():
-            gross_income_orig += getattr(income, prop, 0)
+            part = getattr(income, prop, 0)
+            gross_income_orig += part['per_interval_value'] if isinstance(part, dict) else part
 
         self.assertEqual(gross_income_orig, ti)
 
     def test_total_income_calculation_with_partner(self):
         combined_income = 30000
         default_data = get_default_case_data(
-            you__income__earnings=10000,
-            you__income__other_income=4000,
-            partner__income__earnings=10000,
-            partner__income__other_income=6000,
+            you__income__earnings={"interval_period": "per_month", "per_interval_value": 10000},
+            you__income__other_income={"interval_period": "per_month", "per_interval_value": 4000},
+            partner__income__earnings={"interval_period": "per_month", "per_interval_value": 10000},
+            partner__income__other_income={"interval_period": "per_month", "per_interval_value": 6000},
             facts__has_partner=True)
 
         cd = CaseData(**default_data)
         ti = cd.total_income
         income = cd.you.income
-        gross_income_orig = income.earnings + income.other_income
-        gross_income_orig += \
-            cd.partner.income.earnings + cd.partner.income.other_income
+        gross_income_orig = income.earnings['per_interval_value'] + income.other_income['per_interval_value']
+        gross_income_orig += cd.partner.income.earnings['per_interval_value']
+        gross_income_orig += cd.partner.income.other_income['per_interval_value']
         self.assertEqual(gross_income_orig, ti)
         self.assertEqual(combined_income, ti)
 
@@ -68,17 +69,25 @@ class TestCaseData(unittest.TestCase):
 
     def test_get_total_income_no_partner(self):
         cdd = get_default_case_data(
-            you__income__earnings=265700,
-            you__income__other_income=0
+            you__income__earnings={"interval_period": "per_month", "per_interval_value": 265700},
+            you__income__other_income={"interval_period": "per_month", "per_interval_value": 0},
         )
         cd = CaseData(**cdd)
         self.assertFalse(cd.facts.has_partner)
         self.assertEqual(265700, cd.total_income)
 
     def test_get_total_income_incl_other_no_partner(self):
+
+        earnings = {"interval_period": "per_month",
+                    "per_interval_value": 265700,
+                    }
+        other_income = {"interval_period": "per_month",
+                    "per_interval_value": 100,
+                    }
+
         cdd = get_default_case_data(
-            you__income__earnings=265700,
-            you__income__other_income=100
+            you__income__earnings=earnings,
+            you__income__other_income=other_income
         )
         cd = CaseData(**cdd)
         self.assertFalse(cd.facts.has_partner)
@@ -98,10 +107,10 @@ class TestCaseData(unittest.TestCase):
 
     def test_get_total_income_with_partner(self):
         cdd = get_default_case_data(
-            you__income__earnings=265700,
-            you__income__other_income=0,
-            partner__income__earnings=100,
-            partner__income__other_income=0,
+            you__income__earnings={"interval_period": "per_month", "per_interval_value": 265700},
+            you__income__other_income={"interval_period": "per_month", "per_interval_value": 0},
+            partner__income__earnings={"interval_period": "per_month", "per_interval_value": 100},
+            partner__income__other_income={"interval_period": "per_month", "per_interval_value": 0},
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
@@ -109,10 +118,10 @@ class TestCaseData(unittest.TestCase):
 
     def test_get_total_income_incl_other_with_partner(self):
         cdd = get_default_case_data(
-            you__income__earnings=265700,
-            you__income__other_income=100,
-            partner__income__earnings=100,
-            partner__income__other_income=0,
+            you__income__earnings={"interval_period": "per_month", "per_interval_value": 265700},
+            you__income__other_income={"interval_period": "per_month", "per_interval_value": 100},
+            partner__income__earnings={"interval_period": "per_month", "per_interval_value": 100},
+            partner__income__other_income={"interval_period": "per_month", "per_interval_value": 0},
             facts__has_partner=True
         )
         cd = CaseData(**cdd)

@@ -62,7 +62,9 @@ class EligibilityCheckTestCase(TestCase):
                     earnings= {"interval_period": "per_month",
                                "per_interval_value": 500,
                                 },
-                    other_income=600,
+                    other_income={"interval_period": "per_month",
+                                  "per_interval_value": 600
+                                  },
                     self_employed=True
                 ),
                 savings=make_recipe('legalaid.savings',
@@ -72,10 +74,12 @@ class EligibilityCheckTestCase(TestCase):
                     credit_balance=400,
                 ),
                 deductions=make_recipe('legalaid.deductions',
-                    income_tax_and_ni=700,
-                    maintenance=710,
-                    childcare=715,
-                    mortgage_or_rent=720,
+                    income_tax=MoneyInterval('per_month', pennies=600),
+                    national_insurance=MoneyInterval('per_month', pennies=100),
+                    maintenance=MoneyInterval('per_month', pennies=710),
+                    childcare=MoneyInterval('per_month', pennies=715),
+                    mortgage=MoneyInterval('per_month', pennies=700),
+                    rent=MoneyInterval('per_month', pennies=20),
                     criminal_legalaid_contributions=730
                 )
             ),
@@ -106,17 +110,17 @@ class EligibilityCheckTestCase(TestCase):
                         'valuable_items': 300,
                     },
                     'income': {
-                        'earnings': {"interval_period": "per_month",
-                                     "per_interval_value": 500,
-                                    },
-                        'other_income':600,
+                        'earnings': {"per_month": 500, "interval_period": "per_month", "per_interval_value": 500},
+                        'other_income':{"per_month": 600, "interval_period": "per_month", "per_interval_value": 600},
                         'self_employed': True,
                     },
                     'deductions': {
-                        'income_tax_and_ni': 700,
-                        'maintenance': 710,
-                        'childcare': 715,
-                        'mortgage_or_rent': 720,
+                        'income_tax': {"per_month": 600, "interval_period": "per_month", "per_interval_value": 600},
+                        'national_insurance': {"per_month": 100, "interval_period": "per_month", "per_interval_value": 100},
+                        'maintenance': {"per_month": 710, "interval_period": "per_month", "per_interval_value": 710},
+                        'childcare': {"per_month": 715, "interval_period": "per_month", "per_interval_value": 715},
+                        'mortgage': {"per_month": 700, "interval_period": "per_month", "per_interval_value": 700},
+                        'rent': {"per_month": 20, "interval_period": "per_month", "per_interval_value": 20},
                         'criminal_legalaid_contributions': 730,
                     }
                 },
@@ -131,10 +135,8 @@ class EligibilityCheckTestCase(TestCase):
             category=make_recipe('legalaid.category', code='code'),
             you=make_recipe('legalaid.person',
                 income=make_recipe('legalaid.income',
-                    earnings={"interval_period": "per_month",
-                              "per_interval_value": 500,
-                              },
-                    other_income=600,
+                    earnings=MoneyInterval('per_month', pennies=500),
+                    other_income=MoneyInterval('per_month', pennies=600),
                     self_employed=True
                 ),
                 savings=make_recipe('legalaid.savings',
@@ -144,19 +146,19 @@ class EligibilityCheckTestCase(TestCase):
                     credit_balance=400,
                 ),
                 deductions=make_recipe('legalaid.deductions',
-                    income_tax_and_ni=700,
-                    maintenance=710,
-                    childcare=715,
-                    mortgage_or_rent=720,
+                    income_tax=MoneyInterval('per_month', pennies=600),
+                    national_insurance=MoneyInterval('per_month', pennies=100),
+                    maintenance=MoneyInterval('per_month', pennies=710),
+                    childcare=MoneyInterval('per_month', pennies=715),
+                    mortgage=MoneyInterval('per_month', pennies=700),
+                    rent=MoneyInterval('per_month', pennies=20),
                     criminal_legalaid_contributions=730
                 )
             ),
             partner=make_recipe('legalaid.person',
                 income= make_recipe('legalaid.income',
-                    earnings={"interval_period": "per_month",
-                              "per_interval_value": 501,
-                              },
-                    other_income=601,
+                    earnings=MoneyInterval('per_month', pennies=501),
+                    other_income=MoneyInterval('per_month', pennies=601),
                     self_employed=False
                 ),
                 savings= make_recipe('legalaid.savings',
@@ -166,10 +168,12 @@ class EligibilityCheckTestCase(TestCase):
                     credit_balance=401,
                 ),
                 deductions=make_recipe('legalaid.deductions',
-                    income_tax_and_ni=701,
-                    maintenance=711,
-                    childcare=716,
-                    mortgage_or_rent=721,
+                    income_tax=MoneyInterval('per_month', pennies=700),
+                    national_insurance=MoneyInterval('per_month', pennies=1),
+                    maintenance=MoneyInterval('per_month', pennies=711),
+                    childcare=MoneyInterval('per_month', pennies=716),
+                    mortgage=MoneyInterval('per_month', pennies=720),
+                    rent=MoneyInterval('per_month', pennies=1),
                     criminal_legalaid_contributions=731
                 )
             ),
@@ -198,17 +202,17 @@ class EligibilityCheckTestCase(TestCase):
                     'valuable_items': 300,
                 },
                 'income': {
-                    'earnings': {"interval_period": "per_month",
-                                 "per_interval_value": 500,
-                                 },
-                    'other_income':600,
+                    'earnings': {"per_month": 500, "interval_period": "per_month", "per_interval_value": 500 },
+                    'other_income':{"per_month": 600, "interval_period": "per_month", "per_interval_value": 600},
                     'self_employed': True,
                 },
                 'deductions': {
-                    'income_tax_and_ni': 700,
-                    'maintenance': 710,
-                    'childcare': 715,
-                    'mortgage_or_rent': 720,
+                    'income_tax': {"per_month": 600, "interval_period": "per_month", "per_interval_value": 600 },
+                    'national_insurance': {"per_month": 100, "interval_period": "per_month", "per_interval_value": 100 },
+                    'maintenance': {"per_month": 710, "interval_period": "per_month", "per_interval_value": 710 },
+                    'childcare': {"per_month": 715, "interval_period": "per_month", "per_interval_value": 715 },
+                    'mortgage': {"per_month": 700, "interval_period": "per_month", "per_interval_value": 700},
+                    'rent': {"per_month": 20, "interval_period": "per_month", "per_interval_value": 20},
                     'criminal_legalaid_contributions': 730,
                 }
             },
@@ -220,17 +224,17 @@ class EligibilityCheckTestCase(TestCase):
                     'valuable_items': 301,
                 },
                 'income': {
-                    'earnings': {"interval_period": "per_month",
-                                 "per_interval_value": 501,
-                                 },
-                    'other_income':601,
+                    'earnings': {"per_month": 501, "interval_period": "per_month", "per_interval_value": 501 },
+                    'other_income':{"per_month": 601, "interval_period": "per_month", "per_interval_value": 601 },
                     'self_employed': False,
                 },
                 'deductions': {
-                    'income_tax_and_ni': 701,
-                    'maintenance': 711,
-                    'childcare': 716,
-                    'mortgage_or_rent': 721,
+                    'income_tax': {"per_month": 700, "interval_period": "per_month", "per_interval_value": 700 },
+                    'national_insurance': {"per_month": 1, "interval_period": "per_month", "per_interval_value": 1},
+                    'maintenance': {"per_month": 711, "interval_period": "per_month", "per_interval_value": 711},
+                    'childcare': {"per_month": 716, "interval_period": "per_month", "per_interval_value": 716},
+                    'mortgage': {"per_month": 720, "interval_period": "per_month", "per_interval_value": 720},
+                    'rent': {"per_month": 1, "interval_period": "per_month", "per_interval_value": 1},
                     'criminal_legalaid_contributions': 731,
                 }
             },
@@ -445,7 +449,7 @@ class MoneyIntervalFieldTestCase(TestCase):
         ei = MoneyInterval('per_week', pennies=5000)
         per_month = int((5000.0 * 52.0) / 12.0)
 
-        i = Income(earnings=ei, other_income=200, self_employed=True)
+        i = Income(earnings=ei, other_income=ei, self_employed=True)
         self.assertEqual(i.earnings.interval_period, 'per_week')
         i.save()
 

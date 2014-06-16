@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.test import TestCase
 
 from eligibility_calculator.models import CaseData, ModelMixin
@@ -280,6 +281,20 @@ class EligibilityCheckTestCase(TestCase):
 
 
 class CaseTestCase(TestCase):
+
+    def test_create_has_laa_reference(self):
+        case = make_recipe('legalaid.case')
+
+        # there is an LAA Reference
+        self.assertIsNotNone(case.laa_reference)
+
+        # it is valid as per algorithm
+        self.assertEqual(case.id + settings.LAA_REFERENCE_SEED, case.laa_reference)
+
+        # it is 7 digits long
+        self.assertEqual(len(unicode(case.laa_reference)), 7)
+
+
     def test_assign_to_provider_overriding_provider(self):
         providers = make_recipe('cla_provider.provider', _quantity=2)
 

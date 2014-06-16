@@ -15,6 +15,7 @@ from legalaid.models import Category, EligibilityCheck, Property, \
 from core.tests.test_base import CLABaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
 
+from cla_common.money_interval.models import MoneyInterval
 
 class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
     def setUp(self):
@@ -64,10 +65,10 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             self.assertEqual(obj, data)
             return
 
-        for prop in ['other_income', 'self_employed']:
+        for prop in ['self_employed']:
             self.assertEqual(getattr(obj, prop), data.get(prop))
 
-        for prop in ['earnings',]:
+        for prop in ['other_income', 'earnings',]:
             moneyInterval = getattr(obj, prop)
             self.assertEqual(moneyInterval.per_interval_value, data.get(prop)['per_interval_value'])
             self.assertEqual(moneyInterval.interval_period, data.get(prop)['interval_period'])
@@ -89,11 +90,15 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             self.assertEqual(obj, data)
             return
 
-        for prop in [
-            'income_tax_and_ni', 'maintenance', 'childcare',
-            'mortgage_or_rent', 'criminal_legalaid_contributions'
-        ]:
+        for prop in ['criminal_legalaid_contributions']:
             self.assertEqual(getattr(obj, prop), data.get(prop))
+
+        for prop in ['income_tax', 'national_insurance', 'maintenance', 'childcare',
+                     'mortgage', 'rent']:
+            moneyInterval = getattr(obj, prop)
+            self.assertEqual(moneyInterval.per_interval_value, data.get(prop)['per_interval_value'])
+            self.assertEqual(moneyInterval.interval_period, data.get(prop)['interval_period'])
+
 
     def assertFinanceEqual(self, data, obj):
         if data is None or obj is None:
@@ -356,14 +361,30 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "earnings": {"interval_period": "per_month",
                                  "per_interval_value": 500,
                                 },
-                    "other_income": 600,
+                    "other_income": {"interval_period": "per_month",
+                                 "per_interval_value": 600,
+                                },
                     "self_employed": True,
                 },
                 'deductions': {
-                    "income_tax_and_ni": 700,
-                    "maintenance": 710,
-                    "childcare": 715,
-                    "mortgage_or_rent": 720,
+                    "income_tax": {"interval_period": "per_month",
+                                 "per_interval_value": 600,
+                                },
+                    "national_insurance": {"interval_period": "per_month",
+                                 "per_interval_value": 100,
+                                },
+                    "maintenance": {"interval_period": "per_month",
+                                 "per_interval_value": 710,
+                                },
+                    "childcare": {"interval_period": "per_month",
+                                 "per_interval_value": 715,
+                                },
+                    "mortgage": {"interval_period": "per_month",
+                                 "per_interval_value": 700,
+                                },
+                    "rent": {"interval_period": "per_month",
+                                 "per_interval_value": 20,
+                                },
                     "criminal_legalaid_contributions": 730
                 },
             },
@@ -378,10 +399,32 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "earnings": {"interval_period": "per_month",
                                  "per_interval_value": 5000,
                                 },
-                    "other_income": 6000,
+                    "other_income": {"interval_period": "per_month",
+                                 "per_interval_value": 6000,
+                                },
                     "self_employed": False
                 },
-
+                'deductions': {
+                    "income_tax": {"interval_period": "per_month",
+                                 "per_interval_value": 600,
+                                },
+                    "national_insurance": {"interval_period": "per_month",
+                                 "per_interval_value": 100,
+                                },
+                    "maintenance": {"interval_period": "per_month",
+                                 "per_interval_value": 710,
+                                },
+                    "childcare": {"interval_period": "per_month",
+                                 "per_interval_value": 715,
+                                },
+                    "mortgage": {"interval_period": "per_month",
+                                 "per_interval_value": 700,
+                                },
+                    "rent": {"interval_period": "per_month",
+                                 "per_interval_value": 20,
+                                },
+                    "criminal_legalaid_contributions": 730
+                },
             },
         }
         return data
@@ -410,6 +453,8 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         Generic method called by 'create' and 'patch' to test against validation
         errors.
+        
+        @see: notes in test_errors_masked_by_drf(..)
         """
         data={
             'category': -1,
@@ -430,16 +475,16 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": -1,
                 },
                 'income': {
-                   "earnings": {"interval_period": "per_month",
-                                "per_interval_value": 0,
-                                },
-                    "other_income": -1,
+                   "earnings": {"interval_period": "per_month", "per_interval_value": 0 },
+                   "other_income": {"interval_period": "per_month", "per_interval_value": 0 },
                 },
                 'deductions': {
-                    "income_tax_and_ni": -1,
-                    "maintenance": -1,
-                    "childcare": -1,
-                    "mortgage_or_rent": -1,
+                    "income_tax": {"interval_period": "per_month", "per_interval_value": 0 },
+                    "national_insurance": {"interval_period": "per_month", "per_interval_value": 0 },
+                    "maintenance": {"interval_period": "per_month", "per_interval_value": 0 },
+                    "childcare": {"interval_period": "per_month", "per_interval_value": 0 },
+                    "mortgage": {"interval_period": "per_month", "per_interval_value": 0 },
+                    "rent": {"interval_period": "per_month", "per_interval_value": 0 },
                     "criminal_legalaid_contributions": -1
                 }
             },
@@ -451,16 +496,16 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": -1,
                 },
                 'income': {
-                   "earnings": {"interval_period": "per_month",
-                                "per_interval_value": 0,
-                                },
-                    "other_income": -1
+                   "earnings": {"interval_period": "per_month", "per_interval_value": 0 },
+                   "other_income": {"interval_period": "per_month", "per_interval_value": 0 },
                 },
                 'deductions': {
-                    "income_tax_and_ni": -1,
-                    "maintenance": -1,
-                    "childcare": -1,
-                    "mortgage_or_rent": -1,
+                    "income_tax": {"interval_period": "per_month", "per_interval_value": 0 },
+                    "national_insurance": {"interval_period": "per_month", "per_interval_value": 0 },
+                    "maintenance": {"interval_period": "per_month", "per_interval_value": 0 },
+                    "childcare": {"interval_period": "per_month", "per_interval_value": 0 },
+                    "mortgage": {"interval_period": "per_month", "per_interval_value": 0 },
+                    "rent": {"interval_period": "per_month", "per_interval_value": 0 },
                     "criminal_legalaid_contributions": -1
                 }
             },
@@ -506,17 +551,8 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                             'bank_balance': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ],
-                    'income': [
-                        {
-                            'other_income': [u'Ensure this value is greater than or equal to 0.'],
-                        }
-                    ],
                     'deductions': [
                         {
-                            'income_tax_and_ni': [u'Ensure this value is greater than or equal to 0.'],
-                            'maintenance': [u'Ensure this value is greater than or equal to 0.'],
-                            'childcare': [u'Ensure this value is greater than or equal to 0.'],
-                            'mortgage_or_rent': [u'Ensure this value is greater than or equal to 0.'],
                             'criminal_legalaid_contributions': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ]
@@ -535,23 +571,25 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                             'bank_balance': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ],
-                    'income': [
-                        {
-                            'other_income': [u'Ensure this value is greater than or equal to 0.'],
-                        }
-                    ],
                     'deductions': [
                         {
-                            'income_tax_and_ni': [u'Ensure this value is greater than or equal to 0.'],
-                            'maintenance': [u'Ensure this value is greater than or equal to 0.'],
-                            'childcare': [u'Ensure this value is greater than or equal to 0.'],
-                            'mortgage_or_rent': [u'Ensure this value is greater than or equal to 0.'],
                             'criminal_legalaid_contributions': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ]
                 }
             ]
         )
+
+    @classmethod
+    def deep_update(cls, d, u):
+        import collections
+        for k, v in u.iteritems():
+            if isinstance(v, collections.Mapping):
+                r = EligibilityCheckTests.deep_update(d.get(k, {}), v)
+                d[k] = r
+            else:
+                d[k] = u[k]
+        return d
 
     def test_errors_masked_by_drf(self):
         """
@@ -576,15 +614,26 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                                     }}}
                         }
             },
-
         ]
 
+        # MoneyInterval income fields
+        for who in ['you', 'partner']:
+            for field_name in ["income_tax", "national_insurance", "maintenance", "childcare",\
+                               "mortgage", "rent"]:
+                a = {
+                    'error': { who: [{'deductions': [{field_name: [u'Ensure this value is less than or equal to 9999999999.']}]}]},
+                    'data': { who : { "deductions" : { field_name: {"interval_period": "per_month","per_interval_value": 9999999999+1}
+                                        }}
+                            }
+                }
+                ERRORS_DATA.append(a)
+
         for error_data in ERRORS_DATA:
-            data = dict(valid_data)
-            data.update(error_data['data'])
+            data = copy.deepcopy(valid_data)
+            EligibilityCheckTests.deep_update(data, error_data['data'])
             response = self.client.post(self.list_url, data, format='json')
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-            self.assertItemsEqual(error_data['error'], response.data)
+            self.assertDictEqual(error_data['error'], response.data)
 
     def test_create_in_error(self):
         self._test_method_in_error('post', self.list_url)
@@ -714,7 +763,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "earnings": {"interval_period": "per_month",
                                  "per_interval_value": 500,
                                  },
-                    "other_income": 600,
+                    "other_income": {"interval_period": "per_month",
+                                     "per_interval_value": 600,
+                                     },
                     "self_employed": True,
                 },
                 'savings': {
@@ -724,10 +775,12 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": 400,
                 },
                 'deductions': {
-                    "income_tax_and_ni": 700,
-                    "maintenance": 710,
-                    "childcare": 715,
-                    "mortgage_or_rent": 720,
+                    "income_tax": {"interval_period": "per_month", "per_interval_value": 600},
+                    "national_insurance": {"interval_period": "per_month", "per_interval_value": 100},
+                    "maintenance": {"interval_period": "per_month", "per_interval_value": 710},
+                    "childcare": {"interval_period": "per_month", "per_interval_value": 715},
+                    "mortgage": {"interval_period": "per_month", "per_interval_value": 700},
+                    "rent": {"interval_period": "per_month", "per_interval_value": 100},
                     "criminal_legalaid_contributions": 730
                 },
             },
@@ -736,7 +789,9 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "earnings": {"interval_period": "per_month",
                                  "per_interval_value": 5000,
                                  },
-                    "other_income": 6000,
+                    "other_income": {"interval_period": "per_month",
+                                 "per_interval_value": 6000,
+                                 },
                     "self_employed": False
                 },
                 'savings': {
@@ -746,10 +801,12 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": 4000,
                 },
                 'deductions': {
-                    "income_tax_and_ni": 7000,
-                    "maintenance": 7100,
-                    "childcare": 7150,
-                    "mortgage_or_rent": 7200,
+                    "income_tax": {"interval_period": "per_month", "per_interval_value": 6000},
+                    "national_insurance": {"interval_period": "per_month", "per_interval_value": 1000},
+                    "maintenance": {"interval_period": "per_month", "per_interval_value": 7100},
+                    "childcare": {"interval_period": "per_month", "per_interval_value": 7150},
+                    "mortgage": {"interval_period": "per_month", "per_interval_value": 7000},
+                    "rent": {"interval_period": "per_month", "per_interval_value": 200},
                     "criminal_legalaid_contributions": 7300
                 },
             },
@@ -777,29 +834,29 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 'credit_balance': 0,
             },
             'income':{
-                'earnings': {"interval_period": "per_month",
-                             "per_interval_value": 2200,
-                            },
-                'other_income': 0,
+                'earnings': MoneyInterval('per_month', pennies=2200),
+                'other_income': MoneyInterval('per_month', pennies=0),
                 'self_employed': False,
             },
 
         }
 
-        self.check.you.income = Income(**existing_your_finances_values['income'])
+        self.check.you.income = Income(id=self.check.you.income.id, **existing_your_finances_values['income'])
         self.check.you.income.save()
 
-        self.check.you.savings = Savings(**existing_your_finances_values['savings'])
+        self.check.you.savings = Savings(id=self.check.you.savings.id, **existing_your_finances_values['savings'])
         self.check.you.savings.save()
 
         # new values that should change after the patch
         data={
             'you': {
                 'deductions': {
-                    "income_tax_and_ni": 700,
-                    "maintenance": 710,
-                    "childcare": 715,
-                    "mortgage_or_rent": 720,
+                    "income_tax": {"interval_period": "per_month", "per_interval_value": 600 },
+                    "national_insurance": {"interval_period": "per_month", "per_interval_value": 100 },
+                    "maintenance": {"interval_period": "per_month", "per_interval_value": 710 },
+                    "childcare": {"interval_period": "per_month", "per_interval_value": 715 },
+                    "mortgage": {"interval_period": "per_month", "per_interval_value": 620 },
+                    "rent": {"interval_period": "per_month", "per_interval_value": 100 },
                     "criminal_legalaid_contributions": 730
                 }
             }

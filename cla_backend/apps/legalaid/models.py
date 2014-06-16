@@ -15,6 +15,7 @@ from model_utils.models import TimeStampedModel
 # from jsonfield import JSONField
 
 from cla_common.money_interval.fields import MoneyIntervalField
+from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, CASE_STATES
 
 
@@ -63,15 +64,17 @@ class Savings(TimeStampedModel):
 
 class Income(TimeStampedModel):
     earnings = MoneyIntervalField()
-    other_income = MoneyField(default=0)
+    other_income = MoneyIntervalField()
     self_employed = models.BooleanField(default=False)
 
 
 class Deductions(TimeStampedModel):
-    income_tax_and_ni = MoneyField(default=0)
-    maintenance = MoneyField(default=0)
-    childcare = MoneyField(default=0)
-    mortgage_or_rent = MoneyField(default=0)
+    income_tax = MoneyIntervalField()
+    national_insurance = MoneyIntervalField()
+    maintenance = MoneyIntervalField()
+    childcare = MoneyIntervalField()
+    mortgage = MoneyIntervalField()
+    rent = MoneyIntervalField()
     criminal_legalaid_contributions = MoneyField(default=0)
 
 
@@ -169,17 +172,19 @@ class EligibilityCheck(TimeStampedModel):
 
             if self.you.income:
                 income = {}
-                income['earnings'] = self.you.income.earnings.as_dict()
-                income['other_income'] = self.you.income.other_income
+                income['earnings'] = self.you.income.earnings.as_monthly()
+                income['other_income'] = self.you.income.other_income.as_monthly()
                 income['self_employed'] = self.you.income.self_employed or False
                 d['you']['income'] = income
 
             if self.you.deductions:
                 deductions = {}
-                deductions['income_tax_and_ni'] = self.you.deductions.income_tax_and_ni
-                deductions['maintenance'] = self.you.deductions.maintenance
-                deductions['childcare'] = self.you.deductions.childcare
-                deductions['mortgage_or_rent'] = self.you.deductions.mortgage_or_rent
+                deductions['income_tax'] = self.you.deductions.income_tax.as_monthly()
+                deductions['national_insurance']  = self.you.deductions.national_insurance.as_monthly()
+                deductions['maintenance'] = self.you.deductions.maintenance.as_monthly()
+                deductions['childcare'] = self.you.deductions.childcare.as_monthly()
+                deductions['mortgage'] = self.you.deductions.mortgage.as_monthly()
+                deductions['rent'] = self.you.deductions.rent.as_monthly()
                 deductions['criminal_legalaid_contributions'] = self.you.deductions.criminal_legalaid_contributions
                 d['you']['deductions'] = deductions
 
@@ -196,17 +201,19 @@ class EligibilityCheck(TimeStampedModel):
 
                 if self.partner.income:
                     partner_income = {}
-                    partner_income['earnings'] = self.partner.income.earnings.as_dict()
-                    partner_income['other_income'] = self.partner.income.other_income
+                    partner_income['earnings'] = self.partner.income.earnings.as_monthly()
+                    partner_income['other_income'] = self.partner.income.other_income.as_monthly()
                     partner_income['self_employed'] = self.partner.income.self_employed
                     d['partner']['income'] = partner_income
 
                 if self.partner.deductions:
                     partner_deductions = {}
-                    partner_deductions['income_tax_and_ni'] = self.partner.deductions.income_tax_and_ni
-                    partner_deductions['maintenance'] = self.partner.deductions.maintenance
-                    partner_deductions['childcare'] = self.partner.deductions.childcare
-                    partner_deductions['mortgage_or_rent'] = self.partner.deductions.mortgage_or_rent
+                    partner_deductions['income_tax'] = self.partner.deductions.income_tax.as_monthly()
+                    partner_deductions['national_insurance']  = self.partner.deductions.national_insurance.as_monthly()
+                    partner_deductions['maintenance'] = self.partner.deductions.maintenance.as_monthly()
+                    partner_deductions['childcare'] = self.partner.deductions.childcare.as_monthly()
+                    partner_deductions['mortgage'] = self.partner.deductions.mortgage.as_monthly()
+                    partner_deductions['rent'] = self.partner.deductions.rent.as_monthly()
                     partner_deductions['criminal_legalaid_contributions'] = self.partner.deductions.criminal_legalaid_contributions
                     d['partner']['deductions'] = partner_deductions
 

@@ -34,7 +34,8 @@ class TestCaseData(unittest.TestCase):
         income = cd.you.income
         gross_income_orig = 0
         for prop in income.PROPERTY_META.keys():
-            gross_income_orig += getattr(income, prop, 0)
+            part = getattr(income, prop, 0)
+            gross_income_orig += part
 
         self.assertEqual(gross_income_orig, ti)
 
@@ -51,8 +52,8 @@ class TestCaseData(unittest.TestCase):
         ti = cd.total_income
         income = cd.you.income
         gross_income_orig = income.earnings + income.other_income
-        gross_income_orig += \
-            cd.partner.income.earnings + cd.partner.income.other_income
+        gross_income_orig += cd.partner.income.earnings
+        gross_income_orig += cd.partner.income.other_income
         self.assertEqual(gross_income_orig, ti)
         self.assertEqual(combined_income, ti)
 
@@ -69,16 +70,20 @@ class TestCaseData(unittest.TestCase):
     def test_get_total_income_no_partner(self):
         cdd = get_default_case_data(
             you__income__earnings=265700,
-            you__income__other_income=0
+            you__income__other_income=0,
         )
         cd = CaseData(**cdd)
         self.assertFalse(cd.facts.has_partner)
         self.assertEqual(265700, cd.total_income)
 
     def test_get_total_income_incl_other_no_partner(self):
+
+        earnings = 265700
+        other_income = 100
+
         cdd = get_default_case_data(
-            you__income__earnings=265700,
-            you__income__other_income=100
+            you__income__earnings=earnings,
+            you__income__other_income=other_income
         )
         cd = CaseData(**cdd)
         self.assertFalse(cd.facts.has_partner)
@@ -393,5 +398,3 @@ class TestCaseData(unittest.TestCase):
             )
             cd = CaseData(**cdd)
             self.assertEqual(sum(steps), cd.liquid_capital)
-
-

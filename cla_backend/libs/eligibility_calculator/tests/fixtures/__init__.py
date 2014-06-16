@@ -24,10 +24,12 @@ case_data_dict = {
         },
         'deductions':
             {
-                'income_tax_and_ni': 0,
-                'childcare': 0,
+                'income_tax': 0,
+                'national_insurance': 0,
                 'maintenance': 0,
-                'mortgage_or_rent': 0,
+                'mortgage': 0,
+                'rent': 0,
+                'childcare': 0,
                 'criminal_legalaid_contributions': 0,
             },
     },

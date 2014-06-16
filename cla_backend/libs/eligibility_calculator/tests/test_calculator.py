@@ -8,6 +8,7 @@ from .. import constants
 
 from . import fixtures
 
+
 class CalculatorTestBase(unittest.TestCase):
 
     def get_default_case_data(self, **kwargs):
@@ -254,9 +255,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
         )
         you = mock.MagicMock(
             deductions=mock.MagicMock(
-                income_tax_and_ni=random.randint(50, 1000),
+                income_tax=random.randint(50, 1000),
+                national_insurance=random.randint(50, 1000),
                 maintenance=random.randint(50, 1000),
-                mortgage_or_rent=random.randint(50, 1000),
+                mortgage=random.randint(50, 1000),
+                rent=random.randint(50, 1000),
                 childcare=random.randint(50, 1000),
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
@@ -267,9 +270,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
         )
         partner = mock.MagicMock(
             deductions=mock.MagicMock(
-                income_tax_and_ni=random.randint(50, 1000),
+                income_tax=random.randint(50, 1000),
+                national_insurance=random.randint(50, 1000),
                 maintenance=random.randint(50, 1000),
-                mortgage_or_rent=random.randint(50, 1000),
+                mortgage=random.randint(50, 1000),
+                rent=random.randint(50, 1000),
                 childcare=random.randint(50, 1000),
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
@@ -294,14 +299,18 @@ class DisposableIncomeTestCase(unittest.TestCase):
             expected_value = ec.gross_income - \
                 constants.disposable_income.PARTNER_ALLOWANCE - \
                 facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE - \
-                you.deductions.income_tax_and_ni - \
+                you.deductions.income_tax - \
+                you.deductions.national_insurance - \
                 you.deductions.maintenance - \
-                you.deductions.mortgage_or_rent - \
+                you.deductions.mortgage - \
+                you.deductions.rent - \
                 you.deductions.childcare - \
                 you.deductions.criminal_legalaid_contributions - \
-                partner.deductions.income_tax_and_ni - \
+                partner.deductions.income_tax - \
+                partner.deductions.national_insurance - \
                 partner.deductions.maintenance - \
-                partner.deductions.mortgage_or_rent - \
+                partner.deductions.mortgage - \
+                partner.deductions.rent - \
                 partner.deductions.childcare - \
                 partner.deductions.criminal_legalaid_contributions - \
                 constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE - \
@@ -336,9 +345,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
         )
         you = mock.MagicMock(
             deductions=mock.MagicMock(
-                income_tax_and_ni=random.randint(50, 1000),
+                income_tax=random.randint(50, 1000),
+                national_insurance=random.randint(50, 1000),
                 maintenance=random.randint(50, 1000),
-                mortgage_or_rent=constants.disposable_income.CHILDLESS_HOUSING_CAP-1000,
+                mortgage=constants.disposable_income.CHILDLESS_HOUSING_CAP-1000,
+                rent=0,
                 childcare=random.randint(50, 1000),
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
@@ -361,9 +372,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
             ec = EligibilityChecker(case_data)
 
             expected_value = ec.gross_income - \
-                you.deductions.income_tax_and_ni - \
+                you.deductions.income_tax - \
+                you.deductions.national_insurance - \
                 you.deductions.maintenance - \
-                you.deductions.mortgage_or_rent - \
+                you.deductions.mortgage - \
+                you.deductions.rent - \
                 you.deductions.childcare - \
                 you.deductions.criminal_legalaid_contributions
 
@@ -398,9 +411,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
         )
         you = mock.MagicMock(
             deductions=mock.MagicMock(
-                income_tax_and_ni=random.randint(50, 1000),
+                income_tax=random.randint(50, 1000),
+                national_insurance=random.randint(50, 1000),
                 maintenance=random.randint(50, 1000),
-                mortgage_or_rent=constants.disposable_income.CHILDLESS_HOUSING_CAP+1000,
+                mortgage=constants.disposable_income.CHILDLESS_HOUSING_CAP+1000,
+                rent=0,
                 childcare=random.randint(50, 1000),
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
@@ -422,7 +437,8 @@ class DisposableIncomeTestCase(unittest.TestCase):
             ec = EligibilityChecker(case_data)
 
             expected_value = ec.gross_income - \
-                you.deductions.income_tax_and_ni - \
+                you.deductions.income_tax - \
+                you.deductions.national_insurance - \
                 you.deductions.maintenance - \
                 constants.disposable_income.CHILDLESS_HOUSING_CAP - \
                 you.deductions.childcare - \
@@ -464,9 +480,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
         )
         you = mock.MagicMock(
             deductions=mock.MagicMock(
-                income_tax_and_ni=random.randint(50, 1000),
+                income_tax=random.randint(50, 1000),
+                national_insurance=random.randint(50, 1000),
                 maintenance=random.randint(50, 1000),
-                mortgage_or_rent=random.randint(50, 1000),
+                mortgage=random.randint(50, 1000),
+                rent=random.randint(50, 1000),
                 childcare=random.randint(50, 1000),
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
@@ -477,9 +495,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
         )
         partner = mock.MagicMock(
             deductions=mock.MagicMock(
-                income_tax_and_ni=random.randint(50, 1000),
+                income_tax=random.randint(50, 1000),
+                national_insurance=random.randint(50, 1000),
                 maintenance=random.randint(50, 1000),
-                mortgage_or_rent=random.randint(50, 1000),
+                mortgage=random.randint(50, 1000),
+                rent=random.randint(50, 1000),
                 childcare=random.randint(50, 1000),
                 criminal_legalaid_contributions=random.randint(50, 1000)
             ),
@@ -504,14 +524,18 @@ class DisposableIncomeTestCase(unittest.TestCase):
             expected_value = ec.gross_income - \
                 constants.disposable_income.PARTNER_ALLOWANCE - \
                 facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE - \
-                you.deductions.income_tax_and_ni - \
+                you.deductions.income_tax - \
+                you.deductions.national_insurance - \
                 you.deductions.maintenance - \
-                you.deductions.mortgage_or_rent - \
+                you.deductions.mortgage - \
+                you.deductions.rent - \
                 you.deductions.childcare - \
                 you.deductions.criminal_legalaid_contributions - \
-                partner.deductions.income_tax_and_ni - \
+                partner.deductions.income_tax - \
+                partner.deductions.national_insurance - \
                 partner.deductions.maintenance - \
-                partner.deductions.mortgage_or_rent - \
+                partner.deductions.mortgage - \
+                partner.deductions.rent - \
                 partner.deductions.childcare - \
                 partner.deductions.criminal_legalaid_contributions
 

@@ -45,8 +45,8 @@ class DeductionsSerializer(DeductionsSerializerBase):
 
     class Meta(DeductionsSerializerBase.Meta):
         fields = (
-            'income_tax_and_ni', 'maintenance',
-            'childcare', 'mortgage_or_rent',
+            'income_tax', 'national_insurance', 'maintenance',
+            'childcare', 'mortgage', 'rent',
             'criminal_legalaid_contributions',
             'total',
         )

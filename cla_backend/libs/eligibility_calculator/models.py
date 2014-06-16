@@ -1,5 +1,3 @@
-from cla_common.money_interval.models import MoneyInterval
-
 from . import exceptions
 
 
@@ -56,26 +54,14 @@ class Income(ModelMixin, object):
         'other_income': None,
         'self_employed': None
     }
-    @property
-    def _earnings_per_month(self):
-        if isinstance(self.earnings, dict):
-            mi = MoneyInterval.from_dict(self.earnings)
-            earnings = mi.as_monthly()
-        else:
-            earnings = self.earnings
-        return earnings
-    
+
     @property
     def has_employment_earnings(self):
-        return self._earnings_per_month
-    
+        return self.earnings
+
     @property
     def total(self):
-        earnings = self._earnings_per_month
-        mi = MoneyInterval.from_dict(self.other_income)
-        other_income = mi.as_monthly()
-
-        return earnings + other_income
+        return self.earnings + self.other_income
 
 
 class Deductions(ModelMixin, object):

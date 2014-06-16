@@ -172,19 +172,19 @@ class EligibilityCheck(TimeStampedModel):
 
             if self.you.income:
                 income = {}
-                income['earnings'] = self.you.income.earnings.as_dict()
-                income['other_income'] = self.you.income.other_income.as_dict()
+                income['earnings'] = self.you.income.earnings.as_monthly()
+                income['other_income'] = self.you.income.other_income.as_monthly()
                 income['self_employed'] = self.you.income.self_employed or False
                 d['you']['income'] = income
 
             if self.you.deductions:
                 deductions = {}
-                deductions['income_tax'] = self.you.deductions.income_tax.as_dict()
-                deductions['national_insurance']  = self.you.deductions.national_insurance.as_dict()
-                deductions['maintenance'] = self.you.deductions.maintenance.as_dict()
-                deductions['childcare'] = self.you.deductions.childcare.as_dict()
-                deductions['mortgage'] = self.you.deductions.mortgage.as_dict()
-                deductions['rent'] = self.you.deductions.rent.as_dict()
+                deductions['income_tax'] = self.you.deductions.income_tax.as_monthly()
+                deductions['national_insurance']  = self.you.deductions.national_insurance.as_monthly()
+                deductions['maintenance'] = self.you.deductions.maintenance.as_monthly()
+                deductions['childcare'] = self.you.deductions.childcare.as_monthly()
+                deductions['mortgage'] = self.you.deductions.mortgage.as_monthly()
+                deductions['rent'] = self.you.deductions.rent.as_monthly()
                 deductions['criminal_legalaid_contributions'] = self.you.deductions.criminal_legalaid_contributions
                 d['you']['deductions'] = deductions
 
@@ -201,19 +201,19 @@ class EligibilityCheck(TimeStampedModel):
 
                 if self.partner.income:
                     partner_income = {}
-                    partner_income['earnings'] = self.partner.income.earnings.as_dict()
-                    partner_income['other_income'] = self.partner.income.other_income.as_dict()
+                    partner_income['earnings'] = self.partner.income.earnings.as_monthly()
+                    partner_income['other_income'] = self.partner.income.other_income.as_monthly()
                     partner_income['self_employed'] = self.partner.income.self_employed
                     d['partner']['income'] = partner_income
 
                 if self.partner.deductions:
                     partner_deductions = {}
-                    partner_deductions['income_tax'] = self.partner.deductions.income_tax.as_dict()
-                    partner_deductions['national_insurance']  = self.partner.deductions.national_insurance.as_dict()
-                    partner_deductions['maintenance'] = self.partner.deductions.maintenance.as_dict()
-                    partner_deductions['childcare'] = self.partner.deductions.childcare.as_dict()
-                    partner_deductions['mortgage'] = self.partner.deductions.mortgage.as_dict()
-                    partner_deductions['rent'] = self.partner.deductions.rent.as_dict()
+                    partner_deductions['income_tax'] = self.partner.deductions.income_tax.as_monthly()
+                    partner_deductions['national_insurance']  = self.partner.deductions.national_insurance.as_monthly()
+                    partner_deductions['maintenance'] = self.partner.deductions.maintenance.as_monthly()
+                    partner_deductions['childcare'] = self.partner.deductions.childcare.as_monthly()
+                    partner_deductions['mortgage'] = self.partner.deductions.mortgage.as_monthly()
+                    partner_deductions['rent'] = self.partner.deductions.rent.as_monthly()
                     partner_deductions['criminal_legalaid_contributions'] = self.partner.deductions.criminal_legalaid_contributions
                     d['partner']['deductions'] = partner_deductions
 

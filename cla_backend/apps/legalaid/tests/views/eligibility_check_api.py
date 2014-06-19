@@ -820,6 +820,10 @@ class EligibilityCheckAPIMixin(object):
         self.assertNotEqual(response.data['property_set'][0]['id'], other_property.pk)
         self.assertNotEqual(other_property.eligibility_check.pk, self.check.pk)
 
+
+
+
+
     # Just check that eligibility check endpoint responds
     # in a sensible way
 

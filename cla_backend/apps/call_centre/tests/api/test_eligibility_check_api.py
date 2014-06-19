@@ -1,3 +1,5 @@
+from django.utils.unittest import skip
+
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -45,6 +47,35 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, EligibilityCheck
         self.check.your_problem_notes = data['your_problem_notes']
         self.assertEligibilityCheckEqual(response.data, self.check)
         self.assertTrue(response.data['notes'] != data['notes'])
+
+    @skip("Don't want to test")
+    def test_empty_fields(self):
+        """
+        Skipping because of a DRF bug.
+        When patching a NullBooleanField setting it to None, DRF saves it
+        as False value.
+        """
+        data = {
+            'category': None,
+            'dependants_old': None,
+            'dependants_young': None,
+            'has_partner': None,
+            'is_you_or_your_partner_over_60': None,
+            'notes': "",
+            'on_nass_benefits': None,
+            'on_passported_benefits': None,
+            'partner': None,
+            'property_set': [],
+            'state': "maybe",
+            'you': None,
+            'your_problem_notes': "",
+        }
+        response = self.client.patch(
+            self.detail_url, data=data, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        # TODO: needs more checks
+        self.assertEqual(response.data['has_partner'], None)
 
     def test_check_validate_api_method_works(self):
         # actual testing of 'validate' is done in model tests.

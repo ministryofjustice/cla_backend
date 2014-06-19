@@ -347,7 +347,6 @@ class CaseTestCase(TestCase):
         # it is 7 digits long
         self.assertEqual(len(unicode(case.laa_reference)), 7)
 
-
     def test_assign_to_provider_overriding_provider(self):
         providers = make_recipe('cla_provider.provider', _quantity=2)
 

@@ -96,10 +96,10 @@ class EligibilityCheckTestCase(TestCase):
             CaseData(
                 category='code',
                 facts={
-                    'dependant_children':5,
+                    'dependants_young': 3,
+                    'dependants_old': 2,
                     'is_you_or_your_partner_over_60':True,
                     'on_passported_benefits':True,
-                    'on_nass_benefits': None,
                     'has_partner': False,
                     'is_partner_opponent': False,
                 },
@@ -188,10 +188,10 @@ class EligibilityCheckTestCase(TestCase):
         self.assertModelMixinEqual(case_data, CaseData(
             category='code',
             facts={
-                'dependant_children':5,
+                'dependants_young': 3,
+                'dependants_old': 2,
                 'is_you_or_your_partner_over_60':True,
                 'on_passported_benefits': True,
-                'on_nass_benefits': None,
                 'has_partner': True,
                 'is_partner_opponent': False,
             },

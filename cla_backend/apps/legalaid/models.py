@@ -145,6 +145,19 @@ class EligibilityCheck(TimeStampedModel):
     has_partner = models.NullBooleanField(default=None)
 
     def to_case_data(self):
+        def compose_dict(model=self, props=[]):
+            if not model:
+                return None
+
+            obj = {}
+            for prop in props:
+                value = getattr(model, prop)
+                if value != None:
+                    if isinstance(value, MoneyInterval):
+                        value = value.as_monthly()
+                    obj[prop] = value
+            return obj
+
         d = {}
 
         if self.category:
@@ -154,69 +167,43 @@ class EligibilityCheck(TimeStampedModel):
             'value', 'mortgage_left', 'share', 'disputed'
         )
 
-        d['facts'] = {}
-        d['facts']['dependant_children'] = self.dependants_old + self.dependants_young
-        d['facts']['has_partner'] = self.has_partner
-        d['facts']['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
-        d['facts']['on_passported_benefits'] = self.on_passported_benefits
-        d['facts']['on_nass_benefits'] = self.on_nass_benefits
+        d['facts'] = compose_dict(props=[
+            'dependants_old', 'dependants_young', 'has_partner',
+            'is_you_or_your_partner_over_60', 'on_passported_benefits',
+            'on_nass_benefits'
+        ])
 
-        d['you'] = {}
         if self.you:
-            if self.you.savings:
-                savings = {}
-                savings['bank_balance'] = self.you.savings.bank_balance
-                savings['investment_balance'] = self.you.savings.investment_balance
-                savings['credit_balance']  = self.you.savings.credit_balance
-                savings['asset_balance'] = self.you.savings.asset_balance
-                d['you']['savings'] = savings
+            you_props = {
+                'savings': compose_dict(self.you.savings, [
+                    'bank_balance', 'investment_balance', 'credit_balance',
+                    'asset_balance'
+                ]),
+                'income': compose_dict(self.you.income, [
+                    'earnings', 'other_income', 'self_employed'
+                ]),
+                'deductions': compose_dict(self.you.deductions, [
+                    'income_tax', 'national_insurance', 'maintenance',
+                    'childcare', 'mortgage', 'rent', 'criminal_legalaid_contributions'
+                ])
+            }
+            d['you'] = {prop:value for prop, value in you_props.items() if value}
 
-            if self.you.income:
-                income = {}
-                income['earnings'] = self.you.income.earnings.as_monthly()
-                income['other_income'] = self.you.income.other_income.as_monthly()
-                income['self_employed'] = self.you.income.self_employed or False
-                d['you']['income'] = income
-
-            if self.you.deductions:
-                deductions = {}
-                deductions['income_tax'] = self.you.deductions.income_tax.as_monthly()
-                deductions['national_insurance']  = self.you.deductions.national_insurance.as_monthly()
-                deductions['maintenance'] = self.you.deductions.maintenance.as_monthly()
-                deductions['childcare'] = self.you.deductions.childcare.as_monthly()
-                deductions['mortgage'] = self.you.deductions.mortgage.as_monthly()
-                deductions['rent'] = self.you.deductions.rent.as_monthly()
-                deductions['criminal_legalaid_contributions'] = self.you.deductions.criminal_legalaid_contributions
-                d['you']['deductions'] = deductions
-
-        if self.has_partner:
-            d['partner'] = {}
-            if self.partner:
-                if self.partner.savings:
-                    partner_savings = {}
-                    partner_savings['bank_balance'] = self.partner.savings.bank_balance
-                    partner_savings['investment_balance'] = self.partner.savings.investment_balance
-                    partner_savings['credit_balance']  = self.partner.savings.credit_balance
-                    partner_savings['asset_balance'] = self.partner.savings.asset_balance
-                    d['partner']['savings'] = partner_savings
-
-                if self.partner.income:
-                    partner_income = {}
-                    partner_income['earnings'] = self.partner.income.earnings.as_monthly()
-                    partner_income['other_income'] = self.partner.income.other_income.as_monthly()
-                    partner_income['self_employed'] = self.partner.income.self_employed
-                    d['partner']['income'] = partner_income
-
-                if self.partner.deductions:
-                    partner_deductions = {}
-                    partner_deductions['income_tax'] = self.partner.deductions.income_tax.as_monthly()
-                    partner_deductions['national_insurance']  = self.partner.deductions.national_insurance.as_monthly()
-                    partner_deductions['maintenance'] = self.partner.deductions.maintenance.as_monthly()
-                    partner_deductions['childcare'] = self.partner.deductions.childcare.as_monthly()
-                    partner_deductions['mortgage'] = self.partner.deductions.mortgage.as_monthly()
-                    partner_deductions['rent'] = self.partner.deductions.rent.as_monthly()
-                    partner_deductions['criminal_legalaid_contributions'] = self.partner.deductions.criminal_legalaid_contributions
-                    d['partner']['deductions'] = partner_deductions
+        if self.has_partner and self.partner:
+            partner_props = {
+                'savings': compose_dict(self.partner.savings, [
+                    'bank_balance', 'investment_balance', 'credit_balance',
+                    'asset_balance'
+                ]),
+                'income': compose_dict(self.partner.income, [
+                    'earnings', 'other_income', 'self_employed'
+                ]),
+                'deductions': compose_dict(self.partner.deductions, [
+                    'income_tax', 'national_insurance', 'maintenance',
+                    'childcare', 'mortgage', 'rent', 'criminal_legalaid_contributions'
+                ])
+            }
+            d['partner'] = {prop:value for prop, value in partner_props.items() if value}
 
         # Fake
         d['facts']['is_partner_opponent'] = False

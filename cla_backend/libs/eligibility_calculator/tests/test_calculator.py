@@ -3,7 +3,7 @@ import mock
 import random
 
 from ..calculator import EligibilityChecker
-from ..models import CaseData
+from ..models import CaseData, Facts
 from .. import constants
 
 from . import fixtures
@@ -49,7 +49,8 @@ class TestCalculator(CalculatorTestBase):
         for dep_children in range(1,constants.gross_income.INCLUSIVE_CHILDREN_BASE+1):
             case_data = self.get_default_case_data(
                 you__income__earnings=too_much_money,
-                facts__dependant_children=dep_children
+                facts__dependants_young=dep_children,
+                facts__dependants_old=0
             )
             is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
             self.assertFalse(is_elig)
@@ -62,7 +63,8 @@ class TestCalculator(CalculatorTestBase):
         too_much_money = constants.gross_income.BASE_LIMIT + 1
         case_data = self.get_default_case_data(
             you__income__earnings=too_much_money,
-            facts__dependant_children=5
+            facts__dependants_young=5,
+            facts__dependants_old=0
         )
         is_elig = EligibilityChecker(case_data).is_gross_income_eligible()
         self.assertTrue(is_elig)
@@ -248,10 +250,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
         should be equal to sum of above random values
 
         """
-        facts = mock.MagicMock(
+        facts = Facts(
             has_partner=True,
-            dependant_children=random.randint(2, 5),
-            should_aggregate_partner=True
+            dependants_young=random.randint(2, 5),
+            dependants_old=0,
+            is_partner_opponent=False
         )
         you = mock.MagicMock(
             deductions=mock.MagicMock(
@@ -298,7 +301,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
 
             expected_value = ec.gross_income - \
                 constants.disposable_income.PARTNER_ALLOWANCE - \
-                facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE - \
+                (facts.dependants_young + facts.dependants_old) * constants.disposable_income.CHILD_ALLOWANCE - \
                 you.deductions.income_tax - \
                 you.deductions.national_insurance - \
                 you.deductions.maintenance - \
@@ -338,10 +341,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
         should be equal to sum of above random values
 
         """
-        facts = mock.MagicMock(
+        facts = Facts(
             has_partner=False,
-            dependant_children=0,
-            should_aggregate_partner=False
+            dependants_young=0,
+            dependants_old=0,
+            is_partner_opponent=False
         )
         you = mock.MagicMock(
             deductions=mock.MagicMock(
@@ -404,10 +408,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
         Mortgage or rent is capped to
             constants.disposable_income.CHILDLESS_HOUSING_CAP
         """
-        facts = mock.MagicMock(
+        facts = Facts(
             has_partner=False,
-            dependant_children=0,
-            should_aggregate_partner=False
+            dependants_young=0,
+            dependants_old=0,
+            is_partner_opponent=False
         )
         you = mock.MagicMock(
             deductions=mock.MagicMock(
@@ -473,10 +478,11 @@ class DisposableIncomeTestCase(unittest.TestCase):
         Disposable income should be equal to the sum of above random values
 
         """
-        facts = mock.MagicMock(
+        facts = Facts(
             has_partner=True,
-            dependant_children=random.randint(2, 5),
-            should_aggregate_partner=True
+            dependants_young=random.randint(2, 5),
+            dependants_old=0,
+            is_partner_opponent=False
         )
         you = mock.MagicMock(
             deductions=mock.MagicMock(
@@ -523,7 +529,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
 
             expected_value = ec.gross_income - \
                 constants.disposable_income.PARTNER_ALLOWANCE - \
-                facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE - \
+                (facts.dependants_young + facts.dependants_old) * constants.disposable_income.CHILD_ALLOWANCE - \
                 you.deductions.income_tax - \
                 you.deductions.national_insurance - \
                 you.deductions.maintenance - \

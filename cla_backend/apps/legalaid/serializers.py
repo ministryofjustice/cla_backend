@@ -9,7 +9,8 @@ from cla_common.money_interval.serializers import MoneyIntervalModelSerializerMi
 
 
 from .models import Category, Property, EligibilityCheck, Income, \
-    Savings, Deductions, Person, PersonalDetails, Case, CaseLog, CaseLogType
+    Savings, Deductions, Person, PersonalDetails, Case, CaseLog, CaseLogType, \
+    ThirdPartyDetails
 
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
@@ -103,6 +104,12 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
         model = PersonalDetails
         fields = ()
 
+class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
+    personal_details = PersonalDetailsSerializerBase(required=True)
+
+    class Meta:
+        model = ThirdPartyDetails
+        fields = ()
 
 class PersonSerializerBase(serializers.ModelSerializer):
     income = IncomeSerializerBase(required=False)

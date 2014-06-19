@@ -9,7 +9,8 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
     CaseLogSerializerBase, CaseLogTypeSerializerBase, \
-    OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase
+    OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase, \
+    ThirdPartyDetailsSerializerBase
 
 from .models import Operator
 
@@ -96,6 +97,13 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
             'mobile_phone', 'home_phone'
         )
 
+
+class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
+    class Meta(ThirdPartyDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'personal_details', 'pass_phrase', 'reason',
+            'personal_relationship'
+        )
 
 class CaseLogSerializer(CaseLogSerializerBase):
     code = serializers.CharField(read_only=True, source='logtype.code')

@@ -1,7 +1,7 @@
+import random
 import copy
 import uuid
 import mock
-from django.utils.unittest.case import skip
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
@@ -17,6 +17,10 @@ from core.tests.mommy_utils import make_recipe
 
 from cla_common.money_interval.models import MoneyInterval
 
+
+mi_dict_generator = lambda x: {"interval_period": "per_month", "per_interval_value": x}
+
+
 class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
     def setUp(self):
         super(EligibilityCheckTests, self).setUp()
@@ -30,9 +34,12 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                             savings=make_recipe('legalaid.savings'),
                             deductions=make_recipe('legalaid.deductions'))
         )
-        self.detail_url = reverse(
+        self.detail_url = self.get_detail_url(self.check.reference)
+
+    def get_detail_url(self, check_ref):
+        return reverse(
             'checker:eligibility_check-detail', args=(),
-            kwargs={'reference': unicode(self.check.reference)}
+            kwargs={'reference': unicode(check_ref)}
         )
 
     def get_is_eligible_url(self, reference):
@@ -72,7 +79,6 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             moneyInterval = getattr(obj, prop)
             self.assertEqual(moneyInterval.per_interval_value, data.get(prop)['per_interval_value'])
             self.assertEqual(moneyInterval.interval_period, data.get(prop)['interval_period'])
-        
 
     def assertSavingsEqual(self, data, obj):
         if obj is None or data is None:
@@ -99,8 +105,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             self.assertEqual(moneyInterval.per_interval_value, data.get(prop)['per_interval_value'])
             self.assertEqual(moneyInterval.interval_period, data.get(prop)['interval_period'])
 
-
-    def assertFinanceEqual(self, data, obj):
+    def assertPersonEqual(self, data, obj):
         if data is None or obj is None:
             self.assertEqual(data, obj)
             return
@@ -125,8 +130,8 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertEqual(len(data['property_set']), check.property_set.count())
         self.assertEqual(data['dependants_young'], check.dependants_young)
         self.assertEqual(data['dependants_old'], check.dependants_old)
-        self.assertFinanceEqual(data['you'], check.you)
-        self.assertFinanceEqual(data['partner'], check.partner)
+        self.assertPersonEqual(data['you'], check.you)
+        self.assertPersonEqual(data['partner'], check.partner)
 
     def test_methods_not_allowed(self):
         """
@@ -186,51 +191,28 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 reference=response.data['reference'],
                 category=category, notes=data['notes'],
                 your_problem_notes=data['your_problem_notes'],
-                dependants_young=2, dependants_old=3
+                dependants_young=data['dependants_young'],
+                dependants_old=data['dependants_old']
             )
         )
 
-    def test_create_basic_data_with_partner(self):
+    def test_create_basic_data_with_extras(self):
         """
-        CREATE data includes `has_partner`
+        CREATE data includes random values for fields:
+            `has_partner`, `is_you_or_your_partner_over_60`, `on_passported_benefits`
+
+            Where the possible values are: [`True`, `False`, `None`]
         """
         make_recipe('legalaid.category')
 
         category = Category.objects.all()[0]
-        data={
+        data= {
             'category': category.code,
             'your_problem_notes': 'lorem',
             'notes': 'ipsum',
-            'has_partner': True
-            }
-        response = self.client.post(
-            self.list_url, data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        self.assertEligibilityCheckResponseKeys(response)
-        self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEligibilityCheckEqual(response.data,
-            EligibilityCheck(
-                reference=response.data['reference'],
-                category=category, notes=data['notes'],
-                your_problem_notes=data['your_problem_notes'],
-                has_partner=data['has_partner']
-            )
-        )
-
-    def test_create_basic_data_with_over_60(self):
-        """
-        CREATE data includes over 60
-        """
-        make_recipe('legalaid.category')
-
-        category = Category.objects.all()[0]
-        data={
-            'category': category.code,
-            'your_problem_notes': 'lorem',
-            'notes': 'ipsum',
-            'is_you_or_your_partner_over_60': True
+            'has_partner': random.choice([None, True, False]),
+            'is_you_or_your_partner_over_60': random.choice([None, True, False]),
+            'on_passported_benefits': random.choice([None, True, False])
         }
         response = self.client.post(
             self.list_url, data, format='json'
@@ -244,35 +226,8 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 reference=response.data['reference'],
                 category=category, notes=data['notes'],
                 your_problem_notes=data['your_problem_notes'],
-                is_you_or_your_partner_over_60=data['is_you_or_your_partner_over_60']
-            )
-        )
-
-    def test_create_basic_data_with_on_benefits(self):
-        """
-        CREATE data includes `on_passported_benefits`
-        """
-        make_recipe('legalaid.category')
-
-        category = Category.objects.all()[0]
-        data={
-            'category': category.code,
-            'your_problem_notes': 'lorem',
-            'notes': 'ipsum',
-            'on_passported_benefits': True
-        }
-        response = self.client.post(
-            self.list_url, data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        self.assertEligibilityCheckResponseKeys(response)
-        self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEligibilityCheckEqual(response.data,
-            EligibilityCheck(
-                reference=response.data['reference'],
-                category=category, notes=data['notes'],
-                your_problem_notes=data['your_problem_notes'],
+                has_partner=data['has_partner'],
+                is_you_or_your_partner_over_60=data['is_you_or_your_partner_over_60'],
                 on_passported_benefits=data['on_passported_benefits'],
             )
         )
@@ -286,38 +241,38 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         category = Category.objects.all()[0]
         category2 = Category.objects.all()[1]
 
+        # CREATING FIRST
         data={
             'category': category.code,
             'your_problem_notes': 'lorem',
             'notes': 'ipsum',
             'dependants_young': 2,
             'dependants_old': 3,
-            }
+        }
         response = self.client.post(
             self.list_url, data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertEligibilityCheckResponseKeys(response)
-        self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEligibilityCheckEqual(response.data,
-            EligibilityCheck(
-                reference=response.data['reference'],
-                category=category, notes=data['notes'],
-                your_problem_notes=data['your_problem_notes'],
-                dependants_young=2, dependants_old=3
-            )
-        )
+        # NOW PATCHING
+        reference = response.data['reference']
+        detail_url = self.get_detail_url(reference)
 
         data['category'] = category2.code
-        response2 = self.client.patch(
-            self.detail_url, data=data, format='json'
+        patch_response = self.client.patch(detail_url, data=data, format='json')
+
+        self.assertEqual(patch_response.status_code, status.HTTP_200_OK)
+
+        self.assertEligibilityCheckResponseKeys(patch_response)
+        self.assertEligibilityCheckEqual(patch_response.data,
+            EligibilityCheck(
+                reference=reference,
+                category=category2, notes=data['notes'],
+                your_problem_notes=data['your_problem_notes'],
+                dependants_young=data['dependants_young'],
+                dependants_old=data['dependants_old'],
+            )
         )
-
-        self.assertEqual(response2.status_code, status.HTTP_200_OK)
-
-        self.assertEligibilityCheckResponseKeys(response2)
-        self.assertEqual(response2.data['category'], category2.code)
 
     def test_create_with_properties(self):
         """
@@ -329,19 +284,11 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 {'value': 999, 'mortgage_left': 888, 'share': 77, 'disputed': False}
             ]
         }
-        response = self.client.post(
-            self.list_url, data, format='json'
-        )
+        response = self.client.post(self.list_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEligibilityCheckResponseKeys(response)
-        self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEqual(response.data['category'], None)
-        self.assertEqual(response.data['notes'], '')
-        self.assertEqual(len(response.data['property_set']), 2)
-        self.assertEqual(response.data['dependants_young'], 0)
-        self.assertEqual(response.data['dependants_old'], 0)
-        self.assertEqual(len(response.data['property_set']), 2)
+        self.assertEqual(len(data['property_set']), 2)
         self.assertItemsEqual([p['value'] for p in response.data['property_set']], [111, 999])
         self.assertItemsEqual([p['mortgage_left'] for p in response.data['property_set']], [222, 888])
         self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
@@ -358,33 +305,17 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": 400,
                 },
                 'income': {
-                    "earnings": {"interval_period": "per_month",
-                                 "per_interval_value": 500,
-                                },
-                    "other_income": {"interval_period": "per_month",
-                                 "per_interval_value": 600,
-                                },
+                    "earnings": mi_dict_generator(500),
+                    "other_income": mi_dict_generator(600),
                     "self_employed": True,
                 },
                 'deductions': {
-                    "income_tax": {"interval_period": "per_month",
-                                 "per_interval_value": 600,
-                                },
-                    "national_insurance": {"interval_period": "per_month",
-                                 "per_interval_value": 100,
-                                },
-                    "maintenance": {"interval_period": "per_month",
-                                 "per_interval_value": 710,
-                                },
-                    "childcare": {"interval_period": "per_month",
-                                 "per_interval_value": 715,
-                                },
-                    "mortgage": {"interval_period": "per_month",
-                                 "per_interval_value": 700,
-                                },
-                    "rent": {"interval_period": "per_month",
-                                 "per_interval_value": 20,
-                                },
+                    "income_tax": mi_dict_generator(600),
+                    "national_insurance": mi_dict_generator(100),
+                    "maintenance": mi_dict_generator(710),
+                    "childcare": mi_dict_generator(715),
+                    "mortgage": mi_dict_generator(700),
+                    "rent": mi_dict_generator(20),
                     "criminal_legalaid_contributions": 730
                 },
             },
@@ -396,38 +327,23 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                     "credit_balance": 4000,
                     },
                 'income': {
-                    "earnings": {"interval_period": "per_month",
-                                 "per_interval_value": 5000,
-                                },
-                    "other_income": {"interval_period": "per_month",
-                                 "per_interval_value": 6000,
-                                },
+                    "earnings": mi_dict_generator(5000),
+                    "other_income": mi_dict_generator(6000),
                     "self_employed": False
                 },
                 'deductions': {
-                    "income_tax": {"interval_period": "per_month",
-                                 "per_interval_value": 600,
-                                },
-                    "national_insurance": {"interval_period": "per_month",
-                                 "per_interval_value": 100,
-                                },
-                    "maintenance": {"interval_period": "per_month",
-                                 "per_interval_value": 710,
-                                },
-                    "childcare": {"interval_period": "per_month",
-                                 "per_interval_value": 715,
-                                },
-                    "mortgage": {"interval_period": "per_month",
-                                 "per_interval_value": 700,
-                                },
-                    "rent": {"interval_period": "per_month",
-                                 "per_interval_value": 20,
-                                },
+                    "income_tax": mi_dict_generator(600),
+                    "national_insurance": mi_dict_generator(100),
+                    "maintenance": mi_dict_generator(710),
+                    "childcare": mi_dict_generator(715),
+                    "mortgage": mi_dict_generator(700),
+                    "rent": mi_dict_generator(20),
                     "criminal_legalaid_contributions": 730
                 },
             },
         }
         return data
+
     def test_create_with_finances(self):
         """
         CREATE data with finances
@@ -439,7 +355,6 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEligibilityCheckResponseKeys(response)
-        self.assertTrue(len(response.data['reference']) > 30)
         self.assertEligibilityCheckEqual(
             response.data,
             EligibilityCheck(
@@ -453,7 +368,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         Generic method called by 'create' and 'patch' to test against validation
         errors.
-        
+
         @see: notes in test_errors_masked_by_drf(..)
         """
         data={
@@ -600,7 +515,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         ERRORS_DATA = [
             {
                 'error': {'you': [{'income': [{'earnings': [u'Ensure this value is less than or equal to 9999999999.']}]}]},
-                'data': {   "you" : { "income" : { "earnings": 
+                'data': {   "you" : { "income" : { "earnings":
                                                     {"interval_period": "per_month",
                                                      "per_interval_value": 9999999999+1,
                                     }}}
@@ -608,7 +523,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             },
             {
                 'error': {'partner': [{'income': [{'earnings': [u'Ensure this value is less than or equal to 9999999999.']}]}]},
-                'data': {   "partner" : { "income" : { "earnings": 
+                'data': {   "partner" : { "income" : { "earnings":
                                                     {"interval_period": "per_month",
                                                      "per_interval_value": 9999999999+1,
                                     }}}
@@ -692,7 +607,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             'category': category2.code,
             'your_problem_notes': 'ipsum lorem2',
             'notes': 'lorem ipsum2',
-            'dependants_young': 10,
+            'dependants_young': None,
             'dependants_old': 10,
         }
         response = self.client.patch(
@@ -714,7 +629,7 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         """
         properties = make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4, disputed=False)
 
-        # making extra properties
+        # making extra propertiesn not associated to this eligibility check
         make_recipe('legalaid.property', _quantity=5)
 
         self.assertEqual(self.check.property_set.count(), 4)
@@ -727,16 +642,11 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
                 {'value': 999, 'mortgage_left': 888, 'share': 77, 'disputed': True}
             ]
         }
-        response = self.client.patch(
-            self.detail_url, data=data, format='json'
-        )
+        response = self.client.patch(self.detail_url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
         # nothing should have changed here
-        self.assertEqual(response.data['reference'], unicode(self.check.reference))
-        self.assertEqual(response.data['category'], self.check.category.code)
-        self.assertEqual(response.data['notes'], self.check.notes)
-        self.assertEqual(response.data['dependants_young'], self.check.dependants_young)
-        self.assertEqual(response.data['dependants_old'], self.check.dependants_old)
+        self.assertEligibilityCheckEqual(response.data, self.check)
 
         # properties should have changed. The new property should have id == 10
         self.assertEqual(len(response.data['property_set']), 2)
@@ -760,53 +670,45 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         data={
             'you': {
                 'income': {
-                    "earnings": {"interval_period": "per_month",
-                                 "per_interval_value": 500,
-                                 },
-                    "other_income": {"interval_period": "per_month",
-                                     "per_interval_value": 600,
-                                     },
+                    "earnings": mi_dict_generator(500),
+                    "other_income": mi_dict_generator(600),
                     "self_employed": True,
                 },
                 'savings': {
                     "bank_balance": 100,
                     "investment_balance": 200,
                     "asset_balance": 300,
-                    "credit_balance": 400,
+                    "credit_balance": 400
                 },
                 'deductions': {
-                    "income_tax": {"interval_period": "per_month", "per_interval_value": 600},
-                    "national_insurance": {"interval_period": "per_month", "per_interval_value": 100},
-                    "maintenance": {"interval_period": "per_month", "per_interval_value": 710},
-                    "childcare": {"interval_period": "per_month", "per_interval_value": 715},
-                    "mortgage": {"interval_period": "per_month", "per_interval_value": 700},
-                    "rent": {"interval_period": "per_month", "per_interval_value": 100},
+                    "income_tax": mi_dict_generator(600),
+                    "national_insurance": mi_dict_generator(100),
+                    "maintenance": mi_dict_generator(710),
+                    "childcare": mi_dict_generator(7150),
+                    "mortgage": mi_dict_generator(700),
+                    "rent": mi_dict_generator(100),
                     "criminal_legalaid_contributions": 730
                 },
             },
             'partner': {
                 'income': {
-                    "earnings": {"interval_period": "per_month",
-                                 "per_interval_value": 5000,
-                                 },
-                    "other_income": {"interval_period": "per_month",
-                                 "per_interval_value": 6000,
-                                 },
+                    "earnings": mi_dict_generator(5000),
+                    "other_income": mi_dict_generator(6000),
                     "self_employed": False
                 },
                 'savings': {
                     "bank_balance": 1000,
                     "investment_balance": 2000,
                     "asset_balance": 3000,
-                    "credit_balance": 4000,
+                    "credit_balance": 4000
                 },
                 'deductions': {
-                    "income_tax": {"interval_period": "per_month", "per_interval_value": 6000},
-                    "national_insurance": {"interval_period": "per_month", "per_interval_value": 1000},
-                    "maintenance": {"interval_period": "per_month", "per_interval_value": 7100},
-                    "childcare": {"interval_period": "per_month", "per_interval_value": 7150},
-                    "mortgage": {"interval_period": "per_month", "per_interval_value": 7000},
-                    "rent": {"interval_period": "per_month", "per_interval_value": 200},
+                    "income_tax": mi_dict_generator(6000),
+                    "national_insurance": mi_dict_generator(1000),
+                    "maintenance": mi_dict_generator(7100),
+                    "childcare": mi_dict_generator(7150),
+                    "mortgage": mi_dict_generator(7000),
+                    "rent": mi_dict_generator(200),
                     "criminal_legalaid_contributions": 7300
                 },
             },
@@ -851,12 +753,12 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         data={
             'you': {
                 'deductions': {
-                    "income_tax": {"interval_period": "per_month", "per_interval_value": 600 },
-                    "national_insurance": {"interval_period": "per_month", "per_interval_value": 100 },
-                    "maintenance": {"interval_period": "per_month", "per_interval_value": 710 },
-                    "childcare": {"interval_period": "per_month", "per_interval_value": 715 },
-                    "mortgage": {"interval_period": "per_month", "per_interval_value": 620 },
-                    "rent": {"interval_period": "per_month", "per_interval_value": 100 },
+                    "income_tax": mi_dict_generator(600),
+                    "national_insurance": mi_dict_generator(100),
+                    "maintenance": mi_dict_generator(710),
+                    "childcare": mi_dict_generator(715),
+                    "mortgage": mi_dict_generator(620),
+                    "rent": mi_dict_generator(100),
                     "criminal_legalaid_contributions": 730
                 }
             }
@@ -898,41 +800,6 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
         self.assertNotEqual(response.data['property_set'][0]['id'], other_property.pk)
         self.assertNotEqual(other_property.eligibility_check.pk, self.check.pk)
 
-    # PUT
-
-    def test_put_basic_data(self):
-        """
-        PUT should override the values
-        """
-        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4)
-
-        category2 = make_recipe('legalaid.category')
-
-        data={
-            'reference': 'just-trying...', # reference should never change
-            'category': category2.code,
-            'your_problem_notes': 'lorem2',
-            'notes': 'ipsum2',
-            'property_set': [],
-            'dependants_young': 1,
-            'dependants_old': 2,
-        }
-        response = self.client.put(
-            self.detail_url, data=data, format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.assertEligibilityCheckResponseKeys(response)
-
-        # checking the changed properties
-        self.check.category = category2
-        self.check.notes = data['notes']
-        self.check.your_problem_notes = data['your_problem_notes']
-        self.check.dependants_young = data['dependants_young']
-        self.check.dependants_old = data['dependants_old']
-        self.assertEligibilityCheckEqual(response.data, self.check)
-
-
     # Just check that eligibility check endpoint responds
     # in a sensible way
 
@@ -973,116 +840,3 @@ class EligibilityCheckTests(CLABaseApiTestMixin, APITestCase):
             format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'unknown')
-
-
-class EligibilityCheckPropertyTests(CLABaseApiTestMixin, APITestCase):
-    def setUp(self):
-        super(EligibilityCheckPropertyTests, self).setUp()
-
-        self.check = make_recipe('legalaid.property',
-            value=100000,
-            mortgage_left=20000,
-            share=50,
-        )
-        parent_ref = unicode(self.check.eligibility_check.reference)
-        self.list_url = reverse('checker:property-list',
-                                args=[parent_ref])
-
-        self.detail_url = reverse(
-            'checker:property-detail', args=[parent_ref, self.check.id]
-        )
-
-    def test_create_no_data(self):
-        """
-        CREATE data is empty
-        """
-        response = self.client.post(self.list_url, data={}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertItemsEqual(response.data.keys(), ['value', 'mortgage_left', 'share', 'id', 'disputed'])
-        self.assertTrue(response.data['id'] > self.check.id)
-        self.assertEqual(response.data['value'], 0)
-        self.assertEqual(response.data['mortgage_left'], 0)
-        self.assertEqual(response.data['share'], 0)
-
-    def test_post_full_data(self):
-        response = self.client.post(self.list_url,
-                                    data=
-                                    {
-                                        'value': self.check.value,
-                                        'mortgage_left': self.check.mortgage_left,
-                                        'share': self.check.share
-                                    })
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(response.data['id'] > self.check.id)
-        self.assertEqual(response.data['value'], self.check.value)
-        self.assertEqual(response.data['mortgage_left'], self.check.mortgage_left)
-        self.assertEqual(response.data['share'], self.check.share)
-
-
-    def test_patch_full_data(self):
-        response = self.client.patch(self.detail_url,
-                                     data=
-                                     {
-                                         'value': self.check.value-1,
-                                         'share': self.check.share-1,
-                                         'mortgage_left': self.check.mortgage_left-1
-                                     })
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data['id'] == self.check.id)
-        self.assertTrue(response.data['value'] == self.check.value-1)
-        self.assertTrue(response.data['share'] == self.check.share-1)
-        self.assertTrue(response.data['mortgage_left'] == self.check.mortgage_left-1)
-
-        # make sure it actually saved
-        response2 = self.client.get(self.detail_url)
-        self.assertEqual(response.data, response2.data)
-
-
-
-    def test_put_full_data(self):
-        response = self.client.put(self.detail_url,
-                                     data=
-                                     {
-                                         'value': self.check.value-1,
-                                         'share': self.check.share-1,
-                                         'mortgage_left': self.check.mortgage_left-1
-                                     })
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data['id'] == self.check.id)
-        self.assertTrue(response.data['value'] == self.check.value-1)
-        self.assertTrue(response.data['share'] == self.check.share-1)
-        self.assertTrue(response.data['mortgage_left'] == self.check.mortgage_left-1)
-
-        # make sure it actually saved
-        response2 = self.client.get(self.detail_url)
-        self.assertEqual(response.data, response2.data)
-
-
-    def test_put_partial_data(self):
-        response = self.client.put(self.detail_url,
-                                   data=
-                                   {
-                                       'value': self.check.value-1,
-                                   })
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data['id'] == self.check.id)
-        self.assertTrue(response.data['value'] == self.check.value-1)
-
-        # was not sent by us so should be default
-        self.assertTrue(response.data['share'] == 0)
-        self.assertTrue(response.data['mortgage_left'] == 0)
-
-        # make sure it actually saved
-        response2 = self.client.get(self.detail_url)
-        self.assertEqual(response.data, response2.data)
-
-    def test_delete_object(self):
-        response = self.client.delete(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertIsNone(response.data)
-
-        response2 = self.client.get(self.detail_url)
-        self.assertEqual(response2.status_code, status.HTTP_404_NOT_FOUND)

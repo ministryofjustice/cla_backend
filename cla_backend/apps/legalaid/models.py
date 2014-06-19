@@ -57,26 +57,26 @@ class Category(TimeStampedModel):
 
 
 class Savings(TimeStampedModel):
-    bank_balance = MoneyField(default=0)
-    investment_balance = MoneyField(default=0)
-    asset_balance = MoneyField(default=0)
-    credit_balance = MoneyField(default=0)
+    bank_balance = MoneyField(default=None, null=True, blank=True)
+    investment_balance = MoneyField(default=None, null=True, blank=True)
+    asset_balance = MoneyField(default=None, null=True, blank=True)
+    credit_balance = MoneyField(default=None, null=True, blank=True)
 
 
 class Income(TimeStampedModel):
-    earnings = MoneyIntervalField()
-    other_income = MoneyIntervalField()
-    self_employed = models.BooleanField(default=False)
+    earnings = MoneyIntervalField(default=None, null=True, blank=True)
+    other_income = MoneyIntervalField(default=None, null=True, blank=True)
+    self_employed = models.NullBooleanField(default=None)
 
 
 class Deductions(TimeStampedModel):
-    income_tax = MoneyIntervalField()
-    national_insurance = MoneyIntervalField()
-    maintenance = MoneyIntervalField()
-    childcare = MoneyIntervalField()
-    mortgage = MoneyIntervalField()
-    rent = MoneyIntervalField()
-    criminal_legalaid_contributions = MoneyField(default=0)
+    income_tax = MoneyIntervalField(default=None, null=True, blank=True)
+    national_insurance = MoneyIntervalField(default=None, null=True, blank=True)
+    maintenance = MoneyIntervalField(default=None, null=True, blank=True)
+    childcare = MoneyIntervalField(default=None, null=True, blank=True)
+    mortgage = MoneyIntervalField(default=None, null=True, blank=True)
+    rent = MoneyIntervalField(default=None, null=True, blank=True)
+    criminal_legalaid_contributions = MoneyField(default=None, null=True, blank=True)
 
 
 class PersonalDetails(TimeStampedModel):
@@ -134,15 +134,15 @@ class EligibilityCheck(TimeStampedModel):
         max_length=50, default=ELIGIBILITY_STATES.MAYBE,
         choices=ELIGIBILITY_STATES.CHOICES
     )
-    dependants_young = models.PositiveIntegerField(default=0)
-    dependants_old = models.PositiveIntegerField(default=0)
-    on_passported_benefits = models.BooleanField(default=False)
-    on_nass_benefits = models.BooleanField(default=False)
+    dependants_young = models.PositiveIntegerField(null=True, blank=True, default=None)
+    dependants_old = models.PositiveIntegerField(null=True, blank=True, default=None)
+    on_passported_benefits = models.NullBooleanField(default=None)
+    on_nass_benefits = models.NullBooleanField(default=None)
 
 
     # need to be moved into graph/questions format soon
-    is_you_or_your_partner_over_60 = models.BooleanField(default=False)
-    has_partner = models.BooleanField(default=False)
+    is_you_or_your_partner_over_60 = models.NullBooleanField(default=None)
+    has_partner = models.NullBooleanField(default=None)
 
     def to_case_data(self):
         d = {}
@@ -225,11 +225,11 @@ class EligibilityCheck(TimeStampedModel):
 
 
 class Property(TimeStampedModel):
-    value = MoneyField(default=0)
-    mortgage_left = MoneyField(default=0)
-    share = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
+    value = MoneyField(default=None, null=True, blank=True)
+    mortgage_left = MoneyField(default=None, null=True, blank=True)
+    share = models.PositiveIntegerField(default=None, validators=[MaxValueValidator(100)], null=True, blank=True)
     eligibility_check = models.ForeignKey(EligibilityCheck)
-    disputed = models.BooleanField(default=False)
+    disputed = models.NullBooleanField(default=None)
 
     class Meta:
         verbose_name_plural = "properties"
@@ -251,7 +251,7 @@ class Property(TimeStampedModel):
 
 class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
-    eligibility_check = models.OneToOneField(EligibilityCheck)
+    eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
     personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)

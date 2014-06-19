@@ -56,9 +56,12 @@ class TotalsModelSerializer(ClaModelSerializer):
             value = getattr(obj, f, 0)
 
             if isinstance(value, MoneyInterval):
-                total += value.as_monthly()
+                subtotal = value.as_monthly()
             else:
-                total += getattr(obj, f, 0)
+                subtotal = getattr(obj, f, 0)
+
+            if subtotal != None:
+                total += subtotal
         return total
 
 

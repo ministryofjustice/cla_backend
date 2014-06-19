@@ -169,8 +169,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         max_length=50, default=ELIGIBILITY_STATES.MAYBE,
         choices=ELIGIBILITY_STATES.CHOICES
     )
-    dependants_young = models.PositiveIntegerField(null=True, blank=True, default=None)
-    dependants_old = models.PositiveIntegerField(null=True, blank=True, default=None)
+    dependants_young = models.PositiveIntegerField(null=True, blank=True,
+        default=None, validators=[MaxValueValidator(50)]
+    )
+    dependants_old = models.PositiveIntegerField(null=True, blank=True,
+        default=None, validators=[MaxValueValidator(50)]
+    )
     on_passported_benefits = models.NullBooleanField(default=None)
     on_nass_benefits = models.NullBooleanField(default=None)
 

@@ -37,15 +37,15 @@ class ModelMixin(object):
 
 class Savings(ModelMixin, object):
     PROPERTY_META = {
-        'savings': None,
-        'investments': None,
-        'money_owed': None,
-        'valuable_items': None
+        'bank_balance': None,
+        'investment_balance': None,
+        'credit_balance': None,
+        'asset_balance': None
     }
 
     @property
     def total(self):
-        return self.savings + self.investments + self.money_owed + self.valuable_items
+        return self.bank_balance + self.investment_balance + self.credit_balance + self.asset_balance
 
 
 class Income(ModelMixin, object):
@@ -135,9 +135,9 @@ class CaseData(ModelMixin, object):
     # #         # savings
     # #         {
     # #             'savings',
-    # #             'investments',
-    # #             'money_owed' ,
-    # #             'valuable_items',
+    # #             'investment_balance',
+    # #             'credit_balance' ,
+    # #             'asset_balance',
     # #             },
     # #         },
     #             # 'deductions',
@@ -158,9 +158,9 @@ class CaseData(ModelMixin, object):
     # #             'savings':
     # #                 {
     # #                     'partner_savings': None,
-    # #                     'partner_investments': None,
-    # #                     'partner_money_owed': None,
-    # #                     'partner_valuable_items': None,
+    # #                     'partner_investment_balance': None,
+    # #                     'partner_credit_balance': None,
+    # #                     'partner_asset_balance': None,
     # #                 },
 
     #                 # 'deductions',

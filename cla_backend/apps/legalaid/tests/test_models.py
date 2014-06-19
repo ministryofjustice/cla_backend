@@ -105,10 +105,10 @@ class EligibilityCheckTestCase(TestCase):
                 },
                 you={
                     'savings':{
-                        'savings':100,
-                        'investments': 200,
-                        'money_owed':400,
-                        'valuable_items': 300,
+                        'bank_balance':100,
+                        'investment_balance': 200,
+                        'credit_balance':400,
+                        'asset_balance': 300,
                     },
                     'income': {
                         'earnings': 500,
@@ -197,10 +197,10 @@ class EligibilityCheckTestCase(TestCase):
             },
             you={
                 'savings':{
-                    'savings':100,
-                    'investments': 200,
-                    'money_owed':400,
-                    'valuable_items': 300,
+                    'bank_balance':100,
+                    'investment_balance': 200,
+                    'credit_balance':400,
+                    'asset_balance': 300,
                 },
                 'income': {
                     'earnings': 500,
@@ -219,10 +219,10 @@ class EligibilityCheckTestCase(TestCase):
             },
             partner={
                 'savings':{
-                    'savings':101,
-                    'investments': 201,
-                    'money_owed':401,
-                    'valuable_items': 301,
+                    'bank_balance':101,
+                    'investment_balance': 201,
+                    'credit_balance':401,
+                    'asset_balance': 301,
                 },
                 'income': {
                     'earnings': 501,
@@ -269,8 +269,8 @@ class EligibilityCheckTestCase(TestCase):
     #
     #     case_data = check.to_case_data()
     #     self.assertCaseDataEqual(case_data, CaseData(
-    #         category='code', dependant_children=5, savings=100, investments=200,
-    #         money_owed=400, valuable_items=300, earnings=500, other_income=600,
+    #         category='code', dependant_children=5, savings=100, investment_balance=200,
+    #         credit_balance=400, asset_balance=300, earnings=500, other_income=600,
     #         self_employed=True, property_data=[(31, 41, 51), (32, 42, 52), (33, 43, 53)],
     #         is_you_or_your_partner_over_60=True,
     #         has_partner=False, is_partner_opponent=False, income_tax_and_ni=700,

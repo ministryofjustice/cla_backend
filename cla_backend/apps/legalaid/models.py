@@ -216,10 +216,10 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         if self.you:
             if self.you.savings:
                 savings = {}
-                savings['savings'] = self.you.savings.bank_balance
-                savings['investments'] = self.you.savings.investment_balance
-                savings['money_owed']  = self.you.savings.credit_balance
-                savings['valuable_items'] = self.you.savings.asset_balance
+                savings['bank_balance'] = self.you.savings.bank_balance
+                savings['investment_balance'] = self.you.savings.investment_balance
+                savings['credit_balance']  = self.you.savings.credit_balance
+                savings['asset_balance'] = self.you.savings.asset_balance
                 d['you']['savings'] = savings
 
             if self.you.income:
@@ -245,10 +245,10 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
             if self.partner:
                 if self.partner.savings:
                     partner_savings = {}
-                    partner_savings['savings'] = self.partner.savings.bank_balance
-                    partner_savings['investments'] = self.partner.savings.investment_balance
-                    partner_savings['money_owed']  = self.partner.savings.credit_balance
-                    partner_savings['valuable_items'] = self.partner.savings.asset_balance
+                    partner_savings['bank_balance'] = self.partner.savings.bank_balance
+                    partner_savings['investment_balance'] = self.partner.savings.investment_balance
+                    partner_savings['credit_balance']  = self.partner.savings.credit_balance
+                    partner_savings['asset_balance'] = self.partner.savings.asset_balance
                     d['partner']['savings'] = partner_savings
 
                 if self.partner.income:

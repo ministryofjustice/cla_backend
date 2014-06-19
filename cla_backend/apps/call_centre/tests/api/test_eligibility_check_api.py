@@ -76,3 +76,11 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, EligibilityCheck
         )
         # TODO: needs more checks
         self.assertEqual(response.data['has_partner'], None)
+
+    def test_check_validate_api_method_works(self):
+        # actual testing of 'validate' is done in model tests.
+        response = self.client.get(self.detail_url + 'validate/', {}, format='json',
+                                   HTTP_AUTHORIZATION=self.get_http_authorization())
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, {'warnings': {}})

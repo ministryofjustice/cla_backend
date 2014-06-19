@@ -143,7 +143,7 @@ class ValidateModelMixin(models.Model):
         dependencies = self.get_dependencies()
         warnings = {}
         for dep in dependencies:
-            if not getattrd(self, dep):
+            if not getattrd(self, dep, None):
                 if '__' in dep:
                     levels = dep.split('__')
                     current = warnings

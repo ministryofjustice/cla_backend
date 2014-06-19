@@ -62,6 +62,11 @@ class EligibilityCheckViewSet(
 
     lookup_field = 'reference'
 
+    @link()
+    def validate(self, request, **kwargs):
+        obj = self.get_object()
+        return DRFResponse(obj.validate())
+
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,

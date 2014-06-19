@@ -1,6 +1,7 @@
 import logging
 import datetime
 import uuid
+from call_centre.utils import getattrd
 
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -122,7 +123,41 @@ class Person(TimeStampedModel):
             deductions=deductions)
 
 
-class EligibilityCheck(TimeStampedModel):
+class ValidateModelMixin(models.Model):
+
+    class Meta:
+        abstract = True
+
+
+    def get_dependencies(self):
+        """
+        implement this in the model class that you
+        use the mixin inside of.
+        :return: a set of fields that are required given
+        the current state of the saved object. You can reference
+        nested fields by using __ notation. e.g. `partner__income`
+        """
+        raise NotImplementedError()
+
+    def validate(self):
+        dependencies = self.get_dependencies()
+        warnings = {}
+        for dep in dependencies:
+            if not getattrd(self, dep):
+                if '__' in dep:
+                    levels = dep.split('__')
+                    current = warnings
+                    for level in levels:
+                        if not level == levels[-1]:
+                            current = warnings.get(level, {})
+                            warnings[level]= current
+                        else:
+                            current[level] = ['Field "%s" is required' % level]
+                else:
+                    warnings[dep] = ['Field "%s" is required' % dep]
+        return {"warnings": warnings}
+
+class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     reference = UUIDField(auto=True, unique=True)
 
     category = models.ForeignKey(Category, blank=True, null=True)
@@ -143,6 +178,22 @@ class EligibilityCheck(TimeStampedModel):
     # need to be moved into graph/questions format soon
     is_you_or_your_partner_over_60 = models.NullBooleanField(default=None)
     has_partner = models.NullBooleanField(default=None)
+
+
+    def get_dependencies(self):
+        deps =  {'category',
+                'you__income',
+                'you__savings',
+                'you__deductions'}
+
+        if self.has_partner:
+            deps.update({
+                'partner__income',
+                'partner__savings',
+                'partner__deductions'
+            })
+
+        return deps
 
     def to_case_data(self):
         d = {}
@@ -222,6 +273,7 @@ class EligibilityCheck(TimeStampedModel):
         d['facts']['is_partner_opponent'] = False
 
         return CaseData(**d)
+
 
 
 class Property(TimeStampedModel):

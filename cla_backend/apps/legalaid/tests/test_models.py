@@ -321,7 +321,6 @@ class EligibilityCheckTestCase(TestCase):
                               'savings': ['Field "savings" is required']}}}
 
         self.assertEqual(expected, check.validate())
-        self.maxDiff = None
         check.you = None
         expected2 = {'warnings':
                          {

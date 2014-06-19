@@ -565,7 +565,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                         }
                     ],
                     'deductions': [
-                        {                         
+                        {
                             'criminal_legalaid_contributions': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ]
@@ -585,7 +585,7 @@ class EligibilityCheckTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                         }
                     ],
                     'deductions': [
-                        {   
+                        {
                             'criminal_legalaid_contributions': [u'Ensure this value is greater than or equal to 0.'],
                         }
                     ]

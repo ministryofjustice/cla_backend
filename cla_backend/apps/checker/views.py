@@ -5,22 +5,19 @@ from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, mixins
 
 from core.viewsets import IsEligibleActionViewSetMixin
-from legalaid.models import Category, EligibilityCheck, Property, Case
+from legalaid.models import EligibilityCheck, Property, Case
+from legalaid.views import BaseCategoryViewSet
 
 from .serializers import EligibilityCheckSerializer, \
-    PropertySerializer, CaseSerializer, CategorySerializer
+    PropertySerializer, CaseSerializer
 
 
 class PublicAPIViewSetMixin(object):
     permission_classes = (AllowAny,)
 
 
-class CategoryViewSet(PublicAPIViewSetMixin,
-                      viewsets.ReadOnlyModelViewSet):
-    model = Category
-    serializer_class = CategorySerializer
-
-    lookup_field = 'code'
+class CategoryViewSet(PublicAPIViewSetMixin, BaseCategoryViewSet):
+    pass
 
 
 class EligibilityCheckViewSet(

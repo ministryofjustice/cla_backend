@@ -7,16 +7,10 @@ from legalaid.models import EligibilityCheck
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
-    CaseLogSerializerBase, CaseLogTypeSerializerBase, \
+    CaseSerializerBase, ProviderSerializerBase, CaseLogSerializerBase, \
     OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase
 
 from .models import Operator
-
-
-class CategorySerializer(CategorySerializerBase):
-    class Meta(CategorySerializerBase.Meta):
-        fields = ('code', 'name', 'description')
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -108,9 +102,7 @@ class CaseLogSerializer(CaseLogSerializerBase):
 
 
 class CaseSerializer(CaseSerializerBase):
-    eligibility_check = UUIDSerializer(
-            slug_field='reference',
-            default=lambda: EligibilityCheck.objects.create().reference)
+    eligibility_check = UUIDSerializer(slug_field='reference', required=False)
 
     personal_details = UUIDSerializer(required=False, slug_field='reference')
 

@@ -15,6 +15,7 @@ from .models import Category, Property, EligibilityCheck, Income, \
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
+        fields = ('code', 'name', 'description')
 
 
 class CaseLogTypeSerializerBase(serializers.HyperlinkedModelSerializer):

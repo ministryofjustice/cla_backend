@@ -9,13 +9,14 @@ from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from core.viewsets import IsEligibleActionViewSetMixin
-from legalaid.models import Category, EligibilityCheck, Case, CaseLog, CaseLogType, \
+from legalaid.models import EligibilityCheck, Case, CaseLog, CaseLogType, \
     PersonalDetails
-from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
+from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
+    BaseOutcomeCodeViewSet, BaseCategoryViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
-from .serializers import EligibilityCheckSerializer, CategorySerializer, \
+from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm, \
@@ -26,15 +27,13 @@ from .models import Operator
 class CallCentrePermissionsViewSetMixin(object):
     permission_classes = (CallCentreClientIDPermission,)
 
+
 class CallCentreManagerPermissionsViewSetMixin(object):
     permission_classes = (CallCentreClientIDPermission, OperatorManagerPermission)
 
-class CategoryViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
-    model = Category
-    serializer_class = CategorySerializer
 
-    lookup_field = 'code'
-
+class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
+    pass
 
 class CaseLogTypeViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = CaseLogType
@@ -184,8 +183,6 @@ class CaseViewSet(
         return DRFResponse(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
-
-
 
     @action()
     def decline_all_specialists(self, request, reference=None, **kwargs):

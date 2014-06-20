@@ -128,6 +128,8 @@ class CaseSerializer(CaseSerializerBase):
             default=lambda: EligibilityCheck.objects.create().reference)
 
     personal_details = UUIDSerializer(required=False, slug_field='reference')
+    thirdparty_details = UUIDSerializer(required=False, slug_field='reference')
+    adaptation_details = UUIDSerializer(required=False, slug_field='reference')
 
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)
@@ -145,9 +147,10 @@ class CaseSerializer(CaseSerializerBase):
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
-            'eligibility_check', 'personal_details',
-            'reference', 'created', 'modified', 'created_by', 'state',
-            'provider', 'caseoutcome_set', 'notes', 'provider_notes', 'in_scope', 'full_name'
+            'eligibility_check', 'personal_details', 'reference', 'created',
+            'modified', 'created_by', 'state', 'provider', 'caseoutcome_set',
+            'notes', 'provider_notes', 'in_scope', 'full_name', 'thirdparty_details',
+            'adaptation_details'
         )
 
 

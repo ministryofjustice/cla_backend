@@ -1,3 +1,5 @@
+from core import fields
+from django.db import models
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
@@ -5,12 +7,22 @@ from core.serializers import UUIDSerializer
 from cla_provider.models import Provider, OutOfHoursRota
 
 from cla_common.money_interval.models import MoneyInterval
-from cla_common.money_interval.serializers import MoneyIntervalModelSerializerMixin
-
+from cla_common.money_interval.serializers import \
+    MoneyIntervalModelSerializerMixin
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, CaseLog, CaseLogType
 
+class NullBooleanModelSerializerMixin(object):
+    def __init__(self, *args, **kwargs):
+        # add a model serializer which is used throughout this project
+        self.field_mapping = self.field_mapping.copy()
+        self.field_mapping[models.NullBooleanField] = fields.NullBooleanField
+        super(NullBooleanModelSerializerMixin, self).__init__(*args, **kwargs)
+
+class ClaModelSerializer(MoneyIntervalModelSerializerMixin,
+                         NullBooleanModelSerializerMixin, ModelSerializer):
+    pass
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -18,7 +30,7 @@ class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
         fields = ('code', 'name', 'description')
 
 
-class CaseLogTypeSerializerBase(serializers.HyperlinkedModelSerializer):
+class CaseLogTypeSerializerBase(ClaModelSerializer):
     class Meta:
         model = CaseLogType
         fields = ('code', 'description')
@@ -28,8 +40,8 @@ class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Provider
 
-class OutOfHoursRotaSerializerBase(serializers.ModelSerializer):
 
+class OutOfHoursRotaSerializerBase(ClaModelSerializer):
     category = serializers.SlugRelatedField(slug_field='code')
     provider = serializers.PrimaryKeyRelatedField()
 
@@ -37,15 +49,10 @@ class OutOfHoursRotaSerializerBase(serializers.ModelSerializer):
         model = OutOfHoursRota
 
 
-class PropertySerializerBase(serializers.ModelSerializer):
+class PropertySerializerBase(ClaModelSerializer):
     class Meta:
         model = Property
         fields = ()
-
-
-class ClaModelSerializer(MoneyIntervalModelSerializerMixin, ModelSerializer):
-    pass
-
 
 class TotalsModelSerializer(ClaModelSerializer):
     total_fields = set()
@@ -108,7 +115,7 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
         fields = ()
 
 
-class PersonSerializerBase(serializers.ModelSerializer):
+class PersonSerializerBase(ClaModelSerializer):
     income = IncomeSerializerBase(required=False)
     savings = SavingsSerializerBase(required=False)
     deductions = DeductionsSerializerBase(required=False)
@@ -118,11 +125,12 @@ class PersonSerializerBase(serializers.ModelSerializer):
         fields = ()
 
 
-class EligibilityCheckSerializerBase(serializers.ModelSerializer):
+class EligibilityCheckSerializerBase(ClaModelSerializer):
     category = serializers.SlugRelatedField(slug_field='code', required=False)
     your_problem_notes = serializers.CharField(max_length=500, required=False)
     notes = serializers.CharField(max_length=500, required=False)
-    property_set = PropertySerializerBase(allow_add_remove=True, many=True, required=False)
+    property_set = PropertySerializerBase(allow_add_remove=True, many=True,
+                                          required=False)
     you = PersonSerializerBase(required=False)
     partner = PersonSerializerBase(required=False)
 
@@ -131,13 +139,13 @@ class EligibilityCheckSerializerBase(serializers.ModelSerializer):
         fields = ()
 
 
-class CaseLogSerializerBase(serializers.ModelSerializer):
+class CaseLogSerializerBase(ClaModelSerializer):
     class Meta:
         model = CaseLog
         fields = None
 
 
-class CaseSerializerBase(serializers.ModelSerializer):
+class CaseSerializerBase(ClaModelSerializer):
     eligibility_check = UUIDSerializer(slug_field='reference')
     personal_details = PersonalDetailsSerializerBase()
     notes = serializers.CharField(max_length=500, required=False)
@@ -151,7 +159,8 @@ class CaseSerializerBase(serializers.ModelSerializer):
 
 class ExtendedUserSerializerBase(serializers.ModelSerializer):
     username = serializers.CharField(read_only=True, source='user.username')
-    first_name = serializers.CharField(read_only=True, source='user.first_name')
+    first_name = serializers.CharField(read_only=True,
+                                       source='user.first_name')
     last_name = serializers.CharField(read_only=True, source='user.last_name')
     email = serializers.CharField(read_only=True, source='user.email')
 

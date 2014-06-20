@@ -48,7 +48,6 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, EligibilityCheck
         self.assertEligibilityCheckEqual(response.data, self.check)
         self.assertTrue(response.data['notes'] != data['notes'])
 
-    @skip("Don't want to test")
     def test_empty_fields(self):
         """
         Skipping because of a DRF bug.
@@ -75,7 +74,9 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, EligibilityCheck
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         # TODO: needs more checks
+
         self.assertEqual(response.data['has_partner'], None)
+        self.assertEqual(response.data['is_you_or_your_partner_over_60'], None)
 
     def test_check_validate_api_method_works(self):
         # actual testing of 'validate' is done in model tests.

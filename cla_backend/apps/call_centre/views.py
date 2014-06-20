@@ -10,7 +10,7 @@ from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from core.viewsets import IsEligibleActionViewSetMixin
 from legalaid.models import Category, EligibilityCheck, Case, CaseLog, CaseLogType, \
-    PersonalDetails, ThirdPartyDetails
+    PersonalDetails, ThirdPartyDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
 
 from .permissions import CallCentreClientIDPermission, \
@@ -18,9 +18,10 @@ from .permissions import CallCentreClientIDPermission, \
 from .serializers import EligibilityCheckSerializer, CategorySerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer, \
-    ThirdPartyDetailsSerializer
+    ThirdPartyDetailsSerializer, AdaptationDetailsSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm, DeclineAllSpecialistsCaseForm,\
-    CaseAssignDeferForm, AssociatePersonalDetailsCaseForm, AssociateThirdPartyDetailsCaseForm
+    CaseAssignDeferForm, AssociatePersonalDetailsCaseForm, AssociateThirdPartyDetailsCaseForm,\
+    AssociateAdaptationDetailsCaseForm
 from .models import Operator
 
 
@@ -237,6 +238,19 @@ class CaseViewSet(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
 
+    @action()
+    def associate_adaptation_details(self, request, *args, **kwargs):
+
+        obj = self.get_object()
+
+        form = AssociateAdaptationDetailsCaseForm(case=obj, data=request.DATA)
+        if form.is_valid():
+            form.save(request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Provider
     serializer_class = ProviderSerializer
@@ -284,4 +298,13 @@ class ThirdPartyDetailsViewSet(CallCentrePermissionsViewSetMixin,
                              viewsets.GenericViewSet):
     model = ThirdPartyDetails
     serializer_class = ThirdPartyDetailsSerializer
+    lookup_field = 'reference'
+
+class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,
+                             mixins.CreateModelMixin,
+                             mixins.UpdateModelMixin,
+                             mixins.RetrieveModelMixin,
+                             viewsets.GenericViewSet):
+    model = AdaptationDetails
+    serializer_class = AdaptationDetailsSerializer
     lookup_field = 'reference'

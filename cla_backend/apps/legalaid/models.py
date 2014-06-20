@@ -18,7 +18,7 @@ from model_utils.models import TimeStampedModel
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, CASE_STATES, THIRDPARTY_REASON,\
-                                 THIRDPARTY_RELATIONSHIP
+                                 THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES
 
 
 from legalaid.exceptions import InvalidMutationException
@@ -99,6 +99,15 @@ class ThirdPartyDetails(TimeStampedModel):
     pass_phrase = models.CharField(max_length=255)
     reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON)
     personal_relationship = models.CharField(max_length=30, choices=THIRDPARTY_RELATIONSHIP)
+    reference = UUIDField(auto=True, unique=True)
+
+class AdaptationDetails(TimeStampedModel):
+    bsl_webcam = models.BooleanField(default=False)
+    minicom = models.BooleanField(default=False)
+    text_relay = models.BooleanField(default=False)
+    skype_webcam = models.BooleanField(default=False)
+    language = models.CharField(max_length=30, choices=ADAPTATION_LANGUAGES)
+    notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
 
 class Person(TimeStampedModel):
@@ -276,6 +285,7 @@ class Case(TimeStampedModel):
     in_scope = models.NullBooleanField(default=None, null=True, blank=True)
     laa_reference = models.BigIntegerField(null=True, blank=True, unique=True)
     thirdparty_details = models.ForeignKey('ThirdPartyDetails', blank=True, null=True)
+    adaptation_details = models.ForeignKey('AdaptationDetails', blank=True, null=True)
 
 
     def _set_reference_if_necessary(self):
@@ -309,6 +319,10 @@ class Case(TimeStampedModel):
 
     def associate_thirdparty_details(self, ref):
         self.thirdparty_details = ThirdPartyDetails.objects.get(reference=ref)
+        self.save()
+
+    def associate_adaptation_details(self, ref):
+        self.adaptation_details = AdaptationDetails.objects.get(reference=ref)
         self.save()
 
     def lock(self, user, save=True):

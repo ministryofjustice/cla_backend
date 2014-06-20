@@ -10,7 +10,7 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
     CaseLogSerializerBase, CaseLogTypeSerializerBase, \
     OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase, \
-    ThirdPartyDetailsSerializerBase
+    ThirdPartyDetailsSerializerBase, AdaptationDetailsSerializerBase
 
 from .models import Operator
 
@@ -103,6 +103,13 @@ class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
         fields = (
             'reference', 'personal_details', 'pass_phrase', 'reason',
             'personal_relationship'
+        )
+
+class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
+    class Meta(AdaptationDetailsSerializerBase.Meta):
+        fields = (
+                'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
+                'language', 'notes', 'reference'
         )
 
 class CaseLogSerializer(CaseLogSerializerBase):

@@ -37,7 +37,8 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
              'created', 'modified', 'state', 'created_by',
-             'provider', 'caseoutcome_set', 'notes', 'provider_notes', 'in_scope', 'full_name']
+             'provider', 'caseoutcome_set', 'notes', 'provider_notes', 'in_scope',
+             'full_name', 'thirdparty_details', 'adaptation_details']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -822,7 +823,7 @@ class ThirdPartyDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'personal_relationship': [u'Select a valid choice. XXXXXXXXX is not one of the available choices.'],
             }
 
-        self.maxDiff = None
+#         self.maxDiff = None
         errors = response.data
         self.assertItemsEqual(
             errors.keys(), expected_errors.keys()
@@ -870,3 +871,106 @@ class ThirdPartyDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertThirdPartyDetailsCheckResponseKeys(response)
 
         self.assertThirdPartyDetailsEqual(response.data, check)
+
+class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
+
+    def assertAdaptationDetailsCheckResponseKeys(self, response):
+
+        self.assertItemsEqual(
+            response.data.keys(),
+            [ 'reference',
+              'bsl_webcam',
+              'minicom',
+              'text_relay',
+              'skype_webcam',
+              'language',
+              'notes'
+            ]
+        )
+
+    def setUp(self):
+        super(AdaptationDetailsTestCase, self).setUp()
+
+        self.list_url = reverse('call_centre:adaptationdetails-list')
+        self.personal_details_obj = make_recipe('legalaid.adaptation_details')
+        self.check = self.personal_details_obj
+        self.detail_url = reverse(
+            'call_centre:adaptationdetails-detail', args=(),
+            kwargs={'reference': unicode(self.personal_details_obj.reference)}
+        )
+
+    def _get_default_post_data(self):
+        return {'bsl_webcam' : True,
+                'minicom' : True,
+                'text_relay' : True,
+                'skype_webcam' : True,
+                'language' : 'WELSH',
+                'notes' : 'abc'
+                }
+
+    def _test_method_in_error(self, method, url):
+        
+        # most fields are optional and variable type is just evaluated
+        # by python rules to a boolean. i.e. passing strings etc. instead
+        # of a JS boolean will still be evaluated to True in python.
+        data={ 'language' : 'KLINGON' }
+
+
+        method_callable = getattr(self.client, method)
+        response = method_callable(url, data,
+                                   format='json',
+                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        expected_errors = {
+            'language' : [u'Select a valid choice. XXXXXXXXX is not one of the available choices.'],
+            }
+
+        self.maxDiff = None
+        errors = response.data
+        self.assertItemsEqual(
+            errors.keys(), expected_errors.keys()
+        )
+        self.assertItemsEqual(
+            errors,
+                expected_errors
+        )
+
+    def assertAdaptationDetailsEqual(self, data, obj):
+        if data is None or obj is None:
+            self.assertEqual(data, obj)
+        else:
+            for prop in ['bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
+                         'language','notes']:
+                #self.assertEqual(unicode(getattr(obj, prop)), data[prop])
+                self.assertEqual(obj[prop], data[prop])
+
+    def test_methods_not_allowed(self):
+        """
+        Ensure that we can't DELETE to list url
+        """
+        ### LIST
+        self._test_delete_not_allowed(self.list_url)
+
+    def test_methods_in_error(self):
+        self._test_method_in_error('post', self.list_url)
+        self._test_method_in_error('patch', self.detail_url)
+        self._test_method_in_error('put', self.detail_url)
+
+    # CREATE
+    def test_create_with_data(self):
+        """
+        check variables sent as same as those that return.
+        """
+        data = self._get_default_post_data()
+        check = self._get_default_post_data()
+
+        response = self.client.post(
+            self.list_url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        # check initial state is correct
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertAdaptationDetailsCheckResponseKeys(response)
+        self.assertAdaptationDetailsEqual(response.data, check)

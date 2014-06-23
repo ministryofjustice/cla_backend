@@ -8,11 +8,10 @@ from rest_framework.filters import OrderingFilter, SearchFilter, DjangoFilterBac
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
-from core.viewsets import IsEligibleActionViewSetMixin
 from legalaid.models import EligibilityCheck, Case, CaseLog, CaseLogType, \
     PersonalDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
-    BaseOutcomeCodeViewSet, BaseCategoryViewSet
+    BaseOutcomeCodeViewSet, BaseCategoryViewSet, BaseEligibilityCheckViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
@@ -51,16 +50,12 @@ class OutcomeCodeViewSet(
 
 class EligibilityCheckViewSet(
     CallCentrePermissionsViewSetMixin,
-    IsEligibleActionViewSetMixin,
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
+    BaseEligibilityCheckViewSet
 ):
-    model = EligibilityCheck
     serializer_class = EligibilityCheckSerializer
-
-    lookup_field = 'reference'
 
     @link()
     def validate(self, request, **kwargs):

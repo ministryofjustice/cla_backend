@@ -1,12 +1,16 @@
 from django.http import Http404
 
+from eligibility_calculator.calculator import EligibilityChecker
+from eligibility_calculator.exceptions import PropertyExpectedException
+
 from rest_framework import viewsets, mixins, status
+from rest_framework.decorators import action
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import DjangoFilterBackend
 
 from legalaid.serializers import CaseLogTypeSerializerBase, CategorySerializerBase
 from legalaid.constants import CASELOGTYPE_SUBTYPES
-from legalaid.models import CaseLogType, Category
+from legalaid.models import CaseLogType, Category, EligibilityCheck
 
 from .exceptions import InvalidMutationException
 
@@ -80,3 +84,26 @@ class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CategorySerializerBase
 
     lookup_field = 'code'
+
+
+class BaseEligibilityCheckViewSet(viewsets.GenericViewSet):
+    model = EligibilityCheck
+    lookup_field = 'reference'
+
+    @action()
+    def is_eligible(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        case_data = obj.to_case_data()
+        ec = EligibilityChecker(case_data)
+
+        response = None
+        try:
+            is_eligible = ec.is_eligible()
+            response = 'yes' if is_eligible else 'no'
+        except PropertyExpectedException as e:
+            response = 'unknown'
+
+        return DRFResponse({
+            'is_eligible': response
+        })

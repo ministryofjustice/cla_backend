@@ -9,32 +9,32 @@ from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from core.viewsets import IsEligibleActionViewSetMixin
-from legalaid.models import Category, EligibilityCheck, Case, CaseLog, CaseLogType, \
+from legalaid.models import EligibilityCheck, Case, CaseLog, CaseLogType, \
     PersonalDetails
-from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
+from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
+    BaseOutcomeCodeViewSet, BaseCategoryViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
-from .serializers import EligibilityCheckSerializer, CategorySerializer, \
+from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm, \
-    DeclineAllSpecialistsCaseForm, CaseAssignDeferForm, AssociatePersonalDetailsCaseForm
+    DeclineAllSpecialistsCaseForm, CaseAssignDeferForm, \
+    AssociatePersonalDetailsCaseForm, AssociateEligibilityCheckCaseForm
 from .models import Operator
 
 
 class CallCentrePermissionsViewSetMixin(object):
     permission_classes = (CallCentreClientIDPermission,)
 
+
 class CallCentreManagerPermissionsViewSetMixin(object):
     permission_classes = (CallCentreClientIDPermission, OperatorManagerPermission)
 
-class CategoryViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
-    model = Category
-    serializer_class = CategorySerializer
 
-    lookup_field = 'code'
-
+class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
+    pass
 
 class CaseLogTypeViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = CaseLogType
@@ -61,6 +61,11 @@ class EligibilityCheckViewSet(
     serializer_class = EligibilityCheckSerializer
 
     lookup_field = 'reference'
+
+    @link()
+    def validate(self, request, **kwargs):
+        obj = self.get_object()
+        return DRFResponse(obj.validate())
 
 
 class CaseViewSet(
@@ -125,7 +130,6 @@ class CaseViewSet(
 
         return DRFResponse(suggestions)
 
-
     @action()
     def assign(self, request, reference=None, **kwargs):
         """
@@ -185,8 +189,6 @@ class CaseViewSet(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
 
-
-
     @action()
     def decline_all_specialists(self, request, reference=None, **kwargs):
         return self._state_form_action(request, DeclineAllSpecialistsCaseForm)
@@ -216,6 +218,23 @@ class CaseViewSet(
         obj = self.get_object()
 
         form = AssociatePersonalDetailsCaseForm(case=obj, data=request.DATA)
+        if form.is_valid():
+            form.save(request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
+    @action()
+    def associate_eligibility_check(self, request, *args, **kwargs):
+        """
+        Associates a case with a eligibility_check object. Will throw an error
+        if the case already has a eligibility_check object associated.
+        """
+
+        obj = self.get_object()
+
+        form = AssociateEligibilityCheckCaseForm(case=obj, data=request.DATA)
         if form.is_valid():
             form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)

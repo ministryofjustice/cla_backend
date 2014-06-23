@@ -1,6 +1,7 @@
 import logging
 import datetime
 import uuid
+from call_centre.utils import getattrd
 
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -57,26 +58,26 @@ class Category(TimeStampedModel):
 
 
 class Savings(TimeStampedModel):
-    bank_balance = MoneyField(default=0)
-    investment_balance = MoneyField(default=0)
-    asset_balance = MoneyField(default=0)
-    credit_balance = MoneyField(default=0)
+    bank_balance = MoneyField(default=None, null=True, blank=True)
+    investment_balance = MoneyField(default=None, null=True, blank=True)
+    asset_balance = MoneyField(default=None, null=True, blank=True)
+    credit_balance = MoneyField(default=None, null=True, blank=True)
 
 
 class Income(TimeStampedModel):
-    earnings = MoneyIntervalField()
-    other_income = MoneyIntervalField()
-    self_employed = models.BooleanField(default=False)
+    earnings = MoneyIntervalField(default=None, null=True, blank=True)
+    other_income = MoneyIntervalField(default=None, null=True, blank=True)
+    self_employed = models.NullBooleanField(default=None)
 
 
 class Deductions(TimeStampedModel):
-    income_tax = MoneyIntervalField()
-    national_insurance = MoneyIntervalField()
-    maintenance = MoneyIntervalField()
-    childcare = MoneyIntervalField()
-    mortgage = MoneyIntervalField()
-    rent = MoneyIntervalField()
-    criminal_legalaid_contributions = MoneyField(default=0)
+    income_tax = MoneyIntervalField(default=None, null=True, blank=True)
+    national_insurance = MoneyIntervalField(default=None, null=True, blank=True)
+    maintenance = MoneyIntervalField(default=None, null=True, blank=True)
+    childcare = MoneyIntervalField(default=None, null=True, blank=True)
+    mortgage = MoneyIntervalField(default=None, null=True, blank=True)
+    rent = MoneyIntervalField(default=None, null=True, blank=True)
+    criminal_legalaid_contributions = MoneyField(default=None, null=True, blank=True)
 
 
 class PersonalDetails(TimeStampedModel):
@@ -122,7 +123,41 @@ class Person(TimeStampedModel):
             deductions=deductions)
 
 
-class EligibilityCheck(TimeStampedModel):
+class ValidateModelMixin(models.Model):
+
+    class Meta:
+        abstract = True
+
+
+    def get_dependencies(self):
+        """
+        implement this in the model class that you
+        use the mixin inside of.
+        :return: a set of fields that are required given
+        the current state of the saved object. You can reference
+        nested fields by using __ notation. e.g. `partner__income`
+        """
+        raise NotImplementedError()
+
+    def validate(self):
+        dependencies = self.get_dependencies()
+        warnings = {}
+        for dep in dependencies:
+            if not getattrd(self, dep, None):
+                if '__' in dep:
+                    levels = dep.split('__')
+                    current = warnings
+                    for level in levels:
+                        if not level == levels[-1]:
+                            current = warnings.get(level, {})
+                            warnings[level]= current
+                        else:
+                            current[level] = ['Field "%s" is required' % level]
+                else:
+                    warnings[dep] = ['Field "%s" is required' % dep]
+        return {"warnings": warnings}
+
+class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     reference = UUIDField(auto=True, unique=True)
 
     category = models.ForeignKey(Category, blank=True, null=True)
@@ -134,17 +169,50 @@ class EligibilityCheck(TimeStampedModel):
         max_length=50, default=ELIGIBILITY_STATES.MAYBE,
         choices=ELIGIBILITY_STATES.CHOICES
     )
-    dependants_young = models.PositiveIntegerField(default=0)
-    dependants_old = models.PositiveIntegerField(default=0)
-    on_passported_benefits = models.BooleanField(default=False)
-    on_nass_benefits = models.BooleanField(default=False)
+    dependants_young = models.PositiveIntegerField(null=True, blank=True,
+        default=None, validators=[MaxValueValidator(50)]
+    )
+    dependants_old = models.PositiveIntegerField(null=True, blank=True,
+        default=None, validators=[MaxValueValidator(50)]
+    )
+    on_passported_benefits = models.NullBooleanField(default=None)
+    on_nass_benefits = models.NullBooleanField(default=None)
 
 
     # need to be moved into graph/questions format soon
-    is_you_or_your_partner_over_60 = models.BooleanField(default=False)
-    has_partner = models.BooleanField(default=False)
+    is_you_or_your_partner_over_60 = models.NullBooleanField(default=None)
+    has_partner = models.NullBooleanField(default=None)
+
+
+    def get_dependencies(self):
+        deps =  {'category',
+                'you__income',
+                'you__savings',
+                'you__deductions'}
+
+        if self.has_partner:
+            deps.update({
+                'partner__income',
+                'partner__savings',
+                'partner__deductions'
+            })
+
+        return deps
 
     def to_case_data(self):
+        def compose_dict(model=self, props=[]):
+            if not model:
+                return None
+
+            obj = {}
+            for prop in props:
+                value = getattr(model, prop)
+                if value != None:
+                    if isinstance(value, MoneyInterval):
+                        value = value.as_monthly()
+                    obj[prop] = value
+            return obj
+
         d = {}
 
         if self.category:
@@ -154,69 +222,43 @@ class EligibilityCheck(TimeStampedModel):
             'value', 'mortgage_left', 'share', 'disputed'
         )
 
-        d['facts'] = {}
-        d['facts']['dependant_children'] = self.dependants_old + self.dependants_young
-        d['facts']['has_partner'] = self.has_partner
-        d['facts']['is_you_or_your_partner_over_60'] = self.is_you_or_your_partner_over_60
-        d['facts']['on_passported_benefits'] = self.on_passported_benefits
-        d['facts']['on_nass_benefits'] = self.on_nass_benefits
+        d['facts'] = compose_dict(props=[
+            'dependants_old', 'dependants_young', 'has_partner',
+            'is_you_or_your_partner_over_60', 'on_passported_benefits',
+            'on_nass_benefits'
+        ])
 
-        d['you'] = {}
         if self.you:
-            if self.you.savings:
-                savings = {}
-                savings['bank_balance'] = self.you.savings.bank_balance
-                savings['investment_balance'] = self.you.savings.investment_balance
-                savings['credit_balance']  = self.you.savings.credit_balance
-                savings['asset_balance'] = self.you.savings.asset_balance
-                d['you']['savings'] = savings
+            you_props = {
+                'savings': compose_dict(self.you.savings, [
+                    'bank_balance', 'investment_balance', 'credit_balance',
+                    'asset_balance'
+                ]),
+                'income': compose_dict(self.you.income, [
+                    'earnings', 'other_income', 'self_employed'
+                ]),
+                'deductions': compose_dict(self.you.deductions, [
+                    'income_tax', 'national_insurance', 'maintenance',
+                    'childcare', 'mortgage', 'rent', 'criminal_legalaid_contributions'
+                ])
+            }
+            d['you'] = {prop:value for prop, value in you_props.items() if value}
 
-            if self.you.income:
-                income = {}
-                income['earnings'] = self.you.income.earnings.as_monthly()
-                income['other_income'] = self.you.income.other_income.as_monthly()
-                income['self_employed'] = self.you.income.self_employed or False
-                d['you']['income'] = income
-
-            if self.you.deductions:
-                deductions = {}
-                deductions['income_tax'] = self.you.deductions.income_tax.as_monthly()
-                deductions['national_insurance']  = self.you.deductions.national_insurance.as_monthly()
-                deductions['maintenance'] = self.you.deductions.maintenance.as_monthly()
-                deductions['childcare'] = self.you.deductions.childcare.as_monthly()
-                deductions['mortgage'] = self.you.deductions.mortgage.as_monthly()
-                deductions['rent'] = self.you.deductions.rent.as_monthly()
-                deductions['criminal_legalaid_contributions'] = self.you.deductions.criminal_legalaid_contributions
-                d['you']['deductions'] = deductions
-
-        if self.has_partner:
-            d['partner'] = {}
-            if self.partner:
-                if self.partner.savings:
-                    partner_savings = {}
-                    partner_savings['bank_balance'] = self.partner.savings.bank_balance
-                    partner_savings['investment_balance'] = self.partner.savings.investment_balance
-                    partner_savings['credit_balance']  = self.partner.savings.credit_balance
-                    partner_savings['asset_balance'] = self.partner.savings.asset_balance
-                    d['partner']['savings'] = partner_savings
-
-                if self.partner.income:
-                    partner_income = {}
-                    partner_income['earnings'] = self.partner.income.earnings.as_monthly()
-                    partner_income['other_income'] = self.partner.income.other_income.as_monthly()
-                    partner_income['self_employed'] = self.partner.income.self_employed
-                    d['partner']['income'] = partner_income
-
-                if self.partner.deductions:
-                    partner_deductions = {}
-                    partner_deductions['income_tax'] = self.partner.deductions.income_tax.as_monthly()
-                    partner_deductions['national_insurance']  = self.partner.deductions.national_insurance.as_monthly()
-                    partner_deductions['maintenance'] = self.partner.deductions.maintenance.as_monthly()
-                    partner_deductions['childcare'] = self.partner.deductions.childcare.as_monthly()
-                    partner_deductions['mortgage'] = self.partner.deductions.mortgage.as_monthly()
-                    partner_deductions['rent'] = self.partner.deductions.rent.as_monthly()
-                    partner_deductions['criminal_legalaid_contributions'] = self.partner.deductions.criminal_legalaid_contributions
-                    d['partner']['deductions'] = partner_deductions
+        if self.has_partner and self.partner:
+            partner_props = {
+                'savings': compose_dict(self.partner.savings, [
+                    'bank_balance', 'investment_balance', 'credit_balance',
+                    'asset_balance'
+                ]),
+                'income': compose_dict(self.partner.income, [
+                    'earnings', 'other_income', 'self_employed'
+                ]),
+                'deductions': compose_dict(self.partner.deductions, [
+                    'income_tax', 'national_insurance', 'maintenance',
+                    'childcare', 'mortgage', 'rent', 'criminal_legalaid_contributions'
+                ])
+            }
+            d['partner'] = {prop:value for prop, value in partner_props.items() if value}
 
         # Fake
         d['facts']['is_partner_opponent'] = False
@@ -224,12 +266,13 @@ class EligibilityCheck(TimeStampedModel):
         return CaseData(**d)
 
 
+
 class Property(TimeStampedModel):
-    value = MoneyField(default=0)
-    mortgage_left = MoneyField(default=0)
-    share = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
+    value = MoneyField(default=None, null=True, blank=True)
+    mortgage_left = MoneyField(default=None, null=True, blank=True)
+    share = models.PositiveIntegerField(default=None, validators=[MaxValueValidator(100)], null=True, blank=True)
     eligibility_check = models.ForeignKey(EligibilityCheck)
-    disputed = models.BooleanField(default=False)
+    disputed = models.NullBooleanField(default=None)
 
     class Meta:
         verbose_name_plural = "properties"
@@ -251,7 +294,7 @@ class Property(TimeStampedModel):
 
 class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
-    eligibility_check = models.OneToOneField(EligibilityCheck)
+    eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
     personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
@@ -297,6 +340,10 @@ class Case(TimeStampedModel):
 
     def associate_personal_details(self, ref):
         self.personal_details = PersonalDetails.objects.get(reference=ref)
+        self.save()
+
+    def associate_eligibility_check(self, ref):
+        self.eligibility_check = EligibilityCheck.objects.get(reference=ref)
         self.save()
 
     def lock(self, user, save=True):

@@ -8,7 +8,8 @@ case_data_dict = {
         'on_nass_benefits' : False,
         'has_partner': False,
         'is_partner_opponent': False,
-        'dependant_children': 0
+        'dependants_young': 0,
+        'dependants_old': 0
     },
     'you': {
         'income': {

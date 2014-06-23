@@ -91,7 +91,8 @@ class Facts(ModelMixin, object):
         'on_nass_benefits': None,
         'has_partner': None,
         'is_partner_opponent': None,
-        'dependant_children': None
+        'dependants_old': None,
+        'dependants_young': None
     }
 
     @property
@@ -105,6 +106,10 @@ class Facts(ModelMixin, object):
                 return True
         return False
 
+    @property
+    def dependant_children(self):
+        return self.dependants_old + self.dependants_young
+
 
 class CaseData(ModelMixin, object):
 
@@ -115,83 +120,6 @@ class CaseData(ModelMixin, object):
         'partner': Person,
         'property_data': None
     }
-
-    # PROPERTY_SET = set([
-    #     'category',
-    #     'facts',
-    #     #         'is_you_or_your_partner_over_60': None,
-    #     #         'on_passported_benefits': None,
-    #     #         'has_partner': None,
-    #     #         'is_partner_opponent': None,
-    #     #         'dependant_children': None
-    #      'you',
-    # # : {
-    # #         # income
-    # #         {
-    # #             'earnings',
-    # #             'other_income',
-    # #             'self_employed',
-    # #             },
-    # #         # savings
-    # #         {
-    # #             'savings',
-    # #             'investment_balance',
-    # #             'credit_balance' ,
-    # #             'asset_balance',
-    # #             },
-    # #         },
-    #             # 'deductions',
-    #             #         {
-    #             #             'income_tax_and_ni': None,
-    #             #             'maintenance': None,
-    #             #             'mortgage_or_rent': None,
-    #             #             'criminal_legalaid_contributions': None
-    #             #         },
-    #     'partner',
-    # #         {
-    # #             'income':
-    # #                 {
-    # #                     'partner_earnings': None,
-    # #                     'partner_other_income': None,
-    # #                     'partner_self_employed': None,
-    # #                 },
-    # #             'savings':
-    # #                 {
-    # #                     'partner_savings': None,
-    # #                     'partner_investment_balance': None,
-    # #                     'partner_credit_balance': None,
-    # #                     'partner_asset_balance': None,
-    # #                 },
-
-    #                 # 'deductions',
-    #                 #         {
-    #                 #             'income_tax_and_ni': None,
-    #                 #             'maintenance': None,
-    #                 #             'mortgage_or_rent': None,
-    #                 #             'criminal_legalaid_contributions': None
-    #                 #         },
-    # #             },
-    # #     # properties
-    #     'property_data'
-    #      ])
-
-
-    # def __getattr__(self, name):
-    #     if name in self.PROPERTY_SET:
-    #         raise exceptions.PropertyExpectedException(
-    #             "'%s' object requires attribute '%s' and was not given at __init__" % (self.__class__.__name__, name))
-
-    #     raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
-
-    # def __init__(self, **kwargs):
-    #     for kw, v in kwargs.items():
-    #         if kw in self.PROPERTY_SET:
-    #             setattr(self, kw, v)
-    #         else:
-    #             raise exceptions.PropertyExpectedException('{kw} is not a valid property for Case Data'.format(kw=kw))
-
-    # # comes from Property model
-    # property_data = [('TODO value', 'TODO mortgage_left'), ('TODO value', 'TODO mortgage_left')]
 
     @property
     def liquid_capital(self):

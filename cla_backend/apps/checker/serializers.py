@@ -1,12 +1,7 @@
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, CategorySerializerBase
-
-
-class CategorySerializer(CategorySerializerBase):
-    class Meta(CategorySerializerBase.Meta):
-        fields = ('code', 'name', 'description')
+    CaseSerializerBase
 
 
 class PropertySerializer(PropertySerializerBase):

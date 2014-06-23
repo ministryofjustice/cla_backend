@@ -4,9 +4,9 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import DjangoFilterBackend
 
-from legalaid.serializers import CaseLogTypeSerializerBase
+from legalaid.serializers import CaseLogTypeSerializerBase, CategorySerializerBase
 from legalaid.constants import CASELOGTYPE_SUBTYPES
-from legalaid.models import CaseLogType
+from legalaid.models import CaseLogType, Category
 
 from .exceptions import InvalidMutationException
 
@@ -73,3 +73,10 @@ class BaseOutcomeCodeViewSet(
 
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('action_key',)
+
+
+class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    model = Category
+    serializer_class = CategorySerializerBase
+
+    lookup_field = 'code'

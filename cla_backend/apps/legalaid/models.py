@@ -220,9 +220,9 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
 
         # TODO what do we do when we get a different exception? (which shouldn't happen)
 
-    def save(self, *args, **kwargs):
+    def update_state(self):
         self.state = self._get_state()
-        super(EligibilityCheck, self).save(*args, **kwargs)
+        self.save()
 
     def to_case_data(self):
         def compose_dict(model=self, props=[]):

@@ -297,7 +297,7 @@ class EligibilityCheckTestCase(TestCase):
         self.assertDictEqual(expected2, check.validate())
 
     @mock.patch('legalaid.models.EligibilityChecker')
-    def test_change_state_when_saving(self, MockedEligibilityChecker):
+    def test_update_state(self, MockedEligibilityChecker):
         """
             calling .is_eligible() sequencially will:
 
@@ -313,18 +313,19 @@ class EligibilityCheckTestCase(TestCase):
 
         # 1. PropertyExpectedException => MAYBE
         check = make_recipe('legalaid.eligibility_check', state=ELIGIBILITY_STATES.MAYBE)
+        check.update_state()
         self.assertEqual(check.state, ELIGIBILITY_STATES.MAYBE)
 
         # 2. True => YES
-        check.save()
+        check.update_state()
         self.assertEqual(check.state, ELIGIBILITY_STATES.YES)
 
         # 3. False => NO
-        check.save()
+        check.update_state()
         self.assertEqual(check.state, ELIGIBILITY_STATES.NO)
 
         # 4. PropertyExpectedException => MAYBE
-        check.save()
+        check.update_state()
         self.assertEqual(check.state, ELIGIBILITY_STATES.MAYBE)
 
 

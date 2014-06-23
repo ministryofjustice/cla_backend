@@ -138,6 +138,10 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         model = EligibilityCheck
         fields = ()
 
+    def save(self, **kwargs):
+        super(EligibilityCheckSerializerBase, self).save(**kwargs)
+        self.object.update_state()
+
 
 class CaseLogSerializerBase(ClaModelSerializer):
     class Meta:

@@ -1,7 +1,8 @@
 import logging
 import datetime
 import uuid
-from call_centre.utils import getattrd
+from uuidfield import UUIDField
+from model_utils.models import TimeStampedModel
 
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -10,9 +11,10 @@ from django.db.models import F
 from django.utils.timezone import utc
 
 from eligibility_calculator.models import CaseData
-from uuidfield import UUIDField
+from eligibility_calculator.calculator import EligibilityChecker
+from eligibility_calculator.exceptions import PropertyExpectedException
 
-from model_utils.models import TimeStampedModel
+from call_centre.utils import getattrd
 
 # from jsonfield import JSONField
 
@@ -157,6 +159,7 @@ class ValidateModelMixin(models.Model):
                     warnings[dep] = ['Field "%s" is required' % dep]
         return {"warnings": warnings}
 
+
 class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     reference = UUIDField(auto=True, unique=True)
 
@@ -183,7 +186,6 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     is_you_or_your_partner_over_60 = models.NullBooleanField(default=None)
     has_partner = models.NullBooleanField(default=None)
 
-
     def get_dependencies(self):
         deps =  {'category',
                 'you__income',
@@ -198,6 +200,29 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
             })
 
         return deps
+
+    def _get_state(self):
+        """
+        Returns one of the ELIGIBILITY_STATES values depending on if the model
+        is eligible or not. If PropertyExpectedException is raised, it means
+        that we don't have enough data to determine the state so we set the
+        `state` property to MAYBE.
+        """
+        ec = EligibilityChecker(self.to_case_data())
+
+        try:
+            if ec.is_eligible():
+                return ELIGIBILITY_STATES.YES
+            else:
+                return ELIGIBILITY_STATES.NO
+        except PropertyExpectedException as e:
+            return ELIGIBILITY_STATES.MAYBE
+
+        # TODO what do we do when we get a different exception? (which shouldn't happen)
+
+    def save(self, *args, **kwargs):
+        self.state = self._get_state()
+        super(EligibilityCheck, self).save(*args, **kwargs)
 
     def to_case_data(self):
         def compose_dict(model=self, props=[]):

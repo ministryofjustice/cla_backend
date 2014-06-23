@@ -50,9 +50,8 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, EligibilityCheck
 
     def test_empty_fields(self):
         """
-        Skipping because of a DRF bug.
         When patching a NullBooleanField setting it to None, DRF saves it
-        as False value.
+        as None value.
         """
         data = {
             'category': None,

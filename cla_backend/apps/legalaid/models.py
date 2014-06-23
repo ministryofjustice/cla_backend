@@ -99,6 +99,7 @@ class ThirdPartyDetails(TimeStampedModel):
     pass_phrase = models.CharField(max_length=255)
     reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON)
     personal_relationship = models.CharField(max_length=30, choices=THIRDPARTY_RELATIONSHIP)
+    personal_relationship_note = models.CharField(max_length=255, blank=True)
     reference = UUIDField(auto=True, unique=True)
 
 class AdaptationDetails(TimeStampedModel):

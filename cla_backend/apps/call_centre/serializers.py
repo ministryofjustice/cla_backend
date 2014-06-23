@@ -102,7 +102,7 @@ class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
     class Meta(ThirdPartyDetailsSerializerBase.Meta):
         fields = (
             'reference', 'personal_details', 'pass_phrase', 'reason',
-            'personal_relationship'
+            'personal_relationship', 'personal_relationship_note'
         )
 
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):

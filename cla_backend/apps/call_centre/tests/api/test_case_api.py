@@ -756,7 +756,8 @@ class ThirdPartyDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 'personal_details',
                 'pass_phrase',
                 'reason',
-                'personal_relationship'
+                'personal_relationship',
+                'personal_relationship_note'
             ]
         )
 
@@ -782,7 +783,8 @@ class ThirdPartyDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                     },
                 "pass_phrase": "monkey",
                 "reason": "CHILD_PATIENT",
-                "personal_relationship": "OTHER"
+                "personal_relationship": "OTHER",
+                'personal_relationship_note': "Neighbour"
                 }
 
 
@@ -801,7 +803,8 @@ class ThirdPartyDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 },
                 "pass_phrase": 'XXXXXXXXX',
                 "reason": "XXXXXXXXX",
-                "personal_relationship": "XXXXXXXXX"
+                "personal_relationship": "XXXXXXXXX",
+                "personal_relationship_note": "XXXXXXXX"
                 }
 
 
@@ -837,7 +840,8 @@ class ThirdPartyDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         if data is None or obj is None:
             self.assertEqual(data, obj)
         else:
-            for prop in ['pass_phrase','reason','personal_relationship']:
+            for prop in ['pass_phrase','reason','personal_relationship',\
+                         'personal_relationship_note']:
                 #self.assertEqual(unicode(getattr(obj, prop)), data[prop])
                 self.assertEqual(obj[prop], data[prop])
 

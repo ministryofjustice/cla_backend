@@ -835,7 +835,7 @@ class EligibilityCheckAPIMixin(object):
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    @mock.patch('legalaid.views.EligibilityChecker')
+    @mock.patch('legalaid.models.EligibilityChecker')
     def test_eligibility_check_is_eligible_pass(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
         v.is_eligible.return_value = True
@@ -847,7 +847,7 @@ class EligibilityCheckAPIMixin(object):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'yes')
 
-    @mock.patch('legalaid.views.EligibilityChecker')
+    @mock.patch('legalaid.models.EligibilityChecker')
     def test_eligibility_check_is_eligible_fail(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
         v.is_eligible.return_value = False
@@ -859,7 +859,7 @@ class EligibilityCheckAPIMixin(object):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'no')
 
-    @mock.patch('legalaid.views.EligibilityChecker')
+    @mock.patch('legalaid.models.EligibilityChecker')
     def test_eligibility_check_is_eligible_unknown(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
         v.is_eligible.side_effect = PropertyExpectedException

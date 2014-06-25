@@ -113,13 +113,18 @@ class CaseViewSet(
                         'suitable_providers' all possible providers for this category.
         """
         obj = self.get_object()
-
         helper = ProviderAllocationHelper()
-        category = obj.eligibility_check.category
-        suggested = helper.get_suggested_provider(category)
-        suitable_providers = [ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
 
-        suggestions = { 'suggested_provider' : ProviderSerializer(suggested).data,
+        if hasattr(obj, 'eligibility_check') and obj.eligibility_check != None:
+            category = obj.eligibility_check.category
+            suggested = helper.get_suggested_provider(category)
+            suggested_provider = ProviderSerializer(suggested).data
+        else:
+            category = None
+            suggested_provider = None
+
+        suitable_providers = [ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
+        suggestions = { 'suggested_provider' : suggested_provider,
                         'suitable_providers' : suitable_providers
                       }
 
@@ -132,7 +137,9 @@ class CaseViewSet(
         """
         obj = self.get_object()
         helper = ProviderAllocationHelper()
-        category = obj.eligibility_check.category
+
+        category = obj.eligibility_check.category \
+                    if (hasattr(obj, 'eligibility_check') and obj.eligibility_check != None) else None
 
         suitable_providers = helper.get_qualifying_providers(category)
 

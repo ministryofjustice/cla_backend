@@ -1,7 +1,7 @@
 from random import random
 from operator import itemgetter
 
-from cla_provider.models import ProviderAllocation, OutOfHoursRota
+from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota
 from django.utils import timezone
 
 def today_at(hour, minute=0, second=0, microsecond=0):
@@ -28,7 +28,10 @@ class ProviderAllocationHelper(object):
         """
         @return: list
         """
-        return [pa.provider for pa in self.get_qualifying_providers_allocation(category)]
+        if category == None:
+            return Provider.objects.active()
+        else:
+            return [pa.provider for pa in self.get_qualifying_providers_allocation(category)]
 
     def _get_random_provider(self, category):
         """

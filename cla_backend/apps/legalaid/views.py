@@ -1,8 +1,5 @@
 from django.http import Http404
 
-from eligibility_calculator.calculator import EligibilityChecker
-from eligibility_calculator.exceptions import PropertyExpectedException
-
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response as DRFResponse
@@ -94,16 +91,7 @@ class BaseEligibilityCheckViewSet(viewsets.GenericViewSet):
     def is_eligible(self, request, *args, **kwargs):
         obj = self.get_object()
 
-        case_data = obj.to_case_data()
-        ec = EligibilityChecker(case_data)
-
-        response = None
-        try:
-            is_eligible = ec.is_eligible()
-            response = 'yes' if is_eligible else 'no'
-        except PropertyExpectedException as e:
-            response = 'unknown'
-
+        response = obj.get_eligibility_state()
         return DRFResponse({
             'is_eligible': response
         })

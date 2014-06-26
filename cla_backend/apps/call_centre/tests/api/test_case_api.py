@@ -230,15 +230,24 @@ class AssignCaseTestCase(BaseCaseTestCase):
 
     @mock.patch('cla_provider.models.timezone.now')
     @mock.patch('cla_provider.helpers.timezone.now')
+    def test_assign_case_without_category(self, tz_model_mock, tz_helper_tz):
+        case = make_recipe('legalaid.case', eligibility_check=None)
+        category = make_recipe('legalaid.category')
+        return self._test_assign_successful(case, category, tz_model_mock, tz_helper_tz)
+
+    @mock.patch('cla_provider.models.timezone.now')
+    @mock.patch('cla_provider.helpers.timezone.now')
     def test_assign_successful(self, tz_model_mock, tz_helper_tz):
+        case = make_recipe('legalaid.case')
+        category = case.eligibility_check.category
+        return self._test_assign_successful(case, category, tz_model_mock, tz_helper_tz)
+
+    def _test_assign_successful(self, case, category, tz_model_mock, tz_helper_tz):
 
         fake_day = datetime.datetime(2014, 1, 2, 9, 1, 0).replace(tzinfo=timezone.get_current_timezone())
         tz_model_mock.return_value = fake_day
         tz_helper_tz.return_value = fake_day
 
-        case = make_recipe('legalaid.case')
-
-        category = case.eligibility_check.category
         make_recipe('legalaid.refsp_logtype')
         make_recipe('legalaid.manalc_logtype')
         provider = make_recipe('cla_provider.provider', active=True)

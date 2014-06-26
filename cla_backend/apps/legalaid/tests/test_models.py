@@ -311,10 +311,10 @@ class EligibilityCheckTestCase(TestCase):
             PropertyExpectedException(), True, False, PropertyExpectedException()
         ]
 
-        # 1. PropertyExpectedException => MAYBE
-        check = make_recipe('legalaid.eligibility_check', state=ELIGIBILITY_STATES.MAYBE)
+        # 1. PropertyExpectedException => UNKNOWN
+        check = make_recipe('legalaid.eligibility_check', state=ELIGIBILITY_STATES.UNKNOWN)
         check.update_state()
-        self.assertEqual(check.state, ELIGIBILITY_STATES.MAYBE)
+        self.assertEqual(check.state, ELIGIBILITY_STATES.UNKNOWN)
 
         # 2. True => YES
         check.update_state()
@@ -324,9 +324,9 @@ class EligibilityCheckTestCase(TestCase):
         check.update_state()
         self.assertEqual(check.state, ELIGIBILITY_STATES.NO)
 
-        # 4. PropertyExpectedException => MAYBE
+        # 4. PropertyExpectedException => UNKNOWN
         check.update_state()
-        self.assertEqual(check.state, ELIGIBILITY_STATES.MAYBE)
+        self.assertEqual(check.state, ELIGIBILITY_STATES.UNKNOWN)
 
 
 class CaseTestCase(TestCase):

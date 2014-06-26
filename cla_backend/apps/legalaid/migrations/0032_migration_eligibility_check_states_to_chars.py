@@ -6,7 +6,7 @@ from django.db import models
 
 
 ELIGIBILITY_STATE_MAPPING = {
-    '0': 'maybe',
+    '0': 'unknown',
     '1': 'yes',
     '2': 'no',
 }
@@ -172,7 +172,7 @@ class Migration(DataMigration):
             'on_passported_benefits': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'partner'", 'null': 'True', 'to': u"orm['legalaid.Person']"}),
             'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'}),
-            'state': ('django.db.models.fields.CharField', [], {'default': "'maybe'", 'max_length': '50'}),
+            'state': ('django.db.models.fields.CharField', [], {'default': "'unknown'", 'max_length': '50'}),
             'you': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'you'", 'null': 'True', 'to': u"orm['legalaid.Person']"}),
             'your_problem_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'})
         },

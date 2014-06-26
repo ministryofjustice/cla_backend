@@ -64,7 +64,7 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, EligibilityCheck
             'on_passported_benefits': None,
             'partner': None,
             'property_set': [],
-            'state': "maybe",
+            'state': "unknown",
             'you': None,
             'your_problem_notes': "",
         }

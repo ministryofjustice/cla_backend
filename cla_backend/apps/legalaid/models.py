@@ -169,7 +169,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     your_problem_notes = models.TextField(blank=True)
     notes = models.TextField(blank=True)
     state = models.CharField(
-        max_length=50, default=ELIGIBILITY_STATES.MAYBE,
+        max_length=50, default=ELIGIBILITY_STATES.UNKNOWN,
         choices=ELIGIBILITY_STATES.CHOICES
     )
     dependants_young = models.PositiveIntegerField(null=True, blank=True,
@@ -201,12 +201,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
 
         return deps
 
-    def _get_state(self):
+    def get_eligibility_state(self):
         """
         Returns one of the ELIGIBILITY_STATES values depending on if the model
         is eligible or not. If PropertyExpectedException is raised, it means
         that we don't have enough data to determine the state so we set the
-        `state` property to MAYBE.
+        `state` property to UNKNOWN.
         """
         ec = EligibilityChecker(self.to_case_data())
 
@@ -216,12 +216,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
             else:
                 return ELIGIBILITY_STATES.NO
         except PropertyExpectedException as e:
-            return ELIGIBILITY_STATES.MAYBE
+            return ELIGIBILITY_STATES.UNKNOWN
 
         # TODO what do we do when we get a different exception? (which shouldn't happen)
 
     def update_state(self):
-        self.state = self._get_state()
+        self.state = self.get_eligibility_state()
         self.save()
 
     def to_case_data(self):

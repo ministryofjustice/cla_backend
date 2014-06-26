@@ -1,3 +1,5 @@
+from cla_eventlog.models import Log
+
 
 class BaseEvent(object):
     key = ''
@@ -9,8 +11,17 @@ class BaseEvent(object):
 
         return self.codes.keys()[0]
 
-    def process(self, code=None, notes="", **kwargs):
+    def process(self, case, code=None, notes="", created_by=None, **kwargs):
         if not code:
             code = self.get_log_code(**kwargs)
 
-        return (code, self.codes[code]['type'], notes)
+        code_data = self.codes[code]
+
+        return Log.objects.create(
+            case=case,
+            code=code,
+            type=code_data['type'],
+            level=code_data['level'],
+            notes=notes,
+            created_by=created_by
+        )

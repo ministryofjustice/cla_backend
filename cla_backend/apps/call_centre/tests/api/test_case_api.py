@@ -887,6 +887,7 @@ class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
               'minicom',
               'text_relay',
               'skype_webcam',
+              'callback_preference',
               'language',
               'notes'
             ]
@@ -908,6 +909,7 @@ class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 'minicom' : True,
                 'text_relay' : True,
                 'skype_webcam' : True,
+                'callback_preference' : True,
                 'language' : 'WELSH',
                 'notes' : 'abc'
                 }
@@ -945,7 +947,7 @@ class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             self.assertEqual(data, obj)
         else:
             for prop in ['bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
-                         'language','notes']:
+                         'language','notes', 'callback_preference']:
                 #self.assertEqual(unicode(getattr(obj, prop)), data[prop])
                 self.assertEqual(obj[prop], data[prop])
 

@@ -109,7 +109,7 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
         fields = (
                 'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
-                'language', 'notes', 'reference'
+                'language', 'notes', 'reference', 'callback_preference'
         )
 
 class CaseLogSerializer(CaseLogSerializerBase):

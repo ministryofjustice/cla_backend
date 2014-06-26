@@ -109,6 +109,7 @@ class AdaptationDetails(TimeStampedModel):
     skype_webcam = models.BooleanField(default=False)
     language = models.CharField(max_length=30, choices=ADAPTATION_LANGUAGES)
     notes = models.TextField(blank=True)
+    callback_preference = models.BooleanField(default=False)
     reference = UUIDField(auto=True, unique=True)
 
 class Person(TimeStampedModel):

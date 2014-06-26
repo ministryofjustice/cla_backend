@@ -14,3 +14,35 @@ class DeferAssignmentEvent(BaseEvent):
         }
     }
 event_registry.register(DeferAssignmentEvent)
+
+class AssignToProviderEvent(BaseEvent):
+    key = 'assign_to_provider'
+    codes = {
+        'REFSP': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': 'Referred to Specialist'
+        },
+        'MANALC': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': 'Manually allocated to Specialist'
+        },
+        'RDSP': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Sent to Specialist again'
+        },
+        }
+
+    def get_log_code(self, **kwargs):
+        is_manual = kwargs['is_manual']
+
+        if is_manual:
+            return 'MANALC'
+
+        return 'REFSP'
+event_registry.register(AssignToProviderEvent)

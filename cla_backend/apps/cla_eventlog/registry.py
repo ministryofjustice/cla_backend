@@ -46,10 +46,10 @@ class EventRegistry(object):
 
         self._registry[EventClazz.key] = EventClazz
 
-    def get_action(self, key):
+    def get_event(self, key):
         return self._registry[key]
 
-    def get_selectable_actions(self, role):
+    def get_selectable_events(self, role):
         codes = defaultdict(list)
 
         for action_key, EventClazz in self._registry.items():

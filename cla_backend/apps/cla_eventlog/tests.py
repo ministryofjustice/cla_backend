@@ -3,37 +3,7 @@ from cla_eventlog.events import BaseEvent
 from cla_eventlog.registry import EventRegistry
 from django.test import TestCase
 
-# class OutcomeEventsTestCase(TestCase):
-#     def test_assign_to_provider(self):
-#         event = event_registry.get_event('assign_to_provider')()
-#
-#         # print "\ntesting manual allocation"
-#         res = event.process(is_manual=True, notes='this is a note')
-#         self.assertEqual(res, ('MANALC', LOG_TYPES.OUTCOME, 'this is a note'))
-#
-#         # print "\ntesting automatic allocation"
-#         res = event.process(is_manual=False, notes='this is a note2')
-#         self.assertEqual(res, ('REFSP', LOG_TYPES.OUTCOME, 'this is a note2'))
-#
-#     def test_defer_assignment(self):
-#         # DEFER ASSIGNMENT
-#         event = event_registry.get_event('defer_assignment')()
-#         # print "\ntesting defer assignment"
-#         res = event.process(notes='defer note')
-#         self.assertEqual(res, ('CBSP', LOG_TYPES.OUTCOME, 'defer note'))
-#
-#     def test_select_selectable_code(self):
-#         # get dict {event_key: [list of selectable codes]}
-#         selectable_events = event_registry.get_selectable_events(role='operator')
-#
-#         for chosen_key, chosen_codes in selectable_events.items():
-#             for chosen_code in chosen_codes:
-#                 # chosen key / code
-#
-#                 event = event_registry.get_event(chosen_key)()
-#                 res = event.process(code=chosen_code, notes='selectable notes')
-#                 self.assertEqual(res, (chosen_code, LOG_TYPES.OUTCOME, 'selectable notes'))
-#
+
 #
 # class SystemEventsTestCase(TestCase):
 #     def test_means_test_events(self):
@@ -170,5 +140,20 @@ class StartupChecksTestCase(TestCase):
 
         self.assertRaises(ValueError, registry.register, MyEvent)
 
+    def test_event_with_wrong_selected_by_fails(self):
+        registry = EventRegistry()
 
+        _codes = {
+            'MY_CODE': {
+                'type': LOG_TYPES.SYSTEM,
+                'level': LOG_LEVELS.HIGH,
+                'selectable_by': ['foo'],
+                'description': "my code"
+            },
+            }
 
+        class MyEvent(BaseEvent):
+            key = 'my_key'
+            codes = _codes
+
+        self.assertRaises(ValueError, registry.register, MyEvent)

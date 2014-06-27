@@ -9,22 +9,36 @@ class RejectCaseEvent(BaseEvent):
         'MIS': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
-            'selectable_by': [LOG_ROLES.SPECIALIST],
+            'selectable_by': [],
             'description': 'Misdiagnosed, assigned to wrong Specialist or another Specialist is dealing with client'
         },
         'MIS-MEANS': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
-            'selectable_by': [LOG_ROLES.SPECIALIST],
+            'selectable_by': [],
             'description': 'Misdiagnosed, means test isn\'t correct'
         },
         'MIS-OOS': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
-            'selectable_by': [LOG_ROLES.SPECIALIST],
+            'selectable_by': [],
             'description': 'Misdiagnosed, out of scope'
-        }
+        },
+        'COI': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.SPECIALIST],
+            'description': 'Conflict of Interest'
+        },
     }
+
+    def get_log_code(self, **kwargs):
+        is_conflict = kwargs.get('is_conflict')
+
+        if is_conflict:
+            return 'COI'
+
+        return super(RejectCaseEvent, self).get_log_code(**kwargs)
 event_registry.register(RejectCaseEvent)
 
 

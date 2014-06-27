@@ -93,13 +93,8 @@ class CloseCaseForm(forms.Form):
         self.case.close()
 
 
-class CaseAssignDeferForm(OutcomeForm):
-
-    CASELOGTYPE_CODE = 'CBSP'
-
-    def get_outcome_code_queryset(self):
-        qs = super(CaseAssignDeferForm, self).get_outcome_code_queryset()
-        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.DEFER_ASSIGNMENT)
+class CaseAssignDeferForm(BaseCaseLogForm):
+    LOG_EVENT_KEY = 'defer_assignment'
 
     def clean(self):
         cleaned_data = super(CaseAssignDeferForm, self).clean()

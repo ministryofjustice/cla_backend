@@ -147,6 +147,14 @@ class KnowledgebaseCsvParse(object):
                     else:
                         d["fields"][django_field_name] = 'OTHER'
 
+                elif django_field_name == 'website':
+                    
+                    website = r[csv_field].decode('ascii', 'ignore')
+                    if not website.startswith('http'):
+                        website = 'http://' + website
+
+                    d["fields"][django_field_name] = website
+
                 else:
                     # normal field
                     d["fields"][django_field_name] = r[csv_field].decode('ascii', 'ignore')

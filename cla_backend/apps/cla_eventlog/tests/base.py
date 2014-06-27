@@ -38,3 +38,4 @@ class EventTestCaseMixin(object):
                 created_by=_process_kwargs['created_by']
             )
         )
+

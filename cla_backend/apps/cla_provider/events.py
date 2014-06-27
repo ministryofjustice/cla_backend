@@ -28,9 +28,17 @@ class RejectCaseEvent(BaseEvent):
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.SPECIALIST],
-            'description': 'conflict'
-        }
+            'description': 'Conflict of Interest'
+        },
     }
+
+    def get_log_code(self, **kwargs):
+        is_conflict = kwargs.get('is_conflict')
+
+        if is_conflict:
+            return 'COI'
+
+        return super(RejectCaseEvent, self).get_log_code(**kwargs)
 event_registry.register(RejectCaseEvent)
 
 

@@ -5,7 +5,8 @@ from rest_framework import status
 from cla_common.constants import CASE_STATES, CASELOGTYPE_ACTION_KEYS
 
 from legalaid.constants import CASELOGTYPE_SUBTYPES
-from legalaid.models import CaseLog, Case
+from legalaid.models import Case
+from cla_eventlog.models import Log
 
 from core.tests.mommy_utils import make_recipe, make_user
 
@@ -32,7 +33,6 @@ def generate_outcome_codes():
         )
     ]
 
-
 class BaseStateFormTestCase(object):
     FORM = None,
     VALID_OUTCOME_CODE = None
@@ -42,13 +42,12 @@ class BaseStateFormTestCase(object):
         super(BaseStateFormTestCase, self).setUp()
 
         self.user = make_user()
-        self.outcome_codes = generate_outcome_codes()
 
     def test_choices(self):
         form = self.FORM(case=mock.MagicMock())
 
         self.assertItemsEqual(
-            [f[1] for f in form.fields['outcome_code'].choices], [self.VALID_OUTCOME_CODE]
+            [f[1] for f in form.fields['event_code'].choices], [self.VALID_OUTCOME_CODE]
         )
 
     def test_save_successfull(self):
@@ -56,11 +55,11 @@ class BaseStateFormTestCase(object):
 
         self.assertEqual(case.state, CASE_STATES.OPEN)
 
-        self.assertEqual(CaseLog.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 0)
 
         form = self.FORM(case=case, data={
-            'outcome_code': self.VALID_OUTCOME_CODE,
-            'outcome_notes': 'lorem ipsum'
+            'event_code': self.VALID_OUTCOME_CODE,
+            'notes': 'lorem ipsum'
         })
 
         self.assertTrue(form.is_valid())
@@ -70,8 +69,8 @@ class BaseStateFormTestCase(object):
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, self.EXPECTED_CASE_STATE)
 
-        self.assertEqual(CaseLog.objects.count(), 1)
-        outcome = CaseLog.objects.all()[0]
+        self.assertEqual(Log.objects.count(), 1)
+        outcome = Log.objects.all()[0]
 
         self.assertEqual(outcome.logtype.code, self.VALID_OUTCOME_CODE)
         self.assertEqual(outcome.notes, 'lorem ipsum')
@@ -81,19 +80,19 @@ class BaseStateFormTestCase(object):
 
         self.assertEqual(case.state, CASE_STATES.OPEN)
 
-        self.assertEqual(CaseLog.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 0)
 
         form = self.FORM(case=case, data={
-            'outcome_code': 'invalid',
-            'outcome_notes': 'l'*501
+            'event_code': 'invalid',
+            'notes': 'l'*501
         })
 
         self.assertFalse(form.is_valid())
 
         self.assertItemsEqual(
             form.errors, {
-                'outcome_code': [u'Select a valid choice. That choice is not one of the available choices.'],
-                'outcome_notes': [u'Ensure this value has at most 500 characters (it has 501).']
+                'event_code': [u'Select a valid choice. That choice is not one of the available choices.'],
+                'notes': [u'Ensure this value has at most 500 characters (it has 501).']
             }
         )
 
@@ -101,7 +100,7 @@ class BaseStateFormTestCase(object):
         case = Case.objects.get(pk=case.pk)
         self.assertEqual(case.state, CASE_STATES.OPEN)
 
-        self.assertEqual(CaseLog.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 0)
 
 
 class StateChangeAPIMixin(object):
@@ -113,7 +112,6 @@ class StateChangeAPIMixin(object):
     def setUp(self):
         super(StateChangeAPIMixin, self).setUp()
 
-        self.outcome_codes = generate_outcome_codes()
         self.state_change_url = self.get_state_change_url()
 
     def get_state_change_url(self, reference=None):
@@ -140,12 +138,12 @@ class StateChangeAPIMixin(object):
         # before, case open and no outcomes
         self.assertEqual(self.check.state, self.INITIAL_CASE_STATE)
 
-        self.assertEqual(CaseLog.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 0)
 
         # reject
         data={
-                'outcome_code': self.VALID_OUTCOME_CODE,
-                'outcome_notes': 'lorem ipsum'
+                'event_code': self.VALID_OUTCOME_CODE,
+                'notes': 'lorem ipsum'
             }
         response = self.client.post(
             self.state_change_url, data=data,
@@ -158,23 +156,23 @@ class StateChangeAPIMixin(object):
         case = Case.objects.get(pk=self.check.pk)
         self.assertEqual(case.state, self.EXPECTED_CASE_STATE)
 
-        self.assertEqual(CaseLog.objects.count(), 1)
-        outcome = CaseLog.objects.all()[0]
+        self.assertEqual(Log.objects.count(), 1)
+        outcome = Log.objects.all()[0]
 
         self.assertEqual(outcome.case, self.check)
-        self.assertEqual(outcome.logtype.code, data['outcome_code'])
-        self.assertEqual(outcome.notes, data['outcome_notes'])
+        self.assertEqual(outcome.code, data['event_code'])
+        self.assertEqual(outcome.notes, data['notes'])
 
     def test_invalid_outcome_code(self):
         # before, case open and no outcomes
         self.assertEqual(self.check.state, self.INITIAL_CASE_STATE)
 
-        self.assertEqual(CaseLog.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 0)
 
         # reject
         data={
-                'outcome_code': 'invalid',
-                'outcome_notes': 'lorem ipsum'
+                'event_code': 'invalid',
+                'notes': 'lorem ipsum'
             }
         response = self.client.post(
             self.state_change_url, data=data,
@@ -184,14 +182,14 @@ class StateChangeAPIMixin(object):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertDictEqual(
             response.data,
-            {'outcome_code': [u'Select a valid choice. That choice is not one of the available choices.']}
+            {'event_code': [u'Select a valid choice. invalid is not one of the available choices.']}
         )
 
         # after, case didn't change and no outcome created
         case = Case.objects.get(pk=self.check.pk)
         self.assertEqual(case.state, CASE_STATES.OPEN)
 
-        self.assertEqual(CaseLog.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 0)
 
     def test_invalid_mutation(self):
         # before, case accepted and no outcomes
@@ -199,12 +197,12 @@ class StateChangeAPIMixin(object):
         self.check.save()
         self.assertEqual(self.check.state, self.INVALID_INITIAL_CASE_STATE)
 
-        self.assertEqual(CaseLog.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 0)
 
         # reject
         data={
-                'outcome_code': self.VALID_OUTCOME_CODE,
-                'outcome_notes': 'lorem ipsum'
+                'event_code': self.VALID_OUTCOME_CODE,
+                'notes': 'lorem ipsum'
             }
         response = self.client.post(
             self.state_change_url, data=data,
@@ -219,4 +217,4 @@ class StateChangeAPIMixin(object):
         case = Case.objects.get(pk=self.check.pk)
         self.assertEqual(case.state, self.INVALID_INITIAL_CASE_STATE)
 
-        self.assertEqual(CaseLog.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 0)

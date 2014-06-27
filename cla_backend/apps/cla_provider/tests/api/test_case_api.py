@@ -285,7 +285,7 @@ class CaseTests(BaseCaseTests):
 
 
 class RejectCaseTests(StateChangeAPIMixin, BaseCaseTests):
-    VALID_OUTCOME_CODE = 'CODE_REJECTED'
+    VALID_OUTCOME_CODE = 'MIS'
     EXPECTED_CASE_STATE = CASE_STATES.REJECTED
 
     def get_state_change_url(self, reference=None):
@@ -297,7 +297,7 @@ class RejectCaseTests(StateChangeAPIMixin, BaseCaseTests):
 
 
 class AcceptCaseTests(StateChangeAPIMixin, BaseCaseTests):
-    VALID_OUTCOME_CODE = 'CODE_ACCEPTED'
+    VALID_OUTCOME_CODE = 'SPOP'
     EXPECTED_CASE_STATE = CASE_STATES.ACCEPTED
 
     def get_state_change_url(self, reference=None):
@@ -309,7 +309,7 @@ class AcceptCaseTests(StateChangeAPIMixin, BaseCaseTests):
 
 
 class CloseCaseTests(StateChangeAPIMixin, BaseCaseTests):
-    VALID_OUTCOME_CODE = 'CODE_CLOSED'
+    VALID_OUTCOME_CODE = 'CLSP'
     EXPECTED_CASE_STATE = CASE_STATES.CLOSED
 
     def get_state_change_url(self, reference=None):

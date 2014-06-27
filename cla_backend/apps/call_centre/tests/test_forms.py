@@ -8,11 +8,9 @@ from cla_common.constants import CASE_STATES
 
 from core.tests.mommy_utils import make_recipe, make_user
 from legalaid.tests.base import BaseStateFormTestCase
-from legalaid.models import Case
 
 from cla_provider.helpers import ProviderAllocationHelper
-from ..forms import ProviderAllocationForm, CloseCaseForm, \
-    DeclineAllSpecialistsCaseForm
+from ..forms import ProviderAllocationForm, DeclineAllSpecialistsCaseForm
 
 
 class ProviderAllocationFormTestCase(TestCase):
@@ -121,20 +119,6 @@ class ProviderAllocationFormTestCase(TestCase):
                                       providers=[])
 
         self.assertFalse(form.is_valid())
-
-
-class CloseCaseFormTestCase(TestCase):
-    def test_save(self):
-        user = make_user()
-        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
-
-        form = CloseCaseForm(case=case, data={})
-
-        self.assertTrue(form.is_valid())
-
-        form.save(user)
-
-        self.assertEqual(case.state, CASE_STATES.CLOSED)
 
 
 class DeclineAllSpecialistsCaseFormTestCase(BaseStateFormTestCase, TestCase):

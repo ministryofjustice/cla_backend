@@ -13,7 +13,7 @@ class Log(TimeStampedModel):
     notes = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return u'%s - %s' % (self.case, self.logtype)
+        return u'%s - %s:%s' % (self.case, self.type, self.code)
 
     class Meta:
         ordering = ['-created']

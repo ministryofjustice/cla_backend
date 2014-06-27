@@ -1,12 +1,13 @@
 from cla_common.constants import CASELOGTYPE_ACTION_KEYS
+from cla_eventlog.constants import LOG_ROLES
+from cla_eventlog.registry import event_registry
 
-from legalaid.forms import OutcomeForm
+from legalaid.forms import OutcomeForm, EventSpecificOutcomeForm
 
 
-class RejectCaseForm(OutcomeForm):
-    def get_outcome_code_queryset(self):
-        qs = super(RejectCaseForm, self).get_outcome_code_queryset()
-        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.PROVIDER_REJECT_CASE)
+class RejectCaseForm(EventSpecificOutcomeForm):
+
+    LOG_EVENT_KEY = 'reject_case'
 
     def save(self, user):
         self.case.reject()

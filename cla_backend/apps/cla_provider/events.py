@@ -9,20 +9,26 @@ class RejectCaseEvent(BaseEvent):
         'MIS': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
-            'selectable_by': [LOG_ROLES.SPECIALIST],
+            'selectable_by': [],
             'description': 'Misdiagnosed, assigned to wrong Specialist or another Specialist is dealing with client'
         },
         'MIS-MEANS': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
-            'selectable_by': [LOG_ROLES.SPECIALIST],
+            'selectable_by': [],
             'description': 'Misdiagnosed, means test isn\'t correct'
         },
         'MIS-OOS': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
-            'selectable_by': [LOG_ROLES.SPECIALIST],
+            'selectable_by': [],
             'description': 'Misdiagnosed, out of scope'
+        },
+        'COI': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.SPECIALIST],
+            'description': 'conflict'
         }
     }
 event_registry.register(RejectCaseEvent)

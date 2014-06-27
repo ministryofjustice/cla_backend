@@ -1,18 +1,19 @@
+import mock
+
 from django.conf import settings
 from django.test import TestCase
+from django.db import models
 
 from eligibility_calculator.models import CaseData, ModelMixin
+from eligibility_calculator.exceptions import PropertyExpectedException
 
-from cla_common.constants import CASE_STATES
+from cla_common.constants import CASE_STATES, ELIGIBILITY_STATES
 from cla_common.money_interval.models import MoneyInterval
 
 from core.tests.mommy_utils import make_recipe, make_user
 
 from legalaid.exceptions import InvalidMutationException
-from ..models import Case
-
-from cla_backend.apps.legalaid.models import Income
-
+from legalaid.models import Case, ValidateModelMixin, Income
 
 
 def walk(coll):
@@ -96,10 +97,10 @@ class EligibilityCheckTestCase(TestCase):
             CaseData(
                 category='code',
                 facts={
-                    'dependant_children':5,
+                    'dependants_young': 3,
+                    'dependants_old': 2,
                     'is_you_or_your_partner_over_60':True,
                     'on_passported_benefits':True,
-                    'on_nass_benefits':False,
                     'has_partner': False,
                     'is_partner_opponent': False,
                 },
@@ -188,10 +189,10 @@ class EligibilityCheckTestCase(TestCase):
         self.assertModelMixinEqual(case_data, CaseData(
             category='code',
             facts={
-                'dependant_children':5,
+                'dependants_young': 3,
+                'dependants_old': 2,
                 'is_you_or_your_partner_over_60':True,
-                'on_passported_benefits':True,
-                'on_nass_benefits':False,
+                'on_passported_benefits': True,
                 'has_partner': True,
                 'is_partner_opponent': False,
             },
@@ -242,46 +243,93 @@ class EligibilityCheckTestCase(TestCase):
             property_data=[],
         ))
 
-    # def test_to_case_data_with_properties(self):
-    #     """
-    #     Tests with non-empty property set
-    #     """
-    #     check = make_recipe('legalaid.eligibility_check',
-    #         category=make_recipe('category', code='code'),
-    #         your_finances=make_recipe('finance',
-    #             bank_balance=100, investment_balance=200,
-    #             asset_balance=300, credit_balance=400,
-    #             earnings=500, other_income=600,
-    #             self_employed=True, income_tax_and_ni=700,
-    #             maintenance=710, mortgage_or_rent=720,
-    #             criminal_legalaid_contributions=730
-    #         ),
-    #         dependants_young=3, dependants_old=2,
-    #         is_you_or_your_partner_over_60=True,
-    #         on_passported_benefits=True,
-    #         has_partner=False,
-    #     )
-    #     make_recipe('legalaid.property',
-    #         eligibility_check=check,
-    #         value=recipe.seq(30), mortgage_left=recipe.seq(40),
-    #         share=recipe.seq(50), _quantity=3
-    #     )
-    #
-    #     case_data = check.to_case_data()
-    #     self.assertCaseDataEqual(case_data, CaseData(
-    #         category='code', dependant_children=5, savings=100, investment_balance=200,
-    #         credit_balance=400, asset_balance=300, earnings=500, other_income=600,
-    #         self_employed=True, property_data=[(31, 41, 51), (32, 42, 52), (33, 43, 53)],
-    #         is_you_or_your_partner_over_60=True,
-    #         has_partner=False, is_partner_opponent=False, income_tax_and_ni=700,
-    #         maintenance=710, mortgage_or_rent=720,
-    #         criminal_legalaid_contributions=730,
-    #         on_passported_benefits=True
-    #     ))
+    def test_validate(self):
+        check = make_recipe(
+            'legalaid.eligibility_check',
+            category=make_recipe('legalaid.category', code='code'),
+            you=make_recipe('legalaid.person',
+                            income= make_recipe('legalaid.income',
+                                                earnings= {"interval_period": "per_month",
+                                                           "per_interval_value": 500,
+                                                           },
+                                                other_income={"interval_period": "per_month",
+                                                              "per_interval_value": 600
+                                                },
+                                                self_employed=True
+                            ),
+                            savings=make_recipe('legalaid.savings',
+                                                bank_balance=100,
+                                                investment_balance=200,
+                                                asset_balance=300,
+                                                credit_balance=400,
+                                                ),
+                            deductions=make_recipe('legalaid.deductions',
+                                                   income_tax=MoneyInterval('per_month', pennies=600),
+                                                   national_insurance=MoneyInterval('per_month', pennies=100),
+                                                   maintenance=MoneyInterval('per_month', pennies=710),
+                                                   childcare=MoneyInterval('per_month', pennies=715),
+                                                   mortgage=MoneyInterval('per_month', pennies=700),
+                                                   rent=MoneyInterval('per_month', pennies=20),
+                                                   criminal_legalaid_contributions=730
+                            )
+            ),
+            dependants_young=3, dependants_old=2,
+            is_you_or_your_partner_over_60=True,
+            on_passported_benefits=True,
+            has_partner=True,
+            )
+        expected = {'warnings':
+                        {'partner':
+                             {'deductions': ['Field "deductions" is required'],
+                              'income': ['Field "income" is required'],
+                              'savings': ['Field "savings" is required']}}}
+
+        self.assertEqual(expected, check.validate())
+        check.you = None
+        expected2 = {'warnings':
+                         {
+                             'partner': {'deductions': ['Field "deductions" is required'],
+                                         'income': ['Field "income" is required'],
+                                         'savings': ['Field "savings" is required']},
+                             'you': {'deductions': ['Field "deductions" is required'],
+                                     'income': ['Field "income" is required'],
+                                     'savings': ['Field "savings" is required']}}}
+        self.assertDictEqual(expected2, check.validate())
+
+    @mock.patch('legalaid.models.EligibilityChecker')
+    def test_update_state(self, MockedEligibilityChecker):
+        """
+            calling .is_eligible() sequencially will:
+
+            1. through PropertyExpectedException
+            2. return True
+            3. return False
+            4. through PropertyExpectedException again
+        """
+        mocked_checker = MockedEligibilityChecker()
+        mocked_checker.is_eligible.side_effect = [
+            PropertyExpectedException(), True, False, PropertyExpectedException()
+        ]
+
+        # 1. PropertyExpectedException => UNKNOWN
+        check = make_recipe('legalaid.eligibility_check', state=ELIGIBILITY_STATES.UNKNOWN)
+        check.update_state()
+        self.assertEqual(check.state, ELIGIBILITY_STATES.UNKNOWN)
+
+        # 2. True => YES
+        check.update_state()
+        self.assertEqual(check.state, ELIGIBILITY_STATES.YES)
+
+        # 3. False => NO
+        check.update_state()
+        self.assertEqual(check.state, ELIGIBILITY_STATES.NO)
+
+        # 4. PropertyExpectedException => UNKNOWN
+        check.update_state()
+        self.assertEqual(check.state, ELIGIBILITY_STATES.UNKNOWN)
 
 
 class CaseTestCase(TestCase):
-
     def test_create_has_laa_reference(self):
         case = make_recipe('legalaid.case')
 
@@ -293,7 +341,6 @@ class CaseTestCase(TestCase):
 
         # it is 7 digits long
         self.assertEqual(len(unicode(case.laa_reference)), 7)
-
 
     def test_assign_to_provider_overriding_provider(self):
         providers = make_recipe('cla_provider.provider', _quantity=2)
@@ -447,7 +494,6 @@ class CaseTestCase(TestCase):
         """
             Should raise InvalidMutationException
         """
-
         case = make_recipe('legalaid.case', state=CASE_STATES.CLOSED)
         self.assertEqual(case.state, CASE_STATES.CLOSED)
 
@@ -460,7 +506,6 @@ class CaseTestCase(TestCase):
 
 class MoneyIntervalFieldTestCase(TestCase):
     def test_create_save_moneyinterval(self):
-
         ei = MoneyInterval('per_week', pennies=5000)
         per_month = int((5000.0 * 52.0) / 12.0)
 
@@ -475,7 +520,73 @@ class MoneyIntervalFieldTestCase(TestCase):
         self.assertEqual(eix.as_monthly(), per_month)
 
     def test_annual_moneyinterval(self):
-
         ei = MoneyInterval(interval_period='per_year', pennies=1200000)
         self.assertEqual(ei.as_monthly(), 100000)
 
+
+class ValidationModelMixinTestCase(TestCase):
+
+    class Model1(models.Model):
+        pass
+
+    class Model2(ValidateModelMixin, models.Model):
+        pass
+
+    class Model3(ValidateModelMixin, models.Model):
+
+        a = models.CharField(null=True, blank=True)
+        b = models.CharField(null=True, blank=True)
+        c = models.CharField(null=True, blank=True)
+
+        def get_dependencies(self):
+            return {'a', 'b', 'c'}
+
+    class Model4(ValidateModelMixin, models.Model):
+        related = models.ForeignKey('Model3')
+
+        def get_dependencies(self):
+            return {'related__a', 'related__b', 'related__c'}
+
+
+    def setUp(self):
+        super(ValidationModelMixinTestCase, self).setUp()
+        self.model1 = self.Model1()
+        self.model2 = self.Model2()
+        self.model3 = self.Model3()
+        self.model4 = self.Model4()
+        self.model4.related = self.model3
+
+    def test_mixin_worked(self):
+        self.assertFalse(hasattr(self.model1, 'validate'))
+        self.assertTrue(hasattr(self.model2, 'validate'))
+        self.assertTrue(hasattr(self.model3, 'validate'))
+
+    def test_not_impl_error(self):
+        with self.assertRaises(NotImplementedError):
+            self.model2.get_dependencies()
+
+    def test_validate_all_invalid(self):
+        expected = {'warnings': {'a': ['Field "a" is required'],
+                                 'b': ['Field "b" is required'],
+                                 'c': ['Field "c" is required']}}
+        self.assertEqual(expected, self.model3.validate())
+
+    def test_validate_partial_invalid(self):
+        self.model3.a = 'a'
+        self.model3.b = 'b'
+
+        expected = {'warnings': { 'c': ['Field "c" is required']}}
+        self.assertEqual(expected, self.model3.validate())
+
+    def test_validate_none_invalid(self):
+        self.model3.a = 'a'
+        self.model3.b = 'b'
+        self.model3.c = 'c'
+
+        expected = {'warnings': {}}
+        self.assertEqual(expected, self.model3.validate())
+
+    def test_validate_nested_invalid(self):
+        expected = {'warnings': {'related': {'a': ['Field "a" is required'], 'c': ['Field "c" is required'], 'b': ['Field "b" is required']}}}
+
+        self.assertEqual(expected, self.model4.validate())

@@ -39,6 +39,8 @@ class CLAAuthBaseApiTestMixin(object):
     API_URL_NAMESPACE = None
 
     def setUp(self):
+        super(CLAAuthBaseApiTestMixin, self).setUp()
+
         # create a user
         self.username = 'john'
         self.email = 'lennon@thebeatles.com'

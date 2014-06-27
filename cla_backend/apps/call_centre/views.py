@@ -11,32 +11,31 @@ from cla_provider.helpers import ProviderAllocationHelper
 from core.viewsets import IsEligibleActionViewSetMixin
 from legalaid.models import Category, EligibilityCheck, Case, CaseLog, CaseLogType, \
     PersonalDetails, ThirdPartyDetails, AdaptationDetails
-from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
+from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
+    BaseOutcomeCodeViewSet, BaseCategoryViewSet, BaseEligibilityCheckViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
-from .serializers import EligibilityCheckSerializer, CategorySerializer, \
+from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer, CaseLogSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer, \
     ThirdPartyDetailsSerializer, AdaptationDetailsSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm, DeclineAllSpecialistsCaseForm,\
     CaseAssignDeferForm, AssociatePersonalDetailsCaseForm, AssociateThirdPartyDetailsCaseForm,\
-    AssociateAdaptationDetailsCaseForm
+    AssociateAdaptationDetailsCaseForm, CaseAssignDeferForm, AssociateEligibilityCheckCaseForm
 from .models import Operator
 
 
 class CallCentrePermissionsViewSetMixin(object):
     permission_classes = (CallCentreClientIDPermission,)
 
+
 class CallCentreManagerPermissionsViewSetMixin(object):
     permission_classes = (CallCentreClientIDPermission, OperatorManagerPermission)
 
-class CategoryViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
-    model = Category
-    serializer_class = CategorySerializer
 
-    lookup_field = 'code'
-
+class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
+    pass
 
 class CaseLogTypeViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = CaseLogType
@@ -53,16 +52,17 @@ class OutcomeCodeViewSet(
 
 class EligibilityCheckViewSet(
     CallCentrePermissionsViewSetMixin,
-    IsEligibleActionViewSetMixin,
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
+    BaseEligibilityCheckViewSet
 ):
-    model = EligibilityCheck
     serializer_class = EligibilityCheckSerializer
 
-    lookup_field = 'reference'
+    @link()
+    def validate(self, request, **kwargs):
+        obj = self.get_object()
+        return DRFResponse(obj.validate())
 
 
 class CaseViewSet(
@@ -115,18 +115,22 @@ class CaseViewSet(
                         'suitable_providers' all possible providers for this category.
         """
         obj = self.get_object()
-
         helper = ProviderAllocationHelper()
-        category = obj.eligibility_check.category
-        suggested = helper.get_suggested_provider(category)
-        suitable_providers = [ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
 
-        suggestions = { 'suggested_provider' : ProviderSerializer(suggested).data,
+        if hasattr(obj, 'eligibility_check') and obj.eligibility_check != None:
+            category = obj.eligibility_check.category
+            suggested = helper.get_suggested_provider(category)
+            suggested_provider = ProviderSerializer(suggested).data
+        else:
+            category = None
+            suggested_provider = None
+
+        suitable_providers = [ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
+        suggestions = { 'suggested_provider' : suggested_provider,
                         'suitable_providers' : suitable_providers
                       }
 
         return DRFResponse(suggestions)
-
 
     @action()
     def assign(self, request, reference=None, **kwargs):
@@ -135,7 +139,9 @@ class CaseViewSet(
         """
         obj = self.get_object()
         helper = ProviderAllocationHelper()
-        category = obj.eligibility_check.category
+
+        category = obj.eligibility_check.category \
+                    if (hasattr(obj, 'eligibility_check') and obj.eligibility_check != None) else None
 
         suitable_providers = helper.get_qualifying_providers(category)
 
@@ -187,8 +193,6 @@ class CaseViewSet(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
 
-
-
     @action()
     def decline_all_specialists(self, request, reference=None, **kwargs):
         return self._state_form_action(request, DeclineAllSpecialistsCaseForm)
@@ -231,6 +235,22 @@ class CaseViewSet(
         obj = self.get_object()
 
         form = AssociateThirdPartyDetailsCaseForm(case=obj, data=request.DATA)
+        if form.is_valid():
+            form.save(request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
+    def associate_eligibility_check(self, request, *args, **kwargs):
+        """
+        Associates a case with a eligibility_check object. Will throw an error
+        if the case already has a eligibility_check object associated.
+        """
+
+        obj = self.get_object()
+
+        form = AssociateEligibilityCheckCaseForm(case=obj, data=request.DATA)
         if form.is_valid():
             form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)

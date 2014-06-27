@@ -15,11 +15,6 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
 from .models import Operator
 
 
-class CategorySerializer(CategorySerializerBase):
-    class Meta(CategorySerializerBase.Meta):
-        fields = ('code', 'name', 'description')
-
-
 class PropertySerializer(PropertySerializerBase):
 
     class Meta(PropertySerializerBase.Meta):
@@ -123,9 +118,7 @@ class CaseLogSerializer(CaseLogSerializerBase):
 
 
 class CaseSerializer(CaseSerializerBase):
-    eligibility_check = UUIDSerializer(
-            slug_field='reference',
-            default=lambda: EligibilityCheck.objects.create().reference)
+    eligibility_check = UUIDSerializer(slug_field='reference', required=False)
 
     personal_details = UUIDSerializer(required=False, slug_field='reference')
     thirdparty_details = UUIDSerializer(required=False, slug_field='reference')

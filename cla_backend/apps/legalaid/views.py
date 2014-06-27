@@ -1,12 +1,13 @@
 from django.http import Http404
 
 from rest_framework import viewsets, mixins, status
+from rest_framework.decorators import action
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import DjangoFilterBackend
 
-from legalaid.serializers import CaseLogTypeSerializerBase
+from legalaid.serializers import CaseLogTypeSerializerBase, CategorySerializerBase
 from legalaid.constants import CASELOGTYPE_SUBTYPES
-from legalaid.models import CaseLogType
+from legalaid.models import CaseLogType, Category, EligibilityCheck
 
 from .exceptions import InvalidMutationException
 
@@ -73,3 +74,24 @@ class BaseOutcomeCodeViewSet(
 
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('action_key',)
+
+
+class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    model = Category
+    serializer_class = CategorySerializerBase
+
+    lookup_field = 'code'
+
+
+class BaseEligibilityCheckViewSet(viewsets.GenericViewSet):
+    model = EligibilityCheck
+    lookup_field = 'reference'
+
+    @action()
+    def is_eligible(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        response = obj.get_eligibility_state()
+        return DRFResponse({
+            'is_eligible': response
+        })

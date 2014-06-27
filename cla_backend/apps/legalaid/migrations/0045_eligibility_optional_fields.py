@@ -8,16 +8,158 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Case.laa_reference'
-        db.add_column(u'legalaid_case', 'laa_reference',
-                      self.gf('django.db.models.fields.BigIntegerField')(null=True, blank=True),
-                      keep_default=False)
 
+        # Changing field 'Income.self_employed'
+        db.alter_column(u'legalaid_income', 'self_employed', self.gf('django.db.models.fields.NullBooleanField')(null=True))
+
+        # Changing field 'Income.earnings'
+        db.alter_column(u'legalaid_income', 'earnings', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(null=True))
+
+        # Changing field 'Income.other_income'
+        db.alter_column(u'legalaid_income', 'other_income', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(null=True))
+
+        # Changing field 'Savings.credit_balance'
+        db.alter_column(u'legalaid_savings', 'credit_balance', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0, null=True))
+
+        # Changing field 'Savings.asset_balance'
+        db.alter_column(u'legalaid_savings', 'asset_balance', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0, null=True))
+
+        # Changing field 'Savings.investment_balance'
+        db.alter_column(u'legalaid_savings', 'investment_balance', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0, null=True))
+
+        # Changing field 'Savings.bank_balance'
+        db.alter_column(u'legalaid_savings', 'bank_balance', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0, null=True))
+
+        # Changing field 'Deductions.income_tax'
+        db.alter_column(u'legalaid_deductions', 'income_tax', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(null=True))
+
+        # Changing field 'Deductions.childcare'
+        db.alter_column(u'legalaid_deductions', 'childcare', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(null=True))
+
+        # Changing field 'Deductions.rent'
+        db.alter_column(u'legalaid_deductions', 'rent', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(null=True))
+
+        # Changing field 'Deductions.mortgage'
+        db.alter_column(u'legalaid_deductions', 'mortgage', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(null=True))
+
+        # Changing field 'Deductions.maintenance'
+        db.alter_column(u'legalaid_deductions', 'maintenance', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(null=True))
+
+        # Changing field 'Deductions.national_insurance'
+        db.alter_column(u'legalaid_deductions', 'national_insurance', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(null=True))
+
+        # Changing field 'Deductions.criminal_legalaid_contributions'
+        db.alter_column(u'legalaid_deductions', 'criminal_legalaid_contributions', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0, null=True))
+
+        # Changing field 'Case.eligibility_check'
+        db.alter_column(u'legalaid_case', 'eligibility_check_id', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['legalaid.EligibilityCheck'], unique=True, null=True))
+
+        # Changing field 'Property.disputed'
+        db.alter_column(u'legalaid_property', 'disputed', self.gf('django.db.models.fields.NullBooleanField')(null=True))
+
+        # Changing field 'Property.share'
+        db.alter_column(u'legalaid_property', 'share', self.gf('django.db.models.fields.PositiveIntegerField')(null=True))
+
+        # Changing field 'Property.value'
+        db.alter_column(u'legalaid_property', 'value', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0, null=True))
+
+        # Changing field 'Property.mortgage_left'
+        db.alter_column(u'legalaid_property', 'mortgage_left', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0, null=True))
+
+        # Changing field 'EligibilityCheck.on_passported_benefits'
+        db.alter_column(u'legalaid_eligibilitycheck', 'on_passported_benefits', self.gf('django.db.models.fields.NullBooleanField')(null=True))
+
+        # Changing field 'EligibilityCheck.has_partner'
+        db.alter_column(u'legalaid_eligibilitycheck', 'has_partner', self.gf('django.db.models.fields.NullBooleanField')(null=True))
+
+        # Changing field 'EligibilityCheck.dependants_old'
+        db.alter_column(u'legalaid_eligibilitycheck', 'dependants_old', self.gf('django.db.models.fields.PositiveIntegerField')(null=True))
+
+        # Changing field 'EligibilityCheck.is_you_or_your_partner_over_60'
+        db.alter_column(u'legalaid_eligibilitycheck', 'is_you_or_your_partner_over_60', self.gf('django.db.models.fields.NullBooleanField')(null=True))
+
+        # Changing field 'EligibilityCheck.dependants_young'
+        db.alter_column(u'legalaid_eligibilitycheck', 'dependants_young', self.gf('django.db.models.fields.PositiveIntegerField')(null=True))
+
+        # Changing field 'EligibilityCheck.on_nass_benefits'
+        db.alter_column(u'legalaid_eligibilitycheck', 'on_nass_benefits', self.gf('django.db.models.fields.NullBooleanField')(null=True))
 
     def backwards(self, orm):
-        # Deleting field 'Case.laa_reference'
-        db.delete_column(u'legalaid_case', 'laa_reference')
 
+        # Changing field 'Income.self_employed'
+        db.alter_column(u'legalaid_income', 'self_employed', self.gf('django.db.models.fields.BooleanField')())
+
+        # Changing field 'Income.earnings'
+        db.alter_column(u'legalaid_income', 'earnings', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(default=0))
+
+        # Changing field 'Income.other_income'
+        db.alter_column(u'legalaid_income', 'other_income', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(default=0))
+
+        # Changing field 'Savings.credit_balance'
+        db.alter_column(u'legalaid_savings', 'credit_balance', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0))
+
+        # Changing field 'Savings.asset_balance'
+        db.alter_column(u'legalaid_savings', 'asset_balance', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0))
+
+        # Changing field 'Savings.investment_balance'
+        db.alter_column(u'legalaid_savings', 'investment_balance', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0))
+
+        # Changing field 'Savings.bank_balance'
+        db.alter_column(u'legalaid_savings', 'bank_balance', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0))
+
+        # Changing field 'Deductions.income_tax'
+        db.alter_column(u'legalaid_deductions', 'income_tax', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(default=0))
+
+        # Changing field 'Deductions.childcare'
+        db.alter_column(u'legalaid_deductions', 'childcare', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(default=0))
+
+        # Changing field 'Deductions.rent'
+        db.alter_column(u'legalaid_deductions', 'rent', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(default=0))
+
+        # Changing field 'Deductions.mortgage'
+        db.alter_column(u'legalaid_deductions', 'mortgage', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(default=0))
+
+        # Changing field 'Deductions.maintenance'
+        db.alter_column(u'legalaid_deductions', 'maintenance', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(default=0))
+
+        # Changing field 'Deductions.national_insurance'
+        db.alter_column(u'legalaid_deductions', 'national_insurance', self.gf('cla_common.money_interval.fields.MoneyIntervalField')(default=0))
+
+        # Changing field 'Deductions.criminal_legalaid_contributions'
+        db.alter_column(u'legalaid_deductions', 'criminal_legalaid_contributions', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0))
+
+        # Changing field 'Case.eligibility_check'
+        db.alter_column(u'legalaid_case', 'eligibility_check_id', self.gf('django.db.models.fields.related.OneToOneField')(default=None, to=orm['legalaid.EligibilityCheck'], unique=True))
+
+        # Changing field 'Property.disputed'
+        db.alter_column(u'legalaid_property', 'disputed', self.gf('django.db.models.fields.BooleanField')())
+
+        # Changing field 'Property.share'
+        db.alter_column(u'legalaid_property', 'share', self.gf('django.db.models.fields.PositiveIntegerField')())
+
+        # Changing field 'Property.value'
+        db.alter_column(u'legalaid_property', 'value', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0))
+
+        # Changing field 'Property.mortgage_left'
+        db.alter_column(u'legalaid_property', 'mortgage_left', self.gf('legalaid.fields.MoneyField')(max_value=9999999999, min_value=0))
+
+        # Changing field 'EligibilityCheck.on_passported_benefits'
+        db.alter_column(u'legalaid_eligibilitycheck', 'on_passported_benefits', self.gf('django.db.models.fields.BooleanField')())
+
+        # Changing field 'EligibilityCheck.has_partner'
+        db.alter_column(u'legalaid_eligibilitycheck', 'has_partner', self.gf('django.db.models.fields.BooleanField')())
+
+        # Changing field 'EligibilityCheck.dependants_old'
+        db.alter_column(u'legalaid_eligibilitycheck', 'dependants_old', self.gf('django.db.models.fields.PositiveIntegerField')())
+
+        # Changing field 'EligibilityCheck.is_you_or_your_partner_over_60'
+        db.alter_column(u'legalaid_eligibilitycheck', 'is_you_or_your_partner_over_60', self.gf('django.db.models.fields.BooleanField')())
+
+        # Changing field 'EligibilityCheck.dependants_young'
+        db.alter_column(u'legalaid_eligibilitycheck', 'dependants_young', self.gf('django.db.models.fields.PositiveIntegerField')())
+
+        # Changing field 'EligibilityCheck.on_nass_benefits'
+        db.alter_column(u'legalaid_eligibilitycheck', 'on_nass_benefits', self.gf('django.db.models.fields.BooleanField')())
 
     models = {
         u'auth.group': {
@@ -82,10 +224,10 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Case'},
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'}),
-            'eligibility_check': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['legalaid.EligibilityCheck']", 'unique': 'True'}),
+            'eligibility_check': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['legalaid.EligibilityCheck']", 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'in_scope': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
-            'laa_reference': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'laa_reference': ('django.db.models.fields.BigIntegerField', [], {'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'locked_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'locked_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'case_locked'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
@@ -129,26 +271,26 @@ class Migration(SchemaMigration):
         },
         u'legalaid.deductions': {
             'Meta': {'object_name': 'Deductions'},
-            'childcare': ('cla_common.money_interval.fields.MoneyIntervalField', [], {}),
+            'childcare': ('cla_common.money_interval.fields.MoneyIntervalField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'childcare_interval_period': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'childcare_per_interval_value': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'criminal_legalaid_contributions': ('legalaid.fields.MoneyField', [], {'default': '0', 'max_value': '9999999999', 'min_value': '0'}),
+            'criminal_legalaid_contributions': ('legalaid.fields.MoneyField', [], {'default': 'None', 'max_value': '9999999999', 'min_value': '0', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'income_tax': ('cla_common.money_interval.fields.MoneyIntervalField', [], {}),
+            'income_tax': ('cla_common.money_interval.fields.MoneyIntervalField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'income_tax_interval_period': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'income_tax_per_interval_value': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'maintenance': ('cla_common.money_interval.fields.MoneyIntervalField', [], {}),
+            'maintenance': ('cla_common.money_interval.fields.MoneyIntervalField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'maintenance_interval_period': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'maintenance_per_interval_value': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'mortgage': ('cla_common.money_interval.fields.MoneyIntervalField', [], {}),
+            'mortgage': ('cla_common.money_interval.fields.MoneyIntervalField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'mortgage_interval_period': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'mortgage_per_interval_value': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'national_insurance': ('cla_common.money_interval.fields.MoneyIntervalField', [], {}),
+            'national_insurance': ('cla_common.money_interval.fields.MoneyIntervalField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'national_insurance_interval_period': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'national_insurance_per_interval_value': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'rent': ('cla_common.money_interval.fields.MoneyIntervalField', [], {}),
+            'rent': ('cla_common.money_interval.fields.MoneyIntervalField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'rent_interval_period': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'rent_per_interval_value': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'})
         },
@@ -156,15 +298,15 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'EligibilityCheck'},
             'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Category']", 'null': 'True', 'blank': 'True'}),
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'dependants_old': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'dependants_young': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'has_partner': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'dependants_old': ('django.db.models.fields.PositiveIntegerField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
+            'dependants_young': ('django.db.models.fields.PositiveIntegerField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
+            'has_partner': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_you_or_your_partner_over_60': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'is_you_or_your_partner_over_60': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
             'notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'on_nass_benefits': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'on_passported_benefits': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'on_nass_benefits': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
+            'on_passported_benefits': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'partner': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'partner'", 'null': 'True', 'to': u"orm['legalaid.Person']"}),
             'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'}),
             'state': ('django.db.models.fields.CharField', [], {'default': "'unknown'", 'max_length': '50'}),
@@ -174,15 +316,15 @@ class Migration(SchemaMigration):
         u'legalaid.income': {
             'Meta': {'object_name': 'Income'},
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'earnings': ('cla_common.money_interval.fields.MoneyIntervalField', [], {}),
+            'earnings': ('cla_common.money_interval.fields.MoneyIntervalField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'earnings_interval_period': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'earnings_per_interval_value': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'other_income': ('cla_common.money_interval.fields.MoneyIntervalField', [], {}),
+            'other_income': ('cla_common.money_interval.fields.MoneyIntervalField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'other_income_interval_period': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'other_income_per_interval_value': ('django.db.models.fields.BigIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'self_employed': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
+            'self_employed': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'})
         },
         u'legalaid.person': {
             'Meta': {'object_name': 'Person'},
@@ -209,22 +351,22 @@ class Migration(SchemaMigration):
         u'legalaid.property': {
             'Meta': {'object_name': 'Property'},
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'disputed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'disputed': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'eligibility_check': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.EligibilityCheck']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'mortgage_left': ('legalaid.fields.MoneyField', [], {'default': '0', 'max_value': '9999999999', 'min_value': '0'}),
-            'share': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'value': ('legalaid.fields.MoneyField', [], {'default': '0', 'max_value': '9999999999', 'min_value': '0'})
+            'mortgage_left': ('legalaid.fields.MoneyField', [], {'default': 'None', 'max_value': '9999999999', 'min_value': '0', 'null': 'True', 'blank': 'True'}),
+            'share': ('django.db.models.fields.PositiveIntegerField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
+            'value': ('legalaid.fields.MoneyField', [], {'default': 'None', 'max_value': '9999999999', 'min_value': '0', 'null': 'True', 'blank': 'True'})
         },
         u'legalaid.savings': {
             'Meta': {'object_name': 'Savings'},
-            'asset_balance': ('legalaid.fields.MoneyField', [], {'default': '0', 'max_value': '9999999999', 'min_value': '0'}),
-            'bank_balance': ('legalaid.fields.MoneyField', [], {'default': '0', 'max_value': '9999999999', 'min_value': '0'}),
+            'asset_balance': ('legalaid.fields.MoneyField', [], {'default': 'None', 'max_value': '9999999999', 'min_value': '0', 'null': 'True', 'blank': 'True'}),
+            'bank_balance': ('legalaid.fields.MoneyField', [], {'default': 'None', 'max_value': '9999999999', 'min_value': '0', 'null': 'True', 'blank': 'True'}),
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'credit_balance': ('legalaid.fields.MoneyField', [], {'default': '0', 'max_value': '9999999999', 'min_value': '0'}),
+            'credit_balance': ('legalaid.fields.MoneyField', [], {'default': 'None', 'max_value': '9999999999', 'min_value': '0', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'investment_balance': ('legalaid.fields.MoneyField', [], {'default': '0', 'max_value': '9999999999', 'min_value': '0'}),
+            'investment_balance': ('legalaid.fields.MoneyField', [], {'default': 'None', 'max_value': '9999999999', 'min_value': '0', 'null': 'True', 'blank': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'})
         }
     }

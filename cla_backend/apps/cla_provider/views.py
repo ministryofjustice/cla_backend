@@ -4,13 +4,13 @@ from rest_framework import viewsets, mixins
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.decorators import action
 
-from core.viewsets import DefaultStateFilterViewSetMixin, \
-    IsEligibleActionViewSetMixin
+from core.viewsets import DefaultStateFilterViewSetMixin
 from cla_common.constants import CASE_STATES
 from legalaid.serializers import CaseLogTypeSerializerBase
 
 from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
-from legalaid.views import BaseUserViewSet, StateFromActionMixin, BaseOutcomeCodeViewSet
+from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
+    BaseOutcomeCodeViewSet, BaseEligibilityCheckViewSet
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
@@ -42,14 +42,10 @@ class CaseLogTypeViewSet(
 
 class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,
-    IsEligibleActionViewSetMixin,
     mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
+    BaseEligibilityCheckViewSet
 ):
-    model = EligibilityCheck
     serializer_class = EligibilityCheckSerializer
-
-    lookup_field = 'reference'
 
 
 class OutcomeCodeViewSet(

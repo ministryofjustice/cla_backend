@@ -1,5 +1,4 @@
 import datetime
-import uuid
 
 from django.core.urlresolvers import reverse
 from django.utils import timezone
@@ -8,8 +7,7 @@ import mock
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from legalaid.models import EligibilityCheck, \
-    Case, CaseLog, CaseLogType
+from legalaid.models import Case, CaseLog, CaseLogType
 from legalaid.tests.base import StateChangeAPIMixin
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
@@ -32,7 +30,7 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             kwargs={'reference': self.case_obj.reference}
         )
 
-    def assertCaseCheckResponseKeys(self, response):
+    def assertCaseResponseKeys(self, response):
         self.assertItemsEqual(
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
@@ -53,7 +51,10 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
     def assertCaseEqual(self, data, case):
         self.assertEqual(case.reference, data['reference'])
-        self.assertEqual(unicode(case.eligibility_check.reference), data['eligibility_check'])
+        if data['eligibility_check']:
+            self.assertEqual(unicode(case.eligibility_check.reference), data['eligibility_check'])
+        else:
+            self.assertEqual(case.eligibility_check, None)
         self.assertPersonalDetailsEqual(data['personal_details'], case.personal_details)
 
 
@@ -80,7 +81,8 @@ class CreateCaseTestCase(BaseCaseTestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCaseCheckResponseKeys(response)
+        self.assertCaseResponseKeys(response)
+        self.assertEqual(response.data['eligibility_check'], None)
 
     def test_create_with_data(self):
         check = make_recipe('legalaid.eligibility_check')
@@ -104,7 +106,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.data['state'], CASE_STATES.OPEN)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCaseCheckResponseKeys(response)
+        self.assertCaseResponseKeys(response)
 
         self.assertCaseEqual(response.data,
             Case(
@@ -116,7 +118,6 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.data['in_scope'], None)
 
     def test_create_with_data_in_scope(self):
-        check = make_recipe('legalaid.eligibility_check')
         pd = make_recipe('legalaid.personal_details', **{
             'title': 'MR',
             'full_name': 'John Doe',
@@ -126,7 +127,6 @@ class CreateCaseTestCase(BaseCaseTestCase):
             'home_phone': '9876543210',
             })
         data = {
-            'eligibility_check': unicode(check.reference),
             'personal_details': unicode(pd.reference),
             'in_scope': True,
         }
@@ -138,82 +138,16 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.data['state'], CASE_STATES.OPEN)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCaseCheckResponseKeys(response)
+        self.assertCaseResponseKeys(response)
 
-        self.assertCaseEqual(response.data,
-                             Case(
-                                 reference=response.data['reference'],
-                                 eligibility_check=check,
-                                 personal_details=pd,
-                                 in_scope=True
-                             )
-        )
-
-    def test_create_with_data_out_scope(self):
-        check = make_recipe('legalaid.eligibility_check')
-
-        pd = make_recipe('legalaid.personal_details', **{
-            'title': 'MR',
-            'full_name': 'John Doe',
-            'postcode': 'SW1H 9AJ',
-            'street': '102 Petty France',
-            'mobile_phone': '0123456789',
-            'home_phone': '9876543210',
-            })
-
-        data = {
-            'eligibility_check': unicode(check.reference),
-            'personal_details': unicode(pd.reference),
-            'in_scope': False,
-            }
-        response = self.client.post(
-            self.list_url, data=data, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        # check initial state is correct
-        self.assertEqual(response.data['state'], CASE_STATES.OPEN)
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCaseCheckResponseKeys(response)
-
-        self.assertCaseEqual(response.data,
-                             Case(
-                                 reference=response.data['reference'],
-                                 eligibility_check=check,
-                                 personal_details=pd,
-                                 in_scope=False
-                             )
-        )
-
-    def test_create_without_eligibility_check(self):
-        pd = make_recipe('legalaid.personal_details', **{
-            'title': 'MR',
-            'full_name': 'John Doe',
-            'postcode': 'SW1H 9AJ',
-            'street': '102 Petty France',
-            'mobile_phone': '0123456789',
-            'home_phone': '9876543210',
-            })
-
-        data = {
-            'personal_details': unicode(pd.reference),
-        }
-        response = self.client.post(
-            self.list_url, data=data, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        # check initial state is correct
-        self.assertEqual(response.data['state'], CASE_STATES.OPEN)
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCaseCheckResponseKeys(response)
-
-        self.assertCaseEqual(response.data,
-                             Case(
-                                 reference=response.data['reference'],
-                                 eligibility_check=EligibilityCheck.objects.get(reference=response.data['eligibility_check']),
-                                 personal_details=pd
-                             )
+        self.assertCaseEqual(
+            response.data,
+            Case(
+                reference=response.data['reference'],
+                eligibility_check=None,
+                personal_details=pd,
+                in_scope=True
+            )
         )
 
     def test_case_serializer_with_eligibility_check_reference(self):
@@ -297,15 +231,24 @@ class AssignCaseTestCase(BaseCaseTestCase):
 
     @mock.patch('cla_provider.models.timezone.now')
     @mock.patch('cla_provider.helpers.timezone.now')
+    def test_assign_case_without_category(self, tz_model_mock, tz_helper_tz):
+        case = make_recipe('legalaid.case', eligibility_check=None)
+        category = make_recipe('legalaid.category')
+        return self._test_assign_successful(case, category, tz_model_mock, tz_helper_tz)
+
+    @mock.patch('cla_provider.models.timezone.now')
+    @mock.patch('cla_provider.helpers.timezone.now')
     def test_assign_successful(self, tz_model_mock, tz_helper_tz):
+        case = make_recipe('legalaid.case')
+        category = case.eligibility_check.category
+        return self._test_assign_successful(case, category, tz_model_mock, tz_helper_tz)
+
+    def _test_assign_successful(self, case, category, tz_model_mock, tz_helper_tz):
 
         fake_day = datetime.datetime(2014, 1, 2, 9, 1, 0).replace(tzinfo=timezone.get_current_timezone())
         tz_model_mock.return_value = fake_day
         tz_helper_tz.return_value = fake_day
 
-        case = make_recipe('legalaid.case')
-
-        category = case.eligibility_check.category
         make_recipe('legalaid.refsp_logtype')
         make_recipe('legalaid.manalc_logtype')
         provider = make_recipe('cla_provider.provider', active=True)
@@ -622,6 +565,10 @@ class DeclineAllSpecialistsTestCase(StateChangeAPIMixin, BaseCaseTestCase):
         pass
 
 
+"""
+    TODO: this should be moved into a different file in
+        call_centre.tests.api.test_personal_details_api.py
+"""
 class PersonalDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
     def assertPersonalDetailsCheckResponseKeys(self, response):

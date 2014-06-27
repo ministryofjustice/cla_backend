@@ -20,7 +20,8 @@ from call_centre.utils import getattrd
 
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
-from cla_common.constants import ELIGIBILITY_STATES, CASE_STATES
+from cla_common.constants import ELIGIBILITY_STATES, CASE_STATES, THIRDPARTY_REASON,\
+                                 THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES
 
 
 from legalaid.exceptions import InvalidMutationException
@@ -96,6 +97,23 @@ class PersonalDetails(TimeStampedModel):
     class Meta:
         verbose_name_plural = "personal details"
 
+class ThirdPartyDetails(TimeStampedModel):
+    personal_details = models.ForeignKey(PersonalDetails)
+    pass_phrase = models.CharField(max_length=255)
+    reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON)
+    personal_relationship = models.CharField(max_length=30, choices=THIRDPARTY_RELATIONSHIP)
+    personal_relationship_note = models.CharField(max_length=255, blank=True)
+    reference = UUIDField(auto=True, unique=True)
+
+class AdaptationDetails(TimeStampedModel):
+    bsl_webcam = models.BooleanField(default=False)
+    minicom = models.BooleanField(default=False)
+    text_relay = models.BooleanField(default=False)
+    skype_webcam = models.BooleanField(default=False)
+    language = models.CharField(max_length=30, choices=ADAPTATION_LANGUAGES, blank=True, null=True)
+    notes = models.TextField(blank=True)
+    callback_preference = models.BooleanField(default=False)
+    reference = UUIDField(auto=True, unique=True)
 
 class Person(TimeStampedModel):
     income = models.ForeignKey(Income, blank=True, null=True)
@@ -335,8 +353,10 @@ class Case(TimeStampedModel):
     notes = models.TextField(blank=True)
     provider_notes = models.TextField(blank=True)
     in_scope = models.NullBooleanField(default=None, null=True, blank=True)
-
     laa_reference = models.BigIntegerField(null=True, blank=True, unique=True)
+    thirdparty_details = models.ForeignKey('ThirdPartyDetails', blank=True, null=True)
+    adaptation_details = models.ForeignKey('AdaptationDetails', blank=True, null=True)
+
 
     def _set_reference_if_necessary(self):
         if not self.reference:
@@ -366,6 +386,14 @@ class Case(TimeStampedModel):
     def associate_personal_details(self, ref):
         self.personal_details = PersonalDetails.objects.get(reference=ref)
         self.save()
+
+    def associate_thirdparty_details(self, ref):
+        self.thirdparty_details = ThirdPartyDetails.objects.get(reference=ref)
+        self.save()
+
+    def associate_adaptation_details(self, ref):
+        self.adaptation_details = AdaptationDetails.objects.get(reference=ref)
+	self.save()
 
     def associate_eligibility_check(self, ref):
         self.eligibility_check = EligibilityCheck.objects.get(reference=ref)

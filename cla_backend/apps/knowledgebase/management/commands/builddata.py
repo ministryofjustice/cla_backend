@@ -4,6 +4,9 @@ usage-
 
 Creates derived dataset of constants used by JS frontend. Data is sourced from cla_common.
 
+you can then load the fixture with-
+./manage.py loaddata cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json
+
 """
 from django.core.management.base import BaseCommand
 import os

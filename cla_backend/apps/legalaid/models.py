@@ -110,7 +110,7 @@ class AdaptationDetails(TimeStampedModel):
     minicom = models.BooleanField(default=False)
     text_relay = models.BooleanField(default=False)
     skype_webcam = models.BooleanField(default=False)
-    language = models.CharField(max_length=30, choices=ADAPTATION_LANGUAGES)
+    language = models.CharField(max_length=30, choices=ADAPTATION_LANGUAGES, blank=True, null=True)
     notes = models.TextField(blank=True)
     callback_preference = models.BooleanField(default=False)
     reference = UUIDField(auto=True, unique=True)

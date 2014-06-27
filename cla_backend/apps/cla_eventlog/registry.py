@@ -28,6 +28,7 @@ def is_code_valid(code):
 
     return True
 
+
 class EventRegistry(object):
     def __init__(self):
         self._registry = {}
@@ -50,12 +51,12 @@ class EventRegistry(object):
         return self._registry[key]
 
     def get_selectable_events(self, role):
-        codes = defaultdict(list)
+        events = defaultdict(list)
 
         for action_key, EventClazz in self._registry.items():
-            for code, code_data in EventClazz.codes.items():
-                if code_data['type'] == LOG_TYPES.OUTCOME and role in code_data['selectable_by']:
-                    codes[action_key].append(code)
-        return codes
+            selectable_codes = EventClazz.get_selectable_codes(role)
+            if selectable_codes:
+                events[action_key] = selectable_codes
+        return events
 
 event_registry = EventRegistry()

@@ -15,6 +15,7 @@ class DeferAssignmentEvent(BaseEvent):
     }
 event_registry.register(DeferAssignmentEvent)
 
+
 class AssignToProviderEvent(BaseEvent):
     key = 'assign_to_provider'
     codes = {

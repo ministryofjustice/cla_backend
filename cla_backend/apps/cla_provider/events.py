@@ -6,11 +6,11 @@ from cla_eventlog.events import BaseEvent
 class RejectCaseEvent(BaseEvent):
     key = 'reject_case'
     codes = {
-        'MIS-MER': {
+        'MIS': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.SPECIALIST],
-            'description': 'Misdiagnosed, case lacks sufficient merit'
+            'description': 'Misdiagnosed, assigned to wrong Specialist or another Specialist is dealing with client'
         },
         'MIS-MEANS': {
             'type': LOG_TYPES.OUTCOME,
@@ -23,15 +23,10 @@ class RejectCaseEvent(BaseEvent):
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.SPECIALIST],
             'description': 'Misdiagnosed, out of scope'
-        },
-        'MIS-TEL': {
-            'type': LOG_TYPES.OUTCOME,
-            'level': LOG_LEVELS.HIGH,
-            'selectable_by': [LOG_ROLES.SPECIALIST],
-            'description': 'Misdiagnosed, case not suitable for telephone advice'
         }
     }
 event_registry.register(RejectCaseEvent)
+
 
 class AcceptCaseEvent(BaseEvent):
     key = 'accept_case'
@@ -44,6 +39,7 @@ class AcceptCaseEvent(BaseEvent):
         },
     }
 event_registry.register(AcceptCaseEvent)
+
 
 class CloseCaseEvent(BaseEvent):
     key = 'close_case'

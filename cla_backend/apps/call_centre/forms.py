@@ -92,6 +92,7 @@ class CloseCaseForm(forms.Form):
     def save(self, user):
         self.case.close()
 
+
 class CaseAssignDeferForm(OutcomeForm):
 
     CASELOGTYPE_CODE = 'CBSP'

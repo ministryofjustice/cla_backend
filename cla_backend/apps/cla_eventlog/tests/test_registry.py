@@ -1,7 +1,8 @@
+from django.test import TestCase
+
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
 from cla_eventlog.events import BaseEvent
 from cla_eventlog.registry import EventRegistry
-from django.test import TestCase
 
 
 #
@@ -41,7 +42,7 @@ from django.test import TestCase
 #         self.assertEqual(res, ('CASE_VIEWED', LOG_TYPES.SYSTEM, 'Case viewed'))
 
 
-class StartupChecksTestCase(TestCase):
+class RegistryStartupChecksTestCase(TestCase):
     def test_event_without_key_fails(self):
         registry = EventRegistry()
 

@@ -1,4 +1,5 @@
 from cla_eventlog.models import Log
+from cla_eventlog.constants import LOG_TYPES
 
 
 class BaseEvent(object):
@@ -25,3 +26,13 @@ class BaseEvent(object):
             notes=notes,
             created_by=created_by
         )
+
+    @classmethod
+    def get_selectable_codes(cls, role):
+        selectable_codes = []
+
+        for code, code_data in cls.codes.items():
+            if code_data['type'] == LOG_TYPES.OUTCOME and role in code_data['selectable_by']:
+                selectable_codes.append(code)
+        return selectable_codes
+

@@ -8,7 +8,6 @@ from rest_framework.filters import OrderingFilter, SearchFilter, DjangoFilterBac
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
-from core.viewsets import IsEligibleActionViewSetMixin
 from legalaid.models import Category, EligibilityCheck, Case, CaseLog, CaseLogType, \
     PersonalDetails, ThirdPartyDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \

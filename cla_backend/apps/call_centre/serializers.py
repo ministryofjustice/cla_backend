@@ -132,6 +132,7 @@ class CaseSerializer(CaseSerializerBase):
     provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
     caseoutcome_set = serializers.SerializerMethodField('get_caseoutcome_set')
     full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
+    eligibility_state = serializers.CharField(source='eligibility_check.state', read_only=True)
 
     def get_caseoutcome_set(self, case):
         case_outcomes = case.caselog_set.filter(logtype__subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
@@ -143,7 +144,7 @@ class CaseSerializer(CaseSerializerBase):
             'eligibility_check', 'personal_details', 'reference', 'created',
             'modified', 'created_by', 'state', 'provider', 'caseoutcome_set',
             'notes', 'provider_notes', 'in_scope', 'full_name', 'thirdparty_details',
-            'adaptation_details'
+            'adaptation_details', 'laa_reference', 'eligibility_state'
         )
 
 

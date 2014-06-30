@@ -120,10 +120,9 @@ class ProviderAllocationFormTestCase(TestCase):
 
         self.assertFalse(form.is_valid())
 
+class DeferAssignmentCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
+    FORM = DeferAssignmentCaseForm
+
 
 class DeclineAllSpecialistsCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
     FORM = DeclineAllSpecialistsCaseForm
-
-
-class DeferAssignmentCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
-    FORM = DeferAssignmentCaseForm

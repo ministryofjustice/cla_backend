@@ -59,6 +59,29 @@ class ProviderAllocationForm(BaseCaseLogForm):
         return data['provider_obj']
 
 
+class DeferAssignmentCaseForm(BaseCaseLogForm):
+    LOG_EVENT_KEY = 'defer_assignment'
+
+    def clean(self):
+        cleaned_data = super(DeferAssignmentCaseForm, self).clean()
+        if self._errors:  # skip if already in error
+            return cleaned_data
+
+        # checking that the case is in a consistent state
+        if self.case.provider:
+            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
+        return cleaned_data
+
+
+class DeclineAllSpecialistsCaseForm(EventSpecificLogForm):
+    LOG_EVENT_KEY = 'decline_help'
+
+    def save(self, user):
+        self.case.close()
+
+        super(DeclineAllSpecialistsCaseForm, self).save(user)  # saves the outcome
+
+
 class AssociatePersonalDetailsCaseForm(forms.Form):
     reference = forms.CharField(required=True, max_length=32)
 
@@ -91,26 +114,3 @@ class AssociateEligibilityCheckCaseForm(forms.Form):
     def save(self, user):
         ref = self.cleaned_data['reference']
         self.case.associate_eligibility_check(ref)
-
-
-class DeferAssignmentCaseForm(BaseCaseLogForm):
-    LOG_EVENT_KEY = 'defer_assignment'
-
-    def clean(self):
-        cleaned_data = super(DeferAssignmentCaseForm, self).clean()
-        if self._errors:  # skip if already in error
-            return cleaned_data
-
-        # checking that the case is in a consistent state
-        if self.case.provider:
-            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
-        return cleaned_data
-
-
-class DeclineAllSpecialistsCaseForm(EventSpecificLogForm):
-    LOG_EVENT_KEY = 'decline_help'
-
-    def save(self, user):
-        self.case.close()
-
-        super(DeclineAllSpecialistsCaseForm, self).save(user)  # saves the outcome

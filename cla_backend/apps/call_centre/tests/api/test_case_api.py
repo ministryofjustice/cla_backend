@@ -343,6 +343,41 @@ class AssignCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.data['provider'], None)
 
 
+class DeferAssignmentTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_url(self, reference=None):
+        reference = reference or self.check.reference
+        return reverse(
+            'call_centre:case-defer-assignment', args=(),
+            kwargs={'reference': reference}
+        )
+
+    def test_already_assigned(self):
+        provider = make_recipe('cla_provider.provider', active=True)
+        self.check.provider = provider
+        self.check.save()
+
+        response = self.client.post(
+            self.url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(response.data, {'__all__': [u'Case currently assigned to a provider']})
+
+
+class DeclineAllSpecialistsTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_event_code(self):
+        form = DeclineAllSpecialistsCaseForm(case=mock.MagicMock())
+        return form.fields['event_code'].choices[0][0]
+
+    def get_url(self, reference=None):
+        reference = reference or self.check.reference
+        return reverse(
+            'call_centre:case-decline-all-specialists', args=(),
+            kwargs={'reference': reference}
+        )
+
+
 class SearchCaseTestCase(BaseCaseTestCase):
 
     def test_list_with_dashboard_param(self):
@@ -504,19 +539,6 @@ class SearchCaseTestCase(BaseCaseTestCase):
 
 
 
-class DeclineAllSpecialistsTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
-    def get_event_code(self):
-        form = DeclineAllSpecialistsCaseForm(case=mock.MagicMock())
-        return form.fields['event_code'].choices[0][0]
-
-    def get_url(self, reference=None):
-        reference = reference or self.check.reference
-        return reverse(
-            'call_centre:case-decline-all-specialists', args=(),
-            kwargs={'reference': reference}
-        )
-
-
 """
     TODO: this should be moved into a different file in
         call_centre.tests.api.test_personal_details_api.py
@@ -643,25 +665,3 @@ class PersonalDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertPersonalDetailsCheckResponseKeys(response)
 
         self.assertPersonalDetailsEqual(response.data, check)
-
-
-class DeferAssignmentTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
-    def get_url(self, reference=None):
-        reference = reference or self.check.reference
-        return reverse(
-            'call_centre:case-defer-assignment', args=(),
-            kwargs={'reference': reference}
-        )
-
-    def test_already_assigned(self):
-        provider = make_recipe('cla_provider.provider', active=True)
-        self.check.provider = provider
-        self.check.save()
-
-        response = self.client.post(
-            self.url, data={}, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(response.data, {'__all__': [u'Case currently assigned to a provider']})

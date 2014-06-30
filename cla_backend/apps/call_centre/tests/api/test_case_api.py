@@ -235,21 +235,37 @@ class AssignCaseTestCase(BaseCaseTestCase):
     def test_assign_case_without_category(self, tz_model_mock, tz_helper_tz):
         case = make_recipe('legalaid.case', eligibility_check=None)
         category = make_recipe('legalaid.category')
-        return self._test_assign_successful(case, category, tz_model_mock, tz_helper_tz)
+        return self._test_assign_successful(
+            case, category, tz_model_mock, tz_helper_tz, is_manual=False
+        )
 
     @mock.patch('cla_provider.models.timezone.now')
     @mock.patch('cla_provider.helpers.timezone.now')
-    def test_assign_successful(self, tz_model_mock, tz_helper_tz):
+    def test_manual_assign_successful(self, tz_model_mock, tz_helper_tz):
         case = make_recipe('legalaid.case')
         category = case.eligibility_check.category
-        return self._test_assign_successful(case, category, tz_model_mock, tz_helper_tz)
+        return self._test_assign_successful(
+            case, category, tz_model_mock, tz_helper_tz, is_manual=True
+        )
 
-    def _test_assign_successful(self, case, category, tz_model_mock, tz_helper_tz):
+    @mock.patch('cla_provider.models.timezone.now')
+    @mock.patch('cla_provider.helpers.timezone.now')
+    def test_automatic_assign_successful(self, tz_model_mock, tz_helper_tz):
+        case = make_recipe('legalaid.case')
+        category = case.eligibility_check.category
+        return self._test_assign_successful(
+            case, category, tz_model_mock, tz_helper_tz, is_manual=False
+        )
+
+    def _test_assign_successful(self,
+            case, category, tz_model_mock, tz_helper_tz, is_manual=True
+        ):
         fake_day = datetime.datetime(2014, 1, 2, 9, 1, 0).replace(tzinfo=timezone.get_current_timezone())
         tz_model_mock.return_value = fake_day
         tz_helper_tz.return_value = fake_day
 
-        provider = make_recipe('cla_provider.provider', active=True)
+        # preparing for test
+        provider = make_recipe('cla_provider.provider', name='Provider Name', active=True)
         make_recipe('cla_provider.provider_allocation',
                                  weighted_distribution=0.5,
                                  provider=provider,
@@ -263,7 +279,7 @@ class AssignCaseTestCase(BaseCaseTestCase):
 
         self.assertTrue(case.reference in [x.get('reference') for x in case_list['results']])
 
-        # no manual allocation outcome codes should exist at this point
+        # no outcome codes should exist at this point
         self.assertEqual(Log.objects.count(), 0)
 
         # assign
@@ -272,9 +288,11 @@ class AssignCaseTestCase(BaseCaseTestCase):
         data = {
             'suggested_provider': provider.pk,
             'provider_id': provider.pk,
-            'is_manual': True,
-            'notes': 'my notes'
+            'is_manual': is_manual
         }
+        if is_manual:
+            data['notes'] = 'my notes'
+
         response = self.client.post(
             url, data=data,
             HTTP_AUTHORIZATION='Bearer %s' % self.token,
@@ -294,13 +312,14 @@ class AssignCaseTestCase(BaseCaseTestCase):
 
         self.assertFalse(case.reference in [x.get('reference') for x in case_list['results']])
 
+        # checking that the log object is there
         self.assertEqual(Log.objects.count(), 1)
         log = Log.objects.all()[0]
         self.assertEqual(log.case, case)
-        self.assertEqual(log.notes, 'my notes')
+        self.assertEqual(log.notes, 'my notes' if is_manual else 'Assigned to Provider Name')
         self.assertEqual(log.created_by, self.user)
 
-        # ... but still accessible from the list
+        # ... but the case still accessible from the full list
         case_list = self.client.get(
             self.list_url, format='json',
             HTTP_AUTHORIZATION='Bearer %s' % self.token

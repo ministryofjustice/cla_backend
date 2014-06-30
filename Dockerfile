@@ -25,7 +25,7 @@ RUN DEBIAN_FRONTEND='noninteractive' add-apt-repository ppa:nginx/stable && apt-
 RUN DEBIAN_FRONTEND='noninteractive' apt-get -y --force-yes install nginx-full && \
   chown -R www-data:www-data /var/lib/nginx
 
-ADD ./nginx.conf /etc/nginx/nginx.conf
+ADD ./docker/nginx.conf /etc/nginx/nginx.conf
 RUN rm -f /etc/nginx/sites-enabled/default
 
 # Install ruby
@@ -41,7 +41,7 @@ RUN pip install GitPython uwsgi
 RUN mkdir -p /var/log/wsgi
 
 RUN  mkdir -p /var/log/nginx/cla_backend
-ADD ./cla_backend.ini /etc/wsgi/conf.d/cla_backend.ini
+ADD ./docker/cla_backend.ini /etc/wsgi/conf.d/cla_backend.ini
 
 # Define mountable directories.
 VOLUME ["/data", "/var/log/nginx", "/var/log/wsgi"]
@@ -50,15 +50,15 @@ VOLUME ["/data", "/var/log/nginx", "/var/log/wsgi"]
 ENV APP_HOME /home/app/django
 
 # Add project directory to docker
-ADD ./ /home/app/django
+ADD . /home/app/django
 
 # Add deploy-key
 RUN mkdir -p /root/.ssh
-ADD ./deploy-key /root/.ssh/id_rsa
-ADD ./config /root/.ssh/config
+ADD ./docker/deploy-key /root/.ssh/id_rsa
+ADD ./docker/config /root/.ssh/config
 
 # Add local.py for QA
-ADD ./local.py /home/app/django/cla_backend/settings/local.py
+ADD ./docker/local.py /home/app/django/cla_backend/settings/local.py
 
 # Define working directory.
 WORKDIR /home/app/django
@@ -80,10 +80,10 @@ RUN python manage.py loaddata initial_category.json
 RUN python manage.py collectstatic --noinput
 
 # install service files for runit
-ADD nginx.service /etc/service/nginx/run
+ADD ./docker/nginx.service /etc/service/nginx/run
 
 # install service files for runit
-ADD uwsgi.service /etc/service/uwsgi/run
+ADD ./docker/uwsgi.service /etc/service/uwsgi/run
 
 # Expose ports.
 EXPOSE 80

@@ -16,7 +16,7 @@ from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
 from .serializers import EligibilityCheckSerializer, \
-    CaseSerializer, ProviderSerializer, CaseLogSerializer, \
+    CaseSerializer, ProviderSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer
 from .forms import ProviderAllocationForm, CloseCaseForm, \
     DeclineAllSpecialistsCaseForm, CaseAssignDeferForm, \
@@ -34,13 +34,6 @@ class CallCentreManagerPermissionsViewSetMixin(object):
 
 class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
     pass
-
-class CaseLogTypeViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
-    model = CaseLogType
-    serializer_class = CaseLogSerializer
-
-    lookup_field = 'code'
-
 
 class OutcomeCodeViewSet(
     CallCentrePermissionsViewSetMixin, BaseOutcomeCodeViewSet

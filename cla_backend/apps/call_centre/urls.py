@@ -6,7 +6,6 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)
-router.register(r'caselogtype', views.CaseLogTypeViewSet)
 router.register(r'provider/rota', views.OutOfHoursRotaViewSet)
 router.register(r'outcome_code', views.OutcomeCodeViewSet, base_name='outcome_code')
 router.register(r'provider', views.ProviderViewSet)

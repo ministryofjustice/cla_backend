@@ -1,28 +1,16 @@
-from core import fields
-from django.db import models
+from cla_eventlog.constants import LOG_TYPES
+from cla_eventlog.serializers import LogSerializerBase
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
 
-from core.serializers import UUIDSerializer
+from core.serializers import UUIDSerializer, ClaModelSerializer
 from cla_provider.models import Provider, OutOfHoursRota
 
 from cla_common.money_interval.models import MoneyInterval
-from cla_common.money_interval.serializers import \
-    MoneyIntervalModelSerializerMixin
 
 from .models import Category, Property, EligibilityCheck, Income, \
-    Savings, Deductions, Person, PersonalDetails, Case, CaseLog, CaseLogType
+    Savings, Deductions, Person, PersonalDetails, Case, CaseLogType
 
-class NullBooleanModelSerializerMixin(object):
-    def __init__(self, *args, **kwargs):
-        # add a model serializer which is used throughout this project
-        self.field_mapping = self.field_mapping.copy()
-        self.field_mapping[models.NullBooleanField] = fields.NullBooleanField
-        super(NullBooleanModelSerializerMixin, self).__init__(*args, **kwargs)
 
-class ClaModelSerializer(MoneyIntervalModelSerializerMixin,
-                         NullBooleanModelSerializerMixin, ModelSerializer):
-    pass
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -143,18 +131,20 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         self.object.update_state()
 
 
-class CaseLogSerializerBase(ClaModelSerializer):
-    class Meta:
-        model = CaseLog
-        fields = None
-
-
 class CaseSerializerBase(ClaModelSerializer):
+
+    LOG_SERIALIZER = LogSerializerBase
+
     eligibility_check = UUIDSerializer(slug_field='reference')
     personal_details = PersonalDetailsSerializerBase()
     notes = serializers.CharField(max_length=500, required=False)
     provider_notes = serializers.CharField(max_length=500, required=False)
-    in_scope = serializers.BooleanField(required=False)
+    in_scope = serializers
+
+    def get_log_set(self, case):
+        case_log = case.log_set.filter(logtype__subtype=LOG_TYPES.OUTCOME)
+        serializer = self.LOG_SERIALIZER(instance=case_log, many=True, required=False, read_only=True)
+        return serializer.data.BooleanField(required=False)
 
     class Meta:
         model = Case

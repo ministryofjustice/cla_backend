@@ -7,7 +7,7 @@ from legalaid.models import CaseLog
 from cla_common.constants import CASE_STATES
 
 from core.tests.mommy_utils import make_recipe, make_user
-from legalaid.tests.base import BaseStateFormTestCase
+from legalaid.tests.base import BaseCaseLogFormTestCase
 
 from cla_provider.helpers import ProviderAllocationHelper
 from ..forms import ProviderAllocationForm, DeclineAllSpecialistsCaseForm
@@ -121,7 +121,7 @@ class ProviderAllocationFormTestCase(TestCase):
         self.assertFalse(form.is_valid())
 
 
-class DeclineAllSpecialistsCaseFormTestCase(BaseStateFormTestCase, TestCase):
+class DeclineAllSpecialistsCaseFormTestCase(BaseCaseLogFormTestCase, TestCase):
     FORM = DeclineAllSpecialistsCaseForm
     VALID_OUTCOME_CODE = 'CODE_DECLINED_ALL_SPECIALISTS'
     EXPECTED_CASE_STATE = CASE_STATES.CLOSED

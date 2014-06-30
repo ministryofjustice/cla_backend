@@ -37,7 +37,7 @@ class AssignToProviderEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Sent to Specialist again'
         },
-        }
+    }
 
     def get_log_code(self, **kwargs):
         is_manual = kwargs['is_manual']

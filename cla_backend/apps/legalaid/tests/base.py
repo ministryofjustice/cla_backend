@@ -35,75 +35,86 @@ def generate_outcome_codes():
     ]
 
 
-class BaseStateFormTestCase(object):
-    FORM = None,
-    VALID_OUTCOME_CODE = None
-    EXPECTED_CASE_STATE = None
+class BaseCaseLogFormTestCase(object):
+    FORM = None
 
     def setUp(self):
-        super(BaseStateFormTestCase, self).setUp()
+        super(BaseCaseLogFormTestCase, self).setUp()
 
         self.user = make_user()
-        self.outcome_codes = generate_outcome_codes()
 
-    def test_choices(self):
-        form = self.FORM(case=mock.MagicMock())
-
-        self.assertItemsEqual(
-            [f[1] for f in form.fields['outcome_code'].choices], [self.VALID_OUTCOME_CODE]
-        )
+    def get_default_data(self):
+        return {
+            'notes': 'lorem ipsum'
+        }
 
     def test_save_successfull(self):
-        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
+        case = make_recipe('legalaid.case')
+        self.assertEqual(Log.objects.count(), 0)
 
-        self.assertEqual(case.state, CASE_STATES.OPEN)
-
-        self.assertEqual(CaseLog.objects.count(), 0)
-
-        form = self.FORM(case=case, data={
-            'outcome_code': self.VALID_OUTCOME_CODE,
-            'outcome_notes': 'lorem ipsum'
-        })
+        data = self.get_default_data()
+        form = self.FORM(case=case, data=data)
 
         self.assertTrue(form.is_valid())
 
         form.save(self.user)
 
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, self.EXPECTED_CASE_STATE)
 
-        self.assertEqual(CaseLog.objects.count(), 1)
-        outcome = CaseLog.objects.all()[0]
+        self.assertEqual(Log.objects.count(), 1)
+        log = Log.objects.all()[0]
 
-        self.assertEqual(outcome.logtype.code, self.VALID_OUTCOME_CODE)
-        self.assertEqual(outcome.notes, 'lorem ipsum')
+        self.assertEqual(log.notes, 'lorem ipsum')
+        self.assertEqual(log.created_by, self.user)
+        self.assertEqual(log.case, case)
 
     def test_invalid_form(self):
-        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN)
-
-        self.assertEqual(case.state, CASE_STATES.OPEN)
-
+        case = make_recipe('legalaid.case')
         self.assertEqual(CaseLog.objects.count(), 0)
 
-        form = self.FORM(case=case, data={
-            'outcome_code': 'invalid',
-            'outcome_notes': 'l'*501
-        })
+        data = self.get_default_data()
+        data['notes'] = 'l'*501
+        form = self.FORM(case=case, data=data)
 
         self.assertFalse(form.is_valid())
 
         self.assertItemsEqual(
             form.errors, {
-                'outcome_code': [u'Select a valid choice. That choice is not one of the available choices.'],
-                'outcome_notes': [u'Ensure this value has at most 500 characters (it has 501).']
+                'notes': [u'Ensure this value has at most 500 characters (it has 501).']
             }
         )
 
         # nothing has changed
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(case.state, CASE_STATES.OPEN)
-
         self.assertEqual(CaseLog.objects.count(), 0)
+
+
+class EventSpecificLogFormTestCase(BaseCaseLogFormTestCase):
+    def get_default_data(self):
+        data = super(EventSpecificLogFormTestCase, self).get_default_data()
+
+        form = self.FORM(case=mock.MagicMock())
+        event_code = form.fields['event_code'].choices[0][0]  # getting the first code
+        data['event_code'] = event_code
+
+        return data
+
+    def test_invalid_event_code(self):
+        # test with invalid code
+        case = make_recipe('legalaid.case')
+        self.assertEqual(CaseLog.objects.count(), 0)
+
+        data = self.get_default_data()
+        data['event_code'] = 'invalid'
+        form = self.FORM(case=case, data=data)
+
+        self.assertFalse(form.is_valid())
+
+        self.assertItemsEqual(
+            form.errors, {
+                'event_code': [u'Invalid choice']
+            }
+        )
 
 
 class StateChangeAPIMixin(object):
@@ -224,12 +235,15 @@ class StateChangeAPIMixin(object):
         self.assertEqual(CaseLog.objects.count(), 0)
 
 
-# NOTE: attempt to create a generic Mixin for API actions which create a log entry
-# from events with only 1 code. Should be extended / changed including all other
-# cases
-class ViewActionWithSingleEventTestCase(object):
+class ImplicitEventCodeViewTestCaseMixin(object):
+    """
+    This is for endpoints which mainly create implicit outcome after
+    an action (e.g. close case, accept case etc.).
+
+    The user is not given the possibility to specify an outcome code.
+    """
     def setUp(self):
-        super(ViewActionWithSingleEventTestCase, self).setUp()
+        super(ImplicitEventCodeViewTestCaseMixin, self).setUp()
         self.url = self.get_url()
 
     def get_url(self, reference=None):
@@ -252,13 +266,16 @@ class ViewActionWithSingleEventTestCase(object):
         response = self.client.post(self.url, data={})
         self.assertTrue(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def get_default_post_data(self):
+        return {
+            'notes': 'lorem ipsum'
+        }
+
     def test_successful(self):
         # before, no logs
         self.assertEqual(Log.objects.count(), 0)
 
-        data={
-            'notes': 'lorem ipsum'
-        }
+        data = self.get_default_post_data()
         response = self.client.post(
             self.url, data=data, format='json',
             HTTP_AUTHORIZATION='Bearer %s' % self.token
@@ -267,10 +284,29 @@ class ViewActionWithSingleEventTestCase(object):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         # after, log entry created
-        # self.assertEqual(case.state, self.EXPECTED_CASE_STATE)
         self.assertEqual(Log.objects.count(), 1)
         log = Log.objects.all()[0]
 
         self.assertEqual(log.case, self.check)
         self.assertEqual(log.notes, data['notes'])
         self.assertEqual(log.created_by, self.user)
+
+
+class ExplicitEventCodeViewTestCaseMixin(ImplicitEventCodeViewTestCaseMixin):
+    """
+    This is for endpoints which create explicit outcomes after
+    an action (e.g. reject case etc.).
+
+    The user is given the possibility to specify an outcome code from a list of
+    valid ones.
+    """
+    def get_event_code(self):
+        """
+        Should return a __valid__ code for this endpoints.
+        """
+        raise NotImplementedError()
+
+    def get_default_post_data(self):
+        data = super(ExplicitEventCodeViewTestCaseMixin, self).get_default_post_data()
+        data['event_code'] = self.get_event_code()
+        return data

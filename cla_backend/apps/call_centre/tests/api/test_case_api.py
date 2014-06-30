@@ -10,7 +10,7 @@ from rest_framework.test import APITestCase
 from cla_eventlog.models import Log
 
 from legalaid.models import Case, CaseLog, CaseLogType
-from legalaid.tests.base import StateChangeAPIMixin, ViewActionWithSingleEventTestCase
+from legalaid.tests.base import StateChangeAPIMixin, ImplicitEventCodeViewTestCaseMixin
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
@@ -653,7 +653,7 @@ class PersonalDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
 
 
-class DeferAssignmentTestCase(ViewActionWithSingleEventTestCase, BaseCaseTestCase):
+class DeferAssignmentTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def get_url(self, reference=None):
         reference = reference or self.check.reference
         return reverse(

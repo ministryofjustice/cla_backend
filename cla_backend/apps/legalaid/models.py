@@ -46,20 +46,6 @@ class Category(TimeStampedModel):
         return u'%s' % self.name
 
 
-# class Question(TimeStampedModel):
-#     name = models.CharField(max_length=500)
-#     description = models.TextField(blank=True)
-#     guidance = models.TextField(blank=True)
-#     config = JSONField(blank=True, null=True)
-#     order = models.PositiveIntegerField(default=0)
-
-#     class Meta:
-#         ordering = ['order']
-
-#     def __unicode__(self):
-#         return u'%s' % self.name
-
-
 class Savings(TimeStampedModel):
     bank_balance = MoneyField(default=None, null=True, blank=True)
     investment_balance = MoneyField(default=None, null=True, blank=True)
@@ -319,20 +305,6 @@ class Property(TimeStampedModel):
 
     class Meta:
         verbose_name_plural = "properties"
-
-
-# class OutcomeCode(TimeStampedModel):
-#     code = models.CharField(max_length=50, unique=True)
-#     description = models.TextField()
-#     case_state = models.PositiveSmallIntegerField(
-#         choices=CASE_STATES.CHOICES, null=True, blank=True
-#     )
-#
-#     def __unicode__(self):
-#         return u'%s' % self.code
-#
-#     class Meta:
-#         ordering = ['code']
 
 
 class Case(TimeStampedModel):

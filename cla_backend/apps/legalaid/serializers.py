@@ -139,12 +139,13 @@ class CaseSerializerBase(ClaModelSerializer):
     personal_details = PersonalDetailsSerializerBase()
     notes = serializers.CharField(max_length=500, required=False)
     provider_notes = serializers.CharField(max_length=500, required=False)
+    log_set = serializers.SerializerMethodField('get_log_set')
     in_scope = serializers
 
     def get_log_set(self, case):
-        case_log = case.log_set.filter(logtype__subtype=LOG_TYPES.OUTCOME)
+        case_log = case.log_set.filter(type=LOG_TYPES.OUTCOME)
         serializer = self.LOG_SERIALIZER(instance=case_log, many=True, required=False, read_only=True)
-        return serializer.data.BooleanField(required=False)
+        return serializer.data
 
     class Meta:
         model = Case

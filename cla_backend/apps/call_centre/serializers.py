@@ -119,7 +119,6 @@ class CaseSerializer(CaseSerializerBase):
     state = serializers.ChoiceField(choices=CASE_STATES.CHOICES, default=CASE_STATES.OPEN, read_only=True)
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
-    logset_set = serializers.SerializerMethodField('get_log_set')
     full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
 
 

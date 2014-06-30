@@ -8,8 +8,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter, DjangoFilterBac
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
-from legalaid.models import EligibilityCheck, Case, CaseLog, CaseLogType, \
-    PersonalDetails
+from legalaid.models import Case, CaseLogType, PersonalDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
     BaseOutcomeCodeViewSet, BaseCategoryViewSet, BaseEligibilityCheckViewSet
 
@@ -18,7 +17,7 @@ from .permissions import CallCentreClientIDPermission, \
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer
-from .forms import ProviderAllocationForm, CloseCaseForm, \
+from .forms import ProviderAllocationForm, \
     DeclineAllSpecialistsCaseForm, CaseAssignDeferForm, \
     AssociatePersonalDetailsCaseForm, AssociateEligibilityCheckCaseForm
 from .models import Operator
@@ -131,9 +130,7 @@ class CaseViewSet(
         obj = self.get_object()
         helper = ProviderAllocationHelper()
 
-        category = obj.eligibility_check.category \
-                    if (hasattr(obj, 'eligibility_check') and obj.eligibility_check != None) else None
-
+        category = obj.eligibility_check.category if obj.eligibility_check else None
         suitable_providers = helper.get_qualifying_providers(category)
 
         # find given provider in suitable - avoid extra lookup and ensures
@@ -148,24 +145,15 @@ class CaseViewSet(
         # if we're inside office hours then:
         # Randomly assign to provider who offers this category of service
         # else it should be the on duty provider
+        data = request.DATA.copy()
+        data['provider'] = p.pk
         form = ProviderAllocationForm(case=obj,
-                                      data={'provider' : p.pk},
+                                      data=data,
                                       providers=suitable_providers)
 
         if form.is_valid():
             provider = form.save(request.user)
             provider_serialised = ProviderSerializer(provider)
-
-            notes = request.DATA['assign_notes'] if 'assign_notes' in request.DATA else None
-
-            # TODO - caselog is about to change. This is a simple way of completing
-            #        current story before caselog refactor
-            if request.DATA['is_manual']:
-                logType = CaseLogType.objects.get(code='MANALC')
-                CaseLog.objects.create( case=obj, created_by=self.request.user,
-                                        logtype=logType, notes=notes
-                                      )
-
             return DRFResponse(data=provider_serialised.data)
 
         return DRFResponse(
@@ -187,21 +175,6 @@ class CaseViewSet(
     @action()
     def decline_all_specialists(self, request, reference=None, **kwargs):
         return self._state_form_action(request, DeclineAllSpecialistsCaseForm)
-
-    @action()
-    def close(self, request, reference=None, **kwargs):
-        """
-        Closes a case
-        """
-        obj = self.get_object()
-        form = CloseCaseForm(case=obj, data=request.DATA)
-        if form.is_valid():
-            form.save(request.user)
-            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
 
     @action()
     def associate_personal_details(self, request, *args, **kwargs):

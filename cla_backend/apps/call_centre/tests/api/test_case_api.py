@@ -7,10 +7,10 @@ import mock
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from legalaid.models import Case, CaseLog, CaseLogType
-from legalaid.tests.base import StateChangeAPIMixin
-
 from cla_eventlog.models import Log
+
+from legalaid.models import Case, CaseLog, CaseLogType
+from legalaid.tests.base import StateChangeAPIMixin, ViewActionWithSingleEventTestCase
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
@@ -235,24 +235,37 @@ class AssignCaseTestCase(BaseCaseTestCase):
     def test_assign_case_without_category(self, tz_model_mock, tz_helper_tz):
         case = make_recipe('legalaid.case', eligibility_check=None)
         category = make_recipe('legalaid.category')
-        return self._test_assign_successful(case, category, tz_model_mock, tz_helper_tz)
+        return self._test_assign_successful(
+            case, category, tz_model_mock, tz_helper_tz, is_manual=False
+        )
 
     @mock.patch('cla_provider.models.timezone.now')
     @mock.patch('cla_provider.helpers.timezone.now')
-    def test_assign_successful(self, tz_model_mock, tz_helper_tz):
+    def test_manual_assign_successful(self, tz_model_mock, tz_helper_tz):
         case = make_recipe('legalaid.case')
         category = case.eligibility_check.category
-        return self._test_assign_successful(case, category, tz_model_mock, tz_helper_tz)
+        return self._test_assign_successful(
+            case, category, tz_model_mock, tz_helper_tz, is_manual=True
+        )
 
-    def _test_assign_successful(self, case, category, tz_model_mock, tz_helper_tz):
+    @mock.patch('cla_provider.models.timezone.now')
+    @mock.patch('cla_provider.helpers.timezone.now')
+    def test_automatic_assign_successful(self, tz_model_mock, tz_helper_tz):
+        case = make_recipe('legalaid.case')
+        category = case.eligibility_check.category
+        return self._test_assign_successful(
+            case, category, tz_model_mock, tz_helper_tz, is_manual=False
+        )
 
+    def _test_assign_successful(self,
+            case, category, tz_model_mock, tz_helper_tz, is_manual=True
+        ):
         fake_day = datetime.datetime(2014, 1, 2, 9, 1, 0).replace(tzinfo=timezone.get_current_timezone())
         tz_model_mock.return_value = fake_day
         tz_helper_tz.return_value = fake_day
 
-        make_recipe('legalaid.refsp_logtype')
-        make_recipe('legalaid.manalc_logtype')
-        provider = make_recipe('cla_provider.provider', active=True)
+        # preparing for test
+        provider = make_recipe('cla_provider.provider', name='Provider Name', active=True)
         make_recipe('cla_provider.provider_allocation',
                                  weighted_distribution=0.5,
                                  provider=provider,
@@ -266,16 +279,20 @@ class AssignCaseTestCase(BaseCaseTestCase):
 
         self.assertTrue(case.reference in [x.get('reference') for x in case_list['results']])
 
-        # no manual allocation outcome codes should exist at this point
-        clt = CaseLogType.objects.get(code='MANALC')
-        manual_alloc_records_count = CaseLog.objects.filter(logtype=clt).count()
-        self.assertEqual(manual_alloc_records_count, 0)
+        # no outcome codes should exist at this point
+        self.assertEqual(Log.objects.count(), 0)
 
         # assign
-
         url = reverse('call_centre:case-assign', args=(), kwargs={'reference': case.reference})
 
-        data = {'suggested_provider': provider.pk, 'provider_id': provider.pk, 'is_manual': True}
+        data = {
+            'suggested_provider': provider.pk,
+            'provider_id': provider.pk,
+            'is_manual': is_manual
+        }
+        if is_manual:
+            data['notes'] = 'my notes'
+
         response = self.client.post(
             url, data=data,
             HTTP_AUTHORIZATION='Bearer %s' % self.token,
@@ -285,7 +302,7 @@ class AssignCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         case = Case.objects.get(pk=case.pk)
-        self.assertTrue(case.provider.pk!=None)
+        self.assertTrue(case.provider.pk != None)
 
         # after being assigned, it's gone from the dashboard...
         case_list = self.client.get(
@@ -295,10 +312,14 @@ class AssignCaseTestCase(BaseCaseTestCase):
 
         self.assertFalse(case.reference in [x.get('reference') for x in case_list['results']])
 
-        manual_alloc_records_count = CaseLog.objects.filter(logtype=clt).count()
-        self.assertEqual(manual_alloc_records_count, 1)
+        # checking that the log object is there
+        self.assertEqual(Log.objects.count(), 1)
+        log = Log.objects.all()[0]
+        self.assertEqual(log.case, case)
+        self.assertEqual(log.notes, 'my notes' if is_manual else 'Assigned to Provider Name')
+        self.assertEqual(log.created_by, self.user)
 
-        # ... but still accessible from the list
+        # ... but the case still accessible from the full list
         case_list = self.client.get(
             self.list_url, format='json',
             HTTP_AUTHORIZATION='Bearer %s' % self.token
@@ -320,72 +341,9 @@ class AssignCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.data['provider'], None)
 
 
-class CloseCaseTestCase(BaseCaseTestCase):
 
-    def test_close_invalid_case_reference(self):
-        url = reverse('call_centre:case-close', args=(), kwargs={'reference': 'invalid'})
+# TODO is_manual = False not DONE (check automatic notes as well)
 
-        response = self.client.post(
-            url, data={}, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, 404)
-
-    def test_close_successful(self):
-        case = make_recipe('legalaid.case')
-
-        # before being closed, case in the list
-        case_list = self.client.get(
-            self.list_url, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        ).data
-
-        self.assertTrue(case.reference in [x.get('reference') for x in case_list['results']])
-
-        # close
-
-        url = reverse('call_centre:case-close', args=(), kwargs={'reference': case.reference})
-
-        response = self.client.post(
-            url, data={},
-            HTTP_AUTHORIZATION='Bearer %s' % self.token,
-            format='json'
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-        case = Case.objects.get(pk=case.pk)
-
-        # after being closed, it's gone from the dashboard...
-        case_list = self.client.get(
-            self.list_dashboard_url, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        ).data
-
-        self.assertFalse(case.reference in [x.get('reference') for x in case_list['results']])
-
-        # ...but still accessible from the list
-        case_list = self.client.get(
-            self.list_url, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        ).data
-
-        self.assertTrue(case.reference in [x.get('reference') for x in case_list['results']])
-
-
-    def test_cannot_patch_state_directly(self):
-        """
-        Need to use close action instead
-        """
-
-        self.assertEqual(self.case_obj.state, CASE_STATES.OPEN)
-
-        response = self.client.patch(self.detail_url, data={
-            'state': CASE_STATES.CLOSED
-        }, format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['state'], CASE_STATES.OPEN)
 
 
 class SearchCaseTestCase(BaseCaseTestCase):
@@ -694,61 +652,14 @@ class PersonalDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertPersonalDetailsEqual(response.data, check)
 
 
-class DeferAssignmentTestCase(BaseCaseTestCase):
-    def setUp(self):
-        super(DeferAssignmentTestCase, self).setUp()
-        self.url = self.get_url()
 
+class DeferAssignmentTestCase(ViewActionWithSingleEventTestCase, BaseCaseTestCase):
     def get_url(self, reference=None):
         reference = reference or self.check.reference
         return reverse(
             'call_centre:case-defer-assignment', args=(),
             kwargs={'reference': reference}
         )
-
-    def test_methods_not_allowed(self):
-        self._test_get_not_allowed(self.url)
-        self._test_patch_not_allowed(self.url)
-        self._test_delete_not_allowed(self.url)
-
-    def test_invalid_reference(self):
-        url = self.get_url(reference='invalid')
-
-        response = self.client.post(url, data={},
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_401_if_not_logged_in(self):
-        response = self.client.post(self.url, data={})
-        self.assertTrue(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_successful(self):
-        # before, no outcomes
-        # self.assertEqual(self.check.state, self.INITIAL_CASE_STATE)
-
-        self.assertEqual(Log.objects.count(), 0)
-
-        data={
-            'notes': 'lorem ipsum'
-        }
-        response = self.client.post(
-            self.url, data=data, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-        # after, case rejected and outcome created
-        case = Case.objects.get(pk=self.check.pk)
-        # self.assertEqual(case.state, self.EXPECTED_CASE_STATE)
-
-        self.assertEqual(Log.objects.count(), 1)
-        log = Log.objects.all()[0]
-
-        self.assertEqual(log.case, self.check)
-        self.assertEqual(log.notes, data['notes'])
-        self.assertEqual(log.created_by, self.user)
 
     def test_already_assigned(self):
         provider = make_recipe('cla_provider.provider', active=True)

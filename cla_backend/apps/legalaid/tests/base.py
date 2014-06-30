@@ -33,6 +33,7 @@ def generate_outcome_codes():
         )
     ]
 
+
 class BaseStateFormTestCase(object):
     FORM = None,
     VALID_OUTCOME_CODE = None
@@ -218,3 +219,55 @@ class StateChangeAPIMixin(object):
         self.assertEqual(case.state, self.INVALID_INITIAL_CASE_STATE)
 
         self.assertEqual(Log.objects.count(), 0)
+
+
+# NOTE: attempt to create a generic Mixin for API actions which create a log entry
+# from events with only 1 code. Should be extended / changed including all other
+# cases
+class ViewActionWithSingleEventTestCase(object):
+    def setUp(self):
+        super(ViewActionWithSingleEventTestCase, self).setUp()
+        self.url = self.get_url()
+
+    def get_url(self, reference=None):
+        raise NotImplementedError()
+
+    def test_methods_not_allowed(self):
+        self._test_get_not_allowed(self.url)
+        self._test_patch_not_allowed(self.url)
+        self._test_delete_not_allowed(self.url)
+
+    def test_invalid_reference(self):
+        url = self.get_url(reference='invalid')
+
+        response = self.client.post(url, data={},
+            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_401_if_not_logged_in(self):
+        response = self.client.post(self.url, data={})
+        self.assertTrue(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_successful(self):
+        # before, no logs
+        self.assertEqual(Log.objects.count(), 0)
+
+        data={
+            'notes': 'lorem ipsum'
+        }
+        response = self.client.post(
+            self.url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # after, log entry created
+        # self.assertEqual(case.state, self.EXPECTED_CASE_STATE)
+        self.assertEqual(Log.objects.count(), 1)
+        log = Log.objects.all()[0]
+
+        self.assertEqual(log.case, self.check)
+        self.assertEqual(log.notes, data['notes'])
+        self.assertEqual(log.created_by, self.user)

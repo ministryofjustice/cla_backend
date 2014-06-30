@@ -10,7 +10,7 @@ from rest_framework.test import APITestCase
 from cla_eventlog.models import Log
 
 from legalaid.models import Case
-from legalaid.tests.base import ExplicitEventCodeViewTestCaseMixin, \
+from legalaid.tests.views.base import ExplicitEventCodeViewTestCaseMixin, \
     ImplicitEventCodeViewTestCaseMixin
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin

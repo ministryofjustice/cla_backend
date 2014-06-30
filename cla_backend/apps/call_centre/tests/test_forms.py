@@ -2,10 +2,11 @@ import mock
 import datetime
 from django.test import TestCase
 from django.utils import timezone
-from legalaid.models import CaseLog
 
 from core.tests.mommy_utils import make_recipe, make_user
-from legalaid.tests.base import BaseCaseLogFormTestCaseMixin, EventSpecificLogFormTestCaseMixin
+from legalaid.tests.test_forms import BaseCaseLogFormTestCaseMixin, EventSpecificLogFormTestCaseMixin
+
+from cla_eventlog.models import Log
 
 from cla_provider.helpers import ProviderAllocationHelper
 from call_centre.forms import DeferAssignmentCaseForm, ProviderAllocationForm, \
@@ -34,11 +35,11 @@ class ProviderAllocationFormTestCase(TestCase):
 
         self.assertTrue(form.is_valid())
 
-        self.assertEqual(CaseLog.objects.count(),0)
+        self.assertEqual(Log.objects.count(),0)
         form.save(user)
 
         self.assertEqual(case.provider, provider)
-        self.assertEqual(CaseLog.objects.count(),1)
+        self.assertEqual(Log.objects.count(),1)
 
 
     @mock.patch('cla_provider.models.timezone.now')
@@ -74,11 +75,11 @@ class ProviderAllocationFormTestCase(TestCase):
 
         self.assertTrue(form.is_valid())
 
-        self.assertEqual(CaseLog.objects.count(),0)
+        self.assertEqual(Log.objects.count(),0)
         form.save(user)
 
         self.assertEqual(case.provider, provider)
-        self.assertEqual(CaseLog.objects.count(),1)
+        self.assertEqual(Log.objects.count(),1)
 
     @mock.patch('cla_provider.models.timezone.now')
     @mock.patch('cla_provider.helpers.timezone.now')

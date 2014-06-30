@@ -3,10 +3,8 @@ from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 
-from cla_common.constants import CASELOGTYPE_ACTION_KEYS
-
 from cla_provider.models import Provider
-from legalaid.forms import BaseCaseLogForm, OutcomeForm
+from legalaid.forms import BaseCaseLogForm, EventSpecificLogForm
 
 
 class ProviderAllocationForm(BaseCaseLogForm):
@@ -95,11 +93,11 @@ class AssociateEligibilityCheckCaseForm(forms.Form):
         self.case.associate_eligibility_check(ref)
 
 
-class CaseAssignDeferForm(BaseCaseLogForm):
+class DeferAssignmentCaseForm(BaseCaseLogForm):
     LOG_EVENT_KEY = 'defer_assignment'
 
     def clean(self):
-        cleaned_data = super(CaseAssignDeferForm, self).clean()
+        cleaned_data = super(DeferAssignmentCaseForm, self).clean()
         if self._errors:  # skip if already in error
             return cleaned_data
 
@@ -109,20 +107,8 @@ class CaseAssignDeferForm(BaseCaseLogForm):
         return cleaned_data
 
 
-class DeclineAllSpecialistsCaseForm(OutcomeForm):
-    def get_outcome_code_queryset(self):
-        qs = super(DeclineAllSpecialistsCaseForm, self).get_outcome_code_queryset()
-        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.DECLINE_SPECIALISTS)
-
-    def clean(self):
-        cleaned_data = super(DeclineAllSpecialistsCaseForm, self).clean()
-        if self._errors:  # skip if already in error
-            return cleaned_data
-
-        # checking that the case is in a consistent state
-        if self.case.provider:
-            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
-        return cleaned_data
+class DeclineAllSpecialistsCaseForm(EventSpecificLogForm):
+    LOG_EVENT_KEY = 'decline_help'
 
     def save(self, user):
         self.case.close()

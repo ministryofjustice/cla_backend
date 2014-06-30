@@ -35,11 +35,11 @@ def generate_outcome_codes():
     ]
 
 
-class BaseCaseLogFormTestCase(object):
+class BaseCaseLogFormTestCaseMixin(object):
     FORM = None
 
     def setUp(self):
-        super(BaseCaseLogFormTestCase, self).setUp()
+        super(BaseCaseLogFormTestCaseMixin, self).setUp()
 
         self.user = make_user()
 
@@ -89,9 +89,9 @@ class BaseCaseLogFormTestCase(object):
         self.assertEqual(CaseLog.objects.count(), 0)
 
 
-class EventSpecificLogFormTestCase(BaseCaseLogFormTestCase):
+class EventSpecificLogFormTestCaseMixin(BaseCaseLogFormTestCaseMixin):
     def get_default_data(self):
-        data = super(EventSpecificLogFormTestCase, self).get_default_data()
+        data = super(EventSpecificLogFormTestCaseMixin, self).get_default_data()
 
         form = self.FORM(case=mock.MagicMock())
         event_code = form.fields['event_code'].choices[0][0]  # getting the first code

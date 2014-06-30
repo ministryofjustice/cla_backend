@@ -47,3 +47,28 @@ class AssignToProviderEvent(BaseEvent):
 
         return 'REFSP'
 event_registry.register(AssignToProviderEvent)
+
+
+class DeclineHelpEvent(BaseEvent):
+    key = 'decline_help'
+    codes = {
+        'DESP': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Client declined Specialist'
+        },
+        'DECL': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Client declined all help options'
+        },
+        'NRES': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'No resources available to help'
+        },
+    }
+event_registry.register(DeclineHelpEvent)

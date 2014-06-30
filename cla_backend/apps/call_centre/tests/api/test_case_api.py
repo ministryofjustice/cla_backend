@@ -9,13 +9,15 @@ from rest_framework.test import APITestCase
 
 from cla_eventlog.models import Log
 
-from legalaid.models import Case, CaseLog, CaseLogType
-from legalaid.tests.base import StateChangeAPIMixin, ImplicitEventCodeViewTestCaseMixin
+from legalaid.models import Case
+from legalaid.tests.base import ExplicitEventCodeViewTestCaseMixin, \
+    ImplicitEventCodeViewTestCaseMixin
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
 from cla_common.constants import CASE_STATES
 
+from call_centre.forms import DeclineAllSpecialistsCaseForm
 from call_centre.serializers import CaseSerializer
 
 
@@ -341,11 +343,6 @@ class AssignCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.data['provider'], None)
 
 
-
-# TODO is_manual = False not DONE (check automatic notes as well)
-
-
-
 class SearchCaseTestCase(BaseCaseTestCase):
 
     def test_list_with_dashboard_param(self):
@@ -506,22 +503,18 @@ class SearchCaseTestCase(BaseCaseTestCase):
         self.assertNotEqual(response.data['provider_notes'], 'abc123')
 
 
-class DeclineAllSpecialistsTestCase(StateChangeAPIMixin, BaseCaseTestCase):
-    VALID_OUTCOME_CODE = 'CODE_DECLINED_ALL_SPECIALISTS'
-    EXPECTED_CASE_STATE = CASE_STATES.CLOSED
 
-    def get_state_change_url(self, reference=None):
+class DeclineAllSpecialistsTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_event_code(self):
+        form = DeclineAllSpecialistsCaseForm(case=mock.MagicMock())
+        return form.fields['event_code'].choices[0][0]
+
+    def get_url(self, reference=None):
         reference = reference or self.check.reference
         return reverse(
             'call_centre:case-decline-all-specialists', args=(),
             kwargs={'reference': reference}
         )
-
-    def test_invalid_mutation(self):
-        """
-            Overriding as not possible to test
-        """
-        pass
 
 
 """
@@ -650,7 +643,6 @@ class PersonalDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertPersonalDetailsCheckResponseKeys(response)
 
         self.assertPersonalDetailsEqual(response.data, check)
-
 
 
 class DeferAssignmentTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):

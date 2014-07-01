@@ -67,7 +67,7 @@ WORKDIR /home/app/django
 RUN pip install -r requirements/production.txt
 
 # Create django super-user and password
-#echo "from django.contrib.auth.models import User; User.objects.create_superuser('pidah','peter.idah@digital.justice.gov.uk', 'S3cur31sh')" | ./manage.py shell
+RUN echo "from django.contrib.auth.models import User; User.objects.create_superuser('cla_admin','peter.idah@digital.justice.gov.uk', 'S3cur31sh')" | ./manage.py shell || echo "user already exists"
 
 # Manage sync db
 RUN python manage.py syncdb --noinput

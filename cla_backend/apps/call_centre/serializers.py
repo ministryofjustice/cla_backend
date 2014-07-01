@@ -1,16 +1,13 @@
-from cla_eventlog.constants import LOG_TYPES
 from cla_eventlog.serializers import LogSerializerBase
-from legalaid.constants import CASELOGTYPE_SUBTYPES
 from rest_framework import serializers
 
 from cla_common.constants import CASE_STATES
 
 from core.serializers import UUIDSerializer
-from legalaid.models import EligibilityCheck
 from legalaid.serializers import EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
+    CaseSerializerBase, ProviderSerializerBase, \
     OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase, \
     ThirdPartyDetailsSerializerBase, AdaptationDetailsSerializerBase
 
@@ -110,7 +107,7 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
         )
 
 class LogSerializer(LogSerializerBase):
-    
+
     class Meta(LogSerializerBase.Meta):
         fields = ('code',
                   'created_by',

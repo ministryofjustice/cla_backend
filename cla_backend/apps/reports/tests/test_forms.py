@@ -6,7 +6,6 @@ from django.test import TestCase
 from django.utils import timezone
 
 from cla_common.constants import CASELOGTYPE_ACTION_KEYS
-from legalaid.constants import CASELOGTYPE_SUBTYPES
 
 from core.tests.mommy_utils import make_recipe
 

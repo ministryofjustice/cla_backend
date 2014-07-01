@@ -5,12 +5,6 @@ from django.utils import timezone
 from django.contrib.admin import widgets
 from django.template.defaulttags import date
 
-from cla_common.constants import CASE_STATES, CASELOGTYPE_ACTION_KEYS
-from django.utils.unittest.case import skip
-from legalaid.constants import CASELOGTYPE_SUBTYPES
-
-# from legalaid.models import CaseLog, CaseLogType
-
 from cla_provider.models import Provider
 
 

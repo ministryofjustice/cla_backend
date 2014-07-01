@@ -1,7 +1,5 @@
 from model_mommy.recipe import Recipe, seq, foreign_key
 
-from legalaid.constants import CASELOGTYPE_SUBTYPES
-
 from cla_common.money_interval.models import MoneyInterval
 
 from ..models import Category, EligibilityCheck, Property, Savings, \

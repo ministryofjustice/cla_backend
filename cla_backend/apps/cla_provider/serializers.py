@@ -2,7 +2,6 @@ from cla_eventlog.serializers import LogSerializerBase
 from rest_framework import serializers
 
 from cla_common.constants import CASE_STATES
-from legalaid.constants import CASELOGTYPE_SUBTYPES
 
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \

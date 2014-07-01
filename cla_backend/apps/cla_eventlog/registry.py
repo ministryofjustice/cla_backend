@@ -48,6 +48,8 @@ class EventRegistry(object):
         self._registry[EventClazz.key] = EventClazz
 
     def get_event(self, key):
+        if key not in self._registry:
+            raise ValueError(u'%s not registered' % key)
         return self._registry[key]
 
     def get_selectable_events(self, role):

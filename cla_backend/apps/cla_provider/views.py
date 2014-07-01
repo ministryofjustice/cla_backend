@@ -6,9 +6,9 @@ from rest_framework.decorators import action
 
 from core.viewsets import DefaultStateFilterViewSetMixin
 from cla_common.constants import CASE_STATES
+from cla_eventlog.views import BaseEventViewSet
 from legalaid.serializers import CaseLogTypeSerializerBase
-
-from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
+from legalaid.models import Category, Case, CaseLogType
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
     BaseOutcomeCodeViewSet, BaseEligibilityCheckViewSet
 
@@ -130,3 +130,7 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
 
     def get_logged_in_user_model(self):
         return self.request.user.staff
+
+
+class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
+    pass

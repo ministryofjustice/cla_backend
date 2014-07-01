@@ -85,8 +85,3 @@ class SelectableEventLogForm(EventSpecificLogForm):
         cleaned_data['event_code_'] = event_code
 
         return cleaned_data
-
-
-# TODO: should be removed after outcome refactoring
-class OutcomeForm(object):
-    pass

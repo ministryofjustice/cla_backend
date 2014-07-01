@@ -8,6 +8,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter, DjangoFilterBac
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
+from cla_eventlog.views import BaseEventViewSet
 from legalaid.models import Case, CaseLogType, PersonalDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
     BaseOutcomeCodeViewSet, BaseCategoryViewSet, BaseEligibilityCheckViewSet
@@ -257,3 +258,7 @@ class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin,
     model = PersonalDetails
     serializer_class = PersonalDetailsSerializer
     lookup_field = 'reference'
+
+
+class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):
+    pass

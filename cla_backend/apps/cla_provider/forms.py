@@ -1,4 +1,4 @@
-from legalaid.forms import EventSpecificLogForm, BaseCaseLogForm
+from cla_eventlog.forms import EventSpecificLogForm, BaseCaseLogForm
 
 
 class RejectCaseForm(EventSpecificLogForm):

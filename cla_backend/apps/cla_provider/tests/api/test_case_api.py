@@ -12,9 +12,10 @@ from cla_common.constants import CASE_STATES
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
 
-from legalaid.models import Case
-from legalaid.tests.views.base import ImplicitEventCodeViewTestCaseMixin, \
+from cla_eventlog.tests.test_views import ImplicitEventCodeViewTestCaseMixin, \
     ExplicitEventCodeViewTestCaseMixin
+
+from legalaid.models import Case
 
 from cla_provider.forms import RejectCaseForm
 

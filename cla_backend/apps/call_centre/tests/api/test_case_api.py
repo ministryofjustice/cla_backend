@@ -8,10 +8,10 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from cla_eventlog.models import Log
+from cla_eventlog.tests.test_views import ExplicitEventCodeViewTestCaseMixin, \
+    ImplicitEventCodeViewTestCaseMixin
 
 from legalaid.models import Case
-from legalaid.tests.views.base import ExplicitEventCodeViewTestCaseMixin, \
-    ImplicitEventCodeViewTestCaseMixin
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
@@ -838,7 +838,7 @@ class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 }
 
     def _test_method_in_error(self, method, url):
-        
+
         # most fields are optional and variable type is just evaluated
         # by python rules to a boolean. i.e. passing strings etc. instead
         # of a JS boolean will still be evaluated to True in python.

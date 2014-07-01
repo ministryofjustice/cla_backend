@@ -4,7 +4,8 @@ from django.test import TestCase
 from django.utils import timezone
 
 from core.tests.mommy_utils import make_recipe, make_user
-from legalaid.tests.test_forms import BaseCaseLogFormTestCaseMixin, EventSpecificLogFormTestCaseMixin
+from cla_eventlog.tests.test_forms import BaseCaseLogFormTestCaseMixin, \
+    EventSpecificLogFormTestCaseMixin
 
 from cla_eventlog.models import Log
 

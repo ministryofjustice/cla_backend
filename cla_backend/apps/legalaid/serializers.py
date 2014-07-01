@@ -1,6 +1,7 @@
+from rest_framework import serializers
+
 from cla_eventlog.constants import LOG_TYPES
 from cla_eventlog.serializers import LogSerializerBase
-from rest_framework import serializers
 
 from core.serializers import UUIDSerializer, ClaModelSerializer
 from cla_provider.models import Provider, OutOfHoursRota

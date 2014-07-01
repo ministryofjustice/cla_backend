@@ -60,7 +60,6 @@ class StateFromActionMixin(object):
         )
 
 
-
 class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     model = Category
     serializer_class = CategorySerializerBase

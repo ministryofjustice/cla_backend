@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 
 from cla_provider.models import Provider
-from legalaid.forms import BaseCaseLogForm, EventSpecificLogForm
+from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
 
 
 class ProviderAllocationForm(BaseCaseLogForm):

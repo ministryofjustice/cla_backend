@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from legalaid.tests.test_forms import BaseCaseLogFormTestCaseMixin, EventSpecificLogFormTestCaseMixin
+from cla_eventlog.tests.test_forms import BaseCaseLogFormTestCaseMixin, \
+    EventSpecificLogFormTestCaseMixin
 
 from cla_provider.forms import CloseCaseForm, AcceptCaseForm, RejectCaseForm
 

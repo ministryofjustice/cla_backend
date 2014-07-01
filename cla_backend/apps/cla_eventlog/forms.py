@@ -1,5 +1,5 @@
-from cla_eventlog.constants import LOG_ROLES
 from django import forms
+
 from cla_eventlog.registry import event_registry
 
 

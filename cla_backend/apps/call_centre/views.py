@@ -241,6 +241,7 @@ class CaseViewSet(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
 
+    @action()
     def associate_eligibility_check(self, request, *args, **kwargs):
         """
         Associates a case with a eligibility_check object. Will throw an error

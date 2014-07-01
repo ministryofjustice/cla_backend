@@ -1,6 +1,8 @@
 import logging
 import datetime
 import uuid
+from cla_common.db.mixins import ModelDiffMixin
+from cla_eventlog import event_registry
 from uuidfield import UUIDField
 from model_utils.models import TimeStampedModel
 
@@ -20,9 +22,9 @@ from call_centre.utils import getattrd
 
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
-from cla_common.constants import ELIGIBILITY_STATES, CASE_STATES, THIRDPARTY_REASON,\
-                                 THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES
-
+from cla_common.constants import ELIGIBILITY_STATES, CASE_STATES, \
+    THIRDPARTY_REASON, \
+    THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES
 
 from legalaid.exceptions import InvalidMutationException
 from legalaid.fields import MoneyField
@@ -61,12 +63,14 @@ class Income(TimeStampedModel):
 
 class Deductions(TimeStampedModel):
     income_tax = MoneyIntervalField(default=None, null=True, blank=True)
-    national_insurance = MoneyIntervalField(default=None, null=True, blank=True)
+    national_insurance = MoneyIntervalField(default=None, null=True,
+                                            blank=True)
     maintenance = MoneyIntervalField(default=None, null=True, blank=True)
     childcare = MoneyIntervalField(default=None, null=True, blank=True)
     mortgage = MoneyIntervalField(default=None, null=True, blank=True)
     rent = MoneyIntervalField(default=None, null=True, blank=True)
-    criminal_legalaid_contributions = MoneyField(default=None, null=True, blank=True)
+    criminal_legalaid_contributions = MoneyField(default=None, null=True,
+                                                 blank=True)
 
 
 class PersonalDetails(TimeStampedModel):
@@ -83,23 +87,28 @@ class PersonalDetails(TimeStampedModel):
     class Meta:
         verbose_name_plural = "personal details"
 
+
 class ThirdPartyDetails(TimeStampedModel):
     personal_details = models.ForeignKey(PersonalDetails)
     pass_phrase = models.CharField(max_length=255)
     reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON)
-    personal_relationship = models.CharField(max_length=30, choices=THIRDPARTY_RELATIONSHIP)
+    personal_relationship = models.CharField(max_length=30,
+                                             choices=THIRDPARTY_RELATIONSHIP)
     personal_relationship_note = models.CharField(max_length=255, blank=True)
     reference = UUIDField(auto=True, unique=True)
+
 
 class AdaptationDetails(TimeStampedModel):
     bsl_webcam = models.BooleanField(default=False)
     minicom = models.BooleanField(default=False)
     text_relay = models.BooleanField(default=False)
     skype_webcam = models.BooleanField(default=False)
-    language = models.CharField(max_length=30, choices=ADAPTATION_LANGUAGES, blank=True, null=True)
+    language = models.CharField(max_length=30, choices=ADAPTATION_LANGUAGES,
+                                blank=True, null=True)
     notes = models.TextField(blank=True)
     callback_preference = models.BooleanField(default=False)
     reference = UUIDField(auto=True, unique=True)
+
 
 class Person(TimeStampedModel):
     income = models.ForeignKey(Income, blank=True, null=True)
@@ -122,7 +131,6 @@ class Person(TimeStampedModel):
             if deductions_dict:
                 deductions = Deductions(**deductions_dict)
 
-
         return Person(
             income=income,
             savings=savings,
@@ -130,7 +138,6 @@ class Person(TimeStampedModel):
 
 
 class ValidateModelMixin(models.Model):
-
     class Meta:
         abstract = True
 
@@ -156,7 +163,7 @@ class ValidateModelMixin(models.Model):
                     for level in levels:
                         if not level == levels[-1]:
                             current = warnings.get(level, {})
-                            warnings[level]= current
+                            warnings[level] = current
                         else:
                             current[level] = ['Field "%s" is required' % level]
                 else:
@@ -164,12 +171,13 @@ class ValidateModelMixin(models.Model):
         return {"warnings": warnings}
 
 
-class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
+class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
     reference = UUIDField(auto=True, unique=True)
 
     category = models.ForeignKey(Category, blank=True, null=True)
     you = models.ForeignKey(Person, blank=True, null=True, related_name='you')
-    partner = models.ForeignKey(Person, blank=True, null=True, related_name='partner')
+    partner = models.ForeignKey(Person, blank=True, null=True,
+                                related_name='partner')
     your_problem_notes = models.TextField(blank=True)
     notes = models.TextField(blank=True)
     state = models.CharField(
@@ -177,10 +185,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         choices=ELIGIBILITY_STATES.CHOICES
     )
     dependants_young = models.PositiveIntegerField(null=True, blank=True,
-        default=None, validators=[MaxValueValidator(50)]
+                                                   default=None, validators=[
+            MaxValueValidator(50)]
     )
     dependants_old = models.PositiveIntegerField(null=True, blank=True,
-        default=None, validators=[MaxValueValidator(50)]
+                                                 default=None, validators=[
+            MaxValueValidator(50)]
     )
     on_passported_benefits = models.NullBooleanField(default=None)
     on_nass_benefits = models.NullBooleanField(default=None)
@@ -191,7 +201,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     has_partner = models.NullBooleanField(default=None)
 
     def get_dependencies(self):
-        deps =  {'category',
+        deps = {'category',
                 'you__income',
                 'you__savings',
                 'you__deductions'}
@@ -222,7 +232,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         except PropertyExpectedException as e:
             return ELIGIBILITY_STATES.UNKNOWN
 
-        # TODO what do we do when we get a different exception? (which shouldn't happen)
+            # TODO what do we do when we get a different exception? (which shouldn't happen)
 
     def update_state(self):
         self.state = self.get_eligibility_state()
@@ -268,10 +278,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
                 ]),
                 'deductions': compose_dict(self.you.deductions, [
                     'income_tax', 'national_insurance', 'maintenance',
-                    'childcare', 'mortgage', 'rent', 'criminal_legalaid_contributions'
+                    'childcare', 'mortgage', 'rent',
+                    'criminal_legalaid_contributions'
                 ])
             }
-            d['you'] = {prop:value for prop, value in you_props.items() if value}
+            d['you'] = {prop: value for prop, value in you_props.items() if
+                        value}
 
         if self.has_partner and self.partner:
             partner_props = {
@@ -284,10 +296,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
                 ]),
                 'deductions': compose_dict(self.partner.deductions, [
                     'income_tax', 'national_insurance', 'maintenance',
-                    'childcare', 'mortgage', 'rent', 'criminal_legalaid_contributions'
+                    'childcare', 'mortgage', 'rent',
+                    'criminal_legalaid_contributions'
                 ])
             }
-            d['partner'] = {prop:value for prop, value in partner_props.items() if value}
+            d['partner'] = {prop: value for prop, value in
+                            partner_props.items() if value}
 
         # Fake
         d['facts']['is_partner_opponent'] = False
@@ -295,11 +309,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         return CaseData(**d)
 
 
-
 class Property(TimeStampedModel):
     value = MoneyField(default=None, null=True, blank=True)
     mortgage_left = MoneyField(default=None, null=True, blank=True)
-    share = models.PositiveIntegerField(default=None, validators=[MaxValueValidator(100)], null=True, blank=True)
+    share = models.PositiveIntegerField(default=None,
+                                        validators=[MaxValueValidator(100)],
+                                        null=True, blank=True)
     eligibility_check = models.ForeignKey(EligibilityCheck)
     disputed = models.NullBooleanField(default=None)
 
@@ -309,10 +324,13 @@ class Property(TimeStampedModel):
 
 class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
-    eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
-    personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
+    eligibility_check = models.OneToOneField(EligibilityCheck, null=True,
+                                             blank=True)
+    personal_details = models.ForeignKey(PersonalDetails, blank=True,
+                                         null=True)
 
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True,
+                                   null=True)
     state = models.CharField(
         max_length=50, choices=CASE_STATES.CHOICES, default=CASE_STATES.OPEN
     )
@@ -321,21 +339,26 @@ class Case(TimeStampedModel):
         related_name='case_locked'
     )
     locked_at = models.DateTimeField(auto_now=False, blank=True, null=True)
-    provider = models.ForeignKey('cla_provider.Provider', blank=True, null=True)
+    provider = models.ForeignKey('cla_provider.Provider', blank=True,
+                                 null=True)
     notes = models.TextField(blank=True)
     provider_notes = models.TextField(blank=True)
     in_scope = models.NullBooleanField(default=None, null=True, blank=True)
     laa_reference = models.BigIntegerField(null=True, blank=True, unique=True)
-    thirdparty_details = models.ForeignKey('ThirdPartyDetails', blank=True, null=True)
-    adaptation_details = models.ForeignKey('AdaptationDetails', blank=True, null=True)
+    thirdparty_details = models.ForeignKey('ThirdPartyDetails', blank=True,
+                                           null=True)
+    adaptation_details = models.ForeignKey('AdaptationDetails', blank=True,
+                                           null=True)
 
 
     def _set_reference_if_necessary(self):
         if not self.reference:
             # TODO make it better
             from django.utils.crypto import get_random_string
+
             self.reference = u'%s-%s-%s' % (
-                get_random_string(length=2, allowed_chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'),
+                get_random_string(length=2,
+                                  allowed_chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'),
                 get_random_string(length=4, allowed_chars='0123456789'),
                 get_random_string(length=4, allowed_chars='0123456789')
             )
@@ -365,7 +388,7 @@ class Case(TimeStampedModel):
 
     def associate_adaptation_details(self, ref):
         self.adaptation_details = AdaptationDetails.objects.get(reference=ref)
-	self.save()
+        self.save()
 
     def associate_eligibility_check(self, ref):
         self.eligibility_check = EligibilityCheck.objects.get(reference=ref)
@@ -380,9 +403,10 @@ class Case(TimeStampedModel):
             return True
         else:
             if self.locked_by != user:
-                logger.warning(u'User %s tried to lock case %s locked already by %s' % (
-                    user, self.reference, self.locked_by
-                ))
+                logger.warning(
+                    u'User %s tried to lock case %s locked already by %s' % (
+                        user, self.reference, self.locked_by
+                    ))
 
         return False
 

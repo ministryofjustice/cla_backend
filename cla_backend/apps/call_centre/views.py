@@ -1,3 +1,4 @@
+from cla_eventlog import event_registry
 from django.contrib.auth.models import AnonymousUser
 
 from rest_framework import viewsets, mixins, status
@@ -54,6 +55,22 @@ class EligibilityCheckViewSet(
         obj = self.get_object()
         return DRFResponse(obj.validate())
 
+    def pre_save(self, obj):
+        user = self.request.user
+        means_test_event = event_registry.get_event('means_test')()
+        diff = obj.diff
+        diff.pop('id', None)
+        try:
+
+            means_test_event.process(obj.case,
+                                     notes="",
+                                     created_by=user,
+                                     status='changed'
+            )
+        except:
+            pass
+
+        return super(EligibilityCheckViewSet, self).pre_save(obj)
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,

@@ -1,3 +1,4 @@
+from cla_eventlog import event_registry
 from rest_framework import serializers
 
 from cla_eventlog.constants import LOG_TYPES

@@ -8,7 +8,7 @@ from cla_provider.models import Provider, OutOfHoursRota
 from cla_common.money_interval.models import MoneyInterval
 
 from .models import Category, Property, EligibilityCheck, Income, \
-    Savings, Deductions, Person, PersonalDetails, Case, CaseLogType
+    Savings, Deductions, Person, PersonalDetails, Case
 
 
 
@@ -16,12 +16,6 @@ class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
         fields = ('code', 'name', 'description')
-
-
-class CaseLogTypeSerializerBase(ClaModelSerializer):
-    class Meta:
-        model = CaseLogType
-        fields = ('code', 'description')
 
 
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):

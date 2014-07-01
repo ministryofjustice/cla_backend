@@ -14,8 +14,6 @@ from call_centre.forms import DeferAssignmentCaseForm, ProviderAllocationForm, \
 
 
 class ProviderAllocationFormTestCase(TestCase):
-    def setUp(self):
-        make_recipe('legalaid.refsp_logtype')
 
     @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_in_office_hours(self, timezone_mock):

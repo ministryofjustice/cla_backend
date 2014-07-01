@@ -430,27 +430,4 @@ class Case(TimeStampedModel):
         self._set_state(CASE_STATES.ACCEPTED)
 
 
-class CaseLogType(TimeStampedModel):
-    code = models.CharField(max_length=50, unique=True)
-    subtype = models.CharField(max_length=50)
-    description = models.TextField()
-    action_key = models.CharField(max_length=50, blank=True)
 
-    def __unicode__(self):
-        return u'%s' % self.code
-
-    class Meta:
-        ordering = ['code']
-
-
-class CaseLog(TimeStampedModel):
-    case = models.ForeignKey(Case)
-    logtype = models.ForeignKey(CaseLogType)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
-    notes = models.TextField(null=True, blank=True)
-
-    def __unicode__(self):
-        return u'%s - %s' % (self.case, self.logtype)
-
-    class Meta:
-        ordering = ['-created']

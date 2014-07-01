@@ -8,9 +8,9 @@ from rest_framework.filters import OrderingFilter, SearchFilter, DjangoFilterBac
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
-from legalaid.models import Case, CaseLogType, PersonalDetails
+from legalaid.models import Case, PersonalDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
-    BaseOutcomeCodeViewSet, BaseCategoryViewSet, BaseEligibilityCheckViewSet
+    BaseCategoryViewSet, BaseEligibilityCheckViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
@@ -33,12 +33,6 @@ class CallCentreManagerPermissionsViewSetMixin(object):
 
 class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
     pass
-
-class OutcomeCodeViewSet(
-    CallCentrePermissionsViewSetMixin, BaseOutcomeCodeViewSet
-):
-    pass
-
 
 class EligibilityCheckViewSet(
     CallCentrePermissionsViewSetMixin,

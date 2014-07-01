@@ -12,6 +12,8 @@ router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_name='
 router.register(r'case', views.CaseViewSet)
 router.register(r'user', views.UserViewSet, base_name='user')
 router.register(r'personal_details', views.PersonalDetailsViewSet)
+router.register(r'thirdparty_details', views.ThirdPartyDetailsViewSet)
+router.register(r'adaptation_details', views.AdaptationDetailsViewSet)
 
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),

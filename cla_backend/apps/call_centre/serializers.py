@@ -10,8 +10,9 @@ from legalaid.models import EligibilityCheck
 from legalaid.serializers import EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, ProviderSerializerBase, \
-    OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase
+    CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
+    OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase, \
+    ThirdPartyDetailsSerializerBase, AdaptationDetailsSerializerBase
 
 from .models import Operator
 
@@ -94,8 +95,22 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
         )
 
 
-class LogSerializer(LogSerializerBase):
+class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
+    class Meta(ThirdPartyDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'personal_details', 'pass_phrase', 'reason',
+            'personal_relationship', 'personal_relationship_note'
+        )
 
+class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
+    class Meta(AdaptationDetailsSerializerBase.Meta):
+        fields = (
+                'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
+                'language', 'notes', 'reference', 'callback_preference'
+        )
+
+class LogSerializer(LogSerializerBase):
+    
     class Meta(LogSerializerBase.Meta):
         fields = ('code',
                   'created_by',
@@ -112,6 +127,8 @@ class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field='reference', required=False)
 
     personal_details = UUIDSerializer(required=False, slug_field='reference')
+    thirdparty_details = UUIDSerializer(required=False, slug_field='reference')
+    adaptation_details = UUIDSerializer(required=False, slug_field='reference')
 
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)
@@ -120,14 +137,16 @@ class CaseSerializer(CaseSerializerBase):
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
     full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
+    eligibility_state = serializers.CharField(source='eligibility_check.state', read_only=True)
 
 
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
-            'eligibility_check', 'personal_details',
-            'reference', 'created', 'modified', 'created_by', 'state',
-            'provider', 'log_set', 'notes', 'provider_notes', 'in_scope', 'full_name'
+            'eligibility_check', 'personal_details', 'reference', 'created',
+            'modified', 'created_by', 'state', 'provider', 'log_set',
+            'notes', 'provider_notes', 'in_scope', 'full_name', 'thirdparty_details',
+            'adaptation_details', 'laa_reference', 'eligibility_state'
         )
 
 

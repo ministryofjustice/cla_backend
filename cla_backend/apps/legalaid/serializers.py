@@ -8,7 +8,8 @@ from cla_provider.models import Provider, OutOfHoursRota
 from cla_common.money_interval.models import MoneyInterval
 
 from .models import Category, Property, EligibilityCheck, Income, \
-    Savings, Deductions, Person, PersonalDetails, Case
+    Savings, Deductions, Person, PersonalDetails, Case, \
+    ThirdPartyDetails, AdaptationDetails
 
 
 
@@ -96,6 +97,17 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
         model = PersonalDetails
         fields = ()
 
+class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
+    personal_details = PersonalDetailsSerializerBase(required=True)
+
+    class Meta:
+        model = ThirdPartyDetails
+        fields = ()
+
+class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
+    class Meta:
+        model = AdaptationDetails
+        fields = ()
 
 class PersonSerializerBase(ClaModelSerializer):
     income = IncomeSerializerBase(required=False)

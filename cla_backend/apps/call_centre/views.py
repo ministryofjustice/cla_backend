@@ -8,18 +8,23 @@ from rest_framework.filters import OrderingFilter, SearchFilter, DjangoFilterBac
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
-from legalaid.models import Case, PersonalDetails
+from legalaid.models import Category, EligibilityCheck, Case, \
+    PersonalDetails, ThirdPartyDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
     BaseCategoryViewSet, BaseEligibilityCheckViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
 from .serializers import EligibilityCheckSerializer, \
-    CaseSerializer, ProviderSerializer, \
-    OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer
-from .forms import ProviderAllocationForm, \
-    DeclineAllSpecialistsCaseForm, DeferAssignmentCaseForm, \
-    AssociatePersonalDetailsCaseForm, AssociateEligibilityCheckCaseForm
+    CaseSerializer, ProviderSerializer,  \
+    OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer, \
+    ThirdPartyDetailsSerializer, AdaptationDetailsSerializer
+
+from .forms import ProviderAllocationForm,  DeclineAllSpecialistsCaseForm,\
+     AssociatePersonalDetailsCaseForm, AssociateThirdPartyDetailsCaseForm,\
+    AssociateAdaptationDetailsCaseForm, AssociateEligibilityCheckCaseForm, \
+    DeferAssignmentCaseForm
+
 from .models import Operator
 
 
@@ -72,8 +77,8 @@ class CaseViewSet(
 
     search_fields = ('personal_details__full_name',
                      'personal_details__postcode',
-                     'reference')
-
+                     'reference',
+                     'laa_reference')
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
@@ -188,6 +193,18 @@ class CaseViewSet(
         )
 
     @action()
+    def associate_thirdparty_details(self, request, *args, **kwargs):
+
+        obj = self.get_object()
+
+        form = AssociateThirdPartyDetailsCaseForm(case=obj, data=request.DATA)
+        if form.is_valid():
+            form.save(request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
     def associate_eligibility_check(self, request, *args, **kwargs):
         """
         Associates a case with a eligibility_check object. Will throw an error
@@ -204,6 +221,18 @@ class CaseViewSet(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
 
+    @action()
+    def associate_adaptation_details(self, request, *args, **kwargs):
+
+        obj = self.get_object()
+
+        form = AssociateAdaptationDetailsCaseForm(case=obj, data=request.DATA)
+        if form.is_valid():
+            form.save(request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Provider
@@ -243,4 +272,22 @@ class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin,
                              viewsets.GenericViewSet):
     model = PersonalDetails
     serializer_class = PersonalDetailsSerializer
+    lookup_field = 'reference'
+
+class ThirdPartyDetailsViewSet(CallCentrePermissionsViewSetMixin,
+                             mixins.CreateModelMixin,
+                             mixins.UpdateModelMixin,
+                             mixins.RetrieveModelMixin,
+                             viewsets.GenericViewSet):
+    model = ThirdPartyDetails
+    serializer_class = ThirdPartyDetailsSerializer
+    lookup_field = 'reference'
+
+class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,
+                             mixins.CreateModelMixin,
+                             mixins.UpdateModelMixin,
+                             mixins.RetrieveModelMixin,
+                             viewsets.GenericViewSet):
+    model = AdaptationDetails
+    serializer_class = AdaptationDetailsSerializer
     lookup_field = 'reference'

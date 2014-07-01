@@ -5,7 +5,8 @@ from legalaid.constants import CASELOGTYPE_SUBTYPES
 from cla_common.money_interval.models import MoneyInterval
 
 from ..models import Category, EligibilityCheck, Property, Savings, \
-    Case, PersonalDetails, Income, Deductions, Person
+    Case, PersonalDetails, Income, Deductions, Person,\
+    ThirdPartyDetails, AdaptationDetails
 
 
 category = Recipe(Category,
@@ -46,6 +47,13 @@ personal_details = Recipe(PersonalDetails,
                           street=seq('Street'),
                           postcode=seq('postcode'),
                           full_name=seq('fullname'))
+
+thirdparty_details = Recipe(ThirdPartyDetails,
+                          personal_details=foreign_key(personal_details)
+                          )
+
+adaptation_details = Recipe(AdaptationDetails)
+
 
 case = Recipe(Case,
     eligibility_check=foreign_key(eligibility_check),

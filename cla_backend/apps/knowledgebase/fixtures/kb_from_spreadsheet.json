@@ -1,0 +1,3002 @@
+[
+    {
+        "pk": 1, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Debt", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Education", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Discrimination", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Housing", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Family", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Welfare benefits", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Action against police", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Clinical negligence", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Community care", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Consumer", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Crime", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Employment", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Immigration and asylum", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Mental health", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Miscellaneous", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Personal injury", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Public", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "knowledgebase.articlecategory", 
+        "fields": {
+            "name": "Generic", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.acas.org.uk", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Employment advice helpline", 
+            "description": "General Advice/Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "ACAS", 
+            "organisation": "", 
+            "helpline": "08457 47 47 47  / 18001 08457 47 47 47 (Text relay)", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Text relay and Welsh helpline service available.Website has range of features including read aloud service and resizeable text.", 
+            "when_to_use": "Clients seeking legal advice for out of scope Employment and Discrimination problems", 
+            "how_to_use": "Refer those who wish to self help to website. Refer those needing guidance to helpline.", 
+            "address": "N/A", 
+            "keywords": "employment, helpline, employers, contract, tribunal, grievance, employee, redundancy, misconduct, maternity, redundant, dismissal, wage, helpline, stress, absence, ACAS, acas", 
+            "opening_hours": "Monday-Friday, 8am-8pm and Saturday, 9am-1pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 1, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 12, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 1, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 3, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.avma.org.uk / advice@avma.org.uk", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Those on a low income", 
+            "description": "Advice,  information and casework service.", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Action against medical accidents (AVMA)", 
+            "organisation": "", 
+            "helpline": "0845 123 2352", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Website available in Welsh", 
+            "when_to_use": "Clients on a low income seeking legal advice after a medical accident.", 
+            "how_to_use": "Refer those wishing to self help to website, those who wish to speak to to someone to helpline.", 
+            "address": "Action against Medical Accidents\nFreedman House\nChristopher Wren Yard \n117 High Street\nCroydon     \nCR0 1QG", 
+            "keywords": "action, medical, accidents, negligence, clinical, doctor, nurse, gp, nhs, hospital, surgery, injury, patient, avma, helpline", 
+            "opening_hours": "10am-5pm Monday to Friday", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 2, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 8, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.adviceguide.org.uk", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "", 
+            "description": "General Advice/Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Advice Guide", 
+            "organisation": "Citizens Advice", 
+            "helpline": "08444 111 444 (England)\n08444 77 20 20 (Wales)\n08444 111 445 (Text Relay)", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Options on website, Text Relay", 
+            "when_to_use": "Clients seeking legal advice for out of scope Debt, Housing, Immigration problems", 
+            "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to website.", 
+            "address": "N/A", 
+            "keywords": "cab, CAB, citizens, bureau, advice", 
+            "opening_hours": "Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 6, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 12, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 18, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 3, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 4, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 13, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 15, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 14, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 7, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 8, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 3, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 2, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.apil.org.uk", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Personal injury lawyer search", 
+            "description": "General information and advice", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Association of Personal Injury Lawyers (APIL) Find A Lawyer", 
+            "organisation": "", 
+            "helpline": "0115 958 0585", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email, webform", 
+            "when_to_use": "Clients seeking legal advice for Personal Injury problems", 
+            "how_to_use": "Refer those looking for lawyer to helpline, those who requre information to website.", 
+            "address": "APIL\n3 Alder Court, Rennie Hogg Road\nNottingham, NG2 1RX", 
+            "keywords": "apil, personal, injury, lawyers, injuries, claim, compensation, helpline, accident, accidents", 
+            "opening_hours": "Helpline tbc, Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 4, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 16, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.asylumaid.org.uk", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Asylum seekers, refugees", 
+            "description": "Specialist advice and representation (limited cases)", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Asylum Aid", 
+            "organisation": "", 
+            "helpline": "(020) 7354 9264", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients seeking legal advice for out of scope asylum and immigration progblems", 
+            "how_to_use": "Refer clients seeking advice to helpline.", 
+            "address": "Club Union House\n253-254 Upper Street\nLondon\nN1 1RY", 
+            "keywords": "asylum, immigration, tribunal, refugee, refugees, entry, aid,nationality, immigrated, helpline", 
+            "opening_hours": "Tuesdays 1-4pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 5, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 13, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.turn2us.org.uk/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Benefits checker", 
+            "description": "Benefic entitlement checker", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Benefits Checker", 
+            "organisation": "Turn2us", 
+            "helpline": "0808 802 2000", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Interpretation and text relay services available. Accessibility features on website.", 
+            "when_to_use": "Clients wishing to check entitlement to welfare benefits using online calculator", 
+            "how_to_use": "Refer those who are able to self help to website and those who need assistance to helpline.", 
+            "address": "Turn2us, Unit 9, Cefn Coed Parc, Nantgarw, Cardiff CF15 7QQ", 
+            "keywords": "benefits, benefit, check, entitled, JSA, ESA, DLA, incapacity, financial, debt, money, tax credits, help, entitlement", 
+            "opening_hours": "8am-8pm Monday-Friday", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 6, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 6, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.bdl.org.uk/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Business debt", 
+            "description": "Specialist Advice Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Business Debt Line", 
+            "organisation": "Money Advice Trust", 
+            "helpline": "0800 197 6026", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients seeking advice about business debt", 
+            "how_to_use": "Refer clients seeking advice to helpline, those willing to self help websites.", 
+            "address": "N/A", 
+            "keywords": "debt, helpline, self employed, director, bankruptcy, bankrupt, insolvent, insolvency, business, debtline, bailiff, bailiffs, landlords, debt recovery", 
+            "opening_hours": "Monday to Friday                                                 9.00am to 5.00pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 7, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.cqc.org.uk", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Health & adult social care", 
+            "description": "Complaints service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Care Quality Commission", 
+            "organisation": "", 
+            "helpline": "03000 616161", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email, Browsealoud, some information in other formats and languages, including BSL", 
+            "when_to_use": "Refer clients with concerns about care services in hospitals, care homes, dental and GP surgeries, and all other care services.", 
+            "how_to_use": "Refer those who are able to self help to website and those who need assistance to helpline.", 
+            "address": "N/A", 
+            "keywords": "care, quality, commission, cqc, social, home, regulator, regulates, health, carer, helpline", 
+            "opening_hours": "Monday to Friday, between 8.30am and 5:30pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 8, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 9, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.cmoptions.org/ http://www.nidirect.gov.uk/choices (Northern Ireland)", 
+            "geographic_coverage": "UK (separate number for Northern Ireland)", 
+            "type_of_service": "Child Maintenance payments", 
+            "description": "General Advice/Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Child Maintenance Options", 
+            "organisation": "Child Maintenance Group", 
+            "helpline": "0800 988 0988/0800 028 7439 for Northern Ireland", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Interpretation service, web chat, information in other formats. accessibility options on website and Welsh version available.", 
+            "when_to_use": "Clients seeking legal advice/support regarding Child Maintenance arrangements, including making decisions.", 
+            "how_to_use": "Refer clients wishing to self help to websites, those who require support to helpline", 
+            "address": "N/A", 
+            "keywords": "child, support, agency, children, parent, parents, maintenance, payments, families, family, CSA, options, child, maintenance, options,", 
+            "opening_hours": "8am to 8pm Monday to Friday.\n9am to 4pm Saturday.", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 9, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.cafcass.gov.uk/", 
+            "geographic_coverage": "England (for a list of equivalents in other UK countries see http://www.cafcass.gov.uk/contact-us/finding-more-help.aspx)", 
+            "type_of_service": "Children and young people, also their parents", 
+            "description": "safeguard and promote the welfare of children give advice to the family courts make provision for children to be represented provide information, advice and support to children and their families.", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Cafcass (Children and Family Court Advisory and Support Service)", 
+            "organisation": "Department for Education", 
+            "helpline": "0844 353 4332", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Children and young people (or their parents) seeking support for issues at court including  care or adoption proceedings, or whose parents have separated and are unable to agree about future arrangements for their children.", 
+            "how_to_use": "Refer those willing to self help to factsheets, those who need to talk to somebody about their case to the helpline. List of regional offices supplied on website.", 
+            "address": "", 
+            "keywords": "", 
+            "opening_hours": "", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 22, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 10, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.citizensadvice.org.uk", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Consumer issues", 
+            "description": "General Advice/Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Citizens Advice Consumer Service", 
+            "organisation": "Citizens Advice", 
+            "helpline": "08454 04 05 06 / 08454 04 05 05 (Welsh)", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email, accessibility options on website, Text Relay", 
+            "when_to_use": "Clients seeking advice on consumer issues.", 
+            "how_to_use": "Refer clients seeking advice to helpline. For web information see AdviceGuide", 
+            "address": "Citizens Advice consumer service\nPost Point 24\nTown Hall\nWalliscote Grove Road\nWeston super Mare\nNorth Somerset\nBS23 1UJ", 
+            "keywords": "citizens, advice, consumer, helpline, direct, cab, goods, service, services, selling, warranty, warranties,citizen", 
+            "opening_hours": "Monday to Friday 9.00am to 5.00pm.", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 23, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 11, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 10, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.cafamily.org.uk/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Parents with disabled children", 
+            "description": "Specialist Advice Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Contact a Family", 
+            "organisation": "", 
+            "helpline": "0808 808 3555", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email. Some translated content on website.", 
+            "when_to_use": "Refer those seeking information or advice on any aspect of caring for a disabled child", 
+            "how_to_use": "Refer those who wish to self help to website. Those who need specialist Education advice or information on Debt advice services to helpline.", 
+            "address": "N/A", 
+            "keywords": "contact, family, disabled, children, families, disabilities", 
+            "opening_hours": "Monday to Friday, 9.30am to 5.00pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 12, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 25, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 12, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 2, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.childrenslegalcentre.com", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Children's rights advice", 
+            "description": "Specialist Advice Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Coram Family, Child & Education Legal Advice", 
+            "organisation": "Coram Children's Legal Centre", 
+            "helpline": "0808 802 0008", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Interpretation service, Texttalk.  Browsealoud on website.", 
+            "when_to_use": "Clients seeking legal advice and/or representation for children's rights issues", 
+            "how_to_use": "Refer clients wishing to self help to website, those who require support to helpline", 
+            "address": "N/A", 
+            "keywords": "child, children, childrens,. Children's, legal, centre, clc, young, protection, maintenance, parental, parents, responsibility, care, proceedings, coram", 
+            "opening_hours": "Mon-Fri 8am-8pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 26, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 13, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 27, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 13, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 2, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.dls.org.uk", 
+            "geographic_coverage": "UK?", 
+            "type_of_service": "Disability related law (Comm Care, Discrimination, SEN, Employment, Consumer)", 
+            "description": "Information Provider/Casework Service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Disability Law Service", 
+            "organisation": "", 
+            "helpline": "020 7791 9800", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Online Advice", 
+            "when_to_use": "Clients seeking advice or information for disability related legal issues (Comm Care, Discrimination, SEN, Employment, Consumer)", 
+            "how_to_use": "Refer those willing to self help to factsheets, those who need advice to helpline.", 
+            "address": "12 City Forum\n250 City Road\nLondon\nEC1V 8AF", 
+            "keywords": "disability, disabled, law, service, carer, carers, dls, deaf", 
+            "opening_hours": "Helpline - varies. Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 28, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 14, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 9, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 29, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 14, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 6, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 30, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 14, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 12, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 31, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 14, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 3, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 32, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 14, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 2, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 33, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 14, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 10, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.autism.org.uk/advocacy", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Education advice for those with autism", 
+            "description": "General Advice/Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Education Rights Service", 
+            "organisation": "National Autistic Society", 
+            "helpline": "0808 800 4102", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Online enquiry form & email. Various accessibility features on website including visual display settings, BrowseAloud and Welsh language. List of information resources in other languages.", 
+            "when_to_use": "Clients with autism seeking advice for Education matters.", 
+            "how_to_use": "Refer those who wish to self help to website. Tell those needing guidance to contact helpline - not suitable for urgent cases - this will be a call back service. Client will need to provide name, number, brief details of why they are contacting and best times to call back. Will usually receive a call within a few days.", 
+            "address": "N/A", 
+            "keywords": "education, rights, sen, special, educational, needs, autism, adhd, aspergers", 
+            "opening_hours": "N/A call back service", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 34, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 15, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 18, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 35, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 15, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 2, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.equalityadvisoryservice.com/", 
+            "geographic_coverage": "", 
+            "type_of_service": "Discrimination & human rights issues", 
+            "description": "General Advice/Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Equality Advisory Support Service", 
+            "organisation": "", 
+            "helpline": "0808 800 0082", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Text phone, letter or email or Skype (BSL users)", 
+            "when_to_use": "Clients seeking advice and support on discrimination and human rights issues", 
+            "how_to_use": "Refer those who wish to self help to 'Ask a Question' search function. Refer those needing advice, support or to look for local sources of help helpline.", 
+            "address": "FREEPOST EQUALITY ADVISORY SUPPORT SERVICE FPN4431", 
+            "keywords": "equality, advisory, support, services, human, rights, commission, race, disability, civil, discrimination, liberties, EASS, employment", 
+            "opening_hours": "Monday - Friday 9am - 8pm and Saturday 10am - 2pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 36, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 16, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 9, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 37, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 16, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 12, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 38, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 16, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 3, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 39, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 16, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 2, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 40, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 16, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 10, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 41, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 16, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 17, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.fnf.org.uk/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Parents", 
+            "description": "General information & Support", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Families Need Fathers", 
+            "organisation": "", 
+            "helpline": "0300 0300 363", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients seeking advice on child contact after separation or divorce", 
+            "how_to_use": "Refer clients wishing to self help to website, those who require support to helpline", 
+            "address": "N/A", 
+            "keywords": "families, fathers, father, family, support, child, children, contact, residence, paternity", 
+            "opening_hours": "7 am  midnight, 7 days a week", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 42, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 17, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.familymediationcouncil.org.uk/ ", 
+            "geographic_coverage": "", 
+            "type_of_service": "", 
+            "description": "Information and searchable database", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Family Mediation Council", 
+            "organisation": "", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients looking for information about mediation and/or who wish to search for providers carrying out non legally aided work", 
+            "how_to_use": "Refer clients seeking mediation.", 
+            "address": "", 
+            "keywords": "", 
+            "opening_hours": "", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 43, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 18, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.frg.org.uk/", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "Child welfare", 
+            "description": "General Advice/Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Family Rights Group", 
+            "organisation": "", 
+            "helpline": "0808 801 0366", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Interpretation service available on helpline", 
+            "when_to_use": "Clients whose family is involved with or seeking help from local authority children's services for information and advice.", 
+            "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to website.", 
+            "address": "The Print House, 18 Ashwin Street, London E8 3DL", 
+            "keywords": "family, rights, group, families, social, services, protection, child, children", 
+            "opening_hours": "Monday to Friday 9.30am-3.00pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 44, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 19, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.financial-ombudsman.org.uk/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Consumer financial transaction complaints", 
+            "description": "Complaints service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Financial Ombudsman Service", 
+            "organisation": "", 
+            "helpline": "0800 023 4567 \n/ 0300 123 9 123 \n\n/ complaint.info@financial-ombudsman.org.uk", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email, Text Relay, Browsealoud. Information in variety of formats, some in other languages including BSL and audio and video clips.", 
+            "when_to_use": "Clients with consumer complaint about a financial service", 
+            "how_to_use": "Refer those who are able to self help to website and those who need assistance to helpline.", 
+            "address": "The Financial Ombudsman Service\nSouth Quay Plaza\n183 Marsh Wall\nLondon E14 9SR", 
+            "keywords": "financial, ombudsman, service, investments, investment, invest, consumer, consumers, dispute, disputes, money, finances, bank, banks", 
+            "opening_hours": "Monday to Friday  8am to 8pm\nSaturday  9am to 1pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 45, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 20, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 10, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.lawsociety.org.uk/find-a-solicitor/", 
+            "geographic_coverage": "", 
+            "type_of_service": "", 
+            "description": "Database of solicitors", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Find a Solicitor", 
+            "organisation": "Law Society", 
+            "helpline": "Tel. 0870 606 2555 (Inside the UK). Select Option 6", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients seeking a face to face Immigration provider for an out of scope issue.", 
+            "how_to_use": "Refer those with internet access to website, those without to telephone", 
+            "address": "", 
+            "keywords": "law, society, solicitor, solicitors, advocacy, agricultural, business, charity, commercial, litigation, property, company, construction, civil, contract, conveyancing, investment, tax, international.", 
+            "opening_hours": "Web 24 hours, Telephone 08.00 to 18.00, Monday, Wednesday, Thursday, Friday \n09.30 to 18.00, Tuesday", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 46, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 21, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 12, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 47, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 21, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 18, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 48, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 21, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 3, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 49, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 21, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 13, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 50, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 21, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 10, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 51, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 21, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 17, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 22, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.gingerbread.org.uk", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "Single parent advice and support", 
+            "description": "Support, expert advice & information", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Gingerbread Single Parent Helpline", 
+            "organisation": "", 
+            "helpline": "0808 802 0925", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Interpretation service available on helpline. Some video content on website.", 
+            "when_to_use": "Clients seeking support or advice on family related issues including child maintenance, contact, employment, education, welfare benefits and tax credits, housing and debt.", 
+            "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to website or email advice service.", 
+            "address": "N/A", 
+            "keywords": "ginger, gingerbread, single, parent, parents, family, lone, child, children", 
+            "opening_hours": "Mondays: 10am to 6pm\n    Tuesdays/Thursdays/Fridays: 10am to 4pm\n    Wednesdays: 10am-1pm and 5pm-7pm.", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 52, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 22, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 53, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 22, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 6, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 54, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 22, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 55, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 22, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 12, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 56, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 22, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 4, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 57, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 22, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 2, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 23, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.gov.uk", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Government services & information on: \n Driving & Transport\n Employing people\n Working, jobs and pensions\n Money & tax\n Citizenship & living in the UK\n Benefits\n Passports, travel & living abroad\n Crime, justice and the law\n Disabled people", 
+            "description": "Information, online tools & signposting", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Gov.uk", 
+            "organisation": "", 
+            "helpline": "N/A", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients looking for government services and information.", 
+            "how_to_use": "Refer clients who require government services, policies and general information. Sections include:\n Working, jobs and pensions:  https://www.gov.uk/browse/working\n Money (court claims, debt and bankruptcy): https://www.gov.uk/browse/tax/court-claims-debt-bankruptcy\n Benefits: https://www.gov.uk/browse/benefits\n Housing & local services: https://www.gov.uk/browse/housing\n Births, marriages, deaths and care (includes power of attorney): https://www.gov.uk/browse/births-deaths-marriages \n Education https://www.gov.uk/browse/education \n Crime: https://www.gov.uk/browse/justice\n Information for disabled people: https://www.gov.uk/browse/disabilities", 
+            "address": "N/A", 
+            "keywords": "N/A", 
+            "opening_hours": "Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 58, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 59, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 9, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 60, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 16, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 61, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 6, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 62, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 63, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 12, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 64, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 18, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 65, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 3, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 66, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 4, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 67, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 13, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 68, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 15, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 69, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 14, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 70, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 11, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 71, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 7, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 72, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 2, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 73, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 23, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 17, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.justice.gov.uk/contacts/hmcts", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "Courts & Tribunals", 
+            "description": "Court & Trinunal office finder", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "HMCTS", 
+            "organisation": "", 
+            "helpline": "N/A", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Textphone, Text Relay. Other adjustments with individual courts/Tribunal office", 
+            "when_to_use": "Clients with case specific enquiries with court or tribunal office", 
+            "how_to_use": "Refer clients with case specific enquiries with court or tribunal office", 
+            "address": "N/A", 
+            "keywords": "HMCS - hmcs, court, courts, claim, claims, hearing, duty, justice\n\nTribunals Service - tribunal, dispute, tribunals, service, welfare, benefits, employment, immigration, education, asylum,", 
+            "opening_hours": "Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 74, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 24, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 25, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.independentage.org", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Older people", 
+            "description": "General information, advice and support", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Independent Age", 
+            "organisation": "", 
+            "helpline": "0845 262 1863 / advice@independentage.org ", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email, visual display settings on website", 
+            "when_to_use": "Older people, families and carers looking for informatin and support", 
+            "how_to_use": "Refer those who are able to self help to website and those who need assistance to helpline.", 
+            "address": "N/A", 
+            "keywords": "N/A", 
+            "opening_hours": "Monday to Friday between 10am and 4pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 75, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 25, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 9, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 26, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.ipsea.org.uk", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "Families with children with SEN", 
+            "description": "Information and next-step advice, limited caseworker service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Independent Parental Special Education Advice (IPSEA)", 
+            "organisation": "", 
+            "helpline": "0800 018 4016/01799 526771", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Call back booking service, email information service", 
+            "when_to_use": "Clients seeking legal advice regarding children with special educational needs", 
+            "how_to_use": "Refer those who wish to self help to website. Refer those who have right of appeal against LEA decision regarding SEN or making Disability Discrimination claim advice to helpline. Subject to availability.\n\nFor Tribunal appeals use: http://www.ipsea.org.uk/How-we-can-help/Tribunal-Helpline.aspx", 
+            "address": "N/A", 
+            "keywords": "ipsea, education, parental, parent, special, independent, educational, school, sen, disability, discrimination", 
+            "opening_hours": "Vary daily  see website", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 76, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 26, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 3, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 77, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 26, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 2, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 27, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.ipcc.gov.uk/", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "Police complaints", 
+            "description": "General information", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Independent Police Complaints Commission (IPCC)", 
+            "organisation": "", 
+            "helpline": "0300 020 0096 (press 2 at prompt)", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email, Text relay. Information in other languages, BSL and braille", 
+            "when_to_use": "Clients who wish to make a complaint about the police.", 
+            "how_to_use": "Refer those who are able to self help to website and those who need assistance to helpline.", 
+            "address": "N/A", 
+            "keywords": "ipcc, police, complaints, witness, law, laws, arrest, arrested, unlawful, rights, commission, policeman, policewoman, independent, helpline", 
+            "opening_hours": "9 am to 5 pm, Monday to Friday", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 78, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 27, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 11, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 79, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 27, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 7, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 28, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.lawcentres.org.uk/", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "Social welfare law", 
+            "description": "Network of centres providing legal advice and representation", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Law Centre Network", 
+            "organisation": "", 
+            "helpline": "N/A", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients seeking a face to face provider for Discrimination, Housing, Welfare Benefits, Employment, Immigration", 
+            "how_to_use": "Refer clients to search for local Law Centre", 
+            "address": "N/A", 
+            "keywords": "law, centres, centre, local, advice, legal,", 
+            "opening_hours": "Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 80, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 28, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 81, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 28, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 6, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 82, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 28, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 12, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 83, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 28, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 3, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 84, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 28, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 4, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 85, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 28, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 13, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 29, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://lawworks.org.uk/help-for-individuals", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "", 
+            "description": "Legal casework & representation", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Law Works", 
+            "organisation": "", 
+            "helpline": "N/A", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Refer clients seeking advice and representation for out of scope debt, housing and welfare benefits issues", 
+            "how_to_use": "Refer those who wish to self help resources,  those who need initial advice to Clinics Network and those requiring a Solicitor to Free Legal Casework service", 
+            "address": "N/A", 
+            "keywords": "pro, bono, free, legal, help, lawworks, solicitor, lawyer, aid, casework, caseworker", 
+            "opening_hours": "Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 86, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 29, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 87, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 29, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 6, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 88, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 29, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 4, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 30, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.lease-advice.org/ ", 
+            "geographic_coverage": "England & Wales", 
+            "type_of_service": "", 
+            "description": "Information service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Leasehold Advisory Service", 
+            "organisation": "", 
+            "helpline": "020 7383 9800\n/ 02920 782 222 (Wales)", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Refer clients seeking information on the law affecting residential leasehold property", 
+            "how_to_use": "Refer those able to self help, those seeking advice to helpline.", 
+            "address": "", 
+            "keywords": "", 
+            "opening_hours": "Monday to Friday from 9am to 5pm.", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 89, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 30, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 4, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 31, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.familymediationhelpline.co.uk/find-service.php ", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "", 
+            "description": "Searchable database of mediation providers", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Mediation Directory", 
+            "organisation": "Ministry of Justice", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Refer clients seeking mediation for all types of family dispute, including those who wish to find a mediator specialising abduction, ancillary relief, children, domestic violence, finance, langauges, MIAMs", 
+            "how_to_use": "Refer clients who wish to search for a mediation provider", 
+            "address": "", 
+            "keywords": "", 
+            "opening_hours": "Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 90, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 31, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 32, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.childrenslegalcentre.com", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Migrant children's rights", 
+            "description": "General Advice/Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Migrant Children's Project Adviceline", 
+            "organisation": "Coram Children's Legal Centre", 
+            "helpline": "0207 636 8505", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Interpretation service, Texttalk.  Browsealoud on website.", 
+            "when_to_use": "Refer clients seeking advice on migrant children's rights", 
+            "how_to_use": "Refer clients wishing to self help to website, those who require support to helpline", 
+            "address": "N/A", 
+            "keywords": "N/A", 
+            "opening_hours": "Mon-Fri, 10am  6pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 91, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 32, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 13, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 33, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.mind.org.uk/information-support/helplines/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Mental health related law  (including community care & discriminatin/equality)", 
+            "description": "General information and advice including casework service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Mind Legal Advice Line", 
+            "organisation": "Mind", 
+            "helpline": "0300 466 6463 / Email legal@mind.org.uk", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email, Interpretation and textphone services available", 
+            "when_to_use": "Refer clients seeking legal advice relating to mental health issues (ncluding community care & discriminatin/equality)", 
+            "how_to_use": "Refer those who wish to self help to website. Tell those needing advice to contact helpline", 
+            "address": "Mind LAS\nPO Box 277 \nManchester \nM60 3XN", 
+            "keywords": "mind, legal, mental, health, capacity, sectioned, community, care, human, rights, discrimination", 
+            "opening_hours": "Helpline tbc, Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 92, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 33, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 14, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 34, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.moneyadviceservice.org.uk", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Monkey/debt advice", 
+            "description": "General Advice/Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Money Advice Service", 
+            "organisation": "", 
+            "helpline": "0300 500 5000 or 0300 500 5555 (Welsh speaking)", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Typetalk: 18001 0300 500 5000. Face to face appointments possible", 
+            "when_to_use": "Clients seeking information online relating to money related issues.", 
+            "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to website", 
+            "address": "N/A", 
+            "keywords": "N/A", 
+            "opening_hours": "Monday to Friday                                           8am-8pm                                                                                 Saturdays                                                  9am-12pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 93, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 34, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 94, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 34, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 6, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 35, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.mymoneysteps.org", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Monkey/debt advice", 
+            "description": "General Advice/Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "My Money Steps", 
+            "organisation": "Money Advice Trust", 
+            "helpline": "N/A", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Online advice service", 
+            "when_to_use": "Clients seeking information online relating to debt.", 
+            "how_to_use": "Refer clients willing to self help websites.", 
+            "address": "N/A", 
+            "keywords": "debt, bills, money, finances, management, budget, my, steps", 
+            "opening_hours": "Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 95, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 35, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 36, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.nationaldebtline.co.uk", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Debt advice", 
+            "description": "Specialist Advice Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "National Debt Line", 
+            "organisation": "Money Advice Trust", 
+            "helpline": "0808 808 4000", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email", 
+            "when_to_use": "Clients seeking debt advice.", 
+            "how_to_use": "Refer clients seeking advice to helpline, those willing to self help websites.", 
+            "address": "National Debtline\nTricorn House,\n51-53 Hagley Road,\nEdgbaston,\nBirmingham\nB16 8TP", 
+            "keywords": "national, debtline, debt, helpline, loan, loans, bankrupt, bankruptcy, bailiff, bailiffs, bank, manage, management, personal,,", 
+            "opening_hours": "Monday to Friday                   9am-9pm                                 and Saturday                                                    9.30am-1pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 96, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 36, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 37, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://oisc.homeoffice.gov.uk/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Immigration", 
+            "description": "Information about finding an Immigration advisor", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Office of the Immigration Services Commissioner", 
+            "organisation": "", 
+            "helpline": "0845 000 0046\n/ 0207 211 1500", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients who wish to search for an Immigration advice provider", 
+            "how_to_use": "Refer clients who wish to search for an Immigration advice provider", 
+            "address": "The Office of the Immigration Services Commissioner\n5th Floor\nCounting House\n53 Tooley Street\nLondon\nSE1 2QN", 
+            "keywords": "asylum, immigration, tribunal, refugee, refugees, entry, aid,nationality, immigrated, helpline, oisc, commissioner", 
+            "opening_hours": "Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 97, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 37, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 13, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 38, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://oiahe.org.uk/", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "Higher Education complaints", 
+            "description": "Complaints review body", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Office of the Independant Adjudicator", 
+            "organisation": "", 
+            "helpline": "N/A", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Visual display settings and Browsealoud on website", 
+            "when_to_use": "Clients who have exhausted their university's complaints procedure", 
+            "how_to_use": "Refer clients who have exhausted their university's complaints procedure and wish to take their complaint to the next step.", 
+            "address": "Third Floor\nKings Reach\n38  50 Kings Road\nREADING\nRG1 3AA", 
+            "keywords": "education, student, university, complaint, college, academic, teaching, accomodation, research, BA, BSC, PHD, MA, MSC, MPhil, degree, appeal, discrimination, office, independant, adjudicator,", 
+            "opening_hours": "Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 98, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 38, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 2, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 39, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.prisonersadvice.org.uk", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "Advice for prisoners", 
+            "description": "Legal advice and information", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Prisoners Advice Service", 
+            "organisation": "", 
+            "helpline": "0845 430 8923  / \n020 7253 3323", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email, information available in other languages.", 
+            "when_to_use": "Clients seeking advice on prisoners' rights and the application of the prison rules.", 
+            "how_to_use": "Refer those who are able to self help to website and those who need assistance to helpline.", 
+            "address": "PAS\nPO Box 46199 \nLondon\nEC1M 4XA", 
+            "keywords": "prisoners, advice, crime, prisoner, prison, jail, detainee", 
+            "opening_hours": "9.30-13.00 and 14.00-17.30 on Monday, Wednesday and Friday", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 99, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 39, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 11, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 40, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.publiclawproject.org.uk/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Public law/issues with public bodies", 
+            "description": "General information and advice", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Public Law Project Civil Legal Aid Adviceline", 
+            "organisation": "", 
+            "helpline": "0808 165 0170", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients seeking information about Public Law.", 
+            "how_to_use": "Refer those who wish to self help to website. Tell those needing advice to contact helpline", 
+            "address": "150 Caledonian Road\nLondon\nN1 9RD", 
+            "keywords": "N/A", 
+            "opening_hours": "10am to 11am on Mondays, Tuesdays, Wednesdays and Fridays.", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 100, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 40, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 18, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 101, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 40, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 17, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 41, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.shelter.org.uk", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "Housing advice", 
+            "description": "General Legal Advice Line", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Shelter Adviceline", 
+            "organisation": "", 
+            "helpline": "England: 0808 800 4444 Wales: 0845 075 5005", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email advice service", 
+            "when_to_use": "Clients seeking legal advice for housing issues.", 
+            "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to websites.", 
+            "address": "N/A", 
+            "keywords": "shelter, advice, line, helpline, possession, repossession, house, housing, homeless, homelessness, landlord, tenant, tenants, disrepair, neighbour, neighbours, rent, mortgage", 
+            "opening_hours": "8am-8pm Monday-Friday and 8am-5pm at weekends", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 102, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 41, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 4, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 42, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.sortingoutseparation.org.uk", 
+            "geographic_coverage": "E&W (links to other services for other jurisdictions)", 
+            "type_of_service": "Relationship breakdown", 
+            "description": "General Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Sorting Out Separation", 
+            "organisation": "", 
+            "helpline": "N/A", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients clients seeking advice about separation.", 
+            "how_to_use": "Refer clients who wish to self help or to search for other support services.", 
+            "address": "N/A", 
+            "keywords": "sorting, out, seperation, break, up, relationship, family, seperation", 
+            "opening_hours": "Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 103, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 42, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 43, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.stepchange.org", 
+            "geographic_coverage": "E&W", 
+            "type_of_service": "Debt advice", 
+            "description": "Specialist Advice Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Step Change Debt Charity                            (formerly CCCS)", 
+            "organisation": "", 
+            "helpline": "0800 138 1111", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Options on website, Request a call back", 
+            "when_to_use": "Clients seeking advice for debt related issues.", 
+            "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to website", 
+            "address": "Wade House, Merrion Centre, Leeds, LS2 8NG", 
+            "keywords": "step, change, debt, charity, cccs, counselling, money, manage, management, finances, financial, loan, loans, debt, debts, arrear, arrears, creditors, creditor, iva, bankrupt, bankruptcy", 
+            "opening_hours": "Web 24 hours", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 104, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 43, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 1, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 44, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.stonewall.org.uk/", 
+            "geographic_coverage": "England, Wales & Scotland", 
+            "type_of_service": "Issues affecting those who are lesbian, gay or bisexual", 
+            "description": "General Advice/Information Provider", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Stonewall", 
+            "organisation": "", 
+            "helpline": "0800 050 20 20", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients who are seeking information in relation to issues relating to gay rights.", 
+            "how_to_use": "Refer clients requiring general information to website, those who require support to helpline", 
+            "address": "Tower Building\nYork Road\nLondon SE1 7NX", 
+            "keywords": "stonewall, stone, discrimination, lesbian, gay, bisexual, sexuality, equality", 
+            "opening_hours": "Mon-Fri 9:30am to 5:30pm", 
+            "resource_type": "LEGAL"
+        }
+    }, 
+    {
+        "pk": 105, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 44, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 3, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 106, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 44, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 4, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 107, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 44, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 13, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 45, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.lawsociety.org.uk/choosingandusing/usingsolicitor.page", 
+            "geographic_coverage": "", 
+            "type_of_service": "Information about using a solicitor", 
+            "description": "Web based resource", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "A Guide to Using a solicitor", 
+            "organisation": "Law Society", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients looking for information about finding and using a solicitor.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "Lawyers, solicitor, representation, help, court, legal executive, advocate, lawyer", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 46, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.ageuk.org.uk/", 
+            "geographic_coverage": "", 
+            "type_of_service": "Older people", 
+            "description": "Information and advice service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Age UK", 
+            "organisation": "", 
+            "helpline": "0800 169 6565", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Advice and support service for older people.", 
+            "how_to_use": "To be used as supplement to category specific referrals. Refer those who are able to to self help to website, refer those who wish to speak to someone to helpline", 
+            "address": "Tavis House\n1-6 Tavistock Square\nLondon\nWC1H 9NA", 
+            "keywords": "age, uk, concern, old, elderly, pension, pensions, funeral, disabled, aged, older, helpline, fuel, benefits, care, residential, community", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 108, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 46, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 6, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 47, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.brokenrainbow.org.uk/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Lesbian, gay, bisexual, transgender domestic violence", 
+            "description": "support to all members of the LGBT communities, their family, friends, and agencies supporting them. They can: provide confidential information, advice and support \nhelp you create your safety plan \nexplore options around housing, legal advice, counselling and local support groups \ntell you about your local LGBT friendly services \ndiscuss the possibility of reporting to the Police", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Broken Rainbow", 
+            "organisation": "", 
+            "helpline": "0300 999 5428", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Online Chat, Email", 
+            "when_to_use": "All members of the LGBT communities who are victims of domestic violence . Offer in addition to other resources, including referral to CLA Specialist.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "help@brokenrainbow.org.uk ", 
+            "keywords": "broken, rainbow, gay, bisexual, lesbian, transgender, homophobic, transphobic, domestic, violence, dv", 
+            "opening_hours": "10am - 8pm Monday\n10am - 5pm_ Tuesday \n10am - 5pm Wednesday\n10am - 8pm_ Thursday \n\n1pm-5pm Tuesday is a trans* specific service", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 109, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 47, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 48, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "https://www.gov.uk/check-legal-aid", 
+            "geographic_coverage": "", 
+            "type_of_service": "Legal aid eligibility", 
+            "description": "Web tool", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Can I get legal aid?", 
+            "organisation": "Legal Aid Agency", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients who wish to find out about legal aid eligibility.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "can I get legal aid, legal aid, eligibility, debt, housing, education, discrimination, family, welfare benefits", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 49, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "https://www.gov.uk/civil-legal-advice", 
+            "geographic_coverage": "", 
+            "type_of_service": "", 
+            "description": "Service information page", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Civil Legal Advice", 
+            "organisation": "Legal Aid Agency", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients looking for information about CLA.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "civil, legal, advice, cla, aid, directory, online, email, abroad", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 50, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "https://claonlineadvice.justice.gov.uk/", 
+            "geographic_coverage": "", 
+            "type_of_service": "", 
+            "description": "", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "CLA Online Advice", 
+            "organisation": "Legal Aid Agency", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients seeking Online Advice from CLA.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 51, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.scope.org.uk/help-and-information/dial-groups", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Disabled people and their families", 
+            "description": "Information, advice and support", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "DIAL UK", 
+            "organisation": "Scope", 
+            "helpline": "0808 800 33 33 / Email response@scope.org.uk", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Visual display settings and Browsealoud on website", 
+            "when_to_use": "Information, advice and support for disabled people and their families.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "Scope\n6 Market Road\nLondon\nN7 9PW\nEngland\nUK", 
+            "keywords": "", 
+            "opening_hours": "9am - 5pm  Mon - Fri", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 110, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 51, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 6, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 52, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.gypsy-traveller.org/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Issues affecting gypsies & travellers", 
+            "description": "Information Provider/Casework Service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Friends, Families and Travellers", 
+            "organisation": "", 
+            "helpline": "01273 234 777", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Advice on issues affecting typsies & travellers.", 
+            "how_to_use": "To be used as supplement to category specific referrals. Refer those who are able to to self help to website, refer those who wish to speak to someone to helpline", 
+            "address": "FFT\nCommunity Base\n113 Queens Road\nBrighton\nE. Sussex, BN1 3XG", 
+            "keywords": "travellers, gypsies, housing, caravan, family, families, mobile home, caravan rental, eviction, illegal site, romany gypsy, gypsey, gypsie", 
+            "opening_hours": "Monday to Friday from 10.00am to 5:00pm (not Wednesdays)", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 53, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.getconnected.org/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Support for people under 25", 
+            "description": "Support service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Get Connected", 
+            "organisation": "", 
+            "helpline": "0808 808 4994 / Text 80849", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Webchat, email, text", 
+            "when_to_use": "General support service for people aged under 25.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "get, connected, crime, family, welfare, benefits, homeless, housing, employment, education, bullying, harassment, discrimination, domestic, violence, rape, sex, relationship, mental, health, depression, bereavement, addiction, drugs, alcohol, social, services, mediation, carer, fostering, health, disability, disabled, young, self harming,", 
+            "opening_hours": "1pm - 11pm every day", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 54, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.justice.gov.uk/information-access-rights", 
+            "geographic_coverage": "", 
+            "type_of_service": "Freedom of information (FOI), data protection and transparency data from Ministry of Justice", 
+            "description": "Information resource", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Information Access and Rights", 
+            "organisation": "", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Information about Data Protection and Freedom of Information Requests", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "access, information, data protection, freedom of information, transparency data", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 55, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.gov.im/registries/legal/welcome.xml", 
+            "geographic_coverage": "Isle of Man", 
+            "type_of_service": "Legal aid - Isle of Man", 
+            "description": "Information resource", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Isle of Man Courts of Justice - civil legal aid and legal costs", 
+            "organisation": "", 
+            "helpline": "01624 685265", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Legal aid and costs for the  Isle of Man", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "isle, man, legal, aid, court, courts, justice, civil,", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 56, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.legalaid.je/", 
+            "geographic_coverage": "Jersey", 
+            "type_of_service": "Legal aid - Jersey", 
+            "description": "Informatin resource", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Jersey Legal Aid Office", 
+            "organisation": "", 
+            "helpline": "0845 800 1066 Email:email@legalaid.je ", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Legal Aid in Jersey", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "Acting Btonnier,\n40 Don Street,\nSt Helier,\nJersey,\nChannel Islands,\nJE1 4XD.", 
+            "keywords": "jersey, legal, Aid,channel", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 57, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.justice.gov.uk/contacts/legal-aid-agency", 
+            "geographic_coverage": "England & Wales", 
+            "type_of_service": "", 
+            "description": "Enquiries about legal aid", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "LAA Customer Services", 
+            "organisation": "Legal Aid Agency", 
+            "helpline": "0300 200 2020", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Non case-specific enquiries about legal aid.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "lsc, legal, services, commission,  general, enquiries, aid, certificate, laa, LAA", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 58, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://find-legal-advice.justice.gov.uk/", 
+            "geographic_coverage": "", 
+            "type_of_service": "", 
+            "description": "", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Legal Adviser Finder", 
+            "organisation": "Legal Aid Agency", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients who wish to search online for a legal adviser or family mediator with a legal aid contract in England and Wales", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "directory, legal aid, abroad contact number, search for solicitors, f2f referral, signposting, signpost to f2f, cla", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 59, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://", 
+            "geographic_coverage": "International", 
+            "type_of_service": "Legal aid internationally", 
+            "description": "Links to scheme in other countries", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Legal Aid Around the World", 
+            "organisation": "", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients enquiring about legal aid in other countries.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "\"This website provides links to other organisations that may be able to provide legal help or information on Legal Aid available in countries outside of the country-region", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 60, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.legalombudsman.org.uk/", 
+            "geographic_coverage": "England & Wales", 
+            "type_of_service": "Escalated complaints about legal advice providers", 
+            "description": "Ombudsman service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Legal Ombudsman", 
+            "organisation": "", 
+            "helpline": "0300 300 3100", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients who wish to complain about legal advice services.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "Legal Ombudsman\nPO Box 6806,\nWolverhampton,\nWV1 9WJ", 
+            "keywords": "office, legal, services, ombudsman, solicitor, solicitors, attorney, conveyancer, complaint, complaints", 
+            "opening_hours": "8.30am to 5.30pm Mon-Fri", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 61, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.justice.gov.uk/", 
+            "geographic_coverage": "", 
+            "type_of_service": "", 
+            "description": "", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Ministry of Justice", 
+            "organisation": "", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "", 
+            "how_to_use": "To be used as supplement to category specific referrals. Refer those looking for more information.", 
+            "address": "", 
+            "keywords": "ministry of justice, MOJ, legal aid", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 62, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://", 
+            "geographic_coverage": "", 
+            "type_of_service": "Legal aid policy", 
+            "description": "MoJ department responsible for Legal Aid policy", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Ministry Of Justice (Legal Aid Policy Complaints)", 
+            "organisation": "", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients who wish to complaint about legal aid policy.", 
+            "how_to_use": "To be used as supplement to category specific referrals. Only provide for clients who have complained about legal aid policy", 
+            "address": "Legal Aid Policy, Law and Access to Justice Group\n\n4th Floor \n102 Petty France \nLondon \nSW1H 9AJ", 
+            "keywords": "lsc, legal, aid, complaint, limit, eligiblity, eligible, ineligible, ministry, justice", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 63, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.nilsc.org.uk/", 
+            "geographic_coverage": "NI", 
+            "type_of_service": "Legal aid - Northern Ireland", 
+            "description": "Information resource", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Northern Ireland Legal Services Commission", 
+            "organisation": "", 
+            "helpline": "+44 (0)28 9040 8888", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Legal Aid in Norther Ireland", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "The Northern Ireland Legal Services Commission\n2nd Floor,\nWaterfront Plaza,\n8 Laganbank Road,\nMays Meadow,\nBelfast,\nNorthern Ireland,\nUnited Kingdom,\nBT1 3BN", 
+            "keywords": "northern, ireland, NI, legal, aid, eligible, eligibility, means, assessment, commission", 
+            "opening_hours": "09:15 - 17:15 Monday to Friday", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 64, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.ombudsmanassociation.org/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "", 
+            "description": "Web based signposting service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Ombudsman Association", 
+            "organisation": "", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Clients looking for complaints bodies or an Ombudsman.", 
+            "how_to_use": "To be used as supplement to category specific referrals. Refer those wishing to search for relevant complaints body or Ombudsman", 
+            "address": "", 
+            "keywords": "british, irish, ombudsman, association, complain, complaint, ombudsmans", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 65, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.justice.gov.uk/downloads/legal-aid/funding-code/paying-for-your-civil-legal-aid-leaflet.pdf", 
+            "geographic_coverage": "", 
+            "type_of_service": "Legal aid", 
+            "description": "Web based resource/leaflet", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Paying for your legal aid", 
+            "organisation": "Legal Aid Agency", 
+            "helpline": "", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Information on what is covered by legal aid and when clients may have to contribute to the cost of their case.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 66, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.pohwer.net/about-us", 
+            "geographic_coverage": "England", 
+            "type_of_service": "Support and advocacy to people who experience disability, vulnerability, distress and social exclusion.", 
+            "description": "Supportline - advocacy service offering information, advice & signposting", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "POhWER", 
+            "organisation": "", 
+            "helpline": "0300 456 2370", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Minicom, text, Skype, Email,", 
+            "when_to_use": "Clients who have a disability, are vulnerable, distressed or suffering from social exclusion.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "PO Box 14043, Birmingham, B6 9BL", 
+            "keywords": "", 
+            "opening_hours": "Monday to Friday from 8am - 6pm", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 67, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.mensadviceline.org.uk   ", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Male victims of domestic violence", 
+            "description": "Support, information and practical advice to male victims of domestic violence.", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Men's Advice Line", 
+            "organisation": "Respect", 
+            "helpline": "0808 801 0327", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Interpretation and TypeTalk service available.", 
+            "when_to_use": "Refer male victims of domestic violence seeking support, information and advice. Offer in addition to other resources, including referral to CLA Specialist.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "info@mensadviceline.org.uk  ", 
+            "keywords": "", 
+            "opening_hours": "Monday - Friday 9am-5pm", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 111, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 67, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 68, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.respectphoneline.org.uk  ", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Perpetrators of Demestic Violence", 
+            "description": "Confidential helpline for domestic violence perpetrators (male, female, in heterosexual or same-sex relationships). \n\nInformation and advice to support perpetrators stop their violence and change their abusive behaviours.", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Respect", 
+            "organisation": "Respect", 
+            "helpline": "0808 802 4040", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Interpretation and TypeTalk service available.", 
+            "when_to_use": "Refer perpetrators of Domstic Violence seeking informatino and advice about stopping their violence and changing their abusive behaviours.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "info@respectphoneline.org.uk  ", 
+            "keywords": "", 
+            "opening_hours": "Monday - Friday 9am-5pm", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 112, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 68, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 69, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.samaritans.org/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Emotional support, including suicidal clients", 
+            "description": "Listening and support service", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Samaritans", 
+            "organisation": "", 
+            "helpline": "08457 90 90 90 / jo@samaritans.org", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email", 
+            "when_to_use": "Clients who wish to talk about any issue affecting them.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "Freepost RSRB-KKBY-CYJK\nChris\nPO Box 9090\nStirling\nFK8 2SA", 
+            "keywords": "support, emotional, helpline, distress, suicide, stress, mental, disorder, samaritan, sectioned, samaritan, samaritans, lonely, loneliness, isolation, isolated,", 
+            "opening_hours": "24 hours a day, 365 days a year", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 70, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.slab.org.uk/", 
+            "geographic_coverage": "Scotland", 
+            "type_of_service": "Legal aid - Scotland", 
+            "description": "Information resource", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Scottish Legal Aid Board", 
+            "organisation": "", 
+            "helpline": "0845 122 8686", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "", 
+            "when_to_use": "Legal Aid in Scotland.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "", 
+            "keywords": "scottish, scotland, legal, aid, eligible, eligibility, means, assessment, civil, criminal, slab", 
+            "opening_hours": "", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 71, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://victimsupport.org", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Support for victims of crime", 
+            "description": "Supportline", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "Victim Supportline", 
+            "organisation": "", 
+            "helpline": "0845 30 30 900", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Email, Text Relay and interpretation.", 
+            "when_to_use": "Clients who have been a victim of crime and are seeking support.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "The Supportline address for letters only is:\nHannibal House\nElephant and Castle Shopping Centre\nLondon\nSE1 6TB", 
+            "keywords": "\"helpline", 
+            "opening_hours": "9am - 9pm Monday to Friday \n9am - 7pm weekends \n9am - 5pm bank holidays", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 113, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 71, 
+            "preferred_signpost": false, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 11, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }, 
+    {
+        "pk": 72, 
+        "model": "knowledgebase.article", 
+        "fields": {
+            "website": "http://www.nationaldomesticviolencehelpline.org.uk/", 
+            "geographic_coverage": "UK", 
+            "type_of_service": "Women and children experiencing, or who have experienced, domestic violence Friends and family seeking to support women and children who are experiencing, or who have experienced, domestic violence Professionals supporting women and children experiencing domestic violence.", 
+            "description": "The Helpline is an emergency service and is not intended to offer general information on domestic violence. Helpline staff respond according to caller's needs and may for example:\n\nRefer women (with or without children) to emergency safe accommodation. Provide information about legal, housing or welfare rights and options and referral to relevant services and professions. Carry out online crisis and safety planning. Offer emotional support and (if appropriate) refer to counselling services. Refer women to face-to-face support via community based drop-in or outreach domestic violence services in their locality Refer callers to the online Survivors Handbook or send them an information pack, with a range of help and information leaflets that are all available in different languages. In addition to offering confidential support and information, Helpline staff are a source of practical help and information about housing rights and entitlements, information on getting injunctions or reassurance about calling the police.", 
+            "created": "2014-06-27T15:52:55.547895+01:00", 
+            "service_name": "24 hour National Domestic Violence Helpline", 
+            "organisation": "Women's Aid & Refuge", 
+            "helpline": "0808 2000 247", 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "accessibility": "Interpretation service available. Type Talk for calers with hearing difficulties. Womens Aid and Refuge websites provide some information in other languages", 
+            "when_to_use": "Emergency service for women and children who experiencing, or have experienced domestic violence. Offer in addition to other resources, including referral to CLA Specialist.", 
+            "how_to_use": "To be used as supplement to category specific referrals", 
+            "address": "helpline@womensaid.org.uk (limited information only, respond within 3 days)", 
+            "keywords": "", 
+            "opening_hours": "24 hours a day, 365 days a year", 
+            "resource_type": "OTHER"
+        }
+    }, 
+    {
+        "pk": 114, 
+        "model": "knowledgebase.articlecategorymatrix", 
+        "fields": {
+            "article": 72, 
+            "preferred_signpost": true, 
+            "modified": "2014-06-27T15:52:55.547895+01:00", 
+            "article_category": 5, 
+            "created": "2014-06-27T15:52:55.547895+01:00"
+        }
+    }
+]

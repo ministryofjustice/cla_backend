@@ -14,7 +14,7 @@ class Migration(SchemaMigration):
             ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
             ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
-            ('is_operator_superuser', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('is_manager', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal(u'call_centre', ['Operator'])
 
@@ -58,7 +58,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Operator'},
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_operator_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'is_manager': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
         },

@@ -129,7 +129,7 @@ class CaseSerializer(CaseSerializerBase):
     locked_by = serializers.CharField(read_only=True)
     locked_at = serializers.DateTimeField(read_only=True)
 
-    log_set = serializers.SerializerMethodField('get_logset_set')
+    log_set = serializers.SerializerMethodField('get_log_set')
 
 
     class Meta(CaseSerializerBase.Meta):

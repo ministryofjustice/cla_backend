@@ -6,7 +6,7 @@ from cla_common.money_interval.models import MoneyInterval
 
 from ..models import Category, EligibilityCheck, Property, Savings, \
     Case, PersonalDetails, Income, Deductions, Person,\
-    CaseLogType, CaseLog
+    ThirdPartyDetails, AdaptationDetails
 
 
 category = Recipe(Category,
@@ -48,19 +48,18 @@ personal_details = Recipe(PersonalDetails,
                           postcode=seq('postcode'),
                           full_name=seq('fullname'))
 
+thirdparty_details = Recipe(ThirdPartyDetails,
+                          personal_details=foreign_key(personal_details)
+                          )
+
+adaptation_details = Recipe(AdaptationDetails)
+
+
 case = Recipe(Case,
     eligibility_check=foreign_key(eligibility_check),
     personal_details=foreign_key(personal_details)
 )
 
-logtype = Recipe(CaseLogType)
 
-outcome_code = Recipe(CaseLogType, subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
-refsp_logtype = Recipe(CaseLogType, code='REFSP', subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
-manalc_logtype = Recipe(CaseLogType, code='MANALC', subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
 
-case_log = Recipe(CaseLog,
-    case=foreign_key(case),
-    logtype=foreign_key(logtype)
-)
 

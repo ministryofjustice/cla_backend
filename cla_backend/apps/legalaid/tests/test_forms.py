@@ -2,7 +2,7 @@ import mock
 
 from cla_eventlog.models import Log
 
-from legalaid.models import CaseLog, Case
+from legalaid.models import Case
 
 from core.tests.mommy_utils import make_recipe, make_user
 
@@ -42,7 +42,7 @@ class BaseCaseLogFormTestCaseMixin(object):
 
     def test_invalid_form(self):
         case = make_recipe('legalaid.case')
-        self.assertEqual(CaseLog.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 0)
 
         data = self.get_default_data()
         data['notes'] = 'l'*501
@@ -58,7 +58,7 @@ class BaseCaseLogFormTestCaseMixin(object):
 
         # nothing has changed
         case = Case.objects.get(pk=case.pk)
-        self.assertEqual(CaseLog.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 0)
 
 
 class EventSpecificLogFormTestCaseMixin(BaseCaseLogFormTestCaseMixin):
@@ -74,7 +74,7 @@ class EventSpecificLogFormTestCaseMixin(BaseCaseLogFormTestCaseMixin):
     def test_invalid_event_code(self):
         # test with invalid code
         case = make_recipe('legalaid.case')
-        self.assertEqual(CaseLog.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 0)
 
         data = self.get_default_data()
         data['event_code'] = 'invalid'

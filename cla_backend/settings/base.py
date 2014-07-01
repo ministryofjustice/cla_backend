@@ -154,8 +154,9 @@ PROJECT_APPS = (
     'legalaid',
     'cla_provider',
     'call_centre',
+    'cla_eventlog',
     'reports',
-    'cla_eventlog'
+    'knowledgebase'
 )
 
 INSTALLED_APPS += PROJECT_APPS

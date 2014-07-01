@@ -124,7 +124,7 @@ class CaseViewSet(
         obj = self.get_object()
         helper = ProviderAllocationHelper()
 
-        if hasattr(obj, 'eligibility_check') and obj.eligibility_check != None:
+        if hasattr(obj, 'eligibility_check') and obj.eligibility_check != None and obj.eligibility_check.category:
             category = obj.eligibility_check.category
             suggested = helper.get_suggested_provider(category)
             suggested_provider = ProviderSerializer(suggested).data

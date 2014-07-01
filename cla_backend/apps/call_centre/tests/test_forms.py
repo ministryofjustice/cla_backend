@@ -2,15 +2,15 @@ import mock
 import datetime
 from django.test import TestCase
 from django.utils import timezone
-from legalaid.models import CaseLog
-
-from cla_common.constants import CASE_STATES
 
 from core.tests.mommy_utils import make_recipe, make_user
-from legalaid.tests.base import BaseStateFormTestCase
+from legalaid.tests.test_forms import BaseCaseLogFormTestCaseMixin, EventSpecificLogFormTestCaseMixin
+
+from cla_eventlog.models import Log
 
 from cla_provider.helpers import ProviderAllocationHelper
-from ..forms import ProviderAllocationForm, DeclineAllSpecialistsCaseForm
+from call_centre.forms import DeferAssignmentCaseForm, ProviderAllocationForm, \
+    DeclineAllSpecialistsCaseForm
 
 
 class ProviderAllocationFormTestCase(TestCase):
@@ -35,11 +35,11 @@ class ProviderAllocationFormTestCase(TestCase):
 
         self.assertTrue(form.is_valid())
 
-        self.assertEqual(CaseLog.objects.count(),0)
+        self.assertEqual(Log.objects.count(),0)
         form.save(user)
 
         self.assertEqual(case.provider, provider)
-        self.assertEqual(CaseLog.objects.count(),1)
+        self.assertEqual(Log.objects.count(),1)
 
 
     @mock.patch('cla_provider.models.timezone.now')
@@ -75,11 +75,11 @@ class ProviderAllocationFormTestCase(TestCase):
 
         self.assertTrue(form.is_valid())
 
-        self.assertEqual(CaseLog.objects.count(),0)
+        self.assertEqual(Log.objects.count(),0)
         form.save(user)
 
         self.assertEqual(case.provider, provider)
-        self.assertEqual(CaseLog.objects.count(),1)
+        self.assertEqual(Log.objects.count(),1)
 
     @mock.patch('cla_provider.models.timezone.now')
     @mock.patch('cla_provider.helpers.timezone.now')
@@ -120,23 +120,9 @@ class ProviderAllocationFormTestCase(TestCase):
 
         self.assertFalse(form.is_valid())
 
+class DeferAssignmentCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
+    FORM = DeferAssignmentCaseForm
 
-class DeclineAllSpecialistsCaseFormTestCase(BaseStateFormTestCase, TestCase):
+
+class DeclineAllSpecialistsCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
     FORM = DeclineAllSpecialistsCaseForm
-    VALID_OUTCOME_CODE = 'CODE_DECLINED_ALL_SPECIALISTS'
-    EXPECTED_CASE_STATE = CASE_STATES.CLOSED
-
-    def test_invalid_if_case_already_assigned(self):
-        provider = make_recipe('cla_provider.provider')
-        case = make_recipe('legalaid.case', state=CASE_STATES.OPEN, provider=provider)
-
-        form = self.FORM(case=case, data={
-            'outcome_code': self.VALID_OUTCOME_CODE,
-            'outcome_notes': 'lorem ipsum'
-        })
-
-        self.assertFalse(form.is_valid())
-
-        self.assertItemsEqual(
-            form.errors, {'__all__': [u'Case currently assigned to a provider']}
-        )

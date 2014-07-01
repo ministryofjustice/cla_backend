@@ -18,7 +18,7 @@ from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer, \
     OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer
 from .forms import ProviderAllocationForm, \
-    DeclineAllSpecialistsCaseForm, CaseAssignDeferForm, \
+    DeclineAllSpecialistsCaseForm, DeferAssignmentCaseForm, \
     AssociatePersonalDetailsCaseForm, AssociateEligibilityCheckCaseForm
 from .models import Operator
 
@@ -163,7 +163,7 @@ class CaseViewSet(
     @action()
     def defer_assignment(self, request, **kwargs):
         obj = self.get_object()
-        form = CaseAssignDeferForm(case=obj, data=request.DATA)
+        form = DeferAssignmentCaseForm(case=obj, data=request.DATA)
         if form.is_valid():
             form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)

@@ -1,12 +1,7 @@
-from cla_common.constants import CASELOGTYPE_ACTION_KEYS
-from cla_eventlog.constants import LOG_ROLES
-from cla_eventlog.registry import event_registry
-
-from legalaid.forms import EventSpecificOutcomeForm
+from legalaid.forms import EventSpecificLogForm, BaseCaseLogForm
 
 
-class RejectCaseForm(EventSpecificOutcomeForm):
-
+class RejectCaseForm(EventSpecificLogForm):
     LOG_EVENT_KEY = 'reject_case'
 
     def save(self, user):
@@ -15,8 +10,7 @@ class RejectCaseForm(EventSpecificOutcomeForm):
         super(RejectCaseForm, self).save(user)  # saves the outcome
 
 
-class AcceptCaseForm(EventSpecificOutcomeForm):
-
+class AcceptCaseForm(BaseCaseLogForm):
     LOG_EVENT_KEY = 'accept_case'
 
     def save(self, user):
@@ -25,7 +19,7 @@ class AcceptCaseForm(EventSpecificOutcomeForm):
         super(AcceptCaseForm, self).save(user)  # saves the outcome
 
 
-class CloseCaseForm(EventSpecificOutcomeForm):
+class CloseCaseForm(BaseCaseLogForm):
     LOG_EVENT_KEY = 'close_case'
 
     def save(self, user):

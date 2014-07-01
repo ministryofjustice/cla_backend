@@ -33,13 +33,13 @@ class BaseCaseLogForm(forms.Form):
                            notes=self.get_notes(), **self.get_kwargs())
 
 
-class EventSpecificOutcomeForm(BaseCaseLogForm):
+class EventSpecificLogForm(BaseCaseLogForm):
     event_code = forms.ChoiceField(
         choices=()
     )
 
     def __init__(self, *args, **kwargs):
-        super(EventSpecificOutcomeForm, self).__init__(*args, **kwargs)
+        super(EventSpecificLogForm, self).__init__(*args, **kwargs)
         self.fields['event_code'].choices = self.get_event_code_choices()
 
     def get_event_code_choices(self):
@@ -50,12 +50,12 @@ class EventSpecificOutcomeForm(BaseCaseLogForm):
         return self.cleaned_data['event_code']
 
     def get_kwargs(self):
-        kwargs = super(EventSpecificOutcomeForm, self).get_kwargs()
+        kwargs = super(EventSpecificLogForm, self).get_kwargs()
         kwargs['code'] = self.get_event_code()
         return kwargs
 
-class SelectableEventOutcomeForm(EventSpecificOutcomeForm):
 
+class SelectableEventLogForm(EventSpecificLogForm):
     ROLE = None
 
     def get_role(self):
@@ -79,17 +79,14 @@ class SelectableEventOutcomeForm(EventSpecificOutcomeForm):
         return self.cleaned_data.get('event_key')
 
     def clean(self):
-        cleaned_data = super(SelectableEventOutcomeForm, self).clean()
+        cleaned_data = super(SelectableEventLogForm, self).clean()
         event_key, event_code = cleaned_data['event_code'].split(':')
         cleaned_data['event_key']  = event_key
         cleaned_data['event_code_'] = event_code
 
         return cleaned_data
 
+
+# TODO: should be removed after outcome refactoring
 class OutcomeForm(object):
     pass
-
-class CCForm(SelectableEventOutcomeForm):
-    ROLE = LOG_ROLES.SPECIALIST
-
-

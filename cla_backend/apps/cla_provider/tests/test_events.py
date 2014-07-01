@@ -9,25 +9,12 @@ from cla_eventlog.tests.base import EventTestCaseMixin
 
 class RejectCaseEventTestCase(EventTestCaseMixin, TestCase):
     def test_reject_case(self):
-        event = event_registry.get_event('reject_case')()
-        codes = event.codes.keys()
-
-        self.assertItemsEqual(codes, ['MIS', 'MIS-MEANS', 'MIS-OOS', 'COI'])
-
-        chosen_code = codes[0]
-        res = event.process(
-            self.dummy_case, code=chosen_code, notes='this is a note',
-            created_by=self.dummy_user
-        )
-
-        self.assertLogEqual(res, Log(
-            case=self.dummy_case, code=chosen_code,
-            type=LOG_TYPES.OUTCOME, notes='this is a note',
-            level=LOG_LEVELS.HIGH, created_by=self.dummy_user)
+        self._test_process_with_expicit_code(
+            'reject_case', ['MIS', 'MIS-MEANS', 'MIS-OOS', 'COI']
         )
 
     def test_reject_conflict(self):
-        self._test_process_event_key_with_one_code('reject_case', 'COI',
+        self._test_process_with_implicit_code('reject_case', 'COI',
             process_kwargs={
                 'is_conflict': True
             }
@@ -36,9 +23,9 @@ class RejectCaseEventTestCase(EventTestCaseMixin, TestCase):
 
 class AcceptCaseEventTestCase(EventTestCaseMixin, TestCase):
     def test_accept_case(self):
-        self._test_process_event_key_with_one_code('accept_case', 'SPOP')
+        self._test_process_with_implicit_code('accept_case', 'SPOP')
 
 
 class CloseCaseEventTestCase(EventTestCaseMixin, TestCase):
     def test_close_case(self):
-        self._test_process_event_key_with_one_code('close_case', 'CLSP')
+        self._test_process_with_implicit_code('close_case', 'CLSP')

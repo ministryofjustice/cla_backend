@@ -3,10 +3,8 @@ from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 
-from cla_common.constants import CASELOGTYPE_ACTION_KEYS
-
 from cla_provider.models import Provider
-from legalaid.forms import BaseCaseLogForm, OutcomeForm
+from legalaid.forms import BaseCaseLogForm, EventSpecificLogForm
 
 
 class ProviderAllocationForm(BaseCaseLogForm):
@@ -61,6 +59,29 @@ class ProviderAllocationForm(BaseCaseLogForm):
         return data['provider_obj']
 
 
+class DeferAssignmentCaseForm(BaseCaseLogForm):
+    LOG_EVENT_KEY = 'defer_assignment'
+
+    def clean(self):
+        cleaned_data = super(DeferAssignmentCaseForm, self).clean()
+        if self._errors:  # skip if already in error
+            return cleaned_data
+
+        # checking that the case is in a consistent state
+        if self.case.provider:
+            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
+        return cleaned_data
+
+
+class DeclineAllSpecialistsCaseForm(EventSpecificLogForm):
+    LOG_EVENT_KEY = 'decline_help'
+
+    def save(self, user):
+        self.case.close()
+
+        super(DeclineAllSpecialistsCaseForm, self).save(user)  # saves the outcome
+
+
 class AssociatePersonalDetailsCaseForm(forms.Form):
     reference = forms.CharField(required=True, max_length=32)
 
@@ -93,38 +114,3 @@ class AssociateEligibilityCheckCaseForm(forms.Form):
     def save(self, user):
         ref = self.cleaned_data['reference']
         self.case.associate_eligibility_check(ref)
-
-
-class CaseAssignDeferForm(BaseCaseLogForm):
-    LOG_EVENT_KEY = 'defer_assignment'
-
-    def clean(self):
-        cleaned_data = super(CaseAssignDeferForm, self).clean()
-        if self._errors:  # skip if already in error
-            return cleaned_data
-
-        # checking that the case is in a consistent state
-        if self.case.provider:
-            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
-        return cleaned_data
-
-
-class DeclineAllSpecialistsCaseForm(OutcomeForm):
-    def get_outcome_code_queryset(self):
-        qs = super(DeclineAllSpecialistsCaseForm, self).get_outcome_code_queryset()
-        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.DECLINE_SPECIALISTS)
-
-    def clean(self):
-        cleaned_data = super(DeclineAllSpecialistsCaseForm, self).clean()
-        if self._errors:  # skip if already in error
-            return cleaned_data
-
-        # checking that the case is in a consistent state
-        if self.case.provider:
-            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
-        return cleaned_data
-
-    def save(self, user):
-        self.case.close()
-
-        super(DeclineAllSpecialistsCaseForm, self).save(user)  # saves the outcome

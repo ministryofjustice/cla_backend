@@ -3,19 +3,6 @@ from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES
 from cla_eventlog.events import BaseEvent
 
 
-class DeferAssignmentEvent(BaseEvent):
-    key = 'defer_assignment'
-    codes = {
-        'CBSP': {
-            'type': LOG_TYPES.OUTCOME,
-            'level': LOG_LEVELS.HIGH,
-            'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Will call back later for Specialist'
-        }
-    }
-event_registry.register(DeferAssignmentEvent)
-
-
 class AssignToProviderEvent(BaseEvent):
     key = 'assign_to_provider'
     codes = {
@@ -37,7 +24,7 @@ class AssignToProviderEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Sent to Specialist again'
         },
-        }
+    }
 
     def get_log_code(self, **kwargs):
         is_manual = kwargs['is_manual']
@@ -47,3 +34,41 @@ class AssignToProviderEvent(BaseEvent):
 
         return 'REFSP'
 event_registry.register(AssignToProviderEvent)
+
+
+class DeferAssignmentEvent(BaseEvent):
+    key = 'defer_assignment'
+    codes = {
+        'CBSP': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Will call back later for Specialist'
+        }
+    }
+event_registry.register(DeferAssignmentEvent)
+
+
+class DeclineHelpEvent(BaseEvent):
+    key = 'decline_help'
+    codes = {
+        'DESP': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Client declined Specialist'
+        },
+        'DECL': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Client declined all help options'
+        },
+        'NRES': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'No resources available to help'
+        },
+    }
+event_registry.register(DeclineHelpEvent)

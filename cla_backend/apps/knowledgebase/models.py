@@ -27,12 +27,22 @@ class Article(TimeStampedModel):
     article_category = models.ManyToManyField('ArticleCategory',
                                               through='ArticleCategoryMatrix')
 
+    def __unicode__(self):
+        return self.service_name
+
 
 class ArticleCategory(TimeStampedModel):
     name = models.CharField(max_length=25)
+
+    def __unicode__(self):
+        return self.name
 
 
 class ArticleCategoryMatrix(TimeStampedModel):
     article = models.ForeignKey(Article)
     article_category = models.ForeignKey(ArticleCategory)
     preferred_signpost = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return u"%s - %s" % (self.article.__unicode__(),
+                             self.article_category.__unicode__())

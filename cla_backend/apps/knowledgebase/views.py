@@ -2,8 +2,8 @@ from rest_framework import viewsets
 #from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework import filters
 
-from .models import Article
-from .serializers import ArticleSerializer
+from .models import Article, ArticleCategory
+from .serializers import ArticleSerializer, ArticleCategorySerializer
 from call_centre.views import CallCentrePermissionsViewSetMixin
 
 
@@ -23,3 +23,10 @@ class ArticleViewSet(
     search_fields = ('organisation', 'service_name', 'description',
                      'keywords', 'when_to_use', 'type_of_service',
                      'address', 'article_category__name')
+
+
+class ArticleCategoryViewSet(
+        CallCentrePermissionsViewSetMixin,
+        viewsets.ReadOnlyModelViewSet):
+    model = ArticleCategory
+    serializer_class = ArticleCategorySerializer

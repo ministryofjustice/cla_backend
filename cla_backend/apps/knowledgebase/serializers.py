@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Article, ArticleCategoryMatrix
+from .models import Article, ArticleCategoryMatrix, ArticleCategory
 
 
 class ArticleCategoryMatrixSerializer(serializers.ModelSerializer):
@@ -20,3 +20,9 @@ class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         exclude = ('article_category',)
+
+
+class ArticleCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ArticleCategory
+        exclude = ('created', 'modified')

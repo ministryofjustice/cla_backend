@@ -3,17 +3,15 @@ from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 
-from cla_common.constants import CASELOGTYPE_ACTION_KEYS
-
 from cla_provider.models import Provider
-from legalaid.forms import BaseCaseLogForm, OutcomeForm
+from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
 
 
 class ProviderAllocationForm(BaseCaseLogForm):
-
-    CASELOGTYPE_CODE = 'REFSP'
+    LOG_EVENT_KEY = 'assign_to_provider'
 
     provider = forms.ChoiceField()
+    is_manual = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         self.providers = kwargs.pop('providers', None)
@@ -29,7 +27,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
         return provider
 
     def clean(self):
-        cleaned_data = super(ProviderAllocationForm,self).clean()
+        cleaned_data = super(ProviderAllocationForm, self).clean()
         if not self.providers:
             self._errors[NON_FIELD_ERRORS] = ErrorList([
                 _(u'There is no provider specified in '
@@ -39,7 +37,18 @@ class ProviderAllocationForm(BaseCaseLogForm):
         return cleaned_data
 
     def get_notes(self):
-        return u"Assigned to {provider}".format(provider=self.cleaned_data['provider_obj'].name)
+        notes = self.cleaned_data['notes']
+        if not notes and not self.get_is_manual():
+            notes = u"Assigned to {provider}".format(provider=self.cleaned_data['provider_obj'].name)
+        return notes
+
+    def get_is_manual(self):
+        return self.cleaned_data['is_manual']
+
+    def get_kwargs(self):
+        kwargs = super(ProviderAllocationForm, self).get_kwargs()
+        kwargs['is_manual'] = self.get_is_manual()
+        return kwargs
 
     def save(self, user):
         data = self.cleaned_data
@@ -48,6 +57,29 @@ class ProviderAllocationForm(BaseCaseLogForm):
 
         super(ProviderAllocationForm, self).save(user)
         return data['provider_obj']
+
+
+class DeferAssignmentCaseForm(BaseCaseLogForm):
+    LOG_EVENT_KEY = 'defer_assignment'
+
+    def clean(self):
+        cleaned_data = super(DeferAssignmentCaseForm, self).clean()
+        if self._errors:  # skip if already in error
+            return cleaned_data
+
+        # checking that the case is in a consistent state
+        if self.case.provider:
+            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
+        return cleaned_data
+
+
+class DeclineAllSpecialistsCaseForm(EventSpecificLogForm):
+    LOG_EVENT_KEY = 'decline_help'
+
+    def save(self, user):
+        self.case.close()
+
+        super(DeclineAllSpecialistsCaseForm, self).save(user)  # saves the outcome
 
 
 class AssociatePersonalDetailsCaseForm(forms.Form):
@@ -115,51 +147,3 @@ class AssociateEligibilityCheckCaseForm(forms.Form):
     def save(self, user):
         ref = self.cleaned_data['reference']
         self.case.associate_eligibility_check(ref)
-
-
-class CloseCaseForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        self.case = kwargs.pop('case')
-        super(CloseCaseForm, self).__init__(*args, **kwargs)
-
-    def save(self, user):
-        self.case.close()
-
-class CaseAssignDeferForm(OutcomeForm):
-
-    CASELOGTYPE_CODE = 'CBSP'
-
-    def get_outcome_code_queryset(self):
-        qs = super(CaseAssignDeferForm, self).get_outcome_code_queryset()
-        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.DEFER_ASSIGNMENT)
-
-    def clean(self):
-        cleaned_data = super(CaseAssignDeferForm, self).clean()
-        if self._errors:  # skip if already in error
-            return cleaned_data
-
-        # checking that the case is in a consistent state
-        if self.case.provider:
-            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
-        return cleaned_data
-
-
-class DeclineAllSpecialistsCaseForm(OutcomeForm):
-    def get_outcome_code_queryset(self):
-        qs = super(DeclineAllSpecialistsCaseForm, self).get_outcome_code_queryset()
-        return qs.filter(action_key=CASELOGTYPE_ACTION_KEYS.DECLINE_SPECIALISTS)
-
-    def clean(self):
-        cleaned_data = super(DeclineAllSpecialistsCaseForm, self).clean()
-        if self._errors:  # skip if already in error
-            return cleaned_data
-
-        # checking that the case is in a consistent state
-        if self.case.provider:
-            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
-        return cleaned_data
-
-    def save(self, user):
-        self.case.close()
-
-        super(DeclineAllSpecialistsCaseForm, self).save(user)  # saves the outcome

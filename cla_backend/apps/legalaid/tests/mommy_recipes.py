@@ -1,12 +1,10 @@
 from model_mommy.recipe import Recipe, seq, foreign_key
 
-from legalaid.constants import CASELOGTYPE_SUBTYPES
-
 from cla_common.money_interval.models import MoneyInterval
 
 from ..models import Category, EligibilityCheck, Property, Savings, \
     Case, PersonalDetails, Income, Deductions, Person,\
-    CaseLogType, CaseLog, ThirdPartyDetails, AdaptationDetails
+    ThirdPartyDetails, AdaptationDetails
 
 
 category = Recipe(Category,
@@ -60,14 +58,6 @@ case = Recipe(Case,
     personal_details=foreign_key(personal_details)
 )
 
-logtype = Recipe(CaseLogType)
 
-outcome_code = Recipe(CaseLogType, subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
-refsp_logtype = Recipe(CaseLogType, code='REFSP', subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
-manalc_logtype = Recipe(CaseLogType, code='MANALC', subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
 
-case_log = Recipe(CaseLog,
-    case=foreign_key(case),
-    logtype=foreign_key(logtype)
-)
 

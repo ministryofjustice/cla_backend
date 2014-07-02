@@ -3,11 +3,9 @@ from django.http import Http404
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import DjangoFilterBackend
 
-from legalaid.serializers import CaseLogTypeSerializerBase, CategorySerializerBase
-from legalaid.constants import CASELOGTYPE_SUBTYPES
-from legalaid.models import CaseLogType, Category, EligibilityCheck
+from legalaid.serializers import CategorySerializerBase
+from legalaid.models import Category, EligibilityCheck
 
 from .exceptions import InvalidMutationException
 
@@ -60,20 +58,6 @@ class StateFromActionMixin(object):
         return DRFResponse(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
-
-
-class BaseOutcomeCodeViewSet(
-    viewsets.ReadOnlyModelViewSet
-):
-    model = CaseLogType
-    serializer_class = CaseLogTypeSerializerBase
-
-    lookup_field = 'code'
-
-    queryset =  CaseLogType.objects.filter(subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
-
-    filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('action_key',)
 
 
 class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):

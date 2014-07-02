@@ -15,7 +15,10 @@ class ArticleViewSet(
 
     filter_backends = (
         filters.SearchFilter,
+        filters.DjangoFilterBackend
     )
+
+    filter_fields = ('article_category',)
 
     search_fields = ('organisation', 'service_name', 'description',
                      'keywords', 'when_to_use', 'type_of_service',

@@ -1,14 +1,13 @@
-from legalaid.constants import CASELOGTYPE_SUBTYPES
+from cla_eventlog.serializers import LogSerializerBase
 from rest_framework import serializers
 
 from cla_common.constants import CASE_STATES
 
-from legalaid.models import EligibilityCheck
-from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
+from core.serializers import UUIDSerializer
+from legalaid.serializers import EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, CategorySerializerBase, ProviderSerializerBase, \
-    CaseLogSerializerBase, CaseLogTypeSerializerBase, \
+    CaseSerializerBase, ProviderSerializerBase, \
     OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase, \
     ThirdPartyDetailsSerializerBase, AdaptationDetailsSerializerBase
 
@@ -107,17 +106,21 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
                 'language', 'notes', 'reference', 'callback_preference'
         )
 
-class CaseLogSerializer(CaseLogSerializerBase):
-    code = serializers.CharField(read_only=True, source='logtype.code')
-    created_by = serializers.CharField(read_only=True, source='created_by.username')
-    created = serializers.DateTimeField(read_only=True)
-    notes = serializers.CharField(read_only=True)
+class LogSerializer(LogSerializerBase):
 
-    class Meta(CaseLogSerializerBase.Meta):
-        fields = ('code', 'created_by', 'created', 'notes')
+    class Meta(LogSerializerBase.Meta):
+        fields = ('code',
+                  'created_by',
+                  'created',
+                  'notes',
+                  'type',
+                  'level'
+        )
 
 
 class CaseSerializer(CaseSerializerBase):
+    LOG_SERIALIZER = LogSerializer
+
     eligibility_check = UUIDSerializer(slug_field='reference', required=False)
 
     personal_details = UUIDSerializer(required=False, slug_field='reference')
@@ -130,19 +133,15 @@ class CaseSerializer(CaseSerializerBase):
     state = serializers.ChoiceField(choices=CASE_STATES.CHOICES, default=CASE_STATES.OPEN, read_only=True)
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
-    caseoutcome_set = serializers.SerializerMethodField('get_caseoutcome_set')
     full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
     eligibility_state = serializers.CharField(source='eligibility_check.state', read_only=True)
 
-    def get_caseoutcome_set(self, case):
-        case_outcomes = case.caselog_set.filter(logtype__subtype=CASELOGTYPE_SUBTYPES.OUTCOME)
-        serializer = CaseLogSerializer(instance=case_outcomes, many=True, required=False, read_only=True)
-        return serializer.data
+
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference', 'created',
-            'modified', 'created_by', 'state', 'provider', 'caseoutcome_set',
+            'modified', 'created_by', 'state', 'provider', 'log_set',
             'notes', 'provider_notes', 'in_scope', 'full_name', 'thirdparty_details',
             'adaptation_details', 'laa_reference', 'eligibility_state'
         )

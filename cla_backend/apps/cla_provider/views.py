@@ -6,11 +6,11 @@ from rest_framework.decorators import action
 
 from core.viewsets import DefaultStateFilterViewSetMixin
 from cla_common.constants import CASE_STATES
-from legalaid.serializers import CaseLogTypeSerializerBase
+from cla_eventlog.views import BaseEventViewSet
 
-from legalaid.models import Category, EligibilityCheck, Case, CaseLogType
+from legalaid.models import Category, Case
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
-    BaseOutcomeCodeViewSet, BaseEligibilityCheckViewSet
+    BaseEligibilityCheckViewSet
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
@@ -30,28 +30,12 @@ class CategoryViewSet(CLAProviderPermissionViewSetMixin, viewsets.ReadOnlyModelV
     lookup_field = 'code'
 
 
-class CaseLogTypeViewSet(
-    CLAProviderPermissionViewSetMixin,
-    viewsets.ReadOnlyModelViewSet
-):
-    model = CaseLogType
-    serializer_class = CaseLogTypeSerializerBase
-
-    lookup_field = 'code'
-
-
 class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,
     mixins.RetrieveModelMixin,
     BaseEligibilityCheckViewSet
 ):
     serializer_class = EligibilityCheckSerializer
-
-
-class OutcomeCodeViewSet(
-    CLAProviderPermissionViewSetMixin, BaseOutcomeCodeViewSet
-):
-    pass
 
 
 class CaseViewSet(
@@ -130,3 +114,7 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
 
     def get_logged_in_user_model(self):
         return self.request.user.staff
+
+
+class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
+    pass

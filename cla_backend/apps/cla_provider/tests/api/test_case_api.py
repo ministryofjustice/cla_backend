@@ -1,3 +1,4 @@
+import mock
 from datetime import datetime
 
 from django.core.urlresolvers import reverse
@@ -11,13 +12,17 @@ from cla_common.constants import CASE_STATES
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
 
-from legalaid.models import Case, CaseLog
-from legalaid.tests.base import StateChangeAPIMixin
+from cla_eventlog.tests.test_views import ImplicitEventCodeViewTestCaseMixin, \
+    ExplicitEventCodeViewTestCaseMixin
+
+from legalaid.models import Case
+
+from cla_provider.forms import RejectCaseForm
 
 
-class BaseCaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
+class BaseCaseTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
     def setUp(self):
-        super(BaseCaseTests, self).setUp()
+        super(BaseCaseTestCase, self).setUp()
 
         self.list_url = reverse('cla_provider:case-list')
         obj = make_recipe('legalaid.case', provider=self.provider)
@@ -31,7 +36,7 @@ class BaseCaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertItemsEqual(
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
-             'created', 'modified', 'state', 'created_by', 'caseoutcome_set',
+             'created', 'modified', 'state', 'created_by', 'log_set',
              'provider', 'locked_by', 'locked_at', 'notes', 'provider_notes']
         )
 
@@ -48,7 +53,7 @@ class BaseCaseTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertPersonalDetailsEqual(data['personal_details'], case.personal_details)
 
 
-class CaseTests(BaseCaseTests):
+class CaseTests(BaseCaseTestCase):
     def test_methods_not_allowed(self):
         """
         Ensure that we can't POST, PUT or DELETE
@@ -284,11 +289,12 @@ class CaseTests(BaseCaseTests):
         self.assertEqual(response.data['provider_notes'], 'abc123')
 
 
-class RejectCaseTests(StateChangeAPIMixin, BaseCaseTests):
-    VALID_OUTCOME_CODE = 'CODE_REJECTED'
-    EXPECTED_CASE_STATE = CASE_STATES.REJECTED
+class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_event_code(self):
+        form = RejectCaseForm(case=mock.MagicMock())
+        return form.fields['event_code'].choices[0][0]
 
-    def get_state_change_url(self, reference=None):
+    def get_url(self, reference=None):
         reference = reference or self.check.reference
         return reverse(
             'cla_provider:case-reject', args=(),
@@ -296,11 +302,8 @@ class RejectCaseTests(StateChangeAPIMixin, BaseCaseTests):
         )
 
 
-class AcceptCaseTests(StateChangeAPIMixin, BaseCaseTests):
-    VALID_OUTCOME_CODE = 'CODE_ACCEPTED'
-    EXPECTED_CASE_STATE = CASE_STATES.ACCEPTED
-
-    def get_state_change_url(self, reference=None):
+class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_url(self, reference=None):
         reference = reference or self.check.reference
         return reverse(
             'cla_provider:case-accept', args=(),
@@ -308,22 +311,10 @@ class AcceptCaseTests(StateChangeAPIMixin, BaseCaseTests):
         )
 
 
-class CloseCaseTests(StateChangeAPIMixin, BaseCaseTests):
-    VALID_OUTCOME_CODE = 'CODE_CLOSED'
-    EXPECTED_CASE_STATE = CASE_STATES.CLOSED
-
-    def get_state_change_url(self, reference=None):
+class CloseCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_url(self, reference=None):
         reference = reference or self.check.reference
         return reverse(
             'cla_provider:case-close', args=(),
             kwargs={'reference': reference}
         )
-
-    def test_invalid_mutation(self):
-        """
-            Overriding as not possible to test
-        """
-        pass
-
-
-

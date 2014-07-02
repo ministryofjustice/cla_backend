@@ -5,11 +5,6 @@ from django.utils import timezone
 from django.contrib.admin import widgets
 from django.template.defaulttags import date
 
-from cla_common.constants import CASE_STATES, CASELOGTYPE_ACTION_KEYS
-from legalaid.constants import CASELOGTYPE_SUBTYPES
-
-from legalaid.models import CaseLog, CaseLogType
-
 from cla_provider.models import Provider
 
 
@@ -30,18 +25,19 @@ class ProviderCaseClosureReportForm(ConvertDateMixin, forms.Form):
         date_from = self._convert_date(self.cleaned_data['date_from'])
         date_to = self._convert_date(self.cleaned_data['date_to'] + timedelta(days=1))
 
-        return CaseLog.objects.filter(
-            created__range=(date_from, date_to),
-            logtype__subtype=CASELOGTYPE_SUBTYPES.OUTCOME,
-            logtype__action_key__in=[
-                CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE,
-                CASELOGTYPE_ACTION_KEYS.PROVIDER_REJECT_CASE
-            ],
-            case__provider=self.cleaned_data['provider'],
-        ).order_by('created').values_list(
-            'case__reference', 'created', 'logtype__code',
-            'case__eligibility_check__category__name'
-        )
+        # return CaseLog.objects.filter(
+        #     created__range=(date_from, date_to),
+        #     logtype__subtype=CASELOGTYPE_SUBTYPES.OUTCOME,
+        #     logtype__action_key__in=[
+        #         CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE,
+        #         CASELOGTYPE_ACTION_KEYS.PROVIDER_REJECT_CASE
+        #     ],
+        #     case__provider=self.cleaned_data['provider'],
+        # ).order_by('created').values_list(
+        #     'case__reference', 'created', 'logtype__code',
+        #     'case__eligibility_check__category__name'
+        # )
+        raise NotImplementedError()
 
     def get_headers(self):
         return ['Case #', 'Closure Date', 'Outcome Code', 'Law Categories']
@@ -60,7 +56,6 @@ class ProviderCaseClosureReportForm(ConvertDateMixin, forms.Form):
         yield []
         yield ['Total: %d' % total]
 
-
 class OperatorCaseClosureReportForm(ConvertDateMixin, forms.Form):
     date_from = forms.DateField(widget=widgets.AdminDateWidget)
     date_to = forms.DateField(widget=widgets.AdminDateWidget)
@@ -68,13 +63,13 @@ class OperatorCaseClosureReportForm(ConvertDateMixin, forms.Form):
     def get_queryset(self):
         date_from = self._convert_date(self.cleaned_data['date_from'])
         date_to = self._convert_date(self.cleaned_data['date_to'] + timedelta(days=1))
-
-        return CaseLog.objects.filter(
-            created__range=(date_from, date_to),
-            logtype=CaseLogType.objects.get(code='REFSP'),
-            ).order_by('created').values_list(
-            'case__reference', 'case__created', 'created', 'logtype__code', 'case__provider__name'
-        )
+        raise NotImplementedError()
+        # return CaseLog.objects.filter(
+        #     created__range=(date_from, date_to),
+        #     logtype=CaseLogType.objects.get(code='REFSP'),
+        #     ).order_by('created').values_list(
+        #     'case__reference', 'case__created', 'created', 'logtype__code', 'case__provider__name'
+        # )
 
     def get_headers(self):
         return ['Case #', 'Call Started', 'Call Assigned', 'Duration (sec)','Outcome Code', 'To Provider']

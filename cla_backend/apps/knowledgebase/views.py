@@ -1,3 +1,12 @@
-from django.shortcuts import render
+from rest_framework import viewsets
 
-# Create your views here.
+from .models import Article
+from .serializers import ArticleSerializer
+from call_centre.views import CallCentrePermissionsViewSetMixin
+
+
+class ArticleViewSet(
+    CallCentrePermissionsViewSetMixin,
+    viewsets.ReadOnlyModelViewSet):
+    model = Article
+    serializer_class = ArticleSerializer

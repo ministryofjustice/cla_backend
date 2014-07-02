@@ -3,6 +3,7 @@ from django.conf.urls import patterns, url, include
 from rest_framework import routers
 
 from . import views
+from knowledgebase.views import ArticleViewSet
 
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)
@@ -16,6 +17,7 @@ router.register(r'user', views.UserViewSet, base_name='user')
 router.register(r'personal_details', views.PersonalDetailsViewSet)
 router.register(r'thirdparty_details', views.ThirdPartyDetailsViewSet)
 router.register(r'adaptation_details', views.AdaptationDetailsViewSet)
+router.register(r'knowledgebase', ArticleViewSet)
 
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),

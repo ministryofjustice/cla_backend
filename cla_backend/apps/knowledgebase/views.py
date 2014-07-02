@@ -13,6 +13,10 @@ class ArticleViewSet(
     model = Article
     serializer_class = ArticleSerializer
 
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
     filter_backends = (
         filters.SearchFilter,
         filters.DjangoFilterBackend

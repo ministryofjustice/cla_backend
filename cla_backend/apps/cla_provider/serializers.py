@@ -136,7 +136,7 @@ class CaseSerializer(CaseSerializerBase):
             'eligibility_check', 'personal_details',
             'reference', 'created', 'modified', 'created_by', 'state',
             'provider', 'log_set', 'locked_by', 'locked_at',
-            'notes', 'provider_notes'
+            'notes', 'provider_notes', 'laa_reference'
         )
 
 class ProviderSerializer(ProviderSerializerBase):

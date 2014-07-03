@@ -37,7 +37,8 @@ class BaseCaseTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
              'created', 'modified', 'state', 'created_by', 'log_set',
-             'provider', 'locked_by', 'locked_at', 'notes', 'provider_notes']
+             'provider', 'locked_by', 'locked_at', 'notes', 'provider_notes',
+             'laa_reference']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):

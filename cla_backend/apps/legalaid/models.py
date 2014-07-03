@@ -239,9 +239,9 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
         self.save()
 
     def to_case_data(self):
-        def compose_dict(model=self, props=[]):
-            if not model:
-                return None
+        def compose_dict(model=self, props=None):
+            if not props: props = []
+            if not model: return None
 
             obj = {}
             for prop in props:
@@ -263,9 +263,11 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
 
         d['facts'] = compose_dict(props=[
             'dependants_old', 'dependants_young', 'has_partner',
-            'is_you_or_your_partner_over_60', 'on_passported_benefits',
-            'on_nass_benefits'
+            'is_you_or_your_partner_over_60',
         ])
+
+        d['facts']['on_passported_benefits'] = self.on_passported_benefits
+        d['facts']['on_nass_benefits'] = self.on_nass_benefits
 
         if self.you:
             you_props = {

@@ -14,6 +14,7 @@ from legalaid.models import Category, EligibilityCheck, Case, \
     PersonalDetails, ThirdPartyDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
     BaseCategoryViewSet, BaseEligibilityCheckViewSet
+from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
@@ -319,3 +320,12 @@ class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,
     model = AdaptationDetails
     serializer_class = AdaptationDetailsSerializer
     lookup_field = 'reference'
+
+
+class ArticleViewSet(CallCentrePermissionsViewSetMixin, BaseArticleViewSet):
+    pass
+
+
+class ArticleCategoryViewSet(CallCentrePermissionsViewSetMixin,
+        BaseArticleCategoryViewSet):
+    pass

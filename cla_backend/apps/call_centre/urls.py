@@ -15,6 +15,8 @@ router.register(r'personal_details', views.PersonalDetailsViewSet)
 router.register(r'event', views.EventViewSet, base_name='event')
 router.register(r'thirdparty_details', views.ThirdPartyDetailsViewSet)
 router.register(r'adaptation_details', views.AdaptationDetailsViewSet)
+router.register(r'knowledgebase/article', views.ArticleViewSet)
+router.register(r'knowledgebase/category', views.ArticleCategoryViewSet)
 
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),

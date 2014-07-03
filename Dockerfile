@@ -4,7 +4,7 @@
 # https://github.com/dockerfile/nginx
 #
 # Pull base image.
-FROM phusion/baseimage:0.9.10
+FROM phusion/baseimage:0.9.11
 
 MAINTAINER Peter Idah <peter.idah@digital.justice.gov.uk>
 
@@ -13,7 +13,6 @@ ENV HOME /root
 
 # Use baseimage-docker's init process.
 CMD ["/sbin/my_init"]
-
 
 # Dependencies
 RUN DEBIAN_FRONTEND='noninteractive' \ 
@@ -66,24 +65,13 @@ WORKDIR /home/app/django
 # PIP INSTALL APPLICATION
 RUN pip install -r requirements/production.txt
 
-# Create django super-user and password
-RUN echo "from django.contrib.auth.models import User; User.objects.create_superuser('cla_admin','peter.idah@digital.justice.gov.uk', 'S3cur31sh')" | ./manage.py shell || echo "user already exists"
-
-# Manage sync db
-RUN python manage.py syncdb --noinput
-
-# manage syncdb migrate
-RUN python manage.py migrate
-
-RUN python manage.py loaddata initial_category.json
-
-RUN python manage.py collectstatic --noinput
-
 # install service files for runit
 ADD ./docker/nginx.service /etc/service/nginx/run
 
 # install service files for runit
 ADD ./docker/uwsgi.service /etc/service/uwsgi/run
+
+ADD ./docker/rc.local /etc/rc.local
 
 # Expose ports.
 EXPOSE 80

@@ -1,7 +1,10 @@
 from .base import *
+import os
 
+SECRET_KEY = os.environ["SECRET_KEY"]
 
-DEBUG = True
+DEBUG = bool(os.environ.get('DEBUG', False))
+
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -16,14 +19,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'cla_backend',
         'USER': 'www-data',
-        'PASSWORD': '',
-        'HOST': '172.31.29.142',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', ''),                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
     }
 }
 
 RAVEN_CONFIG = {
-    'dsn': 'https://298cb46e45fd412ebb49ac1f243db641:21c7e1c2d56b43d093737de1f7cc3019@app.getsentry.com/23077',
+    'dsn': os.environ.get('RAVEN_CONFIG', 'https://298cb46e45fd412ebb49ac1f243db641:21c7e1c2d56b43d093737de1f7cc3019@app.getsentry.com/23077'),
 }
 
 INSTALLED_APPS += (

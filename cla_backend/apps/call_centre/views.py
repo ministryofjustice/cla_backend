@@ -1,4 +1,5 @@
 from cla_eventlog import event_registry
+from core.drf.mixins import AssociateNestedModelToParentMixin, NestedGenericModelMixin
 from django.contrib.auth.models import AnonymousUser
 
 from rest_framework import viewsets, mixins, status
@@ -46,31 +47,34 @@ class EligibilityCheckViewSet(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
+    NestedGenericModelMixin,
+    AssociateNestedModelToParentMixin,
     BaseEligibilityCheckViewSet
 ):
     serializer_class = EligibilityCheckSerializer
+    PARENT_FIELD = 'eligibility_check'
+
 
     @link()
     def validate(self, request, **kwargs):
         obj = self.get_object()
         return DRFResponse(obj.validate())
 
-    def pre_save(self, obj):
+    def post_save(self, obj, created=False, **kwargs):
+        super(EligibilityCheckViewSet, self).post_save(obj, created=created)
+
         user = self.request.user
         means_test_event = event_registry.get_event('means_test')()
         diff = obj.diff
         diff.pop('id', None)
-        try:
+        status = 'changed' if not created else 'created'
+        means_test_event.process(obj.case,
+                                 notes=diff,
+                                 created_by=user,
+                                 status=status
+        )
 
-            means_test_event.process(obj.case,
-                                     notes="",
-                                     created_by=user,
-                                     status='changed'
-            )
-        except:
-            pass
-
-        return super(EligibilityCheckViewSet, self).pre_save(obj)
+        return obj
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
@@ -83,6 +87,8 @@ class CaseViewSet(
 ):
     model = Case
     lookup_field = 'reference'
+    lookup_regex = r'[A-Z|\d]{2}-\d{4}-\d{4}'
+
     serializer_class = CaseSerializer
 
     filter_backends = (
@@ -100,6 +106,7 @@ class CaseViewSet(
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
+
 
     def get_queryset(self):
         qs = super(CaseViewSet, self).get_queryset()
@@ -288,11 +295,14 @@ class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin,
                              mixins.CreateModelMixin,
                              mixins.UpdateModelMixin,
                              mixins.RetrieveModelMixin,
+                             NestedGenericModelMixin,
+                             AssociateNestedModelToParentMixin,
                              viewsets.GenericViewSet):
     model = PersonalDetails
     serializer_class = PersonalDetailsSerializer
     lookup_field = 'reference'
 
+    PARENT_FIELD = 'personal_details'
 
 class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):
     pass
@@ -311,7 +321,11 @@ class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,
                              mixins.CreateModelMixin,
                              mixins.UpdateModelMixin,
                              mixins.RetrieveModelMixin,
+                             NestedGenericModelMixin,
+                             AssociateNestedModelToParentMixin,
                              viewsets.GenericViewSet):
     model = AdaptationDetails
     serializer_class = AdaptationDetailsSerializer
     lookup_field = 'reference'
+
+    PARENT_FIELD = 'adaptation_details'

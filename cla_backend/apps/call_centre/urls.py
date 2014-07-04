@@ -26,7 +26,7 @@ case_router.register(r'adaptation_details', views.AdaptationDetailsViewSet)
 
 
 urlpatterns = patterns('',
-    url(r'', include(case_router.urls)),
-    url(r'', include(router.urls)),
+    url(r'^', include(case_router.urls)),
+    url(r'^', include(router.urls)),
 )
 

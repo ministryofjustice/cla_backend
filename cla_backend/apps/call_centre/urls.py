@@ -16,6 +16,8 @@ router.register(r'personal_details', views.PersonalDetailsViewSet)
 router.register(r'event', views.EventViewSet, base_name='event')
 router.register(r'thirdparty_details', views.ThirdPartyDetailsViewSet)
 router.register(r'adaptation_details', views.AdaptationDetailsViewSet)
+router.register(r'knowledgebase/article', views.ArticleViewSet)
+router.register(r'knowledgebase/category', views.ArticleCategoryViewSet)
 
 case_router = NestedCLARouter(router, 'case', lookup='case')
 case_router.register(r'eligibility_check', views.EligibilityCheckViewSet)

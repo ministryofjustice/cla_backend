@@ -59,7 +59,7 @@ class CaseViewSet(
 
     search_fields = ('personal_details__full_name',
                      'personal_details__postcode',
-                     'reference' )
+                     'reference', 'laa_reference')
 
     ordering_fields = ('state', 'modified', 'created')
     ordering = ('-state', '-locked_by', '-modified', '-created')

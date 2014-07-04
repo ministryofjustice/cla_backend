@@ -15,6 +15,7 @@ from legalaid.models import Category, EligibilityCheck, Case, \
     PersonalDetails, ThirdPartyDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
     BaseCategoryViewSet, BaseEligibilityCheckViewSet
+from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
@@ -131,10 +132,14 @@ class CaseViewSet(
         obj = self.get_object()
         helper = ProviderAllocationHelper()
 
-        if hasattr(obj, 'eligibility_check') and obj.eligibility_check != None:
+        if hasattr(obj, 'eligibility_check') and obj.eligibility_check != None and obj.eligibility_check.category:
             category = obj.eligibility_check.category
             suggested = helper.get_suggested_provider(category)
-            suggested_provider = ProviderSerializer(suggested).data
+
+            if suggested:
+                suggested_provider = ProviderSerializer(suggested).data
+            else:
+                suggested_provider = None
         else:
             category = None
             suggested_provider = None
@@ -327,5 +332,12 @@ class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,
     model = AdaptationDetails
     serializer_class = AdaptationDetailsSerializer
     lookup_field = 'reference'
-
     PARENT_FIELD = 'adaptation_details'
+
+class ArticleViewSet(CallCentrePermissionsViewSetMixin, BaseArticleViewSet):
+    pass
+
+
+class ArticleCategoryViewSet(CallCentrePermissionsViewSetMixin,
+        BaseArticleCategoryViewSet):
+    pass

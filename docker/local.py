@@ -5,6 +5,8 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 DEBUG = bool(os.environ.get('DEBUG', False))
 
+ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(',')
+
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

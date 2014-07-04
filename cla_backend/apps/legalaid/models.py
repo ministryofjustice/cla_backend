@@ -80,7 +80,7 @@ class PersonalDetails(TimeStampedModel):
     street = models.CharField(max_length=255, blank=True, null=True)
     mobile_phone = models.CharField(max_length=20, blank=True, null=True)
     home_phone = models.CharField(max_length=20, blank=True)
-    # email = models.EmailField(blank=True)
+    email = models.EmailField(blank=True)
 
     reference = UUIDField(auto=True, unique=True)
 

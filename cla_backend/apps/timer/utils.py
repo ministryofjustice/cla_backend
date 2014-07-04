@@ -1,7 +1,14 @@
 from .models import Timer
 
 
+def _create_timer(request):
+    return Timer.start(request.user)
+
+
 def get_timer(request):
+    if not request.user.is_authenticated():
+        raise ValueError(u'User is not authenticated')
+
     try:
         return Timer.running_objects.get_by_user(request.user.pk)
     except IndexError:
@@ -18,8 +25,15 @@ def create_timer(request):
     if not request.user.is_authenticated():
         raise ValueError(u'A timer cannot be started without an authenticated User')
 
-    timer = Timer.start(request.user)
-    return timer
+    return _create_timer(request)
+
+
+def get_or_create_timer(request):
+    current_timer = get_timer(request)
+
+    if not current_timer:
+        current_timer = _create_timer(request)
+    return current_timer
 
 
 def stop_timer(request):

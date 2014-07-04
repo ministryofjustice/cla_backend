@@ -4,18 +4,21 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, SearchFilter, DjangoFilterBackend
+from rest_framework.filters import OrderingFilter, SearchFilter, \
+    DjangoFilterBackend
 
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from cla_eventlog.views import BaseEventViewSet
 from timer.views import BaseTimerViewSet
-from legalaid.models import Category, EligibilityCheck, Case, \
-    PersonalDetails, ThirdPartyDetails, AdaptationDetails
+from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, \
+    AdaptationDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
     BaseCategoryViewSet, BaseEligibilityCheckViewSet
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
+
+from timer.utils import get_or_create_timer
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
@@ -105,6 +108,15 @@ class CaseViewSet(
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
+
+    def get_object(self, queryset=None):
+        """
+        TODO: we might need to override retrieve instead so that we don't
+            hit the db during POST, PATCH etc.
+        """
+        obj = super(CaseViewSet, self).get_object(queryset=queryset)
+        get_or_create_timer(self.request)
+        return obj
 
     def get_queryset(self):
         qs = super(CaseViewSet, self).get_queryset()

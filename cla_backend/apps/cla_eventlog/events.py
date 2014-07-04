@@ -1,6 +1,8 @@
 from cla_eventlog.models import Log
 from cla_eventlog.constants import LOG_TYPES
 
+from  timer.utils import get_or_create_timer
+
 
 class BaseEvent(object):
     key = ''
@@ -17,10 +19,12 @@ class BaseEvent(object):
             code = self.get_log_code(**kwargs)
 
         code_data = self.codes[code]
+        timer = get_or_create_timer(created_by)
 
         return Log.objects.create(
             case=case,
             code=code,
+            timer=timer,
             type=code_data['type'],
             level=code_data['level'],
             notes=notes,

@@ -14,10 +14,10 @@ class BaseTimerViewSet(viewsets.ViewSetMixin, views.APIView):
         return self.serializer_class(obj).data
 
     def create(self, request, *args, **kwargs):
-        timer = get_timer(request)
+        timer = get_timer(request.user)
 
         try:
-            timer = create_timer(request)
+            timer = create_timer(request.user)
         except ValueError as e:
             return DRFResponse(
                 {'detail': e.message},
@@ -28,7 +28,7 @@ class BaseTimerViewSet(viewsets.ViewSetMixin, views.APIView):
         return DRFResponse(data, status.HTTP_201_CREATED)
 
     def get(self, request, *args, **kwargs):
-        timer = get_timer(request)
+        timer = get_timer(request.user)
 
         if not timer:
             return DRFResponse(

@@ -10,6 +10,7 @@ from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from cla_eventlog.views import BaseEventViewSet
+from timer.views import BaseTimerViewSet
 from legalaid.models import Category, EligibilityCheck, Case, \
     PersonalDetails, ThirdPartyDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
@@ -24,7 +25,7 @@ from .serializers import EligibilityCheckSerializer, \
     ThirdPartyDetailsSerializer, AdaptationDetailsSerializer
 
 from .forms import ProviderAllocationForm,  DeclineAllSpecialistsCaseForm,\
-     AssociatePersonalDetailsCaseForm, AssociateThirdPartyDetailsCaseForm,\
+    AssociatePersonalDetailsCaseForm, AssociateThirdPartyDetailsCaseForm,\
     AssociateAdaptationDetailsCaseForm, AssociateEligibilityCheckCaseForm, \
     DeferAssignmentCaseForm
 
@@ -36,11 +37,13 @@ class CallCentrePermissionsViewSetMixin(object):
 
 
 class CallCentreManagerPermissionsViewSetMixin(object):
-    permission_classes = (CallCentreClientIDPermission, OperatorManagerPermission)
+    permission_classes = (
+        CallCentreClientIDPermission, OperatorManagerPermission)
 
 
 class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
     pass
+
 
 class EligibilityCheckViewSet(
     CallCentrePermissionsViewSetMixin,
@@ -67,11 +70,12 @@ class EligibilityCheckViewSet(
                                      notes="",
                                      created_by=user,
                                      status='changed'
-            )
+                                     )
         except:
             pass
 
         return super(EligibilityCheckViewSet, self).pre_save(obj)
+
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
@@ -137,10 +141,11 @@ class CaseViewSet(
             category = None
             suggested_provider = None
 
-        suitable_providers = [ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
-        suggestions = { 'suggested_provider' : suggested_provider,
-                        'suitable_providers' : suitable_providers
-                      }
+        suitable_providers = [
+            ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
+        suggestions = {'suggested_provider': suggested_provider,
+                       'suitable_providers': suitable_providers
+                       }
 
         return DRFResponse(suggestions)
 
@@ -258,6 +263,7 @@ class CaseViewSet(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
 
+
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Provider
     serializer_class = ProviderSerializer
@@ -289,6 +295,7 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     def get_logged_in_user_model(self):
         return self.request.user.operator
 
+
 class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin,
                              mixins.CreateModelMixin,
                              mixins.UpdateModelMixin,
@@ -304,19 +311,20 @@ class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):
 
 
 class ThirdPartyDetailsViewSet(CallCentrePermissionsViewSetMixin,
-                             mixins.CreateModelMixin,
-                             mixins.UpdateModelMixin,
-                             mixins.RetrieveModelMixin,
-                             viewsets.GenericViewSet):
+                               mixins.CreateModelMixin,
+                               mixins.UpdateModelMixin,
+                               mixins.RetrieveModelMixin,
+                               viewsets.GenericViewSet):
     model = ThirdPartyDetails
     serializer_class = ThirdPartyDetailsSerializer
     lookup_field = 'reference'
 
+
 class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,
-                             mixins.CreateModelMixin,
-                             mixins.UpdateModelMixin,
-                             mixins.RetrieveModelMixin,
-                             viewsets.GenericViewSet):
+                               mixins.CreateModelMixin,
+                               mixins.UpdateModelMixin,
+                               mixins.RetrieveModelMixin,
+                               viewsets.GenericViewSet):
     model = AdaptationDetails
     serializer_class = AdaptationDetailsSerializer
     lookup_field = 'reference'
@@ -327,5 +335,9 @@ class ArticleViewSet(CallCentrePermissionsViewSetMixin, BaseArticleViewSet):
 
 
 class ArticleCategoryViewSet(CallCentrePermissionsViewSetMixin,
-        BaseArticleCategoryViewSet):
+                             BaseArticleCategoryViewSet):
+    pass
+
+
+class TimerViewSet(CallCentrePermissionsViewSetMixin, BaseTimerViewSet):
     pass

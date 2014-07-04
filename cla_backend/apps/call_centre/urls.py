@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url, include
 
 from rest_framework import routers
+from timer import routers as timer_routers
 
 from . import views
 
@@ -18,6 +19,10 @@ router.register(r'adaptation_details', views.AdaptationDetailsViewSet)
 router.register(r'knowledgebase/article', views.ArticleViewSet)
 router.register(r'knowledgebase/category', views.ArticleCategoryViewSet)
 
+timer_router = timer_routers.TimerRouter()
+timer_router.register(r'timer', views.TimerViewSet, base_name='timer')
+
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),
+    url(r'^', include(timer_router.urls)),
 )

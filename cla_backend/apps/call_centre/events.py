@@ -10,19 +10,22 @@ class AssignToProviderEvent(BaseEvent):
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
-            'description': 'Referred to Specialist'
+            'description': 'Referred to Specialist',
+            'stops_timer': True
         },
         'MANALC': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
-            'description': 'Manually allocated to Specialist'
+            'description': 'Manually allocated to Specialist',
+            'stops_timer': True
         },
         'RDSP': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Sent to Specialist again'
+            'description': 'Sent to Specialist again',
+            'stops_timer': True
         },
     }
 
@@ -33,6 +36,7 @@ class AssignToProviderEvent(BaseEvent):
             return 'MANALC'
 
         return 'REFSP'
+
 event_registry.register(AssignToProviderEvent)
 
 
@@ -43,7 +47,8 @@ class DeferAssignmentEvent(BaseEvent):
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Will call back later for Specialist'
+            'description': 'Will call back later for Specialist',
+            'stops_timer': True
         }
     }
 event_registry.register(DeferAssignmentEvent)
@@ -56,19 +61,22 @@ class DeclineHelpEvent(BaseEvent):
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Client declined Specialist'
+            'description': 'Client declined Specialist',
+            'stops_timer': True
         },
         'DECL': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Client declined all help options'
+            'description': 'Client declined all help options',
+            'stops_timer': True
         },
         'NRES': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'No resources available to help'
+            'description': 'No resources available to help',
+            'stops_timer': True
         },
     }
 event_registry.register(DeclineHelpEvent)

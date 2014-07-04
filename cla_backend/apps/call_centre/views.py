@@ -277,6 +277,26 @@ class CaseViewSet(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
 
+    def retrieve(self, request, *args, **kwargs):
+        """
+        TODO: might get called more than it should so take a look at it
+            AND
+              what happens in case of 404? still creating a log?
+        """
+        resp = super(CaseViewSet, self).retrieve(request, *args, **kwargs)
+
+        event = event_registry.get_event('case')()
+        event.process(self.object, status='viewed', created_by=request.user)
+
+        return resp
+
+    def post_save(self, obj, created=False):
+        super(CaseViewSet, self).post_save(obj, created=created)
+
+        if created:
+            event = event_registry.get_event('case')()
+            event.process(obj, status='created', created_by=self.request.user)
+
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Provider

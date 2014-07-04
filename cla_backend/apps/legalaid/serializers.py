@@ -151,7 +151,7 @@ class CaseSerializerBase(ClaModelSerializer):
     in_scope = serializers
 
     def get_log_set(self, case):
-        case_log = case.log_set.filter(type=LOG_TYPES.OUTCOME)
+        case_log = case.log_set.all()
         serializer = self.LOG_SERIALIZER(instance=case_log, many=True, required=False, read_only=True)
         return serializer.data
 

@@ -57,7 +57,7 @@ ADD ./docker/deploy-key /root/.ssh/id_rsa
 ADD ./docker/config /root/.ssh/config
 
 # Add local.py for QA
-ADD ./docker/local.py /home/app/django/cla_backend/settings/local.py
+#ADD ./docker/local.py /home/app/django/cla_backend/settings/local.py
 
 # Define working directory.
 WORKDIR /home/app/django

@@ -2,7 +2,7 @@ import random
 import copy
 import uuid
 import mock
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, NoReverseMatch
 
 from rest_framework import status
 
@@ -21,10 +21,12 @@ mi_dict_generator = lambda x: {"interval_period": "per_month", "per_interval_val
 
 class EligibilityCheckAPIMixin(object):
 
+    LOOKUP_KEY = 'reference'
+
     def setUp(self):
         super(EligibilityCheckAPIMixin, self).setUp()
 
-        self.list_url = reverse('%s:eligibility_check-list' %  self.API_URL_NAMESPACE)
+        self.list_url = self.get_list_url()
         self.check = make_recipe('legalaid.eligibility_check',
             category=make_recipe('legalaid.category'),
             notes=u'lorem ipsum',
@@ -38,17 +40,40 @@ class EligibilityCheckAPIMixin(object):
     def get_http_authorization(self):
         return None
 
+
+    def _create(self, data=None, url=None):
+        if not url: url = self.list_url
+        if not data: data = {}
+        return self.client.post(
+            url, data=data, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+
+    def _update(self, ref, data):
+        url = self.get_detail_url(unicode(ref))
+        return self.client.patch(
+            url, data=data, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+
+
+    def get_reference_from_response(self, data):
+        return data['reference']
+
+    def get_list_url(self):
+        return reverse('%s:eligibility_check-list' %  self.API_URL_NAMESPACE)
+
     def get_detail_url(self, check_ref):
         return reverse(
             '%s:eligibility_check-detail'  % self.API_URL_NAMESPACE, args=(),
-            kwargs={'reference': unicode(check_ref)}
+            kwargs={self.LOOKUP_KEY: unicode(check_ref)}
         )
 
     def get_is_eligible_url(self, reference):
         return reverse(
             '%s:eligibility_check-is-eligible' % self.API_URL_NAMESPACE,
             args=(),
-            kwargs={'reference': unicode(reference)}
+            kwargs={self.LOOKUP_KEY: unicode(reference)}
         )
 
     def assertEligibilityCheckResponseKeys(self, response):
@@ -142,11 +167,16 @@ class EligibilityCheckAPIMixin(object):
         ### LIST
         self._test_get_not_allowed(self.list_url)
         self._test_put_not_allowed(self.list_url)
-        self._test_delete_not_allowed(self.list_url)
 
         ### DETAIL
         self._test_post_not_allowed(self.detail_url)
         self._test_delete_not_allowed(self.detail_url)
+
+
+    @property
+    def check_reference(self):
+        return self.check.reference
+
 
     # CREATE
 
@@ -154,10 +184,8 @@ class EligibilityCheckAPIMixin(object):
         """
         CREATE data is empty
         """
-        response = self.client.post(
-            self.list_url, data={}, format='json',
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self._create()
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEligibilityCheckResponseKeys(response)
@@ -181,10 +209,8 @@ class EligibilityCheckAPIMixin(object):
             'dependants_young': 2,
             'dependants_old': 3,
         }
-        response = self.client.post(
-            self.list_url, data, format='json',
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self._create(data=data)
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEligibilityCheckResponseKeys(response)
@@ -215,10 +241,8 @@ class EligibilityCheckAPIMixin(object):
             'is_you_or_your_partner_over_60': random.choice([None, True, False]),
             'on_passported_benefits': random.choice([None, True, False])
         }
-        response = self.client.post(
-            self.list_url, data, format='json',
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self._create(data=data)
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEligibilityCheckResponseKeys(response)
@@ -250,28 +274,22 @@ class EligibilityCheckAPIMixin(object):
             'dependants_young': 2,
             'dependants_old': 3,
         }
-        response = self.client.post(
-            self.list_url, data, format='json',
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self._create(data=data)
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # NOW PATCHING
-        reference = response.data['reference']
-        detail_url = self.get_detail_url(reference)
+        reference = self.get_reference_from_response(response.data)
 
         data['category'] = category2.code
-        patch_response = self.client.patch(
-            detail_url, data=data, format='json',
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        patch_response = self._update(reference, data=data)
 
         self.assertEqual(patch_response.status_code, status.HTTP_200_OK)
 
         self.assertEligibilityCheckResponseKeys(patch_response)
         self.assertEligibilityCheckEqual(patch_response.data,
             EligibilityCheck(
-                reference=reference, category=category2,
+                reference=response.data['reference'], category=category2,
                 your_problem_notes=data['your_problem_notes'],
                 dependants_young=data['dependants_young'],
                 dependants_old=data['dependants_old'],
@@ -288,10 +306,8 @@ class EligibilityCheckAPIMixin(object):
                 {'value': 999, 'mortgage_left': 888, 'share': 77, 'disputed': False}
             ]
         }
-        response = self.client.post(
-            self.list_url, data, format='json',
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self._create(data=data)
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEligibilityCheckResponseKeys(response)
@@ -356,10 +372,7 @@ class EligibilityCheckAPIMixin(object):
         CREATE data with finances
         """
         data = self._get_valid_post_data()
-        response = self.client.post(
-            self.list_url, data, format='json',
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self._create(data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEligibilityCheckResponseKeys(response)
@@ -554,15 +567,15 @@ class EligibilityCheckAPIMixin(object):
         for error_data in ERRORS_DATA:
             data = copy.deepcopy(valid_data)
             EligibilityCheckAPIMixin.deep_update(data, error_data['data'])
-            response = self.client.post(
-                self.list_url, data, format='json',
-                HTTP_AUTHORIZATION=self.get_http_authorization()
-            )
+
+            response = self._create(data=data)
+
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
             self.assertDictEqual(error_data['error'], response.data)
 
     def test_create_in_error(self):
-        self._test_method_in_error('post', self.list_url)
+        if hasattr(self, 'list_url') and self.list_url:
+            self._test_method_in_error('post', self.list_url)
 
     # GET OBJECT
 
@@ -840,7 +853,7 @@ class EligibilityCheckAPIMixin(object):
         v = mocked_eligibility_checker()
         v.is_eligible.return_value = True
         response = self.client.post(
-            self.get_is_eligible_url(self.check.reference),
+            self.get_is_eligible_url(self.check_reference),
             data={},
             format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization())
@@ -852,7 +865,7 @@ class EligibilityCheckAPIMixin(object):
         v = mocked_eligibility_checker()
         v.is_eligible.return_value = False
         response = self.client.post(
-            self.get_is_eligible_url(self.check.reference),
+            self.get_is_eligible_url(self.check_reference),
             data={},
             format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization())
@@ -864,9 +877,59 @@ class EligibilityCheckAPIMixin(object):
         v = mocked_eligibility_checker()
         v.is_eligible.side_effect = PropertyExpectedException
         response = self.client.post(
-            self.get_is_eligible_url(self.check.reference),
+            self.get_is_eligible_url(self.check_reference),
             data={},
             format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'unknown')
+
+
+
+class NestedEligibilityCheckAPIMixin(EligibilityCheckAPIMixin):
+    LOOKUP_KEY = 'case_reference'
+
+    def setUp(self):
+        # THIS IS TOTALLY INTENTIONAL (super with EligibilityCheckAPIMixin to skip the
+        # stuff that happens in EligibilityCheckAPIMixin's setUp
+        super(EligibilityCheckAPIMixin, self).setUp()
+
+        self.check = make_recipe('legalaid.eligibility_check',
+                                 category=make_recipe('legalaid.category'),
+                                 notes=u'lorem ipsum',
+                                 you=make_recipe('legalaid.person',
+                                                 income=make_recipe('legalaid.income'),
+                                                 savings=make_recipe('legalaid.savings'),
+                                                 deductions=make_recipe('legalaid.deductions'))
+        )
+
+        self.check_case = make_recipe('legalaid.case', eligibility_check=self.check)
+
+        self.detail_url = self.get_detail_url(self.check_reference)
+
+    @property
+    def check_reference(self):
+        return self.check_case.reference
+
+    def _create(self, data=None, url=None):
+        if not url:
+            self.check_case.eligibility_check = None
+            self.check_case.save()
+            url = self.get_detail_url(self.check_reference)
+
+        if not data: data = {}
+        return super(NestedEligibilityCheckAPIMixin, self)._create(data=data, url=url)
+
+
+
+    def get_reference_from_response(self, data):
+        return self.check_case.reference
+
+    def test_methods_not_allowed(self):
+        """
+        Ensure that we can't POST, PUT or DELETE
+        """
+        ### DETAIL
+        self._test_delete_not_allowed(self.detail_url)
+
+

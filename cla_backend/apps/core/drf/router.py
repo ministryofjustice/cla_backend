@@ -16,7 +16,7 @@ class NestedCLARouter(NestedSimpleRouter):
                 'post': 'create'
             },
             name='{basename}-detail',
-            initkwargs={'suffix': 'Instance', 'nested': True}
+            initkwargs={'suffix': 'Instance'}
         ),
         # Dynamically generated routes.
         # Generated using @action or @link decorators on methods of the viewset.
@@ -26,7 +26,7 @@ class NestedCLARouter(NestedSimpleRouter):
                 '{httpmethod}': '{methodname}',
                 },
             name='{basename}-{methodnamehyphen}',
-            initkwargs={'nested': True}
+            initkwargs={}
         ),
         ]
 

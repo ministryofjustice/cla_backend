@@ -1,6 +1,7 @@
 from cla_eventlog import event_registry
-from core.drf.mixins import AssociateNestedModelToParentMixin, NestedGenericModelMixin
+from core.drf.mixins import NestedGenericModelMixin
 from django.contrib.auth.models import AnonymousUser
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
@@ -49,8 +50,7 @@ class EligibilityCheckViewSet(
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     NestedGenericModelMixin,
-    AssociateNestedModelToParentMixin,
-    BaseEligibilityCheckViewSet
+    BaseEligibilityCheckViewSet,
 ):
     serializer_class = EligibilityCheckSerializer
     PARENT_FIELD = 'eligibility_check'
@@ -63,7 +63,6 @@ class EligibilityCheckViewSet(
 
     def post_save(self, obj, created=False, **kwargs):
         super(EligibilityCheckViewSet, self).post_save(obj, created=created)
-
         user = self.request.user
         means_test_event = event_registry.get_event('means_test')()
         diff = obj.diff
@@ -301,7 +300,6 @@ class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin,
                              mixins.UpdateModelMixin,
                              mixins.RetrieveModelMixin,
                              NestedGenericModelMixin,
-                             AssociateNestedModelToParentMixin,
                              viewsets.GenericViewSet):
     model = PersonalDetails
     serializer_class = PersonalDetailsSerializer
@@ -317,17 +315,18 @@ class ThirdPartyDetailsViewSet(CallCentrePermissionsViewSetMixin,
                              mixins.CreateModelMixin,
                              mixins.UpdateModelMixin,
                              mixins.RetrieveModelMixin,
+                             NestedGenericModelMixin,
                              viewsets.GenericViewSet):
     model = ThirdPartyDetails
     serializer_class = ThirdPartyDetailsSerializer
     lookup_field = 'reference'
+    PARENT_FIELD = 'thirdparty_details'
 
 class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,
                              mixins.CreateModelMixin,
                              mixins.UpdateModelMixin,
                              mixins.RetrieveModelMixin,
                              NestedGenericModelMixin,
-                             AssociateNestedModelToParentMixin,
                              viewsets.GenericViewSet):
     model = AdaptationDetails
     serializer_class = AdaptationDetailsSerializer

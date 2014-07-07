@@ -1,6 +1,12 @@
-class NestedGenericModelMixin(object):
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Model
 
-    nested = False
+
+class NoParentReferenceException(BaseException):
+    pass
+
+
+class NestedGenericModelMixin(object):
 
     def get_parent_lookup_kwarg(self):
         return self.parent_prefix + '_' + self.lookup_field
@@ -9,26 +15,29 @@ class NestedGenericModelMixin(object):
         return self.parent(requet=self.request).get_queryset()
 
     def get_parent_object(self):
-        parent_key = self.kwargs.pop(self.get_parent_lookup_kwarg())
+        parent_key = self.kwargs.pop(self.get_parent_lookup_kwarg(), None)
+        if not parent_key:
+            raise NoParentReferenceException('Trying to do a nested lookup on a non-nested viewset')
         parent_viewset_instance = self.parent(
             request=self.request,
             kwargs= {self.lookup_field: parent_key})
         parent_obj = parent_viewset_instance.get_object()
         return parent_obj
 
-    def get_object(self):
-        is_nested = self.kwargs.get('nested', False)
-        if is_nested:
-            return getattr(self.get_parent_object(), self.PARENT_FIELD)
-        return super(NestedGenericModelMixin, self).get_object()
+    def get_parent_object_or_none(self):
+        try:
+            return self.get_parent_object()
+        except (ObjectDoesNotExist, NoParentReferenceException):
+            return None
 
-class AssociateNestedModelToParentMixin(object):
+    def get_object(self):
+        return getattr(self.get_parent_object(), self.PARENT_FIELD)
 
 
     def __init__(self, *args, **kwargs):
         if not hasattr(self, 'PARENT_FIELD'):
             raise Exception('To use this mixin you must specify PARENT_FIELD')
-        super(AssociateNestedModelToParentMixin, self).__init__(*args, **kwargs)
+        super(NestedGenericModelMixin, self).__init__(*args, **kwargs)
 
     def post_save(self, obj, created=False):
         """
@@ -38,12 +47,13 @@ class AssociateNestedModelToParentMixin(object):
         """
 
         if created:
-            parent_obj = self.get_parent_object()
+            parent_obj = self.get_parent_object_or_none()
 
-            if getattr(parent_obj, self.PARENT_FIELD):
-                raise ValueError('%s already has a %s associated to it' % (parent_obj, obj.__class__))
-            else:
-                setattr(parent_obj, self.PARENT_FIELD, obj)
-                parent_obj.save()
+            if parent_obj:
+                if getattr(parent_obj, self.PARENT_FIELD):
+                    raise ValueError('%s already has a %s associated to it' % (parent_obj, obj.__class__))
+                else:
+                    setattr(parent_obj, self.PARENT_FIELD, obj)
+                    parent_obj.save()
 
-        super(AssociateNestedModelToParentMixin, self).post_save(obj, created=created)
+        super(NestedGenericModelMixin, self).post_save(obj, created=created)

@@ -286,7 +286,10 @@ class CaseViewSet(
         resp = super(CaseViewSet, self).retrieve(request, *args, **kwargs)
 
         event = event_registry.get_event('case')()
-        event.process(self.object, status='viewed', created_by=request.user)
+        event.process(
+            self.object, status='viewed', created_by=request.user,
+            notes='Case viewed'
+        )
 
         return resp
 
@@ -295,7 +298,10 @@ class CaseViewSet(
 
         if created:
             event = event_registry.get_event('case')()
-            event.process(obj, status='created', created_by=self.request.user)
+            event.process(
+                obj, status='created', created_by=self.request.user,
+                notes="Case created"
+            )
 
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):

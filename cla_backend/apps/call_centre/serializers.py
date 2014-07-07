@@ -114,7 +114,8 @@ class LogSerializer(LogSerializerBase):
                   'created',
                   'notes',
                   'type',
-                  'level'
+                  'level',
+                  'timer'
         )
 
 

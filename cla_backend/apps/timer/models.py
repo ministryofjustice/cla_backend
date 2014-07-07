@@ -32,9 +32,12 @@ class Timer(TimeStampedModel):
         if self.is_stopped():
             raise ValueError(u'The timer has already been stopped')
 
+        last_log = self.log_set.last()  # get last log
+        if not last_log:
+            raise ValueError(u'You can\'t stop a timer without a log')
+
         # stop and update this model
         self.stopped = timezone.now()  # stop
-        last_log = self.log_set.last()  # link to case
         self.linked_case = last_log.case
 
         self.save()

@@ -5,10 +5,13 @@ from rest_framework.test import APITestCase
 
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 
-from legalaid.tests.views.eligibility_check_api import EligibilityCheckAPIMixin
+from legalaid.tests.views.mixins.eligibility_check_api import \
+    NestedEligibilityCheckAPIMixin
 
 
-class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, EligibilityCheckAPIMixin, APITestCase):
+class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilityCheckAPIMixin, APITestCase):
+    LOOKUP_KEY = 'case_reference'
+
     def get_http_authorization(self):
         return 'Bearer %s' % self.token
 

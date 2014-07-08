@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from core.tests.test_base import CLABaseApiTestMixin
 
 
-from legalaid.tests.views.eligibility_check_api import EligibilityCheckAPIMixin
+from legalaid.tests.views.mixins.eligibility_check_api import EligibilityCheckAPIMixin
 
 
 class EligibilityCheckTestCase(CLABaseApiTestMixin, EligibilityCheckAPIMixin, APITestCase):

@@ -37,7 +37,7 @@ RUN gem2.1 install sass --no-rdoc --no-ri
 
 RUN pip install GitPython uwsgi
 
-RUN mkdir -p /var/log/wsgi
+RUN mkdir -p /var/log/wsgi && chown -R www-data:www-data /var/log/wsgi
 
 RUN  mkdir -p /var/log/nginx/cla_backend
 ADD ./docker/cla_backend.ini /etc/wsgi/conf.d/cla_backend.ini
@@ -51,16 +51,8 @@ ENV APP_HOME /home/app/django
 # Add project directory to docker
 ADD . /home/app/django
 
-# Add deploy-key
-RUN mkdir -p /root/.ssh
-ADD ./docker/deploy-key /root/.ssh/id_rsa
-RUN chmod 400 /root/.ssh/id_rsa
-ADD ./docker/config /root/.ssh/config
-# Define working directory.
-WORKDIR /home/app/django
-
 # PIP INSTALL APPLICATION
-RUN pip install -r requirements/production.txt
+RUN cd /home/app/django && pip install -r requirements/production.txt
 
 # install service files for runit
 ADD ./docker/nginx.service /etc/service/nginx/run

@@ -1,7 +1,7 @@
 from cla_eventlog.models import Log
 from cla_eventlog.constants import LOG_TYPES
 
-from timer.utils import get_or_create_timer
+from timer.utils import get_timer
 
 
 class BaseEvent(object):
@@ -22,7 +22,7 @@ class BaseEvent(object):
             code = self.get_log_code(**kwargs)
 
         code_data = self.codes[code]
-        timer = get_or_create_timer(created_by)
+        timer = get_timer(created_by)
 
         log = Log(
             case=case,
@@ -36,7 +36,7 @@ class BaseEvent(object):
 
         self.save_log(log)
 
-        if code_data.get('stops_timer', False):
+        if timer and code_data.get('stops_timer', False):
             timer.stop()
 
         return log

@@ -46,20 +46,22 @@ class GetOrCreateTimerTestCase(TestCase):
         timer = make_recipe('timer.Timer')
         self.assertEqual(Timer.objects.count(), 1)
 
-        db_timer = get_or_create_timer(timer.created_by)
+        db_timer, created = get_or_create_timer(timer.created_by)
 
         self.assertEqual(Timer.objects.count(), 1)
         self.assertEqual(db_timer, timer)
+        self.assertEqual(created, False)
 
     def test_returns_created(self):
         self.assertEqual(Timer.objects.count(), 0)
         user = make_user()
-        timer = get_or_create_timer(user)
+        timer, created = get_or_create_timer(user)
 
         self.assertEqual(Timer.objects.count(), 1)
         timer = Timer.objects.first()
 
         self.assertEqual(timer.created_by, user)
+        self.assertEqual(created, True)
 
 
 class StopTimerTestCase(TestCase):

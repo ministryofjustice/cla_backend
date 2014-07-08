@@ -1,7 +1,7 @@
 from rest_framework import viewsets, views, status
 from rest_framework.response import Response as DRFResponse
 
-from .utils import get_timer, create_timer
+from .utils import get_timer, get_or_create_timer
 from .serializers import TimerSerializer
 
 
@@ -14,8 +14,11 @@ class BaseTimerViewSet(viewsets.ViewSetMixin, views.APIView):
         return self.serializer_class(obj).data
 
     def create(self, request, *args, **kwargs):
+        return self.get_or_create(request, *args, **kwargs)
+
+    def get_or_create(self, request, *args, **kwargs):
         try:
-            timer = create_timer(request.user)
+            timer, created = get_or_create_timer(request.user)
         except ValueError as e:
             return DRFResponse(
                 {'detail': str(e)},
@@ -23,7 +26,8 @@ class BaseTimerViewSet(viewsets.ViewSetMixin, views.APIView):
             )
 
         data = self.get_serializer(timer)
-        return DRFResponse(data, status.HTTP_201_CREATED)
+        resp_status = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        return DRFResponse(data, resp_status)
 
     def get(self, request, *args, **kwargs):
         timer = get_timer(request.user)

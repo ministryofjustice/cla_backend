@@ -26,11 +26,13 @@ def create_timer(user):
 
 
 def get_or_create_timer(user):
+    created = False
     current_timer = get_timer(user)
 
     if not current_timer:
         current_timer = _create_timer(user)
-    return current_timer
+        created = True
+    return (current_timer, created)
 
 
 def stop_timer(user):

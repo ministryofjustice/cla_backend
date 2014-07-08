@@ -79,7 +79,8 @@ class CaseEvent(BaseEvent):
             # events.
             # TODO: might be slow, is there a better way?
             to_be_saved = Log.objects.filter(
-                timer=log.timer, code__in=['CASE_CREATED', 'CASE_VIEWED']
+                timer=log.timer, case=log.case, 
+                code__in=['CASE_CREATED', 'CASE_VIEWED']
             ).count() == 0
 
         if to_be_saved:

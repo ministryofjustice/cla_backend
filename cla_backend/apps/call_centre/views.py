@@ -18,8 +18,6 @@ from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
     BaseCategoryViewSet, BaseEligibilityCheckViewSet
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 
-from timer.utils import get_or_create_timer
-
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
 from .serializers import EligibilityCheckSerializer, \
@@ -108,17 +106,6 @@ class CaseViewSet(
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
-
-    # NOTE commented out because it may make more sense to get_or_create_timer
-    #   when creating a Log object instead
-    # def get_object(self, queryset=None):
-    #     """
-    #     TODO: we might need to override retrieve instead so that we don't
-    #         hit the db during POST, PATCH etc.
-    #     """
-    #     obj = super(CaseViewSet, self).get_object(queryset=queryset)
-    #     get_or_create_timer(self.request.user)
-    #     return obj
 
     def get_queryset(self):
         qs = super(CaseViewSet, self).get_queryset()

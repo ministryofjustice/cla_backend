@@ -10,25 +10,29 @@ class RejectCaseEvent(BaseEvent):
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
-            'description': 'Misdiagnosed, assigned to wrong Specialist or another Specialist is dealing with client'
+            'description': 'Misdiagnosed, assigned to wrong Specialist or another Specialist is dealing with client',
+            'stops_timer': False
         },
         'MIS-MEANS': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
-            'description': 'Misdiagnosed, means test isn\'t correct'
+            'description': 'Misdiagnosed, means test isn\'t correct',
+            'stops_timer': False
         },
         'MIS-OOS': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
-            'description': 'Misdiagnosed, out of scope'
+            'description': 'Misdiagnosed, out of scope',
+            'stops_timer': False
         },
         'COI': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.SPECIALIST],
-            'description': 'Conflict of Interest'
+            'description': 'Conflict of Interest',
+            'stops_timer': False
         },
     }
 
@@ -49,7 +53,8 @@ class AcceptCaseEvent(BaseEvent):
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
-            'description': 'Case taken'
+            'description': 'Case taken',
+            'stops_timer': False
         },
     }
 event_registry.register(AcceptCaseEvent)
@@ -62,7 +67,8 @@ class CloseCaseEvent(BaseEvent):
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
-            'description': 'Closed SP Case'
+            'description': 'Closed SP Case',
+            'stops_timer': False
         }
     }
 event_registry.register(CloseCaseEvent)

@@ -19,7 +19,7 @@ class Timer(TimeStampedModel):
     running_objects = RunningTimerManager()
 
     def __unicode__(self):
-        return u'Timer created at' % self.created
+        return u'Timer created at %s' % self.created
 
     @classmethod
     def start(cls, user):

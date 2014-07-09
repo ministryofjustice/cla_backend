@@ -11,7 +11,6 @@ class SingletonRouter(DefaultRouter):
      * prefix/
         GET: returns 404 or the object
         POST: creates the object if it doesn't exist
-            TODO: should we allow POST for updates as well?
         PUT: updates the object
         PATCH: updates the object partially
         DELETE: deletes the object

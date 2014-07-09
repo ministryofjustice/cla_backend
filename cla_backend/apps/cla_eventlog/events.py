@@ -49,4 +49,3 @@ class BaseEvent(object):
             if code_data['type'] == LOG_TYPES.OUTCOME and role in code_data['selectable_by']:
                 selectable_codes.append(code)
         return selectable_codes
-

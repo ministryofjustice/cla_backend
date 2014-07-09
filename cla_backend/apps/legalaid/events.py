@@ -73,7 +73,7 @@ class CaseEvent(BaseEvent):
     def save_log(self, log):
         to_be_saved = True
 
-        if log.code == 'CASE_VIEWED':
+        if log.code == 'CASE_VIEWED' and log.timer:
             # checking that doesn't exist 'created' or 'viewed' log entry
             # for this timer in the db already do that I don't duplicate
             # events.

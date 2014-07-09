@@ -1,5 +1,5 @@
 #
-# CLA Dockerfile
+# CLA_BACKEND Dockerfile
 #
 # https://github.com/dockerfile/nginx
 #

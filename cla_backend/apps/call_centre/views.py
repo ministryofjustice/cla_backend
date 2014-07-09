@@ -265,11 +265,6 @@ class CaseViewSet(
         )
 
     def retrieve(self, request, *args, **kwargs):
-        """
-        TODO: might get called more than it should so take a look at it
-            AND
-              what happens in case of 404? still creating a log?
-        """
         resp = super(CaseViewSet, self).retrieve(request, *args, **kwargs)
 
         event = event_registry.get_event('case')()

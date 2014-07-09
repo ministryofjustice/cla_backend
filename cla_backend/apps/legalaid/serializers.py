@@ -1,7 +1,6 @@
-from cla_eventlog import event_registry
 from rest_framework import serializers
 
-from cla_eventlog.constants import LOG_TYPES
+from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.serializers import LogSerializerBase
 
 from core.serializers import UUIDSerializer, ClaModelSerializer
@@ -12,7 +11,6 @@ from cla_common.money_interval.models import MoneyInterval
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
     ThirdPartyDetails, AdaptationDetails
-
 
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
@@ -99,6 +97,7 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
         model = PersonalDetails
         fields = ()
 
+
 class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
     personal_details = PersonalDetailsSerializerBase(required=True)
 
@@ -106,10 +105,12 @@ class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
         model = ThirdPartyDetails
         fields = ()
 
+
 class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
     class Meta:
         model = AdaptationDetails
         fields = ()
+
 
 class PersonSerializerBase(ClaModelSerializer):
     income = IncomeSerializerBase(required=False)
@@ -151,7 +152,7 @@ class CaseSerializerBase(ClaModelSerializer):
     in_scope = serializers
 
     def get_log_set(self, case):
-        case_log = case.log_set.all()
+        case_log = case.log_set.filter(level__gt=LOG_LEVELS.MINOR)
         serializer = self.LOG_SERIALIZER(instance=case_log, many=True, required=False, read_only=True)
         return serializer.data
 

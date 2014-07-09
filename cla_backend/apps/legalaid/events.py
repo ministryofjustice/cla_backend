@@ -63,7 +63,7 @@ class CaseEvent(BaseEvent):
         },
         'CASE_VIEWED': {
             'type': LOG_TYPES.SYSTEM,
-            'level': LOG_LEVELS.HIGH,
+            'level': LOG_LEVELS.MINOR,
             'selectable_by': [],
             'description': "Case viewed",
             'stops_timer': False

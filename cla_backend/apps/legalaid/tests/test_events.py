@@ -5,7 +5,7 @@ from core.tests.mommy_utils import make_recipe
 from cla_eventlog import event_registry
 from cla_eventlog.models import Log
 from cla_eventlog.tests.base import EventTestCaseMixin
-from cla_eventlog.constants import LOG_TYPES
+from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
 
 
 class CaseEventTestCase(EventTestCaseMixin, TestCase):
@@ -26,7 +26,8 @@ class CaseEventTestCase(EventTestCaseMixin, TestCase):
             process_kwargs={
                 'status': 'viewed'
             },
-            expected_type=LOG_TYPES.SYSTEM
+            expected_type=LOG_TYPES.SYSTEM,
+            expected_level=LOG_LEVELS.MINOR
         )
 
 

@@ -6,17 +6,20 @@ from django.db import models
 
 
 class Migration(SchemaMigration):
+    depends_on = (
+        ('timer', '0001_initial'),
+    )
 
     def forwards(self, orm):
-        # Adding field 'PersonalDetails.email'
-        db.add_column(u'legalaid_personaldetails', 'email',
-                      self.gf('django.db.models.fields.EmailField')(default='', max_length=75, blank=True),
+        # Adding field 'Log.timer'
+        db.add_column(u'cla_eventlog_log', 'timer',
+                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['timer.Timer'], null=True, blank=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'PersonalDetails.email'
-        db.delete_column(u'legalaid_personaldetails', 'email')
+        # Deleting field 'Log.timer'
+        db.delete_column(u'cla_eventlog_log', 'timer_id')
 
 
     models = {
@@ -48,6 +51,19 @@ class Migration(SchemaMigration):
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
+        },
+        u'cla_eventlog.log': {
+            'Meta': {'ordering': "['-created']", 'object_name': 'Log'},
+            'case': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Case']"}),
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
+            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
+            'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'level': ('django.db.models.fields.PositiveSmallIntegerField', [], {}),
+            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
+            'notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'timer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['timer.Timer']", 'null': 'True', 'blank': 'True'}),
+            'type': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
         u'cla_provider.provider': {
             'Meta': {'object_name': 'Provider'},
@@ -192,7 +208,6 @@ class Migration(SchemaMigration):
         u'legalaid.personaldetails': {
             'Meta': {'object_name': 'PersonalDetails'},
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'full_name': ('django.db.models.fields.CharField', [], {'max_length': '400', 'null': 'True', 'blank': 'True'}),
             'home_phone': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -202,17 +217,6 @@ class Migration(SchemaMigration):
             'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'}),
             'street': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'})
-        },
-        u'legalaid.property': {
-            'Meta': {'object_name': 'Property'},
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'disputed': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
-            'eligibility_check': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.EligibilityCheck']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'mortgage_left': ('legalaid.fields.MoneyField', [], {'default': 'None', 'max_value': '9999999999', 'min_value': '0', 'null': 'True', 'blank': 'True'}),
-            'share': ('django.db.models.fields.PositiveIntegerField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
-            'value': ('legalaid.fields.MoneyField', [], {'default': 'None', 'max_value': '9999999999', 'min_value': '0', 'null': 'True', 'blank': 'True'})
         },
         u'legalaid.savings': {
             'Meta': {'object_name': 'Savings'},
@@ -235,7 +239,15 @@ class Migration(SchemaMigration):
             'personal_relationship_note': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'reason': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
             'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'})
+        },
+        u'timer.timer': {
+            'Meta': {'object_name': 'Timer'},
+            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
+            'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
+            'stopped_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
         }
     }
 
-    complete_apps = ['legalaid']
+    complete_apps = ['cla_eventlog']

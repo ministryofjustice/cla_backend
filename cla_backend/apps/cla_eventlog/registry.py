@@ -7,7 +7,8 @@ def is_code_valid(code):
         'type': basestring,
         'level': int,
         'selectable_by': list,
-        'description': basestring
+        'description': basestring,
+        'stops_timer': bool
     }
 
     for key, type_ in required_keys.items():

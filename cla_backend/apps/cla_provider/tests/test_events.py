@@ -1,20 +1,19 @@
 from django.test import TestCase
 
-from cla_eventlog import event_registry
-from cla_eventlog.constants import LOG_TYPES, LOG_ROLES, LOG_LEVELS
-from cla_eventlog.models import Log
-
 from cla_eventlog.tests.base import EventTestCaseMixin
 
 
 class RejectCaseEventTestCase(EventTestCaseMixin, TestCase):
+    EVENT_KEY = 'reject_case'
+
     def test_reject_case(self):
         self._test_process_with_expicit_code(
-            'reject_case', ['MIS', 'MIS-MEANS', 'MIS-OOS', 'COI']
+            ['MIS', 'MIS-MEANS', 'MIS-OOS', 'COI']
         )
 
     def test_reject_conflict(self):
-        self._test_process_with_implicit_code('reject_case', 'COI',
+        self._test_process_with_implicit_code(
+            'COI',
             process_kwargs={
                 'is_conflict': True
             }
@@ -22,10 +21,14 @@ class RejectCaseEventTestCase(EventTestCaseMixin, TestCase):
 
 
 class AcceptCaseEventTestCase(EventTestCaseMixin, TestCase):
+    EVENT_KEY = 'accept_case'
+
     def test_accept_case(self):
-        self._test_process_with_implicit_code('accept_case', 'SPOP')
+        self._test_process_with_implicit_code('SPOP')
 
 
 class CloseCaseEventTestCase(EventTestCaseMixin, TestCase):
+    EVENT_KEY = 'close_case'
+
     def test_close_case(self):
-        self._test_process_with_implicit_code('close_case', 'CLSP')
+        self._test_process_with_implicit_code('CLSP')

@@ -8,14 +8,16 @@ import jsonpatch
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, SearchFilter, DjangoFilterBackend
+from rest_framework.filters import OrderingFilter, SearchFilter, \
+    DjangoFilterBackend
 
 from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from cla_eventlog.views import BaseEventViewSet
-from legalaid.models import Category, EligibilityCheck, Case, \
-    PersonalDetails, ThirdPartyDetails, AdaptationDetails
+from timer.views import BaseTimerViewSet
+from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, \
+    AdaptationDetails
 from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
     BaseCategoryViewSet, BaseEligibilityCheckViewSet
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -28,7 +30,7 @@ from .serializers import EligibilityCheckSerializer, \
     ThirdPartyDetailsSerializer, AdaptationDetailsSerializer
 
 from .forms import ProviderAllocationForm,  DeclineAllSpecialistsCaseForm,\
-     AssociatePersonalDetailsCaseForm, AssociateThirdPartyDetailsCaseForm,\
+    AssociatePersonalDetailsCaseForm, AssociateThirdPartyDetailsCaseForm,\
     AssociateAdaptationDetailsCaseForm, AssociateEligibilityCheckCaseForm, \
     DeferAssignmentCaseForm
 
@@ -40,7 +42,8 @@ class CallCentrePermissionsViewSetMixin(object):
 
 
 class CallCentreManagerPermissionsViewSetMixin(object):
-    permission_classes = (CallCentreClientIDPermission, OperatorManagerPermission)
+    permission_classes = (
+        CallCentreClientIDPermission, OperatorManagerPermission)
 
 
 class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
@@ -97,6 +100,7 @@ class EligibilityCheckViewSet(
         )
 
         return obj
+
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
@@ -165,10 +169,11 @@ class CaseViewSet(
             category = None
             suggested_provider = None
 
-        suitable_providers = [ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
-        suggestions = { 'suggested_provider' : suggested_provider,
-                        'suitable_providers' : suitable_providers
-                      }
+        suitable_providers = [
+            ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
+        suggestions = {'suggested_provider': suggested_provider,
+                       'suitable_providers': suitable_providers
+                       }
 
         return DRFResponse(suggestions)
 
@@ -286,6 +291,28 @@ class CaseViewSet(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
 
+    def retrieve(self, request, *args, **kwargs):
+        resp = super(CaseViewSet, self).retrieve(request, *args, **kwargs)
+
+        event = event_registry.get_event('case')()
+        event.process(
+            self.object, status='viewed', created_by=request.user,
+            notes='Case viewed'
+        )
+
+        return resp
+
+    def post_save(self, obj, created=False):
+        super(CaseViewSet, self).post_save(obj, created=created)
+
+        if created:
+            event = event_registry.get_event('case')()
+            event.process(
+                obj, status='created', created_by=self.request.user,
+                notes="Case created"
+            )
+
+
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
     model = Provider
     serializer_class = ProviderSerializer
@@ -317,6 +344,7 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     def get_logged_in_user_model(self):
         return self.request.user.operator
 
+
 class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin,
                              mixins.CreateModelMixin,
                              mixins.UpdateModelMixin,
@@ -344,6 +372,7 @@ class ThirdPartyDetailsViewSet(CallCentrePermissionsViewSetMixin,
     lookup_field = 'reference'
     PARENT_FIELD = 'thirdparty_details'
 
+
 class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,
                              mixins.CreateModelMixin,
                              mixins.UpdateModelMixin,
@@ -360,5 +389,9 @@ class ArticleViewSet(CallCentrePermissionsViewSetMixin, BaseArticleViewSet):
 
 
 class ArticleCategoryViewSet(CallCentrePermissionsViewSetMixin,
-        BaseArticleCategoryViewSet):
+                             BaseArticleCategoryViewSet):
+    pass
+
+
+class TimerViewSet(CallCentrePermissionsViewSetMixin, BaseTimerViewSet):
     pass

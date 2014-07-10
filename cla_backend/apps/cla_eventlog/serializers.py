@@ -10,6 +10,7 @@ class LogSerializerBase(ClaModelSerializer):
     created = serializers.DateTimeField(read_only=True)
     level = serializers.CharField(read_only=True)
     type = serializers.CharField(read_only=True)
+    timer_id = serializers.IntegerField(read_only=True)
     notes = serializers.CharField(read_only=True)
 
     class Meta:

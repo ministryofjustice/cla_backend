@@ -26,7 +26,7 @@ def _transform_patch_line(item):
     return {
         'action': lookup[item['op']],
         'thing': item['path'].lstrip('/').replace('/','.'),
-        'value': item['value']
+        'value': item.get('value', 'None')
     }
 
 def format_patch(patch):

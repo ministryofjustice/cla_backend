@@ -50,7 +50,7 @@ ENV APP_HOME /home/app/django
 ADD . /home/app/django
 
 # PIP INSTALL APPLICATION
-RUN cd /home/app/django && pip install -r requirements/production.txt
+RUN cd /home/app/django && pip install -r requirements/production.txt && find . -name '*.pyc' -delete
 
 # install service files for runit
 ADD ./docker/nginx.service /etc/service/nginx/run

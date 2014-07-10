@@ -2,21 +2,18 @@ import datetime
 
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+from legalaid.tests.views.mixins.resource import \
+    NestedSimpleResourceCheckAPIMixin
 import mock
-
 from rest_framework import status
 from rest_framework.test import APITestCase
-
 from cla_eventlog.models import Log
 from cla_eventlog.tests.test_views import ExplicitEventCodeViewTestCaseMixin, \
     ImplicitEventCodeViewTestCaseMixin
-
 from legalaid.models import Case
-
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
 from cla_common.constants import CASE_STATES
-
 from call_centre.forms import DeclineAllSpecialistsCaseForm
 from call_centre.serializers import CaseSerializer
 
@@ -554,292 +551,27 @@ class SearchCaseTestCase(BaseCaseTestCase):
         self.assertNotEqual(response.data['provider_notes'], 'abc123')
 
 
+class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, NestedSimpleResourceCheckAPIMixin, APITestCase):
 
-"""
-    TODO: this should be moved into a different file in
-        call_centre.tests.api.test_personal_details_api.py
-"""
-class PersonalDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
+    API_URL_NAMESPACE = 'call_centre'
+    BASE_NAME = 'adaptationdetails'
+    CHECK_RECIPE = 'legalaid.adaptation_details'
 
-    def assertPersonalDetailsCheckResponseKeys(self, response):
-        self.assertItemsEqual(
-            response.data.keys(),
-            [
-                'reference',
-                'title',
-                'full_name',
-                'postcode',
-                'street',
-                'mobile_phone',
-                'home_phone'
-            ]
-        )
+    @property
+    def check_keys(self):
+        return \
+        [ 'reference',
+          'bsl_webcam',
+          'minicom',
+          'text_relay',
+          'skype_webcam',
+          'callback_preference',
+          'language',
+          'notes'
+        ]
 
-    def setUp(self):
-        super(PersonalDetailsTestCase, self).setUp()
-
-        self.list_url = reverse('call_centre:personaldetails-list')
-        self.personal_details_obj = make_recipe('legalaid.personal_details')
-        self.check = self.personal_details_obj
-        self.detail_url = reverse(
-            'call_centre:personaldetails-detail', args=(),
-            kwargs={'reference': unicode(self.personal_details_obj.reference)}
-        )
-
-    def _get_default_post_data(self):
-        return {
-            'title': 'MR',
-            'full_name': 'John Doe',
-            'postcode': 'SW1H 9AJ',
-            'street': '102 Petty France',
-            'mobile_phone': '0123456789',
-            'home_phone': '9876543210',
-            }
-
-    def _test_method_in_error(self, method, url):
-        """
-        Generic method called by 'create' and 'patch' to test against validation
-        errors.
-        """
-        data={
-            "title": '1'*21,
-            "full_name": '1'*456,
-            "postcode": '1'*13,
-            "street": '1'*256,
-            "mobile_phone": '1'*21,
-            "home_phone": '1'*21,
-            }
-
-        method_callable = getattr(self.client, method)
-        response = method_callable(url, data,
-                                   format='json',
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        expected_errors = {
-            'title': [u'Ensure this value has at most 20 characters (it has 21).'],
-            'full_name': [u'Ensure this value has at most 400 characters (it has 456).'],
-            'postcode': [u'Ensure this value has at most 12 characters (it has 13).'],
-            'street': [u'Ensure this value has at most 255 characters (it has 256).'],
-            'mobile_phone': [u'Ensure this value has at most 20 characters (it has 21).'],
-            'home_phone': [u'Ensure this value has at most 20 characters (it has 21).'],
-            }
-
-        self.maxDiff = None
-        errors = response.data
-        self.assertItemsEqual(
-            errors.keys(), expected_errors.keys()
-        )
-        self.assertItemsEqual(
-            errors,
-                expected_errors
-        )
-
-    def assertPersonalDetailsEqual(self, data, obj):
-        if data is None or obj is None:
-            self.assertEqual(data, obj)
-        else:
-            for prop in ['title', 'full_name', 'postcode', 'street', 'mobile_phone', 'home_phone']:
-                self.assertEqual(unicode(getattr(obj, prop)), data[prop])
-
-    def test_methods_not_allowed(self):
-        """
-        Ensure that we can't POST, PUT or DELETE
-        """
-        ### LIST
-        self._test_delete_not_allowed(self.list_url)
-
-    def test_methods_in_error(self):
-        self._test_method_in_error('post', self.list_url)
-        self._test_method_in_error('patch', self.detail_url)
-        self._test_method_in_error('put', self.detail_url)
-
-    # CREATE
-
-    def test_create_no_data(self):
-        """
-        CREATE should work, even with an empty POST
-        """
-        response = self.client.post(
-            self.list_url, data={}, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertPersonalDetailsCheckResponseKeys(response)
-
-    def test_create_with_data(self):
-        data = self._get_default_post_data()
-        check = make_recipe('legalaid.personal_details', **data)
-
-        response = self.client.post(
-            self.list_url, data=data, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        # check initial state is correct
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertPersonalDetailsCheckResponseKeys(response)
-
-        self.assertPersonalDetailsEqual(response.data, check)
-
-class ThirdPartyDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
-
-    def assertThirdPartyDetailsCheckResponseKeys(self, response):
-
-        self.assertItemsEqual(
-            response.data.keys(),
-            [
-                'reference',
-                'personal_details',
-                'pass_phrase',
-                'reason',
-                'personal_relationship',
-                'personal_relationship_note'
-            ]
-        )
-
-    def setUp(self):
-        super(ThirdPartyDetailsTestCase, self).setUp()
-
-        self.list_url = reverse('call_centre:thirdpartydetails-list')
-        self.personal_details_obj = make_recipe('legalaid.thirdparty_details')
-        self.check = self.personal_details_obj
-        self.detail_url = reverse(
-            'call_centre:thirdpartydetails-detail', args=(),
-            kwargs={'reference': unicode(self.personal_details_obj.reference)}
-        )
-
-    def _get_default_post_data(self):
-        return {"personal_details": {
-                    "title": "Mr",
-                    "full_name": "Bob",
-                    "postcode": "SW1H 9AJ",
-                    "street": "102 Petty France",
-                    "mobile_phone": "07000000000",
-                    "home_phone": "01179000000",
-                    },
-                "pass_phrase": "monkey",
-                "reason": "CHILD_PATIENT",
-                "personal_relationship": "OTHER",
-                'personal_relationship_note': "Neighbour"
-                }
-
-
-    def _test_method_in_error(self, method, url):
-        """
-        Generic method called by 'create' and 'patch' to test against validation
-        errors.
-        """
-        data={"personal_details": {
-                    "title": '1'*21,
-                    "full_name": '1'*456,
-                    "postcode": '1'*13,
-                    "street": '1'*256,
-                    "mobile_phone": '1'*21,
-                    "home_phone": '1'*21,
-                },
-                "pass_phrase": 'XXXXXXXXX',
-                "reason": "XXXXXXXXX",
-                "personal_relationship": "XXXXXXXXX",
-                "personal_relationship_note": "XXXXXXXX"
-                }
-
-
-        method_callable = getattr(self.client, method)
-        response = method_callable(url, data,
-                                   format='json',
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        expected_errors = {
-            'personal_details' : [{'full_name': [u'Ensure this value has at most 400 characters (it has 456).'],
-                                   'home_phone': [u'Ensure this value has at most 20 characters (it has 21).'],
-                                   'mobile_phone': [u'Ensure this value has at most 20 characters (it has 21).'],
-                                   'postcode': [u'Ensure this value has at most 12 characters (it has 13).'],
-                                   'street': [u'Ensure this value has at most 255 characters (it has 256).'],
-                                   'title': [u'Ensure this value has at most 20 characters (it has 21).']
-                                }],
-            'reason': [u'Select a valid choice. XXXXXXXXX is not one of the available choices.'],
-            'personal_relationship': [u'Select a valid choice. XXXXXXXXX is not one of the available choices.'],
-            }
-
-#         self.maxDiff = None
-        errors = response.data
-        self.assertItemsEqual(
-            errors.keys(), expected_errors.keys()
-        )
-        self.assertItemsEqual(
-            errors,
-                expected_errors
-        )
-
-    def assertThirdPartyDetailsEqual(self, data, obj):
-        if data is None or obj is None:
-            self.assertEqual(data, obj)
-        else:
-            for prop in ['pass_phrase','reason','personal_relationship',\
-                         'personal_relationship_note']:
-                #self.assertEqual(unicode(getattr(obj, prop)), data[prop])
-                self.assertEqual(obj[prop], data[prop])
-
-    def test_methods_not_allowed(self):
-        """
-        Ensure that we can't DELETE to list url
-        """
-        ### LIST
-        self._test_delete_not_allowed(self.list_url)
-
-    def test_methods_in_error(self):
-        self._test_method_in_error('post', self.list_url)
-        self._test_method_in_error('patch', self.detail_url)
-        self._test_method_in_error('put', self.detail_url)
-
-    # CREATE
-    def test_create_with_data(self):
-        """
-        check variables sent as same as those that return.
-        """
-        data = self._get_default_post_data()
-        check = self._get_default_post_data()
-
-        response = self.client.post(
-            self.list_url, data=data, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        # check initial state is correct
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertThirdPartyDetailsCheckResponseKeys(response)
-
-        self.assertThirdPartyDetailsEqual(response.data, check)
-
-class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
-
-    def assertAdaptationDetailsCheckResponseKeys(self, response):
-
-        self.assertItemsEqual(
-            response.data.keys(),
-            [ 'reference',
-              'bsl_webcam',
-              'minicom',
-              'text_relay',
-              'skype_webcam',
-              'callback_preference',
-              'language',
-              'notes'
-            ]
-        )
-
-    def setUp(self):
-        super(AdaptationDetailsTestCase, self).setUp()
-
-        self.list_url = reverse('call_centre:adaptationdetails-list')
-        self.personal_details_obj = make_recipe('legalaid.adaptation_details')
-        self.check = self.personal_details_obj
-        self.detail_url = reverse(
-            'call_centre:adaptationdetails-detail', args=(),
-            kwargs={'reference': unicode(self.personal_details_obj.reference)}
-        )
+    def get_http_authorization(self):
+        return 'Bearer %s' % self.token
 
     def _get_default_post_data(self):
         return {'bsl_webcam' : True,
@@ -893,10 +625,10 @@ class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         Ensure that we can't DELETE to list url
         """
         ### LIST
-        self._test_delete_not_allowed(self.list_url)
+        if hasattr(self, 'list_url') and self.list_url:
+            self._test_delete_not_allowed(self.list_url)
 
     def test_methods_in_error(self):
-        self._test_method_in_error('post', self.list_url)
         self._test_method_in_error('patch', self.detail_url)
         self._test_method_in_error('put', self.detail_url)
 
@@ -908,12 +640,8 @@ class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         data = self._get_default_post_data()
         check = self._get_default_post_data()
 
-        response = self.client.post(
-            self.list_url, data=data, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        # check initial state is correct
+        response = self._create(data=data)      # check initial state is correct
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertAdaptationDetailsCheckResponseKeys(response)
+        self.assertCheckResponseKeys(response)
         self.assertAdaptationDetailsEqual(response.data, check)

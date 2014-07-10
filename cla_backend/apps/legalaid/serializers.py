@@ -136,9 +136,9 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         fields = ()
 
     def save(self, **kwargs):
-        super(EligibilityCheckSerializerBase, self).save(**kwargs)
-        self.object.update_state()
-
+        obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
+        obj.update_state()
+        return obj
 
 class CaseSerializerBase(ClaModelSerializer):
 

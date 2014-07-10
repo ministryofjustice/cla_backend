@@ -88,6 +88,7 @@ class EligibilityCheckTestCase(TestCase):
             dependants_young=3, dependants_old=2,
             is_you_or_your_partner_over_60=True,
             on_passported_benefits=True,
+            on_nass_benefits=False,
             has_partner=False,
         )
 
@@ -101,6 +102,7 @@ class EligibilityCheckTestCase(TestCase):
                     'dependants_old': 2,
                     'is_you_or_your_partner_over_60':True,
                     'on_passported_benefits':True,
+                    'on_nass_benefits': False,
                     'has_partner': False,
                     'is_partner_opponent': False,
                 },
@@ -182,6 +184,7 @@ class EligibilityCheckTestCase(TestCase):
             dependants_young=3, dependants_old=2,
             is_you_or_your_partner_over_60=True,
             on_passported_benefits=True,
+            on_nass_benefits=False,
             has_partner=True,
         )
 
@@ -193,6 +196,7 @@ class EligibilityCheckTestCase(TestCase):
                 'dependants_old': 2,
                 'is_you_or_your_partner_over_60':True,
                 'on_passported_benefits': True,
+                'on_nass_benefits': False,
                 'has_partner': True,
                 'is_partner_opponent': False,
             },

@@ -1,8 +1,6 @@
 #
 # CLA_BACKEND Dockerfile
 #
-# https://github.com/dockerfile/nginx
-#
 # Pull base image.
 FROM phusion/baseimage:0.9.11
 

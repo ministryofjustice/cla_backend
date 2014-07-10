@@ -95,6 +95,7 @@ class Migration(SchemaMigration):
         u'legalaid.case': {
             'Meta': {'object_name': 'Case'},
             'adaptation_details': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.AdaptationDetails']", 'null': 'True', 'blank': 'True'}),
+            'billable_time': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'}),
             'eligibility_check': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['legalaid.EligibilityCheck']", 'unique': 'True', 'null': 'True', 'blank': 'True'}),

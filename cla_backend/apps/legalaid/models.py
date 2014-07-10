@@ -351,7 +351,7 @@ class Case(TimeStampedModel):
                                            null=True)
     adaptation_details = models.ForeignKey('AdaptationDetails', blank=True,
                                            null=True)
-
+    billable_time = models.PositiveIntegerField(default=0)
 
     def _set_reference_if_necessary(self):
         if not self.reference:

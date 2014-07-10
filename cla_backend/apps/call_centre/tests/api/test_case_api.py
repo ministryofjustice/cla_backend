@@ -38,7 +38,7 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
              'created', 'modified', 'state', 'created_by',
              'provider', 'log_set', 'notes', 'provider_notes', 'in_scope',
              'full_name', 'laa_reference', 'eligibility_state', 'thirdparty_details',
-             'adaptation_details']
+             'adaptation_details', 'billable_time']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -58,6 +58,12 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         else:
             self.assertEqual(case.eligibility_check, None)
         self.assertPersonalDetailsEqual(data['personal_details'], case.personal_details)
+
+    def assertLogInDB(self):
+        self.assertEqual(Log.objects.count(), 1)
+
+    def assertNoLogInDB(self):
+        self.assertEqual(Log.objects.count(), 0)
 
 
 class CaseGeneralTestCase(BaseCaseTestCase):
@@ -85,6 +91,8 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCaseResponseKeys(response)
         self.assertEqual(response.data['eligibility_check'], None)
+
+        self.assertLogInDB()
 
     def test_create_with_data(self):
         check = make_recipe('legalaid.eligibility_check')
@@ -119,6 +127,8 @@ class CreateCaseTestCase(BaseCaseTestCase):
         )
         self.assertEqual(response.data['in_scope'], None)
 
+        self.assertLogInDB()
+
     def test_create_with_data_in_scope(self):
         pd = make_recipe('legalaid.personal_details', **{
             'title': 'MR',
@@ -151,6 +161,8 @@ class CreateCaseTestCase(BaseCaseTestCase):
                 in_scope=True
             )
         )
+
+        self.assertLogInDB()
 
     def test_case_serializer_with_eligibility_check_reference(self):
         eligibility_check = make_recipe('legalaid.eligibility_check')
@@ -218,6 +230,8 @@ class CreateCaseTestCase(BaseCaseTestCase):
             response.data,
             {'eligibility_check': [u'Case with this Eligibility check already exists.']}
         )
+
+        self.assertNoLogInDB()
 
 
 class AssignCaseTestCase(BaseCaseTestCase):

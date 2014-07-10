@@ -114,7 +114,8 @@ class LogSerializer(LogSerializerBase):
                   'created',
                   'notes',
                   'type',
-                  'level'
+                  'level',
+                  'timer'
         )
 
 
@@ -135,7 +136,7 @@ class CaseSerializer(CaseSerializerBase):
     provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
     full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
     eligibility_state = serializers.CharField(source='eligibility_check.state', read_only=True)
-
+    billable_time = serializers.IntegerField(read_only=True)
 
 
     class Meta(CaseSerializerBase.Meta):
@@ -143,7 +144,7 @@ class CaseSerializer(CaseSerializerBase):
             'eligibility_check', 'personal_details', 'reference', 'created',
             'modified', 'created_by', 'state', 'provider', 'log_set',
             'notes', 'provider_notes', 'in_scope', 'full_name', 'thirdparty_details',
-            'adaptation_details', 'laa_reference', 'eligibility_state'
+            'adaptation_details', 'laa_reference', 'eligibility_state', 'billable_time'
         )
 
 

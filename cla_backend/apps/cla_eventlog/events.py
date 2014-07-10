@@ -12,7 +12,7 @@ class BaseEvent(object):
 
         return self.codes.keys()[0]
 
-    def process(self, case, code=None, notes="", created_by=None, **kwargs):
+    def process(self, case, code=None, notes="", created_by=None, patch=None, **kwargs):
         if not code:
             code = self.get_log_code(**kwargs)
 
@@ -24,6 +24,7 @@ class BaseEvent(object):
             type=code_data['type'],
             level=code_data['level'],
             notes=notes,
+            patch=patch,
             created_by=created_by
         )
 

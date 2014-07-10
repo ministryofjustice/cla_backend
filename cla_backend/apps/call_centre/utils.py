@@ -15,3 +15,25 @@ def getattrd(obj, name, default=NoDefaultProvided):
             return default
         raise
 
+
+def _transform_patch_line(item):
+    lookup = {
+        'replace': 'Changed',
+        'add': 'Added',
+        'remove': 'Removed'
+    }
+
+    return {
+        'action': lookup[item['op']],
+        'thing': item['path'].lstrip('/').replace('/','.'),
+        'value': item['value']
+    }
+
+def format_patch(patch):
+    lines = []
+    for change in patch:
+        change = _transform_patch_line(change)
+        lines.append("{action} {thing} to {value}".format(**change))
+    return '\n'.join(lines)
+
+

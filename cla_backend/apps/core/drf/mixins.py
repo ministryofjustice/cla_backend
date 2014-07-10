@@ -15,7 +15,7 @@ class NestedGenericModelMixin(object):
         return self.parent(requet=self.request).get_queryset()
 
     def get_parent_object(self):
-        parent_key = self.kwargs.pop(self.get_parent_lookup_kwarg(), None)
+        parent_key = self.kwargs.get(self.get_parent_lookup_kwarg(), None)
         if not parent_key:
             raise NoParentReferenceException('Trying to do a nested lookup on a non-nested viewset')
         parent_viewset_instance = self.parent(

@@ -107,11 +107,12 @@ class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
 
 
 class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
-    bsl_webcam = serializers.BooleanField(label="BSL - Webcam")
-    minicom = serializers.BooleanField(label="Minicom")
-    text_relay = serializers.BooleanField(label="Text relay")
-    skype_webcam = serializers.BooleanField(label="Skype")
-    callback_preference = serializers.BooleanField(label="Callback preference")
+    bsl_webcam = serializers.BooleanField(label="BSL - Webcam", required=False)
+    minicom = serializers.BooleanField(label="Minicom", required=False)
+    text_relay = serializers.BooleanField(label="Text relay", required=False)
+    skype_webcam = serializers.BooleanField(label="Skype", required=False)
+    callback_preference = serializers.BooleanField(label="Callback preference",
+            required=False)
 
     class Meta:
         model = AdaptationDetails

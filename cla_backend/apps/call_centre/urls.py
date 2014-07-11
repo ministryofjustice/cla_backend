@@ -14,6 +14,7 @@ router.register(r'user', views.UserViewSet, base_name='user')
 router.register(r'event', views.EventViewSet, base_name='event')
 router.register(r'knowledgebase/article', views.ArticleViewSet)
 router.register(r'knowledgebase/category', views.ArticleCategoryViewSet)
+router.register(r'adaptations', views.AdaptationDetailsViewSet)
 
 timer_router = core_routers.SingletonRouter()
 timer_router.register(r'timer', views.TimerViewSet, base_name='timer')

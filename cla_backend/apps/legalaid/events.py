@@ -1,5 +1,5 @@
 from cla_eventlog import event_registry
-from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
+from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES
 from cla_eventlog.events import BaseEvent
 
 from cla_eventlog.models import Log
@@ -95,3 +95,52 @@ class CaseEvent(BaseEvent):
 
         return lookup[status]
 event_registry.register(CaseEvent)
+
+
+class SuspendCaseEvent(BaseEvent):
+    key = 'suspend_case'
+    codes = {
+        'INSUF': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Not enough info to continue',
+            'stops_timer': True
+        },
+        'ABND': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR, LOG_ROLES.SPECIALIST],
+            'description': 'Client abbandoned call',
+            'stops_timer': True
+        },
+        'TERM': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR, LOG_ROLES.SPECIALIST],
+            'description': 'Hung up call',
+            'stops_timer': True
+        },
+        'RTCS': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Referred to customer support',
+            'stops_timer': True
+        },
+        'IRCB': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Booked appointment with senior member of staff',
+            'stops_timer': True
+        },
+        'NCOE': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Case opened in error',
+            'stops_timer': False
+        }
+    }
+event_registry.register(SuspendCaseEvent)

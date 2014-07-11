@@ -32,7 +32,7 @@ from .serializers import EligibilityCheckSerializer, \
 from .forms import ProviderAllocationForm,  DeclineAllSpecialistsCaseForm,\
     AssociatePersonalDetailsCaseForm, AssociateThirdPartyDetailsCaseForm,\
     AssociateAdaptationDetailsCaseForm, AssociateEligibilityCheckCaseForm, \
-    DeferAssignmentCaseForm
+    DeferAssignmentCaseForm, SuspendCaseForm
 
 from .models import Operator
 
@@ -230,6 +230,10 @@ class CaseViewSet(
     @action()
     def decline_all_specialists(self, request, reference=None, **kwargs):
         return self._state_form_action(request, DeclineAllSpecialistsCaseForm)
+
+    @action()
+    def suspend(self, request, reference=None, **kwargs):
+        return self._state_form_action(request, SuspendCaseForm)
 
     @action()
     def associate_personal_details(self, request, *args, **kwargs):

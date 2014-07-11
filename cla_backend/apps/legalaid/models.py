@@ -1,15 +1,12 @@
 import logging
 import datetime
-import uuid
 from cla_common.db.mixins import ModelDiffMixin
-from cla_eventlog import event_registry
 from uuidfield import UUIDField
 from model_utils.models import TimeStampedModel
 
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.conf import settings
-from django.db.models import F
 from django.utils.timezone import utc
 
 from eligibility_calculator.models import CaseData
@@ -378,22 +375,6 @@ class Case(TimeStampedModel):
 
     def assign_to_provider(self, provider):
         self.provider = provider
-        self.save()
-
-    def associate_personal_details(self, ref):
-        self.personal_details = PersonalDetails.objects.get(reference=ref)
-        self.save()
-
-    def associate_thirdparty_details(self, ref):
-        self.thirdparty_details = ThirdPartyDetails.objects.get(reference=ref)
-        self.save()
-
-    def associate_adaptation_details(self, ref):
-        self.adaptation_details = AdaptationDetails.objects.get(reference=ref)
-        self.save()
-
-    def associate_eligibility_check(self, ref):
-        self.eligibility_check = EligibilityCheck.objects.get(reference=ref)
         self.save()
 
     def lock(self, user, save=True):

@@ -30,8 +30,6 @@ from .serializers import EligibilityCheckSerializer, \
     ThirdPartyDetailsSerializer, AdaptationDetailsSerializer
 
 from .forms import ProviderAllocationForm,  DeclineAllSpecialistsCaseForm,\
-    AssociatePersonalDetailsCaseForm, AssociateThirdPartyDetailsCaseForm,\
-    AssociateAdaptationDetailsCaseForm, AssociateEligibilityCheckCaseForm, \
     DeferAssignmentCaseForm, SuspendCaseForm
 
 from .models import Operator
@@ -234,66 +232,6 @@ class CaseViewSet(
     @action()
     def suspend(self, request, reference=None, **kwargs):
         return self._state_form_action(request, SuspendCaseForm)
-
-    @action()
-    def associate_personal_details(self, request, *args, **kwargs):
-        """
-        Associates a case with a a personal details object. Will throw an error
-        if the case already has a personal details object associated.
-        """
-
-        obj = self.get_object()
-
-        form = AssociatePersonalDetailsCaseForm(case=obj, data=request.DATA)
-        if form.is_valid():
-            form.save(request.user)
-            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
-
-    @action()
-    def associate_thirdparty_details(self, request, *args, **kwargs):
-
-        obj = self.get_object()
-
-        form = AssociateThirdPartyDetailsCaseForm(case=obj, data=request.DATA)
-        if form.is_valid():
-            form.save(request.user)
-            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
-
-    @action()
-    def associate_eligibility_check(self, request, *args, **kwargs):
-        """
-        Associates a case with a eligibility_check object. Will throw an error
-        if the case already has a eligibility_check object associated.
-        """
-
-        obj = self.get_object()
-
-        form = AssociateEligibilityCheckCaseForm(case=obj, data=request.DATA)
-        if form.is_valid():
-            form.save(request.user)
-            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
-
-    @action()
-    def associate_adaptation_details(self, request, *args, **kwargs):
-
-        obj = self.get_object()
-
-        form = AssociateAdaptationDetailsCaseForm(case=obj, data=request.DATA)
-        if form.is_valid():
-            form.save(request.user)
-            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
 
     def retrieve(self, request, *args, **kwargs):
         resp = super(CaseViewSet, self).retrieve(request, *args, **kwargs)

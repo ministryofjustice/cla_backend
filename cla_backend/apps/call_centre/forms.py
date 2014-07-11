@@ -1,5 +1,5 @@
 from django import forms
-from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.core.exceptions import NON_FIELD_ERRORS
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 
@@ -84,73 +84,3 @@ class DeclineAllSpecialistsCaseForm(EventSpecificLogForm):
 
 class SuspendCaseForm(EventSpecificLogForm):
     LOG_EVENT_KEY = 'suspend_case'
-
-
-class AssociatePersonalDetailsCaseForm(forms.Form):
-    reference = forms.CharField(required=True, max_length=32)
-
-    def __init__(self, *args, **kwargs):
-        self.case = kwargs.pop('case')
-        super(AssociatePersonalDetailsCaseForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        if self.case.personal_details:
-            raise ValidationError(u'There is already a person associated to this case.')
-        return self.cleaned_data
-
-    def save(self, user):
-        ref = self.cleaned_data['reference']
-        self.case.associate_personal_details(ref)
-
-
-class AssociateThirdPartyDetailsCaseForm(forms.Form):
-
-    reference = forms.CharField(required=True, max_length=32)
-
-    def __init__(self, *args, **kwargs):
-        self.case = kwargs.pop('case')
-        super(AssociateThirdPartyDetailsCaseForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        if self.case.thirdparty_details:
-            raise ValidationError(u'There is already a third party associated to this case.')
-        return self.cleaned_data
-
-    def save(self, user):
-        ref = self.cleaned_data['reference']
-        self.case.associate_thirdparty_details(ref)
-
-
-class AssociateAdaptationDetailsCaseForm(forms.Form):
-
-    reference = forms.CharField(required=True, max_length=32)
-
-    def __init__(self, *args, **kwargs):
-        self.case = kwargs.pop('case')
-        super(AssociateAdaptationDetailsCaseForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        if self.case.adaptation_details:
-            raise ValidationError(u'There is already an adaptation associated to this case.')
-        return self.cleaned_data
-
-    def save(self, user):
-        ref = self.cleaned_data['reference']
-        self.case.associate_adaptation_details(ref)
-
-
-class AssociateEligibilityCheckCaseForm(forms.Form):
-    reference = forms.CharField(required=True, max_length=32)
-
-    def __init__(self, *args, **kwargs):
-        self.case = kwargs.pop('case')
-        super(AssociateEligibilityCheckCaseForm, self).__init__(*args, **kwargs)
-
-    def clean(self):
-        if self.case.eligibility_check:
-            raise ValidationError(u'There is already an eligibility check associated to this case.')
-        return self.cleaned_data
-
-    def save(self, user):
-        ref = self.cleaned_data['reference']
-        self.case.associate_eligibility_check(ref)

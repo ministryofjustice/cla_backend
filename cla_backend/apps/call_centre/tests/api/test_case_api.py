@@ -14,7 +14,8 @@ from legalaid.models import Case
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
 from cla_common.constants import CASE_STATES
-from call_centre.forms import DeclineAllSpecialistsCaseForm
+from call_centre.forms import DeclineAllSpecialistsCaseForm, \
+    SuspendCaseForm
 from call_centre.serializers import CaseSerializer
 
 
@@ -387,6 +388,19 @@ class DeclineAllSpecialistsTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCase
         reference = reference or self.check.reference
         return reverse(
             'call_centre:case-decline-all-specialists', args=(),
+            kwargs={'reference': reference}
+        )
+
+
+class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_event_code(self):
+        form = SuspendCaseForm(case=mock.MagicMock())
+        return form.fields['event_code'].choices[0][0]
+
+    def get_url(self, reference=None):
+        reference = reference or self.check.reference
+        return reverse(
+            'call_centre:case-suspend', args=(),
             kwargs={'reference': reference}
         )
 

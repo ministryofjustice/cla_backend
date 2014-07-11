@@ -144,3 +144,12 @@ class CaseEventAvoidDuplicatesTestCase(EventTestCaseMixin, TestCase):
         })
 
         self.assertEqual(Log.objects.count(), 2)
+
+
+class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
+    EVENT_KEY = 'suspend_case'
+
+    def test_decline_help(self):
+        self._test_process_with_expicit_code([
+            'INSUF', 'ABND', 'TERM', 'RTCS', 'IRCB', 'NCOE'
+        ])

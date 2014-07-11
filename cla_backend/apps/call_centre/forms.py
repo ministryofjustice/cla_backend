@@ -82,6 +82,10 @@ class DeclineAllSpecialistsCaseForm(EventSpecificLogForm):
         super(DeclineAllSpecialistsCaseForm, self).save(user)  # saves the outcome
 
 
+class SuspendCaseForm(EventSpecificLogForm):
+    LOG_EVENT_KEY = 'suspend_case'
+
+
 class AssociatePersonalDetailsCaseForm(forms.Form):
     reference = forms.CharField(required=True, max_length=32)
 
@@ -97,6 +101,7 @@ class AssociatePersonalDetailsCaseForm(forms.Form):
     def save(self, user):
         ref = self.cleaned_data['reference']
         self.case.associate_personal_details(ref)
+
 
 class AssociateThirdPartyDetailsCaseForm(forms.Form):
 
@@ -115,6 +120,7 @@ class AssociateThirdPartyDetailsCaseForm(forms.Form):
         ref = self.cleaned_data['reference']
         self.case.associate_thirdparty_details(ref)
 
+
 class AssociateAdaptationDetailsCaseForm(forms.Form):
 
     reference = forms.CharField(required=True, max_length=32)
@@ -131,6 +137,7 @@ class AssociateAdaptationDetailsCaseForm(forms.Form):
     def save(self, user):
         ref = self.cleaned_data['reference']
         self.case.associate_adaptation_details(ref)
+
 
 class AssociateEligibilityCheckCaseForm(forms.Form):
     reference = forms.CharField(required=True, max_length=32)

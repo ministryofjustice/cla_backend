@@ -384,6 +384,17 @@ class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,
     lookup_field = 'reference'
     PARENT_FIELD = 'adaptation_details'
 
+
+class AdaptationDetailsMetadataViewSet(CallCentrePermissionsViewSetMixin,
+        mixins.CreateModelMixin,
+        viewsets.GenericViewSet):
+    model = AdaptationDetails
+    serializer_class = AdaptationDetailsSerializer
+
+    def create(self, request, *args, **kwargs):
+        self.http_method_not_allowed(request)
+
+
 class ArticleViewSet(CallCentrePermissionsViewSetMixin, BaseArticleViewSet):
     pass
 

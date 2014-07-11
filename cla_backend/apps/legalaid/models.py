@@ -21,7 +21,7 @@ from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, CASE_STATES, \
     THIRDPARTY_REASON, \
-    THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES
+    THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS
 
 from legalaid.exceptions import InvalidMutationException
 from legalaid.fields import MoneyField
@@ -321,6 +321,18 @@ class Property(TimeStampedModel):
         verbose_name_plural = "properties"
 
 
+class MatterType(TimeStampedModel):
+    category = models.ForeignKey(Category)
+    code = models.CharField(max_length=4)
+    description = models.CharField(max_length=255)
+    level = models.PositiveSmallIntegerField(
+        choices=MATTER_TYPE_LEVELS.CHOICES,
+        validators=[MaxValueValidator(2)])
+
+    def __unicode__(self):
+        return u'MatterType{} ({}): {} - {}'.format(self.get_level_display(), self.category.code, self.code, self.description)
+
+
 class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True,
@@ -349,6 +361,18 @@ class Case(TimeStampedModel):
     adaptation_details = models.ForeignKey('AdaptationDetails', blank=True,
                                            null=True)
     billable_time = models.PositiveIntegerField(default=0)
+
+    matter_type1 = models.ForeignKey(MatterType,
+                                     limit_choices_to=
+                                     {'level': MATTER_TYPE_LEVELS.ONE},
+                                     blank=True, null=True,
+                                     related_name='+')
+
+    matter_type2 = models.ForeignKey(MatterType,
+                                     limit_choices_to=
+                                     {'level': MATTER_TYPE_LEVELS.TWO},
+                                     blank=True, null=True,
+                                     related_name='+')
 
     def _set_reference_if_necessary(self):
         if not self.reference:

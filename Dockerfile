@@ -1,5 +1,5 @@
 #
-# CLA_BACKEND Dockerfile all_envs
+# CLA_BACKEND Dockerfile all environments
 #
 # Pull base image.
 FROM phusion/baseimage:0.9.11

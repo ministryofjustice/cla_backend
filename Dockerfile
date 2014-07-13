@@ -35,7 +35,7 @@ RUN gem2.1 install sass --no-rdoc --no-ri
 
 RUN pip install GitPython uwsgi
 
-RUN mkdir -p /var/log/wsgi && chown -R www-data:www-data /var/log/wsgi
+RUN mkdir -p /var/log/wsgi && touch /var/log/wsgi/app.log /var/log/wsgi/debug.log && chown -R www-data:www-data /var/log/wsgi && chmod -R g+s /var/log/wsgi
 
 RUN  mkdir -p /var/log/nginx/cla_backend
 ADD ./docker/cla_backend.ini /etc/wsgi/conf.d/cla_backend.ini

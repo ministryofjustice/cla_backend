@@ -11,15 +11,15 @@ from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter, \
     DjangoFilterBackend
 
-from cla_common.constants import CASE_STATES
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from cla_eventlog.views import BaseEventViewSet
 from timer.views import BaseTimerViewSet
 from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, \
     AdaptationDetails
-from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
+from legalaid.views import BaseUserViewSet, FormActionMixin, \
     BaseCategoryViewSet, BaseEligibilityCheckViewSet
+from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 
 from .permissions import CallCentreClientIDPermission, \
@@ -106,7 +106,7 @@ class CaseViewSet(
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
-    StateFromActionMixin,
+    FormActionMixin,
     viewsets.GenericViewSet
 ):
     model = Case
@@ -136,7 +136,7 @@ class CaseViewSet(
         qs = super(CaseViewSet, self).get_queryset()
         dashboard_param = self.request.QUERY_PARAMS.get('dashboard', None)
         if dashboard_param:
-            qs = qs.filter(state=CASE_STATES.OPEN, provider=None)
+            qs = qs.filter(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
         return qs
 
     def pre_save(self, obj, *args, **kwargs):
@@ -227,11 +227,11 @@ class CaseViewSet(
 
     @action()
     def decline_all_specialists(self, request, reference=None, **kwargs):
-        return self._state_form_action(request, DeclineAllSpecialistsCaseForm)
+        return self._form_action(request, DeclineAllSpecialistsCaseForm)
 
     @action()
     def suspend(self, request, reference=None, **kwargs):
-        return self._state_form_action(request, SuspendCaseForm)
+        return self._form_action(request, SuspendCaseForm)
 
     def retrieve(self, request, *args, **kwargs):
         resp = super(CaseViewSet, self).retrieve(request, *args, **kwargs)

@@ -19,12 +19,12 @@ from call_centre.utils import getattrd
 
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
-from cla_common.constants import ELIGIBILITY_STATES, CASE_STATES, \
-    THIRDPARTY_REASON, \
+from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS
 
-from legalaid.exceptions import InvalidMutationException
 from legalaid.fields import MoneyField
+
+from cla_common.constants import REQUIRES_ACTION_BY
 
 
 logger = logging.getLogger(__name__)
@@ -137,7 +137,6 @@ class Person(TimeStampedModel):
 class ValidateModelMixin(models.Model):
     class Meta:
         abstract = True
-
 
     def get_dependencies(self):
         """
@@ -342,9 +341,13 @@ class Case(TimeStampedModel):
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True,
                                    null=True)
-    state = models.CharField(
-        max_length=50, choices=CASE_STATES.CHOICES, default=CASE_STATES.OPEN
+
+    requires_action_by = models.CharField(
+        max_length=50, choices=REQUIRES_ACTION_BY.CHOICES,
+        default=REQUIRES_ACTION_BY.OPERATOR,
+        blank=True, null=True
     )
+
     locked_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, blank=True, null=True,
         related_name='case_locked'
@@ -417,48 +420,6 @@ class Case(TimeStampedModel):
 
         return False
 
-    def is_open(self):
-        return self.state == CASE_STATES.OPEN
-
-    def is_closed(self):
-        return self.state == CASE_STATES.CLOSED
-
-    def is_accepted(self):
-        return self.state == CASE_STATES.ACCEPTED
-
-    def _set_state(self, state):
-        self.state = state
+    def set_requires_action_by(self, requires_action_by):
+        self.requires_action_by = requires_action_by
         self.save()
-        return True
-
-    def close(self):
-        if not self.is_open() and not self.is_accepted():
-            raise InvalidMutationException(
-                u"Case should be 'OPEN' or 'ACCEPTED' to be closed but it's currently '%s'" % (
-                    self.get_state_display()
-                )
-            )
-        return self._set_state(CASE_STATES.CLOSED)
-
-    def reject(self):
-        if not self.is_open():
-            raise InvalidMutationException(
-                u"Case should be 'OPEN' to be rejected but it's currently '%s'" % (
-                    self.get_state_display()
-                )
-            )
-
-        self._set_state(CASE_STATES.REJECTED)
-
-    def accept(self):
-        if not self.is_open():
-            raise InvalidMutationException(
-                u"Case should be 'OPEN' to be accepted but it's currently '%s'" % (
-                    self.get_state_display()
-                )
-            )
-
-        self._set_state(CASE_STATES.ACCEPTED)
-
-
-

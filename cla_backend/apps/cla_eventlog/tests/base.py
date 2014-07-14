@@ -2,6 +2,8 @@ from core.tests.mommy_utils import make_user, make_recipe
 
 from timer.models import Timer
 
+from legalaid.models import Case
+
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
 from cla_eventlog.models import Log
@@ -108,3 +110,39 @@ class EventTestCaseMixin(object):
             else:
                 self.assertFalse(timer.is_stopped())
                 self.assertEqual(res.timer, timer)
+
+    def test_set_requires_action_by(self):
+        """
+        Tests that:
+            * if the code has the key `set_requires_action_by`,
+                after process, case.requires_action_by will be set to
+                that value
+            * if the code doesn't have the key `set_requires_action_by`,
+                after process, case.requires_action_by won't change
+        """
+        if not self.EVENT_KEY:
+            return
+
+        event = event_registry.get_event(self.EVENT_KEY)()
+
+        for code, code_data in event.codes.items():
+            self.dummy_case.requires_action_by = None
+            self.dummy_case.save()
+            user = make_user()
+
+            event.process(**{
+                'case': self.dummy_case,
+                'code': code,
+                'notes': 'this is a note',
+                'created_by': user
+            })
+
+            case = Case.objects.get(pk=self.dummy_case.pk)
+
+            if 'set_requires_action_by' in code_data:
+                self.assertEqual(
+                    case.requires_action_by,
+                    code_data['set_requires_action_by']
+                )
+            else:
+                self.assertEqual(case.requires_action_by, None)

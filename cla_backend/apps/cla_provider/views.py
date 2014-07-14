@@ -4,13 +4,12 @@ from rest_framework import viewsets, mixins
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.decorators import action
 
-from core.viewsets import DefaultStateFilterViewSetMixin
-from cla_common.constants import CASE_STATES
 from cla_eventlog.views import BaseEventViewSet
 
 from legalaid.models import Category, Case
-from legalaid.views import BaseUserViewSet, StateFromActionMixin, \
+from legalaid.views import BaseUserViewSet, FormActionMixin, \
     BaseEligibilityCheckViewSet
+from cla_common.constants import REQUIRES_ACTION_BY
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
@@ -40,11 +39,10 @@ class EligibilityCheckViewSet(
 
 class CaseViewSet(
     CLAProviderPermissionViewSetMixin,
-    DefaultStateFilterViewSetMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
-    StateFromActionMixin,
+    FormActionMixin,
     viewsets.GenericViewSet
 ):
     queryset = Case.objects.exclude(provider=None)
@@ -61,15 +59,17 @@ class CaseViewSet(
                      'personal_details__postcode',
                      'reference', 'laa_reference')
 
-    ordering_fields = ('state', 'modified', 'created')
-    ordering = ('-state', '-locked_by', '-modified', '-created')
-
-    default_state_filter = [CASE_STATES.OPEN, CASE_STATES.ACCEPTED]
-    all_states = dict(CASE_STATES.CHOICES).keys()
+    ordering_fields = ('-requires_action_by', 'modified', 'created')
+    ordering = ('-locked_by', '-modified', '-created')
 
     def get_queryset(self):
         this_provider = get_object_or_404(Staff, user=self.request.user).provider
-        qs = super(CaseViewSet, self).get_queryset().filter(provider=this_provider)
+        qs = super(CaseViewSet, self).get_queryset().filter(
+            provider=this_provider,
+            requires_action_by__in=[
+                REQUIRES_ACTION_BY.PROVIDER, REQUIRES_ACTION_BY.PROVIDER_REVIEW
+            ]
+        )
         return qs
 
     def get_object(self, *args, **kwargs):
@@ -86,21 +86,21 @@ class CaseViewSet(
         """
         Rejects a case
         """
-        return self._state_form_action(request, Form=RejectCaseForm)
+        return self._form_action(request, Form=RejectCaseForm)
 
     @action()
     def accept(self, request, reference=None, **kwargs):
         """
         Accepts a case
         """
-        return self._state_form_action(request, Form=AcceptCaseForm)
+        return self._form_action(request, Form=AcceptCaseForm)
 
     @action()
     def close(self, request, reference=None, **kwargs):
         """
         Closes a case
         """
-        return self._state_form_action(request, Form=CloseCaseForm)
+        return self._form_action(request, Form=CloseCaseForm)
 
 
 class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):

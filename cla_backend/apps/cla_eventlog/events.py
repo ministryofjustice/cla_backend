@@ -40,6 +40,9 @@ class BaseEvent(object):
         if timer and code_data.get('stops_timer', False):
             timer.stop()
 
+        if 'set_requires_action_by' in code_data:
+            case.set_requires_action_by(code_data['set_requires_action_by'])
+
         return log
 
     @classmethod

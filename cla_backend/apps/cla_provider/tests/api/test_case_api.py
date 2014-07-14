@@ -7,8 +7,6 @@ from django.utils.timezone import utc
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from cla_common.constants import CASE_STATES
-
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
 
@@ -16,6 +14,7 @@ from cla_eventlog.tests.test_views import ImplicitEventCodeViewTestCaseMixin, \
     ExplicitEventCodeViewTestCaseMixin
 
 from legalaid.models import Case
+from cla_common.constants import REQUIRES_ACTION_BY
 
 from cla_provider.forms import RejectCaseForm
 
@@ -25,7 +24,10 @@ class BaseCaseTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
         super(BaseCaseTestCase, self).setUp()
 
         self.list_url = reverse('cla_provider:case-list')
-        obj = make_recipe('legalaid.case', provider=self.provider)
+        obj = make_recipe(
+            'legalaid.case', provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+        )
         self.check = obj
         self.detail_url = reverse(
             'cla_provider:case-detail', args=(),
@@ -36,9 +38,9 @@ class BaseCaseTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertItemsEqual(
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
-             'created', 'modified', 'state', 'created_by', 'log_set',
+             'created', 'modified', 'created_by', 'log_set',
              'provider', 'locked_by', 'locked_at', 'notes', 'provider_notes',
-             'laa_reference']
+             'laa_reference', 'requires_action_by']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -54,7 +56,7 @@ class BaseCaseTestCase(CLAProviderAuthBaseApiTestMixin, APITestCase):
         self.assertPersonalDetailsEqual(data['personal_details'], case.personal_details)
 
 
-class CaseTests(BaseCaseTestCase):
+class CaseViewTestCase(BaseCaseTestCase):
     def test_methods_not_allowed(self):
         """
         Ensure that we can't POST, PUT or DELETE
@@ -67,7 +69,6 @@ class CaseTests(BaseCaseTestCase):
 
         ### CREATE
         self._test_post_not_allowed(self.list_url)
-
 
     def test_methods_not_authorized_operator_key(self):
         """
@@ -83,15 +84,40 @@ class CaseTests(BaseCaseTestCase):
         ### CREATE
         self._test_post_not_authorized(self.list_url, self.operator_token)
 
-
     def test_list_allowed(self):
         """
         GET list-url should work
         """
+        Case.objects.all().delete()
 
-        obj = make_recipe('legalaid.case')
-        obj.provider = self.provider
-        obj.save()
+        provider2 = make_recipe('cla_provider.Provider')
+
+        # this should appear in the list
+        obj1 = make_recipe(
+            'legalaid.case', provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+        )
+        # this shouldn't because requires_action_by is not PROVIDER
+        make_recipe(
+            'legalaid.case', provider=self.provider,
+            requires_action_by=None
+        )
+        # this shouldn't appear because belonging to another provider
+        make_recipe(
+            'legalaid.case', provider=provider2,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+        )
+        # this shouldn't appear because requires_action_by == OPERATOR
+        make_recipe(
+            'legalaid.case', provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR
+        )
+
+        # this should appear in the list
+        obj2 = make_recipe(
+            'legalaid.case', provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER_REVIEW
+        )
 
         response = self.client.get(
             self.list_url, data={}, format='json',
@@ -99,8 +125,8 @@ class CaseTests(BaseCaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data))
-        self.assertCaseEqual(response.data[0], obj)
-        self.assertCaseEqual(response.data[1], self.check)
+        self.assertCaseEqual(response.data[0], obj2)  # cases in review first
+        self.assertCaseEqual(response.data[1], obj1)
 
     def test_get_allowed(self):
         response = self.client.get(
@@ -110,7 +136,6 @@ class CaseTests(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertCaseCheckResponseKeys(response)
         self.assertCaseEqual(response.data, self.check)
-
 
     def test_locked_by_when_getting_case(self):
 
@@ -128,55 +153,6 @@ class CaseTests(BaseCaseTestCase):
         time_diff = datetime.utcnow().replace(tzinfo=utc)-response.data['locked_at']
         self.assertTrue(time_diff.seconds<3)
 
-    # CASE LIST ORDERING
-    def test_case_list_ordering(self):
-        """
-            Should return:
-                "1. open not locked" (state == open, locked_by == None)
-                "2. open locked a" (state == open, locked_by != None, modified at == recent)
-                "3. open locked b" (state == open, locked_by != None, modified at == far in the past)
-                "4. accepted a" (state == accepted, modified at == recent)
-                "5. accepted b" (state == accepted, modified at == far in the past)
-        """
-        Case.objects.all().delete()  # deleting all existing cases just in case
-
-        def create_case(state, reference, locked_by, modified=None):
-            case = make_recipe(
-                'legalaid.case', provider=self.provider,
-                state=state, reference=reference, locked_by=locked_by
-            )
-
-            if modified:
-                # need to update it manually otherwise django does it for us
-                Case.objects.filter(pk=case.pk).update(modified=modified)
-            return case
-
-        from django.utils import timezone
-        from datetime import timedelta
-
-        now = timezone.now()
-        self.cases = [
-            create_case(CASE_STATES.ACCEPTED, reference='5. accepted b', locked_by=self.user, modified=now-timedelta(days=2)),
-            create_case(CASE_STATES.OPEN, reference='3. open locked b', locked_by=self.user, modified=now-timedelta(days=3)),
-            create_case(CASE_STATES.OPEN, reference='1. open not locked', locked_by=None),
-            create_case(CASE_STATES.ACCEPTED, reference='4. accepted a', locked_by=self.user, modified=now-timedelta(minutes=2)),
-            create_case(CASE_STATES.OPEN, reference='2. open locked a', locked_by=self.user, modified=now-timedelta(minutes=1)),
-        ]
-
-        response = self.client.get(
-            self.list_url, data={}, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(5, len(response.data))
-        self.assertEqual(
-            [case['reference'] for case in response.data],
-            [
-                '1. open not locked', '2. open locked a', '3. open locked b',
-                '4. accepted a', '5. accepted b'
-            ]
-        )
-
     # SEARCH
 
     def test_search_find_one_result_by_name(self):
@@ -188,6 +164,7 @@ class CaseTests(BaseCaseTestCase):
                           reference='ref1',
                           personal_details__full_name='xyz',
                           personal_details__postcode='123',
+                          requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
                           provider=self.provider,
                           )
 

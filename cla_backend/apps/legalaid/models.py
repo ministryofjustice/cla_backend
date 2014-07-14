@@ -331,6 +331,8 @@ class MatterType(TimeStampedModel):
     def __unicode__(self):
         return u'MatterType{} ({}): {} - {}'.format(self.get_level_display(), self.category.code, self.code, self.description)
 
+    class Meta:
+        unique_together = (("code", "level"),)
 
 class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)

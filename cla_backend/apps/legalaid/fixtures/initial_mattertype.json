@@ -414,8 +414,8 @@
     "model": "legalaid.mattertype",
     "fields": {
       "category": 4,
-      "code": "FAMB",
-      "description": "Dissolution of Civil Partnership",
+      "code": "FAMC",
+      "description": "Domestic Abuse",
       "level": 1
     }
   },
@@ -816,16 +816,6 @@
       "category": 2,
       "code": "HREP",
       "description": "Disrepair, including public health, environmental and DPA (Defective Premises Act) issues",
-      "level": 1
-    }
-  },
-  {
-    "pk": 83,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HHOM",
-      "description": "Homelessness / threat of homelessness",
       "level": 1
     }
   },
@@ -1266,6 +1256,56 @@
       "category": 6,
       "code": "WBHC",
       "description": "Onward Council Tax Reduction Scheme Appeals to the High Court",
+      "level": 2
+    }
+  },
+  {
+    "pk": 128,
+    "model": "legalaid.mattertype",
+    "fields": {
+      "category": 3,
+      "code": "DVAL",
+      "description": "Client wants to challenge validity of debts",
+      "level": 2
+    }
+  },
+  {
+    "pk": 129,
+    "model": "legalaid.mattertype",
+    "fields": {
+      "category": 3,
+      "code": "DMIX",
+      "description": "Client wants both to challenge validity of debts and reschedule debts",
+      "level": 2
+    }
+  },
+  {
+    "pk": 130,
+    "model": "legalaid.mattertype",
+    "fields": {
+      "category": 3,
+      "code": "DIBP",
+      "description": "Client is defending involuntary bankruptcy proceedings",
+      "level": 2
+    }
+  },
+  {
+    "pk": 131,
+    "model": "legalaid.mattertype",
+    "fields": {
+      "category": 3,
+      "code": "DORD",
+      "description": "Client is facing an order for sale of the home",
+      "level": 2
+    }
+  },
+  {
+    "pk": 132,
+    "model": "legalaid.mattertype",
+    "fields": {
+      "category": 3,
+      "code": "DOTH",
+      "description": "Other",
       "level": 2
     }
   }

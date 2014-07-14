@@ -4,6 +4,16 @@ from cla_eventlog.constants import LOG_TYPES
 from timer.utils import get_timer
 
 
+# These are util functions that help Events set the right value of
+#   `set_requires_action_by` quickly.
+# Choose one of them if you want something else than a simple single value
+
+def None_if_owned_by_operator(case):
+    if case.requires_action_by_operator:
+        return None
+    return case.requires_action_by
+
+
 class BaseEvent(object):
     key = ''
     codes = {}
@@ -37,11 +47,16 @@ class BaseEvent(object):
 
         self.save_log(log)
 
+        # stop timer if the code wants
         if timer and code_data.get('stops_timer', False):
             timer.stop()
 
+        # update set_requires_action_by if the code wantes
         if 'set_requires_action_by' in code_data:
-            case.set_requires_action_by(code_data['set_requires_action_by'])
+            set_requires_action_by = code_data['set_requires_action_by']
+            if callable(set_requires_action_by):
+                set_requires_action_by = set_requires_action_by(case)
+            case.set_requires_action_by(set_requires_action_by)
 
         return log
 

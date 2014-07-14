@@ -2,7 +2,7 @@ from cla_common.constants import REQUIRES_ACTION_BY
 
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES
-from cla_eventlog.events import BaseEvent
+from cla_eventlog.events import BaseEvent, None_if_owned_by_operator
 
 
 class AssignToProviderEvent(BaseEvent):
@@ -45,8 +45,7 @@ class DeferAssignmentEvent(BaseEvent):
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Will call back later for Specialist',
-            'stops_timer': True,
-            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
+            'stops_timer': True
         }
     }
 event_registry.register(DeferAssignmentEvent)
@@ -61,7 +60,7 @@ class DeclineHelpEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Client declined Specialist',
             'stops_timer': True,
-            'set_requires_action_by': None
+            'set_requires_action_by': None_if_owned_by_operator
         },
         'DECL': {
             'type': LOG_TYPES.OUTCOME,
@@ -69,7 +68,7 @@ class DeclineHelpEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Client declined all help options',
             'stops_timer': True,
-            'set_requires_action_by': None
+            'set_requires_action_by': None_if_owned_by_operator
         },
         'NRES': {
             'type': LOG_TYPES.OUTCOME,
@@ -77,7 +76,7 @@ class DeclineHelpEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'No resources available to help',
             'stops_timer': True,
-            'set_requires_action_by': None
+            'set_requires_action_by': None_if_owned_by_operator
         },
     }
 event_registry.register(DeclineHelpEvent)

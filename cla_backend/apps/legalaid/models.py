@@ -423,3 +423,15 @@ class Case(TimeStampedModel):
     def set_requires_action_by(self, requires_action_by):
         self.requires_action_by = requires_action_by
         self.save()
+
+    @property
+    def doesnt_requires_action(self):
+        return not self.requires_action_by
+
+    @property
+    def requires_action_by_operator(self):
+        return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR
+
+    # @property
+    # def requires_action_by_operator_manager(self):
+    #     return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR

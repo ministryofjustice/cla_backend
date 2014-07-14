@@ -1,5 +1,9 @@
 from django.test import TestCase
 
+from cla_common.constants import REQUIRES_ACTION_BY
+
+from legalaid.models import Case
+
 from cla_eventlog.tests.base import EventTestCaseMixin
 
 
@@ -32,6 +36,19 @@ class DeferAssignmentEventTestCase(EventTestCaseMixin, TestCase):
 
 class DeclineHelpEventTestCase(EventTestCaseMixin, TestCase):
     EVENT_KEY = 'decline_help'
+    CODES = ['DESP', 'DECL', 'NRES']
 
-    def test_decline_help(self):
-        self._test_process_with_expicit_code(['DESP', 'DECL', 'NRES'])
+    def test_DESP(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+            self.CODES, code='DESP'
+        )
+
+    def test_DECL(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+            self.CODES, code='DECL'
+        )
+
+    def test_NRES(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+            self.CODES, code='NRES'
+        )

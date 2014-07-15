@@ -62,24 +62,9 @@ class ProviderAllocationForm(BaseCaseLogForm):
 class DeferAssignmentCaseForm(BaseCaseLogForm):
     LOG_EVENT_KEY = 'defer_assignment'
 
-    def clean(self):
-        cleaned_data = super(DeferAssignmentCaseForm, self).clean()
-        if self._errors:  # skip if already in error
-            return cleaned_data
-
-        # checking that the case is in a consistent state
-        if self.case.provider:
-            self._errors[NON_FIELD_ERRORS] = ErrorList(['Case currently assigned to a provider'])
-        return cleaned_data
-
 
 class DeclineAllSpecialistsCaseForm(EventSpecificLogForm):
     LOG_EVENT_KEY = 'decline_help'
-
-    def save(self, user):
-        self.case.close()
-
-        super(DeclineAllSpecialistsCaseForm, self).save(user)  # saves the outcome
 
 
 class SuspendCaseForm(EventSpecificLogForm):

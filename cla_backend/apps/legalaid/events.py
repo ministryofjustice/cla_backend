@@ -1,7 +1,8 @@
+from cla_common.constants import REQUIRES_ACTION_BY
+
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES
-from cla_eventlog.events import BaseEvent
-
+from cla_eventlog.events import BaseEvent, None_if_owned_by_operator
 from cla_eventlog.models import Log
 
 
@@ -105,7 +106,8 @@ class SuspendCaseEvent(BaseEvent):
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Not enough info to continue',
-            'stops_timer': True
+            'stops_timer': True,
+            'set_requires_action_by': None_if_owned_by_operator
         },
         'ABND': {
             'type': LOG_TYPES.OUTCOME,
@@ -119,21 +121,24 @@ class SuspendCaseEvent(BaseEvent):
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR, LOG_ROLES.SPECIALIST],
             'description': 'Hung up call',
-            'stops_timer': True
+            'stops_timer': True,
+            'set_requires_action_by': None_if_owned_by_operator
         },
         'RTCS': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Referred to customer support',
-            'stops_timer': True
+            'stops_timer': True,
+            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR_MANAGER  # TODO not sure about this
         },
         'IRCB': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Booked appointment with senior member of staff',
-            'stops_timer': True
+            'stops_timer': True,
+            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR_MANAGER  # TODO not sure about this
         },
         'NCOE': {
             'type': LOG_TYPES.OUTCOME,

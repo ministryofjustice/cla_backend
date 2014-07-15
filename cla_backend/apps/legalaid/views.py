@@ -7,8 +7,6 @@ from rest_framework.response import Response as DRFResponse
 from legalaid.serializers import CategorySerializerBase
 from legalaid.models import Category, EligibilityCheck
 
-from .exceptions import InvalidMutationException
-
 
 class BaseUserViewSet(
     mixins.RetrieveModelMixin,
@@ -41,18 +39,12 @@ class BaseUserViewSet(
         return super(BaseUserViewSet, self).get_object(*args, **kwargs)
 
 
-class StateFromActionMixin(object):
-    def _state_form_action(self, request, Form):
+class FormActionMixin(object):
+    def _form_action(self, request, Form):
         obj = self.get_object()
         form = Form(case=obj, data=request.DATA)
         if form.is_valid():
-            try:
-                form.save(request.user)
-            except InvalidMutationException as e:
-                return DRFResponse(
-                    {'case_state': [unicode(e)]},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+            form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
         return DRFResponse(

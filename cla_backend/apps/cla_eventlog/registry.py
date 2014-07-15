@@ -10,6 +10,7 @@ def is_code_valid(code):
         'description': basestring,
         'stops_timer': bool
     }
+    all_keys = required_keys.keys() + ['set_requires_action_by']
 
     for key, type_ in required_keys.items():
         if not key in code:
@@ -26,6 +27,10 @@ def is_code_valid(code):
     for selectable_by in code['selectable_by']:
         if selectable_by not in LOG_ROLES.CHOICES_DICT:
             raise ValueError('Unknown role %s (must be one of %s)' % (selectable_by, ', '.join(map(str, LOG_ROLES.CHOICES_DICT))))
+
+    diff = set(code.keys()) - set(all_keys)
+    if len(diff) > 0:
+        raise ValueError('Unknown key(s) %s (must be one of %s)' % (diff, all_keys))
 
     return True
 

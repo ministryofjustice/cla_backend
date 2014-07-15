@@ -1,19 +1,24 @@
 import datetime
+import mock
 
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+
+from rest_framework.test import APITestCase
+from rest_framework import status
+
 from legalaid.tests.views.mixins.resource import \
     NestedSimpleResourceCheckAPIMixin
-import mock
-from rest_framework import status
-from rest_framework.test import APITestCase
+from legalaid.models import Case
+from cla_common.constants import REQUIRES_ACTION_BY
+
 from cla_eventlog.models import Log
 from cla_eventlog.tests.test_views import ExplicitEventCodeViewTestCaseMixin, \
     ImplicitEventCodeViewTestCaseMixin
-from legalaid.models import Case
+
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
-from cla_common.constants import CASE_STATES
+
 from call_centre.forms import DeclineAllSpecialistsCaseForm, \
     SuspendCaseForm
 from call_centre.serializers import CaseSerializer
@@ -36,10 +41,10 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertItemsEqual(
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
-             'created', 'modified', 'state', 'created_by',
+             'created', 'modified', 'created_by',
              'provider', 'log_set', 'notes', 'provider_notes', 'in_scope',
              'full_name', 'laa_reference', 'eligibility_state', 'thirdparty_details',
-             'adaptation_details', 'billable_time']
+             'adaptation_details', 'billable_time', 'requires_action_by']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -93,6 +98,10 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertCaseResponseKeys(response)
         self.assertEqual(response.data['eligibility_check'], None)
 
+        # checking that requires_action_by is set to OPERATOR
+        case = Case.objects.get(reference=response.data['reference'])
+        self.assertEqual(case.requires_action_by, REQUIRES_ACTION_BY.OPERATOR)
+
         self.assertLogInDB()
 
     def test_create_with_data(self):
@@ -113,9 +122,6 @@ class CreateCaseTestCase(BaseCaseTestCase):
             self.list_url, data=data, format='json',
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
-        # check initial state is correct
-        self.assertEqual(response.data['state'], CASE_STATES.OPEN)
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCaseResponseKeys(response)
 
@@ -147,9 +153,6 @@ class CreateCaseTestCase(BaseCaseTestCase):
             self.list_url, data=data, format='json',
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
-        # check initial state is correct
-        self.assertEqual(response.data['state'], CASE_STATES.OPEN)
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCaseResponseKeys(response)
 
@@ -328,6 +331,9 @@ class AssignCaseTestCase(BaseCaseTestCase):
 
         self.assertFalse(case.reference in [x.get('reference') for x in case_list['results']])
 
+        # checking that requires_action_by is set to PROVIDER
+        self.assertEqual(case.requires_action_by, REQUIRES_ACTION_BY.PROVIDER_REVIEW)
+
         # checking that the log object is there
         self.assertEqual(Log.objects.count(), 1)
         log = Log.objects.all()[0]
@@ -365,19 +371,6 @@ class DeferAssignmentTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCa
             kwargs={'reference': reference}
         )
 
-    def test_already_assigned(self):
-        provider = make_recipe('cla_provider.provider', active=True)
-        self.check.provider = provider
-        self.check.save()
-
-        response = self.client.post(
-            self.url, data={}, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(response.data, {'__all__': [u'Case currently assigned to a provider']})
-
 
 class DeclineAllSpecialistsTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def get_event_code(self):
@@ -410,25 +403,28 @@ class SearchCaseTestCase(BaseCaseTestCase):
     def test_list_with_dashboard_param(self):
         """
         Testing that if ?dashboard param is specified, it will exclude cases
-        that are already assigned or not open.
+        that are already assigned or don't requires_action_by == OPERATOR
         """
         Case.objects.all().delete()
 
-        # obj1 is assigned, obj2 is closed, obj3 is open and not assigned
-        obj1 = make_recipe('legalaid.case',
-              reference='ref1',
-              provider=self.provider,
-              state=CASE_STATES.OPEN
+        # obj1 is assigned should be excluded
+        # obj2.requires_action_by == None (meaning doesn't require action)
+        #   so should be excluded
+        # obj3.requires_action_by == OPERATOR so should be included
+        obj1 = make_recipe(
+            'legalaid.case',
+            reference='ref1', provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
         )
-        obj2 = make_recipe('legalaid.case',
-              reference='ref2',
-              provider=None,
-              state=CASE_STATES.CLOSED
+        obj2 = make_recipe(
+            'legalaid.case',
+            reference='ref2', provider=None,
+            requires_action_by=None
         )
-        obj3 = make_recipe('legalaid.case',
-              reference='ref3',
-              provider=None,
-              state=CASE_STATES.OPEN
+        obj3 = make_recipe(
+            'legalaid.case',
+            reference='ref3', provider=None,
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR
         )
 
         # searching via dashboard param => should return just obj3
@@ -487,7 +483,6 @@ class SearchCaseTestCase(BaseCaseTestCase):
                           personal_details__full_name='abc',
                           personal_details__postcode='123')
 
-
         response = self.client.get(
             self.list_url, data={'search':self.case_obj.reference}, format='json',
             HTTP_AUTHORIZATION='Bearer %s' % self.token
@@ -527,7 +522,6 @@ class SearchCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, len(response.data['results']))
 
-
     def test_search_find_none_result_by_fullname(self):
         """
         GET search by name should work
@@ -540,7 +534,6 @@ class SearchCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, len(response.data['results']))
 
-
     def test_search_find_none_result_by_ref(self):
         """
         GET search by name should work
@@ -552,7 +545,6 @@ class SearchCaseTestCase(BaseCaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, len(response.data['results']))
-
 
     def test_patch_provider_notes_not_allowed(self):
         """
@@ -621,8 +613,7 @@ class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, NestedSimpleRes
             errors.keys(), expected_errors.keys()
         )
         self.assertItemsEqual(
-            errors,
-                expected_errors
+            errors, expected_errors
         )
 
     def assertAdaptationDetailsEqual(self, data, obj):
@@ -654,7 +645,7 @@ class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, NestedSimpleRes
         data = self._get_default_post_data()
         check = self._get_default_post_data()
 
-        response = self._create(data=data)      # check initial state is correct
+        response = self._create(data=data)  # check initial state is correct
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCheckResponseKeys(response)

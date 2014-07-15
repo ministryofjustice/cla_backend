@@ -1,8 +1,6 @@
 from cla_eventlog.serializers import LogSerializerBase
 from rest_framework import serializers
 
-from cla_common.constants import CASE_STATES
-
 from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
@@ -11,6 +9,7 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
     ExtendedUserSerializerBase
 
 from .models import Staff
+
 
 class CategorySerializer(CategorySerializerBase):
     class Meta(CategorySerializerBase.Meta):
@@ -72,7 +71,6 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     partner = PersonSerializer(required=False)
     notes = serializers.CharField(max_length=500, required=False, read_only=True)
 
-
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
             'reference',
@@ -111,33 +109,33 @@ class LogSerializer(LogSerializerBase):
                   'type'
         )
 
-class CaseSerializer(CaseSerializerBase):
 
+class CaseSerializer(CaseSerializerBase):
     LOG_SERIALIZER = LogSerializer
 
     eligibility_check = UUIDSerializer(
-            slug_field='reference')
+        slug_field='reference')
 
     personal_details = PersonalDetailsSerializer(required=False)
 
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)
     created_by = serializers.CharField(read_only=True)
-    state = serializers.ChoiceField(choices=CASE_STATES.CHOICES, default=CASE_STATES.OPEN)
     provider = serializers.PrimaryKeyRelatedField(required=False)
     locked_by = serializers.CharField(read_only=True)
     locked_at = serializers.DateTimeField(read_only=True)
 
     log_set = serializers.SerializerMethodField('get_log_set')
 
-
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details',
-            'reference', 'created', 'modified', 'created_by', 'state',
+            'reference', 'created', 'modified', 'created_by',
             'provider', 'log_set', 'locked_by', 'locked_at',
-            'notes', 'provider_notes', 'laa_reference'
+            'notes', 'provider_notes', 'laa_reference',
+            'requires_action_by'
         )
+
 
 class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):

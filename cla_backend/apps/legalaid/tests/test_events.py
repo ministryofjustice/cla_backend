@@ -149,7 +149,26 @@ class CaseEventAvoidDuplicatesTestCase(EventTestCaseMixin, TestCase):
 class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
     EVENT_KEY = 'suspend_case'
 
-    def test_decline_help(self):
-        self._test_process_with_expicit_code([
-            'INSUF', 'ABND', 'TERM', 'RTCS', 'IRCB', 'NCOE'
-        ])
+    CODES = ['INSUF', 'ABND', 'TERM', 'RTCS', 'IRCB', 'NCOE']
+
+    def test_INSUF(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+            self.CODES, code='INSUF'
+        )
+
+    def test_ABND(self):
+        self._test_process_with_expicit_code(self.CODES, code='ABND')
+
+    def test_TERM(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+            self.CODES, code='TERM'
+        )
+
+    def test_RTCS(self):
+        self._test_process_with_expicit_code(self.CODES, code='RTCS')
+
+    def test_IRCB(self):
+        self._test_process_with_expicit_code(self.CODES, code='IRCB')
+
+    def test_NCOE(self):
+        self._test_process_with_expicit_code(self.CODES, code='NCOE')

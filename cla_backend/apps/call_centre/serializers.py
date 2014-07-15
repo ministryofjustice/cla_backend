@@ -1,12 +1,11 @@
 from cla_eventlog.serializers import LogSerializerBase
 from rest_framework import serializers
 
-from cla_common.constants import CASE_STATES
-
 from core.serializers import UUIDSerializer
 from legalaid.serializers import EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
-    DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
+    DeductionsSerializerBase, PersonSerializerBase, \
+    PersonalDetailsSerializerBase, \
     CaseSerializerBase, ProviderSerializerBase, \
     OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase, \
     ThirdPartyDetailsSerializerBase, AdaptationDetailsSerializerBase
@@ -36,6 +35,7 @@ class SavingsSerializer(SavingsSerializerBase):
             'credit_balance',
         )
 
+
 class DeductionsSerializer(DeductionsSerializerBase):
 
     class Meta(DeductionsSerializerBase.Meta):
@@ -44,6 +44,7 @@ class DeductionsSerializer(DeductionsSerializerBase):
             'childcare', 'mortgage', 'rent',
             'criminal_legalaid_contributions',
         )
+
 
 class PersonSerializer(PersonSerializerBase):
 
@@ -58,12 +59,12 @@ class PersonSerializer(PersonSerializerBase):
             'deductions',
         )
 
+
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
     you = PersonSerializer(required=False)
     partner = PersonSerializer(required=False)
     notes = serializers.CharField(max_length=500, required=False, read_only=True)
-
 
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
@@ -99,12 +100,14 @@ class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
             'personal_relationship', 'personal_relationship_note'
         )
 
+
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
         fields = (
                 'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
                 'language', 'notes', 'reference', 'callback_preference'
         )
+
 
 class LogSerializer(LogSerializerBase):
 
@@ -131,20 +134,19 @@ class CaseSerializer(CaseSerializerBase):
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)
     created_by = serializers.CharField(read_only=True)
-    state = serializers.ChoiceField(choices=CASE_STATES.CHOICES, default=CASE_STATES.OPEN, read_only=True)
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
     full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
     eligibility_state = serializers.CharField(source='eligibility_check.state', read_only=True)
     billable_time = serializers.IntegerField(read_only=True)
 
-
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference', 'created',
-            'modified', 'created_by', 'state', 'provider', 'log_set',
+            'modified', 'created_by', 'provider', 'log_set',
             'notes', 'provider_notes', 'in_scope', 'full_name', 'thirdparty_details',
-            'adaptation_details', 'laa_reference', 'eligibility_state', 'billable_time'
+            'adaptation_details', 'laa_reference', 'eligibility_state', 'billable_time',
+            'requires_action_by'
         )
 
 

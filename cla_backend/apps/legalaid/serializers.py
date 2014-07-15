@@ -146,6 +146,11 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     def save(self, **kwargs):
         obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
         obj.update_state()
+        diff = obj.diff
+        if 'category' in diff:
+            # if the category has been updated then reset mattertype on
+            # corresponding case
+            obj.reset_matter_types()
         return obj
 
 class MatterTypeSerializerBase(ClaModelSerializer):

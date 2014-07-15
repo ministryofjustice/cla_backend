@@ -110,7 +110,7 @@ class MatterTypeViewSet(
     serializer_class = MatterTypeSerializer
 
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('level', 'category')
+    filter_fields = ('level', 'category__code')
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,

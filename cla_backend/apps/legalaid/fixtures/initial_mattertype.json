@@ -763,7 +763,7 @@
     "pk": 77,
     "model": "legalaid.mattertype",
     "fields": {
-      "category": 2,
+      "category": 4,
       "code": "FMEA",
       "description": "Where the client is seeking advice in connection with mediation – all issues",
       "level": 1

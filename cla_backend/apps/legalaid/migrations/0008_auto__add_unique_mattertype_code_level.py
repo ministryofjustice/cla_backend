@@ -110,7 +110,7 @@ class Migration(SchemaMigration):
             'provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cla_provider.Provider']", 'null': 'True', 'blank': 'True'}),
             'provider_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'reference': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
-            'state': ('django.db.models.fields.CharField', [], {'default': "'open'", 'max_length': '50'}),
+            'requires_action_by': ('django.db.models.fields.CharField', [], {'default': "'operator'", 'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'thirdparty_details': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.ThirdPartyDetails']", 'null': 'True', 'blank': 'True'})
         },
         u'legalaid.category': {

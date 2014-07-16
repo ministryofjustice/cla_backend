@@ -44,7 +44,8 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
              'created', 'modified', 'created_by',
              'provider', 'log_set', 'notes', 'provider_notes', 'in_scope',
              'full_name', 'laa_reference', 'eligibility_state', 'thirdparty_details',
-             'adaptation_details', 'billable_time', 'requires_action_by']
+             'adaptation_details', 'billable_time', 'requires_action_by',
+             'matter_type1', 'matter_type2']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -282,6 +283,11 @@ class AssignCaseTestCase(BaseCaseTestCase):
         fake_day = datetime.datetime(2014, 1, 2, 9, 1, 0).replace(tzinfo=timezone.get_current_timezone())
         tz_model_mock.return_value = fake_day
         tz_helper_tz.return_value = fake_day
+
+        case.matter_type1 = make_recipe('legalaid.matter_type1', category=category)
+        case.matter_type2 = make_recipe('legalaid.matter_type2', category=category)
+        case.save()
+
 
         # preparing for test
         provider = make_recipe('cla_provider.provider', name='Provider Name', active=True)

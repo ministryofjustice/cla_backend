@@ -16,7 +16,8 @@ class ProviderAllocationForm(BaseCaseLogForm):
     def __init__(self, *args, **kwargs):
         self.providers = kwargs.pop('providers', None)
         if self.providers:
-            self.base_fields['provider'].choices = [(p.pk, p.name) for p in self.providers]
+            self.base_fields['provider'].choices = [(p.pk, p.name) for p in
+                                                    self.providers]
         super(ProviderAllocationForm, self).__init__(*args, **kwargs)
 
     def clean_provider(self):
@@ -28,18 +29,45 @@ class ProviderAllocationForm(BaseCaseLogForm):
 
     def clean(self):
         cleaned_data = super(ProviderAllocationForm, self).clean()
+        nfe = []
         if not self.providers:
-            self._errors[NON_FIELD_ERRORS] = ErrorList([
+            nfe.append(
                 _(u'There is no provider specified in '
                   u'the system to handle cases of this law category.')
-            ])
+            )
             del self._errors['provider']
+
+        if not (self.case.matter_type1 and self.case.matter_type2):
+            nfe.append(_(u"Can't assign to specialist provider without setting "
+                         u"matter_type1 and matter_type2"))
+
+        if (self.case.matter_type1 and self.case.matter_type2) and (
+                not self.case.matter_type1.category == self.case.matter_type2.category):
+            nfe.append(_(
+                u"Category of matter type 1: {} must match category of matter type 2: {}".format(
+                    self.case.matter_type1.category.name,
+                    self.case.matter_type2.category)))
+
+        if self.case.eligibility_check:
+            case_category = self.case.eligibility_check.category
+            mt1_category = self.case.matter_type1.category if self.case.matter_type1 else None
+            mt2_category = self.case.matter_type2.category if self.case.matter_type2 else None
+            if (case_category and mt1_category and mt2_category):
+                if (case_category != mt1_category or case_category != mt2_category):
+                    nfe.append(_(
+                        u"Category of Matter Types: {},{} must match category of case: {}".format(
+                            mt1_category.name, mt2_category.name,
+                            case_category.name)))
+
+        if nfe:
+            self._errors[NON_FIELD_ERRORS] = ErrorList(nfe)
         return cleaned_data
 
     def get_notes(self):
         notes = self.cleaned_data['notes']
         if not notes and not self.get_is_manual():
-            notes = u"Assigned to {provider}".format(provider=self.cleaned_data['provider_obj'].name)
+            notes = u"Assigned to {provider}".format(
+                provider=self.cleaned_data['provider_obj'].name)
         return notes
 
     def get_is_manual(self):

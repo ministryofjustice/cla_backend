@@ -1,6 +1,7 @@
 import logging
 import datetime
 from cla_common.db.mixins import ModelDiffMixin
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from uuidfield import UUIDField
 from model_utils.models import TimeStampedModel
 
@@ -306,6 +307,18 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
 
         return CaseData(**d)
 
+    def reset_matter_types(self):
+        case = None
+
+        try:
+            case = self.case
+        except ObjectDoesNotExist:
+            pass
+
+        if case and (case.matter_type1 or self.case.matter_type2):
+            case.matter_type1 = None
+            case.matter_type2 = None
+            case.save()
 
 class Property(TimeStampedModel):
     value = MoneyField(default=None, null=True, blank=True)
@@ -331,6 +344,8 @@ class MatterType(TimeStampedModel):
     def __unicode__(self):
         return u'MatterType{} ({}): {} - {}'.format(self.get_level_display(), self.category.code, self.code, self.description)
 
+    class Meta:
+        unique_together = (("code", "level"),)
 
 class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)

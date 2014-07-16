@@ -16,7 +16,7 @@ from cla_provider.helpers import ProviderAllocationHelper
 from cla_eventlog.views import BaseEventViewSet
 from timer.views import BaseTimerViewSet
 from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, \
-    AdaptationDetails
+    AdaptationDetails, MatterType
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
     BaseCategoryViewSet, BaseEligibilityCheckViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
@@ -27,7 +27,8 @@ from .permissions import CallCentreClientIDPermission, \
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer,  \
     OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer, \
-    ThirdPartyDetailsSerializer, AdaptationDetailsSerializer
+    ThirdPartyDetailsSerializer, AdaptationDetailsSerializer, \
+    MatterTypeSerializer
 
 from .forms import ProviderAllocationForm,  DeclineAllSpecialistsCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm
@@ -99,6 +100,17 @@ class EligibilityCheckViewSet(
 
         return obj
 
+class MatterTypeViewSet(
+    CallCentrePermissionsViewSetMixin,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    model = MatterType
+    serializer_class = MatterTypeSerializer
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('level', 'category__code')
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,

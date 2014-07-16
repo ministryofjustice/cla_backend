@@ -8,7 +8,8 @@ from legalaid.serializers import EligibilityCheckSerializerBase, \
     PersonalDetailsSerializerBase, \
     CaseSerializerBase, ProviderSerializerBase, \
     OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase, \
-    ThirdPartyDetailsSerializerBase, AdaptationDetailsSerializerBase
+    ThirdPartyDetailsSerializerBase, AdaptationDetailsSerializerBase, \
+    MatterTypeSerializerBase
 
 from .models import Operator
 
@@ -121,6 +122,17 @@ class LogSerializer(LogSerializerBase):
                   'timer'
         )
 
+class MatterTypeSerializer(MatterTypeSerializerBase):
+
+    category = serializers.SlugRelatedField(slug_field='code', read_only=True)
+
+    class Meta(MatterTypeSerializerBase.Meta):
+        fields = (
+            'category',
+            'code',
+            'description',
+            'level'
+        )
 
 class CaseSerializer(CaseSerializerBase):
     LOG_SERIALIZER = LogSerializer
@@ -146,7 +158,7 @@ class CaseSerializer(CaseSerializerBase):
             'modified', 'created_by', 'provider', 'log_set',
             'notes', 'provider_notes', 'in_scope', 'full_name', 'thirdparty_details',
             'adaptation_details', 'laa_reference', 'eligibility_state', 'billable_time',
-            'requires_action_by'
+            'matter_type1', 'matter_type2', 'requires_action_by'
         )
 
 

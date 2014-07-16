@@ -1,3 +1,4 @@
+from cla_common.constants import MATTER_TYPE_LEVELS
 from rest_framework import serializers
 
 from cla_eventlog.constants import LOG_LEVELS
@@ -10,7 +11,7 @@ from cla_common.money_interval.models import MoneyInterval
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
-    ThirdPartyDetails, AdaptationDetails
+    ThirdPartyDetails, AdaptationDetails, MatterType
 
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
@@ -145,7 +146,18 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     def save(self, **kwargs):
         obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
         obj.update_state()
+        diff = obj.diff
+        if 'category' in diff:
+            # if the category has been updated then reset mattertype on
+            # corresponding case
+            obj.reset_matter_types()
         return obj
+
+class MatterTypeSerializerBase(ClaModelSerializer):
+
+    class Meta:
+        model = MatterType
+        fields = ()
 
 class CaseSerializerBase(ClaModelSerializer):
 
@@ -156,7 +168,8 @@ class CaseSerializerBase(ClaModelSerializer):
     notes = serializers.CharField(max_length=500, required=False)
     provider_notes = serializers.CharField(max_length=500, required=False)
     log_set = serializers.SerializerMethodField('get_log_set')
-    in_scope = serializers
+    matter_type1 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE))
+    matter_type2 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO))
 
     def get_log_set(self, case):
         case_log = case.log_set.filter(level__gt=LOG_LEVELS.MINOR)

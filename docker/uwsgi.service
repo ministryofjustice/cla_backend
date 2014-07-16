@@ -1,6 +1,6 @@
 #!/bin/bash
 cd /home/app/django
-
+source /etc/container_environment.sh
 # Manage sync db
 python manage.py syncdb --noinput >> /var/log/wsgi/db.log 2>&1
 

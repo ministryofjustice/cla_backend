@@ -58,7 +58,5 @@ ADD ./docker/nginx.service /etc/service/nginx/run
 # install service files for runit
 ADD ./docker/uwsgi.service /etc/service/uwsgi/run
 
-ADD ./docker/rc.local /etc/rc.local
-
 # Expose ports.
 EXPOSE 80

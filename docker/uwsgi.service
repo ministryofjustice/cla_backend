@@ -1,2 +1,19 @@
 #!/bin/bash
+cd /home/app/django
+
+# Manage sync db
+python manage.py syncdb --noinput
+
+# manage syncdb migrate
+python manage.py migrate
+
+python manage.py loaddata initial_category.json
+python manage.py loaddata initial_mattertype.json
+python manage.py loaddata kb_from_spreadsheet.json
+python manage.py loaddata initial_outcome_codes.json
+
+python manage.py collectstatic --noinput
+
+echo "from django.contrib.auth.models import User; User.objects.create_superuser('cla_admin','peter.idah@digital.justice.gov.uk', 'S3cur31sh')" | ./manage.py shell || echo "user already exists"
+
 exec /usr/local/bin/uwsgi --ini /etc/wsgi/conf.d/cla_backend.ini

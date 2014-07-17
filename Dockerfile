@@ -58,5 +58,6 @@ ADD ./docker/nginx.service /etc/service/nginx/run
 # install service files for runit
 ADD ./docker/uwsgi.service /etc/service/uwsgi/run
 
+RUN ln -s /home/app/django/cla_backend/settings/docker.py /home/app/django/cla_backend/settings/local.py
 # Expose ports.
 EXPOSE 80

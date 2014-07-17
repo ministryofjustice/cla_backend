@@ -4,6 +4,10 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, mixins
 
+from core.models import get_web_user
+
+from cla_eventlog import event_registry
+
 from legalaid.models import EligibilityCheck, Property, Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet
 
@@ -83,3 +87,18 @@ class CaseViewSet(
     model = Case
     serializer_class = CaseSerializer
 
+    def pre_save(self, obj, *args, **kwargs):
+        super(CaseViewSet, self).pre_save(obj, *args, **kwargs)
+
+        if not obj.created_by:
+            obj.created_by = get_web_user()
+
+    def post_save(self, obj, created=False):
+        super(CaseViewSet, self).post_save(obj, created=created)
+
+        if created:
+            event = event_registry.get_event('case')()
+            event.process(
+                obj, status='created', created_by=obj.created_by,
+                notes="Case created digitally"
+            )

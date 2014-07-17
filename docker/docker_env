@@ -1,0 +1,7 @@
+CLA_ENV=development
+SECRET_KEY=odimf%y#bszp359fe5z-zhd77m7_=*m768^@rr8*hk5knvd^-p
+DEBUG=True
+DB_PASSWORD='' 
+DB_HOST=172.31.29.142                 
+ALLOWED_HOSTS=*
+

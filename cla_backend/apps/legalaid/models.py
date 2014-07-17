@@ -347,6 +347,16 @@ class MatterType(TimeStampedModel):
     class Meta:
         unique_together = (("code", "level"),)
 
+class MediaCodeGroup(models.Model):
+    name = models.CharField(max_length=128)
+
+
+class MediaCode(TimeStampedModel):
+    group = models.ForeignKey(MediaCodeGroup)
+    name = models.CharField(max_length=128)
+    code = models.CharField(max_length=20)
+
+
 class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True,
@@ -391,6 +401,8 @@ class Case(TimeStampedModel):
                                      {'level': MATTER_TYPE_LEVELS.TWO},
                                      blank=True, null=True,
                                      related_name='+')
+
+    media_code = models.ForeignKey(MediaCode, blank=True, null=True)
 
     def _set_reference_if_necessary(self):
         if not self.reference:

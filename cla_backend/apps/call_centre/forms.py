@@ -91,7 +91,7 @@ class DeferAssignmentCaseForm(BaseCaseLogForm):
     LOG_EVENT_KEY = 'defer_assignment'
 
 
-class DeclineAllSpecialistsCaseForm(EventSpecificLogForm):
+class DeclineHelpCaseForm(EventSpecificLogForm):
     LOG_EVENT_KEY = 'decline_help'
 
 

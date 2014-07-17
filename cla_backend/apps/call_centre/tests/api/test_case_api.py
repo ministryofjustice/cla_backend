@@ -19,7 +19,7 @@ from cla_eventlog.tests.test_views import ExplicitEventCodeViewTestCaseMixin, \
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
 
-from call_centre.forms import DeclineAllSpecialistsCaseForm, \
+from call_centre.forms import DeclineHelpCaseForm, \
     SuspendCaseForm
 from call_centre.serializers import CaseSerializer
 
@@ -378,15 +378,15 @@ class DeferAssignmentTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCa
         )
 
 
-class DeclineAllSpecialistsTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+class DeclineHelpTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def get_event_code(self):
-        form = DeclineAllSpecialistsCaseForm(case=mock.MagicMock())
+        form = DeclineHelpCaseForm(case=mock.MagicMock())
         return form.fields['event_code'].choices[0][0]
 
     def get_url(self, reference=None):
         reference = reference or self.check.reference
         return reverse(
-            'call_centre:case-decline-all-specialists', args=(),
+            'call_centre:case-decline-help', args=(),
             kwargs={'reference': reference}
         )
 

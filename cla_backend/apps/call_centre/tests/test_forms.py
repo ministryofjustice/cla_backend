@@ -11,7 +11,7 @@ from cla_eventlog.models import Log
 
 from cla_provider.helpers import ProviderAllocationHelper
 from call_centre.forms import DeferAssignmentCaseForm, ProviderAllocationForm, \
-    DeclineAllSpecialistsCaseForm
+    DeclineHelpCaseForm
 
 
 def _mock_datetime_now_with(date, *mocks):
@@ -249,6 +249,6 @@ class DeferAssignmentCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     FORM = DeferAssignmentCaseForm
 
 
-class DeclineAllSpecialistsCaseFormTestCase(EventSpecificLogFormTestCaseMixin,
+class DeclineHelpCaseFormTestCase(EventSpecificLogFormTestCaseMixin,
                                             TestCase):
-    FORM = DeclineAllSpecialistsCaseForm
+    FORM = DeclineHelpCaseForm

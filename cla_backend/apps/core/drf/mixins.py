@@ -1,5 +1,6 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.models import Model
+from rest_framework.exceptions import MethodNotAllowed
 
 
 class NoParentReferenceException(BaseException):
@@ -51,7 +52,7 @@ class NestedGenericModelMixin(object):
 
             if parent_obj:
                 if getattr(parent_obj, self.PARENT_FIELD):
-                    raise ValueError('%s already has a %s associated to it' % (parent_obj, obj.__class__))
+                    raise MethodNotAllowed('POST: %s already has a %s associated to it' % (parent_obj, obj.__class__.__name__))
                 else:
                     setattr(parent_obj, self.PARENT_FIELD, obj)
                     parent_obj.save()

@@ -157,7 +157,8 @@ PROJECT_APPS = (
     'cla_eventlog',
     'reports',
     'knowledgebase',
-    'timer'
+    'timer',
+    'diagnosis'
 )
 
 INSTALLED_APPS += PROJECT_APPS

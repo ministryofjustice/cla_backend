@@ -364,6 +364,8 @@ class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True,
                                              blank=True)
+    diagnosis = models.OneToOneField('diagnosis.DiagnosisTraversal', null=True,
+                                             blank=True)
     personal_details = models.ForeignKey(PersonalDetails, blank=True,
                                          null=True)
 

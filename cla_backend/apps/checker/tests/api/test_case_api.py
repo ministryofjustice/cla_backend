@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from cla_eventlog.models import Log
+
 from legalaid.models import Case, PersonalDetails
 
 from core.tests.test_base import CLABaseApiTestMixin
@@ -58,6 +60,8 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
             response.data.keys(), ['eligibility_check', 'personal_details']
         )
 
+        self.assertEqual(Case.objects.count(), 0)
+
     def test_create_with_data(self):
         check = make_recipe('legalaid.eligibility_check')
 
@@ -85,6 +89,16 @@ class CaseTests(CLABaseApiTestMixin, APITestCase):
                 personal_details=PersonalDetails(**data['personal_details'])
             )
         )
+
+        # test that the Case is in the db and created by 'web' user
+        self.assertEqual(Case.objects.count(), 1)
+        case = Case.objects.first()
+        self.assertEqual(case.created_by.username, 'web')
+
+        # test that the log is in the db and created by 'web' user
+        self.assertEqual(Log.objects.count(), 1)
+        log = Log.objects.first()
+        self.assertEqual(log.created_by.username, 'web')
 
     def _test_method_in_error(self, method, url):
         """

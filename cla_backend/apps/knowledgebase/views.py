@@ -1,3 +1,4 @@
+import django_filters
 from rest_framework import viewsets
 from rest_framework import filters
 
@@ -5,8 +6,16 @@ from .models import Article, ArticleCategory
 from .serializers import ArticleSerializer, ArticleCategorySerializer
 
 
+class ArticleCategoryFilter(django_filters.FilterSet):
+    article_category = django_filters.CharFilter(name="article_category__id")
+
+    class Meta:
+        model = Article
+        fields = ('article_category',)
+
+
 class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
-    model = Article
+    queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
     paginate_by = 20
@@ -15,10 +24,10 @@ class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
 
     filter_backends = (
         filters.SearchFilter,
-        filters.DjangoFilterBackend
+        filters.DjangoFilterBackend,
     )
 
-    filter_fields = ('article_category',)
+    filter_class = ArticleCategoryFilter
 
     search_fields = ('organisation', 'service_name', 'description',
                      'keywords', 'when_to_use', 'type_of_service',

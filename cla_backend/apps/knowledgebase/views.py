@@ -7,7 +7,7 @@ from .serializers import ArticleSerializer, ArticleCategorySerializer
 
 
 class ArticleCategoryFilter(django_filters.FilterSet):
-    article_category = django_filters.CharFilter(name="article_category__id")
+    article_category = django_filters.ModelMultipleChoiceFilter
 
     class Meta:
         model = Article
@@ -15,7 +15,7 @@ class ArticleCategoryFilter(django_filters.FilterSet):
 
 
 class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Article.objects.all()
+    model = Article
     serializer_class = ArticleSerializer
 
     paginate_by = 20

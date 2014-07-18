@@ -274,5 +274,61 @@
       "is_manager": false,
       "created": "2014-07-16T16:35:18.574Z"
     }
+  },
+  {
+    "pk": 21,
+    "model": "auth.user",
+    "fields": {
+        "username": "test_adrian",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": true,
+        "last_login": "2014-07-18T09:18:49Z",
+        "groups": [],
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$12000$WPgqL2rSnCVD$93H+C9MS8XHZ2Yhe+xcgvwynSqxMhhpmbb2rf2RV15c=",
+        "email": "",
+        "date_joined": "2014-07-18T09:18:49Z"
+    }
+  },
+  {
+    "pk": 22,
+    "model": "auth.user",
+    "fields": {
+        "username": "test_robin",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": true,
+        "last_login": "2014-07-18T09:19:02Z",
+        "groups": [],
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$12000$J4eTtLojJCNt$/Vmn7PFBt5FEH662uP4u7A7xN5JXbAuTyLWUe1FR808=",
+        "email": "",
+        "date_joined": "2014-07-18T09:19:02Z"
+    }
+  },
+  {
+    "pk": 15,
+    "model": "call_centre.operator",
+    "fields": {
+        "user": 21,
+        "modified": "2014-07-18T09:20:15.728Z",
+        "is_manager": false,
+        "created": "2014-07-18T09:20:15.725Z"
+    }
+  },
+  {
+    "pk": 16,
+    "model": "call_centre.operator",
+    "fields": {
+        "user": 22,
+        "modified": "2014-07-18T09:20:21.262Z",
+        "is_manager": false,
+        "created": "2014-07-18T09:20:21.260Z"
+    }
   }
 ]

@@ -163,6 +163,11 @@ PROJECT_APPS = (
 
 INSTALLED_APPS += PROJECT_APPS
 
+# DIAGNOSIS
+
+DIAGNOSIS_FILE_NAME = 'graph-2014.07.18.graphml'
+
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.

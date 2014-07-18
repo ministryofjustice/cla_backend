@@ -23,3 +23,5 @@ git+git://github.com/ministryofjustice/cla_common.git@0.1.31#egg=cla_common==0.1
 django-extended-choices==0.3.0
 django-filter==0.7
 jsonpatch==1.7
+networkx==1.9
+lxml==3.3.5

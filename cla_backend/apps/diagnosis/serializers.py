@@ -1,7 +1,6 @@
 from core.serializers import ClaModelSerializer
 from diagnosis.models import DiagnosisTraversal
-from rest_framework.fields import ChoiceField, SerializerMethodField, \
-    WritableField
+from rest_framework.fields import ChoiceField, SerializerMethodField
 
 from core.serializers import JSONField
 
@@ -58,4 +57,4 @@ class DiagnosisSerializer(ClaModelSerializer):
 
     class Meta:
         model = DiagnosisTraversal
-        fields = ('nodes', 'choices', 'current_node_id')
+        fields = ('reference', 'nodes', 'choices', 'current_node_id')

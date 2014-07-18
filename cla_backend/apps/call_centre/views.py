@@ -16,7 +16,7 @@ from cla_provider.helpers import ProviderAllocationHelper
 from cla_eventlog.views import BaseEventViewSet
 from timer.views import BaseTimerViewSet
 from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, \
-    AdaptationDetails, MatterType
+    AdaptationDetails, MatterType, MediaCode
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
     BaseCategoryViewSet, BaseEligibilityCheckViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
@@ -28,7 +28,7 @@ from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer,  \
     OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer, \
     ThirdPartyDetailsSerializer, AdaptationDetailsSerializer, \
-    MatterTypeSerializer
+    MatterTypeSerializer, MediaCodeSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm
@@ -111,6 +111,20 @@ class MatterTypeViewSet(
 
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('level', 'category__code')
+
+
+class MediaCodeViewSet(
+    CallCentrePermissionsViewSetMixin,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    model = MediaCode
+    serializer_class = MediaCodeSerializer
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('name', 'group__name')
+
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,

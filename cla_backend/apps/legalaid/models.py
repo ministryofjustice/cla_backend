@@ -350,6 +350,9 @@ class MatterType(TimeStampedModel):
 class MediaCodeGroup(models.Model):
     name = models.CharField(max_length=128)
 
+    def __unicode__(self):
+        return self.name
+
 
 class MediaCode(TimeStampedModel):
     group = models.ForeignKey(MediaCodeGroup)

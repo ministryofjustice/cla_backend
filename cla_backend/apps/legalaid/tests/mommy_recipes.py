@@ -4,7 +4,7 @@ from cla_common.money_interval.models import MoneyInterval
 
 from ..models import Category, EligibilityCheck, Property, Savings, \
     Case, PersonalDetails, Income, Deductions, Person,\
-    ThirdPartyDetails, AdaptationDetails, MatterType
+    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, MediaCodeGroup
 
 
 category = Recipe(Category,
@@ -55,9 +55,14 @@ adaptation_details = Recipe(AdaptationDetails)
 matter_type1 = Recipe(MatterType, level=1)
 matter_type2 = Recipe(MatterType, level=2)
 
+media_code_group = Recipe(MediaCodeGroup)
+
+media_code = Recipe(MediaCode, group=foreign_key(media_code_group))
+
 case = Recipe(Case,
     eligibility_check=foreign_key(eligibility_check),
-    personal_details=foreign_key(personal_details)
+    personal_details=foreign_key(personal_details),
+    media_code=foreign_key(media_code)
 )
 
 

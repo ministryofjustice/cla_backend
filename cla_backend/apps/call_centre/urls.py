@@ -17,6 +17,7 @@ router.register(r'knowledgebase/category', views.ArticleCategoryViewSet)
 router.register(r'adaptations', views.AdaptationDetailsMetadataViewSet,
         base_name='adaptations-metadata')
 router.register(r'mattertype', views.MatterTypeViewSet)
+router.register(r'mediacode', views.MediaCodeViewSet)
 
 timer_router = core_routers.SingletonRouter()
 timer_router.register(r'timer', views.TimerViewSet, base_name='timer')

@@ -11,7 +11,7 @@ from cla_common.money_interval.models import MoneyInterval
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
-    ThirdPartyDetails, AdaptationDetails, MatterType
+    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, MediaCodeGroup
 
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
@@ -159,6 +159,19 @@ class MatterTypeSerializerBase(ClaModelSerializer):
         model = MatterType
         fields = ()
 
+
+class MediaCodeSerializer(ClaModelSerializer):
+    group = serializers.SlugRelatedField(slug_field='name', read_only=True)
+
+    class Meta:
+        model = MediaCode
+        fields = (
+            'group',
+            'name',
+            'code'
+        )
+
+
 class CaseSerializerBase(ClaModelSerializer):
 
     LOG_SERIALIZER = LogSerializerBase
@@ -170,6 +183,7 @@ class CaseSerializerBase(ClaModelSerializer):
     log_set = serializers.SerializerMethodField('get_log_set')
     matter_type1 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE))
     matter_type2 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO))
+    media_code = serializers.SlugRelatedField(slug_field='code', required=False)
 
     def get_log_set(self, case):
         case_log = case.log_set.filter(level__gt=LOG_LEVELS.MINOR)

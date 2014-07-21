@@ -1,0 +1,718 @@
+[
+  {
+    "pk": 1, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Friend/Family"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "FF", 
+      "group": 1, 
+      "name": "Recommended by friends or family"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Media/TV/Press/leaflet"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "PL", 
+      "group": 2, 
+      "name": "Media/TV/Advertising/Leaflet"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "PAYLA", 
+      "group": 2, 
+      "name": "\"Paying for your legal aid\" leaflet"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "DK", 
+      "group": 2, 
+      "name": "Don't Know"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "CBK", 
+      "group": 2, 
+      "name": "Call Back"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "RC", 
+      "group": 2, 
+      "name": "Repeat Caller"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Other Helpline/Website"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "P1", 
+      "group": 3, 
+      "name": "Other Helpline"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Victim", 
+      "group": 3, 
+      "name": "Victim Support/Victim Supportline"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "P2", 
+      "group": 3, 
+      "name": "Equality Advisor Service/Commission for Equality and Human Rights"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "NDL", 
+      "group": 3, 
+      "name": "National Debtline"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "MAS", 
+      "group": 3, 
+      "name": "Money Advice Service"
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "SHAH", 
+      "group": 3, 
+      "name": "Shelter Housing Advice Helpline"
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "GBRD", 
+      "group": 3, 
+      "name": "Gingerbread - Single Parent Helpline"
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "IAS", 
+      "group": 3, 
+      "name": "Immigration Advisory Service"
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "P12", 
+      "group": 3, 
+      "name": "Citizens Advice Consumer Helpline"
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "P3", 
+      "group": 3, 
+      "name": "ACAS"
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "MIND", 
+      "group": 3, 
+      "name": "Mind/Mind Infoline"
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "NHSD", 
+      "group": 3, 
+      "name": "NHS Direct"
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "OFT", 
+      "group": 3, 
+      "name": "The Office of Fair Trading"
+    }
+  }, 
+  {
+    "pk": 20, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Pensions", 
+      "group": 3, 
+      "name": "The Pension Service"
+    }
+  }, 
+  {
+    "pk": 21, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "P13", 
+      "group": 3, 
+      "name": "Child Maintenance Options"
+    }
+  }, 
+  {
+    "pk": 22, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "BDL", 
+      "group": 3, 
+      "name": "Business Debtline"
+    }
+  }, 
+  {
+    "pk": 23, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "MAT", 
+      "group": 3, 
+      "name": "Money Advice Trust - My Money Steps"
+    }
+  }, 
+  {
+    "pk": 24, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "CAHELP", 
+      "group": 3, 
+      "name": "Citizens Advice helpline"
+    }
+  }, 
+  {
+    "pk": 25, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "SCDC", 
+      "group": 3, 
+      "name": "Step Change Debt Charity"
+    }
+  }, 
+  {
+    "pk": 26, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "LAWSOC", 
+      "group": 3, 
+      "name": "Law Society"
+    }
+  }, 
+  {
+    "pk": 27, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "IP", 
+      "group": 3, 
+      "name": "IPSEA"
+    }
+  }, 
+  {
+    "pk": 28, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "AGEC", 
+      "group": 3, 
+      "name": "Age Concern"
+    }
+  }, 
+  {
+    "pk": 29, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "REFA", 
+      "group": 3, 
+      "name": "Refugee Action"
+    }
+  }, 
+  {
+    "pk": 30, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "LAWW", 
+      "group": 3, 
+      "name": "Law Works"
+    }
+  }, 
+  {
+    "pk": 31, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "CCLC", 
+      "group": 3, 
+      "name": "Coram Childrens Legal Service"
+    }
+  }, 
+  {
+    "pk": 32, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "ACE", 
+      "group": 3, 
+      "name": "Advisory Centre for Education (ACE)"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Government"
+    }
+  }, 
+  {
+    "pk": 33, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "GA", 
+      "group": 4, 
+      "name": "Government Agency or Business"
+    }
+  }, 
+  {
+    "pk": 34, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "LAA", 
+      "group": 4, 
+      "name": "Legal Aid Agency"
+    }
+  }, 
+  {
+    "pk": 35, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "MP", 
+      "group": 4, 
+      "name": "Member of Parliament (MP)"
+    }
+  }, 
+  {
+    "pk": 36, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "LA", 
+      "group": 4, 
+      "name": "Local Authority"
+    }
+  }, 
+  {
+    "pk": 37, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "HOME", 
+      "group": 4, 
+      "name": "Home Office/UK Border Agency"
+    }
+  }, 
+  {
+    "pk": 38, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "DWP", 
+      "group": 4, 
+      "name": "DWP/JobCentrePlus"
+    }
+  }, 
+  {
+    "pk": 39, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Social Worker", 
+      "group": 4, 
+      "name": "Social Worker"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Advice Sector"
+    }
+  }, 
+  {
+    "pk": 40, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Legal", 
+      "group": 5, 
+      "name": "Other Legal Advice Agency"
+    }
+  }, 
+  {
+    "pk": 41, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "AA", 
+      "group": 5, 
+      "name": "Citizens Advice Bureau/Adviceguide.org.uk"
+    }
+  }, 
+  {
+    "pk": 42, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Law Centre", 
+      "group": 5, 
+      "name": "Law Centre"
+    }
+  }, 
+  {
+    "pk": 43, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "LS", 
+      "group": 5, 
+      "name": "Solicitor"
+    }
+  }, 
+  {
+    "pk": 44, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "P9", 
+      "group": 5, 
+      "name": "Solicitors Regulation Authority"
+    }
+  }, 
+  {
+    "pk": 45, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "CLA", 
+      "group": 5, 
+      "name": "Community Legal Advice (all providers)"
+    }
+  }, 
+  {
+    "pk": 46, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "SAC", 
+      "group": 5, 
+      "name": "Shelter Advice Centres"
+    }
+  }, 
+  {
+    "pk": 47, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "LCF", 
+      "group": 5, 
+      "name": "Law Centres Federation"
+    }
+  }, 
+  {
+    "pk": 48, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "ASA", 
+      "group": 5, 
+      "name": "Advice Services Alliance"
+    }
+  }, 
+  {
+    "pk": 49, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "DIAL", 
+      "group": 5, 
+      "name": "DIAL UK"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Justice System"
+    }
+  }, 
+  {
+    "pk": 50, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "CJ", 
+      "group": 6, 
+      "name": "Justice System"
+    }
+  }, 
+  {
+    "pk": 51, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "P14", 
+      "group": 6, 
+      "name": "Courts - Criminal (Magistrates/Crown)"
+    }
+  }, 
+  {
+    "pk": 52, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "CS", 
+      "group": 6, 
+      "name": "Court - Civil (County Court/SCC)"
+    }
+  }, 
+  {
+    "pk": 53, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Police", 
+      "group": 6, 
+      "name": "Police"
+    }
+  }, 
+  {
+    "pk": 54, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Prob", 
+      "group": 6, 
+      "name": "The Probation Service"
+    }
+  }, 
+  {
+    "pk": 55, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Pris", 
+      "group": 6, 
+      "name": "HM Prison Service"
+    }
+  }, 
+  {
+    "pk": 56, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "P15", 
+      "group": 6, 
+      "name": "Tribunal Service (Employment/benefits/immigration)"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Health"
+    }
+  }, 
+  {
+    "pk": 57, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "NH", 
+      "group": 7, 
+      "name": "Healthcare Sector"
+    }
+  }, 
+  {
+    "pk": 58, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Comm Health", 
+      "group": 7, 
+      "name": "Community Health"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Education"
+    }
+  }, 
+  {
+    "pk": 59, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "ES", 
+      "group": 8, 
+      "name": "Educational professional e.g. school"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Employment"
+    }
+  }, 
+  {
+    "pk": 60, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "AT", 
+      "group": 9, 
+      "name": "Employment Sector"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Directories - helpline, online and books"
+    }
+  }, 
+  {
+    "pk": 61, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Directory", 
+      "group": 10, 
+      "name": "Directories - helpline, online and books"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Financial Org"
+    }
+  }, 
+  {
+    "pk": 62, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Finance", 
+      "group": 11, 
+      "name": "Financial Sector"
+    }
+  }, 
+  {
+    "pk": 63, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Bank", 
+      "group": 11, 
+      "name": "Bank/Building Society or Financial Organisation"
+    }
+  }, 
+  {
+    "pk": 64, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "YPM", 
+      "group": 11, 
+      "name": "FSA"
+    }
+  }, 
+  {
+    "pk": 65, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "DG1", 
+      "group": 11, 
+      "name": ".Gov.uk"
+    }
+  }, 
+  {
+    "pk": 66, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "CYGLA", 
+      "group": 11, 
+      "name": "\"Can You Get Legal Aid\" Tool"
+    }
+  }, 
+  {
+    "pk": 67, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Other Search", 
+      "group": 11, 
+      "name": "Other Search Engines (Yahoo/Bing)"
+    }
+  }, 
+  {
+    "pk": 68, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "NM1", 
+      "group": 11, 
+      "name": "Other Website"
+    }
+  }, 
+  {
+    "pk": 69, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Utilities", 
+      "group": 11, 
+      "name": "Utilities (Gas/Water/Electricity)"
+    }
+  }, 
+  {
+    "pk": 70, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "CV", 
+      "group": 11, 
+      "name": "Community/Charity/Voluntary Sector"
+    }
+  }, 
+  {
+    "pk": 71, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Bailiffs", 
+      "group": 11, 
+      "name": "Bailiffs"
+    }
+  }
+]

@@ -45,7 +45,7 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
              'provider', 'log_set', 'notes', 'provider_notes', 'in_scope',
              'full_name', 'laa_reference', 'eligibility_state', 'thirdparty_details',
              'adaptation_details', 'billable_time', 'requires_action_by',
-             'matter_type1', 'matter_type2']
+             'matter_type1', 'matter_type2', 'media_code']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -237,6 +237,14 @@ class CreateCaseTestCase(BaseCaseTestCase):
         )
 
         self.assertNoLogInDB()
+
+    def test_case_serializer_with_media_code(self):
+        media_code = make_recipe('legalaid.media_code')
+
+        data = {u'media_code': media_code.code}
+        serializer = CaseSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        self.assertDictEqual(serializer.errors, {})
 
 
 class AssignCaseTestCase(BaseCaseTestCase):

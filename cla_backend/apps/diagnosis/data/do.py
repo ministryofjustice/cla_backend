@@ -1,12 +1,8 @@
+#! /Users/marcofucci/workspaces/pythonenv/cla_backend/bin/python
 import re
 import codecs
 import networkx as nx
 from lxml import objectify
-
-from os.path import join, abspath, dirname
-
-from django.conf import settings
-from django.utils.functional import SimpleLazyObject
 
 
 class GraphImporter(object):
@@ -58,8 +54,8 @@ class GraphImporter(object):
         for node in self.xpath_ns(self.doc, '//ns:node'):
             self.graph.add_node(
                 node.attrib['id'],
-                label=self.xpath_ns(node, 'ns:data[@key="%s"]' % body_key)[0].text,
-                title=self.xpath_ns(node, 'ns:data[@key="%s"]' % title_key)[0].text
+                label=self.xpath_ns(node, 'ns:data[@key="%s"]' % body_key),
+                title=self.xpath_ns(node, 'ns:data[@key="%s"]' % title_key)
             )
 
     def process_edges(self):
@@ -67,22 +63,6 @@ class GraphImporter(object):
             self.graph.add_edge(edge.attrib['source'], edge.attrib['target'])
 
 
-def get_graph():
-    file_path = join(abspath(dirname(__file__)), 'data', settings.DIAGNOSIS_FILE_NAME)
-    importer = GraphImporter(file_path)
-
-    return importer.process()
-
-
-def get_graph_mock():
-    G = nx.DiGraph()
-    G.add_node('root', label="what's your problem")
-    G.add_node('c1', label="You are my problem")
-    G.add_node('c2', label="Don't have any problem")
-
-    G.add_edge('root', 'c1')
-    G.add_edge('root', 'c2')
-    return G
-
-
-graph = SimpleLazyObject(lambda: get_graph())
+if __name__ == '__main__':
+    importer = GraphImporter('./graph-2014.07.18.graphml')
+    graph = importer.process()

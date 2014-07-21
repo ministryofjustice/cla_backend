@@ -165,7 +165,7 @@ INSTALLED_APPS += PROJECT_APPS
 
 # DIAGNOSIS
 
-DIAGNOSIS_FILE_NAME = 'graph-2014.07.18.graphml'
+DIAGNOSIS_FILE_NAME = 'graph-2014.07.21.graphml'
 
 
 # A sample logging configuration. The only tangible logging

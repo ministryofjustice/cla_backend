@@ -12,6 +12,7 @@ from django.utils.functional import SimpleLazyObject
 class GraphImporter(object):
     KEY_BODY = 'body'
     KEY_TITLE = 'title'
+    KEY_CONTEXT = 'context'
 
     def __init__(self, file_path):
         self.file_path = file_path
@@ -47,19 +48,36 @@ class GraphImporter(object):
 
         self.prop_mapping = {
             self.KEY_BODY: _get_id_value_for('body'),
-            self.KEY_TITLE: _get_id_value_for('title')
+            self.KEY_TITLE: _get_id_value_for('title'),
+            self.KEY_CONTEXT: _get_id_value_for('context:xml')
         }
 
     def process_nodes(self):
-        # for item in self.doc.graph.getchildren():
         body_key = self.prop_mapping[self.KEY_BODY]
         title_key = self.prop_mapping[self.KEY_TITLE]
+        context_key = self.prop_mapping[self.KEY_CONTEXT]
 
+        def _process_context(node):
+            xml_context = self.xpath_ns(node, 'ns:data[@key="%s"]' % context_key)
+            if not xml_context:
+                return None
+            xml_context = xml_context[0].find('context')
+
+            if xml_context is None:
+                return None
+
+            context = {}
+            for child in xml_context.getchildren():
+                context[child.tag] = child.text
+            return context
+
+        # looping through the nodes
         for node in self.xpath_ns(self.doc, '//ns:node'):
             self.graph.add_node(
                 node.attrib['id'],
                 label=self.xpath_ns(node, 'ns:data[@key="%s"]' % body_key)[0].text,
-                title=self.xpath_ns(node, 'ns:data[@key="%s"]' % title_key)[0].text
+                title=self.xpath_ns(node, 'ns:data[@key="%s"]' % title_key)[0].text,
+                context=_process_context(node)
             )
 
     def process_edges(self):

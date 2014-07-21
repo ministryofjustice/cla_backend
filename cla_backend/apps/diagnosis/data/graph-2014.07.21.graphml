@@ -20,12 +20,10 @@
   <key attr.name="description" attr.type="string" for="edge" id="d12"/>
   <key for="edge" id="d13" yfiles.type="edgegraphics"/>
   <graph edgedefault="directed" id="G">
-    <node id="root">
+    <node id="n0">
       <data key="d4"><![CDATA[Diagnosis for operators]]></data>
       <data key="d5"><![CDATA[Diagnosis for operators]]></data>
       <data key="d6"><![CDATA[testcontext]]></data>
-      <data key="d7">
-      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13226.91865079365" y="0.0"/>
@@ -138,8 +136,13 @@
       </data>
     </node>
     <node id="n6">
-      <data key="d4"><![CDATA[DEBT INSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>debt</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15.0" y="675.0"/>
@@ -176,8 +179,13 @@
       </data>
     </node>
     <node id="n8">
-      <data key="d4"><![CDATA[DEBT INSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>debt</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="195.0" y="675.0"/>
@@ -214,8 +222,13 @@
       </data>
     </node>
     <node id="n10">
-      <data key="d4"><![CDATA[DEBT INSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>debt</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="375.0" y="675.0"/>
@@ -252,8 +265,13 @@
       </data>
     </node>
     <node id="n12">
-      <data key="d4"><![CDATA[DEBT INSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>debt</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="555.0" y="675.0"/>
@@ -328,8 +346,13 @@
       </data>
     </node>
     <node id="n16">
-      <data key="d4"><![CDATA[DEBT INSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>debt</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="735.0" y="675.0"/>
@@ -366,8 +389,13 @@
       </data>
     </node>
     <node id="n18">
-      <data key="d4"><![CDATA[DEBT INSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>debt</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="915.0" y="675.0"/>
@@ -404,8 +432,13 @@
       </data>
     </node>
     <node id="n20">
-      <data key="d4"><![CDATA[DEBT INSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>debt</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1095.0" y="675.0"/>
@@ -480,8 +513,13 @@
       </data>
     </node>
     <node id="n24">
-      <data key="d4"><![CDATA[DEBT INSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>debt</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1275.0" y="675.0"/>
@@ -518,8 +556,13 @@
       </data>
     </node>
     <node id="n26">
-      <data key="d4"><![CDATA[DEBT INSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>debt</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1455.0" y="675.0"/>
@@ -556,8 +599,13 @@
       </data>
     </node>
     <node id="n28">
-      <data key="d4"><![CDATA[DEBT INSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>debt</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1635.0" y="675.0"/>
@@ -651,8 +699,13 @@
       </data>
     </node>
     <node id="n33">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1995.0" y="675.0"/>
@@ -689,8 +742,13 @@
       </data>
     </node>
     <node id="n35">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2175.0" y="675.0"/>
@@ -727,8 +785,13 @@
       </data>
     </node>
     <node id="n37">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2355.0" y="675.0"/>
@@ -765,8 +828,13 @@
       </data>
     </node>
     <node id="n39">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2535.0" y="675.0"/>
@@ -803,8 +871,13 @@
       </data>
     </node>
     <node id="n41">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2715.0" y="675.0"/>
@@ -841,8 +914,13 @@
       </data>
     </node>
     <node id="n43">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3075.0" y="675.0"/>
@@ -879,8 +957,13 @@
       </data>
     </node>
     <node id="n45">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3255.0" y="675.0"/>
@@ -917,8 +1000,13 @@
       </data>
     </node>
     <node id="n47">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3435.0" y="675.0"/>
@@ -993,8 +1081,13 @@
       </data>
     </node>
     <node id="n51">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1815.0" y="585.0"/>
@@ -1088,8 +1181,13 @@
       </data>
     </node>
     <node id="n56">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5415.0" y="675.0"/>
@@ -1126,8 +1224,13 @@
       </data>
     </node>
     <node id="n58">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3615.0" y="585.0"/>
@@ -1164,8 +1267,13 @@
       </data>
     </node>
     <node id="n60">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3795.0" y="585.0"/>
@@ -1202,8 +1310,13 @@
       </data>
     </node>
     <node id="n62">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3975.0" y="585.0"/>
@@ -1240,8 +1353,13 @@
       </data>
     </node>
     <node id="n64">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4155.0" y="585.0"/>
@@ -1278,8 +1396,13 @@
       </data>
     </node>
     <node id="n66">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4335.0" y="585.0"/>
@@ -1316,8 +1439,13 @@
       </data>
     </node>
     <node id="n68">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4515.0" y="585.0"/>
@@ -1354,8 +1482,13 @@
       </data>
     </node>
     <node id="n70">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4695.0" y="585.0"/>
@@ -1392,8 +1525,13 @@
       </data>
     </node>
     <node id="n72">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4875.0" y="585.0"/>
@@ -1430,8 +1568,13 @@
       </data>
     </node>
     <node id="n74">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5055.0" y="585.0"/>
@@ -1468,8 +1611,13 @@
       </data>
     </node>
     <node id="n76">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5235.0" y="585.0"/>
@@ -1525,8 +1673,8 @@
       </data>
     </node>
     <node id="n79">
-      <data key="d4"><![CDATA[DEBT OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1635.0" y="465.0"/>
@@ -1563,8 +1711,8 @@
       </data>
     </node>
     <node id="n81">
-      <data key="d4"><![CDATA[DEBT OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1815.0" y="465.0"/>
@@ -1601,8 +1749,8 @@
       </data>
     </node>
     <node id="n83">
-      <data key="d4"><![CDATA[DEBT OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1995.0" y="465.0"/>
@@ -1639,8 +1787,8 @@
       </data>
     </node>
     <node id="n85">
-      <data key="d4"><![CDATA[DEBT OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2175.0" y="465.0"/>
@@ -1677,8 +1825,8 @@
       </data>
     </node>
     <node id="n87">
-      <data key="d4"><![CDATA[DEBT OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[DEBT OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2355.0" y="465.0"/>
@@ -1696,7 +1844,7 @@
       </data>
     </node>
     <node id="n88">
-      <data key="d4"><![CDATA[If none of the above consider whether discrimination might apply e.g. landlord asks deaf person for non-refundable deposit because be believes tenant will be less reliable than others; housing association with blanket policy of requiring tenants with history mental health problems to have only a short-term tenancy in first instance; landlord refusing to let to racial group because he believes it will deter white tenants; minority groups only being offered properties that are considered hard to let; landlord responds to repair requests more slowly for one tenant because he has a learning disability; landlord refuses permission to allow a disabled tent to carry out improvements to the premises to better facilitate their disability]]></data>
+      <data key="d4"><![CDATA[If none of the above consider whether discrimination might apply e.g. landlord asks deaf person for non-refundable deposit because be believes tenant will be less reliable than others; housing association with blanket policy of requiring tenants with history mental health problems to have only a short-term tenancy in first instance; landlord refusing to let to racial group because he believes it will deter white tenants; minority groups only being offered properties that are considered hard to let; landlord responds to repair requests more slowly for one tenant because he has a learning disability; landlord refuses permission to allow a disabled tent to out improvements to the premises to better facilitate their disability]]></data>
       <data key="d5"><![CDATA[If none of the above]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -1791,8 +1939,13 @@
       </data>
     </node>
     <node id="n93">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6855.0" y="585.0"/>
@@ -1829,8 +1982,13 @@
       </data>
     </node>
     <node id="n95">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7035.0" y="585.0"/>
@@ -1867,8 +2025,13 @@
       </data>
     </node>
     <node id="n97">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7215.0" y="585.0"/>
@@ -1905,8 +2068,13 @@
       </data>
     </node>
     <node id="n99">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7395.0" y="585.0"/>
@@ -1981,8 +2149,13 @@
       </data>
     </node>
     <node id="n103">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5775.0" y="585.0"/>
@@ -2019,8 +2192,13 @@
       </data>
     </node>
     <node id="n105">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5955.0" y="585.0"/>
@@ -2057,8 +2235,13 @@
       </data>
     </node>
     <node id="n107">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6135.0" y="585.0"/>
@@ -2095,8 +2278,13 @@
       </data>
     </node>
     <node id="n109">
-      <data key="d4"><![CDATA[HOUSING OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5595.0" y="465.0"/>
@@ -2152,8 +2340,13 @@
       </data>
     </node>
     <node id="n112">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6315.0" y="465.0"/>
@@ -2190,8 +2383,13 @@
       </data>
     </node>
     <node id="n114">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6495.0" y="465.0"/>
@@ -2209,8 +2407,8 @@
       </data>
     </node>
     <node id="n115">
-      <data key="d4"><![CDATA[Other matters out of scope, rediagnose]]></data>
-      <data key="d5"><![CDATA[Other matters out of]]></data>
+      <data key="d4"><![CDATA[Other out of scope, rediagnose]]></data>
+      <data key="d5"><![CDATA[Other out of]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6675.0" y="330.0"/>
@@ -2228,8 +2426,13 @@
       </data>
     </node>
     <node id="n116">
-      <data key="d4"><![CDATA[HOUSING OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>housing</category>
+</context>
+      </data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6675.0" y="465.0"/>
@@ -2266,8 +2469,8 @@
       </data>
     </node>
     <node id="n118">
-      <data key="d4"><![CDATA[HOUSING OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6855.0" y="330.0"/>
@@ -3273,8 +3476,8 @@
       </data>
     </node>
     <node id="n171">
-      <data key="d4"><![CDATA[FAMILY INSCOPE NOOPERATORMEANSTEST]]></data>
-      <data key="d5"><![CDATA[FAMILY INSCOPE NOOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE NOOPERATORMEANSTEST]]></data>
+      <data key="d5"><![CDATA[INSCOPE NOOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9251.25" y="855.0"/>
@@ -3311,8 +3514,8 @@
       </data>
     </node>
     <node id="n173">
-      <data key="d4"><![CDATA[FAMILY INSCOPE]]></data>
-      <data key="d5"><![CDATA[FAMILY INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9431.25" y="855.0"/>
@@ -3349,8 +3552,8 @@
       </data>
     </node>
     <node id="n175">
-      <data key="d4"><![CDATA[FAMILY INSCOPE]]></data>
-      <data key="d5"><![CDATA[FAMILY INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9611.25" y="855.0"/>
@@ -3387,8 +3590,8 @@
       </data>
     </node>
     <node id="n177">
-      <data key="d4"><![CDATA[FAMILY INSCOPE]]></data>
-      <data key="d5"><![CDATA[FAMILY INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9791.25" y="855.0"/>
@@ -3425,8 +3628,8 @@
       </data>
     </node>
     <node id="n179">
-      <data key="d4"><![CDATA[FAMILY INSCOPE]]></data>
-      <data key="d5"><![CDATA[FAMILY INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9971.25" y="855.0"/>
@@ -3463,8 +3666,8 @@
       </data>
     </node>
     <node id="n181">
-      <data key="d4"><![CDATA[FAMILY OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[FAMILY OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10151.25" y="855.0"/>
@@ -3501,8 +3704,8 @@
       </data>
     </node>
     <node id="n183">
-      <data key="d4"><![CDATA[FAMILY OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[FAMILY OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8902.67738095238" y="585.0"/>
@@ -3558,8 +3761,8 @@
       </data>
     </node>
     <node id="n186">
-      <data key="d4"><![CDATA[FAMLY INSCOPE NOOPERATORMEANSTEST]]></data>
-      <data key="d5"><![CDATA[FAMLY INSCOPE NOOPER]]></data>
+      <data key="d4"><![CDATA[INSCOPE NOOPERATORMEANSTEST]]></data>
+      <data key="d5"><![CDATA[INSCOPE NOOPER]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9622.67738095238" y="465.0"/>
@@ -3596,8 +3799,8 @@
       </data>
     </node>
     <node id="n188">
-      <data key="d4"><![CDATA[FAMILY INSCOPE NOOPERATORMEANSTEST]]></data>
-      <data key="d5"><![CDATA[FAMILY INSCOPE NOOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE NOOPERATORMEANSTEST]]></data>
+      <data key="d5"><![CDATA[INSCOPE NOOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9802.67738095238" y="465.0"/>
@@ -3634,8 +3837,8 @@
       </data>
     </node>
     <node id="n190">
-      <data key="d4"><![CDATA[FAMILY INSCOPE NOOPERATORMEANSTEST]]></data>
-      <data key="d5"><![CDATA[FAMILY INSCOPE NOOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE NOOPERATORMEANSTEST]]></data>
+      <data key="d5"><![CDATA[INSCOPE NOOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9982.67738095238" y="465.0"/>
@@ -3672,8 +3875,8 @@
       </data>
     </node>
     <node id="n192">
-      <data key="d4"><![CDATA[FAMILY OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[FAMILY OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10162.67738095238" y="465.0"/>
@@ -3710,8 +3913,8 @@
       </data>
     </node>
     <node id="n194">
-      <data key="d4"><![CDATA[FAMILY OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[FAMILY OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10342.67738095238" y="465.0"/>
@@ -3748,7 +3951,7 @@
       </data>
     </node>
     <node id="n196">
-      <data key="d4"><![CDATA[The Discrimination category covers advice on cases that contravene the Equalities Act 2010. The originating issue could be in another category (e.g. housing or employment) but the client will believe that they have been discriminated, harassed or victimised.  Please note we have two approaches we can take for diagnosing discrimination matters; these are proactive (for cases that originate as Employment, Education or Consumer matters) and reactive (for cases that originate as Housing, Welfare Benefits or Actions Against the Police matters). Choosing the relevant main category will (if appropriate) give you context on the correct discrimination flow.  However, if the client presents a discrimination issue and therefore doesn’t need any further diagnosis please click on the ‘discrimination’ tab and work through the proactive approach from here.  For further information on the different approach to take please search the operator guidance.  Key questions to use (sensitively to what client has said) include: - Do you think you have been singled out, or treated differently or experienced worse treatment? If so, why? - Do you think you have been disadvantaged in some way? If so, how? - Do you think that rules, practices or mays of doing things have put you at a disadvantage? If so, how? - Did something happen to make you feel that you were in an environment that was intimidating, hostile, degrading, humiliating or off onsive, or that violated your dignity? - Do you think that what has happened to you is because you have previously complained of discrimination, brought a claim of discrimination, supported someone else’s claim or was suspected of doing one of these things? If so, why? - Do you believe that you have been treated differently or experience worse treatment because of something that arises out of your disability? If so, why? - Do you believe that you have been treated or experienced worse treatment because of something that is connected to your pregnancy or maternity leave? If so, why? - Do you believe that any steps could have been taken to assist you to overcome any problems (i.e. accessing services, at work) that are linked to your disability? - Where did the discrimination occur? - Why do you think you were discriminated against?]]></data>
+      <data key="d4"><![CDATA[The Discrimination category covers advice on cases that contravene the Equalities Act 2010. The originating issue could be in another category (e.g. housing or employment) but the client will believe that they have been discriminated, harassed or victimised.  Please note we have two approaches we can take for diagnosing discrimination matters; these are proactive (for cases that originate as Employment, Education or Consumer matters) and reactive (for cases that originate as Housing, Welfare Benefits or Actions Against the Police matters). Choosing the relevant main category will (if appropriate) give you context on the correct discrimination flow.  However, if the client presents a discrimination issue and therefore doesn’t need any further diagnosis please click on the ‘discrimination’ tab and work through the proactive approach from here.  For further information on the different approach to take please search the operator guidance.  Key questions to use (sensitively to what client has said) include: - Do you think you have been singled out, or treated differently or experienced worse treatment? If so, why? - Do you think you have been disadvantaged in some way? If so, how? - Do you think that rules, practices or mays of doing things have put you at a disadvantage? If so, how? - Did something happen to make you feel that you were in an environment that was intimidating, hostile, degrading, humiliating or off onsive, or that violated your dignity? - Do you think that what has happened to you is because you have previously complained of discrimination, brought a claim of discrimination, supported someone else’s claim or was suspected of doing one of these things? If so, why? - Do you believe that you have been treated differently or experience worse treatment because of something that out of your disability? If so, why? - Do you believe that you have been treated or experienced worse treatment because of something that is connected to your pregnancy or maternity leave? If so, why? - Do you believe that any steps could have been taken to assist you to overcome any problems (i.e. accessing services, at work) that are linked to your disability? - Where did the discrimination occur? - Why do you think you were discriminated against?]]></data>
       <data key="d5"><![CDATA[The Discrimination c]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -3786,7 +3989,7 @@
       </data>
     </node>
     <node id="n198">
-      <data key="d4"><![CDATA[Direct discrimination - treated less favourably than someone else than someone else in similar circumstances (e.g. the client things that they have been singled out for worse treatment or the client things that they have been disadvantaged in some way compared to someone else) due to a protected characteristic. This includes situations where clients are linked to a person with a protected characteristic and suffers less favourable treatment.]]></data>
+      <data key="d4"><![CDATA[Direct discrimination - treated less favourably than someone else than someone else in similar circumstances (e.g. the client things that they have been out for worse treatment or the client things that they have been disadvantaged in some way compared to someone else) due to a protected characteristic. This includes situations where clients are linked to a person with a protected characteristic and suffers less favourable treatment.]]></data>
       <data key="d5"><![CDATA[Direct discriminatio]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -3881,7 +4084,7 @@
       </data>
     </node>
     <node id="n203">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -3919,7 +4122,7 @@
       </data>
     </node>
     <node id="n205">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -3957,7 +4160,7 @@
       </data>
     </node>
     <node id="n207">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -3995,7 +4198,7 @@
       </data>
     </node>
     <node id="n209">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4033,7 +4236,7 @@
       </data>
     </node>
     <node id="n211">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4071,7 +4274,7 @@
       </data>
     </node>
     <node id="n213">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4109,7 +4312,7 @@
       </data>
     </node>
     <node id="n215">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4185,7 +4388,7 @@
       </data>
     </node>
     <node id="n219">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4223,7 +4426,7 @@
       </data>
     </node>
     <node id="n221">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4261,7 +4464,7 @@
       </data>
     </node>
     <node id="n223">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4299,8 +4502,8 @@
       </data>
     </node>
     <node id="n225">
-      <data key="d4"><![CDATA[DISCRIMINATION OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[DISCRIMINATION OUTOF]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOF]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14863.92619047619" y="960.0"/>
@@ -4375,7 +4578,7 @@
       </data>
     </node>
     <node id="n229">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4413,7 +4616,7 @@
       </data>
     </node>
     <node id="n231">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4451,7 +4654,7 @@
       </data>
     </node>
     <node id="n233">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4489,7 +4692,7 @@
       </data>
     </node>
     <node id="n235">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4527,7 +4730,7 @@
       </data>
     </node>
     <node id="n237">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4565,8 +4768,8 @@
       </data>
     </node>
     <node id="n239">
-      <data key="d4"><![CDATA[DISCRIMINATION OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[DISCRIMINATION OUTOF]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOF]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15943.92619047619" y="960.0"/>
@@ -4641,7 +4844,7 @@
       </data>
     </node>
     <node id="n243">
-      <data key="d4"><![CDATA[DISCRIMINATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[DISCRIMINATION INSCO]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4679,8 +4882,8 @@
       </data>
     </node>
     <node id="n245">
-      <data key="d4"><![CDATA[DISCRIMINATION OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[DISCRIMINATION OUTOF]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOF]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="16303.92619047619" y="960.0"/>
@@ -4755,7 +4958,7 @@
       </data>
     </node>
     <node id="n249">
-      <data key="d4"><![CDATA[Discrimination arising out of a disability - the client thinks that they have been singled out for worse treatment, or that they have been disadvantaged in some way because of something arising out of their disability (e.g. being dismissed for being absent from work which was caused by a disability or a child not being allowed access to a nursery because not toilet trained when have a bowel condition)]]></data>
+      <data key="d4"><![CDATA[Discrimination arising out of a disability - the client thinks that they have been singled out for worse treatment, or that they have been disadvantaged in some way because of something out of their disability (e.g. being dismissed for being absent from work which was caused by a disability or a child not being allowed access to a nursery because not toilet trained when have a bowel condition)]]></data>
       <data key="d5"><![CDATA[Discrimination arisi]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -4793,7 +4996,7 @@
       </data>
     </node>
     <node id="n251">
-      <data key="d4"><![CDATA[Failure to make reasonable adjustments - the client suffers from a disability which causes them difficulty in accessing services (e.g. not having ramp access for wheelchair users, not sending information out in Braille)]]></data>
+      <data key="d4"><![CDATA[Failure to make reasonable adjustments - the client suffers from a disability which causes them difficulty in accessing services (e.g. not having ramp access for wheelchair users, not sending out in Braille)]]></data>
       <data key="d5"><![CDATA[Failure to make reas]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -5097,8 +5300,8 @@
       </data>
     </node>
     <node id="n267">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9632.67857142857" y="1020.0"/>
@@ -5135,8 +5338,8 @@
       </data>
     </node>
     <node id="n269">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9812.67857142857" y="1020.0"/>
@@ -5173,8 +5376,8 @@
       </data>
     </node>
     <node id="n271">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9992.67857142857" y="1020.0"/>
@@ -5211,8 +5414,8 @@
       </data>
     </node>
     <node id="n273">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10172.67857142857" y="1020.0"/>
@@ -5249,8 +5452,8 @@
       </data>
     </node>
     <node id="n275">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10352.67857142857" y="1020.0"/>
@@ -5287,8 +5490,8 @@
       </data>
     </node>
     <node id="n277">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10532.67857142857" y="1020.0"/>
@@ -5325,8 +5528,8 @@
       </data>
     </node>
     <node id="n279">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10712.67857142857" y="1020.0"/>
@@ -5401,8 +5604,8 @@
       </data>
     </node>
     <node id="n283">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10892.67857142857" y="1020.0"/>
@@ -5439,8 +5642,8 @@
       </data>
     </node>
     <node id="n285">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11072.67857142857" y="1020.0"/>
@@ -5477,8 +5680,8 @@
       </data>
     </node>
     <node id="n287">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11252.67857142857" y="1020.0"/>
@@ -5515,8 +5718,8 @@
       </data>
     </node>
     <node id="n289">
-      <data key="d4"><![CDATA[EDUCATION OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11435.490476190476" y="1020.0"/>
@@ -5591,8 +5794,8 @@
       </data>
     </node>
     <node id="n293">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11618.30238095238" y="1020.0"/>
@@ -5629,8 +5832,8 @@
       </data>
     </node>
     <node id="n295">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11798.30238095238" y="1020.0"/>
@@ -5667,8 +5870,8 @@
       </data>
     </node>
     <node id="n297">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11978.30238095238" y="1020.0"/>
@@ -5705,8 +5908,8 @@
       </data>
     </node>
     <node id="n299">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12158.30238095238" y="1020.0"/>
@@ -5743,8 +5946,8 @@
       </data>
     </node>
     <node id="n301">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12338.30238095238" y="1020.0"/>
@@ -5781,8 +5984,8 @@
       </data>
     </node>
     <node id="n303">
-      <data key="d4"><![CDATA[EDUCATION OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12521.114285714286" y="1020.0"/>
@@ -5857,8 +6060,8 @@
       </data>
     </node>
     <node id="n307">
-      <data key="d4"><![CDATA[EDUCATION INSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12703.92619047619" y="1020.0"/>
@@ -5895,8 +6098,8 @@
       </data>
     </node>
     <node id="n309">
-      <data key="d4"><![CDATA[EDUCATION OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[EDUCATION OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12886.738095238095" y="1020.0"/>
@@ -5971,7 +6174,7 @@
       </data>
     </node>
     <node id="n313">
-      <data key="d4"><![CDATA[Discrimination arising out of a disability]]></data>
+      <data key="d4"><![CDATA[Discrimination out of a disability]]></data>
       <data key="d5"><![CDATA[Discrimination arisi]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -6066,7 +6269,7 @@
       </data>
     </node>
     <node id="n318">
-      <data key="d4"><![CDATA[Teacher or employee of LAA (is out of scope)]]></data>
+      <data key="d4"><![CDATA[Teacher or employee of LAA (out of scope)]]></data>
       <data key="d5"><![CDATA[Teacher or employee ]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -6199,8 +6402,8 @@
       </data>
     </node>
     <node id="n325">
-      <data key="d4"><![CDATA[WB INSCOPE]]></data>
-      <data key="d5"><![CDATA[WB INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13222.67738095238" y="465.0"/>
@@ -6237,8 +6440,8 @@
       </data>
     </node>
     <node id="n327">
-      <data key="d4"><![CDATA[WB INSCOPE]]></data>
-      <data key="d5"><![CDATA[WB INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13402.67738095238" y="465.0"/>
@@ -6313,8 +6516,8 @@
       </data>
     </node>
     <node id="n331">
-      <data key="d4"><![CDATA[WB OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[WB OUTOFSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12704.105952380953" y="330.0"/>
@@ -6408,8 +6611,8 @@
       </data>
     </node>
     <node id="n336">
-      <data key="d4"><![CDATA[EMPLOYMENT OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[EMPLOYMENT OUTOFSCOP]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOP]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13428.836507936508" y="330.0"/>
@@ -6465,8 +6668,8 @@
       </data>
     </node>
     <node id="n339">
-      <data key="d4"><![CDATA[Otherwise out of scope]]></data>
-      <data key="d5"><![CDATA[Otherwise out of sco]]></data>
+      <data key="d4"><![CDATA[out of scope]]></data>
+      <data key="d5"><![CDATA[out of sco]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13439.061507936507" y="225.0"/>
@@ -6484,8 +6687,8 @@
       </data>
     </node>
     <node id="n340">
-      <data key="d4"><![CDATA[CONSUMER OUTOFSCOPE DISCLAIMERNONCLA]]></data>
-      <data key="d5"><![CDATA[CONSUMER OUTOFSCOPE ]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE DISCLAIMERNONCLA]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE ]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13616.314285714287" y="330.0"/>
@@ -6522,7 +6725,7 @@
       </data>
     </node>
     <node id="n342">
-      <data key="d4"><![CDATA[Client has been subject to discrimination e.g. police officer used racially abusive language when making an arrest; a victim who believes the police have not taken a report of a violent crime seriously because of their sexuality; young asian man singled out for stop and search when among a group of other young white men.]]></data>
+      <data key="d4"><![CDATA[Client has been subject to discrimination e.g. police officer used racially abusive language when making an arrest; a victim who believes the police have not taken a report of a violent crime seriously because of their sexuality; young asian man out for stop and search when among a group of other young white men.]]></data>
       <data key="d5"><![CDATA[Client has been subj]]></data>
       <data key="d10">
         <y:ShapeNode>
@@ -6579,8 +6782,8 @@
       </data>
     </node>
     <node id="n345">
-      <data key="d4"><![CDATA[AAP OUTOFSCOPE DISCLAIMERNONCLA]]></data>
-      <data key="d5"><![CDATA[AAP OUTOFSCOPE DISCL]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE DISCLAIMERNONCLA]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE DISCL]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13979.061507936507" y="330.0"/>
@@ -6807,8 +7010,8 @@
       </data>
     </node>
     <node id="n357">
-      <data key="d4"><![CDATA[HOUSING INSCOPE]]></data>
-      <data key="d5"><![CDATA[HOUSING INSCOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14519.061507936507" y="465.0"/>
@@ -6921,8 +7124,8 @@
       </data>
     </node>
     <node id="n363">
-      <data key="d4"><![CDATA[MHEALTH OUTOFSCOPE DISCLAIMERNONCLA]]></data>
-      <data key="d5"><![CDATA[MHEALTH OUTOFSCOPE D]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE DISCLAIMERNONCLA]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE D]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14881.826190476191" y="465.0"/>
@@ -7035,8 +7238,8 @@
       </data>
     </node>
     <node id="n369">
-      <data key="d4"><![CDATA[PI OUTOFSCOPE DISCLAIMERNONCLA]]></data>
-      <data key="d5"><![CDATA[PI OUTOFSCOPE DISCLA]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE DISCLAIMERNONCLA]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE DISCLA]]></data>
       <data key="d10">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15244.590873015874" y="465.0"/>
@@ -7053,7 +7256,7 @@
         </y:ShapeNode>
       </data>
     </node>
-    <edge id="e0" source="root" target="n1">
+    <edge id="e0" source="n0" target="n1">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="-69.64285714285711" sy="15.0" tx="0.0" ty="-15.0">
@@ -8047,7 +8250,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e88" source="root" target="n89">
+    <edge id="e88" source="n0" target="n89">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="-58.92857142857139" sy="15.0" tx="0.0" ty="-15.0">
@@ -8383,7 +8586,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e118" source="root" target="n119">
+    <edge id="e118" source="n0" target="n119">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="-48.21428571428568" sy="15.0" tx="0.0" ty="-15.0">
@@ -9236,7 +9439,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e194" source="root" target="n195">
+    <edge id="e194" source="n0" target="n195">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="-26.785714285714263" sy="15.0" tx="0.0" ty="-15.0">
@@ -9884,7 +10087,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e251" source="root" target="n252">
+    <edge id="e251" source="n0" target="n252">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="-37.49999999999997" sy="15.0" tx="0.0" ty="-15.0">
@@ -10683,7 +10886,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e321" source="root" target="n322">
+    <edge id="e321" source="n0" target="n322">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="-16.071428571428555" sy="15.0" tx="0.0" ty="-15.0">
@@ -10804,7 +11007,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e331" source="root" target="n332">
+    <edge id="e331" source="n0" target="n332">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="-5.357142857142847" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -10863,7 +11066,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e336" source="root" target="n337">
+    <edge id="e336" source="n0" target="n337">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="5.357142857142861" sy="15.0" tx="0.0" ty="-15.0">
@@ -10912,7 +11115,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e340" source="root" target="n341">
+    <edge id="e340" source="n0" target="n341">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="16.07142857142857" sy="15.0" tx="0.0" ty="-15.0">
@@ -10968,7 +11171,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e345" source="root" target="n346">
+    <edge id="e345" source="n0" target="n346">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="26.785714285714285" sy="15.0" tx="0.0" ty="-15.0">
@@ -10991,7 +11194,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e347" source="root" target="n348">
+    <edge id="e347" source="n0" target="n348">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="48.214285714285715" sy="15.0" tx="0.0" ty="-15.0">
@@ -11014,7 +11217,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e349" source="root" target="n350">
+    <edge id="e349" source="n0" target="n350">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="37.5" sy="15.0" tx="0.0" ty="-15.0">
@@ -11103,7 +11306,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e357" source="root" target="n358">
+    <edge id="e357" source="n0" target="n358">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="58.92857142857143" sy="15.0" tx="0.0" ty="-15.0">
@@ -11169,7 +11372,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e363" source="root" target="n364">
+    <edge id="e363" source="n0" target="n364">
       <data key="d13">
         <y:PolyLineEdge>
           <y:Path sx="69.64285714285714" sy="15.0" tx="0.0" ty="-15.0">

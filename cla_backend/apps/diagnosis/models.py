@@ -1,4 +1,5 @@
 import json
+from cla_common.constants import DIAGNOSIS_SCOPE
 from jsonfield import JSONField
 from model_utils.models import TimeStampedModel
 
@@ -12,11 +13,7 @@ class DiagnosisTraversal(TimeStampedModel):
     nodes = JSONField(null=True, blank=True)
     current_node_id = models.CharField(blank=True, max_length=50)
 
-    def get_nodes(self):
-        return json.loads(self.nodes) if self.nodes else None
+    state = models.CharField(blank=True, null=True, max_length=50, default=DIAGNOSIS_SCOPE.UNKNOWN)
+    category = models.ForeignKey('legalaid.Category', null=True, blank=True)
 
-    # def get_current_node(self):
-    #     nodes = self.get_nodes()
-    #     if nodes:
-    #         return nodes[-1]
-    #     return None
+

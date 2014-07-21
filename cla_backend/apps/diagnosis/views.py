@@ -9,6 +9,7 @@ class BaseDiagnosisViewSet(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     NestedGenericModelMixin,
     viewsets.GenericViewSet
 ):

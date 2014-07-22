@@ -21,6 +21,7 @@ from legalaid.views import BaseUserViewSet, FormActionMixin, \
     BaseCategoryViewSet, BaseEligibilityCheckViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
+from diagnosis.views import BaseDiagnosisViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
@@ -373,4 +374,8 @@ class ArticleCategoryViewSet(CallCentrePermissionsViewSetMixin,
 
 
 class TimerViewSet(CallCentrePermissionsViewSetMixin, BaseTimerViewSet):
+    pass
+
+
+class DiagnosisViewSet(CallCentrePermissionsViewSetMixin, BaseDiagnosisViewSet):
     pass

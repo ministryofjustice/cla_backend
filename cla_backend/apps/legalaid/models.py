@@ -2,6 +2,7 @@ import logging
 import datetime
 from cla_common.db.mixins import ModelDiffMixin
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.db.models import SET_NULL
 from uuidfield import UUIDField
 from model_utils.models import TimeStampedModel
 
@@ -364,6 +365,8 @@ class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True,
                                              blank=True)
+    diagnosis = models.OneToOneField('diagnosis.DiagnosisTraversal', null=True,
+                                             blank=True, on_delete=SET_NULL)
     personal_details = models.ForeignKey(PersonalDetails, blank=True,
                                          null=True)
 

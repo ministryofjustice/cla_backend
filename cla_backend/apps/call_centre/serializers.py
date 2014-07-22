@@ -159,7 +159,7 @@ class CaseSerializer(CaseSerializerBase):
             'modified', 'created_by', 'provider', 'log_set',
             'notes', 'provider_notes', 'in_scope', 'full_name', 'thirdparty_details',
             'adaptation_details', 'laa_reference', 'eligibility_state', 'billable_time',
-            'matter_type1', 'matter_type2', 'requires_action_by', 'media_code'
+            'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis', 'media_code'
         )
 
 

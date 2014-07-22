@@ -7,40 +7,20 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('diagnosis', '0001_initial'),
+    )
+
     def forwards(self, orm):
-        # Adding model 'MediaCodeGroup'
-        db.create_table(u'legalaid_mediacodegroup', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
-        ))
-        db.send_create_signal(u'legalaid', ['MediaCodeGroup'])
-
-        # Adding model 'MediaCode'
-        db.create_table(u'legalaid_mediacode', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
-            ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
-            ('group', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['legalaid.MediaCodeGroup'])),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('code', self.gf('django.db.models.fields.CharField')(max_length=20)),
-        ))
-        db.send_create_signal(u'legalaid', ['MediaCode'])
-
-        # Adding field 'Case.media_code'
-        db.add_column(u'legalaid_case', 'media_code',
-                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['legalaid.MediaCode'], null=True, blank=True),
+        # Adding field 'Case.diagnosis'
+        db.add_column(u'legalaid_case', 'diagnosis',
+                      self.gf('django.db.models.fields.related.OneToOneField')(to=orm['diagnosis.DiagnosisTraversal'], unique=True, null=True, on_delete=models.SET_NULL, blank=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'MediaCodeGroup'
-        db.delete_table(u'legalaid_mediacodegroup')
-
-        # Deleting model 'MediaCode'
-        db.delete_table(u'legalaid_mediacode')
-
-        # Deleting field 'Case.media_code'
-        db.delete_column(u'legalaid_case', 'media_code_id')
+        # Deleting field 'Case.diagnosis'
+        db.delete_column(u'legalaid_case', 'diagnosis_id')
 
 
     models = {
@@ -102,6 +82,17 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        u'diagnosis.diagnosistraversal': {
+            'Meta': {'object_name': 'DiagnosisTraversal'},
+            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Category']", 'null': 'True', 'blank': 'True'}),
+            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
+            'current_node_id': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
+            'nodes': ('jsonfield.fields.JSONField', [], {'null': 'True', 'blank': 'True'}),
+            'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'}),
+            'state': ('django.db.models.fields.CharField', [], {'default': "'UNKNOWN'", 'max_length': '50', 'null': 'True', 'blank': 'True'})
+        },
         u'legalaid.adaptationdetails': {
             'Meta': {'object_name': 'AdaptationDetails'},
             'bsl_webcam': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -122,6 +113,7 @@ class Migration(SchemaMigration):
             'billable_time': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'}),
+            'diagnosis': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['diagnosis.DiagnosisTraversal']", 'unique': 'True', 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'eligibility_check': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['legalaid.EligibilityCheck']", 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'in_scope': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),

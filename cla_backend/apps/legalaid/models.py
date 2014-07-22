@@ -256,9 +256,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
         if self.category:
             d['category'] = self.category.code
 
-        d['property_data'] = self.property_set.values_list(
-            'value', 'mortgage_left', 'share', 'disputed'
-        )
+        d['property_data'] = self.property_set.values('value', 'mortgage_left', 'share', 'disputed')
 
         d['facts'] = compose_dict(props=[
             'dependants_old', 'dependants_young', 'has_partner',

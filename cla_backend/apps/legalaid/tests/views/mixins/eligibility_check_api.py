@@ -91,6 +91,7 @@ class EligibilityCheckAPIMixin(object):
              'has_partner',
              'on_passported_benefits',
              'on_nass_benefits',
+             'is_under_eighteen',
              'is_you_or_your_partner_over_60']
         )
 

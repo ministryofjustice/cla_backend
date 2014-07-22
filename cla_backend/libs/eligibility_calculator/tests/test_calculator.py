@@ -941,6 +941,8 @@ class IsEligibleTestCase(unittest.TestCase):
         """
         case_data = mock.MagicMock()
         mocked_on_passported_benefits = mock.PropertyMock()
+        mocked_is_under_eighteen = mock.PropertyMock(return_value=False)
+        type(case_data.facts).is_under_eighteen = mocked_is_under_eighteen
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
         case_data.facts.on_nass_benefits = False
         ec = EligibilityChecker(case_data)
@@ -963,6 +965,8 @@ class IsEligibleTestCase(unittest.TestCase):
         """
         case_data = mock.MagicMock()
         mocked_on_passported_benefits = mock.PropertyMock()
+        mocked_is_under_eighteen = mock.PropertyMock(return_value=False)
+        type(case_data.facts).is_under_eighteen = mocked_is_under_eighteen
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
         case_data.facts.on_nass_benefits = False
         self.assertFalse(mocked_on_passported_benefits.called)
@@ -986,6 +990,8 @@ class IsEligibleTestCase(unittest.TestCase):
         """
         case_data = mock.MagicMock()
         mocked_on_passported_benefits = mock.PropertyMock()
+        mocked_is_under_eighteen = mock.PropertyMock(return_value=False)
+        type(case_data.facts).is_under_eighteen = mocked_is_under_eighteen
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
         case_data.facts.on_nass_benefits = False
         self.assertFalse(mocked_on_passported_benefits.called)
@@ -1010,6 +1016,8 @@ class IsEligibleTestCase(unittest.TestCase):
         """
         case_data = mock.MagicMock()
         mocked_on_passported_benefits = mock.PropertyMock()
+        mocked_is_under_eighteen = mock.PropertyMock(return_value=False)
+        type(case_data.facts).is_under_eighteen = mocked_is_under_eighteen
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
         case_data.facts.on_nass_benefits = False
         self.assertFalse(mocked_on_passported_benefits.called)
@@ -1030,6 +1038,8 @@ class IsEligibleTestCase(unittest.TestCase):
         """
         case_data = mock.MagicMock()
         mocked_on_passported_benefits = mock.PropertyMock()
+        mocked_is_under_eighteen = mock.PropertyMock(return_value=False)
+        type(case_data.facts).is_under_eighteen = mocked_is_under_eighteen
         mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
         type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits

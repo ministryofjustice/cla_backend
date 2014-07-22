@@ -117,6 +117,9 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
+        if self.case_data.facts.is_under_eighteen:
+            return True
+
         if self.case_data.facts.on_nass_benefits:
             return True
 

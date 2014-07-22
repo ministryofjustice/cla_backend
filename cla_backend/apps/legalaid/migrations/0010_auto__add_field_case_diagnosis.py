@@ -7,10 +7,14 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('diagnosis', '0001_initial'),
+    )
+
     def forwards(self, orm):
         # Adding field 'Case.diagnosis'
         db.add_column(u'legalaid_case', 'diagnosis',
-                      self.gf('django.db.models.fields.related.OneToOneField')(to=orm['diagnosis.DiagnosisTraversal'], unique=True, null=True, blank=True),
+                      self.gf('django.db.models.fields.related.OneToOneField')(to=orm['diagnosis.DiagnosisTraversal'], unique=True, null=True, on_delete=models.SET_NULL, blank=True),
                       keep_default=False)
 
 
@@ -80,11 +84,14 @@ class Migration(SchemaMigration):
         },
         u'diagnosis.diagnosistraversal': {
             'Meta': {'object_name': 'DiagnosisTraversal'},
+            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Category']", 'null': 'True', 'blank': 'True'}),
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
+            'current_node_id': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
             'nodes': ('jsonfield.fields.JSONField', [], {'null': 'True', 'blank': 'True'}),
-            'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'})
+            'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'}),
+            'state': ('django.db.models.fields.CharField', [], {'default': "'UNKNOWN'", 'max_length': '50', 'null': 'True', 'blank': 'True'})
         },
         u'legalaid.adaptationdetails': {
             'Meta': {'object_name': 'AdaptationDetails'},
@@ -106,7 +113,7 @@ class Migration(SchemaMigration):
             'billable_time': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'}),
-            'diagnosis': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['diagnosis.DiagnosisTraversal']", 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            'diagnosis': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['diagnosis.DiagnosisTraversal']", 'unique': 'True', 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
             'eligibility_check': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['legalaid.EligibilityCheck']", 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'in_scope': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
@@ -115,6 +122,7 @@ class Migration(SchemaMigration):
             'locked_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'case_locked'", 'null': 'True', 'to': u"orm['auth.User']"}),
             'matter_type1': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['legalaid.MatterType']"}),
             'matter_type2': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['legalaid.MatterType']"}),
+            'media_code': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.MediaCode']", 'null': 'True', 'blank': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
             'notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'personal_details': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.PersonalDetails']", 'null': 'True', 'blank': 'True'}),
@@ -201,6 +209,20 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'level': ('django.db.models.fields.PositiveSmallIntegerField', [], {}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'})
+        },
+        u'legalaid.mediacode': {
+            'Meta': {'object_name': 'MediaCode'},
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
+            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
+            'group': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.MediaCodeGroup']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'})
+        },
+        u'legalaid.mediacodegroup': {
+            'Meta': {'object_name': 'MediaCodeGroup'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'})
         },
         u'legalaid.person': {
             'Meta': {'object_name': 'Person'},

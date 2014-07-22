@@ -137,7 +137,7 @@ class Migration(SchemaMigration):
             'provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cla_provider.Provider']", 'null': 'True', 'blank': 'True'}),
             'provider_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'reference': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
-            'state': ('django.db.models.fields.CharField', [], {'default': "'open'", 'max_length': '50'}),
+            'requires_action_by': ('django.db.models.fields.CharField', [], {'default': "'operator'", 'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'thirdparty_details': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.ThirdPartyDetails']", 'null': 'True', 'blank': 'True'})
         },
         u'legalaid.category': {
@@ -209,7 +209,7 @@ class Migration(SchemaMigration):
             'self_employed': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'})
         },
         u'legalaid.mattertype': {
-            'Meta': {'object_name': 'MatterType'},
+            'Meta': {'unique_together': "(('code', 'level'),)", 'object_name': 'MatterType'},
             'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Category']"}),
             'code': ('django.db.models.fields.CharField', [], {'max_length': '4'}),
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),

@@ -303,8 +303,8 @@ class EligibilityCheckAPIMixin(object):
         """
         data={
             'property_set': [
-                {'value': 111, 'mortgage_left': 222, 'share': 33, 'disputed': True},
-                {'value': 999, 'mortgage_left': 888, 'share': 77, 'disputed': False}
+                {'value': 111, 'mortgage_left': 222, 'share': 33, 'disputed': True, 'main': True},
+                {'value': 999, 'mortgage_left': 888, 'share': 77, 'disputed': False, 'main': False}
             ]
         }
         response = self._create(data=data)
@@ -317,6 +317,18 @@ class EligibilityCheckAPIMixin(object):
         self.assertItemsEqual([p['mortgage_left'] for p in response.data['property_set']], [222, 888])
         self.assertItemsEqual([p['share'] for p in response.data['property_set']], [33, 77])
         self.assertItemsEqual([p['disputed'] for p in response.data['property_set']], [True, False])
+
+    def test_create_with_more_main_properties_fails(self):
+        data={
+            'property_set': [
+                {'value': 111, 'mortgage_left': 222, 'share': 33, 'disputed': True, 'main': True},
+                {'value': 999, 'mortgage_left': 888, 'share': 77, 'disputed': False, 'main': True}
+            ]
+        }
+        response = self._create(data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(response.data, {'property_set': [u'Only one main property allowed']})
 
     def _get_valid_post_data(self):
         data={

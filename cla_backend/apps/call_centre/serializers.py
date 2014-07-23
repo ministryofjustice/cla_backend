@@ -17,7 +17,7 @@ from .models import Operator
 class PropertySerializer(PropertySerializerBase):
 
     class Meta(PropertySerializerBase.Meta):
-        fields = ('value', 'mortgage_left', 'share', 'id', 'disputed')
+        fields = ('value', 'mortgage_left', 'share', 'id', 'disputed', 'main')
 
 
 class IncomeSerializer(IncomeSerializerBase):
@@ -180,6 +180,7 @@ class OutOfHoursRotaSerializer(OutOfHoursRotaSerializerBase):
             'provider',
             'provider_name',
         )
+
 
 class OperatorSerializer(ExtendedUserSerializerBase):
     class Meta:

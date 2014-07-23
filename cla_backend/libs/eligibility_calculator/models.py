@@ -133,12 +133,12 @@ class CaseData(ModelMixin, object):
             capital += self.partner.savings.total
         return capital
 
-    @property
-    def property_capital(self):
-        properties_value = sum([d[0] for d in self.property_data])
-        mortgages_left = sum([d[1] for d in self.property_data])
+    # @property
+    # def property_capital(self):
+    #     properties_value = sum([d[0] for d in self.property_data])
+    #     mortgages_left = sum([d[1] for d in self.property_data])
 
-        return (properties_value, mortgages_left)
+    #     return (properties_value, mortgages_left)
 
     @property
     def total_income(self):

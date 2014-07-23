@@ -256,8 +256,8 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
         if self.category:
             d['category'] = self.category.code
 
-        d['property_data'] = self.property_set.values_list(
-            'value', 'mortgage_left', 'share', 'disputed'
+        d['property_data'] = self.property_set.values(
+            'value', 'mortgage_left', 'share', 'disputed', 'main'
         )
 
         d['facts'] = compose_dict(props=[
@@ -331,6 +331,7 @@ class Property(TimeStampedModel):
                                         null=True, blank=True)
     eligibility_check = models.ForeignKey(EligibilityCheck)
     disputed = models.NullBooleanField(default=None)
+    main = models.NullBooleanField(default=None)
 
     class Meta:
         verbose_name_plural = "properties"

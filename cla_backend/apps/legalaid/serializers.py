@@ -143,6 +143,17 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         model = EligibilityCheck
         fields = ()
 
+    def validate_property_set(self, attrs, source):
+        """
+        Checks that only one main property is selected
+        """
+        if source in attrs:
+            main_props = [prop for prop in attrs[source] if prop.main]
+
+            if len(main_props) > 1:
+                raise serializers.ValidationError("Only one main property allowed")
+        return attrs
+
     def save(self, **kwargs):
         obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
         obj.update_state()
@@ -152,6 +163,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
             # corresponding case
             obj.reset_matter_types()
         return obj
+
 
 class MatterTypeSerializerBase(ClaModelSerializer):
 

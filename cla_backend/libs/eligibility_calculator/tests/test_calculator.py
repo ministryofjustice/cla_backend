@@ -1,12 +1,415 @@
+# -*- coding: utf-8 -*-
+
 import unittest
 import mock
 import random
 
-from ..calculator import EligibilityChecker
+from ..calculator import EligibilityChecker, CapitalCalculator
 from ..models import CaseData, Facts
 from .. import constants
 
 from . import fixtures
+
+
+class TestCapitalCalculator(unittest.TestCase):
+    def test_without_properties(self):
+        # default params
+        calc = CapitalCalculator()
+        self.assertEqual(calc.calculate_capital(), 0)
+
+        # None param
+        calc = CapitalCalculator(properties=None, liquid_capital=0)
+        self.assertEqual(calc.calculate_capital(), 0)
+
+        # liquid capital > 0
+        calc = CapitalCalculator(liquid_capital=22)
+        self.assertEqual(calc.calculate_capital(), 22)
+
+    def make_property(self, value, mortgage_left, share, disputed, main):
+        return {
+            'value': value,
+            'mortgage_left': mortgage_left,
+            'share': share,
+            'disputed': disputed,
+            'main': main
+        }
+
+    def test_scenario_smod_1(self):
+        # The applicant has a home worth £320,000 and the mortgage is £150,000.
+        # The property is registered in joint names with his opponent.
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(32000000, 15000000, 50, True, True)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 0)
+        self.assertEqual(calc.main_property['equity'], 0)
+
+    def test_scenario_smod_2(self):
+        # The applicant has a home worth £520,000 and the mortgage is £150,000.
+        # The property is registered in his sole name.
+        calc = CapitalCalculator(properties=[
+            self.make_property(52000000, 15000000, 100, True, True)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 22000000)
+        self.assertEqual(calc.main_property['equity'], 22000000)
+
+    @unittest.skip('skip until joint savings account disputed implemented')
+    def test_scenario_smod_3(self):
+        # The applicant has a home worth £500,000 and the mortgage is £150,000.
+        # The property is registered in joint names with her opponent.
+        # The client also has full access to a joint savings account, account balance £9,000
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(50000000, 15000000, 100, True, True)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 900000)
+        self.assertEqual(calc.main_property['equity'], 900000)
+
+    def test_scenario_smod_4(self):
+        # The applicant’s main home is worth £240,000 and her other property is worth £90,000,
+        # both properties are registered in joint names with her opponent and
+        # both have mortgages of £80,000.
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(24000000, 8000000, 50, True, True),
+            self.make_property(9000000, 8000000, 50, True, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 500000)
+        self.assertEqual(calc.main_property['equity'], 0)
+        self.assertEqual(calc.other_properties[0]['equity'], 500000)
+
+    # @unittest.skip('skip until we understand how to deal with this')
+    def test_scenario_smod_5(self):
+        # The applicant’s main home is worth £240,000 and her other property is worth £90,000,
+        # both properties are registered in joint names with her opponent and
+        # both have mortgages of £80,000.
+        # only the other property is disputed
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(24000000, 8000000, 50, False, True),
+            self.make_property(9000000, 8000000, 50, True, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 1000000)
+        self.assertEqual(calc.main_property['equity'], 1000000)
+        self.assertEqual(calc.other_properties[0]['equity'], 0)
+
+    def test_scenario_no_smod_1(self):
+        # The applicant has a home worth £150,000 and the mortgage is £75,000
+        calc = CapitalCalculator(properties=[
+            self.make_property(15000000, 7500000, 100, False, True)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 0)
+        self.assertEqual(calc.main_property['equity'], 0)
+
+    def test_scenario_no_smod_2(self):
+        # The applicant has a home worth £215,000 and the mortgage is £200,000
+        calc = CapitalCalculator(properties=[
+            self.make_property(21500000, 20000000, 100, False, True)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 1500000)
+        self.assertEqual(calc.main_property['equity'], 1500000)
+
+    def test_scenario_no_smod_3(self):
+        # The client has a main dwelling worth £150,000 and a second dwelling worth £100,000.
+        # Each has a mortgage of £80,000.
+        calc = CapitalCalculator(properties=[
+            self.make_property(15000000, 8000000, 100, False, True),
+            self.make_property(10000000, 8000000, 100, False, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 5000000)
+        self.assertEqual(calc.main_property['equity'], 3000000)
+        self.assertEqual(calc.other_properties[0]['equity'], 2000000)
+
+    def test_laa_scenario_A12(self):
+        # Testing if equity disregard applied to first property only
+        calc = CapitalCalculator(properties=[
+            self.make_property(5000000, 0, 100, False, True),
+            self.make_property(4000000, 0, 100, False, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 4000000)
+
+    def test_laa_scenario_A13(self):
+        # Testing if equity disregard capped
+        calc = CapitalCalculator(properties=[
+            self.make_property(10800100, 0, 100, False, True),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 800100)
+
+    def test_laa_scenario_A14(self):
+        # Testing if mortgage disregard capped on second property
+        calc = CapitalCalculator(properties=[
+            self.make_property(10000000, 0, 100, False, True),
+            self.make_property(10800100, 10000100, 100, False, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 800100)
+
+    def test_laa_scenario_A15(self):
+        # Testing if mortgage disregard capped on first property
+        calc = CapitalCalculator(properties=[
+            self.make_property(20800100, 10000100, 100, False, True)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 800100)
+
+    def test_laa_scenario_A16(self):
+        # Testing if mortgage disregard capped across all properties
+        calc = CapitalCalculator(properties=[
+                self.make_property(15000000, 5000000, 100, False, True),
+                self.make_property(7500000, 7500000, 100, False, False)
+            ],
+            liquid_capital=800000
+        )
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 3300000)
+
+    def test_laa_scenario_A17(self):
+        # Testing if mortgage disregard applied to second property before first
+        calc = CapitalCalculator(properties=[
+            self.make_property(10000000, 6000000, 100, False, True),
+            self.make_property(5000000, 5000000, 100, False, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 0)
+
+    def test_laa_scenario_smod_1(self):
+        # Client - 1 Property
+        # MV £180,000, Mortgage £10,000, SMOD, Equity Disregard
+        # Capital £0.00 Pass
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(18000000, 1000000, 100, True, True)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 0)
+
+    def test_laa_scenario_smod_2(self):
+        # Client - 1 Property
+        # MV £300,000, Mortgage £34,560, SMOD, Equity Disregard
+        # Capital £65,440 Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(30000000, 3456000, 100, True, True)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 6544000)
+
+    def test_laa_scenario_smod_3(self):
+        # Client - 1 Property Joint Owned
+        # MV £300,000, Mortgage £34,560, SMOD, Equity Disregard
+        # Capital £0.00 Pass
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(30000000, 3456000, 50, True, True)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 0)
+
+    def test_laa_scenario_smod_4(self):
+        # Client - 2 Properties Both SMOD
+        # MV £136,000, Mortgage £75,000, SMOD, Equity Disregard
+        # MV £120,000, Mortgage £25,000, SMOD
+        # Capital £56,000 (all from 2nd Property) Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(13600000, 7500000, 100, True, True),
+            self.make_property(12000000, 2500000, 100, True, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 5600000)
+        self.assertEqual(calc.main_property['equity'], 0)
+        self.assertEqual(calc.other_properties[0]['equity'], 5600000)
+
+    def test_laa_scenario_smod_5(self):
+        # Client - 2 Properties, Second SMOD
+        # MV £136,000, Mortgage £75,000, Equity Disregard
+        # MV £120,000, Mortgage £25,000, SMOD Y
+        # Capital £0.00 Pass
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(13600000, 7500000, 100, False, True),
+            self.make_property(12000000, 2500000, 100, True, False),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 0)
+
+    def test_laa_scenario_smod_6(self):
+        # Client - 1 Property, Doesn't reside, SMOD
+        # MV £145,000, Mortgage £45,670, SMOD
+        # Capital £0.00 Pass
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(14500000, 45667000, 100, True, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 0)
+
+    def test_laa_scenario_smod_7(self):
+        # Client and Partner 1 Property each, Not SMOD
+        # MV £156,000, Mortgage £89,000, Equity Disregard
+        # MV £129,000, Mortgage £45,000
+        # Capital £1,000 from First, £84,000 from Second Fail
+
+        # from @marco, it doesn't matter which property is the
+        # main one as no SMOD applies
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(15600000, 8900000, 100, False, True),
+            self.make_property(12900000, 4500000, 100, False, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 8500000)
+        self.assertEqual(calc.main_property['equity'], 100000)
+        self.assertEqual(calc.other_properties[0]['equity'], 8400000)
+
+    def test_laa_scenario_smod_8(self):
+        # Client and Partner 1 Property each, First SMOD
+        # MV £156,000, Mortgage £89,000, SMOD, Equity Disregard
+        # MV £129,000, Mortgage £45,000
+        # Capital £84,000 from Second, Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(15600000, 8900000, 100, True, True),
+            self.make_property(12900000, 4500000, 100, False, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 8400000)
+        self.assertEqual(calc.main_property['equity'], 0)
+        self.assertEqual(calc.other_properties[0]['equity'], 8400000)
+
+    def test_laa_scenario_smod_9(self):
+        # Client and Partner 1 Property each, Second SMOD
+        # MV £156,000, Mortgage £89,000, Equity Disregard
+        # MV £129,000, Mortgage £45,000, SMOD
+        # Capital £1,000 from First, Pass
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(15600000, 8900000, 100, False, True),
+            self.make_property(12900000, 4500000, 100, True, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 100000)
+        self.assertEqual(calc.main_property['equity'], 100000)
+        self.assertEqual(calc.other_properties[0]['equity'], 0)
+
+    def test_laa_scenario_smod_10(self):
+        # Client and Partner 1 Property each, Both SMOD
+        # MV £156,000, Mortgage £89,000, SMOD, Equity Disregard
+        # MV £129,000, Mortgage £45,000, SMOD
+        # Capital £84,000 from Second, Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(15600000, 8900000, 100, True, True),
+            self.make_property(12900000, 4500000, 100, True, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 8400000)
+        self.assertEqual(calc.main_property['equity'], 0)
+        self.assertEqual(calc.other_properties[0]['equity'], 8400000)
+
+    def test_laa_scenario_smod_11(self):
+        # Client and Partner 1 Property each, Reside in Partner's Property, First SMOD
+        # MV £156,000, Mortgage £89,000
+        # MV £129,000, Mortgage £45,000, SMOD, Equity Disregard
+        # Capital £67,000 Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(15600000, 8900000, 100, False, False),
+            self.make_property(12900000, 4500000, 100, True, True),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 6700000)
+
+    def test_laa_scenario_smod_12(self):
+        # Client and Partner 1 Property each, Reside in Partner's Property, Second SMOD
+        # MV £156,000, Mortgage £89,000, SMOD
+        # MV £129,000, Mortgage £45,000,Equity Disregard
+        # Capital £18,000 Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(15600000, 8900000, 100, True, False),
+            self.make_property(12900000, 4500000, 100, False, True),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 1800000)
+
+    def test_laa_scenario_smod_13(self):
+        # Client and Partner 1 Property each, Reside in Partner's Property, Both SMOD
+        # MV £156,000, Mortgage £89,000, SMOD
+        # MV £129,000, Mortgage £45,000, SMOD, Equity Disregard
+        # Capital £67,000 Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(15600000, 8900000, 100, True, False),
+            self.make_property(12900000, 4500000, 100, True, True),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 6700000)
+
+    def test_laa_scenario_smod_14(self):
+        # Client - 2 Properties, Both SMOD, Joint Owned
+        # MV £136,000, Mortgage £120,000, 50%, SMOD, Equity Disregard
+        # MV £86,000, Mortgage £45,000, 50%, SMOD
+        # Capital £0.00 Pass
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(13600000, 12000000, 50, True, True),
+            self.make_property(8600000, 4500000, 50, True, False),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 0)
+
+    def test_laa_scenario_smod_15(self):
+        # Client - 2 Properties, Both SMOD, High Value, Joint Owned
+        # MV £340,000, Mortgage £220,500, 50%, SMOD, Equity Disregard
+        # MV £210,000, Mortgage £195,000, 50%, SMOD
+        # Capital £55,000 Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(34000000, 22000000, 50, True, True),
+            self.make_property(21000000, 19500000, 50, True, False),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 5500000)
 
 
 class CalculatorTestBase(unittest.TestCase):
@@ -23,7 +426,6 @@ class CalculatorTestBase(unittest.TestCase):
 
 
 class TestCalculator(CalculatorTestBase):
-
 
     def setUp(self):
         self.default_calculator = EligibilityChecker(self.get_default_case_data())
@@ -70,7 +472,6 @@ class TestCalculator(CalculatorTestBase):
         self.assertTrue(is_elig)
 
 
-
 class TestApplicantOnBenefitsCalculator(CalculatorTestBase):
     """
     An applicant on passported benefits should be eligible
@@ -93,8 +494,16 @@ class TestApplicantOnBenefitsCalculator(CalculatorTestBase):
     def test_applicant_on_single_benefits_no_capital_has_property_is_eligible(self):
         case_data = self.get_default_case_data(
             facts__on_passported_benefits=True,
-            property_data=[(10800000, 0, 100,)]
-            )
+            property_data=[
+                {
+                    'value': 10800000,
+                    'mortgage_left': 0,
+                    'share': 100,
+                    'disputed': False,
+                    'main': True
+                }
+            ]
+        )
         checker = EligibilityChecker(case_data)
         is_elig = checker.is_eligible()
         self.assertEqual(case_data.you.income.total, 0)
@@ -108,13 +517,20 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
         case_data = self.get_default_case_data(
             facts__on_passported_benefits=True,
             facts__is_you_or_your_partner_over_60=True,
-            property_data=[(25800000, 10000000, 100,)]
+            property_data=[
+                {
+                    'value': 25800000,
+                    'mortgage_left': 10000000,
+                    'share': 100,
+                    'disputed': False,
+                    'main': True
+                }
+            ]
         )
 
         checker = EligibilityChecker(case_data)
         is_elig = checker.is_eligible()
         return is_elig
-
 
     def test_pensioner_250k_house_100k_mort_0_savings(self):
         """
@@ -138,6 +554,7 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
         """
         is_elig = self._test_pensioner_on_benefits(30000002, 10000001, 79999)
         self.assertTrue(is_elig)
+
 
 class GrossIncomeTestCase(CalculatorTestBase):
     def test_gross_income(self):
@@ -625,170 +1042,6 @@ class DisposableIncomeTestCase(unittest.TestCase):
 
 class DisposableCapitalTestCase(unittest.TestCase):
 
-    def test_disposable_capital_assets_over_mortgage_disregard(self):
-        """
-        TEST:
-            mocked liquid capital and property capital
-            not disputed partner
-            mortgages left > MORTGAGE_DISREGARD
-
-        result:
-            mortgages left capped to constants.disposable_capital.MORTGAGE_DISREGARD
-        """
-        facts = mock.MagicMock(
-            has_disputed_partner=False,
-            is_you_or_your_partner_over_60=False
-        )
-
-        properties_value = constants.disposable_capital.MORTGAGE_DISREGARD + \
-            constants.disposable_capital.EQUITY_DISREGARD + \
-            random.randint(50, 1000)
-        mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD + 1000
-
-        case_data = mock.MagicMock(
-            facts=facts,
-            liquid_capital=random.randint(50, 1000),
-            property_capital=(properties_value, mortgages_left)
-        )
-
-        # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
-        with mock.patch.object(
-            constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
-        ) as mocked_pensioner_disregard:
-            ec = EligibilityChecker(case_data)
-
-            expected_value = 0 + \
-                case_data.liquid_capital + \
-                (
-                    case_data.property_capital[0] - \
-                    constants.disposable_capital.MORTGAGE_DISREGARD - \
-                    constants.disposable_capital.EQUITY_DISREGARD
-                )
-
-            self.assertEqual(expected_value, ec.disposable_capital_assets)
-            self.assertEqual(mocked_pensioner_disregard.get.called, False)
-
-    def test_disposable_capital_assets_exactly_equal_mortgage_disregard(self):
-        """
-        TEST:
-            mocked liquid capital and property capital
-            not disputed partner
-            mortgages left == MORTGAGE_DISREGARD
-
-        result:
-            constants.disposable_capital.MORTGAGE_DISREGARD used
-        """
-        facts = mock.MagicMock(
-            has_disputed_partner=False,
-            is_you_or_your_partner_over_60=False
-        )
-
-        properties_value = constants.disposable_capital.MORTGAGE_DISREGARD + \
-            constants.disposable_capital.EQUITY_DISREGARD + \
-            random.randint(50, 1000)
-        mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD
-
-        case_data = mock.MagicMock(
-            facts=facts,
-            liquid_capital=random.randint(50, 1000),
-            property_capital=(properties_value, mortgages_left)
-        )
-
-        # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
-        with mock.patch.object(
-            constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
-        ) as mocked_pensioner_disregard:
-            ec = EligibilityChecker(case_data)
-
-            expected_value = 0 + \
-                case_data.liquid_capital + \
-                (
-                    case_data.property_capital[0] - \
-                    constants.disposable_capital.MORTGAGE_DISREGARD - \
-                    constants.disposable_capital.EQUITY_DISREGARD
-                )
-
-            self.assertEqual(expected_value, ec.disposable_capital_assets)
-            self.assertEqual(mocked_pensioner_disregard.get.called, False)
-
-    def test_disposable_capital_assets_under_mortgage_disregard(self):
-        """
-        TEST:
-            mocked liquid capital and property capital
-            not disputed partner
-            mortgages left < MORTGAGE_DISREGARD
-
-        result:
-            mortgages left used
-        """
-        facts = mock.MagicMock(
-            has_disputed_partner=False,
-            is_you_or_your_partner_over_60=False
-        )
-
-        properties_value = constants.disposable_capital.MORTGAGE_DISREGARD + \
-            constants.disposable_capital.EQUITY_DISREGARD + \
-            random.randint(50, 1000)
-        mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD
-
-        case_data = mock.MagicMock(
-            facts=facts,
-            liquid_capital=random.randint(50, 1000),
-            property_capital=(properties_value, mortgages_left)
-        )
-
-        # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
-        with mock.patch.object(
-            constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
-        ) as mocked_pensioner_disregard:
-            ec = EligibilityChecker(case_data)
-
-            expected_value = 0 + \
-                case_data.liquid_capital + \
-                (
-                    case_data.property_capital[0] - \
-                    mortgages_left - \
-                    constants.disposable_capital.EQUITY_DISREGARD
-                )
-
-            self.assertEqual(expected_value, ec.disposable_capital_assets)
-            self.assertEqual(mocked_pensioner_disregard.get.called, False)
-
-    def test_disposable_capital_assets_mortgage_not_negative(self):
-        """
-        TEST:
-            mocked liquid capital and property capital
-            not disputed partner
-            properties_value == mortgages left == MORTGAGE_DISREGARD
-
-        result:
-            EQUITY_DISREGARD not subtracted
-        """
-        facts = mock.MagicMock(
-            has_disputed_partner=False,
-            is_you_or_your_partner_over_60=False
-        )
-
-        mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD
-        properties_value = mortgages_left
-
-        case_data = mock.MagicMock(
-            facts=facts,
-            liquid_capital=random.randint(50, 1000),
-            property_capital=(properties_value, mortgages_left)
-        )
-
-        # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
-        with mock.patch.object(
-            constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
-        ) as mocked_pensioner_disregard:
-            ec = EligibilityChecker(case_data)
-
-            expected_value = case_data.liquid_capital
-
-            self.assertEqual(expected_value, ec.disposable_capital_assets)
-            self.assertEqual(mocked_pensioner_disregard.get.called, False)
-
     def test_disposable_capital_assets_subtracts_pensioner_disregard(self):
         """
         TEST:
@@ -862,19 +1115,6 @@ class DisposableCapitalTestCase(unittest.TestCase):
             self.assertEqual(mocked_pensioner_disregard.get.called, True)
 
     #here
-
-    def test_disposable_capital_is_partner_opponent(self):
-        """
-        Should raise NotImplementedError,
-        mock has_disputed_partner = True
-        """
-        case_data = mock.MagicMock()
-        mocked_has_disputed_partner = mock.PropertyMock(return_value=True)
-        type(case_data.facts).has_disputed_partner = mocked_has_disputed_partner
-        ec = EligibilityChecker(case_data)
-        with self.assertRaises(NotImplementedError):
-            _ = ec.disposable_capital_assets
-        self.assertTrue(mocked_has_disputed_partner.called)
 
     def test_is_disposable_capital_eligible_under_limit(self):
         """
@@ -1049,4 +1289,3 @@ class IsEligibleTestCase(unittest.TestCase):
 
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
-

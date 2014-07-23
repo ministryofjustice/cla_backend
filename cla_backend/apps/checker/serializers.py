@@ -11,7 +11,7 @@ class PropertySerializer(PropertySerializerBase):
         return super(PropertySerializer, self).errors
 
     class Meta(PropertySerializerBase.Meta):
-        fields = ('value', 'mortgage_left', 'share', 'id', 'disputed')
+        fields = ('value', 'mortgage_left', 'share', 'id', 'disputed', 'main')
 
 
 class IncomeSerializer(IncomeSerializerBase):

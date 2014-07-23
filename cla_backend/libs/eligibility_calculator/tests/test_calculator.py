@@ -25,12 +25,13 @@ class TestCapitalCalculator(unittest.TestCase):
         calc = CapitalCalculator(liquid_capital=22)
         self.assertEqual(calc.calculate_capital(), 22)
 
-    def make_property(self, value, mortgage_left, share, disputed):
+    def make_property(self, value, mortgage_left, share, disputed, main):
         return {
             'value': value,
             'mortgage_left': mortgage_left,
             'share': share,
-            'disputed': disputed
+            'disputed': disputed,
+            'main': main
         }
 
     def test_scenario_smod_1(self):
@@ -38,7 +39,7 @@ class TestCapitalCalculator(unittest.TestCase):
         # The property is registered in joint names with his opponent.
 
         calc = CapitalCalculator(properties=[
-            self.make_property(32000000, 15000000, 50, True)
+            self.make_property(32000000, 15000000, 50, True, True)
         ])
         capital = calc.calculate_capital()
 
@@ -49,7 +50,7 @@ class TestCapitalCalculator(unittest.TestCase):
         # The applicant has a home worth £520,000 and the mortgage is £150,000.
         # The property is registered in his sole name.
         calc = CapitalCalculator(properties=[
-            self.make_property(52000000, 15000000, 100, True)
+            self.make_property(52000000, 15000000, 100, True, True)
         ])
         capital = calc.calculate_capital()
 
@@ -63,7 +64,7 @@ class TestCapitalCalculator(unittest.TestCase):
         # The client also has full access to a joint savings account, account balance £9,000
 
         calc = CapitalCalculator(properties=[
-            self.make_property(50000000, 15000000, 100, True)
+            self.make_property(50000000, 15000000, 100, True, True)
         ])
         capital = calc.calculate_capital()
 
@@ -76,8 +77,8 @@ class TestCapitalCalculator(unittest.TestCase):
         # both have mortgages of £80,000.
 
         calc = CapitalCalculator(properties=[
-            self.make_property(24000000, 8000000, 50, True),
-            self.make_property(9000000, 8000000, 50, True)
+            self.make_property(24000000, 8000000, 50, True, True),
+            self.make_property(9000000, 8000000, 50, True, False)
         ])
         capital = calc.calculate_capital()
 
@@ -93,8 +94,8 @@ class TestCapitalCalculator(unittest.TestCase):
         # only the other property is disputed
 
         calc = CapitalCalculator(properties=[
-            self.make_property(24000000, 8000000, 50, False),
-            self.make_property(9000000, 8000000, 50, True)
+            self.make_property(24000000, 8000000, 50, False, True),
+            self.make_property(9000000, 8000000, 50, True, False)
         ])
         capital = calc.calculate_capital()
 
@@ -105,7 +106,7 @@ class TestCapitalCalculator(unittest.TestCase):
     def test_scenario_no_smod_1(self):
         # The applicant has a home worth £150,000 and the mortgage is £75,000
         calc = CapitalCalculator(properties=[
-            self.make_property(15000000, 7500000, 100, False)
+            self.make_property(15000000, 7500000, 100, False, True)
         ])
         capital = calc.calculate_capital()
 
@@ -115,7 +116,7 @@ class TestCapitalCalculator(unittest.TestCase):
     def test_scenario_no_smod_2(self):
         # The applicant has a home worth £215,000 and the mortgage is £200,000
         calc = CapitalCalculator(properties=[
-            self.make_property(21500000, 20000000, 100, False)
+            self.make_property(21500000, 20000000, 100, False, True)
         ])
         capital = calc.calculate_capital()
 
@@ -126,8 +127,8 @@ class TestCapitalCalculator(unittest.TestCase):
         # The client has a main dwelling worth £150,000 and a second dwelling worth £100,000.
         # Each has a mortgage of £80,000.
         calc = CapitalCalculator(properties=[
-            self.make_property(15000000, 8000000, 100, False),
-            self.make_property(10000000, 8000000, 100, False)
+            self.make_property(15000000, 8000000, 100, False, True),
+            self.make_property(10000000, 8000000, 100, False, False)
         ])
         capital = calc.calculate_capital()
 
@@ -138,8 +139,8 @@ class TestCapitalCalculator(unittest.TestCase):
     def test_laa_scenario_A12(self):
         # Testing if equity disregard applied to first property only
         calc = CapitalCalculator(properties=[
-            self.make_property(5000000, 0, 100, False),
-            self.make_property(4000000, 0, 100, False)
+            self.make_property(5000000, 0, 100, False, True),
+            self.make_property(4000000, 0, 100, False, False)
         ])
         capital = calc.calculate_capital()
 
@@ -148,7 +149,7 @@ class TestCapitalCalculator(unittest.TestCase):
     def test_laa_scenario_A13(self):
         # Testing if equity disregard capped
         calc = CapitalCalculator(properties=[
-            self.make_property(10800100, 0, 100, False),
+            self.make_property(10800100, 0, 100, False, True),
         ])
         capital = calc.calculate_capital()
 
@@ -157,8 +158,8 @@ class TestCapitalCalculator(unittest.TestCase):
     def test_laa_scenario_A14(self):
         # Testing if mortgage disregard capped on second property
         calc = CapitalCalculator(properties=[
-            self.make_property(10000000, 0, 100, False),
-            self.make_property(10800100, 10000100, 100, False)
+            self.make_property(10000000, 0, 100, False, True),
+            self.make_property(10800100, 10000100, 100, False, False)
         ])
         capital = calc.calculate_capital()
 
@@ -167,7 +168,7 @@ class TestCapitalCalculator(unittest.TestCase):
     def test_laa_scenario_A15(self):
         # Testing if mortgage disregard capped on first property
         calc = CapitalCalculator(properties=[
-            self.make_property(20800100, 10000100, 100, False)
+            self.make_property(20800100, 10000100, 100, False, True)
         ])
         capital = calc.calculate_capital()
 
@@ -176,8 +177,8 @@ class TestCapitalCalculator(unittest.TestCase):
     def test_laa_scenario_A16(self):
         # Testing if mortgage disregard capped across all properties
         calc = CapitalCalculator(properties=[
-                self.make_property(15000000, 5000000, 100, False),
-                self.make_property(7500000, 7500000, 100, False)
+                self.make_property(15000000, 5000000, 100, False, True),
+                self.make_property(7500000, 7500000, 100, False, False)
             ],
             liquid_capital=800000
         )
@@ -188,8 +189,8 @@ class TestCapitalCalculator(unittest.TestCase):
     def test_laa_scenario_A17(self):
         # Testing if mortgage disregard applied to second property before first
         calc = CapitalCalculator(properties=[
-            self.make_property(10000000, 6000000, 100, False),
-            self.make_property(5000000, 5000000, 100, False)
+            self.make_property(10000000, 6000000, 100, False, True),
+            self.make_property(5000000, 5000000, 100, False, False)
         ])
         capital = calc.calculate_capital()
 
@@ -201,7 +202,7 @@ class TestCapitalCalculator(unittest.TestCase):
         # Capital £0.00 Pass
 
         calc = CapitalCalculator(properties=[
-            self.make_property(18000000, 1000000, 100, True)
+            self.make_property(18000000, 1000000, 100, True, True)
         ])
         capital = calc.calculate_capital()
 
@@ -213,7 +214,7 @@ class TestCapitalCalculator(unittest.TestCase):
         # Capital £65,440 Fail
 
         calc = CapitalCalculator(properties=[
-            self.make_property(30000000, 3456000, 100, True)
+            self.make_property(30000000, 3456000, 100, True, True)
         ])
         capital = calc.calculate_capital()
 
@@ -225,7 +226,7 @@ class TestCapitalCalculator(unittest.TestCase):
         # Capital £0.00 Pass
 
         calc = CapitalCalculator(properties=[
-            self.make_property(30000000, 3456000, 50, True)
+            self.make_property(30000000, 3456000, 50, True, True)
         ])
         capital = calc.calculate_capital()
 
@@ -238,8 +239,8 @@ class TestCapitalCalculator(unittest.TestCase):
         # Capital £56,000 (all from 2nd Property) Fail
 
         calc = CapitalCalculator(properties=[
-            self.make_property(13600000, 7500000, 100, True),
-            self.make_property(12000000, 2500000, 100, True)
+            self.make_property(13600000, 7500000, 100, True, True),
+            self.make_property(12000000, 2500000, 100, True, False)
         ])
         capital = calc.calculate_capital()
 
@@ -254,21 +255,20 @@ class TestCapitalCalculator(unittest.TestCase):
         # Capital £0.00 Pass
 
         calc = CapitalCalculator(properties=[
-            self.make_property(13600000, 7500000, 100, False),
-            self.make_property(12000000, 2500000, 100, True),
+            self.make_property(13600000, 7500000, 100, False, True),
+            self.make_property(12000000, 2500000, 100, True, False),
         ])
         capital = calc.calculate_capital()
 
         self.assertEqual(capital, 0)
 
-    # TODO check better, client doesn't reside...
     def test_laa_scenario_smod_6(self):
         # Client - 1 Property, Doesn't reside, SMOD
         # MV £145,000, Mortgage £45,670, SMOD
         # Capital £0.00 Pass
 
         calc = CapitalCalculator(properties=[
-            self.make_property(14500000, 45667000, 100, True)
+            self.make_property(14500000, 45667000, 100, True, False)
         ])
         capital = calc.calculate_capital()
 
@@ -284,8 +284,8 @@ class TestCapitalCalculator(unittest.TestCase):
         # main one as no SMOD applies
 
         calc = CapitalCalculator(properties=[
-            self.make_property(15600000, 8900000, 100, False),
-            self.make_property(12900000, 4500000, 100, False)
+            self.make_property(15600000, 8900000, 100, False, True),
+            self.make_property(12900000, 4500000, 100, False, False)
         ])
         capital = calc.calculate_capital()
 
@@ -300,8 +300,8 @@ class TestCapitalCalculator(unittest.TestCase):
         # Capital £84,000 from Second, Fail
 
         calc = CapitalCalculator(properties=[
-            self.make_property(15600000, 8900000, 100, True),
-            self.make_property(12900000, 4500000, 100, False)
+            self.make_property(15600000, 8900000, 100, True, True),
+            self.make_property(12900000, 4500000, 100, False, False)
         ])
         capital = calc.calculate_capital()
 
@@ -316,8 +316,8 @@ class TestCapitalCalculator(unittest.TestCase):
         # Capital £1,000 from First, Pass
 
         calc = CapitalCalculator(properties=[
-            self.make_property(15600000, 8900000, 100, False),
-            self.make_property(12900000, 4500000, 100, True)
+            self.make_property(15600000, 8900000, 100, False, True),
+            self.make_property(12900000, 4500000, 100, True, False)
         ])
         capital = calc.calculate_capital()
 
@@ -332,8 +332,8 @@ class TestCapitalCalculator(unittest.TestCase):
         # Capital £84,000 from Second, Fail
 
         calc = CapitalCalculator(properties=[
-            self.make_property(15600000, 8900000, 100, True),
-            self.make_property(12900000, 4500000, 100, True)
+            self.make_property(15600000, 8900000, 100, True, True),
+            self.make_property(12900000, 4500000, 100, True, False)
         ])
         capital = calc.calculate_capital()
 
@@ -341,7 +341,6 @@ class TestCapitalCalculator(unittest.TestCase):
         self.assertEqual(calc.main_property['equity'], 0)
         self.assertEqual(calc.other_properties[0]['equity'], 8400000)
 
-    # TODO fine but just change ordering (1st property - not main, 2nd property - main)
     def test_laa_scenario_smod_11(self):
         # Client and Partner 1 Property each, Reside in Partner's Property, First SMOD
         # MV £156,000, Mortgage £89,000
@@ -349,8 +348,8 @@ class TestCapitalCalculator(unittest.TestCase):
         # Capital £67,000 Fail
 
         calc = CapitalCalculator(properties=[
-            self.make_property(12900000, 4500000, 100, True),
-            self.make_property(15600000, 8900000, 100, False),
+            self.make_property(15600000, 8900000, 100, False, False),
+            self.make_property(12900000, 4500000, 100, True, True),
         ])
         capital = calc.calculate_capital()
 
@@ -360,29 +359,29 @@ class TestCapitalCalculator(unittest.TestCase):
         # Client and Partner 1 Property each, Reside in Partner's Property, Second SMOD
         # MV £156,000, Mortgage £89,000, SMOD
         # MV £129,000, Mortgage £45,000,Equity Disregard
-        # Capital £0.00 Pass
+        # Capital £18,000 Fail
 
         calc = CapitalCalculator(properties=[
-            self.make_property(12900000, 4500000, 100, False),
-            self.make_property(15600000, 8900000, 100, True),
+            self.make_property(15600000, 8900000, 100, True, False),
+            self.make_property(12900000, 4500000, 100, False, True),
         ])
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 0)
+        self.assertEqual(capital, 1800000)
 
     def test_laa_scenario_smod_13(self):
         # Client and Partner 1 Property each, Reside in Partner's Property, Both SMOD
         # MV £156,000, Mortgage £89,000, SMOD
         # MV £129,000, Mortgage £45,000, SMOD, Equity Disregard
-        # Capital £63,000 Fail
+        # Capital £67,000 Fail
 
         calc = CapitalCalculator(properties=[
-            self.make_property(12900000, 4500000, 100, True),
-            self.make_property(15600000, 8900000, 100, True),
+            self.make_property(15600000, 8900000, 100, True, False),
+            self.make_property(12900000, 4500000, 100, True, True),
         ])
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 6300000)
+        self.assertEqual(capital, 6700000)
 
     def test_laa_scenario_smod_14(self):
         # Client - 2 Properties, Both SMOD, Joint Owned
@@ -391,8 +390,8 @@ class TestCapitalCalculator(unittest.TestCase):
         # Capital £0.00 Pass
 
         calc = CapitalCalculator(properties=[
-            self.make_property(13600000, 12000000, 50, True),
-            self.make_property(8600000, 4500000, 50, True),
+            self.make_property(13600000, 12000000, 50, True, True),
+            self.make_property(8600000, 4500000, 50, True, False),
         ])
         capital = calc.calculate_capital()
 
@@ -405,8 +404,8 @@ class TestCapitalCalculator(unittest.TestCase):
         # Capital £55,000 Fail
 
         calc = CapitalCalculator(properties=[
-            self.make_property(34000000, 22000000, 50, True),
-            self.make_property(21000000, 19500000, 50, True),
+            self.make_property(34000000, 22000000, 50, True, True),
+            self.make_property(21000000, 19500000, 50, True, False),
         ])
         capital = calc.calculate_capital()
 
@@ -500,7 +499,8 @@ class TestApplicantOnBenefitsCalculator(CalculatorTestBase):
                     'value': 10800000,
                     'mortgage_left': 0,
                     'share': 100,
-                    'disputed': False
+                    'disputed': False,
+                    'main': True
                 }
             ]
         )
@@ -522,7 +522,8 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
                     'value': 25800000,
                     'mortgage_left': 10000000,
                     'share': 100,
-                    'disputed': False
+                    'disputed': False,
+                    'main': True
                 }
             ]
         )

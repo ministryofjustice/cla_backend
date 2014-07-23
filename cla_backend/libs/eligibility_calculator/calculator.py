@@ -16,18 +16,27 @@ class CapitalCalculator(object):
 
     @property
     def main_property(self):
-        if not self.properties:
-            return None
-        return self.properties[0]
+        if not hasattr(self, '_main_property'):
+            self._main_property = None
+            if self.properties:
+                for prop in self.properties:
+                    if prop['main']:
+                        self._main_property = prop
+                        break
+        return self._main_property
 
     @property
     def other_properties(self):
-        if not self.properties:
-            return []
-        return self.properties[1:]
+        if not hasattr(self, '_other_properties'):
+            self._other_properties = []
+            if self.properties:
+                self._other_properties = [prop for prop in self.properties if not prop['main']]
+        return self._other_properties
 
     # for each other property
     def _calculate_property_equity(self, prop):
+        if not prop:
+            return
         mortgage_disregard = min(prop['mortgage_left'], self.mortgage_disregard_available)
 
         property_equity = prop['value'] - mortgage_disregard
@@ -40,7 +49,7 @@ class CapitalCalculator(object):
         self.mortgage_disregard_available = remaining_mortgage_disregard
 
     def _apply_SMOD_disregard(self, prop):
-        if not prop['disputed']:
+        if not prop or not prop['disputed']:
             return
 
         SMOD_disregard = min(prop['equity'], self.SMOD_disregard_available)
@@ -51,6 +60,8 @@ class CapitalCalculator(object):
         self.SMOD_disregard_available = remaining_SMOD_disregard
 
     def _apply_equity_disregard(self, prop):
+        if not prop:
+            return
         # if not prop.disputed:
         #     return
 

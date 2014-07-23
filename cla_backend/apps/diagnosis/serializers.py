@@ -51,7 +51,7 @@ class DiagnosisSerializer(ClaModelSerializer):
         # if not hasattr(self, '_get_choices'):
         current_node_id = self.object.current_node_id
         if not current_node_id:
-            current_node_id = 'n0'  # root
+            current_node_id = self.graph.graph['operator_root_id']
 
         # populating choices
         children = self.graph.successors(current_node_id)

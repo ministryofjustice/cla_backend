@@ -13,6 +13,8 @@ class GraphImporter(object):
     KEY_BODY = 'body'
     KEY_TITLE = 'title'
     KEY_CONTEXT = 'context'
+    KEY_OPERATOR_ROOT = 'operator_root'
+    KEY_ORDER = 'order'
 
     def __init__(self, file_path):
         self.file_path = file_path
@@ -42,20 +44,27 @@ class GraphImporter(object):
         return el.xpath(s, namespaces={'ns': self.ns})
 
     def process_properties_declaration(self):
-        def _get_id_value_for(attr):
+        def _get_id_default_dict_for(attr):
             el = self.xpath_ns(self.doc, '//ns:key[@attr.name="%s"]' % attr)[0]
-            return el.attrib.get('id')
+            d = {'id': el.attrib.get('id')}
+
+            try:
+                d['default'] = el['default'].text
+            except AttributeError:
+                d['default'] = None
+
+            return d
 
         self.prop_mapping = {
-            self.KEY_BODY: _get_id_value_for('body'),
-            self.KEY_TITLE: _get_id_value_for('title'),
-            self.KEY_CONTEXT: _get_id_value_for('context:xml')
+            self.KEY_BODY: _get_id_default_dict_for('body'),
+            self.KEY_TITLE: _get_id_default_dict_for('title'),
+            self.KEY_CONTEXT: _get_id_default_dict_for('context:xml'),
+            self.KEY_OPERATOR_ROOT: _get_id_default_dict_for('operator_root'),
+            self.KEY_ORDER: _get_id_default_dict_for('order'),
         }
 
     def process_nodes(self):
-        body_key = self.prop_mapping[self.KEY_BODY]
-        title_key = self.prop_mapping[self.KEY_TITLE]
-        context_key = self.prop_mapping[self.KEY_CONTEXT]
+        context_key = self.prop_mapping[self.KEY_CONTEXT]['id']
 
         def _process_context(node):
             xml_context = self.xpath_ns(node, 'ns:data[@key="%s"]' % context_key)
@@ -71,12 +80,24 @@ class GraphImporter(object):
                 context[child.tag] = child.text
             return context
 
+        def _get_node_data_value_or_default(node, key):
+            attr_key = self.prop_mapping[key]['id']
+            try:
+                return self.xpath_ns(node, 'ns:data[@key="%s"]' % attr_key)[0].text
+            except IndexError:
+                return self.prop_mapping[key]['default']
+
         # looping through the nodes
         for node in self.xpath_ns(self.doc, '//ns:node'):
+            if _get_node_data_value_or_default(
+                    node, self.KEY_OPERATOR_ROOT) == 'true':
+                self.graph.graph['operator_root_id'] = self.xpath_ns(node, '@id')[0]
+
             self.graph.add_node(
                 node.attrib['id'],
-                label=self.xpath_ns(node, 'ns:data[@key="%s"]' % body_key)[0].text,
-                title=self.xpath_ns(node, 'ns:data[@key="%s"]' % title_key)[0].text,
+                label=_get_node_data_value_or_default(node, self.KEY_BODY),
+                title=_get_node_data_value_or_default(node, self.KEY_TITLE),
+                order=_get_node_data_value_or_default(node, self.KEY_ORDER),
                 context=_process_context(node)
             )
 

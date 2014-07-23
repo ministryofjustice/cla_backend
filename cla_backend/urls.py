@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^checker/api/v1/', include('checker.urls', namespace='checker')),
     url(r'^call_centre/api/v1/', include('call_centre.urls', namespace='call_centre')),
     url(r'^cla_provider/api/v1/', include('cla_provider.urls', namespace='cla_provider')),
+    url(r'^means_test/api/v1/', include('means_test_api.urls', namespace='means_test')),
     url(r'^oauth2/', include('core.oauth2.urls', namespace='oauth2')),
 
     url(r'^admin/reports/', include('reports.urls', namespace='reports')),

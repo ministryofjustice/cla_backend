@@ -135,6 +135,66 @@ class TestCapitalCalculator(unittest.TestCase):
         self.assertEqual(calc.main_property['equity'], 3000000)
         self.assertEqual(calc.other_properties[0]['equity'], 2000000)
 
+    def test_laa_scenario_A12(self):
+        # Testing if equity disregard applied to first property only
+        calc = CapitalCalculator(properties=[
+            self.make_property(5000000, 0, 100, False),
+            self.make_property(4000000, 0, 100, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 4000000)
+
+    def test_laa_scenario_A13(self):
+        # Testing if equity disregard capped
+        calc = CapitalCalculator(properties=[
+            self.make_property(10800100, 0, 100, False),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 800100)
+
+    def test_laa_scenario_A14(self):
+        # Testing if mortgage disregard capped on second property
+        calc = CapitalCalculator(properties=[
+            self.make_property(10000000, 0, 100, False),
+            self.make_property(10800100, 10000100, 100, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 800100)
+
+    def test_laa_scenario_A15(self):
+        # Testing if mortgage disregard capped on first property
+        calc = CapitalCalculator(properties=[
+            self.make_property(20800100, 10000100, 100, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 800100)
+
+    def test_laa_scenario_A16(self):
+        # Testing if mortgage disregard capped across all properties
+        calc = CapitalCalculator(properties=[
+                self.make_property(15000000, 5000000, 100, False),
+                self.make_property(7500000, 7500000, 100, False)
+            ],
+            liquid_capital=800000
+        )
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 3300000)
+
+    def test_laa_scenario_A17(self):
+        # Testing if mortgage disregard applied to second property before first
+        calc = CapitalCalculator(properties=[
+            self.make_property(10000000, 6000000, 100, False),
+            self.make_property(5000000, 5000000, 100, False)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 0)
+
     # def test_disposable_capital_assets_over_mortgage_disregard(self):
     #     """
     #     TEST:

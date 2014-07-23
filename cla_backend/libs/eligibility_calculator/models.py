@@ -141,14 +141,6 @@ class CaseData(ModelMixin, object):
     #     return (properties_value, mortgages_left)
 
     @property
-    def main_property(self):
-        pass
-
-    @property
-    def other_properties(self):
-        pass
-
-    @property
     def total_income(self):
         income = self.you.income.total
         if self.facts.should_aggregate_partner:

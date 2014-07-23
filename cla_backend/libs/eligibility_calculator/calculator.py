@@ -2,10 +2,29 @@ from . import constants
 
 
 class CapitalCalculator(object):
-    def __init__(self, main_property, other_properties=[], liquid_capital=0):
-        self.main_property = main_property.copy()
-        self.other_properties = [prop.copy() for prop in other_properties]
+    def __init__(self, properties=[], liquid_capital=0):
+        self.properties = self._parse_props(properties)
         self.liquid_capital = liquid_capital
+
+    def _parse_props(self, props):
+        l = []
+        for p in (props or []):
+            parsed_prop = p.copy()
+            parsed_prop['equity'] = 0
+            l.append(parsed_prop)
+        return l
+
+    @property
+    def main_property(self):
+        if not self.properties:
+            return None
+        return self.properties[0]
+
+    @property
+    def other_properties(self):
+        if not self.properties:
+            return []
+        return self.properties[1:]
 
     # for each other property
     def _calculate_property_equity(self, prop):
@@ -42,10 +61,13 @@ class CapitalCalculator(object):
         self.SMOD_disregard_available = constants.disposable_capital.SMOD_DISREGARD
         self.equity_disregard_available = constants.disposable_capital.EQUITY_DISREGARD
 
-        for prop in [self.main_property] + self.other_properties:
+        for prop in self.properties:
             prop['equity'] = 0
 
     def _calculate_property_capital(self):
+        if not self.properties:
+            return
+
         # calculating equities
         for other_property in self.other_properties:
             self._calculate_property_equity(other_property)
@@ -67,7 +89,7 @@ class CapitalCalculator(object):
 
         capital = 0
         # property capital
-        for prop in [self.main_property] + self.other_properties:
+        for prop in self.properties:
             capital += prop['equity']
 
         # liquid capital
@@ -151,8 +173,7 @@ class EligibilityChecker(object):
             # NOTE: problem in case of disputed partner (and joined savings/assets)
 
             capital_calc = CapitalCalculator(
-                main_property=self.case_data.main_property,
-                other_properties=self.case_data.other_properties,
+                properties=self.case_data.property_data,
                 liquid_capital=0 if self.case_data.facts.has_disputed_partner else self.case_data.liquid_capital
 
             )

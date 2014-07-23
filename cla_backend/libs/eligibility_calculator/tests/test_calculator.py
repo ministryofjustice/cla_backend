@@ -195,169 +195,222 @@ class TestCapitalCalculator(unittest.TestCase):
 
         self.assertEqual(capital, 0)
 
-    # def test_disposable_capital_assets_over_mortgage_disregard(self):
-    #     """
-    #     TEST:
-    #         mocked liquid capital and property capital
-    #         not disputed partner
-    #         mortgages left > MORTGAGE_DISREGARD
+    def test_laa_scenario_smod_1(self):
+        # Client - 1 Property
+        # MV £180,000, Mortgage £10,000, SMOD, Equity Disregard
+        # Capital £0.00 Pass
 
-    #     result:
-    #         mortgages left capped to constants.disposable_capital.MORTGAGE_DISREGARD
-    #     """
-    #     facts = mock.MagicMock(
-    #         has_disputed_partner=False,
-    #         is_you_or_your_partner_over_60=False
-    #     )
+        calc = CapitalCalculator(properties=[
+            self.make_property(18000000, 1000000, 100, True)
+        ])
+        capital = calc.calculate_capital()
 
-    #     properties_value = constants.disposable_capital.MORTGAGE_DISREGARD + \
-    #         constants.disposable_capital.EQUITY_DISREGARD + \
-    #         random.randint(50, 1000)
-    #     mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD + 1000
+        self.assertEqual(capital, 0)
 
-    #     case_data = mock.MagicMock(
-    #         facts=facts,
-    #         liquid_capital=random.randint(50, 1000),
-    #         property_capital=(properties_value, mortgages_left)
-    #     )
+    def test_laa_scenario_smod_2(self):
+        # Client - 1 Property
+        # MV £300,000, Mortgage £34,560, SMOD, Equity Disregard
+        # Capital £65,440 Fail
 
-    #     # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
-    #     with mock.patch.object(
-    #         constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
-    #     ) as mocked_pensioner_disregard:
-    #         ec = EligibilityChecker(case_data)
+        calc = CapitalCalculator(properties=[
+            self.make_property(30000000, 3456000, 100, True)
+        ])
+        capital = calc.calculate_capital()
 
-    #         expected_value = 0 + \
-    #             case_data.liquid_capital + \
-    #             (
-    #                 case_data.property_capital[0] - \
-    #                 constants.disposable_capital.MORTGAGE_DISREGARD - \
-    #                 constants.disposable_capital.EQUITY_DISREGARD
-    #             )
+        self.assertEqual(capital, 6544000)
 
-    #         self.assertEqual(expected_value, ec.disposable_capital_assets)
-    #         self.assertEqual(mocked_pensioner_disregard.get.called, False)
+    def test_laa_scenario_smod_3(self):
+        # Client - 1 Property Joint Owned
+        # MV £300,000, Mortgage £34,560, SMOD, Equity Disregard
+        # Capital £0.00 Pass
 
-    # def test_disposable_capital_assets_exactly_equal_mortgage_disregard(self):
-    #     """
-    #     TEST:
-    #         mocked liquid capital and property capital
-    #         not disputed partner
-    #         mortgages left == MORTGAGE_DISREGARD
+        calc = CapitalCalculator(properties=[
+            self.make_property(30000000, 3456000, 50, True)
+        ])
+        capital = calc.calculate_capital()
 
-    #     result:
-    #         constants.disposable_capital.MORTGAGE_DISREGARD used
-    #     """
-    #     facts = mock.MagicMock(
-    #         has_disputed_partner=False,
-    #         is_you_or_your_partner_over_60=False
-    #     )
+        self.assertEqual(capital, 0)
 
-    #     properties_value = constants.disposable_capital.MORTGAGE_DISREGARD + \
-    #         constants.disposable_capital.EQUITY_DISREGARD + \
-    #         random.randint(50, 1000)
-    #     mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD
+    def test_laa_scenario_smod_4(self):
+        # Client - 2 Properties Both SMOD
+        # MV £136,000, Mortgage £75,000, SMOD, Equity Disregard
+        # MV £120,000, Mortgage £25,000, SMOD
+        # Capital £56,000 (all from 2nd Property) Fail
 
-    #     case_data = mock.MagicMock(
-    #         facts=facts,
-    #         liquid_capital=random.randint(50, 1000),
-    #         property_capital=(properties_value, mortgages_left)
-    #     )
+        calc = CapitalCalculator(properties=[
+            self.make_property(13600000, 7500000, 100, True),
+            self.make_property(12000000, 2500000, 100, True)
+        ])
+        capital = calc.calculate_capital()
 
-    #     # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
-    #     with mock.patch.object(
-    #         constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
-    #     ) as mocked_pensioner_disregard:
-    #         ec = EligibilityChecker(case_data)
+        self.assertEqual(capital, 5600000)
+        self.assertEqual(calc.main_property['equity'], 0)
+        self.assertEqual(calc.other_properties[0]['equity'], 5600000)
 
-    #         expected_value = 0 + \
-    #             case_data.liquid_capital + \
-    #             (
-    #                 case_data.property_capital[0] - \
-    #                 constants.disposable_capital.MORTGAGE_DISREGARD - \
-    #                 constants.disposable_capital.EQUITY_DISREGARD
-    #             )
+    def test_laa_scenario_smod_5(self):
+        # Client - 2 Properties, Second SMOD
+        # MV £136,000, Mortgage £75,000, Equity Disregard
+        # MV £120,000, Mortgage £25,000, SMOD Y
+        # Capital £0.00 Pass
 
-    #         self.assertEqual(expected_value, ec.disposable_capital_assets)
-    #         self.assertEqual(mocked_pensioner_disregard.get.called, False)
+        calc = CapitalCalculator(properties=[
+            self.make_property(13600000, 7500000, 100, False),
+            self.make_property(12000000, 2500000, 100, True),
+        ])
+        capital = calc.calculate_capital()
 
-    # def test_disposable_capital_assets_under_mortgage_disregard(self):
-    #     """
-    #     TEST:
-    #         mocked liquid capital and property capital
-    #         not disputed partner
-    #         mortgages left < MORTGAGE_DISREGARD
+        self.assertEqual(capital, 0)
 
-    #     result:
-    #         mortgages left used
-    #     """
-    #     facts = mock.MagicMock(
-    #         has_disputed_partner=False,
-    #         is_you_or_your_partner_over_60=False
-    #     )
+    # TODO check better, client doesn't reside...
+    def test_laa_scenario_smod_6(self):
+        # Client - 1 Property, Doesn't reside, SMOD
+        # MV £145,000, Mortgage £45,670, SMOD
+        # Capital £0.00 Pass
 
-    #     properties_value = constants.disposable_capital.MORTGAGE_DISREGARD + \
-    #         constants.disposable_capital.EQUITY_DISREGARD + \
-    #         random.randint(50, 1000)
-    #     mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD
+        calc = CapitalCalculator(properties=[
+            self.make_property(14500000, 45667000, 100, True)
+        ])
+        capital = calc.calculate_capital()
 
-    #     case_data = mock.MagicMock(
-    #         facts=facts,
-    #         liquid_capital=random.randint(50, 1000),
-    #         property_capital=(properties_value, mortgages_left)
-    #     )
+        self.assertEqual(capital, 0)
 
-    #     # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
-    #     with mock.patch.object(
-    #         constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
-    #     ) as mocked_pensioner_disregard:
-    #         ec = EligibilityChecker(case_data)
+    def test_laa_scenario_smod_7(self):
+        # Client and Partner 1 Property each, Not SMOD
+        # MV £156,000, Mortgage £89,000, Equity Disregard
+        # MV £129,000, Mortgage £45,000
+        # Capital £1,000 from First, £84,000 from Second Fail
 
-    #         expected_value = 0 + \
-    #             case_data.liquid_capital + \
-    #             (
-    #                 case_data.property_capital[0] - \
-    #                 mortgages_left - \
-    #                 constants.disposable_capital.EQUITY_DISREGARD
-    #             )
+        # from @marco, it doesn't matter which property is the
+        # main one as no SMOD applies
 
-    #         self.assertEqual(expected_value, ec.disposable_capital_assets)
-    #         self.assertEqual(mocked_pensioner_disregard.get.called, False)
+        calc = CapitalCalculator(properties=[
+            self.make_property(15600000, 8900000, 100, False),
+            self.make_property(12900000, 4500000, 100, False)
+        ])
+        capital = calc.calculate_capital()
 
-    # def test_disposable_capital_assets_mortgage_not_negative(self):
-    #     """
-    #     TEST:
-    #         mocked liquid capital and property capital
-    #         not disputed partner
-    #         properties_value == mortgages left == MORTGAGE_DISREGARD
+        self.assertEqual(capital, 8500000)
+        self.assertEqual(calc.main_property['equity'], 100000)
+        self.assertEqual(calc.other_properties[0]['equity'], 8400000)
 
-    #     result:
-    #         EQUITY_DISREGARD not subtracted
-    #     """
-    #     facts = mock.MagicMock(
-    #         has_disputed_partner=False,
-    #         is_you_or_your_partner_over_60=False
-    #     )
+    def test_laa_scenario_smod_8(self):
+        # Client and Partner 1 Property each, First SMOD
+        # MV £156,000, Mortgage £89,000, SMOD, Equity Disregard
+        # MV £129,000, Mortgage £45,000
+        # Capital £84,000 from Second, Fail
 
-    #     mortgages_left = constants.disposable_capital.MORTGAGE_DISREGARD
-    #     properties_value = mortgages_left
+        calc = CapitalCalculator(properties=[
+            self.make_property(15600000, 8900000, 100, True),
+            self.make_property(12900000, 4500000, 100, False)
+        ])
+        capital = calc.calculate_capital()
 
-    #     case_data = mock.MagicMock(
-    #         facts=facts,
-    #         liquid_capital=random.randint(50, 1000),
-    #         property_capital=(properties_value, mortgages_left)
-    #     )
+        self.assertEqual(capital, 8400000)
+        self.assertEqual(calc.main_property['equity'], 0)
+        self.assertEqual(calc.other_properties[0]['equity'], 8400000)
 
-    #     # mocking just to check that PENSIONER_DISREGARD_LIMIT_LEVELS is not called
-    #     with mock.patch.object(
-    #         constants.disposable_capital, 'PENSIONER_DISREGARD_LIMIT_LEVELS'
-    #     ) as mocked_pensioner_disregard:
-    #         ec = EligibilityChecker(case_data)
+    def test_laa_scenario_smod_9(self):
+        # Client and Partner 1 Property each, Second SMOD
+        # MV £156,000, Mortgage £89,000, Equity Disregard
+        # MV £129,000, Mortgage £45,000, SMOD
+        # Capital £1,000 from First, Pass
 
-    #         expected_value = case_data.liquid_capital
+        calc = CapitalCalculator(properties=[
+            self.make_property(15600000, 8900000, 100, False),
+            self.make_property(12900000, 4500000, 100, True)
+        ])
+        capital = calc.calculate_capital()
 
-    #         self.assertEqual(expected_value, ec.disposable_capital_assets)
-    #         self.assertEqual(mocked_pensioner_disregard.get.called, False)
+        self.assertEqual(capital, 100000)
+        self.assertEqual(calc.main_property['equity'], 100000)
+        self.assertEqual(calc.other_properties[0]['equity'], 0)
+
+    def test_laa_scenario_smod_10(self):
+        # Client and Partner 1 Property each, Both SMOD
+        # MV £156,000, Mortgage £89,000, SMOD, Equity Disregard
+        # MV £129,000, Mortgage £45,000, SMOD
+        # Capital £84,000 from Second, Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(15600000, 8900000, 100, True),
+            self.make_property(12900000, 4500000, 100, True)
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 8400000)
+        self.assertEqual(calc.main_property['equity'], 0)
+        self.assertEqual(calc.other_properties[0]['equity'], 8400000)
+
+    # TODO fine but just change ordering (1st property - not main, 2nd property - main)
+    def test_laa_scenario_smod_11(self):
+        # Client and Partner 1 Property each, Reside in Partner's Property, First SMOD
+        # MV £156,000, Mortgage £89,000
+        # MV £129,000, Mortgage £45,000, SMOD, Equity Disregard
+        # Capital £67,000 Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(12900000, 4500000, 100, True),
+            self.make_property(15600000, 8900000, 100, False),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 6700000)
+
+    def test_laa_scenario_smod_12(self):
+        # Client and Partner 1 Property each, Reside in Partner's Property, Second SMOD
+        # MV £156,000, Mortgage £89,000, SMOD
+        # MV £129,000, Mortgage £45,000,Equity Disregard
+        # Capital £0.00 Pass
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(12900000, 4500000, 100, False),
+            self.make_property(15600000, 8900000, 100, True),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 0)
+
+    def test_laa_scenario_smod_13(self):
+        # Client and Partner 1 Property each, Reside in Partner's Property, Both SMOD
+        # MV £156,000, Mortgage £89,000, SMOD
+        # MV £129,000, Mortgage £45,000, SMOD, Equity Disregard
+        # Capital £63,000 Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(12900000, 4500000, 100, True),
+            self.make_property(15600000, 8900000, 100, True),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 6300000)
+
+    def test_laa_scenario_smod_14(self):
+        # Client - 2 Properties, Both SMOD, Joint Owned
+        # MV £136,000, Mortgage £120,000, 50%, SMOD, Equity Disregard
+        # MV £86,000, Mortgage £45,000, 50%, SMOD
+        # Capital £0.00 Pass
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(13600000, 12000000, 50, True),
+            self.make_property(8600000, 4500000, 50, True),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 0)
+
+    def test_laa_scenario_smod_15(self):
+        # Client - 2 Properties, Both SMOD, High Value, Joint Owned
+        # MV £340,000, Mortgage £220,500, 50%, SMOD, Equity Disregard
+        # MV £210,000, Mortgage £195,000, 50%, SMOD
+        # Capital £55,000 Fail
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(34000000, 22000000, 50, True),
+            self.make_property(21000000, 19500000, 50, True),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 5500000)
 
 
 class CalculatorTestBase(unittest.TestCase):

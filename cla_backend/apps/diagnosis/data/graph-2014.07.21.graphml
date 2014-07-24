@@ -14,7 +14,7 @@
     <default/>
   </key>
   <key attr.name="operator_root" attr.type="string" for="node" id="d8">
-    <default><![CDATA[false1]]></default>
+    <default><![CDATA[false]]></default>
   </key>
   <key attr.name="order" attr.type="int" for="node" id="d9">
     <default>9999</default>
@@ -2762,7 +2762,7 @@
       </data>
     </node>
     <node id="n131">
-      <data key="d4"><![CDATA[Client has public law problem (the state or local authority are involved) 
+      <data key="d4"><![CDATA[Client has public law problem (the state or local authority are involved)
 e.g. care proceedings or adoption]]></data>
       <data key="d5"><![CDATA[Public law
 ]]></data>

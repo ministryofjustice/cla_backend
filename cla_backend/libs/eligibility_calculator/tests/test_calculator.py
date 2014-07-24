@@ -18,11 +18,11 @@ class TestCapitalCalculator(unittest.TestCase):
         self.assertEqual(calc.calculate_capital(), 0)
 
         # None param
-        calc = CapitalCalculator(properties=None, liquid_capital=0)
+        calc = CapitalCalculator(properties=None, non_disputed_liquid_capital=0)
         self.assertEqual(calc.calculate_capital(), 0)
 
         # liquid capital > 0
-        calc = CapitalCalculator(liquid_capital=22)
+        calc = CapitalCalculator(non_disputed_liquid_capital=22)
         self.assertEqual(calc.calculate_capital(), 22)
 
     def make_property(self, value, mortgage_left, share, disputed, main):
@@ -57,19 +57,22 @@ class TestCapitalCalculator(unittest.TestCase):
         self.assertEqual(capital, 22000000)
         self.assertEqual(calc.main_property['equity'], 22000000)
 
-    @unittest.skip('skip until joint savings account disputed implemented')
     def test_scenario_smod_3(self):
-        # The applicant has a home worth £500,000 and the mortgage is £150,000.
-        # The property is registered in joint names with her opponent.
-        # The client also has full access to a joint savings account, account balance £9,000
+        # The applicant has a home worth £120,000 and the mortgage is £80,000.
+        # SMOD on main property
+        # The client also has full access to a joint savings account,
+        # account balance £9,000 disputed
 
-        calc = CapitalCalculator(properties=[
-            self.make_property(50000000, 15000000, 100, True, True)
-        ])
+        calc = CapitalCalculator(
+            properties=[
+                self.make_property(12000000, 8000000, 100, True, True)
+            ],
+            disputed_liquid_capital=10000000
+        )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 900000)
-        self.assertEqual(calc.main_property['equity'], 900000)
+        self.assertEqual(capital, 4000000)
+        self.assertEqual(calc.main_property['equity'], 0)
 
     def test_scenario_smod_4(self):
         # The applicant’s main home is worth £240,000 and her other property is worth £90,000,
@@ -86,7 +89,6 @@ class TestCapitalCalculator(unittest.TestCase):
         self.assertEqual(calc.main_property['equity'], 0)
         self.assertEqual(calc.other_properties[0]['equity'], 500000)
 
-    # @unittest.skip('skip until we understand how to deal with this')
     def test_scenario_smod_5(self):
         # The applicant’s main home is worth £240,000 and her other property is worth £90,000,
         # both properties are registered in joint names with her opponent and
@@ -180,7 +182,7 @@ class TestCapitalCalculator(unittest.TestCase):
                 self.make_property(15000000, 5000000, 100, False, True),
                 self.make_property(7500000, 7500000, 100, False, False)
             ],
-            liquid_capital=800000
+            non_disputed_liquid_capital=800000
         )
         capital = calc.calculate_capital()
 
@@ -1050,10 +1052,10 @@ class DisposableCapitalTestCase(unittest.TestCase):
             is_you_or_partner_over_60 = True
             properties_value == mortgages left == 0
 
-            liquid_capital > pensioner_disregard
+            non_disputed_liquid_capital > pensioner_disregard
 
         result:
-            disposable_capital = liquid_capital - pensioner_disregard
+            disposable_capital = non_disputed_liquid_capital - pensioner_disregard
         """
         facts = mock.MagicMock(
             has_disputed_partner=False,
@@ -1062,7 +1064,7 @@ class DisposableCapitalTestCase(unittest.TestCase):
 
         case_data = mock.MagicMock(
             facts=facts,
-            liquid_capital=random.randint(6000000, 8000000),
+            non_disputed_liquid_capital=random.randint(6000000, 8000000),
             property_capital=(0, 0)
         )
 
@@ -1073,7 +1075,7 @@ class DisposableCapitalTestCase(unittest.TestCase):
             mocked_pensioner_disregard.get.return_value = pensioner_disregard_limit
             ec = EligibilityChecker(case_data)
 
-            expected_value = case_data.liquid_capital - pensioner_disregard_limit
+            expected_value = case_data.non_disputed_liquid_capital - pensioner_disregard_limit
 
             self.assertEqual(expected_value, ec.disposable_capital_assets)
             self.assertEqual(mocked_pensioner_disregard.get.called, True)
@@ -1086,7 +1088,7 @@ class DisposableCapitalTestCase(unittest.TestCase):
             is_you_or_partner_over_60 = True
             properties_value == mortgages left == 0
 
-            liquid_capital < pensioner_disregard
+            non_disputed_liquid_capital < pensioner_disregard
 
         result:
             disposable_capital = 0 (no negative numbers returned)
@@ -1098,7 +1100,7 @@ class DisposableCapitalTestCase(unittest.TestCase):
 
         case_data = mock.MagicMock(
             facts=facts,
-            liquid_capital=random.randint(50, 4999999),
+            non_disputed_liquid_capital=random.randint(50, 4999999),
             property_capital=(0, 0)
         )
 

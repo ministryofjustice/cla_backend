@@ -2,9 +2,10 @@ from . import constants
 
 
 class CapitalCalculator(object):
-    def __init__(self, properties=[], liquid_capital=0):
+    def __init__(self, properties=[], non_disputed_liquid_capital=0, disputed_liquid_capital=0):
         self.properties = self._parse_props(properties)
-        self.liquid_capital = liquid_capital
+        self.non_disputed_liquid_capital = non_disputed_liquid_capital
+        self.disputed_liquid_capital = disputed_liquid_capital
 
     def _parse_props(self, props):
         l = []
@@ -77,7 +78,7 @@ class CapitalCalculator(object):
 
     def _calculate_property_capital(self):
         if not self.properties:
-            return
+            return 0
 
         # calculating equities
         for other_property in self.other_properties:
@@ -94,18 +95,29 @@ class CapitalCalculator(object):
         # applying equity disregard (to main home only)
         self._apply_equity_disregard(self.main_property)
 
+        property_capital = 0
+        for prop in self.properties:
+            property_capital += prop['equity']
+        return property_capital
+
+    def _calculate_liquid_capital(self):
+        SMOD_disregard = min(
+            self.disputed_liquid_capital, self.SMOD_disregard_available
+        )
+
+        capital = max(self.disputed_liquid_capital - SMOD_disregard, 0)
+
+        capital += self.non_disputed_liquid_capital
+
+        return capital
+
     def calculate_capital(self):
         self._reset_state()
-        self._calculate_property_capital()
 
-        capital = 0
-        # property capital
-        for prop in self.properties:
-            capital += prop['equity']
+        property_capital = self._calculate_property_capital()
+        liquid_capital = self._calculate_liquid_capital()
 
-        # liquid capital
-        capital += self.liquid_capital
-        return capital
+        return property_capital + liquid_capital
 
 
 class EligibilityChecker(object):
@@ -185,13 +197,13 @@ class EligibilityChecker(object):
 
             capital_calc = CapitalCalculator(
                 properties=self.case_data.property_data,
-                liquid_capital=0 if self.case_data.facts.has_disputed_partner else self.case_data.liquid_capital
+                non_disputed_liquid_capital=0 if self.case_data.facts.has_disputed_partner else self.case_data.non_disputed_liquid_capital
 
             )
             disposable_capital = capital_calc.calculate_capital()
 
             # if not self.case_data.facts.has_disputed_partner:
-            #     disposable_capital += self.case_data.liquid_capital
+            #     disposable_capital += self.case_data.non_disputed_liquid_capital
             # else:
             #     # big TODO
             #     raise NotImplementedError('Not supported yet')

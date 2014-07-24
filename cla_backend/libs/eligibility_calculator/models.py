@@ -123,7 +123,7 @@ class CaseData(ModelMixin, object):
     }
 
     @property
-    def liquid_capital(self):
+    def non_disputed_liquid_capital(self):
         # total capital not including properties
         capital = 0
 
@@ -133,12 +133,10 @@ class CaseData(ModelMixin, object):
             capital += self.partner.savings.total
         return capital
 
-    # @property
-    # def property_capital(self):
-    #     properties_value = sum([d[0] for d in self.property_data])
-    #     mortgages_left = sum([d[1] for d in self.property_data])
-
-    #     return (properties_value, mortgages_left)
+    @property
+    def disputed_liquid_capital(self):
+        # TODO: not implemented yet
+        return 0
 
     @property
     def total_income(self):

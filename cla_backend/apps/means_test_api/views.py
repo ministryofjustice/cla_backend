@@ -33,7 +33,7 @@ def to_case_data(scenario):
         'dependants_young': number(scenario['under16']),
         'has_partner': is_yes(scenario['partner']),
         'is_you_or_your_partner_over_60': is_yes(scenario['60-or-over']),
-        'is_under_eighteen': is_yes(scenario['under16']),
+        'is_under_eighteen': False,
         'on_passported_benefits': on_passported_benefits(benefits),
         'on_nass_benefits': on_nass_benefits(benefits),
         'is_partner_opponent': False
@@ -87,7 +87,7 @@ def to_case_data(scenario):
 
 
 def is_yes(value):
-    return value.upper() == 'Y'
+    return str(value).upper() == 'Y'
 
 
 def properties(scenario):

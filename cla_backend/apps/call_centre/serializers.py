@@ -66,6 +66,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     you = PersonSerializer(required=False)
     partner = PersonSerializer(required=False)
     notes = serializers.CharField(max_length=500, required=False, read_only=True)
+    disputed_savings = SavingsSerializer(required=False)
 
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
@@ -76,9 +77,11 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'property_set',
             'you',
             'partner',
+            'disputed_savings',
             'dependants_young',
             'dependants_old',
             'is_you_or_your_partner_over_60',
+            'is_under_eighteen',
             'has_partner',
             'on_passported_benefits',
             'on_nass_benefits',

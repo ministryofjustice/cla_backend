@@ -18,11 +18,11 @@ class TestCapitalCalculator(unittest.TestCase):
         self.assertEqual(calc.calculate_capital(), 0)
 
         # None param
-        calc = CapitalCalculator(properties=None, liquid_capital=0)
+        calc = CapitalCalculator(properties=None, non_disputed_liquid_capital=0)
         self.assertEqual(calc.calculate_capital(), 0)
 
         # liquid capital > 0
-        calc = CapitalCalculator(liquid_capital=22)
+        calc = CapitalCalculator(non_disputed_liquid_capital=22)
         self.assertEqual(calc.calculate_capital(), 22)
 
     def make_property(self, value, mortgage_left, share, disputed, main):
@@ -57,21 +57,7 @@ class TestCapitalCalculator(unittest.TestCase):
         self.assertEqual(capital, 22000000)
         self.assertEqual(calc.main_property['equity'], 22000000)
 
-    @unittest.skip('skip until joint savings account disputed implemented')
     def test_scenario_smod_3(self):
-        # The applicant has a home worth £500,000 and the mortgage is £150,000.
-        # The property is registered in joint names with her opponent.
-        # The client also has full access to a joint savings account, account balance £9,000
-
-        calc = CapitalCalculator(properties=[
-            self.make_property(50000000, 15000000, 100, True, True)
-        ])
-        capital = calc.calculate_capital()
-
-        self.assertEqual(capital, 900000)
-        self.assertEqual(calc.main_property['equity'], 900000)
-
-    def test_scenario_smod_4(self):
         # The applicant’s main home is worth £240,000 and her other property is worth £90,000,
         # both properties are registered in joint names with her opponent and
         # both have mortgages of £80,000.
@@ -86,8 +72,7 @@ class TestCapitalCalculator(unittest.TestCase):
         self.assertEqual(calc.main_property['equity'], 0)
         self.assertEqual(calc.other_properties[0]['equity'], 500000)
 
-    # @unittest.skip('skip until we understand how to deal with this')
-    def test_scenario_smod_5(self):
+    def test_scenario_smod_4(self):
         # The applicant’s main home is worth £240,000 and her other property is worth £90,000,
         # both properties are registered in joint names with her opponent and
         # both have mortgages of £80,000.
@@ -180,7 +165,7 @@ class TestCapitalCalculator(unittest.TestCase):
                 self.make_property(15000000, 5000000, 100, False, True),
                 self.make_property(7500000, 7500000, 100, False, False)
             ],
-            liquid_capital=800000
+            non_disputed_liquid_capital=800000
         )
         capital = calc.calculate_capital()
 
@@ -410,6 +395,145 @@ class TestCapitalCalculator(unittest.TestCase):
         capital = calc.calculate_capital()
 
         self.assertEqual(capital, 5500000)
+
+    def test_scenario_assets_smod_1(self):
+        # The applicant has a home worth £120,000 and the mortgage is £80,000.
+        # SMOD on main property
+        # The client also has full access to a joint savings account,
+        # account balance £9,000 disputed
+
+        calc = CapitalCalculator(
+            properties=[
+                self.make_property(12000000, 8000000, 100, True, True)
+            ],
+            disputed_liquid_capital=10000000
+        )
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 4000000)
+        self.assertEqual(calc.main_property['equity'], 0)
+
+    def test_laa_scenario_assets_smod_A50(self):
+        # Client, No Partner, No Children, Passported (IS), No Property
+        # Undisputed Assets Savings £5000 Investments £0 IOV £500 Owed £0
+        # Disputed Assets Savings £0 Investments £2,500, IOV £500 Owed £0
+        # Pass
+        calc = CapitalCalculator(
+            properties=[],
+            non_disputed_liquid_capital=550000,
+            disputed_liquid_capital=300000
+        )
+        capital = calc.calculate_capital()
+        self.assertEqual(capital, 550000)
+
+    def test_laa_scenario_assets_smod_A51(self):
+        # Client, No Partner, No Children, Passported (IS), No Property
+        # Undisputed Assets Savings £5000 Investments £2500 IOV £499.99 Owed £0
+        # Disputed Assets Savings £0 Investments £2,500, IOV £500 Owed £0
+        # Just Pass
+        calc = CapitalCalculator(
+            properties=[],
+            non_disputed_liquid_capital=799999,
+            disputed_liquid_capital=300000
+        )
+        capital = calc.calculate_capital()
+        self.assertEqual(capital, 799999)
+
+    def test_laa_scenario_assets_smod_A52(self):
+        # Client, No Partner, No Children, Passported (IS), No Property
+        # Undisputed Assets Savings £5000 Investments £2500 IOV £501 Owed £0
+        # Disputed Assets Savings £0 Investments £2,500, IOV £500 Owed £0
+        # Fail
+        calc = CapitalCalculator(
+            properties=[],
+            non_disputed_liquid_capital=800100,
+            disputed_liquid_capital=300000
+        )
+        capital = calc.calculate_capital()
+        self.assertEqual(capital, 800100)
+
+    def test_laa_scenario_assets_smod_A53(self):
+        # Client, Partner, No Children, Passported (IS), No Property
+        # Undisputed Assets Savings £1000 Investments £1500 IOV £0 Owed £0
+        # Partner Assets Savings £567.89 Investments £1,200 IOV £600 Owed £0
+        # Disputed Assets Savings £0 Investments £10,000, IOV £12,000 Owed £0
+        # Pass
+        calc = CapitalCalculator(
+            properties=[],
+            non_disputed_liquid_capital=250000,
+            disputed_liquid_capital=236789
+        )
+        capital = calc.calculate_capital()
+        self.assertEqual(capital, 250000)
+
+    def test_laa_scenario_assets_smod_A54(self):
+        # Client, Partner, No Children, Passported (IS), No Property
+        # Undisputed Assets Savings £4,000, Investments £1,000, IOV £0, Owed £0
+        # Partner Assets Savings £1,000, Investments £1,500, IOV £499.99 Owed £0
+        # Disputed Assets Savings £0, Investments £1,000 IOV £12,000 Owed £0
+        # Just Pass
+        calc = CapitalCalculator(
+            properties=[],
+            non_disputed_liquid_capital=400000+100000+100000+150000+49999,
+            disputed_liquid_capital=100000+1200000
+        )
+        capital = calc.calculate_capital()
+        self.assertEqual(capital, 799999)
+
+    def test_laa_scenario_assets_smod_A55(self):
+        # Client, Partner, No Children, Passported (IS), No Property
+        # Undisputed Assets Savings £4,000, Investments £1,000, IOV £0, Owed £0
+        # Partner Assets Savings £1,000.01, Investments £1,500, IOV £500 Owed £0
+        # Disputed Assets Savings £0, Investments £1,000 IOV £12,000 Owed £0
+        # Fail
+        calc = CapitalCalculator(
+            properties=[],
+            non_disputed_liquid_capital=400000+100000+100001+150000+50000,
+            disputed_liquid_capital=100000+1200000
+        )
+        capital = calc.calculate_capital()
+        self.assertEqual(capital, 800001)
+
+    def test_laa_scenario_assets_smod_A56(self):
+        # Client, Partner, No Children, Passported (IS), Property
+        # MV £156,000, Mortgage £89,000, Equity Disregard
+        # MV £129,000, Mortgage £45,000, SMOD
+        # Capital from property £1,000, SMOD remaining after property £16,000
+        # Undisputed Assets Savings £1000 Investments £1500 IOV £0 Owed £0
+        # Partner Assets Savings £567.89 Investments £1,200 IOV £600 Owed £0
+        # Disputed Assets Savings £0 Investments £10,000, IOV £12,000 Owed £0
+        # Fail
+        calc = CapitalCalculator(
+            properties=[
+                self.make_property(15600000, 8900000, 100, False, True),
+                self.make_property(12900000, 4500000, 100, True, False),
+            ],
+            non_disputed_liquid_capital=100000+150000+56789+120000+60000,
+            disputed_liquid_capital=1000000+1200000
+        )
+        capital = calc.calculate_capital()
+        self.assertEqual(calc.main_property['equity'], 100000)
+        self.assertEqual(capital, 1186789)
+
+    def test_laa_scenario_assets_smod_A57(self):
+        # Client, Partner, No Children, Passported (IS), Property
+        # MV £156,000, Mortgage £89,000, Equity Disregard
+        # MV £129,000, Mortgage £45,000, SMOD
+        # Capital from property £1,000, SMOD remaining after property £16,000
+        # Undisputed Assets Savings £3000 Investments £1500 IOV £499.99 Owed £0
+        # Partner Assets Savings £1,000, Investments £1,000
+        # Disputed Assets Savings £0 Investments £2,500, IOV £500 Owed £0
+        # Just Pass (£7,999.99 capital and £13,000 SMOD remaining)
+        calc = CapitalCalculator(
+            properties=[
+                self.make_property(15600000, 8900000, 100, False, True),
+                self.make_property(12900000, 4500000, 100, True, False),
+            ],
+            non_disputed_liquid_capital=300000+150000+49999+100000+100000,
+            disputed_liquid_capital=250000+50000
+        )
+        capital = calc.calculate_capital()
+        self.assertEqual(capital, 799999)
 
 
 class CalculatorTestBase(unittest.TestCase):
@@ -1050,10 +1174,10 @@ class DisposableCapitalTestCase(unittest.TestCase):
             is_you_or_partner_over_60 = True
             properties_value == mortgages left == 0
 
-            liquid_capital > pensioner_disregard
+            non_disputed_liquid_capital > pensioner_disregard
 
         result:
-            disposable_capital = liquid_capital - pensioner_disregard
+            disposable_capital = non_disputed_liquid_capital - pensioner_disregard
         """
         facts = mock.MagicMock(
             has_disputed_partner=False,
@@ -1062,7 +1186,8 @@ class DisposableCapitalTestCase(unittest.TestCase):
 
         case_data = mock.MagicMock(
             facts=facts,
-            liquid_capital=random.randint(6000000, 8000000),
+            non_disputed_liquid_capital=random.randint(6000000, 8000000),
+            disputed_liquid_capital=0,
             property_capital=(0, 0)
         )
 
@@ -1073,7 +1198,7 @@ class DisposableCapitalTestCase(unittest.TestCase):
             mocked_pensioner_disregard.get.return_value = pensioner_disregard_limit
             ec = EligibilityChecker(case_data)
 
-            expected_value = case_data.liquid_capital - pensioner_disregard_limit
+            expected_value = case_data.non_disputed_liquid_capital - pensioner_disregard_limit
 
             self.assertEqual(expected_value, ec.disposable_capital_assets)
             self.assertEqual(mocked_pensioner_disregard.get.called, True)
@@ -1086,7 +1211,7 @@ class DisposableCapitalTestCase(unittest.TestCase):
             is_you_or_partner_over_60 = True
             properties_value == mortgages left == 0
 
-            liquid_capital < pensioner_disregard
+            non_disputed_liquid_capital < pensioner_disregard
 
         result:
             disposable_capital = 0 (no negative numbers returned)
@@ -1098,7 +1223,8 @@ class DisposableCapitalTestCase(unittest.TestCase):
 
         case_data = mock.MagicMock(
             facts=facts,
-            liquid_capital=random.randint(50, 4999999),
+            non_disputed_liquid_capital=random.randint(50, 4999999),
+            disputed_liquid_capital=0,
             property_capital=(0, 0)
         )
 

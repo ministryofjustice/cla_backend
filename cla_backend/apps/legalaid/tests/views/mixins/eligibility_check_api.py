@@ -2,7 +2,7 @@ import random
 import copy
 import uuid
 import mock
-from django.core.urlresolvers import reverse, NoReverseMatch
+from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
@@ -160,6 +160,7 @@ class EligibilityCheckAPIMixin(object):
         self.assertEqual(data['dependants_old'], check.dependants_old)
         self.assertPersonEqual(data['you'], check.you)
         self.assertPersonEqual(data['partner'], check.partner)
+        self.assertSavingsEqual(data['disputed_savings'], check.disputed_savings)
 
     def test_methods_not_allowed(self):
         """
@@ -353,7 +354,7 @@ class EligibilityCheckAPIMixin(object):
                     "mortgage": mi_dict_generator(700),
                     "rent": mi_dict_generator(20),
                     "criminal_legalaid_contributions": 730
-                },
+                }
             },
             'partner': {
                 'savings': {
@@ -377,6 +378,12 @@ class EligibilityCheckAPIMixin(object):
                     "criminal_legalaid_contributions": 730
                 },
             },
+            'disputed_savings': {
+                "bank_balance": 1111,
+                "investment_balance": 2222,
+                "asset_balance": 3333,
+                "credit_balance": 4444,
+            }
         }
         return data
 
@@ -394,7 +401,11 @@ class EligibilityCheckAPIMixin(object):
             EligibilityCheck(
                 reference=response.data['reference'],
                 you=Person.from_dict(data['you']),
-                partner=Person.from_dict(data['partner'])
+                partner=Person.from_dict(data['partner']),
+                disputed_savings=Savings(
+                    bank_balance=1111, investment_balance=2222,
+                    asset_balance=3333, credit_balance=4444
+                )
             )
         )
 

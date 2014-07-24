@@ -176,6 +176,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
     you = models.ForeignKey(Person, blank=True, null=True, related_name='you')
     partner = models.ForeignKey(Person, blank=True, null=True,
                                 related_name='partner')
+    disputed_savings = models.ForeignKey(Savings, blank=True, null=True)
     your_problem_notes = models.TextField(blank=True)
     notes = models.TextField(blank=True)
     state = models.CharField(
@@ -304,6 +305,13 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
             }
             d['partner'] = {prop: value for prop, value in
                             partner_props.items() if value}
+
+        if self.disputed_savings:
+            d['disputed_savings'] = compose_dict(
+                self.disputed_savings, [
+                    'bank_balance', 'investment_balance', 'credit_balance',
+                    'asset_balance'
+                ])
 
         # Fake
         d['facts']['is_partner_opponent'] = False

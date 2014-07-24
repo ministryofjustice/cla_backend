@@ -30,7 +30,7 @@ case_router.register(r'thirdparty_details', views.ThirdPartyDetailsViewSet)
 case_router.register(r'diagnosis', views.DiagnosisViewSet)
 
 urlpatterns = patterns('',
-    url(r'', include(case_router.urls)),
+    url(r'^', include(case_router.urls)),
     url(r'^', include(router.urls)),
     url(r'^', include(timer_router.urls)),
 )

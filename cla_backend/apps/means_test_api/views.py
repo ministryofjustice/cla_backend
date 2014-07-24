@@ -1,3 +1,4 @@
+import json
 import re
 
 from rest_framework.decorators import api_view, permission_classes
@@ -15,29 +16,24 @@ def eligibility_batch_check(request):
 
 
 def pass_fail(scenario):
-    scenario = EligibilityChecker(to_case_data(scenario))
+    case_data = CaseData(**to_case_data(scenario))
+    scenario = EligibilityChecker(case_data)
     return 'P' if scenario.is_eligible() else 'F'
 
 
 def to_case_data(scenario):
-    has = lambda key: scenario[key].upper() == 'Y'
     benefits = scenario['benefits'].split(',')
     benefits = map(slugify, benefits)
 
     case = {}
     case['category'] = scenario['law-area'].lower()
-    case['property_data'] = [{
-        'value': money(scenario['main-property-value']),
-        'mortgage_left': money(scenario['mortgage']),
-        'share': money(scenario['owned-']),
-        'disputed': has('disputed'),
-        'main': True}]
+    case['property_data'] = properties(scenario)
     case['facts'] = {
         'dependants_old': number(scenario['over16']),
         'dependants_young': number(scenario['under16']),
-        'has_partner': has('partner'),
-        'is_you_or_your_partner_over_60': has('60-or-over'),
-        'is_under_eighteen': has('under16'),
+        'has_partner': is_yes(scenario['partner']),
+        'is_you_or_your_partner_over_60': is_yes(scenario['60-or-over']),
+        'is_under_eighteen': is_yes(scenario['under16']),
         'on_passported_benefits': on_passported_benefits(benefits),
         'on_nass_benefits': on_nass_benefits(benefits),
         'is_partner_opponent': False
@@ -52,7 +48,7 @@ def to_case_data(scenario):
         'income': {
             'earnings': money(scenario['earnings-1']),
             'other_income': money(scenario['other-income']),
-            'self_employed': has('selfemp')
+            'self_employed': is_yes(scenario['selfemp'])
         },
         'deductions': {
             'income_tax': money(scenario['tax']),
@@ -74,7 +70,7 @@ def to_case_data(scenario):
         'income': {
             'earnings': money(scenario['partner-earnings']),
             'other_income': money(scenario['partner-other-income']),
-            'self_employed': has('pselfemp')
+            'self_employed': is_yes(scenario['pselfemp'])
         },
         'deductions': {
             'income_tax': money(scenario['ptax']),
@@ -87,7 +83,27 @@ def to_case_data(scenario):
         }
     }
 
-    return CaseData(**case)
+    return case
+
+
+def is_yes(value):
+    return value.upper() == 'Y'
+
+
+def properties(scenario):
+
+    def property_data(i):
+        prop = lambda s: scenario['prop{0}-{1}'.format(i, s)]
+        if prop('value'):
+            return {
+                'value': money(prop('value')),
+                'mortgage_left': money(prop('mortgage')),
+                'share': number(prop('share')),
+                'disputed': is_yes(prop('disputed')),
+                'main': (i == 1)
+            }
+
+    return filter(None, map(property_data, [1, 2, 3]))
 
 
 def number(s):
@@ -99,15 +115,11 @@ def number(s):
 
 
 def money(s):
-    if isinstance(s, int) or isinstance(s, float):
-        return s
     try:
         n = float(s)
     except ValueError:
         return 0
-    if '.' in s:
-        return int(n * 100)
-    return int(n)
+    return int(n * 100)
 
 
 def slugify(s):

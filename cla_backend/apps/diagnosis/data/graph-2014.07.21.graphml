@@ -29,6 +29,7 @@
     <node id="n0">
       <data key="d4"><![CDATA[Education]]></data>
       <data key="d5"><![CDATA[Education]]></data>
+      <data key="d9">4</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11223.92738095238" y="150.0"/>
@@ -67,14 +68,15 @@
       </data>
     </node>
     <node id="n2">
-      <data key="d4"><![CDATA[debt and housing - loss of home]]></data>
-      <data key="d5"><![CDATA[debt and housing - l]]></data>
+      <data key="d4"><![CDATA[Debt & Housing - loss of home]]></data>
+      <data key="d5"><![CDATA[Debt/Housing - Loss of Home]]></data>
+      <data key="d9">1</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2392.5" y="150.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="124.287109375" x="12.8564453125" y="5.93359375">debt and housing - l<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="148.1640625" x="0.91796875" y="5.93359375">Debt/housing home loss<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -88,6 +90,7 @@
     <node id="n3">
       <data key="d4"><![CDATA[Client owns a house and lives in it; they are at immediate risk of losing it. (Includes shared ownership if resident in the property)]]></data>
       <data key="d5"><![CDATA[Client owns a house ]]></data>
+      <data key="d9">1</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="915.0" y="225.0"/>
@@ -651,6 +654,7 @@
     <node id="n30">
       <data key="d4"><![CDATA[client in rented accomodation]]></data>
       <data key="d5"><![CDATA[client in rented acc]]></data>
+      <data key="d9">2</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2572.5" y="225.0"/>
@@ -1131,8 +1135,9 @@
       </data>
     </node>
     <node id="n53">
-      <data key="d4"><![CDATA[client is, or is becoming, homeless]]></data>
-      <data key="d5"><![CDATA[client is, or is bec]]></data>
+      <data key="d4"><![CDATA[Client is, or is becoming, homeless]]></data>
+      <data key="d5"><![CDATA[Client becoming homeless]]></data>
+      <data key="d9">4</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4348.636507936508" y="225.0"/>
@@ -1663,6 +1668,7 @@
     <node id="n78">
       <data key="d4"><![CDATA[Other money owed (check that the consequences of this don’t place the client in another category of debt)]]></data>
       <data key="d5"><![CDATA[Other money owed (ch]]></data>
+      <data key="d9">3</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1995.0" y="225.0"/>
@@ -1870,14 +1876,14 @@
       </data>
     </node>
     <node id="n89">
-      <data key="d4"><![CDATA[If none of the above consider whether discrimination might apply e.g. landlord asks deaf person for non-refundable deposit because be believes tenant will be less reliable than others; housing association with blanket policy of requiring tenants with history mental health problems to have only a short-term tenancy in first instance; landlord refusing to let to racial group because he believes it will deter white tenants; minority groups only being offered properties that are considered hard to let; landlord responds to repair requests more slowly for one tenant because he has a learning disability; landlord refuses permission to allow a disabled tent to out improvements to the premises to better facilitate their disability]]></data>
+      <data key="d4"><![CDATA[If none of the above consider whether discrimination might apply  - click for examples]]></data>
       <data key="d5"><![CDATA[If none of the above]]></data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2392.5" y="225.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="120.859375" x="14.5703125" y="5.93359375">If none of the above<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="142.837890625" x="3.5810546875" y="5.93359375">Consider discrimination<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -1889,14 +1895,15 @@
       </data>
     </node>
     <node id="n90">
-      <data key="d4"><![CDATA[other housing matters]]></data>
-      <data key="d5"><![CDATA[other housing matter]]></data>
+      <data key="d4"><![CDATA[Other housing matters]]></data>
+      <data key="d5"><![CDATA[Other housing matter]]></data>
+      <data key="d9">2</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6836.25" y="150.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="127.6796875" x="11.16015625" y="5.93359375">other housing matter<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="129.630859375" x="10.1845703125" y="5.93359375">Other housing matter<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -1910,6 +1917,7 @@
     <node id="n91">
       <data key="d4"><![CDATA[Housing disrepair issue]]></data>
       <data key="d5"><![CDATA[Housing disrepair is]]></data>
+      <data key="d9">1</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7053.75" y="225.0"/>
@@ -2120,6 +2128,7 @@
     <node id="n101">
       <data key="d4"><![CDATA[ASBO/ASBI]]></data>
       <data key="d5"><![CDATA[ASBO/ASBI]]></data>
+      <data key="d9">3</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5917.5" y="225.0"/>
@@ -2330,6 +2339,7 @@
     <node id="n111">
       <data key="d4"><![CDATA[Harrassment (being disturbed in your home or being threatened)]]></data>
       <data key="d5"><![CDATA[Harrassment (being d]]></data>
+      <data key="d9">2</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6495.0" y="225.0"/>
@@ -2478,6 +2488,7 @@
     <node id="n118">
       <data key="d4"><![CDATA[None of the above, and Discrimination has been considered and does not apply]]></data>
       <data key="d5"><![CDATA[None of the above, a]]></data>
+      <data key="d9">4</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6855.0" y="225.0"/>
@@ -2516,6 +2527,7 @@
     <node id="n120">
       <data key="d4"><![CDATA[Family]]></data>
       <data key="d5"><![CDATA[Family]]></data>
+      <data key="d9">3</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9405.17738095238" y="150.0"/>
@@ -4100,6 +4112,7 @@
     <node id="n196">
       <data key="d4"><![CDATA[Discrimination]]></data>
       <data key="d5"><![CDATA[Discrimination]]></data>
+      <data key="d9">5</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12344.105952380953" y="150.0"/>
@@ -6714,6 +6727,7 @@
     <node id="n322">
       <data key="d4"><![CDATA[Welfare Benefits]]></data>
       <data key="d5"><![CDATA[Welfare Benefits]]></data>
+      <data key="d9">6</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12704.105952380953" y="150.0"/>
@@ -6919,6 +6933,7 @@
     <node id="n332">
       <data key="d4"><![CDATA[Employment]]></data>
       <data key="d5"><![CDATA[Employment]]></data>
+      <data key="d9">7</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13221.561507936507" y="150.0"/>
@@ -7014,6 +7029,7 @@
     <node id="n337">
       <data key="d4"><![CDATA[Consumer]]></data>
       <data key="d5"><![CDATA[Consumer]]></data>
+      <data key="d9">8</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13476.561507936507" y="150.0"/>
@@ -7090,6 +7106,7 @@
     <node id="n341">
       <data key="d4"><![CDATA[Actions against the police]]></data>
       <data key="d5"><![CDATA[Actions against the ]]></data>
+      <data key="d9">9</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13836.561507936507" y="150.0"/>
@@ -7166,6 +7183,7 @@
     <node id="n345">
       <data key="d4"><![CDATA[Crime]]></data>
       <data key="d5"><![CDATA[Crime]]></data>
+      <data key="d9">10</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14159.061507936507" y="150.0"/>
@@ -7204,6 +7222,7 @@
     <node id="n347">
       <data key="d4"><![CDATA[Clinical Negligence]]></data>
       <data key="d5"><![CDATA[Clinical Negligence]]></data>
+      <data key="d9">12</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14519.061507936507" y="150.0"/>
@@ -7242,6 +7261,7 @@
     <node id="n349">
       <data key="d4"><![CDATA[Immigration and Asylum]]></data>
       <data key="d5"><![CDATA[Immigration and Asyl]]></data>
+      <data key="d9">11</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14339.061507936507" y="150.0"/>
@@ -7385,6 +7405,7 @@
     <node id="n356">
       <data key="d4"><![CDATA[Mental Health]]></data>
       <data key="d5"><![CDATA[Mental Health]]></data>
+      <data key="d9">13</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14736.561507936507" y="150.0"/>
@@ -7480,6 +7501,7 @@
     <node id="n361">
       <data key="d4"><![CDATA[Personal Injury]]></data>
       <data key="d5"><![CDATA[Personal Injury]]></data>
+      <data key="d9">14</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15102.090873015874" y="150.0"/>
@@ -7650,6 +7672,50 @@
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="139.9140625" x="-54.95703125" y="5.93359375">HOUSING OUTOFSCOPE
+<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n370">
+      <data key="d4"><![CDATA[Discrimination applies
+
+e.g. landlord asks deaf person for non-refundable deposit because be believes tenant will be less reliable than others; housing association with blanket policy of requiring tenants with history mental health problems to have only a short-term tenancy in first instance; landlord refusing to let to racial group because he believes it will deter white tenants; minority groups only being offered properties that are considered hard to let; landlord responds to repair requests more slowly for one tenant because he has a learning disability; landlord refuses permission to allow a disabled tent to out improvements to the premises to better facilitate their disability]]></data>
+      <data key="d5"><![CDATA[If none of the above]]></data>
+      <data key="d9">1</data>
+      <data key="d12">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="2435.538370693092" y="285.0"/>
+          <y:Fill color="#FFCC00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="133.890625" x="8.0546875" y="5.93359375">Discrimination applies
+<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n371">
+      <data key="d4"><![CDATA[Discrimination does not apply]]></data>
+      <data key="d5"><![CDATA[No discrimination]]></data>
+      <data key="d9">2</data>
+      <data key="d12">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="2607.360684515066" y="285.0"/>
+          <y:Fill color="#FFCC00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="107.21875" x="21.390625" y="5.93359375">No discrimination
 <y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
@@ -11934,6 +12000,39 @@
       </data>
     </edge>
     <edge id="e378" source="n367" target="n196">
+      <data key="d15">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e379" source="n89" target="n370">
+      <data key="d14"/>
+      <data key="d15">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e380" source="n89" target="n371">
+      <data key="d14"/>
+      <data key="d15">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e381" source="n370" target="n196">
+      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

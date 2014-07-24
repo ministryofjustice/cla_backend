@@ -7424,7 +7424,7 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11960.415476190476" y="225.0"/>
-          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:Fill color="#FF0000" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="103.4921875" x="23.25390625" y="5.93359375">“Guidance notes”<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
@@ -7520,7 +7520,7 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11060.415476190476" y="225.0"/>
-          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:Fill color="#FF0000" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="103.4921875" x="23.25390625" y="5.93359375">“Guidance notes”<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
@@ -12130,7 +12130,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e377" source="n89" target="n367">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="-37.5" sy="15.0" tx="0.0" ty="-15.0">
@@ -12144,7 +12143,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e378" source="n89" target="n368">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="37.5" sy="15.0" tx="0.0" ty="-15.0">
@@ -12158,7 +12156,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e379" source="n367" target="n196">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="7.5" ty="-15.0">
@@ -12172,7 +12169,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e380" source="n368" target="n370">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="37.5" sy="15.0" tx="0.0" ty="-15.0">
@@ -12186,7 +12182,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e381" source="n368" target="n369">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="-37.5" sy="15.0" tx="0.0" ty="-15.0">
@@ -12200,7 +12195,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e382" source="n369" target="n366">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="-7.5" ty="-15.0">
@@ -12214,7 +12208,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e383" source="n3" target="n371">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="-18.75" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -12225,7 +12218,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e384" source="n371" target="n372">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -12236,7 +12228,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e385" source="n332" target="n196">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="-22.5" ty="-15.0">
@@ -12250,7 +12241,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e386" source="n336" target="n196">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="-52.5" ty="-15.0">
@@ -12264,7 +12254,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e387" source="n328" target="n196">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="52.5" ty="-15.0">

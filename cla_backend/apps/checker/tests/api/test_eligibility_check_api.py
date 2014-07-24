@@ -25,3 +25,14 @@ class EligibilityCheckTestCase(CLABaseApiTestMixin, EligibilityCheckAPIMixin, AP
         self.check.your_problem_notes = data['your_problem_notes']
         self.check.notes = data['notes']
         self.assertEligibilityCheckEqual(response.data, self.check)
+
+    def assertEligibilityCheckEqual(self, data, check):
+        self.assertEqual(data['reference'], unicode(check.reference))
+        self.assertEqual(data['category'], check.category.code if check.category else None)
+        self.assertEqual(data['your_problem_notes'], check.your_problem_notes)
+        self.assertEqual(data['notes'], check.notes)
+        self.assertEqual(len(data['property_set']), check.property_set.count())
+        self.assertEqual(data['dependants_young'], check.dependants_young)
+        self.assertEqual(data['dependants_old'], check.dependants_old)
+        self.assertPersonEqual(data['you'], check.you)
+        self.assertPersonEqual(data['partner'], check.partner)

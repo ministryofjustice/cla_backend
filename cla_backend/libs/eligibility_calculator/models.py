@@ -119,7 +119,8 @@ class CaseData(ModelMixin, object):
         'facts': Facts,
         'you': Person,
         'partner': Person,
-        'property_data': None
+        'property_data': None,
+        'disputed_savings': Savings
     }
 
     @property
@@ -135,7 +136,8 @@ class CaseData(ModelMixin, object):
 
     @property
     def disputed_liquid_capital(self):
-        # TODO: not implemented yet
+        if hasattr(self, 'disputed_savings') and self.disputed_savings:
+            return self.disputed_savings.total
         return 0
 
     @property

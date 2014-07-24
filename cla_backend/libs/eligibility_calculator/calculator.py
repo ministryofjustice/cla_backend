@@ -197,16 +197,11 @@ class EligibilityChecker(object):
 
             capital_calc = CapitalCalculator(
                 properties=self.case_data.property_data,
-                non_disputed_liquid_capital=0 if self.case_data.facts.has_disputed_partner else self.case_data.non_disputed_liquid_capital
+                non_disputed_liquid_capital=self.case_data.non_disputed_liquid_capital,
+                disputed_liquid_capital=self.case_data.disputed_liquid_capital
 
             )
             disposable_capital = capital_calc.calculate_capital()
-
-            # if not self.case_data.facts.has_disputed_partner:
-            #     disposable_capital += self.case_data.non_disputed_liquid_capital
-            # else:
-            #     # big TODO
-            #     raise NotImplementedError('Not supported yet')
 
             if self.case_data.facts.is_you_or_your_partner_over_60:
                 disposable_capital -= constants.disposable_capital.PENSIONER_DISREGARD_LIMIT_LEVELS.get(max(self.disposable_income, 0), 0)

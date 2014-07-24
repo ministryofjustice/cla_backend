@@ -81,6 +81,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'dependants_young',
             'dependants_old',
             'is_you_or_your_partner_over_60',
+            'is_under_eighteen',
             'has_partner',
             'on_passported_benefits',
             'on_nass_benefits',

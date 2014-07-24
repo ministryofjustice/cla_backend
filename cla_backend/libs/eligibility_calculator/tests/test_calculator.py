@@ -1187,6 +1187,7 @@ class DisposableCapitalTestCase(unittest.TestCase):
         case_data = mock.MagicMock(
             facts=facts,
             non_disputed_liquid_capital=random.randint(6000000, 8000000),
+            disputed_liquid_capital=0,
             property_capital=(0, 0)
         )
 
@@ -1223,6 +1224,7 @@ class DisposableCapitalTestCase(unittest.TestCase):
         case_data = mock.MagicMock(
             facts=facts,
             non_disputed_liquid_capital=random.randint(50, 4999999),
+            disputed_liquid_capital=0,
             property_capital=(0, 0)
         )
 

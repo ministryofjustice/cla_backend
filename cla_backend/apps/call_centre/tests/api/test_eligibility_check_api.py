@@ -32,7 +32,8 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilit
              'on_passported_benefits',
              'on_nass_benefits',
              'is_you_or_your_partner_over_60',
-             'state'
+             'state',
+             'is_under_eighteen'
             ]
         )
 

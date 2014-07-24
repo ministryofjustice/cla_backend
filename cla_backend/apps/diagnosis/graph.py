@@ -93,11 +93,16 @@ class GraphImporter(object):
                     node, self.KEY_OPERATOR_ROOT) == 'true':
                 self.graph.graph['operator_root_id'] = self.xpath_ns(node, '@id')[0]
 
+            try:
+                order = int(_get_node_data_value_or_default(node, self.KEY_ORDER))
+            except TypeError:
+                order = 9999
+
             self.graph.add_node(
                 node.attrib['id'],
                 label=_get_node_data_value_or_default(node, self.KEY_BODY),
                 title=_get_node_data_value_or_default(node, self.KEY_TITLE),
-                order=_get_node_data_value_or_default(node, self.KEY_ORDER),
+                order=order,
                 context=_process_context(node)
             )
 

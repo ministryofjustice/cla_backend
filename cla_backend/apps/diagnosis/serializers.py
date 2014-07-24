@@ -55,7 +55,9 @@ class DiagnosisSerializer(ClaModelSerializer):
 
         # populating choices
         children = self.graph.successors(current_node_id)
-        return [(node_id, self.graph.node[node_id]['label']) for node_id in children]
+        nodes = [(node_id, self.graph.node[node_id]['label']) for node_id in children]
+        nodes = sorted(nodes, key=lambda i: self.graph.node[i[0]]['order'])
+        return nodes
 
     def get_context(self, obj):
         context = {}

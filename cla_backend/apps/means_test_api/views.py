@@ -82,6 +82,12 @@ def to_case_data(scenario):
             'criminal_legalaid_contributions': money(scenario['pcontribution'])
         }
     }
+    case['disputed_savings'] = {
+        'bank_balance': money(scenario['dsavings']),
+        'investment_balance': money(scenario['dinvestments']),
+        'credit_balance': money(scenario['dowed']),
+        'asset_balance': money(scenario['dvaluable'])
+    }
 
     return case
 

@@ -4,7 +4,6 @@ case_data_dict = {
     'category': u'blah blah',
     'facts': {
         'is_you_or_your_partner_over_60': False,
-        'is_under_eighteen': False,
         'on_passported_benefits': False,
         'on_nass_benefits' : False,
         'has_partner': False,

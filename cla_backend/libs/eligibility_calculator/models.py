@@ -92,8 +92,7 @@ class Facts(ModelMixin, object):
         'has_partner': None,
         'is_partner_opponent': None,
         'dependants_old': None,
-        'dependants_young': None,
-        'is_under_eighteen': None
+        'dependants_young': None
     }
 
     @property

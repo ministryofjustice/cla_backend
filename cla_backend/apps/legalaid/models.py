@@ -197,7 +197,6 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
 
     # need to be moved into graph/questions format soon
     is_you_or_your_partner_over_60 = models.NullBooleanField(default=None)
-    is_under_eighteen = models.NullBooleanField(default=None)
     has_partner = models.NullBooleanField(default=None)
 
     def get_dependencies(self):
@@ -264,7 +263,6 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
         d['facts'] = compose_dict(props=[
             'dependants_old', 'dependants_young', 'has_partner',
             'is_you_or_your_partner_over_60',
-            'is_under_eighteen',
         ])
 
         d['facts']['on_passported_benefits'] = self.on_passported_benefits

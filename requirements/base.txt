@@ -19,7 +19,7 @@ Markdown==2.4.1
 bleach==1.4
 django-oauth2-provider==0.2.6.1
 
-git+git://github.com/ministryofjustice/cla_common.git@0.1.32#egg=cla_common==0.1.32
+git+git://github.com/ministryofjustice/cla_common.git@0.1.33#egg=cla_common==0.1.33
 django-extended-choices==0.3.0
 django-filter==0.7
 jsonpatch==1.7

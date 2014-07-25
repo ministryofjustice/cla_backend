@@ -21,11 +21,3 @@ DATABASES = {
         'PORT': '',
     }
 }
-
-RAVEN_CONFIG = {
-    'dsn': 'https://4f950e08988c4cfeba8e5b9cb82d1233:a60f0407af98435aa86fbca234992c74@app.getsentry.com/26717',
-}
-
-INSTALLED_APPS = INSTALLED_APPS + (
-    'raven.contrib.django.raven_compat',
-)

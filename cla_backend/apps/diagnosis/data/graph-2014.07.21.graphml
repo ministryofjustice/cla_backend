@@ -110,12 +110,13 @@
     <node id="n4">
       <data key="d4"><![CDATA[Mortgage lender is seeking/has sought a court order enabling them to recover the property (due to mortgage arrears)]]></data>
       <data key="d5"><![CDATA[Mortgage lender is s]]></data>
+      <data key="d9">1</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10842.915476190476" y="300.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="123.2265625" x="13.38671875" y="5.93359375">Mortgage lender is s<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="133.0234375" x="8.48828125" y="5.93359375">Mortgage reposession<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -322,14 +323,15 @@
       </data>
     </node>
     <node id="n14">
-      <data key="d4"><![CDATA[Creditor is seeking a court order forcing the sale of the client’s proerpty to recoup the debt they are owed]]></data>
+      <data key="d4"><![CDATA[Creditor is seeking a court order forcing the sale of the client’s property to recoup the debt they are owed]]></data>
       <data key="d5"><![CDATA[Creditor is seeking ]]></data>
+      <data key="d9">2</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10467.915476190476" y="300.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="117.56640625" x="16.216796875" y="5.93359375">Creditor is seeking <y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="121.076171875" x="14.4619140625" y="5.93359375">Creditor court order<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -493,12 +495,13 @@
     <node id="n22">
       <data key="d4"><![CDATA[Creditor is seeking to make the client bankrupt in order to recoup the debt they are owed and the client’s estate includes their own home]]></data>
       <data key="d5"><![CDATA[Creditor is seeking ]]></data>
+      <data key="d9">3</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9927.915476190476" y="300.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="117.56640625" x="16.216796875" y="5.93359375">Creditor is seeking <y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="108.525390625" x="20.7373046875" y="5.93359375">Creditor bankrupt<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -660,7 +663,7 @@
       </data>
     </node>
     <node id="n30">
-      <data key="d4"><![CDATA[client in rented accomodation]]></data>
+      <data key="d4"><![CDATA[Client in rented accomodation]]></data>
       <data key="d5"><![CDATA[client in rented acc]]></data>
       <data key="d9">2</data>
       <data key="d12">
@@ -1147,7 +1150,7 @@
     <node id="n53">
       <data key="d4"><![CDATA[Client is, or is becoming, homeless]]></data>
       <data key="d5"><![CDATA[Client becoming homeless]]></data>
-      <data key="d9">4</data>
+      <data key="d9">3</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8501.551984126983" y="225.0"/>
@@ -1679,7 +1682,7 @@
     <node id="n78">
       <data key="d4"><![CDATA[Other money owed (check that the consequences of this don’t place the client in another category of debt)]]></data>
       <data key="d5"><![CDATA[Other money owed (ch]]></data>
-      <data key="d9">3</data>
+      <data key="d9">4</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6131.2488095238095" y="225.0"/>
@@ -7751,6 +7754,7 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       <data key="d4"><![CDATA[None of the above apply.]]></data>
       <data key="d5"><![CDATA[None of above
 ]]></data>
+      <data key="d9">4</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10287.915476190476" y="300.0"/>

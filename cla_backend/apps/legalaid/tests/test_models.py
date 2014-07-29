@@ -367,6 +367,15 @@ class CaseTestCase(TestCase):
 
         self.assertEqual(case.provider, provider)
 
+
+    def test_assign_alternative_help(self):
+        articles = make_recipe('knowledgebase.article', _quantity=10)
+        user = make_user()
+        case = make_recipe('legalaid.case', provider=None)
+
+        self.assertListEqual(list(case.alternative_help_articles.all()), [])
+        case.assign_alternative_help(user, articles[:5])
+
     def test_lock_doesnt_override_existing_lock(self):
         import logging
 

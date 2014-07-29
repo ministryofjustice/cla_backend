@@ -419,6 +419,10 @@ class Case(TimeStampedModel):
 
     media_code = models.ForeignKey(MediaCode, blank=True, null=True)
 
+    alternative_help_articles = models.ManyToManyField('knowledgebase.Article',
+                                                       through='CaseKnowledgebaseAssignment',
+                                                       null=True, blank=True)
+
     def _set_reference_if_necessary(self):
         if not self.reference:
             # TODO make it better
@@ -445,6 +449,13 @@ class Case(TimeStampedModel):
     def assign_to_provider(self, provider):
         self.provider = provider
         self.save()
+
+    def assign_alternative_help(self, user, articles):
+        self.alternative_help_articles.clear()
+        for article in articles:
+            CaseKnowledgebaseAssignment.objects.create(case=self,
+                                                       alternative_help_article=article,
+                                                       assigned_by=user)
 
     def lock(self, user, save=True):
         if not self.locked_by:
@@ -477,3 +488,8 @@ class Case(TimeStampedModel):
     # @property
     # def requires_action_by_operator_manager(self):
     #     return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR
+
+class CaseKnowledgebaseAssignment(TimeStampedModel):
+    case = models.ForeignKey(Case)
+    alternative_help_article = models.ForeignKey('knowledgebase.Article')
+    assigned_by = models.ForeignKey('auth.User', blank=True, null=True)

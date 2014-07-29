@@ -32,7 +32,7 @@ from .serializers import EligibilityCheckSerializer, \
     MatterTypeSerializer, MediaCodeSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
-    DeferAssignmentCaseForm, SuspendCaseForm
+    DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm
 
 from .models import Operator
 
@@ -270,6 +270,10 @@ class CaseViewSet(
         )
 
         return resp
+
+    @action()
+    def assign_alternative_help(self, request, **kwargs):
+        return self._form_action(request, AlternativeHelpForm)
 
     def post_save(self, obj, created=False):
         super(CaseViewSet, self).post_save(obj, created=created)

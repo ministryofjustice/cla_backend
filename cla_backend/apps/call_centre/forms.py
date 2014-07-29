@@ -5,6 +5,7 @@ from django.forms.util import ErrorList
 
 from cla_provider.models import Provider
 from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
+from knowledgebase.models import Article
 
 
 class ProviderAllocationForm(BaseCaseLogForm):
@@ -97,3 +98,28 @@ class DeclineHelpCaseForm(EventSpecificLogForm):
 
 class SuspendCaseForm(EventSpecificLogForm):
     LOG_EVENT_KEY = 'suspend_case'
+
+class AlternativeHelpForm(EventSpecificLogForm):
+
+    selected_providers = forms.ModelMultipleChoiceField(
+        queryset=Article.objects.all(),
+        required=False)
+
+    LOG_EVENT_KEY = 'alternative_help'
+
+    def get_notes(self):
+        notes = self.cleaned_data.get('notes')
+        providers = self.cleaned_data.get('selected_providers',[])
+
+        notes_l = [notes, 'Assigned alternative help:']
+        for provider in providers:
+            notes_l.append(unicode(provider))
+
+
+        return '\n'.join(notes_l)
+
+    def save(self, user):
+        providers = self.cleaned_data.get('selected_providers',[])
+
+        self.case.assign_alternative_help(user, providers)
+        return super(AlternativeHelpForm, self).save(user)

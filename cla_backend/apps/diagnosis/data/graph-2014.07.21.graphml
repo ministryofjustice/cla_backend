@@ -3869,8 +3869,9 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n183">
-      <data key="d4"><![CDATA[INSCOPE NOOPERATORMEANSTEST]]></data>
-      <data key="d5"><![CDATA[INSCOPE NOOPER]]></data>
+      <data key="d4"><![CDATA[INSCOPE
+]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d7">
         <context xmlns="">
 	<category>family</category>
@@ -3881,7 +3882,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
           <y:Geometry height="30.0" width="150.0" x="13902.915476190476" y="435.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="148.298828125" x="0.8505859375" y="5.93359375">FAMLY INSCOPE NOOPER<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="99.724609375" x="25.1376953125" y="5.93359375">FAMILY INSCOPE<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -3913,8 +3914,8 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n185">
-      <data key="d4"><![CDATA[INSCOPE NOOPERATORMEANSTEST]]></data>
-      <data key="d5"><![CDATA[INSCOPE NOOPE]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d7">
         <context xmlns="">
 	<category>family</category>
@@ -3925,7 +3926,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
           <y:Geometry height="30.0" width="150.0" x="13722.915476190476" y="435.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="144.16796875" x="2.916015625" y="5.93359375">FAMILY INSCOPE NOOPE<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="99.724609375" x="25.1376953125" y="5.93359375">FAMILY INSCOPE<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>

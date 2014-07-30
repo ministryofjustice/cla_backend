@@ -3082,6 +3082,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n146">
       <data key="d4"><![CDATA[Divorce]]></data>
       <data key="d5"><![CDATA[Divorce]]></data>
+      <data key="d9">1</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14120.415476190476" y="675.0"/>
@@ -3273,6 +3274,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n155">
       <data key="d4"><![CDATA[Financial matters]]></data>
       <data key="d5"><![CDATA[Financial matters]]></data>
+      <data key="d9">3</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13400.415476190476" y="675.0"/>
@@ -3464,6 +3466,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n164">
       <data key="d4"><![CDATA[Children disputes (access etc)]]></data>
       <data key="d5"><![CDATA[Children disputes (a]]></data>
+      <data key="d9">2</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13021.665476190476" y="675.0"/>
@@ -3483,6 +3486,11 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n165">
       <data key="d4"><![CDATA[INSCOPE]]></data>
       <data key="d5"><![CDATA[INSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>family</category>
+</context>
+      </data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13021.665476190476" y="811.1328125"/>
@@ -3949,7 +3957,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n187">
-      <data key="d4"><![CDATA[INSCOPE NOOPERATORMEANSTEST]]></data>
+      <data key="d4"><![CDATA[INSCOPE ]]></data>
       <data key="d5"><![CDATA[INSCOPE NOOPE]]></data>
       <data key="d7">
         <context xmlns="">
@@ -3961,7 +3969,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
           <y:Geometry height="30.0" width="150.0" x="14262.915476190476" y="435.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="144.16796875" x="2.916015625" y="5.93359375">FAMILY INSCOPE NOOPE<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="99.724609375" x="25.1376953125" y="5.93359375">FAMILY INSCOPE<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -7690,8 +7698,8 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </node>
     <node id="n368">
-      <data key="d4"><![CDATA[NOTINSCOPE]]></data>
-      <data key="d5"><![CDATA[NOTINSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d7">
         <context xmlns="">
 	<category>debt</category>

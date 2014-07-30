@@ -2,6 +2,7 @@ from core.serializers import ClaModelSerializer
 from diagnosis.models import DiagnosisTraversal
 from rest_framework.fields import ChoiceField, SerializerMethodField
 from cla_common.constants import DIAGNOSIS_SCOPE
+from django.template.defaultfilters import striptags
 
 from legalaid.models import Category
 
@@ -70,7 +71,8 @@ class DiagnosisSerializer(ClaModelSerializer):
     def _set_state(self, obj):
         if is_terminal(self.graph, obj.current_node_id):
             current_node = self.graph.node[obj.current_node_id]
-            obj.state = DIAGNOSIS_SCOPE.CHOICES_CONST_DICT.get(current_node['label'], DIAGNOSIS_SCOPE.UNKNOWN)
+            label = striptags(current_node['label']+"    ").strip()
+            obj.state = DIAGNOSIS_SCOPE.CHOICES_CONST_DICT.get(label, DIAGNOSIS_SCOPE.UNKNOWN)
 
             category_name = self.get_context(obj).get('category')
             if category_name:

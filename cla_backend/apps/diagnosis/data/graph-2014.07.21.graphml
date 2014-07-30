@@ -2851,7 +2851,9 @@ Remember that if the caller is the abuser of domestic violence then this will no
       </data>
     </node>
     <node id="n135">
-      <data key="d4"><![CDATA[<headline>Choose the nature of the issue that’s been brought the matter back into scope</headline> <footer>Remember that the abuser will not be in scope. DV will bring all key areas in scope. Child abuse only brings disputes over children into scope</footer>]]></data>
+      <data key="d4"><![CDATA[Choose the nature of the issue that’s been brought the matter back into scope
+
+Remember that the abuser will not be in scope. DV will bring all key areas in scope. Child abuse only brings disputes over children into scope]]></data>
       <data key="d5"><![CDATA[<headline>Choose the]]></data>
       <data key="d12">
         <y:ShapeNode>
@@ -3057,7 +3059,9 @@ Remember that if the caller is the abuser of domestic violence then this will no
       </data>
     </node>
     <node id="n145">
-      <data key="d4"><![CDATA[<headline>Choose the nature of the issue that’s been brought the matter back into scope</headline> <footer>Remember that the abuser will not be in scope. DV will bring all key areas in scope. Child abuse only brings disputes over children into scope</footer>]]></data>
+      <data key="d4"><![CDATA[Choose the nature of the issue that’s been brought the matter back into scope
+
+Remember that the abuser will not be in scope. DV will bring all key areas in scope. Child abuse only brings disputes over children into scope]]></data>
       <data key="d5"><![CDATA[<headline>Choose the]]></data>
       <data key="d12">
         <y:ShapeNode>
@@ -12193,7 +12197,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e385" source="n92" target="n369">
-      <data key="d14"/>
       <data key="d15">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

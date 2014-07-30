@@ -724,12 +724,13 @@
     <node id="n33">
       <data key="d4"><![CDATA[Client has received a letter from landlord confirming that informal arrangements can no longer continue]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
+      <data key="d9">1</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7407.9154761904765" y="585.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="117.7890625" x="16.10546875" y="5.93359375">Client has received <y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="137.32421875" x="6.337890625" y="5.93359375">Informal arrangements<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -765,14 +766,15 @@
       </data>
     </node>
     <node id="n35">
-      <data key="d4"><![CDATA[Client has received a Notice to Quit from the landlord (where renting arrangement orhterwise lacks security of tenure)]]></data>
+      <data key="d4"><![CDATA[Client has received a Notice to Quit from the landlord (where renting arrangement otherwise lacks security of tenure)]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
+      <data key="d9">2</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7227.9154761904765" y="585.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="117.7890625" x="16.10546875" y="5.93359375">Client has received <y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="83.435546875" x="33.2822265625" y="5.93359375">Notice to quit<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -810,12 +812,13 @@
     <node id="n37">
       <data key="d4"><![CDATA[Client has received a Letter Before Action, as required by the Rent Arrears Pre Action Protocol]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
+      <data key="d9">3</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6867.9154761904765" y="585.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="117.7890625" x="16.10546875" y="5.93359375">Client has received <y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="118.416015625" x="15.7919921875" y="5.93359375">Letter before action<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -853,12 +856,13 @@
     <node id="n39">
       <data key="d4"><![CDATA[Client has received Notices from the landlord under section 83 Housing Act 1985 and sections 8 and 21 Housing Act 1988]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
+      <data key="d9">4</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6507.9154761904765" y="585.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="117.7890625" x="16.10546875" y="5.93359375">Client has received <y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="100.849609375" x="24.5751953125" y="5.93359375">Landlord notices<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -939,12 +943,13 @@
     <node id="n43">
       <data key="d4"><![CDATA[The client has received a Possession order from the court (outlining the decision of the court)]]></data>
       <data key="d5"><![CDATA[The client has recei]]></data>
+      <data key="d9">5</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6687.9154761904765" y="585.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="116.904296875" x="16.5478515625" y="5.93359375">The client has recei<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="102.671875" x="23.6640625" y="5.93359375">Possession order<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -982,12 +987,13 @@
     <node id="n45">
       <data key="d4"><![CDATA[The client has received a warrant for eviction from the Court Bailiffs]]></data>
       <data key="d5"><![CDATA[The client has recei]]></data>
+      <data key="d9">6</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5966.2488095238095" y="585.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="116.904296875" x="16.5478515625" y="5.93359375">The client has recei<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="106.80859375" x="21.595703125" y="5.93359375">Warrant - bailliffs<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -1025,12 +1031,14 @@
     <node id="n47">
       <data key="d4"><![CDATA[There is other evidence that landlord is seeking to recover possession and placing the home at immediate risk]]></data>
       <data key="d5"><![CDATA[There is other evide]]></data>
+      <data key="d9">7</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6327.9154761904765" y="585.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="119.798828125" x="15.1005859375" y="5.93359375">There is other evide<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="130.26953125" x="9.865234375" y="5.93359375">Other ev home at risk
+<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>

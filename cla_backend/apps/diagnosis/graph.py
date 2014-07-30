@@ -8,6 +8,8 @@ from os.path import join, abspath, dirname
 from django.conf import settings
 from django.utils.functional import SimpleLazyObject
 
+import markdown
+
 
 class GraphImporter(object):
     KEY_BODY = 'body'
@@ -98,9 +100,13 @@ class GraphImporter(object):
             except TypeError:
                 order = 9999
 
+            label = _get_node_data_value_or_default(node, self.KEY_BODY)
+            if label:
+                label = markdown.markdown(label)
+
             self.graph.add_node(
                 node.attrib['id'],
-                label=_get_node_data_value_or_default(node, self.KEY_BODY),
+                label=label,
                 title=_get_node_data_value_or_default(node, self.KEY_TITLE),
                 order=order,
                 context=_process_context(node)

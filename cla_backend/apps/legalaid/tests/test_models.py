@@ -373,8 +373,16 @@ class CaseTestCase(TestCase):
         user = make_user()
         case = make_recipe('legalaid.case', provider=None)
 
+        # assign some articles
         self.assertListEqual(list(case.alternative_help_articles.all()), [])
         case.assign_alternative_help(user, articles[:5])
+        self.assertListEqual(list(case.alternative_help_articles.all()), articles[:5])
+
+        # assign some more articles; originals should be gone
+        case.assign_alternative_help(user, articles[5:])
+
+        self.assertListEqual(list(case.alternative_help_articles.all()), articles[5:])
+
 
     def test_lock_doesnt_override_existing_lock(self):
         import logging

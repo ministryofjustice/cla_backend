@@ -80,3 +80,4 @@ class DeclineHelpEvent(BaseEvent):
         },
     }
 event_registry.register(DeclineHelpEvent)
+

@@ -4098,7 +4098,30 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n193">
-      <data key="d4"><![CDATA[The Discrimination category covers advice on cases that contravene the Equalities Act 2010. The originating issue could be in another category (e.g. housing or employment) but the client will believe that they have been discriminated, harassed or victimised.  Please note we have two approaches we can take for diagnosing discrimination matters; these are proactive (for cases that originate as Employment, Education or Consumer matters) and reactive (for cases that originate as Housing, Welfare Benefits or Actions Against the Police matters). Choosing the relevant main category will (if appropriate) give you context on the correct discrimination flow.  However, if the client presents a discrimination issue and therefore doesn’t need any further diagnosis please click on the ‘discrimination’ tab and work through the proactive approach from here.  For further information on the different approach to take please search the operator guidance.  Key questions to use (sensitively to what client has said) include: - Do you think you have been singled out, or treated differently or experienced worse treatment? If so, why? - Do you think you have been disadvantaged in some way? If so, how? - Do you think that rules, practices or mays of doing things have put you at a disadvantage? If so, how? - Did something happen to make you feel that you were in an environment that was intimidating, hostile, degrading, humiliating or off onsive, or that violated your dignity? - Do you think that what has happened to you is because you have previously complained of discrimination, brought a claim of discrimination, supported someone else’s claim or was suspected of doing one of these things? If so, why? - Do you believe that you have been treated differently or experience worse treatment because of something that out of your disability? If so, why? - Do you believe that you have been treated or experienced worse treatment because of something that is connected to your pregnancy or maternity leave? If so, why? - Do you believe that any steps could have been taken to assist you to overcome any problems (i.e. accessing services, at work) that are linked to your disability? - Where did the discrimination occur? - Why do you think you were discriminated against?]]></data>
+      <data key="d4"><![CDATA[The discrimination category covers advice on cases that contravene the Equalities Act 2010. The issue could begin in another category (eg housing or employment) but the client will believe that they have been discriminated against, harassed or victimised.  
+
+We have two approaches we can take for diagnosing discrimination matters: proactive (for cases that originate as employment, education or consumer matters) and reactive (for cases that originate as housing, welfare benefits or actions against the police matters). 
+
+Choosing the relevant main category will (if appropriate) give you context on the correct discrimination flow.  However, if the client presents a discrimination issue and doesn’t need any further diagnosis please click on the ‘discrimination’ tab and work through the proactive approach from there.  For more information on the different approaches to take please search the operator guidance.  
+
+Key questions to ask (sensitively to what client has said) include: 
+
+* do you think you have been singled out, or treated differently or experienced worse treatment than someone else? If so, why? 
+* do you think you have been disadvantaged in some way? If so, how? 
+*  do you think that rules, practices or ways of doing things have put you at a disadvantage? If so, how? 
+*  did something happen to make you feel that you were in an environment that was intimidating, hostile, degrading, humiliating or offensive, or that violated your dignity? 
+
+*  do you think that what has happened to you is because you have previously complained of discrimination, brought a claim of discrimination, supported someone else’s claim or been suspected of doing one of these things? If so, why? 
+
+*  do you believe that you have been treated differently or experienced worse treatment because of something that arose out of your disability? If so, why?
+
+* do you believe that you have been treated differently or experienced worse treatment because of something that is connected to your pregnancy or maternity leave? If so, why? 
+
+*  do you believe that any steps could have been taken to help you overcome any problems (ie accessing services, at work) that are linked to your disability? 
+
+*  where did the discrimination occur? 
+
+* why do you think you were discriminated against?]]></data>
       <data key="d5"><![CDATA[The Discrimination c]]></data>
       <data key="d12">
         <y:ShapeNode>
@@ -7771,6 +7794,26 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
           <y:Fill color="#FF99CC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="139.9140625" x="5.04296875" y="5.93359375">HOUSING OUTOFSCOPE<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n371">
+      <data key="d4"/>
+      <data key="d5"/>
+      <data key="d11"/>
+      <data key="d12">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="30.0" x="5318.2488095238095" y="1350.1328125"/>
+          <y:Fill color="#FFCC00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="26.763671875" x="1.6181640625" y="5.93359375">372<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>

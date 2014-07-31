@@ -6,15 +6,17 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from .forms import ProviderCaseClosure, OperatorCaseClosure, \
-    OperatorCaseCreate, OperatorAvgDuration, Reallocation, DuplicateMatters
+    OperatorCaseCreate, CaseReport, NewCasesWithAdaptationCount, \
+    CaseVolumeAndAvgDurationByDay, ReferredCasesByCategory, \
+    AllocatedCasesNoOutcome
 
 
-def report_view(form_class, title):
+def report_view(form_class, title, template='case_report'):
 
     def wrapper(fn):
         slug = title.lower().replace(' ', '_')
         csv_filename = '{0}.csv'.format(slug)
-        template = 'admin/reports/{0}.html'.format(slug)
+        tmpl = 'admin/reports/{0}.html'.format(template)
 
         def view(request):
             form = form_class()
@@ -22,7 +24,7 @@ def report_view(form_class, title):
             if valid_submit(request, form):
                 return csv_download(csv_filename, form)
 
-            return render(request, template, {'title': title, 'form': form})
+            return render(request, tmpl, {'title': title, 'form': form})
 
         return view
 
@@ -39,9 +41,10 @@ def valid_submit(request, form):
 
 def csv_download(filename, form):
     response = make_csv_download_response(filename)
+    csv_data = list(form)
     with csv_writer(response) as writer:
-        write_form_csv(writer, form)
-        return response
+        map(writer.writerow, csv_data)
+    return response
 
 
 @contextlib.contextmanager
@@ -54,12 +57,6 @@ def make_csv_download_response(filename):
     response['Content-Disposition'] = \
         'attachment; filename="{0}"'.format(filename)
     return response
-
-
-def write_form_csv(writer, form):
-    writer.writerow(form.get_headers())
-    for row in form.get_rows():
-        writer.writerow(row)
 
 
 @staff_member_required
@@ -75,24 +72,36 @@ def operator_closure_volume():
 
 
 @staff_member_required
-@report_view(OperatorCaseCreate, 'Operator Create Volume')
+@report_view(CaseVolumeAndAvgDurationByDay, 'Operator Create Volume')
 def operator_create_volume():
     pass
 
 
 @staff_member_required
-@report_view(OperatorAvgDuration, 'Operator Handling Time Average')
-def operator_avg_duration():
+@report_view(CaseReport, 'All Cases')
+def all_cases():
     pass
 
 
 @staff_member_required
-@report_view(Reallocation, 'Cases Ready for Reallocation to New Provider')
-def reallocation():
+@report_view(NewCasesWithAdaptationCount, 'New Cases with Adaptations')
+def adaptation_counts():
     pass
 
 
 @staff_member_required
-@report_view(DuplicateMatters, 'Duplicate Matters')
-def duplicate_matters():
+@report_view(CaseVolumeAndAvgDurationByDay, 'Case Volume and Average Duration by Operator by Day')
+def case_volume_avg_duration_by_operator_day():
+    pass
+
+
+@staff_member_required
+@report_view(ReferredCasesByCategory, 'Cases Referred to Specialist by Category')
+def referred_cases_by_category():
+    pass
+
+
+@staff_member_required
+@report_view(AllocatedCasesNoOutcome, 'Allocated Cases with No Outcome')
+def allocated_no_outcome():
     pass

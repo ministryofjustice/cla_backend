@@ -1,11 +1,14 @@
 from datetime import timedelta, time, datetime
 
 from django import forms
+from django.db import connection
+from django.db.models.aggregates import Avg, Count
 from django.db.models.sql.aggregates import Aggregate
 from django.utils import timezone
 from django.contrib.admin import widgets
 from django.template.defaulttags import date
 
+from cla_eventlog.constants import LOG_LEVELS
 from cla_provider.models import Provider
 from legalaid.models import Case
 
@@ -18,19 +21,39 @@ class ConvertDateMixin(object):
 
 
 class ReportForm(ConvertDateMixin, forms.Form):
+
+    def get_headers(self):
+        raise NotImplementedError
+
+    def get_rows(self):
+        for row in self.get_queryset():
+            yield row
+
+    def __iter__(self):
+        yield self.get_headers()
+        for row in self.get_rows():
+            yield row
+
+
+class DateRangeReportForm(ReportForm):
     date_from = forms.DateField(widget=widgets.AdminDateWidget)
     date_to = forms.DateField(widget=widgets.AdminDateWidget)
 
+    @property
+    def date_range(self):
+        return (
+            self._convert_date(self.cleaned_data['date_from']),
+            self._convert_date(self.cleaned_data['date_to'] + timedelta(days=1))
+        )
 
-class ProviderCaseClosure(ReportForm):
+
+class ProviderCaseClosure(DateRangeReportForm):
     provider = forms.ModelChoiceField(queryset=Provider.objects.active())
 
     def get_queryset(self):
-        date_from = self._convert_date(self.cleaned_data['date_from'])
-        date_to = self._convert_date(self.cleaned_data['date_to'] + timedelta(days=1))
 
         # return CaseLog.objects.filter(
-        #     created__range=(date_from, date_to),
+        #     created__range=self.date_range,
         #     logtype__subtype=CASELOGTYPE_SUBTYPES.OUTCOME,
         #     logtype__action_key__in=[
         #         CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE,
@@ -61,14 +84,12 @@ class ProviderCaseClosure(ReportForm):
         yield ['Total: %d' % total]
 
 
-class OperatorCaseClosure(ReportForm):
+class OperatorCaseClosure(DateRangeReportForm):
 
     def get_queryset(self):
-        date_from = self._convert_date(self.cleaned_data['date_from'])
-        date_to = self._convert_date(self.cleaned_data['date_to'] + timedelta(days=1))
         raise NotImplementedError()
         # return CaseLog.objects.filter(
-        #     created__range=(date_from, date_to),
+        #     created__range=self.date_range,
         #     logtype=CaseLogType.objects.get(code='REFSP'),
         #     ).order_by('created').values_list(
         #     'case__reference', 'case__created', 'created', 'logtype__code', 'case__provider__name'
@@ -105,21 +126,9 @@ class OperatorCaseClosure(ReportForm):
         yield ['Average Duration: %d' % average_call_time_in_sec]
 
 
-class TotalDuration(Aggregate):
-    """
-    Custom aggregate function which calculates the total duration of associated
-    timer_timers.
-    """
+class ReportAggregate(Aggregate):
     sql_function = ''
-    sql_template = '''SUM(CASE
-            WHEN timer_timer.stopped IS NOT NULL THEN
-                EXTRACT(EPOCH FROM (timer_timer.stopped - timer_timer.created))
-            WHEN timer_timer.created IS NOT NULL THEN
-                EXTRACT(EPOCH FROM (now() - timer_timer.created))
-            ELSE
-                0
-            END
-        )'''
+    sql_template = ''
 
     def __init__(self, lookup, **extra):
         self.lookup = lookup
@@ -130,19 +139,36 @@ class TotalDuration(Aggregate):
         return '%s__%s' % (self.lookup, self.__class__.__name__.lower())
 
     def add_to_query(self, query, alias, col, source, is_summary):
-        super(TotalDuration, self).__init__(
+        super(ReportAggregate, self).__init__(
             col, source, is_summary, **self.extra)
         query.aggregate_select[alias] = self
 
 
-class OperatorCaseCreate(ReportForm):
+class TotalDuration(ReportAggregate):
+    """
+    Custom aggregate function which calculates the total duration of associated
+    timer_timers.
+    """
+    sql_template = '''SUM(CASE
+            WHEN timer_timer.stopped IS NOT NULL THEN
+                EXTRACT(EPOCH FROM (timer_timer.stopped - timer_timer.created))
+            WHEN timer_timer.created IS NOT NULL THEN
+                EXTRACT(EPOCH FROM (now() - timer_timer.created))
+            ELSE
+                0
+            END
+        )'''
+
+
+class AvgDuration(Aggregate):
+    sql_template = '({0} / COUNT(%(field)s))'.format(TotalDuration.sql_template)
+
+
+class OperatorCaseCreate(DateRangeReportForm):
 
     def get_queryset(self):
-        date_from = self._convert_date(self.cleaned_data['date_from'])
-        date_to = self._convert_date(
-            self.cleaned_data['date_to'] + timedelta(days=1))
         return Case.objects.filter(
-            created__range=(date_from, date_to),
+            created__range=self.date_range,
             created_by__operator__isnull=False,
         ).order_by('created').annotate(duration=TotalDuration('timer')).values_list(
            'reference', 'created', 'duration')
@@ -157,47 +183,161 @@ class OperatorCaseCreate(ReportForm):
         for case in qs:
             count += 1
             total_time += case[2]
-            yield [
-                case[0],
-                case[1],
-                case[2]
-            ]
+            yield case
         yield []
         yield ['Total: {0}'.format(count)]
         yield ['Average duration: {0}'.format(total_time / count)]
 
 
-class OperatorAvgDuration(ReportForm):
+class CaseReport(DateRangeReportForm):
 
     def get_queryset(self):
-        pass
+        queryset = Case.objects.filter(created__range=self.date_range)
+        queryset = queryset.order_by('created')
+        queryset = queryset.annotate(duration=TotalDuration('timer'))
+        return queryset.values_list(
+            'reference', 'created', 'modified',
+            'created_by__id',
+            'locked_by__id', 'locked_at',
+            'laa_reference',
+            'in_scope', 'diagnosis__state',
+            'eligibility_check__category__name',
+            'adaptation_details__bsl_webcam', 'adaptation_details__minicom',
+            'adaptation_details__text_relay',
+            'adaptation_details__skype_webcam', 'adaptation_details__language',
+            'adaptation_details__callback_preference',
+            'duration', 'billable_time',
+            'matter_type1__code', 'matter_type2__code',
+            'media_code__code',
+            'personal_details__postcode',
+            'provider__name')
 
     def get_headers(self):
-        return []
+        return [
+            'Case #', 'Created', 'Modified',
+            'Created by',
+            'Locked by', 'Locked at',
+            'LAA ref',
+            'In scope?', 'Diagnosis',
+            'Law area',
+            'BSL Webcam', 'Minicom', 'Text Relay', 'Skype', 'Language',
+            'Callback',
+            'Duration', 'Billable time',
+            'Matter type 1', 'Matter type 2',
+            'Media code',
+            'Postcode',
+            'Provider']
 
     def get_rows(self):
+        count = 0
+        for row in self.get_queryset():
+            count += 1
+            yield row
         yield []
+        yield 'Total:', count
 
 
-class Reallocation(ReportForm):
+class NewCasesWithAdaptationCount(DateRangeReportForm):
 
     def get_queryset(self):
-        pass
+        qs = Case.objects.filter(
+                created__range=self.date_range)
+        qs = qs.values_list(
+            'adaptation_details__bsl_webcam', 'adaptation_details__minicom',
+            'adaptation_details__text_relay', 'adaptation_details__skype_webcam',
+            'adaptation_details__callback_preference',
+            'adaptation_details__language')
+        qs = qs.annotate(num_cases=Count('reference'))
+        qs = qs.order_by('-num_cases')
+        return qs
 
     def get_headers(self):
-        return []
+        return [
+            'BSL Webcam', 'Minicom', 'Text Relay', 'Skype Webcam',
+                'Callback', 'Other language', 'Num cases']
 
-    def get_rows(self):
-        yield []
 
-
-class DuplicateMatters(ReportForm):
+class CaseVolumeAndAvgDurationByDay(DateRangeReportForm):
 
     def get_queryset(self):
-        pass
+        cursor = connection.cursor()
+        cursor.execute('''
+SELECT
+    (DATE_TRUNC('day', legalaid_case.created)) AS created_day,
+    legalaid_case.created_by_id AS operator,
+    COUNT(legalaid_case.reference) AS num_cases,
+    ROUND(SUM(
+        CASE
+            WHEN timer_timer.stopped IS NOT NULL THEN
+                EXTRACT(EPOCH FROM (timer_timer.stopped - timer_timer.created))
+            WHEN timer_timer.created IS NOT NULL THEN
+                EXTRACT(EPOCH FROM (now() - timer_timer.created))
+            ELSE
+                0
+        END
+    ) / COUNT(timer_timer.id)) AS avg_duration
+FROM
+    legalaid_case
+    LEFT OUTER JOIN timer_timer ON
+        (legalaid_case.id = timer_timer.linked_case_id)
+WHERE
+    legalaid_case.created BETWEEN %s AND %s
+GROUP BY
+    DATE_TRUNC('day', legalaid_case.created),
+    operator;
+        ''', self.date_range)
+        return cursor.fetchall()
 
     def get_headers(self):
-        return []
+        return [
+            'Date', 'Operator', 'Num cases', 'Avg Duration']
 
-    def get_rows(self):
-        yield []
+
+class ReferredCasesByCategory(CaseReport):
+
+    def get_queryset(self):
+        qs = super(ReferredCasesByCategory, self).get_queryset()
+        qs = qs.filter(provider__isnull=False)
+        qs = qs.order_by('eligibility_check__category__name', 'provider__name')
+        return qs
+
+
+class AllocatedCasesNoOutcome(CaseReport):
+
+    def get_queryset(self):
+        qs = super(AllocatedCasesNoOutcome, self).get_queryset()
+        qs = qs.extra(select={'outcome': '''
+            (SELECT
+                l.code
+            FROM
+                cla_eventlog_log l
+            WHERE
+                l.case_id = legalaid_case.id
+                AND l.type = 'outcome'
+                AND l.level = {high}
+            ORDER BY
+                created DESC
+            LIMIT 1)
+        '''.format(high=LOG_LEVELS.HIGH)})
+        qs = qs.filter(provider__isnull=False)
+        return qs.values_list(
+            'reference', 'created', 'modified',
+            'created_by__id',
+            'locked_by__id', 'locked_at',
+            'laa_reference',
+            'in_scope', 'diagnosis__state',
+            'eligibility_check__category__name',
+            'adaptation_details__bsl_webcam', 'adaptation_details__minicom',
+            'adaptation_details__text_relay',
+            'adaptation_details__skype_webcam', 'adaptation_details__language',
+            'adaptation_details__callback_preference',
+            'duration', 'billable_time',
+            'matter_type1__code', 'matter_type2__code',
+            'media_code__code',
+            'personal_details__postcode',
+            'provider__name',
+            'outcome')
+
+    def get_headers(self):
+        headers = super(AllocatedCasesNoOutcome, self).get_headers()
+        return headers + ['Outcome code']

@@ -1,14 +1,17 @@
+from django.template.defaultfilters import striptags
+
+from rest_framework.exceptions import ParseError
+from rest_framework.fields import ChoiceField, SerializerMethodField
+
 from core.serializers import ClaModelSerializer
 from diagnosis.models import DiagnosisTraversal
-from rest_framework.fields import ChoiceField, SerializerMethodField
 from cla_common.constants import DIAGNOSIS_SCOPE
-from django.template.defaultfilters import striptags
 
 from legalaid.models import Category
 
 from .graph import graph
 from rest_framework.relations import SlugRelatedField
-from .utils import is_terminal
+from .utils import is_terminal, is_pre_end_node
 
 
 class DiagnosisSerializer(ClaModelSerializer):
@@ -49,7 +52,7 @@ class DiagnosisSerializer(ClaModelSerializer):
     def _get_choices(self, request=None):
         if not self.object:
             return []
-        # if not hasattr(self, '_get_choices'):
+
         current_node_id = self.object.current_node_id
         if not current_node_id:
             current_node_id = self.graph.graph['operator_root_id']
@@ -82,27 +85,66 @@ class DiagnosisSerializer(ClaModelSerializer):
                 except Category.DoesNotExist:
                     # TODO log it in sentry
                     pass
+        else:
+            obj.state = DIAGNOSIS_SCOPE.UNKNOWN
+            obj.category = None
 
     def process_obj(self, obj):
         if obj.current_node_id:
             current_node = self.graph.node[obj.current_node_id]
             current_node['id'] = obj.current_node_id
 
-            nodes = obj.nodes or []
+            # delete all nodes after current_node_id and add current not
+            nodes = []
+            for node in (obj.nodes or []):
+                if node['id'] == obj.current_node_id:
+                    break
+                nodes.append(node)
+
             nodes.append(current_node)
             obj.nodes = nodes
 
-            children = self.graph.successors(obj.current_node_id)
-            if len(children) == 1:
-                obj.current_node_id = children[0]
+            # if pre end node => process end node directly
+            if is_pre_end_node(self.graph, obj.current_node_id):
+                obj.current_node_id = self.graph.successors(obj.current_node_id)[0]
                 self.process_obj(obj)
+        else:
+            obj.nodes = []
 
     def save_object(self, obj, **kwargs):
-        if obj.current_node_id:
-            self.process_obj(obj)
-            self._set_state(obj)
+        # if obj.current_node_id:
+        self.process_obj(obj)
+        self._set_state(obj)
 
         return super(DiagnosisSerializer, self).save_object(obj, **kwargs)
+
+    def move_up(self):
+        """
+        Moves up one node.
+        If there are no nodes, it raises ParseError.
+        If current node is end node, it moves up 2 nodes
+        """
+        nodes = self.object.nodes or []
+        nodes_count = len(nodes)
+
+        # no nodes => can't go up
+        if not nodes_count:
+            raise ParseError("Cannot move up, no nodes found")
+
+        if nodes_count == 1:  # root node => 'reset' the traversal
+            self.object.current_node_id = ''  # :-/
+        else:
+            pre_node_id = nodes[-2]['id']
+
+            # if current node is end node => move up 2 nodes
+            if is_pre_end_node(self.graph, pre_node_id) and nodes_count > 2:
+                pre_node_id = nodes[-3]['id']
+
+            self.object.current_node_id = pre_node_id
+
+        self.save(force_update=True)
+
+        return self.object
 
     class Meta:
         model = DiagnosisTraversal

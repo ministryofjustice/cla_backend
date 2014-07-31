@@ -4138,6 +4138,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n195">
       <data key="d4"><![CDATA[Direct discrimination - treated less favourably than someone else than someone else in similar circumstances (e.g. the client things that they have been out for worse treatment or the client things that they have been disadvantaged in some way compared to someone else) due to a protected characteristic. This includes situations where clients are linked to a person with a protected characteristic and suffers less favourable treatment.]]></data>
       <data key="d5"><![CDATA[Direct discriminatio]]></data>
+      <data key="d9">1</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5508.7488095238095" y="1041.1328125"/>
@@ -5143,8 +5144,9 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n243">
-      <data key="d4"><![CDATA[Indirect discrimination - The client thinks that new ways of doing things have put hi/her at a disadvantage compared to someone else because of a protected characteristic (e.g. an employer states that employees cannot have dreadlocks or a pub refuses access to people with hats. This put employees/patrons of a certain religion at a disadvantage when compared to others.]]></data>
+      <data key="d4"><![CDATA[Indirect discrimination - The client thinks that new ways of doing things have put them at a disadvantage compared to someone else because of a protected characteristic (e.g. an employer states that employees cannot have dreadlocks or a pub refuses access to people with hats). This put employees or patrons of a certain religion at a disadvantage when compared to others.]]></data>
       <data key="d5"><![CDATA[Indirect discriminat]]></data>
+      <data key="d9">2</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6048.7488095238095" y="1041.1328125"/>
@@ -5164,6 +5166,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n244">
       <data key="d4"><![CDATA[Harassment - Something happened to make the client feel that they were in an environment that was intimidating, hostile, degrading, humiliating or offensive or that violated their dignity.]]></data>
       <data key="d5"><![CDATA[Harassment - Somethi]]></data>
+      <data key="d9">6</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5328.7488095238095" y="1041.1328125"/>
@@ -5183,6 +5186,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n245">
       <data key="d4"><![CDATA[Victimisation due to a discrimination claim - The client thinks that they have been treated worse, or thinks that they have been disadvantaged in some way because they have previously brought a claim of discrimination, given evidence or information in relation to someone else’s claim of discrimination, made a complaint of discrimination, or was suspected of doing one of these things. For example an employee being dismissed after raising a grievance alleging discrimination.]]></data>
       <data key="d5"><![CDATA[Victimisation due to]]></data>
+      <data key="d9">3</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4968.7488095238095" y="1041.1328125"/>
@@ -5202,6 +5206,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n246">
       <data key="d4"><![CDATA[Discrimination arising out of a disability - the client thinks that they have been singled out for worse treatment, or that they have been disadvantaged in some way because of something out of their disability (e.g. being dismissed for being absent from work which was caused by a disability or a child not being allowed access to a nursery because not toilet trained when have a bowel condition)]]></data>
       <data key="d5"><![CDATA[Discrimination arisi]]></data>
+      <data key="d9">7</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5688.7488095238095" y="1041.1328125"/>
@@ -5221,6 +5226,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n247">
       <data key="d4"><![CDATA[Pregnancy and maternity discrimination - the client thinks that they have been treated unfavourably in some way because of their pregnancy or maternity (e.g. prevented from breast feeding in public places)]]></data>
       <data key="d5"><![CDATA[Pregnancy and matern]]></data>
+      <data key="d9">5</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5868.7488095238095" y="1041.1328125"/>
@@ -5240,6 +5246,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n248">
       <data key="d4"><![CDATA[Failure to make reasonable adjustments - the client suffers from a disability which causes them difficulty in accessing services (e.g. not having ramp access for wheelchair users, not sending out in Braille)]]></data>
       <data key="d5"><![CDATA[Failure to make reas]]></data>
+      <data key="d9">4</data>
       <data key="d12">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5148.7488095238095" y="1041.1328125"/>

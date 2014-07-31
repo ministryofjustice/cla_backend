@@ -1113,7 +1113,7 @@
       </data>
     </node>
     <node id="n51">
-      <data key="d4"><![CDATA[Describe scenario carefully in notes - clients circumstance and why they believe they are facing eviction/have been evicted.]]></data>
+      <data key="d4"><![CDATA[Describe scenario carefully in notes - client's circumstances and why they believe they are facing eviction or have been evicted]]></data>
       <data key="d5"><![CDATA[Describe scenario ca]]></data>
       <data key="d12">
         <y:ShapeNode>
@@ -1196,7 +1196,7 @@
       </data>
     </node>
     <node id="n55">
-      <data key="d4"><![CDATA[Landlord has unlawfully evicted the client without due process. (e.g. changed the locks)]]></data>
+      <data key="d4"><![CDATA[Landlord has unlawfully evicted the client without due process (eg changed the locks)]]></data>
       <data key="d5"><![CDATA[Landlord has unlawfu]]></data>
       <data key="d12">
         <y:ShapeNode>
@@ -1215,7 +1215,7 @@
       </data>
     </node>
     <node id="n56">
-      <data key="d4"><![CDATA[Describe scenario carefully in notes - clients circumstance and why they believe they are facing eviction/have been evicted.]]></data>
+      <data key="d4"><![CDATA[Describe scenario carefully in notes - clients circumstance and why they believe they are facing eviction or have been evicted]]></data>
       <data key="d5"><![CDATA[Describe scenario ca]]></data>
       <data key="d12">
         <y:ShapeNode>
@@ -1301,7 +1301,7 @@
       </data>
     </node>
     <node id="n60">
-      <data key="d4"><![CDATA[Notice to Quit from Landlord]]></data>
+      <data key="d4"><![CDATA[Notice to Quit from landlord]]></data>
       <data key="d5"><![CDATA[Notice to Quit from ]]></data>
       <data key="d12">
         <y:ShapeNode>
@@ -1344,7 +1344,7 @@
       </data>
     </node>
     <node id="n62">
-      <data key="d4"><![CDATA[Client unable to access their home (e.g. due to letter from partner, closure order for property)]]></data>
+      <data key="d4"><![CDATA[Client unable to access their home (eg due to letter from partner, closure order for property)]]></data>
       <data key="d5"><![CDATA[Client unable to acc]]></data>
       <data key="d12">
         <y:ShapeNode>
@@ -1430,7 +1430,7 @@
       </data>
     </node>
     <node id="n66">
-      <data key="d4"><![CDATA[Client received a possession order from the court (outlining the decision of the court)]]></data>
+      <data key="d4"><![CDATA[Client received a possession order from the court (outlining the decision of the court).]]></data>
       <data key="d5"><![CDATA[Client received a po]]></data>
       <data key="d12">
         <y:ShapeNode>
@@ -1602,7 +1602,7 @@
       </data>
     </node>
     <node id="n74">
-      <data key="d4"><![CDATA[Client is being refused accommodation or had it terminated by UK Borders Agency]]></data>
+      <data key="d4"><![CDATA[Client is being refused accommodation or has had it terminated by UK Borders Agency.]]></data>
       <data key="d5"><![CDATA[Client is being refu]]></data>
       <data key="d12">
         <y:ShapeNode>

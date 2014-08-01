@@ -305,7 +305,9 @@ class ReferredCasesByCategory(CaseReport):
 class AllocatedCasesNoOutcome(CaseReport):
 
     def get_queryset(self):
-        qs = super(AllocatedCasesNoOutcome, self).get_queryset()
+        qs = Case.objects.filter(created__range=self.date_range)
+        qs = qs.order_by('created')
+        qs = qs.annotate(duration=TotalDuration('timer'))
         qs = qs.extra(select={'outcome': '''
             (SELECT
                 l.code
@@ -320,6 +322,8 @@ class AllocatedCasesNoOutcome(CaseReport):
             LIMIT 1)
         '''.format(high=LOG_LEVELS.HIGH)})
         qs = qs.filter(provider__isnull=False)
+        query = qs.query.sql_with_params()
+        raise Exception(query)
         return qs.values_list(
             'reference', 'created', 'modified',
             'created_by__id',

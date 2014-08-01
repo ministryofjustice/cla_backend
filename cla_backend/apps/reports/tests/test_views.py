@@ -58,17 +58,3 @@ class ProviderClosureVolumeViewTestCase(SimpleTestCase):
         form = response.context['form']
         self.assertTrue('form' in response.context)
         self.assertEqual(response.context['title'], 'Provider Closure Volume')
-
-    def test_post_success(self):
-        self.create_and_login_user()
-
-        with mock.patch('reports.views.ProviderCaseClosure') as MockedForm:
-            mocked_form = MockedForm()
-            mocked_form.get_headers.return_value = ['1', '2', '3']
-            mocked_form.get_rows.return_value = ['row1', 'row2', 'row3']
-
-            response = self.client.post(self.url, data={})
-            self.assertEqual(response.status_code, 200)
-            self.assertTrue(
-                'filename="provider_closure_volume.csv"' in response.serialize_headers()
-            )

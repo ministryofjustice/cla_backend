@@ -54,8 +54,7 @@ def csv_writer(response):
 
 def make_csv_download_response(filename):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = \
-        'attachment; filename="{0}"'.format(filename)
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
     return response
 
 

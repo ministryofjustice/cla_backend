@@ -4151,7 +4151,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
       </data>
     </node>
     <node id="n195">
-      <data key="d4"><![CDATA[Indicate where the discrimination occurred]]></data>
+      <data key="d4"><![CDATA[Indicate where the discrimination occurred.  *Select radio button and click 'next' to continue*]]></data>
       <data key="d5"><![CDATA[Indicate where the d]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -4172,6 +4172,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n196">
       <data key="d4"><![CDATA[Work]]></data>
       <data key="d5"><![CDATA[Work]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6067.4988095238095" y="1306.1328125"/>
@@ -4215,6 +4216,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n198">
       <data key="d4"><![CDATA[Provision of a service]]></data>
       <data key="d5"><![CDATA[Provision of a servi]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5887.4988095238095" y="1306.1328125"/>
@@ -4258,6 +4260,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n200">
       <data key="d4"><![CDATA[Exercise of a public function]]></data>
       <data key="d5"><![CDATA[Exercise of a public]]></data>
+      <data key="d9">4</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5527.4988095238095" y="1306.1328125"/>
@@ -4301,6 +4304,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n202">
       <data key="d4"><![CDATA[Association or private club]]></data>
       <data key="d5"><![CDATA[Association or priva]]></data>
+      <data key="d9">5</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5347.4988095238095" y="1306.1328125"/>
@@ -4344,6 +4348,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n204">
       <data key="d4"><![CDATA[Premises]]></data>
       <data key="d5"><![CDATA[Premises]]></data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5707.4988095238095" y="1306.1328125"/>
@@ -4387,6 +4392,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n206">
       <data key="d4"><![CDATA[Education (schools)]]></data>
       <data key="d5"><![CDATA[Education (schools)]]></data>
+      <data key="d9">6</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6247.4988095238095" y="1306.1328125"/>
@@ -4430,6 +4436,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n208">
       <data key="d4"><![CDATA[Education (higher education/general qualification bodies)]]></data>
       <data key="d5"><![CDATA[Education (higher ed]]></data>
+      <data key="d9">7</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6427.4988095238095" y="1306.1328125"/>
@@ -4490,7 +4497,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
       </data>
     </node>
     <node id="n211">
-      <data key="d4"><![CDATA[Indicate where the discrimination occurred]]></data>
+      <data key="d4"><![CDATA[Indicate where the discrimination occurred. *Select radio button and click 'next' to continue*]]></data>
       <data key="d5"><![CDATA[Indicate where the d]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -4511,6 +4518,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n212">
       <data key="d4"><![CDATA[Work]]></data>
       <data key="d5"><![CDATA[Work]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6607.4988095238095" y="1306.1328125"/>
@@ -4554,6 +4562,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n214">
       <data key="d4"><![CDATA[Association or private club]]></data>
       <data key="d5"><![CDATA[Association or priva]]></data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6967.4988095238095" y="1306.1328125"/>
@@ -4597,6 +4606,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n216">
       <data key="d4"><![CDATA[Education (higher education/general qualification bodies)]]></data>
       <data key="d5"><![CDATA[Education (higher ed]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6787.4988095238095" y="1306.1328125"/>
@@ -4700,7 +4710,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
       </data>
     </node>
     <node id="n221">
-      <data key="d4"><![CDATA[Indicate where the discrimination occurred]]></data>
+      <data key="d4"><![CDATA[Indicate where the discrimination occurred.  *Select radio button and click 'next' to continue*]]></data>
       <data key="d5"><![CDATA[Indicate where the d]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -4721,6 +4731,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n222">
       <data key="d4"><![CDATA[Work]]></data>
       <data key="d5"><![CDATA[Work]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4807.4988095238095" y="1306.1328125"/>
@@ -4764,6 +4775,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n224">
       <data key="d4"><![CDATA[Provision of a service]]></data>
       <data key="d5"><![CDATA[Provision of a servi]]></data>
+      <data key="d9">4</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4267.4988095238095" y="1306.1328125"/>
@@ -4807,6 +4819,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n226">
       <data key="d4"><![CDATA[Exercise of a public function]]></data>
       <data key="d5"><![CDATA[Exercise of a public]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4627.4988095238095" y="1306.1328125"/>
@@ -4850,6 +4863,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n228">
       <data key="d4"><![CDATA[Association or private club]]></data>
       <data key="d5"><![CDATA[Association or priva]]></data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4447.4988095238095" y="1306.1328125"/>
@@ -4893,6 +4907,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n230">
       <data key="d4"><![CDATA[Education (higher education/general qualification bodies)]]></data>
       <data key="d5"><![CDATA[Education (higher ed]]></data>
+      <data key="d9">5</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4087.4988095238095" y="1306.1328125"/>
@@ -4996,7 +5011,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
       </data>
     </node>
     <node id="n235">
-      <data key="d4"><![CDATA[Indicate where it occurred]]></data>
+      <data key="d4"><![CDATA[Indicate where it occurred.  *Select radio button and click 'next' to continue*]]></data>
       <data key="d5"><![CDATA[Indicate where it oc]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -5017,6 +5032,7 @@ Choosing the relevant main category will (if appropriate) give you context on th
     <node id="n236">
       <data key="d4"><![CDATA[Work]]></data>
       <data key="d5"><![CDATA[Work]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5167.4988095238095" y="1306.1328125"/>

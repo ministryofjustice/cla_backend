@@ -20,6 +20,13 @@ eligibility_check = Recipe(EligibilityCheck,
     partner=foreign_key(person)
 )
 
+eligibility_check_yes = Recipe(EligibilityCheck,
+    category=foreign_key(category),
+    dependants_young=5, dependants_old=6,
+    you=foreign_key(person),
+    partner=foreign_key(person),
+    state='yes'
+)
 
 income = Recipe(Income, earnings=MoneyInterval('per_month', pennies=2200),
                 other_income=MoneyInterval('per_week', pennies=2200)
@@ -63,6 +70,13 @@ case = Recipe(Case,
     eligibility_check=foreign_key(eligibility_check),
     personal_details=foreign_key(personal_details),
     media_code=foreign_key(media_code)
+)
+
+eligible_case = Recipe(Case,
+    eligibility_check=foreign_key(eligibility_check_yes),
+    personal_details=foreign_key(personal_details),
+    media_code=foreign_key(media_code),
+    in_scope=True
 )
 
 

@@ -37,8 +37,8 @@ class AssignToProviderEvent(BaseEvent):
     def get_log_code(self, case=None, **kwargs):
 
         if case:
-            is_eligible = case.eligibility_check.get_eligibility_state() == \
-                ELIGIBILITY_STATES.YES
+            is_eligible = case.eligibility_check and \
+                case.eligibility_check.state == ELIGIBILITY_STATES.YES
 
             if not is_eligible or not case.in_scope:
                 return 'SPOR'

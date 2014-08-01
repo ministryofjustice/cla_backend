@@ -7622,7 +7622,7 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
           <y:Geometry height="30.0" width="30.0" x="5743.705952380952" y="811.1328125"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="139.9140625" x="-54.95703125" y="5.93359375">HOUSING OUTOFSCOPE
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="153.671875" x="-61.8359375" y="5.93359375">zzHOUSING OUTOFSCOPE
 <y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
@@ -7755,7 +7755,7 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
           <y:Geometry height="30.0" width="150.0" x="10287.915476190476" y="435.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="113.1015625" x="18.44921875" y="5.93359375">DEBT NOTINSCOPE<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="115.984375" x="17.0078125" y="5.93359375">DEBT OUTOFSCOPE<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -12279,7 +12279,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e386" source="n244" target="n196">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12290,7 +12289,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e387" source="n248" target="n196">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12301,7 +12299,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e388" source="n245" target="n196">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12312,7 +12309,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e389" source="n246" target="n196">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12323,7 +12319,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e390" source="n247" target="n196">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12334,7 +12329,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e391" source="n243" target="n196">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

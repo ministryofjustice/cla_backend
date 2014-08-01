@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 
 from core.tests.mommy_utils import make_user
 
-from ..forms import ProviderCaseClosureReportForm
+from ..forms import ProviderCaseClosure
 
 
 class ProviderClosureVolumeViewTestCase(SimpleTestCase):
@@ -62,7 +62,7 @@ class ProviderClosureVolumeViewTestCase(SimpleTestCase):
     def test_post_success(self):
         self.create_and_login_user()
 
-        with mock.patch('reports.views.ProviderCaseClosureReportForm') as MockedForm:
+        with mock.patch('reports.views.ProviderCaseClosure') as MockedForm:
             mocked_form = MockedForm()
             mocked_form.get_headers.return_value = ['1', '2', '3']
             mocked_form.get_rows.return_value = ['row1', 'row2', 'row3']

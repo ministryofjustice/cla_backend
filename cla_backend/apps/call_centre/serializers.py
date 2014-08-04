@@ -116,7 +116,7 @@ class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
         fields = (
             'reference', 'personal_details', 'pass_phrase', 'reason',
             'personal_relationship', 'personal_relationship_note',
-            'spoke_to', 'no_contact_reason'
+            'spoke_to', 'no_contact_reason', 'organisation_name',
         )
 
 

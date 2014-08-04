@@ -329,6 +329,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
             case.matter_type2 = None
             case.save()
 
+
 class Property(TimeStampedModel):
     value = MoneyField(default=None, null=True, blank=True)
     mortgage_left = MoneyField(default=None, null=True, blank=True)
@@ -397,7 +398,6 @@ class Case(TimeStampedModel):
                                  null=True)
     notes = models.TextField(blank=True)
     provider_notes = models.TextField(blank=True)
-    in_scope = models.NullBooleanField(default=None, null=True, blank=True)
     laa_reference = models.BigIntegerField(null=True, blank=True, unique=True)
     thirdparty_details = models.ForeignKey('ThirdPartyDetails', blank=True,
                                            null=True)

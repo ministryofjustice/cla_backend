@@ -80,6 +80,11 @@ class PersonalDetails(TimeStampedModel):
     mobile_phone = models.CharField(max_length=20, blank=True, null=True)
     home_phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
+    date_of_birth = models.DateField(blank=True, null=True)
+    ni_number = models.CharField(max_length=10, null=True, blank=True)
+    exempt_user = models.NullBooleanField(blank=True, null=True)
+    exempt_user_reason = models.TextField(blank=True, null=True)
+    contact_for_research = models.NullBooleanField(blank=True, null=True)
 
     reference = UUIDField(auto=True, unique=True)
 
@@ -94,6 +99,9 @@ class ThirdPartyDetails(TimeStampedModel):
     personal_relationship = models.CharField(max_length=30,
                                              choices=THIRDPARTY_RELATIONSHIP)
     personal_relationship_note = models.CharField(max_length=255, blank=True)
+    spoke_to = models.NullBooleanField(blank=True, null=True)
+    no_contact_reason = models.TextField(blank=True, null=True)
+
     reference = UUIDField(auto=True, unique=True)
 
 
@@ -329,6 +337,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
             case.matter_type2 = None
             case.save()
 
+
 class Property(TimeStampedModel):
     value = MoneyField(default=None, null=True, blank=True)
     mortgage_left = MoneyField(default=None, null=True, blank=True)
@@ -397,7 +406,6 @@ class Case(TimeStampedModel):
                                  null=True)
     notes = models.TextField(blank=True)
     provider_notes = models.TextField(blank=True)
-    in_scope = models.NullBooleanField(default=None, null=True, blank=True)
     laa_reference = models.BigIntegerField(null=True, blank=True, unique=True)
     thirdparty_details = models.ForeignKey('ThirdPartyDetails', blank=True,
                                            null=True)

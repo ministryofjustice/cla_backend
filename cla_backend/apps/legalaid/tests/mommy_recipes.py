@@ -2,6 +2,8 @@ from model_mommy.recipe import Recipe, seq, foreign_key
 
 from cla_common.money_interval.models import MoneyInterval
 
+from diagnosis.tests.mommy_recipes import diagnosis_yes
+
 from ..models import Category, EligibilityCheck, Property, Savings, \
     Case, PersonalDetails, Income, Deductions, Person,\
     ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, MediaCodeGroup
@@ -20,6 +22,13 @@ eligibility_check = Recipe(EligibilityCheck,
     partner=foreign_key(person)
 )
 
+eligibility_check_yes = Recipe(EligibilityCheck,
+    category=foreign_key(category),
+    dependants_young=5, dependants_old=6,
+    you=foreign_key(person),
+    partner=foreign_key(person),
+    state='yes'
+)
 
 income = Recipe(Income, earnings=MoneyInterval('per_month', pennies=2200),
                 other_income=MoneyInterval('per_week', pennies=2200)
@@ -65,6 +74,9 @@ case = Recipe(Case,
     media_code=foreign_key(media_code)
 )
 
-
-
-
+eligible_case = Recipe(Case,
+    eligibility_check=foreign_key(eligibility_check_yes),
+    diagnosis=foreign_key(diagnosis_yes),
+    personal_details=foreign_key(personal_details),
+    media_code=foreign_key(media_code)
+)

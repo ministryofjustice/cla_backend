@@ -42,10 +42,11 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
              'created', 'modified', 'created_by',
-             'provider', 'log_set', 'notes', 'provider_notes', 'in_scope',
+             'provider', 'log_set', 'notes', 'provider_notes',
              'full_name', 'laa_reference', 'eligibility_state', 'thirdparty_details',
              'adaptation_details', 'billable_time', 'requires_action_by',
-             'matter_type1', 'matter_type2', 'diagnosis', 'media_code', 'postcode']
+             'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
+             'postcode', 'diagnosis_state']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -131,39 +132,6 @@ class CreateCaseTestCase(BaseCaseTestCase):
                 reference=response.data['reference'],
                 eligibility_check=check,
                 personal_details=pd
-            )
-        )
-        self.assertEqual(response.data['in_scope'], None)
-
-        self.assertLogInDB()
-
-    def test_create_with_data_in_scope(self):
-        pd = make_recipe('legalaid.personal_details', **{
-            'title': 'MR',
-            'full_name': 'John Doe',
-            'postcode': 'SW1H 9AJ',
-            'street': '102 Petty France',
-            'mobile_phone': '0123456789',
-            'home_phone': '9876543210',
-            })
-        data = {
-            'personal_details': unicode(pd.reference),
-            'in_scope': True,
-        }
-        response = self.client.post(
-            self.list_url, data=data, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCaseResponseKeys(response)
-
-        self.assertCaseEqual(
-            response.data,
-            Case(
-                reference=response.data['reference'],
-                eligibility_check=None,
-                personal_details=pd,
-                in_scope=True
             )
         )
 

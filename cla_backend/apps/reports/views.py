@@ -1,59 +1,100 @@
+import contextlib
 import csv
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .forms import ProviderCaseClosureReportForm, OperatorCaseClosureReportForm
+from .forms import ProviderCaseClosure, OperatorCaseClosure, \
+    OperatorCaseCreate, CaseReport, NewCasesWithAdaptationCount, \
+    CaseVolumeAndAvgDurationByDay, ReferredCasesByCategory, \
+    AllocatedCasesNoOutcome
+
+
+def report_view(form_class, title, template='case_report'):
+
+    def wrapper(fn):
+        slug = title.lower().replace(' ', '_')
+        csv_filename = '{0}.csv'.format(slug)
+        tmpl = 'admin/reports/{0}.html'.format(template)
+
+        def view(request):
+            form = form_class()
+
+            if valid_submit(request, form):
+                return csv_download(csv_filename, form)
+
+            return render(request, tmpl, {'title': title, 'form': form})
+
+        return view
+
+    return wrapper
+
+
+def valid_submit(request, form):
+    if request.method == 'POST':
+        form.data = request.POST
+        form.is_bound = True
+        return form.is_valid()
+    return False
+
+
+def csv_download(filename, form):
+    response = make_csv_download_response(filename)
+    csv_data = list(form)
+    with csv_writer(response) as writer:
+        map(writer.writerow, csv_data)
+    return response
+
+
+@contextlib.contextmanager
+def csv_writer(response):
+    yield csv.writer(response)
+
+
+def make_csv_download_response(filename):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+    return response
 
 
 @staff_member_required
-def provider_closure_volume(request):
-    if request.method == 'POST':
-        form = ProviderCaseClosureReportForm(request.POST)
+@report_view(ProviderCaseClosure, 'Provider Closure Volume')
+def provider_closure_volume():
+    pass
 
-        if form.is_valid():
-            response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="provider_closure_volume.csv"'
-
-            writer = csv.writer(response)
-            writer.writerow(form.get_headers())
-            for row in form.get_rows():
-                writer.writerow(row)
-
-            return response
-    else:
-        form = ProviderCaseClosureReportForm()
-
-    return render(request, 'admin/reports/provider_closure_volume.html', {
-            'title': 'Provider Closure Volume',
-            'form': form
-        })
 
 @staff_member_required
-def operator_closure_volume(request):
-    if request.method == 'POST':
-        form = OperatorCaseClosureReportForm(request.POST)
+@report_view(OperatorCaseClosure, 'Operator Closure Volume')
+def operator_closure_volume():
+    pass
 
-        if form.is_valid():
-            response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="operator_closure_volume.csv"'
 
-            writer = csv.writer(response)
-            writer.writerow(form.get_headers())
-            for row in form.get_rows():
-                writer.writerow(row)
+@staff_member_required
+@report_view(CaseReport, 'All Cases')
+def all_cases():
+    pass
 
-            return response
-    else:
-        form = OperatorCaseClosureReportForm()
 
-    return render(
-        request,
-        'admin/reports/operator_closure_volume.html',
-        {
-         'title': 'Operator Closure Volume',
-         'form': form
-        }
-    )
+@staff_member_required
+@report_view(NewCasesWithAdaptationCount, 'New Cases with Adaptations')
+def adaptation_counts():
+    pass
 
+
+@staff_member_required
+@report_view(CaseVolumeAndAvgDurationByDay, 'Case Volume and Average Duration by Operator by Day')
+def case_volume_avg_duration_by_operator_day():
+    pass
+
+
+@staff_member_required
+@report_view(ReferredCasesByCategory, 'Cases Referred to Specialist by Category')
+def referred_cases_by_category():
+    pass
+
+
+@staff_member_required
+@report_view(AllocatedCasesNoOutcome, 'Allocated Cases with No Outcome')
+def allocated_no_outcome():
+    pass

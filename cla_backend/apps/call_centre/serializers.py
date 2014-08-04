@@ -1,4 +1,5 @@
 from cla_eventlog.serializers import LogSerializerBase
+from core.drf.fields import ThreePartDateField
 from rest_framework import serializers
 
 from core.serializers import UUIDSerializer
@@ -89,18 +90,33 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
 
 
 class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
+
+    dob = ThreePartDateField(required=False, source='date_of_birth')
+
     class Meta(PersonalDetailsSerializerBase.Meta):
         fields = (
             'reference', 'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone'
+            'mobile_phone', 'home_phone', 'email', 'dob',
+            'ni_number', 'exempt_user', 'exempt_user_reason',
+            'contact_for_research'
         )
 
+class ThirdPartyPersonalDetailsSerializer(PersonalDetailsSerializerBase):
+    class Meta(PersonalDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'title', 'full_name', 'postcode', 'street',
+            'mobile_phone', 'home_phone', 'email'
+        )
 
 class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
+
+    personal_details = ThirdPartyPersonalDetailsSerializer(required=True)
+
     class Meta(ThirdPartyDetailsSerializerBase.Meta):
         fields = (
             'reference', 'personal_details', 'pass_phrase', 'reason',
-            'personal_relationship', 'personal_relationship_note'
+            'personal_relationship', 'personal_relationship_note',
+            'spoke_to', 'no_contact_reason'
         )
 
 
@@ -153,6 +169,7 @@ class CaseSerializer(CaseSerializerBase):
     provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
     full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
     eligibility_state = serializers.CharField(source='eligibility_check.state', read_only=True)
+    diagnosis_state = serializers.CharField(source='diagnosis.state', read_only=True)
     billable_time = serializers.IntegerField(read_only=True)
     postcode = serializers.CharField(source='personal_details.postcode', read_only=True)
 
@@ -160,10 +177,10 @@ class CaseSerializer(CaseSerializerBase):
         fields = (
             'eligibility_check', 'personal_details', 'reference', 'created',
             'modified', 'created_by', 'provider', 'log_set',
-            'notes', 'provider_notes', 'in_scope', 'full_name', 'thirdparty_details',
+            'notes', 'provider_notes', 'full_name', 'thirdparty_details',
             'adaptation_details', 'laa_reference', 'eligibility_state', 'billable_time',
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis', 'media_code',
-            'postcode'
+            'postcode', 'diagnosis_state'
         )
 
 

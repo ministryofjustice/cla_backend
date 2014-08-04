@@ -23,7 +23,14 @@ class PersonalDetailsTestCase(CLAOperatorAuthBaseApiTestMixin,
                'postcode',
                'street',
                'mobile_phone',
-               'home_phone'
+               'home_phone',
+               'email',
+               'dob',
+               'ni_number',
+               'exempt_user',
+               'exempt_user_reason',
+               'contact_for_research'
+
            ]
 
    def get_http_authorization(self):

@@ -55,6 +55,6 @@ class NestedGenericModelMixin(object):
                     raise MethodNotAllowed('POST: %s already has a %s associated to it' % (parent_obj, obj.__class__.__name__))
                 else:
                     setattr(parent_obj, self.PARENT_FIELD, obj)
-                    parent_obj.save()
+                    parent_obj.save(update_fields=[self.PARENT_FIELD])
 
         super(NestedGenericModelMixin, self).post_save(obj, created=created)

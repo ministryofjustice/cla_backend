@@ -186,7 +186,8 @@ class OperatorCaseCreate(DateRangeReportForm):
             yield case
         yield []
         yield ['Total: {0}'.format(count)]
-        yield ['Average duration: {0}'.format(total_time / count)]
+        if count:
+            yield ['Average duration: {0}'.format(total_time / count)]
 
 
 class CaseReport(DateRangeReportForm):
@@ -266,16 +267,21 @@ SELECT
     (DATE_TRUNC('day', legalaid_case.created)) AS created_day,
     legalaid_case.created_by_id AS operator,
     COUNT(legalaid_case.reference) AS num_cases,
-    ROUND(SUM(
-        CASE
-            WHEN timer_timer.stopped IS NOT NULL THEN
-                EXTRACT(EPOCH FROM (timer_timer.stopped - timer_timer.created))
-            WHEN timer_timer.created IS NOT NULL THEN
-                EXTRACT(EPOCH FROM (now() - timer_timer.created))
-            ELSE
-                0
-        END
-    ) / COUNT(timer_timer.id)) AS avg_duration
+    CASE
+        WHEN COUNT(timer_timer.id) = 0 THEN
+            0
+        ELSE
+            ROUND(SUM(
+                CASE
+                    WHEN timer_timer.stopped IS NOT NULL THEN
+                        EXTRACT(EPOCH FROM (timer_timer.stopped - timer_timer.created))
+                    WHEN timer_timer.created IS NOT NULL THEN
+                        EXTRACT(EPOCH FROM (now() - timer_timer.created))
+                    ELSE
+                        0
+                END
+            ) / COUNT(timer_timer.id)) AS avg_duration
+    END
 FROM
     legalaid_case
     LEFT OUTER JOIN timer_timer ON

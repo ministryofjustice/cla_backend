@@ -9,8 +9,8 @@ from cla_common.constants import CASELOGTYPE_ACTION_KEYS
 
 from core.tests.mommy_utils import make_recipe
 
-from ..forms import ProviderCaseClosureReportForm, \
-    OperatorCaseClosureReportForm
+from ..forms import ProviderCaseClosure, \
+    OperatorCaseClosure
 
 @skip('skip until this is reimplemented using Log')
 class ProviderCaseClosureReportFormTestCase(TestCase):
@@ -69,7 +69,7 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
 
 
         # form, non-empty result
-        form = ProviderCaseClosureReportForm({
+        form = ProviderCaseClosure({
             'provider': providers[0].pk,
             'date_from': datetime.date(2014, 4, 2),
             'date_to': datetime.date(2014, 4, 15)
@@ -90,7 +90,7 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
         )
 
         # form, empty results
-        form = ProviderCaseClosureReportForm({
+        form = ProviderCaseClosure({
             'provider': providers[0].pk,
             'date_from': datetime.date(2014, 4, 19),
             'date_to': datetime.date(2014, 4, 20)
@@ -107,7 +107,7 @@ class ProviderCaseClosureReportFormTestCase(TestCase):
         )
 
     def test_get_headers(self):
-        form = ProviderCaseClosureReportForm()
+        form = ProviderCaseClosure()
 
         self.assertEqual(
             form.get_headers(),
@@ -139,7 +139,7 @@ class OperatorCaseClosureReportFormTestCase(TestCase):
         providers = make_recipe('cla_provider.provider', active=True, _quantity=2)
 
         # form, empty results
-        form = OperatorCaseClosureReportForm({
+        form = OperatorCaseClosure({
             'date_from': datetime.date(2014, 4, 19),
             'date_to': datetime.date(2014, 4, 20)
         })
@@ -184,7 +184,7 @@ class OperatorCaseClosureReportFormTestCase(TestCase):
 
 
         # form, non-empty result
-        form = OperatorCaseClosureReportForm({
+        form = OperatorCaseClosure({
             'date_from': datetime.date(2014, 4, 2),
             'date_to': datetime.date(2014, 4, 15)
         })
@@ -208,7 +208,7 @@ class OperatorCaseClosureReportFormTestCase(TestCase):
 
 
     def test_get_headers(self):
-        form = OperatorCaseClosureReportForm()
+        form = OperatorCaseClosure()
 
         self.assertEqual(
             form.get_headers(),

@@ -147,7 +147,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'pagedown',
     'provider',
-    'provider.oauth2'
+    'provider.oauth2',
+    'reports'
 )
 
 PROJECT_APPS = (

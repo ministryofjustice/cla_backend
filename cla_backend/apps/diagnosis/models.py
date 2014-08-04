@@ -14,3 +14,12 @@ class DiagnosisTraversal(TimeStampedModel):
 
     state = models.CharField(blank=True, null=True, max_length=50, default=DIAGNOSIS_SCOPE.UNKNOWN)
     category = models.ForeignKey('legalaid.Category', null=True, blank=True)
+
+    def is_state_inscope(self):
+        return self.state == DIAGNOSIS_SCOPE.INSCOPE
+
+    def is_state_outofscope(self):
+        return self.state == DIAGNOSIS_SCOPE.OUTOFSCOPE
+
+    def is_state_unknown(self):
+        return self.state == DIAGNOSIS_SCOPE.UNKNOWN

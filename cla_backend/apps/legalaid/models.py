@@ -101,7 +101,6 @@ class ThirdPartyDetails(TimeStampedModel):
     personal_relationship_note = models.CharField(max_length=255, blank=True)
     spoke_to = models.NullBooleanField(blank=True, null=True)
     no_contact_reason = models.TextField(blank=True, null=True)
-    organisation_name = models.CharField(max_length=255, blank=True, null=True)
 
     reference = UUIDField(auto=True, unique=True)
 

@@ -29,7 +29,9 @@ class PersonalDetailsTestCase(CLAOperatorAuthBaseApiTestMixin,
                'ni_number',
                'exempt_user',
                'exempt_user_reason',
-               'contact_for_research'
+               'contact_for_research',
+               'safe_to_contact',
+               'vulnerable_user'
 
            ]
 

@@ -23,7 +23,9 @@ class ThirdPartyDetailsTestCase(CLAOperatorAuthBaseApiTestMixin,
                 'pass_phrase',
                 'reason',
                 'personal_relationship',
-                'personal_relationship_note'
+                'personal_relationship_note',
+                'spoke_to',
+                'no_contact_reason',
             ]
 
 

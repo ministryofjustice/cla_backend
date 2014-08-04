@@ -71,12 +71,6 @@ def operator_closure_volume():
 
 
 @staff_member_required
-@report_view(CaseVolumeAndAvgDurationByDay, 'Operator Create Volume')
-def operator_create_volume():
-    pass
-
-
-@staff_member_required
 @report_view(CaseReport, 'All Cases')
 def all_cases():
     pass

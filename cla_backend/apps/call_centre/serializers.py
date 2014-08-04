@@ -1,4 +1,5 @@
 from cla_eventlog.serializers import LogSerializerBase
+from core.drf.fields import ThreePartDateField
 from rest_framework import serializers
 
 from core.serializers import UUIDSerializer
@@ -89,18 +90,33 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
 
 
 class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
+
+    dob = ThreePartDateField(required=False, source='date_of_birth')
+
     class Meta(PersonalDetailsSerializerBase.Meta):
         fields = (
             'reference', 'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone'
+            'mobile_phone', 'home_phone', 'email', 'dob',
+            'ni_number', 'exempt_user', 'exempt_user_reason',
+            'contact_for_research'
         )
 
+class ThirdPartyPersonalDetailsSerializer(PersonalDetailsSerializerBase):
+    class Meta(PersonalDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'title', 'full_name', 'postcode', 'street',
+            'mobile_phone', 'home_phone', 'email'
+        )
 
 class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
+
+    personal_details = ThirdPartyPersonalDetailsSerializer(required=True)
+
     class Meta(ThirdPartyDetailsSerializerBase.Meta):
         fields = (
             'reference', 'personal_details', 'pass_phrase', 'reason',
-            'personal_relationship', 'personal_relationship_note'
+            'personal_relationship', 'personal_relationship_note',
+            'spoke_to', 'no_contact_reason'
         )
 
 

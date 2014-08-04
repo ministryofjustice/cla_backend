@@ -2810,7 +2810,8 @@ Remember that if the caller is the abuser of domestic violence then this will no
           <y:Geometry height="30.0" width="150.0" x="1616.25" y="480.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="122.58203125" x="13.708984375" y="5.93359375">Client has been subj<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="98.34765625" x="25.826171875" y="5.93359375">Domestic Abuse
+<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -2991,8 +2992,13 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n139">
-      <data key="d4"><![CDATA[Cord?]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d5"><![CDATA[Cord?]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>family</category>
+</context>
+      </data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3075.0" y="795.0"/>
@@ -3018,7 +3024,8 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
           <y:Geometry height="30.0" width="150.0" x="1436.25" y="480.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="120.642578125" x="14.6787109375" y="5.93359375">Relationship has inv<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="74.119140625" x="37.9404296875" y="5.93359375">Child Abuse
+<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -3073,12 +3080,13 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n143">
       <data key="d4"><![CDATA[Client is being harassed by (e.g. by a partner or expartner)?]]></data>
       <data key="d5"><![CDATA[Client is being hara]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="735.0" y="795.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="117.0859375" x="16.45703125" y="5.93359375">Client is being hara<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="77.951171875" x="36.0244140625" y="5.93359375">Harrassment<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -3116,12 +3124,14 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n145">
       <data key="d4"><![CDATA[Client has previously taken action to stop harassment (e.g. sought injunction) but this is not being complied with]]></data>
       <data key="d5"><![CDATA[Client has previousl]]></data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="915.0" y="795.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="118.87890625" x="15.560546875" y="5.93359375">Client has previousl<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="151.427734375" x="-0.7138671875" y="5.93359375">Harrass order noncomply
+<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -3159,12 +3169,13 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n147">
       <data key="d4"><![CDATA[Does the client want advice in support of family mediation?]]></data>
       <data key="d5"><![CDATA[Does the client want]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1095.0" y="795.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="122.6875" x="13.65625" y="5.93359375">Does the client want<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="61.4453125" x="44.27734375" y="5.93359375">Mediation<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -3265,12 +3276,13 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n152">
       <data key="d4"><![CDATA[Client is being harassed by (e.g. by a partner or expartner)?]]></data>
       <data key="d5"><![CDATA[Client is being hara]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="555.0" y="795.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="117.0859375" x="16.45703125" y="5.93359375">Client is being hara<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="77.951171875" x="36.0244140625" y="5.93359375">Harrassment<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -3308,12 +3320,14 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n154">
       <data key="d4"><![CDATA[Client has previously taken action to stop harassment (e.g. sought injunction) but this is not being complied with]]></data>
       <data key="d5"><![CDATA[Client has previousl]]></data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="195.0" y="795.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="118.87890625" x="15.560546875" y="5.93359375">Client has previousl<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="151.427734375" x="-0.7138671875" y="5.93359375">Harrass order noncomply
+<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -3351,12 +3365,13 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     <node id="n156">
       <data key="d4"><![CDATA[Does the client want advice in support of family mediation?]]></data>
       <data key="d5"><![CDATA[Does the client want]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15.0" y="795.0"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="122.6875" x="13.65625" y="5.93359375">Does the client want<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="61.4453125" x="44.27734375" y="5.93359375">Mediation<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>

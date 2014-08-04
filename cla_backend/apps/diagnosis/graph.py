@@ -17,6 +17,7 @@ class GraphImporter(object):
     KEY_CONTEXT = 'context'
     KEY_OPERATOR_ROOT = 'operator_root'
     KEY_ORDER = 'order'
+    KEY_HELP = 'help'
 
     def __init__(self, file_path):
         self.file_path = file_path
@@ -63,6 +64,7 @@ class GraphImporter(object):
             self.KEY_CONTEXT: _get_id_default_dict_for('context:xml'),
             self.KEY_OPERATOR_ROOT: _get_id_default_dict_for('operator_root'),
             self.KEY_ORDER: _get_id_default_dict_for('order'),
+            self.KEY_HELP: _get_id_default_dict_for('help'),
         }
 
     def process_nodes(self):
@@ -104,12 +106,17 @@ class GraphImporter(object):
             if label:
                 label = markdown.markdown(label)
 
+            help_text = _get_node_data_value_or_default(node, self.KEY_HELP)
+            if help_text:
+                help_text = markdown.markdown(help_text)
+
             self.graph.add_node(
                 node.attrib['id'],
                 label=label,
                 title=_get_node_data_value_or_default(node, self.KEY_TITLE),
                 order=order,
-                context=_process_context(node)
+                context=_process_context(node),
+                help_text=help_text
             )
 
     def process_edges(self):

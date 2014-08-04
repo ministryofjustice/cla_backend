@@ -29,15 +29,15 @@ class MockedGraph(mock.MagicMock):
         """
         super(MockedGraph, self).__init__(*args, **kwargs)
         self.node = {
-            '1': {'label': '1', 'order': 1, 'context': None},
-            '2a': {'label': '2a', 'order': 1, 'context': None},
-            '2b': {'label': '2b', 'order': 1, 'context': None},
-            '3aa': {'label': '3aa', 'order': 1, 'context': None},
-            '3ab': {'label': '3ab', 'order': 1, 'context': None},
-            '3ba': {'label': '3ba', 'order': 1, 'context': None},
+            '1': {'label': '1', 'order': 1, 'context': None, 'help': None},
+            '2a': {'label': '2a', 'order': 1, 'context': None, 'help': None},
+            '2b': {'label': '2b', 'order': 1, 'context': None, 'help': None},
+            '3aa': {'label': '3aa', 'order': 1, 'context': None, 'help': None},
+            '3ab': {'label': '3ab', 'order': 1, 'context': None, 'help': None},
+            '3ba': {'label': '3ba', 'order': 1, 'context': None, 'help': None},
             'INSCOPE': {'label': 'INSCOPE', 'order': 1, 'context': {
                 'category': 'debt'
-            }},
+            }, 'help': None},
         }
         self.children = {
             '1': ['2a', '2b'],
@@ -95,8 +95,8 @@ class DiagnosisSerializerTestCase(TestCase):
             self.mocked_graph.get_node_dict('2a')
         ])
         self.assertItemsEqual(data['choices'], [
-            self.mocked_graph.get_node_dict('3aa', short=True),
-            self.mocked_graph.get_node_dict('3ab', short=True)
+            self.mocked_graph.get_node_dict('3aa'),
+            self.mocked_graph.get_node_dict('3ab')
         ])
         self.assertEqual(data['current_node_id'], '2a')
         self.assertEqual(data['state'], DIAGNOSIS_SCOPE.UNKNOWN)
@@ -113,8 +113,8 @@ class DiagnosisSerializerTestCase(TestCase):
         data = serializer.data
         self.assertEqual(data['nodes'], None)
         self.assertItemsEqual(data['choices'], [
-            self.mocked_graph.get_node_dict('2a', short=True),
-            self.mocked_graph.get_node_dict('2b', short=True)
+            self.mocked_graph.get_node_dict('2a'),
+            self.mocked_graph.get_node_dict('2b')
         ])
         self.assertEqual(data['current_node_id'], '')
         self.assertEqual(data['state'], DIAGNOSIS_SCOPE.UNKNOWN)

@@ -40,7 +40,10 @@ class AssignToProviderEvent(BaseEvent):
             is_eligible = case.eligibility_check and \
                 case.eligibility_check.state == ELIGIBILITY_STATES.YES
 
-            if not is_eligible or not case.in_scope:
+            is_in_scope = case.diagnosis and \
+                case.diagnosis.is_state_inscope()
+
+            if not is_eligible or not is_in_scope:
                 return 'SPOR'
 
         is_manual = kwargs['is_manual']

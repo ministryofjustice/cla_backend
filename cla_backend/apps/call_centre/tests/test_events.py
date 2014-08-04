@@ -26,7 +26,6 @@ class AssignToProviderEventTestCase(EventTestCaseMixin, TestCase):
 
     def test_assign_to_provider_automatically(self):
         eligible_case = make_recipe('legalaid.eligible_case')
-        self.assertTrue(eligible_case.in_scope)
         self.assertEqual(eligible_case.eligibility_check.state, 'yes')
         self._test_process_with_implicit_code(
             'REFSP',
@@ -38,7 +37,6 @@ class AssignToProviderEventTestCase(EventTestCaseMixin, TestCase):
 
     def test_assign_to_provider_automatically_ineligible_case(self):
         eligible_case = make_recipe('legalaid.case')
-        self.assertFalse(eligible_case.in_scope)
         self.assertNotEqual(eligible_case.eligibility_check.state, 'yes')
         self._test_process_with_implicit_code(
             'SPOR',
@@ -49,7 +47,6 @@ class AssignToProviderEventTestCase(EventTestCaseMixin, TestCase):
 
     def test_assign_to_provider_manually_ineligible_case(self):
         eligible_case = make_recipe('legalaid.case')
-        self.assertFalse(eligible_case.in_scope)
         self.assertNotEqual(eligible_case.eligibility_check.state, 'yes')
         self._test_process_with_implicit_code(
             'SPOR',

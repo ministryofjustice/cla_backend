@@ -24,20 +24,14 @@ class DiagnosisSerializer(ClaModelSerializer):
         super(DiagnosisSerializer, self).__init__(*args, **kwargs)
         self.graph = graph
 
-        choices = self._get_choices()
-        self.fields['current_node_id'].choices = choices
-        self.fields['current_node_id'].required = bool(choices)
+        nodes_choices = self._get_nodes()
+        self.fields['current_node_id'].choices = [
+            (node['id'], node['label']) for node in nodes_choices
+        ]
+        self.fields['current_node_id'].required = bool(nodes_choices)
 
     def get_choices(self, request):
-        choices = self._get_choices()
-
-        choice_list = []
-        for choice_tuple in choices:
-            choice_list.append({
-                'id': choice_tuple[0],
-                'label': choice_tuple[1]
-            })
-        return choice_list
+        return self._get_nodes()
 
     def get_nodes(self, request):
         if not self.object:
@@ -49,7 +43,7 @@ class DiagnosisSerializer(ClaModelSerializer):
 
         return nodes
 
-    def _get_choices(self, request=None):
+    def _get_nodes(self, request=None):
         if not self.object:
             return []
 
@@ -59,9 +53,14 @@ class DiagnosisSerializer(ClaModelSerializer):
 
         # populating choices
         children = self.graph.successors(current_node_id)
-        nodes = [(node_id, self.graph.node[node_id]['label'])
-                 for node_id in children]
-        nodes = sorted(nodes, key=lambda i: self.graph.node[i[0]]['order'])
+        nodes = []
+        for child_id in children:
+            node = self.graph.node[child_id].copy()
+            node['id'] = child_id
+            nodes.append(node)
+        # nodes = [(node_id, self.graph.node[node_id])
+        #          for node_id in children]
+        nodes = sorted(nodes, key=lambda x: x['order'])
         return nodes
 
     def get_context(self, obj):

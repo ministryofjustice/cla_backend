@@ -22,7 +22,8 @@ from call_centre.utils import getattrd
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
-    THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS
+    THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS, \
+    CONTACT_SAFETY
 
 from legalaid.fields import MoneyField
 
@@ -85,6 +86,11 @@ class PersonalDetails(TimeStampedModel):
     exempt_user = models.NullBooleanField(blank=True, null=True)
     exempt_user_reason = models.TextField(blank=True, null=True)
     contact_for_research = models.NullBooleanField(blank=True, null=True)
+    vulnerable_user = models.NullBooleanField(blank=True, null=True)
+    safe_to_contact = models.CharField(max_length=30,
+                                       default=CONTACT_SAFETY.SAFE,
+                                       choices=CONTACT_SAFETY,
+                                       blank=True, null=True)
 
     reference = UUIDField(auto=True, unique=True)
 

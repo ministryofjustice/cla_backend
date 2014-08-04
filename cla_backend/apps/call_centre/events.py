@@ -1,4 +1,4 @@
-from cla_common.constants import REQUIRES_ACTION_BY
+from cla_common.constants import ELIGIBILITY_STATES, REQUIRES_ACTION_BY
 
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES
@@ -23,10 +23,26 @@ class AssignToProviderEvent(BaseEvent):
             'description': 'Manually allocated to Specialist',
             'stops_timer': True,
             'set_requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
-        }
+        },
+        'SPOR': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': 'Referred to Specialist for second opinion',
+            'stops_timer': True,
+            'set_requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
+        },
     }
 
-    def get_log_code(self, **kwargs):
+    def get_log_code(self, case=None, **kwargs):
+
+        if case:
+            is_eligible = case.eligibility_check and \
+                case.eligibility_check.state == ELIGIBILITY_STATES.YES
+
+            if not is_eligible or not case.in_scope:
+                return 'SPOR'
+
         is_manual = kwargs['is_manual']
 
         if is_manual:

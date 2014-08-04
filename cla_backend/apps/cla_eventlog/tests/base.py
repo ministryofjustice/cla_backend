@@ -25,7 +25,7 @@ class EventTestCaseMixin(object):
     def _test_process_with_implicit_code(
         self, expected_code,
         expected_type=LOG_TYPES.OUTCOME, expected_level=LOG_LEVELS.HIGH,
-        process_kwargs={}
+        process_kwargs={}, dummy_case=None
     ):
         """
         Used to test the `process` call when there's only one possible implicit
@@ -33,9 +33,12 @@ class EventTestCaseMixin(object):
         """
         event = event_registry.get_event(self.EVENT_KEY)()
 
+        if not dummy_case:
+            dummy_case = self.dummy_case
+
         # building process params and overridding potential ones through process_kwargs
         _process_kwargs = {
-            'case': self.dummy_case,
+            'case': dummy_case,
             'notes': 'this is a note',
             'created_by': self.dummy_user
         }

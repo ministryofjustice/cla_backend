@@ -29,7 +29,7 @@ class BaseEvent(object):
 
     def process(self, case, code=None, notes="", created_by=None, patch=None, **kwargs):
         if not code:
-            code = self.get_log_code(**kwargs)
+            code = self.get_log_code(case=case, **kwargs)
 
         code_data = self.codes[code]
         timer = get_timer(created_by)

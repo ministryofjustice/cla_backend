@@ -401,7 +401,7 @@ class Case(TimeStampedModel):
     requires_action_by = models.CharField(
         max_length=50, choices=REQUIRES_ACTION_BY.CHOICES,
         default=REQUIRES_ACTION_BY.OPERATOR,
-        blank=True, null=True
+        blank=True, null=True, editable=False
     )
 
     locked_by = models.ForeignKey(
@@ -413,7 +413,9 @@ class Case(TimeStampedModel):
                                  null=True)
     notes = models.TextField(blank=True)
     provider_notes = models.TextField(blank=True)
-    laa_reference = models.BigIntegerField(null=True, blank=True, unique=True)
+    laa_reference = models.BigIntegerField(
+        null=True, blank=True, unique=True, editable=False
+    )
     thirdparty_details = models.ForeignKey('ThirdPartyDetails', blank=True,
                                            null=True)
     adaptation_details = models.ForeignKey('AdaptationDetails', blank=True,

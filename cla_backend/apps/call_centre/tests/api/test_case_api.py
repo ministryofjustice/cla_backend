@@ -60,11 +60,48 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                 self.assertEqual(unicode(getattr(obj, prop)), data[prop])
 
     def assertCaseEqual(self, data, case):
+        """
+            'provider': unicode(provider.id),
+            'laa_reference': 3000314,
+            'matter_type1': matter_type1.code,
+            'matter_type2': matter_type2.code,
+            'media_code': media_code.code,
+            'provider_notes': "bla",
+            'requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
+        """
+
         self.assertEqual(case.reference, data['reference'])
-        if data['eligibility_check']:
-            self.assertEqual(unicode(case.eligibility_check.reference), data['eligibility_check'])
-        else:
-            self.assertEqual(case.eligibility_check, None)
+
+        fks = {
+            'eligibility_check': 'reference', 
+            'personal_details': 'reference', 
+            'thirdparty_details': 'reference',
+            'adaptation_details': 'reference',
+            'diagnosis': 'reference',
+            'matter_type1': 'code',
+            'matter_type2': 'code',
+            'media_code': 'code',
+        }
+
+        for field, fk_pk in fks.items():
+            if not field in data: continue
+
+            val = getattr(case, field)
+            if val:
+                val = unicode(getattr(val, fk_pk))
+            self.assertEqual(val, data[field])
+
+        for field in [
+            'notes', 'billable_time', 'laa_reference', 
+            'provider_notes', 'requires_action_by'
+
+        ]:
+            if not field in data: continue
+
+            self.assertEqual(getattr(case, field), data[field], '%s: %s - %s' % (
+                field, getattr(case, field), data[field])
+            )
+        
         self.assertPersonalDetailsEqual(data['personal_details'], case.personal_details)
 
     def assertLogInDB(self):
@@ -88,6 +125,71 @@ class CaseGeneralTestCase(BaseCaseTestCase):
 
 class CreateCaseTestCase(BaseCaseTestCase):
 
+    def test_create_doesnt_set_readonly_values(self):
+        pd = make_recipe('legalaid.personal_details')
+        eligibility_check = make_recipe('legalaid.eligibility_check')
+        thirdparty_details = make_recipe('legalaid.thirdparty_details')
+        adaptation_details = make_recipe('legalaid.adaptation_details')
+        diagnosis = make_recipe('diagnosis.diagnosis')
+        provider = make_recipe('cla_provider.provider')
+        media_code = make_recipe('legalaid.media_code')
+
+        matter_type1 = make_recipe('legalaid.matter_type1')
+        matter_type2 = make_recipe('legalaid.matter_type2')
+
+        data = {
+            'personal_details': unicode(pd.reference),
+            'eligibility_check': unicode(eligibility_check.reference),
+            'thirdparty_details': unicode(thirdparty_details.reference),
+            'adaptation_details': unicode(adaptation_details.reference),
+            'diagnosis': unicode(diagnosis.reference),
+            'provider': unicode(provider.id),
+            'notes': 'my notes',
+            'billable_time': 234,
+            'created': "2014-08-05T10:41:55.979Z",
+            'modified': "2014-08-05T10:41:55.985Z",
+            'created_by': "test_user",
+            'matter_type1': matter_type1.code,
+            'matter_type2': matter_type2.code,
+            'media_code': media_code.code,
+            'provider_notes': "bla",
+            'laa_reference': 232323,
+            'requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
+        }
+        response = self.client.post(
+            self.list_url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertCaseResponseKeys(response)
+
+        self.assertCaseEqual(response.data,
+            Case(
+                reference=response.data['reference'],
+                personal_details=None,
+                eligibility_check=None,
+                thirdparty_details=None,
+                adaptation_details=None,
+                diagnosis=None,
+                provider=None,
+                notes=data['notes'],
+                billable_time=0,
+                laa_reference=response.data['laa_reference'],
+                matter_type1=matter_type1,
+                matter_type2=matter_type2,
+                media_code=media_code,
+                provider_notes=""
+            )
+        )
+
+        self.assertNotEqual(response.data['requires_action_by'], data['requires_action_by'])
+        self.assertNotEqual(response.data['created'], data['created'])
+        self.assertNotEqual(response.data['created_by'], data['created_by'])
+        self.assertNotEqual(response.data['modified'], data['modified'])
+        self.assertNotEqual(response.data['laa_reference'], data['laa_reference'])
+
+        self.assertLogInDB()
+
     def test_create_no_data(self):
         """
         CREATE should work, even with an empty POST
@@ -107,18 +209,16 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertLogInDB()
 
     def test_create_with_data(self):
-        check = make_recipe('legalaid.eligibility_check')
-        pd = make_recipe('legalaid.personal_details', **{
-                'title': 'MR',
-                'full_name': 'John Doe',
-                'postcode': 'SW1H 9AJ',
-                'street': '102 Petty France',
-                'mobile_phone': '0123456789',
-                'home_phone': '9876543210',
-            })
+        media_code = make_recipe('legalaid.media_code')
+        matter_type1 = make_recipe('legalaid.matter_type1')
+        matter_type2 = make_recipe('legalaid.matter_type2')
+
         data = {
-            'eligibility_check': unicode(check.reference),
-            'personal_details': unicode(pd.reference)
+            'notes': 'my notes',
+            'matter_type1': matter_type1.code,
+            'matter_type2': matter_type2.code,
+            'media_code': media_code.code,
+            'provider_notes': "bla",
         }
         response = self.client.post(
             self.list_url, data=data, format='json',
@@ -130,8 +230,12 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertCaseEqual(response.data,
             Case(
                 reference=response.data['reference'],
-                eligibility_check=check,
-                personal_details=pd
+                notes=data['notes'],
+                matter_type1=matter_type1,
+                matter_type2=matter_type2,
+                media_code=media_code,
+                provider_notes="",
+                laa_reference=response.data['laa_reference'],
             )
         )
 
@@ -157,54 +261,6 @@ class CreateCaseTestCase(BaseCaseTestCase):
         serializer = CaseSerializer(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertDictEqual( serializer.errors, {})
-
-    def test_case_serializer_with_dupe_eligibility_check_reference(self):
-        case = make_recipe('legalaid.case')
-        personal_details = make_recipe('legalaid.personal_details', **{u'full_name': u'John Doe',
-                                      u'home_phone': u'9876543210',
-                                      u'mobile_phone': u'0123456789',
-                                      u'postcode': u'SW1H 9AJ',
-                                      u'street': u'102 Petty France',
-                                      u'title': u'MR'})
-        data = {u'eligibility_check': case.eligibility_check.reference,
-                u'personal_details': unicode(personal_details.reference)}
-        serializer = CaseSerializer(data=data)
-        self.assertFalse(serializer.is_valid())
-        self.assertDictEqual(
-            serializer.errors,
-            {'eligibility_check':
-                 [u'Case with this Eligibility check already exists.']})
-
-    def test_cannot_create_with_other_eligibility_reference(self):
-        """
-        Cannot create a case passing an eligibility check reference already assigned
-        to another case
-        """
-        # create a different case
-        case = make_recipe('legalaid.case')
-        pd = make_recipe('legalaid.personal_details', **{
-                'title': 'MR',
-                'full_name': 'John Doe',
-                'postcode': 'SW1H 9AJ',
-                'street': '102 Petty France',
-                'mobile_phone': '0123456789',
-                'home_phone': '9876543210',
-            })
-
-        data = {
-            'eligibility_check': unicode(case.eligibility_check.reference),
-            'personal_details':  unicode(pd.reference)
-        }
-        response = self.client.post(
-            self.list_url, data=data, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertDictEqual(
-            response.data,
-            {'eligibility_check': [u'Case with this Eligibility check already exists.']}
-        )
-
-        self.assertNoLogInDB()
 
     def test_case_serializer_with_media_code(self):
         media_code = make_recipe('legalaid.media_code')

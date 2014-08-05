@@ -6955,7 +6955,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
     </node>
     <node id="n325">
       <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
-      <data key="d5"><![CDATA[OUTOFSCOP]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3240.9805555555554" y="330.0"/>
@@ -7033,14 +7033,14 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       </data>
     </node>
     <node id="n329">
-      <data key="d4"><![CDATA[OUTOFSCOPE DISCLAIMERNONCLA]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d5"><![CDATA[OUTOFSCOPE ]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5628.233333333334" y="330.0"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="155.494140625" x="-2.7470703125" y="5.93359375">CONSUMER OUTOFSCOPE <y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="86.001953125" x="31.9990234375" y="5.93359375">OUTOFSCOPE <y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -7110,7 +7110,7 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       </data>
     </node>
     <node id="n333">
-      <data key="d4"><![CDATA[OUTOFSCOPE DISCLAIMERNONCLA]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d5"><![CDATA[OUTOFSCOPE DISCL]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -7149,7 +7149,7 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       </data>
     </node>
     <node id="n335">
-      <data key="d4"><![CDATA[OUTOFSCOPE DISCLAIMERNONCLA]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d5"><![CDATA[OUTOFSCOPE DISCLAIME]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -7284,7 +7284,7 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       </data>
     </node>
     <node id="n342">
-      <data key="d4"><![CDATA[OUTOFSCOPE DISCLAIMERNONCLA]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d5"><![CDATA[OUTOFSCOPE DISCLAIME]]></data>
       <data key="d7">
         <context xmlns="">
@@ -7428,7 +7428,7 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       </data>
     </node>
     <node id="n349">
-      <data key="d4"><![CDATA[OUTOFSCOPE DISCLAIMERNONCLA]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d5"><![CDATA[OUTOFSCOPE D]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -7524,7 +7524,7 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       </data>
     </node>
     <node id="n354">
-      <data key="d4"><![CDATA[OUTOFSCOPE DISCLAIMERNONCLA]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d5"><![CDATA[OUTOFSCOPE DISCLA]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -12284,7 +12284,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e388" source="n361" target="n366">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

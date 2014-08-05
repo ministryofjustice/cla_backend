@@ -78,6 +78,7 @@
       <data key="d10"><![CDATA[This category covers the legal area of Debt, and the areas of Housing covering home loss.
 
 Debt covers advice on
+
 * struggling to manage/pay debt
 * council tax, housing or mortgage arrears
 * dealing with creditors, loan sharks and illegal money lenders
@@ -7771,6 +7772,30 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
         </y:ShapeNode>
       </data>
     </node>
+    <node id="n366">
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
+      <data key="d7">
+        <context xmlns="">
+	<category>debt</category>
+</context>
+      </data>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="10204.480555555556" y="763.0"/>
+          <y:Fill color="#FF9900" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="115.984375" x="17.0078125" y="5.93359375">DEBT OUTOFSCOPE<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <edge id="e0" source="n1" target="n2">
       <data key="d16">
         <y:PolyLineEdge>
@@ -12230,13 +12255,23 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e387" source="n20" target="n363">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="-37.5" ty="-15.0">
             <y:Point x="11645.980555555556" y="645.0"/>
             <y:Point x="11608.480555555556" y="645.0"/>
           </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e388" source="n361" target="n366">
+      <data key="d15"/>
+      <data key="d16">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>

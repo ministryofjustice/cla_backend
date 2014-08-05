@@ -280,8 +280,8 @@ SELECT
                     ELSE
                         0
                 END
-            ) / COUNT(timer_timer.id)) AS avg_duration
-    END
+            ) / COUNT(timer_timer.id))
+    END AS avg_duration
 FROM
     legalaid_case
     LEFT OUTER JOIN timer_timer ON

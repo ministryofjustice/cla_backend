@@ -2,7 +2,10 @@ import json
 from call_centre.utils import format_patch
 from cla_eventlog import event_registry
 from core.drf.mixins import NestedGenericModelMixin
+from dateutil import parser
+from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
+from django.utils import timezone
 import jsonpatch
 
 from rest_framework import viewsets, mixins, status
@@ -179,8 +182,14 @@ class CaseViewSet(
         @return: dict - 'suggested_provider' (single item) ;
                         'suitable_providers' all possible providers for this category.
         """
+
+        as_of = None
+        if 'as_of' in request.GET and settings.DEBUG:
+            as_of = parser.parse(request.GET.get('as_of'))
+            as_of = as_of.replace(tzinfo=timezone.get_current_timezone())
+
         obj = self.get_object()
-        helper = ProviderAllocationHelper()
+        helper = ProviderAllocationHelper(as_of=as_of)
 
         if hasattr(obj, 'eligibility_check') and obj.eligibility_check != None and obj.eligibility_check.category:
             category = obj.eligibility_check.category

@@ -216,66 +216,6 @@
     }
   },
   {
-    "pk": 9,
-    "model": "call_centre.operator",
-    "fields": {
-      "user": 15,
-      "modified": "2014-07-16T16:33:16.999Z",
-      "is_manager": false,
-      "created": "2014-07-16T16:33:16.994Z"
-    }
-  },
-  {
-    "pk": 10,
-    "model": "call_centre.operator",
-    "fields": {
-      "user": 16,
-      "modified": "2014-07-16T16:33:27.250Z",
-      "is_manager": false,
-      "created": "2014-07-16T16:33:27.243Z"
-    }
-  },
-  {
-    "pk": 11,
-    "model": "call_centre.operator",
-    "fields": {
-      "user": 17,
-      "modified": "2014-07-16T16:33:36.611Z",
-      "is_manager": false,
-      "created": "2014-07-16T16:33:36.603Z"
-    }
-  },
-  {
-    "pk": 12,
-    "model": "call_centre.operator",
-    "fields": {
-      "user": 18,
-      "modified": "2014-07-16T16:33:45.146Z",
-      "is_manager": false,
-      "created": "2014-07-16T16:33:45.140Z"
-    }
-  },
-  {
-    "pk": 13,
-    "model": "call_centre.operator",
-    "fields": {
-      "user": 19,
-      "modified": "2014-07-16T16:33:53.179Z",
-      "is_manager": false,
-      "created": "2014-07-16T16:33:53.174Z"
-    }
-  },
-  {
-    "pk": 14,
-    "model": "call_centre.operator",
-    "fields": {
-      "user": 20,
-      "modified": "2014-07-16T16:35:18.580Z",
-      "is_manager": false,
-      "created": "2014-07-16T16:35:18.574Z"
-    }
-  },
-  {
     "pk": 21,
     "model": "auth.user",
     "fields": {
@@ -312,23 +252,181 @@
     }
   },
   {
-    "pk": 15,
-    "model": "call_centre.operator",
-    "fields": {
-        "user": 21,
-        "modified": "2014-07-18T09:20:15.728Z",
-        "is_manager": false,
-        "created": "2014-07-18T09:20:15.725Z"
-    }
+      "pk": 23,
+      "model": "auth.user",
+      "fields": {
+          "username": "test_rachelm",
+          "first_name": "",
+          "last_name": "",
+          "is_active": true,
+          "is_superuser": false,
+          "is_staff": false,
+          "last_login": "2014-08-06T10:53:57.442Z",
+          "groups": [],
+          "user_permissions": [],
+          "password": "pbkdf2_sha256$12000$xso9R7t9XOXN$sJ+PqvpruQEEYlj2T0Nx3w9kIONZxUk/ptjUViWswDw=",
+          "email": "",
+          "date_joined": "2014-08-06T10:53:57.442Z"
+      }
   },
   {
-    "pk": 16,
-    "model": "call_centre.operator",
-    "fields": {
-        "user": 22,
-        "modified": "2014-07-18T09:20:21.262Z",
-        "is_manager": false,
-        "created": "2014-07-18T09:20:21.260Z"
-    }
+      "pk": 9,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 15,
+          "modified": "2014-07-16T16:33:16.999Z",
+          "is_manager": false,
+          "created": "2014-07-16T16:33:16.994Z"
+      }
+  },
+  {
+      "pk": 10,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 16,
+          "modified": "2014-07-16T16:33:27.250Z",
+          "is_manager": false,
+          "created": "2014-07-16T16:33:27.243Z"
+      }
+  },
+  {
+      "pk": 11,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 17,
+          "modified": "2014-07-16T16:33:36.611Z",
+          "is_manager": false,
+          "created": "2014-07-16T16:33:36.603Z"
+      }
+  },
+  {
+      "pk": 12,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 18,
+          "modified": "2014-07-16T16:33:45.146Z",
+          "is_manager": false,
+          "created": "2014-07-16T16:33:45.140Z"
+      }
+  },
+  {
+      "pk": 13,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 19,
+          "modified": "2014-07-16T16:33:53.179Z",
+          "is_manager": false,
+          "created": "2014-07-16T16:33:53.174Z"
+      }
+  },
+  {
+      "pk": 14,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 20,
+          "modified": "2014-07-16T16:35:18.580Z",
+          "is_manager": false,
+          "created": "2014-07-16T16:35:18.574Z"
+      }
+  },
+  {
+      "pk": 15,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 21,
+          "modified": "2014-07-18T09:20:15.728Z",
+          "is_manager": false,
+          "created": "2014-07-18T09:20:15.725Z"
+      }
+  },
+  {
+      "pk": 16,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 22,
+          "modified": "2014-07-18T09:20:21.262Z",
+          "is_manager": false,
+          "created": "2014-07-18T09:20:21.260Z"
+      }
+  },
+  {
+      "pk": 17,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 9,
+          "modified": "2014-08-06T10:45:06.613Z",
+          "is_manager": false,
+          "created": "2014-08-06T10:45:06.611Z"
+      }
+  },
+  {
+      "pk": 18,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 11,
+          "modified": "2014-08-06T10:45:29.132Z",
+          "is_manager": false,
+          "created": "2014-08-06T10:45:29.130Z"
+      }
+  },
+  {
+      "pk": 19,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 12,
+          "modified": "2014-08-06T10:45:58.676Z",
+          "is_manager": false,
+          "created": "2014-08-06T10:45:58.674Z"
+      }
+  },
+  {
+      "pk": 20,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 14,
+          "modified": "2014-08-06T10:46:08.519Z",
+          "is_manager": false,
+          "created": "2014-08-06T10:46:08.517Z"
+      }
+  },
+  {
+      "pk": 21,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 13,
+          "modified": "2014-08-06T10:46:17.677Z",
+          "is_manager": false,
+          "created": "2014-08-06T10:46:17.675Z"
+      }
+  },
+  {
+      "pk": 22,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 3,
+          "modified": "2014-08-06T10:46:30.685Z",
+          "is_manager": false,
+          "created": "2014-08-06T10:46:30.682Z"
+      }
+  },
+  {
+      "pk": 23,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 10,
+          "modified": "2014-08-06T10:46:40.256Z",
+          "is_manager": false,
+          "created": "2014-08-06T10:46:40.254Z"
+      }
+  },
+  {
+      "pk": 24,
+      "model": "call_centre.operator",
+      "fields": {
+          "user": 23,
+          "modified": "2014-08-06T10:54:09.061Z",
+          "is_manager": false,
+          "created": "2014-08-06T10:54:09.059Z"
+      }
   }
 ]

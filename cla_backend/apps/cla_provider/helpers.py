@@ -4,15 +4,13 @@ from operator import itemgetter
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota
 from django.utils import timezone
 
-def today_at(hour, minute=0, second=0, microsecond=0):
-    t = timezone.localtime(timezone.now())
-    return t.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
 
 
 class ProviderAllocationHelper(object):
 
-    def __init__(self):
+    def __init__(self, as_of=None):
         self._providers_in_category = None
+        self.as_of = as_of or timezone.now()
 
     def get_qualifying_providers_allocation(self, category):
         """
@@ -23,6 +21,9 @@ class ProviderAllocationHelper(object):
 
         return self._providers_in_category
 
+    def today_at(self, hour, minute=0, second=0, microsecond=0):
+        t = timezone.localtime(self.as_of)
+        return t.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
 
     def get_qualifying_providers(self, category):
         """
@@ -75,7 +76,7 @@ class ProviderAllocationHelper(object):
 
     @property
     def is_out_of_hours(self):
-        today = timezone.localtime(timezone.now())
+        today = timezone.localtime(self.as_of)
         weekday = today.date().weekday()
 
         # not open on bank holiday
@@ -84,14 +85,14 @@ class ProviderAllocationHelper(object):
 
         # if day in MON-FRI (open 09h-17h)
         elif weekday < 5:
-            day_start = today_at(9)
-            day_end = today_at(17)
-            return not (day_start < timezone.now() < day_end)
+            day_start = self.today_at(9)
+            day_end = self.today_at(17)
+            return not (day_start < today < day_end)
 
         # if Saturday (only open in the morning)
         elif weekday == 5:
-            day_start = today_at(9)
-            day_end = today_at(12, minute=30)
+            day_start = self.today_at(9)
+            day_end = self.today_at(12, minute=30)
             return not (day_start < timezone.now() < day_end)
 
         # if Sunday then out of hours (call centre doesn't operate on sunday)

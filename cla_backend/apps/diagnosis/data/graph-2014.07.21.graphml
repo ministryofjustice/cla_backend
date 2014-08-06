@@ -5477,7 +5477,7 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n252">
-      <data key="d4"><![CDATA[Type of discrimination the client falls into.]]></data>
+      <data key="d4"><![CDATA[Now please type of discrimination the client falls into. *click 'Next' to continue*]]></data>
       <data key="d5"><![CDATA[Type of discriminati]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -5498,6 +5498,7 @@ More information will be available in guidance.*]]></data>
     <node id="n253">
       <data key="d4"><![CDATA[Direct Discrimination]]></data>
       <data key="d5"><![CDATA[Direct Discriminatio]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13920.355555555556" y="600.0"/>
@@ -6505,6 +6506,7 @@ More information will be available in guidance.*]]></data>
     <node id="n301">
       <data key="d4"><![CDATA[Indirect Discrimination]]></data>
       <data key="d5"><![CDATA[Indirect Discriminat]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13200.355555555556" y="600.0"/>
@@ -6524,6 +6526,7 @@ More information will be available in guidance.*]]></data>
     <node id="n302">
       <data key="d4"><![CDATA[Harrassment]]></data>
       <data key="d5"><![CDATA[Harrassment]]></data>
+      <data key="d9">6</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13560.355555555556" y="600.0"/>
@@ -6543,6 +6546,7 @@ More information will be available in guidance.*]]></data>
     <node id="n303">
       <data key="d4"><![CDATA[Victimisation due to a discrimination claim]]></data>
       <data key="d5"><![CDATA[Victimisation due to]]></data>
+      <data key="d9">7</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13740.355555555556" y="600.0"/>
@@ -6562,12 +6566,13 @@ More information will be available in guidance.*]]></data>
     <node id="n304">
       <data key="d4"><![CDATA[Discrimination out of a disability]]></data>
       <data key="d5"><![CDATA[Discrimination arisi]]></data>
+      <data key="d9">5</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13380.355555555556" y="600.0"/>
           <y:Fill color="#FFCC99" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="117.009765625" x="16.4951171875" y="5.93359375">Discrimination arisi<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="57.91796875" x="46.041015625" y="5.93359375">Disability<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -6581,6 +6586,7 @@ More information will be available in guidance.*]]></data>
     <node id="n305">
       <data key="d4"><![CDATA[Pregnancy and maternity discrimination]]></data>
       <data key="d5"><![CDATA[Pregnancy and matern]]></data>
+      <data key="d9">4</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13020.355555555556" y="600.0"/>
@@ -6600,6 +6606,7 @@ More information will be available in guidance.*]]></data>
     <node id="n306">
       <data key="d4"><![CDATA[Failure to make reasonable adjustments]]></data>
       <data key="d5"><![CDATA[Failure to make reas]]></data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12840.355555555556" y="600.0"/>

@@ -103,9 +103,14 @@ Housing covers advice on
 * notices for eviction
 * illegal eviction or possession
 * notices for possession
+* rent arrears
+* UKBA issues
+
+The following are covered in 'other housing'.
+
 * threatened loss of home or harassment from landlords
 * disrepair / poor housing conditions
-* rent arrears
+* ASBO/ASBI
 
 Clients in temporary accommodation will be covered for in scope housing. 
 ]]></data>
@@ -1963,6 +1968,17 @@ If client has received a charging order please record this in Operator Notes.]]>
       <data key="d4"><![CDATA[Other housing matters]]></data>
       <data key="d5"><![CDATA[Other housing matter]]></data>
       <data key="d9">2</data>
+      <data key="d10"><![CDATA[This category covers the legal area of Housing outside home loss.
+
+It covers advice on
+
+* threatened loss of home or harassment from landlords
+* disrepair / poor housing conditions
+* ASBO/ASBI
+* rent arrears
+
+For loss of home please click 'back' and select the first category.
+]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4886.736111111111" y="150.0"/>
@@ -2507,6 +2523,16 @@ If client has received a charging order please record this in Operator Notes.]]>
       <data key="d4"><![CDATA[Family]]></data>
       <data key="d5"><![CDATA[Family]]></data>
       <data key="d9">3</data>
+      <data key="d10"><![CDATA[The Family category covers advice on:
+
+* Difficulty in obtaining or being denied access to children
+* Trying to obtain custondy and parental rights
+* Involvement of Social Services with a child
+* Protection fo client and/or children from violence/abuse
+* The rights or entitlements in divorce/separation
+* Guardian appointment/rights
+* Trying to adopt a child in care
+* Enforcing previous court orders]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1938.75" y="150.0"/>
@@ -4082,6 +4108,13 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       <data key="d4"><![CDATA[Discrimination]]></data>
       <data key="d5"><![CDATA[Discrimination]]></data>
       <data key="d9">5</data>
+      <data key="d10"><![CDATA[The discrimination category coveres advice on cases that contravene the Equalities Act 2010. The originating issue could be in another category (e.g. housing or employment) but the client will believe that thay have been discriminated, harassed or victimised.
+
+*Please note we have two approaches we can take for diagnosing discrimination matters: these are proactive (for cases taht orginate as Employment, Education or Consumer matters) and reactive (for cases that origitnate as Housing, Welfare Benefts or Actions Against The Police matters). Each of these categories will individually tak you to the correct discrimination flow.
+
+However if the client presents a discrimination issue and therefore doesn't need any further diagnosis please continue through the proactive approach from here.
+
+More information will be available in guidance.*]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5998.480555555556" y="795.0"/>
@@ -6911,10 +6944,18 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       <data key="d4"><![CDATA[Employment]]></data>
       <data key="d5"><![CDATA[Employment]]></data>
       <data key="d9">7</data>
+      <data key="d10"><![CDATA[The Employment category covers advice on
+
+* Reduncancies, dismissals and disciplinaries
+* Contracts, workers' rights and working hours
+* Rights at work including health & safety and accidents at work
+* Employment status
+* Holidays, time off, sick leave, maternity & paternity leave and other absence
+* Pay, tax and the National Minimum Wage.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3383.4805555555554" y="150.0"/>
-          <y:Fill color="#C0C0C0" transparent="false"/>
+          <y:Fill color="#FF6600" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="76.193359375" x="36.9033203125" y="5.93359375">Employment<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>

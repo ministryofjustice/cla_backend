@@ -2,7 +2,7 @@ from cla_eventlog.serializers import LogSerializerBase
 from core.drf.fields import ThreePartDateField
 from rest_framework import serializers
 
-from core.serializers import UUIDSerializer
+from core.serializers import UUIDSerializer, PartialUpdateExcludeReadonlySerializerMixin
 from legalaid.serializers import EligibilityCheckSerializerBase, \
     IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, \
@@ -153,14 +153,14 @@ class MatterTypeSerializer(MatterTypeSerializerBase):
         )
 
 
-class CaseSerializer(CaseSerializerBase):
+class CaseSerializer(PartialUpdateExcludeReadonlySerializerMixin, CaseSerializerBase):
     LOG_SERIALIZER = LogSerializer
 
-    eligibility_check = UUIDSerializer(slug_field='reference', required=False)
+    eligibility_check = UUIDSerializer(slug_field='reference', required=False, read_only=True)
 
-    personal_details = UUIDSerializer(required=False, slug_field='reference')
-    thirdparty_details = UUIDSerializer(required=False, slug_field='reference')
-    adaptation_details = UUIDSerializer(required=False, slug_field='reference')
+    personal_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
+    thirdparty_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
+    adaptation_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
 
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)

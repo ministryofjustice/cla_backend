@@ -188,8 +188,8 @@ class CaseSerializerBase(ClaModelSerializer):
 
     LOG_SERIALIZER = LogSerializerBase
 
-    eligibility_check = UUIDSerializer(slug_field='reference')
-    diagnosis = UUIDSerializer(slug_field='reference', required=False)
+    eligibility_check = UUIDSerializer(slug_field='reference', read_only=True)
+    diagnosis = UUIDSerializer(slug_field='reference', required=False, read_only=True)
     personal_details = PersonalDetailsSerializerBase()
     notes = serializers.CharField(max_length=500, required=False)
     provider_notes = serializers.CharField(max_length=500, required=False)

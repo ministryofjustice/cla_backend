@@ -10,7 +10,7 @@ class ProviderAllocationHelper(object):
 
     def __init__(self, as_of=None):
         self._providers_in_category = None
-        self.as_of = as_of or timezone.now()
+        self.as_of = timezone.localtime(as_of or timezone.now())
 
     def get_qualifying_providers_allocation(self, category):
         """
@@ -57,7 +57,7 @@ class ProviderAllocationHelper(object):
 
     def _get_rota_provider(self, category):
         try:
-            rota = OutOfHoursRota.objects.get_current(category)
+            rota = OutOfHoursRota.objects.get_current(category, as_of=self.as_of)
             return rota.provider if rota else None
         except OutOfHoursRota.MultipleObjectsReturned:
             # this should be prevented by OutOfHoursRota.clean but what
@@ -76,8 +76,7 @@ class ProviderAllocationHelper(object):
 
     @property
     def is_out_of_hours(self):
-        today = timezone.localtime(self.as_of)
-        weekday = today.date().weekday()
+        weekday = self.as_of.date().weekday()
 
         # not open on bank holiday
         if self.is_bank_holiday:
@@ -87,13 +86,13 @@ class ProviderAllocationHelper(object):
         elif weekday < 5:
             day_start = self.today_at(9)
             day_end = self.today_at(17)
-            return not (day_start < today < day_end)
+            return not (day_start < self.as_of < day_end)
 
         # if Saturday (only open in the morning)
         elif weekday == 5:
             day_start = self.today_at(9)
             day_end = self.today_at(12, minute=30)
-            return not (day_start < timezone.now() < day_end)
+            return not (day_start < self.as_of < day_end)
 
         # if Sunday then out of hours (call centre doesn't operate on sunday)
         else:

@@ -1,0 +1,26 @@
+[
+{
+  "pk": 1, 
+  "model": "cla_provider.outofhoursrota", 
+  "fields": {
+    "category": 3, 
+    "end_date": "2014-08-09T13:06:07Z", 
+    "created": "2014-08-06T13:06:22.798Z", 
+    "modified": "2014-08-06T13:06:23.032Z", 
+    "provider": 1, 
+    "start_date": "2014-08-06T13:06:05Z"
+  }
+},
+{
+  "pk": 2, 
+  "model": "cla_provider.outofhoursrota", 
+  "fields": {
+    "category": 2, 
+    "end_date": "2014-08-09T13:10:54Z", 
+    "created": "2014-08-06T13:11:04.583Z", 
+    "modified": "2014-08-06T13:11:05.151Z", 
+    "provider": 2, 
+    "start_date": "2014-08-06T13:10:54Z"
+  }
+}
+]

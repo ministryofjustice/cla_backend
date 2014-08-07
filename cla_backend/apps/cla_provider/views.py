@@ -62,6 +62,10 @@ class CaseViewSet(
     ordering_fields = ('-requires_action_by', 'modified', 'created')
     ordering = ('-locked_by', '-modified', '-created')
 
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
     def get_queryset(self):
         this_provider = get_object_or_404(Staff, user=self.request.user).provider
         qs = super(CaseViewSet, self).get_queryset().filter(

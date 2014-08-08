@@ -275,3 +275,4 @@ REST_FRAMEWORK = {
 # the start number of the LAA reference, must be 7 digit number and must
 # not clash with existing - generated references so we are starting at 3million
 LAA_REFERENCE_SEED = 3000000
+TEST_MODE = False

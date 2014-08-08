@@ -206,7 +206,8 @@ class CaseViewSet(
         suitable_providers = [
             ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
         suggestions = {'suggested_provider': suggested_provider,
-                       'suitable_providers': suitable_providers
+                       'suitable_providers': suitable_providers,
+                       'as_of': helper.as_of
                        }
 
         return DRFResponse(suggestions)

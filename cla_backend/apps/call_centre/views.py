@@ -130,6 +130,33 @@ class MediaCodeViewSet(
     filter_fields = ('name', 'group__name')
 
 
+class OrderingRejectedFirstFilter(OrderingFilter):
+
+    def filter_queryset(self, request, qs, view):
+        ordering = self.get_ordering(request)
+        if ordering:
+            ordering = self.remove_invalid_fields(qs, ordering, view)
+        if not ordering:
+            ordering = self.get_default_ordering(view)
+        if not ordering:
+            ordering = []
+
+        dashboard_param = request.QUERY_PARAMS.get('dashboard', None)
+        if dashboard_param:
+            qs = qs.extra(select={
+                'rejected': '''CASE
+                        WHEN legalaid_case.outcome_code IN ('COI', 'MIS',
+                            'MIS-OOS', 'MIS-MEAN') THEN 1
+                        ELSE 0
+                    END'''})
+            qs = qs.order_by('-rejected', *ordering)
+
+        elif ordering:
+            qs = qs.order_by(*ordering)
+
+        return qs
+
+
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
     mixins.CreateModelMixin,
@@ -146,7 +173,7 @@ class CaseViewSet(
     serializer_class = CaseSerializer
 
     filter_backends = (
-        OrderingFilter,
+        OrderingRejectedFirstFilter,
         SearchFilter,
     )
 

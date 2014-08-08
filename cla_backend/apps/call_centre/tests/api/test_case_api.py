@@ -46,7 +46,7 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
              'full_name', 'laa_reference', 'eligibility_state', 'thirdparty_details',
              'adaptation_details', 'billable_time', 'requires_action_by',
              'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
-             'postcode', 'diagnosis_state']
+             'postcode', 'diagnosis_state', 'rejected']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):

@@ -33,5 +33,11 @@ class Log(TimeStampedModel):
     def __unicode__(self):
         return u'%s - %s:%s' % (self.case, self.type, self.code)
 
+    def save(self, *args, **kwargs):
+        super(Log, self).save(*args, **kwargs)
+        if self.type == LOG_TYPES.OUTCOME and self.level >= LOG_LEVELS.HIGH:
+            self.case.outcome_code = self.code
+            self.case.level = self.level
+
     class Meta:
         ordering = ['-created']

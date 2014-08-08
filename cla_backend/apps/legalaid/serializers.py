@@ -4,7 +4,8 @@ from rest_framework import serializers
 from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.serializers import LogSerializerBase
 
-from core.serializers import UUIDSerializer, ClaModelSerializer
+from core.serializers import UUIDSerializer, ClaModelSerializer, \
+    PartialUpdateExcludeReadonlySerializerMixin
 from cla_provider.models import Provider, OutOfHoursRota
 
 from cla_common.money_interval.models import MoneyInterval
@@ -166,6 +167,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 
 
 class MatterTypeSerializerBase(ClaModelSerializer):
+    category = serializers.SlugRelatedField(slug_field='code', read_only=True)
 
     class Meta:
         model = MatterType
@@ -184,7 +186,7 @@ class MediaCodeSerializer(ClaModelSerializer):
         )
 
 
-class CaseSerializerBase(ClaModelSerializer):
+class CaseSerializerBase(ClaModelSerializer, PartialUpdateExcludeReadonlySerializerMixin):
 
     LOG_SERIALIZER = LogSerializerBase
 

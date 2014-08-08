@@ -142,7 +142,6 @@ class LogSerializer(LogSerializerBase):
 
 class MatterTypeSerializer(MatterTypeSerializerBase):
 
-    category = serializers.SlugRelatedField(slug_field='code', read_only=True)
 
     class Meta(MatterTypeSerializerBase.Meta):
         fields = (
@@ -153,7 +152,7 @@ class MatterTypeSerializer(MatterTypeSerializerBase):
         )
 
 
-class CaseSerializer(PartialUpdateExcludeReadonlySerializerMixin, CaseSerializerBase):
+class CaseSerializer(CaseSerializerBase):
     LOG_SERIALIZER = LogSerializer
 
     eligibility_check = UUIDSerializer(slug_field='reference', required=False, read_only=True)

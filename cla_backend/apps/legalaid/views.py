@@ -1,9 +1,13 @@
+import json
+
+from core.utils import format_patch
+from cla_eventlog import event_registry
+from core.drf.mixins import NestedGenericModelMixin
 from django.http import Http404
-
+import jsonpatch
 from rest_framework import viewsets, mixins, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
-
 from legalaid.serializers import CategorySerializerBase
 from legalaid.models import Category, EligibilityCheck
 
@@ -59,9 +63,17 @@ class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'code'
 
 
-class BaseEligibilityCheckViewSet(viewsets.GenericViewSet):
+class BaseEligibilityCheckViewSet(NestedGenericModelMixin,
+                                  viewsets.GenericViewSet):
     model = EligibilityCheck
     lookup_field = 'reference'
+    PARENT_FIELD = 'eligibility_check'
+
+
+    @link()
+    def validate(self, request, **kwargs):
+        obj = self.get_object()
+        return DRFResponse(obj.validate())
 
     @action()
     def is_eligible(self, request, *args, **kwargs):
@@ -71,3 +83,38 @@ class BaseEligibilityCheckViewSet(viewsets.GenericViewSet):
         return DRFResponse({
             'is_eligible': response
         })
+
+
+    @property
+    def jsonpatch(self):
+        forwards = jsonpatch.JsonPatch.from_diff(self.__pre_save__, self.__post_save__)
+        backwards = jsonpatch.JsonPatch.from_diff(self.__post_save__, self.__pre_save__)
+        serializer = self.get_serializer_class()
+
+        return {
+            'serializer': '.'.join([serializer.__module__, serializer.__name__]),
+            'backwards': backwards.patch,
+            'forwards': forwards.patch
+        }
+
+    def pre_save(self, obj):
+        original_obj = self.get_object()
+        self.__pre_save__ = self.get_serializer_class()(original_obj).data
+
+    def post_save(self, obj, created=False, **kwargs):
+        super(BaseEligibilityCheckViewSet, self).post_save(obj, created=created)
+        user = self.request.user
+        self.__post_save__ = self.get_serializer_class()(obj).data
+
+        patch = self.jsonpatch
+
+        means_test_event = event_registry.get_event('means_test')()
+        status = 'changed' if not created else 'created'
+        means_test_event.process(obj.case,
+                                 patch=json.dumps(patch),
+                                 notes=format_patch(patch['forwards']),
+                                 created_by=user,
+                                 status=status
+        )
+
+        return obj

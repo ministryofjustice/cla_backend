@@ -440,6 +440,9 @@ class Case(TimeStampedModel):
                                                        through='CaseKnowledgebaseAssignment',
                                                        null=True, blank=True)
 
+    outcome_code = models.CharField(max_length=20, null=True, blank=True)
+    level = models.PositiveSmallIntegerField(null=True)
+
     def _set_reference_if_necessary(self):
         if not self.reference:
             # TODO make it better
@@ -505,6 +508,7 @@ class Case(TimeStampedModel):
     # @property
     # def requires_action_by_operator_manager(self):
     #     return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR
+
 
 class CaseKnowledgebaseAssignment(TimeStampedModel):
     case = models.ForeignKey(Case)

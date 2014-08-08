@@ -172,6 +172,13 @@ class CaseSerializer(PartialUpdateExcludeReadonlySerializerMixin, CaseSerializer
     diagnosis_state = serializers.CharField(source='diagnosis.state', read_only=True)
     billable_time = serializers.IntegerField(read_only=True)
     postcode = serializers.CharField(source='personal_details.postcode', read_only=True)
+    rejected = serializers.SerializerMethodField('is_rejected')
+
+    def is_rejected(self, case):
+        try:
+            return case.rejected == 1
+        except:
+            return False
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
@@ -180,7 +187,7 @@ class CaseSerializer(PartialUpdateExcludeReadonlySerializerMixin, CaseSerializer
             'notes', 'provider_notes', 'full_name', 'thirdparty_details',
             'adaptation_details', 'laa_reference', 'eligibility_state', 'billable_time',
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis', 'media_code',
-            'postcode', 'diagnosis_state'
+            'postcode', 'diagnosis_state', 'rejected'
         )
 
 

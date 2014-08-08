@@ -1,12 +1,16 @@
+from core.drf.mixins import NestedGenericModelMixin
 from django.shortcuts import get_object_or_404
+from legalaid.serializers import MediaCodeSerializer
 
 from rest_framework import viewsets, mixins
-from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.filters import OrderingFilter, SearchFilter, \
+    DjangoFilterBackend
 from rest_framework.decorators import action
 
 from cla_eventlog.views import BaseEventViewSet
 
-from legalaid.models import Category, Case
+from legalaid.models import Category, Case, MediaCode, MatterType, \
+    PersonalDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
     BaseEligibilityCheckViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
@@ -14,7 +18,9 @@ from cla_common.constants import REQUIRES_ACTION_BY
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import CategorySerializer, \
-    EligibilityCheckSerializer, CaseSerializer, StaffSerializer
+    EligibilityCheckSerializer, CaseSerializer, StaffSerializer, \
+    MatterTypeSerializer, PersonalDetailsSerializer, \
+    AdaptationDetailsSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
 
 
@@ -31,10 +37,36 @@ class CategoryViewSet(CLAProviderPermissionViewSetMixin, viewsets.ReadOnlyModelV
 
 class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,
+    mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     BaseEligibilityCheckViewSet
 ):
     serializer_class = EligibilityCheckSerializer
+
+
+class MatterTypeViewSet(
+    CLAProviderPermissionViewSetMixin,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    model = MatterType
+    serializer_class = MatterTypeSerializer
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('level', 'category__code')
+
+class MediaCodeViewSet(
+    CLAProviderPermissionViewSetMixin,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    model = MediaCode
+    serializer_class = MediaCodeSerializer
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('name', 'group__name')
 
 
 class CaseViewSet(
@@ -61,6 +93,10 @@ class CaseViewSet(
 
     ordering_fields = ('-requires_action_by', 'modified', 'created')
     ordering = ('-locked_by', '-modified', '-created')
+
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
 
     def get_queryset(self):
         this_provider = get_object_or_404(Staff, user=self.request.user).provider
@@ -115,6 +151,36 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
     def get_logged_in_user_model(self):
         return self.request.user.staff
 
+class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin,
+                             mixins.UpdateModelMixin,
+                             mixins.RetrieveModelMixin,
+                             NestedGenericModelMixin,
+                             viewsets.GenericViewSet):
+    model = PersonalDetails
+    serializer_class = PersonalDetailsSerializer
+    lookup_field = 'reference'
+
+    PARENT_FIELD = 'personal_details'
 
 class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
     pass
+
+class AdaptationDetailsMetadataViewSet(CLAProviderPermissionViewSetMixin,
+                                       mixins.CreateModelMixin,
+                                       viewsets.GenericViewSet):
+    model = AdaptationDetails
+    serializer_class = AdaptationDetailsSerializer
+
+    def create(self, request, *args, **kwargs):
+        self.http_method_not_allowed(request)
+
+class AdaptationDetailsViewSet(CLAProviderPermissionViewSetMixin,
+                               mixins.CreateModelMixin,
+                               mixins.UpdateModelMixin,
+                               mixins.RetrieveModelMixin,
+                               NestedGenericModelMixin,
+                               viewsets.GenericViewSet):
+    model = AdaptationDetails
+    serializer_class = AdaptationDetailsSerializer
+    lookup_field = 'reference'
+    PARENT_FIELD = 'adaptation_details'

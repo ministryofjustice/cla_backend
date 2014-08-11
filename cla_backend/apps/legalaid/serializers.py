@@ -1,14 +1,16 @@
-from cla_common.constants import MATTER_TYPE_LEVELS
 from rest_framework import serializers
+
+from core.drf.fields import ThreePartDateField
+from core.serializers import UUIDSerializer, ClaModelSerializer, \
+    PartialUpdateExcludeReadonlySerializerMixin
+
+from cla_common.constants import MATTER_TYPE_LEVELS
+from cla_common.money_interval.models import MoneyInterval
 
 from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.serializers import LogSerializerBase
 
-from core.serializers import UUIDSerializer, ClaModelSerializer, \
-    PartialUpdateExcludeReadonlySerializerMixin
 from cla_provider.models import Provider, OutOfHoursRota
-
-from cla_common.money_interval.models import MoneyInterval
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
@@ -111,12 +113,36 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
         fields = ()
 
 
+class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
+    dob = ThreePartDateField(required=False, source='date_of_birth')
+
+    class Meta(PersonalDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'title', 'full_name', 'postcode', 'street',
+            'mobile_phone', 'home_phone', 'email', 'dob',
+            'ni_number', 'exempt_user', 'exempt_user_reason',
+            'contact_for_research', 'safe_to_contact', 'vulnerable_user'
+        )
+
+
+class ThirdPartyPersonalDetailsSerializerBase(PersonalDetailsSerializerBase):
+    class Meta(PersonalDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'title', 'full_name', 'postcode', 'street',
+            'mobile_phone', 'home_phone', 'email'
+        )
+
+
 class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
-    personal_details = PersonalDetailsSerializerBase(required=True)
+    personal_details = ThirdPartyPersonalDetailsSerializerBase(required=True)
 
     class Meta:
         model = ThirdPartyDetails
-        fields = ()
+        fields = (
+            'reference', 'personal_details', 'pass_phrase', 'reason',
+            'personal_relationship', 'personal_relationship_note',
+            'spoke_to', 'no_contact_reason', 'organisation_name',
+        )
 
 
 class AdaptationDetailsSerializerBase(serializers.ModelSerializer):

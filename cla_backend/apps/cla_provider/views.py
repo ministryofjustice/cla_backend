@@ -12,7 +12,8 @@ from legalaid.models import Case, \
     PersonalDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
     BaseNestedEligibilityCheckViewSet, BaseCategoryViewSet, \
-    BaseMatterTypeViewSet, BaseMediaCodeViewSet
+    BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
+    BaseThirdPartyDetailsViewSet
 
 from diagnosis.views import BaseDiagnosisViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
@@ -20,8 +21,7 @@ from cla_common.constants import REQUIRES_ACTION_BY
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import EligibilityCheckSerializer, \
-    CaseSerializer, StaffSerializer, \
-    PersonalDetailsSerializer, AdaptationDetailsSerializer
+    CaseSerializer, StaffSerializer, AdaptationDetailsSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
 
 
@@ -142,16 +142,18 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
         return self.request.user.staff
 
 
-class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin,
-                             mixins.UpdateModelMixin,
-                             mixins.RetrieveModelMixin,
-                             NestedGenericModelMixin,
-                             viewsets.GenericViewSet):
-    model = PersonalDetails
-    serializer_class = PersonalDetailsSerializer
-    lookup_field = 'reference'
+class PersonalDetailsViewSet(
+    CLAProviderPermissionViewSetMixin,
+    FullPersonalDetailsViewSet
+):
+    pass
 
-    PARENT_FIELD = 'personal_details'
+
+class ThirdPartyDetailsViewSet(
+    CLAProviderPermissionViewSetMixin,
+    BaseThirdPartyDetailsViewSet
+):
+    pass
 
 
 class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):

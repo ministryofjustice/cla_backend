@@ -1,14 +1,12 @@
 from cla_eventlog.serializers import LogSerializerBase
-from core.drf.fields import ThreePartDateField
 from rest_framework import serializers
 
 from core.serializers import UUIDSerializer
 from legalaid.serializers import EligibilityCheckSerializerBase, \
     PropertySerializerBase, SavingsSerializerBase, \
-    PersonalDetailsSerializerBase, \
     CaseSerializerBase, ProviderSerializerBase, \
     OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase, \
-    ThirdPartyDetailsSerializerBase, AdaptationDetailsSerializerBase
+    AdaptationDetailsSerializerBase
 
 from .models import Operator
 
@@ -34,37 +32,6 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'on_passported_benefits',
             'on_nass_benefits',
             'state'
-        )
-
-
-class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
-
-    dob = ThreePartDateField(required=False, source='date_of_birth')
-
-    class Meta(PersonalDetailsSerializerBase.Meta):
-        fields = (
-            'reference', 'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone', 'email', 'dob',
-            'ni_number', 'exempt_user', 'exempt_user_reason',
-            'contact_for_research', 'safe_to_contact', 'vulnerable_user'
-        )
-
-class ThirdPartyPersonalDetailsSerializer(PersonalDetailsSerializerBase):
-    class Meta(PersonalDetailsSerializerBase.Meta):
-        fields = (
-            'reference', 'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone', 'email'
-        )
-
-class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
-
-    personal_details = ThirdPartyPersonalDetailsSerializer(required=True)
-
-    class Meta(ThirdPartyDetailsSerializerBase.Meta):
-        fields = (
-            'reference', 'personal_details', 'pass_phrase', 'reason',
-            'personal_relationship', 'personal_relationship_note',
-            'spoke_to', 'no_contact_reason', 'organisation_name',
         )
 
 

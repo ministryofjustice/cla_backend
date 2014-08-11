@@ -19,11 +19,12 @@ from cla_eventlog.views import BaseEventViewSet
 
 from timer.views import BaseTimerViewSet
 
-from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, \
+from legalaid.models import Case, \
     AdaptationDetails, MatterType
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
-    BaseMatterTypeViewSet, BaseMediaCodeViewSet
+    BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
+    BaseThirdPartyDetailsViewSet
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -33,8 +34,8 @@ from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer,  \
-    OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer, \
-    ThirdPartyDetailsSerializer, AdaptationDetailsSerializer
+    OutOfHoursRotaSerializer, OperatorSerializer, \
+    AdaptationDetailsSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm
@@ -307,32 +308,24 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
         return self.request.user.operator
 
 
-class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin,
-                             mixins.CreateModelMixin,
-                             mixins.UpdateModelMixin,
-                             mixins.RetrieveModelMixin,
-                             NestedGenericModelMixin,
-                             viewsets.GenericViewSet):
-    model = PersonalDetails
-    serializer_class = PersonalDetailsSerializer
-    lookup_field = 'reference'
+class PersonalDetailsViewSet(
+    CallCentrePermissionsViewSetMixin,
+    mixins.CreateModelMixin,
+    FullPersonalDetailsViewSet
+):
+    pass
 
-    PARENT_FIELD = 'personal_details'
 
 class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):
     pass
 
 
-class ThirdPartyDetailsViewSet(CallCentrePermissionsViewSetMixin,
-                             mixins.CreateModelMixin,
-                             mixins.UpdateModelMixin,
-                             mixins.RetrieveModelMixin,
-                             NestedGenericModelMixin,
-                             viewsets.GenericViewSet):
-    model = ThirdPartyDetails
-    serializer_class = ThirdPartyDetailsSerializer
-    lookup_field = 'reference'
-    PARENT_FIELD = 'thirdparty_details'
+class ThirdPartyDetailsViewSet(
+    CallCentrePermissionsViewSetMixin,
+    mixins.CreateModelMixin,
+    BaseThirdPartyDetailsViewSet
+):
+    pass
 
 
 class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,

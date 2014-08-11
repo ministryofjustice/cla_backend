@@ -13,9 +13,10 @@ from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin
 from cla_eventlog import event_registry
 
 from .serializers import CategorySerializerBase, \
-    MatterTypeSerializerBase, MediaCodeSerializerBase
+    MatterTypeSerializerBase, MediaCodeSerializerBase, \
+    PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase
 from .models import Case, Category, EligibilityCheck, \
-    MatterType, MediaCode
+    MatterType, MediaCode, PersonalDetails, ThirdPartyDetails
 
 
 class BaseUserViewSet(
@@ -154,3 +155,28 @@ class BaseMediaCodeViewSet(
 
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('name', 'group__name')
+
+
+class FullPersonalDetailsViewSet(
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    NestedGenericModelMixin,
+    viewsets.GenericViewSet
+):
+    model = PersonalDetails
+    serializer_class = PersonalDetailsSerializerFull
+    lookup_field = 'reference'
+
+    PARENT_FIELD = 'personal_details'
+
+
+class BaseThirdPartyDetailsViewSet(
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    NestedGenericModelMixin,
+    viewsets.GenericViewSet
+):
+    model = ThirdPartyDetails
+    serializer_class = ThirdPartyDetailsSerializerBase
+    lookup_field = 'reference'
+    PARENT_FIELD = 'thirdparty_details'

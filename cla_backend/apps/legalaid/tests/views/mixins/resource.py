@@ -56,6 +56,7 @@ class SimpleResourceCheckAPIMixin(object):
         self.detail_url = self.get_detail_url(self.check_reference)
         self.check = make_recipe(self.CHECK_RECIPE)
 
+
 class NestedSimpleResourceCheckAPIMixin(SimpleResourceCheckAPIMixin):
     LOOKUP_KEY = 'case_reference'
     API_NAMESPACE = 'checker'

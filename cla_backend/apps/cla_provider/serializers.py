@@ -1,10 +1,11 @@
-from cla_eventlog.serializers import LogSerializerBase
 from rest_framework import serializers
+
+from cla_eventlog.serializers import LogSerializerBase
 
 from legalaid.serializers import UUIDSerializer, \
     EligibilityCheckSerializerBase, \
     PropertySerializerBase, SavingsSerializerBase, \
-    PersonSerializerBase, PersonalDetailsSerializerBase, \
+    PersonSerializerBase, \
     CaseSerializerBase, CategorySerializerBase,  \
     ProviderSerializerBase, \
     ExtendedUserSerializerBase, \
@@ -34,14 +35,6 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'on_passported_benefits',
             'on_nass_benefits',
             'state'
-        )
-
-
-class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
-    class Meta(PersonalDetailsSerializerBase.Meta):
-        fields = (
-            'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone'
         )
 
 

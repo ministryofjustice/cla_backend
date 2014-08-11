@@ -7,20 +7,10 @@ from legalaid.serializers import UUIDSerializer, \
     PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase,  \
     ProviderSerializerBase, \
-    ExtendedUserSerializerBase, MatterTypeSerializerBase, \
+    ExtendedUserSerializerBase, \
     AdaptationDetailsSerializerBase
 
 from .models import Staff
-
-
-class MatterTypeSerializer(MatterTypeSerializerBase):
-    class Meta(MatterTypeSerializerBase.Meta):
-        fields = (
-            'category',
-            'code',
-            'description',
-            'level'
-        )
 
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):

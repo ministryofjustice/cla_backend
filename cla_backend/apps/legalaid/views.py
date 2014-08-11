@@ -5,14 +5,17 @@ from django.http import Http404
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
+from rest_framework.filters import DjangoFilterBackend
 
 from core.utils import format_patch
 from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin
 
 from cla_eventlog import event_registry
 
-from legalaid.serializers import CategorySerializerBase
-from legalaid.models import Case, Category, EligibilityCheck
+from .serializers import CategorySerializerBase, \
+    MatterTypeSerializerBase, MediaCodeSerializerBase
+from .models import Case, Category, EligibilityCheck, \
+    MatterType, MediaCode
 
 
 class BaseUserViewSet(
@@ -127,3 +130,27 @@ class BaseNestedEligibilityCheckViewSet(
             'notes': format_patch(patch['forwards']),
         })
         return kwargs
+
+
+class BaseMatterTypeViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    model = MatterType
+    serializer_class = MatterTypeSerializerBase
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('level', 'category__code')
+
+
+class BaseMediaCodeViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    model = MediaCode
+    serializer_class = MediaCodeSerializerBase
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('name', 'group__name')

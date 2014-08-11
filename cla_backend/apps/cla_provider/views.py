@@ -1,18 +1,19 @@
-from core.drf.mixins import NestedGenericModelMixin
 from django.shortcuts import get_object_or_404
-from legalaid.serializers import MediaCodeSerializer
 
 from rest_framework import viewsets, mixins
-from rest_framework.filters import OrderingFilter, SearchFilter, \
-    DjangoFilterBackend
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.decorators import action
+
+from core.drf.mixins import NestedGenericModelMixin
 
 from cla_eventlog.views import BaseEventViewSet
 
-from legalaid.models import Case, MediaCode, MatterType, \
+from legalaid.models import Case, \
     PersonalDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
-    BaseNestedEligibilityCheckViewSet, BaseCategoryViewSet
+    BaseNestedEligibilityCheckViewSet, BaseCategoryViewSet, \
+    BaseMatterTypeViewSet, BaseMediaCodeViewSet
+
 from diagnosis.views import BaseDiagnosisViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
 
@@ -20,8 +21,7 @@ from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, StaffSerializer, \
-    MatterTypeSerializer, PersonalDetailsSerializer, \
-    AdaptationDetailsSerializer
+    PersonalDetailsSerializer, AdaptationDetailsSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
 
 
@@ -48,28 +48,15 @@ class EligibilityCheckViewSet(
 
 
 class MatterTypeViewSet(
-    CLAProviderPermissionViewSetMixin,
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
+    CLAProviderPermissionViewSetMixin, BaseMatterTypeViewSet
 ):
-    model = MatterType
-    serializer_class = MatterTypeSerializer
+    pass
 
-    filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('level', 'category__code')
 
 class MediaCodeViewSet(
-    CLAProviderPermissionViewSetMixin,
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
+    CLAProviderPermissionViewSetMixin, BaseMediaCodeViewSet
 ):
-    model = MediaCode
-    serializer_class = MediaCodeSerializer
-
-    filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('name', 'group__name')
+    pass
 
 
 class CaseViewSet(

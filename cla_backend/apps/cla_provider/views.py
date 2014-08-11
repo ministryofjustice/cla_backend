@@ -13,6 +13,7 @@ from legalaid.models import Category, Case, MediaCode, MatterType, \
     PersonalDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
     BaseEligibilityCheckViewSet
+from diagnosis.views import BaseDiagnosisViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
 
 from .models import Staff
@@ -151,6 +152,7 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
     def get_logged_in_user_model(self):
         return self.request.user.staff
 
+
 class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin,
                              mixins.UpdateModelMixin,
                              mixins.RetrieveModelMixin,
@@ -162,8 +164,10 @@ class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin,
 
     PARENT_FIELD = 'personal_details'
 
+
 class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
     pass
+
 
 class AdaptationDetailsMetadataViewSet(CLAProviderPermissionViewSetMixin,
                                        mixins.CreateModelMixin,
@@ -173,6 +177,7 @@ class AdaptationDetailsMetadataViewSet(CLAProviderPermissionViewSetMixin,
 
     def create(self, request, *args, **kwargs):
         self.http_method_not_allowed(request)
+
 
 class AdaptationDetailsViewSet(CLAProviderPermissionViewSetMixin,
                                mixins.CreateModelMixin,
@@ -184,3 +189,7 @@ class AdaptationDetailsViewSet(CLAProviderPermissionViewSetMixin,
     serializer_class = AdaptationDetailsSerializer
     lookup_field = 'reference'
     PARENT_FIELD = 'adaptation_details'
+
+
+class DiagnosisViewSet(CLAProviderPermissionViewSetMixin, BaseDiagnosisViewSet):
+    pass

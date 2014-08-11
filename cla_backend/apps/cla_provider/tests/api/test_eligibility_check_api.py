@@ -16,6 +16,13 @@ class EligibilityCheckTestCase(CLAProviderAuthBaseApiTestMixin, NestedEligibilit
     def get_http_authorization(self):
         return 'Bearer %s' % self.staff_token
 
+    def setUp(self):
+        super(EligibilityCheckTestCase, self).setUp()
+
+        self.check_case.provider = self.provider
+        self.check_case.requires_action_by = REQUIRES_ACTION_BY.PROVIDER
+        self.check_case.save()
+
     def test_methods_not_allowed(self):
         super(EligibilityCheckTestCase, self).test_methods_not_allowed()
 
@@ -72,12 +79,7 @@ class EligibilityCheckTestCase(CLAProviderAuthBaseApiTestMixin, NestedEligibilit
     def test_errors_masked_by_drf(self):
         pass
 
-    def setUp(self):
-        super(EligibilityCheckTestCase, self).setUp()
-
-        self.check_case.provider = self.provider
-        self.check_case.requires_action_by = REQUIRES_ACTION_BY.PROVIDER
-        self.check_case.save()
+    # SECURITY
 
     def test_get_not_found_if_not_belonging_to_provider(self):
         check = make_recipe('legalaid.eligibility_check')

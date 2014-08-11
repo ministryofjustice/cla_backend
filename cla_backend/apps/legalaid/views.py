@@ -1,15 +1,18 @@
 import json
 
-from core.utils import format_patch
-from cla_eventlog import event_registry
-from core.drf.mixins import NestedGenericModelMixin
 from django.http import Http404
-import jsonpatch
+
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
+
+from core.utils import format_patch
+from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin
+
+from cla_eventlog import event_registry
+
 from legalaid.serializers import CategorySerializerBase
-from legalaid.models import Category, EligibilityCheck
+from legalaid.models import Case, Category, EligibilityCheck
 
 
 class BaseUserViewSet(
@@ -63,12 +66,9 @@ class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'code'
 
 
-class BaseEligibilityCheckViewSet(NestedGenericModelMixin,
-                                  viewsets.GenericViewSet):
+class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet):
     model = EligibilityCheck
     lookup_field = 'reference'
-    PARENT_FIELD = 'eligibility_check'
-
 
     @link()
     def validate(self, request, **kwargs):
@@ -84,37 +84,46 @@ class BaseEligibilityCheckViewSet(NestedGenericModelMixin,
             'is_eligible': response
         })
 
+    def get_means_test_event_kwargs(self, kwargs):
+        return kwargs
 
-    @property
-    def jsonpatch(self):
-        forwards = jsonpatch.JsonPatch.from_diff(self.__pre_save__, self.__post_save__)
-        backwards = jsonpatch.JsonPatch.from_diff(self.__post_save__, self.__pre_save__)
-        serializer = self.get_serializer_class()
+    def create_means_test_log(self, obj, created):
+        try:
+            obj.case
+        except Case.DoesNotExist:
+            return
 
-        return {
-            'serializer': '.'.join([serializer.__module__, serializer.__name__]),
-            'backwards': backwards.patch,
-            'forwards': forwards.patch
-        }
-
-    def pre_save(self, obj):
-        original_obj = self.get_object()
-        self.__pre_save__ = self.get_serializer_class()(original_obj).data
-
-    def post_save(self, obj, created=False, **kwargs):
-        super(BaseEligibilityCheckViewSet, self).post_save(obj, created=created)
         user = self.request.user
-        self.__post_save__ = self.get_serializer_class()(obj).data
-
-        patch = self.jsonpatch
 
         means_test_event = event_registry.get_event('means_test')()
         status = 'changed' if not created else 'created'
-        means_test_event.process(obj.case,
-                                 patch=json.dumps(patch),
-                                 notes=format_patch(patch['forwards']),
-                                 created_by=user,
-                                 status=status
-        )
+
+        kwargs = {
+            'created_by': user,
+            'status': status
+        }
+        kwargs = self.get_means_test_event_kwargs(kwargs)
+        means_test_event.process(obj.case, **kwargs)
+
+    def post_save(self, obj, created=False, **kwargs):
+        super(BaseEligibilityCheckViewSet, self).post_save(obj, created=created)
+
+        self.create_means_test_log(obj, created=created)
 
         return obj
+
+
+class BaseNestedEligibilityCheckViewSet(
+        NestedGenericModelMixin, BaseEligibilityCheckViewSet
+    ):
+
+    PARENT_FIELD = 'eligibility_check'
+
+    def get_means_test_event_kwargs(self, kwargs):
+        patch = self.jsonpatch
+
+        kwargs.update({
+            'patch': json.dumps(patch),
+            'notes': format_patch(patch['forwards']),
+        })
+        return kwargs

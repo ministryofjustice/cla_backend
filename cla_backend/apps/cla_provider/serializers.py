@@ -1,9 +1,10 @@
 from cla_eventlog.serializers import LogSerializerBase
 from rest_framework import serializers
 
-from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
-    IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
-    DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
+from legalaid.serializers import UUIDSerializer, \
+    EligibilityCheckSerializerBase, \
+    PropertySerializerBase, SavingsSerializerBase, \
+    PersonSerializerBase, PersonalDetailsSerializerBase, \
     CaseSerializerBase, CategorySerializerBase,  \
     ProviderSerializerBase, \
     ExtendedUserSerializerBase, MatterTypeSerializerBase, \
@@ -12,57 +13,7 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
 from .models import Staff
 
 
-class PropertySerializer(PropertySerializerBase):
-
-    class Meta(PropertySerializerBase.Meta):
-        fields = ('value', 'mortgage_left', 'share', 'id')
-
-
-class IncomeSerializer(IncomeSerializerBase):
-
-    class Meta(IncomeSerializerBase.Meta):
-        fields = ('earnings', 'other_income', 'self_employed', 'total')
-
-
-class SavingsSerializer(SavingsSerializerBase):
-
-    class Meta(SavingsSerializerBase.Meta):
-        fields = (
-            'bank_balance',
-            'investment_balance',
-            'asset_balance',
-            'credit_balance',
-            'total',
-        )
-
-
-class DeductionsSerializer(DeductionsSerializerBase):
-
-    class Meta(DeductionsSerializerBase.Meta):
-        fields = (
-            'income_tax', 'national_insurance', 'maintenance',
-            'childcare', 'mortgage', 'rent',
-            'criminal_legalaid_contributions',
-            'total',
-        )
-
-
-class PersonSerializer(PersonSerializerBase):
-
-    income = IncomeSerializer(required=False)
-    savings = SavingsSerializer(required=False)
-    deductions = DeductionsSerializer(required=False)
-
-    class Meta(PersonSerializerBase.Meta):
-        fields = (
-            'income',
-            'savings',
-            'deductions',
-        )
-
 class MatterTypeSerializer(MatterTypeSerializerBase):
-
-
     class Meta(MatterTypeSerializerBase.Meta):
         fields = (
             'category',
@@ -71,11 +22,10 @@ class MatterTypeSerializer(MatterTypeSerializerBase):
             'level'
         )
 
+
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
-    property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
-    you = PersonSerializer(required=False)
-    partner = PersonSerializer(required=False)
     notes = serializers.CharField(max_length=500, required=False, read_only=True)
+    disputed_savings = SavingsSerializerBase(required=False)
 
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
@@ -86,6 +36,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'property_set',
             'you',
             'partner',
+            'disputed_savings',
             'dependants_young',
             'dependants_old',
             'is_you_or_your_partner_over_60',

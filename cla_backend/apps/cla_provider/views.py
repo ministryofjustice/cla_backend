@@ -12,7 +12,7 @@ from cla_eventlog.views import BaseEventViewSet
 from legalaid.models import Case, MediaCode, MatterType, \
     PersonalDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
-    BaseEligibilityCheckViewSet, BaseCategoryViewSet
+    BaseNestedEligibilityCheckViewSet, BaseCategoryViewSet
 from diagnosis.views import BaseDiagnosisViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
 
@@ -37,9 +37,14 @@ class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
-    BaseEligibilityCheckViewSet
+    BaseNestedEligibilityCheckViewSet
 ):
     serializer_class = EligibilityCheckSerializer
+
+    # this is to fix a stupid thing in DRF where pre_save doesn't call super
+    def pre_save(self, obj):
+        original_obj = self.get_object()
+        self.__pre_save__ = self.get_serializer_class()(original_obj).data
 
 
 class MatterTypeViewSet(

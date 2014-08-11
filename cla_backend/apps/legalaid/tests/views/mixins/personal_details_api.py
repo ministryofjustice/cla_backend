@@ -2,8 +2,11 @@ from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
 
+from legalaid.tests.views.mixins.resource import \
+    NestedSimpleResourceCheckAPIMixin
 
-class PersonalDetailsAPIMixin(object):
+
+class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
     CHECK_RECIPE = 'legalaid.personal_details'
     BASE_NAME = 'personaldetails'
 
@@ -126,6 +129,8 @@ class PersonalDetailsAPIMixin(object):
         self.assertCheckResponseKeys(response)
 
         self.assertPersonalDetailsEqual(response.data, check)
+
+    # GET
 
     def test_get(self):
         response = self.client.get(

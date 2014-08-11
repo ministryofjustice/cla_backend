@@ -9,17 +9,17 @@ from rest_framework.decorators import action
 
 from cla_eventlog.views import BaseEventViewSet
 
-from legalaid.models import Category, Case, MediaCode, MatterType, \
+from legalaid.models import Case, MediaCode, MatterType, \
     PersonalDetails, AdaptationDetails
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
-    BaseEligibilityCheckViewSet
+    BaseEligibilityCheckViewSet, BaseCategoryViewSet
 from diagnosis.views import BaseDiagnosisViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
-from .serializers import CategorySerializer, \
-    EligibilityCheckSerializer, CaseSerializer, StaffSerializer, \
+from .serializers import EligibilityCheckSerializer, \
+    CaseSerializer, StaffSerializer, \
     MatterTypeSerializer, PersonalDetailsSerializer, \
     AdaptationDetailsSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
@@ -29,11 +29,8 @@ class CLAProviderPermissionViewSetMixin(object):
     permission_classes = (CLAProviderClientIDPermission,)
 
 
-class CategoryViewSet(CLAProviderPermissionViewSetMixin, viewsets.ReadOnlyModelViewSet):
-    model = Category
-    serializer_class = CategorySerializer
-
-    lookup_field = 'code'
+class CategoryViewSet(CLAProviderPermissionViewSetMixin, BaseCategoryViewSet):
+    pass
 
 
 class EligibilityCheckViewSet(

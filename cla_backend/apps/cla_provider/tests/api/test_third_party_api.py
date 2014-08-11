@@ -1,21 +1,21 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
+from core.tests.mommy_utils import make_recipe
 
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from legalaid.tests.views.mixins.personal_details_api import \
-    PersonalDetailsAPIMixin
+from legalaid.tests.views.mixins.third_party_api import \
+    ThirdPartyDetailsApiMixin
 
 
-class PersonalDetailsTestCase(
-    CLAProviderAuthBaseApiTestMixin, PersonalDetailsAPIMixin, APITestCase
+class ThirdPartyDetailsTestCase(
+    CLAProviderAuthBaseApiTestMixin, ThirdPartyDetailsApiMixin, APITestCase
 ):
 
     def setUp(self):
-        super(PersonalDetailsTestCase, self).setUp()
+        super(ThirdPartyDetailsTestCase, self).setUp()
 
         self.check_case.provider = self.provider
         self.check_case.requires_action_by = REQUIRES_ACTION_BY.PROVIDER
@@ -25,18 +25,15 @@ class PersonalDetailsTestCase(
         return 'Bearer %s' % self.staff_token
 
     def test_methods_not_allowed(self):
-        super(PersonalDetailsTestCase, self).test_methods_not_allowed()
+        super(ThirdPartyDetailsTestCase, self).test_methods_not_allowed()
 
-        check_without_personal_details = make_recipe('legalaid.case')
-        list_url = self.get_detail_url(check_without_personal_details.reference)
+        check_without_3rd_party = make_recipe('legalaid.case')
+        list_url = self.get_detail_url(check_without_3rd_party.reference)
 
         # CREATE NOT ALLOWED
         self._test_post_not_allowed(list_url)
 
     # CREATE
-
-    def test_create_no_data(self):
-        pass
 
     def test_create_with_data(self):
         pass

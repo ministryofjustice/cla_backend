@@ -16,11 +16,15 @@ from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from cla_eventlog import event_registry
 from cla_eventlog.views import BaseEventViewSet
+
 from timer.views import BaseTimerViewSet
+
 from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, \
-    AdaptationDetails, MatterType, MediaCode
+    AdaptationDetails, MatterType
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
-    BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet
+    BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
+    BaseMatterTypeViewSet, BaseMediaCodeViewSet
+
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 from diagnosis.views import BaseDiagnosisViewSet
@@ -30,8 +34,7 @@ from .permissions import CallCentreClientIDPermission, \
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer,  \
     OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer, \
-    ThirdPartyDetailsSerializer, AdaptationDetailsSerializer, \
-    MatterTypeSerializer, MediaCodeSerializer
+    ThirdPartyDetailsSerializer, AdaptationDetailsSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm
@@ -68,29 +71,15 @@ class EligibilityCheckViewSet(
 
 
 class MatterTypeViewSet(
-    CallCentrePermissionsViewSetMixin,
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
+    CallCentrePermissionsViewSetMixin, BaseMatterTypeViewSet
 ):
-    model = MatterType
-    serializer_class = MatterTypeSerializer
-
-    filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('level', 'category__code')
+    pass
 
 
 class MediaCodeViewSet(
-    CallCentrePermissionsViewSetMixin,
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
+    CallCentrePermissionsViewSetMixin, BaseMediaCodeViewSet
 ):
-    model = MediaCode
-    serializer_class = MediaCodeSerializer
-
-    filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('name', 'group__name')
+    pass
 
 
 class OrderingRejectedFirstFilter(OrderingFilter):

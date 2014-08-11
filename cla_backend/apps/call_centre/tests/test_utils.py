@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 import jsonpatch
-from ..core.utils import format_patch
+from core.utils import format_patch
 
 
 class FormatPatchTestCase(TestCase):

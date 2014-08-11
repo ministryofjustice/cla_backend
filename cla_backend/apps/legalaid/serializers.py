@@ -187,10 +187,15 @@ class MatterTypeSerializerBase(ClaModelSerializer):
 
     class Meta:
         model = MatterType
-        fields = ()
+        fields = (
+            'category',
+            'code',
+            'description',
+            'level'
+        )
 
 
-class MediaCodeSerializer(ClaModelSerializer):
+class MediaCodeSerializerBase(ClaModelSerializer):
     group = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
     class Meta:

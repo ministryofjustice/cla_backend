@@ -12,11 +12,6 @@ from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase,
 from .models import Staff
 
 
-class CategorySerializer(CategorySerializerBase):
-    class Meta(CategorySerializerBase.Meta):
-        fields = ('code', 'name', 'description')
-
-
 class PropertySerializer(PropertySerializerBase):
 
     class Meta(PropertySerializerBase.Meta):

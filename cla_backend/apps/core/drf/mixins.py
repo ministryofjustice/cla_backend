@@ -1,5 +1,6 @@
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.db.models import Model
+import jsonpatch
+
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.exceptions import MethodNotAllowed
 
 
@@ -58,3 +59,27 @@ class NestedGenericModelMixin(object):
                     parent_obj.save(update_fields=[self.PARENT_FIELD])
 
         super(NestedGenericModelMixin, self).post_save(obj, created=created)
+
+
+class JsonPatchViewSetMixin(object):
+    @property
+    def jsonpatch(self):
+        forwards = jsonpatch.JsonPatch.from_diff(self.__pre_save__, self.__post_save__)
+        backwards = jsonpatch.JsonPatch.from_diff(self.__post_save__, self.__pre_save__)
+        serializer = self.get_serializer_class()
+
+        return {
+            'serializer': '.'.join([serializer.__module__, serializer.__name__]),
+            'backwards': backwards.patch,
+            'forwards': forwards.patch
+        }
+
+    def pre_save(self, obj):
+        original_obj = self.get_object()
+        self.__pre_save__ = self.get_serializer_class()(original_obj).data
+
+    def post_save(self, obj, created=False, **kwargs):
+        super(JsonPatchViewSetMixin, self).post_save(obj, created=created)
+        self.__post_save__ = self.get_serializer_class()(obj).data
+
+        return obj

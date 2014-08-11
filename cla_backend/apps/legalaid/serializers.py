@@ -37,7 +37,8 @@ class OutOfHoursRotaSerializerBase(ClaModelSerializer):
 class PropertySerializerBase(ClaModelSerializer):
     class Meta:
         model = Property
-        fields = ()
+        fields = ('value', 'mortgage_left', 'share', 'id', 'disputed', 'main')
+
 
 class TotalsModelSerializer(ClaModelSerializer):
     total_fields = set()
@@ -63,7 +64,7 @@ class IncomeSerializerBase(TotalsModelSerializer):
 
     class Meta:
         model = Income
-        fields = ()
+        fields = ('earnings', 'other_income', 'self_employed', 'total')
 
 
 class SavingsSerializerBase(TotalsModelSerializer):
@@ -75,7 +76,13 @@ class SavingsSerializerBase(TotalsModelSerializer):
 
     class Meta:
         model = Savings
-        fields = ()
+        fields = (
+            'bank_balance',
+            'investment_balance',
+            'asset_balance',
+            'credit_balance',
+            'total',
+        )
 
 
 class DeductionsSerializerBase(TotalsModelSerializer):
@@ -91,7 +98,11 @@ class DeductionsSerializerBase(TotalsModelSerializer):
 
     class Meta:
         model = Deductions
-        fields = ()
+        fields = (
+            'income_tax', 'national_insurance', 'maintenance',
+            'childcare', 'mortgage', 'rent',
+            'criminal_legalaid_contributions', 'total'
+        )
 
 
 class PersonalDetailsSerializerBase(serializers.ModelSerializer):
@@ -128,17 +139,22 @@ class PersonSerializerBase(ClaModelSerializer):
 
     class Meta:
         model = Person
-        fields = ()
+        fields = (
+            'income',
+            'savings',
+            'deductions',
+        )
 
 
 class EligibilityCheckSerializerBase(ClaModelSerializer):
+    property_set = PropertySerializerBase(
+        allow_add_remove=True, many=True, required=False
+    )
+    you = PersonSerializerBase(required=False)
+    partner = PersonSerializerBase(required=False)
     category = serializers.SlugRelatedField(slug_field='code', required=False)
     your_problem_notes = serializers.CharField(max_length=500, required=False)
     notes = serializers.CharField(max_length=500, required=False)
-    property_set = PropertySerializerBase(allow_add_remove=True, many=True,
-                                          required=False)
-    you = PersonSerializerBase(required=False)
-    partner = PersonSerializerBase(required=False)
 
     class Meta:
         model = EligibilityCheck

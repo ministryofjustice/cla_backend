@@ -40,7 +40,6 @@ class EligibilityCheckAPIMixin(object):
     def get_http_authorization(self):
         return None
 
-
     def _create(self, data=None, url=None):
         if not url: url = self.list_url
         if not data: data = {}
@@ -65,7 +64,7 @@ class EligibilityCheckAPIMixin(object):
 
     def get_detail_url(self, check_ref):
         return reverse(
-            '%s:eligibility_check-detail'  % self.API_URL_NAMESPACE, args=(),
+            '%s:eligibility_check-detail' % self.API_URL_NAMESPACE, args=(),
             kwargs={self.LOOKUP_KEY: unicode(check_ref)}
         )
 
@@ -173,11 +172,9 @@ class EligibilityCheckAPIMixin(object):
         self._test_post_not_allowed(self.detail_url)
         self._test_delete_not_allowed(self.detail_url)
 
-
     @property
     def check_reference(self):
         return self.check.reference
-
 
     # CREATE
 
@@ -856,10 +853,6 @@ class EligibilityCheckAPIMixin(object):
         self.assertNotEqual(response.data['property_set'][0]['id'], other_property.pk)
         self.assertNotEqual(other_property.eligibility_check.pk, self.check.pk)
 
-
-
-
-
     # Just check that eligibility check endpoint responds
     # in a sensible way
 
@@ -943,8 +936,6 @@ class NestedEligibilityCheckAPIMixin(EligibilityCheckAPIMixin):
         if not data: data = {}
         return super(NestedEligibilityCheckAPIMixin, self)._create(data=data, url=url)
 
-
-
     def get_reference_from_response(self, data):
         return self.check_case.reference
 
@@ -954,5 +945,3 @@ class NestedEligibilityCheckAPIMixin(EligibilityCheckAPIMixin):
         """
         ### DETAIL
         self._test_delete_not_allowed(self.detail_url)
-
-

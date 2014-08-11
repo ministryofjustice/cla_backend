@@ -1,6 +1,5 @@
-from cla_eventlog import event_registry
-from core.drf.mixins import NestedGenericModelMixin
 from dateutil import parser
+
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
@@ -11,14 +10,17 @@ from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter, \
     DjangoFilterBackend
 
+from core.drf.mixins import NestedGenericModelMixin
+
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
+from cla_eventlog import event_registry
 from cla_eventlog.views import BaseEventViewSet
 from timer.views import BaseTimerViewSet
 from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, \
     AdaptationDetails, MatterType, MediaCode
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
-    BaseCategoryViewSet, BaseEligibilityCheckViewSet
+    BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 from diagnosis.views import BaseDiagnosisViewSet
@@ -55,12 +57,14 @@ class EligibilityCheckViewSet(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
-    BaseEligibilityCheckViewSet,
+    BaseNestedEligibilityCheckViewSet,
 ):
     serializer_class = EligibilityCheckSerializer
-    PARENT_FIELD = 'eligibility_check'
 
-
+    # this is to fix a stupid thing in DRF where pre_save doesn't call super
+    def pre_save(self, obj):
+        original_obj = self.get_object()
+        self.__pre_save__ = self.get_serializer_class()(original_obj).data
 
 
 class MatterTypeViewSet(

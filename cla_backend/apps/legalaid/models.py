@@ -1,21 +1,20 @@
 import logging
 import datetime
+
 from cla_common.db.mixins import ModelDiffMixin
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import SET_NULL
 from uuidfield import UUIDField
 from model_utils.models import TimeStampedModel
-
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.conf import settings
 from django.utils.timezone import utc
-
 from eligibility_calculator.models import CaseData
 from eligibility_calculator.calculator import EligibilityChecker
 from eligibility_calculator.exceptions import PropertyExpectedException
+from core.utils import getattrd
 
-from call_centre.utils import getattrd
 
 # from jsonfield import JSONField
 

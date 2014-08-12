@@ -35,7 +35,8 @@ from .permissions import CallCentreClientIDPermission, \
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer,  \
     OutOfHoursRotaSerializer, OperatorSerializer, \
-    AdaptationDetailsSerializer
+    AdaptationDetailsSerializer, PersonalDetailsSerializer, \
+    ThirdPartyDetailsSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm
@@ -286,7 +287,7 @@ class PersonalDetailsViewSet(
     mixins.CreateModelMixin,
     FullPersonalDetailsViewSet
 ):
-    pass
+    serializer_class = PersonalDetailsSerializer
 
 
 class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):
@@ -298,7 +299,7 @@ class ThirdPartyDetailsViewSet(
     mixins.CreateModelMixin,
     BaseThirdPartyDetailsViewSet
 ):
-    pass
+    serializer_class = ThirdPartyDetailsSerializer
 
 
 class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,

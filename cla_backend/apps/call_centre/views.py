@@ -7,8 +7,7 @@ from django.utils import timezone
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, SearchFilter, \
-    DjangoFilterBackend
+from rest_framework.filters import DjangoFilterBackend
 
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
@@ -17,12 +16,11 @@ from cla_eventlog.views import BaseEventViewSet
 
 from timer.views import BaseTimerViewSet
 
-from legalaid.models import Case
-from legalaid.views import BaseUserViewSet, FormActionMixin, \
+from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -84,35 +82,12 @@ class MediaCodeViewSet(
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    FormActionMixin,
-    viewsets.GenericViewSet
+    mixins.CreateModelMixin, FullCaseViewSet
 ):
-    model = Case
-    lookup_field = 'reference'
-    lookup_regex = r'[A-Z|\d]{2}-\d{4}-\d{4}'
-
     serializer_class = CaseSerializer
-
-    filter_backends = (
-        OrderingFilter,
-        SearchFilter,
-    )
 
     ordering_fields = ('modified', 'created')
     ordering = '-modified'
-
-    search_fields = ('personal_details__full_name',
-                     'personal_details__postcode',
-                     'reference',
-                     'laa_reference')
-    paginate_by = 20
-    paginate_by_param = 'page_size'
-    max_paginate_by = 100
-
 
     def get_queryset(self):
         qs = super(CaseViewSet, self).get_queryset()

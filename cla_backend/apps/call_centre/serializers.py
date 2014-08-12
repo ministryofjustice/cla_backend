@@ -1,10 +1,9 @@
 from cla_eventlog.serializers import LogSerializerBase
 from rest_framework import serializers
 
-from core.serializers import UUIDSerializer
 from legalaid.serializers import EligibilityCheckSerializerBase, \
     PropertySerializerBase, SavingsSerializerBase, \
-    CaseSerializerBase, ProviderSerializerBase, \
+    CaseSerializerFull, ProviderSerializerBase, \
     OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase, \
     AdaptationDetailsSerializerBase, IncomeSerializerBase, \
     DeductionsSerializerBase, PersonalDetailsSerializerFull, \
@@ -121,50 +120,42 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
 class LogSerializer(LogSerializerBase):
 
     class Meta(LogSerializerBase.Meta):
-        fields = ('code',
-                  'created_by',
-                  'created',
-                  'notes',
-                  'type',
-                  'level',
-                  'timer'
+        fields = (
+            'code',
+            'created_by',
+            'created',
+            'notes',
+            'type',
+            'level',
+            'timer'
         )
 
 
-class CaseSerializer(CaseSerializerBase):
+class CaseSerializer(CaseSerializerFull):
     LOG_SERIALIZER = LogSerializer
 
-    eligibility_check = UUIDSerializer(slug_field='reference', required=False, read_only=True)
-
-    personal_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
-    thirdparty_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
-    adaptation_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
-
-    created = serializers.DateTimeField(read_only=True)
-    modified = serializers.DateTimeField(read_only=True)
-    created_by = serializers.CharField(read_only=True)
-    provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
+    notes = serializers.CharField(max_length=500, required=False)
     provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
-    full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
-    eligibility_state = serializers.CharField(source='eligibility_check.state', read_only=True)
-    diagnosis_state = serializers.CharField(source='diagnosis.state', read_only=True)
     billable_time = serializers.IntegerField(read_only=True)
-    postcode = serializers.CharField(source='personal_details.postcode', read_only=True)
 
-    class Meta(CaseSerializerBase.Meta):
+    class Meta(CaseSerializerFull.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference', 'created',
             'modified', 'created_by', 'provider', 'log_set',
             'notes', 'provider_notes', 'full_name', 'thirdparty_details',
-            'adaptation_details', 'laa_reference', 'eligibility_state', 'billable_time',
-            'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis', 'media_code',
-            'postcode', 'diagnosis_state'
+            'adaptation_details', 'laa_reference', 'eligibility_state',
+            'billable_time', 'matter_type1', 'matter_type2',
+            'requires_action_by', 'diagnosis',
+            'media_code', 'postcode', 'diagnosis_state'
         )
 
 
 class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):
-        fields = ('name', 'id', 'short_code', 'telephone_frontdoor', 'telephone_backdoor')
+        fields = (
+            'name', 'id', 'short_code', 'telephone_frontdoor',
+            'telephone_backdoor'
+        )
 
 
 class OutOfHoursRotaSerializer(OutOfHoursRotaSerializerBase):

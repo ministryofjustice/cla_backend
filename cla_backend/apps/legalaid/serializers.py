@@ -204,7 +204,6 @@ class MediaCodeSerializerBase(ClaModelSerializer):
 
 
 class CaseSerializerBase(ClaModelSerializer, PartialUpdateExcludeReadonlySerializerMixin):
-
     LOG_SERIALIZER = LogSerializerBase
 
     eligibility_check = UUIDSerializer(slug_field='reference', read_only=True)
@@ -224,6 +223,27 @@ class CaseSerializerBase(ClaModelSerializer, PartialUpdateExcludeReadonlySeriali
 
     class Meta:
         model = Case
+        fields = ()
+
+
+class CaseSerializerFull(CaseSerializerBase):
+    eligibility_check = UUIDSerializer(slug_field='reference', required=False, read_only=True)
+
+    personal_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
+    thirdparty_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
+    adaptation_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
+
+    created = serializers.DateTimeField(read_only=True)
+    modified = serializers.DateTimeField(read_only=True)
+    created_by = serializers.CharField(read_only=True)
+    provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
+
+    full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
+    eligibility_state = serializers.CharField(source='eligibility_check.state', read_only=True)
+    diagnosis_state = serializers.CharField(source='diagnosis.state', read_only=True)
+    postcode = serializers.CharField(source='personal_details.postcode', read_only=True)
+
+    class Meta(CaseSerializerBase.Meta):
         fields = ()
 
 

@@ -22,6 +22,8 @@ class Provider(TimeStampedModel):
     telephone_frontdoor = models.CharField(max_length=100, blank=True)
     telephone_backdoor = models.CharField(max_length=100, blank=True)
 
+    email_address = models.EmailField(blank=True)
+
     objects = ProviderManager()
 
     def __unicode__(self):

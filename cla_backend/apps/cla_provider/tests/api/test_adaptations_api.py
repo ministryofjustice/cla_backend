@@ -1,4 +1,4 @@
-from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
+from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
 from rest_framework.test import APITestCase
 
 from legalaid.tests.views.mixins.adaptations_api import \
@@ -6,7 +6,7 @@ from legalaid.tests.views.mixins.adaptations_api import \
 
 
 class AdaptationsMetadataTestCase(
-    CLAOperatorAuthBaseApiTestMixin, AdaptationsMetadataAPIMixin,
+    CLAProviderAuthBaseApiTestMixin, AdaptationsMetadataAPIMixin,
     APITestCase
 ):
-    API_URL_NAMESPACE = 'call_centre'
+    API_URL_NAMESPACE = 'cla_provider'

@@ -5,7 +5,8 @@ from django.http import Http404
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter, SearchFilter, \
+    DjangoFilterBackend
 
 from core.utils import format_patch
 from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin
@@ -15,7 +16,7 @@ from cla_eventlog import event_registry
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
-    AdaptationDetailsSerializerBase
+    AdaptationDetailsSerializerBase, CaseSerializerBase
 from .models import Case, Category, EligibilityCheck, \
     MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
     AdaptationDetails
@@ -208,3 +209,35 @@ class BaseAdaptationDetailsMetadataViewSet(
 
     def create(self, request, *args, **kwargs):
         self.http_method_not_allowed(request)
+
+
+class FullCaseViewSet(
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    FormActionMixin,
+    viewsets.GenericViewSet
+):
+    model = Case
+    lookup_field = 'reference'
+    lookup_regex = r'[A-Z|\d]{2}-\d{4}-\d{4}'
+
+    serializer_class = CaseSerializerBase
+
+    filter_backends = (
+        OrderingFilter,
+        SearchFilter,
+    )
+
+    ordering_fields = ('modified', 'created')
+    ordering = '-modified'
+
+    search_fields = (
+        'personal_details__full_name',
+        'personal_details__postcode',
+        'reference',
+        'laa_reference'
+    )
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100

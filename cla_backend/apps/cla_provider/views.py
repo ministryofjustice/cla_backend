@@ -1,17 +1,16 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework import viewsets, mixins
-from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework import mixins
 from rest_framework.decorators import action
 
 from cla_eventlog.views import BaseEventViewSet
 
 from legalaid.models import Case
-from legalaid.views import BaseUserViewSet, FormActionMixin, \
+from legalaid.views import BaseUserViewSet, \
     BaseNestedEligibilityCheckViewSet, BaseCategoryViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
 
 from diagnosis.views import BaseDiagnosisViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
@@ -59,33 +58,13 @@ class MediaCodeViewSet(
 
 
 class CaseViewSet(
-    CLAProviderPermissionViewSetMixin,
-    mixins.UpdateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    FormActionMixin,
-    viewsets.GenericViewSet
+    CLAProviderPermissionViewSetMixin, FullCaseViewSet
 ):
-    queryset = Case.objects.exclude(provider=None)
-    model = Case
-    lookup_field = 'reference'
     serializer_class = CaseSerializer
-
-    filter_backends = (
-        OrderingFilter,
-        SearchFilter,
-    )
-
-    search_fields = ('personal_details__full_name',
-                     'personal_details__postcode',
-                     'reference', 'laa_reference')
+    queryset = Case.objects.exclude(provider=None)
 
     ordering_fields = ('-requires_action_by', 'modified', 'created')
-    ordering = ('-locked_by', '-modified', '-created')
-
-    paginate_by = 20
-    paginate_by_param = 'page_size'
-    max_paginate_by = 100
+    ordering = ('-modified', '-created')
 
     def get_queryset(self):
         this_provider = get_object_or_404(Staff, user=self.request.user).provider
@@ -96,15 +75,6 @@ class CaseViewSet(
             ]
         )
         return qs
-
-    def get_object(self, *args, **kwargs):
-        """
-        Lock the object every time it's requested
-        """
-        obj = super(CaseViewSet, self).get_object(*args, **kwargs)
-        if self.request:
-            obj.lock(self.request.user)
-        return obj
 
     @action()
     def reject(self, request, reference=None, **kwargs):

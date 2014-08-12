@@ -2,7 +2,6 @@ from core.drf.router import NestedCLARouter
 from django.conf.urls import patterns, url, include
 
 from rest_framework import routers
-# from rest_framework_nested.routers import NestedSimpleRouter
 
 from . import views
 

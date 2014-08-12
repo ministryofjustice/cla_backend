@@ -7,9 +7,10 @@ from django.utils import timezone
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-from legalaid.tests.views.mixins.resource import \
-    NestedSimpleResourceCheckAPIMixin
 from legalaid.models import Case
+from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin, \
+    BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase
+
 from cla_common.constants import REQUIRES_ACTION_BY
 
 from cla_eventlog.models import Log
@@ -24,91 +25,29 @@ from call_centre.forms import DeclineHelpCaseForm, \
 from call_centre.serializers import CaseSerializer
 
 
-class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
-    def setUp(self):
-        super(BaseCaseTestCase, self).setUp()
+class BaseCaseTestCase(
+    CLAOperatorAuthBaseApiTestMixin, FullCaseAPIMixin, APITestCase
+):
+    API_URL_NAMESPACE = 'call_centre'
 
-        self.list_url = reverse('call_centre:case-list')
-        self.list_dashboard_url = u'%s?dashboard=1' % reverse('call_centre:case-list')
-        self.case_obj = make_recipe('legalaid.case')
-        self.check = self.case_obj
-        self.detail_url = reverse(
-            'call_centre:case-detail', args=(),
-            kwargs={'reference': self.case_obj.reference}
-        )
+    def get_http_authorization(self):
+        return 'Bearer %s' % self.token
+
+    def get_case_serializer_clazz(self):
+        return CaseSerializer
 
     def assertCaseResponseKeys(self, response):
         self.assertItemsEqual(
-            response.data.keys(),
-            ['eligibility_check', 'personal_details', 'reference',
-             'created', 'modified', 'created_by',
-             'provider', 'log_set', 'notes', 'provider_notes',
-             'full_name', 'laa_reference', 'eligibility_state', 'thirdparty_details',
-             'adaptation_details', 'billable_time', 'requires_action_by',
-             'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
-             'postcode', 'diagnosis_state', 'rejected']
+            response.data.keys(), [
+                'eligibility_check', 'personal_details', 'reference',
+                'created', 'modified', 'created_by',
+                'provider', 'log_set', 'notes', 'provider_notes',
+                'full_name', 'laa_reference', 'eligibility_state',
+                'adaptation_details', 'billable_time', 'requires_action_by',
+                'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
+                'postcode', 'diagnosis_state', 'thirdparty_details', 'rejected'
+            ]
         )
-
-    def assertPersonalDetailsEqual(self, data, obj):
-        if isinstance(data, basestring):
-            self.assertEqual(unicode(data), unicode(obj.reference))
-            return
-        if data is None or obj is None:
-            self.assertEqual(data, obj)
-        else:
-            for prop in ['title', 'full_name', 'postcode', 'street', 'mobile_phone', 'home_phone']:
-                self.assertEqual(unicode(getattr(obj, prop)), data[prop])
-
-    def assertCaseEqual(self, data, case):
-        """
-            'provider': unicode(provider.id),
-            'laa_reference': 3000314,
-            'matter_type1': matter_type1.code,
-            'matter_type2': matter_type2.code,
-            'media_code': media_code.code,
-            'provider_notes': "bla",
-            'requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
-        """
-
-        self.assertEqual(case.reference, data['reference'])
-
-        fks = {
-            'eligibility_check': 'reference', 
-            'personal_details': 'reference', 
-            'thirdparty_details': 'reference',
-            'adaptation_details': 'reference',
-            'diagnosis': 'reference',
-            'matter_type1': 'code',
-            'matter_type2': 'code',
-            'media_code': 'code',
-        }
-
-        for field, fk_pk in fks.items():
-            if not field in data: continue
-
-            val = getattr(case, field)
-            if val:
-                val = unicode(getattr(val, fk_pk))
-            self.assertEqual(val, data[field])
-
-        for field in [
-            'notes', 'billable_time', 'laa_reference', 
-            'provider_notes', 'requires_action_by'
-
-        ]:
-            if not field in data: continue
-
-            self.assertEqual(getattr(case, field), data[field], '%s: %s - %s' % (
-                field, getattr(case, field), data[field])
-            )
-        
-        self.assertPersonalDetailsEqual(data['personal_details'], case.personal_details)
-
-    def assertLogInDB(self):
-        self.assertEqual(Log.objects.count(), 1)
-
-    def assertNoLogInDB(self):
-        self.assertEqual(Log.objects.count(), 0)
 
 
 class CaseGeneralTestCase(BaseCaseTestCase):
@@ -269,6 +208,31 @@ class CreateCaseTestCase(BaseCaseTestCase):
         serializer = CaseSerializer(data=data)
         self.assertTrue(serializer.is_valid())
         self.assertDictEqual(serializer.errors, {})
+
+
+class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
+    def test_patch_operator_notes_allowed(self):
+        """
+        Test that provider cannot post provider notes
+        """
+        response = self.client.patch(
+            self.detail_url, data={'notes': 'abc123'},
+            format='json', HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['notes'], 'abc123')
+
+    def test_patch_provider_notes_not_allowed(self):
+        """
+        Test that provider cannot post provider notes
+        """
+        response = self.client.patch(
+            self.detail_url, data={'provider_notes': 'abc123'},
+            format='json', HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['provider_notes'], self.case_obj.provider_notes)
+        self.assertNotEqual(response.data['provider_notes'], 'abc123')
 
 
 class AssignCaseTestCase(BaseCaseTestCase):
@@ -436,8 +400,7 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         )
 
 
-class SearchCaseTestCase(BaseCaseTestCase):
-
+class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
     def test_list_with_dashboard_param(self):
         """
         Testing that if ?dashboard param is specified, it will exclude cases
@@ -485,206 +448,3 @@ class SearchCaseTestCase(BaseCaseTestCase):
             [case['reference'] for case in response.data['results']],
             ['ref1', 'ref2', 'ref3']
         )
-
-    def test_search_find_one_result_by_name(self):
-        """
-        GET search by name should work
-        """
-
-        obj = make_recipe('legalaid.case',
-              reference='ref1',
-              personal_details__full_name='xyz',
-              personal_details__postcode='123',
-              provider=self.provider,
-        )
-
-        self.case_obj.personal_details.full_name = 'abc'
-        self.case_obj.personal_details.postcode = '123'
-        self.case_obj.personal_details.save()
-        self.case_obj.reference = 'ref2'
-        self.case_obj.save()
-
-        response = self.client.get(
-            self.list_url, data={'search':'abc'}, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, len(response.data['results']))
-        self.assertCaseEqual(response.data['results'][0], self.case_obj)
-
-    def test_search_find_one_result_by_ref(self):
-        """
-        GET search by name should work
-        """
-
-        obj = make_recipe('legalaid.case', provider=self.provider,
-                          personal_details__full_name='abc',
-                          personal_details__postcode='123')
-
-        response = self.client.get(
-            self.list_url, data={'search':self.case_obj.reference}, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, len(response.data['results']))
-        self.assertCaseEqual(response.data['results'][0], self.case_obj)
-
-    def test_search_find_one_result_by_postcode(self):
-        """
-        GET search by name should work
-        """
-
-        obj = make_recipe('legalaid.case', provider=self.provider,
-                          personal_details__postcode='123',
-                          personal__details__full_name='abc')
-
-        response = self.client.get(
-            self.list_url, data={'search': self.case_obj.personal_details.postcode},
-            format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, len(response.data['results']))
-        self.assertCaseEqual(response.data['results'][0], self.case_obj)
-
-    def test_search_find_none_result_by_postcode(self):
-        """
-        GET search by name should work
-        """
-
-        response = self.client.get(
-            self.list_url, data={'search': self.case_obj.personal_details.postcode+'ss'},
-            format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(0, len(response.data['results']))
-
-    def test_search_find_none_result_by_fullname(self):
-        """
-        GET search by name should work
-        """
-        response = self.client.get(
-            self.list_url, data={'search': self.case_obj.personal_details.full_name+'ss'},
-            format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(0, len(response.data['results']))
-
-    def test_search_find_none_result_by_ref(self):
-        """
-        GET search by name should work
-        """
-        response = self.client.get(
-            self.list_url, data={'search': self.case_obj.reference+'ss'},
-            format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(0, len(response.data['results']))
-
-    def test_patch_provider_notes_not_allowed(self):
-        """
-        Test that provider can post provider notes
-        """
-        response = self.client.patch(self.detail_url, data={'provider_notes': 'abc123'},
-                                     format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['provider_notes'], self.case_obj.provider_notes)
-        self.assertNotEqual(response.data['provider_notes'], 'abc123')
-
-
-class AdaptationDetailsTestCase(CLAOperatorAuthBaseApiTestMixin, NestedSimpleResourceCheckAPIMixin, APITestCase):
-
-    API_URL_NAMESPACE = 'call_centre'
-    BASE_NAME = 'adaptationdetails'
-    CHECK_RECIPE = 'legalaid.adaptation_details'
-
-    @property
-    def check_keys(self):
-        return \
-        [ 'reference',
-          'bsl_webcam',
-          'minicom',
-          'text_relay',
-          'skype_webcam',
-          'callback_preference',
-          'language',
-          'notes'
-        ]
-
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.token
-
-    def _get_default_post_data(self):
-        return {'bsl_webcam' : True,
-                'minicom' : True,
-                'text_relay' : True,
-                'skype_webcam' : True,
-                'callback_preference' : True,
-                'language' : 'WELSH',
-                'notes' : 'abc'
-                }
-
-    def _test_method_in_error(self, method, url):
-
-        # most fields are optional and variable type is just evaluated
-        # by python rules to a boolean. i.e. passing strings etc. instead
-        # of a JS boolean will still be evaluated to True in python.
-        data={ 'language' : 'KLINGON' }
-
-
-        method_callable = getattr(self.client, method)
-        response = method_callable(url, data,
-                                   format='json',
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        expected_errors = {
-            'language' : [u'Select a valid choice. XXXXXXXXX is not one of the available choices.'],
-            }
-
-        self.maxDiff = None
-        errors = response.data
-        self.assertItemsEqual(
-            errors.keys(), expected_errors.keys()
-        )
-        self.assertItemsEqual(
-            errors, expected_errors
-        )
-
-    def assertAdaptationDetailsEqual(self, data, obj):
-        if data is None or obj is None:
-            self.assertEqual(data, obj)
-        else:
-            for prop in ['bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
-                         'language','notes', 'callback_preference']:
-                #self.assertEqual(unicode(getattr(obj, prop)), data[prop])
-                self.assertEqual(obj[prop], data[prop])
-
-    def test_methods_not_allowed(self):
-        """
-        Ensure that we can't DELETE to list url
-        """
-        ### LIST
-        if hasattr(self, 'list_url') and self.list_url:
-            self._test_delete_not_allowed(self.list_url)
-
-    def test_methods_in_error(self):
-        self._test_method_in_error('patch', self.detail_url)
-        self._test_method_in_error('put', self.detail_url)
-
-    # CREATE
-    def test_create_with_data(self):
-        """
-        check variables sent as same as those that return.
-        """
-        data = self._get_default_post_data()
-        check = self._get_default_post_data()
-
-        response = self._create(data=data)  # check initial state is correct
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCheckResponseKeys(response)
-        self.assertAdaptationDetailsEqual(response.data, check)

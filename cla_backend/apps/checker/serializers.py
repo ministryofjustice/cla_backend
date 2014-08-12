@@ -86,6 +86,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
 class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field='reference')
     personal_details = PersonalDetailsSerializer()
+
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference',

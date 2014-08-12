@@ -39,7 +39,7 @@ class OutOfHoursRotaSerializerBase(ClaModelSerializer):
 class PropertySerializerBase(ClaModelSerializer):
     class Meta:
         model = Property
-        fields = ('value', 'mortgage_left', 'share', 'id', 'disputed', 'main')
+        fields = ()
 
 
 class TotalsModelSerializer(ClaModelSerializer):
@@ -66,7 +66,7 @@ class IncomeSerializerBase(TotalsModelSerializer):
 
     class Meta:
         model = Income
-        fields = ('earnings', 'other_income', 'self_employed', 'total')
+        fields = ()
 
 
 class SavingsSerializerBase(TotalsModelSerializer):
@@ -78,13 +78,7 @@ class SavingsSerializerBase(TotalsModelSerializer):
 
     class Meta:
         model = Savings
-        fields = (
-            'bank_balance',
-            'investment_balance',
-            'asset_balance',
-            'credit_balance',
-            'total',
-        )
+        fields = ()
 
 
 class DeductionsSerializerBase(TotalsModelSerializer):
@@ -100,11 +94,7 @@ class DeductionsSerializerBase(TotalsModelSerializer):
 
     class Meta:
         model = Deductions
-        fields = (
-            'income_tax', 'national_insurance', 'maintenance',
-            'childcare', 'mortgage', 'rent',
-            'criminal_legalaid_contributions', 'total'
-        )
+        fields = ()
 
 
 class PersonalDetailsSerializerBase(serializers.ModelSerializer):
@@ -117,20 +107,12 @@ class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
     dob = ThreePartDateField(required=False, source='date_of_birth')
 
     class Meta(PersonalDetailsSerializerBase.Meta):
-        fields = (
-            'reference', 'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone', 'email', 'dob',
-            'ni_number', 'exempt_user', 'exempt_user_reason',
-            'contact_for_research', 'safe_to_contact', 'vulnerable_user'
-        )
+        fields = ()
 
 
 class ThirdPartyPersonalDetailsSerializerBase(PersonalDetailsSerializerBase):
     class Meta(PersonalDetailsSerializerBase.Meta):
-        fields = (
-            'reference', 'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone', 'email'
-        )
+        fields = ()
 
 
 class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
@@ -138,11 +120,17 @@ class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
 
     class Meta:
         model = ThirdPartyDetails
-        fields = (
-            'reference', 'personal_details', 'pass_phrase', 'reason',
-            'personal_relationship', 'personal_relationship_note',
-            'spoke_to', 'no_contact_reason', 'organisation_name',
-        )
+        fields = ()
+
+
+class PersonSerializerBase(ClaModelSerializer):
+    income = IncomeSerializerBase(required=False)
+    savings = SavingsSerializerBase(required=False)
+    deductions = DeductionsSerializerBase(required=False)
+
+    class Meta:
+        model = Person
+        fields = ()
 
 
 class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
@@ -156,20 +144,6 @@ class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
     class Meta:
         model = AdaptationDetails
         fields = ()
-
-
-class PersonSerializerBase(ClaModelSerializer):
-    income = IncomeSerializerBase(required=False)
-    savings = SavingsSerializerBase(required=False)
-    deductions = DeductionsSerializerBase(required=False)
-
-    class Meta:
-        model = Person
-        fields = (
-            'income',
-            'savings',
-            'deductions',
-        )
 
 
 class EligibilityCheckSerializerBase(ClaModelSerializer):
@@ -214,10 +188,7 @@ class MatterTypeSerializerBase(ClaModelSerializer):
     class Meta:
         model = MatterType
         fields = (
-            'category',
-            'code',
-            'description',
-            'level'
+            'category', 'code', 'description', 'level'
         )
 
 
@@ -227,9 +198,7 @@ class MediaCodeSerializerBase(ClaModelSerializer):
     class Meta:
         model = MediaCode
         fields = (
-            'group',
-            'name',
-            'code'
+            'group', 'name', 'code'
         )
 
 

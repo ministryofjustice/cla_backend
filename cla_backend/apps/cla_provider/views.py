@@ -21,7 +21,8 @@ from cla_common.constants import REQUIRES_ACTION_BY
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import EligibilityCheckSerializer, \
-    CaseSerializer, StaffSerializer, AdaptationDetailsSerializer
+    CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
+    PersonalDetailsSerializer, ThirdPartyDetailsSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
 
 
@@ -146,14 +147,14 @@ class PersonalDetailsViewSet(
     CLAProviderPermissionViewSetMixin,
     FullPersonalDetailsViewSet
 ):
-    pass
+    serializer_class = PersonalDetailsSerializer
 
 
 class ThirdPartyDetailsViewSet(
     CLAProviderPermissionViewSetMixin,
     BaseThirdPartyDetailsViewSet
 ):
-    pass
+    serializer_class = ThirdPartyDetailsSerializer
 
 
 class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):

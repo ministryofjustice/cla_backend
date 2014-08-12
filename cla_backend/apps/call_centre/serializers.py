@@ -6,14 +6,97 @@ from legalaid.serializers import EligibilityCheckSerializerBase, \
     PropertySerializerBase, SavingsSerializerBase, \
     CaseSerializerBase, ProviderSerializerBase, \
     OutOfHoursRotaSerializerBase, ExtendedUserSerializerBase, \
-    AdaptationDetailsSerializerBase
+    AdaptationDetailsSerializerBase, IncomeSerializerBase, \
+    DeductionsSerializerBase, PersonalDetailsSerializerFull, \
+    ThirdPartyPersonalDetailsSerializerBase, \
+    ThirdPartyDetailsSerializerBase, PersonSerializerBase
 
 from .models import Operator
 
 
+class PropertySerializer(PropertySerializerBase):
+    class Meta(PropertySerializerBase.Meta):
+        fields = ('value', 'mortgage_left', 'share', 'id', 'disputed', 'main')
+
+
+class IncomeSerializer(IncomeSerializerBase):
+    class Meta(IncomeSerializerBase.Meta):
+        fields = ('earnings', 'other_income', 'self_employed', 'total')
+
+
+class SavingsSerializer(SavingsSerializerBase):
+    class Meta(SavingsSerializerBase.Meta):
+        fields = (
+            'bank_balance', 'investment_balance',
+            'asset_balance', 'credit_balance', 'total',
+        )
+
+
+class DeductionsSerializer(DeductionsSerializerBase):
+    class Meta(DeductionsSerializerBase.Meta):
+        fields = (
+            'income_tax', 'national_insurance', 'maintenance',
+            'childcare', 'mortgage', 'rent',
+            'criminal_legalaid_contributions', 'total'
+        )
+
+
+class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
+    class Meta(PersonalDetailsSerializerFull.Meta):
+        fields = (
+            'reference', 'title', 'full_name', 'postcode', 'street',
+            'mobile_phone', 'home_phone', 'email', 'dob',
+            'ni_number', 'exempt_user', 'exempt_user_reason',
+            'contact_for_research', 'safe_to_contact', 'vulnerable_user'
+        )
+
+
+class ThirdPartyPersonalDetailsSerializer(ThirdPartyPersonalDetailsSerializerBase):
+    class Meta(ThirdPartyPersonalDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'title', 'full_name', 'postcode', 'street',
+            'mobile_phone', 'home_phone', 'email'
+        )
+
+
+class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
+    personal_details = ThirdPartyPersonalDetailsSerializer(required=True)
+
+    class Meta(ThirdPartyDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'personal_details', 'pass_phrase', 'reason',
+            'personal_relationship', 'personal_relationship_note',
+            'spoke_to', 'no_contact_reason', 'organisation_name',
+        )
+
+
+class PersonSerializer(PersonSerializerBase):
+    income = IncomeSerializer(required=False)
+    savings = SavingsSerializer(required=False)
+    deductions = DeductionsSerializer(required=False)
+
+    class Meta(PersonSerializerBase.Meta):
+        fields = (
+            'income', 'savings', 'deductions',
+        )
+
+
+class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
+    class Meta(AdaptationDetailsSerializerBase.Meta):
+        fields = (
+                'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
+                'language', 'notes', 'reference', 'callback_preference'
+        )
+
+
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
+    property_set = PropertySerializer(
+        allow_add_remove=True, many=True, required=False
+    )
+    you = PersonSerializer(required=False)
+    partner = PersonSerializer(required=False)
     notes = serializers.CharField(max_length=500, required=False, read_only=True)
-    disputed_savings = SavingsSerializerBase(required=False)
+    disputed_savings = SavingsSerializer(required=False)
 
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
@@ -32,14 +115,6 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'on_passported_benefits',
             'on_nass_benefits',
             'state'
-        )
-
-
-class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
-    class Meta(AdaptationDetailsSerializerBase.Meta):
-        fields = (
-                'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
-                'language', 'notes', 'reference', 'callback_preference'
         )
 
 

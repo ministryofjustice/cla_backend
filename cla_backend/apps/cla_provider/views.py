@@ -4,16 +4,14 @@ from rest_framework import viewsets, mixins
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.decorators import action
 
-from core.drf.mixins import NestedGenericModelMixin
-
 from cla_eventlog.views import BaseEventViewSet
 
-from legalaid.models import Case, \
-    PersonalDetails, AdaptationDetails
+from legalaid.models import Case
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
     BaseNestedEligibilityCheckViewSet, BaseCategoryViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
-    BaseThirdPartyDetailsViewSet
+    BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
+    BaseAdaptationDetailsMetadataViewSet
 
 from diagnosis.views import BaseDiagnosisViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
@@ -161,27 +159,19 @@ class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
     pass
 
 
-class AdaptationDetailsMetadataViewSet(CLAProviderPermissionViewSetMixin,
-                                       mixins.CreateModelMixin,
-                                       viewsets.GenericViewSet):
-    model = AdaptationDetails
+class AdaptationDetailsViewSet(
+    CLAProviderPermissionViewSetMixin, BaseAdaptationDetailsViewSet
+):
     serializer_class = AdaptationDetailsSerializer
 
-    def create(self, request, *args, **kwargs):
-        self.http_method_not_allowed(request)
 
-
-class AdaptationDetailsViewSet(CLAProviderPermissionViewSetMixin,
-                               mixins.CreateModelMixin,
-                               mixins.UpdateModelMixin,
-                               mixins.RetrieveModelMixin,
-                               NestedGenericModelMixin,
-                               viewsets.GenericViewSet):
-    model = AdaptationDetails
+class AdaptationDetailsMetadataViewSet(
+    CLAProviderPermissionViewSetMixin, BaseAdaptationDetailsMetadataViewSet
+):
     serializer_class = AdaptationDetailsSerializer
-    lookup_field = 'reference'
-    PARENT_FIELD = 'adaptation_details'
 
 
-class DiagnosisViewSet(CLAProviderPermissionViewSetMixin, BaseDiagnosisViewSet):
+class DiagnosisViewSet(
+    CLAProviderPermissionViewSetMixin, BaseDiagnosisViewSet
+):
     pass

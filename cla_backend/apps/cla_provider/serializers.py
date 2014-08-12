@@ -144,7 +144,6 @@ class CaseSerializer(CaseSerializerBase):
     diagnosis_state = serializers.CharField(source='diagnosis.state', read_only=True)
     postcode = serializers.CharField(source='personal_details.postcode', read_only=True)
 
-
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details',
@@ -163,12 +162,14 @@ class CaseSerializer(CaseSerializerBase):
             'diagnosis',
         )
 
+
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
         fields = (
             'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
             'language', 'notes', 'reference', 'callback_preference'
         )
+
 
 class ProviderSerializer(ProviderSerializerBase):
     class Meta(ProviderSerializerBase.Meta):

@@ -24,23 +24,6 @@ class PersonalDetailsTestCase(
     def get_http_authorization(self):
         return 'Bearer %s' % self.staff_token
 
-    def test_methods_not_allowed(self):
-        super(PersonalDetailsTestCase, self).test_methods_not_allowed()
-
-        check_without_personal_details = make_recipe('legalaid.case')
-        list_url = self.get_detail_url(check_without_personal_details.reference)
-
-        # CREATE NOT ALLOWED
-        self._test_post_not_allowed(list_url)
-
-    # CREATE
-
-    def test_create_no_data(self):
-        pass
-
-    def test_create_with_data(self):
-        pass
-
     # SECURITY
 
     def test_get_not_found_if_not_belonging_to_provider(self):

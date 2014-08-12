@@ -24,20 +24,6 @@ class ThirdPartyDetailsTestCase(
     def get_http_authorization(self):
         return 'Bearer %s' % self.staff_token
 
-    def test_methods_not_allowed(self):
-        super(ThirdPartyDetailsTestCase, self).test_methods_not_allowed()
-
-        check_without_3rd_party = make_recipe('legalaid.case')
-        list_url = self.get_detail_url(check_without_3rd_party.reference)
-
-        # CREATE NOT ALLOWED
-        self._test_post_not_allowed(list_url)
-
-    # CREATE
-
-    def test_create_with_data(self):
-        pass
-
     # SECURITY
 
     def test_get_not_found_if_not_belonging_to_provider(self):

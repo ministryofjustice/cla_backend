@@ -10,8 +10,6 @@ from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter, \
     DjangoFilterBackend
 
-from core.drf.mixins import NestedGenericModelMixin
-
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper
 from cla_eventlog import event_registry
@@ -19,12 +17,12 @@ from cla_eventlog.views import BaseEventViewSet
 
 from timer.views import BaseTimerViewSet
 
-from legalaid.models import Case, \
-    AdaptationDetails, MatterType
+from legalaid.models import Case
 from legalaid.views import BaseUserViewSet, FormActionMixin, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
-    BaseThirdPartyDetailsViewSet
+    BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
+    BaseAdaptationDetailsMetadataViewSet
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -283,45 +281,32 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
 
 
 class PersonalDetailsViewSet(
-    CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin,
-    FullPersonalDetailsViewSet
+    CallCentrePermissionsViewSetMixin, FullPersonalDetailsViewSet
 ):
     serializer_class = PersonalDetailsSerializer
 
 
-class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):
-    pass
-
-
 class ThirdPartyDetailsViewSet(
-    CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin,
-    BaseThirdPartyDetailsViewSet
+    CallCentrePermissionsViewSetMixin, BaseThirdPartyDetailsViewSet
 ):
     serializer_class = ThirdPartyDetailsSerializer
 
 
-class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,
-                             mixins.CreateModelMixin,
-                             mixins.UpdateModelMixin,
-                             mixins.RetrieveModelMixin,
-                             NestedGenericModelMixin,
-                             viewsets.GenericViewSet):
-    model = AdaptationDetails
-    serializer_class = AdaptationDetailsSerializer
-    lookup_field = 'reference'
-    PARENT_FIELD = 'adaptation_details'
-
-
-class AdaptationDetailsMetadataViewSet(CallCentrePermissionsViewSetMixin,
-        mixins.CreateModelMixin,
-        viewsets.GenericViewSet):
-    model = AdaptationDetails
+class AdaptationDetailsViewSet(
+    CallCentrePermissionsViewSetMixin, BaseAdaptationDetailsViewSet
+):
     serializer_class = AdaptationDetailsSerializer
 
-    def create(self, request, *args, **kwargs):
-        self.http_method_not_allowed(request)
+
+class AdaptationDetailsMetadataViewSet(
+    CallCentrePermissionsViewSetMixin,
+    BaseAdaptationDetailsMetadataViewSet
+):
+    serializer_class = AdaptationDetailsSerializer
+
+
+class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):
+    pass
 
 
 class ArticleViewSet(CallCentrePermissionsViewSetMixin, BaseArticleViewSet):

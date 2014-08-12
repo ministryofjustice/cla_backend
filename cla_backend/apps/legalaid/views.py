@@ -14,9 +14,11 @@ from cla_eventlog import event_registry
 
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
-    PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase
+    PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
+    AdaptationDetailsSerializerBase
 from .models import Case, Category, EligibilityCheck, \
-    MatterType, MediaCode, PersonalDetails, ThirdPartyDetails
+    MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
+    AdaptationDetails
 
 
 class BaseUserViewSet(
@@ -158,6 +160,7 @@ class BaseMediaCodeViewSet(
 
 
 class FullPersonalDetailsViewSet(
+    mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     NestedGenericModelMixin,
@@ -171,6 +174,7 @@ class FullPersonalDetailsViewSet(
 
 
 class BaseThirdPartyDetailsViewSet(
+    mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     NestedGenericModelMixin,
@@ -180,3 +184,27 @@ class BaseThirdPartyDetailsViewSet(
     serializer_class = ThirdPartyDetailsSerializerBase
     lookup_field = 'reference'
     PARENT_FIELD = 'thirdparty_details'
+
+
+class BaseAdaptationDetailsViewSet(
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    NestedGenericModelMixin,
+    viewsets.GenericViewSet
+):
+    model = AdaptationDetails
+    serializer_class = AdaptationDetailsSerializerBase
+    lookup_field = 'reference'
+    PARENT_FIELD = 'adaptation_details'
+
+
+class BaseAdaptationDetailsMetadataViewSet(
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet
+):
+    model = AdaptationDetails
+    serializer_class = AdaptationDetailsSerializerBase
+
+    def create(self, request, *args, **kwargs):
+        self.http_method_not_allowed(request)

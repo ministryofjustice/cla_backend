@@ -1,3 +1,7 @@
+import mock
+
+from django.core.urlresolvers import reverse
+
 from rest_framework.test import APITestCase
 from rest_framework import status
 
@@ -8,7 +12,11 @@ from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
 from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin, \
     BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase
 
+from cla_eventlog.tests.test_views import ExplicitEventCodeViewTestCaseMixin, \
+    ImplicitEventCodeViewTestCaseMixin
+
 from cla_provider.serializers import CaseSerializer
+from cla_provider.forms import RejectCaseForm
 
 
 class BaseCaseTestCase(
@@ -90,32 +98,32 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
         self.assertNotEqual(response.data['notes'], 'abc123')
 
 
-# class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
-#     def get_event_code(self):
-#         form = RejectCaseForm(case=mock.MagicMock())
-#         return form.fields['event_code'].choices[0][0]
+class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_event_code(self):
+        form = RejectCaseForm(case=mock.MagicMock())
+        return form.fields['event_code'].choices[0][0]
 
-#     def get_url(self, reference=None):
-#         reference = reference or self.check.reference
-#         return reverse(
-#             'cla_provider:case-reject', args=(),
-#             kwargs={'reference': reference}
-#         )
-
-
-# class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
-#     def get_url(self, reference=None):
-#         reference = reference or self.check.reference
-#         return reverse(
-#             'cla_provider:case-accept', args=(),
-#             kwargs={'reference': reference}
-#         )
+    def get_url(self, reference=None):
+        reference = reference or self.check.reference
+        return reverse(
+            'cla_provider:case-reject', args=(),
+            kwargs={'reference': reference}
+        )
 
 
-# class CloseCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
-#     def get_url(self, reference=None):
-#         reference = reference or self.check.reference
-#         return reverse(
-#             'cla_provider:case-close', args=(),
-#             kwargs={'reference': reference}
-#         )
+class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_url(self, reference=None):
+        reference = reference or self.check.reference
+        return reverse(
+            'cla_provider:case-accept', args=(),
+            kwargs={'reference': reference}
+        )
+
+
+class CloseCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_url(self, reference=None):
+        reference = reference or self.check.reference
+        return reverse(
+            'cla_provider:case-close', args=(),
+            kwargs={'reference': reference}
+        )

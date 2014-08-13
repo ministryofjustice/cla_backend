@@ -88,7 +88,7 @@ class CaseViewSet(
         """
         Accepts a case
         """
-        return self._form_action(request, Form=AcceptCaseForm)
+        return self._form_action(request, Form=AcceptCaseForm, no_body=False)
 
     @action()
     def close(self, request, reference=None, **kwargs):

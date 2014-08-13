@@ -54,12 +54,17 @@ class BaseUserViewSet(
 
 
 class FormActionMixin(object):
-    def _form_action(self, request, Form):
+    def _form_action(self, request, Form, no_body=True):
         obj = self.get_object()
         form = Form(case=obj, data=request.DATA)
         if form.is_valid():
             form.save(request.user)
-            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
+            if no_body:
+                return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+            else:
+                serializer = self.get_serializer(obj)
+                return DRFResponse(serializer.data, status=status.HTTP_200_OK)
 
         return DRFResponse(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST

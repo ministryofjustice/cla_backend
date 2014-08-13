@@ -112,6 +112,8 @@ class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
 
 class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    NO_BODY_RESPONSE = False
+
     def get_url(self, reference=None):
         reference = reference or self.check.reference
         return reverse(

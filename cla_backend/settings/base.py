@@ -118,6 +118,8 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django_statsd.middleware.GraphiteRequestTimingMiddleware',
+    'django_statsd.middleware.GraphiteMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -143,6 +145,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django_statsd',
     'south',
     'rest_framework',
     'pagedown',
@@ -276,5 +279,12 @@ REST_FRAMEWORK = {
 # not clash with existing - generated references so we are starting at 3million
 LAA_REFERENCE_SEED = 3000000
 TEST_MODE = False
+
+STATSD_CLIENT = 'django_statsd.clients.normal'
+STATSD_PREFIX = 'backend'
+
+STATSD_PATCHES = [
+    'django_statsd.patches.db',
+]
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'

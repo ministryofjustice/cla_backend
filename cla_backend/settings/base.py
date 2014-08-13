@@ -286,3 +286,5 @@ STATSD_PREFIX = 'backend'
 STATSD_PATCHES = [
     'django_statsd.patches.db',
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'

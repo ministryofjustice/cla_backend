@@ -30,12 +30,6 @@ ADD ./docker/nginx.conf /etc/nginx/nginx.conf
 ADD ./docker/htpassword /etc/nginx/conf.d/htpassword
 RUN rm -f /etc/nginx/sites-enabled/default && chown www-data:www-data /etc/nginx/conf.d/htpassword
 
-# Install ruby
-RUN DEBIAN_FRONTEND='noninteractive' add-apt-repository ppa:brightbox/ruby-ng && apt-get update
-RUN DEBIAN_FRONTEND='noninteractive' apt-get install -y --no-install-recommends  ruby2.1 ruby2.1-dev
-
-RUN gem2.1 install sass --no-rdoc --no-ri
-
 #Pip install Python packages
 
 RUN pip install GitPython uwsgi

@@ -7,7 +7,8 @@ from django.utils import timezone
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import DjangoFilterBackend, SearchFilter
+from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
+    SearchFilter
 
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_provider.helpers import ProviderAllocationHelper

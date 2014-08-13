@@ -75,6 +75,8 @@ class ImplicitEventCodeViewTestCaseMixin(object):
 
     The user is not given the possibility to specify an outcome code.
     """
+    NO_BODY_RESPONSE = True
+
     def setUp(self):
         super(ImplicitEventCodeViewTestCaseMixin, self).setUp()
         self.url = self.get_url()
@@ -114,7 +116,10 @@ class ImplicitEventCodeViewTestCaseMixin(object):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
 
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        if self.NO_BODY_RESPONSE:
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        else:
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # after, log entry created
         self.assertEqual(Log.objects.count(), 1)

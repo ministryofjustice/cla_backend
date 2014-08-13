@@ -276,3 +276,5 @@ REST_FRAMEWORK = {
 # not clash with existing - generated references so we are starting at 3million
 LAA_REFERENCE_SEED = 3000000
 TEST_MODE = False
+
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'

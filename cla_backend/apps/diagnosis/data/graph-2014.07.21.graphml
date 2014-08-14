@@ -4199,8 +4199,9 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n192">
-      <data key="d4"><![CDATA[Disability Pregnancy & Maternity Race Religion or belief Sex Sexual orientation Gender Reassignment (confirm data storage/sharing with specialist)]]></data>
+      <data key="d4"><![CDATA[Disability, Pregnancy & Maternity, Race, Religion or belief, Sex, Sexual orientation, Gender Reassignment (confirm data storage/sharing with specialist)]]></data>
       <data key="d5"><![CDATA[Disability Pregnancy]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6737.230555555556" y="1100.0"/>
@@ -4547,12 +4548,14 @@ More information will be available in guidance.*]]></data>
     <node id="n208">
       <data key="d4"><![CDATA[Age (where client is under 18)]]></data>
       <data key="d5"><![CDATA[Age (where client is]]></data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5458.480555555556" y="1100.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="118.005859375" x="15.9970703125" y="5.93359375">Age (where client is<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="27.490234375" x="61.2548828125" y="5.93359375">U18
+<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -4760,12 +4763,14 @@ More information will be available in guidance.*]]></data>
     <node id="n218">
       <data key="d4"><![CDATA[Age (where client is over 18)]]></data>
       <data key="d5"><![CDATA[Age (where client is]]></data>
+      <data key="d9">4</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7829.730555555556" y="1100.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="118.005859375" x="15.9970703125" y="5.93359375">Age (where client is<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="62.763671875" x="43.6181640625" y="5.93359375">Age (18+)
+<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -5061,6 +5066,7 @@ More information will be available in guidance.*]]></data>
     <node id="n232">
       <data key="d4"><![CDATA[Marriage and civil partnership]]></data>
       <data key="d5"><![CDATA[Marriage and civil p]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5979.730555555556" y="1100.0"/>

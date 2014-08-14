@@ -1,9 +1,12 @@
+import datetime
 from random import random
 from operator import itemgetter
 
-from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.utils import timezone
 
+from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota
 
 
 class ProviderAllocationHelper(object):
@@ -104,3 +107,24 @@ class ProviderAllocationHelper(object):
         else:
             return self._get_random_provider(category)
 
+
+def notify_case_assigned(provider, case):
+    if not provider.email_address:
+        return
+    from_address = 'no-reply@digital.justice.gov.uk'
+    subject = 'CLA Case {ref} has been assigned to {provider}'.format(**{
+        'ref': case.reference,
+        'provider': provider.name})
+    case_url = '/call_centre/{0}'
+    template_params = {
+        'provider': provider,
+        'now': datetime.datetime.now(),
+        'case_url': case_url.format(case.reference),
+        'case': case}
+    template = 'cla_provider/email/assigned.{0}'
+    text = render_to_string(template.format('txt'), template_params)
+    html = render_to_string(template.format('html'), template_params)
+    email = EmailMultiAlternatives(
+        subject, text, from_address, [provider.email_address])
+    email.attach_alternative(html, 'text/html')
+    email.send()

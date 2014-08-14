@@ -11,8 +11,8 @@ from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
     SearchFilter
 
 from cla_provider.models import Provider, OutOfHoursRota
-from cla_provider.helpers import ProviderAllocationHelper
 from cla_eventlog import event_registry
+from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 from cla_eventlog.views import BaseEventViewSet
 
 from timer.views import BaseTimerViewSet
@@ -203,6 +203,7 @@ class CaseViewSet(
 
         if form.is_valid():
             provider = form.save(request.user)
+            notify_case_assigned(provider, form.case)
             provider_serialised = ProviderSerializer(provider)
             return DRFResponse(data=provider_serialised.data)
 

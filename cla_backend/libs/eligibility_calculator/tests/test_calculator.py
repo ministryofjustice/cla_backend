@@ -1456,7 +1456,7 @@ class IsEligibleTestCase(unittest.TestCase):
         ec.is_gross_income_eligible.assert_called_once_with()
         ec.is_disposable_capital_eligible.assert_called_once_with()
 
-    def test_nass_benefit_is_eligible(self):
+    def test_nass_benefit_is_eligible_only_if_category_is_immagration(self):
         """
         TEST: if citizen is on NASS benefit income and capital are not
         tested so the citizen should be eligible.
@@ -1466,6 +1466,7 @@ class IsEligibleTestCase(unittest.TestCase):
         mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
         type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
+        case_data.category = 'immigration'
 
         ec = EligibilityChecker(case_data)
         self.assertTrue(ec.is_eligible())
@@ -1473,3 +1474,20 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
+    def test_nass_benefit_is_noteligible_if_category_isnt_immagration(self):
+        """
+        TEST: if citizen is on NASS benefit income and capital are not
+        tested so the citizen should be eligible.
+        """
+        case_data = mock.MagicMock()
+        mocked_on_passported_benefits = mock.PropertyMock()
+        mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
+        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
+        type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
+        case_data.category = 'notimmigration'
+
+        ec = EligibilityChecker(case_data)
+        self.assertFalse(ec.is_eligible())
+
+        self.assertFalse(mocked_on_passported_benefits.called)
+        self.assertTrue(mocked_on_nass_benefits.called)

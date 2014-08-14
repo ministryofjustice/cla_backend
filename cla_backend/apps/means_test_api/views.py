@@ -1,3 +1,4 @@
+from decimal import Decimal, InvalidOperation
 import json
 import re
 
@@ -121,8 +122,8 @@ def number(s):
 
 def money(s):
     try:
-        n = float(s)
-    except ValueError:
+        n = Decimal(s).quantize(Decimal('.01'))
+    except (ValueError, InvalidOperation):
         return 0
     return int(n * 100)
 

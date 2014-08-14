@@ -643,14 +643,15 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
             facts__is_you_or_your_partner_over_60=True,
             property_data=[
                 {
-                    'value': 25800000,
-                    'mortgage_left': 10000000,
+                    'value': property_value,
+                    'mortgage_left': mortgage,
                     'share': 100,
                     'disputed': False,
                     'main': True
                 }
             ]
         )
+        case_data.you.savings.asset_balance = other_assets
 
         checker = EligibilityChecker(case_data)
         is_elig = checker.is_eligible()
@@ -678,6 +679,72 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
         """
         is_elig = self._test_pensioner_on_benefits(30000002, 10000001, 79999)
         self.assertTrue(is_elig)
+
+
+
+class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
+
+
+    def _test_pensioner(self, case_data):
+
+        checker = EligibilityChecker(case_data)
+        is_elig = checker.is_eligible()
+        return is_elig, checker
+
+
+    def test_pensioner_200k2p_house_100k1p_mort_800001_savings(self):
+        """
+        if over 60 and on benefits, 300K.02 house with 100K.01 mortgage and
+        8000.01+.01+.01 of other assets should fail.
+        """
+
+        case_data = self.get_default_case_data(
+            facts__on_passported_benefits=False,
+            facts__is_you_or_your_partner_over_60=True,
+            property_data=[
+                {
+                    'value': 20000002,
+                    'mortgage_left': 10000001,
+                    'share': 100,
+                    'disputed': False,
+                    'main': True
+                }
+            ],
+            you__income__earnings = 31506,
+            you__income__other_income = 59001,
+            you__savings__bank_balance = 800001,
+            you__savings__investment_balance = 1,
+            you__savings__asset_balance = 1,
+            you__savings__credit_balance = 1,
+
+            you__deductions__mortgage = 54501,
+            you__deductions__rent = 2,
+            you__deductions__income_tax = 2,
+            you__deductions__national_insurance = 1,
+            you__deductions__maintenance = 1,
+            you__deductions__childcare = 1,
+            you__deductions__criminal_legalaid_contributions = 1,
+        )
+        is_elig, checker = self._test_pensioner(case_data)
+
+        self.assertFalse(is_elig)
+
+    def test_pensioner_limit_10k_diregard_fail(self):
+        """
+        pensioner over 60, no property 18,000.01 savings
+        310 other income:
+        should be ineligible.
+        """
+        case_data = self.get_default_case_data(
+            facts__on_passported_benefits=False,
+            facts__is_you_or_your_partner_over_60=True,
+            you__income__other_income = 31000,
+            you__savings__bank_balance = 1800001,
+            )
+
+        is_elig, checker = self._test_pensioner(case_data)
+
+        self.assertFalse(is_elig)
 
 
 class GrossIncomeTestCase(CalculatorTestBase):
@@ -1405,3 +1472,4 @@ class IsEligibleTestCase(unittest.TestCase):
 
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
+

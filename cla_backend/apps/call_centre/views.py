@@ -1,27 +1,28 @@
-import json
-from call_centre.utils import format_patch
-from cla_eventlog import event_registry
-from core.drf.mixins import NestedGenericModelMixin
 from dateutil import parser
+
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
-import jsonpatch
 
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, SearchFilter, \
-    DjangoFilterBackend
+from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
+    SearchFilter
 
 from cla_provider.models import Provider, OutOfHoursRota
+from cla_eventlog import event_registry
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 from cla_eventlog.views import BaseEventViewSet
+
 from timer.views import BaseTimerViewSet
-from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, \
-    AdaptationDetails, MatterType, MediaCode
-from legalaid.views import BaseUserViewSet, FormActionMixin, \
-    BaseCategoryViewSet, BaseEligibilityCheckViewSet
+
+from legalaid.views import BaseUserViewSet, \
+    BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
+    BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
+    BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
+
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 from diagnosis.views import BaseDiagnosisViewSet
@@ -30,9 +31,9 @@ from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer,  \
-    OutOfHoursRotaSerializer, OperatorSerializer, PersonalDetailsSerializer, \
-    ThirdPartyDetailsSerializer, AdaptationDetailsSerializer, \
-    MatterTypeSerializer, MediaCodeSerializer
+    OutOfHoursRotaSerializer, OperatorSerializer, \
+    AdaptationDetailsSerializer, PersonalDetailsSerializer, \
+    ThirdPartyDetailsSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm
@@ -58,76 +59,26 @@ class EligibilityCheckViewSet(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
-    NestedGenericModelMixin,
-    BaseEligibilityCheckViewSet,
+    BaseNestedEligibilityCheckViewSet,
 ):
     serializer_class = EligibilityCheckSerializer
-    PARENT_FIELD = 'eligibility_check'
 
-
-    @link()
-    def validate(self, request, **kwargs):
-        obj = self.get_object()
-        return DRFResponse(obj.validate())
-
-    @property
-    def jsonpatch(self):
-        forwards = jsonpatch.JsonPatch.from_diff(self.__pre_save__, self.__post_save__)
-        backwards = jsonpatch.JsonPatch.from_diff(self.__post_save__, self.__pre_save__)
-        serializer = self.get_serializer_class()
-
-        return {
-            'serializer': '.'.join([serializer.__module__, serializer.__name__]),
-            'backwards': backwards.patch,
-            'forwards': forwards.patch
-        }
-
+    # this is to fix a stupid thing in DRF where pre_save doesn't call super
     def pre_save(self, obj):
         original_obj = self.get_object()
         self.__pre_save__ = self.get_serializer_class()(original_obj).data
 
-    def post_save(self, obj, created=False, **kwargs):
-        super(EligibilityCheckViewSet, self).post_save(obj, created=created)
-        user = self.request.user
-        self.__post_save__ = self.get_serializer_class()(obj).data
-
-        patch = self.jsonpatch
-
-        means_test_event = event_registry.get_event('means_test')()
-        status = 'changed' if not created else 'created'
-        means_test_event.process(obj.case,
-                                 patch=json.dumps(patch),
-                                 notes=format_patch(patch['forwards']),
-                                 created_by=user,
-                                 status=status
-        )
-
-        return obj
 
 class MatterTypeViewSet(
-    CallCentrePermissionsViewSetMixin,
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
+    CallCentrePermissionsViewSetMixin, BaseMatterTypeViewSet
 ):
-    model = MatterType
-    serializer_class = MatterTypeSerializer
-
-    filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('level', 'category__code')
+    pass
 
 
 class MediaCodeViewSet(
-    CallCentrePermissionsViewSetMixin,
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
+    CallCentrePermissionsViewSetMixin, BaseMediaCodeViewSet
 ):
-    model = MediaCode
-    serializer_class = MediaCodeSerializer
-
-    filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('name', 'group__name')
+    pass
 
 
 class OrderingRejectedFirstFilter(OrderingFilter):
@@ -159,17 +110,8 @@ class OrderingRejectedFirstFilter(OrderingFilter):
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    FormActionMixin,
-    viewsets.GenericViewSet
+    mixins.CreateModelMixin, FullCaseViewSet
 ):
-    model = Case
-    lookup_field = 'reference'
-    lookup_regex = r'[A-Z|\d]{2}-\d{4}-\d{4}'
-
     serializer_class = CaseSerializer
 
     filter_backends = (
@@ -179,15 +121,6 @@ class CaseViewSet(
 
     ordering_fields = ('modified', 'personal_details__full_name', 'personal_details__date_of_birth', 'personal_details__postcode', 'eligibility_check__category__name')
     ordering = '-modified'
-
-    search_fields = ('personal_details__full_name',
-                     'personal_details__postcode',
-                     'reference',
-                     'laa_reference')
-    paginate_by = 20
-    paginate_by_param = 'page_size'
-    max_paginate_by = 100
-
 
     def get_queryset(self):
         qs = super(CaseViewSet, self).get_queryset()
@@ -356,54 +289,33 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
         return self.request.user.operator
 
 
-class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin,
-                             mixins.CreateModelMixin,
-                             mixins.UpdateModelMixin,
-                             mixins.RetrieveModelMixin,
-                             NestedGenericModelMixin,
-                             viewsets.GenericViewSet):
-    model = PersonalDetails
+class PersonalDetailsViewSet(
+    CallCentrePermissionsViewSetMixin, FullPersonalDetailsViewSet
+):
     serializer_class = PersonalDetailsSerializer
-    lookup_field = 'reference'
 
-    PARENT_FIELD = 'personal_details'
+
+class ThirdPartyDetailsViewSet(
+    CallCentrePermissionsViewSetMixin, BaseThirdPartyDetailsViewSet
+):
+    serializer_class = ThirdPartyDetailsSerializer
+
+
+class AdaptationDetailsViewSet(
+    CallCentrePermissionsViewSetMixin, BaseAdaptationDetailsViewSet
+):
+    serializer_class = AdaptationDetailsSerializer
+
+
+class AdaptationDetailsMetadataViewSet(
+    CallCentrePermissionsViewSetMixin,
+    BaseAdaptationDetailsMetadataViewSet
+):
+    serializer_class = AdaptationDetailsSerializer
+
 
 class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):
     pass
-
-
-class ThirdPartyDetailsViewSet(CallCentrePermissionsViewSetMixin,
-                             mixins.CreateModelMixin,
-                             mixins.UpdateModelMixin,
-                             mixins.RetrieveModelMixin,
-                             NestedGenericModelMixin,
-                             viewsets.GenericViewSet):
-    model = ThirdPartyDetails
-    serializer_class = ThirdPartyDetailsSerializer
-    lookup_field = 'reference'
-    PARENT_FIELD = 'thirdparty_details'
-
-
-class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin,
-                             mixins.CreateModelMixin,
-                             mixins.UpdateModelMixin,
-                             mixins.RetrieveModelMixin,
-                             NestedGenericModelMixin,
-                             viewsets.GenericViewSet):
-    model = AdaptationDetails
-    serializer_class = AdaptationDetailsSerializer
-    lookup_field = 'reference'
-    PARENT_FIELD = 'adaptation_details'
-
-
-class AdaptationDetailsMetadataViewSet(CallCentrePermissionsViewSetMixin,
-        mixins.CreateModelMixin,
-        viewsets.GenericViewSet):
-    model = AdaptationDetails
-    serializer_class = AdaptationDetailsSerializer
-
-    def create(self, request, *args, **kwargs):
-        self.http_method_not_allowed(request)
 
 
 class ArticleViewSet(CallCentrePermissionsViewSetMixin, BaseArticleViewSet):

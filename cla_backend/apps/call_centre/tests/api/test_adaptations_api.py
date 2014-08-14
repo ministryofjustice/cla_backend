@@ -1,19 +1,21 @@
-from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
-from django.core.urlresolvers import reverse
-from rest_framework import status
 from rest_framework.test import APITestCase
 
+from legalaid.tests.views.mixins.adaptations_api import \
+    AdaptationsMetadataAPIMixin, AdaptationsDetailsAPIMixin
 
-class AdaptationsMetadataTestCase(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
-   def test_methods_not_allowed(self):
-       """
-       Ensure that only OPTIONS is allowed
-       """
-       url = reverse('call_centre:adaptations-metadata-list')
-       self._test_delete_not_allowed(url)
-       self._test_post_not_allowed(url)
-       self._test_put_not_allowed(url)
-       self._test_patch_not_allowed(url)
-       self._test_get_not_allowed(url)
+class AdaptationsMetadataTestCase(
+    CLAOperatorAuthBaseApiTestMixin, AdaptationsMetadataAPIMixin,
+    APITestCase
+):
+    API_URL_NAMESPACE = 'call_centre'
+
+
+class AdaptationsDetailsTestCase(
+    CLAOperatorAuthBaseApiTestMixin, AdaptationsDetailsAPIMixin,
+    APITestCase
+):
+
+    def get_http_authorization(self):
+        return 'Bearer %s' % self.token

@@ -1,75 +1,94 @@
-from cla_eventlog.serializers import LogSerializerBase
 from rest_framework import serializers
+from cla_eventlog.serializers import LogSerializerBase
 
-from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
-    IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
-    DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase, CategorySerializerBase,  \
-    ProviderSerializerBase, \
-    ExtendedUserSerializerBase
+from legalaid.serializers import \
+    EligibilityCheckSerializerBase, \
+    SavingsSerializerBase, PropertySerializerBase, \
+    CaseSerializerFull, ProviderSerializerBase, \
+    ExtendedUserSerializerBase, \
+    AdaptationDetailsSerializerBase, IncomeSerializerBase, \
+    DeductionsSerializerBase, PersonalDetailsSerializerFull, \
+    ThirdPartyPersonalDetailsSerializerBase, \
+    ThirdPartyDetailsSerializerBase, PersonSerializerBase
 
 from .models import Staff
 
 
-class CategorySerializer(CategorySerializerBase):
-    class Meta(CategorySerializerBase.Meta):
-        fields = ('code', 'name', 'description')
-
-
 class PropertySerializer(PropertySerializerBase):
-
     class Meta(PropertySerializerBase.Meta):
-        fields = ('value', 'mortgage_left', 'share', 'id')
+        fields = ('value', 'mortgage_left', 'share', 'id', 'disputed', 'main')
 
 
 class IncomeSerializer(IncomeSerializerBase):
-
     class Meta(IncomeSerializerBase.Meta):
         fields = ('earnings', 'other_income', 'self_employed', 'total')
 
 
 class SavingsSerializer(SavingsSerializerBase):
-
     class Meta(SavingsSerializerBase.Meta):
         fields = (
-            'bank_balance',
-            'investment_balance',
-            'asset_balance',
-            'credit_balance',
-            'total',
+            'bank_balance', 'investment_balance',
+            'asset_balance', 'credit_balance', 'total',
         )
 
 
 class DeductionsSerializer(DeductionsSerializerBase):
-
     class Meta(DeductionsSerializerBase.Meta):
         fields = (
             'income_tax', 'national_insurance', 'maintenance',
             'childcare', 'mortgage', 'rent',
-            'criminal_legalaid_contributions',
-            'total',
+            'criminal_legalaid_contributions', 'total'
+        )
+
+
+class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
+    class Meta(PersonalDetailsSerializerFull.Meta):
+        fields = (
+            'reference', 'title', 'full_name', 'postcode', 'street',
+            'mobile_phone', 'home_phone', 'email', 'dob',
+            'ni_number', 'exempt_user', 'exempt_user_reason',
+            'contact_for_research', 'safe_to_contact', 'vulnerable_user'
+        )
+
+
+class ThirdPartyPersonalDetailsSerializer(ThirdPartyPersonalDetailsSerializerBase):
+    class Meta(ThirdPartyPersonalDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'title', 'full_name', 'postcode', 'street',
+            'mobile_phone', 'home_phone', 'email'
+        )
+
+
+class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
+    personal_details = ThirdPartyPersonalDetailsSerializer(required=True)
+
+    class Meta(ThirdPartyDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'personal_details', 'pass_phrase', 'reason',
+            'personal_relationship', 'personal_relationship_note',
+            'spoke_to', 'no_contact_reason', 'organisation_name',
         )
 
 
 class PersonSerializer(PersonSerializerBase):
-
     income = IncomeSerializer(required=False)
     savings = SavingsSerializer(required=False)
     deductions = DeductionsSerializer(required=False)
 
     class Meta(PersonSerializerBase.Meta):
         fields = (
-            'income',
-            'savings',
-            'deductions',
+            'income', 'savings', 'deductions',
         )
 
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
-    property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
+    property_set = PropertySerializer(
+        allow_add_remove=True, many=True, required=False
+    )
     you = PersonSerializer(required=False)
     partner = PersonSerializer(required=False)
     notes = serializers.CharField(max_length=500, required=False, read_only=True)
+    disputed_savings = SavingsSerializer(required=False)
 
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
@@ -80,6 +99,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'property_set',
             'you',
             'partner',
+            'disputed_savings',
             'dependants_young',
             'dependants_old',
             'is_you_or_your_partner_over_60',
@@ -90,50 +110,42 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
         )
 
 
-class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
-    class Meta(PersonalDetailsSerializerBase.Meta):
-        fields = (
-            'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone'
-        )
-
-
 class LogSerializer(LogSerializerBase):
 
     class Meta(LogSerializerBase.Meta):
-        fields = ('code',
-                  'created_by',
-                  'created',
-                  'notes',
-                  'level',
-                  'type'
+        fields = (
+            'code',
+            'created_by',
+            'created',
+            'notes',
+            'type',
+            'level',
+            'timer'
         )
 
 
-class CaseSerializer(CaseSerializerBase):
+class CaseSerializer(CaseSerializerFull):
     LOG_SERIALIZER = LogSerializer
 
-    eligibility_check = UUIDSerializer(
-        slug_field='reference')
+    notes = serializers.CharField(max_length=500, required=False, read_only=True)
+    provider_notes = serializers.CharField(max_length=500, required=False)
 
-    personal_details = PersonalDetailsSerializer(required=False)
-
-    created = serializers.DateTimeField(read_only=True)
-    modified = serializers.DateTimeField(read_only=True)
-    created_by = serializers.CharField(read_only=True)
-    provider = serializers.PrimaryKeyRelatedField(required=False)
-    locked_by = serializers.CharField(read_only=True)
-    locked_at = serializers.DateTimeField(read_only=True)
-
-    log_set = serializers.SerializerMethodField('get_log_set')
-
-    class Meta(CaseSerializerBase.Meta):
+    class Meta(CaseSerializerFull.Meta):
         fields = (
-            'eligibility_check', 'personal_details',
-            'reference', 'created', 'modified', 'created_by',
-            'provider', 'log_set', 'locked_by', 'locked_at',
-            'notes', 'provider_notes', 'laa_reference',
-            'requires_action_by'
+            'eligibility_check', 'personal_details', 'reference', 'created',
+            'modified', 'created_by', 'provider', 'log_set',
+            'notes', 'provider_notes', 'full_name', 'thirdparty_details',
+            'adaptation_details', 'laa_reference', 'eligibility_state',
+            'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis',
+            'media_code', 'postcode', 'diagnosis_state'
+        )
+
+
+class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
+    class Meta(AdaptationDetailsSerializerBase.Meta):
+        fields = (
+            'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
+            'language', 'notes', 'reference', 'callback_preference'
         )
 
 

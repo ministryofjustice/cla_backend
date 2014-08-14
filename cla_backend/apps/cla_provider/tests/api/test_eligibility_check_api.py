@@ -1,24 +1,36 @@
-from django.core.urlresolvers import reverse
-
 from rest_framework.test import APITestCase
+from rest_framework import status
+
+from cla_common.constants import REQUIRES_ACTION_BY
 
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
 
-from legalaid.models import Property
+from legalaid.tests.views.mixins.eligibility_check_api import \
+    NestedEligibilityCheckAPIMixin
 
 
-class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
+class EligibilityCheckTestCase(CLAProviderAuthBaseApiTestMixin, NestedEligibilityCheckAPIMixin, APITestCase):
+    LOOKUP_KEY = 'case_reference'
+
+    def get_http_authorization(self):
+        return 'Bearer %s' % self.staff_token
 
     def setUp(self):
-        super(EligibilityCheckTests, self).setUp()
+        super(EligibilityCheckTestCase, self).setUp()
 
-        self.check = make_recipe('legalaid.eligibility_check')
-        self.detail_url = reverse(
-            'cla_provider:eligibility_check-detail', args=(),
-            kwargs={'reference': self.check.reference}
-        )
+        self.check_case.provider = self.provider
+        self.check_case.requires_action_by = REQUIRES_ACTION_BY.PROVIDER
+        self.check_case.save()
 
+    def test_methods_not_allowed(self):
+        super(EligibilityCheckTestCase, self).test_methods_not_allowed()
+
+        check_without_ec = make_recipe('legalaid.case')
+        list_url = self.get_detail_url(check_without_ec.reference)
+
+        # CREATE NOT ALLOWED
+        self._test_post_not_allowed(list_url)
 
     def assertEligibilityCheckResponseKeys(self, response):
         self.assertItemsEqual(
@@ -32,96 +44,69 @@ class EligibilityCheckTests(CLAProviderAuthBaseApiTestMixin, APITestCase):
              'dependants_old',
              'you',
              'partner',
+             'disputed_savings',
              'has_partner',
              'on_passported_benefits',
              'on_nass_benefits',
              'is_you_or_your_partner_over_60',
-             'state']
+             'state',
+            ]
         )
 
-    def assertSavingsEqual(self, data, obj):
-        if obj is None or data is None:
-            self.assertEqual(obj, data)
-            return
+    # CREATE
 
-        for prop in [
-            'bank_balance', 'investment_balance',
-            'asset_balance', 'credit_balance'
-        ]:
-            self.assertEqual(getattr(obj, prop), data.get(prop))
+    def test_create_no_data(self):
+        pass
 
-    def assertIncomeEqual(self, data, obj):
-        if obj is None or data is None:
-            self.assertEqual(obj, data)
-            return
+    def test_create_basic_data(self):
+        pass
 
-    def assertDeductionsEqual(self, data, obj):
-        if obj is None or data is None:
-            self.assertEqual(obj, data)
-            return
+    def test_create_basic_data_with_extras(self):
+        pass
 
-        for prop in [
-            'income_tax', 'national_insurance', 'maintenance', 'childcare',
-            'mortgage', 'rent', 'criminal_legalaid_contributions'
-        ]:
-            self.assertEqual(getattr(obj, prop), data.get(prop))
+    def test_create_then_patch_category(self):
+        pass
 
-    def assertFinanceEqual(self, data, obj):
-        if data is None or obj is None:
-            self.assertEqual(data, obj)
-            return
+    def test_create_with_properties(self):
+        pass
 
-        o_income = getattr(obj, 'income')
-        d_income = data.get('income')
-        self.assertIncomeEqual(d_income, o_income)
+    def test_create_with_more_main_properties_fails(self):
+        pass
 
-        o_savings = getattr(obj, 'savings')
-        d_savings = data.get('savings')
-        self.assertSavingsEqual(d_savings, o_savings)
+    def test_create_with_finances(self):
+        pass
 
-        o_deductions = getattr(obj, 'deductions')
-        d_deductions = data.get('deductions')
-        self.assertDeductionsEqual(d_deductions, o_deductions)
+    def test_errors_masked_by_drf(self):
+        pass
 
-    def get_is_eligible_url(self, reference):
-        return reverse(
-            'call_centre:eligibility_check-is-eligible',
-            args=(),
-            kwargs={'reference': unicode(reference)}
+    # SECURITY
+
+    def test_get_not_found_if_not_belonging_to_provider(self):
+        check = make_recipe('legalaid.eligibility_check')
+        check_case = make_recipe(
+            'legalaid.case', eligibility_check=check,
+            provider=None, requires_action_by=REQUIRES_ACTION_BY.OPERATOR
         )
+        detail_url = self.get_detail_url(check_case.reference)
 
-    def assertEligibilityCheckEqual(self, data, check):
-        self.assertEqual(data['reference'], unicode(check.reference))
-        self.assertEqual(data['category'], check.category.code if check.category else None)
-        self.assertEqual(data['your_problem_notes'], check.your_problem_notes)
-        self.assertEqual(data['notes'], check.notes)
-        self.assertEqual(len(data['property_set']), check.property_set.count())
-        self.assertEqual(data['dependants_young'], check.dependants_young)
-        self.assertEqual(data['dependants_old'], check.dependants_old)
-        self.assertFinanceEqual(data['you'], check.you)
-        self.assertFinanceEqual(data['partner'], check.partner)
+        response = self.client.get(
+            detail_url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_methods_not_allowed(self):
-        """
-        Ensure that we can't POST, PUT or DELETE
-        """
-        ### DETAIL
-        self._test_post_not_allowed(self.detail_url)
-        self._test_delete_not_allowed(self.detail_url)
+    def test_get_not_found_if_belonging_to_different_provider(self):
+        other_provider = make_recipe('cla_provider.provider')
 
+        check = make_recipe('legalaid.eligibility_check')
+        check_case = make_recipe(
+            'legalaid.case', eligibility_check=check,
+            provider=other_provider, requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+        )
+        detail_url = self.get_detail_url(check_case.reference)
 
-    def test_get_object(self):
-        """
-        GET should not return properties of other eligibility check objects
-        """
-        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4)
-
-        # making extra properties
-        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=5)
-
-        self.assertEqual(Property.objects.count(), 9)
-
-        response = self.client.get(self.detail_url, format='json',
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
-        self.assertEligibilityCheckResponseKeys(response)
-        self.assertEligibilityCheckEqual(response.data, self.check)
+        response = self.client.get(
+            detail_url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

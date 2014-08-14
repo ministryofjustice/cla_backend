@@ -1,13 +1,16 @@
-from cla_common.constants import MATTER_TYPE_LEVELS
 from rest_framework import serializers
+
+from core.drf.fields import ThreePartDateField
+from core.serializers import UUIDSerializer, ClaModelSerializer, \
+    PartialUpdateExcludeReadonlySerializerMixin
+
+from cla_common.constants import MATTER_TYPE_LEVELS
+from cla_common.money_interval.models import MoneyInterval
 
 from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.serializers import LogSerializerBase
 
-from core.serializers import UUIDSerializer, ClaModelSerializer
 from cla_provider.models import Provider, OutOfHoursRota
-
-from cla_common.money_interval.models import MoneyInterval
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
@@ -37,6 +40,7 @@ class PropertySerializerBase(ClaModelSerializer):
     class Meta:
         model = Property
         fields = ()
+
 
 class TotalsModelSerializer(ClaModelSerializer):
     total_fields = set()
@@ -99,24 +103,23 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
         fields = ()
 
 
-class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
-    personal_details = PersonalDetailsSerializerBase(required=True)
+class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
+    dob = ThreePartDateField(required=False, source='date_of_birth')
 
-    class Meta:
-        model = ThirdPartyDetails
+    class Meta(PersonalDetailsSerializerBase.Meta):
         fields = ()
 
 
-class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
-    bsl_webcam = serializers.BooleanField(label="BSL - Webcam", required=False)
-    minicom = serializers.BooleanField(label="Minicom", required=False)
-    text_relay = serializers.BooleanField(label="Text relay", required=False)
-    skype_webcam = serializers.BooleanField(label="Skype", required=False)
-    callback_preference = serializers.BooleanField(label="Callback preference",
-            required=False)
+class ThirdPartyPersonalDetailsSerializerBase(PersonalDetailsSerializerBase):
+    class Meta(PersonalDetailsSerializerBase.Meta):
+        fields = ()
+
+
+class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
+    personal_details = ThirdPartyPersonalDetailsSerializerBase(required=True)
 
     class Meta:
-        model = AdaptationDetails
+        model = ThirdPartyDetails
         fields = ()
 
 
@@ -130,14 +133,29 @@ class PersonSerializerBase(ClaModelSerializer):
         fields = ()
 
 
+class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
+    bsl_webcam = serializers.BooleanField(label="BSL - Webcam", required=False)
+    minicom = serializers.BooleanField(label="Minicom", required=False)
+    text_relay = serializers.BooleanField(label="Text relay", required=False)
+    skype_webcam = serializers.BooleanField(label="Skype", required=False)
+    callback_preference = serializers.BooleanField(
+        label="Callback preference", required=False
+    )
+
+    class Meta:
+        model = AdaptationDetails
+        fields = ()
+
+
 class EligibilityCheckSerializerBase(ClaModelSerializer):
+    property_set = PropertySerializerBase(
+        allow_add_remove=True, many=True, required=False
+    )
+    you = PersonSerializerBase(required=False)
+    partner = PersonSerializerBase(required=False)
     category = serializers.SlugRelatedField(slug_field='code', required=False)
     your_problem_notes = serializers.CharField(max_length=500, required=False)
     notes = serializers.CharField(max_length=500, required=False)
-    property_set = PropertySerializerBase(allow_add_remove=True, many=True,
-                                          required=False)
-    you = PersonSerializerBase(required=False)
-    partner = PersonSerializerBase(required=False)
 
     class Meta:
         model = EligibilityCheck
@@ -166,26 +184,26 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 
 
 class MatterTypeSerializerBase(ClaModelSerializer):
+    category = serializers.SlugRelatedField(slug_field='code', read_only=True)
 
     class Meta:
         model = MatterType
-        fields = ()
+        fields = (
+            'category', 'code', 'description', 'level'
+        )
 
 
-class MediaCodeSerializer(ClaModelSerializer):
+class MediaCodeSerializerBase(ClaModelSerializer):
     group = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
     class Meta:
         model = MediaCode
         fields = (
-            'group',
-            'name',
-            'code'
+            'group', 'name', 'code'
         )
 
 
-class CaseSerializerBase(ClaModelSerializer):
-
+class CaseSerializerBase(ClaModelSerializer, PartialUpdateExcludeReadonlySerializerMixin):
     LOG_SERIALIZER = LogSerializerBase
 
     eligibility_check = UUIDSerializer(slug_field='reference', read_only=True)
@@ -205,6 +223,27 @@ class CaseSerializerBase(ClaModelSerializer):
 
     class Meta:
         model = Case
+        fields = ()
+
+
+class CaseSerializerFull(CaseSerializerBase):
+    eligibility_check = UUIDSerializer(slug_field='reference', required=False, read_only=True)
+
+    personal_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
+    thirdparty_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
+    adaptation_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
+
+    created = serializers.DateTimeField(read_only=True)
+    modified = serializers.DateTimeField(read_only=True)
+    created_by = serializers.CharField(read_only=True)
+    provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
+
+    full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
+    eligibility_state = serializers.CharField(source='eligibility_check.state', read_only=True)
+    diagnosis_state = serializers.CharField(source='diagnosis.state', read_only=True)
+    postcode = serializers.CharField(source='personal_details.postcode', read_only=True)
+
+    class Meta(CaseSerializerBase.Meta):
         fields = ()
 
 

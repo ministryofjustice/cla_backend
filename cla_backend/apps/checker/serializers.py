@@ -1,11 +1,11 @@
-from legalaid.serializers import UUIDSerializer, EligibilityCheckSerializerBase, \
-    IncomeSerializerBase, PropertySerializerBase, SavingsSerializerBase, \
-    DeductionsSerializerBase, PersonSerializerBase, PersonalDetailsSerializerBase, \
-    CaseSerializerBase
+from legalaid.serializers import UUIDSerializer, \
+    EligibilityCheckSerializerBase, PropertySerializerBase, \
+    PersonalDetailsSerializerBase, CaseSerializerBase, \
+    IncomeSerializerBase, SavingsSerializerBase, \
+    DeductionsSerializerBase, PersonSerializerBase
 
 
 class PropertySerializer(PropertySerializerBase):
-
     @property
     def errors(self):
         return super(PropertySerializer, self).errors
@@ -15,25 +15,19 @@ class PropertySerializer(PropertySerializerBase):
 
 
 class IncomeSerializer(IncomeSerializerBase):
-
     class Meta(IncomeSerializerBase.Meta):
         fields = ('earnings', 'other_income', 'self_employed', 'total')
 
 
 class SavingsSerializer(SavingsSerializerBase):
-
     class Meta(SavingsSerializerBase.Meta):
         fields = (
-            'bank_balance',
-            'investment_balance',
-            'asset_balance',
-            'credit_balance',
-            'total'
+            'bank_balance', 'investment_balance',
+            'asset_balance', 'credit_balance', 'total',
         )
 
 
 class DeductionsSerializer(DeductionsSerializerBase):
-
     class Meta(DeductionsSerializerBase.Meta):
         fields = (
             'income_tax', 'national_insurance', 'maintenance',
@@ -43,16 +37,13 @@ class DeductionsSerializer(DeductionsSerializerBase):
 
 
 class PersonSerializer(PersonSerializerBase):
-
     income = IncomeSerializer(required=False)
     savings = SavingsSerializer(required=False)
     deductions = DeductionsSerializer(required=False)
 
     class Meta(PersonSerializerBase.Meta):
         fields = (
-            'income',
-            'savings',
-            'deductions',
+            'income', 'savings', 'deductions',
         )
 
 
@@ -95,6 +86,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
 class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field='reference')
     personal_details = PersonalDetailsSerializer()
+
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference',

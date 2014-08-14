@@ -45,7 +45,8 @@ class BaseCaseTestCase(
                 'full_name', 'laa_reference', 'eligibility_state',
                 'adaptation_details', 'billable_time', 'requires_action_by',
                 'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
-                'postcode', 'diagnosis_state', 'thirdparty_details', 'rejected'
+                'postcode', 'diagnosis_state', 'thirdparty_details', 'rejected',
+                'date_of_birth', 'category'
             ]
         )
 

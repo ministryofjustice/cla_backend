@@ -137,7 +137,9 @@ class CaseSerializer(CaseSerializerFull):
     notes = serializers.CharField(max_length=500, required=False)
     provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
     billable_time = serializers.IntegerField(read_only=True)
+    date_of_birth = serializers.CharField(source='personal_details.date_of_birth', read_only=True)
     postcode = serializers.CharField(source='personal_details.postcode', read_only=True)
+    category = serializers.CharField(source='eligibility_check.category.name', read_only=True)
     rejected = serializers.SerializerMethodField('is_rejected')
 
     def is_rejected(self, case):
@@ -154,7 +156,8 @@ class CaseSerializer(CaseSerializerFull):
             'adaptation_details', 'laa_reference', 'eligibility_state',
             'billable_time', 'matter_type1', 'matter_type2',
             'requires_action_by', 'diagnosis',
-            'media_code', 'postcode', 'diagnosis_state', 'rejected'
+            'media_code', 'postcode', 'diagnosis_state', 'rejected',
+            'date_of_birth', 'category'
         )
 
 

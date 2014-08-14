@@ -119,7 +119,7 @@ class CaseViewSet(
         SearchFilter,
     )
 
-    ordering_fields = ('modified', 'created')
+    ordering_fields = ('modified', 'personal_details__full_name', 'personal_details__date_of_birth', 'personal_details__postcode', 'eligibility_check__category__name')
     ordering = '-modified'
 
     def get_queryset(self):

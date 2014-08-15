@@ -2523,16 +2523,18 @@ For loss of home please click 'back' and select the first category.
       <data key="d4"><![CDATA[Family]]></data>
       <data key="d5"><![CDATA[Family]]></data>
       <data key="d9">3</data>
-      <data key="d10"><![CDATA[The Family category covers advice on:
+      <data key="d10"><![CDATA[The family category of law includes advice on:
 
-* Difficulty in obtaining or being denied access to children
-* Trying to obtain custondy and parental rights
-* Involvement of Social Services with a child
-* Protection fo client and/or children from violence/abuse
-* The rights or entitlements in divorce/separation
-* Guardian appointment/rights
-* Trying to adopt a child in care
-* Enforcing previous court orders]]></data>
+* difficulty in getting contact with children or being denied contact
+* trying to get custody and parental rights
+* Social Services involvement with a child
+* protection from domestic violence or abuse
+* rights and entitlements in divorce or separation
+* appointing a guardian and the rights of a guardian
+* trying to adopt a child who's in care
+* enforcing previous court orders
+* child abduction
+]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1938.75" y="150.0"/>
@@ -2550,7 +2552,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n116">
-      <data key="d4"><![CDATA[Client wants to protect themselves from domestic violence/abuse]]></data>
+      <data key="d4"><![CDATA[The client wants to protect themselves or their children from domestic violence or abuse]]></data>
       <data key="d5"><![CDATA[Client protecting self]]></data>
       <data key="d9">1</data>
       <data key="d13">
@@ -2656,7 +2658,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n121">
-      <data key="d4"><![CDATA[Client wants to prevent child abduction or forced marriage for their child]]></data>
+      <data key="d4"><![CDATA[The client wants to prevent child abduction or forced marriage]]></data>
       <data key="d5"><![CDATA[Client wants to prev]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -2699,8 +2701,8 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n123">
-      <data key="d4"><![CDATA[Client has public law problem (the state or local authority are involved) 
-e.g. care proceedings or adoption]]></data>
+      <data key="d4"><![CDATA[The client has a public law problem (the local council is involved) 
+eg care proceedings or adoption]]></data>
       <data key="d5"><![CDATA[Public law
 ]]></data>
       <data key="d9">2</data>
@@ -2807,8 +2809,8 @@ e.g. care proceedings or adoption]]></data>
       </data>
     </node>
     <node id="n128">
-      <data key="d4"><![CDATA[Client has private law issue (between two individuals)
-e.g. divorce/finances/access to children etc]]></data>
+      <data key="d4"><![CDATA[The client has a private law problem (between two individuals)
+e.g. divorce, contact with children]]></data>
       <data key="d5"><![CDATA[Private Law]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -3864,7 +3866,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n177">
-      <data key="d4"><![CDATA[Client is under 18]]></data>
+      <data key="d4"><![CDATA[The client is under 18]]></data>
       <data key="d5"><![CDATA[Client is under 18]]></data>
       <data key="d9">4</data>
       <data key="d13">
@@ -7868,6 +7870,26 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="115.984375" x="17.0078125" y="5.93359375">DEBT OUTOFSCOPE<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n367">
+      <data key="d4"/>
+      <data key="d5"/>
+      <data key="d12"/>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="30.0" x="9045.189873417721" y="1299.177215189873"/>
+          <y:Fill color="#FFCC00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="26.763671875" x="1.6181640625" y="5.93359375">368<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>

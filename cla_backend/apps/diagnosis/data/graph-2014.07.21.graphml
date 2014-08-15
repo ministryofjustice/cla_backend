@@ -2572,7 +2572,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n117">
-      <data key="d4"><![CDATA[Domestic violence - any incident of threatening behaviour, violence or abuse (whether psychological, physical, sexual, financial or emotional) between individuals who are associated with each other)]]></data>
+      <data key="d4"><![CDATA[Domestic violence - any incident of threatening behaviour, violence or abuse (whether psychological, physical, sexual, financial or emotional) within a family relationship]]></data>
       <data key="d5"><![CDATA[Domestic violence - ]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -2615,7 +2615,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n119">
-      <data key="d4"><![CDATA[Child abuse - any physical or mental abuse, including sexual abuse, and abuse in the form of violence, deflect, maltreatment and exploitation. A child is someone aged under 18.]]></data>
+      <data key="d4"><![CDATA[Child abuse - any mental or physical abuse, including sexual abuse and abuse in the form of violence, neglect, maltreatment and exploitation. A child is someone aged under 18.]]></data>
       <data key="d5"><![CDATA[Child abuse - any ph]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -2810,7 +2810,7 @@ eg care proceedings or adoption]]></data>
     </node>
     <node id="n128">
       <data key="d4"><![CDATA[The client has a private law problem (between two individuals)
-e.g. divorce, contact with children]]></data>
+eg divorce, contact with children]]></data>
       <data key="d5"><![CDATA[Private Law]]></data>
       <data key="d9">3</data>
       <data key="d13">

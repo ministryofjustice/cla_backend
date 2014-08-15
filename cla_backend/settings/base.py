@@ -288,6 +288,6 @@ STATSD_PATCHES = [
 ]
 
 STATSD_HOST = os.environ.get('STATSD_HOST', 'localhost')
-STATSD_PORT = os.environ.get('STATSD_POST', 8125)
+STATSD_PORT = os.environ.get('STATSD_PORT', 8125)
 
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'

@@ -49,7 +49,8 @@ class FullCaseAPIMixin(object):
                 'full_name', 'laa_reference', 'eligibility_state',
                 'adaptation_details', 'billable_time', 'requires_action_by',
                 'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
-                'postcode', 'diagnosis_state', 'thirdparty_details'
+                'postcode', 'diagnosis_state', 'thirdparty_details',
+                'exempt_user', 'exempt_user_reason'
             ]
         )
 
@@ -94,7 +95,7 @@ class FullCaseAPIMixin(object):
 
         for field in [
             'notes', 'billable_time', 'laa_reference',
-            'provider_notes', 'requires_action_by'
+            'provider_notes', 'requires_action_by', 'exempt_user', 'exempt_user_reason'
 
         ]:
             if not field in data:

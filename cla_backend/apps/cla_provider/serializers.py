@@ -46,7 +46,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
         fields = (
             'reference', 'title', 'full_name', 'postcode', 'street',
             'mobile_phone', 'home_phone', 'email', 'dob',
-            'ni_number', 'exempt_user', 'exempt_user_reason',
+            'ni_number',
             'contact_for_research', 'safe_to_contact', 'vulnerable_user'
         )
 
@@ -145,7 +145,8 @@ class CaseSerializer(CaseSerializerFull):
             'notes', 'provider_notes', 'full_name', 'thirdparty_details',
             'adaptation_details', 'laa_reference', 'eligibility_state',
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis',
-            'media_code', 'postcode', 'diagnosis_state', 'language',
+            'media_code', 'postcode', 'diagnosis_state',
+            'exempt_user', 'exempt_user_reason', 'language',
             'thirdparty_full_name'
         )
 

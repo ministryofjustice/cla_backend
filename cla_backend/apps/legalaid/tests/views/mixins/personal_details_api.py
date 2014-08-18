@@ -24,8 +24,6 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
                 'email',
                 'dob',
                 'ni_number',
-                'exempt_user',
-                'exempt_user_reason',
                 'contact_for_research',
                 'safe_to_contact',
                 'vulnerable_user'

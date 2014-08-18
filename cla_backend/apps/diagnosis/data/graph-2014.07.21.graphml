@@ -3043,7 +3043,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n139">
-      <data key="d4"><![CDATA[The client is being harassed by their partner or ex-partner]]></data>
+      <data key="d4"><![CDATA[The client is being harassed by their partner or ex-partner or family member]]></data>
       <data key="d5"><![CDATA[Client is being hara]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -3087,7 +3087,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n141">
-      <data key="d4"><![CDATA[The client has taken action to stop harassment by their partner or ex-partner (eg sought an injunction) but this is not being complied with]]></data>
+      <data key="d4"><![CDATA[The client has taken action to stop domestic violence by their partner or ex-partner (eg sought an injunction) but this is not being complied with]]></data>
       <data key="d5"><![CDATA[Client has previousl]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -3239,7 +3239,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n148">
-      <data key="d4"><![CDATA[The client is being harassed by their partner or ex-partner]]></data>
+      <data key="d4"><![CDATA[The client is being harassed by their partner or ex-partner or a family member]]></data>
       <data key="d5"><![CDATA[Client is being hara]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -3283,7 +3283,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n150">
-      <data key="d4"><![CDATA[The client has taken action to stop harassment by their partner or ex-partner (eg sought an injunction) but this is not being complied with]]></data>
+      <data key="d4"><![CDATA[The client has taken action to stop domestic violence by their partner or ex-partner (eg sought an injunction) but this is not being complied with]]></data>
       <data key="d5"><![CDATA[Client has previousl]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -3736,7 +3736,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n171">
-      <data key="d4"><![CDATA[None of the above (including private adoption, becoming a guardian, wills and probate, lasting power of attorney)]]></data>
+      <data key="d4"><![CDATA[None of the above (including becoming a guardian, wills and probate, lasting power of attorney)]]></data>
       <data key="d5"><![CDATA[None of the above (i]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -3933,7 +3933,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n180">
-      <data key="d4"><![CDATA[The client's problem relates to private adoption, wills and probate or lasting power of attorney]]></data>
+      <data key="d4"><![CDATA[The client's problem relates to wills and probate or lasting power of attorney]]></data>
       <data key="d5"><![CDATA[Private adoption, wi]]></data>
       <data key="d9">4</data>
       <data key="d13">

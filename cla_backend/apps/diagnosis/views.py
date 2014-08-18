@@ -64,12 +64,12 @@ class BaseDiagnosisViewSet(
         return ret
 
     def pre_save(self, obj, *args, **kwargs):
-        original_obj = self.get_object()
-        self._original_state = original_obj.state if original_obj else None
+        self._original_obj = self.get_object()
         return super(BaseDiagnosisViewSet, self).pre_save(obj, *args, **kwargs)
 
     def post_save(self, obj, *args, **kwargs):
         ret = super(BaseDiagnosisViewSet, self).post_save(obj, *args, **kwargs)
-        if not self._original_state and obj.state:
-            self.create_diagnosis_log(obj, status='created')
+        if not obj.is_state_unknown():
+            if not self._original_obj or self._original_obj.is_state_unknown():
+                self.create_diagnosis_log(obj, status='created')
         return ret

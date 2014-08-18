@@ -1,5 +1,8 @@
-from cla_eventlog.serializers import LogSerializerBase
 from rest_framework import serializers
+
+from core.serializers import JSONField
+
+from cla_eventlog.serializers import LogSerializerBase
 
 from legalaid.serializers import EligibilityCheckSerializerBase, \
     PropertySerializerBase, SavingsSerializerBase, \
@@ -118,6 +121,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
 
 
 class LogSerializer(LogSerializerBase):
+    patch = JSONField(read_only=True)
 
     class Meta(LogSerializerBase.Meta):
         fields = (
@@ -127,7 +131,8 @@ class LogSerializer(LogSerializerBase):
             'notes',
             'type',
             'level',
-            'timer'
+            'timer',
+            'patch'
         )
 
 

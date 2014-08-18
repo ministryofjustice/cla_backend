@@ -127,8 +127,16 @@ class LogSerializer(LogSerializerBase):
 class CaseSerializer(CaseSerializerFull):
     LOG_SERIALIZER = LogSerializer
 
-    notes = serializers.CharField(max_length=500, required=False, read_only=True)
+    notes = serializers.CharField(
+        max_length=500, required=False, read_only=True
+    )
     provider_notes = serializers.CharField(max_length=500, required=False)
+    language = serializers.CharField(
+        source='adaptation_details.language', read_only=True
+    )
+    thirdparty_full_name = serializers.CharField(
+        source='thirdparty_details.personal_details.full_name', read_only=True
+    )
 
     class Meta(CaseSerializerFull.Meta):
         fields = (
@@ -137,7 +145,8 @@ class CaseSerializer(CaseSerializerFull):
             'notes', 'provider_notes', 'full_name', 'thirdparty_details',
             'adaptation_details', 'laa_reference', 'eligibility_state',
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis',
-            'media_code', 'postcode', 'diagnosis_state'
+            'media_code', 'postcode', 'diagnosis_state', 'language',
+            'thirdparty_full_name'
         )
 
 

@@ -2790,9 +2790,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n127">
-      <data key="d4"><![CDATA[Choose the nature of the issue that’s been brought the matter back into scope
-
-Remember that the abuser will not be in scope. DV will bring all key areas in scope. Child abuse only brings disputes over children into scope]]></data>
+      <data key="d4"><![CDATA[Choose the nature of the issue that the caller would like advice about. ]]></data>
       <data key="d5"><![CDATA[<headline>Choose the]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -3005,9 +3003,8 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n137">
-      <data key="d4"><![CDATA[Choose the nature of the issue that’s been brought the matter back into scope
-
-Remember that the abuser will not be in scope. DV will bring all key areas in scope. Child abuse only brings disputes over children into scope]]></data>
+      <data key="d4"><![CDATA[Choose the nature of the issue that the caller would like advice about. 
+]]></data>
       <data key="d5"><![CDATA[<headline>Choose the]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -3046,7 +3043,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n139">
-      <data key="d4"><![CDATA[Client is being harassed by (e.g. by a partner or expartner)?]]></data>
+      <data key="d4"><![CDATA[The client is being harassed by their partner or ex-partner]]></data>
       <data key="d5"><![CDATA[Client is being hara]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -3090,7 +3087,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n141">
-      <data key="d4"><![CDATA[Client has previously taken action to stop harassment (e.g. sought injunction) but this is not being complied with]]></data>
+      <data key="d4"><![CDATA[The client has taken action to stop harassment by their partner or ex-partner (eg sought an injunction) but this is not being complied with]]></data>
       <data key="d5"><![CDATA[Client has previousl]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -3135,7 +3132,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n143">
-      <data key="d4"><![CDATA[Does the client want advice in support of family mediation?]]></data>
+      <data key="d4"><![CDATA[The client would like advice about family mediation]]></data>
       <data key="d5"><![CDATA[Does the client want]]></data>
       <data key="d9">1</data>
       <data key="d13">
@@ -3242,7 +3239,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n148">
-      <data key="d4"><![CDATA[Client is being harassed by (e.g. by a partner or expartner)?]]></data>
+      <data key="d4"><![CDATA[The client is being harassed by their partner or ex-partner]]></data>
       <data key="d5"><![CDATA[Client is being hara]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -3286,7 +3283,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n150">
-      <data key="d4"><![CDATA[Client has previously taken action to stop harassment (e.g. sought injunction) but this is not being complied with]]></data>
+      <data key="d4"><![CDATA[The client has taken action to stop harassment by their partner or ex-partner (eg sought an injunction) but this is not being complied with]]></data>
       <data key="d5"><![CDATA[Client has previousl]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -3331,7 +3328,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n152">
-      <data key="d4"><![CDATA[Does the client want advice in support of family mediation?]]></data>
+      <data key="d4"><![CDATA[The client would like advice about family mediation ]]></data>
       <data key="d5"><![CDATA[Does the client want]]></data>
       <data key="d9">1</data>
       <data key="d13">
@@ -3481,7 +3478,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n159">
-      <data key="d4"><![CDATA[Client is a child]]></data>
+      <data key="d4"><![CDATA[The client is a child (under 18)]]></data>
       <data key="d5"><![CDATA[Client is a child]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -3524,7 +3521,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n161">
-      <data key="d4"><![CDATA[Advice on preventing forced marriage]]></data>
+      <data key="d4"><![CDATA[The client wants advice on preventing forced marriage]]></data>
       <data key="d5"><![CDATA[Advice on preventing]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -3567,7 +3564,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n163">
-      <data key="d4"><![CDATA[Advice on preventing domestic/international child abduction]]></data>
+      <data key="d4"><![CDATA[The client wants advice on preventing the abduction of a child]]></data>
       <data key="d5"><![CDATA[Advice on preventing]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -3610,7 +3607,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n165">
-      <data key="d4"><![CDATA[Prevent the removal of a child from the UK]]></data>
+      <data key="d4"><![CDATA[The client wants to prevent the removal of a child from the UK]]></data>
       <data key="d5"><![CDATA[Prevent the removal ]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -3653,7 +3650,7 @@ Remember that the abuser will not be in scope. DV will bring all key areas in sc
       </data>
     </node>
     <node id="n167">
-      <data key="d4"><![CDATA[Advice on International Family Maintenance]]></data>
+      <data key="d4"><![CDATA[The client wants advice on international family maintenance]]></data>
       <data key="d5"><![CDATA[Advice on Internatio]]></data>
       <data key="d13">
         <y:ShapeNode>

@@ -45,7 +45,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
         fields = (
             'reference', 'title', 'full_name', 'postcode', 'street',
             'mobile_phone', 'home_phone', 'email', 'dob',
-            'ni_number', 'exempt_user', 'exempt_user_reason',
+            'ni_number',
             'contact_for_research', 'safe_to_contact', 'vulnerable_user'
         )
 
@@ -157,7 +157,8 @@ class CaseSerializer(CaseSerializerFull):
             'billable_time', 'matter_type1', 'matter_type2',
             'requires_action_by', 'diagnosis',
             'media_code', 'postcode', 'diagnosis_state', 'rejected',
-            'date_of_birth', 'category'
+            'date_of_birth', 'category',
+            'exempt_user', 'exempt_user_reason',
         )
 
 

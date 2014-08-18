@@ -6708,7 +6708,7 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n310">
-      <data key="d4"><![CDATA[Primary question: Client seeking to appeal on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court? (Or client had their case heard by a tribunal and they want to appeal the decision)]]></data>
+      <data key="d4"><![CDATA[Primary question: The client wants to appeal their benefits decision on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court. (Or the client has been refused permission by a first-tier tribunal  to appeal their benefits decision in the Upper Tribunal and they want to appeal this decision.)]]></data>
       <data key="d5"><![CDATA[Primary question: Cl]]></data>
       <data key="d9">1</data>
       <data key="d13">
@@ -6814,7 +6814,7 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n315">
-      <data key="d4"><![CDATA[There a potential discrimination issue (client identified, or picked up by the operator). Click to proceed to discrimination.]]></data>
+      <data key="d4"><![CDATA[The client believes (or you suspect) they have been discriminated against. Click to proceed to discrimination.]]></data>
       <data key="d5"><![CDATA[Discrimination?]]></data>
       <data key="d9">2</data>
       <data key="d13">

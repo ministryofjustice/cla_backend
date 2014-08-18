@@ -41,7 +41,8 @@ class AssignToProviderEventTestCase(EventTestCaseMixin, TestCase):
         self._test_process_with_implicit_code(
             'SPOR',
             process_kwargs={
-                'is_manual': False
+                'is_manual': False,
+                'is_spor': True
             }
         )
 
@@ -51,7 +52,8 @@ class AssignToProviderEventTestCase(EventTestCaseMixin, TestCase):
         self._test_process_with_implicit_code(
             'SPOR',
             process_kwargs={
-                'is_manual': True
+                'is_manual': True,
+                'is_spor': True
             }
         )
 

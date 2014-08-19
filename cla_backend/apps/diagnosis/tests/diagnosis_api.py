@@ -39,7 +39,6 @@ class DiagnosisAPIMixin(NestedSimpleResourceCheckAPIMixin):
         raise NotImplementedError()
 
     def assertLogEquals(self, log, diagnosis):
-        print str(type(log.patch)) + ' ****** ' + str(log.patch)
         self.assertItemsEqual(log.patch['nodes'], diagnosis.nodes)
         self.assertItemsEqual(log.patch['reference'], unicode(diagnosis.reference))
 

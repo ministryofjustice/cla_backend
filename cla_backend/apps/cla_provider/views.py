@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import mixins
 from rest_framework.decorators import action
 
-from cla_eventlog.views import BaseEventViewSet
+from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 
 from legalaid.models import Case
 from legalaid.views import BaseUserViewSet, \
@@ -19,7 +19,8 @@ from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
-    PersonalDetailsSerializer, ThirdPartyDetailsSerializer
+    PersonalDetailsSerializer, ThirdPartyDetailsSerializer, \
+    LogSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
 
 
@@ -146,3 +147,7 @@ class DiagnosisViewSet(
     CLAProviderPermissionViewSetMixin, BaseDiagnosisViewSet
 ):
     pass
+
+
+class LogViewSet(CLAProviderPermissionViewSetMixin, BaseLogViewSet):
+    serializer_class = LogSerializer

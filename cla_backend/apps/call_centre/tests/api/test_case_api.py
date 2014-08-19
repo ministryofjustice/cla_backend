@@ -41,7 +41,7 @@ class BaseCaseTestCase(
             response.data.keys(), [
                 'eligibility_check', 'personal_details', 'reference',
                 'created', 'modified', 'created_by',
-                'provider', 'log_set', 'notes', 'provider_notes',
+                'provider', 'notes', 'provider_notes',
                 'full_name', 'laa_reference', 'eligibility_state',
                 'adaptation_details', 'billable_time', 'requires_action_by',
                 'matter_type1', 'matter_type2', 'diagnosis', 'media_code',

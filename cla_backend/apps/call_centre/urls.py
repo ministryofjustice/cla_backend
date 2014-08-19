@@ -7,8 +7,8 @@ from core.drf.router import NestedCLARouter
 
 from core import routers as core_routers
 
-
 from . import views
+
 
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)

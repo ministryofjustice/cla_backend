@@ -60,7 +60,8 @@ class BaseDiagnosisViewSet(
 
     def post_delete(self, obj, *args, **kwargs):
         ret = super(BaseDiagnosisViewSet, self).post_delete(obj, *args, **kwargs)
-        self.create_diagnosis_log(obj, status='deleted')
+        if not obj.is_state_unknown():
+            self.create_diagnosis_log(obj, status='deleted')
         return ret
 
     def pre_save(self, obj, *args, **kwargs):

@@ -54,7 +54,7 @@ class BaseCaseTestCase(
                 'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
                 'postcode', 'diagnosis_state', 'thirdparty_details',
                 'exempt_user', 'exempt_user_reason',
-                'language', 'thirdparty_full_name'
+                'language', 'thirdparty_full_name', 'ecf_statement'
             ]
         )
 

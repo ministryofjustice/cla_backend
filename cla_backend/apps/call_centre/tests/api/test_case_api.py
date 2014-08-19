@@ -47,7 +47,7 @@ class BaseCaseTestCase(
                 'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
                 'postcode', 'diagnosis_state', 'thirdparty_details', 'rejected',
                 'date_of_birth', 'category',
-                'exempt_user', 'exempt_user_reason'
+                'exempt_user', 'exempt_user_reason', 'ecf_statement'
             ]
         )
 

@@ -2,8 +2,10 @@ from django.core.urlresolvers import reverse, NoReverseMatch
 
 from rest_framework import status
 
+from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import CLAAuthBaseApiTestMixin
 
+from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.models import Log
 from cla_eventlog import event_registry
 
@@ -148,3 +150,49 @@ class ExplicitEventCodeViewTestCaseMixin(ImplicitEventCodeViewTestCaseMixin):
         data = super(ExplicitEventCodeViewTestCaseMixin, self).get_default_post_data()
         data['event_code'] = self.get_event_code()
         return data
+
+
+class LogAPIMixin(CLAAuthBaseApiTestMixin):
+    def setUp(self):
+        super(LogAPIMixin, self).setUp()
+        self.case_obj = make_recipe('legalaid.case')
+        self.high_logs = make_recipe(
+            'cla_eventlog.log', case=self.case_obj, level=LOG_LEVELS.HIGH,
+            code="HIGH_", _quantity=4
+        )
+        self.minor_logs = make_recipe(
+            'cla_eventlog.log', case=self.case_obj, level=LOG_LEVELS.MINOR,
+            code="MINIOR_", _quantity=4
+        )
+
+        self.list_url = self.get_list_url(self.case_obj.reference)
+
+    def get_list_url(self, case_ref):
+        return reverse(
+            '%s:log-list' % self.API_URL_NAMESPACE, args=(),
+            kwargs={'case_reference': case_ref}
+        )
+
+    def get_http_authorization(self):
+        raise NotImplementedError()
+
+    def test_methods_not_allowed(self):
+        """
+        Ensure that we can't POST, PUT or DELETE
+        """
+        self._test_post_not_allowed(self.list_url)
+        self._test_put_not_allowed(self.list_url)
+        self._test_delete_not_allowed(self.list_url)
+
+    def test_methods_not_authorized(self):
+        self._test_get_not_authorized(self.list_url, self.invalid_token)
+
+    def test_get(self):
+        response = self.client.get(
+            self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertItemsEqual(
+            [log.code for log in self.high_logs],
+            [log['code'] for log in response.data]
+        )

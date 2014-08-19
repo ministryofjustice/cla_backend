@@ -22,7 +22,7 @@ from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS, \
-    CONTACT_SAFETY, EXEMPT_USER_REASON
+    CONTACT_SAFETY, EXEMPT_USER_REASON, ECF_STATEMENT
 
 from legalaid.fields import MoneyField
 
@@ -36,6 +36,8 @@ class Category(TimeStampedModel):
     name = models.CharField(max_length=500)
     code = models.CharField(max_length=50, unique=True)
     raw_description = models.TextField(blank=True)
+    ecf_available = models.BooleanField(default=False)
+    mandatory = models.BooleanField(default=False)
     description = models.TextField(blank=True, editable=False)
     order = models.PositiveIntegerField(default=0)
 
@@ -443,6 +445,9 @@ class Case(TimeStampedModel):
     # exempt user is a property of case
     exempt_user = models.NullBooleanField(blank=True, null=True)
     exempt_user_reason = models.CharField(blank=True, null=True, max_length=5, choices=EXEMPT_USER_REASON)
+
+    # exceptional case fund
+    ecf_statement = models.CharField(blank=True, null=True, max_length=35, choices=ECF_STATEMENT)
 
     def _set_reference_if_necessary(self):
         if not self.reference:

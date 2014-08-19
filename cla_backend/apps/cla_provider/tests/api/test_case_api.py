@@ -52,7 +52,9 @@ class BaseCaseTestCase(
                 'full_name', 'laa_reference', 'eligibility_state',
                 'adaptation_details', 'requires_action_by',
                 'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
-                'postcode', 'diagnosis_state', 'thirdparty_details'
+                'postcode', 'diagnosis_state', 'thirdparty_details',
+                'exempt_user', 'exempt_user_reason',
+                'language', 'thirdparty_full_name'
             ]
         )
 

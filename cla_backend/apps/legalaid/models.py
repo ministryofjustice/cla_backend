@@ -22,7 +22,7 @@ from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS, \
-    CONTACT_SAFETY
+    CONTACT_SAFETY, EXEMPT_USER_REASON
 
 from legalaid.fields import MoneyField
 
@@ -82,8 +82,6 @@ class PersonalDetails(TimeStampedModel):
     email = models.EmailField(blank=True)
     date_of_birth = models.DateField(blank=True, null=True)
     ni_number = models.CharField(max_length=10, null=True, blank=True)
-    exempt_user = models.NullBooleanField(blank=True, null=True)
-    exempt_user_reason = models.TextField(blank=True, null=True)
     contact_for_research = models.NullBooleanField(blank=True, null=True)
     vulnerable_user = models.NullBooleanField(blank=True, null=True)
     safe_to_contact = models.CharField(max_length=30,
@@ -441,6 +439,10 @@ class Case(TimeStampedModel):
 
     outcome_code = models.CharField(max_length=20, null=True, blank=True)
     level = models.PositiveSmallIntegerField(null=True)
+
+    # exempt user is a property of case
+    exempt_user = models.NullBooleanField(blank=True, null=True)
+    exempt_user_reason = models.CharField(blank=True, null=True, max_length=5, choices=EXEMPT_USER_REASON)
 
     def _set_reference_if_necessary(self):
         if not self.reference:

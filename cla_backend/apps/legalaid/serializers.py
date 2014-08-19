@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from core.drf.fields import ThreePartDateField
@@ -221,9 +222,18 @@ class CaseSerializerBase(ClaModelSerializer, PartialUpdateExcludeReadonlySeriali
         serializer = self.LOG_SERIALIZER(instance=case_log, many=True, required=False, read_only=True)
         return serializer.data
 
+
+    def validate(self, attrs):
+        attrs = super(CaseSerializerBase, self).validate(attrs)
+        if attrs.get('exempt_user') and not attrs.get('exempt_user_reason'):
+            raise ValidationError({u'exempt_user_reason': [u'A reason is required if client is exempt.']})
+        return attrs
+
+
     class Meta:
         model = Case
         fields = ()
+
 
 
 class CaseSerializerFull(CaseSerializerBase):

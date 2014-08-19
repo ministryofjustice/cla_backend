@@ -35,16 +35,10 @@ class AssignToProviderEvent(BaseEvent):
     }
 
     def get_log_code(self, case=None, **kwargs):
+        is_spor = kwargs.get('is_spor', False)
 
-        if case:
-            is_eligible = case.eligibility_check and \
-                case.eligibility_check.state == ELIGIBILITY_STATES.YES
-
-            is_in_scope = case.diagnosis and \
-                case.diagnosis.is_state_inscope()
-
-            if not is_eligible or not is_in_scope:
-                return 'SPOR'
+        if is_spor:
+            return 'SPOR'
 
         is_manual = kwargs['is_manual']
 

@@ -27,7 +27,7 @@ case_router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_n
 case_router.register(r'personal_details', views.PersonalDetailsViewSet)
 case_router.register(r'adaptation_details', views.AdaptationDetailsViewSet)
 case_router.register(r'thirdparty_details', views.ThirdPartyDetailsViewSet)
-case_router.register(r'diagnosis', views.DiagnosisViewSet)
+case_router.register(r'diagnosis', views.DiagnosisViewSet, base_name='diagnosis')
 
 urlpatterns = patterns('',
     url(r'^', include(case_router.urls)),

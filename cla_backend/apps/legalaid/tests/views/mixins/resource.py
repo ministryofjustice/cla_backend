@@ -29,15 +29,13 @@ class SimpleResourceCheckAPIMixin(object):
     def get_http_authorization(self):
         return None
 
-
     def get_list_url(self):
         return reverse('%s:%s-list' % (self.API_NAMESPACE, self.BASE_NAME))
 
-
-    def get_detail_url(self, check_ref):
+    def get_detail_url(self, check_ref, suffix='detail'):
         return reverse(
-            '%s:%s-detail'  % (self.API_URL_NAMESPACE, self.BASE_NAME), args=(),
-            kwargs={self.LOOKUP_KEY: unicode(check_ref)}
+            '%s:%s-%s' % (self.API_URL_NAMESPACE, self.BASE_NAME, suffix),
+            args=(), kwargs={self.LOOKUP_KEY: unicode(check_ref)}
         )
 
     def _create(self, data=None, url=None):

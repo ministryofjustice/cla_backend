@@ -50,7 +50,7 @@ class FullCaseAPIMixin(object):
                 'adaptation_details', 'billable_time', 'requires_action_by',
                 'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
                 'postcode', 'diagnosis_state', 'thirdparty_details',
-                'exempt_user', 'exempt_user_reason'
+                'exempt_user', 'exempt_user_reason', 'ecf_statement',
             ]
         )
 

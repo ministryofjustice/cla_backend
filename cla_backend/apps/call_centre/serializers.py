@@ -159,6 +159,7 @@ class CaseSerializer(CaseSerializerFull):
             'media_code', 'postcode', 'diagnosis_state', 'rejected',
             'date_of_birth', 'category',
             'exempt_user', 'exempt_user_reason',
+            'ecf_statement'
         )
 
 

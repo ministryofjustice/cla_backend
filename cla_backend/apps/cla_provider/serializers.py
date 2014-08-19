@@ -147,7 +147,8 @@ class CaseSerializer(CaseSerializerFull):
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis',
             'media_code', 'postcode', 'diagnosis_state',
             'exempt_user', 'exempt_user_reason', 'language',
-            'thirdparty_full_name'
+            'thirdparty_full_name',
+            'ecf_statement'
         )
 
 

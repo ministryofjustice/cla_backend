@@ -1,17 +1,19 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from core.tests.test_base import CLABaseApiTestMixin
+from core.tests.test_base import CLACheckerAuthBaseApiTestMixin
 
 
-from legalaid.tests.views.mixins.eligibility_check_api import EligibilityCheckAPIMixin
+from legalaid.tests.views.mixins.eligibility_check_api import \
+    EligibilityCheckAPIMixin
 
 
-class EligibilityCheckTestCase(CLABaseApiTestMixin, EligibilityCheckAPIMixin, APITestCase):
-    API_URL_NAMESPACE = 'checker'
+class EligibilityCheckTestCase(
+    CLACheckerAuthBaseApiTestMixin, EligibilityCheckAPIMixin, APITestCase
+):
 
     def test_can_change_notes(self):
-        data={
+        data = {
             'notes': 'new notes',
             'your_problem_notes': 'ipsum lorem2',
         }

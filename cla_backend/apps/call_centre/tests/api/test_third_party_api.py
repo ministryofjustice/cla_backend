@@ -9,6 +9,4 @@ from legalaid.tests.views.mixins.third_party_api import \
 class ThirdPartyDetailsTestCase(
     CLAOperatorAuthBaseApiTestMixin, ThirdPartyDetailsApiMixin, APITestCase
 ):
-
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.token
+    pass

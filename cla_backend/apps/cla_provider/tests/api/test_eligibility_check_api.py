@@ -10,11 +10,11 @@ from legalaid.tests.views.mixins.eligibility_check_api import \
     NestedEligibilityCheckAPIMixin
 
 
-class EligibilityCheckTestCase(CLAProviderAuthBaseApiTestMixin, NestedEligibilityCheckAPIMixin, APITestCase):
+class EligibilityCheckTestCase(
+    CLAProviderAuthBaseApiTestMixin, NestedEligibilityCheckAPIMixin,
+    APITestCase
+):
     LOOKUP_KEY = 'case_reference'
-
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.staff_token
 
     def setUp(self):
         super(EligibilityCheckTestCase, self).setUp()

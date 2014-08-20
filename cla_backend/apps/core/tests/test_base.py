@@ -13,6 +13,11 @@ class CLABaseApiTestMixin(object):
     """
     Useful testing methods
     """
+    API_URL_NAMESPACE = None
+
+    def get_http_authorization(self):
+        return ''
+
     def _test_get_not_allowed(self, url):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
@@ -30,13 +35,11 @@ class CLABaseApiTestMixin(object):
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-
 class CLAAuthBaseApiTestMixin(object):
     """
     Useful testing methods
     """
     DEFAULT_TOKEN = None
-    API_URL_NAMESPACE = None
 
     def setUp(self):
         super(CLAAuthBaseApiTestMixin, self).setUp()
@@ -96,6 +99,9 @@ class CLAAuthBaseApiTestMixin(object):
         # set default token
         self.token = getattr(self, self.DEFAULT_TOKEN)
         self.invalid_token = getattr(self, self.INVALID_TOKEN)
+
+    def get_http_authorization(self):
+        return 'Bearer %s' % self.token
 
     def _test_get_not_allowed(self, url):
         response = self.client.get(url,
@@ -173,3 +179,6 @@ class CLAOperatorAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
     INVALID_TOKEN = 'staff_token'
     API_URL_NAMESPACE = 'call_centre'
 
+
+class CLACheckerAuthBaseApiTestMixin(CLABaseApiTestMixin):
+    API_URL_NAMESPACE = 'checker'

@@ -21,9 +21,6 @@ class ThirdPartyDetailsTestCase(
         self.check_case.requires_action_by = REQUIRES_ACTION_BY.PROVIDER
         self.check_case.save()
 
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.staff_token
-
     # SECURITY
 
     def test_get_not_found_if_not_belonging_to_provider(self):

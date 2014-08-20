@@ -23,9 +23,6 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceCheckAPIMixin):
                 'organisation_name',
             ]
 
-    def get_http_authorization(self):
-        raise NotImplementedError()
-
     def _create(self, data=None, url=None):
         if not url:
             self.check_case.thirdparty_details = None
@@ -67,9 +64,9 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceCheckAPIMixin):
                 }
 
         method_callable = getattr(self.client, method)
-        response = method_callable(url, data,
-                                   format='json',
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
+        response = method_callable(
+            url, data, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         expected_errors = {
@@ -138,7 +135,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceCheckAPIMixin):
         self.check_case.save()
 
         response = self.client.get(
-            self.detail_url, format='json',
+            self.detail_url,
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 

@@ -8,7 +8,4 @@ from diagnosis.tests.diagnosis_api import DiagnosisAPIMixin
 class DiagnosisTestCase(
     DiagnosisAPIMixin, CLAOperatorAuthBaseApiTestMixin, APITestCase
 ):
-    API_URL_NAMESPACE = 'call_centre'
-
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.token
+    pass

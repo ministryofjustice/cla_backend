@@ -26,9 +26,6 @@ class SimpleResourceCheckAPIMixin(object):
             self.check_keys
         )
 
-    def get_http_authorization(self):
-        return None
-
     def get_list_url(self):
         return reverse('%s:%s-list' % (self.API_NAMESPACE, self.BASE_NAME))
 

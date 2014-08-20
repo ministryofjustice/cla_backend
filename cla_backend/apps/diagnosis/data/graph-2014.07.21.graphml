@@ -7845,6 +7845,7 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
     <node id="n365">
       <data key="d4"><![CDATA[The client's problem is about admissions]]></data>
       <data key="d5"><![CDATA[Admissions]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="16500.340476190475" y="660.0"/>
@@ -7864,6 +7865,7 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
     <node id="n366">
       <data key="d4"><![CDATA[The client's problem is about bullying]]></data>
       <data key="d5"><![CDATA[Bullying]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14853.154761904761" y="660.0"/>
@@ -7883,6 +7885,7 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
     <node id="n367">
       <data key="d4"><![CDATA[A child or young person is out of school or in a Pupil Referral Unit]]></data>
       <data key="d5"><![CDATA[Child out of school]]></data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14484.719444444445" y="660.0"/>
@@ -7940,6 +7943,7 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
     <node id="n370">
       <data key="d4"><![CDATA[The client's problem is about further education]]></data>
       <data key="d5"><![CDATA[Further education]]></data>
+      <data key="d9">5</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14087.219444444445" y="660.0"/>
@@ -7960,6 +7964,7 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       <data key="d4"><![CDATA[The problem is about a school, college or local authority's failure to 
 provide for a child or young person's educational needs, or specifically about the failure to provide the support set out in the assessment of their needs]]></data>
       <data key="d5"><![CDATA[Failure to provide support]]></data>
+      <data key="d9">6</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14304.719444444445" y="660.0"/>
@@ -7979,6 +7984,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n372">
       <data key="d4"><![CDATA[The client's problem is about higher education]]></data>
       <data key="d5"><![CDATA[Higher education]]></data>
+      <data key="d9">7</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15755.966666666667" y="660.0"/>
@@ -7998,6 +8004,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n373">
       <data key="d4"><![CDATA[None of the above]]></data>
       <data key="d5"><![CDATA[None of the above]]></data>
+      <data key="d9">9</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14667.531349206349" y="660.0"/>
@@ -8017,6 +8024,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n374">
       <data key="d4"><![CDATA[The client's problem is about transport]]></data>
       <data key="d5"><![CDATA[Transport]]></data>
+      <data key="d9">8</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="17021.590476190475" y="660.0"/>
@@ -8304,6 +8312,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n387">
       <data key="d4"><![CDATA[The client's problem is about negligence in the provision of education]]></data>
       <data key="d5"><![CDATA[Education negligence]]></data>
+      <data key="d9">4</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15073.466666666667" y="660.0"/>
@@ -8433,6 +8442,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n393">
       <data key="d4"><![CDATA[There has been a formal fixed term exclusion from school (a suspension)]]></data>
       <data key="d5"><![CDATA[Suspension]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13759.096031746032" y="810.0"/>
@@ -8452,6 +8462,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n394">
       <data key="d4"><![CDATA[Other]]></data>
       <data key="d5"><![CDATA[Other]]></data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13579.096031746032" y="810.0"/>
@@ -8471,6 +8482,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n395">
       <data key="d4"><![CDATA[The child has been permanently excluded from school or told to go home]]></data>
       <data key="d5"><![CDATA[Permanent exclusion]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13399.096031746032" y="810.0"/>
@@ -8562,6 +8574,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n399">
       <data key="d4"><![CDATA[Other]]></data>
       <data key="d5"><![CDATA[Other]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13944.719444444445" y="810.0"/>
@@ -8605,6 +8618,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n401">
       <data key="d4"><![CDATA[The client's problem is about SEN, transport, admissions or exclusions]]></data>
       <data key="d5"><![CDATA[SEN, transport etc]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14124.719444444445" y="810.0"/>

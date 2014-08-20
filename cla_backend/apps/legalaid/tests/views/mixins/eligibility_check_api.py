@@ -11,6 +11,8 @@ from eligibility_calculator.exceptions import PropertyExpectedException
 from legalaid.models import Category, EligibilityCheck, Property, \
     Person, Income, Savings
 
+from core.tests.test_base import SimpleResourceAPIMixin, \
+    NestedSimpleResourceAPIMixin
 from core.tests.mommy_utils import make_recipe
 
 from cla_common.money_interval.models import MoneyInterval
@@ -19,75 +21,57 @@ from cla_common.money_interval.models import MoneyInterval
 mi_dict_generator = lambda x: {"interval_period": "per_month", "per_interval_value": x}
 
 
-class EligibilityCheckAPIMixin(object):
+class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
     LOOKUP_KEY = 'reference'
+    API_URL_BASE_NAME = 'eligibility_check'
+    RESOURCE_RECIPE = 'legalaid.eligibility_check'
 
-    def setUp(self):
-        super(EligibilityCheckAPIMixin, self).setUp()
+    @property
+    def response_keys(self):
+        return [
+            'reference',
+            'category',
+            'notes',
+            'your_problem_notes',
+            'property_set',
+            'dependants_young',
+            'dependants_old',
+            'you',
+            'partner',
+            'has_partner',
+            'on_passported_benefits',
+            'on_nass_benefits',
+            'is_you_or_your_partner_over_60'
+        ]
 
-        self.list_url = self.get_list_url()
-        self.check = make_recipe('legalaid.eligibility_check',
+    def make_resource(self):
+        return make_recipe(
+            'legalaid.eligibility_check',
             category=make_recipe('legalaid.category'),
             notes=u'lorem ipsum',
-            you=make_recipe('legalaid.person',
-                            income=make_recipe('legalaid.income'),
-                            savings=make_recipe('legalaid.savings'),
-                            deductions=make_recipe('legalaid.deductions'))
-        )
-        self.detail_url = self.get_detail_url(self.check.reference)
-
-    def _create(self, data=None, url=None):
-        if not url: url = self.list_url
-        if not data: data = {}
-        return self.client.post(
-            url, data=data, format='json',
-            HTTP_AUTHORIZATION=self.get_http_authorization()
+            you=make_recipe(
+                'legalaid.person',
+                income=make_recipe('legalaid.income'),
+                savings=make_recipe('legalaid.savings'),
+                deductions=make_recipe('legalaid.deductions')
+            )
         )
 
     def _update(self, ref, data):
         url = self.get_detail_url(unicode(ref))
         return self.client.patch(
-            url, data=data, format='json',
+            url, data=data,
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
     def get_reference_from_response(self, data):
         return data['reference']
 
-    def get_list_url(self):
-        return reverse(
-            '%s:eligibility_check-list' % self.API_URL_NAMESPACE
-        )
-
-    def get_detail_url(self, check_ref):
-        return reverse(
-            '%s:eligibility_check-detail' % self.API_URL_NAMESPACE, args=(),
-            kwargs={self.LOOKUP_KEY: unicode(check_ref)}
-        )
-
     def get_is_eligible_url(self, reference):
         return reverse(
             '%s:eligibility_check-is-eligible' % self.API_URL_NAMESPACE,
             args=(),
             kwargs={self.LOOKUP_KEY: unicode(reference)}
-        )
-
-    def assertEligibilityCheckResponseKeys(self, response):
-        self.assertItemsEqual(
-            response.data.keys(),
-            ['reference',
-             'category',
-             'notes',
-             'your_problem_notes',
-             'property_set',
-             'dependants_young',
-             'dependants_old',
-             'you',
-             'partner',
-             'has_partner',
-             'on_passported_benefits',
-             'on_nass_benefits',
-             'is_you_or_your_partner_over_60']
         )
 
     def assertIncomeEqual(self, data, obj):
@@ -169,10 +153,6 @@ class EligibilityCheckAPIMixin(object):
         self._test_post_not_allowed(self.detail_url)
         self._test_delete_not_allowed(self.detail_url)
 
-    @property
-    def resource_lookup_value(self):
-        return self.check.reference
-
     # CREATE
 
     def test_create_no_data(self):
@@ -183,7 +163,7 @@ class EligibilityCheckAPIMixin(object):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertEligibilityCheckResponseKeys(response)
+        self.assertResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
         self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
@@ -208,7 +188,7 @@ class EligibilityCheckAPIMixin(object):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertEligibilityCheckResponseKeys(response)
+        self.assertResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
         self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
@@ -240,7 +220,7 @@ class EligibilityCheckAPIMixin(object):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertEligibilityCheckResponseKeys(response)
+        self.assertResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
         self.assertEligibilityCheckEqual(response.data,
             EligibilityCheck(
@@ -281,7 +261,7 @@ class EligibilityCheckAPIMixin(object):
 
         self.assertEqual(patch_response.status_code, status.HTTP_200_OK)
 
-        self.assertEligibilityCheckResponseKeys(patch_response)
+        self.assertResponseKeys(patch_response)
         self.assertEligibilityCheckEqual(patch_response.data,
             EligibilityCheck(
                 reference=response.data['reference'], category=category2,
@@ -305,7 +285,7 @@ class EligibilityCheckAPIMixin(object):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertEligibilityCheckResponseKeys(response)
+        self.assertResponseKeys(response)
         self.assertEqual(len(data['property_set']), 2)
         self.assertItemsEqual([p['value'] for p in response.data['property_set']], [111, 999])
         self.assertItemsEqual([p['mortgage_left'] for p in response.data['property_set']], [222, 888])
@@ -388,7 +368,7 @@ class EligibilityCheckAPIMixin(object):
         response = self._create(data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertEligibilityCheckResponseKeys(response)
+        self.assertResponseKeys(response)
         self.assertEligibilityCheckEqual(
             response.data,
             EligibilityCheck(
@@ -612,10 +592,10 @@ class EligibilityCheckAPIMixin(object):
         """
         GET should not return properties of other eligibility check objects
         """
-        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4)
+        make_recipe('legalaid.property', eligibility_check=self.resource, _quantity=4)
 
         # making extra properties
-        make_recipe('legalaid.property', eligibility_check=self.check, _quantity=5)
+        make_recipe('legalaid.property', eligibility_check=self.resource, _quantity=5)
 
         self.assertEqual(Property.objects.count(), 9)
 
@@ -623,8 +603,8 @@ class EligibilityCheckAPIMixin(object):
             self.detail_url, format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
-        self.assertEligibilityCheckResponseKeys(response)
-        self.assertEligibilityCheckEqual(response.data, self.check)
+        self.assertResponseKeys(response)
+        self.assertEligibilityCheckEqual(response.data, self.resource)
 
     # PATCH
 
@@ -638,8 +618,8 @@ class EligibilityCheckAPIMixin(object):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEligibilityCheckResponseKeys(response)
-        self.assertEligibilityCheckEqual(response.data, self.check)
+        self.assertResponseKeys(response)
+        self.assertEligibilityCheckEqual(response.data, self.resource)
 
     def test_patch_basic_data(self):
         """
@@ -661,22 +641,22 @@ class EligibilityCheckAPIMixin(object):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # checking the changed properties
-        self.check.category = category2
-        self.check.your_problem_notes = data['your_problem_notes']
-        self.check.dependants_young = data['dependants_young']
-        self.check.dependants_old = data['dependants_old']
-        self.assertEligibilityCheckEqual(response.data, self.check)
+        self.resource.category = category2
+        self.resource.your_problem_notes = data['your_problem_notes']
+        self.resource.dependants_young = data['dependants_young']
+        self.resource.dependants_old = data['dependants_old']
+        self.assertEligibilityCheckEqual(response.data, self.resource)
 
     def test_patch_properties(self):
         """
         PATCH should add/remove/change properties.
         """
-        properties = make_recipe('legalaid.property', eligibility_check=self.check, _quantity=4, disputed=False)
+        properties = make_recipe('legalaid.property', eligibility_check=self.resource, _quantity=4, disputed=False)
 
         # making extra propertiesn not associated to this eligibility check
         make_recipe('legalaid.property', _quantity=5)
 
-        self.assertEqual(self.check.property_set.count(), 4)
+        self.assertEqual(self.resource.property_set.count(), 4)
 
         # changing property with id == 1, removing all the others and adding
         # an extra one
@@ -693,7 +673,7 @@ class EligibilityCheckAPIMixin(object):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # nothing should have changed here
-        self.assertEligibilityCheckEqual(response.data, self.check)
+        self.assertEligibilityCheckEqual(response.data, self.resource)
 
         # properties should have changed. The new property should have id == 10
         self.assertEqual(len(response.data['property_set']), 2)
@@ -708,7 +688,7 @@ class EligibilityCheckAPIMixin(object):
         self.assertItemsEqual([p['disputed'] for p in response.data['property_set']], [True, True])
 
         # checking the db just in case
-        self.assertEqual(self.check.property_set.count(), 2)
+        self.assertEqual(self.resource.property_set.count(), 2)
 
     def test_patch_with_finances(self):
         """
@@ -767,9 +747,9 @@ class EligibilityCheckAPIMixin(object):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # finances props should have changed
-        self.check.you = Person.from_dict(data['you'])
-        self.check.partner = Person.from_dict(data['partner'])
-        self.assertEligibilityCheckEqual(response.data, self.check)
+        self.resource.you = Person.from_dict(data['you'])
+        self.resource.partner = Person.from_dict(data['partner'])
+        self.assertEligibilityCheckEqual(response.data, self.resource)
 
     def test_patch_with_partial_finances(self):
         """
@@ -791,11 +771,11 @@ class EligibilityCheckAPIMixin(object):
 
         }
 
-        self.check.you.income = Income(id=self.check.you.income.id, **existing_your_finances_values['income'])
-        self.check.you.income.save()
+        self.resource.you.income = Income(id=self.resource.you.income.id, **existing_your_finances_values['income'])
+        self.resource.you.income.save()
 
-        self.check.you.savings = Savings(id=self.check.you.savings.id, **existing_your_finances_values['savings'])
-        self.check.you.savings.save()
+        self.resource.you.savings = Savings(id=self.resource.you.savings.id, **existing_your_finances_values['savings'])
+        self.resource.you.savings.save()
 
         # new values that should change after the patch
         data={
@@ -820,9 +800,9 @@ class EligibilityCheckAPIMixin(object):
         # only given finances props should have changed
         expected_your_finances_values = {'you': copy.deepcopy(existing_your_finances_values)}
         expected_your_finances_values['you'].update(data['you'])
-        self.check.you = Person.from_dict(expected_your_finances_values['you'])
+        self.resource.you = Person.from_dict(expected_your_finances_values['you'])
 
-        self.assertEligibilityCheckEqual(response.data, self.check)
+        self.assertEligibilityCheckEqual(response.data, self.resource)
 
     def test_patch_in_error(self):
         self._test_method_in_error('patch', self.detail_url)
@@ -831,9 +811,9 @@ class EligibilityCheckAPIMixin(object):
         """
         other_property is assigned to another eligibility_check.
 
-        We try to assign this other_property to our self.check.
+        We try to assign this other_property to our self.resource.
 
-        The endpoint should NOT change the other_property and our self.check.property_set
+        The endpoint should NOT change the other_property and our self.resource.property_set
         should NOT point to other_property.
         """
         other_property = make_recipe('legalaid.property')
@@ -848,7 +828,7 @@ class EligibilityCheckAPIMixin(object):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotEqual(response.data['property_set'][0]['id'], other_property.pk)
-        self.assertNotEqual(other_property.eligibility_check.pk, self.check.pk)
+        self.assertNotEqual(other_property.eligibility_check.pk, self.resource.pk)
 
     # Just check that eligibility check endpoint responds
     # in a sensible way
@@ -898,42 +878,14 @@ class EligibilityCheckAPIMixin(object):
         self.assertEqual(response.data['is_eligible'], 'unknown')
 
 
-class NestedEligibilityCheckAPIMixin(EligibilityCheckAPIMixin):
+class NestedEligibilityCheckAPIMixin(NestedSimpleResourceAPIMixin, EligibilityCheckAPIMixin):
     LOOKUP_KEY = 'case_reference'
-
-    def setUp(self):
-        # THIS IS TOTALLY INTENTIONAL (super with EligibilityCheckAPIMixin to skip the
-        # stuff that happens in EligibilityCheckAPIMixin's setUp
-        super(EligibilityCheckAPIMixin, self).setUp()
-
-        self.check = make_recipe('legalaid.eligibility_check',
-                                 category=make_recipe('legalaid.category'),
-                                 notes=u'lorem ipsum',
-                                 you=make_recipe('legalaid.person',
-                                                 income=make_recipe('legalaid.income'),
-                                                 savings=make_recipe('legalaid.savings'),
-                                                 deductions=make_recipe('legalaid.deductions'))
-        )
-
-        self.check_case = make_recipe('legalaid.case', eligibility_check=self.check)
-
-        self.detail_url = self.get_detail_url(self.resource_lookup_value)
-
-    @property
-    def resource_lookup_value(self):
-        return self.check_case.reference
-
-    def _create(self, data=None, url=None):
-        if not url:
-            self.check_case.eligibility_check = None
-            self.check_case.save()
-            url = self.get_detail_url(self.resource_lookup_value)
-
-        if not data: data = {}
-        return super(NestedEligibilityCheckAPIMixin, self)._create(data=data, url=url)
+    PARENT_LOOKUP_KEY = 'reference'
+    PARENT_RESOURCE_RECIPE = 'legalaid.case'
+    PARENT_PK_FIELD = 'eligibility_check'
 
     def get_reference_from_response(self, data):
-        return self.check_case.reference
+        return self.parent_resource.reference
 
     def test_methods_not_allowed(self):
         """

@@ -13,26 +13,25 @@ class EligibilityCheckTestCase(
 ):
     LOOKUP_KEY = 'case_reference'
 
-    def assertEligibilityCheckResponseKeys(self, response):
-        self.assertItemsEqual(
-            response.data.keys(),
-            ['reference',
-             'category',
-             'notes',
-             'your_problem_notes',
-             'property_set',
-             'dependants_young',
-             'dependants_old',
-             'you',
-             'partner',
-             'disputed_savings',
-             'has_partner',
-             'on_passported_benefits',
-             'on_nass_benefits',
-             'is_you_or_your_partner_over_60',
-             'state',
-            ]
-        )
+    @property
+    def response_keys(self):
+        return [
+            'reference',
+            'category',
+            'notes',
+            'your_problem_notes',
+            'property_set',
+            'dependants_young',
+            'dependants_old',
+            'you',
+            'partner',
+            'disputed_savings',
+            'has_partner',
+            'on_passported_benefits',
+            'on_nass_benefits',
+            'is_you_or_your_partner_over_60',
+            'state',
+        ]
 
     def test_notes_are_readonly(self):
         data={
@@ -46,8 +45,8 @@ class EligibilityCheckTestCase(
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # checking the changed properties
-        self.check.your_problem_notes = data['your_problem_notes']
-        self.assertEligibilityCheckEqual(response.data, self.check)
+        self.resource.your_problem_notes = data['your_problem_notes']
+        self.assertEligibilityCheckEqual(response.data, self.resource)
         self.assertTrue(response.data['notes'] != data['notes'])
 
     def test_empty_fields(self):

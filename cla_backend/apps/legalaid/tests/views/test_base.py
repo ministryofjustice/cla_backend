@@ -12,12 +12,17 @@ from call_centre.models import Operator
 class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
     """
     Useful testing methods
+
+    NOTE: never subclass this directly, use one of the sublasses:
+        CLAProviderAuthBaseApiTestMixin
+        CLAOperatorAuthBaseApiTestMixin
+        CLACheckerAuthBaseApiTestMixin
+
+        instead.
     """
     DEFAULT_TOKEN = None
 
     def setUp(self):
-        super(CLAAuthBaseApiTestMixin, self).setUp()
-
         # create a user
         self.username = 'john'
         self.email = 'lennon@thebeatles.com'
@@ -73,6 +78,8 @@ class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
         # set default token
         self.token = getattr(self, self.DEFAULT_TOKEN)
         self.invalid_token = getattr(self, self.INVALID_TOKEN)
+
+        super(CLAAuthBaseApiTestMixin, self).setUp()
 
     def get_http_authorization(self, token=None):
         return super(CLAAuthBaseApiTestMixin, self).get_http_authorization(

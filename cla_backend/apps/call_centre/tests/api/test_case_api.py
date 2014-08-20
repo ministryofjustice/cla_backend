@@ -31,20 +31,19 @@ class BaseCaseTestCase(
     def get_case_serializer_clazz(self):
         return CaseSerializer
 
-    def assertCaseResponseKeys(self, response):
-        self.assertItemsEqual(
-            response.data.keys(), [
-                'eligibility_check', 'personal_details', 'reference',
-                'created', 'modified', 'created_by',
-                'provider', 'notes', 'provider_notes',
-                'full_name', 'laa_reference', 'eligibility_state',
-                'adaptation_details', 'billable_time', 'requires_action_by',
-                'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
-                'postcode', 'diagnosis_state', 'thirdparty_details', 'rejected',
-                'date_of_birth', 'category',
-                'exempt_user', 'exempt_user_reason', 'ecf_statement'
-            ]
-        )
+    @property
+    def response_keys(self):
+        return [
+            'eligibility_check', 'personal_details', 'reference',
+            'created', 'modified', 'created_by',
+            'provider', 'notes', 'provider_notes',
+            'full_name', 'laa_reference', 'eligibility_state',
+            'adaptation_details', 'billable_time', 'requires_action_by',
+            'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
+            'postcode', 'diagnosis_state', 'thirdparty_details', 'rejected',
+            'date_of_birth', 'category',
+            'exempt_user', 'exempt_user_reason', 'ecf_statement'
+        ]
 
 
 class CaseGeneralTestCase(BaseCaseTestCase):
@@ -97,7 +96,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCaseResponseKeys(response)
+        self.assertResponseKeys(response)
 
         self.assertCaseEqual(response.data,
             Case(
@@ -135,7 +134,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCaseResponseKeys(response)
+        self.assertResponseKeys(response)
         self.assertEqual(response.data['eligibility_check'], None)
 
         # checking that requires_action_by is set to OPERATOR
@@ -161,7 +160,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCaseResponseKeys(response)
+        self.assertResponseKeys(response)
 
         self.assertCaseEqual(response.data,
             Case(
@@ -228,7 +227,7 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
             format='json', HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['provider_notes'], self.case_obj.provider_notes)
+        self.assertEqual(response.data['provider_notes'], self.resource.provider_notes)
         self.assertNotEqual(response.data['provider_notes'], 'abc123')
 
 
@@ -364,7 +363,7 @@ class AssignCaseTestCase(BaseCaseTestCase):
 
 class DeferAssignmentTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def get_url(self, reference=None):
-        reference = reference or self.check.reference
+        reference = reference or self.resource.reference
         return reverse(
             'call_centre:case-defer-assignment', args=(),
             kwargs={'reference': reference}
@@ -377,7 +376,7 @@ class DeclineHelpTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         return form.fields['event_code'].choices[0][0]
 
     def get_url(self, reference=None):
-        reference = reference or self.check.reference
+        reference = reference or self.resource.reference
         return reverse(
             'call_centre:case-decline-help', args=(),
             kwargs={'reference': reference}
@@ -390,7 +389,7 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         return form.fields['event_code'].choices[0][0]
 
     def get_url(self, reference=None):
-        reference = reference or self.check.reference
+        reference = reference or self.resource.reference
         return reverse(
             'call_centre:case-suspend', args=(),
             kwargs={'reference': reference}

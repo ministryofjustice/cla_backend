@@ -5,8 +5,12 @@ from core.tests.test_base import \
 
 
 class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
+    LOOKUP_KEY = 'case_reference'
     RESOURCE_RECIPE = 'legalaid.thirdparty_details'
     API_URL_BASE_NAME = 'thirdpartydetails'
+    PARENT_LOOKUP_KEY = 'reference'
+    PARENT_RESOURCE_RECIPE = 'legalaid.case'
+    PARENT_PK_FIELD = 'thirdparty_details'
 
     @property
     def response_keys(self):
@@ -22,12 +26,6 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
                 'no_contact_reason',
                 'organisation_name',
             ]
-
-    def _create(self, data=None, url=None):
-        if not url:
-            self.check_case.thirdparty_details = None
-            self.check_case.save()
-        return super(ThirdPartyDetailsApiMixin, self)._create(data=data, url=url)
 
     def _get_default_post_data(self):
         return {"personal_details": {
@@ -123,22 +121,18 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
         # check initial state is correct
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCheckResponseKeys(response)
+        self.assertResponseKeys(response)
 
         self.assertThirdPartyDetailsEqual(response.data, check)
 
     # GET
 
     def test_get(self):
-        thirdparty_details = self.resource
-        self.check_case.thirdparty_details = thirdparty_details
-        self.check_case.save()
-
         response = self.client.get(
             self.detail_url,
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
         self.assertThirdPartyDetailsEqual(
-            response.data, self.check_case.thirdparty_details
+            response.data, self.parent_resource.thirdparty_details
         )

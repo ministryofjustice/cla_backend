@@ -4,8 +4,6 @@ from rest_framework import status
 
 from cla_common.constants import DIAGNOSIS_SCOPE
 
-from core.tests.mommy_utils import make_recipe
-
 from cla_eventlog.models import Log
 
 from core.tests.test_base import \
@@ -16,8 +14,12 @@ from diagnosis.tests.utils import MockedGraph
 
 
 class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
+    LOOKUP_KEY = 'case_reference'
     RESOURCE_RECIPE = 'diagnosis.diagnosis'
     API_URL_BASE_NAME = 'diagnosis'
+    PARENT_LOOKUP_KEY = 'reference'
+    PARENT_RESOURCE_RECIPE = 'legalaid.case'
+    PARENT_PK_FIELD = 'diagnosis'
 
     @mock.patch('diagnosis.serializers.graph', new_callable=MockedGraph)
     def __call__(self, runner, mocked_graph, *args, **kwargs):
@@ -30,8 +32,6 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
     def setUp(self):
         super(DiagnosisAPIMixin, self).setUp()
 
-        self.check_case = make_recipe('legalaid.case', diagnosis=self.resource)
-        self.detail_url = self.get_detail_url(self.resource_lookup_value)
         self.move_down_url = self.get_detail_url(self.resource_lookup_value, suffix='move-down')
         self.move_up_url = self.get_detail_url(self.resource_lookup_value, suffix='move-up')
 

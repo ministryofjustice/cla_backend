@@ -23,12 +23,19 @@ class BaseCaseTestCase(
     CLAProviderAuthBaseApiTestMixin, FullCaseAPIMixin, APITestCase
 ):
 
-    def setUp(self):
-        super(BaseCaseTestCase, self).setUp()
-
-        self.case_obj.provider = self.provider
-        self.case_obj.requires_action_by = REQUIRES_ACTION_BY.PROVIDER
-        self.case_obj.save()
+    @property
+    def response_keys(self):
+        return [
+            'eligibility_check', 'personal_details', 'reference',
+            'created', 'modified', 'created_by',
+            'provider', 'notes', 'provider_notes',
+            'full_name', 'laa_reference', 'eligibility_state',
+            'adaptation_details', 'requires_action_by',
+            'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
+            'postcode', 'diagnosis_state', 'thirdparty_details',
+            'exempt_user', 'exempt_user_reason',
+            'language', 'thirdparty_full_name', 'ecf_statement'
+        ]
 
     def get_extra_search_make_recipe_kwargs(self):
         return {
@@ -39,19 +46,10 @@ class BaseCaseTestCase(
     def get_case_serializer_clazz(self):
         return CaseSerializer
 
-    def assertCaseResponseKeys(self, response):
-        self.assertItemsEqual(
-            response.data.keys(), [
-                'eligibility_check', 'personal_details', 'reference',
-                'created', 'modified', 'created_by',
-                'provider', 'notes', 'provider_notes',
-                'full_name', 'laa_reference', 'eligibility_state',
-                'adaptation_details', 'requires_action_by',
-                'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
-                'postcode', 'diagnosis_state', 'thirdparty_details',
-                'exempt_user', 'exempt_user_reason',
-                'language', 'thirdparty_full_name', 'ecf_statement'
-            ]
+    def make_resource(self):
+        return super(BaseCaseTestCase, self).make_resource(
+            provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
         )
 
 
@@ -102,7 +100,7 @@ class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         return form.fields['event_code'].choices[0][0]
 
     def get_url(self, reference=None):
-        reference = reference or self.check.reference
+        reference = reference or self.resource.reference
         return reverse(
             'cla_provider:case-reject', args=(),
             kwargs={'reference': reference}
@@ -113,7 +111,7 @@ class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     NO_BODY_RESPONSE = False
 
     def get_url(self, reference=None):
-        reference = reference or self.check.reference
+        reference = reference or self.resource.reference
         return reverse(
             'cla_provider:case-accept', args=(),
             kwargs={'reference': reference}
@@ -122,7 +120,7 @@ class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
 class CloseCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def get_url(self, reference=None):
-        reference = reference or self.check.reference
+        reference = reference or self.resource.reference
         return reverse(
             'cla_provider:case-close', args=(),
             kwargs={'reference': reference}

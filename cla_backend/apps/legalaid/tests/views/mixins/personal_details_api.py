@@ -7,8 +7,12 @@ from core.tests.test_base import \
 
 
 class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
-    RESOURCE_RECIPE = 'legalaid.personal_details'
+    LOOKUP_KEY = 'case_reference'
+    PARENT_LOOKUP_KEY = 'reference'
     API_URL_BASE_NAME = 'personaldetails'
+    RESOURCE_RECIPE = 'legalaid.personal_details'
+    PARENT_RESOURCE_RECIPE = 'legalaid.case'
+    PARENT_PK_FIELD = 'personal_details'
 
     @property
     def response_keys(self):
@@ -38,12 +42,6 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             'mobile_phone': '0123456789',
             'home_phone': '9876543210',
         }
-
-    def _create(self, data=None, url=None):
-        if not url:
-            self.check_case.personal_details = None
-            self.check_case.save()
-        return super(PersonalDetailsAPIMixin, self)._create(data=data, url=url)
 
     def _test_method_in_error(self, method, url):
         """
@@ -111,7 +109,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         """
         response = self._create()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCheckResponseKeys(response)
+        self.assertResponseKeys(response)
 
     def test_create_with_data(self):
         data = self._get_default_post_data()
@@ -121,7 +119,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         # check initial state is correct
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCheckResponseKeys(response)
+        self.assertResponseKeys(response)
 
         self.assertPersonalDetailsEqual(response.data, check)
 
@@ -133,4 +131,4 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
-        self.assertPersonalDetailsEqual(response.data, self.check_case.personal_details)
+        self.assertPersonalDetailsEqual(response.data, self.parent_resource.personal_details)

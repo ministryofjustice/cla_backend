@@ -2,14 +2,12 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from legalaid.tests.views.test_base import CLAAuthBaseApiTestMixin
-
 from core.tests.mommy_utils import make_recipe
 
 from timer.models import Timer
 
 
-class TimerAPIMixin(CLAAuthBaseApiTestMixin):
+class TimerAPIMixin(object):
     def setUp(self):
         super(TimerAPIMixin, self).setUp()
 
@@ -31,7 +29,7 @@ class TimerAPIMixin(CLAAuthBaseApiTestMixin):
 
         response = self.client.post(
             self.detail_url, data={},
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+            format='json', HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['created'], timer.created)
@@ -40,7 +38,7 @@ class TimerAPIMixin(CLAAuthBaseApiTestMixin):
         self.assertEqual(Timer.objects.count(), 0)
         response = self.client.post(
             self.detail_url, data={},
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+            format='json', HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -52,7 +50,7 @@ class TimerAPIMixin(CLAAuthBaseApiTestMixin):
     def test_get_404_without_timers(self):
         response = self.client.get(
             self.detail_url,
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+            format='json', HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -61,7 +59,7 @@ class TimerAPIMixin(CLAAuthBaseApiTestMixin):
 
         response = self.client.get(
             self.detail_url,
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+            format='json', HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

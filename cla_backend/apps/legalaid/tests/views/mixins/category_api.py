@@ -1,21 +1,18 @@
-from django.core.urlresolvers import reverse
-
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
+from core.tests.test_base import SimpleResourceAPIMixin
 
 
-class CategoryAPIMixin(object):
+class CategoryAPIMixin(SimpleResourceAPIMixin):
+    LOOKUP_KEY = 'code'
+    API_URL_BASE_NAME = 'category'
+    RESOURCE_RECIPE = 'legalaid.category'
+
     def setUp(self):
         super(CategoryAPIMixin, self).setUp()
 
-        self.categories = make_recipe('legalaid.category', _quantity=3)
-
-        self.list_url = reverse('%s:category-list' % self.API_URL_NAMESPACE)
-        self.detail_url = reverse(
-            '%s:category-detail' % self.API_URL_NAMESPACE, args=(),
-            kwargs={'code': self.categories[0].code}
-        )
+        self.categories = make_recipe('legalaid.category', _quantity=2)
 
     def test_get_allowed(self):
         """

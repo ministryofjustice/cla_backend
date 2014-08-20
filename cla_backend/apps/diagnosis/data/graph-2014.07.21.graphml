@@ -8140,6 +8140,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n379">
       <data key="d4"><![CDATA[The client has received a decision on their appeal from the schools adjudicator ]]></data>
       <data key="d5"><![CDATA[Admissions]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="16298.778571428571" y="810.0"/>
@@ -8159,6 +8160,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n380">
       <data key="d4"><![CDATA[The client has appealed to the Independent Appeals Panel but lost the appeal]]></data>
       <data key="d5"><![CDATA[Appeal to IAP but lost]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="16661.590476190475" y="810.0"/>
@@ -8178,6 +8180,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n381">
       <data key="d4"><![CDATA[The client has not yet received a decision on their appeal]]></data>
       <data key="d5"><![CDATA[No decision yet]]></data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="16841.590476190475" y="810.0"/>

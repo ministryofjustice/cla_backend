@@ -7883,7 +7883,7 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </node>
     <node id="n367">
-      <data key="d4"><![CDATA[The client is being harassed, eg by a partner or ex-partner]]></data>
+      <data key="d4"><![CDATA[The client is being harassed by a partner, ex-partner or family member]]></data>
       <data key="d5"><![CDATA[Client being harassed by partner or ex-partner]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -12373,7 +12373,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e386" source="n125" target="n126">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="50.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -12387,7 +12386,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e387" source="n125" target="n171">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="-50.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -12401,7 +12399,6 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </edge>
     <edge id="e388" source="n125" target="n136">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>

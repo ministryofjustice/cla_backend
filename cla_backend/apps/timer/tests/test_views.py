@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from core.tests.test_base import CLAAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAAuthBaseApiTestMixin
 
 from core.tests.mommy_utils import make_recipe
 

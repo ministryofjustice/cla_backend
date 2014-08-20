@@ -170,7 +170,7 @@ class EligibilityCheckAPIMixin(object):
         self._test_delete_not_allowed(self.detail_url)
 
     @property
-    def check_reference(self):
+    def resource_lookup_value(self):
         return self.check.reference
 
     # CREATE
@@ -866,7 +866,7 @@ class EligibilityCheckAPIMixin(object):
         v = mocked_eligibility_checker()
         v.is_eligible.return_value = True
         response = self.client.post(
-            self.get_is_eligible_url(self.check_reference),
+            self.get_is_eligible_url(self.resource_lookup_value),
             data={},
             format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization())
@@ -878,7 +878,7 @@ class EligibilityCheckAPIMixin(object):
         v = mocked_eligibility_checker()
         v.is_eligible.return_value = False
         response = self.client.post(
-            self.get_is_eligible_url(self.check_reference),
+            self.get_is_eligible_url(self.resource_lookup_value),
             data={},
             format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization())
@@ -890,7 +890,7 @@ class EligibilityCheckAPIMixin(object):
         v = mocked_eligibility_checker()
         v.is_eligible.side_effect = PropertyExpectedException
         response = self.client.post(
-            self.get_is_eligible_url(self.check_reference),
+            self.get_is_eligible_url(self.resource_lookup_value),
             data={},
             format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization())
@@ -917,17 +917,17 @@ class NestedEligibilityCheckAPIMixin(EligibilityCheckAPIMixin):
 
         self.check_case = make_recipe('legalaid.case', eligibility_check=self.check)
 
-        self.detail_url = self.get_detail_url(self.check_reference)
+        self.detail_url = self.get_detail_url(self.resource_lookup_value)
 
     @property
-    def check_reference(self):
+    def resource_lookup_value(self):
         return self.check_case.reference
 
     def _create(self, data=None, url=None):
         if not url:
             self.check_case.eligibility_check = None
             self.check_case.save()
-            url = self.get_detail_url(self.check_reference)
+            url = self.get_detail_url(self.resource_lookup_value)
 
         if not data: data = {}
         return super(NestedEligibilityCheckAPIMixin, self)._create(data=data, url=url)

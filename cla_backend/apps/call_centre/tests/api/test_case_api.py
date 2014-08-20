@@ -17,7 +17,7 @@ from cla_eventlog.models import Log
 from cla_eventlog.tests.test_views import ExplicitEventCodeViewTestCaseMixin, \
     ImplicitEventCodeViewTestCaseMixin
 
-from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
 
 from call_centre.forms import DeclineHelpCaseForm, \

@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 
 from core.tests.mommy_utils import make_recipe
-from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 
 from legalaid.tests.views.mixins.user_api import UserAPIMixin
 

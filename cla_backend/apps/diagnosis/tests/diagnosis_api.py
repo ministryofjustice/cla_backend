@@ -8,7 +8,7 @@ from core.tests.mommy_utils import make_recipe
 
 from cla_eventlog.models import Log
 
-from legalaid.tests.views.mixins.resource import \
+from core.tests.test_base import \
     NestedSimpleResourceAPIMixin
 
 from diagnosis.models import DiagnosisTraversal
@@ -16,7 +16,7 @@ from diagnosis.tests.utils import MockedGraph
 
 
 class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
-    CHECK_RECIPE = 'diagnosis.diagnosis'
+    RESOURCE_RECIPE = 'diagnosis.diagnosis'
     API_URL_BASE_NAME = 'diagnosis'
 
     @mock.patch('diagnosis.serializers.graph', new_callable=MockedGraph)
@@ -30,10 +30,10 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
     def setUp(self):
         super(DiagnosisAPIMixin, self).setUp()
 
-        self.check_case = make_recipe('legalaid.case', diagnosis=self.check)
-        self.detail_url = self.get_detail_url(self.check_reference)
-        self.move_down_url = self.get_detail_url(self.check_reference, suffix='move-down')
-        self.move_up_url = self.get_detail_url(self.check_reference, suffix='move-up')
+        self.check_case = make_recipe('legalaid.case', diagnosis=self.resource)
+        self.detail_url = self.get_detail_url(self.resource_lookup_value)
+        self.move_down_url = self.get_detail_url(self.resource_lookup_value, suffix='move-down')
+        self.move_up_url = self.get_detail_url(self.resource_lookup_value, suffix='move-up')
 
     def assertLogEquals(self, log, diagnosis):
         self.assertItemsEqual(log.patch['nodes'], diagnosis.nodes)
@@ -52,14 +52,14 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
         self.assertEqual(Log.objects.count(), 0)
 
     def test_delete_creates_log_with_completed_diagnosis(self):
-        self.check.current_node_id = 'INSCOPE'
-        self.check.nodes = [
+        self.resource.current_node_id = 'INSCOPE'
+        self.resource.nodes = [
             self.mocked_graph.get_node_dict('2a'),
             self.mocked_graph.get_node_dict('3ab'),
             self.mocked_graph.get_node_dict('INSCOPE')
         ]
-        self.check.state = DIAGNOSIS_SCOPE.INSCOPE
-        self.check.save()
+        self.resource.state = DIAGNOSIS_SCOPE.INSCOPE
+        self.resource.save()
 
         self.assertEqual(Log.objects.count(), 0)
         self.assertEqual(DiagnosisTraversal.objects.count(), 1)
@@ -72,7 +72,7 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
         self.assertEqual(DiagnosisTraversal.objects.count(), 0)
         self.assertEqual(Log.objects.count(), 1)
 
-        self.assertLogEquals(Log.objects.all()[0], self.check)
+        self.assertLogEquals(Log.objects.all()[0], self.resource)
 
     def test_move_down_creates_log_when_diagnosis_completes(self):
         # moving down (not completed) => log NOT created
@@ -94,10 +94,10 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(Log.objects.count(), 1)
-        self.check = DiagnosisTraversal.objects.get(pk=self.check.pk)
-        self.assertTrue(self.check.is_state_inscope())
+        self.resource = DiagnosisTraversal.objects.get(pk=self.resource.pk)
+        self.assertTrue(self.resource.is_state_inscope())
 
-        self.assertLogEquals(Log.objects.all()[0], self.check)
+        self.assertLogEquals(Log.objects.all()[0], self.resource)
 
         # moving up => no extra log record created
         response = self.client.post(
@@ -105,8 +105,8 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(Log.objects.count(), 1)
-        self.check = DiagnosisTraversal.objects.get(pk=self.check.pk)
-        self.assertFalse(self.check.is_state_inscope())
+        self.resource = DiagnosisTraversal.objects.get(pk=self.resource.pk)
+        self.assertFalse(self.resource.is_state_inscope())
 
         # moving down again (completed) => extra log created
         response = self.client.post(
@@ -116,7 +116,7 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(Log.objects.count(), 2)
-        self.check = DiagnosisTraversal.objects.get(pk=self.check.pk)
-        self.assertTrue(self.check.is_state_inscope())
+        self.resource = DiagnosisTraversal.objects.get(pk=self.resource.pk)
+        self.assertTrue(self.resource.is_state_inscope())
 
-        self.assertLogEquals(Log.objects.all()[1], self.check)
+        self.assertLogEquals(Log.objects.all()[1], self.resource)

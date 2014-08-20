@@ -2,9 +2,9 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from core.tests.test_base import CLAAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAAuthBaseApiTestMixin
 
-from legalaid.tests.views.mixins.resource import \
+from core.tests.test_base import \
     NestedSimpleResourceAPIMixin
 
 
@@ -24,11 +24,11 @@ class AdaptationsMetadataAPIMixin(CLAAuthBaseApiTestMixin):
 
 
 class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
-    CHECK_RECIPE = 'legalaid.adaptation_details'
+    RESOURCE_RECIPE = 'legalaid.adaptation_details'
     API_URL_BASE_NAME = 'adaptationdetails'
 
     @property
-    def check_keys(self):
+    def response_keys(self):
         return [
             'reference', 'bsl_webcam', 'minicom', 'text_relay',
             'skype_webcam', 'language', 'notes', 'callback_preference'
@@ -123,7 +123,7 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
     # GET
 
     def test_get(self):
-        adaptation_details = self.check
+        adaptation_details = self.resource
         self.check_case.adaptation_details = adaptation_details
         self.check_case.save()
 

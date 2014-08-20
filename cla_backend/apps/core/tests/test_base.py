@@ -1,12 +1,8 @@
-from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from provider.oauth2.models import Client, AccessToken
 from core.tests.mommy_utils import make_recipe
-
-from cla_provider.models import Staff
-from call_centre.models import Operator
 
 
 class CLABaseApiTestMixin(object):
@@ -90,88 +86,76 @@ class CLABaseApiTestMixin(object):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
-    """
-    Useful testing methods
-    """
-    DEFAULT_TOKEN = None
+class SimpleResourceAPIMixin(CLABaseApiTestMixin):
+    LOOKUP_KEY = 'pk'
+    API_URL_BASE_NAME = None
+    RESOURCE_RECIPE = None
+
+    @property
+    def response_keys(self):
+        return []
+
+    @property
+    def resource_lookup_value(self):
+        return getattr(self.resource, self.LOOKUP_KEY)
+
+    def assertCheckResponseKeys(self, response):
+        self.assertItemsEqual(
+            response.data.keys(),
+            self.response_keys
+        )
+
+    def get_list_url(self):
+        return reverse(
+            '%s:%s-list' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME)
+        )
+
+    def get_detail_url(self, check_ref, suffix='detail'):
+        return reverse(
+            '%s:%s-%s' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME, suffix),
+            args=(), kwargs={self.LOOKUP_KEY: unicode(check_ref)}
+        )
+
+    def _create(self, data=None, url=None):
+        if not data: data = {}
+        if not url: url = self.get_list_url()
+        self.client.post(
+            url, data=data,
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
 
     def setUp(self):
-        super(CLAAuthBaseApiTestMixin, self).setUp()
+        super(SimpleResourceAPIMixin, self).setUp()
 
-        # create a user
-        self.username = 'john'
-        self.email = 'lennon@thebeatles.com'
-        self.password = 'password'
-        self.user = User.objects.create_user(self.username, self.email, self.password)
+        self.resource = self.make_resource()
 
-        # create an operator API client
-        self.operator_api_client = Client.objects.create(
-            user=self.user,
-            name='operator',
-            client_type=0,
-            client_id='call_centre',
-            client_secret='secret',
-            url='http://localhost/',
-            redirect_uri='http://localhost/redirect'
+        list_url = self.get_list_url()
+        if list_url:
+            self.list_url = list_url
+        self.detail_url = self.get_detail_url(self.resource_lookup_value)
+
+    def make_resource(self):
+        return make_recipe(self.RESOURCE_RECIPE)
+
+
+class NestedSimpleResourceAPIMixin(SimpleResourceAPIMixin):
+    LOOKUP_KEY = 'case_reference'
+
+    @property
+    def resource_lookup_value(self):
+        return self.check_case.reference
+
+    def get_list_url(self):
+        return None
+
+    def setUp(self):
+        self.check_case = make_recipe('legalaid.case')
+        super(NestedSimpleResourceAPIMixin, self).setUp()
+
+    def _create(self, data=None, url=None):
+        if not url: url = self.detail_url
+        if not data: data = {}
+        return self.client.post(
+            url, data=data, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
         )
-
-        # create an staff API client
-        self.staff_api_client = Client.objects.create(
-            user=self.user,
-            name='staff',
-            client_type=0,
-            client_id='cla_provider',
-            client_secret='secret',
-            url='http://provider.localhost/',
-            redirect_uri='http://provider.localhost/redirect'
-        )
-
-        # create provider and staff user
-        self.provider = make_recipe('cla_provider.provider')
-        self.provider.staff_set.add(Staff(user=self.user))
-        self.provider.save()
-
-        # create operator user
-        self.operator = Operator.objects.create(user=self.user)
-
-        # Create an access token
-        self.operator_token = AccessToken.objects.create(
-            user=self.user,
-            client=self.operator_api_client,
-            token='operator_token',
-            scope=0
-        )
-
-        # Create an access token
-        self.staff_token = AccessToken.objects.create(
-            user=self.user,
-            client=self.staff_api_client,
-            token='stafF_token',
-            scope=0
-        )
-
-        # set default token
-        self.token = getattr(self, self.DEFAULT_TOKEN)
-        self.invalid_token = getattr(self, self.INVALID_TOKEN)
-
-    def get_http_authorization(self, token=None):
-        return super(CLAAuthBaseApiTestMixin, self).get_http_authorization(
-            token or self.token
-        )
-
-
-class CLAProviderAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
-    DEFAULT_TOKEN = 'staff_token'
-    INVALID_TOKEN = 'operator_token'
-    API_URL_NAMESPACE = 'cla_provider'
-
-
-class CLAOperatorAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
-    DEFAULT_TOKEN = 'operator_token'
-    INVALID_TOKEN = 'staff_token'
-    API_URL_NAMESPACE = 'call_centre'
-
-
-class CLACheckerAuthBaseApiTestMixin(CLABaseApiTestMixin):
-    API_URL_NAMESPACE = 'checker'

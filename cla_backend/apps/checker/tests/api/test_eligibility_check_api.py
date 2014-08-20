@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from core.tests.test_base import CLACheckerAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
 
 
 from legalaid.tests.views.mixins.eligibility_check_api import \

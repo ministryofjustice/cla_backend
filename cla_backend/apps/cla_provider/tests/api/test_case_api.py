@@ -7,7 +7,7 @@ from rest_framework import status
 
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 
 from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin, \
     BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase

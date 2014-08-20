@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse, NoReverseMatch
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
-from core.tests.test_base import CLAAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAAuthBaseApiTestMixin
 
 from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.models import Log

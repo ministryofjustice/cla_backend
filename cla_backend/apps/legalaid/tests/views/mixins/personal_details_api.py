@@ -2,16 +2,16 @@ from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
 
-from legalaid.tests.views.mixins.resource import \
+from core.tests.test_base import \
     NestedSimpleResourceAPIMixin
 
 
 class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
-    CHECK_RECIPE = 'legalaid.personal_details'
+    RESOURCE_RECIPE = 'legalaid.personal_details'
     API_URL_BASE_NAME = 'personaldetails'
 
     @property
-    def check_keys(self):
+    def response_keys(self):
         return \
             [
                 'reference',

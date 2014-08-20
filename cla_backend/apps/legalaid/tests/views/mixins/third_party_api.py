@@ -1,15 +1,15 @@
 from rest_framework import status
 
-from legalaid.tests.views.mixins.resource import \
+from core.tests.test_base import \
     NestedSimpleResourceAPIMixin
 
 
 class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
-    CHECK_RECIPE = 'legalaid.thirdparty_details'
+    RESOURCE_RECIPE = 'legalaid.thirdparty_details'
     API_URL_BASE_NAME = 'thirdpartydetails'
 
     @property
-    def check_keys(self):
+    def response_keys(self):
         return \
             [
                 'reference',
@@ -130,7 +130,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
     # GET
 
     def test_get(self):
-        thirdparty_details = self.check
+        thirdparty_details = self.resource
         self.check_case.thirdparty_details = thirdparty_details
         self.check_case.save()
 

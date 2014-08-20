@@ -5439,7 +5439,7 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n250">
-      <data key="d4"><![CDATA[Indicate which protected characteristic type the matter most applies to (indicate specifics and multiple categories in operator notes)  Search operator guidance for ‘protected characteristics’ for more info on these.]]></data>
+      <data key="d4"><![CDATA[Choose which protected characteristic most applies (record specifics and multiple categories, if needed, in operator notes).  Search operator guidance for ‘protected characteristics’ for more information.]]></data>
       <data key="d5"><![CDATA[Indicate which prote]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -5458,7 +5458,7 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n251">
-      <data key="d4"><![CDATA[Disability Pregnancy & Maternity Race Religion or belief Sex Sexual orientation Gender Reassignment (confirm data storage/sharing with specialist)]]></data>
+      <data key="d4"><![CDATA[Disability, pregnancy or maternity, race, religion or belief, sexual orientation, gender or gender reassignment ]]></data>
       <data key="d5"><![CDATA[Disability Pregnancy]]></data>
       <data key="d13">
         <y:ShapeNode>

@@ -28,7 +28,7 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
     API_URL_BASE_NAME = 'adaptationdetails'
 
     @property
-    def check_keys(self):
+    def response_keys(self):
         return [
             'reference', 'bsl_webcam', 'minicom', 'text_relay',
             'skype_webcam', 'language', 'notes', 'callback_preference'
@@ -123,7 +123,7 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
     # GET
 
     def test_get(self):
-        adaptation_details = self.check
+        adaptation_details = self.resource
         self.check_case.adaptation_details = adaptation_details
         self.check_case.save()
 

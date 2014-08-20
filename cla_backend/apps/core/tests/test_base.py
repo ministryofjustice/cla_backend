@@ -92,21 +92,23 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
     RESOURCE_RECIPE = None
 
     @property
-    def check_keys(self):
+    def response_keys(self):
         return []
 
     @property
-    def check_reference(self):
-        return self.check.reference
+    def resource_lookup_value(self):
+        return getattr(self.resource, self.LOOKUP_KEY)
 
     def assertCheckResponseKeys(self, response):
         self.assertItemsEqual(
             response.data.keys(),
-            self.check_keys
+            self.response_keys
         )
 
     def get_list_url(self):
-        return reverse('%s:%s-list' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME))
+        return reverse(
+            '%s:%s-list' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME)
+        )
 
     def get_detail_url(self, check_ref, suffix='detail'):
         return reverse(
@@ -125,12 +127,12 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
     def setUp(self):
         super(SimpleResourceAPIMixin, self).setUp()
 
-        self.check = self.make_resource()
+        self.resource = self.make_resource()
 
         list_url = self.get_list_url()
         if list_url:
             self.list_url = list_url
-        self.detail_url = self.get_detail_url(self.check_reference)
+        self.detail_url = self.get_detail_url(self.resource_lookup_value)
 
     def make_resource(self):
         return make_recipe(self.RESOURCE_RECIPE)
@@ -140,7 +142,7 @@ class NestedSimpleResourceAPIMixin(SimpleResourceAPIMixin):
     LOOKUP_KEY = 'case_reference'
 
     @property
-    def check_reference(self):
+    def resource_lookup_value(self):
         return self.check_case.reference
 
     def get_list_url(self):

@@ -11,7 +11,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
     API_URL_BASE_NAME = 'personaldetails'
 
     @property
-    def check_keys(self):
+    def response_keys(self):
         return \
             [
                 'reference',

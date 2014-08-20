@@ -18,7 +18,7 @@ from .models import Category, Property, EligibilityCheck, Income, \
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
-        fields = ('code', 'name', 'description')
+        fields = ('code', 'name', 'description', 'ecf_available', 'mandatory')
 
 
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):

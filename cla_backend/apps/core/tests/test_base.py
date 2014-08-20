@@ -15,27 +15,82 @@ class CLABaseApiTestMixin(object):
     """
     API_URL_NAMESPACE = None
 
-    def get_http_authorization(self):
-        return ''
+    def get_http_authorization(self, token=None):
+        if not token:
+            return ''
+        return 'Bearer %s' % token
 
-    def _test_get_not_allowed(self, url):
-        response = self.client.get(url, format='json')
+    # NOT ALLOWED SHORTCUTS
+
+    def _test_get_not_allowed(self, url, token=None):
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def _test_post_not_allowed(self, url, data={}):
-        response = self.client.post(url, data, format='json')
+    def _test_post_not_allowed(self, url, data={}, token=None):
+        response = self.client.post(
+            url, data,
+            HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def _test_put_not_allowed(self, url, data={}):
-        response = self.client.put(url, data, format='json')
+    def _test_put_not_allowed(self, url, data={}, token=None):
+        response = self.client.put(
+            url, data,
+            HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def _test_delete_not_allowed(self, url):
-        response = self.client.delete(url, format='json')
+    def _test_patch_not_allowed(self, url, data={}, token=None):
+        response = self.client.patch(
+            url, data,
+            HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    def _test_delete_not_allowed(self, url, token=None):
+        response = self.client.delete(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-class CLAAuthBaseApiTestMixin(object):
+    # NOT AUTHORIZED SHORTCUTS
+
+    def _test_get_not_authorized(self, url, token=None):
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_post_not_authorized(self, url, data={}, token=None):
+        response = self.client.post(
+            url, data, HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_put_not_authorized(self, url, data={}, token=None):
+        response = self.client.put(
+            url, data,
+            HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_patch_not_authorized(self, url, data={}, token=None):
+        response = self.client.patch(
+            url, data,
+            HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_delete_not_authorized(self, url, token=None):
+        response = self.client.delete(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
     """
     Useful testing methods
     """
@@ -100,72 +155,10 @@ class CLAAuthBaseApiTestMixin(object):
         self.token = getattr(self, self.DEFAULT_TOKEN)
         self.invalid_token = getattr(self, self.INVALID_TOKEN)
 
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.token
-
-    def _test_get_not_allowed(self, url):
-        response = self.client.get(url,
-                                   HTTP_AUTHORIZATION="Bearer %s" % self.token,
-                                   format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def _test_post_not_allowed(self, url, data={}):
-        response = self.client.post(url, data,
-                                    HTTP_AUTHORIZATION="Bearer %s" % self.token,
-                                    format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def _test_put_not_allowed(self, url, data={}):
-        response = self.client.put(url, data,
-                                   HTTP_AUTHORIZATION="Bearer %s" % self.token,
-                                   format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def _test_delete_not_allowed(self, url):
-        response = self.client.delete(url,
-                                      HTTP_AUTHORIZATION="Bearer %s" % self.token,
-                                      format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def _test_patch_not_allowed(self, url):
-        response = self.client.patch(url,
-                                      HTTP_AUTHORIZATION="Bearer %s" % self.token,
-                                      format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-    def _test_get_not_authorized(self, url, token):
-        response = self.client.get(url,
-                                   HTTP_AUTHORIZATION="Bearer %s" % token,
-                                   format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def _test_post_not_authorized(self, url, token, data=None):
-        if not data: data = {}
-        response = self.client.post(url, data,
-                                    HTTP_AUTHORIZATION="Bearer %s" % token,
-                                    format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def _test_put_not_authorized(self, url, token, data=None):
-        if not data: data = {}
-        response = self.client.put(url, data,
-                                   HTTP_AUTHORIZATION="Bearer %s" % token,
-                                   format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def _test_delete_not_authorized(self, url, token):
-        response = self.client.delete(url,
-                                      HTTP_AUTHORIZATION="Bearer %s" % token,
-                                      format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def _test_patch_not_authorized(self, url, token, data=None):
-        if not data: data = {}
-        response = self.client.patch(url, data,
-                                     HTTP_AUTHORIZATION="Bearer %s" % token,
-                                     format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    def get_http_authorization(self, token=None):
+        return super(CLAAuthBaseApiTestMixin, self).get_http_authorization(
+            token or self.token
+        )
 
 
 class CLAProviderAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):

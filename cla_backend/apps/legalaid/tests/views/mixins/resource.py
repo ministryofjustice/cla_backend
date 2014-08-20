@@ -2,15 +2,10 @@ from core.tests.mommy_utils import make_recipe
 from django.core.urlresolvers import reverse
 
 
-class SimpleResourceCheckAPIMixin(object):
+class SimpleResourceAPIMixin(object):
     LOOKUP_KEY = 'reference'
-    API_NAMESPACE = None
-    BASE_NAME = None
+    API_URL_BASE_NAME = None
     CHECK_RECIPE = None
-
-    def __init__(self, *args, **kwargs):
-        self.API_NAMESPACE = self.API_NAMESPACE or self.API_URL_NAMESPACE
-        super(SimpleResourceCheckAPIMixin, self).__init__(*args, **kwargs)
 
     @property
     def check_keys(self):
@@ -27,11 +22,11 @@ class SimpleResourceCheckAPIMixin(object):
         )
 
     def get_list_url(self):
-        return reverse('%s:%s-list' % (self.API_NAMESPACE, self.BASE_NAME))
+        return reverse('%s:%s-list' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME))
 
     def get_detail_url(self, check_ref, suffix='detail'):
         return reverse(
-            '%s:%s-%s' % (self.API_URL_NAMESPACE, self.BASE_NAME, suffix),
+            '%s:%s-%s' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME, suffix),
             args=(), kwargs={self.LOOKUP_KEY: unicode(check_ref)}
         )
 
@@ -39,12 +34,12 @@ class SimpleResourceCheckAPIMixin(object):
         if not data: data = {}
         if not url: url = self.get_list_url()
         self.client.post(
-            url, data=data, format='json',
+            url, data=data,
             HTTP_AUTHORIZATION=self.get_authorization()
         )
 
     def setUp(self):
-        super(SimpleResourceCheckAPIMixin, self).setUp()
+        super(SimpleResourceAPIMixin, self).setUp()
         list_url = self.get_list_url()
         if list_url:
             self.list_url = list_url
@@ -52,9 +47,8 @@ class SimpleResourceCheckAPIMixin(object):
         self.check = make_recipe(self.CHECK_RECIPE)
 
 
-class NestedSimpleResourceCheckAPIMixin(SimpleResourceCheckAPIMixin):
+class NestedSimpleResourceAPIMixin(SimpleResourceAPIMixin):
     LOOKUP_KEY = 'case_reference'
-    API_NAMESPACE = 'checker'
 
     @property
     def check_reference(self):
@@ -65,7 +59,7 @@ class NestedSimpleResourceCheckAPIMixin(SimpleResourceCheckAPIMixin):
 
     def setUp(self):
         self.check_case = make_recipe('legalaid.case')
-        super(NestedSimpleResourceCheckAPIMixin, self).setUp()
+        super(NestedSimpleResourceAPIMixin, self).setUp()
 
     def _create(self, data=None, url=None):
         if not url: url = self.detail_url

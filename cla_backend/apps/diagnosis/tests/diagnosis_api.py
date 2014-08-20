@@ -9,15 +9,15 @@ from core.tests.mommy_utils import make_recipe
 from cla_eventlog.models import Log
 
 from legalaid.tests.views.mixins.resource import \
-    NestedSimpleResourceCheckAPIMixin
+    NestedSimpleResourceAPIMixin
 
 from diagnosis.models import DiagnosisTraversal
 from diagnosis.tests.utils import MockedGraph
 
 
-class DiagnosisAPIMixin(NestedSimpleResourceCheckAPIMixin):
+class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
     CHECK_RECIPE = 'diagnosis.diagnosis'
-    BASE_NAME = 'diagnosis'
+    API_URL_BASE_NAME = 'diagnosis'
 
     @mock.patch('diagnosis.serializers.graph', new_callable=MockedGraph)
     def __call__(self, runner, mocked_graph, *args, **kwargs):

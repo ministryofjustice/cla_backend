@@ -3,12 +3,12 @@ from rest_framework import status
 from core.tests.mommy_utils import make_recipe
 
 from legalaid.tests.views.mixins.resource import \
-    NestedSimpleResourceCheckAPIMixin
+    NestedSimpleResourceAPIMixin
 
 
-class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
+class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
     CHECK_RECIPE = 'legalaid.personal_details'
-    BASE_NAME = 'personaldetails'
+    API_URL_BASE_NAME = 'personaldetails'
 
     @property
     def check_keys(self):

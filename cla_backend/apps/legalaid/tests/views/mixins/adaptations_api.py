@@ -5,7 +5,7 @@ from rest_framework import status
 from core.tests.test_base import CLAAuthBaseApiTestMixin
 
 from legalaid.tests.views.mixins.resource import \
-    NestedSimpleResourceCheckAPIMixin
+    NestedSimpleResourceAPIMixin
 
 
 class AdaptationsMetadataAPIMixin(CLAAuthBaseApiTestMixin):
@@ -23,9 +23,9 @@ class AdaptationsMetadataAPIMixin(CLAAuthBaseApiTestMixin):
         self._test_get_not_allowed(url)
 
 
-class AdaptationsDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
+class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
     CHECK_RECIPE = 'legalaid.adaptation_details'
-    BASE_NAME = 'adaptationdetails'
+    API_URL_BASE_NAME = 'adaptationdetails'
 
     @property
     def check_keys(self):

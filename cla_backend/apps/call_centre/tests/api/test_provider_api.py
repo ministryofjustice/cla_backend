@@ -397,8 +397,8 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.operator.is_manager = False
         self.operator.save()
 
-        self._test_get_not_authorized(self.detail_url, self.token)
-        self._test_get_not_authorized(self.list_url, self.token)
-        self._test_post_not_authorized(self.list_url, self.token, self._get_default_post_data())
-        self._test_patch_not_authorized(self.detail_url, self.token, self._get_default_post_data())
-        self._test_delete_not_authorized(self.detail_url, self.token)
+        self._test_get_not_authorized(self.detail_url, token=self.token)
+        self._test_get_not_authorized(self.list_url, token=self.token)
+        self._test_post_not_authorized(self.list_url, token=self.token, data=self._get_default_post_data())
+        self._test_patch_not_authorized(self.detail_url, token=self.token, data=self._get_default_post_data())
+        self._test_delete_not_authorized(self.detail_url, token=self.token)

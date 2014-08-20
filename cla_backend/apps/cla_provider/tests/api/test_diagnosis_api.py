@@ -10,10 +10,6 @@ from diagnosis.tests.diagnosis_api import DiagnosisAPIMixin
 class DiagnosisTestCase(
     DiagnosisAPIMixin, CLAProviderAuthBaseApiTestMixin, APITestCase
 ):
-    API_URL_NAMESPACE = 'cla_provider'
-
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.staff_token
 
     def setUp(self):
         super(DiagnosisTestCase, self).setUp()

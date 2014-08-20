@@ -38,17 +38,18 @@ class UserAPIMixin(CLAAuthBaseApiTestMixin):
         raise NotImplementedError()
 
     def test_get_me_allowed(self):
-        response = self.client.get(self.detail_url,
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
-                                   format='json')
+        response = self.client.get(
+            self.detail_url,
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertUserEqual(response.data)
 
     def test_get_different_user_not_allowed(self):
         detail_url = self.get_user_detail_url(self.other_users[0].pk)
-        response = self.client.get(detail_url,
-            HTTP_AUTHORIZATION='Bearer %s' % self.token,
-            format='json'
+        response = self.client.get(
+            detail_url,
+            HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 

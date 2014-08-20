@@ -17,27 +17,23 @@ class CategoryAPIMixin(object):
             kwargs={'code': self.categories[0].code}
         )
 
-    def get_http_authorization(self):
-        return None
-
     def test_get_allowed(self):
         """
         Ensure we can GET the list and it is ordered
         """
-        http_authorization = self.get_http_authorization()
 
         # LIST
-        response = self.client.get(self.list_url,
-                                   HTTP_AUTHORIZATION=http_authorization,
-                                   format='json')
+        response = self.client.get(
+            self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization(),
+        )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual([d['name'] for d in response.data], ['Name1', 'Name2', 'Name3'])
 
         # DETAIL
-        response = self.client.get(self.detail_url,
-                                   HTTP_AUTHORIZATION=http_authorization,
-                                   format='json')
+        response = self.client.get(
+            self.detail_url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], 'Name1')
 

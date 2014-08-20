@@ -35,9 +35,6 @@ class DiagnosisAPIMixin(NestedSimpleResourceCheckAPIMixin):
         self.move_down_url = self.get_detail_url(self.check_reference, suffix='move-down')
         self.move_up_url = self.get_detail_url(self.check_reference, suffix='move-up')
 
-    def get_http_authorization(self):
-        raise NotImplementedError()
-
     def assertLogEquals(self, log, diagnosis):
         self.assertItemsEqual(log.patch['nodes'], diagnosis.nodes)
         self.assertItemsEqual(log.patch['reference'], unicode(diagnosis.reference))

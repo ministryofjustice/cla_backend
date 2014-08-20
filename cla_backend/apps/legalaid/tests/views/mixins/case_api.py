@@ -4,6 +4,7 @@ from rest_framework import status
 
 from cla_common.constants import REQUIRES_ACTION_BY
 
+from core.tests.test_base import CLAAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
 
 from legalaid.models import Case
@@ -11,9 +12,7 @@ from legalaid.models import Case
 from cla_eventlog.models import Log
 
 
-class FullCaseAPIMixin(object):
-    API_URL_NAMESPACE = None
-
+class FullCaseAPIMixin(CLAAuthBaseApiTestMixin):
     def setUp(self):
         super(FullCaseAPIMixin, self).setUp()
 
@@ -24,9 +23,6 @@ class FullCaseAPIMixin(object):
         self.case_obj = make_recipe('legalaid.case')
         self.check = self.case_obj
         self.detail_url = self.get_details_url(self.case_obj)
-
-    def get_http_authorization(self):
-        raise NotImplementedError()
 
     def get_case_serializer_clazz(self):
         raise NotImplementedError()
@@ -170,7 +166,7 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
         self.case_obj.save()
 
         response = self.client.get(
-            self.list_url, data={'search': 'abc'}, format='json',
+            self.list_url, data={'search': 'abc'},
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -190,7 +186,7 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
         )
 
         response = self.client.get(
-            self.list_url, data={'search':self.case_obj.reference}, format='json',
+            self.list_url, data={'search':self.case_obj.reference},
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -211,7 +207,6 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
 
         response = self.client.get(
             self.list_url, data={'search': self.case_obj.personal_details.postcode},
-            format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -225,7 +220,6 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
 
         response = self.client.get(
             self.list_url, data={'search': self.case_obj.personal_details.postcode+'ss'},
-            format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -237,7 +231,6 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
         """
         response = self.client.get(
             self.list_url, data={'search': self.case_obj.personal_details.full_name+'ss'},
-            format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -249,7 +242,6 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
         """
         response = self.client.get(
             self.list_url, data={'search': self.case_obj.reference+'ss'},
-            format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -300,7 +292,7 @@ class BaseUpdateCaseTestCase(FullCaseAPIMixin):
             'requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
         }
         response = self.client.patch(
-            self.get_details_url(case), data=data, format='json',
+            self.get_details_url(case), data=data,
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -343,7 +335,7 @@ class BaseUpdateCaseTestCase(FullCaseAPIMixin):
             'media_code': media_code.code
         }
         response = self.client.patch(
-            self.detail_url, data=data, format='json',
+            self.detail_url, data=data,
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)

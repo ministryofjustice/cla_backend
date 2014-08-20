@@ -1,7 +1,7 @@
-import random
 import copy
 import uuid
 import mock
+import random
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
@@ -20,7 +20,6 @@ mi_dict_generator = lambda x: {"interval_period": "per_month", "per_interval_val
 
 
 class EligibilityCheckAPIMixin(object):
-
     LOOKUP_KEY = 'reference'
 
     def setUp(self):
@@ -37,9 +36,6 @@ class EligibilityCheckAPIMixin(object):
         )
         self.detail_url = self.get_detail_url(self.check.reference)
 
-    def get_http_authorization(self):
-        return None
-
     def _create(self, data=None, url=None):
         if not url: url = self.list_url
         if not data: data = {}
@@ -55,12 +51,13 @@ class EligibilityCheckAPIMixin(object):
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
-
     def get_reference_from_response(self, data):
         return data['reference']
 
     def get_list_url(self):
-        return reverse('%s:eligibility_check-list' %  self.API_URL_NAMESPACE)
+        return reverse(
+            '%s:eligibility_check-list' % self.API_URL_NAMESPACE
+        )
 
     def get_detail_url(self, check_ref):
         return reverse(
@@ -899,7 +896,6 @@ class EligibilityCheckAPIMixin(object):
             HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['is_eligible'], 'unknown')
-
 
 
 class NestedEligibilityCheckAPIMixin(EligibilityCheckAPIMixin):

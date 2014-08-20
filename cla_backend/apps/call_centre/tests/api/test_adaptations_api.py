@@ -9,13 +9,11 @@ class AdaptationsMetadataTestCase(
     CLAOperatorAuthBaseApiTestMixin, AdaptationsMetadataAPIMixin,
     APITestCase
 ):
-    API_URL_NAMESPACE = 'call_centre'
+    pass
 
 
 class AdaptationsDetailsTestCase(
     CLAOperatorAuthBaseApiTestMixin, AdaptationsDetailsAPIMixin,
     APITestCase
 ):
-
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.token
+    pass

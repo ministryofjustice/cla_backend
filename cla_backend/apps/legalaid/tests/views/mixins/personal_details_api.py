@@ -29,9 +29,6 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
                 'vulnerable_user'
             ]
 
-    def get_http_authorization(self):
-        raise NotImplementedError()
-
     def _get_default_post_data(self):
         return {
             'title': 'MR',
@@ -63,9 +60,9 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
         }
 
         method_callable = getattr(self.client, method)
-        response = method_callable(url, data,
-                                   format='json',
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
+        response = method_callable(
+            url, data, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         expected_errors = {
@@ -132,7 +129,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
 
     def test_get(self):
         response = self.client.get(
-            self.detail_url, format='json',
+            self.detail_url,
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 

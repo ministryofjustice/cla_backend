@@ -28,11 +28,6 @@ from call_centre.serializers import CaseSerializer
 class BaseCaseTestCase(
     CLAOperatorAuthBaseApiTestMixin, FullCaseAPIMixin, APITestCase
 ):
-    API_URL_NAMESPACE = 'call_centre'
-
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.token
-
     def get_case_serializer_clazz(self):
         return CaseSerializer
 

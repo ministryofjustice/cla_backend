@@ -173,9 +173,6 @@ class LogAPIMixin(CLAAuthBaseApiTestMixin):
             kwargs={'case_reference': case_ref}
         )
 
-    def get_http_authorization(self):
-        raise NotImplementedError()
-
     def test_methods_not_allowed(self):
         """
         Ensure that we can't POST, PUT or DELETE

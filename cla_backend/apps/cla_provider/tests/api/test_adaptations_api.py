@@ -14,7 +14,7 @@ class AdaptationsMetadataTestCase(
     CLAProviderAuthBaseApiTestMixin, AdaptationsMetadataAPIMixin,
     APITestCase
 ):
-    API_URL_NAMESPACE = 'cla_provider'
+    pass
 
 
 class AdaptationsDetailsTestCase(
@@ -28,9 +28,6 @@ class AdaptationsDetailsTestCase(
         self.check_case.provider = self.provider
         self.check_case.requires_action_by = REQUIRES_ACTION_BY.PROVIDER
         self.check_case.save()
-
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.staff_token
 
     # SECURITY
 

@@ -22,7 +22,6 @@ from cla_provider.forms import RejectCaseForm
 class BaseCaseTestCase(
     CLAProviderAuthBaseApiTestMixin, FullCaseAPIMixin, APITestCase
 ):
-    API_URL_NAMESPACE = 'cla_provider'
 
     def setUp(self):
         super(BaseCaseTestCase, self).setUp()
@@ -36,9 +35,6 @@ class BaseCaseTestCase(
             'provider': self.provider,
             'requires_action_by': REQUIRES_ACTION_BY.PROVIDER
         }
-
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.staff_token
 
     def get_case_serializer_clazz(self):
         return CaseSerializer

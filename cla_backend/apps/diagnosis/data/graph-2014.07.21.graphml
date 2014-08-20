@@ -7924,6 +7924,7 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
     <node id="n369">
       <data key="d4"><![CDATA[The client's problem relates to exclusion from school ]]></data>
       <data key="d5"><![CDATA[Exclusions]]></data>
+      <data key="d9">9</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13579.096031746032" y="660.0"/>
@@ -8004,7 +8005,6 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n373">
       <data key="d4"><![CDATA[None of the above]]></data>
       <data key="d5"><![CDATA[None of the above]]></data>
-      <data key="d9">9</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14667.531349206349" y="660.0"/>

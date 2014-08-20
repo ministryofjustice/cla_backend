@@ -23,8 +23,8 @@ class TimerAPIMixin(CLAAuthBaseApiTestMixin):
         self._test_delete_not_allowed(self.detail_url)
 
     def test_methods_not_authorized(self):
-        self._test_get_not_authorized(self.detail_url, self.invalid_token)
-        self._test_post_not_authorized(self.detail_url, self.invalid_token)
+        self._test_get_not_authorized(self.detail_url, token=self.invalid_token)
+        self._test_post_not_authorized(self.detail_url, token=self.invalid_token)
 
     def test_200_when_timer_is_running(self):
         timer = make_recipe('timer.Timer', created_by=self.user)

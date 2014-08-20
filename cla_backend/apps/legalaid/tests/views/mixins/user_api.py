@@ -55,6 +55,6 @@ class UserAPIMixin(CLAAuthBaseApiTestMixin):
 
     def test_methods_not_authorized(self):
         ### DETAIL
-        self._test_post_not_authorized(self.detail_url, self.invalid_token)
-        self._test_put_not_authorized(self.detail_url, self.invalid_token)
-        self._test_delete_not_authorized(self.detail_url, self.invalid_token)
+        self._test_post_not_authorized(self.detail_url, token=self.invalid_token)
+        self._test_put_not_authorized(self.detail_url, token=self.invalid_token)
+        self._test_delete_not_authorized(self.detail_url, token=self.invalid_token)

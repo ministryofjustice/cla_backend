@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 
 from cla_common.constants import REQUIRES_ACTION_BY
 

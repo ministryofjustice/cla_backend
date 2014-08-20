@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse, NoReverseMatch
 
 from rest_framework import status
 
-from core.tests.test_base import CLAAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAAuthBaseApiTestMixin
 
 
 class UserAPIMixin(CLAAuthBaseApiTestMixin):

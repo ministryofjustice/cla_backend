@@ -2,9 +2,9 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from core.tests.test_base import CLAAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAAuthBaseApiTestMixin
 
-from legalaid.tests.views.mixins.resource import \
+from core.tests.test_base import \
     NestedSimpleResourceAPIMixin
 
 
@@ -24,7 +24,7 @@ class AdaptationsMetadataAPIMixin(CLAAuthBaseApiTestMixin):
 
 
 class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
-    CHECK_RECIPE = 'legalaid.adaptation_details'
+    RESOURCE_RECIPE = 'legalaid.adaptation_details'
     API_URL_BASE_NAME = 'adaptationdetails'
 
     @property

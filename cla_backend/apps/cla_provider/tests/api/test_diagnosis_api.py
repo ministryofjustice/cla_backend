@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 
 from diagnosis.tests.diagnosis_api import DiagnosisAPIMixin
 

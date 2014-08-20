@@ -6,6 +6,6 @@ from diagnosis.tests.diagnosis_api import DiagnosisAPIMixin
 
 
 class DiagnosisTestCase(
-    DiagnosisAPIMixin, CLAOperatorAuthBaseApiTestMixin, APITestCase
+    CLAOperatorAuthBaseApiTestMixin, DiagnosisAPIMixin, APITestCase
 ):
     pass

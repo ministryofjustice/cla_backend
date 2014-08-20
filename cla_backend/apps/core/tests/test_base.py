@@ -8,6 +8,11 @@ from core.tests.mommy_utils import make_recipe
 class CLABaseApiTestMixin(object):
     """
     Useful testing methods
+
+
+    NOTE: you probably don't want to subclass it directly.
+        Think if it's better to use SimpleResourceAPIMixin or NestedSimpleResourceAPIMixin
+        instead.
     """
     API_URL_NAMESPACE = None
 
@@ -87,6 +92,23 @@ class CLABaseApiTestMixin(object):
 
 
 class SimpleResourceAPIMixin(CLABaseApiTestMixin):
+    """
+    You should (almost) always subclass this or the NestedSimpleResourceAPIMixin
+    in your TestCase.
+
+    Your actual TestCase should also sublass one of the legalaid.tests.views.test_base
+    classes.
+
+
+    Usage:
+
+    when using it, override the config properties below (in UPPERCASE).
+
+    your test will have:
+        * self.resource ==> instance of the resource you are about to test
+        * self.list_url, self.details_url ==> url to list and details
+        * a bunch of extra things (look around)
+    """
     LOOKUP_KEY = 'pk'
     API_URL_BASE_NAME = None
     RESOURCE_RECIPE = None
@@ -99,7 +121,7 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
     def resource_lookup_value(self):
         return getattr(self.resource, self.LOOKUP_KEY)
 
-    def assertCheckResponseKeys(self, response):
+    def assertResponseKeys(self, response):
         self.assertItemsEqual(
             response.data.keys(),
             self.response_keys
@@ -110,52 +132,85 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
             '%s:%s-list' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME)
         )
 
-    def get_detail_url(self, check_ref, suffix='detail'):
+    def get_detail_url(self, resource_lookup_value, suffix='detail'):
         return reverse(
             '%s:%s-%s' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME, suffix),
-            args=(), kwargs={self.LOOKUP_KEY: unicode(check_ref)}
+            args=(), kwargs={self.LOOKUP_KEY: unicode(resource_lookup_value)}
         )
 
     def _create(self, data=None, url=None):
         if not data: data = {}
         if not url: url = self.get_list_url()
-        self.client.post(
-            url, data=data,
+        return self.client.post(
+            url, data=data, format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
     def setUp(self):
         super(SimpleResourceAPIMixin, self).setUp()
-
         self.resource = self.make_resource()
 
-        list_url = self.get_list_url()
-        if list_url:
-            self.list_url = list_url
-        self.detail_url = self.get_detail_url(self.resource_lookup_value)
+    @property
+    def list_url(self):
+        return self.get_list_url()
 
-    def make_resource(self):
-        return make_recipe(self.RESOURCE_RECIPE)
+    @property
+    def detail_url(self):
+        return self.get_detail_url(self.resource_lookup_value)
+
+    def make_resource(self, **kwargs):
+        return make_recipe(self.RESOURCE_RECIPE, **kwargs)
 
 
 class NestedSimpleResourceAPIMixin(SimpleResourceAPIMixin):
-    LOOKUP_KEY = 'case_reference'
+    """
+    You should (almost) always subclass this or the SimpleResourceAPIMixin
+    in your TestCase.
+
+    Your actual TestCase should also sublass one of the legalaid.tests.views.test_base
+    classes.
+
+    Usage:
+
+    when using it, override the config properties below (in UPPERCASE).
+
+    your test will have:
+        * self.resource ==> instance of the resource you are about to test
+        * self.parent_resource ==> instance of the parent resource
+        * self.list_url, self.details_url ==> url to list and details
+        * a bunch of extra things (look around)
+    """
+
+    LOOKUP_KEY = None  # e.g. case_reference
+    PARENT_LOOKUP_KEY = None  # e.g. reference
+    PARENT_RESOURCE_RECIPE = None  # e.g. legalaid.case
+    PARENT_PK_FIELD = None  # e.g. eligibility_check
 
     @property
     def resource_lookup_value(self):
-        return self.check_case.reference
+        return getattr(self.parent_resource, self.PARENT_LOOKUP_KEY)
 
     def get_list_url(self):
         return None
 
     def setUp(self):
-        self.check_case = make_recipe('legalaid.case')
         super(NestedSimpleResourceAPIMixin, self).setUp()
+        self.parent_resource = self.make_parent_resource()
+
+    def make_parent_resource(self, **kwargs):
+        kwargs[self.PARENT_PK_FIELD] = self.resource
+
+        return make_recipe(
+            self.PARENT_RESOURCE_RECIPE, **kwargs
+        )
+
+    def _cleanup_before_create(self):
+        setattr(self.parent_resource, self.PARENT_PK_FIELD, None)
+        self.parent_resource.save()
 
     def _create(self, data=None, url=None):
-        if not url: url = self.detail_url
-        if not data: data = {}
+        self._cleanup_before_create()
         return self.client.post(
-            url, data=data, format='json',
+            url or self.detail_url, data=data or {}, format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )

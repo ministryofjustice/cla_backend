@@ -10,7 +10,7 @@ from cla_eventlog.models import Log
 from cla_eventlog import event_registry
 
 
-class EventAPIMixin(CLAAuthBaseApiTestMixin):
+class EventAPIMixin(object):
     def get_event_key(self):
         # getting the first event key in the registry as we don't know what's in there
         return event_registry._registry.keys()[0]
@@ -127,7 +127,7 @@ class ImplicitEventCodeViewTestCaseMixin(object):
         self.assertEqual(Log.objects.count(), 1)
         log = Log.objects.all()[0]
 
-        self.assertEqual(log.case, self.check)
+        self.assertEqual(log.case, self.resource)
         self.assertEqual(log.notes, data['notes'])
         self.assertEqual(log.created_by, self.user)
 

@@ -8,21 +8,38 @@ from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
+from core.tests.test_base import SimpleResourceAPIMixin
 from core.tests.mommy_utils import make_recipe
 
+from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 
-class ProviderTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
+
+class ProviderTestCase(
+    CLAOperatorAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase
+):
+    LOOKUP_KEY = 'pk'
+    API_URL_BASE_NAME = 'provider'
+    RESOURCE_RECIPE = 'cla_provider.provider'
+
     def setUp(self):
-        super(ProviderTests, self).setUp()
+        super(ProviderTestCase, self).setUp()
+        self.providers = [
+            self.resource,
+            self.make_resource()
+        ]
 
-        self.providers = make_recipe('cla_provider.provider', active=True, _quantity=3)
+    def make_resource(self, **kwargs):
+        return super(ProviderTestCase, self).make_resource(active=True)
 
-        self.list_url = reverse('call_centre:provider-list')
-        self.detail_url = reverse(
-            'call_centre:provider-detail', args=(),
-            kwargs={'pk': self.providers[0].pk}
-        )
+    @property
+    def response_keys(self):
+        return [
+            'name',
+            'id',
+            'short_code',
+            'telephone_frontdoor',
+            'telephone_backdoor'
+        ]
 
     def test_get_allowed(self):
         """
@@ -60,20 +77,12 @@ class ProviderTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
     def test_provider_response_fields(self):
 
-        response = self.client.get(self.detail_url,
-                           HTTP_AUTHORIZATION='Bearer %s' % self.token,
-                           format='json')
-        self.assertItemsEqual(
-            response.data.keys(),
-            ['name',
-             'id',
-             'short_code',
-             'telephone_frontdoor',
-             'telephone_backdoor'
-             ]
+        response = self.client.get(
+            self.detail_url,
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
+            format='json'
         )
-
-
+        self.assertResponseKeys(response)
 
 
 class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):

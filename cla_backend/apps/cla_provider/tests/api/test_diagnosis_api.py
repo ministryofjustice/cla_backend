@@ -11,9 +11,8 @@ class DiagnosisTestCase(
     DiagnosisAPIMixin, CLAProviderAuthBaseApiTestMixin, APITestCase
 ):
 
-    def setUp(self):
-        super(DiagnosisTestCase, self).setUp()
-
-        self.check_case.provider = self.provider
-        self.check_case.requires_action_by = REQUIRES_ACTION_BY.PROVIDER
-        self.check_case.save()
+    def make_parent_resource(self):
+        return super(DiagnosisTestCase, self).make_parent_resource(
+            provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+        )

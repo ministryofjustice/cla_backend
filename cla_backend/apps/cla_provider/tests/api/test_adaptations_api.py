@@ -22,19 +22,18 @@ class AdaptationsDetailsTestCase(
     APITestCase
 ):
 
-    def setUp(self):
-        super(AdaptationsDetailsTestCase, self).setUp()
-
-        self.check_case.provider = self.provider
-        self.check_case.requires_action_by = REQUIRES_ACTION_BY.PROVIDER
-        self.check_case.save()
+    def make_parent_resource(self):
+        return super(AdaptationsDetailsTestCase, self).make_parent_resource(
+            provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+        )
 
     # SECURITY
 
     def test_get_not_found_if_not_belonging_to_provider(self):
-        self.check_case.provider = None
-        self.check_case.requires_action_by = REQUIRES_ACTION_BY.OPERATOR
-        self.check_case.save()
+        self.parent_resource.provider = None
+        self.parent_resource.requires_action_by = REQUIRES_ACTION_BY.OPERATOR
+        self.parent_resource.save()
 
         response = self.client.get(
             self.detail_url, format='json',
@@ -45,8 +44,8 @@ class AdaptationsDetailsTestCase(
     def test_get_not_found_if_belonging_to_different_provider(self):
         other_provider = make_recipe('cla_provider.provider')
 
-        self.check_case.provider = other_provider
-        self.check_case.save()
+        self.parent_resource.provider = other_provider
+        self.parent_resource.save()
 
         response = self.client.get(
             self.detail_url, format='json',

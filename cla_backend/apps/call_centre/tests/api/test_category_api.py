@@ -6,6 +6,6 @@ from legalaid.tests.views.mixins.category_api import CategoryAPIMixin
 
 
 class CategoryTestCase(
-    CategoryAPIMixin, CLAOperatorAuthBaseApiTestMixin, APITestCase
+    CLAOperatorAuthBaseApiTestMixin, CategoryAPIMixin, APITestCase
 ):
     pass

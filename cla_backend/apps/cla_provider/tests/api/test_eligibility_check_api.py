@@ -16,12 +16,31 @@ class EligibilityCheckTestCase(
 ):
     LOOKUP_KEY = 'case_reference'
 
-    def setUp(self):
-        super(EligibilityCheckTestCase, self).setUp()
+    @property
+    def response_keys(self):
+        return [
+            'reference',
+            'category',
+            'notes',
+            'your_problem_notes',
+            'property_set',
+            'dependants_young',
+            'dependants_old',
+            'you',
+            'partner',
+            'disputed_savings',
+            'has_partner',
+            'on_passported_benefits',
+            'on_nass_benefits',
+            'is_you_or_your_partner_over_60',
+            'state',
+        ]
 
-        self.check_case.provider = self.provider
-        self.check_case.requires_action_by = REQUIRES_ACTION_BY.PROVIDER
-        self.check_case.save()
+    def make_parent_resource(self):
+        return super(EligibilityCheckTestCase, self).make_parent_resource(
+            provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+        )
 
     def test_methods_not_allowed(self):
         super(EligibilityCheckTestCase, self).test_methods_not_allowed()
@@ -31,27 +50,6 @@ class EligibilityCheckTestCase(
 
         # CREATE NOT ALLOWED
         self._test_post_not_allowed(list_url)
-
-    def assertEligibilityCheckResponseKeys(self, response):
-        self.assertItemsEqual(
-            response.data.keys(),
-            ['reference',
-             'category',
-             'notes',
-             'your_problem_notes',
-             'property_set',
-             'dependants_young',
-             'dependants_old',
-             'you',
-             'partner',
-             'disputed_savings',
-             'has_partner',
-             'on_passported_benefits',
-             'on_nass_benefits',
-             'is_you_or_your_partner_over_60',
-             'state',
-            ]
-        )
 
     # CREATE
 

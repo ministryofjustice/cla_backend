@@ -2,13 +2,11 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from legalaid.tests.views.test_base import CLAAuthBaseApiTestMixin
-
 from core.tests.test_base import \
     NestedSimpleResourceAPIMixin
 
 
-class AdaptationsMetadataAPIMixin(CLAAuthBaseApiTestMixin):
+class AdaptationsMetadataAPIMixin(object):
 
     def test_methods_not_allowed(self):
         """
@@ -24,8 +22,12 @@ class AdaptationsMetadataAPIMixin(CLAAuthBaseApiTestMixin):
 
 
 class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
+    LOOKUP_KEY = 'case_reference'
+    PARENT_LOOKUP_KEY = 'reference'
     RESOURCE_RECIPE = 'legalaid.adaptation_details'
     API_URL_BASE_NAME = 'adaptationdetails'
+    PARENT_RESOURCE_RECIPE = 'legalaid.case'
+    PARENT_PK_FIELD = 'adaptation_details'
 
     @property
     def response_keys(self):
@@ -33,12 +35,6 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             'reference', 'bsl_webcam', 'minicom', 'text_relay',
             'skype_webcam', 'language', 'notes', 'callback_preference'
         ]
-
-    def _create(self, data=None, url=None):
-        if not url:
-            self.check_case.adaptation_details = None
-            self.check_case.save()
-        return super(AdaptationsDetailsAPIMixin, self)._create(data=data, url=url)
 
     def _get_default_post_data(self):
         return {
@@ -109,29 +105,25 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         check variables sent as same as those that return.
         """
         data = self._get_default_post_data()
-        check = self._get_default_post_data()
+        adaptations_details = self._get_default_post_data()
 
         response = self._create(data=data)
         # check initial state is correct
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCheckResponseKeys(response)
+        self.assertResponseKeys(response)
 
-        check['reference'] = response.data['reference']
-        self.assertAdaptationDetailsEqual(response.data, check)
+        adaptations_details['reference'] = response.data['reference']
+        self.assertAdaptationDetailsEqual(response.data, adaptations_details)
 
     # GET
 
     def test_get(self):
-        adaptation_details = self.resource
-        self.check_case.adaptation_details = adaptation_details
-        self.check_case.save()
-
         response = self.client.get(
             self.detail_url,
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
         self.assertAdaptationDetailsEqual(
-            response.data, self.check_case.adaptation_details
+            response.data, self.parent_resource.adaptation_details
         )

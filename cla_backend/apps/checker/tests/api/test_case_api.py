@@ -8,17 +8,22 @@ from rest_framework.test import APITestCase
 
 from cla_eventlog.models import Log
 
-from legalaid.models import Case, PersonalDetails
-
-from core.tests.test_base import CLABaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
+from core.tests.test_base import SimpleResourceAPIMixin
+
+from legalaid.models import Case, PersonalDetails
+from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
 
 
-class CaseTests(CLABaseApiTestMixin, APITestCase):
-    def setUp(self):
-        super(CaseTests, self).setUp()
+class CaseTests(
+    CLACheckerAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase
+):
+    LOOKUP_KEY = 'reference'
+    API_URL_BASE_NAME = 'case'
+    RESOURCE_RECIPE = 'legalaid.case'
 
-        self.list_url = reverse('checker:case-list')
+    def make_resource(self):
+        return None
 
     def assertEligibilityCheckResponseKeys(self, response):
         self.assertItemsEqual(

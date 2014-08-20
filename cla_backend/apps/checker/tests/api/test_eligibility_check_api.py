@@ -9,7 +9,7 @@ from legalaid.tests.views.mixins.eligibility_check_api import \
 
 
 class EligibilityCheckTestCase(
-    CLACheckerAuthBaseApiTestMixin, EligibilityCheckAPIMixin, APITestCase
+    EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTestMixin, APITestCase
 ):
 
     def test_can_change_notes(self):
@@ -24,9 +24,9 @@ class EligibilityCheckTestCase(
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # checking the changed properties
-        self.check.your_problem_notes = data['your_problem_notes']
-        self.check.notes = data['notes']
-        self.assertEligibilityCheckEqual(response.data, self.check)
+        self.resource.your_problem_notes = data['your_problem_notes']
+        self.resource.notes = data['notes']
+        self.assertEligibilityCheckEqual(response.data, self.resource)
 
     def assertEligibilityCheckEqual(self, data, check):
         self.assertEqual(data['reference'], unicode(check.reference))

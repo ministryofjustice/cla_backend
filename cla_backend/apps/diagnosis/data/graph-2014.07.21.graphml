@@ -5232,7 +5232,7 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n240">
-      <data key="d4"><![CDATA[Client has parental responsibility/is foster parent for a child or young person under 25 who has SEN, or caller is child or such a young person]]></data>
+      <data key="d4"><![CDATA[The client has parental responsibility or is a foster parent for a child or young person under 25 who has special eduational needs (SEN), or the client is a child or young person who has SEN]]></data>
       <data key="d5"><![CDATA[Client has parental ]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -5275,7 +5275,7 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n242">
-      <data key="d4"><![CDATA[Client wishes to challenge decision, action or failure to take action of any public authority including the LEA, a school or college, or arm of central government such as the Secretary of State]]></data>
+      <data key="d4"><![CDATA[The client wants to challenge a decision, action or failure to take action of any public body including a local authority, school or college, or arm of central government eg the Secretary of State]]></data>
       <data key="d5"><![CDATA[Client wishes to cha]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -5318,7 +5318,7 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n244">
-      <data key="d4"><![CDATA[They have been advised to bring judicial review proceedings on an education matter]]></data>
+      <data key="d4"><![CDATA[The client has been advised to bring judicial review proceedings in an education matter]]></data>
       <data key="d5"><![CDATA[They have been advis]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -5361,7 +5361,7 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n246">
-      <data key="d4"><![CDATA[Discrimination may apply due to child’s SEN or other protected characteristics. e.g. school excludes disabled child from a trip, pupil reports they are being bullied for being gay but no action is taken, school not adapting uniform to meet needs of disabled children, exclusion due to behaviour linked to a disability, pupils fighting where only one is excluded due to a protected characteristic, exclusion due to pregnancy.]]></data>
+      <data key="d4"><![CDATA[Discrimination may have occurred due to the child or young person’s SEN or other protected characteristic eg a school has excluded a disabled child from a school trip, a young person is excluded from school because she is pregnant, a student says they are being bullied because they are gay but the school is taking no action]]></data>
       <data key="d5"><![CDATA[Discrimination may a]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -5380,7 +5380,7 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n247">
-      <data key="d4"><![CDATA[Problem covers admissions, exclusions, other disciplinary procedures, school trips, bullying, any problems at school caused by a child’s disability or other similar scenarios]]></data>
+      <data key="d4"><![CDATA[The client's problem is about admissions, exclusions, other disciplinary procedures, school trips, bullying, any problems at school caused by a child’s disability or any other similar situation]]></data>
       <data key="d5"><![CDATA[Problem covers admis]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -5399,7 +5399,7 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n248">
-      <data key="d4"><![CDATA[Now please type of discrimination the client falls into. *click 'Next' to continue*]]></data>
+      <data key="d4"><![CDATA[On the next screen, select the type of discrimination the client has experienced. Click 'Next' to continue.]]></data>
       <data key="d5"><![CDATA[Type of discriminati]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -6589,7 +6589,7 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n305">
-      <data key="d4"><![CDATA[Teacher or employee of LAA (out of scope)]]></data>
+      <data key="d4"><![CDATA[The client is a teacher or employee of the local authority]]></data>
       <data key="d5"><![CDATA[Teacher or employee ]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -6632,7 +6632,7 @@ More information will be available in guidance.*]]></data>
       </data>
     </node>
     <node id="n307">
-      <data key="d4"><![CDATA[Calling for general advice, not regarding an issue specific to them. For example, whether school can stop them removing their child. (As opposed to calling for advice following action by the school after they did.)]]></data>
+      <data key="d4"><![CDATA[The client is calling for general advice, not about a legal issue specific to them (eg they want to know if a school can stop them removing their child, as opposed to calling after the school has taken action against them for removing their child)]]></data>
       <data key="d5"><![CDATA[Calling for general ]]></data>
       <data key="d13">
         <y:ShapeNode>

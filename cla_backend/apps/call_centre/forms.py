@@ -123,6 +123,17 @@ class AlternativeHelpForm(EventSpecificLogForm):
 
         return '\n'.join(notes_l)
 
+    def get_event_code(self):
+        code = self.cleaned_data['event_code']
+        category = self.case.eligibility_check.category.code
+
+        if code == 'COSPF':
+            if category in ('family', 'housing'):
+                code = 'SPFN'
+            if category in ('debt', 'education', 'discrimination'):
+                code = 'SPFM'
+        return code
+
     def save(self, user):
         providers = self.cleaned_data.get('selected_providers',[])
 

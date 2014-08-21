@@ -6978,8 +6978,9 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       </data>
     </node>
     <node id="n323">
-      <data key="d4"><![CDATA[Client has been subject to discrimination e.g. police officer used racially abusive language when making an arrest; a victim who believes the police have not taken a report of a violent crime seriously because of their sexuality; young asian man out for stop and search when among a group of other young white men.]]></data>
+      <data key="d4"><![CDATA[The police have discriminated against the client (eg a police officer used racially abusive language when making an arrest) ]]></data>
       <data key="d5"><![CDATA[Client has been subj]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13489.096031746032" y="240.0"/>
@@ -6997,7 +6998,7 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       </data>
     </node>
     <node id="n324">
-      <data key="d4"><![CDATA[Client has not been subject to discrimination]]></data>
+      <data key="d4"><![CDATA[Discrimination does not apply]]></data>
       <data key="d5"><![CDATA[Client has not been ]]></data>
       <data key="d13">
         <y:ShapeNode>

@@ -7094,14 +7094,14 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       </data>
     </node>
     <node id="n329">
-      <data key="d4"><![CDATA[{what do we do?}]]></data>
-      <data key="d5"><![CDATA[{what do we do?}]]></data>
+      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8930.529365079365" y="240.0"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="101.845703125" x="24.0771484375" y="5.93359375">{what do we do?}<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="53.546875" x="48.2265625" y="5.93359375">INSCOPE<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -13823,7 +13823,6 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </edge>
     <edge id="e423" source="n372" target="n404">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="-30.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -13837,7 +13836,6 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </edge>
     <edge id="e424" source="n372" target="n408">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="-60.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -13851,7 +13849,6 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </edge>
     <edge id="e425" source="n372" target="n410">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="60.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -13865,7 +13862,6 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </edge>
     <edge id="e426" source="n372" target="n406">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -13886,7 +13882,6 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </edge>
     <edge id="e428" source="n372" target="n412">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="30.0" sy="15.0" tx="0.0" ty="-15.0">

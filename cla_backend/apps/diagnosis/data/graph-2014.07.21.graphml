@@ -7091,8 +7091,9 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n328">
-      <data key="d4"><![CDATA[Client has been subject to discrimination]]></data>
+      <data key="d4"><![CDATA[The client has been discriminated against]]></data>
       <data key="d5"><![CDATA[Client has been subj]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6996.871031746032" y="240.0"/>
@@ -7110,7 +7111,7 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n329">
-      <data key="d4"><![CDATA[Client not subject to discrimination]]></data>
+      <data key="d4"><![CDATA[None of the above]]></data>
       <data key="d5"><![CDATA[Client not subject t]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -7153,8 +7154,9 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n331">
-      <data key="d4"><![CDATA[Client is losing home due to refusal of UKBA to support or terminating support]]></data>
+      <data key="d4"><![CDATA[The client is losing their home due to the Border Force refusing to support them or withdrawing their support]]></data>
       <data key="d5"><![CDATA[Client is losing hom]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6816.871031746032" y="240.0"/>

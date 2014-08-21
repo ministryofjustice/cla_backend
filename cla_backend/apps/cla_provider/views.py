@@ -64,7 +64,7 @@ class CaseViewSet(
     serializer_class = CaseSerializer
     queryset = Case.objects.exclude(provider=None)
 
-    ordering_fields = ('-requires_action_by', 'modified', 'personal_details__full_name', 'personal_details__postcode', 'adaptation_details__language', 'thirdparty_details__personal_details__full_name')
+    ordering_fields = ('-requires_action_by', 'modified', 'personal_details__full_name', 'personal_details__postcode')
 
     def get_queryset(self):
         this_provider = get_object_or_404(Staff, user=self.request.user).provider

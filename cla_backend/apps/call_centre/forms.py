@@ -104,6 +104,7 @@ class DeclineHelpCaseForm(EventSpecificLogForm):
 class SuspendCaseForm(EventSpecificLogForm):
     LOG_EVENT_KEY = 'suspend_case'
 
+
 class AlternativeHelpForm(EventSpecificLogForm):
 
     selected_providers = forms.ModelMultipleChoiceField(
@@ -114,17 +115,27 @@ class AlternativeHelpForm(EventSpecificLogForm):
 
     def get_notes(self):
         notes = self.cleaned_data.get('notes')
-        providers = self.cleaned_data.get('selected_providers',[])
+        providers = self.cleaned_data.get('selected_providers', [])
 
         notes_l = [notes, 'Assigned alternative help:']
         for provider in providers:
             notes_l.append(unicode(provider))
 
-
         return '\n'.join(notes_l)
 
+    def get_event_code(self):
+        code = self.cleaned_data['event_code']
+        category = self.case.eligibility_check.category.code
+
+        if code == 'COSPF':
+            if category in ('family', 'housing'):
+                code = 'SPFN'
+            if category in ('debt', 'education', 'discrimination'):
+                code = 'SPFM'
+        return code
+
     def save(self, user):
-        providers = self.cleaned_data.get('selected_providers',[])
+        providers = self.cleaned_data.get('selected_providers', [])
 
         self.case.assign_alternative_help(user, providers)
         return super(AlternativeHelpForm, self).save(user)

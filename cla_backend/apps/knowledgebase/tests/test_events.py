@@ -8,5 +8,5 @@ class AlternativeHelpEventTestCase(EventTestCaseMixin, TestCase):
 
     def test_assign_alternative_help(self):
         self._test_process_with_expicit_code(
-            ['COSPF', 'IRKB']
+            ['COSPF', 'IRKB', 'SPFN', 'SPFM']
         )

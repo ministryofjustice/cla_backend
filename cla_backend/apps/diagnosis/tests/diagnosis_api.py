@@ -19,7 +19,7 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
     API_URL_BASE_NAME = 'diagnosis'
     PARENT_LOOKUP_KEY = 'reference'
     PARENT_RESOURCE_RECIPE = 'legalaid.case'
-    PARENT_PK_FIELD = 'diagnosis'
+    PK_FIELD = 'diagnosis'
 
     @mock.patch('diagnosis.serializers.graph', new_callable=MockedGraph)
     def __call__(self, runner, mocked_graph, *args, **kwargs):

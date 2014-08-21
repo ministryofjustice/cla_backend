@@ -11,8 +11,11 @@ class DiagnosisTestCase(
     DiagnosisAPIMixin, CLAProviderAuthBaseApiTestMixin, APITestCase
 ):
 
-    def make_parent_resource(self):
+    def make_parent_resource(self, **kwargs):
+        kwargs.update({
+            'provider': self.provider,
+            'requires_action_by': REQUIRES_ACTION_BY.PROVIDER
+        })
         return super(DiagnosisTestCase, self).make_parent_resource(
-            provider=self.provider,
-            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+            **kwargs
         )

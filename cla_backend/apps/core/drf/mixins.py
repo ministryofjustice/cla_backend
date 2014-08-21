@@ -13,8 +13,8 @@ class NestedGenericModelMixin(object):
     def get_parent_lookup_kwarg(self):
         return self.parent_prefix + '_' + self.lookup_field
 
-    def get_parent_queryset(self):
-        return self.parent(requet=self.request).get_queryset()
+    # def get_parent_queryset(self):
+    #     return self.parent(requet=self.request).get_queryset()
 
     def get_parent_object(self):
         parent_key = self.kwargs.get(self.get_parent_lookup_kwarg(), None)
@@ -32,14 +32,26 @@ class NestedGenericModelMixin(object):
         except (ObjectDoesNotExist, NoParentReferenceException):
             return None
 
-    def get_object(self):
-        return getattr(self.get_parent_object(), self.PARENT_FIELD)
+    def is_one_to_one_nested(self):
+        descriptor = getattr(self.parent.model, self.PARENT_FIELD)
+        return not hasattr(descriptor, 'related')
 
+    def get_object(self):
+        if self.is_one_to_one_nested():
+            return getattr(self.get_parent_object(), self.PARENT_FIELD)
+        return super(NestedGenericModelMixin, self).get_object()
 
     def __init__(self, *args, **kwargs):
         if not hasattr(self, 'PARENT_FIELD'):
             raise Exception('To use this mixin you must specify PARENT_FIELD')
         super(NestedGenericModelMixin, self).__init__(*args, **kwargs)
+
+    def get_queryset(self):
+        if not self.is_one_to_one_nested():
+            qs = getattr(self.get_parent_object(), self.PARENT_FIELD)
+            return qs.all()
+
+        return super(NestedGenericModelMixin, self).get_queryset()
 
     def post_save(self, obj, created=False):
         """
@@ -47,6 +59,8 @@ class NestedGenericModelMixin(object):
         :param kwargs: any kwargs needed to work out the parent
         :return: parent_obj after saving it
         """
+        if not self.is_one_to_one_nested():
+            return
 
         if created:
             parent_obj = self.get_parent_object_or_none()

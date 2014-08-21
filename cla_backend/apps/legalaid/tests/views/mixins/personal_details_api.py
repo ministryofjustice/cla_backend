@@ -12,7 +12,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
     API_URL_BASE_NAME = 'personaldetails'
     RESOURCE_RECIPE = 'legalaid.personal_details'
     PARENT_RESOURCE_RECIPE = 'legalaid.case'
-    PARENT_PK_FIELD = 'personal_details'
+    PK_FIELD = 'personal_details'
 
     @property
     def response_keys(self):

@@ -882,7 +882,7 @@ class NestedEligibilityCheckAPIMixin(NestedSimpleResourceAPIMixin, EligibilityCh
     LOOKUP_KEY = 'case_reference'
     PARENT_LOOKUP_KEY = 'reference'
     PARENT_RESOURCE_RECIPE = 'legalaid.case'
-    PARENT_PK_FIELD = 'eligibility_check'
+    PK_FIELD = 'eligibility_check'
 
     def get_reference_from_response(self, data):
         return self.parent_resource.reference

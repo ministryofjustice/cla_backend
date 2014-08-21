@@ -3,11 +3,13 @@ from django.core.urlresolvers import reverse, NoReverseMatch
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
-from legalaid.tests.views.test_base import CLAAuthBaseApiTestMixin
+from core.tests.test_base import \
+    NestedSimpleResourceAPIMixin
 
 from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.models import Log
 from cla_eventlog import event_registry
+
 
 
 class EventAPIMixin(object):
@@ -152,26 +154,29 @@ class ExplicitEventCodeViewTestCaseMixin(ImplicitEventCodeViewTestCaseMixin):
         return data
 
 
-class LogAPIMixin(CLAAuthBaseApiTestMixin):
-    def setUp(self):
-        super(LogAPIMixin, self).setUp()
-        self.case_obj = make_recipe('legalaid.case')
+class LogAPIMixin(NestedSimpleResourceAPIMixin):
+    LOOKUP_KEY = 'reference'
+    API_URL_BASE_NAME = 'log'
+    RESOURCE_RECIPE = 'cla_eventlog.log'
+    LOOKUP_KEY = 'case_reference'
+    PARENT_LOOKUP_KEY = 'reference'
+    PARENT_RESOURCE_RECIPE = 'legalaid.case'
+    PK_FIELD = 'case'
+    ONE_TO_ONE_RESOURCE = False
+
+    def setup_resources(self):
+        super(LogAPIMixin, self).setup_resources()
         self.high_logs = make_recipe(
-            'cla_eventlog.log', case=self.case_obj, level=LOG_LEVELS.HIGH,
+            'cla_eventlog.log', case=self.parent_resource, level=LOG_LEVELS.HIGH,
             code="HIGH_", _quantity=4
         )
         self.minor_logs = make_recipe(
-            'cla_eventlog.log', case=self.case_obj, level=LOG_LEVELS.MINOR,
+            'cla_eventlog.log', case=self.parent_resource, level=LOG_LEVELS.MINOR,
             code="MINIOR_", _quantity=4
         )
 
-        self.list_url = self.get_list_url(self.case_obj.reference)
-
-    def get_list_url(self, case_ref):
-        return reverse(
-            '%s:log-list' % self.API_URL_NAMESPACE, args=(),
-            kwargs={'case_reference': case_ref}
-        )
+    def make_resource(self, **kwargs):
+        return None
 
     def test_methods_not_allowed(self):
         """

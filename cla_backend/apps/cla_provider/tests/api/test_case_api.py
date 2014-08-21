@@ -46,10 +46,13 @@ class BaseCaseTestCase(
     def get_case_serializer_clazz(self):
         return CaseSerializer
 
-    def make_resource(self):
+    def make_resource(self, **kwargs):
+        kwargs.update({
+            'provider': self.provider,
+            'requires_action_by': REQUIRES_ACTION_BY.PROVIDER
+        })
         return super(BaseCaseTestCase, self).make_resource(
-            provider=self.provider,
-            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+            **kwargs
         )
 
 

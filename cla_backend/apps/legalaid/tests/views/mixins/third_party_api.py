@@ -10,7 +10,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
     API_URL_BASE_NAME = 'thirdpartydetails'
     PARENT_LOOKUP_KEY = 'reference'
     PARENT_RESOURCE_RECIPE = 'legalaid.case'
-    PARENT_PK_FIELD = 'thirdparty_details'
+    PK_FIELD = 'thirdparty_details'
 
     @property
     def response_keys(self):

@@ -27,7 +27,7 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
     RESOURCE_RECIPE = 'legalaid.adaptation_details'
     API_URL_BASE_NAME = 'adaptationdetails'
     PARENT_RESOURCE_RECIPE = 'legalaid.case'
-    PARENT_PK_FIELD = 'adaptation_details'
+    PK_FIELD = 'adaptation_details'
 
     @property
     def response_keys(self):

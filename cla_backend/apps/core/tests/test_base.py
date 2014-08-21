@@ -146,9 +146,12 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
+    def setup_resources(self):
+        self.resource = self.make_resource()
+
     def setUp(self):
         super(SimpleResourceAPIMixin, self).setUp()
-        self.resource = self.make_resource()
+        self.setup_resources()
 
     @property
     def list_url(self):
@@ -167,8 +170,8 @@ class NestedSimpleResourceAPIMixin(SimpleResourceAPIMixin):
     You should (almost) always subclass this or the SimpleResourceAPIMixin
     in your TestCase.
 
-    Your actual TestCase should also sublass one of the legalaid.tests.views.test_base
-    classes.
+    Your actual TestCase should also sublass one of the
+    legalaid.tests.views.test_base classes.
 
     Usage:
 
@@ -184,29 +187,47 @@ class NestedSimpleResourceAPIMixin(SimpleResourceAPIMixin):
     LOOKUP_KEY = None  # e.g. case_reference
     PARENT_LOOKUP_KEY = None  # e.g. reference
     PARENT_RESOURCE_RECIPE = None  # e.g. legalaid.case
-    PARENT_PK_FIELD = None  # e.g. eligibility_check
+    PK_FIELD = None  # e.g. eligibility_check
+    ONE_TO_ONE_RESOURCE = True
 
     @property
     def resource_lookup_value(self):
         return getattr(self.parent_resource, self.PARENT_LOOKUP_KEY)
 
     def get_list_url(self):
-        return None
+        if self.ONE_TO_ONE_RESOURCE:
+            return None
 
-    def setUp(self):
-        super(NestedSimpleResourceAPIMixin, self).setUp()
-        self.parent_resource = self.make_parent_resource()
-
-    def make_parent_resource(self, **kwargs):
-        kwargs[self.PARENT_PK_FIELD] = self.resource
-
-        return make_recipe(
-            self.PARENT_RESOURCE_RECIPE, **kwargs
+        return reverse(
+            '%s:%s-list' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME),
+            args=(), kwargs={self.LOOKUP_KEY: unicode(self.resource_lookup_value)}
         )
 
+    def get_detail_url(self, resource_lookup_value, suffix='detail'):
+        return reverse(
+            '%s:%s-%s' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME, suffix),
+            args=(), kwargs={self.LOOKUP_KEY: unicode(resource_lookup_value)}
+        )
+
+    def setup_resources(self):
+        if self.ONE_TO_ONE_RESOURCE:
+            self.resource = self.make_resource()
+            self.parent_resource = self.make_parent_resource(**{
+                self.PK_FIELD: self.resource
+            })
+        else:
+            self.parent_resource = self.make_parent_resource()
+            self.resource = self.make_resource(**{
+                self.PK_FIELD: self.parent_resource
+            })
+
+    def make_parent_resource(self, **kwargs):
+        return make_recipe(self.PARENT_RESOURCE_RECIPE, **kwargs)
+
     def _cleanup_before_create(self):
-        setattr(self.parent_resource, self.PARENT_PK_FIELD, None)
-        self.parent_resource.save()
+        if self.ONE_TO_ONE_RESOURCE:
+            setattr(self.parent_resource, self.PK_FIELD, None)
+            self.parent_resource.save()
 
     def _create(self, data=None, url=None):
         self._cleanup_before_create()

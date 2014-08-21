@@ -6899,9 +6899,9 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n319">
-      <data key="d4"><![CDATA[Potential discrimination issue - please click to restart within the discrimination category.
+      <data key="d4"><![CDATA[The client may have been discriminated against (eg a restaurant refuses to serve a customer with a disabled child) 
 
-e.g. a shop will not serve someone due to ethnic origin, gay couple refused a room in  hotel, restaurant refuses to serve a customer with a disabled child although serving other parents with children, staff in a nightclub abusive regarding a protected characteristic.]]></data>
+]]></data>
       <data key="d5"><![CDATA[Emp discrimination?]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -6920,14 +6920,14 @@ e.g. a shop will not serve someone due to ethnic origin, gay couple refused a ro
       </data>
     </node>
     <node id="n320">
-      <data key="d4"><![CDATA[out of scope]]></data>
+      <data key="d4"><![CDATA[Discrimination does not apply]]></data>
       <data key="d5"><![CDATA[out of sco]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="195.0" y="240.0"/>
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="124.486328125" x="12.7568359375" y="5.93359375">Otherwise out of sco<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="107.21875" x="21.390625" y="5.93359375">No discrimination<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>

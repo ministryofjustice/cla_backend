@@ -4155,7 +4155,7 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n189">
-      <data key="d4"><![CDATA[Indicate where the discrimination occurred.  *Select radio button and click 'next' to continue*]]></data>
+      <data key="d4"><![CDATA[Where did the discrimination occur? *Click 'next' to choose an option*]]></data>
       <data key="d5"><![CDATA[Indicate where the d]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -4503,14 +4503,14 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n205">
-      <data key="d4"><![CDATA[Indicate where the discrimination occurred. *Select radio button and click 'next' to continue*]]></data>
+      <data key="d4"><![CDATA[Where did the discrimination occur? *Click 'Next' to choose an option.*]]></data>
       <data key="d5"><![CDATA[Indicate where the d]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9753.121031746032" y="1305.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="122.412109375" x="13.7939453125" y="5.93359375">Indicate where the d<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="141.625" x="4.1875" y="5.93359375">Where discrim occurred<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -4718,14 +4718,14 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n215">
-      <data key="d4"><![CDATA[Indicate where the discrimination occurred.  *Select radio button and click 'next' to continue*]]></data>
+      <data key="d4"><![CDATA[Where did the discrimination occur?  *Click 'Next to choose an option*]]></data>
       <data key="d5"><![CDATA[Indicate where the d]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8846.871031746032" y="1305.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="122.412109375" x="13.7939453125" y="5.93359375">Indicate where the d<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="141.625" x="4.1875" y="5.93359375">Where discrim occurred<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -5020,14 +5020,14 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n229">
-      <data key="d4"><![CDATA[Indicate where it occurred.  *Select radio button and click 'next' to continue*]]></data>
+      <data key="d4"><![CDATA[Where did the discrimination occur? *Click 'Next' to choose an option*]]></data>
       <data key="d5"><![CDATA[Indicate where it oc]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8256.871031746032" y="1305.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="117.712890625" x="16.1435546875" y="5.93359375">Indicate where it oc<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="140.60546875" x="4.697265625" y="5.93359375">where discrim occurred<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>

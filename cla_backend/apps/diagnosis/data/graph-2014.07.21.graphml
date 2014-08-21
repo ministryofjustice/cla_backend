@@ -4116,7 +4116,7 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n187">
-      <data key="d4"><![CDATA[Indicate which protected characteristic type the matter most applies to (indicate specifics and multiple categories in operator notes)  Search operator guidance for ‘protected characteristics’ for more info on these.]]></data>
+      <data key="d4"><![CDATA[On what basis has the client been discriminated against?  (Please give details in the operator notes, especially if more than one option applies)  *Click 'Next' to choose an option*]]></data>
       <data key="d5"><![CDATA[Indicate which prote]]></data>
       <data key="d13">
         <y:ShapeNode>

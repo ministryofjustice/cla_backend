@@ -2,13 +2,17 @@ from django.core.urlresolvers import reverse, NoReverseMatch
 
 from rest_framework import status
 
-from core.tests.test_base import CLAAuthBaseApiTestMixin
+from core.tests.mommy_utils import make_recipe
+from core.tests.test_base import \
+    NestedSimpleResourceAPIMixin
 
+from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.models import Log
 from cla_eventlog import event_registry
 
 
-class EventAPIMixin(CLAAuthBaseApiTestMixin):
+
+class EventAPIMixin(object):
     def get_event_key(self):
         # getting the first event key in the registry as we don't know what's in there
         return event_registry._registry.keys()[0]
@@ -63,9 +67,9 @@ class EventAPIMixin(CLAAuthBaseApiTestMixin):
 
     def test_methods_not_authorized(self):
         ### DETAIL
-        self._test_post_not_authorized(self.detail_url, self.invalid_token)
-        self._test_put_not_authorized(self.detail_url, self.invalid_token)
-        self._test_delete_not_authorized(self.detail_url, self.invalid_token)
+        self._test_post_not_authorized(self.detail_url, token=self.invalid_token)
+        self._test_put_not_authorized(self.detail_url, token=self.invalid_token)
+        self._test_delete_not_authorized(self.detail_url, token=self.invalid_token)
 
 
 class ImplicitEventCodeViewTestCaseMixin(object):
@@ -125,7 +129,7 @@ class ImplicitEventCodeViewTestCaseMixin(object):
         self.assertEqual(Log.objects.count(), 1)
         log = Log.objects.all()[0]
 
-        self.assertEqual(log.case, self.check)
+        self.assertEqual(log.case, self.resource)
         self.assertEqual(log.notes, data['notes'])
         self.assertEqual(log.created_by, self.user)
 
@@ -148,3 +152,49 @@ class ExplicitEventCodeViewTestCaseMixin(ImplicitEventCodeViewTestCaseMixin):
         data = super(ExplicitEventCodeViewTestCaseMixin, self).get_default_post_data()
         data['event_code'] = self.get_event_code()
         return data
+
+
+class LogAPIMixin(NestedSimpleResourceAPIMixin):
+    LOOKUP_KEY = 'reference'
+    API_URL_BASE_NAME = 'log'
+    RESOURCE_RECIPE = 'cla_eventlog.log'
+    LOOKUP_KEY = 'case_reference'
+    PARENT_LOOKUP_KEY = 'reference'
+    PARENT_RESOURCE_RECIPE = 'legalaid.case'
+    PK_FIELD = 'case'
+    ONE_TO_ONE_RESOURCE = False
+
+    def setup_resources(self):
+        super(LogAPIMixin, self).setup_resources()
+        self.high_logs = make_recipe(
+            'cla_eventlog.log', case=self.parent_resource, level=LOG_LEVELS.HIGH,
+            code="HIGH_", _quantity=4
+        )
+        self.minor_logs = make_recipe(
+            'cla_eventlog.log', case=self.parent_resource, level=LOG_LEVELS.MINOR,
+            code="MINIOR_", _quantity=4
+        )
+
+    def make_resource(self, **kwargs):
+        return None
+
+    def test_methods_not_allowed(self):
+        """
+        Ensure that we can't POST, PUT or DELETE
+        """
+        self._test_post_not_allowed(self.list_url)
+        self._test_put_not_allowed(self.list_url)
+        self._test_delete_not_allowed(self.list_url)
+
+    def test_methods_not_authorized(self):
+        self._test_get_not_authorized(self.list_url, self.invalid_token)
+
+    def test_get(self):
+        response = self.client.get(
+            self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertItemsEqual(
+            [log.code for log in self.high_logs],
+            [log['code'] for log in response.data]
+        )

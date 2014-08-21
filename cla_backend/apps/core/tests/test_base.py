@@ -1,175 +1,237 @@
-from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from provider.oauth2.models import Client, AccessToken
 from core.tests.mommy_utils import make_recipe
-
-from cla_provider.models import Staff
-from call_centre.models import Operator
 
 
 class CLABaseApiTestMixin(object):
     """
     Useful testing methods
+
+
+    NOTE: you probably don't want to subclass it directly.
+        Think if it's better to use SimpleResourceAPIMixin or NestedSimpleResourceAPIMixin
+        instead.
     """
-    def _test_get_not_allowed(self, url):
-        response = self.client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def _test_post_not_allowed(self, url, data={}):
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def _test_put_not_allowed(self, url, data={}):
-        response = self.client.put(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def _test_delete_not_allowed(self, url):
-        response = self.client.delete(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-
-class CLAAuthBaseApiTestMixin(object):
-    """
-    Useful testing methods
-    """
-    DEFAULT_TOKEN = None
     API_URL_NAMESPACE = None
 
+    def get_http_authorization(self, token=None):
+        if not token:
+            return ''
+        return 'Bearer %s' % token
+
+    # NOT ALLOWED SHORTCUTS
+
+    def _test_get_not_allowed(self, url, token=None):
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def _test_post_not_allowed(self, url, data={}, token=None):
+        response = self.client.post(
+            url, data,
+            HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def _test_put_not_allowed(self, url, data={}, token=None):
+        response = self.client.put(
+            url, data,
+            HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def _test_patch_not_allowed(self, url, data={}, token=None):
+        response = self.client.patch(
+            url, data,
+            HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def _test_delete_not_allowed(self, url, token=None):
+        response = self.client.delete(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    # NOT AUTHORIZED SHORTCUTS
+
+    def _test_get_not_authorized(self, url, token=None):
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_post_not_authorized(self, url, data={}, token=None):
+        response = self.client.post(
+            url, data, HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_put_not_authorized(self, url, data={}, token=None):
+        response = self.client.put(
+            url, data,
+            HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_patch_not_authorized(self, url, data={}, token=None):
+        response = self.client.patch(
+            url, data,
+            HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def _test_delete_not_authorized(self, url, token=None):
+        response = self.client.delete(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization(token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class SimpleResourceAPIMixin(CLABaseApiTestMixin):
+    """
+    You should (almost) always subclass this or the NestedSimpleResourceAPIMixin
+    in your TestCase.
+
+    Your actual TestCase should also sublass one of the legalaid.tests.views.test_base
+    classes.
+
+
+    Usage:
+
+    when using it, override the config properties below (in UPPERCASE).
+
+    your test will have:
+        * self.resource ==> instance of the resource you are about to test
+        * self.list_url, self.details_url ==> url to list and details
+        * a bunch of extra things (look around)
+    """
+    LOOKUP_KEY = 'pk'
+    API_URL_BASE_NAME = None
+    RESOURCE_RECIPE = None
+
+    @property
+    def response_keys(self):
+        return []
+
+    @property
+    def resource_lookup_value(self):
+        return getattr(self.resource, self.LOOKUP_KEY)
+
+    def assertResponseKeys(self, response):
+        self.assertItemsEqual(
+            response.data.keys(),
+            self.response_keys
+        )
+
+    def get_list_url(self):
+        return reverse(
+            '%s:%s-list' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME)
+        )
+
+    def get_detail_url(self, resource_lookup_value, suffix='detail'):
+        return reverse(
+            '%s:%s-%s' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME, suffix),
+            args=(), kwargs={self.LOOKUP_KEY: unicode(resource_lookup_value)}
+        )
+
+    def _create(self, data=None, url=None):
+        if not data: data = {}
+        if not url: url = self.get_list_url()
+        return self.client.post(
+            url, data=data, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+
+    def setup_resources(self):
+        self.resource = self.make_resource()
+
     def setUp(self):
-        super(CLAAuthBaseApiTestMixin, self).setUp()
+        super(SimpleResourceAPIMixin, self).setUp()
+        self.setup_resources()
 
-        # create a user
-        self.username = 'john'
-        self.email = 'lennon@thebeatles.com'
-        self.password = 'password'
-        self.user = User.objects.create_user(self.username, self.email, self.password)
+    @property
+    def list_url(self):
+        return self.get_list_url()
 
-        # create an operator API client
-        self.operator_api_client = Client.objects.create(
-            user=self.user,
-            name='operator',
-            client_type=0,
-            client_id='call_centre',
-            client_secret='secret',
-            url='http://localhost/',
-            redirect_uri='http://localhost/redirect'
+    @property
+    def detail_url(self):
+        return self.get_detail_url(self.resource_lookup_value)
+
+    def make_resource(self, **kwargs):
+        return make_recipe(self.RESOURCE_RECIPE, **kwargs)
+
+
+class NestedSimpleResourceAPIMixin(SimpleResourceAPIMixin):
+    """
+    You should (almost) always subclass this or the SimpleResourceAPIMixin
+    in your TestCase.
+
+    Your actual TestCase should also sublass one of the
+    legalaid.tests.views.test_base classes.
+
+    Usage:
+
+    when using it, override the config properties below (in UPPERCASE).
+
+    your test will have:
+        * self.resource ==> instance of the resource you are about to test
+        * self.parent_resource ==> instance of the parent resource
+        * self.list_url, self.details_url ==> url to list and details
+        * a bunch of extra things (look around)
+    """
+
+    LOOKUP_KEY = None  # e.g. case_reference
+    PARENT_LOOKUP_KEY = None  # e.g. reference
+    PARENT_RESOURCE_RECIPE = None  # e.g. legalaid.case
+    PK_FIELD = None  # e.g. eligibility_check
+    ONE_TO_ONE_RESOURCE = True
+
+    @property
+    def resource_lookup_value(self):
+        return getattr(self.parent_resource, self.PARENT_LOOKUP_KEY)
+
+    def get_list_url(self):
+        if self.ONE_TO_ONE_RESOURCE:
+            return None
+
+        return reverse(
+            '%s:%s-list' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME),
+            args=(), kwargs={self.LOOKUP_KEY: unicode(self.resource_lookup_value)}
         )
 
-        # create an staff API client
-        self.staff_api_client = Client.objects.create(
-            user=self.user,
-            name='staff',
-            client_type=0,
-            client_id='cla_provider',
-            client_secret='secret',
-            url='http://provider.localhost/',
-            redirect_uri='http://provider.localhost/redirect'
+    def get_detail_url(self, resource_lookup_value, suffix='detail'):
+        return reverse(
+            '%s:%s-%s' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME, suffix),
+            args=(), kwargs={self.LOOKUP_KEY: unicode(resource_lookup_value)}
         )
 
-        # create provider and staff user
-        self.provider = make_recipe('cla_provider.provider')
-        self.provider.staff_set.add(Staff(user=self.user))
-        self.provider.save()
+    def setup_resources(self):
+        if self.ONE_TO_ONE_RESOURCE:
+            self.resource = self.make_resource()
+            self.parent_resource = self.make_parent_resource(**{
+                self.PK_FIELD: self.resource
+            })
+        else:
+            self.parent_resource = self.make_parent_resource()
+            self.resource = self.make_resource(**{
+                self.PK_FIELD: self.parent_resource
+            })
 
-        # create operator user
-        self.operator = Operator.objects.create(user=self.user)
+    def make_parent_resource(self, **kwargs):
+        return make_recipe(self.PARENT_RESOURCE_RECIPE, **kwargs)
 
-        # Create an access token
-        self.operator_token = AccessToken.objects.create(
-            user=self.user,
-            client=self.operator_api_client,
-            token='operator_token',
-            scope=0
+    def _cleanup_before_create(self):
+        if self.ONE_TO_ONE_RESOURCE:
+            setattr(self.parent_resource, self.PK_FIELD, None)
+            self.parent_resource.save()
+
+    def _create(self, data=None, url=None):
+        self._cleanup_before_create()
+        return self.client.post(
+            url or self.detail_url, data=data or {}, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
         )
-
-        # Create an access token
-        self.staff_token = AccessToken.objects.create(
-            user=self.user,
-            client=self.staff_api_client,
-            token='stafF_token',
-            scope=0
-        )
-
-        # set default token
-        self.token = getattr(self, self.DEFAULT_TOKEN)
-        self.invalid_token = getattr(self, self.INVALID_TOKEN)
-
-    def _test_get_not_allowed(self, url):
-        response = self.client.get(url,
-                                   HTTP_AUTHORIZATION="Bearer %s" % self.token,
-                                   format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def _test_post_not_allowed(self, url, data={}):
-        response = self.client.post(url, data,
-                                    HTTP_AUTHORIZATION="Bearer %s" % self.token,
-                                    format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def _test_put_not_allowed(self, url, data={}):
-        response = self.client.put(url, data,
-                                   HTTP_AUTHORIZATION="Bearer %s" % self.token,
-                                   format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def _test_delete_not_allowed(self, url):
-        response = self.client.delete(url,
-                                      HTTP_AUTHORIZATION="Bearer %s" % self.token,
-                                      format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def _test_patch_not_allowed(self, url):
-        response = self.client.patch(url,
-                                      HTTP_AUTHORIZATION="Bearer %s" % self.token,
-                                      format='json')
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-    def _test_get_not_authorized(self, url, token):
-        response = self.client.get(url,
-                                   HTTP_AUTHORIZATION="Bearer %s" % token,
-                                   format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def _test_post_not_authorized(self, url, token, data=None):
-        if not data: data = {}
-        response = self.client.post(url, data,
-                                    HTTP_AUTHORIZATION="Bearer %s" % token,
-                                    format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def _test_put_not_authorized(self, url, token, data=None):
-        if not data: data = {}
-        response = self.client.put(url, data,
-                                   HTTP_AUTHORIZATION="Bearer %s" % token,
-                                   format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def _test_delete_not_authorized(self, url, token):
-        response = self.client.delete(url,
-                                      HTTP_AUTHORIZATION="Bearer %s" % token,
-                                      format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def _test_patch_not_authorized(self, url, token, data=None):
-        if not data: data = {}
-        response = self.client.patch(url, data,
-                                     HTTP_AUTHORIZATION="Bearer %s" % token,
-                                     format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-
-class CLAProviderAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
-    DEFAULT_TOKEN = 'staff_token'
-    INVALID_TOKEN = 'operator_token'
-    API_URL_NAMESPACE = 'cla_provider'
-
-
-class CLAOperatorAuthBaseApiTestMixin(CLAAuthBaseApiTestMixin):
-    DEFAULT_TOKEN = 'operator_token'
-    INVALID_TOKEN = 'staff_token'
-    API_URL_NAMESPACE = 'call_centre'
-

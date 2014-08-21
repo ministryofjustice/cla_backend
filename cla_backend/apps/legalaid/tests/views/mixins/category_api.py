@@ -1,43 +1,36 @@
-from django.core.urlresolvers import reverse
-
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
+from core.tests.test_base import SimpleResourceAPIMixin
 
 
-class CategoryAPIMixin(object):
+class CategoryAPIMixin(SimpleResourceAPIMixin):
+    LOOKUP_KEY = 'code'
+    API_URL_BASE_NAME = 'category'
+    RESOURCE_RECIPE = 'legalaid.category'
+
     def setUp(self):
         super(CategoryAPIMixin, self).setUp()
 
-        self.categories = make_recipe('legalaid.category', _quantity=3)
-
-        self.list_url = reverse('%s:category-list' % self.API_URL_NAMESPACE)
-        self.detail_url = reverse(
-            '%s:category-detail' % self.API_URL_NAMESPACE, args=(),
-            kwargs={'code': self.categories[0].code}
-        )
-
-    def get_http_authorization(self):
-        return None
+        self.categories = make_recipe('legalaid.category', _quantity=2)
 
     def test_get_allowed(self):
         """
         Ensure we can GET the list and it is ordered
         """
-        http_authorization = self.get_http_authorization()
 
         # LIST
-        response = self.client.get(self.list_url,
-                                   HTTP_AUTHORIZATION=http_authorization,
-                                   format='json')
+        response = self.client.get(
+            self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization(),
+        )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual([d['name'] for d in response.data], ['Name1', 'Name2', 'Name3'])
 
         # DETAIL
-        response = self.client.get(self.detail_url,
-                                   HTTP_AUTHORIZATION=http_authorization,
-                                   format='json')
+        response = self.client.get(
+            self.detail_url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], 'Name1')
 

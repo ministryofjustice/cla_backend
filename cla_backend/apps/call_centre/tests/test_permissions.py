@@ -1,4 +1,4 @@
-from core.tests.test_base import CLAOperatorAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 from django.conf.urls import patterns
 from django.contrib.auth.models import User
 from django.http import HttpResponse

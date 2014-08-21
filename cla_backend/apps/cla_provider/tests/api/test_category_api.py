@@ -1,10 +1,11 @@
 from rest_framework.test import APITestCase
 
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 
-from legalaid.tests.views.category_api import CategoryAPIMixin
+from legalaid.tests.views.mixins.category_api import CategoryAPIMixin
 
 
-class CategoryTestCase(CategoryAPIMixin, CLAProviderAuthBaseApiTestMixin, APITestCase):
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.token
+class CategoryTestCase(
+    CLAProviderAuthBaseApiTestMixin, CategoryAPIMixin, APITestCase
+):
+    pass

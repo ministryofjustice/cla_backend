@@ -1,9 +1,9 @@
 from rest_framework.test import APITestCase
 
 from core.tests.mommy_utils import make_recipe
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 
-from legalaid.tests.views.user_api import UserAPIMixin
+from legalaid.tests.views.mixins.user_api import UserAPIMixin
 
 
 class UserTests(CLAProviderAuthBaseApiTestMixin, UserAPIMixin, APITestCase):

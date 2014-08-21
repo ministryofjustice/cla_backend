@@ -8,20 +8,17 @@ from core.serializers import UUIDSerializer, ClaModelSerializer, \
 from cla_common.constants import MATTER_TYPE_LEVELS
 from cla_common.money_interval.models import MoneyInterval
 
-from cla_eventlog.constants import LOG_LEVELS
-from cla_eventlog.serializers import LogSerializerBase
-
 from cla_provider.models import Provider, OutOfHoursRota
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
-    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, MediaCodeGroup
+    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode
 
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
-        fields = ('code', 'name', 'description')
+        fields = ('code', 'name', 'description', 'ecf_available', 'mandatory')
 
 
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
@@ -205,23 +202,14 @@ class MediaCodeSerializerBase(ClaModelSerializer):
 
 
 class CaseSerializerBase(ClaModelSerializer, PartialUpdateExcludeReadonlySerializerMixin):
-    LOG_SERIALIZER = LogSerializerBase
-
     eligibility_check = UUIDSerializer(slug_field='reference', read_only=True)
     diagnosis = UUIDSerializer(slug_field='reference', required=False, read_only=True)
     personal_details = PersonalDetailsSerializerBase()
     notes = serializers.CharField(max_length=5000, required=False)
     provider_notes = serializers.CharField(max_length=5000, required=False)
-    log_set = serializers.SerializerMethodField('get_log_set')
     matter_type1 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE))
     matter_type2 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO))
     media_code = serializers.SlugRelatedField(slug_field='code', required=False)
-
-    def get_log_set(self, case):
-        case_log = case.log_set.filter(level__gt=LOG_LEVELS.MINOR)
-        serializer = self.LOG_SERIALIZER(instance=case_log, many=True, required=False, read_only=True)
-        return serializer.data
-
 
     def validate(self, attrs):
         attrs = super(CaseSerializerBase, self).validate(attrs)
@@ -229,11 +217,9 @@ class CaseSerializerBase(ClaModelSerializer, PartialUpdateExcludeReadonlySeriali
             raise ValidationError({u'exempt_user_reason': [u'A reason is required if client is exempt.']})
         return attrs
 
-
     class Meta:
         model = Case
         fields = ()
-
 
 
 class CaseSerializerFull(CaseSerializerBase):

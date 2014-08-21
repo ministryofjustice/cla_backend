@@ -1,9 +1,13 @@
-from core.drf.router import NestedCLARouter
 from django.conf.urls import patterns, url, include
+
 from rest_framework import routers
+
+from core.drf.router import NestedSimpleRouter, NestedCLARouter
+
 from core import routers as core_routers
 
 from . import views
+
 
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)
@@ -22,15 +26,19 @@ router.register(r'mediacode', views.MediaCodeViewSet)
 timer_router = core_routers.SingletonRouter()
 timer_router.register(r'timer', views.TimerViewSet, base_name='timer')
 
-case_router = NestedCLARouter(router, 'case', lookup='case')
-case_router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_name='eligibility_check')
-case_router.register(r'personal_details', views.PersonalDetailsViewSet)
-case_router.register(r'adaptation_details', views.AdaptationDetailsViewSet)
-case_router.register(r'thirdparty_details', views.ThirdPartyDetailsViewSet)
-case_router.register(r'diagnosis', views.DiagnosisViewSet)
+case_one2one_router = NestedCLARouter(router, 'case', lookup='case')
+case_one2one_router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_name='eligibility_check')
+case_one2one_router.register(r'personal_details', views.PersonalDetailsViewSet)
+case_one2one_router.register(r'adaptation_details', views.AdaptationDetailsViewSet)
+case_one2one_router.register(r'thirdparty_details', views.ThirdPartyDetailsViewSet)
+case_one2one_router.register(r'diagnosis', views.DiagnosisViewSet, base_name='diagnosis')
+
+case_one2many_router = NestedSimpleRouter(router, r'case', lookup='case')
+case_one2many_router.register(r'logs', views.LogViewSet)
 
 urlpatterns = patterns('',
-    url(r'^', include(case_router.urls)),
+    url(r'^', include(case_one2one_router.urls)),
+    url(r'^', include(case_one2many_router.urls)),
     url(r'^', include(router.urls)),
     url(r'^', include(timer_router.urls)),
 )

@@ -1,7 +1,13 @@
-from rest_framework import viewsets, views, status
+from rest_framework import mixins, viewsets, views, status
 from rest_framework.response import Response as DRFResponse
 
+from core.drf.mixins import NestedGenericModelMixin
+
+from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog import event_registry
+
+from .serializers import LogSerializerBase
+from .models import Log
 
 
 class BaseEventViewSet(viewsets.ViewSetMixin, views.APIView):
@@ -43,3 +49,18 @@ class BaseEventViewSet(viewsets.ViewSetMixin, views.APIView):
 
     def format_codes(self, codes):
         return [{'code': code, 'description': code_data['description']} for code, code_data in codes.items()]
+
+
+class BaseLogViewSet(
+    NestedGenericModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    PARENT_FIELD = 'log_set'
+    lookup_field = 'reference'
+    serializer_class = LogSerializerBase
+    model = Log
+
+    def get_queryset(self):
+        qs = super(BaseLogViewSet, self).get_queryset()
+        return qs.filter(level__gt=LOG_LEVELS.MINOR)

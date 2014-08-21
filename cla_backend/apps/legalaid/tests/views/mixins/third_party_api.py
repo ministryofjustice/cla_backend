@@ -1,15 +1,19 @@
 from rest_framework import status
 
-from legalaid.tests.views.mixins.resource import \
-    NestedSimpleResourceCheckAPIMixin
+from core.tests.test_base import \
+    NestedSimpleResourceAPIMixin
 
 
-class ThirdPartyDetailsApiMixin(NestedSimpleResourceCheckAPIMixin):
-    CHECK_RECIPE = 'legalaid.thirdparty_details'
-    BASE_NAME = 'thirdpartydetails'
+class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
+    LOOKUP_KEY = 'case_reference'
+    RESOURCE_RECIPE = 'legalaid.thirdparty_details'
+    API_URL_BASE_NAME = 'thirdpartydetails'
+    PARENT_LOOKUP_KEY = 'reference'
+    PARENT_RESOURCE_RECIPE = 'legalaid.case'
+    PK_FIELD = 'thirdparty_details'
 
     @property
-    def check_keys(self):
+    def response_keys(self):
         return \
             [
                 'reference',
@@ -22,15 +26,6 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceCheckAPIMixin):
                 'no_contact_reason',
                 'organisation_name',
             ]
-
-    def get_http_authorization(self):
-        raise NotImplementedError()
-
-    def _create(self, data=None, url=None):
-        if not url:
-            self.check_case.thirdparty_details = None
-            self.check_case.save()
-        return super(ThirdPartyDetailsApiMixin, self)._create(data=data, url=url)
 
     def _get_default_post_data(self):
         return {"personal_details": {
@@ -67,9 +62,9 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceCheckAPIMixin):
                 }
 
         method_callable = getattr(self.client, method)
-        response = method_callable(url, data,
-                                   format='json',
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
+        response = method_callable(
+            url, data, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         expected_errors = {
@@ -126,22 +121,18 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceCheckAPIMixin):
         # check initial state is correct
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCheckResponseKeys(response)
+        self.assertResponseKeys(response)
 
         self.assertThirdPartyDetailsEqual(response.data, check)
 
     # GET
 
     def test_get(self):
-        thirdparty_details = self.check
-        self.check_case.thirdparty_details = thirdparty_details
-        self.check_case.save()
-
         response = self.client.get(
-            self.detail_url, format='json',
+            self.detail_url,
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
         self.assertThirdPartyDetailsEqual(
-            response.data, self.check_case.thirdparty_details
+            response.data, self.parent_resource.thirdparty_details
         )

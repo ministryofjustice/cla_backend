@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from cla_eventlog.serializers import LogSerializerBase
 
 from legalaid.serializers import \
@@ -111,7 +112,6 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
 
 
 class LogSerializer(LogSerializerBase):
-
     class Meta(LogSerializerBase.Meta):
         fields = (
             'code',
@@ -120,34 +120,26 @@ class LogSerializer(LogSerializerBase):
             'notes',
             'type',
             'level',
-            'timer'
+            'timer',
+            'patch'
         )
 
 
 class CaseSerializer(CaseSerializerFull):
-    LOG_SERIALIZER = LogSerializer
-
     notes = serializers.CharField(
         max_length=500, required=False, read_only=True
     )
     provider_notes = serializers.CharField(max_length=500, required=False)
-    language = serializers.CharField(
-        source='adaptation_details.language', read_only=True
-    )
-    thirdparty_full_name = serializers.CharField(
-        source='thirdparty_details.personal_details.full_name', read_only=True
-    )
 
     class Meta(CaseSerializerFull.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference', 'created',
-            'modified', 'created_by', 'provider', 'log_set',
+            'modified', 'created_by', 'provider',
             'notes', 'provider_notes', 'full_name', 'thirdparty_details',
             'adaptation_details', 'laa_reference', 'eligibility_state',
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis',
             'media_code', 'postcode', 'diagnosis_state',
-            'exempt_user', 'exempt_user_reason', 'language',
-            'thirdparty_full_name'
+            'exempt_user', 'exempt_user_reason', 'ecf_statement'
         )
 
 

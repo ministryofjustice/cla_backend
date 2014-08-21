@@ -5,54 +5,54 @@ from rest_framework import status
 from cla_common.constants import REQUIRES_ACTION_BY
 
 from core.tests.mommy_utils import make_recipe
+from core.tests.test_base import \
+    SimpleResourceAPIMixin
 
 from legalaid.models import Case
 
 from cla_eventlog.models import Log
 
 
-class FullCaseAPIMixin(object):
-    API_URL_NAMESPACE = None
+class FullCaseAPIMixin(SimpleResourceAPIMixin):
+    LOOKUP_KEY = 'reference'
+    RESOURCE_RECIPE = 'legalaid.case'
+    API_URL_BASE_NAME = 'case'
 
     def setUp(self):
         super(FullCaseAPIMixin, self).setUp()
 
-        self.list_url = reverse('%s:case-list' % self.API_URL_NAMESPACE)
+        # self.list_url = reverse('%s:case-list' % self.API_URL_NAMESPACE)
         self.list_dashboard_url = u'%s?dashboard=1' % reverse(
             '%s:case-list' % self.API_URL_NAMESPACE
         )
-        self.case_obj = make_recipe('legalaid.case')
-        self.check = self.case_obj
-        self.detail_url = self.get_details_url(self.case_obj)
-
-    def get_http_authorization(self):
-        raise NotImplementedError()
+        # self.resource = make_recipe('legalaid.case')
+        # self.check = self.resource
+        # self.detail_url = self.get_detail_url(self.resource)
 
     def get_case_serializer_clazz(self):
         raise NotImplementedError()
 
-    def get_details_url(self, case):
-        return reverse(
-            '%s:case-detail' % self.API_URL_NAMESPACE, args=(),
-            kwargs={'reference': case.reference}
-        )
+    # def get_detail_url(self, case):
+    #     return reverse(
+    #         '%s:case-detail' % self.API_URL_NAMESPACE, args=(),
+    #         kwargs={'reference': case.reference}
+    #     )
 
     def get_extra_search_make_recipe_kwargs(self):
         return {}
 
-    def assertCaseResponseKeys(self, response):
-        self.assertItemsEqual(
-            response.data.keys(), [
-                'eligibility_check', 'personal_details', 'reference',
-                'created', 'modified', 'created_by',
-                'provider', 'log_set', 'notes', 'provider_notes',
-                'full_name', 'laa_reference', 'eligibility_state',
-                'adaptation_details', 'billable_time', 'requires_action_by',
-                'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
-                'postcode', 'diagnosis_state', 'thirdparty_details',
-                'exempt_user', 'exempt_user_reason'
-            ]
-        )
+    @property
+    def response_keys(self):
+        return [
+            'eligibility_check', 'personal_details', 'reference',
+            'created', 'modified', 'created_by',
+            'provider', 'notes', 'provider_notes',
+            'full_name', 'laa_reference', 'eligibility_state',
+            'adaptation_details', 'billable_time', 'requires_action_by',
+            'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
+            'postcode', 'diagnosis_state', 'thirdparty_details',
+            'exempt_user', 'exempt_user_reason', 'ecf_statement',
+        ]
 
     def assertPersonalDetailsEqual(self, data, obj):
         if isinstance(data, basestring):
@@ -163,19 +163,19 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
             **self.get_extra_search_make_recipe_kwargs()
         )
 
-        self.case_obj.personal_details.full_name = 'abc'
-        self.case_obj.personal_details.postcode = '123'
-        self.case_obj.personal_details.save()
-        self.case_obj.reference = 'ref2'
-        self.case_obj.save()
+        self.resource.personal_details.full_name = 'abc'
+        self.resource.personal_details.postcode = '123'
+        self.resource.personal_details.save()
+        self.resource.reference = 'ref2'
+        self.resource.save()
 
         response = self.client.get(
-            self.list_url, data={'search': 'abc'}, format='json',
+            self.list_url, data={'search': 'abc'},
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data['results']))
-        self.assertCaseEqual(response.data['results'][0], self.case_obj)
+        self.assertCaseEqual(response.data['results'][0], self.resource)
 
     def test_search_find_one_result_by_ref(self):
         """
@@ -190,12 +190,12 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
         )
 
         response = self.client.get(
-            self.list_url, data={'search':self.case_obj.reference}, format='json',
+            self.list_url, data={'search':self.resource.reference},
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data['results']))
-        self.assertCaseEqual(response.data['results'][0], self.case_obj)
+        self.assertCaseEqual(response.data['results'][0], self.resource)
 
     def test_search_find_one_result_by_postcode(self):
         """
@@ -210,13 +210,12 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
         )
 
         response = self.client.get(
-            self.list_url, data={'search': self.case_obj.personal_details.postcode},
-            format='json',
+            self.list_url, data={'search': self.resource.personal_details.postcode},
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data['results']))
-        self.assertCaseEqual(response.data['results'][0], self.case_obj)
+        self.assertCaseEqual(response.data['results'][0], self.resource)
 
     def test_search_find_none_result_by_postcode(self):
         """
@@ -224,8 +223,7 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
         """
 
         response = self.client.get(
-            self.list_url, data={'search': self.case_obj.personal_details.postcode+'ss'},
-            format='json',
+            self.list_url, data={'search': self.resource.personal_details.postcode+'ss'},
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -236,8 +234,7 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
         GET search by name should work
         """
         response = self.client.get(
-            self.list_url, data={'search': self.case_obj.personal_details.full_name+'ss'},
-            format='json',
+            self.list_url, data={'search': self.resource.personal_details.full_name+'ss'},
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -248,8 +245,7 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
         GET search by name should work
         """
         response = self.client.get(
-            self.list_url, data={'search': self.case_obj.reference+'ss'},
-            format='json',
+            self.list_url, data={'search': self.resource.reference+'ss'},
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -300,11 +296,11 @@ class BaseUpdateCaseTestCase(FullCaseAPIMixin):
             'requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
         }
         response = self.client.patch(
-            self.get_details_url(case), data=data, format='json',
+            self.get_detail_url(case.reference), data=data,
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertCaseResponseKeys(response)
+        self.assertResponseKeys(response)
 
         self.assertCaseEqual(response.data,
             Case(
@@ -343,13 +339,13 @@ class BaseUpdateCaseTestCase(FullCaseAPIMixin):
             'media_code': media_code.code
         }
         response = self.client.patch(
-            self.detail_url, data=data, format='json',
+            self.detail_url, data=data,
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertCaseResponseKeys(response)
+        self.assertResponseKeys(response)
 
-        case = self.case_obj
+        case = self.resource
         case.matter_type1 = matter_type1
         case.matter_type2 = matter_type2
         case.media_code = media_code

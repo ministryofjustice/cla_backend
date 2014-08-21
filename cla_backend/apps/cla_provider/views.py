@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import mixins
 from rest_framework.decorators import action
 
-from cla_eventlog.views import BaseEventViewSet
+from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 
 from legalaid.models import Case
 from legalaid.views import BaseUserViewSet, \
@@ -19,7 +19,8 @@ from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
-    PersonalDetailsSerializer, ThirdPartyDetailsSerializer
+    PersonalDetailsSerializer, ThirdPartyDetailsSerializer, \
+    LogSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
 
 
@@ -63,9 +64,7 @@ class CaseViewSet(
     serializer_class = CaseSerializer
     queryset = Case.objects.exclude(provider=None)
 
-    ordering_fields = ('-requires_action_by', 'modified', 'created')
-    ordering_fields = ('-requires_action_by', 'modified', 'personal_details__full_name', 'personal_details__postcode', 'adaptation_details__language', 'thirdparty_details__personal_details__full_name')
-    ordering = ('-modified', '-created')
+    ordering_fields = ('-requires_action_by', 'modified', 'personal_details__full_name', 'personal_details__postcode')
 
     def get_queryset(self):
         this_provider = get_object_or_404(Staff, user=self.request.user).provider
@@ -146,3 +145,7 @@ class DiagnosisViewSet(
     CLAProviderPermissionViewSetMixin, BaseDiagnosisViewSet
 ):
     pass
+
+
+class LogViewSet(CLAProviderPermissionViewSetMixin, BaseLogViewSet):
+    serializer_class = LogSerializer

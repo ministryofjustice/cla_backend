@@ -1,17 +1,19 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from core.tests.test_base import CLABaseApiTestMixin
+from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
 
 
-from legalaid.tests.views.mixins.eligibility_check_api import EligibilityCheckAPIMixin
+from legalaid.tests.views.mixins.eligibility_check_api import \
+    EligibilityCheckAPIMixin
 
 
-class EligibilityCheckTestCase(CLABaseApiTestMixin, EligibilityCheckAPIMixin, APITestCase):
-    API_URL_NAMESPACE = 'checker'
+class EligibilityCheckTestCase(
+    EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTestMixin, APITestCase
+):
 
     def test_can_change_notes(self):
-        data={
+        data = {
             'notes': 'new notes',
             'your_problem_notes': 'ipsum lorem2',
         }
@@ -22,9 +24,9 @@ class EligibilityCheckTestCase(CLABaseApiTestMixin, EligibilityCheckAPIMixin, AP
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # checking the changed properties
-        self.check.your_problem_notes = data['your_problem_notes']
-        self.check.notes = data['notes']
-        self.assertEligibilityCheckEqual(response.data, self.check)
+        self.resource.your_problem_notes = data['your_problem_notes']
+        self.resource.notes = data['notes']
+        self.assertEligibilityCheckEqual(response.data, self.resource)
 
     def assertEligibilityCheckEqual(self, data, check):
         self.assertEqual(data['reference'], unicode(check.reference))

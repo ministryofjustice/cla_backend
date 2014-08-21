@@ -21,6 +21,7 @@ class DiagnosisSerializer(ClaModelSerializer):
     category = SlugRelatedField('category', slug_field='code', required=False)
 
     def __init__(self, *args, **kwargs):
+        # self.full_nodes_dump = kwargs.pop('full', False)
         super(DiagnosisSerializer, self).__init__(*args, **kwargs)
         self.graph = graph
 
@@ -38,8 +39,11 @@ class DiagnosisSerializer(ClaModelSerializer):
             return []
 
         nodes = self.object.nodes
-        if nodes and is_terminal(self.graph, nodes[-1]['id']):
-            nodes = nodes[:-1]
+        # this is just so that we don't show the INSCOPE / OUTOFSCOPE node
+        # in the interface, nothing else clever happening
+        # if not self.full_nodes_dump:
+        #     if nodes and is_terminal(self.graph, nodes[-1]['id']):
+        #         nodes = nodes[:-1]
 
         return nodes
 

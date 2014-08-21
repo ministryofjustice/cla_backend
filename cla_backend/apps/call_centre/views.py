@@ -12,8 +12,8 @@ from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
 
 from cla_provider.models import Provider, OutOfHoursRota
 from cla_eventlog import event_registry
+from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
-from cla_eventlog.views import BaseEventViewSet
 
 from timer.views import BaseTimerViewSet
 
@@ -33,7 +33,7 @@ from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer,  \
     OutOfHoursRotaSerializer, OperatorSerializer, \
     AdaptationDetailsSerializer, PersonalDetailsSerializer, \
-    ThirdPartyDetailsSerializer
+    ThirdPartyDetailsSerializer, LogSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm
@@ -119,8 +119,6 @@ class CaseViewSet(
         SearchFilter,
     )
 
-    ordering_fields = ('modified', 'personal_details__full_name', 'personal_details__date_of_birth', 'personal_details__postcode', 'eligibility_check__category__name')
-    ordering = '-modified'
 
     def get_queryset(self):
         qs = super(CaseViewSet, self).get_queryset()
@@ -333,3 +331,7 @@ class TimerViewSet(CallCentrePermissionsViewSetMixin, BaseTimerViewSet):
 
 class DiagnosisViewSet(CallCentrePermissionsViewSetMixin, BaseDiagnosisViewSet):
     pass
+
+
+class LogViewSet(CallCentrePermissionsViewSetMixin, BaseLogViewSet):
+    serializer_class = LogSerializer

@@ -2,16 +2,20 @@ from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
 
-from legalaid.tests.views.mixins.resource import \
-    NestedSimpleResourceCheckAPIMixin
+from core.tests.test_base import \
+    NestedSimpleResourceAPIMixin
 
 
-class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
-    CHECK_RECIPE = 'legalaid.personal_details'
-    BASE_NAME = 'personaldetails'
+class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
+    LOOKUP_KEY = 'case_reference'
+    PARENT_LOOKUP_KEY = 'reference'
+    API_URL_BASE_NAME = 'personaldetails'
+    RESOURCE_RECIPE = 'legalaid.personal_details'
+    PARENT_RESOURCE_RECIPE = 'legalaid.case'
+    PK_FIELD = 'personal_details'
 
     @property
-    def check_keys(self):
+    def response_keys(self):
         return \
             [
                 'reference',
@@ -29,9 +33,6 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
                 'vulnerable_user'
             ]
 
-    def get_http_authorization(self):
-        raise NotImplementedError()
-
     def _get_default_post_data(self):
         return {
             'title': 'MR',
@@ -41,12 +42,6 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
             'mobile_phone': '0123456789',
             'home_phone': '9876543210',
         }
-
-    def _create(self, data=None, url=None):
-        if not url:
-            self.check_case.personal_details = None
-            self.check_case.save()
-        return super(PersonalDetailsAPIMixin, self)._create(data=data, url=url)
 
     def _test_method_in_error(self, method, url):
         """
@@ -63,9 +58,9 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
         }
 
         method_callable = getattr(self.client, method)
-        response = method_callable(url, data,
-                                   format='json',
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token)
+        response = method_callable(
+            url, data, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         expected_errors = {
@@ -114,7 +109,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
         """
         response = self._create()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCheckResponseKeys(response)
+        self.assertResponseKeys(response)
 
     def test_create_with_data(self):
         data = self._get_default_post_data()
@@ -124,7 +119,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
         # check initial state is correct
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertCheckResponseKeys(response)
+        self.assertResponseKeys(response)
 
         self.assertPersonalDetailsEqual(response.data, check)
 
@@ -132,8 +127,8 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceCheckAPIMixin):
 
     def test_get(self):
         response = self.client.get(
-            self.detail_url, format='json',
+            self.detail_url,
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
-        self.assertPersonalDetailsEqual(response.data, self.check_case.personal_details)
+        self.assertPersonalDetailsEqual(response.data, self.parent_resource.personal_details)

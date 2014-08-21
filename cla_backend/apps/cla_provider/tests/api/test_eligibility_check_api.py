@@ -4,24 +4,46 @@ from rest_framework import status
 from cla_common.constants import REQUIRES_ACTION_BY
 
 from core.tests.mommy_utils import make_recipe
-from core.tests.test_base import CLAProviderAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 
 from legalaid.tests.views.mixins.eligibility_check_api import \
     NestedEligibilityCheckAPIMixin
 
 
-class EligibilityCheckTestCase(CLAProviderAuthBaseApiTestMixin, NestedEligibilityCheckAPIMixin, APITestCase):
+class EligibilityCheckTestCase(
+    CLAProviderAuthBaseApiTestMixin, NestedEligibilityCheckAPIMixin,
+    APITestCase
+):
     LOOKUP_KEY = 'case_reference'
 
-    def get_http_authorization(self):
-        return 'Bearer %s' % self.staff_token
+    @property
+    def response_keys(self):
+        return [
+            'reference',
+            'category',
+            'notes',
+            'your_problem_notes',
+            'property_set',
+            'dependants_young',
+            'dependants_old',
+            'you',
+            'partner',
+            'disputed_savings',
+            'has_partner',
+            'on_passported_benefits',
+            'on_nass_benefits',
+            'is_you_or_your_partner_over_60',
+            'state',
+        ]
 
-    def setUp(self):
-        super(EligibilityCheckTestCase, self).setUp()
-
-        self.check_case.provider = self.provider
-        self.check_case.requires_action_by = REQUIRES_ACTION_BY.PROVIDER
-        self.check_case.save()
+    def make_parent_resource(self, **kwargs):
+        kwargs.update({
+            'provider': self.provider,
+            'requires_action_by': REQUIRES_ACTION_BY.PROVIDER
+        })
+        return super(EligibilityCheckTestCase, self).make_parent_resource(
+            **kwargs
+        )
 
     def test_methods_not_allowed(self):
         super(EligibilityCheckTestCase, self).test_methods_not_allowed()
@@ -31,27 +53,6 @@ class EligibilityCheckTestCase(CLAProviderAuthBaseApiTestMixin, NestedEligibilit
 
         # CREATE NOT ALLOWED
         self._test_post_not_allowed(list_url)
-
-    def assertEligibilityCheckResponseKeys(self, response):
-        self.assertItemsEqual(
-            response.data.keys(),
-            ['reference',
-             'category',
-             'notes',
-             'your_problem_notes',
-             'property_set',
-             'dependants_young',
-             'dependants_old',
-             'you',
-             'partner',
-             'disputed_savings',
-             'has_partner',
-             'on_passported_benefits',
-             'on_nass_benefits',
-             'is_you_or_your_partner_over_60',
-             'state',
-            ]
-        )
 
     # CREATE
 

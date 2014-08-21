@@ -4061,13 +4061,24 @@ The client's problem could start in another category (eg housing) but the client
       </data>
     </node>
     <node id="n185">
-      <data key="d4"><![CDATA[Has the client been discriminated against or have they been treated adversely due to having previously complained about discrimination or supported someone else’s discrimination claim? Identify the issue. (Also search operator guidance for ‘discrimination situations’.)
+      <data key="d4"><![CDATA[The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else’s discrimination claim 
 
-> The discrimination category covers advice on cases that contravene the Equalities Act 2010. The issue could begin in another category (eg housing or employment) but the client will believe that they have been discriminated against, harassed or victimised.  
-> 
-> We have two approaches we can take for diagnosing discrimination matters: proactive (for cases that originate as employment, education or consumer matters) and reactive (for cases that originate as housing, welfare benefits or actions against the police matters). 
-> 
-> Choosing the relevant main category will (if appropriate) give you context on the correct discrimination flow.  However, if the client presents a discrimination issue and doesn’t need any further diagnosis please click on the ‘discrimination’ tab and work through the proactive approach from there.  For more information on the different approaches to take please search the operator guidance.  
+It is against the law to discriminate against anyone because of:
+
+* age
+* being or becoming a transsexual person
+* being married or in a civil partnership
+* being pregnant or having a child
+* disability
+* race including colour, nationality, ethnic or national origin
+* religion, belief or lack of religion or belief
+* sex
+* sexual orientation
+
+These are called 'protected characteristics'. To find out more, search the guidance for 'protected characteristics'.
+
+The client's problem could start in another category (eg housing) but the client will believe that thay have been discriminated against, harassed or victimised. 
+
 
 *Click 'Next' to continue*]]></data>
       <data key="d5"><![CDATA[Has the client been ]]></data>

@@ -8846,7 +8846,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n410">
-      <data key="d4"><![CDATA[Refer all clinical negligence cases to a specialist for face-to-face advice. ]]></data>
+      <data key="d4"><![CDATA[Refer all clinical negligence cases to a specialist for face-to-face advice *Click 'Next' to continue*]]></data>
       <data key="d5"><![CDATA[Clinical face to face]]></data>
       <data key="d9">12</data>
       <data key="d10"><![CDATA[Refer all clinical negligence cases to a specialist for face-to-face advice. Generally, only cases that relate to infants with a brain injury are in scope for legal aid but it's possible that other cases may qualify for exceptional case funding. ]]></data>
@@ -8856,6 +8856,26 @@ provide for a child or young person's educational needs, or specifically about t
           <y:Fill color="#C0C0C0" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="71.1953125" x="39.40234375" y="5.93359375">face to face<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n411">
+      <data key="d4"/>
+      <data key="d5"/>
+      <data key="d12"/>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="30.0" x="7826.819999999996" y="666.25"/>
+          <y:Fill color="#FFCC00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="26.763671875" x="1.6181640625" y="5.93359375">412<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>

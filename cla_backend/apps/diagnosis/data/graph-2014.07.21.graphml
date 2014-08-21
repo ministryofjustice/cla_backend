@@ -4135,9 +4135,9 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n188">
-      <data key="d4"><![CDATA[Disability]]></data>
+      <data key="d4"><![CDATA[disability]]></data>
       <data key="d5"><![CDATA[Disability Pregnancy]]></data>
-      <data key="d9">1</data>
+      <data key="d9">5</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7356.871031746032" y="1215.0"/>
@@ -4482,9 +4482,9 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n204">
-      <data key="d4"><![CDATA[Age (where client is under 18)]]></data>
+      <data key="d4"><![CDATA[age (the client is under 18)]]></data>
       <data key="d5"><![CDATA[Age (where client is]]></data>
-      <data key="d9">3</data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9753.121031746032" y="1215.0"/>
@@ -4697,9 +4697,9 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n214">
-      <data key="d4"><![CDATA[Age (where client is over 18)]]></data>
+      <data key="d4"><![CDATA[age (the client is 18 or over)]]></data>
       <data key="d5"><![CDATA[Age (where client is]]></data>
-      <data key="d9">4</data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8846.871031746032" y="1215.0"/>
@@ -5000,9 +5000,9 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n228">
-      <data key="d4"><![CDATA[Marriage and civil partnership]]></data>
+      <data key="d4"><![CDATA[being married or in a civil partnership]]></data>
       <data key="d5"><![CDATA[Marriage and civil p]]></data>
-      <data key="d9">2</data>
+      <data key="d9">6</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8256.871031746032" y="1215.0"/>
@@ -8826,7 +8826,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n409">
       <data key="d4"><![CDATA[being pregnant or having a child]]></data>
       <data key="d5"><![CDATA[Disability Pregnancy]]></data>
-      <data key="d9">1</data>
+      <data key="d9">4</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7716.871031746032" y="1215.0"/>
@@ -8846,7 +8846,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n410">
       <data key="d4"><![CDATA[race]]></data>
       <data key="d5"><![CDATA[Disability Pregnancy]]></data>
-      <data key="d9">1</data>
+      <data key="d9">7</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8076.871031746032" y="1215.0"/>
@@ -8866,7 +8866,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n411">
       <data key="d4"><![CDATA[religion or belief (or lack of belief)]]></data>
       <data key="d5"><![CDATA[Disability Pregnancy]]></data>
-      <data key="d9">1</data>
+      <data key="d9">8</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6996.871031746032" y="1215.0"/>
@@ -8886,7 +8886,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n412">
       <data key="d4"><![CDATA[sex]]></data>
       <data key="d5"><![CDATA[sex]]></data>
-      <data key="d9">1</data>
+      <data key="d9">9</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7896.871031746032" y="1215.0"/>
@@ -8906,7 +8906,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n413">
       <data key="d4"><![CDATA[sexual orientation]]></data>
       <data key="d5"><![CDATA[sexual orientation]]></data>
-      <data key="d9">1</data>
+      <data key="d9">10</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7536.871031746032" y="1215.0"/>
@@ -8926,7 +8926,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n414">
       <data key="d4"><![CDATA[being or becoming a transsexual person]]></data>
       <data key="d5"><![CDATA[gender reassignment]]></data>
-      <data key="d9">1</data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7176.871031746032" y="1215.0"/>

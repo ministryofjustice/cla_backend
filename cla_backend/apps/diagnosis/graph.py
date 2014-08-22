@@ -124,8 +124,8 @@ class GraphImporter(object):
             self.graph.add_edge(edge.attrib['source'], edge.attrib['target'])
 
 
-def get_graph():
-    file_path = join(abspath(dirname(__file__)), 'data', settings.DIAGNOSIS_FILE_NAME)
+def get_graph(file_name=settings.DIAGNOSIS_FILE_NAME):
+    file_path = join(abspath(dirname(__file__)), 'data', file_name)
     importer = GraphImporter(file_path)
 
     return importer.process()

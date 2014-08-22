@@ -1,5 +1,3 @@
-from django.template.defaultfilters import striptags
-
 from rest_framework.exceptions import ParseError
 from rest_framework.fields import ChoiceField, SerializerMethodField
 
@@ -11,7 +9,7 @@ from legalaid.models import Category
 
 from .graph import graph
 from rest_framework.relations import SlugRelatedField
-from .utils import is_terminal, is_pre_end_node
+from .utils import is_terminal, is_pre_end_node, get_node_scope_value
 
 
 class DiagnosisSerializer(ClaModelSerializer):
@@ -76,9 +74,7 @@ class DiagnosisSerializer(ClaModelSerializer):
 
     def _set_state(self, obj):
         if is_terminal(self.graph, obj.current_node_id):
-            current_node = self.graph.node[obj.current_node_id]
-            label = striptags(current_node['label']+"    ").strip()
-            obj.state = DIAGNOSIS_SCOPE.CHOICES_CONST_DICT.get(label, DIAGNOSIS_SCOPE.UNKNOWN)
+            obj.state = get_node_scope_value(self.graph, obj.current_node_id)
 
             category_name = self.get_context(obj).get('category')
             if category_name:

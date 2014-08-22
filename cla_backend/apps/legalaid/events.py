@@ -113,7 +113,7 @@ class SuspendCaseEvent(BaseEvent):
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR, LOG_ROLES.SPECIALIST],
-            'description': 'Client abbandoned call',
+            'description': 'Client abandoned call',
             'stops_timer': True
         },
         'TERM': {

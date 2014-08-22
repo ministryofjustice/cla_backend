@@ -239,6 +239,9 @@ class CaseSerializerFull(CaseSerializerBase):
     diagnosis_state = serializers.CharField(source='diagnosis.state', read_only=True)
     postcode = serializers.CharField(source='personal_details.postcode', read_only=True)
 
+    date_of_birth = serializers.CharField(source='personal_details.date_of_birth', read_only=True)
+    category = serializers.CharField(source='eligibility_check.category.name', read_only=True)
+
     class Meta(CaseSerializerBase.Meta):
         fields = ()
 

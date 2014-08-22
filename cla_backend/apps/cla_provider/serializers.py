@@ -139,7 +139,8 @@ class CaseSerializer(CaseSerializerFull):
             'adaptation_details', 'laa_reference', 'eligibility_state',
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis',
             'media_code', 'postcode', 'diagnosis_state',
-            'exempt_user', 'exempt_user_reason', 'ecf_statement'
+            'exempt_user', 'exempt_user_reason', 'ecf_statement',
+            'date_of_birth', 'category'
         )
 
 

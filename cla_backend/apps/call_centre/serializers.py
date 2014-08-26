@@ -133,8 +133,7 @@ class LogSerializer(LogSerializerBase):
 
 
 class CaseSerializer(CaseSerializerFull):
-    notes = serializers.CharField(max_length=500, required=False)
-    provider_notes = serializers.CharField(max_length=500, required=False, read_only=True)
+    provider_notes = serializers.CharField(max_length=5000, required=False, read_only=True)
     billable_time = serializers.IntegerField(read_only=True)
     rejected = serializers.SerializerMethodField('is_rejected')
 

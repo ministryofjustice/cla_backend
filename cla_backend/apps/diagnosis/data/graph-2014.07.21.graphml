@@ -901,7 +901,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n38">
-      <data key="d4"><![CDATA[Client has received Notices from the landlord under section 83 Housing Act 1985 and sections 8 and 21 Housing Act 1988]]></data>
+      <data key="d4"><![CDATA[The client has received notices from the landlord under section 83 of the Housing Act 1985 and sections 8 and 21 of the Housing Act 1988]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
       <data key="d9">4</data>
       <data key="d13">
@@ -989,7 +989,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n42">
-      <data key="d4"><![CDATA[The client has received a Possession order from the court (outlining the decision of the court)]]></data>
+      <data key="d4"><![CDATA[The client has received a Possession Order from the court (outlining the decision of the court)]]></data>
       <data key="d5"><![CDATA[The client has recei]]></data>
       <data key="d9">5</data>
       <data key="d13">
@@ -1033,7 +1033,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n44">
-      <data key="d4"><![CDATA[The client has received a warrant for eviction from the Court Bailiffs]]></data>
+      <data key="d4"><![CDATA[The client has received a warrant for eviction from the court bailiffs]]></data>
       <data key="d5"><![CDATA[The client has recei]]></data>
       <data key="d9">6</data>
       <data key="d13">

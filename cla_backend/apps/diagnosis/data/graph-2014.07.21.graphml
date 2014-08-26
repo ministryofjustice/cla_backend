@@ -7962,6 +7962,7 @@ provide for a child or young person's educational needs, or specifically about t
       <data key="d4"><![CDATA[The client has received a decision on their appeal from the schools adjudicator ]]></data>
       <data key="d5"><![CDATA[Admissions]]></data>
       <data key="d9">2</data>
+      <data key="d10"><![CDATA[The client must have already received a decision from the Schools Adjudicator, which they would like to appeal. ]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12908.38492063492" y="495.0"/>
@@ -7982,6 +7983,7 @@ provide for a child or young person's educational needs, or specifically about t
       <data key="d4"><![CDATA[The client has appealed to the Independent Appeals Panel but lost the appeal]]></data>
       <data key="d5"><![CDATA[Appeal to IAP but lost]]></data>
       <data key="d9">1</data>
+      <data key="d10"><![CDATA[The client must have already appealed to the IAP. If the client has not yet appealed, this will be out of scope. ]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13454.00873015873" y="495.0"/>
@@ -8000,7 +8002,7 @@ provide for a child or young person's educational needs, or specifically about t
     </node>
     <node id="n370">
       <data key="d4"><![CDATA[The client has not yet received a decision on their appeal]]></data>
-      <data key="d5"><![CDATA[No decision yet]]></data>
+      <data key="d5"><![CDATA[The relevant National Offers Day must have passed for phase transfers, or six weeks after requesting admissions for non-phase transfers. ]]></data>
       <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>

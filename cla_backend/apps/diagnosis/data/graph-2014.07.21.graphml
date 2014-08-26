@@ -160,7 +160,7 @@ Search guidance for 'timeline' to see the home repossession timeline.
       </data>
     </node>
     <node id="n4">
-      <data key="d4"><![CDATA[Mortgage lender is seeking/has sought a court order enabling them to recover the property (due to mortgage arrears)]]></data>
+      <data key="d4"><![CDATA[The mortgage lender is seeking or has sought a court order to recover the property (due to mortgage arrears)]]></data>
       <data key="d5"><![CDATA[Mortgage lender is s]]></data>
       <data key="d9">1</data>
       <data key="d10"><![CDATA[Check the mortgage possession timeline in guidance - search for 'timeline'.
@@ -185,7 +185,9 @@ Record in Operator Notes what documents client has received. These may include a
       </data>
     </node>
     <node id="n5">
-      <data key="d4"><![CDATA[Confirm one of the following pieces of documentation or rediagnose:]]></data>
+      <data key="d4"><![CDATA[Confirm one of the following pieces of documentation or rediagnose
+
+*Click 'Next' to continue*]]></data>
       <data key="d5"><![CDATA[Confirm one of the f]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -380,7 +382,7 @@ Record in Operator Notes what documents client has received. These may include a
       </data>
     </node>
     <node id="n14">
-      <data key="d4"><![CDATA[Creditor is seeking a court order forcing the sale of the client’s property to recoup the debt they are owed]]></data>
+      <data key="d4"><![CDATA[A creditor is seeking a court order forcing the sale of the client’s property to recoup the debt they are owed]]></data>
       <data key="d5"><![CDATA[Creditor is seeking ]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -400,7 +402,10 @@ Record in Operator Notes what documents client has received. These may include a
       </data>
     </node>
     <node id="n15">
-      <data key="d4"><![CDATA[Confirm one of the following pieces of documentation or rediagnose:]]></data>
+      <data key="d4"><![CDATA[Confirm one of the following pieces of documentation or rediagnose
+
+*Click 'Next' to continue*
+]]></data>
       <data key="d5"><![CDATA[Confirm one of the f]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -7495,7 +7500,7 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n346">
-      <data key="d4"><![CDATA[None of the above apply.]]></data>
+      <data key="d4"><![CDATA[None of the above apply]]></data>
       <data key="d5"><![CDATA[None of above
 ]]></data>
       <data key="d9">4</data>

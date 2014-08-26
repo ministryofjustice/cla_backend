@@ -1223,7 +1223,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n53">
-      <data key="d4"><![CDATA[Confirm scenario that applies or rediagnose:]]></data>
+      <data key="d4"><![CDATA[Confirm the scenario that applies or rediagnose:]]></data>
       <data key="d5"><![CDATA[Confirm scenario tha]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1242,7 +1242,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n54">
-      <data key="d4"><![CDATA[Landlord has unlawfully evicted the client without due process]]></data>
+      <data key="d4"><![CDATA[The landlord has unlawfully evicted the client without due process]]></data>
       <data key="d5"><![CDATA[Landlord has unlawfu]]></data>
       <data key="d10"><![CDATA[ (eg changed the locks)]]></data>
       <data key="d13">
@@ -1305,7 +1305,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n57">
-      <data key="d4"><![CDATA[Informal licensing/renting arrangement is ending]]></data>
+      <data key="d4"><![CDATA[An informal licensing or renting arrangement is ending]]></data>
       <data key="d5"><![CDATA[Informal licensing/r]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1348,7 +1348,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n59">
-      <data key="d4"><![CDATA[Notice to Quit from landlord]]></data>
+      <data key="d4"><![CDATA[The client has received a Notice to Quit from the landlord]]></data>
       <data key="d5"><![CDATA[Notice to Quit from ]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1391,7 +1391,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n61">
-      <data key="d4"><![CDATA[Client unable to access their home (eg due to letter from partner, closure order for property)]]></data>
+      <data key="d4"><![CDATA[The client can't access their home (eg due to letter from partner, closure order for property)]]></data>
       <data key="d5"><![CDATA[Client unable to acc]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1434,7 +1434,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n63">
-      <data key="d4"><![CDATA[Possession proceedings issued by court]]></data>
+      <data key="d4"><![CDATA[A court has issued possession proceedings]]></data>
       <data key="d5"><![CDATA[Possession proceedin]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1477,7 +1477,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n65">
-      <data key="d4"><![CDATA[Client received a possession order from the court (outlining the decision of the court).]]></data>
+      <data key="d4"><![CDATA[The client has received a possession order from the court (outlining the decision of the court).]]></data>
       <data key="d5"><![CDATA[Client received a po]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1520,7 +1520,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n67">
-      <data key="d4"><![CDATA[Client received a warrant for eviction from the court bailliffs]]></data>
+      <data key="d4"><![CDATA[The client has received a warrant for eviction from the court bailliffs]]></data>
       <data key="d5"><![CDATA[Client received a wa]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1563,7 +1563,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n69">
-      <data key="d4"><![CDATA[Client received a letter from local authority saying that they do not qualify for accommodation or assistance and the client wishes to challenge this decision]]></data>
+      <data key="d4"><![CDATA[The client has received a letter from the local authority saying that they do not qualify for accommodation or assistance and they want to challenge this decision]]></data>
       <data key="d5"><![CDATA[Client received a le]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1606,7 +1606,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n71">
-      <data key="d4"><![CDATA[Client believes that it is not reasonable to continue to occupy property (e.g. disabled access issue)]]></data>
+      <data key="d4"><![CDATA[The client believes it is not reasonable to continue to occupy the property (eg a recently disabled person can't easily access the property)]]></data>
       <data key="d5"><![CDATA[Client believes that]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1649,7 +1649,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n73">
-      <data key="d4"><![CDATA[Client is being refused accommodation or has had it terminated by UK Borders Agency.]]></data>
+      <data key="d4"><![CDATA[The client is being refused accommodation or has had it terminated by the Border Force.]]></data>
       <data key="d5"><![CDATA[Client is being refu]]></data>
       <data key="d13">
         <y:ShapeNode>

@@ -728,7 +728,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n30">
-      <data key="d4"><![CDATA[Landlord is seeking to recover possession of the property]]></data>
+      <data key="d4"><![CDATA[The landlord is seeking to recover possession of the property]]></data>
       <data key="d5"><![CDATA[Landlord is seeking ]]></data>
       <data key="d9">1</data>
       <data key="d13">
@@ -748,7 +748,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n31">
-      <data key="d4"><![CDATA[Confirm which of the following scenarios applies or rediagnose. *Click 'Next' to continue.*]]></data>
+      <data key="d4"><![CDATA[Confirm which of the following scenarios applies or rediagnose *Click 'Next' to continue*]]></data>
       <data key="d5"><![CDATA[Confirm which of the]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1139,7 +1139,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n49">
-      <data key="d4"><![CDATA[Landlord is unlawfully evicting the client without due process. (e.g. will be changing the locks)]]></data>
+      <data key="d4"><![CDATA[The landlord is unlawfully evicting the client without due process (eg will be changing the locks)]]></data>
       <data key="d5"><![CDATA[Landlord is unlawful]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -1262,7 +1262,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n55">
-      <data key="d4"><![CDATA[Describe scenario carefully in notes - clients circumstance and why they believe they are facing eviction or have been evicted]]></data>
+      <data key="d4"><![CDATA[Describe scenario carefully in notes - including the client's circumstances and why they believe they are facing eviction or have been evicted]]></data>
       <data key="d5"><![CDATA[Describe scenario ca]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1649,7 +1649,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n73">
-      <data key="d4"><![CDATA[The client is being refused accommodation or has had it terminated by the Border Force.]]></data>
+      <data key="d4"><![CDATA[The client is being refused accommodation or has had it terminated by the UK Border Force]]></data>
       <data key="d5"><![CDATA[Client is being refu]]></data>
       <data key="d13">
         <y:ShapeNode>

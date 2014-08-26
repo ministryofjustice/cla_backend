@@ -4098,7 +4098,7 @@ It is against the law to discriminate against anyone because of:
       <data key="d4"><![CDATA[Direct discrimination]]></data>
       <data key="d5"><![CDATA[Direct discriminatio]]></data>
       <data key="d9">1</data>
-      <data key="d10"><![CDATA[Treated less favourably than someone else than someone else in similar circumstances (e.g. the client things that they have been out for worse treatment or the client things that they have been disadvantaged in some way compared to someone else) due to a protected characteristic. This includes situations where clients are linked to a person with a protected characteristic and suffers less favourable treatment.]]></data>
+      <data key="d10"><![CDATA[Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6318.3849206349205" y="965.0"/>
@@ -5129,7 +5129,7 @@ It is against the law to discriminate against anyone because of:
       <data key="d4"><![CDATA[Indirect discrimination]]></data>
       <data key="d5"><![CDATA[Indirect discriminat]]></data>
       <data key="d9">2</data>
-      <data key="d10"><![CDATA[The client thinks that new ways of doing things have put them at a disadvantage compared to someone else because of a protected characteristic (e.g. an employer states that employees cannot have dreadlocks or a pub refuses access to people with hats). This put employees or patrons of a certain religion at a disadvantage when compared to others.]]></data>
+      <data key="d10"><![CDATA[The client thinks that new ways of doing things have put them at a disadvantage compared to someone else because of a protected characteristic (eg an employer states that employees cannot have dreadlocks or a pub refuses access to people with hats. This puts employees or patrons of a certain religion at a disadvantage when compared to others.)]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6498.3849206349205" y="965.0"/>
@@ -5171,7 +5171,7 @@ It is against the law to discriminate against anyone because of:
       <data key="d4"><![CDATA[Victimisation due to a discrimination claim ]]></data>
       <data key="d5"><![CDATA[Victimisation due to]]></data>
       <data key="d9">3</data>
-      <data key="d10"><![CDATA[The client thinks that they have been treated worse, or thinks that they have been disadvantaged in some way because they have previously brought a claim of discrimination, given evidence or information in relation to someone else’s claim of discrimination, made a complaint of discrimination, or was suspected of doing one of these things. For example an employee being dismissed after raising a grievance alleging discrimination.]]></data>
+      <data key="d10"><![CDATA[The client thinks that they have been treated worse, or disadvantaged in some way, because they have brought a claim of discrimination, given evidence or information in relation to someone else’s claim of discrimination, made a complaint of discrimination, or been suspected of doing one of these things. For example, an employee is dismissed after making a discrimination claim.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5958.3849206349205" y="965.0"/>
@@ -8926,6 +8926,26 @@ provide for a child or young person's educational needs, or specifically about t
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="61.71484375" x="44.142578125" y="5.93359375">Disability <y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n414">
+      <data key="d4"/>
+      <data key="d5"/>
+      <data key="d12"/>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="30.0" x="6254.337286879169" y="1132.6575240919192"/>
+          <y:Fill color="#FFCC00" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="26.763671875" x="1.6181640625" y="5.93359375">415<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -14004,7 +14024,6 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </edge>
     <edge id="e433" source="n412" target="n189">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="-66.66666666666697" ty="-15.0">
@@ -14018,7 +14037,6 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </edge>
     <edge id="e434" source="n185" target="n412">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="-62.5" sy="15.0" tx="0.0" ty="-15.0">
@@ -14032,7 +14050,6 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </edge>
     <edge id="e435" source="n185" target="n413">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="62.5" sy="15.0" tx="0.0" ty="-15.0">
@@ -14046,7 +14063,6 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </edge>
     <edge id="e436" source="n413" target="n189">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="66.66666666666697" ty="-15.0">

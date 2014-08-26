@@ -126,10 +126,7 @@ class LogSerializer(LogSerializerBase):
 
 
 class CaseSerializer(CaseSerializerFull):
-    notes = serializers.CharField(
-        max_length=500, required=False, read_only=True
-    )
-    provider_notes = serializers.CharField(max_length=500, required=False)
+    notes = serializers.CharField(max_length=5000, required=False, read_only=True)
 
     class Meta(CaseSerializerFull.Meta):
         fields = (

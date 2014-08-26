@@ -8002,8 +8002,9 @@ provide for a child or young person's educational needs, or specifically about t
     </node>
     <node id="n370">
       <data key="d4"><![CDATA[The client has not yet received a decision on their appeal]]></data>
-      <data key="d5"><![CDATA[The relevant National Offers Day must have passed for phase transfers, or six weeks after requesting admissions for non-phase transfers. ]]></data>
+      <data key="d5"><![CDATA[No decision yet]]></data>
       <data key="d9">3</data>
+      <data key="d10"><![CDATA[The relevant National Offers Day must have passed for phase transfers, or six weeks after requesting admissions for non-phase transfers. ]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13088.38492063492" y="495.0"/>

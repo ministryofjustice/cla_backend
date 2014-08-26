@@ -1952,7 +1952,7 @@ If client has received a charging order please record this in Operator Notes.]]>
 
 * the client has been treated differently by their landlord compared to other tenants of the same landlord
 * the landlord has refused to make reasonable adjustments to the property to accommodate a client's disability
-
+* an estate agent is only offering a minority group properties that are considered hard to let
 ]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -7405,9 +7405,7 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n342">
-      <data key="d4"><![CDATA[Discrimination applies
-
-e.g. landlord asks deaf person for non-refundable deposit because be believes tenant will be less reliable than others; housing association with blanket policy of requiring tenants with history mental health problems to have only a short-term tenancy in first instance; landlord refusing to let to racial group because he believes it will deter white tenants; minority groups only being offered properties that are considered hard to let; landlord responds to repair requests more slowly for one tenant because he has a learning disability; landlord refuses permission to allow a disabled tent to out improvements to the premises to better facilitate their disability]]></data>
+      <data key="d4"><![CDATA[The client has been discriminated against]]></data>
       <data key="d5"><![CDATA[If none of the above]]></data>
       <data key="d9">1</data>
       <data key="d13">

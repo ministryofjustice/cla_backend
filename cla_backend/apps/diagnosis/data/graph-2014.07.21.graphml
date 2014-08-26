@@ -748,7 +748,9 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n31">
-      <data key="d4"><![CDATA[Confirm which of the following scenarios applies or rediagnose *Click 'Next' to continue*]]></data>
+      <data key="d4"><![CDATA[Confirm which of the following scenarios applies or rediagnose 
+
+*Click 'Next' to continue*]]></data>
       <data key="d5"><![CDATA[Confirm which of the]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1120,7 +1122,9 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n48">
-      <data key="d4"><![CDATA[None of the above - consider whether discrimination might apply *Click 'Next' to continue*]]></data>
+      <data key="d4"><![CDATA[None of the above - consider whether discrimination might apply 
+
+*Click 'Next' to continue*]]></data>
       <data key="d5"><![CDATA[If none of the above]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -7335,7 +7339,7 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n339">
-      <data key="d4"/>
+      <data key="d4"><![CDATA[The client has been discriminated against]]></data>
       <data key="d5"/>
       <data key="d6"><![CDATA[Discrimination applies
 ]]></data>

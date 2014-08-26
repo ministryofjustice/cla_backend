@@ -6807,6 +6807,7 @@ All other benefit problems are out of scope. ]]></data>
       <data key="d4"><![CDATA[Consumer]]></data>
       <data key="d5"><![CDATA[Consumer]]></data>
       <data key="d9">8</data>
+      <data key="d10"><![CDATA[The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other consumer cases will be out of scope. ]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6150.355555555556" y="150.0"/>
@@ -7253,6 +7254,7 @@ All other benefit problems are out of scope. ]]></data>
       <data key="d4"><![CDATA[Personal injury]]></data>
       <data key="d5"><![CDATA[Personal Injury]]></data>
       <data key="d9">14</data>
+      <data key="d10"><![CDATA[The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other personal injury cases will be out of scope. ]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="157.5" y="150.0"/>

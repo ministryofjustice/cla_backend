@@ -6922,6 +6922,7 @@ All other benefit problems are out of scope. ]]></data>
       <data key="d4"><![CDATA[Actions against the police]]></data>
       <data key="d5"><![CDATA[Actions against the ]]></data>
       <data key="d9">9</data>
+      <data key="d10"><![CDATA[The key thing to determine in actions against the police is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow. ]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7230.355555555556" y="150.0"/>
@@ -6939,7 +6940,7 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n320">
-      <data key="d4"><![CDATA[The police have discriminated against the client (eg a police officer used racially abusive language when making an arrest) ]]></data>
+      <data key="d4"><![CDATA[The client has been discriminated against (eg a police officer used racially abusive language when making an arrest) ]]></data>
       <data key="d5"><![CDATA[Client has been subj]]></data>
       <data key="d9">1</data>
       <data key="d13">

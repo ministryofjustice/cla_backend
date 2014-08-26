@@ -1760,7 +1760,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n78">
-      <data key="d4"><![CDATA[Non-priority debt (credit/store card arrears, catalogue debts, water rates arrears, bank overdrafts & loans, personal loans, money borrowed from friends or family)]]></data>
+      <data key="d4"><![CDATA[Non-priority debt (credit card arrears, catalogue debts, water rates arrears, bank overdrafts and loans, personal loans, money borrowed from friends or family)]]></data>
       <data key="d5"><![CDATA[non-priority debt (c]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1836,7 +1836,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n82">
-      <data key="d4"><![CDATA[Priority debts where home is not yet at risk (hire purchase debts, utility bills, council tax, tax/NI/VAT, Tax credits overpayment)]]></data>
+      <data key="d4"><![CDATA[Priority debts where the client's home is not yet at risk (hire purchase debts, utility bills, council tax, tax/NI/VAT, tax credits overpayment)]]></data>
       <data key="d5"><![CDATA[Priority debts where]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1874,7 +1874,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n84">
-      <data key="d4"><![CDATA[Court orders for sale only: if the matter is related to the making or setting aside of a charging order]]></data>
+      <data key="d4"><![CDATA[Court orders for sale: only if the matter is related to the making or setting aside of a charging order]]></data>
       <data key="d5"><![CDATA[Court orders for sal]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1912,7 +1912,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n86">
-      <data key="d4"><![CDATA[Client is seeking to make themselves bankrupt]]></data>
+      <data key="d4"><![CDATA[The client wants to make themselves bankrupt]]></data>
       <data key="d5"><![CDATA[Client is seeking to]]></data>
       <data key="d13">
         <y:ShapeNode>

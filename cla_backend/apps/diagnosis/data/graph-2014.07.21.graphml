@@ -6783,8 +6783,15 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n312">
-      <data key="d4"><![CDATA[Discrimination may apply e.g. equal pay, equal opportunities, not making adjustment for a disability, applying for job, treated worse due to pregancy/maternity leave, sexual harassment in the workplace]]></data>
+      <data key="d4"><![CDATA[The client may have been discriminated against (eg employer not making reasonable adjustments for a disability)]]></data>
       <data key="d5"><![CDATA[Discrimination may a]]></data>
+      <data key="d10"><![CDATA[More examples of discrimination issues include issues around:
+
+* equal pay
+* being treated worse due to pregnancy or maternity leave
+* sexual harassment in the workplace
+* being victimised due to having made a claim of discrimination in the workplace
+]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3707.8555555555554" y="240.0"/>
@@ -7229,7 +7236,7 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n334">
-      <data key="d4"><![CDATA[Client has been discriminated against]]></data>
+      <data key="d4"><![CDATA[The client has been discriminated against]]></data>
       <data key="d5"><![CDATA[Client has been subj]]></data>
       <data key="d13">
         <y:ShapeNode>

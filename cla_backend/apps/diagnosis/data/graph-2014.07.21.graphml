@@ -1692,10 +1692,9 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n75">
-      <data key="d4"><![CDATA[Other]]></data>
+      <data key="d4"><![CDATA[Other (please give details in notes)]]></data>
       <data key="d5"><![CDATA[Other]]></data>
       <data key="d9">99999</data>
-      <data key="d10"><![CDATA[Please provide details in notes]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8408.38492063492" y="495.0"/>
@@ -8914,7 +8913,6 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n412">
       <data key="d4"/>
       <data key="d5"/>
-      <data key="d12"/>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="30.0" x="6254.337286879169" y="1132.6575240919192"/>

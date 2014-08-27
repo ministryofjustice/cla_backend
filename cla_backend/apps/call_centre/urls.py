@@ -32,6 +32,7 @@ case_one2one_router.register(r'personal_details', views.PersonalDetailsViewSet)
 case_one2one_router.register(r'adaptation_details', views.AdaptationDetailsViewSet)
 case_one2one_router.register(r'thirdparty_details', views.ThirdPartyDetailsViewSet)
 case_one2one_router.register(r'diagnosis', views.DiagnosisViewSet, base_name='diagnosis')
+case_one2one_router.register(r'feedback', views.FeedbackViewSet)
 
 case_one2many_router = NestedSimpleRouter(router, r'case', lookup='case')
 case_one2many_router.register(r'logs', views.LogViewSet)

@@ -1,4 +1,5 @@
 import json
+from cla_provider.models import Feedback
 
 from django.http import Http404
 
@@ -16,7 +17,7 @@ from cla_eventlog import event_registry
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
-    AdaptationDetailsSerializerBase, CaseSerializerBase
+    AdaptationDetailsSerializerBase, CaseSerializerBase, FeedbackSerializerBase
 from .models import Case, Category, EligibilityCheck, \
     MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
     AdaptationDetails
@@ -246,3 +247,15 @@ class FullCaseViewSet(
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
+
+class BaseFeedbackViewSet(
+    NestedGenericModelMixin,
+    mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
+    model = Feedback
+    serializer_class = FeedbackSerializerBase
+    PARENT_FIELD = 'provider_feedback'
+    lookup_field = 'reference'

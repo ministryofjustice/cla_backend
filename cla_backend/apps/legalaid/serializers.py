@@ -8,7 +8,7 @@ from core.serializers import UUIDSerializer, ClaModelSerializer, \
 from cla_common.constants import MATTER_TYPE_LEVELS
 from cla_common.money_interval.models import MoneyInterval
 
-from cla_provider.models import Provider, OutOfHoursRota
+from cla_provider.models import Provider, OutOfHoursRota, Feedback
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
@@ -33,6 +33,22 @@ class OutOfHoursRotaSerializerBase(ClaModelSerializer):
     class Meta:
         model = OutOfHoursRota
 
+class FeedbackSerializerBase(serializers.ModelSerializer):
+    created_by = serializers.CharField(source='created_by.user.username', read_only=True)
+    case = serializers.SlugRelatedField(slug_field='reference', read_only=True)
+
+    comment = serializers.CharField(max_length=1024, read_only=True)
+
+    justified = serializers.BooleanField(read_only=True)
+    resolved = serializers.BooleanField(read_only=True)
+    provider = serializers.SerializerMethodField('get_provider')
+
+    def get_provider(self, obj):
+        return obj.created_by.provider
+
+    class Meta:
+        model = Feedback
+        fields = ()
 
 class PropertySerializerBase(ClaModelSerializer):
     class Meta:

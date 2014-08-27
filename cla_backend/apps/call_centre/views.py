@@ -10,7 +10,7 @@ from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
     SearchFilter
 
-from cla_provider.models import Provider, OutOfHoursRota
+from cla_provider.models import Provider, OutOfHoursRota, Staff
 from cla_eventlog import event_registry
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
@@ -21,7 +21,7 @@ from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, BaseFeedbackViewSet
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -33,7 +33,7 @@ from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer,  \
     OutOfHoursRotaSerializer, OperatorSerializer, \
     AdaptationDetailsSerializer, PersonalDetailsSerializer, \
-    ThirdPartyDetailsSerializer, LogSerializer
+    ThirdPartyDetailsSerializer, LogSerializer, FeedbackSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm
@@ -335,3 +335,8 @@ class DiagnosisViewSet(CallCentrePermissionsViewSetMixin, BaseDiagnosisViewSet):
 
 class LogViewSet(CallCentrePermissionsViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
+
+
+class FeedbackViewSet(CallCentrePermissionsViewSetMixin, BaseFeedbackViewSet):
+    serializer_class = FeedbackSerializer
+

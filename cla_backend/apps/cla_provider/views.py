@@ -10,7 +10,7 @@ from legalaid.views import BaseUserViewSet, \
     BaseNestedEligibilityCheckViewSet, BaseCategoryViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, BaseFeedbackViewSet
 
 from diagnosis.views import BaseDiagnosisViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
@@ -20,7 +20,7 @@ from .permissions import CLAProviderClientIDPermission
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
     PersonalDetailsSerializer, ThirdPartyDetailsSerializer, \
-    LogSerializer
+    LogSerializer, FeedbackSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
 
 
@@ -149,3 +149,13 @@ class DiagnosisViewSet(
 
 class LogViewSet(CLAProviderPermissionViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
+
+class FeedbackViewSet(CLAProviderPermissionViewSetMixin,
+                      BaseFeedbackViewSet,
+                      mixins.CreateModelMixin):
+    serializer_class = FeedbackSerializer
+
+    def pre_save(self, obj):
+        if not obj.pk:
+            obj.created_by = Staff.objects.get(user=self.request.user)
+        super(FeedbackViewSet, self).pre_save(obj)

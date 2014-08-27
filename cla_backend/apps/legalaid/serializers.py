@@ -201,7 +201,7 @@ class MediaCodeSerializerBase(ClaModelSerializer):
         )
 
 
-class CaseSerializerBase(ClaModelSerializer, PartialUpdateExcludeReadonlySerializerMixin):
+class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSerializer):
     eligibility_check = UUIDSerializer(slug_field='reference', read_only=True)
     diagnosis = UUIDSerializer(slug_field='reference', required=False, read_only=True)
     personal_details = PersonalDetailsSerializerBase()

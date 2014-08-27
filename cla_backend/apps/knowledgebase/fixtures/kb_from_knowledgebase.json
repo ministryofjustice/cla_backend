@@ -313,18 +313,18 @@
     "fields": {
         "website": "http://www.autism.org.uk/advocacy", 
         "geographic_coverage": "UK", 
-        "type_of_service": "Education advice for those with autism", 
-        "description": "General Advice/Information Provider", 
+        "type_of_service": "Education advice for parents of children and young people with autism or Aspergers syndrome", 
+        "description": "This helpline is managed by the National Autistic Society to provide advice on educational provision for parents and carers whose children have autism or Asperger syndrome. \r\n\r\nThe helpline can help parents get appropriate education for their child and provides advice on issues which include: \r\n\r\n* getting extra help at school\r\n* statutory assessments\r\n* annual reviews\r\n* exclusions\r\n* admissions", 
         "created": "2014-06-27T14:52:55.547Z", 
         "service_name": "Education Rights Service", 
         "organisation": "National Autistic Society", 
         "helpline": "0808 800 4102", 
-        "modified": "2014-06-27T14:52:55.547Z", 
+        "modified": "2014-08-27T15:52:00.412Z", 
         "accessibility": "Online enquiry form & email. Various accessibility features on website including visual display settings, BrowseAloud and Welsh language. List of information resources in other languages.", 
-        "when_to_use": "Clients with autism seeking advice for Education matters.", 
+        "when_to_use": "Clients with autism seeking advice for education matters", 
         "how_to_use": "Refer those who wish to self help to website. Tell those needing guidance to contact helpline - not suitable for urgent cases - this will be a call back service. Client will need to provide name, number, brief details of why they are contacting and best times to call back. Will usually receive a call within a few days.", 
         "address": "N/A", 
-        "keywords": "education, rights, sen, special, educational, needs, autism, adhd, aspergers", 
+        "keywords": "education, rights, sen, special, educational, needs, autism, aspergers, autistic, asperger ", 
         "opening_hours": "N/A call back service", 
         "resource_type": "LEGAL"
     }

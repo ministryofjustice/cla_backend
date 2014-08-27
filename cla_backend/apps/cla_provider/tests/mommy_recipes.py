@@ -1,5 +1,6 @@
-from model_mommy.recipe import Recipe, seq
-from ..models import Provider, ProviderAllocation, OutOfHoursRota, Staff
+from model_mommy.recipe import Recipe, seq, foreign_key
+from ..models import Provider, ProviderAllocation, OutOfHoursRota, Staff, \
+    Feedback
 
 
 provider = Recipe(Provider,
@@ -12,3 +13,4 @@ outofhoursrota = Recipe(OutOfHoursRota)
 
 provider_allocation = Recipe(ProviderAllocation)
 
+feedback = Recipe(Feedback, created_by=foreign_key(staff))

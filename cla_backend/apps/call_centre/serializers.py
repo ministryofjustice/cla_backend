@@ -9,7 +9,8 @@ from legalaid.serializers import EligibilityCheckSerializerBase, \
     AdaptationDetailsSerializerBase, IncomeSerializerBase, \
     DeductionsSerializerBase, PersonalDetailsSerializerFull, \
     ThirdPartyPersonalDetailsSerializerBase, \
-    ThirdPartyDetailsSerializerBase, PersonSerializerBase
+    ThirdPartyDetailsSerializerBase, PersonSerializerBase, \
+    FeedbackSerializerBase
 
 from .models import Operator
 
@@ -185,4 +186,20 @@ class OperatorSerializer(ExtendedUserSerializerBase):
         model = Operator
         fields = (
             'username', 'first_name', 'last_name', 'email', 'is_manager'
+        )
+
+class FeedbackSerializer(FeedbackSerializerBase):
+    justified = serializers.BooleanField(required=False)
+    resolved = serializers.BooleanField(required=False)
+
+    class Meta(FeedbackSerializerBase.Meta):
+        fields = (
+            'created_by',
+            'case',
+            'comment',
+            'justified',
+            'resolved',
+            'provider',
+            'created',
+            'modified'
         )

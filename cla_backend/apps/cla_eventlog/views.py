@@ -64,3 +64,4 @@ class BaseLogViewSet(
     def get_queryset(self):
         qs = super(BaseLogViewSet, self).get_queryset()
         return qs.filter(level__gt=LOG_LEVELS.MINOR)
+

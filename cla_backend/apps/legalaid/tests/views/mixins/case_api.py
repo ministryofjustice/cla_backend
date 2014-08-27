@@ -1,4 +1,6 @@
 from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.db import connection
 
 from rest_framework import status
 
@@ -253,80 +255,101 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
 
 
 class BaseUpdateCaseTestCase(FullCaseAPIMixin):
-
     def test_update_doesnt_set_readonly_values(self):
-        case = make_recipe(
-            'legalaid.case',
-            eligibility_check=None,
-            personal_details=None,
-            thirdparty_details=None,
-            adaptation_details=None,
-            diagnosis=None,
-            media_code=None,
-            matter_type1=None,
-            matter_type2=None,
-            **self.get_extra_search_make_recipe_kwargs()
-        )
-        pd = make_recipe('legalaid.personal_details')
-        eligibility_check = make_recipe('legalaid.eligibility_check')
-        thirdparty_details = make_recipe('legalaid.thirdparty_details')
-        adaptation_details = make_recipe('legalaid.adaptation_details')
-        diagnosis = make_recipe('diagnosis.diagnosis')
-        provider = make_recipe('cla_provider.provider')
-        media_code = make_recipe('legalaid.media_code')
+        _old_settings = settings.DEBUG
+        try:
+            settings.DEBUG = True
 
-        matter_type1 = make_recipe('legalaid.matter_type1')
-        matter_type2 = make_recipe('legalaid.matter_type2')
+            pd = make_recipe('legalaid.personal_details')
+            eligibility_check = make_recipe('legalaid.eligibility_check')
+            thirdparty_details = make_recipe('legalaid.thirdparty_details')
+            adaptation_details = make_recipe('legalaid.adaptation_details')
+            diagnosis = make_recipe('diagnosis.diagnosis')
+            provider = make_recipe('cla_provider.provider')
 
-        data = {
-            'personal_details': unicode(pd.reference),
-            'eligibility_check': unicode(eligibility_check.reference),
-            'thirdparty_details': unicode(thirdparty_details.reference),
-            'adaptation_details': unicode(adaptation_details.reference),
-            'diagnosis': unicode(diagnosis.reference),
-            'provider': unicode(provider.id),
-            'billable_time': 234,
-            'created': "2014-08-05T10:41:55.979Z",
-            'modified': "2014-08-05T10:41:55.985Z",
-            'created_by': "test_user",
-            'matter_type1': matter_type1.code,
-            'matter_type2': matter_type2.code,
-            'media_code': media_code.code,
-            'laa_reference': 232323,
-            'requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
-        }
-        response = self.client.patch(
-            self.get_detail_url(case.reference), data=data,
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertResponseKeys(response)
-
-        self.assertCaseEqual(response.data,
-            Case(
-                reference=response.data['reference'],
-                personal_details=None,
-                eligibility_check=None,
-                thirdparty_details=None,
-                adaptation_details=None,
-                diagnosis=None,
-                provider=None,
-                billable_time=0,
-                laa_reference=response.data['laa_reference'],
-                matter_type1=matter_type1,
-                matter_type2=matter_type2,
-                media_code=media_code,
-                requires_action_by=case.requires_action_by
+            case = make_recipe(
+                'legalaid.case',
+                eligibility_check=eligibility_check,
+                personal_details=pd,
+                thirdparty_details=thirdparty_details,
+                adaptation_details=adaptation_details,
+                diagnosis=diagnosis,
+                media_code=None,
+                matter_type1=None,
+                matter_type2=None,
+                **self.get_extra_search_make_recipe_kwargs()
             )
-        )
 
-        self.assertNotEqual(response.data['requires_action_by'], data['requires_action_by'])
-        self.assertNotEqual(response.data['created'], data['created'])
-        self.assertNotEqual(response.data['created_by'], data['created_by'])
-        self.assertNotEqual(response.data['modified'], data['modified'])
-        self.assertNotEqual(response.data['laa_reference'], data['laa_reference'])
+            media_code = make_recipe('legalaid.media_code')
 
-        self.assertNoLogInDB()
+            matter_type1 = make_recipe('legalaid.matter_type1')
+            matter_type2 = make_recipe('legalaid.matter_type2')
+
+            data = {
+                'personal_details': None,
+                'eligibility_check': None,
+                'thirdparty_details': None,
+                'adaptation_details': None,
+                'diagnosis': None,
+                'provider': None,
+                'billable_time': 234,
+                'created': "2014-08-05T10:41:55.979Z",
+                'modified': "2014-08-05T10:41:55.985Z",
+                'created_by': "test_user",
+                'matter_type1': matter_type1.code,
+                'matter_type2': matter_type2.code,
+                'media_code': media_code.code,
+                'laa_reference': 232323,
+                'requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
+            }
+            response = self.client.patch(
+                self.get_detail_url(case.reference), data=data,
+                format='json',
+                HTTP_AUTHORIZATION=self.get_http_authorization()
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertResponseKeys(response)
+
+            self.assertCaseEqual(response.data,
+                Case(
+                    reference=response.data['reference'],
+                    personal_details=pd,
+                    eligibility_check=eligibility_check,
+                    thirdparty_details=thirdparty_details,
+                    adaptation_details=adaptation_details,
+                    diagnosis=diagnosis,
+                    provider=provider,
+                    billable_time=0,
+                    laa_reference=response.data['laa_reference'],
+                    matter_type1=matter_type1,
+                    matter_type2=matter_type2,
+                    media_code=media_code,
+                    requires_action_by=case.requires_action_by
+                )
+            )
+
+            self.assertNotEqual(response.data['requires_action_by'], data['requires_action_by'])
+            self.assertNotEqual(response.data['created'], data['created'])
+            self.assertNotEqual(response.data['created_by'], data['created_by'])
+            self.assertNotEqual(response.data['modified'], data['modified'])
+            self.assertNotEqual(response.data['laa_reference'], data['laa_reference'])
+
+            self.assertNoLogInDB()
+
+            # looking for the update case query
+            update_query = [query for query in connection.queries if query['sql'].startswith('UPDATE')]
+            self.assertEqual(len(update_query), 1)
+            update_sql = update_query[0]['sql']
+
+            for readonly_field in [
+                'personal_details', 'eligibility_check', 'thirdparty_details',
+                'adaptation_details', 'provider', 'billable_time', 'laa_reference',
+                'requires_action_by'
+            ]:
+                self.assertFalse(readonly_field in update_sql, '%s is in the UPDATE query when it shouldn\'t be!' % readonly_field)
+        finally:
+            settings.DEBUG = _old_settings
+            connection.queries = []
 
     def test_update_with_data(self):
         media_code = make_recipe('legalaid.media_code')

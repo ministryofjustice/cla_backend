@@ -103,3 +103,12 @@ class OutOfHoursRota(TimeStampedModel):
         if overlapping:
             raise ValidationError(
                 _(u"Overlapping rota allocation not allowed"))
+
+class Feedback(TimeStampedModel):
+    created_by = models.ForeignKey(Staff)
+    comment = models.TextField()
+
+    justified = models.BooleanField(default=False)
+    resolved = models.BooleanField(default=False)
+
+    # issue = models.CharField(choices=FEEDBACK_ISSUE, max_length=25)

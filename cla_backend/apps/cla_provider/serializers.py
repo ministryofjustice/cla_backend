@@ -10,7 +10,8 @@ from legalaid.serializers import \
     AdaptationDetailsSerializerBase, IncomeSerializerBase, \
     DeductionsSerializerBase, PersonalDetailsSerializerFull, \
     ThirdPartyPersonalDetailsSerializerBase, \
-    ThirdPartyDetailsSerializerBase, PersonSerializerBase
+    ThirdPartyDetailsSerializerBase, PersonSerializerBase, \
+    FeedbackSerializerBase
 
 from .models import Staff
 
@@ -163,3 +164,20 @@ class StaffSerializer(ExtendedUserSerializerBase):
             'username', 'first_name', 'last_name', 'email', 'provider',
             'is_manager'
         )
+
+
+class FeedbackSerializer(FeedbackSerializerBase):
+
+    comment = serializers.CharField(max_length=1024, required=False)
+    class Meta(FeedbackSerializerBase.Meta):
+        fields = (
+            'provider',
+            'case',
+            'created_by',
+            'comment',
+            'justified',
+            'resolved',
+            'created',
+            'modified'
+        )
+

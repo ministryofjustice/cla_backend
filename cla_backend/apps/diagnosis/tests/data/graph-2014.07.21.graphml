@@ -112,7 +112,7 @@ The following are covered in 'other housing'.
 * disrepair / poor housing conditions
 * ASBO/ASBI
 
-Clients in temporary accommodation will be covered for in scope housing. 
+Clients in temporary accommodation will be covered for in scope housing.
 ]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1813,6 +1813,10 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n81">
+      <data key="d7">
+        <context xmlns="">
+            <category>housing</category>
+        </context></data>
       <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d5"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d13">
@@ -2701,7 +2705,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n123">
-      <data key="d4"><![CDATA[The client has a public law problem (the local council is involved) 
+      <data key="d4"><![CDATA[The client has a public law problem (the local council is involved)
 eg care proceedings or adoption]]></data>
       <data key="d5"><![CDATA[Public law
 ]]></data>
@@ -3003,7 +3007,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n137">
-      <data key="d4"><![CDATA[Choose the nature of the issue that the caller would like advice about 
+      <data key="d4"><![CDATA[Choose the nature of the issue that the caller would like advice about
 ]]></data>
       <data key="d5"><![CDATA[<headline>Choose the]]></data>
       <data key="d13">
@@ -4050,11 +4054,11 @@ More information will be available in guidance.*]]></data>
     <node id="n185">
       <data key="d4"><![CDATA[Has the client been discriminated against or have they been treated adversely due to having previously complained about discrimination or supported someone else’s discrimination claim? Identify the issue. (Also search operator guidance for ‘discrimination situations’.)
 
-> The discrimination category covers advice on cases that contravene the Equalities Act 2010. The issue could begin in another category (eg housing or employment) but the client will believe that they have been discriminated against, harassed or victimised.  
-> 
-> We have two approaches we can take for diagnosing discrimination matters: proactive (for cases that originate as employment, education or consumer matters) and reactive (for cases that originate as housing, welfare benefits or actions against the police matters). 
-> 
-> Choosing the relevant main category will (if appropriate) give you context on the correct discrimination flow.  However, if the client presents a discrimination issue and doesn’t need any further diagnosis please click on the ‘discrimination’ tab and work through the proactive approach from there.  For more information on the different approaches to take please search the operator guidance.  
+> The discrimination category covers advice on cases that contravene the Equalities Act 2010. The issue could begin in another category (eg housing or employment) but the client will believe that they have been discriminated against, harassed or victimised.
+>
+> We have two approaches we can take for diagnosing discrimination matters: proactive (for cases that originate as employment, education or consumer matters) and reactive (for cases that originate as housing, welfare benefits or actions against the police matters).
+>
+> Choosing the relevant main category will (if appropriate) give you context on the correct discrimination flow.  However, if the client presents a discrimination issue and doesn’t need any further diagnosis please click on the ‘discrimination’ tab and work through the proactive approach from there.  For more information on the different approaches to take please search the operator guidance.
 
 *Click 'Next' to continue*]]></data>
       <data key="d5"><![CDATA[Has the client been ]]></data>
@@ -6899,7 +6903,7 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n319">
-      <data key="d4"><![CDATA[The client may have been discriminated against (eg a restaurant refuses to serve a customer with a disabled child) 
+      <data key="d4"><![CDATA[The client may have been discriminated against (eg a restaurant refuses to serve a customer with a disabled child)
 
 ]]></data>
       <data key="d5"><![CDATA[Emp discrimination?]]></data>
@@ -7096,6 +7100,11 @@ All other benefit problems are out of scope. ]]></data>
     </node>
     <node id="n329">
       <data key="d4"><![CDATA[INSCOPE]]></data>
+            <data key="d7">
+              <context xmlns="">
+      	<category>housing</category>
+      </context>
+            </data>
       <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -7963,7 +7972,7 @@ e.g. landlord asks deaf person for non-refundable deposit because be believes te
       </data>
     </node>
     <node id="n371">
-      <data key="d4"><![CDATA[The problem is about a school, college or local authority's failure to 
+      <data key="d4"><![CDATA[The problem is about a school, college or local authority's failure to
 provide for a child or young person's educational needs, or specifically about the failure to provide the support set out in the assessment of their needs]]></data>
       <data key="d5"><![CDATA[Failure to provide support]]></data>
       <data key="d9">6</data>

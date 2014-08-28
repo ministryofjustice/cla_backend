@@ -146,6 +146,13 @@ class SuspendCaseEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Case opened in error',
             'stops_timer': False
+        },
+        'CPTA': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Transfer back to Capita',
+            'stops_timer': False
         }
     }
 event_registry.register(SuspendCaseEvent)

@@ -20,7 +20,8 @@ JENKINS_TASKS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cla_backend%s' % (os.environ.get('BACKEND_BASE_PORT', '')),
+        'NAME': 'cla_backend',
+        'TEST_NAME': 'cla_backend%s' % (os.environ.get('BACKEND_BASE_PORT', '')),
         'USER': '',
         'PASSWORD': '',
         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.

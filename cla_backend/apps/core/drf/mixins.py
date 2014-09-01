@@ -60,7 +60,7 @@ class NestedGenericModelMixin(object):
         :return: parent_obj after saving it
         """
         if not self.is_one_to_one_nested():
-            return
+            return super(NestedGenericModelMixin, self).post_save(obj, created=created)
 
         if created:
             parent_obj = self.get_parent_object_or_none()

@@ -171,6 +171,7 @@ class FeedbackSerializer(FeedbackSerializerBase):
     comment = serializers.CharField(max_length=1024, required=False)
     class Meta(FeedbackSerializerBase.Meta):
         fields = (
+            'reference',
             'provider',
             'case',
             'created_by',

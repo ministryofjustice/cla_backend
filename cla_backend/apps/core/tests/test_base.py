@@ -204,9 +204,17 @@ class NestedSimpleResourceAPIMixin(SimpleResourceAPIMixin):
         )
 
     def get_detail_url(self, resource_lookup_value, suffix='detail'):
+        if self.ONE_TO_ONE_RESOURCE:
+            params = {self.LOOKUP_KEY: unicode(resource_lookup_value)}
+        else:
+            params = {
+                self.LOOKUP_KEY: unicode(resource_lookup_value),
+                self.PARENT_LOOKUP_KEY: unicode(getattr(self.resource, self.PARENT_LOOKUP_KEY))
+            }
+
         return reverse(
             '%s:%s-%s' % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME, suffix),
-            args=(), kwargs={self.LOOKUP_KEY: unicode(resource_lookup_value)}
+            args=(), kwargs=params
         )
 
     def setup_resources(self):

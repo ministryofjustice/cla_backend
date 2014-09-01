@@ -450,9 +450,6 @@ class Case(TimeStampedModel):
     ecf_statement = models.CharField(blank=True, null=True, max_length=35, choices=ECF_STATEMENT)
 
 
-    # feedback
-    provider_feedback = models.OneToOneField('cla_provider.Feedback', null=True, blank=True)
-
     def _set_reference_if_necessary(self):
         if not self.reference:
             # TODO make it better

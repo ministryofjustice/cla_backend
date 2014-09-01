@@ -194,6 +194,7 @@ class FeedbackSerializer(FeedbackSerializerBase):
 
     class Meta(FeedbackSerializerBase.Meta):
         fields = (
+            'reference',
             'created_by',
             'case',
             'comment',
@@ -201,5 +202,5 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'resolved',
             'provider',
             'created',
-            'modified'
+            'modified',
         )

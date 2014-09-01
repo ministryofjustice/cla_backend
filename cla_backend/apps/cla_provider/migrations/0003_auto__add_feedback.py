@@ -26,6 +26,7 @@ class Migration(SchemaMigration):
         db.delete_table(u'cla_provider_feedback')
 
 
+
     models = {
         u'auth.group': {
             'Meta': {'object_name': 'Group'},

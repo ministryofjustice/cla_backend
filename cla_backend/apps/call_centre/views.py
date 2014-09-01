@@ -33,7 +33,8 @@ from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer,  \
     OutOfHoursRotaSerializer, OperatorSerializer, \
     AdaptationDetailsSerializer, PersonalDetailsSerializer, \
-    ThirdPartyDetailsSerializer, LogSerializer, FeedbackSerializer
+    ThirdPartyDetailsSerializer, LogSerializer, FeedbackSerializer, \
+    CreateCaseSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm
@@ -112,20 +113,22 @@ class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
     mixins.CreateModelMixin, FullCaseViewSet
 ):
-    serializer_class = CaseSerializer
+    serializer_class = CaseSerializer  # using CreateCaseSerializer during creation
 
     filter_backends = (
         OrderingRejectedFirstFilter,
         SearchFilter,
     )
 
+    def get_serializer_class(self):
+        # if POST create request => use special Serializer
+        #   otherwise use standard one
+        if self.request.method == 'POST' and not self.kwargs.get('reference'):
+            return CreateCaseSerializer
+        return super(CaseViewSet, self).get_serializer_class()
 
-    def get_queryset(self):
-        qs = super(CaseViewSet, self).get_queryset()
-        dashboard_param = self.request.QUERY_PARAMS.get('dashboard', None)
-        if dashboard_param:
-            qs = qs.filter(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
-        return qs
+    def get_dashboard_qs(self, qs):
+        return qs.filter(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
 
     def pre_save(self, obj, *args, **kwargs):
         super(CaseViewSet, self).pre_save(obj, *args, **kwargs)

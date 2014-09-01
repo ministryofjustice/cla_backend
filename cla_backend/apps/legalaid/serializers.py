@@ -242,6 +242,10 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
 class CaseSerializerFull(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field='reference', required=False, read_only=True)
 
+    full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
+    postcode = serializers.CharField(source='personal_details.postcode', read_only=True)
+    case_count = serializers.IntegerField(source='personal_details.case_count', read_only=True)
+
     personal_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
     thirdparty_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
     adaptation_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
@@ -251,10 +255,8 @@ class CaseSerializerFull(CaseSerializerBase):
     created_by = serializers.CharField(read_only=True)
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
 
-    full_name = serializers.CharField(source='personal_details.full_name', read_only=True)
     eligibility_state = serializers.CharField(source='eligibility_check.state', read_only=True)
     diagnosis_state = serializers.CharField(source='diagnosis.state', read_only=True)
-    postcode = serializers.CharField(source='personal_details.postcode', read_only=True)
 
     date_of_birth = serializers.CharField(source='personal_details.date_of_birth', read_only=True)
     category = serializers.CharField(source='eligibility_check.category.name', read_only=True)

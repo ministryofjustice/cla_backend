@@ -157,5 +157,6 @@ class FeedbackViewSet(CLAProviderPermissionViewSetMixin,
 
     def pre_save(self, obj):
         if not obj.pk:
+            obj.case = self.get_parent_object()
             obj.created_by = Staff.objects.get(user=self.request.user)
         super(FeedbackViewSet, self).pre_save(obj)

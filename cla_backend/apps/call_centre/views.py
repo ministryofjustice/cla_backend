@@ -10,7 +10,7 @@ from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
     SearchFilter
 
-from cla_provider.models import Provider, OutOfHoursRota, Staff
+from cla_provider.models import Provider, OutOfHoursRota, Staff, Feedback
 from cla_eventlog import event_registry
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
@@ -337,6 +337,12 @@ class LogViewSet(CallCentrePermissionsViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
 
 
-class FeedbackViewSet(CallCentrePermissionsViewSetMixin, BaseFeedbackViewSet):
+class FeedbackViewSet(CallCentrePermissionsViewSetMixin,
+                      mixins.ListModelMixin,
+                      mixins.UpdateModelMixin,
+                      mixins.RetrieveModelMixin,
+                      viewsets.GenericViewSet):
+    model = Feedback
+    lookup_field = 'reference'
     serializer_class = FeedbackSerializer
 

@@ -149,7 +149,7 @@ class CaseEventAvoidDuplicatesTestCase(EventTestCaseMixin, TestCase):
 class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
     EVENT_KEY = 'suspend_case'
 
-    CODES = ['INSUF', 'ABND', 'TERM', 'RTCS', 'IRCB', 'NCOE']
+    CODES = ['INSUF', 'ABND', 'TERM', 'RTCS', 'IRCB', 'NCOE', 'CPTA']
 
     def test_INSUF(self):
         self._test_process_with_expicit_code_and_requires_action_None_if_operator(
@@ -172,3 +172,6 @@ class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
 
     def test_NCOE(self):
         self._test_process_with_expicit_code(self.CODES, code='NCOE')
+
+    def test_CPTA(self):
+        self._test_process_with_expicit_code(self.CODES, code='CPTA')

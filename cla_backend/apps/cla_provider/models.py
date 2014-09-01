@@ -1,3 +1,4 @@
+from cla_common.constants import FEEDBACK_ISSUE
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
@@ -5,6 +6,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from model_utils.models import TimeStampedModel
+from uuidfield import UUIDField
 
 
 class ProviderManager(models.Manager):
@@ -105,10 +107,15 @@ class OutOfHoursRota(TimeStampedModel):
                 _(u"Overlapping rota allocation not allowed"))
 
 class Feedback(TimeStampedModel):
+    reference = UUIDField(auto=True, unique=True)
+    case = models.ForeignKey('legalaid.Case', related_name='provider_feedback')
+
     created_by = models.ForeignKey(Staff)
     comment = models.TextField()
 
     justified = models.BooleanField(default=False)
     resolved = models.BooleanField(default=False)
 
-    # issue = models.CharField(choices=FEEDBACK_ISSUE, max_length=25)
+    issue = models.CharField(choices=FEEDBACK_ISSUE, max_length=100)
+
+

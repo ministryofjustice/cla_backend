@@ -202,8 +202,9 @@
       "modified": "2014-02-24T15:36:50.027Z",
       "name": "Actions Against the Police",
       "created": "2014-02-24T15:36:50.026Z"
-    },
-    {
+    }
+  },
+  {
     "pk": 17,
     "model": "legalaid.category",
     "fields": {

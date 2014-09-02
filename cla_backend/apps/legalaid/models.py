@@ -90,11 +90,20 @@ class PersonalDetails(TimeStampedModel):
                                        default=CONTACT_SAFETY.SAFE,
                                        choices=CONTACT_SAFETY,
                                        blank=True, null=True)
+    case_count = models.PositiveSmallIntegerField(default=0)
 
     reference = UUIDField(auto=True, unique=True)
 
     class Meta:
         verbose_name_plural = "personal details"
+
+    def update_case_count(self):
+        case_count = self.case_set.count()
+
+        # avoiding an extra save if possible
+        if case_count != self.case_count:
+            self.case_count = case_count
+            self.save(update_fields=['case_count'])
 
 
 class ThirdPartyDetails(TimeStampedModel):
@@ -469,9 +478,13 @@ class Case(TimeStampedModel):
             super(Case, self).save(*args, **kwargs)
             self.laa_reference = self.pk + settings.LAA_REFERENCE_SEED
             kwargs['force_insert'] = False
-            return self.save(*args, **kwargs)
+            self.save(*args, **kwargs)
+        else:
+            super(Case, self).save(*args, **kwargs)
 
-        return super(Case, self).save(*args, **kwargs)
+        # updating personal_details case count
+        if self.personal_details:
+            self.personal_details.update_case_count()
 
     def assign_to_provider(self, provider):
         self.provider = provider

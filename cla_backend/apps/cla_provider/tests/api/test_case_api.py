@@ -7,8 +7,10 @@ from rest_framework import status
 
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
+from core.tests.mommy_utils import make_recipe
 
+from legalaid.models import Case
+from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin, \
     BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase
 
@@ -70,7 +72,70 @@ class CaseGeneralTestCase(BaseCaseTestCase):
 
 
 class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
-    pass
+    # person_ref PARAM
+
+    def test_list_with_person_ref_param(self):
+        """
+        Testing that if ?person_ref param is specified, it will only return
+        cases for that person.
+        This is different from the related call_centre test as it
+        has to ignore cases not currently assigned to the provider
+        """
+        Case.objects.all().delete()
+
+        pd1 = make_recipe('legalaid.personal_details')
+        pd2 = make_recipe('legalaid.personal_details')
+        other_provider = make_recipe('cla_provider.provider')
+
+        obj1 = make_recipe(
+            'legalaid.case', reference='ref1',
+            personal_details=pd1, provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+        )
+        obj2 = make_recipe(
+            'legalaid.case', reference='ref2',
+            personal_details=pd2, provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+        )
+        obj3 = make_recipe(  # should be ignore because different provider
+            'legalaid.case', reference='ref3',
+            personal_details=pd1, provider=other_provider,
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER
+        )
+        obj4 = make_recipe(  # should be ignored because of requires_action_by
+            'legalaid.case', reference='ref4',
+            personal_details=pd1, provider=self.provider,
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR
+        )
+        obj5 = make_recipe(  # should be ignored because not assigned to any provider
+            'legalaid.case', reference='ref5',
+            personal_details=pd1, provider=None
+        )
+
+        # searching for pd1
+        response = self.client.get(
+            self.get_list_person_ref_url(pd1.reference), format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data['results']))
+        self.assertItemsEqual(
+            [c['reference'] for c in response.data['results']],
+            ['ref1']
+        )
+
+        # searching for pd2 AND dashboard=1 should ignore dashboard param
+        url = '%s&dashboard=1' % self.get_list_person_ref_url(pd2.reference)
+        response = self.client.get(
+            url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data['results']))
+        self.assertItemsEqual(
+            [case['reference'] for case in response.data['results']],
+            ['ref2']
+        )
 
 
 class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):

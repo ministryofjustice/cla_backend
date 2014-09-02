@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from core.serializers import UUIDSerializer
+
 from cla_eventlog.serializers import LogSerializerBase
 
 from legalaid.serializers import EligibilityCheckSerializerBase, \
@@ -155,8 +157,22 @@ class CaseSerializer(CaseSerializerFull):
             'media_code', 'postcode', 'diagnosis_state', 'rejected',
             'date_of_birth', 'category',
             'exempt_user', 'exempt_user_reason',
-            'ecf_statement'
+            'ecf_statement', 'case_count'
         )
+
+
+class CreateCaseSerializer(CaseSerializer):
+    """
+    Case Serializer only used for creation.
+
+    It allows the API to create a case with optional personal_details reference.
+    No other fields can be used when creating a case atm.
+    """
+    personal_details = UUIDSerializer(slug_field='reference', required=False)
+
+    # class Meta:
+    #     model = Case
+    #     fields = ('reference', 'personal_details')
 
 
 class ProviderSerializer(ProviderSerializerBase):

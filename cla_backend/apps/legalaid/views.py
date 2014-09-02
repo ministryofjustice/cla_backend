@@ -248,6 +248,21 @@ class FullCaseViewSet(
     paginate_by_param = 'page_size'
     max_paginate_by = 100
 
+    def get_queryset(self):
+        qs = super(FullCaseViewSet, self).get_queryset()
+        person_ref_param = self.request.QUERY_PARAMS.get('person_ref', None)
+        dashboard_param = self.request.QUERY_PARAMS.get('dashboard', None)
+
+        if person_ref_param:
+            qs = qs.filter(personal_details__reference=person_ref_param)
+        elif dashboard_param:
+            qs = self.get_dashboard_qs(qs)
+        return qs
+
+    def get_dashboard_qs(self, qs):
+        return qs
+
+
 class BaseFeedbackViewSet(
     NestedGenericModelMixin,
     mixins.ListModelMixin,

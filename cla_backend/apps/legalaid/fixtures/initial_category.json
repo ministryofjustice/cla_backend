@@ -147,7 +147,6 @@
     "fields": {
       "code": "publiclaw",
       "description": "Public Law",
-      "ecf_available": true,
       "order": 11,
       "modified": "2014-09-02T15:35:31.906Z",
       "name": "Public Law",
@@ -160,7 +159,6 @@
     "fields": {
       "code": "commcare",
       "description": "Community Care",
-      "ecf_available": true,
       "order": 12,
       "modified": "2014-09-02T15:35:31.906Z",
       "name": "Community Care",
@@ -217,6 +215,18 @@
       "name": "Crime/Criminal Law",
       "created": "2014-02-24T15:36:50.026Z"
     }
+  },
+  {
+    "pk": 18,
+    "model": "legalaid.category",
+    "fields": {
+      "code": "employment",
+      "description": "Employment",
+      "ecf_available": true,
+      "order": 17,
+      "modified": "2014-02-24T15:36:50.027Z",
+      "name": "Employment",
+      "created": "2014-02-24T15:36:50.026Z"
+    }
   }
-
 ]

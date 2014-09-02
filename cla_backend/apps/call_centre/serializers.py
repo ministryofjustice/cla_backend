@@ -1,10 +1,9 @@
 from rest_framework import serializers
 
-from core.serializers import UUIDSerializer, ClaModelSerializer
+from core.serializers import UUIDSerializer
 
 from cla_eventlog.serializers import LogSerializerBase
 
-from legalaid.models import Case
 from legalaid.serializers import EligibilityCheckSerializerBase, \
     PropertySerializerBase, SavingsSerializerBase, \
     CaseSerializerFull, ProviderSerializerBase, \
@@ -162,7 +161,7 @@ class CaseSerializer(CaseSerializerFull):
         )
 
 
-class CreateCaseSerializer(ClaModelSerializer):
+class CreateCaseSerializer(CaseSerializer):
     """
     Case Serializer only used for creation.
 
@@ -171,9 +170,9 @@ class CreateCaseSerializer(ClaModelSerializer):
     """
     personal_details = UUIDSerializer(slug_field='reference', required=False)
 
-    class Meta:
-        model = Case
-        fields = ('reference', 'personal_details')
+    # class Meta:
+    #     model = Case
+    #     fields = ('reference', 'personal_details')
 
 
 class ProviderSerializer(ProviderSerializerBase):

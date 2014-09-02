@@ -42,7 +42,8 @@ class BaseCaseTestCase(
             'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
             'postcode', 'diagnosis_state', 'thirdparty_details', 'rejected',
             'date_of_birth', 'category',
-            'exempt_user', 'exempt_user_reason', 'ecf_statement'
+            'exempt_user', 'exempt_user_reason', 'ecf_statement',
+            'case_count'
         ]
 
 
@@ -60,7 +61,10 @@ class CaseGeneralTestCase(BaseCaseTestCase):
 
 class CreateCaseTestCase(BaseCaseTestCase):
 
-    def test_create_doesnt_set_readonly_values(self):
+    def test_create_doesnt_set_readonly_values_but_only_personal_details(self):
+        """
+            Only POST personal details allowed
+        """
         pd = make_recipe('legalaid.personal_details')
         eligibility_check = make_recipe('legalaid.eligibility_check')
         thirdparty_details = make_recipe('legalaid.thirdparty_details')
@@ -101,7 +105,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertCaseEqual(response.data,
             Case(
                 reference=response.data['reference'],
-                personal_details=None,
+                personal_details=pd,
                 eligibility_check=None,
                 thirdparty_details=None,
                 adaptation_details=None,

@@ -418,6 +418,34 @@ class CaseTestCase(TestCase):
         db_case = Case.objects.get(pk=case.pk)
         self.assertEqual(db_case.locked_by, user)
 
+    # CASE COUNT
+
+    def test_case_count_doesnt_updated_if_null_pd(self):
+        """
+        if case.personal_details == None:
+            case.personal_details.case_count shouldn't get updated
+        """
+        case = make_recipe('legalaid.case')
+        self.assertTrue(case.personal_details, None)
+
+    def test_case_count_gets_updated_if_pd_not_null(self):
+        pd = make_recipe('legalaid.personal_details')
+
+        self.assertEqual(pd.case_count, 0)
+        # saving first case
+        make_recipe('legalaid.case', personal_details=pd)
+        self.assertEqual(pd.case_count, 1)
+
+        # saving second case
+        make_recipe('legalaid.case', personal_details=pd)
+        self.assertEqual(pd.case_count, 2)
+
+        # saving different case
+        pd2 = make_recipe('legalaid.personal_details')
+        make_recipe('legalaid.case', personal_details=pd2)
+        self.assertEqual(pd.case_count, 2)
+        self.assertEqual(pd2.case_count, 1)
+
 
 class MoneyIntervalFieldTestCase(TestCase):
     def test_create_save_moneyinterval(self):

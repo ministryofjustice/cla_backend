@@ -560,7 +560,9 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n22">
-      <data key="d4"><![CDATA[Confirm one of the following pieces of documentation or rediagnose:]]></data>
+      <data key="d4"><![CDATA[Confirm one of the following pieces of documentation or rediagnose. 
+
+*Click 'next' to see list.*]]></data>
       <data key="d5"><![CDATA[Confirm one of the f]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1168,7 +1170,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n50">
-      <data key="d4"><![CDATA[Describe scenario carefully in notes - client's circumstances and why they believe they are facing eviction or have been evicted]]></data>
+      <data key="d4"><![CDATA[Describe scenario carefully in notes - client's circumstances and why they believe they are facing eviction or have been evicted. *Then click 'next' to continue*]]></data>
       <data key="d5"><![CDATA[Describe scenario ca]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -1232,7 +1234,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n53">
-      <data key="d4"><![CDATA[Confirm the scenario that applies or rediagnose:]]></data>
+      <data key="d4"><![CDATA[Confirm the scenario that applies or rediagnose. *click 'next' to continue*]]></data>
       <data key="d5"><![CDATA[Confirm scenario tha]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -2805,7 +2807,9 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n127">
-      <data key="d4"><![CDATA[Choose the nature of the issue that the caller would like advice about. ]]></data>
+      <data key="d4"><![CDATA[Choose the nature of the issue that the caller would like advice about. 
+
+*Click 'Next' to continue*]]></data>
       <data key="d5"><![CDATA[<headline>Choose the]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -3019,6 +3023,8 @@ eg divorce, contact with children]]></data>
     </node>
     <node id="n137">
       <data key="d4"><![CDATA[Choose the nature of the issue that the caller would like advice about 
+
+*Click 'Next' to continue*
 ]]></data>
       <data key="d5"><![CDATA[<headline>Choose the]]></data>
       <data key="d13">
@@ -6845,8 +6851,7 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n314">
-      <data key="d4"><![CDATA[The client may have been discriminated against (select this button to proceed to the discrimination category) 
-
+      <data key="d4"><![CDATA[The client may have been discriminated against.
 ]]></data>
       <data key="d5"><![CDATA[Emp discrimination?]]></data>
       <data key="d13">
@@ -8931,25 +8936,6 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n411">
-      <data key="d4"/>
-      <data key="d5"/>
-      <data key="d13">
-        <y:ShapeNode>
-          <y:Geometry height="30.0" width="30.0" x="4131.021031746031" y="0.0"/>
-          <y:Fill color="#FFCC00" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="26.763671875" x="1.6181640625" y="5.93359375">415<y:LabelModel>
-              <y:SmartNodeLabelModel distance="4.0"/>
-            </y:LabelModel>
-            <y:ModelParameter>
-              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
-            </y:ModelParameter>
-          </y:NodeLabel>
-          <y:Shape type="rectangle"/>
-        </y:ShapeNode>
-      </data>
-    </node>
-    <node id="n412">
       <data key="d4"><![CDATA[Public Law]]></data>
       <data key="d5"><![CDATA[Public Law]]></data>
       <data key="d9">11</data>
@@ -8969,7 +8955,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n413">
+    <node id="n412">
       <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d5"><![CDATA[OUTOFSCOPE DISCLAIME]]></data>
       <data key="d7">
@@ -8993,7 +8979,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n414">
+    <node id="n413">
       <data key="d4"><![CDATA[Community Care]]></data>
       <data key="d5"><![CDATA[Community Care]]></data>
       <data key="d9">10</data>
@@ -9014,7 +9000,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n415">
+    <node id="n414">
       <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d5"><![CDATA[OUTOFSCOPE DISCLAIME]]></data>
       <data key="d7">
@@ -9038,7 +9024,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n416">
+    <node id="n415">
       <data key="d4"><![CDATA[Client has been identified as homeless through a Community Care Assessment.]]></data>
       <data key="d5"><![CDATA[Community Care Assesment - Homeless]]></data>
       <data key="d9">10</data>
@@ -9059,7 +9045,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n417">
+    <node id="n416">
       <data key="d4"><![CDATA[Client has not been identified as homeless through a Community Care Assessment]]></data>
       <data key="d5"><![CDATA[ComCare: Not homeless]]></data>
       <data key="d9">10</data>
@@ -9079,7 +9065,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n418">
+    <node id="n417">
       <data key="d4"><![CDATA[Not an infant with severe neurological injury.]]></data>
       <data key="d5"><![CDATA[Not infant brain injury]]></data>
       <data key="d9">12</data>
@@ -9101,7 +9087,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:ShapeNode>
       </data>
     </node>
-    <node id="n419">
+    <node id="n418">
       <data key="d4"><![CDATA[*Cannot refer to specialist, so signpost to F2F, but indicate this problem may be in scope.*]]></data>
       <data key="d5"><![CDATA[Clinical face to face]]></data>
       <data key="d9">12</data>
@@ -14172,7 +14158,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e434" source="n412" target="n413">
+    <edge id="e434" source="n411" target="n412">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -14182,7 +14168,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e435" source="n1" target="n412">
+    <edge id="e435" source="n1" target="n411">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="32.8125" sy="15.0" tx="0.0" ty="-15.0">
@@ -14195,7 +14181,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e436" source="n1" target="n414">
+    <edge id="e436" source="n1" target="n413">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="-32.8125" sy="15.0" tx="0.0" ty="-15.0">
@@ -14208,7 +14194,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e437" source="n414" target="n416">
+    <edge id="e437" source="n413" target="n415">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="-37.5" sy="15.0" tx="0.0" ty="-15.0">
@@ -14221,7 +14207,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e438" source="n414" target="n417">
+    <edge id="e438" source="n413" target="n416">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="37.5" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -14231,7 +14217,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e439" source="n417" target="n415">
+    <edge id="e439" source="n416" target="n414">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -14241,7 +14227,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e440" source="n416" target="n76">
+    <edge id="e440" source="n415" target="n76">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="-37.5" ty="-15.0">
@@ -14254,8 +14240,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e441" source="n323" target="n418">
-      <data key="d15"/>
+    <edge id="e441" source="n323" target="n417">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="37.5" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -14265,8 +14250,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e442" source="n418" target="n324">
-      <data key="d15"/>
+    <edge id="e442" source="n417" target="n324">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="37.5" ty="-15.0">
@@ -14279,8 +14263,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e443" source="n408" target="n419">
-      <data key="d15"/>
+    <edge id="e443" source="n408" target="n418">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -14290,8 +14273,7 @@ provide for a child or young person's educational needs, or specifically about t
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e444" source="n419" target="n324">
-      <data key="d15"/>
+    <edge id="e444" source="n418" target="n324">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="-37.5" ty="-15.0">

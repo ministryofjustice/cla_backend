@@ -23,22 +23,22 @@ class FullCaseAPIMixin(SimpleResourceAPIMixin):
     def setUp(self):
         super(FullCaseAPIMixin, self).setUp()
 
-        # self.list_url = reverse('%s:case-list' % self.API_URL_NAMESPACE)
         self.list_dashboard_url = u'%s?dashboard=1' % reverse(
             '%s:case-list' % self.API_URL_NAMESPACE
         )
-        # self.resource = make_recipe('legalaid.case')
-        # self.check = self.resource
-        # self.detail_url = self.get_detail_url(self.resource)
+
+        self.list_person_ref_url = u'%s?person_ref=1' % reverse(
+            '%s:case-list' % self.API_URL_NAMESPACE
+        )
+
+    def get_list_person_ref_url(self, person_ref):
+        return u'%s?person_ref=%s' % (
+            reverse('%s:case-list' % self.API_URL_NAMESPACE),
+            person_ref
+        )
 
     def get_case_serializer_clazz(self):
         raise NotImplementedError()
-
-    # def get_detail_url(self, case):
-    #     return reverse(
-    #         '%s:case-detail' % self.API_URL_NAMESPACE, args=(),
-    #         kwargs={'reference': case.reference}
-    #     )
 
     def get_extra_search_make_recipe_kwargs(self):
         return {}
@@ -252,6 +252,7 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(0, len(response.data['results']))
+
 
 
 class BaseUpdateCaseTestCase(FullCaseAPIMixin):

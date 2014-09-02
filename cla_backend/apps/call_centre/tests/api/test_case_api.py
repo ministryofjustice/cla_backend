@@ -448,3 +448,53 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             [case['reference'] for case in response.data['results']],
             ['ref1', 'ref2', 'ref3']
         )
+
+    # person_ref PARAM
+
+    def test_list_with_person_ref_param(self):
+        """
+        Testing that if ?person_ref param is specified, it will only return
+        cases for that person
+        """
+        Case.objects.all().delete()
+
+        pd1 = make_recipe('legalaid.personal_details')
+        pd2 = make_recipe('legalaid.personal_details')
+
+        obj1 = make_recipe(
+            'legalaid.case', reference='ref1',
+            personal_details=pd1
+        )
+        obj2 = make_recipe(
+            'legalaid.case', reference='ref2',
+            personal_details=pd2
+        )
+        obj3 = make_recipe(
+            'legalaid.case', reference='ref3',
+            personal_details=pd1
+        )
+
+        # searching for pd1
+        response = self.client.get(
+            self.get_list_person_ref_url(pd1.reference), format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(2, len(response.data['results']))
+        self.assertItemsEqual(
+            [c['reference'] for c in response.data['results']],
+            ['ref1', 'ref3']
+        )
+
+        # searching for pd2 AND dashboard=1 should ignore dashboard param
+        url = '%s&dashboard=1' % self.get_list_person_ref_url(pd2.reference)
+        response = self.client.get(
+            url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data['results']))
+        self.assertItemsEqual(
+            [case['reference'] for case in response.data['results']],
+            ['ref2']
+        )

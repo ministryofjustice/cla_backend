@@ -94,12 +94,12 @@
     "model": "legalaid.category",
     "fields": {
       "code": "discrimination",
-      "description": "",
+      "description": "Discrimination",
       "ecf_available": true,
       "mandatory": true,
       "order": 7,
       "modified": "2014-02-24T15:36:44.240Z",
-      "name": "Mental health, discrimination, disability and other issues",
+      "name": "Discrimination, disability and other issues",
       "created": "2014-02-24T15:36:44.239Z"
     }
   },
@@ -109,7 +109,7 @@
     "fields": {
       "code": "none",
       "description": "",
-      "order": 9,
+      "order": 99,
       "modified": "2014-02-24T15:36:50.027Z",
       "name": "None of the above",
       "created": "2014-02-24T15:36:50.026Z"
@@ -125,6 +125,108 @@
       "order": 8,
       "modified": "2014-02-24T15:36:50.027Z",
       "name": "Consumer Issues",
+      "created": "2014-02-24T15:36:50.026Z"
+    }
+  },
+  {
+    "pk": 11,
+    "model": "legalaid.category",
+    "fields": {
+      "code": "pi",
+      "description": "Personal Injury",
+      "ecf_available": true,
+      "order": 10,
+      "modified": "2014-09-02T15:35:31.906Z",
+      "name": "Personal Injury",
+      "created": "2014-09-02T15:35:31.905Z"
+    }
+  },
+  {
+    "pk": 12,
+    "model": "legalaid.category",
+    "fields": {
+      "code": "publiclaw",
+      "description": "Public Law",
+      "order": 11,
+      "modified": "2014-09-02T15:35:31.906Z",
+      "name": "Public Law",
+      "created": "2014-09-02T15:35:31.905Z"
+    }
+  },
+  {
+    "pk": 13,
+    "model": "legalaid.category",
+    "fields": {
+      "code": "commcare",
+      "description": "Community Care",
+      "order": 12,
+      "modified": "2014-09-02T15:35:31.906Z",
+      "name": "Community Care",
+      "created": "2014-09-02T15:35:31.905Z"
+    }
+  },
+  {
+    "pk": 14,
+    "model": "legalaid.category",
+    "fields": {
+      "code": "clinneg",
+      "description": "Clinical Negligence",
+      "ecf_available": true,
+      "order": 13,
+      "modified": "2014-09-02T15:35:31.906Z",
+      "name": "Clinical Negligence",
+      "created": "2014-09-02T15:35:31.905Z"
+    }
+  },
+  {
+    "pk": 15,
+    "model": "legalaid.category",
+    "fields": {
+      "code": "mentalhealth",
+      "description": "",
+      "ecf_available": true,
+      "order": 14,
+      "modified": "2014-02-24T15:36:50.027Z",
+      "name": "Mental Health",
+      "created": "2014-02-24T15:36:50.026Z"
+    }
+  },
+    {
+    "pk": 16,
+    "model": "legalaid.category",
+    "fields": {
+      "code": "aap",
+      "description": "Actions Against Police",
+      "ecf_available": true,
+      "order": 15,
+      "modified": "2014-02-24T15:36:50.027Z",
+      "name": "Actions Against the Police",
+      "created": "2014-02-24T15:36:50.026Z"
+    }
+  },
+  {
+    "pk": 17,
+    "model": "legalaid.category",
+    "fields": {
+      "code": "crime",
+      "description": "Crime",
+      "ecf_available": true,
+      "order": 16,
+      "modified": "2014-02-24T15:36:50.027Z",
+      "name": "Crime/Criminal Law",
+      "created": "2014-02-24T15:36:50.026Z"
+    }
+  },
+  {
+    "pk": 18,
+    "model": "legalaid.category",
+    "fields": {
+      "code": "employment",
+      "description": "Employment",
+      "ecf_available": true,
+      "order": 17,
+      "modified": "2014-02-24T15:36:50.027Z",
+      "name": "Employment",
       "created": "2014-02-24T15:36:50.026Z"
     }
   }

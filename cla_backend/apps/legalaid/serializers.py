@@ -34,7 +34,6 @@ class OutOfHoursRotaSerializerBase(ClaModelSerializer):
         model = OutOfHoursRota
 
 class FeedbackSerializerBase(serializers.ModelSerializer):
-    eligibility_check = UUIDSerializer(slug_field='reference', read_only=True)
     created_by = serializers.CharField(source='created_by.user.username', read_only=True)
     case = serializers.SlugRelatedField(slug_field='reference', read_only=True)
 

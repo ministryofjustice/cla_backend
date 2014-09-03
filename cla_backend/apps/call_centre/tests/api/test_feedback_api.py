@@ -29,7 +29,8 @@ class FeedbackAPITestCase(
             "justified",
             "resolved",
             "created",
-            "modified"
+            "modified",
+            "issue"
         ]
 
     def test_patch_comment_allowed(self):

@@ -1,3 +1,4 @@
+from cla_common.constants import FEEDBACK_ISSUE
 from rest_framework import serializers
 
 from core.serializers import UUIDSerializer
@@ -207,6 +208,7 @@ class OperatorSerializer(ExtendedUserSerializerBase):
 class FeedbackSerializer(FeedbackSerializerBase):
     justified = serializers.BooleanField(required=False)
     resolved = serializers.BooleanField(required=False)
+    issue = serializers.ChoiceField(choices=FEEDBACK_ISSUE, read_only=True)
 
     class Meta(FeedbackSerializerBase.Meta):
         fields = (
@@ -219,4 +221,5 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'provider',
             'created',
             'modified',
+            'issue',
         )

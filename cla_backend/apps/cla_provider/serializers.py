@@ -1,3 +1,4 @@
+from cla_common.constants import FEEDBACK_ISSUE
 from rest_framework import serializers
 
 from cla_eventlog.serializers import LogSerializerBase
@@ -167,7 +168,7 @@ class StaffSerializer(ExtendedUserSerializerBase):
 
 
 class FeedbackSerializer(FeedbackSerializerBase):
-
+    issue = serializers.ChoiceField(choices=FEEDBACK_ISSUE)
     comment = serializers.CharField(max_length=1024, required=False)
     class Meta(FeedbackSerializerBase.Meta):
         fields = (
@@ -179,6 +180,7 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'justified',
             'resolved',
             'created',
-            'modified'
+            'modified',
+            'issue',
         )
 

@@ -1,3 +1,4 @@
+from uuid import UUID
 from dateutil import parser
 
 from django.conf import settings
@@ -10,13 +11,14 @@ from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
     SearchFilter
 
-from cla_provider.models import Provider, OutOfHoursRota, Staff, Feedback
+from cla_provider.models import Provider, OutOfHoursRota, Feedback
 from cla_eventlog import event_registry
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
 from timer.views import BaseTimerViewSet
 
+from legalaid.models import PersonalDetails
 from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
@@ -33,6 +35,7 @@ from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, ProviderSerializer,  \
     OutOfHoursRotaSerializer, OperatorSerializer, \
     AdaptationDetailsSerializer, PersonalDetailsSerializer, \
+    BarePersonalDetailsSerializer, \
     ThirdPartyDetailsSerializer, LogSerializer, FeedbackSerializer, \
     CreateCaseSerializer
 
@@ -256,6 +259,77 @@ class CaseViewSet(
                 obj, status='created', created_by=self.request.user,
                 notes="Case created"
             )
+
+    @link()
+    def search_for_personal_details(self, request, reference=None, **kwargs):
+        """
+            You can only call this endpoint if the case doesn't have any
+            personal_details record attached.
+            This is by design as it feels slighly more secure than allowing
+            clients to use a dedicated endpoint that they can call whenever
+            they want.
+
+            If things change in the future, feel free to add a dedicated
+            endpoint for this though.
+
+            Should return just ('reference', 'full_name', 'postcode', 'dob')
+            and should NOT include vulnerable users.
+        """
+        obj = self.get_object()
+        if obj.personal_details:
+            return DRFResponse(
+                {'error': 'This case is already linked to a Person'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        person_q = request.QUERY_PARAMS.get('person_q', '') or ''
+        if len(person_q) >= 3:
+            users = PersonalDetails.objects.filter(
+                full_name__icontains=person_q
+            ).exclude(vulnerable_user=True)
+        else:
+            users = []
+        data = [BarePersonalDetailsSerializer(user).data for user in users]
+
+        return DRFResponse(data)
+
+    @action()
+    def link_personal_details(self, request, reference=None, **kwargs):
+        """
+            TODO: refactor everything!
+                * if not DATA.personal_details => return 400
+                * if obj.personal_details != None => return 400
+                * if personal_details does not exist => return 400
+        """
+        def error_response(msg):
+            return DRFResponse(
+                {'error': msg}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        obj = self.get_object()
+
+        # check PARAM exists
+        pd_ref = request.DATA.get('personal_details', None)
+        if not pd_ref:
+            return error_response('Param "personal_details" required')
+
+        # check that case doesn't have personal_details
+        if obj.personal_details:
+            return error_response('A person is already linked to this case')
+
+        # check that personal details exists
+        try:
+            pd_ref = UUID(pd_ref, version=4)
+
+            personal_details = PersonalDetails.objects.get(reference=pd_ref)
+        except ValueError, PersonalDetails.DoesNotExist:
+            return error_response('Person with reference "%s" not found' % pd_ref)
+
+        # link personal details to case
+        obj.personal_details = personal_details
+        obj.save(update_fields=['personal_details'])
+
+        return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):

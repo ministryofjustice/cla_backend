@@ -498,3 +498,170 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             [case['reference'] for case in response.data['results']],
             ['ref2']
         )
+
+
+class SearchForPersonalDetailsTestCase(BaseCaseTestCase):
+    def make_resource(self, **kwargs):
+        """
+            Specifying case.personal_details == None by default
+        """
+        kwargs['personal_details'] = None
+        return super(SearchForPersonalDetailsTestCase, self).make_resource(
+            **kwargs
+        )
+
+    def setUp(self):
+        super(SearchForPersonalDetailsTestCase, self).setUp()
+
+        def make_pd(full_name, postcode=None, dob=None, vulnerable=False):
+            return make_recipe(
+                'legalaid.personal_details', full_name=full_name,
+                postcode=postcode, date_of_birth=dob,
+                vulnerable_user=vulnerable
+            )
+        # creating personal details objects
+        self.pds = [
+            make_pd('John Doe', 'SW1H 9AJ', timezone.now(), False),
+            make_pd('John Smith', None, None, False),
+            make_pd('Ethan Engelking', None, None, False),
+            make_pd('John Smith2', None, None, True)
+        ]
+
+    def get_search_for_pd_url(self, person_q, case_reference=None):
+        case_reference = case_reference or self.resource.reference
+        return u'%s?person_q=%s' % (
+            reverse(
+                'call_centre:case-search-for-personal-details', args=(),
+                kwargs={'reference': case_reference}
+            ),
+            person_q
+        )
+
+    def test_404(self):
+        url = self.get_search_for_pd_url('', case_reference='invalid')
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_returns_400_with_case_with_pd_already_attached(self):
+        self.resource.personal_details = self.pds[0]
+        self.resource.save()
+
+        url = self.get_search_for_pd_url('')
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_returns_empty_with_empty_param(self):
+        url = self.get_search_for_pd_url('')
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])
+
+    def test_returns_empty_with_param_len_lt_3(self):
+        url = self.get_search_for_pd_url('jo')
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])
+
+    def test_returns_list_with_param_len_gte_3(self):
+        # should only return reference, full_name, dob and postcode
+        url = self.get_search_for_pd_url('joh')
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertItemsEqual(
+            response.data[0].keys(),
+            ['reference', 'full_name', 'postcode', 'dob']
+        )
+        self.assertItemsEqual(
+            [(p['full_name'], p['postcode']) for p in response.data],
+            [('John Doe', 'SW1H 9AJ'), ('John Smith', None)]
+        )
+
+    def test_doesnt_return_vulnerable_users(self):
+        url = self.get_search_for_pd_url('John Smith2')
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])
+
+
+class LinkPersonalDetailsTestCase(BaseCaseTestCase):
+    def make_resource(self, **kwargs):
+        """
+            Specifying case.personal_details == None by default
+        """
+        kwargs['personal_details'] = None
+        return super(LinkPersonalDetailsTestCase, self).make_resource(
+            **kwargs
+        )
+
+    def setUp(self):
+        super(LinkPersonalDetailsTestCase, self).setUp()
+        self.pd = make_recipe('legalaid.personal_details')
+
+    def get_link_to_pd_url(self, case_reference=None):
+        case_reference = case_reference or self.resource.reference
+        return reverse(
+            'call_centre:case-link-personal-details', args=(),
+            kwargs={'reference': case_reference}
+        )
+
+    def test_404(self):
+        url = self.get_link_to_pd_url(case_reference='invalid')
+        response = self.client.post(
+            url, data={}, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_returns_400_with_case_with_pd_already_attached(self):
+        self.resource.personal_details = self.pd
+        self.resource.save()
+
+        url = self.get_link_to_pd_url()
+        response = self.client.post(
+            url, data={'personal_details': 'abcd'},
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(response.data, {'error': 'A person is already linked to this case'})
+
+    def test_returns_400_if_data_not_passed(self):
+        url = self.get_link_to_pd_url()
+        response = self.client.post(
+            url, data={}, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(response.data, {'error': 'Param "personal_details" required'})
+
+    def test_returns_400_if_pd_obj_not_found(self):
+        url = self.get_link_to_pd_url()
+        response = self.client.post(
+            url, data={'personal_details': 'abcd'},
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(response.data, {'error': 'Person with reference "abcd" not found'})
+
+    def test_link_to_pd_successful(self):
+        self.assertEqual(self.resource.personal_details, None)
+
+        url = self.get_link_to_pd_url()
+        response = self.client.post(
+            url, data={'personal_details': self.pd.reference},
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        self.resource = self.resource.__class__.objects.get(pk=self.resource.pk)
+        self.assertEqual(self.resource.personal_details, self.pd)

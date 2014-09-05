@@ -45,6 +45,13 @@ class DeductionsSerializer(DeductionsSerializerBase):
         )
 
 
+class BarePersonalDetailsSerializer(PersonalDetailsSerializerFull):
+    class Meta(PersonalDetailsSerializerFull.Meta):
+        fields = (
+            'reference', 'full_name', 'postcode', 'dob'
+        )
+
+
 class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
     class Meta(PersonalDetailsSerializerFull.Meta):
         fields = (

@@ -443,9 +443,7 @@ class FeedbackViewSet(CallCentrePermissionsViewSetMixin,
     filter_backends = (
         OrderingFilter,
         DateRangeFilter,
-        DjangoFilterBackend
     )
     ordering = ('resolved', '-modified', '-created',)
-    filter_fields = ('created',)
     date_range_field = 'created'
 

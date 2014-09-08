@@ -3,7 +3,7 @@ import os
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 
-DEBUG = bool(os.environ.get('SET_DEBUG', False))
+DEBUG = True if os.environ.get('SET_DEBUG') == 'True' else False
 
 ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(',')
 

@@ -9,7 +9,7 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
-    SearchFilter
+    SearchFilter, BaseFilterBackend
 
 from cla_provider.models import Provider, OutOfHoursRota, Feedback
 from cla_eventlog import event_registry
@@ -109,6 +109,23 @@ class OrderingRejectedFirstFilter(OrderingFilter):
         elif ordering:
             qs = qs.order_by(*ordering)
 
+        return qs
+
+class DateRangeFilter(BaseFilterBackend):
+
+
+    def filter_queryset(self, request, qs, view):
+
+        filter = {}
+        start_date = request.QUERY_PARAMS.get('start', None)
+        end_date = request.QUERY_PARAMS.get('end', None)
+
+        if start_date is not None:
+            filter['{field}__gte'.format(field=view.date_range_field)] = parser.parse(start_date).replace(tzinfo=timezone.get_current_timezone())
+        if end_date is not None:
+            filter['{field}__lte'.format(field=view.date_range_field)] = parser.parse(end_date).replace(tzinfo=timezone.get_current_timezone())
+
+        qs = qs.filter(**filter)
         return qs
 
 
@@ -422,4 +439,13 @@ class FeedbackViewSet(CallCentrePermissionsViewSetMixin,
     model = Feedback
     lookup_field = 'reference'
     serializer_class = FeedbackSerializer
+
+    filter_backends = (
+        OrderingFilter,
+        DateRangeFilter,
+        DjangoFilterBackend
+    )
+    ordering = ('resolved', '-modified', '-created',)
+    filter_fields = ('created',)
+    date_range_field = 'created'
 

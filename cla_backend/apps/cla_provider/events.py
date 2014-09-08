@@ -80,3 +80,34 @@ class CloseCaseEvent(BaseEvent):
         }
     }
 event_registry.register(CloseCaseEvent)
+
+
+class SplitCaseEvent(BaseEvent):
+    key = 'split_case'
+    codes = {
+        'REF-EXT': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': 'Referred externally',
+            'stops_timer': False,
+            'set_requires_action_by': None
+        },
+        'REF-INT': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': 'Referred internally',
+            'stops_timer': False,
+            'set_requires_action_by': None
+        }
+    }
+
+    def get_log_code(self, **kwargs):
+        internal = kwargs.get('internal')
+
+        if internal:
+            return 'REF-INT'
+        else:
+            return 'REF-EXT'
+event_registry.register(SplitCaseEvent)

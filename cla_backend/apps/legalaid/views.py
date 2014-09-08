@@ -55,9 +55,9 @@ class BaseUserViewSet(
 
 
 class FormActionMixin(object):
-    def _form_action(self, request, Form, no_body=True):
+    def _form_action(self, request, Form, no_body=True, form_kwargs={}):
         obj = self.get_object()
-        form = Form(case=obj, data=request.DATA)
+        form = Form(case=obj, data=request.DATA, **form_kwargs)
         if form.is_valid():
             form.save(request.user)
 

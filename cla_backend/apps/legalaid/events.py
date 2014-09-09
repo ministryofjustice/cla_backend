@@ -152,7 +152,8 @@ class SuspendCaseEvent(BaseEvent):
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Transfer back to Capita',
-            'stops_timer': False
+            'stops_timer': True,
+            'set_requires_action_by': None_if_owned_by_operator
         }
     }
 event_registry.register(SuspendCaseEvent)

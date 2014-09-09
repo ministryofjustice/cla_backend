@@ -1,4 +1,7 @@
+from cla_common.constants import FEEDBACK_ISSUE
 from rest_framework import serializers
+
+from core.serializers import UUIDSerializer
 
 from cla_eventlog.serializers import LogSerializerBase
 
@@ -39,6 +42,13 @@ class DeductionsSerializer(DeductionsSerializerBase):
             'income_tax', 'national_insurance', 'maintenance',
             'childcare', 'mortgage', 'rent',
             'criminal_legalaid_contributions', 'total'
+        )
+
+
+class BarePersonalDetailsSerializer(PersonalDetailsSerializerFull):
+    class Meta(PersonalDetailsSerializerFull.Meta):
+        fields = (
+            'reference', 'full_name', 'postcode', 'dob'
         )
 
 
@@ -155,8 +165,22 @@ class CaseSerializer(CaseSerializerFull):
             'media_code', 'postcode', 'diagnosis_state', 'rejected',
             'date_of_birth', 'category',
             'exempt_user', 'exempt_user_reason',
-            'ecf_statement'
+            'ecf_statement', 'case_count'
         )
+
+
+class CreateCaseSerializer(CaseSerializer):
+    """
+    Case Serializer only used for creation.
+
+    It allows the API to create a case with optional personal_details reference.
+    No other fields can be used when creating a case atm.
+    """
+    personal_details = UUIDSerializer(slug_field='reference', required=False)
+
+    # class Meta:
+    #     model = Case
+    #     fields = ('reference', 'personal_details')
 
 
 class ProviderSerializer(ProviderSerializerBase):
@@ -191,6 +215,7 @@ class OperatorSerializer(ExtendedUserSerializerBase):
 class FeedbackSerializer(FeedbackSerializerBase):
     justified = serializers.BooleanField(required=False)
     resolved = serializers.BooleanField(required=False)
+    issue = serializers.ChoiceField(choices=FEEDBACK_ISSUE, read_only=True)
 
     class Meta(FeedbackSerializerBase.Meta):
         fields = (
@@ -203,4 +228,5 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'provider',
             'created',
             'modified',
+            'issue',
         )

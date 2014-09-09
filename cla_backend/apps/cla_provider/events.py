@@ -22,7 +22,7 @@ class RejectCaseEvent(BaseEvent):
             'selectable_by': [],
             'description': 'Misdiagnosed, means test isn\'t correct',
             'stops_timer': False,
-            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
+            'set_requires_action_by': None
         },
         'MIS-OOS': {
             'type': LOG_TYPES.OUTCOME,
@@ -30,7 +30,7 @@ class RejectCaseEvent(BaseEvent):
             'selectable_by': [],
             'description': 'Misdiagnosed, out of scope',
             'stops_timer': False,
-            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
+            'set_requires_action_by': None
         },
         'COI': {
             'type': LOG_TYPES.OUTCOME,

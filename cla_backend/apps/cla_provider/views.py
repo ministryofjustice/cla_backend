@@ -17,6 +17,7 @@ from cla_common.constants import REQUIRES_ACTION_BY
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
+from rest_framework.filters import OrderingFilter
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
     PersonalDetailsSerializer, ThirdPartyDetailsSerializer, \
@@ -155,8 +156,14 @@ class FeedbackViewSet(CLAProviderPermissionViewSetMixin,
                       mixins.CreateModelMixin):
     serializer_class = FeedbackSerializer
 
+    filter_backends = (
+        OrderingFilter,
+    )
+    ordering = ('-created')
+
     def pre_save(self, obj):
         if not obj.pk:
             obj.case = self.get_parent_object()
             obj.created_by = Staff.objects.get(user=self.request.user)
         super(FeedbackViewSet, self).pre_save(obj)
+

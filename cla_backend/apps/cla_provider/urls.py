@@ -35,5 +35,6 @@ case_one2many_router.register(r'logs', views.LogViewSet)
 urlpatterns = patterns('',
     url(r'^', include(case_one2one_router.urls)),
     url(r'^', include(case_one2many_router.urls)),
+    url(r'^caseExport/$', views.ProviderExtract.as_view(), name='provider-extract'),
     url(r'^', include(router.urls)),
 )

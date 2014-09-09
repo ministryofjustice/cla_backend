@@ -1,4 +1,11 @@
+import logging
+from cla_provider.authentication import LegacyCHSAuthentication
+from cla_provider.forms import ProviderExtractForm
+from cla_provider.helpers import ProviderExtractFormatter
+from core.permissions import IsProviderPermission
+
 from django.shortcuts import get_object_or_404
+from django_statsd.clients import statsd
 
 from rest_framework import mixins
 from rest_framework.decorators import action, link
@@ -19,12 +26,14 @@ from cla_common.constants import REQUIRES_ACTION_BY
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from rest_framework.filters import OrderingFilter
+from rest_framework.views import APIView
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
     PersonalDetailsSerializer, ThirdPartyDetailsSerializer, \
     LogSerializer, FeedbackSerializer, ExtendedEligibilityCheckSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm
 
+logger = logging.getLogger(__name__)
 
 class CLAProviderPermissionViewSetMixin(object):
     permission_classes = (CLAProviderClientIDPermission,)
@@ -66,10 +75,12 @@ class CaseViewSet(
     serializer_class = CaseSerializer
     queryset = Case.objects.exclude(provider=None)
 
-    ordering_fields = ('-requires_action_by', 'modified', 'personal_details__full_name', 'personal_details__postcode')
+    ordering_fields = ('-requires_action_by', 'modified',
+                       'personal_details__full_name', 'personal_details__postcode')
 
     def get_queryset(self):
-        this_provider = get_object_or_404(Staff, user=self.request.user).provider
+        this_provider = get_object_or_404(
+            Staff, user=self.request.user).provider
         qs = super(CaseViewSet, self).get_queryset().filter(
             provider=this_provider,
             requires_action_by__in=[
@@ -121,13 +132,39 @@ class CaseViewSet(
         )
 
 
+class ProviderExtract(APIView):
+    permission_classes = (IsProviderPermission,)
+    authentication_classes = (LegacyCHSAuthentication,)
+
+    http_method_names = [u'post']
+
+    def post(self, request):
+        form = ProviderExtractForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            case = get_object_or_404(Case, reference__iexact=data['CHSCRN'])
+            self.check_object_permissions(request, case)
+            statsd.incr('provider_extract.exported')
+
+            logger.info('Provider case exported',
+                        extra={'USERNAME': request.user.username,
+                               'POSTDATA': request.POST})
+
+            return ProviderExtractFormatter(case).format()
+        else:
+            statsd.incr('provider_extract.malformed')
+            return DRFResponse(form.errors, content_type='text/xml', status=400)
+
+
 class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
     model = Staff
     serializer_class = StaffSerializer
 
     def get_queryset(self):
-        this_provider = get_object_or_404(Staff, user=self.request.user).provider
-        qs = super(UserViewSet, self).get_queryset().filter(provider=this_provider)
+        this_provider = get_object_or_404(
+            Staff, user=self.request.user).provider
+        qs = super(UserViewSet, self).get_queryset().filter(
+            provider=this_provider)
         return qs
 
     def get_logged_in_user_model(self):
@@ -189,4 +226,3 @@ class FeedbackViewSet(CLAProviderPermissionViewSetMixin,
             obj.case = self.get_parent_object()
             obj.created_by = Staff.objects.get(user=self.request.user)
         super(FeedbackViewSet, self).pre_save(obj)
-

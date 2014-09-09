@@ -196,11 +196,11 @@ class ProviderSerializer(ProviderSerializerBase):
 class StaffSerializer(ExtendedUserSerializerBase):
     provider = ProviderSerializer(read_only=True)
 
-    class Meta:
+    class Meta(ExtendedUserSerializerBase.Meta):
         model = Staff
         fields = (
             'username', 'first_name', 'last_name', 'email', 'provider',
-            'is_manager'
+            'is_manager',
         )
 
 

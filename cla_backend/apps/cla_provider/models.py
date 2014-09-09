@@ -1,4 +1,5 @@
 from cla_common.constants import FEEDBACK_ISSUE
+from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
@@ -59,7 +60,15 @@ class Staff(TimeStampedModel):
     provider = models.ForeignKey(Provider)
     is_manager = models.BooleanField(default=False)
 
+    chs_organisation = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
+    chs_user = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
+    chs_password = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
+
+    def set_chs_password(self, raw_password):
+        self.chs_password = make_password(raw_password)
+
     class Meta:
+        unique_together = (("chs_organisation", "chs_user"),)
         verbose_name_plural = 'staff'
 
     def __unicode__(self):

@@ -1,6 +1,6 @@
 from django import forms
 from django.forms.util import ErrorList
-from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.core.exceptions import NON_FIELD_ERRORS
 
 from cla_eventlog.forms import EventSpecificLogForm, BaseCaseLogForm
 from cla_common.constants import MATTER_TYPE_LEVELS
@@ -53,7 +53,7 @@ class SplitCaseForm(BaseCaseLogForm):
         return True
 
     def can_provider_deal_with_category(self, category):
-        provider = self.request.user.provider
+        provider = self.request.user.staff.provider
         return provider.law_category.filter(code=category.code).count() == 1
 
     def clean(self):
@@ -71,7 +71,7 @@ class SplitCaseForm(BaseCaseLogForm):
         non_fields_errors = []
 
         # validate case.provider == loggedin provider
-        if self.case.provider != self.request.user.provider:
+        if self.case.provider != self.request.user.staff.provider:
             non_fields_errors.append(
                 'Only Providers assigned to the Case can split it.'
             )
@@ -118,9 +118,16 @@ class SplitCaseForm(BaseCaseLogForm):
         return cleaned_data
 
     def save(self, user):
-        # TODO clone Case
-        # TODO if external => assign to random provider?
-        # TODO if internal => assign to same provider
+        category = self.cleaned_data['category']
+        matter_type1 = self.cleaned_data['matter_type1']
+        matter_type2 = self.cleaned_data['matter_type2']
+        internal = self.cleaned_data['internal']
+
+        new_case = self.case.split(
+            user=user, category=category,
+            matter_type1=matter_type1, matter_type2=matter_type2,
+            assignment_internal=internal
+        )
 
         return super(SplitCaseForm, self).save(user)
 

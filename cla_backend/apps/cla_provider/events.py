@@ -90,16 +90,14 @@ class SplitCaseEvent(BaseEvent):
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
             'description': 'Referred externally',
-            'stops_timer': False,
-            'set_requires_action_by': None
+            'stops_timer': False
         },
         'REF-INT': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
             'description': 'Referred internally',
-            'stops_timer': False,
-            'set_requires_action_by': None
+            'stops_timer': False
         }
     }
 

@@ -1,4 +1,5 @@
 import mock
+import datetime
 
 from django.conf import settings
 from django.test import TestCase
@@ -7,12 +8,14 @@ from django.db import models
 from eligibility_calculator.models import CaseData, ModelMixin
 from eligibility_calculator.exceptions import PropertyExpectedException
 
-from cla_common.constants import ELIGIBILITY_STATES
+from cla_common.constants import ELIGIBILITY_STATES, CONTACT_SAFETY, \
+    THIRDPARTY_REASON, THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES
 from cla_common.money_interval.models import MoneyInterval
 
 from core.tests.mommy_utils import make_recipe, make_user
 
-from legalaid.models import Case, ValidateModelMixin, Income
+from legalaid.models import Savings, Income, Deductions, PersonalDetails, \
+    ThirdPartyDetails, AdaptationDetails, Person, Case, ValidateModelMixin
 
 
 def walk(coll):
@@ -533,3 +536,194 @@ class ValidationModelMixinTestCase(TestCase):
         expected = {'warnings': {'related': {'a': ['Field "a" is required'], 'c': ['Field "c" is required'], 'b': ['Field "b" is required']}}}
 
         self.assertEqual(expected, self.model4.validate())
+
+
+class CloneModelsTestCase(TestCase):
+    def _check_model_fields(self, model, expected_fields):
+        """
+        This is a bit tedious but it's just to make sure that when fields are
+        added or removed from a model, the developer updates the cloning logic
+        of the related model if necessary.
+
+        Each object which extends CloneModelMixin has a `cloning_config`.
+        Just make sure that it's configured properly.
+        """
+        actual_fields = [field.name for field in model._meta.fields]
+        remoded_fields = set(expected_fields) - set(actual_fields)
+        added_fields = set(actual_fields) - set(expected_fields)
+
+        text = ''
+        if added_fields:
+            text = ('It seems like you have added some fields "%s". '
+                'This model gets cloned by the split case logic so now it\'s '
+                'up to you do decide it these new fields have to be cloned, reset '
+                'or just referenced. '
+                'After done this, just add the new field to the list of expected fields '
+                'in this test and you\'re done!' % added_fields)
+        elif remoded_fields:
+            text = ('It seems like you have removed some fields "%s" from your model. '
+                'All fine but just double-check that nothing is missing when cloning this '
+                'model by the split case logic. '
+                'After done this, just remove the new field from the list of expected fields '
+                'in this test and you\'re done!' % remoded_fields)
+
+        self.assertFalse(text)
+
+    def _test_clone(self, Model, instance_creator, non_equal_fields, equal_fields):
+        all_fields = non_equal_fields + equal_fields
+
+        self.assertEqual(Model.objects.count(), 0)
+
+        self.obj = instance_creator()
+        self.cloned_obj = Model.clone_from_obj(self.obj.pk)
+
+        self.assertEqual(Model.objects.count(), 2)
+
+        self._check_model_fields(Model, all_fields)
+
+        for field in non_equal_fields:
+            self.assertNotEqual(getattr(self.obj, field), getattr(self.cloned_obj, field))
+        for field in equal_fields:
+            self.assertEqual(getattr(self.obj, field), getattr(self.cloned_obj, field))
+
+    def test_clone_savings(self):
+        self._test_clone(
+            Model=Savings,
+            instance_creator=lambda: make_recipe(
+                'legalaid.savings',
+                bank_balance=100,
+                investment_balance=200,
+                asset_balance=300,
+                credit_balance=400
+            ),
+            non_equal_fields=['id', 'created', 'modified'],
+            equal_fields=[
+                'bank_balance', 'investment_balance',
+                'asset_balance', 'credit_balance'
+            ]
+        )
+
+    def test_clone_income(self):
+        self._test_clone(
+            Model=Income,
+            instance_creator=lambda: make_recipe(
+                'legalaid.income',
+                self_employed=True
+            ),
+            non_equal_fields=['id', 'created', 'modified'],
+            equal_fields=[
+                'earnings_interval_period', 'earnings_per_interval_value', 'earnings',
+                'other_income_interval_period', 'other_income_per_interval_value', 'other_income',
+                'self_employed'
+            ]
+        )
+
+    def test_clone_deductions(self):
+        self._test_clone(
+            Model=Deductions,
+            instance_creator=lambda: make_recipe(
+                'legalaid.deductions',
+                criminal_legalaid_contributions=100
+            ),
+            non_equal_fields=['id', 'created', 'modified'],
+            equal_fields=[
+                'income_tax_interval_period', 'income_tax_per_interval_value', 'income_tax',
+                'national_insurance_interval_period', 'national_insurance_per_interval_value', 'national_insurance',
+                'maintenance_interval_period', 'maintenance_per_interval_value', 'maintenance',
+                'childcare_interval_period', 'childcare_per_interval_value', 'childcare',
+                'mortgage_interval_period', 'mortgage_per_interval_value', 'mortgage',
+                'rent_interval_period', 'rent_per_interval_value', 'rent',
+                'criminal_legalaid_contributions'
+            ]
+        )
+
+    def test_clone_personal_details(self):
+        self._test_clone(
+            Model=PersonalDetails,
+            instance_creator=lambda: make_recipe(
+                'legalaid.personal_details',
+                title='Title',
+                full_name='Full name',
+                postcode='Postcode',
+                street='Street',
+                mobile_phone='Mobile phone',
+                home_phone='Home phone',
+                email='email@email.com',
+                date_of_birth=datetime.date(day=1, month=1, year=2000),
+                ni_number='ni number',
+                contact_for_research=True,
+                vulnerable_user=True,
+                safe_to_contact=CONTACT_SAFETY.SAFE,
+                case_count=2
+            ),
+            non_equal_fields=['id', 'created', 'modified', 'reference', 'case_count'],
+            equal_fields=[
+                'title', 'full_name', 'postcode', 'street', 'mobile_phone',
+                'home_phone', 'email', 'date_of_birth', 'ni_number',
+                'contact_for_research', 'vulnerable_user', 'safe_to_contact'
+            ]
+        )
+
+    def test_clone_third_party(self):
+        self._test_clone(
+            Model=ThirdPartyDetails,
+            instance_creator=lambda: make_recipe(
+                'legalaid.thirdparty_details',
+                pass_phrase='Pass phrase',
+                reason=THIRDPARTY_REASON[0][0],
+                personal_relationship=THIRDPARTY_RELATIONSHIP[0][0],
+                personal_relationship_note='Relationship Notes',
+                spoke_to=True,
+                no_contact_reason='No Contact Reason',
+                organisation_name='Organisation Name'
+            ),
+            non_equal_fields=['id', 'created', 'modified', 'reference', 'personal_details'],
+            equal_fields=[
+                'pass_phrase', 'reason', 'personal_relationship', 'personal_relationship_note',
+                'spoke_to', 'no_contact_reason', 'organisation_name'
+            ]
+        )
+
+    def test_clone_adaptations(self):
+        self._test_clone(
+            Model=AdaptationDetails,
+            instance_creator=lambda: make_recipe(
+                'legalaid.adaptation_details',
+                bsl_webcam=True,
+                minicom=True,
+                text_relay=True,
+                skype_webcam=True,
+                language=ADAPTATION_LANGUAGES[0][0],
+                notes='Notes',
+                callback_preference=True
+            ),
+            non_equal_fields=['id', 'created', 'modified', 'reference'],
+            equal_fields=[
+                'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
+                'language', 'notes', 'callback_preference'
+            ]
+        )
+
+    def test_clone_person(self):
+        self._test_clone(
+            Model=Person,
+            instance_creator=lambda: make_recipe(
+                'legalaid.full_person'
+            ),
+            non_equal_fields=['id', 'created', 'modified', 'income', 'savings', 'deductions'],
+            equal_fields=[]
+        )
+
+
+class SplitCaseTestCase(TestCase):
+    def test_split_bare_minimum_case(self):
+        pass
+
+    def test_split_full_case(self):
+        pass
+
+    def test_split_with_internal_assignment(self):
+        pass
+
+    def test_split_with_external_assignment(self):
+        pass

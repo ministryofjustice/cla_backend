@@ -52,7 +52,9 @@ class SplitCaseFormTestCase(TestCase):
         )
         self.request = mock.MagicMock(
             user=mock.MagicMock(
-                provider=self.provider
+                staff=mock.MagicMock(
+                    provider=self.provider
+                )
             )
         )
         self.eligibility_check = make_recipe(

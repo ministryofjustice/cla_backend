@@ -13,7 +13,25 @@ category = Recipe(Category,
     name=seq('Name'), code=seq('Code'), order = seq(0)
 )
 
+income = Recipe(Income, earnings=MoneyInterval('per_month', pennies=2200),
+                other_income=MoneyInterval('per_week', pennies=2200)
+                )
+savings = Recipe(Savings)
+deductions = Recipe(Deductions,
+                    income_tax = MoneyInterval('per_week', pennies=2200),
+                    national_insurance = MoneyInterval('per_4week', pennies=2200),
+                    maintenance = MoneyInterval('per_year', pennies=2200),
+                    childcare = MoneyInterval('per_week', pennies=2200),
+                    mortgage = MoneyInterval('per_week', pennies=2200),
+                    rent = MoneyInterval('per_week', pennies=2200)
+                    )
+
 person = Recipe(Person)
+full_person = Recipe(Person,
+    income=foreign_key(income),
+    savings=foreign_key(savings),
+    deductions=foreign_key(deductions)
+)
 
 eligibility_check = Recipe(EligibilityCheck,
     category=foreign_key(category),
@@ -29,19 +47,6 @@ eligibility_check_yes = Recipe(EligibilityCheck,
     partner=foreign_key(person),
     state='yes'
 )
-
-income = Recipe(Income, earnings=MoneyInterval('per_month', pennies=2200),
-                other_income=MoneyInterval('per_week', pennies=2200)
-                )
-savings = Recipe(Savings)
-deductions = Recipe(Deductions,
-                    income_tax = MoneyInterval('per_week', pennies=2200),
-                    national_insurance = MoneyInterval('per_4week', pennies=2200),
-                    maintenance = MoneyInterval('per_year', pennies=2200),
-                    childcare = MoneyInterval('per_week', pennies=2200),
-                    mortgage = MoneyInterval('per_week', pennies=2200),
-                    rent = MoneyInterval('per_week', pennies=2200)
-                    )
 
 property = Recipe(Property,
     eligibility_check=foreign_key(eligibility_check)

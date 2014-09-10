@@ -35,6 +35,11 @@ logger = logging.getLogger(__name__)
 
 
 def clone_model(cls, pk, config={}):
+    """
+    NOTE: it does not support cloning many2many and one2many
+    fields by design. This is to keep the cloning logic simple
+    If you do need to, close the related objects manually
+    """
     if not pk:
         return None
 
@@ -107,11 +112,19 @@ class Savings(CloneModelMixin, TimeStampedModel):
     asset_balance = MoneyField(default=None, null=True, blank=True)
     credit_balance = MoneyField(default=None, null=True, blank=True)
 
+    cloning_config = {
+        'excludes': ['created', 'modified']
+    }
+
 
 class Income(CloneModelMixin, TimeStampedModel):
     earnings = MoneyIntervalField(default=None, null=True, blank=True)
     other_income = MoneyIntervalField(default=None, null=True, blank=True)
     self_employed = models.NullBooleanField(default=None)
+
+    cloning_config = {
+        'excludes': ['created', 'modified']
+    }
 
 
 class Deductions(CloneModelMixin, TimeStampedModel):
@@ -124,6 +137,10 @@ class Deductions(CloneModelMixin, TimeStampedModel):
     rent = MoneyIntervalField(default=None, null=True, blank=True)
     criminal_legalaid_contributions = MoneyField(default=None, null=True,
                                                  blank=True)
+
+    cloning_config = {
+        'excludes': ['created', 'modified']
+    }
 
 
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
@@ -147,7 +164,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     reference = UUIDField(auto=True, unique=True)
 
     cloning_config = {
-        'excludes': ['reference']
+        'excludes': ['reference', 'created', 'modified', 'case_count']
     }
 
     class Meta:
@@ -176,7 +193,7 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
     reference = UUIDField(auto=True, unique=True)
 
     cloning_config = {
-        'excludes': ['reference'],
+        'excludes': ['reference', 'created', 'modified'],
         'clone_fks': ['personal_details']
     }
 
@@ -193,7 +210,7 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     reference = UUIDField(auto=True, unique=True)
 
     cloning_config = {
-        'excludes': ['reference']
+        'excludes': ['reference', 'created', 'modified']
     }
 
 
@@ -203,7 +220,7 @@ class Person(CloneModelMixin, TimeStampedModel):
     deductions = models.ForeignKey(Deductions, blank=True, null=True)
 
     cloning_config = {
-        'excludes': [],
+        'excludes': ['created', 'modified'],
         'clone_fks': ['income', 'savings', 'deductions']
     }
 
@@ -550,7 +567,7 @@ class Case(TimeStampedModel):
             cls=EligibilityCheck,
             pk=self.eligibility_check_id,
             config={
-                'excludes': ['reference'],
+                'excludes': ['reference', 'created', 'modified'],
                 'clone_fks': ['you', 'partner', 'disputed_savings'],
                 'override_values': {
                     'category': category
@@ -559,6 +576,7 @@ class Case(TimeStampedModel):
         )
         for prop_id in self.eligibility_check.property_set.values_list('pk', flat=True):
             clone_model(cls=Property, pk=prop_id, config={
+                'excludes': ['created', 'modified'],
                 'override_values': {
                     'eligibility_check': eligibility_check
                 }
@@ -584,7 +602,8 @@ class Case(TimeStampedModel):
             config={
                 'excludes': [
                     'reference', 'locked_by', 'locked_at', 'provider_notes',
-                    'laa_reference', 'billable_time', 'outcome_code', 'level'
+                    'laa_reference', 'billable_time', 'outcome_code', 'level',
+                    'created', 'modified'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details'

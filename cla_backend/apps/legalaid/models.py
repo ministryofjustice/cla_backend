@@ -36,6 +36,11 @@ logger = logging.getLogger(__name__)
 
 
 def clone_model(cls, pk, config={}):
+    """
+    NOTE: it does not support cloning many2many and one2many
+    fields by design. This is to keep the cloning logic simple
+    If you do need to, close the related objects manually
+    """
     if not pk:
         return None
 

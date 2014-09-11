@@ -19,7 +19,7 @@ from core.tests.mommy_utils import make_recipe, make_user
 
 from legalaid.models import Savings, Income, Deductions, PersonalDetails, \
     ThirdPartyDetails, AdaptationDetails, Person, Case, ValidateModelMixin, \
-    EligibilityCheck, Property
+    EligibilityCheck, Property, CaseKnowledgebaseAssignment
 
 
 def walk(coll):
@@ -760,11 +760,11 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
         self.assertEqual(diagnosis.state, DIAGNOSIS_SCOPE.INSCOPE)
         self.assertEqual(diagnosis.category, category)
 
-    def assertPersonalDetails(self, case, new_case):
-        self.assertEqual(case.personal_details, new_case.personal_details)
+    def assertPersonalDetails(self, pd, new_pd):
+        self.assertEqual(pd, new_pd)
 
         self.assertEqual(
-            PersonalDetails.objects.get(pk=new_case.personal_details.pk).case_count, 2
+            PersonalDetails.objects.get(pk=pd.pk).case_count, 2
         )
 
     def assertEligibilityCheck(self, ec, new_ec, category):
@@ -798,6 +798,18 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             equal_fields=['value', 'mortgage_left', 'share', 'disputed', 'main'],
             check_not_None=True
         )
+
+    def assertAlternativeHelpArticles(self, case, new_case):
+        kas = list(case.caseknowledgebaseassignment_set.all())
+        new_kas = list(new_case.caseknowledgebaseassignment_set.all())
+        self.assertEqual(len(kas), len(new_kas))
+        self.assertTrue(len(new_kas) > 0)
+        for ka, new_ka in zip(kas, new_kas):
+            self.assertNotEqual(ka.case, new_ka.case)
+            self.assertEqual(ka.alternative_help_article, new_ka.alternative_help_article)
+            self.assertNotEqual(new_ka.alternative_help_article, None)
+            self.assertEqual(ka.assigned_by, new_ka.assigned_by)
+            self.assertNotEqual(new_ka.assigned_by, None)
 
     def test_split_bare_minimum_case(self):
         case = make_recipe('legalaid.empty_case')
@@ -866,12 +878,15 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             matter_type1=self.cat1_data.matter_type1,
             matter_type2=self.cat1_data.matter_type2,
             media_code=make_recipe('legalaid.media_code'),
-            # TODO alternative_help_articles=,
             outcome_code='outcome code',
             level=40,
             exempt_user=True,
             exempt_user_reason=EXEMPT_USER_REASON.ECHI,
             ecf_statement=ECF_STATEMENT.READ_OUT_MESSAGE
+        )
+        CaseKnowledgebaseAssignment.objects.create(
+            case=case, assigned_by=make_user(),
+            alternative_help_article=make_recipe('knowledgebase.article')
         )
 
         new_case = case.split(
@@ -907,7 +922,8 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             self.cat2_data.category
         )
         self.assertDiagnosis(new_case.diagnosis, self.cat2_data.category)
-        self.assertPersonalDetails(case, new_case)
+        self.assertPersonalDetails(case.personal_details, new_case.personal_details)
+        self.assertAlternativeHelpArticles(case, new_case)
 
         for field in ['eligibility_check', 'diagnosis', 'thirdparty_details', 'adaptation_details']:
             self.assertNotEqual(getattr(new_case, field), None)

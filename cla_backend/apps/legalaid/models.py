@@ -613,8 +613,8 @@ class Case(TimeStampedModel):
                 'override_values': override_values
             }
         )
-        for cka in self.caseknowledgebaseassignment_set.values_list('pk', flat=True):
-            clone_model(cls=CaseKnowledgebaseAssignment, pk=prop_id, config={
+        for cka_id in self.caseknowledgebaseassignment_set.values_list('pk', flat=True):
+            clone_model(cls=CaseKnowledgebaseAssignment, pk=cka_id, config={
                 'override_values': {
                     'case': new_case
                 }

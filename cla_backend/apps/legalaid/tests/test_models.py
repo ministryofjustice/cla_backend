@@ -907,6 +907,10 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             self.cat1_data.matter_type1,
             self.cat1_data.matter_type2
         )
+        CaseKnowledgebaseAssignment.objects.create(
+            case=case, assigned_by=make_user(),
+            alternative_help_article=make_recipe('knowledgebase.article')
+        )
 
         new_case = case.split(
             user=self.user,

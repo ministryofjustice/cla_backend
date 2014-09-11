@@ -3,11 +3,12 @@ from django.test import TestCase
 
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from core.tests.mommy_utils import make_recipe
+from core.tests.mommy_utils import make_recipe, make_user
 
 from cla_eventlog.tests.test_forms import BaseCaseLogFormTestCaseMixin, \
     EventSpecificLogFormTestCaseMixin
 
+from legalaid.models import Case
 from cla_provider.forms import CloseCaseForm, AcceptCaseForm, \
     RejectCaseForm, SplitCaseForm
 
@@ -223,8 +224,34 @@ class SplitCaseFormTestCase(TestCase):
 
     # SAVE
 
+    def _test_save_with_outcome(self, internal, outcome_code):
+        self.assertEqual(Case.objects.count(), 1)
+        form = SplitCaseForm(
+            case=self.case, request=self.request,
+            data=self.get_default_data(
+                category=self.cat2_data.category.code,
+                matter_type1=self.cat2_data.matter_type1.code,
+                matter_type2=self.cat2_data.matter_type2.code,
+                internal=internal
+            )
+        )
+        self.assertTrue(form.is_valid())
+
+        user = make_user()
+        new_case = form.save(user)
+        self.assertEqual(Case.objects.count(), 2)
+
+        log_entry1 = self.case.log_set.last()
+        self.assertEqual(log_entry1.code, outcome_code)
+        self.assertEqual(log_entry1.created_by, user)
+
+        log_entry2 = new_case.log_set.last()
+        self.assertEqual(log_entry2.code, 'CASE_CREATED')
+        self.assertEqual(log_entry2.notes, 'Case created by Specialist')
+        self.assertEqual(log_entry2.created_by, user)
+
     def test_save_internal(self):
-        pass
+        self._test_save_with_outcome(True, 'REF-INT')
 
     def test_save_external(self):
-        pass
+        self._test_save_with_outcome(False, 'REF-EXT')

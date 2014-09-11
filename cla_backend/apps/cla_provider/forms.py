@@ -2,8 +2,10 @@ from django import forms
 from django.forms.util import ErrorList
 from django.core.exceptions import NON_FIELD_ERRORS
 
-from cla_eventlog.forms import EventSpecificLogForm, BaseCaseLogForm
 from cla_common.constants import MATTER_TYPE_LEVELS
+
+from cla_eventlog import event_registry
+from cla_eventlog.forms import EventSpecificLogForm, BaseCaseLogForm
 
 from legalaid.models import Category, MatterType
 
@@ -129,7 +131,16 @@ class SplitCaseForm(BaseCaseLogForm):
             assignment_internal=internal
         )
 
-        return super(SplitCaseForm, self).save(user)
+        # create 'creat event' for new case
+        event = event_registry.get_event('case')()
+        event.process(
+            new_case, status='created', created_by=new_case.created_by,
+            notes="Case created by Specialist"
+        )
+
+        super(SplitCaseForm, self).save(user)
+
+        return new_case
 
     def get_kwargs(self):
         kwargs = super(SplitCaseForm, self).get_kwargs()

@@ -4116,7 +4116,7 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n186">
-      <data key="d4"><![CDATA[Direct discrimination]]></data>
+      <data key="d4"><![CDATA[direct discrimination]]></data>
       <data key="d5"><![CDATA[Direct discriminatio]]></data>
       <data key="d9">1</data>
       <data key="d10"><![CDATA[Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result.]]></data>
@@ -5147,7 +5147,7 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n234">
-      <data key="d4"><![CDATA[Indirect discrimination]]></data>
+      <data key="d4"><![CDATA[indirect discrimination]]></data>
       <data key="d5"><![CDATA[Indirect discriminat]]></data>
       <data key="d9">2</data>
       <data key="d10"><![CDATA[The client thinks that new ways of doing things have put them at a disadvantage compared to someone else because of a protected characteristic (eg an employer states that employees cannot have dreadlocks or a pub refuses access to people with hats. This puts employees or patrons of a certain religion at a disadvantage when compared to others.)]]></data>
@@ -5168,7 +5168,7 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n235">
-      <data key="d4"><![CDATA[Harassment]]></data>
+      <data key="d4"><![CDATA[harassment]]></data>
       <data key="d5"><![CDATA[Harassment - Somethi]]></data>
       <data key="d9">6</data>
       <data key="d10"><![CDATA[Something happened to make the client feel that they were in an environment that was intimidating, hostile, degrading, humiliating or offensive or that violated their dignity.]]></data>
@@ -5189,7 +5189,7 @@ It is against the law to discriminate against anyone because of:
       </data>
     </node>
     <node id="n236">
-      <data key="d4"><![CDATA[Victimisation due to a discrimination claim ]]></data>
+      <data key="d4"><![CDATA[victimisation due to a discrimination claim ]]></data>
       <data key="d5"><![CDATA[Victimisation due to]]></data>
       <data key="d9">3</data>
       <data key="d10"><![CDATA[The client thinks that they have been treated worse, or disadvantaged in some way, because they have brought a claim of discrimination, given evidence or information in relation to someone else’s claim of discrimination, made a complaint of discrimination, or been suspected of doing one of these things. For example, an employee is dismissed after making a discrimination claim.]]></data>
@@ -8508,7 +8508,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n392">
-      <data key="d4"><![CDATA[Discrimination due to pregnancy or having a child]]></data>
+      <data key="d4"><![CDATA[pregnancy or having a child]]></data>
       <data key="d5"><![CDATA[Discrimination due to pregnancy or having a child]]></data>
       <data key="d9">5</data>
       <data key="d13">
@@ -8528,7 +8528,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n393">
-      <data key="d4"><![CDATA[Discrimination due to disability, or failure to make reasonable adjustments for a disabled person]]></data>
+      <data key="d4"><![CDATA[disability or failure to make reasonable adjustments for a disabled person]]></data>
       <data key="d5"><![CDATA[Disability Pregnancy]]></data>
       <data key="d9">6</data>
       <data key="d13">

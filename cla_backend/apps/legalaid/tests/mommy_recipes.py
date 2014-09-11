@@ -73,6 +73,7 @@ media_code_group = Recipe(MediaCodeGroup)
 
 media_code = Recipe(MediaCode, group=foreign_key(media_code_group))
 
+empty_case = Recipe(Case)
 case = Recipe(Case,
     eligibility_check=foreign_key(eligibility_check),
     personal_details=foreign_key(personal_details),

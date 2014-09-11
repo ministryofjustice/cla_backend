@@ -1,21 +1,25 @@
 import mock
 import datetime
+import random
 
 from django.conf import settings
 from django.test import TestCase
 from django.db import models
+from django.utils import timezone
 
 from eligibility_calculator.models import CaseData, ModelMixin
 from eligibility_calculator.exceptions import PropertyExpectedException
 
 from cla_common.constants import ELIGIBILITY_STATES, CONTACT_SAFETY, \
-    THIRDPARTY_REASON, THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES
+    THIRDPARTY_REASON, THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, \
+    REQUIRES_ACTION_BY, DIAGNOSIS_SCOPE, EXEMPT_USER_REASON, ECF_STATEMENT
 from cla_common.money_interval.models import MoneyInterval
 
 from core.tests.mommy_utils import make_recipe, make_user
 
 from legalaid.models import Savings, Income, Deductions, PersonalDetails, \
-    ThirdPartyDetails, AdaptationDetails, Person, Case, ValidateModelMixin
+    ThirdPartyDetails, AdaptationDetails, Person, Case, ValidateModelMixin, \
+    EligibilityCheck, Property
 
 
 def walk(coll):
@@ -538,8 +542,25 @@ class ValidationModelMixinTestCase(TestCase):
         self.assertEqual(expected, self.model4.validate())
 
 
-class CloneModelsTestCase(TestCase):
-    def _check_model_fields(self, model, expected_fields):
+class CloneModelsTestCaseMixin(object):
+    def _check_model_fields(
+        self, Model, obj, new_obj,
+        non_equal_fields, equal_fields, check_not_None=False
+    ):
+        all_fields = non_equal_fields + equal_fields
+        self._check_model_fields_keys(Model, all_fields)
+
+        for field in non_equal_fields:
+            if check_not_None:
+                self.assertNotEqual(getattr(new_obj, field), None)
+            self.assertNotEqual(getattr(obj, field), getattr(new_obj, field))
+
+        for field in equal_fields:
+            if check_not_None:
+                self.assertNotEqual(getattr(new_obj, field), None, field)
+            self.assertEqual(getattr(obj, field), getattr(new_obj, field))
+
+    def _check_model_fields_keys(self, Model, expected_fields):
         """
         This is a bit tedious but it's just to make sure that when fields are
         added or removed from a model, the developer updates the cloning logic
@@ -548,7 +569,7 @@ class CloneModelsTestCase(TestCase):
         Each object which extends CloneModelMixin has a `cloning_config`.
         Just make sure that it's configured properly.
         """
-        actual_fields = [field.name for field in model._meta.fields]
+        actual_fields = [field.name for field in Model._meta.fields]
         remoded_fields = set(expected_fields) - set(actual_fields)
         added_fields = set(actual_fields) - set(expected_fields)
 
@@ -569,9 +590,9 @@ class CloneModelsTestCase(TestCase):
 
         self.assertFalse(text)
 
-    def _test_clone(self, Model, instance_creator, non_equal_fields, equal_fields):
-        all_fields = non_equal_fields + equal_fields
 
+class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
+    def _test_clone(self, Model, instance_creator, non_equal_fields, equal_fields):
         self.assertEqual(Model.objects.count(), 0)
 
         self.obj = instance_creator()
@@ -579,12 +600,10 @@ class CloneModelsTestCase(TestCase):
 
         self.assertEqual(Model.objects.count(), 2)
 
-        self._check_model_fields(Model, all_fields)
-
-        for field in non_equal_fields:
-            self.assertNotEqual(getattr(self.obj, field), getattr(self.cloned_obj, field))
-        for field in equal_fields:
-            self.assertEqual(getattr(self.obj, field), getattr(self.cloned_obj, field))
+        self._check_model_fields(
+            Model, self.obj, self.cloned_obj,
+            non_equal_fields, equal_fields
+        )
 
     def test_clone_savings(self):
         self._test_clone(
@@ -715,15 +734,221 @@ class CloneModelsTestCase(TestCase):
         )
 
 
-class SplitCaseTestCase(TestCase):
+class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
+    def build_category_data(self):
+        class CatData:
+            def __init__(self):
+                self.category = make_recipe('legalaid.category')
+                self.matter_type1 = make_recipe(
+                    'legalaid.matter_type1', category=self.category
+                )
+                self.matter_type2 = make_recipe(
+                    'legalaid.matter_type2', category=self.category
+                )
+        return CatData()
+
+    def setUp(self):
+        super(SplitCaseTestCase, self).setUp()
+
+        self.cat1_data = self.build_category_data()
+        self.cat2_data = self.build_category_data()
+
+        self.user = make_user()
+
+    def assertDiagnosis(self, diagnosis, category):
+        self.assertTrue(diagnosis)
+        self.assertEqual(diagnosis.state, DIAGNOSIS_SCOPE.INSCOPE)
+        self.assertEqual(diagnosis.category, category)
+
+    def assertPersonalDetails(self, case, new_case):
+        self.assertEqual(case.personal_details, new_case.personal_details)
+
+        self.assertEqual(
+            PersonalDetails.objects.get(pk=new_case.personal_details.pk).case_count, 2
+        )
+
+    def assertEligibilityCheck(self, ec, new_ec, category):
+        self._check_model_fields(
+            EligibilityCheck, ec, new_ec,
+            non_equal_fields=[
+                'id', 'modified', 'created', 'reference', 'category',
+                'you', 'partner', 'disputed_savings'
+            ],
+            equal_fields=[
+                'your_problem_notes', 'notes', 'state', 'dependants_young',
+                'dependants_old', 'on_passported_benefits', 'on_nass_benefits',
+                'is_you_or_your_partner_over_60', 'has_partner'
+            ],
+            check_not_None=True
+        )
+
+        self.assertEqual(new_ec.category, category)
+
+        props = list(ec.property_set.all())
+        new_props = list(new_ec.property_set.all())
+        self.assertEqual(len(props), len(new_props))
+        self.assertTrue(len(new_props) > 0)
+        for prop, new_prop in zip(props, new_props):
+            self.assertProperty(prop, new_prop)
+
+    def assertProperty(self, prop, new_prop):
+        self._check_model_fields(
+            Property, prop, new_prop,
+            non_equal_fields=['id', 'created', 'modified', 'eligibility_check'],
+            equal_fields=['value', 'mortgage_left', 'share', 'disputed', 'main'],
+            check_not_None=True
+        )
+
     def test_split_bare_minimum_case(self):
-        pass
+        case = make_recipe('legalaid.empty_case')
 
-    def test_split_full_case(self):
-        pass
+        new_case = case.split(
+            user=self.user,
+            category=self.cat2_data.category,
+            matter_type1=self.cat2_data.matter_type1,
+            matter_type2=self.cat2_data.matter_type2,
+            assignment_internal=False
+        )
 
-    def test_split_with_internal_assignment(self):
-        pass
+        self.assertNotEqual(case.reference, new_case.reference)
+        self.assertDiagnosis(new_case.diagnosis, self.cat2_data.category)
+        self.assertEqual(case.personal_details, None)
+        self.assertEqual(new_case.created_by, self.user)
+        self.assertEqual(new_case.requires_action_by, REQUIRES_ACTION_BY.OPERATOR)
+        self.assertEqual(new_case.notes, '')
+        self.assertEqual(new_case.provider_notes, '')
+        self.assertNotEqual(case.laa_reference, new_case.laa_reference)
+        self.assertEqual(new_case.billable_time, 0)
+        self.assertEqual(new_case.matter_type1, self.cat2_data.matter_type1)
+        self.assertEqual(new_case.matter_type2, self.cat2_data.matter_type2)
+        self.assertEqual(new_case.alternative_help_articles.count(), 0)
 
-    def test_split_with_external_assignment(self):
-        pass
+        for field in [
+            'eligibility_check', 'locked_by', 'locked_at', 'provider',
+            'thirdparty_details', 'adaptation_details', 'media_code',
+            'outcome_code', 'level', 'exempt_user', 'exempt_user_reason',
+            'ecf_statement'
+        ]:
+            self.assertEqual(getattr(new_case, field), None)
+
+    def _test_split_full_case(self, internal):
+        ec = make_recipe(
+            'legalaid.eligibility_check_yes',
+            disputed_savings=make_recipe('legalaid.savings'),
+            on_passported_benefits=True,
+            on_nass_benefits=True,
+            is_you_or_your_partner_over_60=True,
+            has_partner=True
+        )
+        make_recipe(
+            'legalaid.property', eligibility_check=ec,
+            value=random.randint(1, 100),
+            mortgage_left=random.randint(1, 100),
+            share=random.randint(1, 100),
+            disputed=True, main=True,
+            _quantity=2
+        )
+        case = make_recipe(
+            'legalaid.case',
+            eligibility_check=ec,
+            diagnosis=make_recipe('diagnosis.diagnosis_yes'),
+            personal_details=make_recipe('legalaid.personal_details'),
+            created_by=make_user(),
+            requires_action_by=REQUIRES_ACTION_BY.PROVIDER_REVIEW,
+            locked_by=make_user(),
+            locked_at=timezone.now(),
+            provider=make_recipe('cla_provider.provider'),
+            notes='Notes',
+            provider_notes='Provider Notes',
+            thirdparty_details=make_recipe('legalaid.thirdparty_details'),
+            adaptation_details=make_recipe('legalaid.adaptation_details'),
+            billable_time=2000,
+            matter_type1=self.cat1_data.matter_type1,
+            matter_type2=self.cat1_data.matter_type2,
+            media_code=make_recipe('legalaid.media_code'),
+            # TODO alternative_help_articles=,
+            outcome_code='outcome code',
+            level=40,
+            exempt_user=True,
+            exempt_user_reason=EXEMPT_USER_REASON.ECHI,
+            ecf_statement=ECF_STATEMENT.READ_OUT_MESSAGE
+        )
+
+        new_case = case.split(
+            user=self.user,
+            category=self.cat2_data.category,
+            matter_type1=self.cat2_data.matter_type1,
+            matter_type2=self.cat2_data.matter_type2,
+            assignment_internal=internal
+        )
+
+        non_equal_fields = [
+            'id', 'created', 'modified', 'eligibility_check', 'diagnosis',
+            'created_by', 'locked_by', 'locked_at', 'thirdparty_details',
+            'adaptation_details', 'billable_time', 'matter_type1', 'matter_type2',
+            'outcome_code', 'level', 'reference', 'laa_reference'
+        ]
+        equal_fields = [
+            'personal_details', 'notes', 'provider_notes', 'media_code',
+            'exempt_user', 'exempt_user_reason', 'ecf_statement'
+        ]
+
+        if internal:
+            equal_fields += ['provider', 'requires_action_by']
+        else:
+            non_equal_fields += ['provider', 'requires_action_by']
+
+        self._check_model_fields(
+            Case, case, new_case, non_equal_fields, equal_fields
+        )
+
+        self.assertEligibilityCheck(
+            case.eligibility_check, new_case.eligibility_check,
+            self.cat2_data.category
+        )
+        self.assertDiagnosis(new_case.diagnosis, self.cat2_data.category)
+        self.assertPersonalDetails(case, new_case)
+
+        for field in ['eligibility_check', 'diagnosis', 'thirdparty_details', 'adaptation_details']:
+            self.assertNotEqual(getattr(new_case, field), None)
+            self.assertNotEqual(getattr(case, field), getattr(new_case, field))
+
+        expected_values = {
+            'created_by': self.user,
+            'locked_by': None,
+            'locked_at': None,
+            'billable_time': 0,
+            'matter_type1': self.cat2_data.matter_type1,
+            'matter_type2': self.cat2_data.matter_type2,
+            'outcome_code': None,
+            'level': None,
+
+            # it should keep these values from the original case
+            'notes': case.notes,
+            'provider_notes': case.provider_notes,
+            'media_code': case.media_code,
+            'exempt_user': case.exempt_user,
+            'exempt_user_reason': case.exempt_user_reason,
+            'ecf_statement': case.ecf_statement,
+            'personal_details': case.personal_details
+        }
+
+        if internal:
+            expected_values.update({
+                'requires_action_by': case.requires_action_by,
+                'provider': case.provider,
+            })
+        else:
+            expected_values.update({
+                'requires_action_by': REQUIRES_ACTION_BY.OPERATOR,
+                'provider': None,
+            })
+
+        for field, value in expected_values.items():
+            self.assertEqual(getattr(new_case, field), value)
+
+    def test_split_full_case_internal_assignment(self):
+        self._test_split_full_case(internal=True)
+
+    def test_split_full_case_external_assignment(self):
+        self._test_split_full_case(internal=False)

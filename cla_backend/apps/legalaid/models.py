@@ -574,13 +574,15 @@ class Case(TimeStampedModel):
                 }
             }
         )
-        for prop_id in self.eligibility_check.property_set.values_list('pk', flat=True):
-            clone_model(cls=Property, pk=prop_id, config={
-                'excludes': ['created', 'modified'],
-                'override_values': {
-                    'eligibility_check': eligibility_check
-                }
-            })
+        if self.eligibility_check:
+            prop_ids = self.eligibility_check.property_set.values_list('pk', flat=True)
+            for prop_id in prop_ids:
+                clone_model(cls=Property, pk=prop_id, config={
+                    'excludes': ['created', 'modified'],
+                    'override_values': {
+                        'eligibility_check': eligibility_check
+                    }
+                })
 
         # CASE
         override_values = {
@@ -591,7 +593,7 @@ class Case(TimeStampedModel):
             'matter_type2': matter_type2,
         }
         if assignment_internal:
-            override_values['requires_action_by'] = REQUIRES_ACTION_BY.PROVIDER
+            override_values['requires_action_by'] = self.requires_action_by
         else:
             override_values['provider'] = None
             override_values['requires_action_by'] = REQUIRES_ACTION_BY.OPERATOR
@@ -601,7 +603,7 @@ class Case(TimeStampedModel):
             pk=self.pk,
             config={
                 'excludes': [
-                    'reference', 'locked_by', 'locked_at', 'provider_notes',
+                    'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified'
                 ],

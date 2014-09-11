@@ -241,6 +241,7 @@ class FullCaseViewSet(
     search_fields = (
         'personal_details__full_name',
         'personal_details__postcode',
+        'personal_details__street',
         'reference',
         'laa_reference'
     )

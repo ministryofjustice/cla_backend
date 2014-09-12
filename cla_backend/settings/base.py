@@ -50,6 +50,8 @@ DATABASES = {
     }
 }
 
+SITE_HOSTNAME = os.environ.get('SITE_HOSTNAME', 'cla.local:8000')
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
@@ -300,4 +302,4 @@ if all([os.environ.get('SMTP_USER'),
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
 else:
-    EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

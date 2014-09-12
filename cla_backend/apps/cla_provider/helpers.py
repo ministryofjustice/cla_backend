@@ -6,6 +6,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.core.serializers.json import DjangoJSONEncoder
+from django.conf import settings
 
 from cla_provider.serializers import CaseSerializer, EligibilityCheckSerializer, PersonalDetailsSerializer
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota

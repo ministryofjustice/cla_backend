@@ -492,6 +492,10 @@ class Case(TimeStampedModel):
     # exceptional case fund
     ecf_statement = models.CharField(blank=True, null=True, max_length=35, choices=ECF_STATEMENT)
 
+    # if not None, indicates the case from which this was created
+    #   that is, the original case being split
+    from_case = models.ForeignKey('self', blank=True, null=True, related_name='split_cases')
+
     def _set_reference_if_necessary(self):
         if not self.reference:
             # TODO make it better
@@ -503,6 +507,12 @@ class Case(TimeStampedModel):
                 get_random_string(length=4, allowed_chars='0123456789'),
                 get_random_string(length=4, allowed_chars='0123456789')
             )
+
+    def is_part_of_split(self):
+        """
+        Returns True if self has been generated or it generated cases via a split case action.
+        """
+        return self.from_case or self.split_cases.count() > 0
 
     def split(self, user, category, matter_type1, matter_type2, assignment_internal):
         # DIAGNOSIS
@@ -537,6 +547,7 @@ class Case(TimeStampedModel):
             'created_by': user,
             'matter_type1': matter_type1,
             'matter_type2': matter_type2,
+            'from_case': self
         }
         if assignment_internal:
             override_values['requires_action_by'] = self.requires_action_by

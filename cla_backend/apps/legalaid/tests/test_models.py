@@ -497,7 +497,6 @@ class ValidationModelMixinTestCase(TestCase):
         def get_dependencies(self):
             return {'related__a', 'related__b', 'related__c'}
 
-
     def setUp(self):
         super(ValidationModelMixinTestCase, self).setUp()
         self.model1 = self.Model1()
@@ -578,17 +577,26 @@ class CloneModelsTestCaseMixin(object):
             text = ('It seems like you have added some fields "%s". '
                 'This model gets cloned by the split case logic so now it\'s '
                 'up to you do decide it these new fields have to be cloned, reset '
-                'or just referenced. '
+                'or just referenced. \n'
+                'In order to do this, you need to look for the `cloning_config` of the model: \n'
+                '1. if it\'s a fk and you want to create a new copy (with new id), add it to the '
+                'clone_fks. Otherwise, if you want to reference the same copy, don\'t do anything'
+                '2. if you want to exclude it (the default value will be used '
+                'in the cloned object), add it to the `excludes`\n'
+                '3. if you want to use a different value in your cloned version, you need to populate'
+                'the `override_values` dinamically.\n'
                 'After done this, just add the new field to the list of expected fields '
-                'in this test and you\'re done!' % added_fields)
+                'in this test and you\'re done! \n'
+                % list(added_fields))
         elif remoded_fields:
             text = ('It seems like you have removed some fields "%s" from your model. '
                 'All fine but just double-check that nothing is missing when cloning this '
-                'model by the split case logic. '
-                'After done this, just remove the new field from the list of expected fields '
-                'in this test and you\'re done!' % remoded_fields)
+                'model by the split case logic. That means, double check the `cloning_config`'
+                'of your model.\n'
+                'After done this, just remove the old field from the list of expected fields '
+                'in this test and you\'re done!' % list(remoded_fields))
 
-        self.assertFalse(text)
+        self.assertFalse(text, text)
 
 
 class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
@@ -901,7 +909,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'id', 'created', 'modified', 'eligibility_check', 'diagnosis',
             'created_by', 'locked_by', 'locked_at', 'thirdparty_details',
             'adaptation_details', 'billable_time', 'matter_type1', 'matter_type2',
-            'outcome_code', 'level', 'reference', 'laa_reference'
+            'outcome_code', 'level', 'reference', 'laa_reference', 'from_case'
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
@@ -946,7 +954,8 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'exempt_user': case.exempt_user,
             'exempt_user_reason': case.exempt_user_reason,
             'ecf_statement': case.ecf_statement,
-            'personal_details': case.personal_details
+            'personal_details': case.personal_details,
+            'from_case': case
         }
 
         if internal:

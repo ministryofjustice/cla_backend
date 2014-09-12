@@ -98,8 +98,7 @@ class SplitCaseForm(BaseCaseLogForm):
         ##### CATEGORY #####
         if category == self.case.eligibility_check.category:
             self._errors['category'] = ErrorList([
-                'Select a valid choice. That choice is not one of'
-                ' the available choices.'
+                'Please choose a different category or law'
             ])
             del cleaned_data['category']
 

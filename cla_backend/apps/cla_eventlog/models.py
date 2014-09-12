@@ -38,6 +38,7 @@ class Log(TimeStampedModel):
         if self.type == LOG_TYPES.OUTCOME and self.level >= LOG_LEVELS.HIGH:
             self.case.outcome_code = self.code
             self.case.level = self.level
+            self.case.outcome_code_id = self.pk
 
     class Meta:
         ordering = ['-created']

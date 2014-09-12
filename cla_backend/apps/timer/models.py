@@ -44,10 +44,10 @@ class Timer(TimeStampedModel):
 
         # update billable time on case
         cursor = connection.cursor()
-        cursor.execute('''update
-    legalaid_case
-set billable_time =
-    (select sum(ceiling(EXTRACT(epoch FROM a.stopped-a.created)))
-    from timer_timer as a
-    where a.stopped is not null and linked_case_id = legalaid_case.id)
-where id = %s''', [self.linked_case.id])
+        cursor.execute('''
+            select sum(ceiling(EXTRACT(epoch FROM a.stopped-a.created)))
+                from timer_timer as a
+                where a.stopped is not null and a.linked_case_id = %s''', [self.linked_case.id])
+        total_billable_time, = cursor.fetchone()
+        self.linked_case.billable_time = total_billable_time
+        self.linked_case.save(update_fields=['billable_time'])

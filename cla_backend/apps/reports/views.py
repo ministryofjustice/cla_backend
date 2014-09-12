@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from .forms import ProviderCaseClosure, OperatorCaseClosure, \
     OperatorCaseCreate, CaseReport, NewCasesWithAdaptationCount, \
     CaseVolumeAndAvgDurationByDay, ReferredCasesByCategory, \
-    AllocatedCasesNoOutcome
+    AllocatedCasesNoOutcome, MICaseExtract, MIFeedbackExtract
 
 
 def report_view(form_class, title, template='case_report'):
@@ -97,4 +97,15 @@ def referred_cases_by_category():
 @staff_member_required
 @report_view(AllocatedCasesNoOutcome, 'Allocated Cases with No Outcome')
 def allocated_no_outcome():
+    pass
+
+
+@staff_member_required
+@report_view(MICaseExtract, 'MI Case Extract')
+def mi_case_extract():
+    pass
+
+@staff_member_required
+@report_view(MIFeedbackExtract, 'MI Case Extract')
+def mi_feedback_extract():
     pass

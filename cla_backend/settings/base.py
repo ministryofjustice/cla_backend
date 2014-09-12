@@ -290,4 +290,14 @@ STATSD_PATCHES = [
 STATSD_HOST = os.environ.get('STATSD_HOST', 'localhost')
 STATSD_PORT = os.environ.get('STATSD_PORT', 8125)
 
-EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+if all([os.environ.get('SMTP_USER'),
+        os.environ.get('SMTP_PASSWORD'),
+        os.environ.get('SMTP_HOST')]):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = os.environ.get('SMTP_HOST')
+    EMAIL_HOST_USER = os.environ.get('SMTP_USER')
+    EMAIL_HOST_PASSWORD = os.environ.get('SMTP_PASSWORD')
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'

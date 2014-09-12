@@ -1,6 +1,5 @@
 import datetime
 import random
-from operator import itemgetter
 
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -20,27 +19,31 @@ class ProviderAllocationHelper(object):
         @return: list
         """
         if not self._providers_in_category:
-            self._providers_in_category = ProviderAllocation.objects.filter(category=category)
+            self._providers_in_category = ProviderAllocation.objects.filter(
+                category=category)
 
         return self._providers_in_category
 
     def today_at(self, hour, minute=0, second=0, microsecond=0):
         t = timezone.localtime(self.as_of)
-        return t.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+        return t.replace(hour=hour, minute=minute, second=second,
+                         microsecond=microsecond)
 
     def get_qualifying_providers(self, category):
         """
         @return: list
         """
-        if category == None:
-            return Provider.objects.active()
-        else:
-            return [pa.provider for pa in self.get_qualifying_providers_allocation(category)]
+        if category:
+            return [pa.provider for pa in
+                    self.get_qualifying_providers_allocation(category)]
+
+        return Provider.objects.active()
 
     def _get_random_provider(self, category):
         """
         @return: Randomly chosen provider who offers this category of service
-                 or None if there are no providers with this category of service
+                 or None if there are no providers with this category of
+                 service
         """
         def calculate_winner():
             allocations = self.get_qualifying_providers_allocation(category)
@@ -60,7 +63,8 @@ class ProviderAllocationHelper(object):
 
     def _get_rota_provider(self, category):
         try:
-            rota = OutOfHoursRota.objects.get_current(category, as_of=self.as_of)
+            rota = OutOfHoursRota.objects.get_current(category,
+                                                      as_of=self.as_of)
             return rota.provider if rota else None
         except OutOfHoursRota.MultipleObjectsReturned:
             # this should be prevented by OutOfHoursRota.clean but what

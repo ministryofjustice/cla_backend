@@ -1,11 +1,13 @@
-import datetime
-import random
+import datetime, random, json
+from operator import itemgetter
 
+from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
-from django.conf import settings
+from django.core.serializers.json import DjangoJSONEncoder
 
+from cla_provider.serializers import CaseSerializer, EligibilityCheckSerializer, PersonalDetailsSerializer
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota
 
 
@@ -133,3 +135,15 @@ def notify_case_assigned(provider, case):
         subject, text, from_address, [provider.email_address])
     email.attach_alternative(html, 'text/html')
     email.send()
+
+class LegalHelpExtract(object):
+    def __init__(self, case):
+        self.case = case
+
+    def format(self):
+        ctx = {
+            'case': CaseSerializer(instance=self.case).data,
+            'personal_details': PersonalDetailsSerializer(instance=self.case.personal_details).data,
+            'eligibility_check': EligibilityCheckSerializer(instance=self.case.eligibility_check).data
+        }
+        return HttpResponse(json.dumps(ctx, cls=DjangoJSONEncoder), content_type='text/json')

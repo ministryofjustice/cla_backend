@@ -1,7 +1,8 @@
+from cla_provider.helpers import LegalHelpExtract
 from django.shortcuts import get_object_or_404
 
 from rest_framework import mixins
-from rest_framework.decorators import action
+from rest_framework.decorators import action, link
 
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 
@@ -97,6 +98,11 @@ class CaseViewSet(
         Closes a case
         """
         return self._form_action(request, Form=CloseCaseForm)
+
+    @link()
+    def legal_help_form_extract(self, *args, **kwargs):
+        formatter = LegalHelpExtract(self.get_object())
+        return formatter.format()
 
 
 class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):

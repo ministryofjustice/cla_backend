@@ -4,6 +4,7 @@ import random
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
+from django.conf import settings
 
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota
 
@@ -119,11 +120,11 @@ def notify_case_assigned(provider, case):
     subject = 'CLA Case {ref} has been assigned to {provider}'.format(**{
         'ref': case.reference,
         'provider': provider.name})
-    case_url = '/call_centre/{0}'
+    case_url = 'https://{0}/call_centre/{1}/'
     template_params = {
         'provider': provider,
         'now': datetime.datetime.now(),
-        'case_url': case_url.format(case.reference),
+        'case_url': case_url.format(settings.SITE_HOSTNAME, case.reference),
         'case': case}
     template = 'cla_provider/email/assigned.{0}'
     text = render_to_string(template.format('txt'), template_params)

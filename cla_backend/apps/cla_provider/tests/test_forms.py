@@ -8,7 +8,12 @@ from core.tests.mommy_utils import make_recipe, make_user
 from cla_eventlog.tests.test_forms import BaseCaseLogFormTestCaseMixin, \
     EventSpecificLogFormTestCaseMixin
 
-from legalaid.models import Case
+from diagnosis.models import DiagnosisTraversal
+
+from legalaid.tests.test_models import get_full_case
+from legalaid.models import Case, AdaptationDetails, \
+    CaseKnowledgebaseAssignment, Deductions, EligibilityCheck, Income, \
+    Person, PersonalDetails, Property, Savings, ThirdPartyDetails
 from cla_provider.forms import CloseCaseForm, AcceptCaseForm, \
     RejectCaseForm, SplitCaseForm
 
@@ -242,6 +247,48 @@ class SplitCaseFormTestCase(TestCase):
         )
 
     # SAVE
+
+    @mock.patch('cla_provider.forms.event_registry')
+    def test_rollback_on_unexpected_exception_during_save(self, mocked_event_registry):
+        """
+        In case of unexpected Exception, we don't want to have any rubbish
+        objects in the db
+        """
+        mocked_event_registry.get_event.side_effect = Exception()
+
+        case = get_full_case(
+            self.cat2_data.matter_type1, self.cat2_data.matter_type2,
+            provider=self.provider
+        )
+
+        expected_counts = {}
+        for Model in [
+            AdaptationDetails, Case, CaseKnowledgebaseAssignment, Deductions,
+            EligibilityCheck, Income, Person, PersonalDetails, Property,
+            Savings, ThirdPartyDetails, DiagnosisTraversal
+        ]:
+            expected_counts[Model] = Model.objects.count()
+
+        form = SplitCaseForm(
+            case=case, request=self.request,
+            data=self.get_default_data(
+                category=self.cat2_data.category.code,
+                matter_type1=self.cat2_data.matter_type1.code,
+                matter_type2=self.cat2_data.matter_type2.code,
+                internal=False
+            )
+        )
+        self.assertTrue(form.is_valid())
+        self.assertRaises(Exception, form.save, make_user())
+
+        self.assertTrue(expected_counts)
+        for Model, expected_count in expected_counts.items():
+            self.assertEqual(
+                Model.objects.count(), expected_count,
+                '%s count Expected to be %s but it\'s %s instead' % (
+                    Model, expected_count, Model.objects.count()
+                )
+            )
 
     def _test_save_with_outcome(self, internal, outcome_code):
         self.assertEqual(Case.objects.count(), 1)

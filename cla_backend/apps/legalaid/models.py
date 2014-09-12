@@ -576,7 +576,6 @@ class Case(TimeStampedModel):
                     'case': new_case
                 }
             })
-
         return new_case
 
     def save(self, *args, **kwargs):

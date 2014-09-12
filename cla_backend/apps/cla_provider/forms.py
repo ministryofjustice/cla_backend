@@ -1,6 +1,7 @@
 from django import forms
 from django.forms.util import ErrorList
 from django.core.exceptions import NON_FIELD_ERRORS
+from django.db import transaction
 
 from cla_common.constants import MATTER_TYPE_LEVELS
 
@@ -126,6 +127,7 @@ class SplitCaseForm(BaseCaseLogForm):
 
         return cleaned_data
 
+    @transaction.atomic
     def save(self, user):
         category = self.cleaned_data['category']
         matter_type1 = self.cleaned_data['matter_type1']

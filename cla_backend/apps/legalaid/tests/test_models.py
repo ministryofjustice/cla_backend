@@ -34,6 +34,57 @@ def walk(coll):
         yield coll
 
 
+def get_full_case(matter_type1, matter_type2, provider=None):
+    provider = provider or make_recipe('cla_provider.provider')
+
+    ec = make_recipe(
+        'legalaid.eligibility_check_yes',
+        disputed_savings=make_recipe('legalaid.savings'),
+        on_passported_benefits=True,
+        on_nass_benefits=True,
+        is_you_or_your_partner_over_60=True,
+        has_partner=True
+    )
+    make_recipe(
+        'legalaid.property', eligibility_check=ec,
+        value=random.randint(1, 100),
+        mortgage_left=random.randint(1, 100),
+        share=random.randint(1, 100),
+        disputed=True, main=True,
+        _quantity=2
+    )
+    case = make_recipe(
+        'legalaid.case',
+        eligibility_check=ec,
+        diagnosis=make_recipe('diagnosis.diagnosis_yes'),
+        personal_details=make_recipe('legalaid.personal_details'),
+        created_by=make_user(),
+        requires_action_by=REQUIRES_ACTION_BY.PROVIDER_REVIEW,
+        locked_by=make_user(),
+        locked_at=timezone.now(),
+        provider=provider,
+        notes='Notes',
+        provider_notes='Provider Notes',
+        thirdparty_details=make_recipe('legalaid.thirdparty_details'),
+        adaptation_details=make_recipe('legalaid.adaptation_details'),
+        billable_time=2000,
+        matter_type1=matter_type1,
+        matter_type2=matter_type2,
+        media_code=make_recipe('legalaid.media_code'),
+        outcome_code='outcome code',
+        level=40,
+        exempt_user=True,
+        exempt_user_reason=EXEMPT_USER_REASON.ECHI,
+        ecf_statement=ECF_STATEMENT.READ_OUT_MESSAGE
+    )
+    CaseKnowledgebaseAssignment.objects.create(
+        case=case, assigned_by=make_user(),
+        alternative_help_article=make_recipe('knowledgebase.article')
+    )
+
+    return case
+
+
 class EligibilityCheckTestCase(TestCase):
 
     # def test_to_case_data_fail_without_your_finances(self):
@@ -852,49 +903,9 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             self.assertEqual(getattr(new_case, field), None)
 
     def _test_split_full_case(self, internal):
-        ec = make_recipe(
-            'legalaid.eligibility_check_yes',
-            disputed_savings=make_recipe('legalaid.savings'),
-            on_passported_benefits=True,
-            on_nass_benefits=True,
-            is_you_or_your_partner_over_60=True,
-            has_partner=True
-        )
-        make_recipe(
-            'legalaid.property', eligibility_check=ec,
-            value=random.randint(1, 100),
-            mortgage_left=random.randint(1, 100),
-            share=random.randint(1, 100),
-            disputed=True, main=True,
-            _quantity=2
-        )
-        case = make_recipe(
-            'legalaid.case',
-            eligibility_check=ec,
-            diagnosis=make_recipe('diagnosis.diagnosis_yes'),
-            personal_details=make_recipe('legalaid.personal_details'),
-            created_by=make_user(),
-            requires_action_by=REQUIRES_ACTION_BY.PROVIDER_REVIEW,
-            locked_by=make_user(),
-            locked_at=timezone.now(),
-            provider=make_recipe('cla_provider.provider'),
-            notes='Notes',
-            provider_notes='Provider Notes',
-            thirdparty_details=make_recipe('legalaid.thirdparty_details'),
-            adaptation_details=make_recipe('legalaid.adaptation_details'),
-            billable_time=2000,
-            matter_type1=self.cat1_data.matter_type1,
-            matter_type2=self.cat1_data.matter_type2,
-            media_code=make_recipe('legalaid.media_code'),
-            outcome_code='outcome code',
-            level=40,
-            exempt_user=True,
-            exempt_user_reason=EXEMPT_USER_REASON.ECHI,
-            ecf_statement=ECF_STATEMENT.READ_OUT_MESSAGE
-        )
-        CaseKnowledgebaseAssignment.objects.create(
-            case=case, assigned_by=make_user(),
-            alternative_help_article=make_recipe('knowledgebase.article')
+        case = get_full_case(
+            self.cat1_data.matter_type1,
+            self.cat1_data.matter_type2
         )
 
         new_case = case.split(

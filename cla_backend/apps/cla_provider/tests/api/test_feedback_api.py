@@ -49,7 +49,7 @@ class FeedbackAPITestCase(
         self.assertEqual(response.data['comment'], comment)
 
     def test_create_adds_current_user_as_created_by(self):
-        created = self._create(data={'comment':'qqq', 'issue': 'OTHER'}, url=self.list_url)
+        created = self._create(data={'comment':'qqq', 'issue': 'OTHR'}, url=self.list_url)
         self.assertEqual(created.status_code, status.HTTP_201_CREATED)
         self.assertEqual(created.data['created_by'], self.user.username)
 

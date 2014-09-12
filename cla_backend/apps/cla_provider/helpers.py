@@ -1,5 +1,6 @@
-import datetime, random, json
-from operator import itemgetter
+import datetime
+import random
+import json
 
 from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
@@ -82,7 +83,7 @@ class ProviderAllocationHelper(object):
 
     @property
     def is_bank_holiday(self):
-        #TODO: make this work for bank hols
+        # TODO: make this work for bank hols
         return False
 
     @property
@@ -137,7 +138,9 @@ def notify_case_assigned(provider, case):
     email.attach_alternative(html, 'text/html')
     email.send()
 
+
 class LegalHelpExtract(object):
+
     def __init__(self, case):
         self.case = case
 

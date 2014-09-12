@@ -302,4 +302,4 @@ if all([os.environ.get('SMTP_USER'),
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
 else:
-    EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

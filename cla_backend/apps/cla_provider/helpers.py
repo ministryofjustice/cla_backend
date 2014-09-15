@@ -11,6 +11,7 @@ from django.conf import settings
 
 from cla_provider.serializers import CaseSerializer, EligibilityCheckSerializer, PersonalDetailsSerializer
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota
+from eligibility_calculator.calculator import EligibilityChecker
 
 
 class ProviderAllocationHelper(object):
@@ -145,9 +146,21 @@ class LegalHelpExtract(object):
         self.case = case
 
     def format(self):
+        eligibility_check = EligibilityCheckSerializer(instance=self.case.eligibility_check).data
+        calculator = EligibilityChecker(self.case.eligibility_check.to_case_data())
+
         ctx = {
             'case': CaseSerializer(instance=self.case).data,
             'personal_details': PersonalDetailsSerializer(instance=self.case.personal_details).data,
-            'eligibility_check': EligibilityCheckSerializer(instance=self.case.eligibility_check).data
+            'eligibility_check': EligibilityCheckSerializer(instance=self.case.eligibility_check).data,
+            'calculator': {
+              'partner_allowance': calculator.partner_allowance,
+              'employment_allowance': calculator.employment_allowance,
+              'dependants_allowance': calculator.dependants_allowance,
+              'partner_employment_allowance': calculator.partner_employment_allowance,
+              'pensioner_disregard': calculator.pensioner_disregard,
+              'total_disposable_income': calculator.disposable_income,
+              'total_capital': calculator.disposable_capital_assets
+            }
         }
         return HttpResponse(json.dumps(ctx, cls=DjangoJSONEncoder), content_type='text/json')

@@ -132,17 +132,45 @@ class EligibilityChecker(object):
         return self._gross_income
 
     @property
+    def partner_allowance(self):
+        if self.case_data.facts.has_partner:
+            return constants.disposable_income.PARTNER_ALLOWANCE
+        return 0
+
+    @property
+    def employment_allowance(self):
+        if self.case_data.you.income.has_employment_earnings and not self.case_data.you.income.self_employed:
+            return constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
+        return 0
+
+    @property
+    def partner_employment_allowance(self):
+        if self.case_data.facts.has_partner and self.case_data.facts.should_aggregate_partner:
+            if self.case_data.partner.income.has_employment_earnings and not self.case_data.partner.income.self_employed:
+                return constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
+            return 0
+        return 0
+
+    @property
+    def dependants_allowance(self):
+        # TODO 2 values for children...
+        return self.case_data.facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE
+
+    @property
+    def pensioner_disregard(self):
+        if self.case_data.facts.is_you_or_your_partner_over_60:
+            return constants.disposable_capital.PENSIONER_DISREGARD_LIMIT_LEVELS.get(max(self.disposable_income, 0), 0)
+        return 0
+
+    @property
     def disposable_income(self):
         if not hasattr(self, '_disposable_income'):
             gross_income = self.gross_income
 
-            if self.case_data.facts.has_partner:
-                gross_income -= constants.disposable_income.PARTNER_ALLOWANCE
+            gross_income -= self.partner_allowance
 
             # children
-
-            # TODO 2 values for children...
-            gross_income -= self.case_data.facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE
+            gross_income -= self.dependants_allowance
 
             # Tax + NI
             income_tax_and_ni = self.case_data.you.deductions.income_tax \
@@ -169,12 +197,9 @@ class EligibilityChecker(object):
                 mortgage_or_rent = min(mortgage_or_rent, constants.disposable_income.CHILDLESS_HOUSING_CAP)
             gross_income -= mortgage_or_rent
 
-            if self.case_data.you.income.has_employment_earnings and not self.case_data.you.income.self_employed:
-                gross_income -= constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
-
-            if self.case_data.facts.has_partner and self.case_data.facts.should_aggregate_partner:
-                if self.case_data.partner.income.has_employment_earnings and not self.case_data.partner.income.self_employed:
-                    gross_income -= constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
+            # employment allowance
+            gross_income -= self.employment_allowance
+            gross_income -= self.partner_employment_allowance
 
             # criminal
             gross_income -= self.case_data.you.deductions.criminal_legalaid_contributions  # not for now
@@ -203,8 +228,7 @@ class EligibilityChecker(object):
             )
             disposable_capital = capital_calc.calculate_capital()
 
-            if self.case_data.facts.is_you_or_your_partner_over_60:
-                disposable_capital -= constants.disposable_capital.PENSIONER_DISREGARD_LIMIT_LEVELS.get(max(self.disposable_income, 0), 0)
+            disposable_capital -= self.pensioner_disregard
 
             disposable_capital = max(disposable_capital, 0)
 

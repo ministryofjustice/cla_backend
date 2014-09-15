@@ -2,7 +2,7 @@ def clone_model(cls, pk, config={}):
     """
     NOTE: it does not support cloning many2many and one2many
     fields by design. This is to keep the cloning logic simple
-    If you do need to, close the related objects manually
+    If you do need to, clone the related objects manually
     """
     if not pk:
         return None
@@ -42,9 +42,9 @@ def clone_model(cls, pk, config={}):
 
 class CloneModelMixin(object):
     cloning_config = {
-        'excludes': [],
-        'clone_fks': [],
-        'override_values': {}
+        'excludes': [],  # these will be set to default vals
+        'clone_fks': [],  # fk to be cloned (new obj, new id), other fks will be referenced instead
+        'override_values': {}  # dict of val to override during the cloning op
     }
 
     @classmethod

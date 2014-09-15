@@ -209,7 +209,7 @@ class SplitCaseFormTestCase(TestCase):
         )
         self.assertFalse(form.is_valid())
         self.assertDictEqual(form.errors, {
-            'category': ['Select a valid choice. That choice is not one of the available choices.']
+            'category': ['Please choose a different category or law.']
         })
 
     def test_invalid_internal_provider_cant_deal_with_category(self):

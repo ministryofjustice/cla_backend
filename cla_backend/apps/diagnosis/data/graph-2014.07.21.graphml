@@ -711,7 +711,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n29">
-      <data key="d4"><![CDATA[Confirm which of the following scenarios applies or rediagnose 
+      <data key="d4"><![CDATA[Confirm which of the following the client has received or rediagnose.
 
 *Click 'Next' to continue*]]></data>
       <data key="d5"><![CDATA[Confirm which of the]]></data>
@@ -732,7 +732,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n30">
-      <data key="d4"><![CDATA[The client has received a letter from the landlord confirming that informal arrangements can no longer continue]]></data>
+      <data key="d4"><![CDATA[Letter from the landlord confirming that informal arrangements can no longer continue]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
       <data key="d9">1</data>
       <data key="d13">
@@ -776,7 +776,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n32">
-      <data key="d4"><![CDATA[The client has received a Notice to Quit from the landlord (where the renting arrangement does not have a secure tenure)]]></data>
+      <data key="d4"><![CDATA[Notice to Quit (a letter from the landlord giving the tenant notice to leave the property - for cases where the renting arrangement does not have a secure tenure)]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -820,7 +820,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n34">
-      <data key="d4"><![CDATA[The client has received a Letter Before Action, as required by the Rent Arrears Pre Action Protocol]]></data>
+      <data key="d4"><![CDATA[Letter Before Action (a letter the landlord sends before starting proceedings to recover possession of the property)]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -864,7 +864,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n36">
-      <data key="d4"><![CDATA[The client has received notices from the landlord under section 83 of the Housing Act 1985 and sections 8 and 21 of the Housing Act 1988]]></data>
+      <data key="d4"><![CDATA[Notices from the landlord under section 83 of the Housing Act 1985 and sections 8 and 21 of the Housing Act 1988 (these give the client notice before the landlord starts formal possession proceedings for the property)]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
       <data key="d9">4</data>
       <data key="d13">
@@ -908,7 +908,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n38">
-      <data key="d4"><![CDATA[The court has issued possession proceedings]]></data>
+      <data key="d4"><![CDATA[Possession proceedings - issued by the court and giving the client notice of a hearing date for possession proceedings]]></data>
       <data key="d5"><![CDATA[Possession proceedin]]></data>
       <data key="d9">8</data>
       <data key="d13">
@@ -952,7 +952,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n40">
-      <data key="d4"><![CDATA[The client has received a Possession Order from the court (outlining the decision of the court)]]></data>
+      <data key="d4"><![CDATA[Possession Order from the court (this gives the client notice of possession - at the end of the specified period the creditor may apply to bailiffs to execute a warrant for possession)]]></data>
       <data key="d5"><![CDATA[The client has recei]]></data>
       <data key="d9">5</data>
       <data key="d13">
@@ -996,7 +996,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n42">
-      <data key="d4"><![CDATA[The client has received a warrant for eviction from the court bailiffs]]></data>
+      <data key="d4"><![CDATA[Warrant for eviction from the court bailiffs]]></data>
       <data key="d5"><![CDATA[The client has recei]]></data>
       <data key="d9">6</data>
       <data key="d13">
@@ -1190,7 +1190,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n51">
-      <data key="d4"><![CDATA[Confirm the scenario that applies or rediagnose. *click 'next' to continue*]]></data>
+      <data key="d4"><![CDATA[Confirm the scenario that applies. *Click 'next' to continue*]]></data>
       <data key="d5"><![CDATA[Confirm scenario tha]]></data>
       <data key="d13">
         <y:ShapeNode>

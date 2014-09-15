@@ -408,24 +408,6 @@
             "date_joined": "2014-05-02T11:09:56.986Z"
         }
     },
-    {
-        "pk": 5,
-        "model": "auth.user",
-        "fields": {
-            "username": "test_snakeoil",
-            "first_name": "",
-            "last_name": "",
-            "is_active": true,
-            "is_superuser": false,
-            "is_staff": false,
-            "last_login": "2014-05-02T11:10:27.539Z",
-            "groups": [],
-            "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$dpefIq3lkCvP$eEz+Lt36Ck4It11bWXhi6L3uvsTAHer4uyQVbFv37us=",
-            "email": "",
-            "date_joined": "2014-05-02T11:10:27.539Z"
-        }
-    },
 	{
 	    "pk": 2,
 	    "model": "cla_provider.staff",
@@ -435,17 +417,6 @@
 	        "provider": 2,
 	        "modified": "2014-05-02T11:10:02.439Z",
 	        "created": "2014-05-02T11:10:02.420Z"
-	    }
-	},
-	{
-	    "pk": 3,
-	    "model": "cla_provider.staff",
-	    "fields": {
-	        "is_manager": false,
-	        "user": 5,
-	        "provider": 1,
-	        "modified": "2014-05-02T11:10:32.044Z",
-	        "created": "2014-05-02T11:10:31.961Z"
 	    }
 	},
 {

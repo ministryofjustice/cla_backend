@@ -125,7 +125,7 @@ def notify_case_assigned(provider, case):
     subject = 'CLA Case {ref} has been assigned to {provider}'.format(**{
         'ref': case.reference,
         'provider': provider.name})
-    case_url = 'https://{0}/call_centre/{1}/'
+    case_url = 'https://{0}/provider/{1}/'
     template_params = {
         'provider': provider,
         'now': datetime.datetime.now(),

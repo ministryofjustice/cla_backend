@@ -1,32 +1,35 @@
 import logging
 import datetime
 
-from cla_common.db.mixins import ModelDiffMixin
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import SET_NULL
 from uuidfield import UUIDField
-from model_utils.models import TimeStampedModel
 from django.core.validators import MaxValueValidator
 from django.db import models
+from django.db.models import SET_NULL
 from django.conf import settings
 from django.utils.timezone import utc
+from django.core.exceptions import ObjectDoesNotExist
+
+from model_utils.models import TimeStampedModel
+
+from core.utils import getattrd
+from core.cloning import clone_model, CloneModelMixin
+
 from eligibility_calculator.models import CaseData
 from eligibility_calculator.calculator import EligibilityChecker
 from eligibility_calculator.exceptions import PropertyExpectedException
-from core.utils import getattrd
 
+from diagnosis.models import DiagnosisTraversal
 
 # from jsonfield import JSONField
 
+from cla_common.db.mixins import ModelDiffMixin
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS, \
-    CONTACT_SAFETY, EXEMPT_USER_REASON, ECF_STATEMENT
+    CONTACT_SAFETY, EXEMPT_USER_REASON, ECF_STATEMENT, REQUIRES_ACTION_BY
 
 from legalaid.fields import MoneyField
-
-from cla_common.constants import REQUIRES_ACTION_BY
 
 
 logger = logging.getLogger(__name__)
@@ -49,20 +52,28 @@ class Category(TimeStampedModel):
         return u'%s' % self.name
 
 
-class Savings(TimeStampedModel):
+class Savings(CloneModelMixin, TimeStampedModel):
     bank_balance = MoneyField(default=None, null=True, blank=True)
     investment_balance = MoneyField(default=None, null=True, blank=True)
     asset_balance = MoneyField(default=None, null=True, blank=True)
     credit_balance = MoneyField(default=None, null=True, blank=True)
 
+    cloning_config = {
+        'excludes': ['created', 'modified']
+    }
 
-class Income(TimeStampedModel):
+
+class Income(CloneModelMixin, TimeStampedModel):
     earnings = MoneyIntervalField(default=None, null=True, blank=True)
     other_income = MoneyIntervalField(default=None, null=True, blank=True)
     self_employed = models.NullBooleanField(default=None)
 
+    cloning_config = {
+        'excludes': ['created', 'modified']
+    }
 
-class Deductions(TimeStampedModel):
+
+class Deductions(CloneModelMixin, TimeStampedModel):
     income_tax = MoneyIntervalField(default=None, null=True, blank=True)
     national_insurance = MoneyIntervalField(default=None, null=True,
                                             blank=True)
@@ -73,8 +84,12 @@ class Deductions(TimeStampedModel):
     criminal_legalaid_contributions = MoneyField(default=None, null=True,
                                                  blank=True)
 
+    cloning_config = {
+        'excludes': ['created', 'modified']
+    }
 
-class PersonalDetails(TimeStampedModel):
+
+class PersonalDetails(CloneModelMixin, TimeStampedModel):
     title = models.CharField(max_length=20, blank=True, null=True)
     full_name = models.CharField(max_length=400, blank=True, null=True)
     postcode = models.CharField(max_length=12, blank=True, null=True)
@@ -94,6 +109,10 @@ class PersonalDetails(TimeStampedModel):
 
     reference = UUIDField(auto=True, unique=True)
 
+    cloning_config = {
+        'excludes': ['reference', 'created', 'modified', 'case_count']
+    }
+
     class Meta:
         verbose_name_plural = "personal details"
 
@@ -106,7 +125,7 @@ class PersonalDetails(TimeStampedModel):
             self.save(update_fields=['case_count'])
 
 
-class ThirdPartyDetails(TimeStampedModel):
+class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
     personal_details = models.ForeignKey(PersonalDetails)
     pass_phrase = models.CharField(max_length=255)
     reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON)
@@ -119,8 +138,13 @@ class ThirdPartyDetails(TimeStampedModel):
 
     reference = UUIDField(auto=True, unique=True)
 
+    cloning_config = {
+        'excludes': ['reference', 'created', 'modified'],
+        'clone_fks': ['personal_details']
+    }
 
-class AdaptationDetails(TimeStampedModel):
+
+class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     bsl_webcam = models.BooleanField(default=False)
     minicom = models.BooleanField(default=False)
     text_relay = models.BooleanField(default=False)
@@ -131,11 +155,20 @@ class AdaptationDetails(TimeStampedModel):
     callback_preference = models.BooleanField(default=False)
     reference = UUIDField(auto=True, unique=True)
 
+    cloning_config = {
+        'excludes': ['reference', 'created', 'modified']
+    }
 
-class Person(TimeStampedModel):
+
+class Person(CloneModelMixin, TimeStampedModel):
     income = models.ForeignKey(Income, blank=True, null=True)
     savings = models.ForeignKey(Savings, blank=True, null=True)
     deductions = models.ForeignKey(Deductions, blank=True, null=True)
+
+    cloning_config = {
+        'excludes': ['created', 'modified'],
+        'clone_fks': ['income', 'savings', 'deductions']
+    }
 
     @classmethod
     def from_dict(cls, d):
@@ -216,7 +249,6 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
     )
     on_passported_benefits = models.NullBooleanField(default=None)
     on_nass_benefits = models.NullBooleanField(default=None)
-
 
     # need to be moved into graph/questions format soon
     is_you_or_your_partner_over_60 = models.NullBooleanField(default=None)
@@ -381,6 +413,7 @@ class MatterType(TimeStampedModel):
     class Meta:
         unique_together = (("code", "level"),)
 
+
 class MediaCodeGroup(models.Model):
     name = models.CharField(max_length=128)
 
@@ -459,6 +492,9 @@ class Case(TimeStampedModel):
     # exceptional case fund
     ecf_statement = models.CharField(blank=True, null=True, max_length=35, choices=ECF_STATEMENT)
 
+    # if not None, indicates the case from which this was created
+    #   that is, the original case being split
+    from_case = models.ForeignKey('self', blank=True, null=True, related_name='split_cases')
 
     def _set_reference_if_necessary(self):
         if not self.reference:
@@ -471,6 +507,76 @@ class Case(TimeStampedModel):
                 get_random_string(length=4, allowed_chars='0123456789'),
                 get_random_string(length=4, allowed_chars='0123456789')
             )
+
+    def is_part_of_split(self):
+        """
+        Returns True if self has been generated or it generated cases via a split case action.
+        """
+        return self.from_case or self.split_cases.count() > 0
+
+    def split(self, user, category, matter_type1, matter_type2, assignment_internal):
+        # DIAGNOSIS
+        diagnosis = DiagnosisTraversal.objects.create_eligible(category)
+
+        # ELIGIBILITY CHECK
+        eligibility_check = clone_model(
+            cls=EligibilityCheck,
+            pk=self.eligibility_check_id,
+            config={
+                'excludes': ['reference', 'created', 'modified'],
+                'clone_fks': ['you', 'partner', 'disputed_savings'],
+                'override_values': {
+                    'category': category
+                }
+            }
+        )
+        if self.eligibility_check:
+            prop_ids = self.eligibility_check.property_set.values_list('pk', flat=True)
+            for prop_id in prop_ids:
+                clone_model(cls=Property, pk=prop_id, config={
+                    'excludes': ['created', 'modified'],
+                    'override_values': {
+                        'eligibility_check': eligibility_check
+                    }
+                })
+
+        # CASE
+        override_values = {
+            'eligibility_check': eligibility_check,
+            'diagnosis': diagnosis,
+            'created_by': user,
+            'matter_type1': matter_type1,
+            'matter_type2': matter_type2,
+            'from_case': self
+        }
+        if assignment_internal:
+            override_values['requires_action_by'] = self.requires_action_by
+        else:
+            override_values['provider'] = None
+            override_values['requires_action_by'] = REQUIRES_ACTION_BY.OPERATOR
+
+        new_case = clone_model(
+            cls=self.__class__,
+            pk=self.pk,
+            config={
+                'excludes': [
+                    'reference', 'locked_by', 'locked_at',
+                    'laa_reference', 'billable_time', 'outcome_code', 'level',
+                    'created', 'modified', 'outcome_code_id'
+                ],
+                'clone_fks': [
+                    'thirdparty_details', 'adaptation_details'
+                ],
+                'override_values': override_values
+            }
+        )
+        for cka_id in self.caseknowledgebaseassignment_set.values_list('pk', flat=True):
+            clone_model(cls=CaseKnowledgebaseAssignment, pk=cka_id, config={
+                'override_values': {
+                    'case': new_case
+                }
+            })
+        return new_case
 
     def save(self, *args, **kwargs):
         self._set_reference_if_necessary()

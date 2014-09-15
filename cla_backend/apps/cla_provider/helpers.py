@@ -1,11 +1,15 @@
 import datetime
 import random
-from operator import itemgetter
+import json
 
+from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
+from django.core.serializers.json import DjangoJSONEncoder
+from django.conf import settings
 
+from cla_provider.serializers import CaseSerializer, EligibilityCheckSerializer, PersonalDetailsSerializer
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota
 
 
@@ -20,27 +24,31 @@ class ProviderAllocationHelper(object):
         @return: list
         """
         if not self._providers_in_category:
-            self._providers_in_category = ProviderAllocation.objects.filter(category=category)
+            self._providers_in_category = ProviderAllocation.objects.filter(
+                category=category)
 
         return self._providers_in_category
 
     def today_at(self, hour, minute=0, second=0, microsecond=0):
         t = timezone.localtime(self.as_of)
-        return t.replace(hour=hour, minute=minute, second=second, microsecond=microsecond)
+        return t.replace(hour=hour, minute=minute, second=second,
+                         microsecond=microsecond)
 
     def get_qualifying_providers(self, category):
         """
         @return: list
         """
-        if category == None:
-            return Provider.objects.active()
-        else:
-            return [pa.provider for pa in self.get_qualifying_providers_allocation(category)]
+        if category:
+            return [pa.provider for pa in
+                    self.get_qualifying_providers_allocation(category)]
+
+        return Provider.objects.active()
 
     def _get_random_provider(self, category):
         """
         @return: Randomly chosen provider who offers this category of service
-                 or None if there are no providers with this category of service
+                 or None if there are no providers with this category of
+                 service
         """
         def calculate_winner():
             allocations = self.get_qualifying_providers_allocation(category)
@@ -60,7 +68,8 @@ class ProviderAllocationHelper(object):
 
     def _get_rota_provider(self, category):
         try:
-            rota = OutOfHoursRota.objects.get_current(category, as_of=self.as_of)
+            rota = OutOfHoursRota.objects.get_current(category,
+                                                      as_of=self.as_of)
             return rota.provider if rota else None
         except OutOfHoursRota.MultipleObjectsReturned:
             # this should be prevented by OutOfHoursRota.clean but what
@@ -74,7 +83,7 @@ class ProviderAllocationHelper(object):
 
     @property
     def is_bank_holiday(self):
-        #TODO: make this work for bank hols
+        # TODO: make this work for bank hols
         return False
 
     @property
@@ -115,11 +124,11 @@ def notify_case_assigned(provider, case):
     subject = 'CLA Case {ref} has been assigned to {provider}'.format(**{
         'ref': case.reference,
         'provider': provider.name})
-    case_url = '/call_centre/{0}'
+    case_url = 'https://{0}/provider/{1}/'
     template_params = {
         'provider': provider,
         'now': datetime.datetime.now(),
-        'case_url': case_url.format(case.reference),
+        'case_url': case_url.format(settings.SITE_HOSTNAME, case.reference),
         'case': case}
     template = 'cla_provider/email/assigned.{0}'
     text = render_to_string(template.format('txt'), template_params)
@@ -128,3 +137,17 @@ def notify_case_assigned(provider, case):
         subject, text, from_address, [provider.email_address])
     email.attach_alternative(html, 'text/html')
     email.send()
+
+
+class LegalHelpExtract(object):
+
+    def __init__(self, case):
+        self.case = case
+
+    def format(self):
+        ctx = {
+            'case': CaseSerializer(instance=self.case).data,
+            'personal_details': PersonalDetailsSerializer(instance=self.case.personal_details).data,
+            'eligibility_check': EligibilityCheckSerializer(instance=self.case.eligibility_check).data
+        }
+        return HttpResponse(json.dumps(ctx, cls=DjangoJSONEncoder), content_type='text/json')

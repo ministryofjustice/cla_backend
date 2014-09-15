@@ -449,6 +449,7 @@ class Case(TimeStampedModel):
                                                        null=True, blank=True)
 
     outcome_code = models.CharField(max_length=20, null=True, blank=True)
+    outcome_code_id = models.IntegerField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(null=True)
 
     # exempt user is a property of case
@@ -488,7 +489,7 @@ class Case(TimeStampedModel):
 
     def assign_to_provider(self, provider):
         self.provider = provider
-        self.save()
+        self.save(update_fields=['provider'])
 
     def assign_alternative_help(self, user, articles):
         self.alternative_help_articles.clear()
@@ -502,7 +503,7 @@ class Case(TimeStampedModel):
             self.locked_by = user
             self.locked_at = datetime.datetime.utcnow().replace(tzinfo=utc)
             if save:
-                self.save()
+                self.save(update_fields=['locked_by', 'locked_at'])
             return True
         else:
             if self.locked_by != user:
@@ -515,7 +516,7 @@ class Case(TimeStampedModel):
 
     def set_requires_action_by(self, requires_action_by):
         self.requires_action_by = requires_action_by
-        self.save()
+        self.save(update_fields=['requires_action_by'])
 
     @property
     def doesnt_requires_action(self):

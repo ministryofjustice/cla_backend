@@ -7,10 +7,13 @@ from django.db.models.sql.aggregates import Aggregate
 from django.utils import timezone
 from django.contrib.admin import widgets
 from django.template.defaulttags import date
+from django.db import connection
 
 from cla_eventlog.constants import LOG_LEVELS
 from cla_provider.models import Provider
 from legalaid.models import Case
+from . import sql
+import os
 
 
 class ConvertDateMixin(object):
@@ -351,3 +354,63 @@ class AllocatedCasesNoOutcome(CaseReport):
     def get_headers(self):
         headers = super(AllocatedCasesNoOutcome, self).get_headers()
         return headers + ['Outcome code']
+
+
+class SQLFileReport(DateRangeReportForm):
+    def __init__(self, *args, **kwargs):
+        super(DateRangeReportForm, self).__init__(*args, **kwargs)
+        path = os.path.join(sql.__path__[0], self.QUERY_FILE)
+        with open(path, 'r') as f:
+            self.query = f.read()
+
+    def get_queryset(self):
+        cursor = connection.cursor()
+        cursor.execute(self.query, self.date_range)
+        self.description = cursor.description
+        return cursor.fetchall()
+
+class MICaseExtract(SQLFileReport):
+    QUERY_FILE = 'MIExtractByOutcome.sql'
+
+    def get_headers(self):
+        return [
+            'LAA_Reference', 'Hash_ID',
+            'Case_ID', "Split_Check",
+            "Split_Link_Case", "Provider_ID",
+            "Category_Name", "Date_Case_Created",
+            "Last_Modified_Date", "Outcome_Code_Child",
+            "Billable_Time", "Cumulative_Time",
+            "Matter_Type_1", "Matter_Type_2",
+            "User_ID", "Scope_Status",
+            "Eligibility_Status", "Adjustments_BSL",
+            "Adjustments_LLI", "Adjustments_MIN",
+            "Adjustments_TYP", "Gender",
+            "Ethnicity", "Age(Range)",
+            "Religion", "Sexual_Orientation",
+            "Disability", "Time_of_Day",
+            "Reject_Reason", "Media_Code",
+            "Contact_Type", "Call_Back_Request_Time",
+            "Call_Back_Actioned_Time", "Time_to_OS_Access",
+            "Time_to_SP_Access", "Residency_Test",
+            "Repeat_Contact", "Complaint_Type",
+            "Complaint_Date", "Complaint_Owner",
+            "Complaint_Target", "Complaint_Subject",
+            "Complaint_Classification", "Complaint_Outcome",
+            "Agree_Feedback", "Exempt_Client",
+        ]
+
+class MIFeedbackExtract(SQLFileReport):
+    QUERY_FILE = 'MIExtractByFeedback.sql'
+
+    def get_headers(self):
+        return [
+            "LAA_Reference",
+            "Date_Feedback_Created",
+            "Feedback_Issue",
+            "Feedback_Justified",
+            "Feedback_Resolved",
+            "Text_Output"
+        ]
+
+
+

@@ -23,7 +23,7 @@ from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
     PersonalDetailsSerializer, ThirdPartyDetailsSerializer, \
     LogSerializer, FeedbackSerializer
-from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm
+from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm
 
 
 class CLAProviderPermissionViewSetMixin(object):
@@ -104,6 +104,14 @@ class CaseViewSet(
         formatter = LegalHelpExtract(self.get_object())
         return formatter.format()
 
+    @action()
+    def split(self, request, reference=None, **kwargs):
+        return self._form_action(
+            request, Form=SplitCaseForm, form_kwargs={
+                'request': request
+            }
+        )
+
 
 class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
     model = Staff
@@ -156,6 +164,7 @@ class DiagnosisViewSet(
 
 class LogViewSet(CLAProviderPermissionViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
+
 
 class FeedbackViewSet(CLAProviderPermissionViewSetMixin,
                       BaseFeedbackViewSet,

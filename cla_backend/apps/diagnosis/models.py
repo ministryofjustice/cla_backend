@@ -7,6 +7,18 @@ from django.db import models
 from cla_common.constants import DIAGNOSIS_SCOPE
 
 
+class DiagnosisTraversalManager(models.Manager):
+    def create_eligible(self, category):
+        return self.create(
+            state=DIAGNOSIS_SCOPE.INSCOPE,
+            category=category,
+            nodes=[{
+                "title": category.name,
+                "label": "<p>Diagnosis created by Specialist.</p>"
+            }]
+        )
+
+
 class DiagnosisTraversal(TimeStampedModel):
     reference = UUIDField(auto=True, unique=True)
     nodes = JSONField(null=True, blank=True)
@@ -14,6 +26,8 @@ class DiagnosisTraversal(TimeStampedModel):
 
     state = models.CharField(blank=True, null=True, max_length=50, default=DIAGNOSIS_SCOPE.UNKNOWN)
     category = models.ForeignKey('legalaid.Category', null=True, blank=True)
+
+    objects = DiagnosisTraversalManager()
 
     def is_state_inscope(self):
         return self.state == DIAGNOSIS_SCOPE.INSCOPE

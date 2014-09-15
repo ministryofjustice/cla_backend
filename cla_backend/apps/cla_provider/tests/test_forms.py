@@ -298,6 +298,7 @@ class SplitCaseFormTestCase(TestCase):
                 category=self.cat2_data.category.code,
                 matter_type1=self.cat2_data.matter_type1.code,
                 matter_type2=self.cat2_data.matter_type2.code,
+                notes='Notes',
                 internal=internal
             )
         )
@@ -309,6 +310,7 @@ class SplitCaseFormTestCase(TestCase):
 
         log_entry1 = self.case.log_set.last()
         self.assertEqual(log_entry1.code, outcome_code)
+        self.assertEqual(log_entry1.notes, 'Notes')
         self.assertEqual(log_entry1.created_by, user)
 
         log_entry2 = new_case.log_set.last()

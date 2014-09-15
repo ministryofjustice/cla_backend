@@ -212,6 +212,7 @@ class SplitCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             'category': category.code,
             'matter_type1': matter_type1.code,
             'matter_type2': matter_type2.code,
+            'notes': 'Notes',
             'internal': False
         }
 
@@ -239,3 +240,6 @@ class SplitCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
         # after, log entry created
         self.assertEqual(Log.objects.count(), 2)
+
+        ref_log = Log.objects.filter(case=self.resource)[0]
+        self.assertEqual(ref_log.notes, 'Notes')

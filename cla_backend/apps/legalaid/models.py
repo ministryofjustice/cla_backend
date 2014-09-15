@@ -562,7 +562,7 @@ class Case(TimeStampedModel):
                 'excludes': [
                     'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
-                    'created', 'modified'
+                    'created', 'modified', 'outcome_code_id'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details'

@@ -53,6 +53,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         disputed=True, main=True,
         _quantity=2
     )
+    outcome = make_recipe('cla_eventlog.log')
     case = make_recipe(
         'legalaid.case',
         eligibility_check=ec,
@@ -72,6 +73,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         matter_type2=matter_type2,
         media_code=make_recipe('legalaid.media_code'),
         outcome_code='outcome code',
+        outcome_code_id=outcome.pk,
         level=40,
         exempt_user=True,
         exempt_user_reason=EXEMPT_USER_REASON.ECHI,
@@ -924,7 +926,8 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'id', 'created', 'modified', 'eligibility_check', 'diagnosis',
             'created_by', 'locked_by', 'locked_at', 'thirdparty_details',
             'adaptation_details', 'billable_time', 'matter_type1', 'matter_type2',
-            'outcome_code', 'level', 'reference', 'laa_reference', 'from_case'
+            'outcome_code', 'level', 'reference', 'laa_reference', 'from_case',
+            'outcome_code_id'
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
@@ -960,6 +963,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'matter_type1': self.cat2_data.matter_type1,
             'matter_type2': self.cat2_data.matter_type2,
             'outcome_code': None,
+            'outcome_code_id': None,
             'level': None,
 
             # it should keep these values from the original case

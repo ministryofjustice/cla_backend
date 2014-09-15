@@ -1573,7 +1573,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n69">
-      <data key="d4"><![CDATA[The client believes it is not reasonable to continue to occupy the property (eg a recently disabled person can't easily access the property)]]></data>
+      <data key="d4"><![CDATA[The client believes it is not reasonable to continue to occupy the property (eg a recently disabled person can't easily access the property, the client can't afford to live in the property, there is a threat of violence towards the client or their family)]]></data>
       <data key="d5"><![CDATA[Client believes that]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -13996,7 +13996,6 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </edge>
     <edge id="e441" source="n282" target="n283">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

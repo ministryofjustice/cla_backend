@@ -996,7 +996,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n42">
-      <data key="d4"><![CDATA[Warrant for eviction from the court bailiffs]]></data>
+      <data key="d4"><![CDATA[Warrant for eviction from the court bailiffs (this gives county court bailiffs the power to evict occupiers and change the locks)]]></data>
       <data key="d5"><![CDATA[The client has recei]]></data>
       <data key="d9">6</data>
       <data key="d13">

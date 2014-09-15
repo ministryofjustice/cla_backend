@@ -106,6 +106,6 @@ def mi_case_extract():
     pass
 
 @staff_member_required
-@report_view(MIFeedbackExtract, 'MI Case Extract')
+@report_view(MIFeedbackExtract, 'MI Feedback Extract')
 def mi_feedback_extract():
     pass

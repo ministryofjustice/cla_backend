@@ -1,6 +1,8 @@
 from cla_common.constants import FEEDBACK_ISSUE
 from rest_framework import serializers
 
+from core.serializers import JSONField
+
 from cla_eventlog.serializers import LogSerializerBase
 
 from legalaid.serializers import \
@@ -110,6 +112,29 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'on_passported_benefits',
             'on_nass_benefits',
             'state'
+        )
+
+
+class ExtendedEligibilityCheckSerializer(EligibilityCheckSerializerBase):
+    property_set = PropertySerializer(required=False, read_only=True)
+    you = PersonSerializer(required=False)
+    partner = PersonSerializer(required=False)
+    disputed_savings = SavingsSerializer(required=False)
+    calculations = JSONField(read_only=True)
+
+    class Meta(EligibilityCheckSerializerBase.Meta):
+        fields = (
+            'you',
+            'partner',
+            'disputed_savings',
+            'dependants_young',
+            'dependants_old',
+            'is_you_or_your_partner_over_60',
+            'has_partner',
+            'on_passported_benefits',
+            'on_nass_benefits',
+            'property_set',
+            'calculations'
         )
 
 

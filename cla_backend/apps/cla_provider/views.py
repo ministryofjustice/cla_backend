@@ -1,8 +1,8 @@
-from cla_provider.helpers import LegalHelpExtract
 from django.shortcuts import get_object_or_404
 
 from rest_framework import mixins
 from rest_framework.decorators import action, link
+from rest_framework.response import Response as DRFResponse
 
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 
@@ -22,7 +22,7 @@ from rest_framework.filters import OrderingFilter
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
     PersonalDetailsSerializer, ThirdPartyDetailsSerializer, \
-    LogSerializer, FeedbackSerializer
+    LogSerializer, FeedbackSerializer, ExtendedEligibilityCheckSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm
 
 
@@ -101,8 +101,16 @@ class CaseViewSet(
 
     @link()
     def legal_help_form_extract(self, *args, **kwargs):
-        formatter = LegalHelpExtract(self.get_object())
-        return formatter.format()
+        case = self.get_object()
+        data = {
+            'personal_details': PersonalDetailsSerializer(
+                instance=case.personal_details
+            ).data,
+            'eligibility_check': ExtendedEligibilityCheckSerializer(
+                instance=case.eligibility_check
+            ).data
+        }
+        return DRFResponse(data)
 
     @action()
     def split(self, request, reference=None, **kwargs):

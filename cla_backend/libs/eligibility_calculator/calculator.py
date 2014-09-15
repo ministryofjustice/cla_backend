@@ -120,30 +120,47 @@ class CapitalCalculator(object):
         return property_capital + liquid_capital
 
 
+class cached_calcs_property(object):
+    def __init__(self, func):
+        self.func = func
+
+    def _do_get(self, instance, type=None):
+        if instance is None:
+            return self
+        res = instance.__dict__[self.func.__name__] = self.func(instance)
+        return res
+
+    def __get__(self, instance, type=None):
+        res = self._do_get(instance, type)
+        if 'calcs' not in instance.__dict__:
+            instance.__dict__['calcs'] = {}
+        instance.__dict__['calcs'][self.func.__name__] = res
+        return res
+
+
 class EligibilityChecker(object):
     def __init__(self, case_data):
         super(EligibilityChecker, self).__init__()
         self.case_data = case_data
+        self.calcs = {}
 
-    @property
+    @cached_calcs_property
     def gross_income(self):
-        if not hasattr(self, '_gross_income'):
-            self._gross_income = self.case_data.total_income
-        return self._gross_income
+        return self.case_data.total_income
 
-    @property
+    @cached_calcs_property
     def partner_allowance(self):
         if self.case_data.facts.has_partner:
             return constants.disposable_income.PARTNER_ALLOWANCE
         return 0
 
-    @property
+    @cached_calcs_property
     def employment_allowance(self):
         if self.case_data.you.income.has_employment_earnings and not self.case_data.you.income.self_employed:
             return constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
         return 0
 
-    @property
+    @cached_calcs_property
     def partner_employment_allowance(self):
         if self.case_data.facts.has_partner and self.case_data.facts.should_aggregate_partner:
             if self.case_data.partner.income.has_employment_earnings and not self.case_data.partner.income.self_employed:
@@ -151,18 +168,18 @@ class EligibilityChecker(object):
             return 0
         return 0
 
-    @property
+    @cached_calcs_property
     def dependants_allowance(self):
         # TODO 2 values for children...
         return self.case_data.facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE
 
-    @property
+    @cached_calcs_property
     def pensioner_disregard(self):
         if self.case_data.facts.is_you_or_your_partner_over_60:
             return constants.disposable_capital.PENSIONER_DISREGARD_LIMIT_LEVELS.get(max(self.disposable_income, 0), 0)
         return 0
 
-    @property
+    @cached_calcs_property
     def disposable_income(self):
         if not hasattr(self, '_disposable_income'):
             gross_income = self.gross_income
@@ -215,7 +232,7 @@ class EligibilityChecker(object):
 
         return self._disposable_income
 
-    @property
+    @cached_calcs_property
     def disposable_capital_assets(self):
         if not hasattr(self, '_disposable_capital_assets'):
             # NOTE: problem in case of disputed partner (and joined savings/assets)

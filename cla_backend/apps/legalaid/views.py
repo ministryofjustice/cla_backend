@@ -92,7 +92,7 @@ class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet
     def is_eligible(self, request, *args, **kwargs):
         obj = self.get_object()
 
-        response = obj.get_eligibility_state()
+        response, ec = obj.get_eligibility_state()
         return DRFResponse({
             'is_eligible': response
         })

@@ -56,6 +56,12 @@ class Staff(TimeStampedModel):
     provider = models.ForeignKey(Provider)
     is_manager = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name_plural = 'staff'
+
+    def __unicode__(self):
+        return self.user.username
+
 
 class OutOfHoursRotaManager(models.Manager):
     def get_current(self, category, as_of=None):

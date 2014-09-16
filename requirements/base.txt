@@ -27,3 +27,4 @@ networkx==1.9
 lxml==3.3.5
 drf-extensions==0.2.5
 django-statsd-mozilla==0.3.13
+logstash-formatter==0.5.8

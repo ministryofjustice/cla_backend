@@ -1,6 +1,8 @@
 from cla_common.constants import FEEDBACK_ISSUE
 from rest_framework import serializers
 
+from core.serializers import JSONField
+
 from cla_eventlog.serializers import LogSerializerBase
 
 from legalaid.serializers import \
@@ -111,6 +113,15 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'on_nass_benefits',
             'state'
         )
+
+
+class ExtendedEligibilityCheckSerializer(EligibilityCheckSerializer):
+    calculations = JSONField(read_only=True)
+
+    class Meta(EligibilityCheckSerializer.Meta):
+        fields = list(EligibilityCheckSerializer.Meta.fields) + [
+            'calculations'
+        ]
 
 
 class LogSerializer(LogSerializerBase):

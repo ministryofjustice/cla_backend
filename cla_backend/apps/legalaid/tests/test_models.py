@@ -43,7 +43,8 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         on_passported_benefits=True,
         on_nass_benefits=True,
         is_you_or_your_partner_over_60=True,
-        has_partner=True
+        has_partner=True,
+        calculations={'disposable_income': 1000}
     )
     make_recipe(
         'legalaid.property', eligibility_check=ec,
@@ -370,6 +371,7 @@ class EligibilityCheckTestCase(TestCase):
             4. through PropertyExpectedException again
         """
         mocked_checker = MockedEligibilityChecker()
+        mocked_checker.calcs = {}
         mocked_checker.is_eligible.side_effect = [
             PropertyExpectedException(), True, False, PropertyExpectedException()
         ]
@@ -838,7 +840,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             equal_fields=[
                 'your_problem_notes', 'notes', 'state', 'dependants_young',
                 'dependants_old', 'on_passported_benefits', 'on_nass_benefits',
-                'is_you_or_your_partner_over_60', 'has_partner'
+                'is_you_or_your_partner_over_60', 'has_partner', 'calculations'
             ],
             check_not_None=True
         )

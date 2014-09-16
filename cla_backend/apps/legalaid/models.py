@@ -1,6 +1,8 @@
 import logging
 import datetime
 
+from jsonfield import JSONField
+
 from uuidfield import UUIDField
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -254,6 +256,8 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
     is_you_or_your_partner_over_60 = models.NullBooleanField(default=None)
     has_partner = models.NullBooleanField(default=None)
 
+    calculations = JSONField(null=True, blank=True)
+
     def get_dependencies(self):
         deps = {'category',
                 'you__income',
@@ -280,16 +284,22 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
 
         try:
             if ec.is_eligible():
-                return ELIGIBILITY_STATES.YES
+                return (ELIGIBILITY_STATES.YES, ec)
             else:
-                return ELIGIBILITY_STATES.NO
+                return (ELIGIBILITY_STATES.NO, ec)
         except PropertyExpectedException as e:
-            return ELIGIBILITY_STATES.UNKNOWN
+            return (ELIGIBILITY_STATES.UNKNOWN, ec)
 
             # TODO what do we do when we get a different exception? (which shouldn't happen)
 
     def update_state(self):
-        self.state = self.get_eligibility_state()
+        self.state, checker = self.get_eligibility_state()
+
+        if self.state == ELIGIBILITY_STATES.UNKNOWN:
+            self.calculations = None
+        else:
+            self.calculations = checker.calcs
+
         self.save()
 
     def to_case_data(self):

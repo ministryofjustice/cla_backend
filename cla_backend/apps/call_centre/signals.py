@@ -22,7 +22,7 @@ def log_operator_created(sender, instance, created, **kwargs):
     if created:
         statsd.incr('operator.created')
 
-        logger.info('User created', extra={
+        logger.info('Operator user created', extra={
             'USERNAME': instance.user.username,
             'IS_MANAGER': unicode(instance.is_manager)
         })
@@ -47,7 +47,7 @@ def log_operator_modified(sender, instance, **kwargs):
 
     statsd.incr('operator.modified')
 
-    logger.info('Operator modified', extra={
+    logger.info('Operator user modified', extra={
         'USERNAME': instance.user.username,
         'IS_MANAGER': unicode(instance.is_manager)
     })

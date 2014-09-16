@@ -4,6 +4,9 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import ugettext as _
+from django.db.models.signals import post_save, pre_save
+
+from .signals import log_staff_created, log_staff_modified
 
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
@@ -125,3 +128,5 @@ class Feedback(TimeStampedModel):
     issue = models.CharField(choices=FEEDBACK_ISSUE, max_length=100)
 
 
+post_save.connect(log_staff_created, sender=Staff)
+pre_save.connect(log_staff_modified, sender=Staff)

@@ -1,11 +1,30 @@
 from . import constants
 
 
+class cached_calcs_property(object):
+    def __init__(self, func):
+        self.func = func
+
+    def _do_get(self, instance, type=None):
+        if instance is None:
+            return self
+        res = instance.__dict__[self.func.__name__] = self.func(instance)
+        return res
+
+    def __get__(self, instance, type=None):
+        res = self._do_get(instance, type)
+        if 'calcs' not in instance.__dict__:
+            instance.__dict__['calcs'] = {}
+        instance.__dict__['calcs'][self.func.__name__] = res
+        return res
+
+
 class CapitalCalculator(object):
-    def __init__(self, properties=[], non_disputed_liquid_capital=0, disputed_liquid_capital=0):
+    def __init__(self, properties=[], non_disputed_liquid_capital=0, disputed_liquid_capital=0, calcs={}):
         self.properties = self._parse_props(properties)
         self.non_disputed_liquid_capital = non_disputed_liquid_capital
         self.disputed_liquid_capital = disputed_liquid_capital
+        self.calcs = calcs
 
     def _parse_props(self, props):
         l = []
@@ -76,7 +95,8 @@ class CapitalCalculator(object):
         for prop in self.properties:
             prop['equity'] = 0
 
-    def _calculate_property_capital(self):
+    @cached_calcs_property
+    def property_capital(self):
         if not self.properties:
             return 0
 
@@ -100,7 +120,8 @@ class CapitalCalculator(object):
             property_capital += prop['equity']
         return property_capital
 
-    def _calculate_liquid_capital(self):
+    @cached_calcs_property
+    def liquid_capital(self):
         SMOD_disregard = min(
             self.disputed_liquid_capital, self.SMOD_disregard_available
         )
@@ -114,35 +135,20 @@ class CapitalCalculator(object):
     def calculate_capital(self):
         self._reset_state()
 
-        property_capital = self._calculate_property_capital()
-        liquid_capital = self._calculate_liquid_capital()
+        res = self.property_capital + self.liquid_capital
 
-        return property_capital + liquid_capital
+        self.calcs['property_equities'] = [
+            prop.get('equity', 0) for prop in self.properties
+        ]
 
-
-class cached_calcs_property(object):
-    def __init__(self, func):
-        self.func = func
-
-    def _do_get(self, instance, type=None):
-        if instance is None:
-            return self
-        res = instance.__dict__[self.func.__name__] = self.func(instance)
-        return res
-
-    def __get__(self, instance, type=None):
-        res = self._do_get(instance, type)
-        if 'calcs' not in instance.__dict__:
-            instance.__dict__['calcs'] = {}
-        instance.__dict__['calcs'][self.func.__name__] = res
         return res
 
 
 class EligibilityChecker(object):
-    def __init__(self, case_data):
+    def __init__(self, case_data, calcs=None):
         super(EligibilityChecker, self).__init__()
         self.case_data = case_data
-        self.calcs = {}
+        self.calcs = calcs or {}
 
     @cached_calcs_property
     def gross_income(self):
@@ -240,7 +246,8 @@ class EligibilityChecker(object):
             capital_calc = CapitalCalculator(
                 properties=self.case_data.property_data,
                 non_disputed_liquid_capital=self.case_data.non_disputed_liquid_capital,
-                disputed_liquid_capital=self.case_data.disputed_liquid_capital
+                disputed_liquid_capital=self.case_data.disputed_liquid_capital,
+                calcs=self.calcs
 
             )
             disposable_capital = capital_calc.calculate_capital()

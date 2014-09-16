@@ -115,27 +115,13 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
         )
 
 
-class ExtendedEligibilityCheckSerializer(EligibilityCheckSerializerBase):
-    property_set = PropertySerializer(required=False, read_only=True)
-    you = PersonSerializer(required=False)
-    partner = PersonSerializer(required=False)
-    disputed_savings = SavingsSerializer(required=False)
+class ExtendedEligibilityCheckSerializer(EligibilityCheckSerializer):
     calculations = JSONField(read_only=True)
 
-    class Meta(EligibilityCheckSerializerBase.Meta):
-        fields = (
-            'you',
-            'partner',
-            'disputed_savings',
-            'dependants_young',
-            'dependants_old',
-            'is_you_or_your_partner_over_60',
-            'has_partner',
-            'on_passported_benefits',
-            'on_nass_benefits',
-            'property_set',
+    class Meta(EligibilityCheckSerializer.Meta):
+        fields = list(EligibilityCheckSerializer.Meta.fields) + [
             'calculations'
-        )
+        ]
 
 
 class LogSerializer(LogSerializerBase):

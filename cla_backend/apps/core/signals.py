@@ -6,7 +6,6 @@ from django_statsd.clients import statsd
 logger = logging.getLogger(__name__)
 
 
-#@receiver(post_save, sender=User)
 def log_user_created(sender, instance, created, **kwargs):
     if created:
         statsd.incr('user.created')
@@ -19,7 +18,6 @@ def log_user_created(sender, instance, created, **kwargs):
         })
 
 
-#@receiver(pre_save, sender=User)
 def log_user_modified(sender, instance, **kwargs):
     try:
         User.objects.get(pk=instance.pk)

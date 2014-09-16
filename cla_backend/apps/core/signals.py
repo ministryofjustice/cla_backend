@@ -1,6 +1,5 @@
 import logging
 
-from django.contrib.auth.models import User
 from django_statsd.clients import statsd
 
 logger = logging.getLogger(__name__)
@@ -20,8 +19,8 @@ def log_user_created(sender, instance, created, **kwargs):
 
 def log_user_modified(sender, instance, **kwargs):
     try:
-        User.objects.get(pk=instance.pk)
-    except User.DoesNotExist:
+        sender.objects.get(pk=instance.pk)
+    except sender.DoesNotExist:
         return
 
     statsd.incr('user.modified')

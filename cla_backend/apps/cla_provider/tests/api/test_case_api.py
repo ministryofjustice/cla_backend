@@ -14,6 +14,7 @@ from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin, \
     BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase
 
+from cla_eventlog.models import Log
 from cla_eventlog.tests.test_views import ExplicitEventCodeViewTestCaseMixin, \
     ImplicitEventCodeViewTestCaseMixin
 
@@ -193,3 +194,52 @@ class CloseCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             'cla_provider:case-close', args=(),
             kwargs={'reference': reference}
         )
+
+
+class SplitCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def setUp(self):
+        super(SplitCaseTestCase, self).setUp()
+
+    def get_default_post_data(self):
+        category = make_recipe('legalaid.category')
+        matter_type1 = make_recipe(
+            'legalaid.matter_type1', category=category
+        )
+        matter_type2 = make_recipe(
+            'legalaid.matter_type2', category=category
+        )
+        return {
+            'category': category.code,
+            'matter_type1': matter_type1.code,
+            'matter_type2': matter_type2.code,
+            'notes': 'Notes',
+            'internal': False
+        }
+
+    def get_url(self, reference=None):
+        reference = reference or self.resource.reference
+        return reverse(
+            'cla_provider:case-split', args=(),
+            kwargs={'reference': reference}
+        )
+
+    def test_successful(self):
+        # before, no logs
+        self.assertEqual(Log.objects.count(), 0)
+
+        data = self.get_default_post_data()
+        response = self.client.post(
+            self.url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        if self.NO_BODY_RESPONSE:
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        else:
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # after, log entry created
+        self.assertEqual(Log.objects.count(), 2)
+
+        ref_log = Log.objects.filter(case=self.resource)[0]
+        self.assertEqual(ref_log.notes, 'Notes')

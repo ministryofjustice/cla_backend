@@ -392,7 +392,7 @@ class MICaseExtract(SQLFileReport):
             "Contact_Type", "Call_Back_Request_Time",
             "Call_Back_Actioned_Time", "Time_to_OS_Access",
             "Time_to_SP_Access", "Residency_Test",
-            "Repeat_Contact", "Complaint_Type",
+            "Repeat_Contact", "Referral_Agencies", "Complaint_Type",
             "Complaint_Date", "Complaint_Owner",
             "Complaint_Target", "Complaint_Subject",
             "Complaint_Classification", "Complaint_Outcome",

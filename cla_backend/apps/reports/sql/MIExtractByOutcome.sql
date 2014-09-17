@@ -38,6 +38,18 @@ WITH latest_outcome as (
               WHERE l.case_id = e.case_id
                     AND l.code != 'CASE_CREATED'
               GROUP BY l.case_id)
+), provider_first_assign as (
+    SELECT
+      e.*
+    FROM
+      cla_eventlog_log AS e
+    WHERE
+      e.id = (SELECT
+                MIN(l.id)
+              FROM cla_eventlog_log l
+              WHERE l.case_id = e.case_id
+                    AND l.code  in ('REFSP', 'MANALC', 'SPOR')
+              GROUP BY l.case_id)
 )
 select
   c.laa_reference as "LAA_Reference"
@@ -108,7 +120,7 @@ select
   ,null as "Call_Back_Request_Time"
   ,null as "Call_Back_Actioned_Time"
   ,ceil(EXTRACT(SECOND FROM operator_first_view.created-c.created)) as "Time_to_OS_Access"
-  ,ceil(EXTRACT(SECOND FROM provider_first_view.created-c.created))  as "Time_to_SP_Access"
+  ,ceil(EXTRACT(SECOND FROM provider_first_view.created-provider_first_assign.created))  as "Time_to_SP_Access"
   ,'PASS' as "Residency_Test"
   ,null as "Repeat_Contact"
   ,CASE WHEN log.code in ('COSPF', 'IRKB', 'SPFN', 'SPFM') THEN log.notes END as "Referral_Agencies"
@@ -139,6 +151,7 @@ from cla_eventlog_log as log
   LEFT OUTER JOIN latest_outcome on latest_outcome.case_id = c.id
   LEFT OUTER JOIN operator_first_view on operator_first_view.case_id = c.id
   LEFT OUTER JOIN provider_first_view on provider_first_view.case_id = c.id
+  LEFT OUTER JOIN provider_first_assign on provider_first_assign.case_id = c.id
 where
   log.type = 'outcome'
   and log.created >= %s

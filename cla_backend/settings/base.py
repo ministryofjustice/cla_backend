@@ -39,6 +39,11 @@ ADMINS = ()
 
 MANAGERS = ADMINS
 
+EMAIL_FROM_ADDRESS = 'no-reply@digital.justice.gov.uk'
+
+OPERATOR_USER_ALERT_EMAILS = []
+SPECIALIST_USER_ALERT_EMAILS = []
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -190,6 +195,9 @@ LOGGING = {
         'simple': {
             'format': '%(levelname)s %(message)s'
         },
+        'logstash': {
+            '()': 'logstash_formatter.LogstashFormatter'
+        }
     },
     'filters': {
         'require_debug_false': {
@@ -206,7 +214,7 @@ LOGGING = {
             'filename' : '/var/log/wsgi/app.log',
             'maxBytes': 1024*1024*5, # 5 MB
             'backupCount' : 7,
-            'formatter': 'verbose',
+            'formatter': 'logstash',
             'filters': ['require_debug_false'],
         },
         'debug_file':{

@@ -55,9 +55,9 @@ class BaseUserViewSet(
 
 
 class FormActionMixin(object):
-    def _form_action(self, request, Form, no_body=True):
+    def _form_action(self, request, Form, no_body=True, form_kwargs={}):
         obj = self.get_object()
-        form = Form(case=obj, data=request.DATA)
+        form = Form(case=obj, data=request.DATA, **form_kwargs)
         if form.is_valid():
             form.save(request.user)
 
@@ -92,7 +92,7 @@ class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet
     def is_eligible(self, request, *args, **kwargs):
         obj = self.get_object()
 
-        response = obj.get_eligibility_state()
+        response, ec = obj.get_eligibility_state()
         return DRFResponse({
             'is_eligible': response
         })

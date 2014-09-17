@@ -25,7 +25,11 @@ class PropertySerializer(PropertySerializerBase):
 
 class IncomeSerializer(IncomeSerializerBase):
     class Meta(IncomeSerializerBase.Meta):
-        fields = ('earnings', 'other_income', 'self_employed', 'total')
+        fields = (
+            'earnings', 'self_employment_drawings', 'benefits', 'tax_credits',
+            'child_benefits', 'maintenance_received', 'pension',
+            'other_income', 'self_employed', 'total'
+        )
 
 
 class SavingsSerializer(SavingsSerializerBase):

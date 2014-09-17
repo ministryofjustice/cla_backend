@@ -51,6 +51,12 @@ class Savings(ModelMixin, object):
 class Income(ModelMixin, object):
     PROPERTY_META = {
         'earnings': None,
+        'self_employment_drawings': None,
+        'benefits': None,
+        'tax_credits': None,
+        'child_benefits': None,
+        'maintenance_received': None,
+        'pension': None,
         'other_income': None,
         'self_employed': None
     }
@@ -61,7 +67,14 @@ class Income(ModelMixin, object):
 
     @property
     def total(self):
-        return self.earnings + self.other_income
+        return self.earnings + \
+            self.self_employment_drawings + \
+            self.benefits + \
+            self.tax_credits + \
+            self.child_benefits + \
+            self.maintenance_received + \
+            self.pension + \
+            self.other_income
 
 
 class Deductions(ModelMixin, object):

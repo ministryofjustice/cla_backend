@@ -14,6 +14,12 @@ case_data_dict = {
     'you': {
         'income': {
             'earnings': 0,
+            'self_employment_drawings': 0,
+            'benefits': 0,
+            'tax_credits': 0,
+            'child_benefits': 0,
+            'maintenance_received': 0,
+            'pension': 0,
             'other_income': 0,
             'self_employed': False,
         },

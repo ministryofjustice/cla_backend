@@ -121,12 +121,14 @@ class EligibilityCheckTestCase(TestCase):
             category=make_recipe('legalaid.category', code='code'),
             you=make_recipe('legalaid.person',
                 income= make_recipe('legalaid.income',
-                    earnings= {"interval_period": "per_month",
-                               "per_interval_value": 500,
-                                },
-                    other_income={"interval_period": "per_month",
-                                  "per_interval_value": 600
-                                  },
+                    earnings=MoneyInterval('per_month', pennies=100),
+                    self_employment_drawings=MoneyInterval('per_month', pennies=200),
+                    benefits=MoneyInterval('per_month', pennies=300),
+                    tax_credits=MoneyInterval('per_month', pennies=400),
+                    child_benefits=MoneyInterval('per_month', pennies=500),
+                    maintenance_received=MoneyInterval('per_month', pennies=600),
+                    pension=MoneyInterval('per_month', pennies=700),
+                    other_income=MoneyInterval('per_month', pennies=800),
                     self_employed=True
                 ),
                 savings=make_recipe('legalaid.savings',
@@ -174,8 +176,14 @@ class EligibilityCheckTestCase(TestCase):
                         'asset_balance': 300,
                     },
                     'income': {
-                        'earnings': 500,
-                        'other_income': 600,
+                        'earnings': 100,
+                        'self_employment_drawings': 200,
+                        'benefits': 300,
+                        'tax_credits': 400,
+                        'child_benefits': 500,
+                        'maintenance_received': 600,
+                        'pension': 700,
+                        'other_income': 800,
                         'self_employed': True,
                     },
                     'deductions': {
@@ -191,16 +199,26 @@ class EligibilityCheckTestCase(TestCase):
                 property_data=[]
         ))
 
-    def test_to_case_data_with_partner(self):
+    def test_to_case_data_with_partner_and_None_partner_child_benefits(self):
         """
         EligibilityCheck partner data is used during CaseData creation
+
+        If partner.income.child_benefits is None, the to_case_data use a
+        default value (0). This is because that field is not exposed yet
+        (partner's child benefits can't be provided with).
         """
         check = make_recipe('legalaid.eligibility_check',
             category=make_recipe('legalaid.category', code='code'),
             you=make_recipe('legalaid.person',
                 income=make_recipe('legalaid.income',
-                    earnings=MoneyInterval('per_month', pennies=500),
-                    other_income=MoneyInterval('per_month', pennies=600),
+                    earnings=MoneyInterval('per_month', pennies=100),
+                    self_employment_drawings=MoneyInterval('per_month', pennies=200),
+                    benefits=MoneyInterval('per_month', pennies=300),
+                    tax_credits=MoneyInterval('per_month', pennies=400),
+                    child_benefits=MoneyInterval('per_month', pennies=500),
+                    maintenance_received=MoneyInterval('per_month', pennies=600),
+                    pension=MoneyInterval('per_month', pennies=700),
+                    other_income=MoneyInterval('per_month', pennies=800),
                     self_employed=True
                 ),
                 savings=make_recipe('legalaid.savings',
@@ -221,8 +239,16 @@ class EligibilityCheckTestCase(TestCase):
             ),
             partner=make_recipe('legalaid.person',
                 income= make_recipe('legalaid.income',
-                    earnings=MoneyInterval('per_month', pennies=501),
-                    other_income=MoneyInterval('per_month', pennies=601),
+                    earnings=MoneyInterval('per_month', pennies=101),
+                    self_employment_drawings=MoneyInterval('per_month', pennies=201),
+                    benefits=MoneyInterval('per_month', pennies=301),
+                    tax_credits=MoneyInterval('per_month', pennies=401),
+                    # child_beneficts will be None. Testing that the to_case_data sets a default 0 for
+                    # this value.
+                    child_benefits=None,
+                    maintenance_received=MoneyInterval('per_month', pennies=601),
+                    pension=MoneyInterval('per_month', pennies=701),
+                    other_income=MoneyInterval('per_month', pennies=801),
                     self_employed=False
                 ),
                 savings= make_recipe('legalaid.savings',
@@ -268,8 +294,14 @@ class EligibilityCheckTestCase(TestCase):
                     'asset_balance': 300,
                 },
                 'income': {
-                    'earnings': 500,
-                    'other_income':600,
+                    'earnings': 100,
+                    'self_employment_drawings': 200,
+                    'benefits': 300,
+                    'tax_credits': 400,
+                    'child_benefits': 500,
+                    'maintenance_received': 600,
+                    'pension': 700,
+                    'other_income': 800,
                     'self_employed': True,
                 },
                 'deductions': {
@@ -290,8 +322,159 @@ class EligibilityCheckTestCase(TestCase):
                     'asset_balance': 301,
                 },
                 'income': {
-                    'earnings': 501,
-                    'other_income':601,
+                    'earnings': 101,
+                    'self_employment_drawings': 201,
+                    'benefits': 301,
+                    'tax_credits': 401,
+                    'child_benefits': 0,
+                    'maintenance_received': 601,
+                    'pension': 701,
+                    'other_income': 801,
+                    'self_employed': False,
+                },
+                'deductions': {
+                    'income_tax': 700,
+                    'national_insurance': 1,
+                    'maintenance': 711,
+                    'childcare': 716,
+                    'mortgage': 720,
+                    'rent': 1,
+                    'criminal_legalaid_contributions': 731,
+                }
+            },
+            property_data=[],
+        ))
+
+    def test_to_case_data_with_partner_and_NOT_None_partner_child_benefits(self):
+        """
+        EligibilityCheck partner data is used during CaseData creation
+
+        If partner.income.child_benefits is NOT None, the to_case_data will use
+        that value and will not override it with 0
+        """
+        check = make_recipe('legalaid.eligibility_check',
+            category=make_recipe('legalaid.category', code='code'),
+            you=make_recipe('legalaid.person',
+                income=make_recipe('legalaid.income',
+                    earnings=MoneyInterval('per_month', pennies=100),
+                    self_employment_drawings=MoneyInterval('per_month', pennies=200),
+                    benefits=MoneyInterval('per_month', pennies=300),
+                    tax_credits=MoneyInterval('per_month', pennies=400),
+                    child_benefits=MoneyInterval('per_month', pennies=500),
+                    maintenance_received=MoneyInterval('per_month', pennies=600),
+                    pension=MoneyInterval('per_month', pennies=700),
+                    other_income=MoneyInterval('per_month', pennies=800),
+                    self_employed=True
+                ),
+                savings=make_recipe('legalaid.savings',
+                    bank_balance=100,
+                    investment_balance=200,
+                    asset_balance=300,
+                    credit_balance=400,
+                ),
+                deductions=make_recipe('legalaid.deductions',
+                    income_tax=MoneyInterval('per_month', pennies=600),
+                    national_insurance=MoneyInterval('per_month', pennies=100),
+                    maintenance=MoneyInterval('per_month', pennies=710),
+                    childcare=MoneyInterval('per_month', pennies=715),
+                    mortgage=MoneyInterval('per_month', pennies=700),
+                    rent=MoneyInterval('per_month', pennies=20),
+                    criminal_legalaid_contributions=730
+                )
+            ),
+            partner=make_recipe('legalaid.person',
+                income= make_recipe('legalaid.income',
+                    earnings=MoneyInterval('per_month', pennies=101),
+                    self_employment_drawings=MoneyInterval('per_month', pennies=201),
+                    benefits=MoneyInterval('per_month', pennies=301),
+                    tax_credits=MoneyInterval('per_month', pennies=401),
+                    # child_beneficts is not None. Testing that the to_case_data doesn't
+                    # override this value
+                    child_benefits=MoneyInterval('per_month', pennies=501),
+                    maintenance_received=MoneyInterval('per_month', pennies=601),
+                    pension=MoneyInterval('per_month', pennies=701),
+                    other_income=MoneyInterval('per_month', pennies=801),
+                    self_employed=False
+                ),
+                savings= make_recipe('legalaid.savings',
+                    bank_balance=101,
+                    investment_balance=201,
+                    asset_balance=301,
+                    credit_balance=401,
+                ),
+                deductions=make_recipe('legalaid.deductions',
+                    income_tax=MoneyInterval('per_month', pennies=700),
+                    national_insurance=MoneyInterval('per_month', pennies=1),
+                    maintenance=MoneyInterval('per_month', pennies=711),
+                    childcare=MoneyInterval('per_month', pennies=716),
+                    mortgage=MoneyInterval('per_month', pennies=720),
+                    rent=MoneyInterval('per_month', pennies=1),
+                    criminal_legalaid_contributions=731
+                )
+            ),
+            dependants_young=3, dependants_old=2,
+            is_you_or_your_partner_over_60=True,
+            on_passported_benefits=True,
+            on_nass_benefits=False,
+            has_partner=True,
+        )
+
+        case_data = check.to_case_data()
+        self.assertModelMixinEqual(case_data, CaseData(
+            category='code',
+            facts={
+                'dependants_young': 3,
+                'dependants_old': 2,
+                'is_you_or_your_partner_over_60':True,
+                'on_passported_benefits': True,
+                'on_nass_benefits': False,
+                'has_partner': True,
+                'is_partner_opponent': False,
+            },
+            you={
+                'savings':{
+                    'bank_balance':100,
+                    'investment_balance': 200,
+                    'credit_balance':400,
+                    'asset_balance': 300,
+                },
+                'income': {
+                    'earnings': 100,
+                    'self_employment_drawings': 200,
+                    'benefits': 300,
+                    'tax_credits': 400,
+                    'child_benefits': 500,
+                    'maintenance_received': 600,
+                    'pension': 700,
+                    'other_income': 800,
+                    'self_employed': True,
+                },
+                'deductions': {
+                    'income_tax': 600,
+                    'national_insurance': 100,
+                    'maintenance': 710,
+                    'childcare': 715,
+                    'mortgage': 700,
+                    'rent': 20,
+                    'criminal_legalaid_contributions': 730,
+                }
+            },
+            partner={
+                'savings':{
+                    'bank_balance':101,
+                    'investment_balance': 201,
+                    'credit_balance':401,
+                    'asset_balance': 301,
+                },
+                'income': {
+                    'earnings': 101,
+                    'self_employment_drawings': 201,
+                    'benefits': 301,
+                    'tax_credits': 401,
+                    'child_benefits': 501,
+                    'maintenance_received': 601,
+                    'pension': 701,
+                    'other_income': 801,
                     'self_employed': False,
                 },
                 'deductions': {
@@ -312,52 +495,64 @@ class EligibilityCheckTestCase(TestCase):
             'legalaid.eligibility_check',
             category=make_recipe('legalaid.category', code='code'),
             you=make_recipe('legalaid.person',
-                            income= make_recipe('legalaid.income',
-                                                earnings= {"interval_period": "per_month",
-                                                           "per_interval_value": 500,
-                                                           },
-                                                other_income={"interval_period": "per_month",
-                                                              "per_interval_value": 600
-                                                },
-                                                self_employed=True
-                            ),
-                            savings=make_recipe('legalaid.savings',
-                                                bank_balance=100,
-                                                investment_balance=200,
-                                                asset_balance=300,
-                                                credit_balance=400,
-                                                ),
-                            deductions=make_recipe('legalaid.deductions',
-                                                   income_tax=MoneyInterval('per_month', pennies=600),
-                                                   national_insurance=MoneyInterval('per_month', pennies=100),
-                                                   maintenance=MoneyInterval('per_month', pennies=710),
-                                                   childcare=MoneyInterval('per_month', pennies=715),
-                                                   mortgage=MoneyInterval('per_month', pennies=700),
-                                                   rent=MoneyInterval('per_month', pennies=20),
-                                                   criminal_legalaid_contributions=730
-                            )
+                income= make_recipe('legalaid.income',
+                    earnings=MoneyInterval('per_month', pennies=500),
+                    self_employment_drawings=MoneyInterval('per_month', pennies=200),
+                    benefits=MoneyInterval('per_month', pennies=300),
+                    tax_credits=MoneyInterval('per_month', pennies=400),
+                    child_benefits=MoneyInterval('per_month', pennies=500),
+                    maintenance_received=MoneyInterval('per_month', pennies=600),
+                    pension=MoneyInterval('per_month', pennies=700),
+                    other_income=MoneyInterval('per_month', pennies=600),
+                    self_employed=True
+                ),
+                savings=make_recipe('legalaid.savings',
+                    bank_balance=100,
+                    investment_balance=200,
+                    asset_balance=300,
+                    credit_balance=400,
+                ),
+                deductions=make_recipe('legalaid.deductions',
+                   income_tax=MoneyInterval('per_month', pennies=600),
+                   national_insurance=MoneyInterval('per_month', pennies=100),
+                   maintenance=MoneyInterval('per_month', pennies=710),
+                   childcare=MoneyInterval('per_month', pennies=715),
+                   mortgage=MoneyInterval('per_month', pennies=700),
+                   rent=MoneyInterval('per_month', pennies=20),
+                   criminal_legalaid_contributions=730
+                )
             ),
             dependants_young=3, dependants_old=2,
             is_you_or_your_partner_over_60=True,
             on_passported_benefits=True,
             has_partner=True,
             )
-        expected = {'warnings':
-                        {'partner':
-                             {'deductions': ['Field "deductions" is required'],
-                              'income': ['Field "income" is required'],
-                              'savings': ['Field "savings" is required']}}}
+        expected = {
+            'warnings': {
+                'partner': {
+                    'deductions': ['Field "deductions" is required'],
+                    'income': ['Field "income" is required'],
+                    'savings': ['Field "savings" is required']
+                }
+            }
+        }
 
         self.assertEqual(expected, check.validate())
         check.you = None
-        expected2 = {'warnings':
-                         {
-                             'partner': {'deductions': ['Field "deductions" is required'],
-                                         'income': ['Field "income" is required'],
-                                         'savings': ['Field "savings" is required']},
-                             'you': {'deductions': ['Field "deductions" is required'],
-                                     'income': ['Field "income" is required'],
-                                     'savings': ['Field "savings" is required']}}}
+        expected2 = {
+            'warnings': {
+                'partner': {
+                    'deductions': ['Field "deductions" is required'],
+                    'income': ['Field "income" is required'],
+                    'savings': ['Field "savings" is required']
+                },
+                'you': {
+                    'deductions': ['Field "deductions" is required'],
+                    'income': ['Field "income" is required'],
+                    'savings': ['Field "savings" is required']
+                }
+            }
+        }
         self.assertDictEqual(expected2, check.validate())
 
     @mock.patch('legalaid.models.EligibilityChecker')
@@ -696,6 +891,12 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
             equal_fields=[
                 'earnings_interval_period', 'earnings_per_interval_value', 'earnings',
                 'other_income_interval_period', 'other_income_per_interval_value', 'other_income',
+                'self_employment_drawings', 'self_employment_drawings_per_interval_value', 'self_employment_drawings_interval_period',
+                'tax_credits', 'tax_credits_interval_period', 'tax_credits_per_interval_value',
+                'maintenance_received', 'maintenance_received_interval_period', 'maintenance_received_per_interval_value',
+                'benefits', 'benefits_interval_period', 'benefits_per_interval_value',
+                'child_benefits', 'child_benefits_interval_period', 'child_benefits_per_interval_value',
+                'pension', 'pension_per_interval_value', 'pension_interval_period',
                 'self_employed'
             ]
         )

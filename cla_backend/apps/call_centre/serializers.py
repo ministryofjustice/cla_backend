@@ -32,6 +32,18 @@ class IncomeSerializer(IncomeSerializerBase):
         )
 
 
+class PartnerIncomeSerializer(IncomeSerializerBase):
+    """
+    Like IncomeSerializer but without 'child_benefits'
+    """
+    class Meta(IncomeSerializerBase.Meta):
+        fields = (
+            'earnings', 'self_employment_drawings', 'benefits', 'tax_credits',
+            'maintenance_received', 'pension',
+            'other_income', 'self_employed', 'total'
+        )
+
+
 class SavingsSerializer(SavingsSerializerBase):
     class Meta(SavingsSerializerBase.Meta):
         fields = (
@@ -96,6 +108,16 @@ class PersonSerializer(PersonSerializerBase):
         )
 
 
+class PartnerPersonSerializer(PersonSerializer):
+    """
+        Like PersonSerializer but without child_benefits
+    """
+    income = PartnerIncomeSerializer(required=False)
+
+    class Meta(PersonSerializer.Meta):
+        pass
+
+
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
         fields = (
@@ -109,7 +131,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
         allow_add_remove=True, many=True, required=False
     )
     you = PersonSerializer(required=False)
-    partner = PersonSerializer(required=False)
+    partner = PartnerPersonSerializer(required=False)
     notes = serializers.CharField(max_length=500, required=False, read_only=True)
     disputed_savings = SavingsSerializer(required=False)
 

@@ -37,4 +37,4 @@ class EligibilityCheckTestCase(
         self.assertEqual(data['dependants_young'], check.dependants_young)
         self.assertEqual(data['dependants_old'], check.dependants_old)
         self.assertPersonEqual(data['you'], check.you)
-        self.assertPersonEqual(data['partner'], check.partner)
+        self.assertPersonEqual(data['partner'], check.partner, partner=True)

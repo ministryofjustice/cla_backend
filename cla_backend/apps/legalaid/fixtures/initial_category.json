@@ -1,17 +1,5 @@
 [
   {
-    "pk": 1,
-    "model": "legalaid.category",
-    "fields": {
-      "code": "violence",
-      "description": "",
-      "order": 0,
-      "modified": "2014-02-24T15:35:31.906Z",
-      "name": "Violence and abuse at home",
-      "created": "2014-02-24T15:35:31.905Z"
-    }
-  },
-  {
     "pk": 2,
     "model": "legalaid.category",
     "fields": {

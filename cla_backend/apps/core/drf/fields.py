@@ -52,6 +52,9 @@ class ThreePartDateField(serializers.WritableField):
                     dt_object = datetime.date(int(year), int(month), int(day))
                 except ValueError as ve:
                     raise serializers.ValidationError(ve)
+
+                if int(year) < 1900:
+                    raise serializers.ValidationError('year must be >= 1900')
                 return dt_object
             elif not all([day, month, year]):
                 return None

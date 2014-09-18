@@ -625,7 +625,7 @@ class Case(TimeStampedModel):
 
     def assign_to_provider(self, provider):
         self.provider = provider
-        self.save(update_fields=['provider'])
+        self.save(update_fields=['provider', 'modified'])
 
     def assign_alternative_help(self, user, articles):
         self.alternative_help_articles.clear()
@@ -652,7 +652,7 @@ class Case(TimeStampedModel):
 
     def set_requires_action_by(self, requires_action_by):
         self.requires_action_by = requires_action_by
-        self.save(update_fields=['requires_action_by'])
+        self.save(update_fields=['requires_action_by', 'modified'])
 
     @property
     def doesnt_requires_action(self):

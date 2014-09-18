@@ -231,6 +231,11 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     matter_type2 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO))
     media_code = serializers.SlugRelatedField(slug_field='code', required=False)
 
+    def _get_fields_for_partial_update(self):
+        fields = super(CaseSerializerBase, self)._get_fields_for_partial_update()
+        fields.append('modified')
+        return fields
+
     def validate(self, attrs):
         attrs = super(CaseSerializerBase, self).validate(attrs)
         if attrs.get('exempt_user') and not attrs.get('exempt_user_reason'):

@@ -45,6 +45,21 @@ class ProviderAllocationHelper(object):
         @return: Randomly chosen provider who offers this category of service
                  or None if there are no providers with this category of
                  service
+
+        PLEASE NOTE:
+            This can be improved quite a lot (and it should be).
+
+            Only 2 changes are required:
+
+            a/ at each iteration, the algorithm should correct itself by
+                getting the current computed allocations and add a +/- boost
+                to the allocations for the next iteration
+
+            b/ in order to support changes in allocations, the algorithm should
+                only consider the computed allocations after the last modified
+                field of the all provider allocations combined only.
+                In this way, we would ignore the state before the allocation
+                changed.
         """
         def calculate_winner():
             allocations = self.get_qualifying_providers_allocation(category)

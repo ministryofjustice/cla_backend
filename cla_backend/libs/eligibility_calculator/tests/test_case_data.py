@@ -7,26 +7,17 @@ from .fixtures import get_default_case_data
 
 class TestCaseData(unittest.TestCase):
 
-    GROSS_INCOME_FIELDS = [
-        'earnings',
-        'other_income',
-    ]
-
-    GROSS_CAPITAL_FIELDS = [
-        'savings',
-        'investment_balance',
-        'credit_balance',
-        'asset_balance',
-        'partner_savings',
-        'partner_investment_balance',
-        'partner_credit_balance',
-        'partner_asset_balance'
-    ]
-
     def test_total_income_calculation(self):
         default_data = get_default_case_data(
             you__income__earnings=0,
-            you__income__other_income=0)
+            you__income__self_employment_drawings=0,
+            you__income__benefits=0,
+            you__income__tax_credits=0,
+            you__income__child_benefits=0,
+            you__income__maintenance_received=0,
+            you__income__pension=60,
+            you__income__other_income=0
+        )
 
         cd = CaseData(**default_data)
         ti = cd.total_income
@@ -39,20 +30,46 @@ class TestCaseData(unittest.TestCase):
         self.assertEqual(gross_income_orig, ti)
 
     def test_total_income_calculation_with_partner(self):
-        combined_income = 30000
+        combined_income = 31710
         default_data = get_default_case_data(
             you__income__earnings=10000,
+            you__income__self_employment_drawings=10,
+            you__income__benefits=20,
+            you__income__tax_credits=30,
+            you__income__child_benefits=40,
+            you__income__maintenance_received=50,
+            you__income__pension=60,
             you__income__other_income=4000,
             partner__income__earnings=10000,
+            partner__income__self_employment_drawings=100,
+            partner__income__benefits=200,
+            partner__income__tax_credits=300,
+            partner__income__child_benefits=0,
+            partner__income__maintenance_received=400,
+            partner__income__pension=500,
             partner__income__other_income=6000,
-            facts__has_partner=True)
+            facts__has_partner=True
+        )
 
         cd = CaseData(**default_data)
         ti = cd.total_income
         income = cd.you.income
-        gross_income_orig = income.earnings + income.other_income
-        gross_income_orig += cd.partner.income.earnings
-        gross_income_orig += cd.partner.income.other_income
+        gross_income_orig = income.earnings +  \
+            income.self_employment_drawings + \
+            income.benefits + \
+            income.tax_credits + \
+            income.child_benefits + \
+            income.maintenance_received + \
+            income.pension + \
+            income.other_income
+        gross_income_orig += cd.partner.income.earnings + \
+            cd.partner.income.self_employment_drawings + \
+            cd.partner.income.benefits + \
+            cd.partner.income.tax_credits + \
+            cd.partner.income.child_benefits + \
+            cd.partner.income.maintenance_received + \
+            cd.partner.income.pension + \
+            cd.partner.income.other_income
         self.assertEqual(gross_income_orig, ti)
         self.assertEqual(combined_income, ti)
 
@@ -69,24 +86,17 @@ class TestCaseData(unittest.TestCase):
     def test_get_total_income_no_partner(self):
         cdd = get_default_case_data(
             you__income__earnings=265700,
+            you__income__self_employment_drawings=10,
+            you__income__benefits=20,
+            you__income__tax_credits=30,
+            you__income__child_benefits=40,
+            you__income__maintenance_received=50,
+            you__income__pension=60,
             you__income__other_income=0,
         )
         cd = CaseData(**cdd)
         self.assertFalse(cd.facts.has_partner)
-        self.assertEqual(265700, cd.total_income)
-
-    def test_get_total_income_incl_other_no_partner(self):
-
-        earnings = 265700
-        other_income = 100
-
-        cdd = get_default_case_data(
-            you__income__earnings=earnings,
-            you__income__other_income=other_income
-        )
-        cd = CaseData(**cdd)
-        self.assertFalse(cd.facts.has_partner)
-        self.assertEqual(265800, cd.total_income)
+        self.assertEqual(265910, cd.total_income)
 
     # TODO: fix this to check nested properties
     # def test_provide_partner_earnings_required_partner_other_income(self):
@@ -103,24 +113,25 @@ class TestCaseData(unittest.TestCase):
     def test_get_total_income_with_partner(self):
         cdd = get_default_case_data(
             you__income__earnings=265700,
+            you__income__self_employment_drawings=10,
+            you__income__benefits=20,
+            you__income__tax_credits=30,
+            you__income__child_benefits=40,
+            you__income__maintenance_received=50,
+            you__income__pension=60,
             you__income__other_income=0,
             partner__income__earnings=100,
-            partner__income__other_income=0,
+            partner__income__self_employment_drawings=100,
+            partner__income__benefits=200,
+            partner__income__tax_credits=300,
+            partner__income__child_benefits=0,
+            partner__income__maintenance_received=400,
+            partner__income__pension=500,
+            partner__income__other_income=2,
             facts__has_partner=True
         )
         cd = CaseData(**cdd)
-        self.assertEqual(265800, cd.total_income)
-
-    def test_get_total_income_incl_other_with_partner(self):
-        cdd = get_default_case_data(
-            you__income__earnings=265700,
-            you__income__other_income=100,
-            partner__income__earnings=100,
-            partner__income__other_income=0,
-            facts__has_partner=True
-        )
-        cd = CaseData(**cdd)
-        self.assertEqual(265900, cd.total_income)
+        self.assertEqual(267512, cd.total_income)
 
     def test_is_partner_disputed_true(self):
         cdd = get_default_case_data(facts__has_partner=True,

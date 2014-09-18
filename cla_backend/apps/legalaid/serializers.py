@@ -76,7 +76,11 @@ class TotalsModelSerializer(ClaModelSerializer):
 
 
 class IncomeSerializerBase(TotalsModelSerializer):
-    total_fields = {'earnings', 'other_income'}
+    total_fields = {
+        'earnings', 'self_employment_drawings', 'benefits', 'tax_credits',
+        'child_benefits', 'maintenance_received', 'pension',
+        'other_income'
+    }
 
     class Meta:
         model = Income

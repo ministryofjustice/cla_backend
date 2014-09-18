@@ -340,7 +340,7 @@ class AssignCaseTestCase(BaseCaseTestCase):
         self.assertEqual(Log.objects.count(), 1)
         log = Log.objects.all()[0]
         self.assertEqual(log.case, case)
-        self.assertEqual(log.notes, 'my notes' if is_manual else 'Assigned to Provider Name')
+        self.assertEqual(log.notes, 'Assigned to Provider Name. %s' % data.get('notes', ''))
         self.assertEqual(log.created_by, self.user)
 
         # ... but the case still accessible from the full list

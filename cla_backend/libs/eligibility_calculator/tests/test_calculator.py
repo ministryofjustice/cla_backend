@@ -55,6 +55,30 @@ class TestCapitalCalculator(unittest.TestCase):
             'main': main
         }
 
+    def test_with_incomplete_properties(self):
+        # Incomplete property (containing None values) should be skipped
+
+        calc = CapitalCalculator(properties=[
+            self.make_property(24000000, 8000000, 50, True, True),
+            self.make_property(None, None, None, None, None),
+            self.make_property(32000000, None, 50, False, False),
+            self.make_property(32000000, 15000000, None, False, False),
+            self.make_property(32000000, 15000000, 50, None, False),
+            self.make_property(32000000, 15000000, 50, False, None),
+            self.make_property(9000000, 8000000, 50, True, False),
+        ])
+        capital = calc.calculate_capital()
+
+        self.assertEqual(capital, 500000)
+        self.assertEqual(calc.main_property['equity'], 0)
+        self.assertDictEqual(
+            calc.calcs, {
+                'property_equities': [0, 0, 0, 0, 0, 0, 500000],
+                'property_capital': 500000,
+                'liquid_capital': 0
+            }
+        )
+
     def test_scenario_smod_1(self):
         # The applicant has a home worth £320,000 and the mortgage is £150,000.
         # The property is registered in joint names with his opponent.

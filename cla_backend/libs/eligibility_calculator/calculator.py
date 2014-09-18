@@ -53,10 +53,17 @@ class CapitalCalculator(object):
                 self._other_properties = [prop for prop in self.properties if not prop['main']]
         return self._other_properties
 
+    def _is_property_valid(self, prop):
+        if not prop:
+            return False
+
+        return not any(v is None for v in prop.values())
+
     # for each other property
     def _calculate_property_equity(self, prop):
-        if not prop:
+        if not self._is_property_valid(prop):
             return
+
         mortgage_disregard = min(prop['mortgage_left'], self.mortgage_disregard_available)
 
         property_equity = prop['value'] - mortgage_disregard

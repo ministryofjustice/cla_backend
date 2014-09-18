@@ -47,6 +47,12 @@ def to_case_data(scenario):
         },
         'income': {
             'earnings': money(scenario['earnings-1']),
+            'self_employment_drawings': money(0),
+            'benefits': money(0),
+            'tax_credits': money(0),
+            'child_benefits': money(0),
+            'maintenance_received': money(0),
+            'pension': money(0),
             'other_income': money(scenario['other-income']),
             'self_employed': is_yes(scenario['selfemp'])
         },
@@ -69,6 +75,12 @@ def to_case_data(scenario):
         },
         'income': {
             'earnings': money(scenario['partner-earnings']),
+            'self_employment_drawings': money(0),
+            'benefits': money(0),
+            'tax_credits': money(0),
+            'child_benefits': money(0),
+            'maintenance_received': money(0),
+            'pension': money(0),
             'other_income': money(scenario['partner-other-income']),
             'self_employed': is_yes(scenario['pselfemp'])
         },

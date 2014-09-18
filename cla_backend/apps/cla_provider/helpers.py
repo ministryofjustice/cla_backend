@@ -2,7 +2,9 @@ import datetime
 import random
 
 from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
+from django.http import HttpResponse
+from django.template import Context
+from django.template.loader import render_to_string, get_template
 from django.utils import timezone
 from django.conf import settings
 
@@ -148,3 +150,14 @@ def notify_case_assigned(provider, case):
         subject, text, from_address, [provider.email_address])
     email.attach_alternative(html, 'text/html')
     email.send()
+
+
+class ProviderExtractFormatter(object):
+    def __init__(self, case):
+        self.case = case
+
+    def format(self):
+        ctx = {}
+        ctx['case'] = self.case
+        template = get_template('provider/case.xml')
+        return HttpResponse(template.render(Context(ctx)), content_type='text/xml')

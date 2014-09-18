@@ -282,3 +282,4 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
 
     class Meta:
         fields = ()
+        write_only_fields = ('chs_user', 'chs_password', 'chs_organisation',)

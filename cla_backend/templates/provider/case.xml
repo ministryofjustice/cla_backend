@@ -1,0 +1,123 @@
+{% with ec=case.eligibility_check pd=case.personal_details tp=case.thirdparty_details ad=case.adapation_details %}
+<Case CRN="{{ case.laa_reference }}" CaseCreated="{{ case.created|date:'c' }}">
+    <MeansTestResult>{{ ec.state|yesno:'P,F' }}</MeansTestResult>
+    <MatterType>
+        <Name>{{ case.diagnosis.category.name|capfirst }}</Name>
+        <Part1>{{ case.matter_type1.code }}</Part1>
+        <Part2>{{ case.matter_type2.code }}</Part2>
+    </MatterType>
+    <ReferralSource>P</ReferralSource>
+    <Client>
+        <Anonymous>N</Anonymous>
+        {% if pd.safe_to_contact == 'SAFE' %}
+        <CanBeCalledBack>Y</CanBeCalledBack>
+        {% else %}
+        <CanBeCalledBack>N</CanBeCalledBack>
+        {% endif %}
+        <Name>
+            <Title>{{ pd.title }}</Title>
+            <FirstName>{{ pd.full_name }}</FirstName>
+            <Surname/>
+            <KnownAs/>
+        </Name>
+        <DOB>{{ pd.date_of_birth|date:'c' }}</DOB>
+        <Gender>n/a</Gender>
+        <Address>
+            <Line1>{{ pd.street }}</Line1>
+            <Line2>n/a</Line2>
+            <Town>n/a</Town>
+            <County>n/a</County>
+            <PostCode>{{ pd.post_code }}</PostCode>
+        </Address>
+        <Ethnicity>n/a</Ethnicity>
+        <DisabilityMonitoringCode>n/a</DisabilityMonitoringCode>
+        <ServiceAdaptations>
+{#            <CallBackRequestedByOnlineForm>Adaptation</CallBackRequestedByOnlineForm>#}
+            {% if ad.callback_preference %}<CallBackRequestedByCaller>Adaptation</CallBackRequestedByCaller>{% endif %}
+{#            <CallBackRequestedByText>Adaptation</CallBackRequestedByText>#}
+            {% if ad.language and ad.language != 'WELSH' %}<LanguageLine>Adaptation</LanguageLine>{% endif %}
+            {% if ad.bsl_webcam %}<BritishSignLanguageWebcam>Adjustment</BritishSignLanguageWebcam>{% endif %}
+            {% if ad.minicom %}<Minicom>Adjustment</Minicom>{% endif %}
+            {% if ad.text_relay %}<Typetalk>Adjustment</Typetalk>{% endif %}
+            {% if ad.skype_webcam %}<SkypeWebcam>Adjustment</SkypeWebcam>{% endif %}
+{#            <OnlineAdvice>Adaptation</OnlineAdvice>#}
+            {% if case.thirdparty_details %}<ThirdPartyCaller>Adaptation</ThirdPartyCaller>{% endif %}
+            <Other>none</Other>
+        </ServiceAdaptations>
+        <ContactDetails>
+            <Phone>{{ pd.home_phone }}</Phone>
+            <Mobile>{{ pd.mobile_phone }}</Mobile>
+            <Email>{{ pd.email }}</Email>
+            {% if ad.text_relay %}<TextPhone>N</TextPhone>{% endif %}
+        </ContactDetails>
+        {% if ad.language and ad.language != 'WELSH' %}<LanguageLineUsed>Y</LanguageLineUsed>{% endif %}
+        {% if ad.language and ad.language != 'WELSH' %}<LanguageUsed>{{ ad.language }}</LanguageUsed>{% else %}
+                            <LanguageUsed/>{% endif %}
+        <CanBeCalledForFeedback>{{ pd.contact_for_resarch|yesno:"Y,N" }}</CanBeCalledForFeedback>
+        <Security>
+            <Password>{{ tp.pass_phrase }}</Password>
+            <Reminder>n/a</Reminder>
+        </Security>
+    </Client>
+    {% if case.exempt_user %}
+        <ExemptionCode>{{ case.exempt_user_reason }}</ExemptionCode>
+    {% else %}
+        <ExemptionCode/>
+    {% endif %}
+    <PreviousCRN/>
+    <TelephoneAdviceNotAppropriate/>
+    <ReferredOrganisation>
+        <Organisation>{{ case.provider.name }}</Organisation>
+        <OrganisationNumber>{{ case.provider.telephone_frontdoor }}</OrganisationNumber>
+        <ProviderChosenByClient>False</ProviderChosenByClient>
+    </ReferredOrganisation>
+    {% with referrals=case.caseknowledgebaseassignment_set.all %}
+        {% if referrals %}
+            <SignPostingCaseReferrals>
+                {% for referral in case.caseknowledgebaseassignment_set.all %}
+                    <CaseReferral>
+                        <CaseReferralCaseDate>{{ referral.created|date:"c" }}</CaseReferralCaseDate>
+                        <CaseReferralCaseOutcome>n/a</CaseReferralCaseOutcome>
+                        <CaseReferralReasonRejected>n/a</CaseReferralReasonRejected>
+                        <UserName>{{refer.assigned_by.username}}</UserName>
+                    </CaseReferral>
+                {% endfor %}
+            </SignPostingCaseReferrals>
+        {% else %}
+            <SignPostingCaseReferrals/>
+        {% endif %}
+    {% endwith %}
+    <ThirdParty>
+        <Name>{{ tp.personal_details.full_name }}</Name>
+        <Address>
+            <AtSameAddress>{% if tp.personal_details.street == pd.street and tp.personal_details.post_code == pd.post_code %}Y{% else %}N{% endif %}</AtSameAddress>
+            <Line1>{{ tp.personal_details.street }}</Line1>
+            <Line2>n/a</Line2>
+            <Town>n/a</Town>
+            <County>n/a</County>
+            <PostCode>{{ tp.personal_details.post_code }}</PostCode>
+        </Address>
+        <ContactDetails>
+            <Phone>{{ tp.personal_details.home_phone }}</Phone>
+            <Mobile/>
+            <Email>{{ tp.personal_detail.email }}</Email>
+        </ContactDetails>
+        <ReasonForThirdPartyCall>{{ tp.reason }}</ReasonForThirdPartyCall>
+        <RelationshipToClient>{{ tp.personal_relationship }}</RelationshipToClient>
+        <Organisation>{{ tp.organisation_name }}</Organisation>
+        <HaveYouSpokenToClient>{{ tp.spoke_to }}</HaveYouSpokenToClient>
+        <ReasonForNotSpeakingWithClient>{{ tp.no_contact_reason }}</ReasonForNotSpeakingWithClient>
+        <EvidenceProvided/>
+    </ThirdParty>
+    <CaseEvents>
+        {% for outcome in case.log_set.all %}
+            {% if outcome.type == 'outcome' %}
+            <CaseEvent>
+                <OutcomeCode>{{ outcome.code }}</OutcomeCode>
+                <OutcomeNotes>{{ outcome.notes }}</OutcomeNotes>
+            </CaseEvent>
+            {% endif %}
+        {% endfor %}
+    </CaseEvents>
+</Case>
+{% endwith %}

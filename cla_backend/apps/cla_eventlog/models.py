@@ -39,6 +39,7 @@ class Log(TimeStampedModel):
             self.case.outcome_code = self.code
             self.case.level = self.level
             self.case.outcome_code_id = self.pk
+            self.case.save(update_fields=["level", "outcome_code_id", "outcome_code"])
 
     class Meta:
         ordering = ['-created']

@@ -630,6 +630,11 @@ class Case(TimeStampedModel):
         self.provider_viewed = None
         self.save(update_fields=['provider', 'provider_viewed', 'modified'])
 
+    def view_by_provider(self, provider):
+        if provider == self.provider:
+            self.provider_viewed = datetime.datetime.utcnow().replace(tzinfo=utc)
+            self.save(update_fields=['provider_viewed'])
+
     def assign_alternative_help(self, user, articles):
         self.alternative_help_articles.clear()
         for article in articles:

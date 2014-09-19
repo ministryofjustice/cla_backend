@@ -66,11 +66,10 @@ class ProviderAllocationForm(BaseCaseLogForm):
         return cleaned_data
 
     def get_notes(self):
-        notes = self.cleaned_data['notes']
-        if not notes and not self.get_is_manual():
-            notes = u"Assigned to {provider}".format(
-                provider=self.cleaned_data['provider_obj'].name)
-        return notes
+        return u"Assigned to {provider}. {notes}".format(
+            provider=self.cleaned_data['provider_obj'].name,
+            notes=self.cleaned_data['notes'] or ""
+        )
 
     def get_is_manual(self):
         return self.cleaned_data['is_manual']

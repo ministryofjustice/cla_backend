@@ -1,5 +1,17 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+class IsProviderPermission(BasePermission):
+    """
+    Check the request is being made by a provider user
+    """
+    def has_permission(self, request, view):
+        return hasattr(request.user, 'staff') and bool(request.user.staff)
+
+    def has_object_permission(self, request, view, obj):
+        if not obj:
+            return True
+        else:
+            return obj.provider == request.user.staff.provider
 
 class ClientIDPermission(BasePermission):
     """

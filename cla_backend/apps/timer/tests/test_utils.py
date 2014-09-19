@@ -75,6 +75,13 @@ class StopTimerTestCase(TestCase):
 
         self.assertRaises(ValueError, stop_timer, timer.created_by)
 
+    def test_doesnt_fail_without_log_and_cancelled(self):
+        timer = make_recipe('timer.Timer')
+        with self.assertRaises(ValueError):
+            timer.stop()
+
+        timer.stop(cancelled=True)
+
     @mock.patch('timer.utils.get_timer')
     def test_stops_timer(self, mocked_get_timer):
         user = make_user()

@@ -13,9 +13,17 @@ category = Recipe(Category,
     name=seq('Name'), code=seq('Code'), order = seq(0)
 )
 
-income = Recipe(Income, earnings=MoneyInterval('per_month', pennies=2200),
-                other_income=MoneyInterval('per_week', pennies=2200)
-                )
+income = Recipe(
+    Income,
+    earnings=MoneyInterval('per_month', pennies=2200),
+    self_employment_drawings=MoneyInterval('per_month', pennies=0),
+    benefits=MoneyInterval('per_month', pennies=0),
+    tax_credits=MoneyInterval('per_month', pennies=0),
+    child_benefits=MoneyInterval('per_month', pennies=0),
+    maintenance_received=MoneyInterval('per_month', pennies=0),
+    pension=MoneyInterval('per_month', pennies=0),
+    other_income=MoneyInterval('per_week', pennies=2200)
+)
 savings = Recipe(Savings)
 deductions = Recipe(Deductions,
                     income_tax = MoneyInterval('per_week', pennies=2200),

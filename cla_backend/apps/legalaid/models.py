@@ -67,6 +67,12 @@ class Savings(CloneModelMixin, TimeStampedModel):
 
 class Income(CloneModelMixin, TimeStampedModel):
     earnings = MoneyIntervalField(default=None, null=True, blank=True)
+    self_employment_drawings = MoneyIntervalField(default=None, null=True, blank=True)
+    benefits = MoneyIntervalField(default=None, null=True, blank=True)
+    tax_credits = MoneyIntervalField(default=None, null=True, blank=True)
+    child_benefits = MoneyIntervalField(default=None, null=True, blank=True)
+    maintenance_received = MoneyIntervalField(default=None, null=True, blank=True)
+    pension = MoneyIntervalField(default=None, null=True, blank=True)
     other_income = MoneyIntervalField(default=None, null=True, blank=True)
     self_employed = models.NullBooleanField(default=None)
 
@@ -340,7 +346,9 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
                     'asset_balance'
                 ]),
                 'income': compose_dict(self.you.income, [
-                    'earnings', 'other_income', 'self_employed'
+                    'earnings', 'self_employment_drawings', 'benefits',
+                    'tax_credits', 'child_benefits', 'maintenance_received',
+                    'pension', 'other_income', 'self_employed'
                 ]),
                 'deductions': compose_dict(self.you.deductions, [
                     'income_tax', 'national_insurance', 'maintenance',
@@ -352,14 +360,26 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
                         value}
 
         if self.has_partner and self.partner:
+            partner_income = compose_dict(self.partner.income, [
+                'earnings', 'self_employment_drawings', 'benefits',
+                'tax_credits', 'maintenance_received', 'child_benefits',
+                'pension', 'other_income', 'self_employed'
+            ])
+
+            # If partner.income.child_benefits is None, this method will use a
+            # default value (0). This is because that field is not exposed yet
+            # (partner's child benefits can't be provided with).
+            # Used this because in the future I reckon this might change so
+            # it would be easier to support.
+            if 'child_benefits' not in partner_income:
+                partner_income['child_benefits'] = 0
+
             partner_props = {
                 'savings': compose_dict(self.partner.savings, [
                     'bank_balance', 'investment_balance', 'credit_balance',
                     'asset_balance'
                 ]),
-                'income': compose_dict(self.partner.income, [
-                    'earnings', 'other_income', 'self_employed'
-                ]),
+                'income': partner_income,
                 'deductions': compose_dict(self.partner.deductions, [
                     'income_tax', 'national_insurance', 'maintenance',
                     'childcare', 'mortgage', 'rent',
@@ -605,7 +625,7 @@ class Case(TimeStampedModel):
 
     def assign_to_provider(self, provider):
         self.provider = provider
-        self.save(update_fields=['provider'])
+        self.save(update_fields=['provider', 'modified'])
 
     def assign_alternative_help(self, user, articles):
         self.alternative_help_articles.clear()
@@ -632,7 +652,7 @@ class Case(TimeStampedModel):
 
     def set_requires_action_by(self, requires_action_by):
         self.requires_action_by = requires_action_by
-        self.save(update_fields=['requires_action_by'])
+        self.save(update_fields=['requires_action_by', 'modified'])
 
     @property
     def doesnt_requires_action(self):

@@ -1,3 +1,4 @@
+from cla_provider.forms import AdminStaffForm
 from django.contrib import admin
 
 from .models import Provider, ProviderAllocation, Staff, OutOfHoursRota
@@ -5,6 +6,11 @@ from .models import Provider, ProviderAllocation, Staff, OutOfHoursRota
 
 class StaffInline(admin.TabularInline):
     model = Staff
+    form = AdminStaffForm
+
+class StaffAdmin(admin.ModelAdmin):
+    model = Staff
+    form = AdminStaffForm
 
 
 class ProviderAllocationInline(admin.TabularInline):
@@ -28,4 +34,4 @@ class ProviderAdmin(admin.ModelAdmin):
 admin.site.register(Provider, ProviderAdmin)
 admin.site.register(ProviderAllocation)
 admin.site.register(OutOfHoursRota)
-admin.site.register(Staff)
+admin.site.register(Staff, StaffAdmin)

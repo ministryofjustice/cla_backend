@@ -139,7 +139,7 @@ from cla_eventlog_log as log
   LEFT OUTER JOIN cla_provider_provider as provider on c.provider_id = provider.id
   LEFT OUTER JOIN diagnosis_diagnosistraversal as diagnosis on c.diagnosis_id = diagnosis.id
   LEFT OUTER JOIN legalaid_category as category on diagnosis.category_id = category.id
-  LEFT OUTER JOIN timer_timer as timer on log.timer_id = timer.id and timer.stopped IS NOT null
+  LEFT OUTER JOIN timer_timer as timer on log.timer_id = timer.id and timer.stopped IS NOT null and timer.cancelled = false
   LEFT OUTER JOIN legalaid_mattertype as mt1 on mt1.id = c.matter_type1_id
   LEFT OUTER JOIN legalaid_mattertype as mt2 on mt2.id = c.matter_type2_id
   LEFT OUTER JOIN legalaid_eligibilitycheck as ec on c.eligibility_check_id = ec.id

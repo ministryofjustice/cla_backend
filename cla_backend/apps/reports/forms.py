@@ -153,9 +153,9 @@ class TotalDuration(ReportAggregate):
     timer_timers.
     """
     sql_template = '''SUM(CASE
-            WHEN timer_timer.stopped IS NOT NULL THEN
+            WHEN timer_timer.cancelled = false and timer_timer.stopped IS NOT NULL THEN
                 EXTRACT(EPOCH FROM (timer_timer.stopped - timer_timer.created))
-            WHEN timer_timer.created IS NOT NULL THEN
+            WHEN timer.cancelled = false and timer_timer.created IS NOT NULL THEN
                 EXTRACT(EPOCH FROM (now() - timer_timer.created))
             ELSE
                 0
@@ -291,6 +291,7 @@ FROM
         (legalaid_case.id = timer_timer.linked_case_id)
 WHERE
     legalaid_case.created BETWEEN %s AND %s
+    and timer.cancelled = false
 GROUP BY
     DATE_TRUNC('day', legalaid_case.created),
     operator;

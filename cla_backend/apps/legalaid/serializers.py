@@ -76,7 +76,11 @@ class TotalsModelSerializer(ClaModelSerializer):
 
 
 class IncomeSerializerBase(TotalsModelSerializer):
-    total_fields = {'earnings', 'other_income'}
+    total_fields = {
+        'earnings', 'self_employment_drawings', 'benefits', 'tax_credits',
+        'child_benefits', 'maintenance_received', 'pension',
+        'other_income'
+    }
 
     class Meta:
         model = Income
@@ -227,6 +231,11 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     matter_type2 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO))
     media_code = serializers.SlugRelatedField(slug_field='code', required=False)
 
+    def _get_fields_for_partial_update(self):
+        fields = super(CaseSerializerBase, self)._get_fields_for_partial_update()
+        fields.append('modified')
+        return fields
+
     def validate(self, attrs):
         attrs = super(CaseSerializerBase, self).validate(attrs)
         if attrs.get('exempt_user') and not attrs.get('exempt_user_reason'):
@@ -273,3 +282,4 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
 
     class Meta:
         fields = ()
+        write_only_fields = ('chs_user', 'chs_password', 'chs_organisation',)

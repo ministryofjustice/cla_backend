@@ -2,7 +2,9 @@ import datetime
 import random
 
 from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
+from django.http import HttpResponse
+from django.template import Context
+from django.template.loader import render_to_string, get_template
 from django.utils import timezone
 from django.conf import settings
 
@@ -45,6 +47,21 @@ class ProviderAllocationHelper(object):
         @return: Randomly chosen provider who offers this category of service
                  or None if there are no providers with this category of
                  service
+
+        PLEASE NOTE:
+            This can be improved quite a lot (and it should be).
+
+            Only 2 changes are required:
+
+            a/ at each iteration, the algorithm should correct itself by
+                getting the current computed allocations and add a +/- boost
+                to the allocations for the next iteration
+
+            b/ in order to support changes in allocations, the algorithm should
+                only consider the computed allocations after the last modified
+                field of the all provider allocations combined only.
+                In this way, we would ignore the state before the allocation
+                changed.
         """
         def calculate_winner():
             allocations = self.get_qualifying_providers_allocation(category)
@@ -133,3 +150,14 @@ def notify_case_assigned(provider, case):
         subject, text, from_address, [provider.email_address])
     email.attach_alternative(html, 'text/html')
     email.send()
+
+
+class ProviderExtractFormatter(object):
+    def __init__(self, case):
+        self.case = case
+
+    def format(self):
+        ctx = {}
+        ctx['case'] = self.case
+        template = get_template('provider/case.xml')
+        return HttpResponse(template.render(Context(ctx)), content_type='text/xml')

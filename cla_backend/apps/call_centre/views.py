@@ -344,7 +344,7 @@ class CaseViewSet(
 
         # link personal details to case
         obj.personal_details = personal_details
-        obj.save(update_fields=['personal_details'])
+        obj.save(update_fields=['personal_details', 'modified'])
 
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 

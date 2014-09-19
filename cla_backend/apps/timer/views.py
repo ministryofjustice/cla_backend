@@ -1,3 +1,4 @@
+from django_statsd.clients import statsd
 from rest_framework import viewsets, views, status
 from rest_framework.response import Response as DRFResponse
 
@@ -40,3 +41,18 @@ class BaseTimerViewSet(viewsets.ViewSetMixin, views.APIView):
 
         data = self.get_serializer(timer)
         return DRFResponse(data)
+
+    def delete(self, request, *args, **kwargs):
+        timer = get_timer(request.user)
+        statsd.incr('timer.cancel')
+        statsd.incr('timer.cancel.user.%s' % request.user.pk)
+
+        if not timer:
+            return DRFResponse(
+                {'detail': 'Not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        timer.stop(cancelled=True)
+
+        return DRFResponse(status=status.HTTP_204_NO_CONTENT)

@@ -38,13 +38,15 @@ Sync and migrate the database: When prompted to create an Admin user, accept all
     ./manage.py syncdb
     ./manage.py migrate
 
-Load initial data for the categories:
+Load initial data:
 
-    ./manage.py loaddata initial_category.json
+    ./manage.py loaddata kb_from_spreadsheet.json initial_category.json test_provider.json initial_mattertype.json test_auth_clients.json initial_media_codes.json test_rotas.json
 
 Start the server:
 
     ./manage.py runserver 8000
+
+See the list of users in `/admin/auth/user/`. Passwords are the same as the usernames.
 
 ## Dev
 

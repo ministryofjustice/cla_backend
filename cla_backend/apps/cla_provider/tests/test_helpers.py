@@ -19,6 +19,7 @@ class ProviderAllocationHelperTestCase(TestCase):
         return providers
 
     def _test__get_random_provider(self, alloc_data, num_iterations=100000):
+        # print "\n\nNew test"
         helper = ProviderAllocationHelper()
         helper._providers_in_category = self.build_providers(alloc_data)
 
@@ -30,7 +31,11 @@ class ProviderAllocationHelperTestCase(TestCase):
 
         for id, count in results.items():
             prob = (count * 100.) / num_iterations
-            # print 'id %s: %s %%' % (id, prob)
+            # print 'expected %s - found %s. Difference %s' % (
+            #     alloc_data[id]['expected_prob'], prob,
+            #     ((alloc_data[id]['expected_prob'] * 0.01) * num_iterations) - \
+            #     ((prob * 0.01) * num_iterations)
+            # )
             self.assertAlmostEqual(prob, alloc_data[id]['expected_prob'], delta=1.5)
 
     def test__get_random_provider(self):

@@ -1,4 +1,7 @@
+from cla_provider.models import Staff
 from django import forms
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.forms import Form, PasswordInput
 from django.forms.util import ErrorList
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
@@ -70,7 +73,7 @@ class SplitCaseForm(BaseCaseLogForm):
         matter_type2 = cleaned_data['matter_type2']
         internal = cleaned_data['internal']
 
-        ##### GENERAL #####
+        # #### GENERAL #####
         non_fields_errors = []
 
         # validate case.provider == loggedin provider
@@ -103,13 +106,15 @@ class SplitCaseForm(BaseCaseLogForm):
             del cleaned_data['category']
 
         ##### MATTER TYPES #####
-        if not self.is_matter_type_valid(category, MATTER_TYPE_LEVELS.ONE, matter_type1):
+        if not self.is_matter_type_valid(category, MATTER_TYPE_LEVELS.ONE,
+                                         matter_type1):
             self._errors['matter_type1'] = ErrorList([
                 'Select a valid choice. That choice is not one of'
                 ' the available choices.'
             ])
             del cleaned_data['matter_type1']
-        if not self.is_matter_type_valid(category, MATTER_TYPE_LEVELS.TWO, matter_type2):
+        if not self.is_matter_type_valid(category, MATTER_TYPE_LEVELS.TWO,
+                                         matter_type2):
             self._errors['matter_type2'] = ErrorList([
                 'Select a valid choice. That choice is not one of'
                 ' the available choices.'
@@ -154,3 +159,37 @@ class SplitCaseForm(BaseCaseLogForm):
         kwargs = super(SplitCaseForm, self).get_kwargs()
         kwargs['internal'] = self.cleaned_data['internal']
         return kwargs
+
+
+class ProviderExtractForm(Form):
+    CHSUserName = forms.CharField(required=True)
+    CHSOrganisationID = forms.CharField(required=True)
+    CHSPassword = forms.CharField(required=True)
+    CHSCRN = forms.CharField(required=True)
+
+    def clean_CHSCRN(self):
+        data = self.cleaned_data['CHSCRN']
+        if data:
+            data = data.strip().upper()
+        return data
+
+
+class AdminStaffForm(forms.ModelForm):
+    chs_password = ReadOnlyPasswordHashField(widget=PasswordInput(),
+                                             required=False,
+                                             help_text='Password can only be set, not viewed.')
+
+    def clean(self):
+        data = self.cleaned_data
+        if not data['chs_password']:
+            del self.cleaned_data['chs_password']
+        return data
+
+    def save(self, commit=True):
+        raw_password = self.cleaned_data.get('chs_password')
+        if raw_password:
+            self.instance.set_chs_password(raw_password)
+        return super(AdminStaffForm, self).save(commit=commit)
+
+    class Meta:
+        model = Staff

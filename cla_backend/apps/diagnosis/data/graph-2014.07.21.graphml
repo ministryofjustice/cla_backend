@@ -4762,6 +4762,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       <data key="d4"><![CDATA[being married or in a civil partnership]]></data>
       <data key="d5"><![CDATA[Marriage and civil p]]></data>
       <data key="d9">6</data>
+      <data key="d10"><![CDATA[This refers to people who are married or in a civil partnership, including same sex couples. ]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12186.719047619048" y="1220.0"/>
@@ -8054,6 +8055,8 @@ provide for a child or young person's educational needs, or specifically about t
       <data key="d4"><![CDATA[religion or belief (or lack of belief)]]></data>
       <data key="d5"><![CDATA[Disability Pregnancy]]></data>
       <data key="d9">8</data>
+      <data key="d10"><![CDATA[Religion refers to any religious or philosophical belief. This also includes a lack of religious belief (eg atheism).
+Generally, a belief should affect your life choices or the way you live for it to be included in the definition.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11826.719047619048" y="1220.0"/>

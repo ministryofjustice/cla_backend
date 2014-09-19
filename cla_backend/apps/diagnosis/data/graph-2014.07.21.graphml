@@ -3886,6 +3886,11 @@ It is against the law to discriminate against anyone because of:
       <data key="d4"><![CDATA[disability]]></data>
       <data key="d5"><![CDATA[Disability Pregnancy]]></data>
       <data key="d9">5</data>
+      <data key="d10"><![CDATA[Disability is defined as a physical or mental impairment, which has a substantial and long term adverse effect on a person's ability to carry out normal day-to-day activities.
+
+People with cancer or who are HIV+ are classed as having a disability.
+
+The disability does not have to have a name or a diagnosis to meet this definition.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11286.719047619048" y="1220.0"/>
@@ -8026,8 +8031,9 @@ provide for a child or young person's educational needs, or specifically about t
     </node>
     <node id="n367">
       <data key="d4"><![CDATA[race]]></data>
-      <data key="d5"><![CDATA[Disability Pregnancy]]></data>
+      <data key="d5"><![CDATA[Race]]></data>
       <data key="d9">7</data>
+      <data key="d10"><![CDATA[Race refers to a group of people defined by their race, colour, nationality (including citizenship), ethnic or national origins.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11466.719047619048" y="1220.0"/>
@@ -8088,6 +8094,8 @@ provide for a child or young person's educational needs, or specifically about t
       <data key="d4"><![CDATA[sexual orientation]]></data>
       <data key="d5"><![CDATA[sexual orientation]]></data>
       <data key="d9">10</data>
+      <data key="d10"><![CDATA[Sexual orientation is whether a person's sexual attraction is towards their own sex, the opposite sex or to both sexes.
+This can also cover situations where discrimination is based on perceived sexual orientation, which may not be the case.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11646.719047619048" y="1220.0"/>

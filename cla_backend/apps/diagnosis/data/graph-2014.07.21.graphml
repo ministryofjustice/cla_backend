@@ -1837,8 +1837,9 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n81">
-      <data key="d4"><![CDATA[Client has photos of disrepair AND Client or their family have suffered any illness or injury as a result of the disrepair]]></data>
+      <data key="d4"><![CDATA[Client has photos of disrepair AND the disrepair puts them or their family at serious risk of harm or injury (this includes an injury or illness that has already happened)]]></data>
       <data key="d5"><![CDATA[Client has photos of]]></data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="17574.382936507936" y="540.0"/>
@@ -1880,8 +1881,9 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n83">
-      <data key="d4"><![CDATA[Client has report by an expert (e.g. a surveyor) on the disrepair AND Client or their family have suffered any illness or injury as a result of the disrepair]]></data>
+      <data key="d4"><![CDATA[Client has report by an expert (e.g. a surveyor) on the disrepair AND the disrepair puts them or their family at serious risk of harm, injury or illness ]]></data>
       <data key="d5"><![CDATA[Client has report by]]></data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="17394.382936507936" y="540.0"/>
@@ -6812,7 +6814,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       </data>
     </node>
     <node id="n312">
-      <data key="d4"><![CDATA[Client doesn't have both illness and evidence of disrepair]]></data>
+      <data key="d4"><![CDATA[Client does not have BOTH evidence of the disrepair AND reason to believe the disrepair poses a serious risk of harm, injury or illness to them or their family ]]></data>
       <data key="d5"><![CDATA[Not both]]></data>
       <data key="d13">
         <y:ShapeNode>

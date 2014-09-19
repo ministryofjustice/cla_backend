@@ -627,7 +627,8 @@ class Case(TimeStampedModel):
 
     def assign_to_provider(self, provider):
         self.provider = provider
-        self.save(update_fields=['provider', 'modified'])
+        self.provider_viewed = None
+        self.save(update_fields=['provider', 'provider_viewed', 'modified'])
 
     def assign_alternative_help(self, user, articles):
         self.alternative_help_articles.clear()

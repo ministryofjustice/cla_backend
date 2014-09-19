@@ -4233,6 +4233,9 @@ It is against the law to discriminate against anyone because of:
       <data key="d4"><![CDATA[age (the client is under 18)]]></data>
       <data key="d5"><![CDATA[Age (where client is]]></data>
       <data key="d9">2</data>
+      <data key="d10"><![CDATA[This refers to discrimination against people of a:
+* particular age (eg 17-year-olds), or
+* range of ages (eg 10 to 15-year-olds)]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10566.719047619048" y="1220.0"/>
@@ -4448,6 +4451,9 @@ It is against the law to discriminate against anyone because of:
       <data key="d4"><![CDATA[age (the client is 18 or over)]]></data>
       <data key="d5"><![CDATA[Age (where client is]]></data>
       <data key="d9">1</data>
+      <data key="d10"><![CDATA[This refers to discrimination against people of a:
+* particular age (eg 19-year-olds), or
+* range of ages (eg 60 to 80-year-olds)]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12776.719047619048" y="1220.0"/>
@@ -7997,6 +8003,11 @@ provide for a child or young person's educational needs, or specifically about t
       <data key="d4"><![CDATA[pregnancy or maternity]]></data>
       <data key="d5"><![CDATA[Disability Pregnancy]]></data>
       <data key="d9">4</data>
+      <data key="d10"><![CDATA[This refers to:
+* pregnancy
+* having recently given birth (and can include the need to breastfeed)
+
+]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10926.719047619048" y="1220.0"/>

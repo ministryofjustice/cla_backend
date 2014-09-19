@@ -7994,7 +7994,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n366">
-      <data key="d4"><![CDATA[being pregnant or having a child]]></data>
+      <data key="d4"><![CDATA[pregnancy or maternity]]></data>
       <data key="d5"><![CDATA[Disability Pregnancy]]></data>
       <data key="d9">4</data>
       <data key="d13">
@@ -8135,7 +8135,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n373">
-      <data key="d4"><![CDATA[pregnancy or having a child]]></data>
+      <data key="d4"><![CDATA[pregnancy or maternity]]></data>
       <data key="d5"><![CDATA[Discrimination due to pregnancy or having a child]]></data>
       <data key="d9">5</data>
       <data key="d13">
@@ -13930,7 +13930,6 @@ To find the best option for you, can you tell me if you'd like to be put in touc
       </data>
     </edge>
     <edge id="e437" source="n1" target="n399">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="52.94117647058823" sy="15.0" tx="0.0" ty="-15.0">

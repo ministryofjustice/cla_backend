@@ -170,7 +170,7 @@ class CaseSerializer(CaseSerializerFull):
     class Meta(CaseSerializerFull.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference', 'created',
-            'modified', 'created_by', 'provider',
+            'modified', 'created_by', 'provider', 'provider_viewed',
             'notes', 'provider_notes', 'full_name', 'thirdparty_details',
             'adaptation_details', 'laa_reference', 'eligibility_state',
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis',

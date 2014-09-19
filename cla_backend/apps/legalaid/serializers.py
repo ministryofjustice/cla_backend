@@ -262,6 +262,7 @@ class CaseSerializerFull(CaseSerializerBase):
     modified = serializers.DateTimeField(read_only=True)
     created_by = serializers.CharField(read_only=True)
     provider = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
+    provider_viewed = serializers.DateTimeField(required=False, read_only=True)
 
     eligibility_state = serializers.CharField(source='eligibility_check.state', read_only=True)
     diagnosis_state = serializers.CharField(source='diagnosis.state', read_only=True)

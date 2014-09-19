@@ -252,17 +252,6 @@ class CaseViewSet(
     def suspend(self, request, reference=None, **kwargs):
         return self._form_action(request, SuspendCaseForm)
 
-    def retrieve(self, request, *args, **kwargs):
-        resp = super(CaseViewSet, self).retrieve(request, *args, **kwargs)
-
-        event = event_registry.get_event('case')()
-        event.process(
-            self.object, status='viewed', created_by=request.user,
-            notes='Case viewed'
-        )
-
-        return resp
-
     @action()
     def assign_alternative_help(self, request, **kwargs):
         return self._form_action(request, AlternativeHelpForm)

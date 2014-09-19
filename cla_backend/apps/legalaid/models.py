@@ -526,6 +526,8 @@ class Case(TimeStampedModel):
     #   that is, the original case being split
     from_case = models.ForeignKey('self', blank=True, null=True, related_name='split_cases')
 
+    provider_viewed = models.DateTimeField(blank=True, null=True)
+
     def _set_reference_if_necessary(self):
         if not self.reference:
             # TODO make it better
@@ -577,7 +579,8 @@ class Case(TimeStampedModel):
             'created_by': user,
             'matter_type1': matter_type1,
             'matter_type2': matter_type2,
-            'from_case': self
+            'from_case': self,
+            'provider_viewed': None
         }
         if assignment_internal:
             override_values['requires_action_by'] = self.requires_action_by
@@ -625,7 +628,13 @@ class Case(TimeStampedModel):
 
     def assign_to_provider(self, provider):
         self.provider = provider
-        self.save(update_fields=['provider', 'modified'])
+        self.provider_viewed = None
+        self.save(update_fields=['provider', 'provider_viewed', 'modified'])
+
+    def view_by_provider(self, provider):
+        if provider == self.provider:
+            self.provider_viewed = datetime.datetime.utcnow().replace(tzinfo=utc)
+            self.save(update_fields=['provider_viewed'])
 
     def assign_alternative_help(self, user, articles):
         self.alternative_help_articles.clear()

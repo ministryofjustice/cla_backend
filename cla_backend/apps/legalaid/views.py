@@ -263,6 +263,17 @@ class FullCaseViewSet(
     def get_dashboard_qs(self, qs):
         return qs
 
+    def retrieve(self, request, *args, **kwargs):
+        resp = super(FullCaseViewSet, self).retrieve(request, *args, **kwargs)
+
+        event = event_registry.get_event('case')()
+        event.process(
+            self.object, status='viewed', created_by=request.user,
+            notes='Case viewed'
+        )
+
+        return resp
+
 
 class BaseFeedbackViewSet(
     NestedGenericModelMixin,

@@ -421,17 +421,6 @@
             "date_joined": "2014-05-02T11:09:56.986Z"
         }
     },
-	{
-	    "pk": 2,
-	    "model": "cla_provider.staff",
-	    "fields": {
-	        "is_manager": false,
-	        "user": 4,
-	        "provider": 2,
-	        "modified": "2014-05-02T11:10:02.439Z",
-	        "created": "2014-05-02T11:10:02.420Z"
-	    }
-	},
 {
     "pk": 55,
     "model": "auth.user",

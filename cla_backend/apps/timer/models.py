@@ -54,5 +54,6 @@ class Timer(TimeStampedModel):
                     a.cancelled = false and
                     a.stopped is not null and a.linked_case_id = %s''', [self.linked_case.id])
             total_billable_time, = cursor.fetchone()
-            self.linked_case.billable_time = total_billable_time
-            self.linked_case.save(update_fields=['billable_time'])
+            if total_billable_time:
+                self.linked_case.billable_time = total_billable_time
+                self.linked_case.save(update_fields=['billable_time'])

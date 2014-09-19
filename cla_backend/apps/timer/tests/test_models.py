@@ -55,6 +55,7 @@ class TimerTestCase(TestCase):
                 timer3: on case A, by user B, stopped
                 timer4: on case A, by user B, running (should be ignored)
                 timer5: on case B, by user A, stopped (should be ignored)
+                timer6: on no case, by user A, cancelled (should be ignored)
 
             Expected:
                 case A.billable_time == timer1 + timer2 + timer3
@@ -98,6 +99,11 @@ class TimerTestCase(TestCase):
             'timer.Timer',
             stopped=build_datetime('02/02/2014 01:00:01'),
             linked_case=caseB, created_by=userA
+        )
+        timer6 = make_recipe(
+            'timer.Timer',
+            stopped=build_datetime('02/02/2014 01:00:01'),
+            linked_case=caseB, created_by=userA, cancelled=True
         )
 
         make_recipe('cla_eventlog.Log', timer=timer2, case=caseA)

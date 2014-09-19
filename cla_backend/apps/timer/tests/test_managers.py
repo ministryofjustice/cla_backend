@@ -12,6 +12,7 @@ class RunningTimerManagerTestCase(TestCase):
         timer1 = make_recipe('timer.Timer', stopped=None)
         timer2 = make_recipe('timer.Timer', stopped=timezone.now())
         timer3 = make_recipe('timer.Timer', stopped=None)
+        timer4 = make_recipe('timer.Timer', cancelled=True)
 
         timers = Timer.running_objects.all()
         self.assertItemsEqual(timers, [timer1, timer3])

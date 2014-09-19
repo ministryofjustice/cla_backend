@@ -579,7 +579,8 @@ class Case(TimeStampedModel):
             'created_by': user,
             'matter_type1': matter_type1,
             'matter_type2': matter_type2,
-            'from_case': self
+            'from_case': self,
+            'provider_viewed': None
         }
         if assignment_internal:
             override_values['requires_action_by'] = self.requires_action_by

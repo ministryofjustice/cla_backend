@@ -526,6 +526,8 @@ class Case(TimeStampedModel):
     #   that is, the original case being split
     from_case = models.ForeignKey('self', blank=True, null=True, related_name='split_cases')
 
+    provider_viewed = models.DateTimeField(blank=True, null=True)
+
     def _set_reference_if_necessary(self):
         if not self.reference:
             # TODO make it better

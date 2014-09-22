@@ -42,6 +42,14 @@ class RejectCaseEvent(BaseEvent):
         },
     }
 
+    def save_log(self, log):
+
+        if log.case.requires_action_by is not None:
+            log.case.provider = None
+            log.case.save()
+
+        log.save(force_insert=True)
+
     def get_log_code(self, **kwargs):
         is_conflict = kwargs.get('is_conflict')
 

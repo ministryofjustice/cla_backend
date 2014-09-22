@@ -87,6 +87,19 @@ class CaseViewSet(
                 REQUIRES_ACTION_BY.PROVIDER, REQUIRES_ACTION_BY.PROVIDER_REVIEW
             ]
         )
+
+        is_new = self.request.QUERY_PARAMS.get('new', None)
+        if is_new == '1':
+            qs = qs.filter(provider_viewed__isnull=True)
+        elif is_new == '0':
+            qs = qs.filter(provider_viewed__isnull=False)
+
+        is_accepted = self.request.QUERY_PARAMS.get('accepted', None)
+        if is_accepted == '1':
+            qs = qs.filter(outcome_code='SPOP')
+        elif is_accepted == '0':
+            qs = qs.exclude(outcome_code='SPOP')
+
         return qs
 
     @action()

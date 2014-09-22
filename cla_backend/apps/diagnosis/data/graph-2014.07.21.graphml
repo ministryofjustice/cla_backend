@@ -2512,7 +2512,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n112">
-      <data key="d4"><![CDATA[Client has evidence that they have been the subject of domestic abuse during the last 2 years, or their abuser has a current criminal conviction
+      <data key="d4"><![CDATA[Client states that they have experienced domestic abuse during the last 2 years, or their abuser has a current criminal conviction
 ]]></data>
       <data key="d5"><![CDATA[Client has been subj]]></data>
       <data key="d9">1</data>
@@ -2727,7 +2727,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n122">
-      <data key="d4"><![CDATA[Client has evidence that their child has suffered child abuse within the family within the last two years, or the abuser has a current criminal conviction
+      <data key="d4"><![CDATA[Client states that their child has experienced child abuse within the family within the last two years, or the abuser has a current criminal conviction
 (Remember that if the caller is the abuser, this will not be in scope) ]]></data>
       <data key="d5"><![CDATA[Relationship has inv]]></data>
       <data key="d9">2</data>

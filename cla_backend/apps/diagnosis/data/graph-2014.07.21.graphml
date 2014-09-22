@@ -2358,7 +2358,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n105">
-      <data key="d4"><![CDATA[The client wants to protect themselves or their children from domestic violence or abuse (including child abuse)]]></data>
+      <data key="d4"><![CDATA[Domestic violence or abuse (including child abuse) - the client wants to protect themselves or their children]]></data>
       <data key="d5"><![CDATA[Client protecting self]]></data>
       <data key="d9">1</data>
       <data key="d13">
@@ -2402,7 +2402,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n107">
-      <data key="d4"><![CDATA[The client wants advice about child abduction or forced marriage]]></data>
+      <data key="d4"><![CDATA[Child abduction or forced marriage - the client wants advice]]></data>
       <data key="d5"><![CDATA[Client wants to prev]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -2445,7 +2445,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n109">
-      <data key="d4"><![CDATA[The client has a public law problem (the local council is involved) 
+      <data key="d4"><![CDATA[Public law problem (the local council is involved) 
 eg care proceedings or adoption]]></data>
       <data key="d5"><![CDATA[Public law
 ]]></data>
@@ -2491,7 +2491,7 @@ eg care proceedings or adoption]]></data>
       </data>
     </node>
     <node id="n111">
-      <data key="d4"><![CDATA[The client has a private law problem (between two individuals)
+      <data key="d4"><![CDATA[Private law problem (between two individuals)
 eg divorce, contact with children]]></data>
       <data key="d5"><![CDATA[Private Law]]></data>
       <data key="d9">3</data>

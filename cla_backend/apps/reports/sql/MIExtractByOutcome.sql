@@ -56,8 +56,8 @@ select
   ,md5(lower(regexp_replace((pd.full_name||pd.postcode)::text, '\s', '', 'ig'))) as "Hash_ID"
   ,c.reference as "Case_ID"
   -- SPLIT FIELDS. empty for now --
-  ,'' as "Split_Check"
-  ,'' as "Split_Link_Case"
+  ,c.from_case_id::boolean as "Split_Check"
+  ,split_case.laa_reference as "Split_Link_Case"
   -- /SPLIT FIELDS. --
   ,provider.name as "Provider_ID" -- need to convert to LAA provider ID
   ,category.code as "Category_Name"
@@ -152,6 +152,7 @@ from cla_eventlog_log as log
   LEFT OUTER JOIN operator_first_view on operator_first_view.case_id = c.id
   LEFT OUTER JOIN provider_first_view on provider_first_view.case_id = c.id
   LEFT OUTER JOIN provider_first_assign on provider_first_assign.case_id = c.id
+  LEFT OUTER JOIN legalaid_case split_case on c.from_case_id = split_case.id
 where
   log.type = 'outcome'
   and log.created >= %s

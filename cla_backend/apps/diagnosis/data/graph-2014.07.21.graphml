@@ -131,7 +131,7 @@ Clients in temporary accommodation will be covered for in scope housing.
       </data>
     </node>
     <node id="n3">
-      <data key="d4"><![CDATA[The client owns the home they live in, and the nature of the debt means they are at immediate risk of losing it *(Includes shared ownership if the client is living in the property)*]]></data>
+      <data key="d4"><![CDATA[Home owner, and the nature of the debt means they are at immediate risk of losing their home *(Includes shared ownership if the client is living in the property)*]]></data>
       <data key="d5"><![CDATA[Client owns a house ]]></data>
       <data key="d9">1</data>
       <data key="d10"><![CDATA[A client's home is defined as the house, caravan, houseboat or other vehicle or structure that is their only or main residence. The references to caravan, houseboat or other vehicle include the land on which it is located or to which it is moored.
@@ -671,7 +671,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n27">
-      <data key="d4"><![CDATA[The client lives in rented accommodation]]></data>
+      <data key="d4"><![CDATA[In rented accommodation]]></data>
       <data key="d5"><![CDATA[client in rented acc]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -1169,7 +1169,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n50">
-      <data key="d4"><![CDATA[The client is homeless or at risk of becoming homeless within 28 days]]></data>
+      <data key="d4"><![CDATA[Homeless or at risk of becoming homeless within 28 days]]></data>
       <data key="d5"><![CDATA[Client becoming homeless]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -1703,7 +1703,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n75">
-      <data key="d4"><![CDATA[The client owes other money (check that the consequences of this don’t place the client in another category of debt)]]></data>
+      <data key="d4"><![CDATA[Owes other money (check that the consequences of this don’t place the client in another category of debt)]]></data>
       <data key="d5"><![CDATA[Other money owed (ch]]></data>
       <data key="d9">4</data>
       <data key="d13">

@@ -2598,7 +2598,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n116">
-      <data key="d4"><![CDATA[Financial matters]]></data>
+      <data key="d4"><![CDATA[Financial matters (eg property settlement following a divorce or separation, child maintenance)]]></data>
       <data key="d5"><![CDATA[Financial matters]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -2641,7 +2641,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n118">
-      <data key="d4"><![CDATA[Children disputes (eg contact with children]]></data>
+      <data key="d4"><![CDATA[Children disputes (eg contact with children, residence)]]></data>
       <data key="d5"><![CDATA[Children disputes]]></data>
       <data key="d13">
         <y:ShapeNode>

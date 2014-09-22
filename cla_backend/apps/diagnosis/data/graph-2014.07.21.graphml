@@ -4949,7 +4949,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n223">
-      <data key="d4"><![CDATA[The client has parental responsibility or is a foster parent for a child or young person under 25 who has special educational needs (SEN), or the client is a child or young person who has SEN]]></data>
+      <data key="d4"><![CDATA[Special educational needs (SEN) in a child or young person under 25 - client could be the parent or the child or young person
+]]></data>
       <data key="d5"><![CDATA[Client has parental ]]></data>
       <data key="d9">1</data>
       <data key="d13">
@@ -4993,7 +4994,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n225">
-      <data key="d4"><![CDATA[The client has been advised to bring judicial review proceedings in an education matter]]></data>
+      <data key="d4"><![CDATA[Advised to bring judicial review proceedings in an education matter]]></data>
       <data key="d5"><![CDATA[They have been advis]]></data>
       <data key="d9">4</data>
       <data key="d13">

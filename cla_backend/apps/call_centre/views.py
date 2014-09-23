@@ -420,7 +420,7 @@ class LogViewSet(CallCentrePermissionsViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
 
 
-class FeedbackViewSet(CallCentrePermissionsViewSetMixin,
+class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
                       mixins.ListModelMixin,
                       mixins.UpdateModelMixin,
                       mixins.RetrieveModelMixin,
@@ -435,4 +435,3 @@ class FeedbackViewSet(CallCentrePermissionsViewSetMixin,
     )
     ordering = ('resolved', '-modified', '-created',)
     date_range_field = 'created'
-

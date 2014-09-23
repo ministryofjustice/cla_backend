@@ -96,6 +96,8 @@ class CaseViewSet(
 
         if show_accepted == '1':
             qs = qs.filter(outcome_code='SPOP')
+        elif show_accepted == '0':
+            qs = qs.exclude(outcome_code='SPOP')
 
         return qs
 

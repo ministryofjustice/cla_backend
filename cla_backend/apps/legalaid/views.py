@@ -1,19 +1,17 @@
 import json
+
 from cla_provider.models import Feedback
-
-from django.http import Http404
-
+from django.db import transaction
+from legalaid.permissions import IsManagerOrMePermission
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter, \
     DjangoFilterBackend
-
 from core.utils import format_patch
 from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin
-
 from cla_eventlog import event_registry
-
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
@@ -25,10 +23,14 @@ from .models import Case, Category, EligibilityCheck, \
 
 class BaseUserViewSet(
     mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
     viewsets.GenericViewSet
 ):
+    permission_classes = (IsManagerOrMePermission,)
 
     me_lookup_url_kwargs = 'me'
+    lookup_field = 'user__username'
 
     def get_queryset(self):
         qs = super(BaseUserViewSet, self).get_queryset()
@@ -47,12 +49,48 @@ class BaseUserViewSet(
         # for now, you can only access to the user/me/ object, for security
         # reasons. We'll probably change this in the future to allow service
         # managers to add/update/delete users from their area.
-        if lookup != self.me_lookup_url_kwargs:
-            raise Http404
+        logged_in_user_model = self.get_logged_in_user_model()
 
-        self.kwargs[lookup_url_kwarg] = self.get_logged_in_user_model().pk
-        return super(BaseUserViewSet, self).get_object(*args, **kwargs)
+        if lookup == self.me_lookup_url_kwargs:
+            self.kwargs[lookup_url_kwarg] = self.request.user.username
 
+        obj =  super(BaseUserViewSet, self).get_object(*args, **kwargs)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    @action()
+    def password_reset(self, request, *args, **kwargs):
+        old_password = request.DATA.get('old_password')
+        new_password = request.DATA.get('new_password')
+        obj  = self.get_object()
+        self.check_object_permissions(request, obj)
+        user = self.get_object().user
+
+        if request.user == user:
+            # changing own password
+            check = user.check_password(old_password)
+        else:
+            # changing sub-user password
+            check = True
+
+        if check:
+            user.set_password(new_password)
+            user.save()
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return DRFResponse(status=status.HTTP_403_FORBIDDEN)
+
+    def list(self, request, *args, **kwargs):
+        if not self.get_logged_in_user_model().is_manager:
+            raise PermissionDenied()
+        return super(BaseUserViewSet, self).list(request, *args, **kwargs)
+
+
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        obj = super(BaseUserViewSet, self).create(request, *args, **kwargs)
+        self.check_object_permissions(request, obj)
+        return obj
 
 class FormActionMixin(object):
     def _form_action(self, request, Form, no_body=True, form_kwargs={}):

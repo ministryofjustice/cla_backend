@@ -4,6 +4,7 @@ from dateutil import parser
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
+from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
@@ -23,7 +24,7 @@ from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, BaseFeedbackViewSet
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -112,7 +113,6 @@ class OrderingRejectedFirstFilter(OrderingFilter):
         return qs
 
 class DateRangeFilter(BaseFilterBackend):
-
 
     def filter_queryset(self, request, qs, view):
 
@@ -364,6 +364,8 @@ class OutOfHoursRotaViewSet(
 
 class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     model = Operator
+
+    permission_classes = (CallCentreClientIDPermission, IsManagerOrMePermission)
     serializer_class = OperatorSerializer
 
     def get_logged_in_user_model(self):

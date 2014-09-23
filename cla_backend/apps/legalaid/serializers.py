@@ -13,7 +13,7 @@ from cla_provider.models import Provider, OutOfHoursRota, Feedback
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
     ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode
-
+from django.contrib.auth.models import User
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -273,14 +273,41 @@ class CaseSerializerFull(CaseSerializerBase):
     class Meta(CaseSerializerBase.Meta):
         fields = ()
 
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'first_name', 'last_name')
 
 class ExtendedUserSerializerBase(serializers.ModelSerializer):
-    username = serializers.CharField(read_only=True, source='user.username')
-    first_name = serializers.CharField(read_only=True,
-                                       source='user.first_name')
-    last_name = serializers.CharField(read_only=True, source='user.last_name')
-    email = serializers.CharField(read_only=True, source='user.email')
+    username = serializers.CharField(source='user.username')
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+    email = serializers.CharField(source='user.email')
+    password = serializers.CharField(source='user.password', write_only=True)
+    user = UserSerializer()
+
+    def validate(self, attrs):
+        if User.objects.filter(username=attrs['user.username']).exists():
+            raise serializers.ValidationError('An account with this username already exists.')
+        if len(attrs['user.password']) < 10:
+            raise serializers.ValidationError('Password must be at least 10 characters long.')
+
+        return super(ExtendedUserSerializerBase, self).validate(attrs)
+
+    def restore_object(self, attrs, instance=None):
+        restored = super(ExtendedUserSerializerBase, self).restore_object(attrs, instance=instance)
+        user = User()
+        user.username = attrs['user.username']
+        user.first_name = attrs['user.first_name']
+        user.last_name = attrs['user.last_name']
+        user.email = attrs['user.email']
+        user.set_password(attrs['user.password'])
+        user.save()
+        restored.user = user
+        return restored
+
 
     class Meta:
         fields = ()
-        write_only_fields = ('chs_user', 'chs_password', 'chs_organisation',)
+        write_only_fields = ('chs_user', 'chs_password', 'chs_organisation')

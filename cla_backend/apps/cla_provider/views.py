@@ -88,18 +88,14 @@ class CaseViewSet(
             ]
         )
 
-        show_new = self.request.QUERY_PARAMS.get('new', '1') == '1'
-        show_viewed = self.request.QUERY_PARAMS.get('viewed', '1') == '1'
-        show_accepted = self.request.QUERY_PARAMS.get('accepted', '1') == '1'
+        show_new = self.request.QUERY_PARAMS.get('new')
+        show_accepted = self.request.QUERY_PARAMS.get('accepted')
 
-        if not show_new:
-            qs = qs.filter(provider_viewed__isnull=False)
+        if show_new is not None:
+            qs = qs.filter(provider_viewed__isnull=(show_new == '1'))
 
-        if not show_viewed:
-            qs = qs.filter(provider_viewed__isnull=True)
-
-        if not show_accepted:
-            qs = qs.exclude(outcome_code='SPOP')
+        if show_accepted == '1':
+            qs = qs.filter(outcome_code='SPOP')
 
         return qs
 

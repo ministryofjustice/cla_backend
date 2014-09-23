@@ -200,7 +200,7 @@ class StaffSerializer(ExtendedUserSerializerBase):
         model = Staff
         fields = (
             'username', 'first_name', 'last_name', 'email', 'provider',
-            'is_manager',
+            'is_manager', 'password'
         )
 
 

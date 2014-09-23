@@ -6,10 +6,12 @@ from core.permissions import IsProviderPermission
 
 from django.shortcuts import get_object_or_404
 from django_statsd.clients import statsd
+from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import mixins
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
+from rest_framework import status
 
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 
@@ -172,12 +174,18 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
     model = Staff
     serializer_class = StaffSerializer
 
+    permission_classes = (CLAProviderClientIDPermission, IsManagerOrMePermission)
+
     def get_queryset(self):
         this_provider = get_object_or_404(
             Staff, user=self.request.user).provider
         qs = super(UserViewSet, self).get_queryset().filter(
             provider=this_provider)
         return qs
+
+
+    def pre_save(self, obj):
+        obj.provider = self.get_logged_in_user_model().provider
 
     def get_logged_in_user_model(self):
         return self.request.user.staff

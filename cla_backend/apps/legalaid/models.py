@@ -519,7 +519,7 @@ class Case(TimeStampedModel):
                                                        through='CaseKnowledgebaseAssignment',
                                                        null=True, blank=True)
 
-    outcome_code = models.CharField(max_length=20, null=True, blank=True)
+    outcome_code = models.ForeignKey('OutcomeCodePriority', db_column='outcome_code', null=True)
     outcome_code_id = models.IntegerField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(null=True)
 

@@ -3,12 +3,15 @@ import json
 from cla_provider.models import Feedback
 from django.db import transaction
 from legalaid.permissions import IsManagerOrMePermission
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins, status, serializers
 from rest_framework.decorators import action, link
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.pagination import BasePaginationSerializer
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter, \
     DjangoFilterBackend
+from rest_framework.templatetags.rest_framework import replace_query_param
+
 from core.utils import format_patch
 from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin
 from cla_eventlog import event_registry
@@ -255,6 +258,32 @@ class BaseAdaptationDetailsMetadataViewSet(
         self.http_method_not_allowed(request)
 
 
+class RelativeNextPageField(serializers.Field):
+    page_field = 'page'
+
+    def to_native(self, value):
+        if not value.has_next():
+            return None
+        page = value.next_page_number()
+        return replace_query_param('', self.page_field, page)
+
+
+class RelativePreviousPageField(serializers.Field):
+    page_field = 'page'
+
+    def to_native(self, value):
+        if not value.has_previous():
+            return None
+        page = value.previous_page_number()
+        return replace_query_param('', self.page_field, page)
+
+
+class RelativeUrlPaginationSerializer(BasePaginationSerializer):
+    count = serializers.Field(source='paginator.count')
+    next = RelativeNextPageField('*')
+    previous = RelativePreviousPageField('*')
+
+
 class FullCaseViewSet(
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
@@ -267,6 +296,7 @@ class FullCaseViewSet(
     lookup_regex = r'[A-Z|\d]{2}-\d{4}-\d{4}'
 
     serializer_class = CaseSerializerBase
+    pagination_serializer_class = RelativeUrlPaginationSerializer
 
     filter_backends = (
         OrderingFilter,

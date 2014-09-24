@@ -2512,7 +2512,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n112">
-      <data key="d4"><![CDATA[Client states that they have experienced domestic abuse during the last 2 years, or their abuser has a current criminal conviction
+      <data key="d4"><![CDATA[Domestic abuse during the last 2 years, or their abuser has a current criminal conviction
 ]]></data>
       <data key="d5"><![CDATA[Client has been subj]]></data>
       <data key="d9">1</data>
@@ -2727,7 +2727,7 @@ eg divorce, contact with children]]></data>
       </data>
     </node>
     <node id="n122">
-      <data key="d4"><![CDATA[Client states that their child has experienced child abuse within the family within the last two years, or the abuser has a current criminal conviction
+      <data key="d4"><![CDATA[The client's child has experienced child abuse within the family within the last two years, or the abuser has a current criminal conviction
 (Remember that if the caller is the abuser, this will not be in scope) ]]></data>
       <data key="d5"><![CDATA[Relationship has inv]]></data>
       <data key="d9">2</data>
@@ -8747,6 +8747,9 @@ To find the best option for you, can you tell me if you'd like to be put in touc
       <data key="d4"><![CDATA[Client wants advice about mediation]]></data>
       <data key="d5"><![CDATA[Mediation]]></data>
       <data key="d9">3</data>
+      <data key="d10"><![CDATA[If the client is currently participating in family mediation, legal advice in connection with mediation is in scope as long as the client seeks advice on how to progress the case.
+
+A client can also get advice to draft and issue proceedings to obtain a consent order, where the client reaches an agreement about financial issues with their ex-partner through mediation.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15620.621428571429" y="465.0"/>

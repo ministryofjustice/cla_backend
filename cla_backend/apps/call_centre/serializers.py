@@ -235,7 +235,8 @@ class OperatorSerializer(ExtendedUserSerializerBase):
     class Meta:
         model = Operator
         fields = (
-            'username', 'first_name', 'last_name', 'email', 'is_manager', 'password'
+            'username', 'first_name', 'last_name', 'email', 'is_manager', 'password',
+            'created', 'last_login'
         )
 
 class FeedbackSerializer(FeedbackSerializerBase):

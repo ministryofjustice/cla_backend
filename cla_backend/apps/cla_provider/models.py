@@ -1,3 +1,4 @@
+import uuid
 from cla_common.constants import FEEDBACK_ISSUE
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
@@ -11,6 +12,8 @@ from .signals import log_staff_created, log_staff_modified
 
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
+
+random_uuid_str = lambda: str(uuid.uuid4())
 
 
 class ProviderManager(models.Manager):
@@ -60,8 +63,8 @@ class Staff(TimeStampedModel):
     provider = models.ForeignKey(Provider)
     is_manager = models.BooleanField(default=False)
 
-    chs_organisation = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
-    chs_user = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
+    chs_organisation = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True, default=random_uuid_str)
+    chs_user = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True, default=random_uuid_str)
     chs_password = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
 
     def set_chs_password(self, raw_password):

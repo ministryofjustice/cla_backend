@@ -9,13 +9,15 @@ from legalaid.tests.views.mixins.user_api import UserAPIMixin
 
 class UserTests(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
     def assertUserEqual(self, data):
-        self.assertDictEqual(data, {
+        self.assertDictContainsSubset({
             'username': u'john',
             'first_name': u'',
             'last_name': u'',
             'email': u'lennon@thebeatles.com',
-            'is_manager': False
-        })
+            'is_manager': False,
+        }, data)
+        self.assertTrue('last_login' in data)
+        self.assertTrue('created' in data)
 
     def get_other_users(self):
         return make_recipe('call_centre.operator', _quantity=3)

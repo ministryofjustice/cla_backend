@@ -136,7 +136,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
 class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
     personal_details = models.ForeignKey(PersonalDetails)
     pass_phrase = models.CharField(max_length=255)
-    reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON)
+    reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON, null=True, blank=True, default='')
     personal_relationship = models.CharField(max_length=30,
                                              choices=THIRDPARTY_RELATIONSHIP)
     personal_relationship_note = models.CharField(max_length=255, blank=True)

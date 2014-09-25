@@ -178,6 +178,9 @@ class AdminStaffForm(forms.ModelForm):
     chs_password = ReadOnlyPasswordHashField(widget=PasswordInput(),
                                              required=False,
                                              help_text='Password can only be set, not viewed.')
+    chs_organisation = forms.CharField(initial=None, required=False)
+    chs_user = forms.CharField(initial=None, required=False)
+
 
     def clean(self):
         data = self.cleaned_data

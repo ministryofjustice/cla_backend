@@ -285,13 +285,18 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
     last_name = serializers.CharField(source='user.last_name')
     email = serializers.CharField(source='user.email')
     password = serializers.CharField(source='user.password', write_only=True)
+    last_login = serializers.DateTimeField(source='user.last_login', read_only=True)
+    created = serializers.DateTimeField(source='user.date_joined', read_only=True)
     user = UserSerializer()
+
+    def validate_password(self, attrs, source):
+        if len(attrs[source]) < 10:
+            raise serializers.ValidationError('Password must be at least 10 characters long.')
+        return attrs
 
     def validate(self, attrs):
         if User.objects.filter(username=attrs['user.username']).exists():
             raise serializers.ValidationError('An account with this username already exists.')
-        if len(attrs['user.password']) < 10:
-            raise serializers.ValidationError('Password must be at least 10 characters long.')
 
         return super(ExtendedUserSerializerBase, self).validate(attrs)
 
@@ -310,4 +315,4 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
 
     class Meta:
         fields = ()
-        write_only_fields = ('chs_user', 'chs_password', 'chs_organisation')
+

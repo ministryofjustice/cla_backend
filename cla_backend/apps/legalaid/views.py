@@ -1,6 +1,8 @@
 import json
 
 from cla_provider.models import Feedback
+from django import forms
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from legalaid.permissions import IsManagerOrMePermission
 from rest_framework import viewsets, mixins, status, serializers
@@ -24,10 +26,57 @@ from .models import Case, Category, EligibilityCheck, \
     AdaptationDetails
 
 
+class FormActionMixin(object):
+    def _form_action(self, request, Form, no_body=True, form_kwargs={}):
+        obj = self.get_object()
+        form = Form(case=obj, data=request.DATA, **form_kwargs)
+        if form.is_valid():
+            form.save(request.user)
+
+            if no_body:
+                return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+            else:
+                serializer = self.get_serializer(obj)
+                return DRFResponse(serializer.data, status=status.HTTP_200_OK)
+
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+class PasswordResetForm(forms.Form):
+
+    new_password = forms.CharField(required=True, min_length=10)
+    old_password = forms.CharField(required=False)
+
+    def __init__(self, case=None, *args, **kwargs):
+        self.action_user = kwargs.pop('action_user')
+        self.reset_user = kwargs.pop('reset_user')
+
+        super(PasswordResetForm, self).__init__(*args, **kwargs)
+
+        if self.action_user == self.reset_user:
+            self.fields['old_password'].required = True
+
+    def clean_old_password(self):
+        old_password = self.cleaned_data['old_password']
+        if self.action_user == self.reset_user:
+            # changing own password
+            if not self.reset_user.check_password(old_password):
+                raise PermissionDenied({'__all__':["Old password doesn't match."]})
+        return old_password
+
+
+    def save(self, _):
+        new_password = self.cleaned_data['new_password']
+        self.reset_user.set_password(new_password)
+        self.reset_user.save()
+
 class BaseUserViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
+    FormActionMixin,
     viewsets.GenericViewSet
 ):
     permission_classes = (IsManagerOrMePermission,)
@@ -63,25 +112,11 @@ class BaseUserViewSet(
 
     @action()
     def password_reset(self, request, *args, **kwargs):
-        old_password = request.DATA.get('old_password')
-        new_password = request.DATA.get('new_password')
-        obj  = self.get_object()
-        self.check_object_permissions(request, obj)
         user = self.get_object().user
-
-        if request.user == user:
-            # changing own password
-            check = user.check_password(old_password)
-        else:
-            # changing sub-user password
-            check = True
-
-        if check:
-            user.set_password(new_password)
-            user.save()
-            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return DRFResponse(status=status.HTTP_403_FORBIDDEN)
+        try:
+            return self._form_action(request, PasswordResetForm, no_body=True, form_kwargs={'action_user': request.user, 'reset_user': user})
+        except PermissionDenied as pd:
+            return DRFResponse(pd.detail, status=status.HTTP_403_FORBIDDEN)
 
     def list(self, request, *args, **kwargs):
         if not self.get_logged_in_user_model().is_manager:
@@ -95,22 +130,7 @@ class BaseUserViewSet(
         self.check_object_permissions(request, obj)
         return obj
 
-class FormActionMixin(object):
-    def _form_action(self, request, Form, no_body=True, form_kwargs={}):
-        obj = self.get_object()
-        form = Form(case=obj, data=request.DATA, **form_kwargs)
-        if form.is_valid():
-            form.save(request.user)
 
-            if no_body:
-                return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-            else:
-                serializer = self.get_serializer(obj)
-                return DRFResponse(serializer.data, status=status.HTTP_200_OK)
-
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
 
 
 class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):

@@ -196,13 +196,17 @@ class ProviderSerializer(ProviderSerializerBase):
 class StaffSerializer(ExtendedUserSerializerBase):
     provider = ProviderSerializer(read_only=True)
 
+    chs_username = serializers.CharField(required=False)
+    chs_organisation = serializers.CharField(required=False)
+    chs_password = serializers.CharField(required=False, write_only=True)
+
     class Meta(ExtendedUserSerializerBase.Meta):
         model = Staff
         fields = (
             'username', 'first_name', 'last_name', 'email', 'provider',
-            'is_manager', 'password'
+            'is_manager', 'password', 'chs_password', 'chs_organisation', 'chs_user',
+            'last_login', 'created'
         )
-
 
 class FeedbackSerializer(FeedbackSerializerBase):
     issue = serializers.ChoiceField(choices=FEEDBACK_ISSUE)

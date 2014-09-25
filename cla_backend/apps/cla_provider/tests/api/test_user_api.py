@@ -12,14 +12,17 @@ class UserTests(CLAProviderAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
         _data = data.copy()
         del _data['provider']['id']
 
-        self.assertDictEqual(_data, {
+        self.assertDictContainsSubset({
             'username': u'john',
             'first_name': u'',
             'last_name': u'',
             'email': u'lennon@thebeatles.com',
             'provider': {'name': u'Name1'},
             'is_manager': False
-        })
+        }, data)
+        self.assertTrue('last_login' in data)
+        self.assertTrue('created' in data)
+        self.assertTrue('provider' in data)
 
     def get_other_users(self):
         return make_recipe('cla_provider.staff', _quantity=3)

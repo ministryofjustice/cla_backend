@@ -5932,7 +5932,7 @@ All other benefit problems are out of scope. ]]></data>
       </data>
     </node>
     <node id="n271">
-      <data key="d4"><![CDATA[INSCOPE]]></data>
+      <data key="d4"><![CDATA[OUTOFSCOPE]]></data>
       <data key="d5"><![CDATA[INSCOPE]]></data>
       <data key="d7">
         <context xmlns="">
@@ -8726,7 +8726,6 @@ To find the best option for you, can you tell me if you'd like to be put in touc
     <node id="n398">
       <data key="d4"/>
       <data key="d5"/>
-      <data key="d12"/>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="30.0" x="12740.621428571429" y="0.0"/>
@@ -8781,6 +8780,33 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="53.546875" x="48.2265625" y="5.93359375">INSCOPE<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n401">
+      <data key="d4"><![CDATA[Please read out the following to the client:
+
+*Based on what you have told me today your problem may be covered by legal aid. But you will still need to show that you qualify financially.
+
+I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will direct you to alternative help.
+
+I can’t guarantee that these organisations/this organisation will take on your case under legal aid so please check with them to see whether they are able to help you. If you do not qualify for legal aid you may have to pay for their service. So check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*]]></data>
+      <data key="d5"><![CDATA[Primary question: Cl]]></data>
+      <data key="d9">1</data>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="10932.242857142857" y="360.0"/>
+          <y:Fill color="#CC99FF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="120.21484375" x="14.892578125" y="5.93359375">Can't MT Disclaimer
+<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -13696,17 +13722,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e414" source="n270" target="n271">
-      <data key="d16">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e415" source="n111" target="n386">
+    <edge id="e414" source="n111" target="n386">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -13719,7 +13735,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e416" source="n386" target="n387">
+    <edge id="e415" source="n386" target="n387">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -13729,7 +13745,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e417" source="n173" target="n388">
+    <edge id="e416" source="n173" target="n388">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="27.272727272727266" sy="15.0" tx="0.0" ty="-15.0">
@@ -13742,7 +13758,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e418" source="n388" target="n389">
+    <edge id="e417" source="n388" target="n389">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -13752,7 +13768,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e419" source="n390" target="n391">
+    <edge id="e418" source="n390" target="n391">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -13762,7 +13778,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e420" source="n175" target="n390">
+    <edge id="e419" source="n175" target="n390">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="28.125" sy="15.0" tx="0.0" ty="-15.0">
@@ -13775,7 +13791,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e421" source="n297" target="n392">
+    <edge id="e420" source="n297" target="n392">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -13785,7 +13801,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e422" source="n392" target="n298">
+    <edge id="e421" source="n392" target="n298">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -13798,7 +13814,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e423" source="n75" target="n76">
+    <edge id="e422" source="n75" target="n76">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -13808,7 +13824,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e424" source="n78" target="n393">
+    <edge id="e423" source="n78" target="n393">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="30.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -13821,7 +13837,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e425" source="n393" target="n170">
+    <edge id="e424" source="n393" target="n170">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="50.0" ty="-15.0">
@@ -13834,7 +13850,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e426" source="n394" target="n395">
+    <edge id="e425" source="n394" target="n395">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -13844,7 +13860,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e427" source="n1" target="n394">
+    <edge id="e426" source="n1" target="n394">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="70.58823529411765" sy="15.0" tx="0.0" ty="-15.0">
@@ -13857,7 +13873,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e428" source="n105" target="n396">
+    <edge id="e427" source="n105" target="n396">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -13870,7 +13886,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e429" source="n396" target="n106">
+    <edge id="e428" source="n396" target="n106">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -13883,7 +13899,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e430" source="n299" target="n300">
+    <edge id="e429" source="n299" target="n300">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -13893,7 +13909,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e431" source="n289" target="n290">
+    <edge id="e430" source="n289" target="n290">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -13903,7 +13919,7 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e432" source="n399" target="n400">
+    <edge id="e431" source="n399" target="n400">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -13916,14 +13932,35 @@ A client can also get advice to draft and issue proceedings to obtain a consent 
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e433" source="n111" target="n399">
-      <data key="d15"/>
+    <edge id="e432" source="n111" target="n399">
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="60.0" sy="15.0" tx="0.0" ty="-15.0">
             <y:Point x="14525.621428571429" y="345.0"/>
             <y:Point x="15695.621428571429" y="345.0"/>
           </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e433" source="n270" target="n401">
+      <data key="d15"/>
+      <data key="d16">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e434" source="n401" target="n271">
+      <data key="d15"/>
+      <data key="d16">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>

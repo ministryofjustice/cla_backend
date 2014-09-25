@@ -4,6 +4,7 @@ from dateutil import parser
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
+from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
@@ -23,7 +24,7 @@ from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, BaseFeedbackViewSet
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -112,7 +113,6 @@ class OrderingRejectedFirstFilter(OrderingFilter):
         return qs
 
 class DateRangeFilter(BaseFilterBackend):
-
 
     def filter_queryset(self, request, qs, view):
 
@@ -252,17 +252,6 @@ class CaseViewSet(
     def suspend(self, request, reference=None, **kwargs):
         return self._form_action(request, SuspendCaseForm)
 
-    def retrieve(self, request, *args, **kwargs):
-        resp = super(CaseViewSet, self).retrieve(request, *args, **kwargs)
-
-        event = event_registry.get_event('case')()
-        event.process(
-            self.object, status='viewed', created_by=request.user,
-            notes='Case viewed'
-        )
-
-        return resp
-
     @action()
     def assign_alternative_help(self, request, **kwargs):
         return self._form_action(request, AlternativeHelpForm)
@@ -375,6 +364,8 @@ class OutOfHoursRotaViewSet(
 
 class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     model = Operator
+
+    permission_classes = (CallCentreClientIDPermission, IsManagerOrMePermission)
     serializer_class = OperatorSerializer
 
     def get_logged_in_user_model(self):
@@ -431,7 +422,7 @@ class LogViewSet(CallCentrePermissionsViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
 
 
-class FeedbackViewSet(CallCentrePermissionsViewSetMixin,
+class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
                       mixins.ListModelMixin,
                       mixins.UpdateModelMixin,
                       mixins.RetrieveModelMixin,
@@ -446,4 +437,3 @@ class FeedbackViewSet(CallCentrePermissionsViewSetMixin,
     )
     ordering = ('resolved', '-modified', '-created',)
     date_range_field = 'created'
-

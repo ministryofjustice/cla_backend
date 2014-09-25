@@ -124,14 +124,6 @@ class SuspendCaseEvent(BaseEvent):
             'stops_timer': True,
             'set_requires_action_by': None_if_owned_by_operator
         },
-        'RTCS': {
-            'type': LOG_TYPES.OUTCOME,
-            'level': LOG_LEVELS.HIGH,
-            'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Referred to customer support',
-            'stops_timer': True,
-            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR_MANAGER  # TODO not sure about this
-        },
         'IRCB': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,

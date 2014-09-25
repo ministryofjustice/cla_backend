@@ -30,8 +30,8 @@ class BaseCaseTestCase(
     def response_keys(self):
         return [
             'eligibility_check', 'personal_details', 'reference',
-            'created', 'modified', 'created_by',
-            'provider', 'notes', 'provider_notes',
+            'created', 'modified', 'created_by', 'outcome_code',
+            'provider', 'notes', 'provider_notes', 'provider_viewed',
             'full_name', 'laa_reference', 'eligibility_state',
             'adaptation_details', 'requires_action_by',
             'matter_type1', 'matter_type2', 'diagnosis', 'media_code',

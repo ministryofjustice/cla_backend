@@ -170,13 +170,13 @@ class CaseSerializer(CaseSerializerFull):
     class Meta(CaseSerializerFull.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference', 'created',
-            'modified', 'created_by', 'provider',
+            'modified', 'created_by', 'provider', 'provider_viewed',
             'notes', 'provider_notes', 'full_name', 'thirdparty_details',
             'adaptation_details', 'laa_reference', 'eligibility_state',
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis',
             'media_code', 'postcode', 'diagnosis_state',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
-            'date_of_birth', 'category'
+            'date_of_birth', 'category', 'outcome_code'
         )
 
 
@@ -200,7 +200,7 @@ class StaffSerializer(ExtendedUserSerializerBase):
         model = Staff
         fields = (
             'username', 'first_name', 'last_name', 'email', 'provider',
-            'is_manager',
+            'is_manager', 'password'
         )
 
 

@@ -15,6 +15,9 @@ CMD ["/sbin/my_init"]
 # Set timezone
 RUN echo "Europe/London" > /etc/timezone  &&  dpkg-reconfigure -f noninteractive tzdata
 
+# Remove SSHD
+RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
+
 # Dependencies
 RUN DEBIAN_FRONTEND='noninteractive' \ 
   apt-get update && \

@@ -39,7 +39,7 @@ ADMINS = ()
 
 MANAGERS = ADMINS
 
-EMAIL_FROM_ADDRESS = 'no-reply@digital.justice.gov.uk'
+EMAIL_FROM_ADDRESS = 'no-reply@civillegaladvice.service.gov.uk'
 
 OPERATOR_USER_ALERT_EMAILS = []
 SPECIALIST_USER_ALERT_EMAILS = []

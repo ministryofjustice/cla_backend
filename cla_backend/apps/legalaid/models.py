@@ -604,7 +604,8 @@ class Case(TimeStampedModel):
                 'excludes': [
                     'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
-                    'created', 'modified', 'outcome_code_id'
+                    'created', 'modified', 'outcome_code_id',
+                    'outcome_priority'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details'
@@ -624,7 +625,7 @@ class Case(TimeStampedModel):
         try:
             self.outcome_priority = OutcomeCodePriority.objects.get(code=self.outcome_code)
         except OutcomeCodePriority.DoesNotExist:
-            self.outcome_priority = OutcomeCodePriority.objects.get(code='DEFAULT')
+            self.outcome_priority = None
 
     def save(self, *args, **kwargs):
         self._set_reference_if_necessary()

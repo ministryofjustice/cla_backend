@@ -21,7 +21,7 @@ RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 # Dependencies
 RUN DEBIAN_FRONTEND='noninteractive' \ 
   apt-get update && \
-  apt-get -y --force-yes install apt-utils python-pip python-dev build-essential git software-properties-common python-software-properties libpq-dev g++ make libpcre3 libpcre3-dev \
+  apt-get -y --force-yes install bash apt-utils python-pip python-dev build-essential git software-properties-common python-software-properties libpq-dev g++ make libpcre3 libpcre3-dev \
   libxslt-dev libxml2-dev && \
   apt-get -y build-dep python-psycopg2
 # Install Nginx.

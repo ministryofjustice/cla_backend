@@ -43,7 +43,7 @@ class BaseCaseTestCase(
             'postcode', 'diagnosis_state', 'thirdparty_details', 'rejected',
             'date_of_birth', 'category',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
-            'case_count'
+            'case_count', 'outcome_code'
         ]
 
 

@@ -24,7 +24,7 @@ class GraphTestCase(TestCase):
         )
         call_command('loaddata', 'initial_category')
 
-    def test_in_scope_nodes_have_category(self):
+    def test_end_nodes_have_category(self):
         def move_down(node_id, context, nodes):
             node = self.graph.node[node_id]
             node['id'] = node_id
@@ -36,7 +36,7 @@ class GraphTestCase(TestCase):
             context.update(node['context'] or {})
 
             scope_value = get_node_scope_value(self.graph, node_id)
-            if scope_value == DIAGNOSIS_SCOPE.INSCOPE:
+            if scope_value in [DIAGNOSIS_SCOPE.INSCOPE, DIAGNOSIS_SCOPE.OUTOFSCOPE]:
 
                 # checking that the category is set
                 category_name = context.get('category')

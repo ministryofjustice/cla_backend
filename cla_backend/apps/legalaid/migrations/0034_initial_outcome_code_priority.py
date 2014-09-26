@@ -6,53 +6,19 @@ from django.db import models
 
 
 priorities = (
-    #accept_case
-    ('SPOP', 1),
-
-    #alternative_help
-    ('COSPF', 1),
-    ('SPFN', 1),
-    ('IRKB', 1),
-    ('SPFM', 1),
-
-    #assign_to_provider
-    ('SPOR', 1),
-    ('MANALC', 1),
-    ('REFSP', 1),
+    ('DEFAULT', 1),
 
     #callback
     ('CB1', 4),
     ('CB2', 3),
     ('CB3', 2),
 
-    #close_case
-    ('CLSP', 1),
-
-    #decline_help
-    ('DECL', 1),
-    ('NRES', 1),
-    ('DESP', 1),
-
-    #defer_assignment
-    ('CBSP', 1),
-
     #reject_case
     ('COI', 5),
     ('MIS', 6),
-    ('MIS-OOS', 1),
-    ('MIS-MEANS', 1),
-
-    #split_case
-    ('REF-EXT', 1),
-    ('REF-INT', 1),
 
     #suspend_case
-    ('TERM', 1),
-    ('ABND', 1),
     ('IRCB', 7),
-    ('INSUF', 1),
-    ('CPTA', 1),
-    ('NCOE', 1),
 )
 
 class Migration(DataMigration):

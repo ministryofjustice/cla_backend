@@ -5,13 +5,13 @@
         "fields": {
             "name": "Duncan Lewis",
             "created": "2014-04-04T16:42:53.828Z",
-            "short_code": "*001#",
+            "short_code": "105 (housing), 104 (debt), 106 (family)",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "0845 111 1111",
-            "telephone_backdoor": "0845 111 1112",
-            "modified": "2014-05-14T14:37:48.781Z",
+            "telephone_frontdoor": "0845 123 2381 (h), 0845 124 7458 (d), 0845 123 2356 (f)",
+            "telephone_backdoor": "0845 122 8631 (h), 0845 124 7458 (d), 0845 122 8622 (f)",
+            "modified": "2014-09-25T17:21:19.608Z",
             "active": true,
-            "email_address": ""
+            "email_address": "housingclasupervisors@duncanlewis.com"
         }
     },
     {
@@ -20,13 +20,13 @@
         "fields": {
             "name": "DHA",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*002#",
+            "short_code": "103 (housing), 160 (debt)",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 124 7455 (housing), 0845 231 0304 (debt)",
+            "telephone_backdoor": "0845 124 7457 (housing), 0845 124 7452 (debt)",
+            "modified": "2014-09-25T17:20:49.620Z",
             "active": true,
-            "email_address": ""
+            "email_address": "caseworksupervisors@dhadvice.org"
         }
     },
     {
@@ -35,13 +35,13 @@
         "fields": {
             "name": "CES",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*003#",
+            "short_code": "101 (housing), 163 (debt)",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 124 7445 (Housing), 0845 231 0404 (Debt)",
+            "telephone_backdoor": "0845 124 7446 (Housing), 0845 124 7443 (Debt)",
+            "modified": "2014-09-25T17:23:19.854Z",
             "active": true,
-            "email_address": ""
+            "email_address": "CLAAdmin@carillionplc.com"
         }
     },
     {
@@ -50,13 +50,13 @@
         "fields": {
             "name": "Shelter",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*004#",
+            "short_code": "183 (housing), 182 (debt)",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 330 0818 (housing), 0845 231 0607 (debt)",
+            "telephone_backdoor": "0845 122 8664 (housing), 0845 122 8696 (debt)",
+            "modified": "2014-09-25T16:18:00.988Z",
             "active": true,
-            "email_address": ""
+            "email_address": "CLAAdmin@shelter.org.uk"
         }
     },
     {
@@ -65,13 +65,13 @@
         "fields": {
             "name": "Ty Arian",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*005#",
+            "short_code": "111 (housing), 110 (debt)",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 120 2941 (housing), 0845 120 2921 (debt))",
+            "telephone_backdoor": "0845 120 2949 (housing), 0845 120 2935 (debt)",
+            "modified": "2014-09-25T17:23:56.016Z",
             "active": true,
-            "email_address": ""
+            "email_address": "hd@tyarian.net"
         }
     },
     {
@@ -80,13 +80,13 @@
         "fields": {
             "name": "Coop",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*006#",
+            "short_code": "102",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 124 7449",
+            "telephone_backdoor": "0845 124 7450",
+            "modified": "2014-09-25T17:20:13.888Z",
             "active": true,
-            "email_address": ""
+            "email_address": "christine.nwaokolo@theco-operativelegal.co.uk"
         }
     },
     {
@@ -95,13 +95,13 @@
         "fields": {
             "name": "FLG",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*007#",
+            "short_code": "112",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 120 3767",
+            "telephone_backdoor": "0845 120 3787",
+            "modified": "2014-09-25T17:21:47.320Z",
             "active": true,
-            "email_address": ""
+            "email_address": "CLAUsers@familylawgroup.co.uk"
         }
     },
     {
@@ -110,13 +110,13 @@
         "fields": {
             "name": "MG Law",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*008#",
+            "short_code": "107",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 123 2392",
+            "telephone_backdoor": "0845 122 8678",
+            "modified": "2014-09-25T17:22:25.806Z",
             "active": true,
-            "email_address": ""
+            "email_address": "vicky.barnes@simpsonmillar.co.uk"
         }
     },
     {
@@ -125,13 +125,13 @@
         "fields": {
             "name": "CLC",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*009#",
+            "short_code": "155",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 296 7787",
+            "telephone_backdoor": "0845 124 7448",
+            "modified": "2014-09-25T17:19:46.121Z",
             "active": true,
-            "email_address": ""
+            "email_address": "info@coramclc.org.uk"
         }
     },
     {
@@ -140,11 +140,11 @@
         "fields": {
             "name": "THLC",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*010#",
+            "short_code": "109",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 120 2912",
+            "telephone_backdoor": "0845 120 2921",
+            "modified": "2014-09-19T13:30:15.716Z",
             "active": true,
             "email_address": ""
         }
@@ -155,13 +155,13 @@
         "fields": {
             "name": "Howells",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*011#",
+            "short_code": "152",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 296 7870",
+            "telephone_backdoor": "0845 122 8677",
+            "modified": "2014-09-25T17:19:14.394Z",
             "active": true,
-            "email_address": ""
+            "email_address": "CLADiscrimination@howellsllp.com"
         }
     },
     {
@@ -170,11 +170,11 @@
         "fields": {
             "name": "MEL",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*012#",
+            "short_code": "108",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 123 2391",
+            "telephone_backdoor": "0845 122 8646",
+            "modified": "2014-09-19T13:27:22.255Z",
             "active": true,
             "email_address": ""
         }
@@ -185,13 +185,13 @@
         "fields": {
             "name": "Stephensons",
             "created": "2014-04-23T14:59:44.417Z",
-            "short_code": "*013#",
+            "short_code": "185",
             "opening_hours": "9-5M-F",
-            "telephone_frontdoor": "1-800-helpdesk",
-            "telephone_backdoor": "1-800-reception",
-            "modified": "2014-05-14T14:37:26.176Z",
+            "telephone_frontdoor": "0845 296 7990",
+            "telephone_backdoor": "0845 122 8665",
+            "modified": "2014-09-25T16:14:29.155Z",
             "active": true,
-            "email_address": ""
+            "email_address": "Alicia.bradley@cla.stephensons.co.uk"
         }
     },
 	{

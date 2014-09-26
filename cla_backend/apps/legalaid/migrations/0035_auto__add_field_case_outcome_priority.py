@@ -8,20 +8,16 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-
-        # Changing field 'Case.outcome_code'
-        db.alter_column(u'legalaid_case', 'outcome_code', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['legalaid.OutcomeCodePriority'], null=True, db_column='outcome_code'))
-        # Adding index on 'Case', fields ['outcome_code']
-        db.create_index(u'legalaid_case', ['outcome_code'])
+        # Adding field 'Case.outcome_priority'
+        db.add_column(u'legalaid_case', 'outcome_priority',
+                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['legalaid.OutcomeCodePriority'], null=True),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Removing index on 'Case', fields ['outcome_code']
-        db.delete_index(u'legalaid_case', ['outcome_code'])
+        # Deleting field 'Case.outcome_priority'
+        db.delete_column(u'legalaid_case', 'outcome_priority_id')
 
-
-        # Changing field 'Case.outcome_code'
-        db.alter_column(u'legalaid_case', 'outcome_code', self.gf('django.db.models.fields.CharField')(max_length=20, null=True))
 
     models = {
         u'auth.group': {
@@ -168,8 +164,9 @@ class Migration(SchemaMigration):
             'media_code': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.MediaCode']", 'null': 'True', 'blank': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
             'notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'outcome_code': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.OutcomeCodePriority']", 'null': 'True', 'db_column': "'outcome_code'"}),
+            'outcome_code': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'outcome_code_id': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'outcome_priority': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.OutcomeCodePriority']", 'null': 'True'}),
             'personal_details': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.PersonalDetails']", 'null': 'True', 'blank': 'True'}),
             'provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cla_provider.Provider']", 'null': 'True', 'blank': 'True'}),
             'provider_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),

@@ -519,7 +519,8 @@ class Case(TimeStampedModel):
                                                        through='CaseKnowledgebaseAssignment',
                                                        null=True, blank=True)
 
-    outcome_code = models.ForeignKey('OutcomeCodePriority', db_column='outcome_code', null=True)
+    outcome_code = models.CharField(max_length=20, blank=True, null=True)
+    outcome_priority = models.ForeignKey('OutcomeCodePriority', null=True)
     outcome_code_id = models.IntegerField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(null=True)
 
@@ -619,8 +620,16 @@ class Case(TimeStampedModel):
             })
         return new_case
 
+    def _set_outcome_priority(self):
+        try:
+            self.outcome_priority = OutcomeCodePriority.objects.get(code=self.outcome_code)
+        except OutcomeCodePriority.DoesNotExist:
+            self.outcome_priority = OutcomeCodePriority.objects.get(code='DEFAULT')
+
     def save(self, *args, **kwargs):
         self._set_reference_if_necessary()
+
+        self._set_outcome_priority()
 
         if not self.pk:
             super(Case, self).save(*args, **kwargs)

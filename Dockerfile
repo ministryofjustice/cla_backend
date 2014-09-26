@@ -51,6 +51,8 @@ ENV APP_HOME /home/app/django
 # Add project directory to docker
 ADD . /home/app/django
 
+RUN cd /home/app/django && cat docker/version >> /etc/profile
+
 # PIP INSTALL APPLICATION
 RUN cd /home/app/django && pip install -r requirements/production.txt && find . -name '*.pyc' -delete
 

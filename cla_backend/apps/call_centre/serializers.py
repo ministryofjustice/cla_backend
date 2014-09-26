@@ -189,7 +189,7 @@ class CaseSerializer(CaseSerializerFull):
             'billable_time', 'matter_type1', 'matter_type2',
             'requires_action_by', 'diagnosis',
             'media_code', 'postcode', 'diagnosis_state', 'rejected',
-            'date_of_birth', 'category',
+            'date_of_birth', 'category', 'outcome_code',
             'exempt_user', 'exempt_user_reason',
             'ecf_statement', 'case_count'
         )

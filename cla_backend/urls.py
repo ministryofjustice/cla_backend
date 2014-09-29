@@ -14,6 +14,8 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
+    url(r'^status/', include('status.urls', namespace='status')),
+
     url(r'^checker/api/v1/', include('checker.urls', namespace='checker')),
     url(r'^call_centre/api/v1/', include('call_centre.urls', namespace='call_centre')),
     url(r'^cla_provider/api/v1/', include('cla_provider.urls', namespace='cla_provider')),

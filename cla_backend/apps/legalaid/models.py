@@ -371,7 +371,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
             # (partner's child benefits can't be provided with).
             # Used this because in the future I reckon this might change so
             # it would be easier to support.
-            if 'child_benefits' not in partner_income:
+            if partner_income and 'child_benefits' not in partner_income:
                 partner_income['child_benefits'] = 0
 
             partner_props = {

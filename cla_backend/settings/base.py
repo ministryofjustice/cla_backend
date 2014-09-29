@@ -170,7 +170,8 @@ PROJECT_APPS = (
     'reports',
     'knowledgebase',
     'timer',
-    'diagnosis'
+    'diagnosis',
+    'status'
 )
 
 INSTALLED_APPS += PROJECT_APPS

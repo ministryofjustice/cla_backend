@@ -410,5 +410,5 @@ class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
         OrderingFilter,
         DateRangeFilter,
     )
-    ordering = ('resolved', '-modified', '-created',)
+    ordering = ('resolved', '-created',)
     date_range_field = 'created'

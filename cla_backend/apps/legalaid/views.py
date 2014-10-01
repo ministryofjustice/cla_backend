@@ -310,16 +310,12 @@ class OutcomeCodeOrderingFilter(OrderingFilter):
     def get_ordering(self, request):
         ordering = super(OutcomeCodeOrderingFilter, self).get_ordering(request)
 
+        outcome_ordering = ['null_priority', '-priority']
+
         if ordering:
-            by_priority = reduce(
-                lambda acc, term:
-                    acc or term.endswith('priority'),
-                ordering, False)
+            outcome_ordering += ordering
 
-            if by_priority:
-                ordering = ['null_priority'] + ordering
-
-        return ordering
+        return outcome_ordering
 
 
 class FullCaseViewSet(
@@ -374,17 +370,7 @@ class FullCaseViewSet(
                     WHEN legalaid_case.outcome_code IS NULL THEN 1
                     ELSE 0
                 END''',
-                'rejected': '''CASE
-                    WHEN legalaid_case.outcome_code IN (
-                        'COI', 'MIS', 'MIS-OOS', 'MIS-MEAN')
-                    THEN 1
-                    ELSE 0
-                END'''})
-
-        if ordering and 'priority' in ordering:
-            qs = qs.extra(
-                select={
-                    'priority': '''CASE legalaid_case.outcome_code
+                'priority': '''CASE legalaid_case.outcome_code
                         WHEN 'IRCB' THEN 7
                         WHEN 'MIS' THEN 6
                         WHEN 'COI' THEN 5
@@ -392,7 +378,13 @@ class FullCaseViewSet(
                         WHEN 'CB2' THEN 3
                         WHEN 'CB3' THEN 2
                         ELSE 1
-                    END'''})
+                    END''',
+                'rejected': '''CASE
+                    WHEN legalaid_case.outcome_code IN (
+                        'COI', 'MIS', 'MIS-OOS', 'MIS-MEAN')
+                    THEN 1
+                    ELSE 0
+                END'''})
 
         return qs
 

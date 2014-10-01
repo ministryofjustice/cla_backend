@@ -311,13 +311,13 @@ class OutcomeCodeOrderingFilter(OrderingFilter):
         ordering = super(OutcomeCodeOrderingFilter, self).get_ordering(request)
 
         if ordering:
-            by_outcome_priority = reduce(
+            by_priority = reduce(
                 lambda acc, term:
-                    acc or term.endswith('outcome_priority__priority'),
+                    acc or term.endswith('priority'),
                 ordering, False)
 
-            if by_outcome_priority:
-                ordering = ['-null_priority'] + ordering
+            if by_priority:
+                ordering = ['null_priority'] + ordering
 
         return ordering
 
@@ -343,8 +343,7 @@ class FullCaseViewSet(
 
     ordering_fields = ('modified', 'personal_details__full_name',
             'personal_details__date_of_birth', 'personal_details__postcode',
-            'eligibility_check__category__name', 'outcome_priority__priority',
-            'null_priority')
+            'eligibility_check__category__name', 'priority', 'null_priority')
     ordering = '-modified'
 
     search_fields = (
@@ -369,16 +368,31 @@ class FullCaseViewSet(
         elif dashboard_param:
             qs = self.get_dashboard_qs(qs)
 
-        if ordering and ordering.endswith('outcome_priority__priority'):
-            qs = qs.annotate(null_priority=Count('outcome_priority'))
-
-        qs = qs.extra(select={
-            'rejected': '''CASE
+        qs = qs.extra(
+            select={
+                'null_priority': '''CASE
+                    WHEN legalaid_case.outcome_code IS NULL THEN 1
+                    ELSE 0
+                END''',
+                'rejected': '''CASE
                     WHEN legalaid_case.outcome_code IN (
                         'COI', 'MIS', 'MIS-OOS', 'MIS-MEAN')
                     THEN 1
                     ELSE 0
                 END'''})
+
+        if ordering and 'priority' in ordering:
+            qs = qs.extra(
+                select={
+                    'priority': '''CASE legalaid_case.outcome_code
+                        WHEN 'IRCB' THEN 7
+                        WHEN 'MIS' THEN 6
+                        WHEN 'COI' THEN 5
+                        WHEN 'CB1' THEN 4
+                        WHEN 'CB2' THEN 3
+                        WHEN 'CB3' THEN 2
+                        ELSE 1
+                    END'''})
 
         return qs
 

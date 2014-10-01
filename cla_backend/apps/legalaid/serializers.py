@@ -12,8 +12,7 @@ from cla_provider.models import Provider, OutOfHoursRota, Feedback
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
-    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, \
-    OutcomeCodePriority
+    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode
 from django.contrib.auth.models import User
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):

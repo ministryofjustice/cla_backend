@@ -457,14 +457,6 @@ class MediaCode(TimeStampedModel):
     code = models.CharField(max_length=20)
 
 
-class OutcomeCodePriority(models.Model):
-    code = models.CharField(max_length=20, primary_key=True)
-    priority = models.IntegerField(default=1)
-
-    class Meta:
-        ordering = ['-priority']
-
-
 class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True,
@@ -520,7 +512,6 @@ class Case(TimeStampedModel):
                                                        null=True, blank=True)
 
     outcome_code = models.CharField(max_length=20, blank=True, null=True)
-    outcome_priority = models.ForeignKey('OutcomeCodePriority', null=True)
     outcome_code_id = models.IntegerField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(null=True)
 
@@ -604,8 +595,7 @@ class Case(TimeStampedModel):
                 'excludes': [
                     'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
-                    'created', 'modified', 'outcome_code_id',
-                    'outcome_priority'
+                    'created', 'modified', 'outcome_code_id'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details'
@@ -621,16 +611,8 @@ class Case(TimeStampedModel):
             })
         return new_case
 
-    def _set_outcome_priority(self):
-        try:
-            self.outcome_priority = OutcomeCodePriority.objects.get(code=self.outcome_code)
-        except OutcomeCodePriority.DoesNotExist:
-            self.outcome_priority = None
-
     def save(self, *args, **kwargs):
         self._set_reference_if_necessary()
-
-        self._set_outcome_priority()
 
         if not self.pk:
             super(Case, self).save(*args, **kwargs)

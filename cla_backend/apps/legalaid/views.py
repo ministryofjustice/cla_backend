@@ -305,19 +305,6 @@ class RelativeUrlPaginationSerializer(BasePaginationSerializer):
     previous = RelativePreviousPageField('*')
 
 
-class OutcomeCodeOrderingFilter(OrderingFilter):
-
-    def get_ordering(self, request):
-        ordering = super(OutcomeCodeOrderingFilter, self).get_ordering(request)
-
-        outcome_ordering = ['null_priority', '-priority']
-
-        if ordering:
-            outcome_ordering += ordering
-
-        return outcome_ordering
-
-
 class FullCaseViewSet(
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
@@ -333,14 +320,14 @@ class FullCaseViewSet(
     pagination_serializer_class = RelativeUrlPaginationSerializer
 
     filter_backends = (
-        OutcomeCodeOrderingFilter,
+        OrderingFilter,
         SearchFilter,
     )
 
     ordering_fields = ('modified', 'personal_details__full_name',
             'personal_details__date_of_birth', 'personal_details__postcode',
             'eligibility_check__category__name', 'priority', 'null_priority')
-    ordering = '-modified'
+    ordering = ('null_priority', '-priority')
 
     search_fields = (
         'personal_details__full_name',

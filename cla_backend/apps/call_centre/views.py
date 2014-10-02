@@ -24,8 +24,7 @@ from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
-    OutcomeCodeOrderingFilter
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -111,7 +110,7 @@ class CaseViewSet(
     serializer_class = CaseSerializer  # using CreateCaseSerializer during creation
 
     filter_backends = (
-        OutcomeCodeOrderingFilter,
+        OrderingFilter,
         SearchFilter,
     )
 

@@ -298,11 +298,6 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '128'})
         },
-        u'legalaid.outcomecodepriority': {
-            'Meta': {'ordering': "['-priority']", 'object_name': 'OutcomeCodePriority'},
-            'code': ('django.db.models.fields.CharField', [], {'max_length': '20', 'primary_key': 'True'}),
-            'priority': ('django.db.models.fields.IntegerField', [], {'default': '1'})
-        },
         u'legalaid.person': {
             'Meta': {'object_name': 'Person'},
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),

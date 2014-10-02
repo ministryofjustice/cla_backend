@@ -665,3 +665,18 @@ class LinkPersonalDetailsTestCase(BaseCaseTestCase):
 
         self.resource = self.resource.__class__.objects.get(pk=self.resource.pk)
         self.assertEqual(self.resource.personal_details, self.pd)
+
+
+class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_url(self, reference=None):
+        reference = reference or self.resource.reference
+        return reverse(
+            'call_centre:case-call-me-back', args=(),
+            kwargs={'reference': reference}
+        )
+
+    def get_default_post_data(self):
+        return {
+            'notes': 'lorem ipsum',
+            'datetime': timezone.now().strftime('%Y-%m-%d %H:%M')
+        }

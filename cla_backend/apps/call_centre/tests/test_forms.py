@@ -9,9 +9,11 @@ from cla_eventlog.tests.test_forms import BaseCaseLogFormTestCaseMixin, \
 
 from cla_eventlog.models import Log
 
+from legalaid.models import Case
+
 from cla_provider.helpers import ProviderAllocationHelper
 from call_centre.forms import DeferAssignmentCaseForm, ProviderAllocationForm, \
-    DeclineHelpCaseForm
+    DeclineHelpCaseForm, CallMeBackForm
 
 
 def _mock_datetime_now_with(date, *mocks):
@@ -252,3 +254,44 @@ class DeferAssignmentCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
 class DeclineHelpCaseFormTestCase(EventSpecificLogFormTestCaseMixin,
                                             TestCase):
     FORM = DeclineHelpCaseForm
+
+
+class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
+                                            TestCase):
+    FORM = CallMeBackForm
+
+    def get_default_data(self):
+        return {
+            'notes': 'lorem ipsum',
+            'datetime': timezone.now().strftime('%Y-%m-%d %H:%M'),
+        }
+
+    def test_invalid_datetime(self):
+        case = make_recipe('legalaid.case')
+        self.assertEqual(Log.objects.count(), 0)
+
+        def _test(case, datetime, error_msg):
+            data = self.get_default_data()
+            data['datetime'] = datetime
+            form = self.FORM(case=case, data=data)
+
+            self.assertFalse(form.is_valid())
+
+            self.assertEqual(len(form.errors), 1)
+            self.assertItemsEqual(
+                form.errors['datetime'], [error_msg]
+            )
+
+            # nothing has changed
+            case = Case.objects.get(pk=case.pk)
+            self.assertEqual(Log.objects.count(), 0)
+
+        # required datetime
+        _test(case, None, u'This field is required.')
+
+        # invalid format 
+        _test(
+            case,
+            timezone.now().strftime('%Y/%m/%d %H:%M'),
+            u'Enter a valid date/time.'
+        )

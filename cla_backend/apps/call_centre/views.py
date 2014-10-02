@@ -42,7 +42,8 @@ from .serializers import EligibilityCheckSerializer, \
     CreateCaseSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
-    DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm
+    DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm, \
+    CallMeBackForm
 
 from .models import Operator
 
@@ -311,6 +312,10 @@ class CaseViewSet(
         obj.save(update_fields=['personal_details', 'modified'])
 
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
+    @action()
+    def call_me_back(self, request, reference=None, **kwargs):
+        return self._form_action(request, CallMeBackForm)
 
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):

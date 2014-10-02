@@ -50,10 +50,10 @@ class BaseCaseLogFormTestCaseMixin(object):
 
         self.assertFalse(form.is_valid())
 
+        self.assertEqual(len(form.errors), 1)
         self.assertItemsEqual(
-            form.errors, {
-                'notes': [u'Ensure this value has at most 500 characters (it has 501).']
-            }
+            form.errors['notes'],
+            [u'Ensure this value has at most 500 characters (it has 501).']
         )
 
         # nothing has changed

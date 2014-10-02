@@ -139,3 +139,15 @@ class AlternativeHelpForm(EventSpecificLogForm):
 
         self.case.assign_alternative_help(user, providers)
         return super(AlternativeHelpForm, self).save(user)
+
+
+class CallMeBackForm(BaseCaseLogForm):
+    LOG_EVENT_KEY = 'call_me_back'
+
+    # format "2013-12-29 23:59" always in UTC
+    datetime = forms.DateTimeField()
+
+    def save(self, user):
+        dt = self.cleaned_data['datetime']
+        self.case.set_requires_action_at(dt)
+        super(CallMeBackForm, self).save(user)

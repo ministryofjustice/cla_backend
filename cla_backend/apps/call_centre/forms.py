@@ -2,6 +2,7 @@ from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
+from django.utils import timezone
 
 from cla_provider.models import Provider
 from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
@@ -146,6 +147,10 @@ class CallMeBackForm(BaseCaseLogForm):
 
     # format "2013-12-29 23:59" always in UTC
     datetime = forms.DateTimeField()
+
+    def clean_datetime(self):
+        dt = self.cleaned_data['datetime']
+        return dt.replace(tzinfo=timezone.utc)
 
     def save(self, user):
         dt = self.cleaned_data['datetime']

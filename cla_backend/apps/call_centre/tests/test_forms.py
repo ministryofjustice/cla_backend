@@ -260,11 +260,45 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
                                             TestCase):
     FORM = CallMeBackForm
 
-    def get_default_data(self):
+    def get_default_data(self, **kwargs):
+        dt = kwargs.get(
+            'datetime', timezone.now().strftime('%Y-%m-%d %H:%M')
+        )
         return {
             'notes': 'lorem ipsum',
-            'datetime': timezone.now().strftime('%Y-%m-%d %H:%M'),
+            'datetime': dt
         }
+
+    def test_save_successfull(self):
+        case = make_recipe('legalaid.case')
+        self.assertEqual(Log.objects.count(), 0)
+
+        now = timezone.now()
+        data = self.get_default_data(
+            datetime=now.strftime('%Y-%m-%d %H:%M')
+        )
+        form = self.FORM(case=case, data=data)
+
+        self.assertTrue(form.is_valid())
+
+        form.save(self.user)
+
+        case = Case.objects.get(pk=case.pk)
+
+        self.assertEqual(Log.objects.count(), 1)
+        log = Log.objects.all()[0]
+
+        self.assertEqual(log.notes, 'lorem ipsum')
+        self.assertEqual(log.created_by, self.user)
+        self.assertEqual(log.case, case)
+
+        self.assertEqual(
+            case.requires_action_at,
+            datetime.datetime(
+                year=now.year, month=now.month, day=now.day,
+                hour=now.hour, minute=now.minute, tzinfo=timezone.utc
+            )
+        )
 
     def test_invalid_datetime(self):
         case = make_recipe('legalaid.case')

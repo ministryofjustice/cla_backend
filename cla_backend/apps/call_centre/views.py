@@ -4,6 +4,7 @@ from dateutil import parser
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
+from django.db.models import Q
 from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import viewsets, mixins, status
@@ -124,7 +125,15 @@ class CaseViewSet(
         return super(CaseViewSet, self).get_serializer_class()
 
     def get_dashboard_qs(self, qs):
-        return qs.filter(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
+        qs = qs.filter(
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR
+        )
+
+        qs = qs.filter(
+            Q(requires_action_at__isnull=True) | Q(requires_action_at__lte=timezone.now())
+        )
+
+        return qs
 
     def pre_save(self, obj, *args, **kwargs):
         super(CaseViewSet, self).pre_save(obj, *args, **kwargs)

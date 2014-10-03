@@ -3,6 +3,7 @@ from dateutil import parser
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
+from django.db.models import Q
 from django.utils import timezone
 from legalaid.permissions import IsManagerOrMePermission
 
@@ -122,6 +123,11 @@ class CaseViewSet(
         return super(CaseViewSet, self).get_serializer_class()
 
     def get_dashboard_qs(self, qs):
+        user = self.request.user
+        if self.request.user.operator.is_manager:
+            return qs.filter(
+                Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR) |
+                Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR_MANAGER))
         return qs.filter(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
 
     def pre_save(self, obj, *args, **kwargs):

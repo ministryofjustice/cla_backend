@@ -94,3 +94,17 @@ class DeclineHelpEvent(BaseEvent):
     }
 event_registry.register(DeclineHelpEvent)
 
+
+class CallMeBackEvent(BaseEvent):
+    key = 'call_me_back'
+    codes = {
+        'CB1': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Callback 1',
+            'stops_timer': True,
+            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
+        }
+    }
+event_registry.register(CallMeBackEvent)

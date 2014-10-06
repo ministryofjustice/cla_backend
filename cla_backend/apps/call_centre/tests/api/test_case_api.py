@@ -692,12 +692,23 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             kwargs={'reference': reference}
         )
 
-    def get_default_post_data(self):
-        now = timezone.now()
-        mon = now + datetime.timedelta(days=7-now.weekday())
-        mon = mon.replace(hour=10, minute=0, second=0, microsecond=0)
+    @property
+    def _default_dt(self):
+        if not hasattr(self, '__default_dt'):
+            now = timezone.now()
+            dt = now + datetime.timedelta(days=7-now.weekday())
+            self.__default_dt = dt.replace(hour=10, minute=0, second=0, microsecond=0)
+        return self.__default_dt
 
+    def get_expected_notes(self, data):
+        return 'Callback scheduled for %s. %s' % (
+            timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M"),
+            data['notes']
+        )
+        return data['notes']
+
+    def get_default_post_data(self):
         return {
             'notes': 'lorem ipsum',
-            'datetime': mon.strftime('%Y-%m-%d %H:%M')
+            'datetime': self._default_dt.strftime('%Y-%m-%d %H:%M')
         }

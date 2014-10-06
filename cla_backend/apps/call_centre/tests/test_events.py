@@ -1,12 +1,6 @@
-import mock
-
 from core.tests.mommy_utils import make_recipe
 
 from django.test import TestCase
-
-from cla_common.constants import REQUIRES_ACTION_BY, ELIGIBILITY_STATES
-
-from legalaid.models import Case
 
 from cla_eventlog.tests.base import EventTestCaseMixin
 
@@ -83,3 +77,10 @@ class DeclineHelpEventTestCase(EventTestCaseMixin, TestCase):
         self._test_process_with_expicit_code_and_requires_action_None_if_operator(
             self.CODES, code='NRES'
         )
+
+
+class CallMeBackEventTestCase(EventTestCaseMixin, TestCase):
+    EVENT_KEY = 'call_me_back'
+
+    def test_CB1(self):
+        self._test_process_with_implicit_code('CB1')

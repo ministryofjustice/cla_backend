@@ -169,6 +169,13 @@ class CallMeBackForm(BaseCaseLogForm):
             raise ValidationError("Specify a date within working hours.")
         return dt
 
+    def get_notes(self):
+        dt = timezone.localtime(self.cleaned_data['datetime'])
+        return u"Callback scheduled for {dt}. {notes}".format(
+            dt=dt.strftime("%d/%m/%Y %H:%M"),
+            notes=self.cleaned_data['notes'] or ""
+        )
+
     def save(self, user):
         dt = self.cleaned_data['datetime']
         self.case.set_requires_action_at(dt)

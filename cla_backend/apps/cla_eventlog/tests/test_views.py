@@ -110,6 +110,9 @@ class ImplicitEventCodeViewTestCaseMixin(object):
             'notes': 'lorem ipsum'
         }
 
+    def get_expected_notes(self, data):
+        return data['notes']
+
     def test_successful(self):
         # before, no logs
         self.assertEqual(Log.objects.count(), 0)
@@ -130,7 +133,7 @@ class ImplicitEventCodeViewTestCaseMixin(object):
         log = Log.objects.all()[0]
 
         self.assertEqual(log.case, self.resource)
-        self.assertEqual(log.notes, data['notes'])
+        self.assertEqual(log.notes, self.get_expected_notes(data))
         self.assertEqual(log.created_by, self.user)
 
 

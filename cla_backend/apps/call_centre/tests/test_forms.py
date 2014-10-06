@@ -294,7 +294,10 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
         self.assertEqual(Log.objects.count(), 1)
         log = Log.objects.all()[0]
 
-        self.assertEqual(log.notes, 'lorem ipsum')
+        self.assertEqual(
+            log.notes,
+            'Callback scheduled for %s. lorem ipsum' % timezone.localtime(dt).strftime("%d/%m/%Y %H:%M")
+        )
         self.assertEqual(log.created_by, self.user)
         self.assertEqual(log.case, case)
 

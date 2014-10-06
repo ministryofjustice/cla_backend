@@ -172,10 +172,3 @@ class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
 
     def test_CPTA(self):
         self._test_process_with_expicit_code(self.CODES, code='CPTA')
-
-
-class CallMeBackEventTestCase(EventTestCaseMixin, TestCase):
-    EVENT_KEY = 'call_me_back'
-
-    def test_CB1(self):
-        self._test_process_with_implicit_code('CB1')

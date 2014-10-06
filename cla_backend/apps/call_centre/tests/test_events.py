@@ -2,7 +2,10 @@ from core.tests.mommy_utils import make_recipe
 
 from django.test import TestCase
 
+from cla_eventlog import event_registry
+
 from cla_eventlog.tests.base import EventTestCaseMixin
+from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
 
 
 class AssignToProviderEventTestCase(EventTestCaseMixin, TestCase):
@@ -84,3 +87,103 @@ class CallMeBackEventTestCase(EventTestCaseMixin, TestCase):
 
     def test_CB1(self):
         self._test_process_with_implicit_code('CB1')
+
+    def test_CB2(self):
+        case = make_recipe('legalaid.case', callback_attempt=1)
+        self._test_process_with_implicit_code('CB2', dummy_case=case)
+
+    def test_CB3(self):
+        case = make_recipe('legalaid.case', callback_attempt=2)
+        self._test_process_with_implicit_code('CB3', dummy_case=case)
+
+    def test_CB4_errors(self):
+        dummy_case = make_recipe('legalaid.case', callback_attempt=3)
+
+        event = event_registry.get_event(self.EVENT_KEY)()
+
+        self.assertRaises(ValueError, event.process, **{
+            'case': dummy_case,
+            'notes': 'this is a note',
+            'created_by': self.dummy_user
+        })
+
+        self.assertEqual(dummy_case.log_set.count(), 0)
+
+
+class StopCallMeBackEventTestCase(EventTestCaseMixin, TestCase):
+    EVENT_KEY = 'stop_call_me_back'
+
+    def test_CBC(self):
+        # with callback_attempt == 1
+        case = make_recipe('legalaid.case', callback_attempt=1)
+        self._test_process_with_implicit_code('CBC', dummy_case=case, process_kwargs={
+            'cancel': True
+        })
+
+        # with callback_attempt == 2
+        case = make_recipe('legalaid.case', callback_attempt=2)
+        self._test_process_with_implicit_code('CBC', dummy_case=case, process_kwargs={
+            'cancel': True
+        })
+
+        # with callback_attempt == 3
+        case = make_recipe('legalaid.case', callback_attempt=3)
+        self._test_process_with_implicit_code('CBC', dummy_case=case, process_kwargs={
+            'cancel': True
+        })
+
+    def test_CBC_errors_without_prev_CBx(self):
+        dummy_case = make_recipe('legalaid.case', callback_attempt=0)
+
+        event = event_registry.get_event(self.EVENT_KEY)()
+
+        self.assertRaises(ValueError, event.process, **{
+            'case': dummy_case,
+            'notes': 'this is a note',
+            'created_by': self.dummy_user,
+            'cancel': True
+        })
+
+        self.assertEqual(dummy_case.log_set.count(), 0)
+
+    def test_CALLBACK_COMPLETE(self):
+        # with callback_attempt == 1
+        case = make_recipe('legalaid.case', callback_attempt=1)
+        self._test_process_with_implicit_code('CALLBACK_COMPLETE', dummy_case=case,
+            expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.MINOR,
+            process_kwargs={
+                'complete': True
+            }
+        )
+
+        # with callback_attempt == 2
+        case = make_recipe('legalaid.case', callback_attempt=2)
+        self._test_process_with_implicit_code('CALLBACK_COMPLETE', dummy_case=case,
+            expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.MINOR,
+            process_kwargs={
+                'complete': True
+            }
+        )
+
+        # with callback_attempt == 3
+        case = make_recipe('legalaid.case', callback_attempt=3)
+        self._test_process_with_implicit_code('CALLBACK_COMPLETE', dummy_case=case,
+            expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.MINOR,
+            process_kwargs={
+                'complete': True
+            },
+        )
+
+    def test_CALLBACK_COMPLETE_errors_without_prev_CBx(self):
+        dummy_case = make_recipe('legalaid.case', callback_attempt=0)
+
+        event = event_registry.get_event(self.EVENT_KEY)()
+
+        self.assertRaises(ValueError, event.process, **{
+            'case': dummy_case,
+            'notes': 'this is a note',
+            'created_by': self.dummy_user,
+            'complete': True
+        })
+
+        self.assertEqual(dummy_case.log_set.count(), 0)

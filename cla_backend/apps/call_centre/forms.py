@@ -6,6 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 from django.utils import timezone
 
+from cla_eventlog import event_registry
+
 from legalaid.utils.dates import is_out_of_hours_for_operators
 
 from cla_provider.models import Provider
@@ -169,6 +171,24 @@ class CallMeBackForm(BaseCaseLogForm):
             raise ValidationError("Specify a date within working hours.")
         return dt
 
+    def clean(self):
+        """
+        Catches further validation errors before the save.
+        """
+        cleaned_data = super(CallMeBackForm, self).clean()
+
+        if self._errors:  # if already in error => skip
+            return cleaned_data
+
+        event = event_registry.get_event(self.get_event_key())()
+        try:
+            event.get_log_code(case=self.case, **self.get_kwargs())
+        except ValueError as e:
+            self._errors[NON_FIELD_ERRORS] = ErrorList([
+                str(e)
+            ])
+        return cleaned_data
+
     def get_notes(self):
         dt = timezone.localtime(self.cleaned_data['datetime'])
         return u"Callback scheduled for {dt}. {notes}".format(
@@ -177,6 +197,46 @@ class CallMeBackForm(BaseCaseLogForm):
         )
 
     def save(self, user):
+        super(CallMeBackForm, self).save(user)
         dt = self.cleaned_data['datetime']
         self.case.set_requires_action_at(dt)
-        super(CallMeBackForm, self).save(user)
+
+
+class StopCallMeBackForm(BaseCaseLogForm):
+    LOG_EVENT_KEY = 'stop_call_me_back'
+
+    action = forms.ChoiceField(
+        choices=(
+            ('cancel', 'Cancel'),
+            ('complete', 'complete'),
+        )
+    )
+
+    def get_kwargs(self):
+        action = self.cleaned_data['action']
+
+        kwargs = {}
+        kwargs[action] = True
+        return kwargs
+
+    def clean(self):
+        """
+        Catches further validation errors before the save.
+        """
+        cleaned_data = super(StopCallMeBackForm, self).clean()
+
+        if self._errors:  # if already in error => skip
+            return cleaned_data
+
+        event = event_registry.get_event(self.get_event_key())()
+        try:
+            event.get_log_code(case=self.case, **self.get_kwargs())
+        except ValueError as e:
+            self._errors[NON_FIELD_ERRORS] = ErrorList([
+                str(e)
+            ])
+        return cleaned_data
+
+    def save(self, user):
+        super(StopCallMeBackForm, self).save(user)
+        self.case.reset_requires_action_at()

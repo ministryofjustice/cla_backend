@@ -21,10 +21,15 @@ class BaseCaseLogFormTestCaseMixin(object):
         }
 
     def test_save_successfull(self):
-        case = make_recipe('legalaid.case')
+        self._test_save_successfull()
+
+    def _test_save_successfull(self, case=None, data=None):
+        if not case:
+            case = make_recipe('legalaid.case')
         self.assertEqual(Log.objects.count(), 0)
 
-        data = self.get_default_data()
+        if data == None:
+            data = self.get_default_data()
         form = self.FORM(case=case, data=data)
 
         self.assertTrue(form.is_valid())

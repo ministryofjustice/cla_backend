@@ -13,7 +13,7 @@ from legalaid.models import Case
 
 from cla_provider.helpers import ProviderAllocationHelper
 from call_centre.forms import DeferAssignmentCaseForm, ProviderAllocationForm, \
-    DeclineHelpCaseForm, CallMeBackForm
+    DeclineHelpCaseForm, CallMeBackForm, StopCallMeBackForm
 
 
 def _mock_datetime_now_with(date, *mocks):
@@ -251,13 +251,11 @@ class DeferAssignmentCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     FORM = DeferAssignmentCaseForm
 
 
-class DeclineHelpCaseFormTestCase(EventSpecificLogFormTestCaseMixin,
-                                            TestCase):
+class DeclineHelpCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
     FORM = DeclineHelpCaseForm
 
 
-class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
-                                            TestCase):
+class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     FORM = CallMeBackForm
 
     def _strftime(self, date):
@@ -278,9 +276,26 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
         }
 
     def test_save_successfull(self):
-        case = make_recipe('legalaid.case')
+        # commented out because split into _CB1, _CB2, _CB3
+        pass
+
+    def test_save_successfull_CB1(self):
+        case = make_recipe('legalaid.case', callback_attempt=0)
+        self._test_save_successfull(case, 1, 'CB1')
+
+    def test_save_successfull_CB2(self):
+        case = make_recipe('legalaid.case', callback_attempt=1)
+        self._test_save_successfull(case, 2, 'CB2')
+
+    def test_save_successfull_CB3(self):
+        case = make_recipe('legalaid.case', callback_attempt=2)
+        self._test_save_successfull(case, 3, 'CB3')
+
+    def _test_save_successfull(
+        self, case, expected_attempt, expected_outcome
+    ):
         self.assertEqual(Log.objects.count(), 0)
-        self.assertEqual(case.callback_attempt, 0)
+        self.assertEqual(case.callback_attempt, expected_attempt-1)
 
         dt = self._get_next_mon()
         data = self.get_default_data(datetime=self._strftime(dt))
@@ -292,9 +307,10 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
 
         case = Case.objects.get(pk=case.pk)
 
-        self.assertEqual(case.callback_attempt, 1)
+        self.assertEqual(case.callback_attempt, expected_attempt)
         self.assertEqual(Log.objects.count(), 1)
         log = Log.objects.all()[0]
+        self.assertEqual(log.code, expected_outcome)
 
         self.assertEqual(
             log.notes,
@@ -392,4 +408,117 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
             case,
             self._strftime(mon),
             u'Specify a date within working hours.'
+        )
+
+    def test_CB4_not_allowed(self):
+        case = make_recipe(
+            'legalaid.case', callback_attempt=3
+        )
+
+        form = self.FORM(case=case, data=self.get_default_data())
+
+        self.assertFalse(form.is_valid())
+        self.assertItemsEqual(form.errors.keys(), ['__all__'])
+        self.assertItemsEqual(
+            form.errors['__all__'],
+            [u'Reached max number of callbacks allowed']
+        )
+
+
+class StopCallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
+    FORM = StopCallMeBackForm
+
+    def get_default_data(self, **kwargs):
+        return {
+            'notes': 'lorem ipsum',
+            'action': 'complete'
+        }
+
+    def test_save_successfull(self):
+        # commented out because split into _CBC, _CALLBACK_COMPLETE
+        pass
+
+    def test_save_successfull_CBC(self):
+        case = make_recipe(
+            'legalaid.case', callback_attempt=1,
+            requires_action_at=timezone.now()
+        )
+        self._test_save_successfull(case=case, data={
+            'notes': 'lorem ipsum',
+            'action': 'cancel'
+        })
+
+        self.assertEqual(case.callback_attempt, 0)
+        self.assertEqual(case.requires_action_at, None)
+
+        log = Log.objects.all()[0]
+        self.assertEqual(log.code, 'CBC')
+
+    def test_save_successfull_CALLBACK_COMPLETE(self):
+        case = make_recipe(
+            'legalaid.case', callback_attempt=1,
+            requires_action_at=timezone.now()
+        )
+        self._test_save_successfull(case=case, data={
+            'notes': 'lorem ipsum',
+            'action': 'complete'
+        })
+
+        self.assertEqual(case.callback_attempt, 0)
+        self.assertEqual(case.requires_action_at, None)
+
+        log = Log.objects.all()[0]
+        self.assertEqual(log.code, 'CALLBACK_COMPLETE')
+
+    def test_invalid_action(self):
+        case = make_recipe(
+            'legalaid.case', callback_attempt=1,
+            requires_action_at=timezone.now()
+        )
+
+        self.assertEqual(Log.objects.count(), 0)
+
+        form = self.FORM(case=case, data={
+            'action': 'invalid'
+        })
+
+        self.assertFalse(form.is_valid())
+        self.assertItemsEqual(form.errors.keys(), ['action'])
+        self.assertItemsEqual(
+            form.errors['action'],
+            [u'Select a valid choice. invalid is not one of the available choices.']
+        )
+
+        self.assertEqual(Log.objects.count(), 0)
+
+    def test_CBC_not_allowed_wihout_prev_CBx(self):
+        case = make_recipe(
+            'legalaid.case', callback_attempt=0
+        )
+
+        form = self.FORM(case=case, data={
+            'action': 'cancel'
+        })
+
+        self.assertFalse(form.is_valid())
+        self.assertItemsEqual(form.errors.keys(), ['__all__'])
+        self.assertItemsEqual(
+            form.errors['__all__'],
+            [u'Cannot cancel callback without a previous CBx']
+        )
+
+    def test_CALLBACK_COMPLETE_not_allowed_wihout_prev_CBx(self):
+        case = make_recipe(
+            'legalaid.case', callback_attempt=0
+        )
+
+        form = self.FORM(case=case, data={
+            'action': 'complete'
+        })
+
+        self.assertFalse(form.is_valid())
+        self.assertItemsEqual(form.errors.keys(), ['__all__'])
+        self.assertItemsEqual(
+            form.errors['__all__'],
+            [u'Cannot mark callback as complete without previous CBx']
         )

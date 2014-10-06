@@ -260,9 +260,17 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
                                             TestCase):
     FORM = CallMeBackForm
 
+    def _strftime(self, date):
+        return date.strftime('%Y-%m-%d %H:%M')
+
+    def _get_next_mon(self):
+        now = timezone.now()
+        mon = now + datetime.timedelta(days=7-now.weekday())
+        return mon.replace(hour=10, minute=0, second=0, microsecond=0)
+
     def get_default_data(self, **kwargs):
         dt = kwargs.get(
-            'datetime', timezone.now().strftime('%Y-%m-%d %H:%M')
+            'datetime', self._strftime(self._get_next_mon())
         )
         return {
             'notes': 'lorem ipsum',
@@ -273,10 +281,8 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
         case = make_recipe('legalaid.case')
         self.assertEqual(Log.objects.count(), 0)
 
-        now = timezone.now()
-        data = self.get_default_data(
-            datetime=now.strftime('%Y-%m-%d %H:%M')
-        )
+        dt = self._get_next_mon()
+        data = self.get_default_data(datetime=self._strftime(dt))
         form = self.FORM(case=case, data=data)
 
         self.assertTrue(form.is_valid())
@@ -295,8 +301,8 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
         self.assertEqual(
             case.requires_action_at,
             datetime.datetime(
-                year=now.year, month=now.month, day=now.day,
-                hour=now.hour, minute=now.minute, tzinfo=timezone.utc
+                year=dt.year, month=dt.month, day=dt.day,
+                hour=dt.hour, minute=dt.minute, tzinfo=timezone.utc
             )
         )
 
@@ -323,9 +329,62 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
         # required datetime
         _test(case, None, u'This field is required.')
 
-        # invalid format 
+        # invalid format
         _test(
             case,
             timezone.now().strftime('%Y/%m/%d %H:%M'),
             u'Enter a valid date/time.'
+        )
+
+        # datetime in the past
+        _test(
+            case,
+            self._strftime(timezone.now()),
+            u'Specify a date not in the current half hour.'
+        )
+
+        _test(
+            case,
+            self._strftime(timezone.now() + datetime.timedelta(minutes=30)),
+            u'Specify a date not in the current half hour.'
+        )
+
+        # Sat at 12.31
+        sat = timezone.now() + datetime.timedelta(days=12-timezone.now().weekday())
+        sat = sat.replace(hour=11, minute=31, second=0, microsecond=0)
+
+        _test(
+            case,
+            self._strftime(sat),
+            u'Specify a date within working hours.'
+        )
+
+        # Sun at 10am
+        sun = timezone.now() + datetime.timedelta(days=13-timezone.now().weekday())
+        sun = sun.replace(hour=9, minute=0, second=0, microsecond=0)
+
+        _test(
+            case,
+            self._strftime(sun),
+            u'Specify a date within working hours.'
+        )
+
+        # Mon at 8.59
+        mon = timezone.now() + datetime.timedelta(days=7-timezone.now().weekday())
+        mon = mon.replace(hour=7, minute=59, second=0, microsecond=0)
+
+        _test(
+            case,
+            self._strftime(mon),
+            u'Specify a date within working hours.'
+        )
+
+        # Mon at 20.01
+        mon = timezone.now() + datetime.timedelta(days=7-timezone.now().weekday())
+        mon = mon.replace(hour=19, minute=1, second=0, microsecond=0)
+
+        _test(
+            case,
+            self._strftime(mon),
+            u'Specify a date within working hours.'
         )

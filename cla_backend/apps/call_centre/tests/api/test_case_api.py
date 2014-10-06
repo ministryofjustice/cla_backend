@@ -693,7 +693,11 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         )
 
     def get_default_post_data(self):
+        now = timezone.now()
+        mon = now + datetime.timedelta(days=7-now.weekday())
+        mon = mon.replace(hour=10, minute=0, second=0, microsecond=0)
+
         return {
             'notes': 'lorem ipsum',
-            'datetime': timezone.now().strftime('%Y-%m-%d %H:%M')
+            'datetime': mon.strftime('%Y-%m-%d %H:%M')
         }

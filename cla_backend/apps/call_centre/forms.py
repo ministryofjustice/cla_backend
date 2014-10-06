@@ -1,8 +1,12 @@
+import datetime
+
 from django import forms
-from django.core.exceptions import NON_FIELD_ERRORS
+from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 from django.utils import timezone
+
+from legalaid.utils.dates import is_out_of_hours_for_operators
 
 from cla_provider.models import Provider
 from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
@@ -148,9 +152,22 @@ class CallMeBackForm(BaseCaseLogForm):
     # format "2013-12-29 23:59" always in UTC
     datetime = forms.DateTimeField()
 
+    def _is_dt_too_soon(self, dt):
+        return dt <= timezone.now() + datetime.timedelta(minutes=30)
+
+    def _is_dt_out_of_hours(self, dt):
+        return is_out_of_hours_for_operators(timezone.localtime(dt))
+
     def clean_datetime(self):
         dt = self.cleaned_data['datetime']
-        return dt.replace(tzinfo=timezone.utc)
+        dt = dt.replace(tzinfo=timezone.utc)
+
+        if self._is_dt_too_soon(dt):
+            raise ValidationError("Specify a date not in the current half hour.")
+
+        if self._is_dt_out_of_hours(dt):
+            raise ValidationError("Specify a date within working hours.")
+        return dt
 
     def save(self, user):
         dt = self.cleaned_data['datetime']

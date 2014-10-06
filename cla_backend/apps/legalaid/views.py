@@ -24,7 +24,7 @@ from .serializers import CategorySerializerBase, \
     AdaptationDetailsSerializerBase, CaseSerializerBase, FeedbackSerializerBase
 from .models import Case, Category, EligibilityCheck, \
     MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
-    AdaptationDetails
+    AdaptationDetails, CaseNotesHistory
 
 
 class FormActionMixin(object):
@@ -388,6 +388,21 @@ class FullCaseViewSet(
         )
 
         return resp
+
+    def pre_save(self, obj):
+        super(FullCaseViewSet, self).pre_save(obj)
+        if obj.pk:
+            if 'notes' in obj.changed_fields:
+                cnh = CaseNotesHistory(case=obj)
+                cnh.operator_notes = obj.notes
+                cnh.created_by = self.request.user
+                cnh.save()
+
+            if 'provider_notes' in obj.changed_fields:
+                cpnh = CaseNotesHistory(case=obj)
+                cpnh.provider_notes = obj.provider_notes
+                cpnh.created_by = self.request.user
+                cpnh.save()
 
 
 class BaseFeedbackViewSet(

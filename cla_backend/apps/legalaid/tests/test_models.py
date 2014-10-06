@@ -63,6 +63,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         created_by=make_user(),
         requires_action_by=REQUIRES_ACTION_BY.PROVIDER_REVIEW,
         requires_action_at=timezone.now(),
+        callback_attempt=2,
         locked_by=make_user(),
         locked_at=timezone.now(),
         provider=provider,
@@ -1131,7 +1132,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'created_by', 'locked_by', 'locked_at', 'thirdparty_details',
             'adaptation_details', 'billable_time', 'matter_type1', 'matter_type2',
             'outcome_code', 'level', 'reference', 'laa_reference', 'from_case',
-            'outcome_code_id', 'requires_action_at'
+            'outcome_code_id', 'requires_action_at', 'callback_attempt'
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
@@ -1171,6 +1172,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'outcome_code_id': None,
             'level': None,
             'requires_action_at': None,
+            'callback_attempt': 0,
 
             # it should keep these values from the original case
             'notes': case.notes,

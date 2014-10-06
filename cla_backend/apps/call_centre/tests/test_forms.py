@@ -280,6 +280,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
     def test_save_successfull(self):
         case = make_recipe('legalaid.case')
         self.assertEqual(Log.objects.count(), 0)
+        self.assertEqual(case.callback_attempt, 0)
 
         dt = self._get_next_mon()
         data = self.get_default_data(datetime=self._strftime(dt))
@@ -291,6 +292,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin,
 
         case = Case.objects.get(pk=case.pk)
 
+        self.assertEqual(case.callback_attempt, 1)
         self.assertEqual(Log.objects.count(), 1)
         log = Log.objects.all()[0]
 

@@ -478,6 +478,7 @@ class Case(TimeStampedModel):
     requires_action_at = models.DateTimeField(
         auto_now=False, blank=True, null=True
     )
+    callback_attempt = models.PositiveSmallIntegerField(default=0)
 
     locked_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, blank=True, null=True,
@@ -599,7 +600,8 @@ class Case(TimeStampedModel):
                 'excludes': [
                     'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
-                    'created', 'modified', 'outcome_code_id', 'requires_action_at'
+                    'created', 'modified', 'outcome_code_id', 'requires_action_at',
+                    'callback_attempt'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details'
@@ -669,7 +671,13 @@ class Case(TimeStampedModel):
 
     def set_requires_action_at(self, requires_action_at):
         self.requires_action_at = requires_action_at
-        self.save(update_fields=['requires_action_at', 'modified'])
+        self.callback_attempt += 1
+        self.save(update_fields=['requires_action_at', 'callback_attempt', 'modified'])
+
+    def reset_requires_action_at(self):
+        self.requires_action_at = None
+        self.callback_attempt = 0
+        self.save(update_fields=['requires_action_at', 'callback_attempt', 'modified'])
 
     @property
     def doesnt_requires_action(self):

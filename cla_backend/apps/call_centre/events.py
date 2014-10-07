@@ -149,7 +149,7 @@ class StopCallMeBackEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Callback Cancelled',
             'stops_timer': True,
-            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
+            'set_requires_action_by': None_if_owned_by_operator
         },
         'CALLBACK_COMPLETE': {
             'type': LOG_TYPES.SYSTEM,

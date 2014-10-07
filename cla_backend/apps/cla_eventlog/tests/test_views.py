@@ -114,10 +114,15 @@ class ImplicitEventCodeViewTestCaseMixin(object):
         return data['notes']
 
     def test_successful(self):
+        self._test_successful()
+
+    def _test_successful(self, data=None):
         # before, no logs
         self.assertEqual(Log.objects.count(), 0)
 
-        data = self.get_default_post_data()
+        if data == None:
+            data = self.get_default_post_data()
+
         response = self.client.post(
             self.url, data=data, format='json',
             HTTP_AUTHORIZATION='Bearer %s' % self.token

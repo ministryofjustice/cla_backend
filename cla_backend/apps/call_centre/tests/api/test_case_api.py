@@ -712,3 +712,75 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             'notes': 'lorem ipsum',
             'datetime': self._default_dt.strftime('%Y-%m-%d %H:%M')
         }
+
+    def test_successful_CB1(self):
+        self.resource.callback_attempt = 0
+        self.resource.save()
+
+        self.test_successful()
+
+        log = self.resource.log_set.first()
+        self.assertEqual(log.code, 'CB1')
+
+    def test_successful_CB2(self):
+        self.resource.callback_attempt = 1
+        self.resource.save()
+
+        self.test_successful()
+
+        log = self.resource.log_set.first()
+        self.assertEqual(log.code, 'CB2')
+
+    def test_successful_CB3(self):
+        self.resource.callback_attempt = 2
+        self.resource.save()
+
+        self.test_successful()
+
+        log = self.resource.log_set.first()
+        self.assertEqual(log.code, 'CB3')
+
+
+class StopCallMeBackTestCase(
+    ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase
+):
+    def make_resource(self, **kwargs):
+        kwargs['callback_attempt'] = 1
+        return super(StopCallMeBackTestCase, self).make_resource(**kwargs)
+
+    def get_url(self, reference=None):
+        reference = reference or self.resource.reference
+        return reverse(
+            'call_centre:case-stop-call-me-back', args=(),
+            kwargs={'reference': reference}
+        )
+
+    def get_default_post_data(self):
+        return {
+            'notes': 'lorem ipsum',
+            'action': 'complete'
+        }
+
+    def test_successful_CALLBACK_COMPLETE(self):
+        self.resource.callback_attempt = 1
+        self.resource.save()
+
+        self._test_successful(data={
+            'notes': 'lorem ipsum',
+            'action': 'complete'
+        })
+
+        log = self.resource.log_set.first()
+        self.assertEqual(log.code, 'CALLBACK_COMPLETE')
+
+    def test_successful_CBC(self):
+        self.resource.callback_attempt = 1
+        self.resource.save()
+
+        self._test_successful(data={
+            'notes': 'lorem ipsum',
+            'action': 'cancel'
+        })
+
+        log = self.resource.log_set.first()
+        self.assertEqual(log.code, 'CBC')

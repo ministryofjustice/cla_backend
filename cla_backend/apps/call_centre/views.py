@@ -44,7 +44,7 @@ from .serializers import EligibilityCheckSerializer, \
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm, \
-    CallMeBackForm
+    CallMeBackForm, StopCallMeBackForm
 
 from .models import Operator
 
@@ -325,6 +325,10 @@ class CaseViewSet(
     @action()
     def call_me_back(self, request, reference=None, **kwargs):
         return self._form_action(request, CallMeBackForm)
+
+    @action()
+    def stop_call_me_back(self, request, reference=None, **kwargs):
+        return self._form_action(request, StopCallMeBackForm)
 
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):

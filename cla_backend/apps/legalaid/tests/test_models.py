@@ -626,6 +626,23 @@ class CaseTestCase(TestCase):
 
         self.assertEqual(case.provider, provider)
 
+    def test_assign_to_provider_resets_callback_info(self):
+        provider = make_recipe('cla_provider.provider')
+
+        case = make_recipe(
+            'legalaid.case',
+            requires_action_at=timezone.now(),
+            callback_attempt=2
+        )
+
+        self.assertNotEqual(case.requires_action_at, None)
+        self.assertEqual(case.callback_attempt, 2)
+
+        case.assign_to_provider(provider)
+
+        self.assertEqual(case.provider, provider)
+        self.assertEqual(case.requires_action_at, None)
+        self.assertEqual(case.callback_attempt, 0)
 
     def test_assign_alternative_help(self):
         articles = make_recipe('knowledgebase.article', _quantity=10)
@@ -642,6 +659,25 @@ class CaseTestCase(TestCase):
 
         self.assertListEqual(list(case.alternative_help_articles.all()), articles[5:])
 
+    def test_assign_alternative_help_resets_callback_info(self):
+        articles = make_recipe('knowledgebase.article', _quantity=10)
+        user = make_user()
+        case = make_recipe(
+            'legalaid.case', provider=None,
+            requires_action_at=timezone.now(),
+            callback_attempt=2
+        )
+
+        self.assertNotEqual(case.requires_action_at, None)
+        self.assertEqual(case.callback_attempt, 2)
+
+        # assign some articles
+        self.assertListEqual(list(case.alternative_help_articles.all()), [])
+        case.assign_alternative_help(user, articles[:5])
+        self.assertListEqual(list(case.alternative_help_articles.all()), articles[:5])
+
+        self.assertEqual(case.requires_action_at, None)
+        self.assertEqual(case.callback_attempt, 0)
 
     def test_lock_doesnt_override_existing_lock(self):
         import logging

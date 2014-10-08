@@ -636,6 +636,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.provider = provider
         self.provider_viewed = None
         self.save(update_fields=['provider', 'provider_viewed', 'modified'])
+        self.reset_requires_action_at()
 
     def view_by_provider(self, provider):
         if provider == self.provider:
@@ -648,6 +649,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
             CaseKnowledgebaseAssignment.objects.create(case=self,
                                                        alternative_help_article=article,
                                                        assigned_by=user)
+        self.reset_requires_action_at()
 
     def lock(self, user, save=True):
         if not self.locked_by:
@@ -675,9 +677,10 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.save(update_fields=['requires_action_at', 'callback_attempt', 'modified'])
 
     def reset_requires_action_at(self):
-        self.requires_action_at = None
-        self.callback_attempt = 0
-        self.save(update_fields=['requires_action_at', 'callback_attempt', 'modified'])
+        if self.requires_action_at != None or self.callback_attempt != 0:
+            self.requires_action_at = None
+            self.callback_attempt = 0
+            self.save(update_fields=['requires_action_at', 'callback_attempt', 'modified'])
 
     @property
     def doesnt_requires_action(self):

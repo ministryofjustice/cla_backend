@@ -7,7 +7,7 @@ from django.utils import timezone
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-from legalaid.models import Case
+from legalaid.models import Case, CaseNotesHistory
 from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin, \
     BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase
 
@@ -216,12 +216,18 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
         """
         Test that provider cannot post provider notes
         """
+        self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
         response = self.client.patch(
             self.detail_url, data={'notes': 'abc123'},
             format='json', HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['notes'], 'abc123')
+
+        self.assertEqual(CaseNotesHistory.objects.all().count(), 1)
+        case_history = CaseNotesHistory.objects.last()
+        self.assertEqual(case_history.operator_notes, 'abc123')
+        self.assertEqual(case_history.created_by, self.user)
 
     def test_patch_provider_notes_not_allowed(self):
         """

@@ -17,15 +17,17 @@ def status(request):
     if request.method == 'GET':
         message = ''
         try:
-            with connection.cursor() as c:
-                c.execute('SELECT 1')
-                row = c.fetchone()
-                db_ready = row[0] == 1
+            c = connection.cursor()
+            c.execute('SELECT 1')
+            row = c.fetchone()
+            db_ready = row[0] == 1
+            return JSONResponse({
+                'db': {
+                    'ready': db_ready,
+                    'message': message
+                }
+            })
         except DatabaseError as e:
             message = str(e)
-        return JSONResponse({
-            'db': {
-                'ready': db_ready,
-                'message': message
-            }
-        })
+        finally:
+            c.close()

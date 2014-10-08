@@ -457,7 +457,7 @@ class MediaCode(TimeStampedModel):
     code = models.CharField(max_length=20)
 
 
-class Case(TimeStampedModel):
+class Case(TimeStampedModel, ModelDiffMixin):
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True,
                                              blank=True)
@@ -691,6 +691,12 @@ class Case(TimeStampedModel):
     # def requires_action_by_operator_manager(self):
     #     return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR
 
+
+class CaseNotesHistory(TimeStampedModel):
+    case = models.ForeignKey(Case, db_index=True)
+    operator_notes = models.TextField(null=True, blank=True)
+    provider_notes = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
 
 class CaseKnowledgebaseAssignment(TimeStampedModel):
     case = models.ForeignKey(Case)

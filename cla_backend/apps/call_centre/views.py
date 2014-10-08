@@ -3,6 +3,7 @@ from dateutil import parser
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
+from django.db.models import Q
 from django.utils import timezone
 from django.db.models import Q
 from legalaid.permissions import IsManagerOrMePermission
@@ -25,8 +26,7 @@ from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
-    OutcomeCodeOrderingFilter
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -113,7 +113,7 @@ class CaseViewSet(
     serializer_class = CaseSerializer  # using CreateCaseSerializer during creation
 
     filter_backends = (
-        OutcomeCodeOrderingFilter,
+        OrderingFilter,
         SearchFilter,
     )
 
@@ -125,9 +125,12 @@ class CaseViewSet(
         return super(CaseViewSet, self).get_serializer_class()
 
     def get_dashboard_qs(self, qs):
-        qs = qs.filter(
-            requires_action_by=REQUIRES_ACTION_BY.OPERATOR
-        )
+        if self.request.user.operator.is_manager:
+            qs = qs.filter(
+                Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR) |
+                Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR_MANAGER))
+        else:
+            qs = qs.filter(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
 
         qs = qs.filter(
             Q(requires_action_at__isnull=True) | Q(requires_action_at__lte=timezone.now())

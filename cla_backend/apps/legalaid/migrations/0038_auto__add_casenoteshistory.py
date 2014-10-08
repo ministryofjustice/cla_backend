@@ -8,15 +8,22 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Case.requires_action_at'
-        db.add_column(u'legalaid_case', 'requires_action_at',
-                      self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True),
-                      keep_default=False)
+        # Adding model 'CaseNotesHistory'
+        db.create_table(u'legalaid_casenoteshistory', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
+            ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
+            ('case', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['legalaid.Case'])),
+            ('operator_notes', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('provider_notes', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('created_by', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+        ))
+        db.send_create_signal(u'legalaid', ['CaseNotesHistory'])
 
 
     def backwards(self, orm):
-        # Deleting field 'Case.requires_action_at'
-        db.delete_column(u'legalaid_case', 'requires_action_at')
+        # Deleting model 'CaseNotesHistory'
+        db.delete_table(u'legalaid_casenoteshistory')
 
 
     models = {
@@ -171,7 +178,6 @@ class Migration(SchemaMigration):
             'provider_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'provider_viewed': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'reference': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
-            'requires_action_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'requires_action_by': ('django.db.models.fields.CharField', [], {'default': "'operator'", 'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'thirdparty_details': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.ThirdPartyDetails']", 'null': 'True', 'blank': 'True'})
         },
@@ -183,6 +189,16 @@ class Migration(SchemaMigration):
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'})
+        },
+        u'legalaid.casenoteshistory': {
+            'Meta': {'object_name': 'CaseNotesHistory'},
+            'case': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Case']"}),
+            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
+            'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
+            'operator_notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'provider_notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
         u'legalaid.category': {
             'Meta': {'ordering': "['order']", 'object_name': 'Category'},

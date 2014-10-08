@@ -8,6 +8,11 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding field 'Case.requires_action_at'
+        db.add_column(u'legalaid_case', 'requires_action_at',
+                      self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True),
+                      keep_default=False)
+
         # Adding field 'Case.callback_attempt'
         db.add_column(u'legalaid_case', 'callback_attempt',
                       self.gf('django.db.models.fields.PositiveSmallIntegerField')(default=0),
@@ -15,6 +20,9 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+        # Deleting field 'Case.requires_action_at'
+        db.delete_column(u'legalaid_case', 'requires_action_at')
+
         # Deleting field 'Case.callback_attempt'
         db.delete_column(u'legalaid_case', 'callback_attempt')
 
@@ -184,6 +192,16 @@ class Migration(SchemaMigration):
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'})
+        },
+        u'legalaid.casenoteshistory': {
+            'Meta': {'object_name': 'CaseNotesHistory'},
+            'case': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Case']"}),
+            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
+            'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
+            'operator_notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'provider_notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
         u'legalaid.category': {
             'Meta': {'ordering': "['order']", 'object_name': 'Category'},

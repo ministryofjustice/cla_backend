@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to 's documentation!
-==============================================
+Welcome to |CLA| Backend's documentation!
+=========================================
 
 Contents:
 
@@ -12,7 +12,7 @@ Contents:
    :maxdepth: 2
 
    install
-   deploy
+   api
    tests
 
 

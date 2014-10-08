@@ -78,7 +78,7 @@
         "pk": 6,
         "model": "cla_provider.provider",
         "fields": {
-            "name": "Coop",
+            "name": "Co-op",
             "created": "2014-04-23T14:59:44.417Z",
             "short_code": "102",
             "opening_hours": "9-5M-F",

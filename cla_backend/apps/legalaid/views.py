@@ -24,7 +24,7 @@ from .serializers import CategorySerializerBase, \
     AdaptationDetailsSerializerBase, CaseSerializerBase, FeedbackSerializerBase
 from .models import Case, Category, EligibilityCheck, \
     MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
-    AdaptationDetails
+    AdaptationDetails, CaseNotesHistory
 
 
 class FormActionMixin(object):
@@ -305,23 +305,6 @@ class RelativeUrlPaginationSerializer(BasePaginationSerializer):
     previous = RelativePreviousPageField('*')
 
 
-class OutcomeCodeOrderingFilter(OrderingFilter):
-
-    def get_ordering(self, request):
-        ordering = super(OutcomeCodeOrderingFilter, self).get_ordering(request)
-
-        if ordering:
-            by_outcome_priority = reduce(
-                lambda acc, term:
-                    acc or term.endswith('outcome_priority__priority'),
-                ordering, False)
-
-            if by_outcome_priority:
-                ordering = ['-null_priority'] + ordering
-
-        return ordering
-
-
 class FullCaseViewSet(
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
@@ -337,15 +320,14 @@ class FullCaseViewSet(
     pagination_serializer_class = RelativeUrlPaginationSerializer
 
     filter_backends = (
-        OutcomeCodeOrderingFilter,
+        OrderingFilter,
         SearchFilter,
     )
 
     ordering_fields = ('modified', 'personal_details__full_name',
             'personal_details__date_of_birth', 'personal_details__postcode',
-            'eligibility_check__category__name', 'outcome_priority__priority',
-            'null_priority')
-    ordering = '-modified'
+            'eligibility_check__category__name', 'priority', 'null_priority')
+    ordering = ('null_priority', '-priority')
 
     search_fields = (
         'personal_details__full_name',
@@ -369,11 +351,22 @@ class FullCaseViewSet(
         elif dashboard_param:
             qs = self.get_dashboard_qs(qs)
 
-        if ordering and ordering.endswith('outcome_priority__priority'):
-            qs = qs.annotate(null_priority=Count('outcome_priority'))
-
-        qs = qs.extra(select={
-            'rejected': '''CASE
+        qs = qs.extra(
+            select={
+                'null_priority': '''CASE
+                    WHEN legalaid_case.outcome_code IS NULL THEN 1
+                    ELSE 0
+                END''',
+                'priority': '''CASE legalaid_case.outcome_code
+                        WHEN 'IRCB' THEN 7
+                        WHEN 'MIS' THEN 6
+                        WHEN 'COI' THEN 5
+                        WHEN 'CB1' THEN 4
+                        WHEN 'CB2' THEN 3
+                        WHEN 'CB3' THEN 2
+                        ELSE 1
+                    END''',
+                'rejected': '''CASE
                     WHEN legalaid_case.outcome_code IN (
                         'COI', 'MIS', 'MIS-OOS', 'MIS-MEAN')
                     THEN 1
@@ -395,6 +388,21 @@ class FullCaseViewSet(
         )
 
         return resp
+
+    def pre_save(self, obj):
+        super(FullCaseViewSet, self).pre_save(obj)
+        if obj.pk:
+            if 'notes' in obj.changed_fields:
+                cnh = CaseNotesHistory(case=obj)
+                cnh.operator_notes = obj.notes
+                cnh.created_by = self.request.user
+                cnh.save()
+
+            if 'provider_notes' in obj.changed_fields:
+                cpnh = CaseNotesHistory(case=obj)
+                cpnh.provider_notes = obj.provider_notes
+                cpnh.created_by = self.request.user
+                cpnh.save()
 
 
 class BaseFeedbackViewSet(

@@ -1135,7 +1135,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
-            'provider_viewed', 'outcome_priority'
+            'provider_viewed'
         ]
 
         if internal:

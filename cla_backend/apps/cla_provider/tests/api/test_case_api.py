@@ -9,7 +9,7 @@ from cla_common.constants import REQUIRES_ACTION_BY
 
 from core.tests.mommy_utils import make_recipe
 
-from legalaid.models import Case
+from legalaid.models import Case, CaseNotesHistory
 from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin, \
     BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase
@@ -144,6 +144,10 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
         """
         Test that provider can post provider notes
         """
+
+
+        self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
+
         response = self.client.patch(
             self.detail_url, data={'provider_notes': 'abc123'},
             format='json', HTTP_AUTHORIZATION=self.get_http_authorization()
@@ -151,16 +155,23 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['provider_notes'], 'abc123')
 
+        self.assertEqual(CaseNotesHistory.objects.all().count(), 1)
+        case_history = CaseNotesHistory.objects.last()
+        self.assertEqual(case_history.provider_notes, 'abc123')
+        self.assertEqual(case_history.created_by, self.user)
+
     def test_patch_operator_notes_not_allowed(self):
         """
         Test that provider cannot post operator notes
         """
+        self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
         response = self.client.patch(
             self.detail_url, data={'notes': 'abc123'},
             format='json', HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotEqual(response.data['notes'], 'abc123')
+        self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
 
 
 class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):

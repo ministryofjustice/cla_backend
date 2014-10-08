@@ -1,6 +1,7 @@
 from django.db import models
 from jsonfield import JSONField
 from django.conf import settings
+from django_statsd.clients import statsd
 
 from model_utils.models import TimeStampedModel
 
@@ -43,6 +44,7 @@ class Log(TimeStampedModel):
 
         if self.code == 'CASE_VIEWED' and hasattr(self.created_by, 'staff'):
             self.case.view_by_provider(self.created_by.staff.provider)
+        statsd.incr('outcome.%s' % self.code)
 
 
     class Meta:

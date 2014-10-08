@@ -12,7 +12,9 @@ Contents:
    :maxdepth: 2
 
    install
-   api
+   public api
+   operator api
+   provider api
    tests
 
 

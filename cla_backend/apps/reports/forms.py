@@ -385,7 +385,9 @@ class MICaseExtract(SQLFileReport):
             "User_ID", "Scope_Status",
             "Eligibility_Status", "Adjustments_BSL",
             "Adjustments_LLI", "Adjustments_MIN",
-            "Adjustments_TYP", "Gender",
+            "Adjustments_TYP", "Adjustments_CallbackPreferred",
+            "Adjustments_Skype",
+            "Gender",
             "Ethnicity", "Age(Range)",
             "Religion", "Sexual_Orientation",
             "Disability", "Time_of_Day",
@@ -398,6 +400,7 @@ class MICaseExtract(SQLFileReport):
             "Complaint_Target", "Complaint_Subject",
             "Complaint_Classification", "Complaint_Outcome",
             "Agree_Feedback", "Exempt_Client",
+            "Welsh", "Language", "Outcome_Created_At"
         ]
 
 class MIFeedbackExtract(SQLFileReport):

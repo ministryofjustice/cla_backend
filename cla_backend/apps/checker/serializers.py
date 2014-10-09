@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from legalaid.serializers import UUIDSerializer, \
     EligibilityCheckSerializerBase, PropertySerializerBase, \
     PersonalDetailsSerializerBase, CaseSerializerBase, \
@@ -112,8 +114,10 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
 class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field='reference')
     personal_details = PersonalDetailsSerializer()
+    requires_action_at = serializers.DateTimeField()
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference',
+            'requires_action_at', 'outcome_code'
         )

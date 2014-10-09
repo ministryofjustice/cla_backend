@@ -7,8 +7,8 @@ WITH latest_outcome as (
     where  e.id = (
       SELECT MAX(l.id) FROM cla_eventlog_log l WHERE
         l.case_id = c.id
-        and e.type = 'outcome'
-        and e.level >= 29
+        and l.type = 'outcome'
+        and l.level >= 29
       group by l.case_id)
 
 ), operator_first_view as (

@@ -327,7 +327,7 @@ class FullCaseViewSet(
     ordering_fields = ('modified', 'personal_details__full_name',
             'personal_details__date_of_birth', 'personal_details__postcode',
             'eligibility_check__category__name', 'priority', 'null_priority')
-    ordering = ('null_priority', '-priority')
+    ordering = ('null_priority', '-priority', '-modified')
 
     search_fields = (
         'personal_details__full_name',

@@ -1,6 +1,6 @@
 from collections import defaultdict
+import operator
 from .constants import LOG_LEVELS, LOG_TYPES, LOG_ROLES
-
 
 def is_code_valid(code):
     required_keys = {
@@ -66,5 +66,34 @@ class EventRegistry(object):
             if selectable_codes:
                 events[action_key] = selectable_codes
         return events
+
+    def all(self):
+        """
+        :return: all codes in the registry as a unified dictionary
+        """
+        return dict(reduce(operator.add, [EventClazz.codes.items() for EventClazz in self._registry.values()]))
+
+    def filter(self, **kwargs):
+        """
+        Similar to Django's models.objects.filter(...) this will filter
+        all of the codes in the system by the kwargs passed into this
+        function.
+
+        For example,
+        >> registry.filter(stops_timer=True)
+        would return all codes in the system that stop the timer. You can
+        supply multiple kwargs, so if you wanted to see all codes which
+        are of type 'OUTCOME' and don't stop the timer you can do this:
+        >> registry.filter(stops_timer=False, type=LOG_TYPES.OUTCOME)
+
+
+        :param kwargs: set of keyword args you want to filter the outcome
+        codes by
+        :return: returns a unified dictionary of filtered outcome codes
+        registered in this registry.
+        """
+        return {k: v for k, v in self.all().items() if
+                all([v[kk]==vv for kk,vv in kwargs.items()])}
+
 
 event_registry = EventRegistry()

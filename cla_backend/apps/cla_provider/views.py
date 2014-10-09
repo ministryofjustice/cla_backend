@@ -128,6 +128,7 @@ class CaseViewSet(
     def legal_help_form_extract(self, *args, **kwargs):
         case = self.get_object()
         data = {
+            'case': CaseSerializer(instance=case).data,
             'personal_details': PersonalDetailsSerializer(
                 instance=case.personal_details
             ).data,

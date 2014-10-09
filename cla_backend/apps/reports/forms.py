@@ -1,4 +1,5 @@
 from datetime import timedelta, time, datetime
+from cla_eventlog import event_registry
 
 from django import forms
 from django.db import connection
@@ -9,7 +10,7 @@ from django.contrib.admin import widgets
 from django.template.defaulttags import date
 from django.db import connection
 
-from cla_eventlog.constants import LOG_LEVELS
+from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_provider.models import Provider
 from legalaid.models import Case
 from . import sql
@@ -417,4 +418,28 @@ class MIFeedbackExtract(SQLFileReport):
         ]
 
 
+class MIContactsPerCaseByCategoryExtract(SQLFileReport):
+    QUERY_FILE = 'MIContactsPerCaseByCategory.sql'
 
+    def get_headers(self):
+        return  [
+            "Reference",
+            "LAA_Reference",
+            "outcome_count",
+            "category",
+            "created",
+            "outcomes"
+        ]
+
+    def get_valid_outcomes(self):
+        return event_registry.filter(stops_timer=True, type=LOG_TYPES.OUTCOME).keys()
+
+    @property
+    def params(self):
+        return self.date_range + (self.get_valid_outcomes(),)
+
+    def get_queryset(self):
+        cursor = connection.cursor()
+        cursor.execute(self.query, self.params)
+        self.description = cursor.description
+        return cursor.fetchall()

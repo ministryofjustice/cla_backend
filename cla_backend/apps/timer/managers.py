@@ -8,9 +8,9 @@ class RunningTimerManager(models.Manager):
         return qs.filter(stopped__isnull=True, cancelled=False)
 
     def get_by_user(self, user_pk):
-        qs = self.filter(created_by=user_pk)
+        timers = list(self.filter(created_by=user_pk))
 
-        if qs.count() > 1:
+        if len(timers) > 1:
             raise MultipleObjectsReturned()
 
-        return qs[0]
+        return timers[0]

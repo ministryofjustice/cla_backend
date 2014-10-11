@@ -169,6 +169,7 @@ class LogSerializer(LogSerializerBase):
         )
 
 
+
 class CaseSerializer(CaseSerializerFull):
     provider_notes = serializers.CharField(max_length=5000, required=False, read_only=True)
     billable_time = serializers.IntegerField(read_only=True)
@@ -194,6 +195,25 @@ class CaseSerializer(CaseSerializerFull):
             'ecf_statement', 'case_count'
         )
 
+class CaseListSerializer(CaseSerializer):
+
+    class Meta(CaseSerializer.Meta):
+        fields = (
+            'reference',
+            'created',
+            'modified',
+            'full_name',
+            'laa_reference',
+            'eligibility_state',
+            'requires_action_by',
+            'postcode',
+            'diagnosis_state',
+            'rejected',
+            'date_of_birth',
+            'category',
+            'outcome_code',
+            'case_count'
+        )
 
 class CreateCaseSerializer(CaseSerializer):
     """

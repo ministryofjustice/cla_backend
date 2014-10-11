@@ -112,7 +112,12 @@ class CaseViewSet(
     serializer_detail_class = CaseSerializer  # using CreateCaseSerializer during creation
 
     queryset = Case.objects.all().select_related('diagnosis', 'eligibility_check', 'personal_details')
-    queryset_detail = Case.objects.all()
+    queryset_detail = Case.objects.all().select_related(
+        'eligibility_check', 'personal_details',
+        'adaptation_details', 'matter_type1', 'matter_type2',
+        'diagnosis', 'media_code', 'eligibility_check__category',
+        'created_by'
+    )
 
     filter_backends = (
         OrderingFilter,

@@ -107,9 +107,10 @@ class FullCaseAPIMixin(SimpleResourceAPIMixin):
                 field, getattr(case, field), data[field])
             )
 
-        self.assertPersonalDetailsEqual(
-            data['personal_details'], case.personal_details
-        )
+        if 'personal_details' in data:
+            self.assertPersonalDetailsEqual(
+                data['personal_details'], case.personal_details
+            )
 
     def assertLogInDB(self):
         self.assertEqual(Log.objects.count(), 1)

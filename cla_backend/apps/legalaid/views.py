@@ -18,6 +18,7 @@ from rest_framework.templatetags.rest_framework import replace_query_param
 from core.utils import format_patch
 from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin
 from cla_eventlog import event_registry
+from rest_framework_extensions.mixins import DetailSerializerMixin
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
@@ -306,6 +307,7 @@ class RelativeUrlPaginationSerializer(BasePaginationSerializer):
 
 
 class FullCaseViewSet(
+    DetailSerializerMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
@@ -340,13 +342,8 @@ class FullCaseViewSet(
     paginate_by_param = 'page_size'
     max_paginate_by = 100
 
-    def get_queryset(self):
-        qs = super(FullCaseViewSet, self).get_queryset().select_related(
-            'eligibility_check', 'personal_details',
-            'adaptation_details', 'matter_type1', 'matter_type2',
-            'diagnosis', 'media_code', 'eligibility_check__category',
-            'created_by'
-        )
+    def get_queryset(self, **kwargs):
+        qs = super(FullCaseViewSet, self).get_queryset(**kwargs)
         person_ref_param = self.request.QUERY_PARAMS.get('person_ref', None)
         dashboard_param = self.request.QUERY_PARAMS.get('dashboard', None)
         ordering = self.request.QUERY_PARAMS.get('ordering', None)
@@ -355,7 +352,6 @@ class FullCaseViewSet(
             qs = qs.filter(personal_details__reference=person_ref_param)
         elif dashboard_param:
             qs = self.get_dashboard_qs(qs)
-
         qs = qs.extra(
             select={
                 'null_priority': '''CASE

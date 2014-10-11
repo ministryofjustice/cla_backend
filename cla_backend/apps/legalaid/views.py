@@ -341,7 +341,12 @@ class FullCaseViewSet(
     max_paginate_by = 100
 
     def get_queryset(self):
-        qs = super(FullCaseViewSet, self).get_queryset()
+        qs = super(FullCaseViewSet, self).get_queryset().select_related(
+            'eligibility_check', 'personal_details',
+            'adaptation_details', 'matter_type1', 'matter_type2',
+            'diagnosis', 'media_code', 'eligibility_check__category',
+            'created_by'
+        )
         person_ref_param = self.request.QUERY_PARAMS.get('person_ref', None)
         dashboard_param = self.request.QUERY_PARAMS.get('dashboard', None)
         ordering = self.request.QUERY_PARAMS.get('ordering', None)

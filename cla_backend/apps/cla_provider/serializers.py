@@ -179,6 +179,25 @@ class CaseSerializer(CaseSerializerFull):
             'date_of_birth', 'category', 'outcome_code'
         )
 
+class CaseListSerializer(CaseSerializer):
+
+    class Meta(CaseSerializer.Meta):
+        fields = (
+            'reference',
+            'created',
+            'modified',
+            'full_name',
+            'laa_reference',
+            'eligibility_state',
+            'requires_action_by',
+            'postcode',
+            'diagnosis_state',
+            'date_of_birth',
+            'category',
+            'outcome_code',
+            'case_count',
+            'provider_viewed'
+        )
 
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):

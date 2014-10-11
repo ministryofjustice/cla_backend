@@ -352,7 +352,6 @@ class FullCaseViewSet(
             qs = qs.filter(personal_details__reference=person_ref_param)
         elif dashboard_param:
             qs = self.get_dashboard_qs(qs)
-
         qs = qs.extra(
             select={
                 'null_priority': '''CASE

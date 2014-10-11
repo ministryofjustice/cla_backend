@@ -23,7 +23,9 @@ class NestedGenericModelMixin(object):
         parent_viewset_instance = self.parent(
             request=self.request,
             kwargs= {self.lookup_field: parent_key})
-        parent_obj = parent_viewset_instance.get_object()
+        parent_obj = parent_viewset_instance.get_object(
+            queryset=parent_viewset_instance.get_queryset().select_related(None)
+        )
         return parent_obj
 
     def get_parent_object_or_none(self):

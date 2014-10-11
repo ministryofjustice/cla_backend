@@ -1778,7 +1778,7 @@ If client has received a charging order please record this in Operator Notes.]]>
 It covers advice on
 
 * threatened loss of home or harassment from landlords
-* disrepair / poor housing conditions
+* disrepair / poor housing conditions - only where rented accomodation.
 * ASBO/ASBI
 * rent arrears
 
@@ -1801,7 +1801,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n79">
-      <data key="d4"><![CDATA[Housing disrepair (necessary repairs have not been carried out)]]></data>
+      <data key="d4"><![CDATA[Housing disrepair (necessary repairs have not been carried out) - for people in **rented** accomodation only.]]></data>
       <data key="d5"><![CDATA[Housing disrepair is]]></data>
       <data key="d9">1</data>
       <data key="d13">
@@ -15377,7 +15377,6 @@ I can’t guarantee that they will be able to help you so please check with them
       </data>
     </edge>
     <edge id="e469" source="n110" target="n158">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="37.5" sy="15.0" tx="0.0" ty="-15.0">
@@ -15391,7 +15390,6 @@ I can’t guarantee that they will be able to help you so please check with them
       </data>
     </edge>
     <edge id="e470" source="n103" target="n437">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="60.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -15405,7 +15403,6 @@ I can’t guarantee that they will be able to help you so please check with them
       </data>
     </edge>
     <edge id="e471" source="n437" target="n104">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="18.75" sy="15.0" tx="0.0" ty="-15.0">
@@ -15419,7 +15416,6 @@ I can’t guarantee that they will be able to help you so please check with them
       </data>
     </edge>
     <edge id="e472" source="n437" target="n106">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="-56.25" sy="15.0" tx="0.0" ty="-15.0">
@@ -15433,7 +15429,6 @@ I can’t guarantee that they will be able to help you so please check with them
       </data>
     </edge>
     <edge id="e473" source="n314" target="n315">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -15454,7 +15449,6 @@ I can’t guarantee that they will be able to help you so please check with them
       </data>
     </edge>
     <edge id="e475" source="n437" target="n438">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="-18.75" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -15465,7 +15459,6 @@ I can’t guarantee that they will be able to help you so please check with them
       </data>
     </edge>
     <edge id="e476" source="n437" target="n314">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="56.25" sy="15.0" tx="0.0" ty="-15.0">
@@ -15499,7 +15492,6 @@ I can’t guarantee that they will be able to help you so please check with them
       </data>
     </edge>
     <edge id="e479" source="n103" target="n440">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>

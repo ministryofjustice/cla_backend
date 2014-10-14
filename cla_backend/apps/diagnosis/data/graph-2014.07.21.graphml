@@ -2342,6 +2342,12 @@ For loss of home please click 'back' and select the first category.
       <data key="d4"><![CDATA[Domestic violence or abuse (including child abuse) - the client wants to protect themselves or their children]]></data>
       <data key="d5"><![CDATA[Client protecting self]]></data>
       <data key="d9">1</data>
+      <data key="d10"><![CDATA[DV/CA - Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order (an injunction) that tells a person they're not allowed to do a certain act. There are two main forms of injunction
+
+A non-molestation order - aimed at preventing a client's partner or ex-partner from using or threatening violence against them or their child, or intimidating, harassing or pestering them.
+
+An occupation order can restrict who can live in the family home, and even restrict the abuser from entering the surrounding area. They can also be used where clients do not feel safe continuing to live with their partner, or if they have already left home because of abuse, but want to return and exclude the abuser.
+]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4192.685714285714" y="405.0"/>
@@ -6865,6 +6871,14 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       <data key="d4"><![CDATA[Client is the alleged abusive partner and wants to defend an injunction. This will be in scope for CLA.]]></data>
       <data key="d5"><![CDATA[Client wants to contest injunction DV]]></data>
       <data key="d9">5</data>
+      <data key="d10"><![CDATA[Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act. There are two main forms of injunction
+
+A non-molestation order - aimed at preventing your partner or ex-partner from using or threatening violence against you or your child, or intimidating, harassing or pestering you, in order to ensure the health, safety and well-being of yourself and your children.
+
+An occupation order can aimed at deciding who can live in the family home, and can also restrict your abuser from entering the surrounding area. If you do not feel safe continuing to live with your partner, or if you have left home because of violence, but want to return and exclude your abuser, you may want to apply for an occupation order.
+
+Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it.
+]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="181.01944444444462" x="3981.095833333333" y="405.0"/>
@@ -15629,7 +15643,6 @@ You should now direct the client to their nearest contracted quality assured fam
       </data>
     </edge>
     <edge id="e478" source="n437" target="n312">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="-60.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -15643,7 +15656,6 @@ You should now direct the client to their nearest contracted quality assured fam
       </data>
     </edge>
     <edge id="e479" source="n393" target="n443">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="37.5" sy="15.0" tx="0.0" ty="-15.0">
@@ -15657,7 +15669,6 @@ You should now direct the client to their nearest contracted quality assured fam
       </data>
     </edge>
     <edge id="e480" source="n443" target="n394">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -15668,7 +15679,6 @@ You should now direct the client to their nearest contracted quality assured fam
       </data>
     </edge>
     <edge id="e481" source="n393" target="n444">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="-37.5" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -15679,7 +15689,6 @@ You should now direct the client to their nearest contracted quality assured fam
       </data>
     </edge>
     <edge id="e482" source="n445" target="n446">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>
@@ -15690,7 +15699,6 @@ You should now direct the client to their nearest contracted quality assured fam
       </data>
     </edge>
     <edge id="e483" source="n444" target="n445">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0"/>

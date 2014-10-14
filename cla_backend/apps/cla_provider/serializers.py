@@ -189,6 +189,7 @@ class CaseListSerializer(CaseSerializer):
             'full_name',
             'laa_reference',
             'eligibility_state',
+            'personal_details',
             'requires_action_by',
             'postcode',
             'diagnosis_state',

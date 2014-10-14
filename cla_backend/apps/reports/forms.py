@@ -401,7 +401,8 @@ class MICaseExtract(SQLFileReport):
             "Complaint_Target", "Complaint_Subject",
             "Complaint_Classification", "Complaint_Outcome",
             "Agree_Feedback", "Exempt_Client",
-            "Welsh", "Language", "Outcome_Created_At"
+            "Welsh", "Language", "Outcome_Created_At",
+            "Username"
         ]
 
 class MIFeedbackExtract(SQLFileReport):
@@ -414,9 +415,26 @@ class MIFeedbackExtract(SQLFileReport):
             "Feedback_Issue",
             "Feedback_Justified",
             "Feedback_Resolved",
-            "Text_Output"
+            "Text_Output",
+            "Category"
         ]
 
+
+class MIAlternativeHelpExtract(SQLFileReport):
+    QUERY_FILE = 'MIAlternativeHelp.sql'
+
+    def get_headers(self):
+        return [
+            "Id",
+            "Reference",
+            "Laa_reference",
+            "Category",
+            "Created",
+            "Code",
+            "Notes",
+            "F2F",
+            "KB_Id"
+        ]
 
 class MIContactsPerCaseByCategoryExtract(SQLFileReport):
     QUERY_FILE = 'MIContactsPerCaseByCategory.sql'

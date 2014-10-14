@@ -9,7 +9,7 @@ from .forms import ProviderCaseClosure, OperatorCaseClosure, \
     OperatorCaseCreate, CaseReport, NewCasesWithAdaptationCount, \
     CaseVolumeAndAvgDurationByDay, ReferredCasesByCategory, \
     AllocatedCasesNoOutcome, MICaseExtract, MIFeedbackExtract, \
-    MIContactsPerCaseByCategoryExtract
+    MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract
 
 
 def report_view(form_class, title, template='case_report'):
@@ -115,4 +115,9 @@ def mi_feedback_extract():
 @staff_member_required
 @report_view(MIContactsPerCaseByCategoryExtract, 'MI Contacts Per Case By Category')
 def mi_contacts_extract():
+    pass
+
+@staff_member_required
+@report_view(MIAlternativeHelpExtract, 'MI Alternative Help Extract')
+def mi_alternative_help_extract():
     pass

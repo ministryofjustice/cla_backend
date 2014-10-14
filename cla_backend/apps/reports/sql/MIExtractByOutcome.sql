@@ -143,6 +143,7 @@ select
   ,CASE upper(adapt.language) WHEN upper('Welsh') THEN true ELSE false END as "Language"
   ,adapt.language as "Language"
   ,log.created as "Outcome_Created_At"
+  ,u.username as "Username"
 from cla_eventlog_log as log
   JOIN legalaid_case as c on c.id = log.case_id
   LEFT OUTER JOIN legalaid_personaldetails as pd on c.personal_details_id = pd.id

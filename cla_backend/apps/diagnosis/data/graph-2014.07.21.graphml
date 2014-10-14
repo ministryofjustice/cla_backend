@@ -2753,9 +2753,14 @@ eg divorce, contact with children, finance]]></data>
       </data>
     </node>
     <node id="n123">
-      <data key="d4"><![CDATA[Divorce or separation]]></data>
+      <data key="d4"><![CDATA[Divorce/Nullity/Dissolution]]></data>
       <data key="d5"><![CDATA[Divorce]]></data>
       <data key="d9">1</data>
+      <data key="d10"><![CDATA[* Divorce - ending a marriage
+* Nullity - declaring a marriage null and void so it is regareded not to have taken place
+* Dissolution - ending a same sex Civil Partnership
+
+]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="16633.123809523808" y="645.0"/>
@@ -2952,6 +2957,12 @@ eg divorce, contact with children, finance]]></data>
       <data key="d4"><![CDATA[Financial matters]]></data>
       <data key="d5"><![CDATA[Financial matters]]></data>
       <data key="d9">3</data>
+      <data key="d10"><![CDATA[Includes advice on the following areas:
+
+* Financial disputes arising out of
+* Divorce/separation (including civil partnerships) including Inheritance and trusts of land
+* Transfer of tenancies on divorce/separation
+* Maintenance]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="16813.123809523808" y="645.0"/>
@@ -3148,6 +3159,12 @@ eg divorce, contact with children, finance]]></data>
       <data key="d4"><![CDATA[Children disputes (eg contact with children)]]></data>
       <data key="d5"><![CDATA[Children disputes (a]]></data>
       <data key="d9">2</data>
+      <data key="d10"><![CDATA[Includes advice on the following areas
+
+* Parental Responsibility
+* Contact
+* Residence
+* Transferring status of Parentage]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15701.87380952381" y="645.0"/>

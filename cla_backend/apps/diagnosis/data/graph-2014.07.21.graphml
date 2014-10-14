@@ -2386,6 +2386,7 @@ For loss of home please click 'back' and select the first category.
       <data key="d4"><![CDATA[Child abduction - the client wants advice]]></data>
       <data key="d5"><![CDATA[Client wants to prev]]></data>
       <data key="d9">3</data>
+      <data key="d10"><![CDATA[Seeking protection from the unlawful removal of a child from the UK or the return of a child who has been unlawfully removed from the UK or unlawfully removed within the UK. A child is someone under 18 and the client must be the parent or someone with parental responsibility for that child.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="18073.123809523808" y="360.0"/>
@@ -2432,6 +2433,7 @@ eg care proceedings or adoption]]></data>
       <data key="d5"><![CDATA[Public law
 ]]></data>
       <data key="d9">2</data>
+      <data key="d10"><![CDATA[Typically the local council is involved due to child protection concerns.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="18253.123809523808" y="240.0"/>
@@ -2477,6 +2479,7 @@ eg care proceedings or adoption]]></data>
 eg divorce, contact with children, finance]]></data>
       <data key="d5"><![CDATA[Private Law]]></data>
       <data key="d9">3</data>
+      <data key="d10"><![CDATA[Between two or more individuals.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15888.12380952381" y="240.0"/>
@@ -6906,6 +6909,8 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       <data key="d4"><![CDATA[The client is being harassed by a partner, ex-partner or family member]]></data>
       <data key="d5"><![CDATA[Client being harassed by partner or ex-partner]]></data>
       <data key="d9">4</data>
+      <data key="d10"><![CDATA[Seeking protection from a partner, ex partner or other family member due to a fear of violence or unwanted behaviour which is causing them alarm or distress. Also covers client who have previously taken action to stop harassment (i.e. sought an injunction) but this is not being complied with.
+]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="181.01944444444462" x="17502.104166666668" y="360.0"/>
@@ -9850,6 +9855,7 @@ I can’t guarantee that they will be able to help you so please check with them
       <data key="d4"><![CDATA[Forced marriage - the client wants advice]]></data>
       <data key="d5"><![CDATA[Client wants to prev]]></data>
       <data key="d9">2</data>
+      <data key="d10"><![CDATA[This is where a marriage is about to take place or has taken place without the full and free consent of each party. This may be due to actual or threats of physical force or violence, emotional pressure or psychological abuse. CLA Specialists can offer advice on seeking an order to protect the client from such a marriage occuring or how to end such a marriage.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="17713.123809523808" y="360.0"/>

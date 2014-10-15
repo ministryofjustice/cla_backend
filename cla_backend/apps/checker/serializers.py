@@ -4,7 +4,8 @@ from legalaid.serializers import UUIDSerializer, \
     EligibilityCheckSerializerBase, PropertySerializerBase, \
     PersonalDetailsSerializerBase, CaseSerializerBase, \
     IncomeSerializerBase, SavingsSerializerBase, \
-    DeductionsSerializerBase, PersonSerializerBase
+    DeductionsSerializerBase, PersonSerializerBase, \
+    AdaptationDetailsSerializerBase
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -111,13 +112,21 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
         )
 
 
+class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
+    class Meta(AdaptationDetailsSerializerBase.Meta):
+        fields = (
+            'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam', 'language'
+        )
+
+
 class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field='reference')
+    adaptation_details = AdaptationDetailsSerializer(required=False)
     personal_details = PersonalDetailsSerializer()
-    requires_action_at = serializers.DateTimeField()
+    requires_action_at = serializers.DateTimeField(required=False)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference',
-            'requires_action_at', 'outcome_code'
+            'requires_action_at', 'outcome_code', 'adaptation_details',
         )

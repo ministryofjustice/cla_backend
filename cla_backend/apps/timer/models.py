@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.db import connection
-
+from django_statsd.clients import statsd
 from model_utils.models import TimeStampedModel
 
 from legalaid.models import Case
@@ -24,12 +24,14 @@ class Timer(TimeStampedModel):
 
     @classmethod
     def start(cls, user):
+        statsd.incr('timer.start')
         return cls.objects.create(created_by=user)
 
     def is_stopped(self):
         return self.stopped
 
     def stop(self, cancelled=False):
+        statsd.incr('timer.stopped')
         if self.is_stopped():
             raise ValueError(u'The timer has already been stopped')
 
@@ -56,4 +58,6 @@ class Timer(TimeStampedModel):
             total_billable_time, = cursor.fetchone()
             if total_billable_time:
                 self.linked_case.billable_time = total_billable_time
+                if total_billable_time:
+                    statsd.timing('timer.total_time', total_billable_time * 1000)
                 self.linked_case.save(update_fields=['billable_time'])

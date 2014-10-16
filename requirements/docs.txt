@@ -1,0 +1,4 @@
+-r base.txt
+
+sphinx-rtd-theme==0.1.6
+django-rest-swagger==0.1.14

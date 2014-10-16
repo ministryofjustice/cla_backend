@@ -30,6 +30,7 @@ class Log(TimeStampedModel):
     # to create this pair of patches.
 
     patch = JSONField(null=True, blank=True)
+    context = JSONField(null=True, blank=True, help_text='Field to store extra event data for reporting')
 
     def __unicode__(self):
         return u'%s - %s:%s' % (self.case, self.type, self.code)

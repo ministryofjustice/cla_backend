@@ -27,7 +27,7 @@ class BaseEvent(object):
     def save_log(self, log):
         log.save(force_insert=True)
 
-    def process(self, case, code=None, notes="", created_by=None, patch=None, **kwargs):
+    def process(self, case, code=None, notes="", created_by=None, patch=None, context=None, **kwargs):
         if not code:
             code = self.get_log_code(case=case, **kwargs)
 
@@ -42,7 +42,8 @@ class BaseEvent(object):
             level=code_data['level'],
             notes=notes,
             patch=patch,
-            created_by=created_by
+            created_by=created_by,
+            context=context
         )
 
         self.save_log(log)

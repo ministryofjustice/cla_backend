@@ -3,25 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to |CLA| Backend's documentation!
-=========================================
-
-Contents:
-
 .. toctree::
    :maxdepth: 2
+   :hidden:
 
-   install
    public api
    operator api
    provider api
-   tests
 
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. include:: ../README.rst

@@ -108,7 +108,8 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
     class Meta(PersonalDetailsSerializerBase.Meta):
         fields = (
             'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone', 'email'
+            'mobile_phone', 'home_phone', 'email', 'safe_to_contact',
+            'safe_to_email'
         )
 
 

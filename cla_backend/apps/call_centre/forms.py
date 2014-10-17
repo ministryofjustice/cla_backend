@@ -90,6 +90,12 @@ class ProviderAllocationForm(BaseCaseLogForm):
         kwargs['is_spor'] = self.get_is_spor()
         return kwargs
 
+    def get_context(self):
+        provider =  self.cleaned_data['provider_obj']
+        return {
+            'provider': provider.name,
+            'provider_id': provider.id
+        }
     def save(self, user):
         data = self.cleaned_data
 

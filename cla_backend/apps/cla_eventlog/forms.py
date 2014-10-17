@@ -26,10 +26,15 @@ class BaseCaseLogForm(forms.Form):
     def get_kwargs(self):
         return {}
 
+    def get_context(self):
+        return {}
+
     def save(self, user):
         event = event_registry.get_event(self.get_event_key())()
         event.process(self.case, created_by=user,
-                           notes=self.get_notes(), **self.get_kwargs())
+                           notes=self.get_notes(),
+                           context=self.get_context(),
+                           **self.get_kwargs())
 
 
 class EventSpecificLogForm(BaseCaseLogForm):

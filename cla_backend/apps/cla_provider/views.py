@@ -32,7 +32,8 @@ from rest_framework.views import APIView
 from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
     PersonalDetailsSerializer, ThirdPartyDetailsSerializer, \
-    LogSerializer, FeedbackSerializer, ExtendedEligibilityCheckSerializer
+    LogSerializer, FeedbackSerializer, ExtendedEligibilityCheckSerializer, \
+    CaseListSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm
 
 logger = logging.getLogger(__name__)
@@ -74,16 +75,24 @@ class MediaCodeViewSet(
 class CaseViewSet(
     CLAProviderPermissionViewSetMixin, FullCaseViewSet
 ):
-    serializer_class = CaseSerializer
-    queryset = Case.objects.exclude(provider=None)
+    serializer_class = CaseListSerializer
+    serializer_detail_class = CaseSerializer
+
+    queryset = Case.objects.exclude(provider=None).select_related('diagnosis', 'eligibility_check', 'personal_details')
+    queryset_detail = Case.objects.exclude(provider=None).select_related(
+        'eligibility_check', 'personal_details',
+        'adaptation_details', 'matter_type1', 'matter_type2',
+        'diagnosis', 'media_code', 'eligibility_check__category',
+        'created_by'
+    )
 
     ordering_fields = ('-requires_action_by', 'modified',
                        'personal_details__full_name', 'personal_details__postcode')
 
-    def get_queryset(self):
+    def get_queryset(self, **kwargs):
         this_provider = get_object_or_404(
             Staff, user=self.request.user).provider
-        qs = super(CaseViewSet, self).get_queryset().filter(
+        qs = super(CaseViewSet, self).get_queryset(**kwargs).filter(
             provider=this_provider,
             requires_action_by__in=[
                 REQUIRES_ACTION_BY.PROVIDER, REQUIRES_ACTION_BY.PROVIDER_REVIEW
@@ -128,6 +137,7 @@ class CaseViewSet(
     def legal_help_form_extract(self, *args, **kwargs):
         case = self.get_object()
         data = {
+            'case': CaseSerializer(instance=case).data,
             'personal_details': PersonalDetailsSerializer(
                 instance=case.personal_details
             ).data,

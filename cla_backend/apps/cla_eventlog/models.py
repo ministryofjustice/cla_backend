@@ -1,6 +1,7 @@
 from django.db import models
 from jsonfield import JSONField
 from django.conf import settings
+from django_statsd.clients import statsd
 
 from model_utils.models import TimeStampedModel
 
@@ -29,6 +30,7 @@ class Log(TimeStampedModel):
     # to create this pair of patches.
 
     patch = JSONField(null=True, blank=True)
+    context = JSONField(null=True, blank=True, help_text='Field to store extra event data for reporting')
 
     def __unicode__(self):
         return u'%s - %s:%s' % (self.case, self.type, self.code)
@@ -43,6 +45,7 @@ class Log(TimeStampedModel):
 
         if self.code == 'CASE_VIEWED' and hasattr(self.created_by, 'staff'):
             self.case.view_by_provider(self.created_by.staff.provider)
+        statsd.incr('outcome.%s' % self.code)
 
 
     class Meta:

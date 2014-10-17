@@ -20,6 +20,9 @@ class PublicAPIViewSetMixin(object):
 
 
 class CategoryViewSet(PublicAPIViewSetMixin, BaseCategoryViewSet):
+    """
+    This returns a list of all valid categories in the system.
+    """
     pass
 
 

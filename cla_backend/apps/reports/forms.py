@@ -1,4 +1,5 @@
 from datetime import timedelta, time, datetime
+from cla_eventlog import event_registry
 
 from django import forms
 from django.db import connection
@@ -9,7 +10,7 @@ from django.contrib.admin import widgets
 from django.template.defaulttags import date
 from django.db import connection
 
-from cla_eventlog.constants import LOG_LEVELS
+from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_provider.models import Provider
 from legalaid.models import Case
 from . import sql
@@ -385,7 +386,9 @@ class MICaseExtract(SQLFileReport):
             "User_ID", "Scope_Status",
             "Eligibility_Status", "Adjustments_BSL",
             "Adjustments_LLI", "Adjustments_MIN",
-            "Adjustments_TYP", "Gender",
+            "Adjustments_TYP", "Adjustments_CallbackPreferred",
+            "Adjustments_Skype",
+            "Gender",
             "Ethnicity", "Age(Range)",
             "Religion", "Sexual_Orientation",
             "Disability", "Time_of_Day",
@@ -398,6 +401,8 @@ class MICaseExtract(SQLFileReport):
             "Complaint_Target", "Complaint_Subject",
             "Complaint_Classification", "Complaint_Outcome",
             "Agree_Feedback", "Exempt_Client",
+            "Welsh", "Language", "Outcome_Created_At",
+            "Username"
         ]
 
 class MIFeedbackExtract(SQLFileReport):
@@ -410,8 +415,49 @@ class MIFeedbackExtract(SQLFileReport):
             "Feedback_Issue",
             "Feedback_Justified",
             "Feedback_Resolved",
-            "Text_Output"
+            "Text_Output",
+            "Category"
         ]
 
 
+class MIAlternativeHelpExtract(SQLFileReport):
+    QUERY_FILE = 'MIAlternativeHelp.sql'
 
+    def get_headers(self):
+        return [
+            "Id",
+            "Reference",
+            "Laa_reference",
+            "Category",
+            "Created",
+            "Code",
+            "Notes",
+            "F2F",
+            "KB_Id"
+        ]
+
+class MIContactsPerCaseByCategoryExtract(SQLFileReport):
+    QUERY_FILE = 'MIContactsPerCaseByCategory.sql'
+
+    def get_headers(self):
+        return  [
+            "Reference",
+            "LAA_Reference",
+            "outcome_count",
+            "category",
+            "created",
+            "outcomes"
+        ]
+
+    def get_valid_outcomes(self):
+        return event_registry.filter(stops_timer=True, type=LOG_TYPES.OUTCOME).keys()
+
+    @property
+    def params(self):
+        return self.date_range + (self.get_valid_outcomes(),)
+
+    def get_queryset(self):
+        cursor = connection.cursor()
+        cursor.execute(self.query, self.params)
+        self.description = cursor.description
+        return cursor.fetchall()

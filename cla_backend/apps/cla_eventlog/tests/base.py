@@ -53,7 +53,7 @@ class EventTestCaseMixin(object):
                 type=expected_type,
                 notes=_process_kwargs['notes'],
                 level=expected_level,
-                created_by=_process_kwargs['created_by']
+                created_by=_process_kwargs['created_by'],
             )
         )
 

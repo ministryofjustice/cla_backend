@@ -21,7 +21,7 @@ from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
 from timer.views import BaseTimerViewSet
 
-from legalaid.models import PersonalDetails
+from legalaid.models import PersonalDetails, Case
 from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
@@ -40,7 +40,7 @@ from .serializers import EligibilityCheckSerializer, \
     AdaptationDetailsSerializer, PersonalDetailsSerializer, \
     BarePersonalDetailsSerializer, \
     ThirdPartyDetailsSerializer, LogSerializer, FeedbackSerializer, \
-    CreateCaseSerializer
+    CreateCaseSerializer, CaseListSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm, \
@@ -110,7 +110,16 @@ class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
     mixins.CreateModelMixin, FullCaseViewSet
 ):
-    serializer_class = CaseSerializer  # using CreateCaseSerializer during creation
+    serializer_class = CaseListSerializer
+    serializer_detail_class = CaseSerializer  # using CreateCaseSerializer during creation
+
+    queryset = Case.objects.all().select_related('diagnosis', 'eligibility_check', 'personal_details')
+    queryset_detail = Case.objects.all().select_related(
+        'eligibility_check', 'personal_details',
+        'adaptation_details', 'matter_type1', 'matter_type2',
+        'diagnosis', 'media_code', 'eligibility_check__category',
+        'created_by'
+    )
 
     filter_backends = (
         OrderingFilter,

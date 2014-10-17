@@ -7,8 +7,8 @@ WITH latest_outcome as (
     where  e.id = (
       SELECT MAX(l.id) FROM cla_eventlog_log l WHERE
         l.case_id = c.id
-        and e.type = 'outcome'
-        and e.level >= 29
+        and l.type = 'outcome'
+        and l.level >= 29
       group by l.case_id)
 
 ), operator_first_view as (
@@ -55,11 +55,11 @@ select
   c.laa_reference as "LAA_Reference"
   ,md5(lower(regexp_replace((pd.full_name||pd.postcode)::text, '\s', '', 'ig'))) as "Hash_ID"
   ,c.reference as "Case_ID"
-  -- SPLIT FIELDS. empty for now --
+  -- SPLIT FIELDS. --
   ,c.from_case_id::boolean as "Split_Check"
   ,split_case.laa_reference as "Split_Link_Case"
   -- /SPLIT FIELDS. --
-  ,provider.name as "Provider_ID" -- need to convert to LAA provider ID
+  ,COALESCE(trim((log.context->'provider')::text, '"'), provider.name) as "Provider_ID" -- need to convert to LAA provider ID
   ,category.code as "Category_Name"
   ,c.created as "Date_Case_Created"
   ,c.modified as "Last_Modified_Date"
@@ -81,10 +81,17 @@ select
       when 'no' then 'FAIL'
       else 'UNKNOWN'
    END as "Eligibility_Status"
-  ,adapt.bsl_webcam as "Adjustments_BSL"
-  ,adapt.language as "Adjustments_LLI"
-  ,adapt.minicom as "Adjustments_MIN"
-  ,adapt.text_relay as "Adjustments_TYP"
+  ,COALESCE(adapt.bsl_webcam, false)::bool as "Adjustments_BSL"
+  ,CASE upper(COALESCE(adapt.language, ''))
+      WHEN upper('English') THEN false
+      WHEN upper('Welsh') THEN false
+      WHEN '' THEN false
+      ELSE true
+   END as "Adjustments_LLI"
+  ,COALESCE(adapt.minicom, false)::bool as "Adjustments_MIN"
+  ,COALESCE(adapt.text_relay, false)::bool as "Adjustments_TYP"
+  ,COALESCE(adapt.callback_preference, false)::bool as "Adjustments_CallbackPreferred"
+  ,COALESCE(adapt.skype_webcam, false)::bool as "Adjustments_Skype"
   -- diversity fields --
   ,null as "Gender"
   ,null as "Ethnicity"
@@ -133,6 +140,10 @@ select
   ,null as "Complaint_Outcome"
   ,pd.contact_for_research as "Agree_Feedback"
   ,c.exempt_user_reason as "Exempt_Client"
+  ,CASE upper(adapt.language) WHEN upper('Welsh') THEN true ELSE false END as "Language"
+  ,adapt.language as "Language"
+  ,log.created as "Outcome_Created_At"
+  ,u.username as "Username"
 from cla_eventlog_log as log
   JOIN legalaid_case as c on c.id = log.case_id
   LEFT OUTER JOIN legalaid_personaldetails as pd on c.personal_details_id = pd.id

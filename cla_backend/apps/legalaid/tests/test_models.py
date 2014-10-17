@@ -981,7 +981,8 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
             equal_fields=[
                 'title', 'full_name', 'postcode', 'street', 'mobile_phone',
                 'home_phone', 'email', 'date_of_birth', 'ni_number',
-                'contact_for_research', 'vulnerable_user', 'safe_to_contact'
+                'contact_for_research', 'vulnerable_user', 'safe_to_contact',
+                'safe_to_email'
             ]
         )
 

@@ -59,7 +59,7 @@ select
   ,c.from_case_id::boolean as "Split_Check"
   ,split_case.laa_reference as "Split_Link_Case"
   -- /SPLIT FIELDS. --
-  ,provider.name as "Provider_ID" -- need to convert to LAA provider ID
+  ,COALESCE(trim((log.context->'provider')::text, '"'), provider.name) as "Provider_ID" -- need to convert to LAA provider ID
   ,category.code as "Category_Name"
   ,c.created as "Date_Case_Created"
   ,c.modified as "Last_Modified_Date"

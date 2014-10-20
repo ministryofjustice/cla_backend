@@ -7412,9 +7412,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
       <data key="d4"><![CDATA[Family mediation]]></data>
       <data key="d5"><![CDATA[Mediation]]></data>
       <data key="d9">3</data>
-      <data key="d10"><![CDATA[If the client is currently participating in family mediation, legal advice in connection with mediation is in scope as long as the client seeks advice on how to progress the case.
-
-A client can also get advice to draft and issue proceedings to obtain a consent order, where the client reaches an agreement about financial issues with their ex-partner through mediation.]]></data>
+      <data key="d10"><![CDATA[Family mediation can help people whose relationships have broken down to reach their own agreement about money, property and childcare, without going to court. If the client is currently participating in family mediation, they can also get legal advice in connection with mediation.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="157.5" y="390.0"/>
@@ -8444,13 +8442,11 @@ I can’t guarantee that they will be able to help you so please check with them
       <data key="d4"><![CDATA[Domestic Violence or Abuse – including issues arising from forced marriage, child abduction, and harassment. Also includes defence against non-molestation or occupation order where the client is the alleged abuser]]></data>
       <data key="d5"><![CDATA[Client wants to prev]]></data>
       <data key="d9">1</data>
-      <data key="d10"><![CDATA[Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act. There are two main forms of injunction  
+      <data key="d10"><![CDATA[Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act.
 
-* A non-molestation order - aimed at preventing your partner or ex-partner from using or threatening violence against you or your child, or intimidating, harassing or pestering you, in order to ensure the health, safety and well-being of yourself and your children.  
+Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it. 
 
-* An occupation order can aimed at deciding who can live in the family home, and can also restrict your abuser from entering the surrounding area. If you do not feel safe continuing to live with your partner, or if you have left home because of violence, but want to return and exclude your abuser, you may want to apply for an occupation order.  
-
-Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it. ]]></data>
+Guidance contains an article "Domestic violence and abuse - definition" for more information. Search for 'dv' or 'abuse' to find it quickest.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1925.1702380952381" y="240.0"/>
@@ -8609,7 +8605,11 @@ Please note: Mediation must be ongoing or have concluded. Clients will not quali
       <data key="d4"><![CDATA[Client wants to try family mediation]]></data>
       <data key="d5"><![CDATA[Mediation]]></data>
       <data key="d9">2</data>
-      <data key="d10"><![CDATA[Mediation is when an independent and impartial person help separating couples reach money, property and childcare agreements without going to court. Search for 'Family Mediation' in guidance search box for more help.]]></data>
+      <data key="d10"><![CDATA[Mediation is when an independent and impartial person help separating couples reach money, property and childcare agreements without going to court. 
+
+It is not just separating couples that can use mediation. It may also help grandparents or step-families resolve their issues.
+
+Search for 'Family Mediation' in guidance search box for more help.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="195.0" y="540.0"/>
@@ -14331,7 +14331,6 @@ eg divorce, contact with children, finance]]></data>
       </data>
     </edge>
     <edge id="e449" source="n384" target="n393">
-      <data key="d15"/>
       <data key="d16">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

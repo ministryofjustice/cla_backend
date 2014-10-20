@@ -328,6 +328,13 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         )
 
     def test_invalid_datetime(self):
+        def to_utc_date(days_delta, **replace_params):
+            # from localtime to utc (that's because of BST)
+            dt = timezone.localtime(timezone.now())
+            dt += datetime.timedelta(days=days_delta-dt.weekday())
+            dt = dt.replace(**replace_params)
+            return timezone.localtime(dt, timezone.utc)
+
         case = make_recipe('legalaid.case')
         self.assertEqual(Log.objects.count(), 0)
 
@@ -371,8 +378,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         )
 
         # Sat at 12.31
-        sat = timezone.now() + datetime.timedelta(days=12-timezone.now().weekday())
-        sat = sat.replace(hour=11, minute=31, second=0, microsecond=0)
+        sat = to_utc_date(12, hour=12, minute=31, second=0, microsecond=0)
 
         _test(
             case,
@@ -381,8 +387,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         )
 
         # Sun at 10am
-        sun = timezone.now() + datetime.timedelta(days=13-timezone.now().weekday())
-        sun = sun.replace(hour=9, minute=0, second=0, microsecond=0)
+        sun = to_utc_date(13, hour=10, minute=0, second=0, microsecond=0)
 
         _test(
             case,
@@ -391,8 +396,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         )
 
         # Mon at 8.59
-        mon = timezone.now() + datetime.timedelta(days=7-timezone.now().weekday())
-        mon = mon.replace(hour=7, minute=59, second=0, microsecond=0)
+        mon = to_utc_date(7, hour=8, minute=59, second=0, microsecond=0)
 
         _test(
             case,
@@ -401,8 +405,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         )
 
         # Mon at 20.01
-        mon = timezone.now() + datetime.timedelta(days=7-timezone.now().weekday())
-        mon = mon.replace(hour=19, minute=1, second=0, microsecond=0)
+        mon = to_utc_date(7, hour=20, minute=1, second=0, microsecond=0)
 
         _test(
             case,

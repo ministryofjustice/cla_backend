@@ -1,7 +1,14 @@
+import datetime
+
 from django import forms
-from django.core.exceptions import NON_FIELD_ERRORS
+from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
+from django.utils import timezone
+
+from cla_eventlog import event_registry
+
+from legalaid.utils.dates import is_out_of_hours_for_operators
 
 from cla_provider.models import Provider
 from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
@@ -145,3 +152,97 @@ class AlternativeHelpForm(EventSpecificLogForm):
 
         self.case.assign_alternative_help(user, providers)
         return super(AlternativeHelpForm, self).save(user)
+
+
+class CallMeBackForm(BaseCaseLogForm):
+    LOG_EVENT_KEY = 'call_me_back'
+
+    # format "2013-12-29 23:59" always in UTC
+    datetime = forms.DateTimeField()
+
+    def _is_dt_too_soon(self, dt):
+        return dt <= timezone.now() + datetime.timedelta(minutes=30)
+
+    def _is_dt_out_of_hours(self, dt):
+        return is_out_of_hours_for_operators(timezone.localtime(dt))
+
+    def clean_datetime(self):
+        dt = self.cleaned_data['datetime']
+        dt = dt.replace(tzinfo=timezone.utc)
+
+        if self._is_dt_too_soon(dt):
+            raise ValidationError("Specify a date not in the current half hour.")
+
+        if self._is_dt_out_of_hours(dt):
+            raise ValidationError("Specify a date within working hours.")
+        return dt
+
+    def clean(self):
+        """
+        Catches further validation errors before the save.
+        """
+        cleaned_data = super(CallMeBackForm, self).clean()
+
+        if self._errors:  # if already in error => skip
+            return cleaned_data
+
+        event = event_registry.get_event(self.get_event_key())()
+        try:
+            event.get_log_code(case=self.case, **self.get_kwargs())
+        except ValueError as e:
+            self._errors[NON_FIELD_ERRORS] = ErrorList([
+                str(e)
+            ])
+        return cleaned_data
+
+    def get_notes(self):
+        dt = timezone.localtime(self.cleaned_data['datetime'])
+        return u"Callback scheduled for {dt}. {notes}".format(
+            dt=dt.strftime("%d/%m/%Y %H:%M"),
+            notes=self.cleaned_data['notes'] or ""
+        )
+
+    def save(self, user):
+        super(CallMeBackForm, self).save(user)
+        dt = self.cleaned_data['datetime']
+        self.case.set_requires_action_at(dt)
+
+
+class StopCallMeBackForm(BaseCaseLogForm):
+    LOG_EVENT_KEY = 'stop_call_me_back'
+
+    action = forms.ChoiceField(
+        choices=(
+            ('cancel', 'Cancel'),
+            ('complete', 'complete'),
+        )
+    )
+
+    def get_kwargs(self):
+        action = self.cleaned_data['action']
+
+        kwargs = {}
+        kwargs[action] = True
+        return kwargs
+
+    def clean(self):
+        """
+        Catches further validation errors before the save.
+        """
+        cleaned_data = super(StopCallMeBackForm, self).clean()
+
+        if self._errors:  # if already in error => skip
+            return cleaned_data
+
+        event = event_registry.get_event(self.get_event_key())()
+        try:
+            event.get_log_code(case=self.case, **self.get_kwargs())
+        except ValueError as e:
+            self._errors[NON_FIELD_ERRORS] = ErrorList([
+                str(e)
+            ])
+        return cleaned_data
+
+    def save(self, user):
+        super(StopCallMeBackForm, self).save(user)
+        self.case.reset_requires_action_at()

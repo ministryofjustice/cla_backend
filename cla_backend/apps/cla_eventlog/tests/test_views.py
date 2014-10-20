@@ -110,11 +110,19 @@ class ImplicitEventCodeViewTestCaseMixin(object):
             'notes': 'lorem ipsum'
         }
 
+    def get_expected_notes(self, data):
+        return data['notes']
+
     def test_successful(self):
+        self._test_successful()
+
+    def _test_successful(self, data=None):
         # before, no logs
         self.assertEqual(Log.objects.count(), 0)
 
-        data = self.get_default_post_data()
+        if data == None:
+            data = self.get_default_post_data()
+
         response = self.client.post(
             self.url, data=data, format='json',
             HTTP_AUTHORIZATION='Bearer %s' % self.token
@@ -130,7 +138,7 @@ class ImplicitEventCodeViewTestCaseMixin(object):
         log = Log.objects.all()[0]
 
         self.assertEqual(log.case, self.resource)
-        self.assertEqual(log.notes, data['notes'])
+        self.assertEqual(log.notes, self.get_expected_notes(data))
         self.assertEqual(log.created_by, self.user)
 
 

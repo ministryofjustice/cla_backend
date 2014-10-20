@@ -28,7 +28,8 @@ class CaseTests(
     def assertEligibilityCheckResponseKeys(self, response):
         self.assertItemsEqual(
             response.data.keys(),
-            ['eligibility_check', 'personal_details', 'reference']
+            ['eligibility_check', 'personal_details', 'reference',
+                'requires_action_at', 'outcome_code', 'adaptation_details']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):

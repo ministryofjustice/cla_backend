@@ -8,6 +8,8 @@ from django.template.loader import render_to_string, get_template
 from django.utils import timezone
 from django.conf import settings
 
+from legalaid.utils.dates import is_out_of_hours_for_providers
+
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota
 
 
@@ -26,11 +28,6 @@ class ProviderAllocationHelper(object):
                 category=category)
 
         return self._providers_in_category
-
-    def today_at(self, hour, minute=0, second=0, microsecond=0):
-        t = timezone.localtime(self.as_of)
-        return t.replace(hour=hour, minute=minute, second=second,
-                         microsecond=microsecond)
 
     def get_qualifying_providers(self, category):
         """
@@ -94,37 +91,8 @@ class ProviderAllocationHelper(object):
             # (e.g. being able to manually allocate)
             return None
 
-    @property
-    def is_bank_holiday(self):
-        # TODO: make this work for bank hols
-        return False
-
-    @property
-    def is_out_of_hours(self):
-        weekday = self.as_of.date().weekday()
-
-        # not open on bank holiday
-        if self.is_bank_holiday:
-            return True
-
-        # if day in MON-FRI (open 09h-17h)
-        elif weekday < 5:
-            day_start = self.today_at(9)
-            day_end = self.today_at(17)
-            return not (day_start < self.as_of < day_end)
-
-        # if Saturday (only open in the morning)
-        elif weekday == 5:
-            day_start = self.today_at(9)
-            day_end = self.today_at(12, minute=30)
-            return not (day_start < self.as_of < day_end)
-
-        # if Sunday then out of hours (call centre doesn't operate on sunday)
-        else:
-            return True
-
     def get_suggested_provider(self, category):
-        if self.is_out_of_hours:
+        if is_out_of_hours_for_providers(self.as_of):
             return self._get_rota_provider(category)
         else:
             return self._get_random_provider(category)

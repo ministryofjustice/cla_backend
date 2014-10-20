@@ -1,8 +1,11 @@
+from rest_framework import serializers
+
 from legalaid.serializers import UUIDSerializer, \
     EligibilityCheckSerializerBase, PropertySerializerBase, \
     PersonalDetailsSerializerBase, CaseSerializerBase, \
     IncomeSerializerBase, SavingsSerializerBase, \
-    DeductionsSerializerBase, PersonSerializerBase
+    DeductionsSerializerBase, PersonSerializerBase, \
+    AdaptationDetailsSerializerBase
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -105,15 +108,26 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
     class Meta(PersonalDetailsSerializerBase.Meta):
         fields = (
             'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone', 'email'
+            'mobile_phone', 'home_phone', 'email', 'safe_to_contact',
+            'safe_to_email'
+        )
+
+
+class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
+    class Meta(AdaptationDetailsSerializerBase.Meta):
+        fields = (
+            'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam', 'language'
         )
 
 
 class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field='reference')
+    adaptation_details = AdaptationDetailsSerializer(required=False)
     personal_details = PersonalDetailsSerializer()
+    requires_action_at = serializers.DateTimeField(required=False)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference',
+            'requires_action_at', 'outcome_code', 'adaptation_details',
         )

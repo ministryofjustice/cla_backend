@@ -329,6 +329,8 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
 
     def test_invalid_datetime(self):
         def to_utc_date(days_delta, **replace_params):
+            # if this fails remove the pytz module
+
             # from localtime to utc (that's because of BST)
             dt = timezone.localtime(timezone.now())
             dt += datetime.timedelta(days=days_delta-dt.weekday())

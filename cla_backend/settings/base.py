@@ -171,7 +171,8 @@ PROJECT_APPS = (
     'knowledgebase',
     'timer',
     'diagnosis',
-    'status'
+    'status',
+    'historic'
 )
 
 INSTALLED_APPS += PROJECT_APPS

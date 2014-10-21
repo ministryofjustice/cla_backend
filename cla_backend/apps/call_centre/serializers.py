@@ -13,7 +13,7 @@ from legalaid.serializers import EligibilityCheckSerializerBase, \
     DeductionsSerializerBase, PersonalDetailsSerializerFull, \
     ThirdPartyPersonalDetailsSerializerBase, \
     ThirdPartyDetailsSerializerBase, PersonSerializerBase, \
-    FeedbackSerializerBase
+    FeedbackSerializerBase, CaseArchivedSerializerBase
 
 from .models import Operator
 
@@ -278,4 +278,23 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'created',
             'modified',
             'issue',
+        )
+
+class CaseArchivedSerializer(CaseArchivedSerializerBase):
+
+    class Meta(CaseArchivedSerializerBase.Meta):
+        fields = (
+             'full_name',
+             'date_of_birth',
+             'postcode',
+             'laa_reference',
+             'specialist_referred_to',
+             'date_specialist_referred',
+             'date_specialist_closed',
+             'knowledgebase_items_used',
+             'area_of_law',
+             'in_scope',
+             'financially_eligible',
+             'outcome_code',
+             'outcome_code_date'
         )

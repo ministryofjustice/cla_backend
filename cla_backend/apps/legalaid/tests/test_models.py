@@ -62,6 +62,8 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         personal_details=make_recipe('legalaid.personal_details'),
         created_by=make_user(),
         requires_action_by=REQUIRES_ACTION_BY.PROVIDER_REVIEW,
+        requires_action_at=timezone.now(),
+        callback_attempt=2,
         locked_by=make_user(),
         locked_at=timezone.now(),
         provider=provider,
@@ -624,6 +626,23 @@ class CaseTestCase(TestCase):
 
         self.assertEqual(case.provider, provider)
 
+    def test_assign_to_provider_resets_callback_info(self):
+        provider = make_recipe('cla_provider.provider')
+
+        case = make_recipe(
+            'legalaid.case',
+            requires_action_at=timezone.now(),
+            callback_attempt=2
+        )
+
+        self.assertNotEqual(case.requires_action_at, None)
+        self.assertEqual(case.callback_attempt, 2)
+
+        case.assign_to_provider(provider)
+
+        self.assertEqual(case.provider, provider)
+        self.assertEqual(case.requires_action_at, None)
+        self.assertEqual(case.callback_attempt, 0)
 
     def test_assign_alternative_help(self):
         articles = make_recipe('knowledgebase.article', _quantity=10)
@@ -640,6 +659,25 @@ class CaseTestCase(TestCase):
 
         self.assertListEqual(list(case.alternative_help_articles.all()), articles[5:])
 
+    def test_assign_alternative_help_resets_callback_info(self):
+        articles = make_recipe('knowledgebase.article', _quantity=10)
+        user = make_user()
+        case = make_recipe(
+            'legalaid.case', provider=None,
+            requires_action_at=timezone.now(),
+            callback_attempt=2
+        )
+
+        self.assertNotEqual(case.requires_action_at, None)
+        self.assertEqual(case.callback_attempt, 2)
+
+        # assign some articles
+        self.assertListEqual(list(case.alternative_help_articles.all()), [])
+        case.assign_alternative_help(user, articles[:5])
+        self.assertListEqual(list(case.alternative_help_articles.all()), articles[:5])
+
+        self.assertEqual(case.requires_action_at, None)
+        self.assertEqual(case.callback_attempt, 0)
 
     def test_lock_doesnt_override_existing_lock(self):
         import logging
@@ -943,7 +981,8 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
             equal_fields=[
                 'title', 'full_name', 'postcode', 'street', 'mobile_phone',
                 'home_phone', 'email', 'date_of_birth', 'ni_number',
-                'contact_for_research', 'vulnerable_user', 'safe_to_contact'
+                'contact_for_research', 'vulnerable_user', 'safe_to_contact',
+                'safe_to_email'
             ]
         )
 
@@ -1130,7 +1169,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'created_by', 'locked_by', 'locked_at', 'thirdparty_details',
             'adaptation_details', 'billable_time', 'matter_type1', 'matter_type2',
             'outcome_code', 'level', 'reference', 'laa_reference', 'from_case',
-            'outcome_code_id'
+            'outcome_code_id', 'requires_action_at', 'callback_attempt'
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
@@ -1169,6 +1208,8 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'outcome_code': None,
             'outcome_code_id': None,
             'level': None,
+            'requires_action_at': None,
+            'callback_attempt': 0,
 
             # it should keep these values from the original case
             'notes': case.notes,

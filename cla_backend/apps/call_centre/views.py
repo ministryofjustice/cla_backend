@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
+from django.db.models import Q
 from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import viewsets, mixins, status
@@ -42,7 +43,8 @@ from .serializers import EligibilityCheckSerializer, \
     CreateCaseSerializer, CaseListSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
-    DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm
+    DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm, \
+    CallMeBackForm, StopCallMeBackForm
 
 from .models import Operator
 
@@ -132,12 +134,18 @@ class CaseViewSet(
         return super(CaseViewSet, self).get_serializer_class()
 
     def get_dashboard_qs(self, qs):
-        user = self.request.user
         if self.request.user.operator.is_manager:
-            return qs.filter(
+            qs = qs.filter(
                 Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR) |
                 Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR_MANAGER))
-        return qs.filter(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
+        else:
+            qs = qs.filter(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
+
+        qs = qs.filter(
+            Q(requires_action_at__isnull=True) | Q(requires_action_at__lte=timezone.now())
+        )
+
+        return qs
 
     def pre_save(self, obj, *args, **kwargs):
         super(CaseViewSet, self).pre_save(obj, *args, **kwargs)
@@ -325,6 +333,14 @@ class CaseViewSet(
         obj.save(update_fields=['personal_details', 'modified'])
 
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
+    @action()
+    def call_me_back(self, request, reference=None, **kwargs):
+        return self._form_action(request, CallMeBackForm)
+
+    @action()
+    def stop_call_me_back(self, request, reference=None, **kwargs):
+        return self._form_action(request, StopCallMeBackForm)
 
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):

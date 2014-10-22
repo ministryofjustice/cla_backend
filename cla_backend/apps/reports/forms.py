@@ -461,3 +461,24 @@ class MIContactsPerCaseByCategoryExtract(SQLFileReport):
         cursor.execute(self.query, self.params)
         self.description = cursor.description
         return cursor.fetchall()
+
+
+class MISurveyExtract(SQLFileReport):
+    QUERY_FILE = 'MISurveyExtract.sql'
+
+
+    def get_headers(self):
+        return [
+            'Hash_ID',
+            'created',
+            'modified',
+            'full_name',
+            'postcode',
+            'street',
+            'phone',
+            'email',
+            'date_of_birth',
+            'ni_number',
+            'contact_for_research',
+            'safe_to_contact'
+        ]

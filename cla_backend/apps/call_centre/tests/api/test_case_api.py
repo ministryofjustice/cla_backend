@@ -43,7 +43,8 @@ class BaseCaseTestCase(
             'postcode', 'diagnosis_state', 'thirdparty_details', 'rejected',
             'date_of_birth', 'category',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
-            'case_count', 'outcome_code'
+            'case_count', 'outcome_code',
+            'requires_action_at', 'callback_attempt'
         ]
 
 
@@ -414,10 +415,12 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         """
         Case.objects.all().delete()
 
-        # obj1 is assigned should be excluded
-        # obj2.requires_action_by == None (meaning doesn't require action)
-        #   so should be excluded
-        # obj3.requires_action_by == OPERATOR so should be included
+        now = timezone.now()
+        # obj1 is assigned => EXCLUDED
+        # obj2.requires_action_by == None (meaning doesn't require action) => EXCLUDED
+        # obj3.requires_action_by == OPERATOR => INCLUDED
+        # obj4.requires_action_at > now => EXCLUDED
+        # obj5.requires_action_at < now => INCLUDED
         obj1 = make_recipe(
             'legalaid.case',
             reference='ref1', provider=self.provider,
@@ -433,15 +436,30 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             reference='ref3', provider=None,
             requires_action_by=REQUIRES_ACTION_BY.OPERATOR
         )
+        obj4 = make_recipe(
+            'legalaid.case',
+            reference='ref4', provider=None,
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR,
+            requires_action_at=now + datetime.timedelta(seconds=2)
+        )
+        obj5 = make_recipe(
+            'legalaid.case',
+            reference='ref5', provider=None,
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR,
+            requires_action_at=now - datetime.timedelta(seconds=1)
+        )
 
-        # searching via dashboard param => should return just obj3
+        # searching via dashboard param => should return obj3, obj4, obj5
         response = self.client.get(
             self.list_dashboard_url, format='json',
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(1, len(response.data['results']))
-        self.assertCaseEqual(response.data['results'][0], obj3)
+        self.assertEqual(2, len(response.data['results']))
+        self.assertItemsEqual(
+            [case['reference'] for case in response.data['results']],
+            ['ref3', 'ref5']
+        )
 
         # searching without dashboard param => should return all of them
         response = self.client.get(
@@ -449,10 +467,10 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(3, len(response.data['results']))
+        self.assertEqual(5, len(response.data['results']))
         self.assertItemsEqual(
             [case['reference'] for case in response.data['results']],
-            ['ref1', 'ref2', 'ref3']
+            ['ref1', 'ref2', 'ref3', 'ref4', 'ref5']
         )
 
     # person_ref PARAM
@@ -671,3 +689,105 @@ class LinkPersonalDetailsTestCase(BaseCaseTestCase):
 
         self.resource = self.resource.__class__.objects.get(pk=self.resource.pk)
         self.assertEqual(self.resource.personal_details, self.pd)
+
+
+class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    def get_url(self, reference=None):
+        reference = reference or self.resource.reference
+        return reverse(
+            'call_centre:case-call-me-back', args=(),
+            kwargs={'reference': reference}
+        )
+
+    @property
+    def _default_dt(self):
+        if not hasattr(self, '__default_dt'):
+            now = timezone.now()
+            dt = now + datetime.timedelta(days=7-now.weekday())
+            self.__default_dt = dt.replace(hour=10, minute=0, second=0, microsecond=0)
+        return self.__default_dt
+
+    def get_expected_notes(self, data):
+        return 'Callback scheduled for %s. %s' % (
+            timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M"),
+            data['notes']
+        )
+        return data['notes']
+
+    def get_default_post_data(self):
+        return {
+            'notes': 'lorem ipsum',
+            'datetime': self._default_dt.strftime('%Y-%m-%d %H:%M')
+        }
+
+    def test_successful_CB1(self):
+        self.resource.callback_attempt = 0
+        self.resource.save()
+
+        self.test_successful()
+
+        log = self.resource.log_set.first()
+        self.assertEqual(log.code, 'CB1')
+
+    def test_successful_CB2(self):
+        self.resource.callback_attempt = 1
+        self.resource.save()
+
+        self.test_successful()
+
+        log = self.resource.log_set.first()
+        self.assertEqual(log.code, 'CB2')
+
+    def test_successful_CB3(self):
+        self.resource.callback_attempt = 2
+        self.resource.save()
+
+        self.test_successful()
+
+        log = self.resource.log_set.first()
+        self.assertEqual(log.code, 'CB3')
+
+
+class StopCallMeBackTestCase(
+    ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase
+):
+    def make_resource(self, **kwargs):
+        kwargs['callback_attempt'] = 1
+        return super(StopCallMeBackTestCase, self).make_resource(**kwargs)
+
+    def get_url(self, reference=None):
+        reference = reference or self.resource.reference
+        return reverse(
+            'call_centre:case-stop-call-me-back', args=(),
+            kwargs={'reference': reference}
+        )
+
+    def get_default_post_data(self):
+        return {
+            'notes': 'lorem ipsum',
+            'action': 'complete'
+        }
+
+    def test_successful_CALLBACK_COMPLETE(self):
+        self.resource.callback_attempt = 1
+        self.resource.save()
+
+        self._test_successful(data={
+            'notes': 'lorem ipsum',
+            'action': 'complete'
+        })
+
+        log = self.resource.log_set.first()
+        self.assertEqual(log.code, 'CALLBACK_COMPLETE')
+
+    def test_successful_CBC(self):
+        self.resource.callback_attempt = 1
+        self.resource.save()
+
+        self._test_successful(data={
+            'notes': 'lorem ipsum',
+            'action': 'cancel'
+        })
+
+        log = self.resource.log_set.first()
+        self.assertEqual(log.code, 'CBC')

@@ -591,40 +591,6 @@
       "name": "Directories - helpline, online and books"
     }
   }, 
-  {
-    "pk": 11, 
-    "model": "legalaid.MediaCodeGroup", 
-    "fields": {
-      "name": "Financial Org"
-    }
-  }, 
-  {
-    "pk": 62, 
-    "model": "legalaid.MediaCode", 
-    "fields": {
-      "code": "Finance", 
-      "group": 11, 
-      "name": "Financial Sector"
-    }
-  }, 
-  {
-    "pk": 63, 
-    "model": "legalaid.MediaCode", 
-    "fields": {
-      "code": "Bank", 
-      "group": 11, 
-      "name": "Bank/Building Society or Financial Organisation"
-    }
-  }, 
-  {
-    "pk": 64, 
-    "model": "legalaid.MediaCode", 
-    "fields": {
-      "code": "YPM", 
-      "group": 11, 
-      "name": "FSA"
-    }
-  }, 
 {
     "pk": 11, 
     "model": "legalaid.MediaCodeGroup", 
@@ -734,6 +700,40 @@
       "code": "Bailiffs", 
       "group": 13, 
       "name": "Bailiffs"
+    }
+  },
+  {
+    "pk": 14, 
+    "model": "legalaid.MediaCodeGroup", 
+    "fields": {
+      "name": "Financial Org"
+    }
+  }, 
+  {
+    "pk": 62, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Finance", 
+      "group": 14, 
+      "name": "Financial Sector"
+    }
+  }, 
+  {
+    "pk": 63, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "Bank", 
+      "group": 14, 
+      "name": "Bank/Building Society or Financial Organisation"
+    }
+  }, 
+  {
+    "pk": 64, 
+    "model": "legalaid.MediaCode", 
+    "fields": {
+      "code": "YPM", 
+      "group": 14, 
+      "name": "FSA"
     }
   }
  ]

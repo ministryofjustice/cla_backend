@@ -1,4 +1,6 @@
 #!/bin/bash
+
+! $([[  "$CLA_ENV" == "prod" || "$CLA_ENV" == "staging" ]]) ||  grep sentry /etc/hosts > /dev/null 2>&1 || echo "$SENTRY_IPADDRESS $SENTRY_HOSTNAME" >> /etc/hosts
 cd /home/app/django
 # Manage sync db
 python manage.py syncdb --noinput >> /var/log/wsgi/db_scripts.log 2>&1

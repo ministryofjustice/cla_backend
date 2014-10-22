@@ -94,3 +94,89 @@ class DeclineHelpEvent(BaseEvent):
     }
 event_registry.register(DeclineHelpEvent)
 
+
+class CallMeBackEvent(BaseEvent):
+    key = 'call_me_back'
+    codes = {
+        'CB1': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Callback 1',
+            'stops_timer': True,
+            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
+        },
+        'CB2': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Callback 2',
+            'stops_timer': True,
+            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
+        },
+        'CB3': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Callback 3',
+            'stops_timer': True,
+            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
+        }
+    }
+
+    def get_log_code(self, case=None, **kwargs):
+        if not case:
+            raise ValueError('a case obj should be passed in')
+
+        if case.callback_attempt == 0:
+            return 'CB1'
+        if case.callback_attempt == 1:
+            return 'CB2'
+        if case.callback_attempt == 2:
+            return 'CB3'
+
+        raise ValueError('Reached max number of callbacks allowed')
+
+event_registry.register(CallMeBackEvent)
+
+
+class StopCallMeBackEvent(BaseEvent):
+    key = 'stop_call_me_back'
+    codes = {
+        'CBC': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Callback Cancelled',
+            'stops_timer': True,
+            'set_requires_action_by': None_if_owned_by_operator
+        },
+        'CALLBACK_COMPLETE': {
+            'type': LOG_TYPES.SYSTEM,
+            'level': LOG_LEVELS.MINOR,
+            'selectable_by': [],
+            'description': 'Callback complete',
+            'stops_timer': False
+        }
+    }
+
+    def get_log_code(self, case=None, **kwargs):
+        if not case:
+            raise ValueError('A case obj should be passed in')
+        cancel = kwargs.get('cancel', False)
+        complete = kwargs.get('complete', False)
+
+        if not cancel and not complete:
+            raise ValueError('cancel or complete should be passed in')
+
+        if cancel:
+            if case.callback_attempt == 0:
+                raise ValueError('Cannot cancel callback without a previous CBx')
+            return 'CBC'
+
+        if complete:
+            if case.callback_attempt == 0:
+                raise ValueError('Cannot mark callback as complete without previous CBx')
+            return 'CALLBACK_COMPLETE'
+
+event_registry.register(StopCallMeBackEvent)

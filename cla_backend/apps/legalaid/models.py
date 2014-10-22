@@ -29,7 +29,8 @@ from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS, \
-    CONTACT_SAFETY, EXEMPT_USER_REASON, ECF_STATEMENT, REQUIRES_ACTION_BY
+    CONTACT_SAFETY, EXEMPT_USER_REASON, ECF_STATEMENT, REQUIRES_ACTION_BY, \
+    EMAIL_SAFETY
 
 from legalaid.fields import MoneyField
 
@@ -109,10 +110,16 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     ni_number = models.CharField(max_length=10, null=True, blank=True)
     contact_for_research = models.NullBooleanField(blank=True, null=True)
     vulnerable_user = models.NullBooleanField(blank=True, null=True)
-    safe_to_contact = models.CharField(max_length=30,
-                                       default=CONTACT_SAFETY.SAFE,
-                                       choices=CONTACT_SAFETY,
-                                       blank=True, null=True)
+    safe_to_contact = models.CharField(
+        max_length=30,
+        default=CONTACT_SAFETY.SAFE,
+        choices=CONTACT_SAFETY,
+        blank=True, null=True)
+    safe_to_email = models.CharField(
+        max_length=20,
+        default=EMAIL_SAFETY.SAFE,
+        choices=EMAIL_SAFETY,
+        blank=True, null=True)
     case_count = models.PositiveSmallIntegerField(default=0)
 
     reference = UUIDField(auto=True, unique=True)
@@ -475,6 +482,11 @@ class Case(TimeStampedModel, ModelDiffMixin):
         blank=True, null=True, editable=False
     )
 
+    requires_action_at = models.DateTimeField(
+        auto_now=False, blank=True, null=True
+    )
+    callback_attempt = models.PositiveSmallIntegerField(default=0)
+
     locked_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, blank=True, null=True,
         related_name='case_locked'
@@ -595,7 +607,8 @@ class Case(TimeStampedModel, ModelDiffMixin):
                 'excludes': [
                     'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
-                    'created', 'modified', 'outcome_code_id'
+                    'created', 'modified', 'outcome_code_id', 'requires_action_at',
+                    'callback_attempt'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details'
@@ -630,6 +643,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.provider = provider
         self.provider_viewed = None
         self.save(update_fields=['provider', 'provider_viewed', 'modified'])
+        self.reset_requires_action_at()
 
     def view_by_provider(self, provider):
         if provider == self.provider:
@@ -642,6 +656,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
             CaseKnowledgebaseAssignment.objects.create(case=self,
                                                        alternative_help_article=article,
                                                        assigned_by=user)
+        self.reset_requires_action_at()
 
     def lock(self, user, save=True):
         if not self.locked_by:
@@ -662,6 +677,17 @@ class Case(TimeStampedModel, ModelDiffMixin):
     def set_requires_action_by(self, requires_action_by):
         self.requires_action_by = requires_action_by
         self.save(update_fields=['requires_action_by', 'modified'])
+
+    def set_requires_action_at(self, requires_action_at):
+        self.requires_action_at = requires_action_at
+        self.callback_attempt += 1
+        self.save(update_fields=['requires_action_at', 'callback_attempt', 'modified'])
+
+    def reset_requires_action_at(self):
+        if self.requires_action_at != None or self.callback_attempt != 0:
+            self.requires_action_at = None
+            self.callback_attempt = 0
+            self.save(update_fields=['requires_action_at', 'callback_attempt', 'modified'])
 
     @property
     def doesnt_requires_action(self):

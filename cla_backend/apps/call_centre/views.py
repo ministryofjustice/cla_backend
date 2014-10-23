@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
-from django.db.models import Q
 from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import viewsets, mixins, status
@@ -18,6 +17,8 @@ from cla_provider.models import Provider, OutOfHoursRota, Feedback
 from cla_eventlog import event_registry
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
+
+from core.drf.pagination import RelativeUrlPaginationSerializer
 
 from timer.views import BaseTimerViewSet
 
@@ -442,3 +443,12 @@ class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
     )
     ordering = ('resolved', '-created',)
     date_range_field = 'created'
+
+    queryset = Feedback.objects.all().select_related(
+        'case', 'created_by', 'created_by__provider'
+    )
+
+    pagination_serializer_class = RelativeUrlPaginationSerializer
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100

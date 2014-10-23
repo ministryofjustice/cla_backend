@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from historic.models import CaseArchived
 from rest_framework import serializers
 
 from core.drf.fields import ThreePartDateField
@@ -317,3 +318,9 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
     class Meta:
         fields = ()
 
+
+class CaseArchivedSerializerBase(serializers.ModelSerializer):
+
+    class Meta:
+        model = CaseArchived
+        fields = ()

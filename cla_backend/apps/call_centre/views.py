@@ -5,6 +5,8 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
+from django.db.models import Q
+from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import viewsets, mixins, status
@@ -27,7 +29,8 @@ from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
+    RelativeUrlPaginationSerializer
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -41,7 +44,7 @@ from .serializers import EligibilityCheckSerializer, \
     AdaptationDetailsSerializer, PersonalDetailsSerializer, \
     BarePersonalDetailsSerializer, \
     ThirdPartyDetailsSerializer, LogSerializer, FeedbackSerializer, \
-    CreateCaseSerializer, CaseListSerializer
+    CreateCaseSerializer, CaseListSerializer, CaseArchivedSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm, \
@@ -452,3 +455,22 @@ class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
+
+class CaseArchivedViewSet(CallCentrePermissionsViewSetMixin,
+                          mixins.ListModelMixin,
+                          viewsets.GenericViewSet):
+
+    model = CaseArchived
+    serializer_class = CaseArchivedSerializer
+
+    search_fields = CaseArchivedSerializer.Meta.fields
+
+    filter_backends = (
+        SearchFilter,
+        OrderingFilter
+    )
+    ordering = ('-outcome_code_date')
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+    pagination_serializer_class = RelativeUrlPaginationSerializer

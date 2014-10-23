@@ -23,6 +23,7 @@ router.register(r'adaptations', views.AdaptationDetailsMetadataViewSet,
 router.register(r'mattertype', views.MatterTypeViewSet)
 router.register(r'mediacode', views.MediaCodeViewSet)
 router.register(r'feedback', views.FeedbackViewSet)
+router.register(r'case_archive', views.CaseArchivedViewSet)
 
 
 timer_router = core_routers.SingletonRouter()

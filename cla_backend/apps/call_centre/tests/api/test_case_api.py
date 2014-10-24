@@ -8,8 +8,9 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 from legalaid.models import Case, CaseNotesHistory
-from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin, \
-    BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase
+from legalaid.tests.views.mixins.case_api import BaseFullCaseAPIMixin, \
+    FullCaseAPIMixin, BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase
+from cla_common.constants import CASE_SOURCE
 
 from cla_common.constants import REQUIRES_ACTION_BY
 
@@ -26,7 +27,7 @@ from call_centre.serializers import CaseSerializer
 
 
 class BaseCaseTestCase(
-    CLAOperatorAuthBaseApiTestMixin, FullCaseAPIMixin, APITestCase
+    CLAOperatorAuthBaseApiTestMixin, BaseFullCaseAPIMixin, APITestCase
 ):
     def get_case_serializer_clazz(self):
         return CaseSerializer
@@ -44,11 +45,11 @@ class BaseCaseTestCase(
             'date_of_birth', 'category',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
             'case_count', 'outcome_code',
-            'requires_action_at', 'callback_attempt'
+            'requires_action_at', 'callback_attempt', 'source'
         ]
 
 
-class CaseGeneralTestCase(BaseCaseTestCase):
+class CaseGeneralTestCase(BaseCaseTestCase, FullCaseAPIMixin):
     def test_methods_not_allowed(self):
         """
         Ensure that we can't POST, PUT or DELETE
@@ -93,6 +94,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
             'matter_type2': matter_type2.code,
             'media_code': media_code.code,
             'provider_notes': "bla",
+            'source': CASE_SOURCE.VOICEMAIL,
             'laa_reference': 232323,
             'requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
         }
@@ -118,6 +120,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
                 matter_type1=matter_type1,
                 matter_type2=matter_type2,
                 media_code=media_code,
+                source=CASE_SOURCE.VOICEMAIL,
                 provider_notes=""
             )
         )
@@ -141,6 +144,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertResponseKeys(response)
         self.assertEqual(response.data['eligibility_check'], None)
+        self.assertEqual(response.data['source'], CASE_SOURCE.PHONE)
 
         # checking that requires_action_by is set to OPERATOR
         case = Case.objects.get(reference=response.data['reference'])
@@ -158,6 +162,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
             'matter_type1': matter_type1.code,
             'matter_type2': matter_type2.code,
             'media_code': media_code.code,
+            'source': CASE_SOURCE.VOICEMAIL,
             'provider_notes': "bla",
         }
         response = self.client.post(
@@ -174,6 +179,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
                 matter_type1=matter_type1,
                 matter_type2=matter_type2,
                 media_code=media_code,
+                source=CASE_SOURCE.VOICEMAIL,
                 provider_notes="",
                 laa_reference=response.data['laa_reference'],
             )

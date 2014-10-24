@@ -1,3 +1,4 @@
+import hashlib
 import re
 import codecs
 import networkx as nx
@@ -27,7 +28,9 @@ class GraphImporter(object):
         self.prop_mapping = None
 
     def process(self):
-        self.graph = nx.MultiDiGraph()
+        with open(self.file_path, 'rb') as afile:
+            version = hashlib.md5(afile.read()).hexdigest()
+        self.graph = nx.MultiDiGraph(version=version)
 
         with codecs.open(self.file_path, 'r', encoding="utf-8") as f:
             # encoding declaration causes problems so deleting it

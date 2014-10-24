@@ -21,6 +21,10 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
     PARENT_RESOURCE_RECIPE = 'legalaid.case'
     PK_FIELD = 'diagnosis'
 
+    def make_resource(self, **kwargs):
+        kwargs['graph_version'] = 'v1'
+        return super(DiagnosisAPIMixin, self).make_resource(**kwargs)
+
     @mock.patch('diagnosis.serializers.graph', new_callable=MockedGraph)
     def __call__(self, runner, mocked_graph, *args, **kwargs):
         self.mocked_graph = mocked_graph

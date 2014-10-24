@@ -35,7 +35,8 @@ class MockedGraph(mock.MagicMock):
             '3ab': ['INSCOPE'],
         }
         self.graph = {
-            'operator_root_id': '1'
+            'operator_root_id': '1',
+            'version': 'v1'
         }
 
     def get_node_dict(self, node_id, short=False):

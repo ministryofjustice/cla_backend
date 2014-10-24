@@ -1,8 +1,6 @@
 import uuid
 from checker.serializers import CaseSerializer
 
-from django.core.urlresolvers import reverse
-
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -13,6 +11,7 @@ from core.tests.test_base import SimpleResourceAPIMixin
 
 from legalaid.models import Case, PersonalDetails
 from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
+from cla_common.constants import CASE_SOURCE
 
 
 class CaseTests(
@@ -43,6 +42,10 @@ class CaseTests(
         self.assertEqual(case.reference, data['reference'])
         self.assertEqual(unicode(case.eligibility_check.reference), data['eligibility_check'])
         self.assertPersonalDetailsEqual(data['personal_details'], case.personal_details)
+
+        self.assertEqual(Case.objects.count(), 1)
+        case = Case.objects.first()
+        self.assertEqual(case.source, CASE_SOURCE.WEB)
 
     def test_methods_not_allowed(self):
         """

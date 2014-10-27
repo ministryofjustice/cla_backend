@@ -123,7 +123,7 @@ select
      ELSE null
    END as "Reject_Reason"
   ,mc.code as "Media_Code"
-  ,'Phone' as "Contact_Type"
+  ,c.source as "Contact_Type"
   ,null as "Call_Back_Request_Time"
   ,null as "Call_Back_Actioned_Time"
   ,ceil(EXTRACT(SECOND FROM operator_first_view.created-c.created)) as "Time_to_OS_Access"

@@ -21,6 +21,10 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
     PARENT_RESOURCE_RECIPE = 'legalaid.case'
     PK_FIELD = 'diagnosis'
 
+    def make_resource(self, **kwargs):
+        kwargs['graph_version'] = 'v1'
+        return super(DiagnosisAPIMixin, self).make_resource(**kwargs)
+
     @mock.patch('diagnosis.serializers.graph', new_callable=MockedGraph)
     def __call__(self, runner, mocked_graph, *args, **kwargs):
         self.mocked_graph = mocked_graph
@@ -38,18 +42,6 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
     def assertLogEquals(self, log, diagnosis):
         self.assertItemsEqual(log.patch['nodes'], diagnosis.nodes)
         self.assertItemsEqual(log.patch['reference'], unicode(diagnosis.reference))
-
-    def test_delete_doesnt_create_log_with_ongoing_diagnosis(self):
-        self.assertEqual(Log.objects.count(), 0)
-        self.assertEqual(DiagnosisTraversal.objects.count(), 1)
-
-        response = self.client.delete(
-            self.detail_url, HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
-        self.assertTrue(response.status_code, status.HTTP_204_NO_CONTENT)
-
-        self.assertEqual(DiagnosisTraversal.objects.count(), 0)
-        self.assertEqual(Log.objects.count(), 0)
 
     def test_delete_creates_log_with_completed_diagnosis(self):
         self.resource.current_node_id = 'INSCOPE'
@@ -73,6 +65,30 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
         self.assertEqual(Log.objects.count(), 1)
 
         self.assertLogEquals(Log.objects.all()[0], self.resource)
+
+    def test_delete_creates_log_with_incomplete_diagnosis(self):
+        self.resource.current_node_id = '3ab'
+        self.resource.nodes = [
+            self.mocked_graph.get_node_dict('2a'),
+            self.mocked_graph.get_node_dict('3ab')
+        ]
+        self.resource.state = DIAGNOSIS_SCOPE.UNKNOWN
+        self.resource.save()
+
+        self.assertEqual(Log.objects.count(), 0)
+        self.assertEqual(DiagnosisTraversal.objects.count(), 1)
+
+        response = self.client.delete(
+            self.detail_url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertTrue(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        self.assertEqual(DiagnosisTraversal.objects.count(), 0)
+        self.assertEqual(Log.objects.count(), 1)
+        log = Log.objects.first()
+        self.assertTrue('INCOMPLETE' in log.code)
+
+        self.assertLogEquals(log, self.resource)
 
     def test_move_down_creates_log_when_diagnosis_completes(self):
         # moving down (not completed) => log NOT created

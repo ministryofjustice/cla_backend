@@ -19,13 +19,21 @@ class DiagnosisEvent(BaseEvent):
             'selectable_by': [],
             'description': "Diagnosis deleted",
             'stops_timer': False
+        },
+        'INCOMPLETE_DIAGNOSIS_DELETED': {
+            'type': LOG_TYPES.SYSTEM,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': "Incomplete Diagnosis deleted",
+            'stops_timer': False
         }
-        }
+    }
 
     def get_log_code(self, **kwargs):
         status = kwargs['status']
         lookup = {
             'created': 'DIAGNOSIS_CREATED',
+            'incomplete_deleted': 'INCOMPLETE_DIAGNOSIS_DELETED',
             'deleted': 'DIAGNOSIS_DELETED'
         }
 

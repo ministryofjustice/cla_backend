@@ -30,7 +30,8 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
                 'ni_number',
                 'contact_for_research',
                 'safe_to_contact',
-                'vulnerable_user'
+                'vulnerable_user',
+                'has_diversity'
             ]
 
     def _get_default_post_data(self):

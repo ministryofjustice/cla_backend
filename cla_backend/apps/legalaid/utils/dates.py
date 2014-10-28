@@ -2,57 +2,47 @@ import datetime
 
 from django.utils import timezone
 
-
-def is_bank_holiday(dt):
-    # TODO: make this work for bank hols
-    return False
+from cla_common.call_centre_availability import on_bank_holiday, on_sunday, \
+    on_saturday
 
 
-def is_out_of_hours(
-    dt,
-    weekday_time_start, weekday_time_end,
-    sat_time_start, sat_time_end
-):
+class OpeningHours(object):
+
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+
+    def __contains__(self, dt):
+        return self.start < dt.time() < self.end
+
+
+def is_out_of_hours(dt, weekday_hours, saturday_hours):
     """
-        Returns True is dt is out of hours, False otherwise
+        Returns True if dt is out of hours, False otherwise
 
         dt: datetime in localtime (NOT UTC)
-        weekday_time_start: start datetime.time during weekdays
-        weekday_time_end: end datetime.time during weekdays
-        sat_time_start: start datetime.time on Saturdays
-        sat_time_end: end datetime.time during Saturdays
+        weekday_hours: OpeningHours during weekdays
+        saturday_hours: OpeningHours on Saturdays
     """
-    def dt_at(dt, hour, minute=0, second=0, microsecond=0):
-        t = timezone.localtime(dt)
-        return t.replace(hour=hour, minute=minute, second=second,
-                         microsecond=microsecond)
 
-    weekday = dt.weekday()
-
-    # not open on bank holiday
-    if is_bank_holiday(dt):
+    if on_bank_holiday(dt):
         return True
 
-    # if day in MON-FRI (open 09h-17h)
-    elif weekday < 5:
-        day_start = dt_at(dt, hour=weekday_time_start.hour, minute=weekday_time_start.minute)
-        day_end = dt_at(dt, hour=weekday_time_end.hour, minute=weekday_time_end.minute)
-        return not (day_start < dt < day_end)
-
-    # if Saturday (only open in the morning)
-    elif weekday == 5:
-        day_start = dt_at(dt, hour=sat_time_start.hour, minute=sat_time_start.minute)
-        day_end = dt_at(dt, hour=sat_time_end.hour, minute=sat_time_end.minute)
-        return not (day_start < dt < day_end)
-
-    # if Sunday then out of hours (call centre doesn't operate on sunday)
-    else:
+    if on_sunday(dt):
         return True
+
+    if on_saturday(dt) and dt not in saturday_hours:
+        return True
+
+    if dt not in weekday_hours:
+        return True
+
+    return False
 
 
 def is_out_of_hours_for_providers(dt):
     """
-        Returns True is dt is out of hours for specialists,
+        Returns True if dt is out of hours for specialists,
             False otherwise
 
         Currently working hours for specialists run:
@@ -61,18 +51,14 @@ def is_out_of_hours_for_providers(dt):
 
         dt: datetime in localtime (NOT UTC)
     """
-    return is_out_of_hours(
-        dt=dt,
-        weekday_time_start=datetime.time(hour=9, minute=0),
-        weekday_time_end=datetime.time(hour=17, minute=0),
-        sat_time_start=datetime.time(hour=9, minute=0),
-        sat_time_end=datetime.time(hour=12, minute=30)
-    )
+    mon_fri = OpeningHours(datetime.time(9, 0), datetime.time(17, 0))
+    sat = OpeningHours(datetime.time(9, 0), datetime.time(12, 30))
+    return is_out_of_hours(dt, mon_fri, sat)
 
 
 def is_out_of_hours_for_operators(dt):
     """
-        Returns True is dt is out of hours for operators,
+        Returns True if dt is out of hours for operators,
             False otherwise
 
         Currently working hours for operators run:
@@ -81,10 +67,6 @@ def is_out_of_hours_for_operators(dt):
 
         dt: datetime in localtime (NOT UTC)
     """
-    return is_out_of_hours(
-        dt=dt,
-        weekday_time_start=datetime.time(hour=9, minute=0),
-        weekday_time_end=datetime.time(hour=20, minute=0),
-        sat_time_start=datetime.time(hour=9, minute=0),
-        sat_time_end=datetime.time(hour=12, minute=30)
-    )
+    mon_fri = OpeningHours(datetime.time(9, 0), datetime.time(20, 0))
+    sat = OpeningHours(datetime.time(9, 0), datetime.time(12, 30))
+    return is_out_of_hours(dt, mon_fri, sat)

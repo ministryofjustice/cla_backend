@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
-from django.db.models import Q
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
 
@@ -25,7 +24,7 @@ from core.drf.pagination import RelativeUrlPaginationSerializer
 from timer.views import BaseTimerViewSet
 
 from legalaid.models import PersonalDetails, Case
-from legalaid.views import BaseUserViewSet, \
+from legalaid.views import FormActionMixin, BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
@@ -47,7 +46,7 @@ from .serializers import EligibilityCheckSerializer, \
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm, \
-    CallMeBackForm, StopCallMeBackForm
+    CallMeBackForm, StopCallMeBackForm, DiversityForm
 
 from .models import Operator
 
@@ -381,9 +380,13 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
 
 
 class PersonalDetailsViewSet(
-    CallCentrePermissionsViewSetMixin, FullPersonalDetailsViewSet
+    CallCentrePermissionsViewSetMixin, FormActionMixin, FullPersonalDetailsViewSet
 ):
     serializer_class = PersonalDetailsSerializer
+
+    @action()
+    def set_diversity(self, request, reference=None, **kwargs):
+        return self._form_action(request, DiversityForm)
 
 
 class ThirdPartyDetailsViewSet(

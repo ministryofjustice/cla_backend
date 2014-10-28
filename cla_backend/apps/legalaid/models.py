@@ -125,6 +125,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     case_count = models.PositiveSmallIntegerField(default=0)
 
     reference = UUIDField(auto=True, unique=True)
+    diversity = models.BinaryField(blank=True, null=True)
 
     cloning_config = {
         'excludes': ['reference', 'created', 'modified', 'case_count']

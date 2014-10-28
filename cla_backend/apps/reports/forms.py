@@ -3,12 +3,13 @@ from cla_eventlog import event_registry
 
 from django import forms
 from django.db import connection
-from django.db.models.aggregates import Avg, Count
+from django.db.models.aggregates import Count
 from django.db.models.sql.aggregates import Aggregate
 from django.utils import timezone
 from django.contrib.admin import widgets
 from django.template.defaulttags import date
-from django.db import connection
+
+from legalaid.utils import diversity
 
 from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_provider.models import Provider
@@ -371,8 +372,14 @@ class SQLFileReport(DateRangeReportForm):
         self.description = cursor.description
         return cursor.fetchall()
 
+
 class MICaseExtract(SQLFileReport):
     QUERY_FILE = 'MIExtractByOutcome.sql'
+
+    passphrase = forms.CharField(
+        required=False,
+        help_text='Optional. If not provided, the report will not include diversity data'
+    )
 
     def get_headers(self):
         return [
@@ -404,6 +411,27 @@ class MICaseExtract(SQLFileReport):
             "Welsh", "Language", "Outcome_Created_At",
             "Username"
         ]
+
+    def get_queryset(self):
+        passphrase = self.cleaned_data.get('passphrase')
+
+        if passphrase:
+            diversity_expression = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".format(
+                key=diversity.get_private_key()
+            )
+        else:
+            diversity_expression = "%s as placeholder, '{}'::json"
+
+        sql = self.query.format(
+            diversity_expression=diversity_expression
+        )
+        sql_args = [passphrase] + list(self.date_range)
+
+        cursor = connection.cursor()
+        cursor.execute(sql, sql_args)
+        self.description = cursor.description
+        return cursor.fetchall()
+
 
 class MIFeedbackExtract(SQLFileReport):
     QUERY_FILE = 'MIExtractByFeedback.sql'

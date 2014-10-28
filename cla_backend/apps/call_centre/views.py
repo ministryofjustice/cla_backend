@@ -20,11 +20,12 @@ from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
+from core.drf.mixins import FormActionMixin
 
 from timer.views import BaseTimerViewSet
 
 from legalaid.models import PersonalDetails, Case
-from legalaid.views import FormActionMixin, BaseUserViewSet, \
+from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \

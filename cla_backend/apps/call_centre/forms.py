@@ -12,6 +12,7 @@ from cla_common.constants import GENDERS, ETHNICITIES, RELIGIONS,\
 from cla_eventlog import event_registry
 
 from legalaid.utils.dates import is_out_of_hours_for_operators
+from legalaid.utils import diversity
 
 from cla_provider.models import Provider
 from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
@@ -273,20 +274,6 @@ class DiversityForm(forms.Form):
         super(DiversityForm, self).__init__(*args, **kwargs)
 
     def save(self, user):
-        data = self.cleaned_data
-        # TODO data to json
-
-
-        # from django.db import connection
-        # cursor = connection.cursor()
-        # cursor.execute("UPDATE bar SET foo = 1 WHERE baz = %s", [self.baz])
-        """
-        cursor.execute("update %s set diversity = pgp_pub_encrypt('%s', dearmor('%s')) where id = %s", [
-            PersonalDetails._meta.db_table,
-            data,
-            ...
-            self.personal_details.pk
-        ])
-        """
-
-        raise Exception('save pd.diversity')
+        diversity.save_diversity_data(
+            self.personal_details.pk, self.cleaned_data
+        )

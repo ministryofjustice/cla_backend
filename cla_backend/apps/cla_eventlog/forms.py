@@ -9,7 +9,7 @@ class BaseCaseLogForm(forms.Form):
     notes = forms.CharField(required=False, max_length=500)
 
     def __init__(self, *args, **kwargs):
-        self.case = kwargs.pop('obj')
+        self.case = kwargs.pop('case')
         super(BaseCaseLogForm, self).__init__(*args, **kwargs)
 
     def get_event_key(self):

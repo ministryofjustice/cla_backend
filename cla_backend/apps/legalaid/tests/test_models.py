@@ -984,7 +984,7 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
                 'title', 'full_name', 'postcode', 'street', 'mobile_phone',
                 'home_phone', 'email', 'date_of_birth', 'ni_number',
                 'contact_for_research', 'vulnerable_user', 'safe_to_contact',
-                'safe_to_email'
+                'safe_to_email', 'diversity'
             ]
         )
 

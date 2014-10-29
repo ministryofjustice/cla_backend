@@ -17,6 +17,7 @@ class DiagnosisSerializer(ClaModelSerializer):
     nodes = SerializerMethodField('get_nodes')
     current_node_id = ChoiceField(choices=[])
     category = SlugRelatedField('category', slug_field='code', required=False)
+    version_in_conflict = SerializerMethodField('is_version_in_conflict')
 
     def __init__(self, *args, **kwargs):
         # self.full_nodes_dump = kwargs.pop('full', False)
@@ -28,6 +29,15 @@ class DiagnosisSerializer(ClaModelSerializer):
             (node['id'], node['label']) for node in nodes_choices
         ]
         self.fields['current_node_id'].required = bool(nodes_choices)
+
+    def is_version_in_conflict(self, request):
+        if not self.object:
+            return False
+
+        if not self.object.is_state_unknown():
+            return False
+
+        return self.object.graph_version != self.graph.graph['version']
 
     def get_choices(self, request):
         return self._get_nodes()
@@ -46,6 +56,9 @@ class DiagnosisSerializer(ClaModelSerializer):
         return nodes
 
     def _get_nodes(self, request=None):
+        if self.is_version_in_conflict(request):
+            return []
+
         if not self.object:
             return []
 
@@ -111,6 +124,9 @@ class DiagnosisSerializer(ClaModelSerializer):
             obj.nodes = []
 
     def save_object(self, obj, **kwargs):
+        if not obj.graph_version:
+            obj.graph_version = self.graph.graph['version']
+
         # if obj.current_node_id:
         self.process_obj(obj)
         self._set_state(obj)
@@ -152,4 +168,6 @@ class DiagnosisSerializer(ClaModelSerializer):
                   'choices',
                   'current_node_id',
                   'state',
-                  'category')
+                  'category',
+                  'version_in_conflict'
+                  )

@@ -28,13 +28,14 @@ class DiagnosisSerializerTestCase(TestCase):
 
     # GET
 
-    def test_get_with_ongoing_diagnosis(self):
+    def test_get_with_ongoing_diagnosis_same_version(self):
         """
         Tests that the get request from the serializer returns
         expected values when in the middle of a diagnosis
         """
         traversal = DiagnosisTraversal.objects.create(
             current_node_id='2a',
+            graph_version='v1',
             nodes=[
                 self.mocked_graph.get_node_dict('2a')
             ]
@@ -51,13 +52,64 @@ class DiagnosisSerializerTestCase(TestCase):
         self.assertEqual(data['current_node_id'], '2a')
         self.assertEqual(data['state'], DIAGNOSIS_SCOPE.UNKNOWN)
         self.assertEqual(data['category'], None)
+        self.assertEqual(data['version_in_conflict'], False)
+
+    def test_get_with_ongoing_diagnosis_different_version(self):
+        """
+        Tests that the get request from the serializer returns
+        [] when in the middle of a diagnosis
+        """
+        traversal = DiagnosisTraversal.objects.create(
+            current_node_id='2a',
+            graph_version='old_v1',
+            nodes=[
+                self.mocked_graph.get_node_dict('2a')
+            ]
+        )
+        serializer = DiagnosisSerializer(instance=traversal)
+        data = serializer.data
+        self.assertItemsEqual(data['nodes'], [
+            self.mocked_graph.get_node_dict('2a')
+        ])
+        self.assertItemsEqual(data['choices'], [])
+        self.assertEqual(data['current_node_id'], '2a')
+        self.assertEqual(data['state'], DIAGNOSIS_SCOPE.UNKNOWN)
+        self.assertEqual(data['category'], None)
+        self.assertEqual(data['version_in_conflict'], True)
+
+    def test_get_with_inscope_diagnosis_different_version(self):
+        """
+        Tests that 'version_in_conflict' is False for inscope
+        old diagnosis
+        """
+        traversal = DiagnosisTraversal.objects.create(
+            current_node_id='INSCOPE',
+            graph_version='old_v1',
+            nodes=[
+                self.mocked_graph.get_node_dict('2a'),
+                self.mocked_graph.get_node_dict('3ab'),
+                self.mocked_graph.get_node_dict('INSCOPE'),
+            ],
+            state=DIAGNOSIS_SCOPE.INSCOPE
+        )
+        serializer = DiagnosisSerializer(instance=traversal)
+        data = serializer.data
+        self.assertItemsEqual(data['nodes'], [
+            self.mocked_graph.get_node_dict('2a'),
+            self.mocked_graph.get_node_dict('3ab'),
+            self.mocked_graph.get_node_dict('INSCOPE'),
+        ])
+        self.assertItemsEqual(data['choices'], [])
+        self.assertEqual(data['version_in_conflict'], False)
 
     def test_get_with_new_diagnosis(self):
         """
         Tests that the get request from the serializer returns
         expected values when new diagnosis
         """
-        traversal = DiagnosisTraversal.objects.create()
+        traversal = DiagnosisTraversal.objects.create(
+            graph_version='v1'
+        )
 
         serializer = DiagnosisSerializer(instance=traversal)
         data = serializer.data
@@ -69,6 +121,7 @@ class DiagnosisSerializerTestCase(TestCase):
         self.assertEqual(data['current_node_id'], '')
         self.assertEqual(data['state'], DIAGNOSIS_SCOPE.UNKNOWN)
         self.assertEqual(data['category'], None)
+        self.assertEqual(data['version_in_conflict'], False)
 
     # MOVE DOWN (update)
 
@@ -77,6 +130,7 @@ class DiagnosisSerializerTestCase(TestCase):
         Tests that moving down updates the traversal object
         """
         traversal = DiagnosisTraversal.objects.create(
+            graph_version='v1',
             current_node_id='2a',
             nodes=[
                 self.mocked_graph.get_node_dict('2a')
@@ -100,6 +154,7 @@ class DiagnosisSerializerTestCase(TestCase):
 
     def test_move_down_processes_end_node_directly(self):
         traversal = DiagnosisTraversal.objects.create(
+            graph_version='v1',
             current_node_id='2a',
             nodes=[
                 self.mocked_graph.get_node_dict('2a')
@@ -128,6 +183,7 @@ class DiagnosisSerializerTestCase(TestCase):
 
     def test_move_up_updates_traversal(self):
         traversal = DiagnosisTraversal.objects.create(
+            graph_version='v1',
             current_node_id='3aa',
             nodes=[
                 self.mocked_graph.get_node_dict('2a'),
@@ -145,13 +201,16 @@ class DiagnosisSerializerTestCase(TestCase):
         ])
 
     def test_move_up_fails_if_current_node_is_root(self):
-        traversal = DiagnosisTraversal.objects.create()
+        traversal = DiagnosisTraversal.objects.create(
+            graph_version='v1'
+        )
         serializer = DiagnosisSerializer(instance=traversal)
 
         self.assertRaises(ParseError, serializer.move_up)
 
     def test_move_up_skips_end_node(self):
         traversal = DiagnosisTraversal.objects.create(
+            graph_version='v1',
             current_node_id='INSCOPE',
             nodes=[
                 self.mocked_graph.get_node_dict('2a'),

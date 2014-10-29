@@ -24,3 +24,12 @@ class DiagnosisEventTestCase(EventTestCaseMixin, TestCase):
             },
             expected_type=LOG_TYPES.SYSTEM
         )
+
+    def test_incomplete_diagnosis_deleted(self):
+        self._test_process_with_implicit_code(
+            'INCOMPLETE_DIAGNOSIS_DELETED',
+            process_kwargs={
+                'status': 'incomplete_deleted'
+            },
+            expected_type=LOG_TYPES.SYSTEM
+        )

@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        db.execute("""
-        UPDATE
-          cla_eventlog_log
-            set context =
-                ('{"provider": "'||trim(TRAILING '.' FROM trim(LEADING 'Assigned to ' FROM trim(notes)))||'"}')::json
-        WHERE code in ('REFSP', 'SPOR', 'MANALC') and context is NULL;
-        """)
+        # Adding field 'Case.source'
+        db.add_column(u'legalaid_case', 'source',
+                      self.gf('django.db.models.fields.CharField')(default='PHONE', max_length=20),
+                      keep_default=False)
+
 
     def backwards(self, orm):
-        "Write your backwards methods here."
-        pass
+        # Deleting field 'Case.source'
+        db.delete_column(u'legalaid_case', 'source')
+
 
     models = {
         u'auth.group': {
@@ -48,21 +48,6 @@ class Migration(DataMigration):
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        u'cla_eventlog.log': {
-            'Meta': {'ordering': "['-created']", 'object_name': 'Log'},
-            'case': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Case']"}),
-            'code': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'context': ('jsonfield.fields.JSONField', [], {'null': 'True', 'blank': 'True'}),
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'level': ('django.db.models.fields.PositiveSmallIntegerField', [], {}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'patch': ('jsonfield.fields.JSONField', [], {'null': 'True', 'blank': 'True'}),
-            'timer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['timer.Timer']", 'null': 'True', 'blank': 'True'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
         u'cla_provider.provider': {
             'Meta': {'object_name': 'Provider'},
@@ -161,6 +146,7 @@ class Migration(DataMigration):
             'adaptation_details': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.AdaptationDetails']", 'null': 'True', 'blank': 'True'}),
             'alternative_help_articles': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['knowledgebase.Article']", 'null': 'True', 'through': u"orm['legalaid.CaseKnowledgebaseAssignment']", 'blank': 'True'}),
             'billable_time': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'callback_attempt': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'}),
             'diagnosis': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['diagnosis.DiagnosisTraversal']", 'unique': 'True', 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
@@ -186,7 +172,9 @@ class Migration(DataMigration):
             'provider_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'provider_viewed': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'reference': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '128'}),
+            'requires_action_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'requires_action_by': ('django.db.models.fields.CharField', [], {'default': "'operator'", 'max_length': '50', 'null': 'True', 'blank': 'True'}),
+            'source': ('django.db.models.fields.CharField', [], {'default': "'PHONE'", 'max_length': '20'}),
             'thirdparty_details': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.ThirdPartyDetails']", 'null': 'True', 'blank': 'True'})
         },
         u'legalaid.caseknowledgebaseassignment': {
@@ -197,6 +185,16 @@ class Migration(DataMigration):
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'})
+        },
+        u'legalaid.casenoteshistory': {
+            'Meta': {'object_name': 'CaseNotesHistory'},
+            'case': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Case']"}),
+            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
+            'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
+            'operator_notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'provider_notes': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'})
         },
         u'legalaid.category': {
             'Meta': {'ordering': "['order']", 'object_name': 'Category'},
@@ -337,9 +335,22 @@ class Migration(DataMigration):
             'postcode': ('django.db.models.fields.CharField', [], {'max_length': '12', 'null': 'True', 'blank': 'True'}),
             'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'}),
             'safe_to_contact': ('django.db.models.fields.CharField', [], {'default': "'SAFE'", 'max_length': '30', 'null': 'True', 'blank': 'True'}),
+            'safe_to_email': ('django.db.models.fields.CharField', [], {'default': "'SAFE'", 'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'street': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
             'vulnerable_user': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'})
+        },
+        u'legalaid.property': {
+            'Meta': {'object_name': 'Property'},
+            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
+            'disputed': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
+            'eligibility_check': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.EligibilityCheck']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'main': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
+            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
+            'mortgage_left': ('legalaid.fields.MoneyField', [], {'default': 'None', 'max_value': '9999999999', 'min_value': '0', 'null': 'True', 'blank': 'True'}),
+            'share': ('django.db.models.fields.PositiveIntegerField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
+            'value': ('legalaid.fields.MoneyField', [], {'default': 'None', 'max_value': '9999999999', 'min_value': '0', 'null': 'True', 'blank': 'True'})
         },
         u'legalaid.savings': {
             'Meta': {'object_name': 'Savings'},
@@ -365,18 +376,7 @@ class Migration(DataMigration):
             'reason': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '30', 'null': 'True', 'blank': 'True'}),
             'reference': ('uuidfield.fields.UUIDField', [], {'unique': 'True', 'max_length': '32', 'blank': 'True'}),
             'spoke_to': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'})
-        },
-        u'timer.timer': {
-            'Meta': {'object_name': 'Timer'},
-            'cancelled': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'created_by': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'linked_case': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Case']", 'null': 'True', 'blank': 'True'}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'stopped': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
         }
     }
 
-    complete_apps = ['cla_eventlog']
-    symmetrical = True
+    complete_apps = ['legalaid']

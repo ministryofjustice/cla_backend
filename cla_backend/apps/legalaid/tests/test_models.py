@@ -12,7 +12,8 @@ from eligibility_calculator.exceptions import PropertyExpectedException
 
 from cla_common.constants import ELIGIBILITY_STATES, CONTACT_SAFETY, \
     THIRDPARTY_REASON, THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, \
-    REQUIRES_ACTION_BY, DIAGNOSIS_SCOPE, EXEMPT_USER_REASON, ECF_STATEMENT
+    REQUIRES_ACTION_BY, DIAGNOSIS_SCOPE, EXEMPT_USER_REASON, ECF_STATEMENT, \
+    CASE_SOURCE
 from cla_common.money_interval.models import MoneyInterval
 
 from core.tests.mommy_utils import make_recipe, make_user
@@ -80,7 +81,8 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         level=40,
         exempt_user=True,
         exempt_user_reason=EXEMPT_USER_REASON.ECHI,
-        ecf_statement=ECF_STATEMENT.READ_OUT_MESSAGE
+        ecf_statement=ECF_STATEMENT.READ_OUT_MESSAGE,
+        source=CASE_SOURCE.WEB
     )
     CaseKnowledgebaseAssignment.objects.create(
         case=case, assigned_by=make_user(),
@@ -1174,7 +1176,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
-            'provider_viewed'
+            'provider_viewed', 'source'
         ]
 
         if internal:
@@ -1215,6 +1217,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'notes': case.notes,
             'provider_notes': case.provider_notes,
             'media_code': case.media_code,
+            'source': case.source,
             'exempt_user': case.exempt_user,
             'exempt_user_reason': case.exempt_user_reason,
             'ecf_statement': case.ecf_statement,

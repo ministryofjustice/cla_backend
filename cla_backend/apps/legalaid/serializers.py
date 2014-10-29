@@ -231,7 +231,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     matter_type1 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE))
     matter_type2 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO))
     media_code = serializers.SlugRelatedField(slug_field='code', required=False)
-    outcome_code = serializers.CharField(max_length=20, required=False)
+    outcome_code = serializers.CharField(max_length=50, required=False)
 
     def _get_fields_for_partial_update(self):
         fields = super(CaseSerializerBase, self)._get_fields_for_partial_update()

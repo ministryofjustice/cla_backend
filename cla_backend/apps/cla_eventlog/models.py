@@ -13,7 +13,7 @@ from .constants import LOG_LEVELS, LOG_TYPES
 class Log(TimeStampedModel):
     case = models.ForeignKey('legalaid.Case')
     timer = models.ForeignKey(Timer, null=True, blank=True)
-    code = models.CharField(max_length=20)
+    code = models.CharField(max_length=50)
     type = models.CharField(choices=LOG_TYPES.CHOICES, max_length=20)
     level = models.PositiveSmallIntegerField(choices=LOG_LEVELS.CHOICES)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL)

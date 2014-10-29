@@ -10,6 +10,7 @@ from cla_eventlog import event_registry
 
 from legalaid.models import EligibilityCheck, Property, Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet
+from cla_common.constants import CASE_SOURCE
 
 from .serializers import EligibilityCheckSerializer, \
     PropertySerializer, CaseSerializer
@@ -95,6 +96,7 @@ class CaseViewSet(
 
         if not obj.created_by:
             obj.created_by = get_web_user()
+        obj.source = CASE_SOURCE.WEB
 
     def post_save(self, obj, created=False):
         super(CaseViewSet, self).post_save(obj, created=created)

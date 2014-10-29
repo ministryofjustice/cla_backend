@@ -14,7 +14,7 @@ from legalaid.serializers import \
     DeductionsSerializerBase, PersonalDetailsSerializerFull, \
     ThirdPartyPersonalDetailsSerializerBase, \
     ThirdPartyDetailsSerializerBase, PersonSerializerBase, \
-    FeedbackSerializerBase
+    FeedbackSerializerBase, CaseNotesHistorySerializerBase
 
 from .models import Staff
 
@@ -245,3 +245,9 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'issue',
         )
 
+
+class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):
+    class Meta(CaseNotesHistorySerializerBase.Meta):
+        fields = (
+            'created_by', 'created', 'operator_notes', 'provider_notes'
+        )

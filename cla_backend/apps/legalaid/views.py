@@ -19,7 +19,8 @@ from rest_framework_extensions.mixins import DetailSerializerMixin
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
-    AdaptationDetailsSerializerBase, CaseSerializerBase, FeedbackSerializerBase
+    AdaptationDetailsSerializerBase, CaseSerializerBase, \
+    FeedbackSerializerBase, CaseNotesHistorySerializerBase
 from .models import Case, Category, EligibilityCheck, \
     MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
     AdaptationDetails, CaseNotesHistory
@@ -388,3 +389,29 @@ class BaseFeedbackViewSet(
     serializer_class = FeedbackSerializerBase
     PARENT_FIELD = 'provider_feedback'
     lookup_field = 'reference'
+
+
+class BaseCaseNotesHistoryViewSet(
+    NestedGenericModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    PARENT_FIELD = 'casenoteshistory_set'
+    lookup_field = 'reference'
+    serializer_class = CaseNotesHistorySerializerBase
+    model = CaseNotesHistory
+
+    pagination_serializer_class = RelativeUrlPaginationSerializer
+    paginate_by = 5
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
+    def get_queryset(self, **kwargs):
+        qs = super(BaseCaseNotesHistoryViewSet, self).get_queryset(**kwargs)
+        type_param = self.request.QUERY_PARAMS.get('type', None)
+
+        if type_param == 'operator':
+            qs = qs.filter(provider_notes__isnull=True)
+        elif type_param == 'cla_provider':
+            qs = qs.filter(operator_notes__isnull=True)
+        return qs

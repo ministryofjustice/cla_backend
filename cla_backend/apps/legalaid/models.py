@@ -713,6 +713,10 @@ class CaseNotesHistory(TimeStampedModel):
     provider_notes = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
 
+    class Meta:
+        ordering = ['-created']
+
+
 class CaseKnowledgebaseAssignment(TimeStampedModel):
     case = models.ForeignKey(Case)
     alternative_help_article = models.ForeignKey('knowledgebase.Article')

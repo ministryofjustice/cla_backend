@@ -6,7 +6,8 @@ from diagnosis.tests.mommy_recipes import diagnosis_yes
 
 from ..models import Category, EligibilityCheck, Property, Savings, \
     Case, PersonalDetails, Income, Deductions, Person,\
-    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, MediaCodeGroup
+    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, \
+    MediaCodeGroup, CaseNotesHistory
 
 
 category = Recipe(Category,
@@ -94,3 +95,5 @@ eligible_case = Recipe(Case,
     personal_details=foreign_key(personal_details),
     media_code=foreign_key(media_code)
 )
+
+notes_history = Recipe(CaseNotesHistory)

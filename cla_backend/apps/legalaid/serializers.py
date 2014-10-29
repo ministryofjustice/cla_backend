@@ -1,4 +1,6 @@
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
+
 from historic.models import CaseArchived
 from rest_framework import serializers
 
@@ -13,8 +15,9 @@ from cla_provider.models import Provider, OutOfHoursRota, Feedback
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
-    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode
-from django.contrib.auth.models import User
+    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, \
+    CaseNotesHistory
+
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -323,4 +326,15 @@ class CaseArchivedSerializerBase(serializers.ModelSerializer):
 
     class Meta:
         model = CaseArchived
+        fields = ()
+
+
+class CaseNotesHistorySerializerBase(ClaModelSerializer):
+    created_by = serializers.CharField(read_only=True, source='created_by.username')
+    created = serializers.DateTimeField(read_only=True)
+    operator_notes = serializers.CharField(read_only=True)
+    provider_notes = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = CaseNotesHistory
         fields = ()

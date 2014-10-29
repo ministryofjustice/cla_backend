@@ -2,6 +2,7 @@ import json
 
 from django.conf import settings
 from django.db import connection
+from django.utils import timezone
 
 from legalaid.models import PersonalDetails
 
@@ -22,11 +23,12 @@ def save_diversity_data(personal_details_pk, data):
     json_data = json.dumps(data)
 
     cursor = connection.cursor()
-    sql = "UPDATE {table_name} SET diversity = pgp_pub_encrypt(%s, dearmor(%s)) WHERE id = %s".format(
+    sql = "UPDATE {table_name} SET diversity = pgp_pub_encrypt(%s, dearmor(%s)), diversity_modified = %s WHERE id = %s".format(
         table_name=PersonalDetails._meta.db_table
     )
     cursor.execute(sql, [
-        json_data, get_public_key(), personal_details_pk
+        json_data, get_public_key(),
+        timezone.now(), personal_details_pk
     ])
 
 

@@ -74,6 +74,7 @@ class PersonalDetailsTestCase(
     def test_set_diversity_successful(self):
         # 1. NON-EXISTING DIVERSITY
         self.assertEqual(self.resource.diversity, None)
+        self.assertEqual(self.resource.diversity_modified, None)
 
         post_data = self._diversity_post_data()
         response = self.client.post(
@@ -90,6 +91,9 @@ class PersonalDetailsTestCase(
         diversity_data = diversity.load_diversity_data(self.resource.pk, 'cla')
         self.assertDictEqual(diversity_data, post_data)
 
+        first_diversity_modified = self.resource.diversity_modified
+        self.assertNotEqual(first_diversity_modified, None)
+
 
         # 2. SECOND TIME => VALUES OVERRIDDEN
         new_post_data = post_data.copy()
@@ -105,6 +109,10 @@ class PersonalDetailsTestCase(
 
         self.resource = self.resource.__class__.objects.get(pk=self.resource.pk)
         self.assertNotEqual(self.resource.diversity, None)
+
+        second_diversity_modified = self.resource.diversity_modified
+        self.assertNotEqual(second_diversity_modified, None)
+        self.assertNotEqual(first_diversity_modified, second_diversity_modified)
 
         # decrypting the diversity field to check that everything is OK
         diversity_data = diversity.load_diversity_data(self.resource.pk, 'cla')

@@ -7,7 +7,7 @@ from core.tests.test_base import \
 
 class CaseNotesHistoryAPIMixin(NestedSimpleResourceAPIMixin):
     LOOKUP_KEY = 'reference'
-    API_URL_BASE_NAME = 'notes_history'
+    API_URL_BASE_NAME = 'casenoteshistory'
     RESOURCE_RECIPE = 'legalaid.notes_history'
     LOOKUP_KEY = 'case_reference'
     PARENT_LOOKUP_KEY = 'reference'
@@ -23,11 +23,17 @@ class CaseNotesHistoryAPIMixin(NestedSimpleResourceAPIMixin):
             provider_notes=None,
             _quantity=4
         )
-        self.minor_logs = make_recipe(
+        self.provider_notes = make_recipe(
             self.RESOURCE_RECIPE, case=self.parent_resource,
             provider_notes='Provider notes',
             operator_notes=None,
             _quantity=4
+        )
+
+        # creating extra notes on different case
+        extra_case = make_recipe('legalaid.case')
+        make_recipe(
+            self.RESOURCE_RECIPE, case=extra_case, _quantity=4
         )
 
     def make_resource(self, **kwargs):
@@ -49,8 +55,28 @@ class CaseNotesHistoryAPIMixin(NestedSimpleResourceAPIMixin):
             self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        import pdb; pdb.set_trace()
-        # self.assertItemsEqual(
-        #     [log.code for log in self.high_logs],
-        #     [log['code'] for log in response.data]
-        # )
+        self.assertEqual(response.data['count'], 8)
+
+    def test_get_with_operator_type(self):
+        url = "%s?type=operator" % self.list_url
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 4)
+
+        for obj in response.data['results']:
+            self.assertEqual(obj['provider_notes'], None)
+            self.assertEqual(obj['operator_notes'], 'Operator notes')
+
+    def test_get_with_cla_provider_type(self):
+        url = "%s?type=cla_provider" % self.list_url
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 4)
+
+        for obj in response.data['results']:
+            self.assertEqual(obj['operator_notes'], None)
+            self.assertEqual(obj['provider_notes'], 'Provider notes')

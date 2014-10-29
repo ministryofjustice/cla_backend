@@ -1,18 +1,21 @@
 import datetime
 
 from django import forms
+from django.conf import settings
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 from django.utils import timezone
 
+from cla_common.call_centre_availability import OpeningHours
 from cla_eventlog import event_registry
-
-from legalaid.utils.dates import is_out_of_hours_for_operators
 
 from cla_provider.models import Provider
 from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
 from knowledgebase.models import Article
+
+
+OPERATOR_HOURS = OpeningHours(**settings.OPERATOR_HOURS)
 
 
 class ProviderAllocationForm(BaseCaseLogForm):
@@ -164,7 +167,7 @@ class CallMeBackForm(BaseCaseLogForm):
         return dt <= timezone.now() + datetime.timedelta(minutes=30)
 
     def _is_dt_out_of_hours(self, dt):
-        return is_out_of_hours_for_operators(timezone.localtime(dt))
+        return timezone.localtime(dt) not in OPERATOR_HOURS
 
     def clean_datetime(self):
         dt = self.cleaned_data['datetime']

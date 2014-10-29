@@ -1,3 +1,4 @@
+import datetime
 import sys
 import os
 from os.path import join, abspath, dirname
@@ -316,3 +317,13 @@ if all([os.environ.get('SMTP_USER'),
     EMAIL_USE_TLS = True
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+PROVIDER_HOURS = {
+    weekday: (datetime.time(9, 0), datetime.time(17, 0)),
+    saturday: (datetime.time(9, 0), datetime.time(12, 30))
+}
+
+OPERATOR_HOURS = {
+    weekday: (datetime.time(9, 0), datetime.time(20, 0)),
+    saturday: (datetime.time(9, 0), datetime.time(12, 30))
+}

@@ -324,6 +324,9 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
 
 
 class CaseArchivedSerializerBase(serializers.ModelSerializer):
+    date_of_birth = ThreePartDateField(required=False)
+    date_specialist_referred = ThreePartDateField(required=False)
+    date_specialist_closed = ThreePartDateField(required=False)
 
     class Meta:
         model = CaseArchived

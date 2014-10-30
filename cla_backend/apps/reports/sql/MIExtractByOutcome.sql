@@ -1,4 +1,7 @@
-WITH latest_outcome as (
+WITH diversity_view as (
+  select id, {diversity_expression} as diversity
+  from legalaid_personaldetails
+), latest_outcome as (
     select
       e.*
       FROM legalaid_case c
@@ -93,8 +96,8 @@ select
   ,COALESCE(adapt.callback_preference, false)::bool as "Adjustments_CallbackPreferred"
   ,COALESCE(adapt.skype_webcam, false)::bool as "Adjustments_Skype"
   -- diversity fields --
-  ,null as "Gender"
-  ,null as "Ethnicity"
+  ,trim((diversity_view.diversity->'gender')::text, '"') as "Gender"
+  ,trim((diversity_view.diversity->'ethnicity')::text, '"') as "Ethnicity"
   ,CASE
       WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 20 THEN 'A'
       WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 30 THEN 'B'
@@ -105,9 +108,9 @@ select
       WHEN pd.date_of_birth IS NULL THEN 'U'
       ELSE 'G'
       END as "Age(Range)"
-  ,null as "Religion"
-  ,null as "Sexual_Orientation"
-  ,null as "Disability"
+  ,trim((diversity_view.diversity->'religion')::text, '"') as "Religion"
+  ,trim((diversity_view.diversity->'sexual_orientation')::text, '"') as "Sexual_Orientation"
+  ,trim((diversity_view.diversity->'disability')::text, '"') as "Disability"
   -- / diversity fields --
   ,CASE
     when EXTRACT(DOW from c.created at time zone 'Europe/London') = 5 and EXTRACT(HOUR from c.created at time zone 'Europe/London') >= 20 then 'WKEND' -- after 20:00 on friday
@@ -164,6 +167,7 @@ from cla_eventlog_log as log
   LEFT OUTER JOIN provider_first_view on provider_first_view.case_id = c.id
   LEFT OUTER JOIN provider_first_assign on provider_first_assign.case_id = c.id
   LEFT OUTER JOIN legalaid_case split_case on c.from_case_id = split_case.id
+  LEFT OUTER JOIN diversity_view on pd.id = diversity_view.id
 where
   log.type = 'outcome'
   and log.created >= %s

@@ -40,9 +40,26 @@ then enter:
 ::
 
     CREATE DATABASE cla_backend WITH ENCODING 'UTF-8';
+    \c cla_backend
+    create extension pgcrypto;
 
-For OSX update the ``PATH`` and ``DYLD_LIBRARY_PATH`` environment
-variables:
+You should see a message saying ``CREATE EXTENSION``. If you get an error instead, if means that
+you don't have the related lib installed. This is a rare case as ``postgresql-contrib``
+gets installed automatically by homebrew and postgresapp.
+In linux, you can install it using ``sudo apt-get install postgresql-contrib``
+
+Now make postgres create the extension automatically when new databases are created,
+this is useful otherwise the test command will error.
+
+Open a terminal and type:
+
+::
+
+    psql -d template1 -c 'create extension pgcrypto;'
+
+
+For OSX, update the ``PATH`` and ``DYLD_LIBRARY_PATH`` environment
+variables if necessary:
 
 ::
 
@@ -101,4 +118,6 @@ postgres as necessary):
 
     export PATH="/Applications/Postgres.app/Contents/MacOS/bin/:$PATH"
     export DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/MacOS/lib/
+
+
 

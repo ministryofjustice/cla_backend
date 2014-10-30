@@ -1,7 +1,10 @@
 import jsonpatch
 
 from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework.exceptions import MethodNotAllowed
+from rest_framework.response import Response as DRFResponse
+from rest_framework import status
 
 
 class NoParentReferenceException(BaseException):
@@ -99,3 +102,28 @@ class JsonPatchViewSetMixin(object):
         self.__post_save__ = self.get_serializer_class()(obj).data
 
         return obj
+
+
+class FormActionMixin(object):
+    FORM_ACTION_OBJ_PARAM = 'obj'
+
+    def _form_action(self, request, Form, no_body=True, form_kwargs={}):
+        obj = self.get_object()
+
+        _form_kwargs = form_kwargs.copy()
+        _form_kwargs['data'] = request.DATA
+        _form_kwargs[self.FORM_ACTION_OBJ_PARAM] = obj
+
+        form = Form(**_form_kwargs)
+        if form.is_valid():
+            form.save(request.user)
+
+            if no_body:
+                return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+            else:
+                serializer = self.get_serializer(obj)
+                return DRFResponse(serializer.data, status=status.HTTP_200_OK)
+
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )

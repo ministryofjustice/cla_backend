@@ -12,7 +12,8 @@ from rest_framework.filters import OrderingFilter, SearchFilter, \
     DjangoFilterBackend
 
 from core.utils import format_patch
-from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin
+from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin, \
+    FormActionMixin
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from cla_eventlog import event_registry
 from rest_framework_extensions.mixins import DetailSerializerMixin
@@ -25,22 +26,11 @@ from .models import Case, Category, EligibilityCheck, \
     AdaptationDetails, CaseNotesHistory
 
 
-class FormActionMixin(object):
-    def _form_action(self, request, Form, no_body=True, form_kwargs={}):
-        obj = self.get_object()
-        form = Form(case=obj, data=request.DATA, **form_kwargs)
-        if form.is_valid():
-            form.save(request.user)
-
-            if no_body:
-                return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-            else:
-                serializer = self.get_serializer(obj)
-                return DRFResponse(serializer.data, status=status.HTTP_200_OK)
-
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
+class CaseFormActionMixin(FormActionMixin):
+    """
+    This is for backward compatibility
+    """
+    FORM_ACTION_OBJ_PARAM = 'case'
 
 
 class PasswordResetForm(forms.Form):
@@ -75,7 +65,7 @@ class BaseUserViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
-    FormActionMixin,
+    CaseFormActionMixin,
     viewsets.GenericViewSet
 ):
     permission_classes = (IsManagerOrMePermission,)
@@ -282,7 +272,7 @@ class FullCaseViewSet(
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
-    FormActionMixin,
+    CaseFormActionMixin,
     viewsets.GenericViewSet
 ):
     model = Case

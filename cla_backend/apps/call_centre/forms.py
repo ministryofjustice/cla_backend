@@ -6,9 +6,13 @@ from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 from django.utils import timezone
 
+from cla_common.constants import GENDERS, ETHNICITIES, RELIGIONS,\
+    SEXUAL_ORIENTATIONS, DISABILITIES
+
 from cla_eventlog import event_registry
 
 from legalaid.utils.dates import is_out_of_hours_for_operators
+from legalaid.utils import diversity
 
 from cla_provider.models import Provider
 from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
@@ -246,3 +250,30 @@ class StopCallMeBackForm(BaseCaseLogForm):
     def save(self, user):
         super(StopCallMeBackForm, self).save(user)
         self.case.reset_requires_action_at()
+
+
+class DiversityForm(forms.Form):
+    gender = forms.ChoiceField(
+        required=True, choices=GENDERS.CHOICES
+    )
+    ethnicity = forms.ChoiceField(
+        required=True, choices=ETHNICITIES.CHOICES
+    )
+    religion = forms.ChoiceField(
+        required=True, choices=RELIGIONS.CHOICES
+    )
+    sexual_orientation = forms.ChoiceField(
+        required=True, choices=SEXUAL_ORIENTATIONS.CHOICES
+    )
+    disability = forms.ChoiceField(
+        required=True, choices=DISABILITIES.CHOICES
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.personal_details = kwargs.pop('obj')
+        super(DiversityForm, self).__init__(*args, **kwargs)
+
+    def save(self, user):
+        diversity.save_diversity_data(
+            self.personal_details.pk, self.cleaned_data
+        )

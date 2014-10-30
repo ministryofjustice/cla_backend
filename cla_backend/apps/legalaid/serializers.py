@@ -124,6 +124,10 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
 
 class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
     dob = ThreePartDateField(required=False, source='date_of_birth')
+    has_diversity = serializers.SerializerMethodField('diversity_bool')
+
+    def diversity_bool(self, obj):
+        return bool(obj.diversity)
 
     class Meta(PersonalDetailsSerializerBase.Meta):
         fields = ()

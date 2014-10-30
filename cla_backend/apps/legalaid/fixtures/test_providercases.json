@@ -1,7 +1,7 @@
 [{
     "model": "legalaid.case",
     "fields": {
-        "reference": "CH-6931-3360",
+        "reference": "TP-9999-0001",
         "outcome_code": "MANALC",
         "provider_viewed": null,
         "locked_at": null,
@@ -30,7 +30,7 @@
 }, {
     "model": "legalaid.case",
     "fields": {
-        "reference": "E0-5581-4249",
+        "reference": "TP-9999-0002",
         "outcome_code": "SPOP",
         "provider_viewed": "2014-10-30T15:20:20.678Z",
         "locked_at": null,
@@ -59,7 +59,7 @@
 }, {
     "model": "legalaid.case",
     "fields": {
-        "reference": "BP-5097-9090",
+        "reference": "TP-9999-0003",
         "outcome_code": "MANALC",
         "provider_viewed": "2014-10-30T15:20:14.738Z",
         "locked_at": null,

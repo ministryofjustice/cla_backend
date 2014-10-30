@@ -38,6 +38,7 @@ case_one2one_router.register(r'diagnosis', views.DiagnosisViewSet, base_name='di
 
 case_one2many_router = NestedSimpleRouter(router, r'case', lookup='case')
 case_one2many_router.register(r'logs', views.LogViewSet)
+case_one2many_router.register(r'notes_history', views.CaseNotesHistoryViewSet)
 
 urlpatterns = patterns('',
     url(r'^', include(case_one2one_router.urls)),

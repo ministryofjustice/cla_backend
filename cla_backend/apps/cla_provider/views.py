@@ -11,7 +11,6 @@ from legalaid.permissions import IsManagerOrMePermission
 from rest_framework import mixins
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
-from rest_framework import status
 
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 
@@ -20,7 +19,8 @@ from legalaid.views import BaseUserViewSet, \
     BaseNestedEligibilityCheckViewSet, BaseCategoryViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, BaseFeedbackViewSet
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
+    BaseFeedbackViewSet, BaseCaseNotesHistoryViewSet
 
 from diagnosis.views import BaseDiagnosisViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
@@ -33,7 +33,7 @@ from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
     PersonalDetailsSerializer, ThirdPartyDetailsSerializer, \
     LogSerializer, FeedbackSerializer, ExtendedEligibilityCheckSerializer, \
-    CaseListSerializer
+    CaseListSerializer, CaseNotesHistorySerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm
 
 logger = logging.getLogger(__name__)
@@ -256,3 +256,9 @@ class FeedbackViewSet(CLAProviderPermissionViewSetMixin,
             obj.case = self.get_parent_object()
             obj.created_by = Staff.objects.get(user=self.request.user)
         super(FeedbackViewSet, self).pre_save(obj)
+
+
+class CaseNotesHistoryViewSet(
+    CLAProviderPermissionViewSetMixin, BaseCaseNotesHistoryViewSet
+):
+    serializer_class = CaseNotesHistorySerializer

@@ -29,7 +29,8 @@ from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
+    BaseCaseNotesHistoryViewSet
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -43,7 +44,8 @@ from .serializers import EligibilityCheckSerializer, \
     AdaptationDetailsSerializer, PersonalDetailsSerializer, \
     BarePersonalDetailsSerializer, \
     ThirdPartyDetailsSerializer, LogSerializer, FeedbackSerializer, \
-    CreateCaseSerializer, CaseListSerializer, CaseArchivedSerializer
+    CreateCaseSerializer, CaseListSerializer, CaseArchivedSerializer, \
+    CaseNotesHistorySerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm, \
@@ -480,3 +482,9 @@ class CaseArchivedViewSet(CallCentrePermissionsViewSetMixin,
     paginate_by_param = 'page_size'
     max_paginate_by = 100
     pagination_serializer_class = RelativeUrlPaginationSerializer
+
+
+class CaseNotesHistoryViewSet(
+    CallCentrePermissionsViewSetMixin, BaseCaseNotesHistoryViewSet
+):
+    serializer_class = CaseNotesHistorySerializer

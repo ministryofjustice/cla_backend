@@ -1,3 +1,4 @@
+from checker.helpers import notify_callback_created
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
@@ -107,3 +108,5 @@ class CaseViewSet(
                 obj, status='created', created_by=obj.created_by,
                 notes="Case created digitally"
             )
+            if obj.outcome_code == 'CB1':
+                notify_callback_created(obj)

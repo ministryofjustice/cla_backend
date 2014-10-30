@@ -136,3 +136,21 @@ class DiagnosisAPIMixin(NestedSimpleResourceAPIMixin):
         self.assertTrue(self.resource.is_state_inscope())
 
         self.assertLogEquals(Log.objects.all()[1], self.resource)
+
+    def test_get_doesnt_use_graph_with_state_inscope(self):
+        self.mocked_graph.successors = mock.MagicMock()
+        self.mocked_graph.successors.side_effect = Exception()
+
+        self.resource.current_node_id = 'INSCOPE'
+        self.resource.nodes = [
+            self.mocked_graph.get_node_dict('2a'),
+            self.mocked_graph.get_node_dict('3ab'),
+            self.mocked_graph.get_node_dict('INSCOPE')
+        ]
+        self.resource.state = DIAGNOSIS_SCOPE.INSCOPE
+        self.resource.save()
+
+        response = self.client.get(
+            self.detail_url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertTrue(response.status_code, status.HTTP_200_OK)

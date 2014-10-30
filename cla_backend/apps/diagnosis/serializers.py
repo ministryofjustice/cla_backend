@@ -59,7 +59,7 @@ class DiagnosisSerializer(ClaModelSerializer):
         if self.is_version_in_conflict(request):
             return []
 
-        if not self.object:
+        if not self.object or not self.object.is_state_unknown():
             return []
 
         current_node_id = self.object.current_node_id

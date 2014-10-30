@@ -119,3 +119,5 @@ postgres as necessary):
     export PATH="/Applications/Postgres.app/Contents/MacOS/bin/:$PATH"
     export DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/MacOS/lib/
 
+
+

@@ -457,8 +457,11 @@ class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
 
 class CaseArchivedViewSet(CallCentrePermissionsViewSetMixin,
                           mixins.ListModelMixin,
+                          mixins.RetrieveModelMixin,
                           viewsets.GenericViewSet):
 
+
+    lookup_field = 'laa_reference'
     model = CaseArchived
     serializer_class = CaseArchivedSerializer
 

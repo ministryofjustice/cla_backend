@@ -250,5 +250,6 @@ class FeedbackSerializer(FeedbackSerializerBase):
 class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):
     class Meta(CaseNotesHistorySerializerBase.Meta):
         fields = (
-            'created_by', 'created', 'operator_notes', 'provider_notes'
+            'created_by', 'created', 'operator_notes', 'provider_notes',
+            'type_notes'
         )

@@ -174,7 +174,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     partner = PersonSerializerBase(required=False)
     category = serializers.SlugRelatedField(slug_field='code', required=False)
     your_problem_notes = serializers.CharField(max_length=500, required=False)
-    notes = serializers.CharField(max_length=500, required=False)
+    notes = serializers.CharField(max_length=5000, required=False)
 
     class Meta:
         model = EligibilityCheck

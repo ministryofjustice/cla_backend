@@ -1,4 +1,7 @@
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
+
+from historic.models import CaseArchived
 from rest_framework import serializers
 
 from core.drf.fields import ThreePartDateField
@@ -12,8 +15,9 @@ from cla_provider.models import Provider, OutOfHoursRota, Feedback
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
-    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode
-from django.contrib.auth.models import User
+    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, \
+    CaseNotesHistory
+
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -123,6 +127,10 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
 
 class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
     dob = ThreePartDateField(required=False, source='date_of_birth')
+    has_diversity = serializers.SerializerMethodField('diversity_bool')
+
+    def diversity_bool(self, obj):
+        return bool(obj.diversity)
 
     class Meta(PersonalDetailsSerializerBase.Meta):
         fields = ()
@@ -173,7 +181,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     partner = PersonSerializerBase(required=False)
     category = serializers.SlugRelatedField(slug_field='code', required=False)
     your_problem_notes = serializers.CharField(max_length=500, required=False)
-    notes = serializers.CharField(max_length=500, required=False)
+    notes = serializers.CharField(max_length=5000, required=False)
 
     class Meta:
         model = EligibilityCheck
@@ -230,7 +238,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     matter_type1 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE))
     matter_type2 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO))
     media_code = serializers.SlugRelatedField(slug_field='code', required=False)
-    outcome_code = serializers.CharField(max_length=20, required=False)
+    outcome_code = serializers.CharField(max_length=50, required=False)
 
     def _get_fields_for_partial_update(self):
         fields = super(CaseSerializerBase, self)._get_fields_for_partial_update()
@@ -317,3 +325,29 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
     class Meta:
         fields = ()
 
+
+class CaseArchivedSerializerBase(serializers.ModelSerializer):
+    date_of_birth = ThreePartDateField(required=False)
+    date_specialist_referred = ThreePartDateField(required=False)
+    date_specialist_closed = ThreePartDateField(required=False)
+
+    class Meta:
+        model = CaseArchived
+        fields = ()
+
+
+class CaseNotesHistorySerializerBase(ClaModelSerializer):
+    created_by = serializers.CharField(read_only=True, source='created_by.username')
+    created = serializers.DateTimeField(read_only=True)
+    operator_notes = serializers.CharField(read_only=True)
+    provider_notes = serializers.CharField(read_only=True)
+    type_notes = serializers.SerializerMethodField('get_type_notes')
+
+    def get_type_notes(self, obj):
+        if obj.provider_notes != None:
+            return obj.provider_notes
+        return obj.operator_notes
+
+    class Meta:
+        model = CaseNotesHistory
+        fields = ()

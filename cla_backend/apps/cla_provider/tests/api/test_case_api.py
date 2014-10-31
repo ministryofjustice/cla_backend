@@ -11,8 +11,8 @@ from core.tests.mommy_utils import make_recipe
 
 from legalaid.models import Case, CaseNotesHistory
 from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
-from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin, \
-    BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase
+from legalaid.tests.views.mixins.case_api import BaseFullCaseAPIMixin, \
+    FullCaseAPIMixin, BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase
 
 from cla_eventlog.models import Log
 from cla_eventlog.tests.test_views import ExplicitEventCodeViewTestCaseMixin, \
@@ -23,7 +23,7 @@ from cla_provider.forms import RejectCaseForm
 
 
 class BaseCaseTestCase(
-    CLAProviderAuthBaseApiTestMixin, FullCaseAPIMixin, APITestCase
+    CLAProviderAuthBaseApiTestMixin, BaseFullCaseAPIMixin, APITestCase
 ):
 
     @property
@@ -37,7 +37,7 @@ class BaseCaseTestCase(
             'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
             'postcode', 'diagnosis_state', 'thirdparty_details',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
-            'date_of_birth', 'category'
+            'date_of_birth', 'category', 'source'
         ]
 
     def get_extra_search_make_recipe_kwargs(self):
@@ -59,7 +59,7 @@ class BaseCaseTestCase(
         )
 
 
-class CaseGeneralTestCase(BaseCaseTestCase):
+class CaseGeneralTestCase(BaseCaseTestCase, FullCaseAPIMixin):
     def test_methods_not_allowed(self):
         """
         Ensure that we can't POST, PUT or DELETE

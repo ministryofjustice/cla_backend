@@ -11,17 +11,18 @@ from core.tests.test_base import \
     SimpleResourceAPIMixin
 
 from legalaid.models import Case
+from cla_common.constants import CASE_SOURCE
 
 from cla_eventlog.models import Log
 
 
-class FullCaseAPIMixin(SimpleResourceAPIMixin):
+class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
     LOOKUP_KEY = 'reference'
     RESOURCE_RECIPE = 'legalaid.case'
     API_URL_BASE_NAME = 'case'
 
     def setUp(self):
-        super(FullCaseAPIMixin, self).setUp()
+        super(BaseFullCaseAPIMixin, self).setUp()
 
         self.list_dashboard_url = u'%s?dashboard=1' % reverse(
             '%s:case-list' % self.API_URL_NAMESPACE
@@ -97,7 +98,8 @@ class FullCaseAPIMixin(SimpleResourceAPIMixin):
 
         for field in [
             'notes', 'billable_time', 'laa_reference',
-            'provider_notes', 'requires_action_by', 'exempt_user', 'exempt_user_reason'
+            'provider_notes', 'requires_action_by', 'exempt_user', 'exempt_user_reason',
+            'source'
 
         ]:
             if not field in data:
@@ -118,6 +120,8 @@ class FullCaseAPIMixin(SimpleResourceAPIMixin):
     def assertNoLogInDB(self):
         self.assertEqual(Log.objects.count(), 0)
 
+
+class FullCaseAPIMixin(BaseFullCaseAPIMixin):
     def test_case_serializer_with_eligibility_check_reference(self):
         eligibility_check = make_recipe('legalaid.eligibility_check')
 
@@ -151,8 +155,14 @@ class FullCaseAPIMixin(SimpleResourceAPIMixin):
         self.assertTrue(serializer.is_valid())
         self.assertDictEqual(serializer.errors, {})
 
+    def test_case_serializer_with_source(self):
+        data = {u'source': CASE_SOURCE.VOICEMAIL}
+        serializer = self.get_case_serializer_clazz()(data=data)
+        self.assertTrue(serializer.is_valid())
+        self.assertDictEqual(serializer.errors, {})
 
-class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
+
+class BaseSearchCaseAPIMixin(BaseFullCaseAPIMixin):
     def test_search_find_one_result_by_name(self):
         """
         GET search by name should work
@@ -255,8 +265,7 @@ class BaseSearchCaseAPIMixin(FullCaseAPIMixin):
         self.assertEqual(0, len(response.data['results']))
 
 
-
-class BaseUpdateCaseTestCase(FullCaseAPIMixin):
+class BaseUpdateCaseTestCase(BaseFullCaseAPIMixin):
     def test_update_doesnt_set_readonly_values(self):
         _old_settings = settings.DEBUG
         try:
@@ -279,6 +288,7 @@ class BaseUpdateCaseTestCase(FullCaseAPIMixin):
                 media_code=None,
                 matter_type1=None,
                 matter_type2=None,
+                source=CASE_SOURCE.PHONE,
                 **self.get_extra_search_make_recipe_kwargs()
             )
 
@@ -302,6 +312,7 @@ class BaseUpdateCaseTestCase(FullCaseAPIMixin):
                 'matter_type2': matter_type2.code,
                 'media_code': media_code.code,
                 'laa_reference': 232323,
+                'source': CASE_SOURCE.VOICEMAIL,
                 'requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
             }
             response = self.client.patch(
@@ -326,6 +337,7 @@ class BaseUpdateCaseTestCase(FullCaseAPIMixin):
                     matter_type1=matter_type1,
                     matter_type2=matter_type2,
                     media_code=media_code,
+                    source=CASE_SOURCE.VOICEMAIL,
                     requires_action_by=case.requires_action_by
                 )
             )
@@ -361,7 +373,8 @@ class BaseUpdateCaseTestCase(FullCaseAPIMixin):
         data = {
             'matter_type1': matter_type1.code,
             'matter_type2': matter_type2.code,
-            'media_code': media_code.code
+            'media_code': media_code.code,
+            'source': CASE_SOURCE.VOICEMAIL
         }
         response = self.client.patch(
             self.detail_url, data=data,
@@ -374,6 +387,7 @@ class BaseUpdateCaseTestCase(FullCaseAPIMixin):
         case.matter_type1 = matter_type1
         case.matter_type2 = matter_type2
         case.media_code = media_code
+        case.source = CASE_SOURCE.VOICEMAIL
         self.assertCaseEqual(response.data, case)
 
         self.assertNoLogInDB()

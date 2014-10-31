@@ -34,6 +34,8 @@ from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
 
 from legalaid.fields import MoneyField
 
+from cla_common.constants import CASE_SOURCE
+
 
 logger = logging.getLogger(__name__)
 
@@ -123,6 +125,10 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     case_count = models.PositiveSmallIntegerField(default=0)
 
     reference = UUIDField(auto=True, unique=True)
+    diversity = models.BinaryField(blank=True, null=True, editable=False)
+    diversity_modified = models.DateTimeField(
+        auto_now=False, blank=True, null=True, editable=False
+    )
 
     cloning_config = {
         'excludes': ['reference', 'created', 'modified', 'case_count']
@@ -523,7 +529,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
                                                        through='CaseKnowledgebaseAssignment',
                                                        null=True, blank=True)
 
-    outcome_code = models.CharField(max_length=20, blank=True, null=True)
+    outcome_code = models.CharField(max_length=50, blank=True, null=True)
     outcome_code_id = models.IntegerField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(null=True)
 
@@ -539,6 +545,9 @@ class Case(TimeStampedModel, ModelDiffMixin):
     from_case = models.ForeignKey('self', blank=True, null=True, related_name='split_cases')
 
     provider_viewed = models.DateTimeField(blank=True, null=True)
+    source = models.CharField(
+        max_length=20, choices=CASE_SOURCE, default=CASE_SOURCE.PHONE
+    )
 
     def _set_reference_if_necessary(self):
         if not self.reference:
@@ -707,6 +716,10 @@ class CaseNotesHistory(TimeStampedModel):
     operator_notes = models.TextField(null=True, blank=True)
     provider_notes = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    class Meta:
+        ordering = ['-created']
+
 
 class CaseKnowledgebaseAssignment(TimeStampedModel):
     case = models.ForeignKey(Case)

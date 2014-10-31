@@ -1,3 +1,4 @@
+from checker.helpers import notify_callback_created
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
@@ -10,9 +11,11 @@ from cla_eventlog import event_registry
 
 from legalaid.models import EligibilityCheck, Property, Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet
+from cla_common.constants import CASE_SOURCE
 
 from .serializers import EligibilityCheckSerializer, \
     PropertySerializer, CaseSerializer
+from .forms import WebCallMeBackForm
 
 
 class PublicAPIViewSetMixin(object):
@@ -95,6 +98,7 @@ class CaseViewSet(
 
         if not obj.created_by:
             obj.created_by = get_web_user()
+        obj.source = CASE_SOURCE.WEB
 
     def post_save(self, obj, created=False):
         super(CaseViewSet, self).post_save(obj, created=created)
@@ -105,3 +109,13 @@ class CaseViewSet(
                 obj, status='created', created_by=obj.created_by,
                 notes="Case created digitally"
             )
+
+            if obj.requires_action_at:
+                form = WebCallMeBackForm(
+                    case=obj, data={},
+                    requires_action_at=obj.requires_action_at
+                )
+
+                if form.is_valid():
+                    form.save(obj.created_by)
+                    notify_callback_created(obj)

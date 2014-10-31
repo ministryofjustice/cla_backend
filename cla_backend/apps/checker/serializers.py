@@ -129,5 +129,5 @@ class CaseSerializer(CaseSerializerBase):
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference',
-            'requires_action_at', 'outcome_code', 'adaptation_details',
+            'requires_action_at', 'adaptation_details'
         )

@@ -13,7 +13,8 @@ from legalaid.serializers import EligibilityCheckSerializerBase, \
     DeductionsSerializerBase, PersonalDetailsSerializerFull, \
     ThirdPartyPersonalDetailsSerializerBase, \
     ThirdPartyDetailsSerializerBase, PersonSerializerBase, \
-    FeedbackSerializerBase
+    FeedbackSerializerBase, CaseArchivedSerializerBase, \
+    CaseNotesHistorySerializerBase
 
 from .models import Operator
 
@@ -74,7 +75,8 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             'reference', 'title', 'full_name', 'postcode', 'street',
             'mobile_phone', 'home_phone', 'email', 'dob',
             'ni_number',
-            'contact_for_research', 'safe_to_contact', 'vulnerable_user'
+            'contact_for_research', 'safe_to_contact', 'vulnerable_user',
+            'has_diversity'
         )
 
 
@@ -193,7 +195,7 @@ class CaseSerializer(CaseSerializerFull):
             'date_of_birth', 'category', 'outcome_code',
             'exempt_user', 'exempt_user_reason',
             'ecf_statement', 'case_count',
-            'requires_action_at', 'callback_attempt'
+            'requires_action_at', 'callback_attempt', 'source'
         )
 
 class CaseListSerializer(CaseSerializer):
@@ -278,4 +280,31 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'created',
             'modified',
             'issue',
+        )
+
+class CaseArchivedSerializer(CaseArchivedSerializerBase):
+
+    class Meta(CaseArchivedSerializerBase.Meta):
+        fields = (
+             'full_name',
+             'date_of_birth',
+             'postcode',
+             'laa_reference',
+             'specialist_referred_to',
+             'date_specialist_referred',
+             'date_specialist_closed',
+             'knowledgebase_items_used',
+             'area_of_law',
+             'in_scope',
+             'financially_eligible',
+             'outcome_code',
+             'outcome_code_date'
+        )
+
+
+class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):
+    class Meta(CaseNotesHistorySerializerBase.Meta):
+        fields = (
+            'created_by', 'created', 'operator_notes', 'provider_notes',
+            'type_notes'
         )

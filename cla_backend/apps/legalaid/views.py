@@ -2,48 +2,36 @@ import json
 
 from cla_provider.models import Feedback
 from django import forms
-from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.db.models import Count
 from legalaid.permissions import IsManagerOrMePermission
-from rest_framework import viewsets, mixins, status, serializers
+from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.pagination import BasePaginationSerializer
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter, \
     DjangoFilterBackend
-from rest_framework.templatetags.rest_framework import replace_query_param
 
 from core.utils import format_patch
-from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin
+from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin, \
+    FormActionMixin
+from core.drf.pagination import RelativeUrlPaginationSerializer
 from cla_eventlog import event_registry
 from rest_framework_extensions.mixins import DetailSerializerMixin
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
-    AdaptationDetailsSerializerBase, CaseSerializerBase, FeedbackSerializerBase
+    AdaptationDetailsSerializerBase, CaseSerializerBase, \
+    FeedbackSerializerBase, CaseNotesHistorySerializerBase
 from .models import Case, Category, EligibilityCheck, \
     MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
     AdaptationDetails, CaseNotesHistory
 
 
-class FormActionMixin(object):
-    def _form_action(self, request, Form, no_body=True, form_kwargs={}):
-        obj = self.get_object()
-        form = Form(case=obj, data=request.DATA, **form_kwargs)
-        if form.is_valid():
-            form.save(request.user)
-
-            if no_body:
-                return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-            else:
-                serializer = self.get_serializer(obj)
-                return DRFResponse(serializer.data, status=status.HTTP_200_OK)
-
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
+class CaseFormActionMixin(FormActionMixin):
+    """
+    This is for backward compatibility
+    """
+    FORM_ACTION_OBJ_PARAM = 'case'
 
 
 class PasswordResetForm(forms.Form):
@@ -78,7 +66,7 @@ class BaseUserViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
-    FormActionMixin,
+    CaseFormActionMixin,
     viewsets.GenericViewSet
 ):
     permission_classes = (IsManagerOrMePermission,)
@@ -280,38 +268,12 @@ class BaseAdaptationDetailsMetadataViewSet(
         self.http_method_not_allowed(request)
 
 
-class RelativeNextPageField(serializers.Field):
-    page_field = 'page'
-
-    def to_native(self, value):
-        if not value.has_next():
-            return None
-        page = value.next_page_number()
-        return replace_query_param('', self.page_field, page)
-
-
-class RelativePreviousPageField(serializers.Field):
-    page_field = 'page'
-
-    def to_native(self, value):
-        if not value.has_previous():
-            return None
-        page = value.previous_page_number()
-        return replace_query_param('', self.page_field, page)
-
-
-class RelativeUrlPaginationSerializer(BasePaginationSerializer):
-    count = serializers.Field(source='paginator.count')
-    next = RelativeNextPageField('*')
-    previous = RelativePreviousPageField('*')
-
-
 class FullCaseViewSet(
     DetailSerializerMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
-    FormActionMixin,
+    CaseFormActionMixin,
     viewsets.GenericViewSet
 ):
     model = Case
@@ -417,3 +379,29 @@ class BaseFeedbackViewSet(
     serializer_class = FeedbackSerializerBase
     PARENT_FIELD = 'provider_feedback'
     lookup_field = 'reference'
+
+
+class BaseCaseNotesHistoryViewSet(
+    NestedGenericModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    PARENT_FIELD = 'casenoteshistory_set'
+    lookup_field = 'reference'
+    serializer_class = CaseNotesHistorySerializerBase
+    model = CaseNotesHistory
+
+    pagination_serializer_class = RelativeUrlPaginationSerializer
+    paginate_by = 5
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
+    def get_queryset(self, **kwargs):
+        qs = super(BaseCaseNotesHistoryViewSet, self).get_queryset(**kwargs)
+        type_param = self.request.QUERY_PARAMS.get('type', None)
+
+        if type_param == 'operator':
+            qs = qs.filter(provider_notes__isnull=True)
+        elif type_param == 'cla_provider':
+            qs = qs.filter(operator_notes__isnull=True)
+        return qs

@@ -14,7 +14,7 @@ from legalaid.serializers import \
     DeductionsSerializerBase, PersonalDetailsSerializerFull, \
     ThirdPartyPersonalDetailsSerializerBase, \
     ThirdPartyDetailsSerializerBase, PersonSerializerBase, \
-    FeedbackSerializerBase
+    FeedbackSerializerBase, CaseNotesHistorySerializerBase
 
 from .models import Staff
 
@@ -68,7 +68,8 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             'reference', 'title', 'full_name', 'postcode', 'street',
             'mobile_phone', 'home_phone', 'email', 'dob',
             'ni_number',
-            'contact_for_research', 'safe_to_contact', 'vulnerable_user'
+            'contact_for_research', 'safe_to_contact', 'vulnerable_user',
+            'has_diversity'
         )
 
 
@@ -176,7 +177,7 @@ class CaseSerializer(CaseSerializerFull):
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis',
             'media_code', 'postcode', 'diagnosis_state',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
-            'date_of_birth', 'category', 'outcome_code'
+            'date_of_birth', 'category', 'outcome_code', 'source'
         )
 
 class CaseListSerializer(CaseSerializer):
@@ -245,3 +246,10 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'issue',
         )
 
+
+class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):
+    class Meta(CaseNotesHistorySerializerBase.Meta):
+        fields = (
+            'created_by', 'created', 'operator_notes', 'provider_notes',
+            'type_notes'
+        )

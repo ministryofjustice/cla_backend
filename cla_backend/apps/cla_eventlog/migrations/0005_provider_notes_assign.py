@@ -12,7 +12,7 @@ class Migration(DataMigration):
           cla_eventlog_log
             set context =
                 ('{"provider": "'||trim(TRAILING '.' FROM trim(LEADING 'Assigned to ' FROM trim(notes)))||'"}')::json
-        WHERE code = 'REFSP' and context is NULL;
+        WHERE code in ('REFSP', 'SPOR', 'MANALC') and context is NULL;
         """)
 
     def backwards(self, orm):

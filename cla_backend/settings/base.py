@@ -171,7 +171,8 @@ PROJECT_APPS = (
     'knowledgebase',
     'timer',
     'diagnosis',
-    'status'
+    'status',
+    'historic'
 )
 
 INSTALLED_APPS += PROJECT_APPS
@@ -179,6 +180,12 @@ INSTALLED_APPS += PROJECT_APPS
 # DIAGNOSIS
 
 DIAGNOSIS_FILE_NAME = 'graph-2014.07.21.graphml'
+
+
+# DIVERSITY
+
+DIVERSITY_PUBLIC_KEY_PATH = root('../keys/diversity_dev_public.key')
+DIVERSITY_PRIVATE_KEY_PATH = root('../keys/diversity_dev_private.key')
 
 
 # A sample logging configuration. The only tangible logging
@@ -315,3 +322,5 @@ if all([os.environ.get('SMTP_USER'),
     EMAIL_USE_TLS = True
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get('CALL_CENTRE_NOTIFY_EMAIL_ADDRESS', 'ravi.kotecha@digital.justice.gov.uk')

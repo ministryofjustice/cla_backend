@@ -15,6 +15,7 @@ from cla_common.constants import CASE_SOURCE
 
 from .serializers import EligibilityCheckSerializer, \
     PropertySerializer, CaseSerializer
+from .forms import WebCallMeBackForm
 
 
 class PublicAPIViewSetMixin(object):
@@ -108,5 +109,13 @@ class CaseViewSet(
                 obj, status='created', created_by=obj.created_by,
                 notes="Case created digitally"
             )
-            if obj.outcome_code == 'CB1':
-                notify_callback_created(obj)
+
+            if obj.requires_action_at:
+                form = WebCallMeBackForm(
+                    case=obj, data={},
+                    requires_action_at=obj.requires_action_at
+                )
+
+                if form.is_valid():
+                    form.save(obj.created_by)
+                    notify_callback_created(obj)

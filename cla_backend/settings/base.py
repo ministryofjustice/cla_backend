@@ -319,11 +319,11 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 PROVIDER_HOURS = {
-    weekday: (datetime.time(9, 0), datetime.time(17, 0)),
-    saturday: (datetime.time(9, 0), datetime.time(12, 30))
+    'weekday': (datetime.time(9, 0), datetime.time(17, 0)),
+    'saturday': (datetime.time(9, 0), datetime.time(12, 30))
 }
 
 OPERATOR_HOURS = {
-    weekday: (datetime.time(9, 0), datetime.time(20, 0)),
-    saturday: (datetime.time(9, 0), datetime.time(12, 30))
+    'weekday': (datetime.time(9, 0), datetime.time(20, 0)),
+    'saturday': (datetime.time(9, 0), datetime.time(12, 30))
 }

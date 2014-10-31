@@ -76,7 +76,7 @@ class Command(BaseCommand):
 
     def load_referrals(self, filename):
         self.referrals = defaultdict(list)
-        with open(filename) as f:
+        with open(filename, 'rU') as f:
             reader = csv.DictReader(f)
             for count, row in enumerate(reader):
                 if count % 20 == 0:
@@ -105,7 +105,7 @@ class Command(BaseCommand):
             )
 
         self.cases = []
-        with open(filename) as f:
+        with open(filename, 'rU') as f:
             reader = csv.DictReader(f, lineterminator='\n')
             for count, row in enumerate(reader):
                 if count % 20 == 0:

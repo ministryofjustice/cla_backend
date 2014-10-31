@@ -13,6 +13,7 @@ from cla_eventlog import event_registry
 
 from legalaid.utils.dates import is_out_of_hours_for_operators
 from legalaid.utils import diversity
+from legalaid.forms import BaseCallMeBackForm
 
 from cla_provider.models import Provider
 from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
@@ -158,8 +159,7 @@ class AlternativeHelpForm(EventSpecificLogForm):
         return super(AlternativeHelpForm, self).save(user)
 
 
-class CallMeBackForm(BaseCaseLogForm):
-    LOG_EVENT_KEY = 'call_me_back'
+class CallMeBackForm(BaseCallMeBackForm):
 
     # format "2013-12-29 23:59" always in UTC
     datetime = forms.DateTimeField()
@@ -206,10 +206,8 @@ class CallMeBackForm(BaseCaseLogForm):
             notes=self.cleaned_data['notes'] or ""
         )
 
-    def save(self, user):
-        super(CallMeBackForm, self).save(user)
-        dt = self.cleaned_data['datetime']
-        self.case.set_requires_action_at(dt)
+    def get_requires_action_at(self):
+        return self.cleaned_data['datetime']
 
 
 class StopCallMeBackForm(BaseCaseLogForm):

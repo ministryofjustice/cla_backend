@@ -76,12 +76,12 @@ class Command(BaseCommand):
 
     def load_referrals(self, filename):
         self.referrals = defaultdict(list)
-        with open(filename) as f:
+        with open(filename, 'rU') as f:
             reader = csv.DictReader(f)
             for count, row in enumerate(reader):
                 if count % 20 == 0:
                     self.stderr.write('.', ending='')
-                self.referrals[row['CaseID']].append(row['Title'])
+                self.referrals[row['CaseID']].append(unicode(row['Title'], "ISO-8859-1"))
 
 
     def load_cases(self, filename):
@@ -89,23 +89,23 @@ class Command(BaseCommand):
         def record_to_case_archived(row):
             full_name = row['FirstName'] + row['Surname']
             return CaseArchived(
-                full_name=full_name,
-                date_of_birth=parse_dt(row['DateOfBirth']),
-                postcode=row['PostCode'],
+                full_name=unicode(full_name, "ISO-8859-1"),
+                date_of_birth=parse_dt(row['DOB']),
+                postcode=unicode(row['PostCode'], "ISO-8859-1"),
                 laa_reference=row['CaseID'],
                 created=parse_dt(row['DateCreated']),
-                outcome_code=row['OutcomeCode'],
+                outcome_code=unicode(row['OutcomeCode'], "ISO-8859-1"),
                 outcome_code_date=parse_dt(row['OutcomeDate']),
-                specialist_referred_to=row['SpecialistReferred'],
+                specialist_referred_to=unicode(row['SpecialistReferred'], "ISO-8859-1"),
                 date_specialist_referred=parse_dt(row['DateSpecialistClosed']),
-                area_of_law=row['AreaOfLaw'],
+                area_of_law=unicode(row['AreaOfLaw'], "ISO-8859-1"),
                 in_scope=yesno(row['IsInScope']),
                 financially_eligible=bool(row['Eligible']),
                 knowledgebase_items_used=self.get_referrals(row['CaseID'])
             )
 
         self.cases = []
-        with open(filename) as f:
+        with open(filename, 'rU') as f:
             reader = csv.DictReader(f, lineterminator='\n')
             for count, row in enumerate(reader):
                 if count % 20 == 0:

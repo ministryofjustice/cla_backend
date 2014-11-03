@@ -475,9 +475,7 @@ class CaseArchivedViewSet(CallCentrePermissionsViewSetMixin,
 
     filter_backends = (
         SearchFilter,
-        OrderingFilter
     )
-    ordering = ('-outcome_code_date')
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100

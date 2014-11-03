@@ -40,7 +40,7 @@ def is_out_of_hours(
         return not (day_start < dt < day_end)
 
     # if Saturday (only open in the morning)
-    elif weekday == 5:
+    elif ((sat_time_start and sat_time_end) and weekday == 5):
         day_start = dt_at(dt, hour=sat_time_start.hour, minute=sat_time_start.minute)
         day_end = dt_at(dt, hour=sat_time_end.hour, minute=sat_time_end.minute)
         return not (day_start < dt < day_end)
@@ -57,7 +57,6 @@ def is_out_of_hours_for_providers(dt):
 
         Currently working hours for specialists run:
             Mon-Fri: 9am - 5pm
-            Sat: 9am - 12.30pm
 
         dt: datetime in localtime (NOT UTC)
     """
@@ -65,8 +64,8 @@ def is_out_of_hours_for_providers(dt):
         dt=dt,
         weekday_time_start=datetime.time(hour=9, minute=0),
         weekday_time_end=datetime.time(hour=17, minute=0),
-        sat_time_start=datetime.time(hour=9, minute=0),
-        sat_time_end=datetime.time(hour=12, minute=30)
+        sat_time_start=None,
+        sat_time_end=None
     )
 
 

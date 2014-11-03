@@ -70,6 +70,7 @@ class CaseNotesHistoryAPIMixin(NestedSimpleResourceAPIMixin):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertResponseKeys(response)
         self.assertEqual(response.data['count'], 8)
+        self.assertEqual(len(response.data['results']), 5)
 
         for obj in response.data['results']:
             if obj['provider_notes'] != None:
@@ -106,3 +107,21 @@ class CaseNotesHistoryAPIMixin(NestedSimpleResourceAPIMixin):
             self.assertEqual(obj['operator_notes'], None)
             self.assertEqual(obj['provider_notes'], 'Provider notes')
             self.assertEqual(obj['type_notes'], 'Provider notes')
+
+    def test_get_with_with_extra_param(self):
+        url = "%s?with_extra=true" % self.list_url
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertResponseKeys(response)
+        self.assertEqual(response.data['count'], 8)
+        self.assertEqual(len(response.data['results']), 6)
+
+        for obj in response.data['results']:
+            if obj['provider_notes'] != None:
+                self.assertEqual(obj['provider_notes'], 'Provider notes')
+                self.assertEqual(obj['type_notes'], 'Provider notes')
+            else:
+                self.assertEqual(obj['operator_notes'], 'Operator notes')
+                self.assertEqual(obj['type_notes'], 'Operator notes')

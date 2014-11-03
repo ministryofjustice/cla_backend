@@ -3,6 +3,8 @@ import json
 from cla_provider.models import Feedback
 from django import forms
 from django.db import transaction
+from django.core.paginator import Paginator
+
 from legalaid.permissions import IsManagerOrMePermission
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
@@ -381,6 +383,25 @@ class BaseFeedbackViewSet(
     lookup_field = 'reference'
 
 
+class PaginatorWithExtraItem(Paginator):
+    """
+    Same as the Paginator but it will return one more item than expected.
+    Used for endpoints that need to diff elements.
+    """
+    extra_num = 1
+
+    def page(self, number):
+        """
+        Returns a Page object for the given 1-based page number.
+        """
+        number = self.validate_number(number)
+        bottom = (number - 1) * self.per_page
+        top = bottom + (self.per_page + self.extra_num)
+        if top + self.orphans >= self.count:
+            top = self.count
+        return self._get_page(self.object_list[bottom:top], number, self)
+
+
 class BaseCaseNotesHistoryViewSet(
     NestedGenericModelMixin,
     mixins.ListModelMixin,
@@ -395,6 +416,17 @@ class BaseCaseNotesHistoryViewSet(
     paginate_by = 5
     paginate_by_param = 'page_size'
     max_paginate_by = 100
+
+    @property
+    def paginator_class(self):
+        """
+        If with_extra query param is provided, the endpoint will return
+        n+1 elements so that the frontend can build the diff from the
+        current+prev element.
+        """
+        if self.request.QUERY_PARAMS.get('with_extra', False):
+            return PaginatorWithExtraItem
+        return Paginator
 
     def get_queryset(self, **kwargs):
         qs = super(BaseCaseNotesHistoryViewSet, self).get_queryset(**kwargs)

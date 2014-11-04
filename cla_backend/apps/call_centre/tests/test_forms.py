@@ -105,6 +105,61 @@ class ProviderAllocationFormTestCase(TestCase):
 
     @mock.patch('cla_provider.models.timezone.now')
     @mock.patch('cla_provider.helpers.timezone.now')
+    def test_save_out_office_hours_saturday(self, timezone_mock, models_timezone_mock):
+        _mock_datetime_now_with(datetime.datetime(2014, 11, 1, 10, 30, 0),
+                                timezone_mock, models_timezone_mock)
+
+        case = make_recipe('legalaid.case')
+        category = case.eligibility_check.category
+
+        case.matter_type1 = make_recipe('legalaid.matter_type1',
+                                        category=category)
+        case.matter_type2 = make_recipe('legalaid.matter_type2',
+                                        category=category)
+        case.save()
+
+        user = make_user()
+        provider = make_recipe('cla_provider.provider', active=True)
+        in_hours_provider = make_recipe('cla_provider.provider', active=True)
+        make_recipe('cla_provider.outofhoursrota',
+                    provider=provider,
+                    start_date=datetime.datetime(2013, 12, 30).replace(
+                        tzinfo=timezone.get_current_timezone()),
+                    end_date=datetime.datetime(2014, 12, 2).replace(
+                        tzinfo=timezone.get_current_timezone()),
+                    category=category
+        )
+
+        make_recipe('cla_provider.provider_allocation',
+                    weighted_distribution=1,
+                    provider=in_hours_provider,
+                    category=category)
+
+        make_recipe('cla_provider.provider_allocation',
+                    weighted_distribution=0,
+                    provider=provider,
+                    category=category)
+
+
+        with mock.patch.object(ProviderAllocationHelper, '_get_random_provider', return_value=in_hours_provider) as mocked_get_random_provider:
+
+            helper = ProviderAllocationHelper()
+
+            form = ProviderAllocationForm(case=case, data={
+                'provider': helper.get_suggested_provider(category).pk},
+                                          providers=helper.get_qualifying_providers(
+                                              category))
+            self.assertEqual(mocked_get_random_provider.call_count, 0)
+            self.assertTrue(form.is_valid())
+
+            self.assertEqual(Log.objects.count(), 0)
+            form.save(user)
+
+            self.assertEqual(case.provider, provider)
+            self.assertEqual(Log.objects.count(), 1)
+
+    @mock.patch('cla_provider.models.timezone.now')
+    @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_out_office_hours_no_valid_provider(self, timezone_mock,
                                                      models_timezone_mock):
         _mock_datetime_now_with(datetime.datetime(2014, 1, 1, 8, 59, 0),

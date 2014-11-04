@@ -96,7 +96,7 @@ class Command(BaseCommand):
 
         def record_to_case_archived(row):
             full_name = row['FirstName'] + ' ' + row['Surname']
-            return CaseArchived(
+            case = CaseArchived(
                 full_name=unicode(full_name, "ISO-8859-1"),
                 date_of_birth=parse_dt(row['DateOfBirth']),
                 postcode=unicode(row['PostCode'], "ISO-8859-1"),
@@ -111,6 +111,20 @@ class Command(BaseCommand):
                 financially_eligible=bool(row['Eligible']),
                 knowledgebase_items_used=self.get_referrals(row['CaseID'])
             )
+
+            search_field = []
+            for field in [
+                'full_name',
+                'postcode',
+                'laa_reference',
+                'outcome_code'
+            ]:
+                val = getattr(case, field)
+                if val:
+                    search_field.append(val.upper())
+            case.search_field = ' '.join(search_field)
+
+            return case
 
         self.cases = []
         with open(filename, 'rU') as f:

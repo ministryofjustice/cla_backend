@@ -23,22 +23,4 @@ class CaseArchived(TimeStampedModel):
 
     outcome_code = models.TextField(null=True, blank=True)
     outcome_code_date = models.DateTimeField(null=True, blank=True)
-
-    class Meta:
-        index_together = [
-            [
-                'full_name',
-                'date_of_birth',
-                'postcode',
-                'laa_reference',
-                'specialist_referred_to',
-                'date_specialist_referred',
-                'date_specialist_closed',
-                'knowledgebase_items_used',
-                'area_of_law',
-                'in_scope',
-                'financially_eligible',
-                'outcome_code',
-                'outcome_code_date'
-            ]
-        ]
+    search_field = models.TextField(null=True, blank=True)

@@ -461,6 +461,16 @@ class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
     paginate_by_param = 'page_size'
     max_paginate_by = 100
 
+
+class CaseArchivedSearchFilter(SearchFilter):
+    def get_search_terms(self, request):
+        terms = super(CaseArchivedSearchFilter, self).get_search_terms(request)
+        return [term.upper() for term in terms]
+
+    def construct_search(self, field_name):
+        return "%s__contains" % field_name
+
+
 class CaseArchivedViewSet(CallCentrePermissionsViewSetMixin,
                           mixins.ListModelMixin,
                           mixins.RetrieveModelMixin,
@@ -471,13 +481,11 @@ class CaseArchivedViewSet(CallCentrePermissionsViewSetMixin,
     model = CaseArchived
     serializer_class = CaseArchivedSerializer
 
-    search_fields = CaseArchivedSerializer.Meta.fields
+    search_fields = ['search_field']
 
     filter_backends = (
-        SearchFilter,
-        OrderingFilter
+        CaseArchivedSearchFilter,
     )
-    ordering = ('-outcome_code_date')
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100

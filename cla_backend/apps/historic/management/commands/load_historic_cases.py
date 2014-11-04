@@ -1,5 +1,7 @@
 from collections import defaultdict
 import csv
+from operator import attrgetter
+import datetime
 from django.utils.itercompat import is_iterable
 from historic.models import CaseArchived
 import os
@@ -65,7 +67,13 @@ class Command(BaseCommand):
             self.stderr.write('Clearing out %s existing historic cases.' % existing_cases_count)
             CaseArchived.objects.all().delete()
 
+        fake_datetime = datetime.datetime(1900,1,1).replace(tzinfo=UTC())
         # Writing Cases to the database
+
+        def _getdate(x):
+            return x.outcome_code_date or fake_datetime
+        self.cases =  sorted(self.cases, key=_getdate, reverse=True)
+
         CaseArchived.objects.bulk_create(self.cases)
 
 
@@ -87,10 +95,10 @@ class Command(BaseCommand):
     def load_cases(self, filename):
 
         def record_to_case_archived(row):
-            full_name = row['FirstName'] + row['Surname']
-            return CaseArchived(
+            full_name = row['FirstName'] + ' ' + row['Surname']
+            case = CaseArchived(
                 full_name=unicode(full_name, "ISO-8859-1"),
-                date_of_birth=parse_dt(row['DOB']),
+                date_of_birth=parse_dt(row['DateOfBirth']),
                 postcode=unicode(row['PostCode'], "ISO-8859-1"),
                 laa_reference=row['CaseID'],
                 created=parse_dt(row['DateCreated']),
@@ -103,6 +111,20 @@ class Command(BaseCommand):
                 financially_eligible=bool(row['Eligible']),
                 knowledgebase_items_used=self.get_referrals(row['CaseID'])
             )
+
+            search_field = []
+            for field in [
+                'full_name',
+                'postcode',
+                'laa_reference',
+                'outcome_code'
+            ]:
+                val = getattr(case, field)
+                if val:
+                    search_field.append(val.upper())
+            case.search_field = ' '.join(search_field)
+
+            return case
 
         self.cases = []
         with open(filename, 'rU') as f:

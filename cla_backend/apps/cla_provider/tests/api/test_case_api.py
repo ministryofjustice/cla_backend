@@ -252,5 +252,6 @@ class SplitCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         # after, log entry created
         self.assertEqual(Log.objects.count(), 2)
 
-        ref_log = Log.objects.filter(case=self.resource)[0]
+        new_case = self.resource.split_cases.first()
+        ref_log = Log.objects.filter(case=new_case)[0]
         self.assertEqual(ref_log.notes, 'Notes')

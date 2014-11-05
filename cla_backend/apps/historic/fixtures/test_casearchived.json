@@ -1,5 +1,27 @@
 [
     {
+        "pk": 378,
+        "model": "historic.casearchived",
+        "fields": {
+            "outcome_code_date": "2014-10-29T14:43:13.863Z",
+            "financially_eligible": false,
+            "knowledgebase_items_used": "kb178",
+            "area_of_law": "consumer",
+            "laa_reference": 3000178,
+            "created": "2014-10-29T14:43:21.965Z",
+            "modified": "2014-10-29T14:43:21.965Z",
+            "specialist_referred_to": "specialist178",
+            "date_specialist_closed": "1936-11-17T14:43:13.863Z",
+            "date_of_birth": "1938-11-17",
+            "in_scope": true,
+            "postcode": "SW1178",
+            "full_name": "bob178",
+            "outcome_code": "LAMO",
+            "date_specialist_referred": "1937-11-17T14:43:13.863Z",
+            "search_field": "BOB178 SW1178 3000178 LAMO"
+        }
+    },
+    {
         "pk": 201,
         "model": "historic.casearchived",
         "fields": {
@@ -3891,28 +3913,6 @@
             "outcome_code": "LOLZ",
             "date_specialist_referred": "1941-11-16T13:43:13.863Z",
             "search_field": "BOB177 SW1177 3000177 LOLZ"
-        }
-    },
-    {
-        "pk": 378,
-        "model": "historic.casearchived",
-        "fields": {
-            "outcome_code_date": "2014-10-29T14:43:13.863Z",
-            "financially_eligible": false,
-            "knowledgebase_items_used": "kb178",
-            "area_of_law": "consumer",
-            "laa_reference": 3000178,
-            "created": "2014-10-29T14:43:21.965Z",
-            "modified": "2014-10-29T14:43:21.965Z",
-            "specialist_referred_to": "specialist178",
-            "date_specialist_closed": "1936-11-17T14:43:13.863Z",
-            "date_of_birth": "1938-11-17",
-            "in_scope": true,
-            "postcode": "SW1178",
-            "full_name": "bob178",
-            "outcome_code": "LAMO",
-            "date_specialist_referred": "1937-11-17T14:43:13.863Z",
-            "search_field": "BOB178 SW1178 3000178 LAMO"
         }
     },
     {

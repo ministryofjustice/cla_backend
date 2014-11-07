@@ -290,7 +290,16 @@ class SplitCaseFormTestCase(TestCase):
                 )
             )
 
-    def _test_save_with_outcome(self, internal, outcome_code):
+    def _test_save_with_outcome(self, internal):
+        if internal:
+            outcome_code = 'REF-INT'
+            system_outcome_code = 'REF-INT_CREATED'
+        else:
+            outcome_code = 'REF-EXT'
+            system_outcome_code = 'REF-EXT_CREATED'
+
+        case_log_set_size = self.case.log_set.count()
+
         self.assertEqual(Case.objects.count(), 1)
         form = SplitCaseForm(
             case=self.case, request=self.request,
@@ -308,18 +317,35 @@ class SplitCaseFormTestCase(TestCase):
         new_case = form.save(user)
         self.assertEqual(Case.objects.count(), 2)
 
-        log_entry1 = self.case.log_set.last()
-        self.assertEqual(log_entry1.code, outcome_code)
-        self.assertEqual(log_entry1.notes, 'Notes')
-        self.assertEqual(log_entry1.created_by, user)
+        # xxx_CREATED outcome codes for original case
+        self.assertEqual(self.case.log_set.count(), case_log_set_size+1)
+        original_case_log = self.case.log_set.last()
+        self.assertEqual(original_case_log.code, system_outcome_code)
+        self.assertEqual(
+            original_case_log.notes,
+            'Split case created and referred %s' % (
+                'internally' if internal else 'externally'
+            )
+        )
 
-        log_entry2 = new_case.log_set.last()
-        self.assertEqual(log_entry2.code, 'CASE_CREATED')
-        self.assertEqual(log_entry2.notes, 'Case created by Specialist')
-        self.assertEqual(log_entry2.created_by, user)
+        # 2 outcome codes for new case
+        log_entries = new_case.log_set.order_by('created')
+        self.assertEqual(len(log_entries), 2)
+
+        # 1st CASE_CREATED
+        log_created = log_entries[0]
+        self.assertEqual(log_created.code, 'CASE_CREATED')
+        self.assertEqual(log_created.notes, 'Case created by Specialist')
+        self.assertEqual(log_created.created_by, user)
+
+        # 2nd REF-INT or REF-EXT
+        log_ref = log_entries[1]
+        self.assertEqual(log_ref.code, outcome_code)
+        self.assertEqual(log_ref.notes, 'Notes')
+        self.assertEqual(log_ref.created_by, user)
 
     def test_save_internal(self):
-        self._test_save_with_outcome(True, 'REF-INT')
+        self._test_save_with_outcome(True)
 
     def test_save_external(self):
-        self._test_save_with_outcome(False, 'REF-EXT')
+        self._test_save_with_outcome(False)

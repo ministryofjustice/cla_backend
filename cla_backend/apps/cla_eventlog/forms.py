@@ -20,6 +20,9 @@ class BaseCaseLogForm(forms.Form):
                 'LOG_EVENT must be set or this method must be '
                 'overridden in a subclass to return the correct event')
 
+    def get_case(self):
+        return self.case
+
     def get_notes(self):
         return self.cleaned_data['notes']
 
@@ -29,12 +32,17 @@ class BaseCaseLogForm(forms.Form):
     def get_context(self):
         return {}
 
-    def save(self, user):
+    def save_event(self, user):
         event = event_registry.get_event(self.get_event_key())()
-        event.process(self.case, created_by=user,
-                           notes=self.get_notes(),
-                           context=self.get_context(),
-                           **self.get_kwargs())
+        event.process(
+            self.get_case(), created_by=user,
+            notes=self.get_notes(),
+            context=self.get_context(),
+            **self.get_kwargs()
+        )
+
+    def save(self, user):
+        self.save_event(user)
 
 
 class EventSpecificLogForm(BaseCaseLogForm):

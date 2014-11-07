@@ -103,7 +103,7 @@ class SuspendCaseEvent(BaseEvent):
     codes = {
         'INSUF': {
             'type': LOG_TYPES.OUTCOME,
-            'level': LOG_LEVELS.HIGH,
+            'level': LOG_LEVELS.MODERATE,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Not enough info to continue',
             'stops_timer': True,
@@ -111,14 +111,14 @@ class SuspendCaseEvent(BaseEvent):
         },
         'ABND': {
             'type': LOG_TYPES.OUTCOME,
-            'level': LOG_LEVELS.HIGH,
+            'level': LOG_LEVELS.MODERATE,
             'selectable_by': [LOG_ROLES.OPERATOR, LOG_ROLES.SPECIALIST],
             'description': 'Client abandoned call',
             'stops_timer': True
         },
         'TERM': {
             'type': LOG_TYPES.OUTCOME,
-            'level': LOG_LEVELS.HIGH,
+            'level': LOG_LEVELS.MODERATE,
             'selectable_by': [LOG_ROLES.OPERATOR, LOG_ROLES.SPECIALIST],
             'description': 'Hung up call',
             'stops_timer': True,
@@ -134,7 +134,7 @@ class SuspendCaseEvent(BaseEvent):
         },
         'NCOE': {
             'type': LOG_TYPES.OUTCOME,
-            'level': LOG_LEVELS.HIGH,
+            'level': LOG_LEVELS.MODERATE,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Case opened in error',
             'stops_timer': False

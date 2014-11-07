@@ -250,7 +250,7 @@ class SplitCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # after, log entry created
-        self.assertEqual(Log.objects.count(), 2)
+        self.assertEqual(Log.objects.count(), 3)
 
         new_case = self.resource.split_cases.first()
         ref_log = Log.objects.filter(case=new_case)[0]

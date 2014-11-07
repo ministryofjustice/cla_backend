@@ -156,8 +156,14 @@ class SplitCaseForm(BaseCaseLogForm):
 
         return self.new_case
 
-    def get_case(self):
-        return self.new_case
+    def save_event(self, user):
+        event = event_registry.get_event(self.get_event_key())()
+        event.process_split(
+            self.new_case, created_by=user,
+            notes=self.get_notes(),
+            context=self.get_context(),
+            **self.get_kwargs()
+        )
 
     def get_kwargs(self):
         kwargs = super(SplitCaseForm, self).get_kwargs()

@@ -290,7 +290,14 @@ class SplitCaseFormTestCase(TestCase):
                 )
             )
 
-    def _test_save_with_outcome(self, internal, outcome_code):
+    def _test_save_with_outcome(self, internal):
+        if internal:
+            outcome_code = 'REF-INT'
+            system_outcome_code = 'REF-INT_CREATED'
+        else:
+            outcome_code = 'REF-EXT'
+            system_outcome_code = 'REF-EXT_CREATED'
+
         case_log_set_size = self.case.log_set.count()
 
         self.assertEqual(Case.objects.count(), 1)
@@ -310,8 +317,16 @@ class SplitCaseFormTestCase(TestCase):
         new_case = form.save(user)
         self.assertEqual(Case.objects.count(), 2)
 
-        # no outcome codes for original case
-        self.assertEqual(self.case.log_set.count(), case_log_set_size)
+        # xxx_CREATED outcome codes for original case
+        self.assertEqual(self.case.log_set.count(), case_log_set_size+1)
+        original_case_log = self.case.log_set.last()
+        self.assertEqual(original_case_log.code, system_outcome_code)
+        self.assertEqual(
+            original_case_log.notes,
+            'Split case created and referred %s' % (
+                'internally' if internal else 'externally'
+            )
+        )
 
         # 2 outcome codes for new case
         log_entries = new_case.log_set.order_by('created')
@@ -330,7 +345,7 @@ class SplitCaseFormTestCase(TestCase):
         self.assertEqual(log_ref.created_by, user)
 
     def test_save_internal(self):
-        self._test_save_with_outcome(True, 'REF-INT')
+        self._test_save_with_outcome(True)
 
     def test_save_external(self):
-        self._test_save_with_outcome(False, 'REF-EXT')
+        self._test_save_with_outcome(False)

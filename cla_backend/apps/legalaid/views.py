@@ -1,8 +1,8 @@
 import json
+from core.drf.exceptions import ConflictException
 
-from cla_provider.models import Feedback
 from django import forms
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.core.paginator import Paginator
 
 from django_statsd.clients import statsd
@@ -20,6 +20,8 @@ from core.utils import format_patch
 from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin, \
     FormActionMixin
 from core.drf.pagination import RelativeUrlPaginationSerializer
+
+from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
 
 from cla_auth.models import AccessAttempt
@@ -28,7 +30,9 @@ from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
     AdaptationDetailsSerializerBase, CaseSerializerBase, \
-    FeedbackSerializerBase, CaseNotesHistorySerializerBase
+    FeedbackSerializerBase, CaseNotesHistorySerializerBase, \
+    CSVUploadSerializerBase
+from cla_provider.models import Feedback, CSVUpload
 from .models import Case, Category, EligibilityCheck, \
     MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
     AdaptationDetails, CaseNotesHistory
@@ -397,6 +401,33 @@ class BaseFeedbackViewSet(
     PARENT_FIELD = 'provider_feedback'
     lookup_field = 'reference'
 
+class BaseCSVUploadViewSet(
+    DetailSerializerMixin,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
+    model = CSVUpload
+    serializer_class = CSVUploadSerializerBase
+    serializer_detail_class = CSVUploadSerializerBase
+
+    filter_backends = (
+        OrderingFilter,
+    )
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super(BaseCSVUploadViewSet, self).create(request, *args, **kwargs)
+        except IntegrityError as ie:
+            raise ConflictException("Upload already exists for given month. Try overwriting.")
+
+    def update(self, request, *args, **kwargs):
+        if request.method.upper() == u'PATCH':
+            # Don't allow PATCH because they should DELETE+POST or PUT
+            return self.http_method_not_allowed(request, *args, **kwargs)
+        return super(BaseCSVUploadViewSet, self).update(request, *args, **kwargs)
 
 class PaginatorWithExtraItem(Paginator):
     """

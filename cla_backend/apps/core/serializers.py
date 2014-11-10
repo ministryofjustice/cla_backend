@@ -1,3 +1,4 @@
+import json
 from django.db import models
 
 from rest_framework import serializers
@@ -25,6 +26,7 @@ class NullBooleanModelSerializerMixin(object):
 
 
 class JSONField(serializers.WritableField):
+
     def to_native(self, obj):
         return obj
 

@@ -20,7 +20,7 @@ from legalaid.views import BaseUserViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
     BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
-    BaseFeedbackViewSet, BaseCaseNotesHistoryViewSet
+    BaseFeedbackViewSet, BaseCaseNotesHistoryViewSet, BaseCSVUploadViewSet
 
 from diagnosis.views import BaseDiagnosisViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
@@ -33,7 +33,8 @@ from .serializers import EligibilityCheckSerializer, \
     CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
     PersonalDetailsSerializer, ThirdPartyDetailsSerializer, \
     LogSerializer, FeedbackSerializer, ExtendedEligibilityCheckSerializer, \
-    CaseListSerializer, CaseNotesHistorySerializer
+    CaseListSerializer, CaseNotesHistorySerializer, CSVUploadSerializer, \
+    CSVUploadDetailSerializer
 from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm
 
 logger = logging.getLogger(__name__)
@@ -41,6 +42,9 @@ logger = logging.getLogger(__name__)
 
 class CLAProviderPermissionViewSetMixin(object):
     permission_classes = (CLAProviderClientIDPermission,)
+
+    def get_logged_in_user_model(self):
+        return self.request.user.staff
 
 
 class CategoryViewSet(CLAProviderPermissionViewSetMixin, BaseCategoryViewSet):
@@ -243,12 +247,8 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
             provider=this_provider)
         return qs
 
-
     def pre_save(self, obj):
         obj.provider = self.get_logged_in_user_model().provider
-
-    def get_logged_in_user_model(self):
-        return self.request.user.staff
 
 
 class PersonalDetailsViewSet(
@@ -306,6 +306,29 @@ class FeedbackViewSet(CLAProviderPermissionViewSetMixin,
             obj.case = self.get_parent_object()
             obj.created_by = Staff.objects.get(user=self.request.user)
         super(FeedbackViewSet, self).pre_save(obj)
+
+
+class CSVUploadViewSet(CLAProviderPermissionViewSetMixin,
+                       BaseCSVUploadViewSet):
+    serializer_class = CSVUploadSerializer
+    serializer_detail_class = CSVUploadDetailSerializer
+
+    ordering = ('-created')
+
+    def get_queryset(self, *args, **kwargs):
+        this_provider = get_object_or_404(
+            Staff, user=self.request.user).provider
+        qs = super(CSVUploadViewSet, self).get_queryset(*args, **kwargs).filter(
+            provider=this_provider)
+        return qs
+
+    def pre_save(self, obj):
+        user = self.get_logged_in_user_model()
+        obj.provider = user.provider
+        obj.created_by = user
+        super(CSVUploadViewSet, self).pre_save(obj)
+
+
 
 
 class CaseNotesHistoryViewSet(

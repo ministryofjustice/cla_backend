@@ -14,7 +14,8 @@ from legalaid.serializers import \
     DeductionsSerializerBase, PersonalDetailsSerializerFull, \
     ThirdPartyPersonalDetailsSerializerBase, \
     ThirdPartyDetailsSerializerBase, PersonSerializerBase, \
-    FeedbackSerializerBase, CaseNotesHistorySerializerBase
+    FeedbackSerializerBase, CaseNotesHistorySerializerBase, \
+    CSVUploadSerializerBase
 
 from .models import Staff
 
@@ -253,6 +254,36 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'issue',
         )
 
+
+
+class CSVUploadSerializer(CSVUploadSerializerBase):
+
+    body = JSONField(write_only=True)
+
+    class Meta(CSVUploadSerializerBase.Meta):
+        fields = [
+            'id',
+            'provider',
+            'created_by',
+            'comment',
+            'rows',
+            'body',
+            'month',
+            'created',
+        ]
+
+class CSVUploadDetailSerializer(CSVUploadSerializerBase):
+
+    class Meta(CSVUploadSerializerBase.Meta):
+        fields = [
+            'id',
+            'provider',
+            'created_by',
+            'comment',
+            'body',
+            'month',
+            'created',
+        ]
 
 class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):
     class Meta(CaseNotesHistorySerializerBase.Meta):

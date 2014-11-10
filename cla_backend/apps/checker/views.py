@@ -1,6 +1,7 @@
 from checker.helpers import notify_callback_created
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from knowledgebase.views import BaseArticleViewSet
 
 from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, mixins

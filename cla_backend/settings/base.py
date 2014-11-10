@@ -172,7 +172,8 @@ PROJECT_APPS = (
     'timer',
     'diagnosis',
     'status',
-    'historic'
+    'historic',
+    'cla_auth'
 )
 
 INSTALLED_APPS += PROJECT_APPS
@@ -268,7 +269,10 @@ if 'RAVEN_CONFIG_DSN' in os.environ:
         #'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
     ) + MIDDLEWARE_CLASSES
 
-# EMAILS
+# SECURITY
+
+LOGIN_FAILURE_LIMIT = 5
+LOGIN_FAILURE_COOLOFF_TIME = 60  # in minutes
 
 
 # .local.py overrides all the common settings.

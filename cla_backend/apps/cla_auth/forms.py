@@ -48,7 +48,7 @@ class ClientIdPasswordGrantForm(PasswordGrantForm):
         if attempts >= settings.LOGIN_FAILURE_LIMIT:
             self.account_lockedout = True
 
-            statsd.incr('login.locked_out')
+            statsd.incr('account.lockout.created')
             logger.info('account locked out', extra={
                 'username': username
             })
@@ -61,11 +61,11 @@ class ClientIdPasswordGrantForm(PasswordGrantForm):
         if not self.account_lockedout:
             username = self.cleaned_data.get('username')
             if username:
-                AccessAttempt.objects.create(username=username)
+                AccessAttempt.objects.create_for_username(username)
 
     def on_form_valid(self):
         username = self.cleaned_data.get('username')
-        AccessAttempt.objects.filter(username=username).delete()
+        AccessAttempt.objects.delete_for_username(username)
 
     def clean(self):
         self.clean_login_attempts()

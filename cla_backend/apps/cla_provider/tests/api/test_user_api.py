@@ -7,7 +7,7 @@ from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 from legalaid.tests.views.mixins.user_api import UserAPIMixin
 
 
-class UserTests(CLAProviderAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
+class UserTestCase(CLAProviderAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
     def assertUserEqual(self, data):
         _data = data.copy()
         del _data['provider']['id']
@@ -31,7 +31,7 @@ class UserTests(CLAProviderAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
         return make_recipe('cla_provider.staff', provider=self.provider, _quantity=3)
 
     def test_manager_can_list_organisation_users(self):
-        response = super(UserTests, self).test_manager_can_list_organisation_users()
+        response = super(UserTestCase, self).test_manager_can_list_organisation_users()
         self.assertSetEqual({x['provider']['id'] for x in response.data}, {self.provider.id})
 
     def test_created_user_is_of_same_provider(self):

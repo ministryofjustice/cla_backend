@@ -7,7 +7,7 @@ from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 from legalaid.tests.views.mixins.user_api import UserAPIMixin
 
 
-class UserTests(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
+class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
     def assertUserEqual(self, data):
         self.assertDictContainsSubset({
             'username': u'john',

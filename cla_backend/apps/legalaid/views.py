@@ -5,6 +5,8 @@ from django import forms
 from django.db import transaction
 from django.core.paginator import Paginator
 
+from django_statsd.clients import statsd
+
 from legalaid.permissions import IsManagerOrMePermission
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
@@ -12,13 +14,16 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter, \
     DjangoFilterBackend
+from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
 from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin, \
     FormActionMixin
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from cla_eventlog import event_registry
-from rest_framework_extensions.mixins import DetailSerializerMixin
+
+from cla_auth.models import AccessAttempt
+
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
@@ -63,6 +68,7 @@ class PasswordResetForm(forms.Form):
         new_password = self.cleaned_data['new_password']
         self.reset_user.set_password(new_password)
         self.reset_user.save()
+
 
 class BaseUserViewSet(
     mixins.RetrieveModelMixin,
@@ -110,19 +116,27 @@ class BaseUserViewSet(
         except PermissionDenied as pd:
             return DRFResponse(pd.detail, status=status.HTTP_403_FORBIDDEN)
 
+    @action()
+    def reset_lockout(self, request, *args, **kwargs):
+        logged_in_user_model = self.get_logged_in_user_model()
+        if not logged_in_user_model.is_manager:
+            raise PermissionDenied()
+
+        user = self.get_object().user
+        AccessAttempt.objects.delete_for_username(user.username)
+        statsd.incr('account.lockout.reset')
+        return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
     def list(self, request, *args, **kwargs):
         if not self.get_logged_in_user_model().is_manager:
             raise PermissionDenied()
         return super(BaseUserViewSet, self).list(request, *args, **kwargs)
-
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
         obj = super(BaseUserViewSet, self).create(request, *args, **kwargs)
         self.check_object_permissions(request, obj)
         return obj
-
-
 
 
 class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):

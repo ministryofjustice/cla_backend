@@ -166,7 +166,15 @@ class ProviderExtract(APIView):
         form = ProviderExtractForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            case = get_object_or_404(Case, reference__iexact=data['CHSCRN'])
+            try:
+                case = Case.objects.get(reference__iexact=data['CHSCRN'])
+            except Case.DoesNotExist:
+                return DRFResponse({'detail': 'Not found'},
+                    content_type='text/xml',
+                    status=404,
+                    headers={
+                        'Access-Control-Allow-Origin': '*'
+                    })
             self.check_object_permissions(request, case)
             statsd.incr('provider_extract.exported')
 
@@ -177,7 +185,11 @@ class ProviderExtract(APIView):
             return ProviderExtractFormatter(case).format()
         else:
             statsd.incr('provider_extract.malformed')
-            return DRFResponse(form.errors, content_type='text/xml', status=400)
+            return DRFResponse(form.errors, content_type='text/xml',
+                               status=400,
+                               headers={
+                                'Access-Control-Allow-Origin': '*'
+                                })
 
 
 class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):

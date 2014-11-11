@@ -3,6 +3,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
 from django.test import TestCase
 from django.conf import settings
 from django.utils import timezone
@@ -184,3 +185,27 @@ class LoginTestCase(TestCase):
             self.assertEqual(response.status_code, 200)
 
             self.assertEqual(AccessAttempt.objects.count(), 0)
+
+    def test_throttling(self):
+        # clearing cache
+        cache.clear()
+
+        # mocking throttle value
+        from cla_auth.views import LoginRateThrottle
+        with mock.patch.dict(
+            LoginRateThrottle.THROTTLE_RATES, {
+                'login': '1/sec',
+            }
+        ):
+
+            # 1st time => 200
+            response = self.client.post(
+                self.url, data=self.get_operator_data()
+            )
+            self.assertEqual(response.status_code, 200)
+
+            # 2nd time => 429
+            response = self.client.post(
+                self.url, data=self.get_operator_data()
+            )
+            self.assertEqual(response.status_code, 429)

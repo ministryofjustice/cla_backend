@@ -282,10 +282,6 @@ except ImportError:
     pass
 
 
-# importing test settings file if necessary (TODO chould be done better)
-if len(sys.argv) > 1 and 'test' == sys.argv[1]:
-    from .testing import *
-
 
 # Django rest-framework-auth
 REST_FRAMEWORK = {
@@ -297,7 +293,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-    )
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'login': '10/sec',
+    }
 }
 
 # the start number of the LAA reference, must be 7 digit number and must
@@ -328,3 +327,8 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get('CALL_CENTRE_NOTIFY_EMAIL_ADDRESS', 'ravi.kotecha@digital.justice.gov.uk')
+
+
+# importing test settings file if necessary (TODO chould be done better)
+if len(sys.argv) > 1 and 'test' == sys.argv[1]:
+    from .testing import *

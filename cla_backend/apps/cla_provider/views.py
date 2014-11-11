@@ -170,7 +170,7 @@ class ProviderExtract(APIView):
                 case = Case.objects.get(reference__iexact=data['CHSCRN'])
             except Case.DoesNotExist:
                 return DRFResponse({'detail': 'Not found'},
-                    content_type='text/xml',
+                    content_type='application/json',
                     status=404,
                     headers={
                         'Access-Control-Allow-Origin': '*'

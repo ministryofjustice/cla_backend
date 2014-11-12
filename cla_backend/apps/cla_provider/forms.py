@@ -15,7 +15,23 @@ from legalaid.models import Category, MatterType
 
 
 class RejectCaseForm(EventSpecificLogForm):
+    """
+    Rejects a case. If the outcome code has 'requires_action_by' == None
+    then it sets case.provider_closed field
+    """
     LOG_EVENT_KEY = 'reject_case'
+
+    def save(self, user):
+        code = self.get_event_code()
+        event = event_registry.get_event(self.get_event_key())()
+        code_data = event.codes[code]
+
+        val = super(RejectCaseForm, self).save(user)
+
+        if code_data.get('set_requires_action_by', False) == None:
+            self.case.close_by_provider()
+
+        return val
 
 
 class AcceptCaseForm(BaseCaseLogForm):
@@ -23,7 +39,15 @@ class AcceptCaseForm(BaseCaseLogForm):
 
 
 class CloseCaseForm(BaseCaseLogForm):
+    """
+    Closes a case and sets case.provider_closed field
+    """
     LOG_EVENT_KEY = 'close_case'
+
+    def save(self, user):
+        val = super(CloseCaseForm, self).save(user)
+        self.case.close_by_provider()
+        return val
 
 
 class SplitCaseForm(BaseCaseLogForm):

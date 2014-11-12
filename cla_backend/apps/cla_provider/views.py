@@ -38,6 +38,7 @@ from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm
 
 logger = logging.getLogger(__name__)
 
+
 class CLAProviderPermissionViewSetMixin(object):
     permission_classes = (CLAProviderClientIDPermission,)
 

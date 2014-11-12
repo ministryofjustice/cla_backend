@@ -186,6 +186,33 @@ class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             kwargs={'reference': reference}
         )
 
+    def _test_provider_closed(self, code, expected_None):
+        data = self.get_default_post_data()
+        data['event_code'] = code
+
+        self.assertEqual(self.resource.provider_closed, None)
+        self._test_successful(data=data)
+
+        self.resource = self.resource.__class__.objects.get(
+            pk=self.resource.pk
+        )
+        if expected_None:
+            self.assertNotEqual(self.resource.provider_closed, None)
+        else:
+            self.assertEqual(self.resource.provider_closed, None)
+
+    def test_MIS_OOS_successful(self):
+        self._test_provider_closed('MIS-OOS', True)
+
+    def test_MIS_MEANS_successful(self):
+        self._test_provider_closed('MIS-MEANS', True)
+
+    def test_MIS_successful(self):
+        self._test_provider_closed('MIS', False)
+
+    def test_COI_successful(self):
+        self._test_provider_closed('COI', False)
+
 
 class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     NO_BODY_RESPONSE = False
@@ -205,6 +232,16 @@ class CloseCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             'cla_provider:case-close', args=(),
             kwargs={'reference': reference}
         )
+
+    def test_successful(self):
+        self.assertEqual(self.resource.provider_closed, None)
+
+        super(CloseCaseTestCase, self).test_successful()
+
+        self.resource = self.resource.__class__.objects.get(
+            pk=self.resource.pk
+        )
+        self.assertNotEqual(self.resource.provider_closed, None)
 
 
 class SplitCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):

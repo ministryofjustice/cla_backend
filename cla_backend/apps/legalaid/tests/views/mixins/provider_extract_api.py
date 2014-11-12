@@ -78,6 +78,17 @@ class ProviderExtractAPIMixin(object):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_valid_but_legacy_post_to_extract_allowed(self):
+        data = self.get_valid_post_data(
+            CHSCRN=self.case.reference
+        )
+        org_id = data.pop('CHSOrganisationID')
+        data['CHSOrgansationID'] = org_id
+
+        response = self.client.post(
+            self.detail_url, data=data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_methods_not_authorized(self):
         ### DETAIL

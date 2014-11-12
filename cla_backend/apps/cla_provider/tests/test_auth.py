@@ -27,6 +27,16 @@ class LegacyCHSAuthenticationTestCase(CLAProviderAuthBaseApiTestMixin, TestCase)
         user, _ = authenticator.authenticate(mockRequest)
         self.assertIsNotNone(user)
 
+    def test_valid_legacy_login(self):
+        # CHSOrgansationID instead of CHSOrganisationID
+        authenticator = LegacyCHSAuthentication()
+        mockRequest = MagicMock(DATA={'CHSOrgansationID': self.staff.chs_organisation,
+                                      'CHSPassword': 'password',
+                                      'CHSUserName': self.staff.chs_user
+        })
+
+        user, _ = authenticator.authenticate(mockRequest)
+        self.assertIsNotNone(user)
 
     def test_valid_login_but_is_active_false(self):
         self.user.is_active = False

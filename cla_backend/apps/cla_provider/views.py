@@ -163,7 +163,12 @@ class ProviderExtract(APIView):
     http_method_names = [u'post']
 
     def post(self, request):
-        form = ProviderExtractForm(request.POST)
+        # this is to keep backward compatibility with the old system
+        data = request.POST.copy()
+        if 'CHSOrganisationID' not in data:
+            data['CHSOrganisationID'] = data.get('CHSOrgansationID')
+
+        form = ProviderExtractForm(data)
         if form.is_valid():
             data = form.cleaned_data
             try:

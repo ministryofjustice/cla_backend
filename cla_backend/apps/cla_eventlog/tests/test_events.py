@@ -273,7 +273,7 @@ class SelectableEventsTestCase(EventTestCaseMixin, TestCase):
                                              code=chosen_code,
                                              type=LOG_TYPES.OUTCOME,
                                              notes='selectable notes',
-                                             level=LOG_LEVELS.HIGH,
+                                             level=event.codes[chosen_code]['level'],
                                              created_by=self.dummy_user))
 
     def test_select_selectable_code_invalid(self):

@@ -16,7 +16,9 @@ class LegacyCHSAuthentication(BaseAuthentication):
         userid, password, org = \
             request.DATA.get('CHSUserName'), \
             request.DATA.get('CHSPassword'), \
-            request.DATA.get('CHSOrganisationID')
+            request.DATA.get(
+                'CHSOrganisationID', request.DATA.get('CHSOrgansationID')
+            )
 
         if not all([userid, password, org]):
             statsd.incr('provider_extract.malformed')

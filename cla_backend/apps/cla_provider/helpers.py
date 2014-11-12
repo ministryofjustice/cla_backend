@@ -128,4 +128,7 @@ class ProviderExtractFormatter(object):
         ctx = {}
         ctx['case'] = self.case
         template = get_template('provider/case.xml')
-        return HttpResponse(template.render(Context(ctx)), content_type='text/xml')
+        resp = HttpResponse(template.render(Context(ctx)),
+                            content_type='text/xml')
+        resp['Access-Control-Allow-Origin'] = '*'
+        return resp

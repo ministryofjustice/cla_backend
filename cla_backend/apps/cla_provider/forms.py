@@ -138,7 +138,7 @@ class SplitCaseForm(BaseCaseLogForm):
         matter_type2 = self.cleaned_data['matter_type2']
         internal = self.cleaned_data['internal']
 
-        new_case = self.case.split(
+        self.new_case = self.case.split(
             user=user, category=category,
             matter_type1=matter_type1, matter_type2=matter_type2,
             assignment_internal=internal
@@ -147,13 +147,23 @@ class SplitCaseForm(BaseCaseLogForm):
         # create 'creat event' for new case
         event = event_registry.get_event('case')()
         event.process(
-            new_case, status='created', created_by=new_case.created_by,
+            self.new_case, status='created',
+            created_by=self.new_case.created_by,
             notes="Case created by Specialist"
         )
 
         super(SplitCaseForm, self).save(user)
 
-        return new_case
+        return self.new_case
+
+    def save_event(self, user):
+        event = event_registry.get_event(self.get_event_key())()
+        event.process_split(
+            self.new_case, created_by=user,
+            notes=self.get_notes(),
+            context=self.get_context(),
+            **self.get_kwargs()
+        )
 
     def get_kwargs(self):
         kwargs = super(SplitCaseForm, self).get_kwargs()

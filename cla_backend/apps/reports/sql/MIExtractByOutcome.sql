@@ -11,7 +11,6 @@ WITH diversity_view as (
       SELECT MAX(l.id) FROM cla_eventlog_log l WHERE
         l.case_id = c.id
         and l.type = 'outcome'
-        and l.level >= 29
       group by l.case_id)
 
 ), operator_first_view as (

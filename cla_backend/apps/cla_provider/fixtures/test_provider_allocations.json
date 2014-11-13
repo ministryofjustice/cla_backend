@@ -1,0 +1,211 @@
+[
+    {
+        "pk": 1,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 3,
+            "provider": 1,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:47:01.468Z",
+            "created": "2014-04-23T14:47:01.438Z"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 2,
+            "provider": 1,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:47:01.472Z",
+            "created": "2014-04-23T14:47:01.442Z"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 4,
+            "provider": 1,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:47:01.472Z",
+            "created": "2014-04-23T14:47:01.442Z"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 3,
+            "provider": 2,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:47:01.472Z",
+            "created": "2014-04-23T14:47:01.442Z"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 2,
+            "provider": 2,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:47:01.472Z",
+            "created": "2014-04-23T14:47:01.442Z"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 3,
+            "provider": 3,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:47:01.472Z",
+            "created": "2014-04-23T14:47:01.442Z"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 2,
+            "provider": 3,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:47:01.472Z",
+            "created": "2014-04-23T14:47:01.442Z"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 3,
+            "provider": 4,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:47:01.472Z",
+            "created": "2014-04-23T14:47:01.442Z"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 2,
+            "provider": 4,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:59:44.467Z",
+            "created": "2014-04-23T14:59:44.430Z"
+        }
+    },
+    {
+        "pk": 10,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 3,
+            "provider": 5,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:59:44.468Z",
+            "created": "2014-04-23T14:59:44.434Z"
+        }
+    },
+    {
+        "pk": 11,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 2,
+            "provider": 5,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:59:44.468Z",
+            "created": "2014-04-23T14:59:44.434Z"
+        }
+    },
+    {
+        "pk": 12,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 4,
+            "provider": 6,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:59:44.468Z",
+            "created": "2014-04-23T14:59:44.434Z"
+        }
+    },
+    {
+        "pk": 13,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 4,
+            "provider": 7,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:59:44.468Z",
+            "created": "2014-04-23T14:59:44.434Z"
+        }
+    },
+    {
+        "pk": 14,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 7,
+            "provider": 8,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:59:44.468Z",
+            "created": "2014-04-23T14:59:44.434Z"
+        }
+    },
+    {
+        "pk": 15,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 7,
+            "provider": 9,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:59:44.468Z",
+            "created": "2014-04-23T14:59:44.434Z"
+        }
+    },
+    {
+        "pk": 16,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 7,
+            "provider": 10,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:59:44.468Z",
+            "created": "2014-04-23T14:59:44.434Z"
+        }
+    },
+    {
+        "pk": 17,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 8,
+            "provider": 11,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:59:44.468Z",
+            "created": "2014-04-23T14:59:44.434Z"
+        }
+    },
+    {
+        "pk": 18,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 8,
+            "provider": 12,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:59:44.468Z",
+            "created": "2014-04-23T14:59:44.434Z"
+        }
+    },
+    {
+        "pk": 19,
+        "model": "cla_provider.providerallocation",
+        "fields": {
+            "category": 8,
+            "provider": 13,
+            "weighted_distribution": 0.5,
+            "modified": "2014-04-23T14:59:44.468Z",
+            "created": "2014-04-23T14:59:44.434Z"
+        }
+    }
+]

@@ -32,7 +32,8 @@ class CategoryViewSet(PublicAPIViewSetMixin, BaseCategoryViewSet):
 
 
 class ArticleViewSet(PublicAPIViewSetMixin, BaseArticleViewSet):
-    pass
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
 
 
 class EligibilityCheckViewSet(

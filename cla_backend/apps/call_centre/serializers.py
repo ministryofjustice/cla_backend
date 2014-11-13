@@ -216,7 +216,8 @@ class CaseListSerializer(CaseSerializer):
             'date_of_birth',
             'category',
             'outcome_code',
-            'case_count'
+            'case_count',
+            'source'
         )
 
 class CreateCaseSerializer(CaseSerializer):

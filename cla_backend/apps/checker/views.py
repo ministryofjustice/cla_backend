@@ -9,6 +9,7 @@ from rest_framework import viewsets, mixins
 from core.models import get_web_user
 
 from cla_eventlog import event_registry
+from knowledgebase.views import BaseArticleViewSet
 
 from legalaid.models import EligibilityCheck, Property, Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet
@@ -27,6 +28,10 @@ class CategoryViewSet(PublicAPIViewSetMixin, BaseCategoryViewSet):
     """
     This returns a list of all valid categories in the system.
     """
+    pass
+
+
+class ArticleViewSet(PublicAPIViewSetMixin, BaseArticleViewSet):
     pass
 
 

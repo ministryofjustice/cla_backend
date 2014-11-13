@@ -6,7 +6,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)
-router.register(r'knowledgebase/article', views.ArticleViewSet)
+router.register(r'organisation', views.ArticleViewSet)
 router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_name='eligibility_check')
 router.register(r'case', views.CaseViewSet)
 

@@ -21,6 +21,14 @@ from cla_provider.forms import CloseCaseForm, AcceptCaseForm, \
 class AcceptCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     FORM = AcceptCaseForm
 
+    def test_save_successfull(self):
+        case = make_recipe('legalaid.case')
+
+        self.assertEqual(case.provider_accepted, None)
+        self._test_save_successfull(case=case)
+
+        self.assertNotEqual(case.provider_accepted, None)
+
 
 class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
     FORM = RejectCaseForm

@@ -28,14 +28,29 @@ class RejectCaseForm(EventSpecificLogForm):
 
         val = super(RejectCaseForm, self).save(user)
 
+        # if requires_action by == None:
+        #   mark case as closed (keep case.provider)
+        # else:
+        #   reset provider (case not beloging to provider anymore)
         if code_data.get('set_requires_action_by', False) == None:
             self.case.close_by_provider()
+        else:  # if requires_action_by == REQUIRES_ACTION_BY.OPERATOR
+            self.case.provider = None
+            self.case.save(update_fields=['provider'])
 
         return val
 
 
 class AcceptCaseForm(BaseCaseLogForm):
+    """
+    Accepts a case and sets case.provider_accepted field
+    """
     LOG_EVENT_KEY = 'accept_case'
+
+    def save(self, user):
+        val = super(AcceptCaseForm, self).save(user)
+        self.case.accept_by_provider()
+        return val
 
 
 class CloseCaseForm(BaseCaseLogForm):

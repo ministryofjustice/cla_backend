@@ -545,6 +545,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     from_case = models.ForeignKey('self', blank=True, null=True, related_name='split_cases')
 
     provider_viewed = models.DateTimeField(blank=True, null=True)
+    provider_accepted = models.DateTimeField(blank=True, null=True)
     provider_closed = models.DateTimeField(blank=True, null=True)
     source = models.CharField(
         max_length=20, choices=CASE_SOURCE, default=CASE_SOURCE.PHONE
@@ -603,6 +604,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
             'matter_type2': matter_type2,
             'from_case': self,
             'provider_viewed': None,
+            'provider_accepted': None,
             'provider_closed': None
         }
         if assignment_internal:
@@ -653,9 +655,11 @@ class Case(TimeStampedModel, ModelDiffMixin):
     def assign_to_provider(self, provider):
         self.provider = provider
         self.provider_viewed = None
+        self.provider_accepted = None
         self.provider_closed = None
         self.save(update_fields=[
-            'provider', 'provider_viewed', 'provider_closed', 'modified'
+            'provider', 'provider_viewed', 'provider_accepted',
+            'provider_closed', 'modified'
         ])
         self.reset_requires_action_at()
 
@@ -663,6 +667,10 @@ class Case(TimeStampedModel, ModelDiffMixin):
         if provider == self.provider:
             self.provider_viewed = datetime.datetime.utcnow().replace(tzinfo=utc)
             self.save(update_fields=['provider_viewed'])
+
+    def accept_by_provider(self):
+        self.provider_accepted = datetime.datetime.utcnow().replace(tzinfo=utc)
+        self.save(update_fields=['provider_accepted'])
 
     def close_by_provider(self):
         self.provider_closed = datetime.datetime.utcnow().replace(tzinfo=utc)

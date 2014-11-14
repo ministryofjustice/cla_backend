@@ -172,7 +172,8 @@ PROJECT_APPS = (
     'timer',
     'diagnosis',
     'status',
-    'historic'
+    'historic',
+    'cla_auth'
 )
 
 INSTALLED_APPS += PROJECT_APPS
@@ -268,7 +269,10 @@ if 'RAVEN_CONFIG_DSN' in os.environ:
         #'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
     ) + MIDDLEWARE_CLASSES
 
-# EMAILS
+# SECURITY
+
+LOGIN_FAILURE_LIMIT = 5
+LOGIN_FAILURE_COOLOFF_TIME = 60  # in minutes
 
 
 # .local.py overrides all the common settings.
@@ -277,10 +281,6 @@ try:
 except ImportError:
     pass
 
-
-# importing test settings file if necessary (TODO chould be done better)
-if len(sys.argv) > 1 and 'test' == sys.argv[1]:
-    from .testing import *
 
 
 # Django rest-framework-auth
@@ -293,7 +293,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-    )
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'login': '10/sec',
+    }
 }
 
 # the start number of the LAA reference, must be 7 digit number and must
@@ -324,3 +327,8 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get('CALL_CENTRE_NOTIFY_EMAIL_ADDRESS', 'ravi.kotecha@digital.justice.gov.uk')
+
+
+# importing test settings file if necessary (TODO chould be done better)
+if len(sys.argv) > 1 and 'test' == sys.argv[1]:
+    from .testing import *

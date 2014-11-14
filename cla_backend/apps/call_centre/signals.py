@@ -62,4 +62,3 @@ def log_operator_modified(sender, instance, **kwargs):
               settings.EMAIL_FROM_ADDRESS,
               settings.OPERATOR_USER_ALERT_EMAILS,
               fail_silently=True)
-

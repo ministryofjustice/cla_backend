@@ -10,7 +10,7 @@ python manage.py migrate  >> /var/log/wsgi/db_scripts.log 2>&1
 
 python manage.py loaddata initial_category.json >> /var/log/wsgi/db_scripts.log 2>&1
 python manage.py loaddata initial_mattertype.json >> /var/log/wsgi/db_scripts.log 2>&1
-#python manage.py loaddata kb_from_knowledgebase.json >> /var/log/wsgi/db_scripts.log 2>&1
+python manage.py loaddata kb_from_knowledgebase.json >> /var/log/wsgi/db_scripts.log 2>&1
 python manage.py loaddata initial_outcome_codes.json >> /var/log/wsgi/db_scripts.log 2>&1
 python manage.py loaddata initial_media_codes.json >> /var/log/wsgi/db_scripts.log 2>&1
 

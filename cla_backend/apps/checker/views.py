@@ -9,7 +9,8 @@ from rest_framework import viewsets, mixins
 from core.models import get_web_user
 
 from cla_eventlog import event_registry
-from knowledgebase.views import BaseArticleViewSet
+from knowledgebase.views import BaseArticleViewSet, \
+    ArticleCategoryFilter
 
 from legalaid.models import EligibilityCheck, Property, Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet
@@ -31,9 +32,17 @@ class CategoryViewSet(PublicAPIViewSetMixin, BaseCategoryViewSet):
     pass
 
 
+class ArticleCategoryNameFilter(ArticleCategoryFilter):
+
+    class Meta(ArticleCategoryFilter.Meta):
+        fields = ('article_category__name',)
+
+
 class ArticleViewSet(PublicAPIViewSetMixin, BaseArticleViewSet):
     paginate_by_param = 'page_size'
     max_paginate_by = 100
+
+    filter_class = ArticleCategoryNameFilter
 
 
 class EligibilityCheckViewSet(

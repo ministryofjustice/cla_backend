@@ -160,7 +160,19 @@ class ProviderExtract(APIView):
     permission_classes = (IsProviderPermission,)
     authentication_classes = (LegacyCHSAuthentication,)
 
-    http_method_names = [u'post']
+    http_method_names = [u'post', 'options']
+
+    def options(self, request):
+        """
+        CORS requests begin with an OPTIONS request, which must not require
+        authentication and must have CORS headers in the response.
+        """
+        return DRFResponse(self.metadata(request),
+            content_type='application/json',
+            status=200,
+            headers={
+                'Access-Control-Allow-Origin': '*'
+            })
 
     def post(self, request):
         # this is to keep backward compatibility with the old system

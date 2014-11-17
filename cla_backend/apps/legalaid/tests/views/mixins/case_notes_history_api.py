@@ -50,7 +50,7 @@ class CaseNotesHistoryAPIMixin(NestedSimpleResourceAPIMixin):
     def test_methods_not_authorized(self):
         self._test_get_not_authorized(self.list_url, self.invalid_token)
 
-    def assertResponseKeys(self, response):
+    def assertResponseKeys(self, response, *kwargs):
         self.assertTrue('results' in response.data)
 
         results = response.data['results']

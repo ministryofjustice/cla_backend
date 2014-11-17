@@ -21,13 +21,54 @@ from cla_provider.forms import CloseCaseForm, AcceptCaseForm, \
 class AcceptCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     FORM = AcceptCaseForm
 
+    def test_save_successfull(self):
+        case = make_recipe('legalaid.case')
+
+        self.assertEqual(case.provider_accepted, None)
+        self._test_save_successfull(case=case)
+
+        self.assertNotEqual(case.provider_accepted, None)
+
 
 class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
     FORM = RejectCaseForm
 
+    def _test_provider_closed(self, code, expected_None):
+        case = make_recipe('legalaid.case')
+        data = self.get_default_data()
+        data['event_code'] = code
+
+        self.assertEqual(case.provider_closed, None)
+        self._test_save_successfull(case=case, data=data)
+
+        if expected_None:
+            self.assertNotEqual(case.provider_closed, None)
+        else:
+            self.assertEqual(case.provider_closed, None)
+
+    def test_save_MIS_OOS_sets_provider_closed(self):
+        self._test_provider_closed('MIS-OOS', expected_None=True)
+
+    def test_save_MIS_MEANS_sets_provider_closed(self):
+        self._test_provider_closed('MIS-MEANS', expected_None=True)
+
+    def test_save_MIS_doesnt_set_provider_closed(self):
+        self._test_provider_closed('MIS', expected_None=False)
+
+    def test_save_COI_doesnt_set_provider_closed(self):
+        self._test_provider_closed('COI', expected_None=False)
+
 
 class CloseCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     FORM = CloseCaseForm
+
+    def test_save_successfull(self):
+        case = make_recipe('legalaid.case')
+
+        self.assertEqual(case.provider_closed, None)
+        self._test_save_successfull(case=case)
+
+        self.assertNotEqual(case.provider_closed, None)
 
 
 class SplitCaseFormTestCase(TestCase):

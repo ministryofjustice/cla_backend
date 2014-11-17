@@ -82,7 +82,10 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         exempt_user=True,
         exempt_user_reason=EXEMPT_USER_REASON.ECHI,
         ecf_statement=ECF_STATEMENT.READ_OUT_MESSAGE,
-        source=CASE_SOURCE.WEB
+        source=CASE_SOURCE.WEB,
+        provider_viewed=timezone.now(),
+        provider_accepted=timezone.now(),
+        provider_closed=timezone.now()
     )
     CaseKnowledgebaseAssignment.objects.create(
         case=case, assigned_by=make_user(),
@@ -615,8 +618,6 @@ class CaseTestCase(TestCase):
 
         case.assign_to_provider(providers[1])
 
-        self.assertEqual(case.provider, providers[1])
-
     def test_assign_to_provider_None(self):
         provider = make_recipe('cla_provider.provider')
 
@@ -627,6 +628,29 @@ class CaseTestCase(TestCase):
         case.assign_to_provider(provider)
 
         self.assertEqual(case.provider, provider)
+
+    def test_assign_to_provider_resets_provider_viewed_accepted_closed(self):
+        providers = make_recipe('cla_provider.provider', _quantity=2)
+
+        case = make_recipe(
+            'legalaid.case',
+            provider=providers[0],
+            provider_viewed=timezone.now(),
+            provider_accepted=timezone.now(),
+            provider_closed=timezone.now()
+        )
+
+        self.assertTrue(case.provider)
+        self.assertNotEqual(case.provider_viewed, None)
+        self.assertNotEqual(case.provider_accepted, None)
+        self.assertNotEqual(case.provider_closed, None)
+
+        case.assign_to_provider(providers[1])
+
+        self.assertEqual(case.provider, providers[1])
+        self.assertEqual(case.provider_viewed, None)
+        self.assertEqual(case.provider_accepted, None)
+        self.assertEqual(case.provider_closed, None)
 
     def test_assign_to_provider_resets_callback_info(self):
         provider = make_recipe('cla_provider.provider')
@@ -1144,7 +1168,8 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'eligibility_check', 'locked_by', 'locked_at', 'provider',
             'thirdparty_details', 'adaptation_details', 'media_code',
             'outcome_code', 'level', 'exempt_user', 'exempt_user_reason',
-            'ecf_statement'
+            'ecf_statement', 'provider_viewed', 'provider_accepted',
+            'provider_closed'
         ]:
             self.assertEqual(getattr(new_case, field), None)
 
@@ -1171,12 +1196,12 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'created_by', 'locked_by', 'locked_at', 'thirdparty_details',
             'adaptation_details', 'billable_time', 'matter_type1', 'matter_type2',
             'outcome_code', 'level', 'reference', 'laa_reference', 'from_case',
-            'outcome_code_id', 'requires_action_at', 'callback_attempt'
+            'outcome_code_id', 'requires_action_at', 'callback_attempt',
+            'provider_viewed', 'provider_accepted', 'provider_closed'
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
-            'exempt_user', 'exempt_user_reason', 'ecf_statement',
-            'provider_viewed', 'source'
+            'exempt_user', 'exempt_user_reason', 'ecf_statement', 'source'
         ]
 
         if internal:

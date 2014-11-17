@@ -38,6 +38,7 @@ from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm
 
 logger = logging.getLogger(__name__)
 
+
 class CLAProviderPermissionViewSetMixin(object):
     permission_classes = (CLAProviderClientIDPermission,)
 
@@ -90,25 +91,45 @@ class CaseViewSet(
                        'personal_details__full_name', 'personal_details__postcode')
 
     def get_queryset(self, **kwargs):
+        """
+        Returns the following:
+            all:
+                no querystring
+            new:
+                only == 'new'
+            opened:
+                only == 'opened'
+            accepted:
+                only == 'accepted'
+            closed:
+                only == 'closed'
+        """
         this_provider = get_object_or_404(
             Staff, user=self.request.user).provider
         qs = super(CaseViewSet, self).get_queryset(**kwargs).filter(
-            provider=this_provider,
-            requires_action_by__in=[
-                REQUIRES_ACTION_BY.PROVIDER, REQUIRES_ACTION_BY.PROVIDER_REVIEW
-            ]
-        )
+            provider=this_provider
+        ).exclude(outcome_code='IRCB')
 
-        show_new = self.request.QUERY_PARAMS.get('new')
-        show_accepted = self.request.QUERY_PARAMS.get('accepted')
-
-        if show_new is not None:
-            qs = qs.filter(provider_viewed__isnull=(show_new == '1'))
-
-        if show_accepted == '1':
-            qs = qs.filter(outcome_code='SPOP')
-        elif show_accepted == '0':
-            qs = qs.exclude(outcome_code='SPOP')
+        only_param = self.request.QUERY_PARAMS.get('only')
+        if only_param == 'new':
+            qs = qs.filter(
+                provider_viewed__isnull=True
+            )
+        elif only_param == 'opened':
+            qs = qs.filter(
+                provider_viewed__isnull=False,
+                provider_accepted__isnull=True,
+                provider_closed__isnull=True
+            )
+        elif only_param == 'accepted':
+            qs = qs.filter(
+                provider_accepted__isnull=False,
+                provider_closed__isnull=True
+            )
+        elif only_param == 'closed':
+            qs = qs.filter(
+                provider_closed__isnull=False
+            )
 
         return qs
 

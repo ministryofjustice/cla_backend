@@ -270,6 +270,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
     )
     on_passported_benefits = models.NullBooleanField(default=None)
     on_nass_benefits = models.NullBooleanField(default=None)
+    specific_benefits = JSONField(null=True, blank=True)
 
     # need to be moved into graph/questions format soon
     is_you_or_your_partner_over_60 = models.NullBooleanField(default=None)
@@ -320,6 +321,11 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
             self.calculations = checker.calcs
 
         self.save()
+
+    def has_stated_any_specific_benefits(self):
+        if not self.specific_benefits:
+            return False
+        return any(self.specific_benefits.values())
 
     def to_case_data(self):
         def compose_dict(model=self, props=None):

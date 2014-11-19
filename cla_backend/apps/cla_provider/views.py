@@ -11,6 +11,7 @@ from legalaid.permissions import IsManagerOrMePermission
 from rest_framework import mixins
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
+from rest_framework.filters import SearchFilter
 
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 
@@ -20,7 +21,8 @@ from legalaid.views import BaseUserViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
     BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
-    BaseFeedbackViewSet, BaseCaseNotesHistoryViewSet, BaseCSVUploadViewSet
+    BaseFeedbackViewSet, BaseCaseNotesHistoryViewSet, BaseCSVUploadViewSet, \
+    DescCaseOrderingFilter
 
 from diagnosis.views import BaseDiagnosisViewSet
 from cla_common.constants import REQUIRES_ACTION_BY
@@ -91,8 +93,14 @@ class CaseViewSet(
         'created_by'
     )
 
-    ordering_fields = ('-requires_action_by', 'modified',
+    filter_backends = (
+        DescCaseOrderingFilter,
+        SearchFilter,
+    )
+
+    ordering_fields = ('modified', 'null_priority', 'priority',
                        'personal_details__full_name', 'personal_details__postcode')
+    ordering = ('null_priority', '-priority', '-modified')
 
     def get_queryset(self, **kwargs):
         """

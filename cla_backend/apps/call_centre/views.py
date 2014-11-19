@@ -30,7 +30,7 @@ from legalaid.views import BaseUserViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
     BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
-    BaseCaseNotesHistoryViewSet, CaseOrderingFilter
+    BaseCaseNotesHistoryViewSet, AscCaseOrderingFilter
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -127,7 +127,7 @@ class CaseViewSet(
     )
 
     filter_backends = (
-        CaseOrderingFilter,
+        AscCaseOrderingFilter,
         SearchFilter,
     )
 

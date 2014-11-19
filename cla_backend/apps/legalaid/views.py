@@ -303,7 +303,7 @@ class CaseOrderingFilter(OrderingFilter):
                     ordering = [ordering]
 
             if 'modified' not in ordering and '-modified' not in ordering:
-                ordering.append('-modified')
+                ordering.append('modified')
 
         if not ordering:
             ordering = self.get_default_ordering(view)

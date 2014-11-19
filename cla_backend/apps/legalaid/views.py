@@ -1,9 +1,11 @@
 import json
+from core.drf.exceptions import ConflictException
 
-from cla_provider.models import Feedback
 from django import forms
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.core.paginator import Paginator
+
+from django_statsd.clients import statsd
 
 from legalaid.permissions import IsManagerOrMePermission
 from rest_framework import viewsets, mixins, status
@@ -12,18 +14,25 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter, \
     DjangoFilterBackend
+from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
 from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin, \
     FormActionMixin
 from core.drf.pagination import RelativeUrlPaginationSerializer
+
+from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
-from rest_framework_extensions.mixins import DetailSerializerMixin
+
+from cla_auth.models import AccessAttempt
+
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
     AdaptationDetailsSerializerBase, CaseSerializerBase, \
-    FeedbackSerializerBase, CaseNotesHistorySerializerBase
+    FeedbackSerializerBase, CaseNotesHistorySerializerBase, \
+    CSVUploadSerializerBase
+from cla_provider.models import Feedback, CSVUpload
 from .models import Case, Category, EligibilityCheck, \
     MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
     AdaptationDetails, CaseNotesHistory
@@ -63,6 +72,7 @@ class PasswordResetForm(forms.Form):
         new_password = self.cleaned_data['new_password']
         self.reset_user.set_password(new_password)
         self.reset_user.save()
+
 
 class BaseUserViewSet(
     mixins.RetrieveModelMixin,
@@ -110,19 +120,27 @@ class BaseUserViewSet(
         except PermissionDenied as pd:
             return DRFResponse(pd.detail, status=status.HTTP_403_FORBIDDEN)
 
+    @action()
+    def reset_lockout(self, request, *args, **kwargs):
+        logged_in_user_model = self.get_logged_in_user_model()
+        if not logged_in_user_model.is_manager:
+            raise PermissionDenied()
+
+        user = self.get_object().user
+        AccessAttempt.objects.delete_for_username(user.username)
+        statsd.incr('account.lockout.reset')
+        return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
     def list(self, request, *args, **kwargs):
         if not self.get_logged_in_user_model().is_manager:
             raise PermissionDenied()
         return super(BaseUserViewSet, self).list(request, *args, **kwargs)
-
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
         obj = super(BaseUserViewSet, self).create(request, *args, **kwargs)
         self.check_object_permissions(request, obj)
         return obj
-
-
 
 
 class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -270,6 +288,41 @@ class BaseAdaptationDetailsMetadataViewSet(
         self.http_method_not_allowed(request)
 
 
+class BaseCaseOrderingFilter(OrderingFilter):
+    default_modified = 'modified'
+
+    def filter_queryset(self, request, queryset, view):
+        ordering = self.get_ordering(request)
+
+        if ordering:
+            ordering = self.remove_invalid_fields(queryset, ordering, view)
+
+            if isinstance(ordering, basestring):
+                if ',' in ordering:
+                    ordering = ordering.split(',')
+                else:
+                    ordering = [ordering]
+
+            if 'modified' not in ordering and '-modified' not in ordering:
+                ordering.append(self.default_modified)
+
+        if not ordering:
+            ordering = self.get_default_ordering(view)
+
+        if ordering:
+            return queryset.order_by(*ordering)
+
+        return queryset
+
+
+class AscCaseOrderingFilter(BaseCaseOrderingFilter):
+    default_modified = 'modified'
+
+
+class DescCaseOrderingFilter(BaseCaseOrderingFilter):
+    default_modified = '-modified'
+
+
 class FullCaseViewSet(
     DetailSerializerMixin,
     mixins.UpdateModelMixin,
@@ -286,14 +339,14 @@ class FullCaseViewSet(
     pagination_serializer_class = RelativeUrlPaginationSerializer
 
     filter_backends = (
-        OrderingFilter,
+        AscCaseOrderingFilter,
         SearchFilter,
     )
 
     ordering_fields = ('modified', 'personal_details__full_name',
             'personal_details__date_of_birth', 'personal_details__postcode',
             'eligibility_check__category__name', 'priority', 'null_priority')
-    ordering = ('null_priority', '-priority', '-modified')
+    ordering = ('null_priority', '-priority', 'modified')
 
     search_fields = (
         'personal_details__full_name',
@@ -383,6 +436,33 @@ class BaseFeedbackViewSet(
     PARENT_FIELD = 'provider_feedback'
     lookup_field = 'reference'
 
+class BaseCSVUploadViewSet(
+    DetailSerializerMixin,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
+    model = CSVUpload
+    serializer_class = CSVUploadSerializerBase
+    serializer_detail_class = CSVUploadSerializerBase
+
+    filter_backends = (
+        OrderingFilter,
+    )
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super(BaseCSVUploadViewSet, self).create(request, *args, **kwargs)
+        except IntegrityError as ie:
+            raise ConflictException("Upload already exists for given month. Try overwriting.")
+
+    def update(self, request, *args, **kwargs):
+        if request.method.upper() == u'PATCH':
+            # Don't allow PATCH because they should DELETE+POST or PUT
+            return self.http_method_not_allowed(request, *args, **kwargs)
+        return super(BaseCSVUploadViewSet, self).update(request, *args, **kwargs)
 
 class PaginatorWithExtraItem(Paginator):
     """

@@ -2,16 +2,17 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 from historic.models import CaseArchived
+from legalaid.validators import ProviderCSVValidator
 from rest_framework import serializers
 
 from core.drf.fields import ThreePartDateField
 from core.serializers import UUIDSerializer, ClaModelSerializer, \
-    PartialUpdateExcludeReadonlySerializerMixin
+    PartialUpdateExcludeReadonlySerializerMixin, JSONField
 
 from cla_common.constants import MATTER_TYPE_LEVELS
 from cla_common.money_interval.models import MoneyInterval
 
-from cla_provider.models import Provider, OutOfHoursRota, Feedback
+from cla_provider.models import Provider, OutOfHoursRota, Feedback, CSVUpload
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
@@ -52,6 +53,36 @@ class FeedbackSerializerBase(serializers.ModelSerializer):
 
     class Meta:
         model = Feedback
+        fields = ()
+
+
+
+class CSVUploadSerializerBase(serializers.ModelSerializer):
+
+    rows = serializers.SerializerMethodField('get_rows')
+    provider = serializers.CharField(read_only=True, source='provider.name')
+    created_by = serializers.CharField(read_only=True, source='created_by.user.username')
+    body = JSONField()
+
+    def get_rows(self, obj):
+        return len(obj.body)
+
+    def validate_month(self, attrs, source):
+        value = attrs[source]
+        if value.day != 1:
+            raise serializers.ValidationError('Day must be first day of a month.')
+        return attrs
+
+    def validate_body(self, attrs, source):
+        value = attrs[source]
+        if len(value) == 0:
+            raise serializers.ValidationError('No rows found.')
+        ProviderCSVValidator(value).validate()
+
+        return attrs
+
+    class Meta:
+        model = CSVUpload
         fields = ()
 
 class PropertySerializerBase(ClaModelSerializer):

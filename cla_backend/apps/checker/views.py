@@ -1,6 +1,7 @@
 from checker.helpers import notify_callback_created
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from knowledgebase.views import BaseArticleViewSet
 
 from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, mixins
@@ -8,6 +9,8 @@ from rest_framework import viewsets, mixins
 from core.models import get_web_user
 
 from cla_eventlog import event_registry
+from knowledgebase.views import BaseArticleViewSet, \
+    ArticleCategoryFilter
 
 from legalaid.models import EligibilityCheck, Property, Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet
@@ -27,6 +30,19 @@ class CategoryViewSet(PublicAPIViewSetMixin, BaseCategoryViewSet):
     This returns a list of all valid categories in the system.
     """
     pass
+
+
+class ArticleCategoryNameFilter(ArticleCategoryFilter):
+
+    class Meta(ArticleCategoryFilter.Meta):
+        fields = ('article_category__name',)
+
+
+class ArticleViewSet(PublicAPIViewSetMixin, BaseArticleViewSet):
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
+    filter_class = ArticleCategoryNameFilter
 
 
 class EligibilityCheckViewSet(

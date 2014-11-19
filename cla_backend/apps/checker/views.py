@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from knowledgebase.views import BaseArticleViewSet
 
 from rest_framework.permissions import AllowAny
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, filters
 
 from core.models import get_web_user
 
@@ -43,6 +43,10 @@ class ArticleViewSet(PublicAPIViewSetMixin, BaseArticleViewSet):
     max_paginate_by = 100
 
     filter_class = ArticleCategoryNameFilter
+
+    filter_backends = BaseArticleViewSet.filter_backends\
+        + (filters.OrderingFilter,)
+    ordering = ('-articlecategorymatrix__preferred_signpost',)
 
 
 class EligibilityCheckViewSet(

@@ -117,7 +117,9 @@ class CaseViewSet(
         only_param = self.request.QUERY_PARAMS.get('only')
         if only_param == 'new':
             qs = qs.filter(
-                provider_viewed__isnull=True
+                provider_viewed__isnull=True,
+                provider_accepted__isnull=True,
+                provider_closed__isnull=True
             )
         elif only_param == 'opened':
             qs = qs.filter(

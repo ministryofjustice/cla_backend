@@ -288,6 +288,32 @@ class BaseAdaptationDetailsMetadataViewSet(
         self.http_method_not_allowed(request)
 
 
+class CaseOrderingFilter(OrderingFilter):
+
+    def filter_queryset(self, request, queryset, view):
+        ordering = self.get_ordering(request)
+
+        if ordering:
+            ordering = self.remove_invalid_fields(queryset, ordering, view)
+
+            if isinstance(ordering, basestring):
+                if ',' in ordering:
+                    ordering = ordering.split(',')
+                else:
+                    ordering = [ordering]
+
+            if 'modified' not in ordering and '-modified' not in ordering:
+                ordering.append('-modified')
+
+        if not ordering:
+            ordering = self.get_default_ordering(view)
+
+        if ordering:
+            return queryset.order_by(*ordering)
+
+        return queryset
+
+
 class FullCaseViewSet(
     DetailSerializerMixin,
     mixins.UpdateModelMixin,
@@ -304,7 +330,7 @@ class FullCaseViewSet(
     pagination_serializer_class = RelativeUrlPaginationSerializer
 
     filter_backends = (
-        OrderingFilter,
+        CaseOrderingFilter,
         SearchFilter,
     )
 

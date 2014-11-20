@@ -42,6 +42,9 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         'legalaid.eligibility_check_yes',
         disputed_savings=make_recipe('legalaid.savings'),
         on_passported_benefits=True,
+        specific_benefits={
+            'income_support': True
+        },
         on_nass_benefits=True,
         is_you_or_your_partner_over_60=True,
         has_partner=True,
@@ -1106,7 +1109,8 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             equal_fields=[
                 'your_problem_notes', 'notes', 'state', 'dependants_young',
                 'dependants_old', 'on_passported_benefits', 'on_nass_benefits',
-                'is_you_or_your_partner_over_60', 'has_partner', 'calculations'
+                'is_you_or_your_partner_over_60', 'has_partner', 'calculations',
+                'specific_benefits'
             ],
             check_not_None=True
         )

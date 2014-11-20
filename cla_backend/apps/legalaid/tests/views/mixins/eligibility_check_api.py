@@ -16,6 +16,7 @@ from core.tests.test_base import SimpleResourceAPIMixin, \
 from core.tests.mommy_utils import make_recipe
 
 from cla_common.money_interval.models import MoneyInterval
+from cla_common.constants import SPECIFIC_BENEFITS
 
 
 mi_dict_generator = lambda x: {"interval_period": "per_month", "per_interval_value": x}
@@ -40,6 +41,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             'partner',
             'has_partner',
             'on_passported_benefits',
+            'specific_benefits',
             'on_nass_benefits',
             'is_you_or_your_partner_over_60'
         ]
@@ -222,7 +224,8 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             'your_problem_notes': 'lorem',
             'has_partner': random.choice([None, True, False]),
             'is_you_or_your_partner_over_60': random.choice([None, True, False]),
-            'on_passported_benefits': random.choice([None, True, False])
+            'on_passported_benefits': random.choice([None, True, False]),
+            'specific_benefits': None
         }
         response = self._create(data=data)
 
@@ -238,6 +241,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                 has_partner=data['has_partner'],
                 is_you_or_your_partner_over_60=data['is_you_or_your_partner_over_60'],
                 on_passported_benefits=data['on_passported_benefits'],
+                specific_benefits=None,
             )
         )
 
@@ -769,6 +773,41 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.resource.dependants_young = data['dependants_young']
         self.resource.dependants_old = data['dependants_old']
         self.assertEligibilityCheckEqual(response.data, self.resource)
+
+    def test_patch_specific_benefits(self):
+        # with specific_benefits == True
+        data = {
+            'on_passported_benefits': True,
+            'specific_benefits': {
+                SPECIFIC_BENEFITS.UNIVERSAL_CREDIT: False,
+                SPECIFIC_BENEFITS.INCOME_SUPPORT: True,
+                SPECIFIC_BENEFITS.PENSION_CREDIT: True
+            }
+        }
+        response = self.client.patch(
+            self.detail_url, data=data, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['on_passported_benefits'], data['on_passported_benefits'])
+        self.assertEqual(response.data['specific_benefits'], data['specific_benefits'])
+
+        # with specific_benefits == False
+        data = {
+            'on_passported_benefits': False,
+            'specific_benefits': {    #  this should get reset because on_passported_benefits == False
+                SPECIFIC_BENEFITS.UNIVERSAL_CREDIT: False,
+                SPECIFIC_BENEFITS.INCOME_SUPPORT: True,
+                SPECIFIC_BENEFITS.PENSION_CREDIT: True
+            }
+        }
+        response = self.client.patch(
+            self.detail_url, data=data, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['on_passported_benefits'], data['on_passported_benefits'])
+        self.assertEqual(response.data['specific_benefits'], None)  # None because on_passported_benefits == False
 
     def test_patch_properties(self):
         """

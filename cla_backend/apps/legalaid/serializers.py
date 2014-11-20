@@ -1,3 +1,4 @@
+from core.validators import validate_first_of_month
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
@@ -56,7 +57,6 @@ class FeedbackSerializerBase(serializers.ModelSerializer):
         fields = ()
 
 
-
 class CSVUploadSerializerBase(serializers.ModelSerializer):
 
     rows = serializers.SerializerMethodField('get_rows')
@@ -69,8 +69,7 @@ class CSVUploadSerializerBase(serializers.ModelSerializer):
 
     def validate_month(self, attrs, source):
         value = attrs[source]
-        if value.day != 1:
-            raise serializers.ValidationError('Day must be first day of a month.')
+        validate_first_of_month(value)
         return attrs
 
     def validate_body(self, attrs, source):

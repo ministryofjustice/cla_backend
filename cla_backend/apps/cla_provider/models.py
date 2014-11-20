@@ -1,6 +1,5 @@
 import uuid
-from cla_common.constants import FEEDBACK_ISSUE
-from cla_provider.validators import validate_first_of_month
+
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -8,12 +7,15 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.db.models.signals import post_save, pre_save
+
 from jsonfield import JSONField
-
-from .signals import log_staff_created, log_staff_modified
-
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
+
+from core.validators import validate_first_of_month
+from cla_common.constants import FEEDBACK_ISSUE
+from .signals import log_staff_created, log_staff_modified
+
 
 random_uuid_str = lambda: str(uuid.uuid4())
 

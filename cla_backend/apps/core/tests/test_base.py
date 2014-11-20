@@ -1,5 +1,4 @@
 from django.core.urlresolvers import reverse
-from django.utils.itercompat import is_iterable
 
 from rest_framework import status
 

@@ -150,7 +150,7 @@ class StopCallMeBackEventTestCase(EventTestCaseMixin, TestCase):
         # with callback_attempt == 1
         case = make_recipe('legalaid.case', callback_attempt=1)
         self._test_process_with_implicit_code('CALLBACK_COMPLETE', dummy_case=case,
-            expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.MINOR,
+            expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.HIGH,
             process_kwargs={
                 'complete': True
             }
@@ -159,7 +159,7 @@ class StopCallMeBackEventTestCase(EventTestCaseMixin, TestCase):
         # with callback_attempt == 2
         case = make_recipe('legalaid.case', callback_attempt=2)
         self._test_process_with_implicit_code('CALLBACK_COMPLETE', dummy_case=case,
-            expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.MINOR,
+            expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.HIGH,
             process_kwargs={
                 'complete': True
             }
@@ -168,7 +168,7 @@ class StopCallMeBackEventTestCase(EventTestCaseMixin, TestCase):
         # with callback_attempt == 3
         case = make_recipe('legalaid.case', callback_attempt=3)
         self._test_process_with_implicit_code('CALLBACK_COMPLETE', dummy_case=case,
-            expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.MINOR,
+            expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.HIGH,
             process_kwargs={
                 'complete': True
             },

@@ -199,13 +199,6 @@ class CallMeBackForm(BaseCallMeBackForm):
             ])
         return cleaned_data
 
-    def get_notes(self):
-        dt = timezone.localtime(self.cleaned_data['datetime'])
-        return u"Callback scheduled for {dt}. {notes}".format(
-            dt=dt.strftime("%d/%m/%Y %H:%M"),
-            notes=self.cleaned_data['notes'] or ""
-        )
-
     def get_requires_action_at(self):
         return self.cleaned_data['datetime']
 

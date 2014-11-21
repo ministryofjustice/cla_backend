@@ -153,7 +153,7 @@ class StopCallMeBackEvent(BaseEvent):
         },
         'CALLBACK_COMPLETE': {
             'type': LOG_TYPES.SYSTEM,
-            'level': LOG_LEVELS.MINOR,
+            'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
             'description': 'Callback complete',
             'stops_timer': False

@@ -9,7 +9,7 @@ from core.drf.fields import ThreePartDateField
 from core.serializers import UUIDSerializer, ClaModelSerializer, \
     PartialUpdateExcludeReadonlySerializerMixin, JSONField
 
-from cla_common.constants import MATTER_TYPE_LEVELS
+from cla_common.constants import MATTER_TYPE_LEVELS, SPECIFIC_BENEFITS
 from cla_common.money_interval.models import MoneyInterval
 
 from cla_provider.models import Provider, OutOfHoursRota, Feedback, CSVUpload
@@ -213,6 +213,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     category = serializers.SlugRelatedField(slug_field='code', required=False)
     your_problem_notes = serializers.CharField(max_length=500, required=False)
     notes = serializers.CharField(max_length=5000, required=False)
+    specific_benefits = JSONField(required=False)
 
     class Meta:
         model = EligibilityCheck
@@ -229,7 +230,27 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
                 raise serializers.ValidationError("Only one main property allowed")
         return attrs
 
+    def validate_specific_benefits(self, attrs, source):
+        if source in attrs:
+            data_benefits = attrs[source]
+            if data_benefits:
+                extra_fields = set(data_benefits.keys()) - set(SPECIFIC_BENEFITS.CHOICES_DICT.keys())
+                if extra_fields:
+                    raise serializers.ValidationError(
+                        "Fields %s not recognised" % ', '.join(list(extra_fields))
+                    )
+
+                # translate into safer bool values
+                data_benefits = {k: bool(v) for k, v in data_benefits.items()}
+                attrs[source] = data_benefits
+
+        return attrs
+
     def save(self, **kwargs):
+        # TODO double-check this, not sure...
+        if not self.object.on_passported_benefits:
+            self.object.specific_benefits = None
+
         obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
         obj.update_state()
         diff = obj.diff

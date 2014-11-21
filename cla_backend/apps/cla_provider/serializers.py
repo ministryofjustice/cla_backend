@@ -139,7 +139,8 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'has_partner',
             'on_passported_benefits',
             'on_nass_benefits',
-            'state'
+            'state',
+            'specific_benefits'
         )
 
 

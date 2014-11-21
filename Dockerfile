@@ -37,7 +37,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && chown www-data:www-data /etc/nginx
 
 RUN pip install GitPython uwsgi
 
-RUN mkdir -p /var/log/wsgi && touch /var/log/wsgi/app.log /var/log/wsgi/debug.log && chown -R www-data:www-data /var/log/wsgi && chmod -R g+s /var/log/wsgi && mkdir -p /data && chown -R www-data:www-data /data
+RUN mkdir -p /var/log/wsgi && touch /var/log/wsgi/app.log /var/log/wsgi/debug.log && chown -R www-data:www-data /var/log/wsgi && chmod -R g+s /var/log/wsgi
 
 RUN  mkdir -p /var/log/nginx/cla_backend
 ADD ./docker/cla_backend.ini /etc/wsgi/conf.d/cla_backend.ini

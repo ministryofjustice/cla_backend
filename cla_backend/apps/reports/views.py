@@ -10,7 +10,7 @@ from .forms import ProviderCaseClosure, OperatorCaseClosure, \
     CaseVolumeAndAvgDurationByDay, ReferredCasesByCategory, \
     AllocatedCasesNoOutcome, MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
-    MISurveyExtract
+    MISurveyExtract, MICB1Extract
 
 
 def report_view(form_class, title, template='case_report'):
@@ -126,4 +126,9 @@ def mi_alternative_help_extract():
 @staff_member_required
 @report_view(MISurveyExtract, 'MI Survey Extract (ONLY RUN ON DOM1)')
 def mi_survey_extract():
+    pass
+
+@staff_member_required
+@report_view(MICB1Extract, 'MI CB1 Extract')
+def mi_cb1_extract():
     pass

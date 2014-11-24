@@ -25,7 +25,7 @@ class ProviderAllocationFormTestCase(TestCase):
 
     @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_in_office_hours(self, timezone_mock):
-        _mock_datetime_now_with(datetime.datetime(2014, 1, 1, 9, 1, 0),
+        _mock_datetime_now_with(datetime.datetime(2014, 1, 2, 9, 1, 0),
                                 timezone_mock)
         case = make_recipe('legalaid.case')
         category = case.eligibility_check.category
@@ -55,10 +55,48 @@ class ProviderAllocationFormTestCase(TestCase):
         self.assertEqual(case.provider, provider)
         self.assertEqual(Log.objects.count(), 1)
 
+
+
+    @mock.patch('cla_provider.models.timezone.now')
+    @mock.patch('cla_provider.helpers.timezone.now')
+    def test_save_out_office_hours_bank_holiday(self, timezone_mock, models_timezone_mock):
+        _mock_datetime_now_with(datetime.datetime(2014, 1, 1, 9, 1, 0),
+                                timezone_mock, models_timezone_mock)
+
+        case = make_recipe('legalaid.case')
+        category = case.eligibility_check.category
+
+        case.matter_type1 = make_recipe('legalaid.matter_type1',
+                                        category=category)
+        case.matter_type2 = make_recipe('legalaid.matter_type2',
+                                        category=category)
+        case.save()
+
+        provider = make_recipe('cla_provider.provider', active=True)
+
+        make_recipe('cla_provider.provider_allocation',
+                    weighted_distribution=0.5,
+                    provider=provider,
+                    category=category)
+
+        helper = ProviderAllocationHelper()
+
+        suggested = helper.get_suggested_provider(category)
+        self.assertIsNone(suggested)
+
+        form = ProviderAllocationForm(case=case, data={
+            'provider': suggested.pk if suggested else None},
+            providers=helper.get_qualifying_providers(
+            category))
+
+        self.assertFalse(form.is_valid())
+
+        self.assertEqual(Log.objects.count(), 0)
+
     @mock.patch('cla_provider.models.timezone.now')
     @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_out_office_hours(self, timezone_mock, models_timezone_mock):
-        _mock_datetime_now_with(datetime.datetime(2014, 1, 1, 8, 59, 0),
+        _mock_datetime_now_with(datetime.datetime(2014, 1, 2, 8, 59, 0),
                                 timezone_mock, models_timezone_mock)
 
         case = make_recipe('legalaid.case')
@@ -207,7 +245,7 @@ class ProviderAllocationFormTestCase(TestCase):
     @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_without_matter_type_both(self, timezone_mock,
                                            models_timezone_mock):
-        _mock_datetime_now_with(datetime.datetime(2014, 1, 1, 12, 59, 0),
+        _mock_datetime_now_with(datetime.datetime(2014, 1, 2, 12, 59, 0),
                                 timezone_mock, models_timezone_mock)
 
         case = make_recipe('legalaid.case')
@@ -234,7 +272,7 @@ class ProviderAllocationFormTestCase(TestCase):
     @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_without_matter_type_only_mt1(self, timezone_mock,
                                                models_timezone_mock):
-        _mock_datetime_now_with(datetime.datetime(2014, 1, 1, 12, 59, 0),
+        _mock_datetime_now_with(datetime.datetime(2014, 1, 2, 12, 59, 0),
                                 timezone_mock, models_timezone_mock)
 
         case = make_recipe('legalaid.case')
@@ -264,7 +302,7 @@ class ProviderAllocationFormTestCase(TestCase):
     @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_without_matter_type_category_mismatch(self, timezone_mock,
                                                models_timezone_mock):
-        _mock_datetime_now_with(datetime.datetime(2014, 1, 1, 12, 59, 0),
+        _mock_datetime_now_with(datetime.datetime(2014, 1, 2, 12, 59, 0),
                                 timezone_mock, models_timezone_mock)
 
         case = make_recipe('legalaid.case')

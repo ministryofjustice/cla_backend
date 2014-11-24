@@ -8,9 +8,11 @@ from django.template.loader import render_to_string, get_template
 from django.utils import timezone
 from django.conf import settings
 
-from legalaid.utils.dates import is_out_of_hours_for_providers
-
+from cla_common.call_centre_availability import OpeningHours
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota
+
+
+PROVIDER_HOURS = OpeningHours(**settings.PROVIDER_HOURS)
 
 
 class ProviderAllocationHelper(object):
@@ -92,7 +94,7 @@ class ProviderAllocationHelper(object):
             return None
 
     def get_suggested_provider(self, category):
-        if is_out_of_hours_for_providers(self.as_of):
+        if self.as_of not in PROVIDER_HOURS:
             return self._get_rota_provider(category)
         else:
             return self._get_random_provider(category)

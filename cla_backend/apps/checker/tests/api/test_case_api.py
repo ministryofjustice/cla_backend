@@ -236,6 +236,14 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
         self.assertEqual(case.log_set.count(), 2)
 
         self.assertEqual(case.log_set.filter(code='CB1').count(), 1)
+        log = case.log_set.get(code='CB1')
+
+        self.assertEqual(
+            log.notes,
+            'Callback scheduled for %s. ' % (
+                timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M")
+            )
+        )
 
         # checking email
         self.assertEquals(len(mail.outbox), 1)

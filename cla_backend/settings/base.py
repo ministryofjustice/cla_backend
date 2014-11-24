@@ -1,3 +1,4 @@
+import datetime
 import sys
 import os
 from os.path import join, abspath, dirname
@@ -185,8 +186,12 @@ DIAGNOSIS_FILE_NAME = 'graph-2014.07.21.graphml'
 
 # DIVERSITY
 
-DIVERSITY_PUBLIC_KEY_PATH = root('../keys/diversity_dev_public.key')
-DIVERSITY_PRIVATE_KEY_PATH = root('../keys/diversity_dev_private.key')
+DIVERSITY_PUBLIC_KEY_PATH = os.environ.get(
+    'DIVERSITY_PUBLIC_KEY_PATH', root('../keys/diversity_dev_public.key')
+)
+DIVERSITY_PRIVATE_KEY_PATH = os.environ.get(
+    'DIVERSITY_PRIVATE_KEY_PATH', root('../keys/diversity_dev_private.key')
+)
 
 
 # A sample logging configuration. The only tangible logging
@@ -328,7 +333,17 @@ else:
 
 CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get('CALL_CENTRE_NOTIFY_EMAIL_ADDRESS', 'ravi.kotecha@digital.justice.gov.uk')
 
+PROVIDER_HOURS = {
+    'weekday': (datetime.time(9, 0), datetime.time(17, 0))
+}
+
+OPERATOR_HOURS = {
+    'weekday': (datetime.time(9, 0), datetime.time(20, 0)),
+    'saturday': (datetime.time(9, 0), datetime.time(12, 30))
+}
+
 
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and 'test' == sys.argv[1]:
     from .testing import *
+

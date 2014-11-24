@@ -15,7 +15,8 @@ from cla_common.constants import GENDERS, ETHNICITIES, RELIGIONS,\
 
 from legalaid.utils import diversity
 from legalaid.forms import BaseCallMeBackForm
-
+from cla_common.call_centre_availability import OpeningHours
+from cla_eventlog import event_registry
 from cla_provider.models import Provider
 from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
 from knowledgebase.models import Article

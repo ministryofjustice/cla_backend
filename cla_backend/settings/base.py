@@ -343,7 +343,17 @@ OPERATOR_HOURS = {
 
 CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get('CALL_CENTRE_NOTIFY_EMAIL_ADDRESS', 'ravi.kotecha@digital.justice.gov.uk')
 
+PROVIDER_HOURS = {
+    'weekday': (datetime.time(9, 0), datetime.time(17, 0))
+}
+
+OPERATOR_HOURS = {
+    'weekday': (datetime.time(9, 0), datetime.time(20, 0)),
+    'saturday': (datetime.time(9, 0), datetime.time(12, 30))
+}
+
 
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and 'test' == sys.argv[1]:
     from .testing import *
+

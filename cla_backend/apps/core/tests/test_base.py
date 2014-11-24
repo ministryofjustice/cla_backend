@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
+import types
 
 
 class CLABaseApiTestMixin(object):
@@ -121,11 +122,22 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
     def resource_lookup_value(self):
         return getattr(self.resource, self.LOOKUP_KEY)
 
-    def assertResponseKeys(self, response):
-        self.assertItemsEqual(
-            response.data.keys(),
-            self.response_keys
-        )
+    def assertResponseKeys(self, response, keys=None):
+        if not keys:
+            keys = self.response_keys
+        if hasattr(response, 'data'):
+            data = response.data
+            if isinstance(data, types.ListType):
+                for item in data:
+                    self.assertItemsEqual(item, keys)
+            elif isinstance(data, types.DictType):
+                self.assertItemsEqual(data, keys)
+        else:
+            raise ValueError(
+                'Must be called with response object with a .data '
+                'attribute which contains a list of dicts or a dict'
+            )
+
 
     def get_list_url(self):
         return reverse(

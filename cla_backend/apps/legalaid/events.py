@@ -114,7 +114,8 @@ class SuspendCaseEvent(BaseEvent):
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR, LOG_ROLES.SPECIALIST],
             'description': 'Client abandoned call',
-            'stops_timer': True
+            'stops_timer': True,
+            'set_requires_action_by': None_if_owned_by_operator
         },
         'TERM': {
             'type': LOG_TYPES.OUTCOME,
@@ -134,7 +135,7 @@ class SuspendCaseEvent(BaseEvent):
         },
         'NCOE': {
             'type': LOG_TYPES.OUTCOME,
-            'level': LOG_LEVELS.HIGH,
+            'level': LOG_LEVELS.MODERATE,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Case opened in error',
             'stops_timer': False

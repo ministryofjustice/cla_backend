@@ -1,4 +1,7 @@
-WITH latest_outcome as (
+WITH diversity_view as (
+  select id, {diversity_expression} as diversity
+  from legalaid_personaldetails
+), latest_outcome as (
     select
       e.*
       FROM legalaid_case c
@@ -8,7 +11,6 @@ WITH latest_outcome as (
       SELECT MAX(l.id) FROM cla_eventlog_log l WHERE
         l.case_id = c.id
         and l.type = 'outcome'
-        and l.level >= 29
       group by l.case_id)
 
 ), operator_first_view as (
@@ -59,12 +61,12 @@ select
   ,c.from_case_id::boolean as "Split_Check"
   ,split_case.laa_reference as "Split_Link_Case"
   -- /SPLIT FIELDS. --
-  ,COALESCE(trim((log.context->'provider')::text, '"'), provider.name) as "Provider_ID" -- need to convert to LAA provider ID
+  ,COALESCE(assigned_provider.name, trim((log.context->'provider')::text, '"'), provider.name) as "Provider_ID" -- need to convert to LAA provider ID
   ,category.code as "Category_Name"
   ,c.created as "Date_Case_Created"
   ,c.modified as "Last_Modified_Date"
   ,log.code as "Outcome_Code_Child"
-  ,ceil(EXTRACT(EPOCH FROM (timer.stopped - timer.created))) as "Billable_Time"
+  ,CASE WHEN log.code = 'NCOE' THEN 0 ELSE ceil(EXTRACT(EPOCH FROM (timer.stopped - timer.created))) END as "Billable_Time"
   ,CASE WHEN latest_outcome.id = log.id THEN c.billable_time ELSE null END as "Cumulative_Time"
   ,mt1.code as "Matter_Type_1"
   ,mt2.code as "Matter_Type_2"
@@ -93,8 +95,8 @@ select
   ,COALESCE(adapt.callback_preference, false)::bool as "Adjustments_CallbackPreferred"
   ,COALESCE(adapt.skype_webcam, false)::bool as "Adjustments_Skype"
   -- diversity fields --
-  ,null as "Gender"
-  ,null as "Ethnicity"
+  ,trim((diversity_view.diversity->'gender')::text, '"') as "Gender"
+  ,trim((diversity_view.diversity->'ethnicity')::text, '"') as "Ethnicity"
   ,CASE
       WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 20 THEN 'A'
       WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 30 THEN 'B'
@@ -105,9 +107,9 @@ select
       WHEN pd.date_of_birth IS NULL THEN 'U'
       ELSE 'G'
       END as "Age(Range)"
-  ,null as "Religion"
-  ,null as "Sexual_Orientation"
-  ,null as "Disability"
+  ,trim((diversity_view.diversity->'religion')::text, '"') as "Religion"
+  ,trim((diversity_view.diversity->'sexual_orientation')::text, '"') as "Sexual_Orientation"
+  ,trim((diversity_view.diversity->'disability')::text, '"') as "Disability"
   -- / diversity fields --
   ,CASE
     when EXTRACT(DOW from c.created at time zone 'Europe/London') = 5 and EXTRACT(HOUR from c.created at time zone 'Europe/London') >= 20 then 'WKEND' -- after 20:00 on friday
@@ -126,11 +128,11 @@ select
   ,c.source as "Contact_Type"
   ,null as "Call_Back_Request_Time"
   ,null as "Call_Back_Actioned_Time"
-  ,ceil(EXTRACT(SECOND FROM operator_first_view.created-c.created)) as "Time_to_OS_Access"
-  ,ceil(EXTRACT(SECOND FROM provider_first_view.created-provider_first_assign.created))  as "Time_to_SP_Access"
+  ,ceil(EXTRACT(EPOCH FROM operator_first_view.created-c.created)) as "Time_to_OS_Access"
+  ,ceil(EXTRACT(EPOCH FROM provider_first_view.created-provider_first_assign.created))  as "Time_to_SP_Access"
   ,'PASS' as "Residency_Test"
   ,null as "Repeat_Contact"
-  ,CASE WHEN log.code in ('COSPF', 'IRKB', 'SPFN', 'SPFM') THEN log.notes END as "Referral_Agencies"
+  ,null as "Referral_Agencies"
   ,null as "Complaint_Type"
   ,null as "Complaint_Date"
   ,null as "Complaint_Owner"
@@ -144,6 +146,7 @@ select
   ,adapt.language as "Language"
   ,log.created as "Outcome_Created_At"
   ,u.username as "Username"
+  ,c.thirdparty_details_id::bool as "Has_Third_Party"
 from cla_eventlog_log as log
   JOIN legalaid_case as c on c.id = log.case_id
   LEFT OUTER JOIN legalaid_personaldetails as pd on c.personal_details_id = pd.id
@@ -164,6 +167,9 @@ from cla_eventlog_log as log
   LEFT OUTER JOIN provider_first_view on provider_first_view.case_id = c.id
   LEFT OUTER JOIN provider_first_assign on provider_first_assign.case_id = c.id
   LEFT OUTER JOIN legalaid_case split_case on c.from_case_id = split_case.id
+  LEFT OUTER JOIN diversity_view on pd.id = diversity_view.id
+  LEFT OUTER JOIN cla_provider_provider as assigned_provider on trim((log.context->'provider_id')::text, '"')::numeric = assigned_provider.id
+
 where
   log.type = 'outcome'
   and log.created >= %s

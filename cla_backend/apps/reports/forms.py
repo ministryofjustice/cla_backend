@@ -3,12 +3,13 @@ from cla_eventlog import event_registry
 
 from django import forms
 from django.db import connection
-from django.db.models.aggregates import Avg, Count
+from django.db.models.aggregates import Count
 from django.db.models.sql.aggregates import Aggregate
 from django.utils import timezone
 from django.contrib.admin import widgets
 from django.template.defaulttags import date
-from django.db import connection
+
+from legalaid.utils import diversity
 
 from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_provider.models import Provider
@@ -25,7 +26,6 @@ class ConvertDateMixin(object):
 
 
 class ReportForm(ConvertDateMixin, forms.Form):
-
     def get_headers(self):
         raise NotImplementedError
 
@@ -47,7 +47,8 @@ class DateRangeReportForm(ReportForm):
     def date_range(self):
         return (
             self._convert_date(self.cleaned_data['date_from']),
-            self._convert_date(self.cleaned_data['date_to'] + timedelta(days=1))
+            self._convert_date(
+                self.cleaned_data['date_to'] + timedelta(days=1))
         )
 
 
@@ -55,9 +56,8 @@ class ProviderCaseClosure(DateRangeReportForm):
     provider = forms.ModelChoiceField(queryset=Provider.objects.active())
 
     def get_queryset(self):
-
         # return CaseLog.objects.filter(
-        #     created__range=self.date_range,
+        # created__range=self.date_range,
         #     logtype__subtype=CASELOGTYPE_SUBTYPES.OUTCOME,
         #     logtype__action_key__in=[
         #         CASELOGTYPE_ACTION_KEYS.PROVIDER_CLOSE_CASE,
@@ -89,11 +89,10 @@ class ProviderCaseClosure(DateRangeReportForm):
 
 
 class OperatorCaseClosure(DateRangeReportForm):
-
     def get_queryset(self):
         raise NotImplementedError()
         # return CaseLog.objects.filter(
-        #     created__range=self.date_range,
+        # created__range=self.date_range,
         #     logtype=CaseLogType.objects.get(code='REFSP'),
         #     ).order_by('created').values_list(
         #     'case__reference', 'case__created', 'created', 'logtype__code', 'case__provider__name'
@@ -165,17 +164,18 @@ class TotalDuration(ReportAggregate):
 
 
 class AvgDuration(Aggregate):
-    sql_template = '({0} / COUNT(%(field)s))'.format(TotalDuration.sql_template)
+    sql_template = '({0} / COUNT(%(field)s))'.format(
+        TotalDuration.sql_template)
 
 
 class OperatorCaseCreate(DateRangeReportForm):
-
     def get_queryset(self):
         return Case.objects.filter(
             created__range=self.date_range,
             created_by__operator__isnull=False,
-        ).order_by('created').annotate(duration=TotalDuration('timer')).values_list(
-           'reference', 'created', 'duration')
+        ).order_by('created').annotate(
+            duration=TotalDuration('timer')).values_list(
+            'reference', 'created', 'duration')
 
     def get_headers(self):
         return ['Case #', 'Assigned', 'Duration']
@@ -195,7 +195,6 @@ class OperatorCaseCreate(DateRangeReportForm):
 
 
 class CaseReport(DateRangeReportForm):
-
     def get_queryset(self):
         queryset = Case.objects.filter(created__range=self.date_range)
         queryset = queryset.order_by('created')
@@ -243,13 +242,13 @@ class CaseReport(DateRangeReportForm):
 
 
 class NewCasesWithAdaptationCount(DateRangeReportForm):
-
     def get_queryset(self):
         qs = Case.objects.filter(
-                created__range=self.date_range)
+            created__range=self.date_range)
         qs = qs.values_list(
             'adaptation_details__bsl_webcam', 'adaptation_details__minicom',
-            'adaptation_details__text_relay', 'adaptation_details__skype_webcam',
+            'adaptation_details__text_relay',
+            'adaptation_details__skype_webcam',
             'adaptation_details__callback_preference',
             'adaptation_details__language')
         qs = qs.annotate(num_cases=Count('reference'))
@@ -259,11 +258,10 @@ class NewCasesWithAdaptationCount(DateRangeReportForm):
     def get_headers(self):
         return [
             'BSL Webcam', 'Minicom', 'Text Relay', 'Skype Webcam',
-                'Callback', 'Other language', 'Num cases']
+            'Callback', 'Other language', 'Num cases']
 
 
 class CaseVolumeAndAvgDurationByDay(DateRangeReportForm):
-
     def get_queryset(self):
         cursor = connection.cursor()
         cursor.execute('''
@@ -305,7 +303,6 @@ GROUP BY
 
 
 class ReferredCasesByCategory(CaseReport):
-
     def get_queryset(self):
         qs = super(ReferredCasesByCategory, self).get_queryset()
         qs = qs.filter(provider__isnull=False)
@@ -314,7 +311,6 @@ class ReferredCasesByCategory(CaseReport):
 
 
 class AllocatedCasesNoOutcome(CaseReport):
-
     def get_queryset(self):
         qs = Case.objects.filter(created__range=self.date_range)
         qs = qs.order_by('created')
@@ -371,8 +367,14 @@ class SQLFileReport(DateRangeReportForm):
         self.description = cursor.description
         return cursor.fetchall()
 
+
 class MICaseExtract(SQLFileReport):
     QUERY_FILE = 'MIExtractByOutcome.sql'
+
+    passphrase = forms.CharField(
+        required=False,
+        help_text='Optional. If not provided, the report will not include diversity data'
+    )
 
     def get_headers(self):
         return [
@@ -405,6 +407,27 @@ class MICaseExtract(SQLFileReport):
             "Username"
         ]
 
+    def get_queryset(self):
+        passphrase = self.cleaned_data.get('passphrase')
+
+        if passphrase:
+            diversity_expression = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".format(
+                key=diversity.get_private_key()
+            )
+        else:
+            diversity_expression = "%s as placeholder, '{}'::json"
+
+        sql = self.query.format(
+            diversity_expression=diversity_expression
+        )
+        sql_args = [passphrase] + list(self.date_range)
+
+        cursor = connection.cursor()
+        cursor.execute(sql, sql_args)
+        self.description = cursor.description
+        return cursor.fetchall()
+
+
 class MIFeedbackExtract(SQLFileReport):
     QUERY_FILE = 'MIExtractByFeedback.sql'
 
@@ -436,11 +459,12 @@ class MIAlternativeHelpExtract(SQLFileReport):
             "KB_Id"
         ]
 
+
 class MIContactsPerCaseByCategoryExtract(SQLFileReport):
     QUERY_FILE = 'MIContactsPerCaseByCategory.sql'
 
     def get_headers(self):
-        return  [
+        return [
             "Reference",
             "LAA_Reference",
             "outcome_count",
@@ -450,7 +474,8 @@ class MIContactsPerCaseByCategoryExtract(SQLFileReport):
         ]
 
     def get_valid_outcomes(self):
-        return event_registry.filter(stops_timer=True, type=LOG_TYPES.OUTCOME).keys()
+        return event_registry.filter(stops_timer=True,
+                                     type=LOG_TYPES.OUTCOME).keys()
 
     @property
     def params(self):
@@ -482,3 +507,34 @@ class MISurveyExtract(SQLFileReport):
             'contact_for_research',
             'safe_to_contact'
         ]
+
+
+class MICB1Extract(SQLFileReport):
+    QUERY_FILE = 'MICB1s.sql'
+
+
+    def get_headers(self):
+        return ['LAA_Reference',
+                'Hash_ID_personal_details_captured',
+                'Case_ID',
+                'Provider_ID_if_allocated',
+                'Law_Category_Name',
+                'Date_Case_Created',
+                'Last_Modified_Date',
+                'Outcome_Code_Child',
+                'Billable_Time',
+                'Matter_Type_1',
+                'Matter_Type_2',
+                'User_ID',
+                'Scope_Status',
+                'Eligibility_Status',
+                'Time_to_OS_Access',
+                'Outcome_Created_At',
+                'Username',
+                'Requires_Action_At',
+                'Log_Notes',
+                'Time_to_view_after_requires_action_at',
+                'Time_to_action_after_requires_action_at',
+                'Time_to_view_after_requires_action_at_for_humans',
+                'Time_to_action_after_requires_action_at_for_humans',
+                'Next_Outcome']

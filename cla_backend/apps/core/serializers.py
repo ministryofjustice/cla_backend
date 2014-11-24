@@ -25,6 +25,7 @@ class NullBooleanModelSerializerMixin(object):
 
 
 class JSONField(serializers.WritableField):
+
     def to_native(self, obj):
         return obj
 

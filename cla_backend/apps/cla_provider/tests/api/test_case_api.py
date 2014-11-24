@@ -1,6 +1,7 @@
 import mock
 
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -32,6 +33,7 @@ class BaseCaseTestCase(
             'eligibility_check', 'personal_details', 'reference',
             'created', 'modified', 'created_by', 'outcome_code',
             'provider', 'notes', 'provider_notes', 'provider_viewed',
+            'provider_accepted', 'provider_closed',
             'full_name', 'laa_reference', 'eligibility_state',
             'adaptation_details', 'requires_action_by',
             'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
@@ -103,10 +105,10 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             personal_details=pd1, provider=other_provider,
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER
         )
-        obj4 = make_recipe(  # should be ignored because of requires_action_by
+        obj4 = make_recipe(  # should be ignored because of outcome_code 'IRCB'
             'legalaid.case', reference='ref4',
             personal_details=pd1, provider=self.provider,
-            requires_action_by=REQUIRES_ACTION_BY.OPERATOR
+            outcome_code='IRCB'
         )
         obj5 = make_recipe(  # should be ignored because not assigned to any provider
             'legalaid.case', reference='ref5',
@@ -136,6 +138,141 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         self.assertItemsEqual(
             [case['reference'] for case in response.data['results']],
             ['ref2']
+        )
+
+
+class FilteredSearchCaseTestCase(BaseCaseTestCase):
+    def setUp(self):
+        """
+            obj1 on operator queue => always ignored
+            obj2 assigned to different provider => always ignored
+            obj3 assigned to provider => new
+            obj4 assigned and opened by provider => opened
+            obj5 assigned to provider but marked as 'IRCB' => always ignored
+            obj6 accepted by provider => accepted
+            obj7 closed by provider => closed
+        """
+        super(FilteredSearchCaseTestCase, self).setUp()
+
+        Case.objects.all().delete()
+
+        other_provider = make_recipe('cla_provider.provider')
+
+        self.cases = [
+            # obj1 on operator queue => always ignored
+            make_recipe(
+                'legalaid.case', reference='ref1',
+                provider=None
+            ),
+
+            # obj2 assigned to different provider => always ignored
+            make_recipe(
+                'legalaid.case', reference='ref2',
+                provider=other_provider
+            ),
+
+            # obj3 assigned to provider => new
+            make_recipe(
+                'legalaid.case', reference='ref3',
+                provider=self.provider,
+                provider_viewed=None,
+                provider_accepted=None,
+                provider_closed=None
+            ),
+
+            # obj4 assigned and opened by provider => opened
+            make_recipe(
+                'legalaid.case', reference='ref4',
+                provider=self.provider,
+                provider_viewed=timezone.now(),
+                provider_accepted=None,
+                provider_closed=None
+            ),
+
+            # obj5 assigned to provider but marked as 'IRCB' => always ignored
+            make_recipe(
+                'legalaid.case', reference='ref5',
+                provider=self.provider,
+                outcome_code='IRCB'
+            ),
+
+            # obj6 accepted by provider => accepted
+            make_recipe(
+                'legalaid.case', reference='ref6',
+                provider=self.provider,
+                provider_viewed=timezone.now(),
+                provider_accepted=timezone.now(),
+                provider_closed=None
+            ),
+
+            # obj7 closed by provider => closed
+            make_recipe(
+                'legalaid.case', reference='ref7',
+                provider=self.provider,
+                provider_viewed=timezone.now(),
+                provider_accepted=timezone.now(),
+                provider_closed=timezone.now()
+            ),
+        ]
+
+    def test_all_cases(self):
+        response = self.client.get(
+            self.list_url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(4, len(response.data['results']))
+        self.assertItemsEqual(
+            [c['reference'] for c in response.data['results']],
+            ['ref3', 'ref4', 'ref6', 'ref7']
+        )
+
+    def test_new_cases(self):
+        response = self.client.get(
+            u'%s?only=new' % self.list_url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data['results']))
+        self.assertItemsEqual(
+            [c['reference'] for c in response.data['results']],
+            ['ref3']
+        )
+
+    def test_opened_cases(self):
+        response = self.client.get(
+            u'%s?only=opened' % self.list_url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data['results']))
+        self.assertItemsEqual(
+            [c['reference'] for c in response.data['results']],
+            ['ref4']
+        )
+
+    def test_accepted_cases(self):
+        response = self.client.get(
+            u'%s?only=accepted' % self.list_url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data['results']))
+        self.assertItemsEqual(
+            [c['reference'] for c in response.data['results']],
+            ['ref6']
+        )
+
+    def test_closed_cases(self):
+        response = self.client.get(
+            u'%s?only=closed' % self.list_url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data['results']))
+        self.assertItemsEqual(
+            [c['reference'] for c in response.data['results']],
+            ['ref7']
         )
 
 
@@ -186,6 +323,33 @@ class RejectCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             kwargs={'reference': reference}
         )
 
+    def _test_provider_closed(self, code, expected_None):
+        data = self.get_default_post_data()
+        data['event_code'] = code
+
+        self.assertEqual(self.resource.provider_closed, None)
+        self._test_successful(data=data)
+
+        self.resource = self.resource.__class__.objects.get(
+            pk=self.resource.pk
+        )
+        if expected_None:
+            self.assertNotEqual(self.resource.provider_closed, None)
+        else:
+            self.assertEqual(self.resource.provider_closed, None)
+
+    def test_MIS_OOS_successful(self):
+        self._test_provider_closed('MIS-OOS', True)
+
+    def test_MIS_MEANS_successful(self):
+        self._test_provider_closed('MIS-MEANS', True)
+
+    def test_MIS_successful(self):
+        self._test_provider_closed('MIS', False)
+
+    def test_COI_successful(self):
+        self._test_provider_closed('COI', False)
+
 
 class AcceptCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     NO_BODY_RESPONSE = False
@@ -205,6 +369,16 @@ class CloseCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             'cla_provider:case-close', args=(),
             kwargs={'reference': reference}
         )
+
+    def test_successful(self):
+        self.assertEqual(self.resource.provider_closed, None)
+
+        super(CloseCaseTestCase, self).test_successful()
+
+        self.resource = self.resource.__class__.objects.get(
+            pk=self.resource.pk
+        )
+        self.assertNotEqual(self.resource.provider_closed, None)
 
 
 class SplitCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
@@ -250,7 +424,8 @@ class SplitCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # after, log entry created
-        self.assertEqual(Log.objects.count(), 2)
+        self.assertEqual(Log.objects.count(), 3)
 
-        ref_log = Log.objects.filter(case=self.resource)[0]
+        new_case = self.resource.split_cases.first()
+        ref_log = Log.objects.filter(case=new_case)[0]
         self.assertEqual(ref_log.notes, 'Notes')

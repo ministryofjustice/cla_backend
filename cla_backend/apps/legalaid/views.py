@@ -1,8 +1,12 @@
 import json
+from core.drf.exceptions import ConflictException
 
-from cla_provider.models import Feedback
 from django import forms
-from django.db import transaction
+from django.db import transaction, IntegrityError
+from django.core.paginator import Paginator
+
+from django_statsd.clients import statsd
+
 from legalaid.permissions import IsManagerOrMePermission
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
@@ -10,37 +14,35 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, SearchFilter, \
     DjangoFilterBackend
+from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
-from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin
+from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin, \
+    FormActionMixin
 from core.drf.pagination import RelativeUrlPaginationSerializer
+
+from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
-from rest_framework_extensions.mixins import DetailSerializerMixin
+
+from cla_auth.models import AccessAttempt
+
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
-    AdaptationDetailsSerializerBase, CaseSerializerBase, FeedbackSerializerBase
+    AdaptationDetailsSerializerBase, CaseSerializerBase, \
+    FeedbackSerializerBase, CaseNotesHistorySerializerBase, \
+    CSVUploadSerializerBase
+from cla_provider.models import Feedback, CSVUpload
 from .models import Case, Category, EligibilityCheck, \
     MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
     AdaptationDetails, CaseNotesHistory
 
 
-class FormActionMixin(object):
-    def _form_action(self, request, Form, no_body=True, form_kwargs={}):
-        obj = self.get_object()
-        form = Form(case=obj, data=request.DATA, **form_kwargs)
-        if form.is_valid():
-            form.save(request.user)
-
-            if no_body:
-                return DRFResponse(status=status.HTTP_204_NO_CONTENT)
-            else:
-                serializer = self.get_serializer(obj)
-                return DRFResponse(serializer.data, status=status.HTTP_200_OK)
-
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
+class CaseFormActionMixin(FormActionMixin):
+    """
+    This is for backward compatibility
+    """
+    FORM_ACTION_OBJ_PARAM = 'case'
 
 
 class PasswordResetForm(forms.Form):
@@ -71,11 +73,12 @@ class PasswordResetForm(forms.Form):
         self.reset_user.set_password(new_password)
         self.reset_user.save()
 
+
 class BaseUserViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
-    FormActionMixin,
+    CaseFormActionMixin,
     viewsets.GenericViewSet
 ):
     permission_classes = (IsManagerOrMePermission,)
@@ -117,19 +120,27 @@ class BaseUserViewSet(
         except PermissionDenied as pd:
             return DRFResponse(pd.detail, status=status.HTTP_403_FORBIDDEN)
 
+    @action()
+    def reset_lockout(self, request, *args, **kwargs):
+        logged_in_user_model = self.get_logged_in_user_model()
+        if not logged_in_user_model.is_manager:
+            raise PermissionDenied()
+
+        user = self.get_object().user
+        AccessAttempt.objects.delete_for_username(user.username)
+        statsd.incr('account.lockout.reset')
+        return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
     def list(self, request, *args, **kwargs):
         if not self.get_logged_in_user_model().is_manager:
             raise PermissionDenied()
         return super(BaseUserViewSet, self).list(request, *args, **kwargs)
-
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
         obj = super(BaseUserViewSet, self).create(request, *args, **kwargs)
         self.check_object_permissions(request, obj)
         return obj
-
-
 
 
 class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -277,12 +288,47 @@ class BaseAdaptationDetailsMetadataViewSet(
         self.http_method_not_allowed(request)
 
 
+class BaseCaseOrderingFilter(OrderingFilter):
+    default_modified = 'modified'
+
+    def filter_queryset(self, request, queryset, view):
+        ordering = self.get_ordering(request)
+
+        if ordering:
+            ordering = self.remove_invalid_fields(queryset, ordering, view)
+
+            if isinstance(ordering, basestring):
+                if ',' in ordering:
+                    ordering = ordering.split(',')
+                else:
+                    ordering = [ordering]
+
+            if 'modified' not in ordering and '-modified' not in ordering:
+                ordering.append(self.default_modified)
+
+        if not ordering:
+            ordering = self.get_default_ordering(view)
+
+        if ordering:
+            return queryset.order_by(*ordering)
+
+        return queryset
+
+
+class AscCaseOrderingFilter(BaseCaseOrderingFilter):
+    default_modified = 'modified'
+
+
+class DescCaseOrderingFilter(BaseCaseOrderingFilter):
+    default_modified = '-modified'
+
+
 class FullCaseViewSet(
     DetailSerializerMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
-    FormActionMixin,
+    CaseFormActionMixin,
     viewsets.GenericViewSet
 ):
     model = Case
@@ -293,14 +339,14 @@ class FullCaseViewSet(
     pagination_serializer_class = RelativeUrlPaginationSerializer
 
     filter_backends = (
-        OrderingFilter,
+        AscCaseOrderingFilter,
         SearchFilter,
     )
 
     ordering_fields = ('modified', 'personal_details__full_name',
             'personal_details__date_of_birth', 'personal_details__postcode',
             'eligibility_check__category__name', 'priority', 'null_priority')
-    ordering = ('null_priority', '-priority', '-modified')
+    ordering = ('null_priority', '-priority', 'modified')
 
     search_fields = (
         'personal_details__full_name',
@@ -330,6 +376,7 @@ class FullCaseViewSet(
                     ELSE 0
                 END''',
                 'priority': '''CASE legalaid_case.outcome_code
+                        WHEN 'REF-EXT' THEN 8
                         WHEN 'IRCB' THEN 7
                         WHEN 'MIS' THEN 6
                         WHEN 'COI' THEN 5
@@ -388,3 +435,86 @@ class BaseFeedbackViewSet(
     serializer_class = FeedbackSerializerBase
     PARENT_FIELD = 'provider_feedback'
     lookup_field = 'reference'
+
+class BaseCSVUploadViewSet(
+    DetailSerializerMixin,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
+    model = CSVUpload
+    serializer_class = CSVUploadSerializerBase
+    serializer_detail_class = CSVUploadSerializerBase
+
+    filter_backends = (
+        OrderingFilter,
+    )
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super(BaseCSVUploadViewSet, self).create(request, *args, **kwargs)
+        except IntegrityError as ie:
+            raise ConflictException("Upload already exists for given month. Try overwriting.")
+
+    def update(self, request, *args, **kwargs):
+        if request.method.upper() == u'PATCH':
+            # Don't allow PATCH because they should DELETE+POST or PUT
+            return self.http_method_not_allowed(request, *args, **kwargs)
+        return super(BaseCSVUploadViewSet, self).update(request, *args, **kwargs)
+
+class PaginatorWithExtraItem(Paginator):
+    """
+    Same as the Paginator but it will return one more item than expected.
+    Used for endpoints that need to diff elements.
+    """
+    extra_num = 1
+
+    def page(self, number):
+        """
+        Returns a Page object for the given 1-based page number.
+        """
+        number = self.validate_number(number)
+        bottom = (number - 1) * self.per_page
+        top = bottom + (self.per_page + self.extra_num)
+        if top + self.orphans >= self.count:
+            top = self.count
+        return self._get_page(self.object_list[bottom:top], number, self)
+
+
+class BaseCaseNotesHistoryViewSet(
+    NestedGenericModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    PARENT_FIELD = 'casenoteshistory_set'
+    lookup_field = 'reference'
+    serializer_class = CaseNotesHistorySerializerBase
+    model = CaseNotesHistory
+
+    pagination_serializer_class = RelativeUrlPaginationSerializer
+    paginate_by = 5
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
+    @property
+    def paginator_class(self):
+        """
+        If with_extra query param is provided, the endpoint will return
+        n+1 elements so that the frontend can build the diff from the
+        current+prev element.
+        """
+        if self.request.QUERY_PARAMS.get('with_extra', False):
+            return PaginatorWithExtraItem
+        return Paginator
+
+    def get_queryset(self, **kwargs):
+        qs = super(BaseCaseNotesHistoryViewSet, self).get_queryset(**kwargs)
+        type_param = self.request.QUERY_PARAMS.get('type', None)
+
+        if type_param == 'operator':
+            qs = qs.filter(provider_notes__isnull=True)
+        elif type_param == 'cla_provider':
+            qs = qs.filter(operator_notes__isnull=True)
+        return qs

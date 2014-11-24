@@ -14,7 +14,8 @@ from legalaid.serializers import \
     DeductionsSerializerBase, PersonalDetailsSerializerFull, \
     ThirdPartyPersonalDetailsSerializerBase, \
     ThirdPartyDetailsSerializerBase, PersonSerializerBase, \
-    FeedbackSerializerBase
+    FeedbackSerializerBase, CaseNotesHistorySerializerBase, \
+    CSVUploadSerializerBase
 
 from .models import Staff
 
@@ -68,7 +69,8 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             'reference', 'title', 'full_name', 'postcode', 'street',
             'mobile_phone', 'home_phone', 'email', 'dob',
             'ni_number',
-            'contact_for_research', 'safe_to_contact', 'vulnerable_user'
+            'contact_for_research', 'safe_to_contact', 'vulnerable_user',
+            'has_diversity'
         )
 
 
@@ -137,7 +139,8 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'has_partner',
             'on_passported_benefits',
             'on_nass_benefits',
-            'state'
+            'state',
+            'specific_benefits'
         )
 
 
@@ -167,10 +170,15 @@ class LogSerializer(LogSerializerBase):
 class CaseSerializer(CaseSerializerFull):
     notes = serializers.CharField(max_length=5000, required=False, read_only=True)
 
+    provider_viewed = serializers.DateTimeField(read_only=True)
+    provider_accepted = serializers.DateTimeField(read_only=True)
+    provider_closed = serializers.DateTimeField(read_only=True)
+
     class Meta(CaseSerializerFull.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference', 'created',
             'modified', 'created_by', 'provider', 'provider_viewed',
+            'provider_accepted', 'provider_closed',
             'notes', 'provider_notes', 'full_name', 'thirdparty_details',
             'adaptation_details', 'laa_reference', 'eligibility_state',
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis',
@@ -197,7 +205,9 @@ class CaseListSerializer(CaseSerializer):
             'category',
             'outcome_code',
             'case_count',
-            'provider_viewed'
+            'provider_viewed',
+            'provider_accepted',
+            'provider_closed'
         )
 
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
@@ -245,3 +255,40 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'issue',
         )
 
+
+
+class CSVUploadSerializer(CSVUploadSerializerBase):
+
+    body = JSONField(write_only=True)
+
+    class Meta(CSVUploadSerializerBase.Meta):
+        fields = [
+            'id',
+            'provider',
+            'created_by',
+            'comment',
+            'rows',
+            'body',
+            'month',
+            'created',
+        ]
+
+class CSVUploadDetailSerializer(CSVUploadSerializerBase):
+
+    class Meta(CSVUploadSerializerBase.Meta):
+        fields = [
+            'id',
+            'provider',
+            'created_by',
+            'comment',
+            'body',
+            'month',
+            'created',
+        ]
+
+class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):
+    class Meta(CaseNotesHistorySerializerBase.Meta):
+        fields = (
+            'created_by', 'created', 'operator_notes', 'provider_notes',
+            'type_notes'
+        )

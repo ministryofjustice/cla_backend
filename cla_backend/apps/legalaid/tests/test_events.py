@@ -153,22 +153,26 @@ class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
 
     def test_INSUF(self):
         self._test_process_with_expicit_code_and_requires_action_None_if_operator(
-            self.CODES, code='INSUF'
+            self.CODES, code='INSUF', expected_level=LOG_LEVELS.HIGH
         )
 
     def test_ABND(self):
-        self._test_process_with_expicit_code(self.CODES, code='ABND')
+        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+            self.CODES, code='ABND', expected_level=LOG_LEVELS.HIGH
+        )
 
     def test_TERM(self):
         self._test_process_with_expicit_code_and_requires_action_None_if_operator(
-            self.CODES, code='TERM'
+            self.CODES, code='TERM', expected_level=LOG_LEVELS.HIGH
         )
 
     def test_IRCB(self):
         self._test_process_with_expicit_code(self.CODES, code='IRCB')
 
     def test_NCOE(self):
-        self._test_process_with_expicit_code(self.CODES, code='NCOE')
+        self._test_process_with_expicit_code(
+            self.CODES, code='NCOE', expected_level=LOG_LEVELS.MODERATE
+        )
 
     def test_CPTA(self):
         self._test_process_with_expicit_code(self.CODES, code='CPTA')

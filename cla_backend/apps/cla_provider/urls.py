@@ -19,6 +19,7 @@ router.register(r'adaptations', views.AdaptationDetailsMetadataViewSet,
                 base_name='adaptations-metadata')
 router.register(r'mattertype', views.MatterTypeViewSet)
 router.register(r'mediacode', views.MediaCodeViewSet)
+router.register(r'csvupload', views.CSVUploadViewSet)
 
 case_one2one_router = NestedCLARouter(router, 'case', lookup='case')
 case_one2one_router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_name='eligibility_check')
@@ -31,6 +32,7 @@ case_one2many_router = NestedSimpleRouter(router, r'case', lookup='case')
 
 case_one2many_router.register(r'feedback', views.FeedbackViewSet)
 case_one2many_router.register(r'logs', views.LogViewSet)
+case_one2many_router.register(r'notes_history', views.CaseNotesHistoryViewSet)
 
 urlpatterns = patterns('',
     url(r'^', include(case_one2one_router.urls)),

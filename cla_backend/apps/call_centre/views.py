@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
-from django.db.models import Q
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
 
@@ -21,6 +20,7 @@ from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
+from core.drf.mixins import FormActionMixin
 
 from timer.views import BaseTimerViewSet
 
@@ -29,7 +29,8 @@ from legalaid.views import BaseUserViewSet, \
     BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet
+    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
+    BaseCaseNotesHistoryViewSet, AscCaseOrderingFilter
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -43,11 +44,12 @@ from .serializers import EligibilityCheckSerializer, \
     AdaptationDetailsSerializer, PersonalDetailsSerializer, \
     BarePersonalDetailsSerializer, \
     ThirdPartyDetailsSerializer, LogSerializer, FeedbackSerializer, \
-    CreateCaseSerializer, CaseListSerializer, CaseArchivedSerializer
+    CreateCaseSerializer, CaseListSerializer, CaseArchivedSerializer, \
+    CaseNotesHistorySerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm, \
-    CallMeBackForm, StopCallMeBackForm
+    CallMeBackForm, StopCallMeBackForm, DiversityForm
 
 from .models import Operator
 
@@ -125,7 +127,7 @@ class CaseViewSet(
     )
 
     filter_backends = (
-        OrderingFilter,
+        AscCaseOrderingFilter,
         SearchFilter,
     )
 
@@ -381,9 +383,13 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
 
 
 class PersonalDetailsViewSet(
-    CallCentrePermissionsViewSetMixin, FullPersonalDetailsViewSet
+    CallCentrePermissionsViewSetMixin, FormActionMixin, FullPersonalDetailsViewSet
 ):
     serializer_class = PersonalDetailsSerializer
+
+    @action()
+    def set_diversity(self, request, reference=None, **kwargs):
+        return self._form_action(request, DiversityForm)
 
 
 class ThirdPartyDetailsViewSet(
@@ -455,21 +461,38 @@ class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
     paginate_by_param = 'page_size'
     max_paginate_by = 100
 
+
+class CaseArchivedSearchFilter(SearchFilter):
+    def get_search_terms(self, request):
+        terms = super(CaseArchivedSearchFilter, self).get_search_terms(request)
+        return [term.upper() for term in terms]
+
+    def construct_search(self, field_name):
+        return "%s__contains" % field_name
+
+
 class CaseArchivedViewSet(CallCentrePermissionsViewSetMixin,
                           mixins.ListModelMixin,
+                          mixins.RetrieveModelMixin,
                           viewsets.GenericViewSet):
 
+
+    lookup_field = 'laa_reference'
     model = CaseArchived
     serializer_class = CaseArchivedSerializer
 
-    search_fields = CaseArchivedSerializer.Meta.fields
+    search_fields = ['search_field']
 
     filter_backends = (
-        SearchFilter,
-        OrderingFilter
+        CaseArchivedSearchFilter,
     )
-    ordering = ('-outcome_code_date')
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
     pagination_serializer_class = RelativeUrlPaginationSerializer
+
+
+class CaseNotesHistoryViewSet(
+    CallCentrePermissionsViewSetMixin, BaseCaseNotesHistoryViewSet
+):
+    serializer_class = CaseNotesHistorySerializer

@@ -1,12 +1,16 @@
+from checker.helpers import notify_callback_created
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from knowledgebase.views import BaseArticleViewSet
 
 from rest_framework.permissions import AllowAny
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, filters
 
 from core.models import get_web_user
 
 from cla_eventlog import event_registry
+from knowledgebase.views import BaseArticleViewSet, \
+    ArticleCategoryFilter
 
 from legalaid.models import EligibilityCheck, Property, Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet
@@ -14,6 +18,7 @@ from cla_common.constants import CASE_SOURCE
 
 from .serializers import EligibilityCheckSerializer, \
     PropertySerializer, CaseSerializer
+from .forms import WebCallMeBackForm
 
 
 class PublicAPIViewSetMixin(object):
@@ -25,6 +30,23 @@ class CategoryViewSet(PublicAPIViewSetMixin, BaseCategoryViewSet):
     This returns a list of all valid categories in the system.
     """
     pass
+
+
+class ArticleCategoryNameFilter(ArticleCategoryFilter):
+
+    class Meta(ArticleCategoryFilter.Meta):
+        fields = ('article_category__name',)
+
+
+class ArticleViewSet(PublicAPIViewSetMixin, BaseArticleViewSet):
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
+    filter_class = ArticleCategoryNameFilter
+
+    filter_backends = BaseArticleViewSet.filter_backends\
+        + (filters.OrderingFilter,)
+    ordering = ('-articlecategorymatrix__preferred_signpost',)
 
 
 class EligibilityCheckViewSet(
@@ -107,3 +129,13 @@ class CaseViewSet(
                 obj, status='created', created_by=obj.created_by,
                 notes="Case created digitally"
             )
+
+            if obj.requires_action_at:
+                form = WebCallMeBackForm(
+                    case=obj, data={},
+                    requires_action_at=obj.requires_action_at
+                )
+
+                if form.is_valid():
+                    form.save(obj.created_by)
+                    notify_callback_created(obj)

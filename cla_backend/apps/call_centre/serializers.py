@@ -13,7 +13,8 @@ from legalaid.serializers import EligibilityCheckSerializerBase, \
     DeductionsSerializerBase, PersonalDetailsSerializerFull, \
     ThirdPartyPersonalDetailsSerializerBase, \
     ThirdPartyDetailsSerializerBase, PersonSerializerBase, \
-    FeedbackSerializerBase, CaseArchivedSerializerBase
+    FeedbackSerializerBase, CaseArchivedSerializerBase, \
+    CaseNotesHistorySerializerBase
 
 from .models import Operator
 
@@ -74,7 +75,8 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             'reference', 'title', 'full_name', 'postcode', 'street',
             'mobile_phone', 'home_phone', 'email', 'dob',
             'ni_number',
-            'contact_for_research', 'safe_to_contact', 'vulnerable_user'
+            'contact_for_research', 'safe_to_contact', 'vulnerable_user',
+            'has_diversity'
         )
 
 
@@ -151,7 +153,8 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             'has_partner',
             'on_passported_benefits',
             'on_nass_benefits',
-            'state'
+            'state',
+            'specific_benefits'
         )
 
 
@@ -214,7 +217,8 @@ class CaseListSerializer(CaseSerializer):
             'date_of_birth',
             'category',
             'outcome_code',
-            'case_count'
+            'case_count',
+            'source'
         )
 
 class CreateCaseSerializer(CaseSerializer):
@@ -297,4 +301,12 @@ class CaseArchivedSerializer(CaseArchivedSerializerBase):
              'financially_eligible',
              'outcome_code',
              'outcome_code_date'
+        )
+
+
+class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):
+    class Meta(CaseNotesHistorySerializerBase.Meta):
+        fields = (
+            'created_by', 'created', 'operator_notes', 'provider_notes',
+            'type_notes'
         )

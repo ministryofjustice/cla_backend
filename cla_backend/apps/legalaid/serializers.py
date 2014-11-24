@@ -1,20 +1,25 @@
+from core.validators import validate_first_of_month
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
+
 from historic.models import CaseArchived
+from legalaid.validators import ProviderCSVValidator
 from rest_framework import serializers
 
 from core.drf.fields import ThreePartDateField
 from core.serializers import UUIDSerializer, ClaModelSerializer, \
-    PartialUpdateExcludeReadonlySerializerMixin
+    PartialUpdateExcludeReadonlySerializerMixin, JSONField
 
-from cla_common.constants import MATTER_TYPE_LEVELS
+from cla_common.constants import MATTER_TYPE_LEVELS, SPECIFIC_BENEFITS
 from cla_common.money_interval.models import MoneyInterval
 
-from cla_provider.models import Provider, OutOfHoursRota, Feedback
+from cla_provider.models import Provider, OutOfHoursRota, Feedback, CSVUpload
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
-    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode
-from django.contrib.auth.models import User
+    ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, \
+    CaseNotesHistory
+
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -49,6 +54,34 @@ class FeedbackSerializerBase(serializers.ModelSerializer):
 
     class Meta:
         model = Feedback
+        fields = ()
+
+
+class CSVUploadSerializerBase(serializers.ModelSerializer):
+
+    rows = serializers.SerializerMethodField('get_rows')
+    provider = serializers.CharField(read_only=True, source='provider.name')
+    created_by = serializers.CharField(read_only=True, source='created_by.user.username')
+    body = JSONField()
+
+    def get_rows(self, obj):
+        return len(obj.body)
+
+    def validate_month(self, attrs, source):
+        value = attrs[source]
+        validate_first_of_month(value)
+        return attrs
+
+    def validate_body(self, attrs, source):
+        value = attrs[source]
+        if len(value) == 0:
+            raise serializers.ValidationError('No rows found.')
+        ProviderCSVValidator(value).validate()
+
+        return attrs
+
+    class Meta:
+        model = CSVUpload
         fields = ()
 
 class PropertySerializerBase(ClaModelSerializer):
@@ -124,6 +157,10 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
 
 class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
     dob = ThreePartDateField(required=False, source='date_of_birth')
+    has_diversity = serializers.SerializerMethodField('diversity_bool')
+
+    def diversity_bool(self, obj):
+        return bool(obj.diversity)
 
     class Meta(PersonalDetailsSerializerBase.Meta):
         fields = ()
@@ -174,7 +211,8 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     partner = PersonSerializerBase(required=False)
     category = serializers.SlugRelatedField(slug_field='code', required=False)
     your_problem_notes = serializers.CharField(max_length=500, required=False)
-    notes = serializers.CharField(max_length=500, required=False)
+    notes = serializers.CharField(max_length=5000, required=False)
+    specific_benefits = JSONField(required=False)
 
     class Meta:
         model = EligibilityCheck
@@ -191,7 +229,27 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
                 raise serializers.ValidationError("Only one main property allowed")
         return attrs
 
+    def validate_specific_benefits(self, attrs, source):
+        if source in attrs:
+            data_benefits = attrs[source]
+            if data_benefits:
+                extra_fields = set(data_benefits.keys()) - set(SPECIFIC_BENEFITS.CHOICES_DICT.keys())
+                if extra_fields:
+                    raise serializers.ValidationError(
+                        "Fields %s not recognised" % ', '.join(list(extra_fields))
+                    )
+
+                # translate into safer bool values
+                data_benefits = {k: bool(v) for k, v in data_benefits.items()}
+                attrs[source] = data_benefits
+
+        return attrs
+
     def save(self, **kwargs):
+        # TODO double-check this, not sure...
+        if not self.object.on_passported_benefits:
+            self.object.specific_benefits = None
+
         obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
         obj.update_state()
         diff = obj.diff
@@ -320,7 +378,27 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
 
 
 class CaseArchivedSerializerBase(serializers.ModelSerializer):
+    date_of_birth = ThreePartDateField(required=False)
+    date_specialist_referred = ThreePartDateField(required=False)
+    date_specialist_closed = ThreePartDateField(required=False)
 
     class Meta:
         model = CaseArchived
+        fields = ()
+
+
+class CaseNotesHistorySerializerBase(ClaModelSerializer):
+    created_by = serializers.CharField(read_only=True, source='created_by.username')
+    created = serializers.DateTimeField(read_only=True)
+    operator_notes = serializers.CharField(read_only=True)
+    provider_notes = serializers.CharField(read_only=True)
+    type_notes = serializers.SerializerMethodField('get_type_notes')
+
+    def get_type_notes(self, obj):
+        if obj.provider_notes != None:
+            return obj.provider_notes
+        return obj.operator_notes
+
+    class Meta:
+        model = CaseNotesHistory
         fields = ()

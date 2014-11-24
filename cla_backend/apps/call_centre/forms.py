@@ -10,6 +10,12 @@ from django.utils import timezone
 from cla_common.call_centre_availability import OpeningHours
 from cla_eventlog import event_registry
 
+from cla_common.constants import GENDERS, ETHNICITIES, RELIGIONS,\
+    SEXUAL_ORIENTATIONS, DISABILITIES
+
+from legalaid.utils import diversity
+from legalaid.forms import BaseCallMeBackForm
+
 from cla_provider.models import Provider
 from cla_eventlog.forms import BaseCaseLogForm, EventSpecificLogForm
 from knowledgebase.models import Article
@@ -157,8 +163,7 @@ class AlternativeHelpForm(EventSpecificLogForm):
         return super(AlternativeHelpForm, self).save(user)
 
 
-class CallMeBackForm(BaseCaseLogForm):
-    LOG_EVENT_KEY = 'call_me_back'
+class CallMeBackForm(BaseCallMeBackForm):
 
     # format "2013-12-29 23:59" always in UTC
     datetime = forms.DateTimeField()
@@ -198,17 +203,8 @@ class CallMeBackForm(BaseCaseLogForm):
             ])
         return cleaned_data
 
-    def get_notes(self):
-        dt = timezone.localtime(self.cleaned_data['datetime'])
-        return u"Callback scheduled for {dt}. {notes}".format(
-            dt=dt.strftime("%d/%m/%Y %H:%M"),
-            notes=self.cleaned_data['notes'] or ""
-        )
-
-    def save(self, user):
-        super(CallMeBackForm, self).save(user)
-        dt = self.cleaned_data['datetime']
-        self.case.set_requires_action_at(dt)
+    def get_requires_action_at(self):
+        return self.cleaned_data['datetime']
 
 
 class StopCallMeBackForm(BaseCaseLogForm):
@@ -249,3 +245,30 @@ class StopCallMeBackForm(BaseCaseLogForm):
     def save(self, user):
         super(StopCallMeBackForm, self).save(user)
         self.case.reset_requires_action_at()
+
+
+class DiversityForm(forms.Form):
+    gender = forms.ChoiceField(
+        required=True, choices=GENDERS.CHOICES
+    )
+    ethnicity = forms.ChoiceField(
+        required=True, choices=ETHNICITIES.CHOICES
+    )
+    religion = forms.ChoiceField(
+        required=True, choices=RELIGIONS.CHOICES
+    )
+    sexual_orientation = forms.ChoiceField(
+        required=True, choices=SEXUAL_ORIENTATIONS.CHOICES
+    )
+    disability = forms.ChoiceField(
+        required=True, choices=DISABILITIES.CHOICES
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.personal_details = kwargs.pop('obj')
+        super(DiversityForm, self).__init__(*args, **kwargs)
+
+    def save(self, user):
+        diversity.save_diversity_data(
+            self.personal_details.pk, self.cleaned_data
+        )

@@ -5,6 +5,8 @@ from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import \
     NestedSimpleResourceAPIMixin
 
+from legalaid.utils import diversity
+
 
 class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
     LOOKUP_KEY = 'case_reference'
@@ -30,7 +32,8 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
                 'ni_number',
                 'contact_for_research',
                 'safe_to_contact',
-                'vulnerable_user'
+                'vulnerable_user',
+                'has_diversity'
             ]
 
     def _get_default_post_data(self):
@@ -88,6 +91,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         else:
             for prop in ['title', 'full_name', 'postcode', 'street', 'mobile_phone', 'home_phone']:
                 self.assertEqual(unicode(getattr(obj, prop)), data[prop])
+            self.assertEqual(data['has_diversity'], bool(obj.diversity))
 
     def test_methods_not_allowed(self):
         """
@@ -132,3 +136,16 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         )
 
         self.assertPersonalDetailsEqual(response.data, self.parent_resource.personal_details)
+
+    def test_get_with_diversity(self):
+        diversity.save_diversity_data(self.resource.pk, {
+            'key': 'test_data'
+        })
+        response = self.client.get(
+            self.detail_url,
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+
+        self.resource = self.resource.__class__.objects.get(pk=self.resource.pk)
+        self.assertPersonalDetailsEqual(response.data, self.resource)
+        self.assertEqual(response.data['has_diversity'], True)

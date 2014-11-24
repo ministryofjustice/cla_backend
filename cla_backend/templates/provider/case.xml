@@ -27,7 +27,7 @@
             <Line2>n/a</Line2>
             <Town>n/a</Town>
             <County>n/a</County>
-            <PostCode>{{ pd.post_code }}</PostCode>
+            <PostCode>{{ pd.postcode }}</PostCode>
         </Address>
         <Ethnicity>n/a</Ethnicity>
         <DisabilityMonitoringCode>n/a</DisabilityMonitoringCode>

@@ -36,4 +36,7 @@ urlpatterns = patterns('',
     url(r'^mi-survey-extract/$',
         views.mi_survey_extract,
         name="mi_survey_extract"),
+    url(r'^mi-cb1-extract/$',
+        views.mi_cb1_extract,
+        name="mi_cb1_extract"),
 )

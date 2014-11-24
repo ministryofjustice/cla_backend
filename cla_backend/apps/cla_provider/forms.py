@@ -15,15 +15,54 @@ from legalaid.models import Category, MatterType
 
 
 class RejectCaseForm(EventSpecificLogForm):
+    """
+    Rejects a case. If the outcome code has 'requires_action_by' == None
+    then it sets case.provider_closed field
+    """
     LOG_EVENT_KEY = 'reject_case'
+
+    def save(self, user):
+        code = self.get_event_code()
+        event = event_registry.get_event(self.get_event_key())()
+        code_data = event.codes[code]
+
+        val = super(RejectCaseForm, self).save(user)
+
+        # if requires_action by == None:
+        #   mark case as closed (keep case.provider)
+        # else:
+        #   reset provider (case not beloging to provider anymore)
+        if code_data.get('set_requires_action_by', False) == None:
+            self.case.close_by_provider()
+        else:  # if requires_action_by == REQUIRES_ACTION_BY.OPERATOR
+            self.case.provider = None
+            self.case.save(update_fields=['provider'])
+
+        return val
 
 
 class AcceptCaseForm(BaseCaseLogForm):
+    """
+    Accepts a case and sets case.provider_accepted field
+    """
     LOG_EVENT_KEY = 'accept_case'
+
+    def save(self, user):
+        val = super(AcceptCaseForm, self).save(user)
+        self.case.accept_by_provider()
+        return val
 
 
 class CloseCaseForm(BaseCaseLogForm):
+    """
+    Closes a case and sets case.provider_closed field
+    """
     LOG_EVENT_KEY = 'close_case'
+
+    def save(self, user):
+        val = super(CloseCaseForm, self).save(user)
+        self.case.close_by_provider()
+        return val
 
 
 class SplitCaseForm(BaseCaseLogForm):
@@ -138,7 +177,7 @@ class SplitCaseForm(BaseCaseLogForm):
         matter_type2 = self.cleaned_data['matter_type2']
         internal = self.cleaned_data['internal']
 
-        new_case = self.case.split(
+        self.new_case = self.case.split(
             user=user, category=category,
             matter_type1=matter_type1, matter_type2=matter_type2,
             assignment_internal=internal
@@ -147,13 +186,23 @@ class SplitCaseForm(BaseCaseLogForm):
         # create 'creat event' for new case
         event = event_registry.get_event('case')()
         event.process(
-            new_case, status='created', created_by=new_case.created_by,
+            self.new_case, status='created',
+            created_by=self.new_case.created_by,
             notes="Case created by Specialist"
         )
 
         super(SplitCaseForm, self).save(user)
 
-        return new_case
+        return self.new_case
+
+    def save_event(self, user):
+        event = event_registry.get_event(self.get_event_key())()
+        event.process_split(
+            self.new_case, created_by=user,
+            notes=self.get_notes(),
+            context=self.get_context(),
+            **self.get_kwargs()
+        )
 
     def get_kwargs(self):
         kwargs = super(SplitCaseForm, self).get_kwargs()

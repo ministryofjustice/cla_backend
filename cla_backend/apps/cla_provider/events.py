@@ -42,14 +42,6 @@ class RejectCaseEvent(BaseEvent):
         },
     }
 
-    def save_log(self, log):
-
-        if log.case.requires_action_by is not None:
-            log.case.provider = None
-            log.case.save()
-
-        log.save(force_insert=True)
-
     def get_log_code(self, **kwargs):
         is_conflict = kwargs.get('is_conflict')
 
@@ -106,8 +98,48 @@ class SplitCaseEvent(BaseEvent):
             'selectable_by': [],
             'description': 'Referred internally',
             'stops_timer': False
+        },
+        'REF-EXT_CREATED': {
+            'type': LOG_TYPES.SYSTEM,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': "Split case created and referred externally",
+            'stops_timer': False
+        },
+        'REF-INT_CREATED': {
+            'type': LOG_TYPES.SYSTEM,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': "Split case created and referred internally",
+            'stops_timer': False
         }
     }
+
+    def process_split(self, case, code=None, notes="", created_by=None, patch=None, context=None, **kwargs):
+        original_case = case.from_case
+
+        code = self.get_log_code(**kwargs)
+        log = self.process(
+            case,
+            code=code,
+            notes=notes,
+            created_by=created_by,
+            patch=patch,
+            context=context,
+            **kwargs
+        )
+
+        system_code = self.get_system_log_code(**kwargs)
+        self.process(
+            original_case,
+            code=system_code,
+            notes=self.codes[system_code]['description'],
+            created_by=created_by,
+            patch=patch,
+            context=context,
+            **kwargs
+        )
+        return log
 
     def get_log_code(self, **kwargs):
         internal = kwargs.get('internal')
@@ -116,4 +148,12 @@ class SplitCaseEvent(BaseEvent):
             return 'REF-INT'
         else:
             return 'REF-EXT'
+
+    def get_system_log_code(self, **kwargs):
+        internal = kwargs.get('internal')
+
+        if internal:
+            return 'REF-INT_CREATED'
+        else:
+            return 'REF-EXT_CREATED'
 event_registry.register(SplitCaseEvent)

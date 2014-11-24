@@ -173,7 +173,8 @@ PROJECT_APPS = (
     'timer',
     'diagnosis',
     'status',
-    'historic'
+    'historic',
+    'cla_auth'
 )
 
 INSTALLED_APPS += PROJECT_APPS
@@ -181,6 +182,16 @@ INSTALLED_APPS += PROJECT_APPS
 # DIAGNOSIS
 
 DIAGNOSIS_FILE_NAME = 'graph-2014.07.21.graphml'
+
+
+# DIVERSITY
+
+DIVERSITY_PUBLIC_KEY_PATH = os.environ.get(
+    'DIVERSITY_PUBLIC_KEY_PATH', root('../keys/diversity_dev_public.key')
+)
+DIVERSITY_PRIVATE_KEY_PATH = os.environ.get(
+    'DIVERSITY_PRIVATE_KEY_PATH', root('../keys/diversity_dev_private.key')
+)
 
 
 # A sample logging configuration. The only tangible logging
@@ -263,7 +274,10 @@ if 'RAVEN_CONFIG_DSN' in os.environ:
         #'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
     ) + MIDDLEWARE_CLASSES
 
-# EMAILS
+# SECURITY
+
+LOGIN_FAILURE_LIMIT = 5
+LOGIN_FAILURE_COOLOFF_TIME = 60  # in minutes
 
 
 # .local.py overrides all the common settings.
@@ -272,10 +286,6 @@ try:
 except ImportError:
     pass
 
-
-# importing test settings file if necessary (TODO chould be done better)
-if len(sys.argv) > 1 and 'test' == sys.argv[1]:
-    from .testing import *
 
 
 # Django rest-framework-auth
@@ -288,7 +298,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-    )
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'login': '10/sec',
+    }
 }
 
 # the start number of the LAA reference, must be 7 digit number and must
@@ -327,3 +340,10 @@ OPERATOR_HOURS = {
     'weekday': (datetime.time(9, 0), datetime.time(20, 0)),
     'saturday': (datetime.time(9, 0), datetime.time(12, 30))
 }
+
+CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get('CALL_CENTRE_NOTIFY_EMAIL_ADDRESS', 'ravi.kotecha@digital.justice.gov.uk')
+
+
+# importing test settings file if necessary (TODO chould be done better)
+if len(sys.argv) > 1 and 'test' == sys.argv[1]:
+    from .testing import *

@@ -3,10 +3,12 @@ from django.core.cache import cache
 
 class IsProviderPermission(BasePermission):
     """
-    Check the request is being made by a provider user
+    Check the request is being made by a provider user.
+    OPTIONS always allowed without authentication to support CORS requests
     """
     def has_permission(self, request, view):
-        return hasattr(request.user, 'staff') and bool(request.user.staff)
+        return request.method == 'OPTIONS' or (
+            hasattr(request.user, 'staff') and bool(request.user.staff))
 
     def has_object_permission(self, request, view, obj):
         if not obj:

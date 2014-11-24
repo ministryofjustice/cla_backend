@@ -1,5 +1,5 @@
 import uuid
-from cla_common.constants import FEEDBACK_ISSUE
+
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -8,10 +8,14 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.db.models.signals import post_save, pre_save
 
-from .signals import log_staff_created, log_staff_modified
-
+from jsonfield import JSONField
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
+
+from core.validators import validate_first_of_month
+from cla_common.constants import FEEDBACK_ISSUE
+from .signals import log_staff_created, log_staff_modified
+
 
 random_uuid_str = lambda: str(uuid.uuid4())
 
@@ -138,6 +142,20 @@ class Feedback(TimeStampedModel):
     resolved = models.BooleanField(default=False)
 
     issue = models.CharField(choices=FEEDBACK_ISSUE, max_length=100)
+
+
+class CSVUpload(TimeStampedModel):
+
+    provider = models.ForeignKey(Provider)
+    created_by = models.ForeignKey(Staff)
+    comment = models.TextField(blank=True, null=True)
+    body = JSONField()
+    month = models.DateField(validators=[validate_first_of_month])
+
+    class Meta:
+        unique_together = [
+            ['provider', 'month']
+        ]
 
 
 post_save.connect(log_staff_created, sender=Staff)

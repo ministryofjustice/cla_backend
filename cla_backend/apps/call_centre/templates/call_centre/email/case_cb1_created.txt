@@ -1,0 +1,13 @@
+{% filter wordwrap:78 %}
+
+name: {{ case.personal_details.full_name }}
+
+tel: {{ case.personal_details.mobile_phone }}
+
+reference: {{ case.reference }}
+
+time slot: {{ case.requires_action_at|date:"c" }}
+
+{% endfilter %}
+url: {{ case_url }}
+

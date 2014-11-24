@@ -35,7 +35,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && chown www-data:www-data /etc/nginx
 
 #Pip install Python packages
 
-RUN pip install GitPython uwsgi
+RUN pip install GitPython uwsgi requests
 
 RUN mkdir -p /var/log/wsgi && touch /var/log/wsgi/app.log /var/log/wsgi/debug.log && chown -R www-data:www-data /var/log/wsgi && chmod -R g+s /var/log/wsgi
 

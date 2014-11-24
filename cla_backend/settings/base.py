@@ -331,16 +331,6 @@ if all([os.environ.get('SMTP_USER'),
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-PROVIDER_HOURS = {
-    'weekday': (datetime.time(9, 0), datetime.time(17, 0)),
-    'saturday': (datetime.time(9, 0), datetime.time(12, 30))
-}
-
-OPERATOR_HOURS = {
-    'weekday': (datetime.time(9, 0), datetime.time(20, 0)),
-    'saturday': (datetime.time(9, 0), datetime.time(12, 30))
-}
-
 CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get('CALL_CENTRE_NOTIFY_EMAIL_ADDRESS', 'ravi.kotecha@digital.justice.gov.uk')
 
 PROVIDER_HOURS = {

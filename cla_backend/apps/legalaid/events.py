@@ -167,7 +167,7 @@ class SuspendCaseEvent(BaseEvent):
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Same referred info as last time',
+            'description': 'Read out prior alternate help',
             'stops_timer': True,
             'order': 80,
             'set_requires_action_by': None_if_owned_by_operator

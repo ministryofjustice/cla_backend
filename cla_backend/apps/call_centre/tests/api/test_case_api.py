@@ -412,6 +412,99 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             kwargs={'reference': reference}
         )
 
+    def get_event_code_data(self, code):
+        return {
+            'notes': 'lorem ipsum',
+            'event_code': code
+        }
+
+    def test_RDSP_fails_if_case_not_assigned(self):
+        self.assertEqual(Log.objects.count(), 0)
+
+        data = self.get_event_code_data('RDSP')
+        response = self.client.post(
+            self.url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(
+            response.data,
+            {
+                'event_code': [
+                    u'You can only use RDSP if the case is assigned to a specialist'
+                ]
+            }
+        )
+        self.assertEqual(Log.objects.count(), 0)
+
+    def test_RDSP_successful(self):
+        # assign case to provider
+        provider = make_recipe('cla_provider.provider', active=True)
+        self.resource.assign_to_provider(provider)
+
+        # before, no logs
+        self.assertEqual(Log.objects.count(), 0)
+
+        data = self.get_event_code_data('RDSP')
+        response = self.client.post(
+            self.url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        # after, log
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Log.objects.count(), 1)
+        log = Log.objects.all()[0]
+
+        self.assertEqual(log.case, self.resource)
+        self.assertEqual(log.notes, self.get_expected_notes(data))
+        self.assertEqual(log.created_by, self.user)
+
+    def test_SAME_fails_if_case_hasnt_received_alternative_help(self):
+        self.assertEqual(Log.objects.count(), 0)
+
+        data = self.get_event_code_data('SAME')
+        response = self.client.post(
+            self.url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(
+            response.data,
+            {
+                'event_code': [
+                    u'You can only use SAME if the client has received alternative help'
+                ]
+            }
+        )
+        self.assertEqual(Log.objects.count(), 0)
+
+    def test_SAME_successful(self):
+        # creating COSPF code
+        make_recipe(
+            'cla_eventlog.log', case=self.resource, code="COSPF"
+        )
+
+        # before, no logs apart from the one just created
+        self.assertEqual(Log.objects.count(), 1)
+
+        data = self.get_event_code_data('SAME')
+        response = self.client.post(
+            self.url, data=data, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        # after, log
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Log.objects.count(), 2)
+        log = Log.objects.first()
+
+        self.assertEqual(log.case, self.resource)
+        self.assertEqual(log.notes, self.get_expected_notes(data))
+        self.assertEqual(log.created_by, self.user)
+
 
 class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
     def test_list_with_dashboard_param(self):

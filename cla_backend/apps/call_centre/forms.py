@@ -126,6 +126,27 @@ class DeclineHelpCaseForm(EventSpecificLogForm):
 class SuspendCaseForm(EventSpecificLogForm):
     LOG_EVENT_KEY = 'suspend_case'
 
+    def clean_event_code(self):
+        code = self.cleaned_data.get('event_code')
+        if code:
+            if code == 'RDSP':
+                # check that the case has really been assigned to a specialist
+                if not self.case.provider:
+                    raise ValidationError(
+                        'You can only use RDSP if the case is assigned to a specialist'
+                    )
+
+            if code == 'SAME':
+                # check that the client has really received alternative help
+                event = event_registry.get_event('alternative_help')
+                if not self.case.log_set.filter(
+                    code__in=event.codes.keys()
+                ).count():
+                    raise ValidationError(
+                        'You can only use SAME if the client has received alternative help'
+                    )
+        return code
+
 
 class AlternativeHelpForm(EventSpecificLogForm):
 

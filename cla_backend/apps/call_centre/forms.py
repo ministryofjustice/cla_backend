@@ -30,6 +30,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
 
     provider = forms.ChoiceField()
     is_manual = forms.BooleanField(required=False)
+    is_manual_ref = forms.BooleanField(required=False)
     is_spor = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
@@ -91,12 +92,16 @@ class ProviderAllocationForm(BaseCaseLogForm):
     def get_is_manual(self):
         return self.cleaned_data['is_manual']
 
+    def get_is_manual_ref(self):
+        return self.cleaned_data.get('is_manual_ref', False)
+
     def get_is_spor(self):
         return self.cleaned_data.get('is_spor', False)
 
     def get_kwargs(self):
         kwargs = super(ProviderAllocationForm, self).get_kwargs()
         kwargs['is_manual'] = self.get_is_manual()
+        kwargs['is_manual_ref'] = self.get_is_manual_ref()
         kwargs['is_spor'] = self.get_is_spor()
         return kwargs
 

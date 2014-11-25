@@ -107,6 +107,7 @@ class SuspendCaseEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Not enough info to continue',
             'stops_timer': True,
+            'order': 10,
             'set_requires_action_by': None_if_owned_by_operator
         },
         'ABND': {
@@ -115,6 +116,7 @@ class SuspendCaseEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR, LOG_ROLES.SPECIALIST],
             'description': 'Client abandoned call',
             'stops_timer': True,
+            'order': 20,
             'set_requires_action_by': None_if_owned_by_operator
         },
         'TERM': {
@@ -123,6 +125,7 @@ class SuspendCaseEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR, LOG_ROLES.SPECIALIST],
             'description': 'Hung up call',
             'stops_timer': True,
+            'order': 30,
             'set_requires_action_by': None_if_owned_by_operator
         },
         'IRCB': {
@@ -131,6 +134,7 @@ class SuspendCaseEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Booked appointment with senior member of staff',
             'stops_timer': True,
+            'order': 40,
             'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR_MANAGER  # TODO not sure about this
         },
         'NCOE': {
@@ -138,6 +142,7 @@ class SuspendCaseEvent(BaseEvent):
             'level': LOG_LEVELS.MODERATE,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Case opened in error',
+            'order': 50,
             'stops_timer': False
         },
         'CPTA': {
@@ -146,6 +151,25 @@ class SuspendCaseEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Transfer back to Capita',
             'stops_timer': True,
+            'order': 60,
+            'set_requires_action_by': None_if_owned_by_operator
+        },
+        'RDSP': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Sent back to Specialist',
+            'stops_timer': True,
+            'order': 70,
+            'set_requires_action_by': None_if_owned_by_operator
+        },
+        'SAME': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Read out prior alternate help',
+            'stops_timer': True,
+            'order': 80,
             'set_requires_action_by': None_if_owned_by_operator
         }
     }

@@ -117,7 +117,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
         fields = (
-            'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam', 'language'
+            'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam', 'language', 'notes'
         )
 
 

@@ -154,13 +154,22 @@ class SuspendCaseEvent(BaseEvent):
             'order': 60,
             'set_requires_action_by': None_if_owned_by_operator
         },
+        'WROF': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Write off case - use only under senior instruction',
+            'stops_timer': True,
+            'order': 70,
+            'set_requires_action_by': None_if_owned_by_operator
+        },
         'RDSP': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Sent back to Specialist',
             'stops_timer': True,
-            'order': 70,
+            'order': 80,
             'set_requires_action_by': None_if_owned_by_operator
         },
         'SAME': {
@@ -169,7 +178,7 @@ class SuspendCaseEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Read out prior alternate help',
             'stops_timer': True,
-            'order': 80,
+            'order': 90,
             'set_requires_action_by': None_if_owned_by_operator
         }
     }

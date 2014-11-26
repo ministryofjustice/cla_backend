@@ -62,11 +62,37 @@ class EventTestCaseMixin(object):
         expected_type=LOG_TYPES.OUTCOME, expected_level=LOG_LEVELS.HIGH,
         process_kwargs={}, code=None
     ):
+        self._test_process_with_expicit_code_and_requires_action(
+            expected_available_codes, [REQUIRES_ACTION_BY.OPERATOR],
+            expected_type=expected_type, expected_level=expected_level,
+            process_kwargs=process_kwargs, code=code
+        )
+
+    def _test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
+        self, expected_available_codes,
+        expected_type=LOG_TYPES.OUTCOME, expected_level=LOG_LEVELS.HIGH,
+        process_kwargs={}, code=None
+    ):
+        self._test_process_with_expicit_code_and_requires_action(
+            expected_available_codes, [
+                REQUIRES_ACTION_BY.OPERATOR,
+                REQUIRES_ACTION_BY.OPERATOR_MANAGER
+            ],
+            expected_type=expected_type, expected_level=expected_level,
+            process_kwargs=process_kwargs, code=code
+        )
+
+    def _test_process_with_expicit_code_and_requires_action(
+        self, expected_available_codes, requires_action_by,
+        expected_type=LOG_TYPES.OUTCOME, expected_level=LOG_LEVELS.HIGH,
+        process_kwargs={}, code=None
+    ):
 
         # if `case.requires_action_by` is not Operator then the
         # value shouldn't change
         values = REQUIRES_ACTION_BY.REVERTED_CHOICES_CONST_DICT.keys()
-        values.remove(REQUIRES_ACTION_BY.OPERATOR)
+        for rab in requires_action_by:
+            values.remove(rab)
 
         for value in values:
             self.dummy_case.set_requires_action_by(value)
@@ -81,15 +107,16 @@ class EventTestCaseMixin(object):
 
         # if `case.requires_action_by` == Operator, then the value should
         # change to None
-        self.dummy_case.set_requires_action_by(REQUIRES_ACTION_BY.OPERATOR)
-        self._test_process_with_expicit_code(
-            expected_available_codes,
-            expected_type=expected_type, expected_level=expected_level,
-            process_kwargs=process_kwargs, code=code
-        )
+        for rab in requires_action_by:
+            self.dummy_case.set_requires_action_by(rab)
+            self._test_process_with_expicit_code(
+                expected_available_codes,
+                expected_type=expected_type, expected_level=expected_level,
+                process_kwargs=process_kwargs, code=code
+            )
 
-        case = Case.objects.get(pk=self.dummy_case.pk)
-        self.assertEqual(case.requires_action_by, None)
+            case = Case.objects.get(pk=self.dummy_case.pk)
+            self.assertEqual(case.requires_action_by, None)
 
     def _test_process_with_expicit_code(
         self, expected_available_codes,

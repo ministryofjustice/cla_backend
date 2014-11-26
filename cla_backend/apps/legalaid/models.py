@@ -729,9 +729,9 @@ class Case(TimeStampedModel, ModelDiffMixin):
     def requires_action_by_operator(self):
         return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR
 
-    # @property
-    # def requires_action_by_operator_manager(self):
-    #     return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR
+    @property
+    def requires_action_by_operator_manager(self):
+        return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR_MANAGER
 
 
 class CaseNotesHistory(TimeStampedModel):

@@ -77,17 +77,17 @@ class DeclineHelpEventTestCase(EventTestCaseMixin, TestCase):
     CODES = ['DESP', 'DECL', 'NRES']
 
     def test_DESP(self):
-        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
             self.CODES, code='DESP'
         )
 
     def test_DECL(self):
-        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
             self.CODES, code='DECL'
         )
 
     def test_NRES(self):
-        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
             self.CODES, code='NRES'
         )
 

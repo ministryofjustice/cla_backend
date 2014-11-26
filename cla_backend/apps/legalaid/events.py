@@ -2,7 +2,7 @@ from cla_common.constants import REQUIRES_ACTION_BY
 
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES
-from cla_eventlog.events import BaseEvent, None_if_owned_by_operator
+from cla_eventlog.events import BaseEvent, None_if_owned_by_op_or_op_manager
 from cla_eventlog.models import Log
 
 
@@ -108,7 +108,7 @@ class SuspendCaseEvent(BaseEvent):
             'description': 'Not enough info to continue',
             'stops_timer': True,
             'order': 10,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'ABND': {
             'type': LOG_TYPES.OUTCOME,
@@ -117,7 +117,7 @@ class SuspendCaseEvent(BaseEvent):
             'description': 'Client abandoned call',
             'stops_timer': True,
             'order': 20,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'TERM': {
             'type': LOG_TYPES.OUTCOME,
@@ -126,7 +126,7 @@ class SuspendCaseEvent(BaseEvent):
             'description': 'Hung up call',
             'stops_timer': True,
             'order': 30,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'IRCB': {
             'type': LOG_TYPES.OUTCOME,
@@ -135,7 +135,7 @@ class SuspendCaseEvent(BaseEvent):
             'description': 'Booked appointment with senior member of staff',
             'stops_timer': True,
             'order': 40,
-            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR_MANAGER  # TODO not sure about this
+            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR_MANAGER
         },
         'NCOE': {
             'type': LOG_TYPES.OUTCOME,
@@ -152,7 +152,7 @@ class SuspendCaseEvent(BaseEvent):
             'description': 'Transfer back to Capita',
             'stops_timer': True,
             'order': 60,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'WROF': {
             'type': LOG_TYPES.OUTCOME,
@@ -161,7 +161,7 @@ class SuspendCaseEvent(BaseEvent):
             'description': 'Write off case - use only under senior instruction',
             'stops_timer': True,
             'order': 70,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'RDSP': {
             'type': LOG_TYPES.OUTCOME,
@@ -170,7 +170,7 @@ class SuspendCaseEvent(BaseEvent):
             'description': 'Sent back to Specialist',
             'stops_timer': True,
             'order': 80,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'SAME': {
             'type': LOG_TYPES.OUTCOME,
@@ -179,7 +179,7 @@ class SuspendCaseEvent(BaseEvent):
             'description': 'Read out prior alternate help',
             'stops_timer': True,
             'order': 90,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         }
     }
 event_registry.register(SuspendCaseEvent)

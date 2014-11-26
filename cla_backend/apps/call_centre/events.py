@@ -1,8 +1,8 @@
-from cla_common.constants import ELIGIBILITY_STATES, REQUIRES_ACTION_BY
+from cla_common.constants import REQUIRES_ACTION_BY
 
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES
-from cla_eventlog.events import BaseEvent, None_if_owned_by_operator
+from cla_eventlog.events import BaseEvent, None_if_owned_by_op_or_op_manager
 
 
 class AssignToProviderEvent(BaseEvent):
@@ -85,7 +85,7 @@ class DeclineHelpEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Client declined Specialist',
             'stops_timer': True,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'DECL': {
             'type': LOG_TYPES.OUTCOME,
@@ -93,7 +93,7 @@ class DeclineHelpEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Client declined all help options',
             'stops_timer': True,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'NRES': {
             'type': LOG_TYPES.OUTCOME,
@@ -101,7 +101,7 @@ class DeclineHelpEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'No resources available to help',
             'stops_timer': True,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
     }
 event_registry.register(DeclineHelpEvent)
@@ -161,7 +161,7 @@ class StopCallMeBackEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Callback Cancelled',
             'stops_timer': True,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'CALLBACK_COMPLETE': {
             'type': LOG_TYPES.SYSTEM,

@@ -16,6 +16,14 @@ def None_if_owned_by_operator(case):
     return case.requires_action_by
 
 
+def None_if_owned_by_op_or_op_manager(case):
+    if case.requires_action_by_operator:
+        return None
+    if case.requires_action_by_operator_manager:
+        return None
+    return case.requires_action_by
+
+
 class BaseEvent(object):
     key = ''
     codes = {}

@@ -6891,7 +6891,7 @@ This includes where someone is:
       </data>
     </node>
     <node id="n313">
-      <data key="d4"><![CDATA[Client has been identified as homeless through a Community Care Assessment.]]></data>
+      <data key="d4"><![CDATA[The client has been identified as homeless through a Community Care Assessment]]></data>
       <data key="d5"><![CDATA[Community Care Assesment - Homeless]]></data>
       <data key="d9">10</data>
       <data key="d13">
@@ -6912,7 +6912,7 @@ This includes where someone is:
       </data>
     </node>
     <node id="n314">
-      <data key="d4"><![CDATA[Client has not been identified as homeless through a Community Care Assessment]]></data>
+      <data key="d4"><![CDATA[The client has not been identified as homeless through a Community Care Assessment]]></data>
       <data key="d5"><![CDATA[ComCare: Not homeless]]></data>
       <data key="d9">10</data>
       <data key="d13">

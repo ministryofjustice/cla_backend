@@ -404,7 +404,7 @@ class MICaseExtract(SQLFileReport):
             "Complaint_Classification", "Complaint_Outcome",
             "Agree_Feedback", "Exempt_Client",
             "Welsh", "Language", "Outcome_Created_At",
-            "Username"
+            "Username", "Has_Third_Party"
         ]
 
     def get_queryset(self):

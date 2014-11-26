@@ -149,7 +149,7 @@ class CaseEventAvoidDuplicatesTestCase(EventTestCaseMixin, TestCase):
 class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
     EVENT_KEY = 'suspend_case'
 
-    CODES = ['INSUF', 'ABND', 'TERM', 'IRCB', 'NCOE', 'CPTA', 'RDSP', 'SAME']
+    CODES = ['INSUF', 'ABND', 'TERM', 'IRCB', 'NCOE', 'CPTA', 'RDSP', 'SAME', 'WROF']
 
     def test_INSUF(self):
         self._test_process_with_expicit_code_and_requires_action_None_if_operator(
@@ -180,6 +180,11 @@ class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
     def test_RDSP(self):
         self._test_process_with_expicit_code_and_requires_action_None_if_operator(
             self.CODES, code='RDSP', expected_level=LOG_LEVELS.HIGH
+        )
+
+    def test_WROF(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+            self.CODES, code='WROF', expected_level=LOG_LEVELS.HIGH
         )
 
     def test_SAME(self):

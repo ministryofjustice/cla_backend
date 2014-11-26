@@ -2,7 +2,7 @@ from decimal import Decimal
 import unittest
 import datetime
 from django.contrib.auth.models import User
-import legalaid.validators as v
+import legalaid.utils.csvupload.validators as v
 import re
 
 from rest_framework import serializers
@@ -116,15 +116,40 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self.data = [
             [u'3333333', u'0001', u'2B222B', u'A N Other', u'Corgi',
              u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
-             u'X', u'FFFF', u'QQQQ', u'QA', u'QM', u'', u'01/01/1901',
+             u'X', u'EPRO', u'ESOS', u'EA', u'EB', u'', u'01/01/1901',
              u'01/01/1902', u'99', u'99.5', u'', u'ILL', u'0', u'0',
              u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA' ],
 
             [ u'2222222', u'0000', u'1A111A', u'A', u'Corgi', u'01/01/1901',
-              u'D', u'F', u'1', u'', u'', u'SW1A 1AA', u'', u'SWAG',
-              u'YOLO', u'', u'', u'', u'', u'', u'18', u'99.5', u'', u'MOB',
-              u'', u'', u'AAAA', u'', u'', u'', u'NAR', u'', u'', u'TA' ]
+              u'D', u'F', u'1', u'', u'', u'SW1A 1AA', u'', u'EPRO',
+              u'ESOS', u'', u'', u'', u'', u'', u'18', u'99.5', u'', u'MOB',
+              u'', u'', u'FINI', u'', u'', u'', u'NAR', u'', u'', u'TA' ]
         ]
+
+        self.dummy_cleaned_data = {
+            'DOB': datetime.datetime(1901, 1, 2, 0, 0),
+            'Media Code': u'DK', 'Exempted Reason Code': u'',
+            'Telephone / Online': u'TA',
+            'First Name': u'A N Other', 'Unused1': u'',
+            'Stage Reached': u'EB', 'Unused3': u'', 'Unused2': u'',
+            'Matter Type 1': u'EPRO', 'Matter Type 2': u'ESOS',
+            'Exceptional Cases (ref)': u'', 'Time Spent': 99,
+            'CLA Reference Number': 3333333, 'Client Ref': u'0001',
+            'Determination': u'', 'Travel Costs': Decimal('0'),
+            'Outcome Code': u'EB',
+            'Date Opened': datetime.datetime(2014, 1, 1, 0, 0),
+            'Signposting / Referral': u'',
+            'Eligibility Code': u'X', 'Gender': u'M',
+            'Case Costs': Decimal('99.5'),
+            'Disbursements': Decimal('0'),
+            'Disability Code': u'ILL',
+            'Suitable for Telephone Advice': u'N',
+            'Adjustments / Adaptations': u'',
+            'Date Closed': datetime.datetime(2014, 1, 2, 0, 0),
+            'Age Range': u'E', 'Surname': u'Corgi',
+            'Account Number': u'2B222B', 'Unused4': u'',
+            'Postcode': u'SW1A 1AA', 'Ethnicity': u'1'
+        }
 
     def test_validator_valid(self):
         validator = v.ProviderCSVValidator(self.data)
@@ -137,11 +162,11 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             validator.validate()
 
 
-    def test_invalid_global_invariant(self):
+    def test_closed_date_after_opened_date_invariant(self):
         validator = v.ProviderCSVValidator([
             [u'3333333', u'0001', u'2B222B', u'A N Other', u'Corgi',
              u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
-             u'X', u'FFFF', u'QQQQ', u'QA', u'QM', u'', u'01/01/2014',
+             u'X', u'EADM', u'ESOS', u'EB', u'EB', u'', u'01/01/2014',
              u'01/01/1902', u'99', u'99.5', u'', u'ILL', u'0', u'0',
              u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA' ],
         ])
@@ -150,14 +175,205 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     def test_invalid_account_number(self):
         validator = v.ProviderCSVValidator([
-            [u'3333333', u'0001', u'22222B', u'A N Other', u'Corgi',
+            [u'3333333', u'0001',
+
+             u'22222B',
+
+             u'A N Other', u'Corgi',
              u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
-             u'X', u'FFFF', u'QQQQ', u'QA', u'QM', u'', u'01/01/1901',
+             u'X', u'EPRO', u'ESOS', u'EB', u'EB', u'', u'01/01/1901',
              u'01/01/1902', u'99', u'99.5', u'', u'ILL', u'0', u'0',
              u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA' ],
         ])
         with self.assertRaises(serializers.ValidationError):
             validator.validate()
+
+
+    def test_service_adapation_validation_valid(self):
+        validator = v.ProviderCSVValidator([
+            [u'3333333', u'0001', u'2B222B', u'A N Other', u'Corgi',
+             u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
+             u'X', u'EPRO', u'ESOS', u'EB', u'EB', u'', u'01/01/2014',
+             u'02/01/2014', u'99', u'99.5', u'', u'ILL', u'0', u'0',
+             u'', u'N', u'', u'',
+
+             u'LOL',
+
+             u'', u'DK', u'TA' ],
+            ])
+        with self.assertRaisesRegexp(serializers.ValidationError, r'Adjustments / Adaptations - LOL must be one of'):
+            validator.validate()
+
+    def test_service_adapation_validation_required(self):
+
+        validator = v.ProviderCSVValidator(self.data)
+
+
+        cleaned_data = self.dummy_cleaned_data.copy()
+
+        cleaned_data['Adjustments / Adaptations '] = u''
+
+        with self.assertRaisesRegexp(serializers.ValidationError, r'Adjustments / Adaptations field is required'):
+            validator._validate_service_adaptation(cleaned_data)
+
+
+    def test_eligibility_code_validation_required(self):
+
+        validator = v.ProviderCSVValidator(self.data)
+
+
+        cleaned_data = self.dummy_cleaned_data.copy()
+
+        validator._validate_eligibility_code(cleaned_data)
+
+        cleaned_data['Eligibility Code'] = u''
+
+        with self.assertRaisesRegexp(serializers.ValidationError, r'Eligibility Code field is required'):
+            validator._validate_eligibility_code(cleaned_data)
+
+    def test_validate_ta_oa_ff_not_valid_for_edu_and_dis(self):
+
+        validator = v.ProviderCSVValidator(self.data)
+        cleaned_data = self.dummy_cleaned_data.copy()
+
+        validator._validate_eligibility_code(cleaned_data)
+
+        cleaned_data['Telephone / Online'] = u'FF'
+
+        validator._validate_telephone_or_online_advice(cleaned_data, u'education')
+        validator._validate_telephone_or_online_advice(cleaned_data, u'discrimination')
+
+        with self.assertRaisesRegexp(serializers.ValidationError, r'.*code FF only valid for.*'):
+            validator._validate_telephone_or_online_advice(cleaned_data, u'ssss')
+
+    def test_eligibility_code_validation_time_spent_less_than_132(self):
+
+        validator = v.ProviderCSVValidator(self.data)
+
+        cleaned_data = self.dummy_cleaned_data.copy()
+        cleaned_data['Eligibility Code'] = u'S'
+
+        validator._validate_eligibility_code(cleaned_data)
+
+        cleaned_data['Time Spent'] = 999
+
+        with self.assertRaisesRegexp(serializers.ValidationError, r'The eligibility code .* you have entered is not valid'):
+            validator._validate_eligibility_code(cleaned_data)
+
+
+    def test_validation_time_spent_less_than_18(self):
+
+        validator = v.ProviderCSVValidator(self.data)
+
+        cleaned_data = self.dummy_cleaned_data.copy()
+        cleaned_data['Eligibility Code'] = u'S'
+        cleaned_data['Determination'] = False
+
+        validator._validate_eligibility_code(cleaned_data)
+        cleaned_data['Time Spent'] = 999
+
+        with self.assertRaisesRegexp(serializers.ValidationError, r'The eligibility code .* you have entered is not valid with'):
+            validator._validate_eligibility_code(cleaned_data)
+
+
+
+    def test_validation_time_spent_more_than_18_with_determination_not_valid(self):
+
+        validator = v.ProviderCSVValidator(self.data)
+
+        cleaned_data = self.dummy_cleaned_data.copy()
+        cleaned_data['Eligibility Code'] = u'S'
+        cleaned_data['Determination'] = True
+
+        cleaned_data['Time Spent'] = 9
+        validator._validate_time_spent(cleaned_data)
+        cleaned_data['Time Spent'] = 999
+
+        with self.assertRaisesRegexp(serializers.ValidationError, "[u'Time spent (999) must not be greater than 18 minutes']"):
+            validator._validate_time_spent(cleaned_data)
+
+
+    def test_validation_exemption_code_or_cla_ref_required(self):
+
+        validator = v.ProviderCSVValidator(self.data)
+
+        cleaned_data = self.dummy_cleaned_data.copy()
+        cleaned_data['Date Opened'] = datetime.datetime(2014, 1, 1)
+        cleaned_data['Determination'] = False
+
+        validator._validate_exemption(cleaned_data, u'debt')
+
+
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                "[u'An Exemption Reason can only be entered for Debt, Discrimination and Education matter]"):
+            validator._validate_exemption(cleaned_data, u'welfare')
+
+        cleaned_data['Exempted Reason Code'] = u''
+        cleaned_data['CLA Reference Number'] = u''
+
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                "[u'Exempt Code Reason or CLA Reference number required before case was opened after 1st Apr 2013']"):
+            validator._validate_exemption(cleaned_data, u'debt')
+
+
+        cleaned_data['Date Opened'] = datetime.datetime(2011, 1, 1)
+        cleaned_data['Exceptional Cases (ref)'] = u'foo'
+
+        validator._validate_exemption(cleaned_data, u'debt')
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                "[u'An Exemption Reason can only be entered for Debt, Discrimination and Education matter]"):
+            validator._validate_exemption(cleaned_data, u'welfare')
+
+    def test_category_consistency_validation(self):
+
+        validator = v.ProviderCSVValidator(self.data)
+
+        cleaned_data = self.dummy_cleaned_data.copy()
+        cleaned_data['Matter Type 1'] = u'S'
+        cleaned_data['Matter Type 2'] = u'P'
+
+        with self.assertRaisesRegexp(serializers.ValidationError, r'fields must be of the same category'):
+            validator._validate_category_consistency(cleaned_data)
+
+
+    def test_staged_reached_validate_required_mt1s(self):
+
+        validator = v.ProviderCSVValidator(self.data)
+
+        cleaned_data = self.dummy_cleaned_data.copy()
+        cleaned_data['Matter Type 1'] = u'DMCA'
+        cleaned_data['Stage Reached'] = u''
+
+        with self.assertRaisesRegexp(serializers.ValidationError, r'.*is required because Matter Type 1: DMCA was specified.*'):
+            validator._validate_stage_reached(cleaned_data)
+
+    def test_staged_reached_validate_not_allowed_mt1s(self):
+
+        validator = v.ProviderCSVValidator(self.data)
+
+        cleaned_data = self.dummy_cleaned_data.copy()
+        cleaned_data['Matter Type 1'] = u'WBAA'
+
+        with self.assertRaisesRegexp(serializers.ValidationError, r'.*is not allowed because Matter Type 1: WBAA was specified.*'):
+            validator._validate_stage_reached(cleaned_data)
+
+    def test_gte_validator(self):
+        gte_0 = v.validate_gte(0)
+
+        self.assertEqual(1, gte_0(1))
+        with self.assertRaisesRegexp(serializers.ValidationError, '.*must be > 0'):
+            gte_0(-1)
+
+    def test_validate_not_current_month(self):
+        d = datetime.datetime(1901, 1, 1)
+
+        self.assertEqual(d, v.validate_not_current_month(d))
+
+        with self.assertRaisesRegexp(serializers.ValidationError, r'.*must not be from current month'):
+            v.validate_not_current_month(datetime.datetime.now())
 
     def test_decimal_validator(self):
         self.assertEqual(Decimal('1.0'), v.validate_decimal('1.0'))
@@ -195,3 +411,46 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         with self.assertRaisesRegexp(serializers.ValidationError,
                                      'Field doesn\'t match'):
             validator('BAR')
+
+    def test_validate_in_iterable(self):
+        test_in = v.validate_in({'a', 'b', 'c'})
+        self.assertEqual('a', test_in('a'))
+
+        with self.assertRaisesRegexp(serializers.ValidationError, r'.*must be one of'):
+            test_in('q')
+
+class DependsOnDecoratorTestCase(unittest.TestCase):
+
+    def test_method_called(self):
+
+        class Test1(object):
+            @v.depends_on('a', check=v.TRUTHY)
+            def do_something(self, d):
+                return 1
+        inst = Test1()
+        self.assertEqual(1,
+                         inst.do_something({'a': True})
+        )
+
+    def test_method_called_default_check_is_TRUTHY(self):
+
+        class Test1(object):
+            @v.depends_on('a')
+            def do_something(self, d):
+                return 1
+        inst = Test1()
+        self.assertEqual(1,
+                         inst.do_something({'a': True})
+        )
+
+
+    def test_method_not_called(self):
+
+        class Test1(object):
+            @v.depends_on('a', check=v.FALSEY)
+            def do_something(self, d):
+                return 1
+        inst = Test1()
+        self.assertEqual(None,
+                         inst.do_something({'a': True})
+        )

@@ -497,7 +497,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n19">
-      <data key="d4"><![CDATA[Creditor is seeking to make the client bankrupt in order to recoup the debt they are owed and the client’s estate includes their own home]]></data>
+      <data key="d4"><![CDATA[A creditor is seeking to make the client bankrupt in order to recoup the debt they are owed and the client’s estate includes their own home]]></data>
       <data key="d5"><![CDATA[Creditor is seeking ]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -6846,7 +6846,7 @@ This includes where someone is:
       </data>
     </node>
     <node id="n311">
-      <data key="d4"><![CDATA[Community Care]]></data>
+      <data key="d4"><![CDATA[Community care]]></data>
       <data key="d5"><![CDATA[Community Care]]></data>
       <data key="d9">10</data>
       <data key="d13">
@@ -8377,7 +8377,7 @@ I can’t guarantee that they will be able to help you so please check with them
       </data>
     </node>
     <node id="n371">
-      <data key="d4"><![CDATA[Domestic Violence or Abuse – including issues arising from forced marriage, child abduction, and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser]]></data>
+      <data key="d4"><![CDATA[Domestic violence or abuse – including issues arising from forced marriage, child abduction, and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser.]]></data>
       <data key="d5"><![CDATA[Client wants to prev]]></data>
       <data key="d9">1</data>
       <data key="d10"><![CDATA[Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act.
@@ -8617,7 +8617,7 @@ You should now direct the client to their nearest contracted quality assured fam
       </data>
     </node>
     <node id="n381">
-      <data key="d4"><![CDATA[Client has already taken action to stop domestic violence (e.g. via an injunction) but needs to take further action as the order is not being complied with.]]></data>
+      <data key="d4"><![CDATA[The client has already taken action to stop domestic violence (e.g. via an injunction) but needs to take further action as the order is not being complied with.]]></data>
       <data key="d5"><![CDATA[Client being harassed by partner or ex-partner]]></data>
       <data key="d9">2</data>
       <data key="d10"><![CDATA[

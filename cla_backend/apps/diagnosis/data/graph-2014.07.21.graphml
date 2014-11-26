@@ -5596,7 +5596,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       </data>
     </node>
     <node id="n254">
-      <data key="d4"><![CDATA[Client is the alleged abusive partner and wants to defend an injunction. This will be in scope for CLA.]]></data>
+      <data key="d4"><![CDATA[Client is the alleged abusive partner and wants to defend an injunction. This will be in scope for CIvil Legal Advice.]]></data>
       <data key="d5"><![CDATA[Client wants to contest injunction DV]]></data>
       <data key="d9">4</data>
       <data key="d10"><![CDATA[Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act. There are two main forms of injunction
@@ -7325,7 +7325,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
       <data key="d4"><![CDATA[None of the above]]></data>
       <data key="d5"><![CDATA[Personal Injury]]></data>
       <data key="d7"/>
-      <data key="d10"><![CDATA[Not a CLA category or legal problem.]]></data>
+      <data key="d10"><![CDATA[Not a CIvil Legal Advice category or legal problem.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15813.03492063492" y="165.0"/>
@@ -7367,7 +7367,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
       </data>
     </node>
     <node id="n334">
-      <data key="d4"><![CDATA[IMPORTANT: Where a client or a child is AT IMMEDIATE RISK OF ABUSE you must follow the CLA Child, Young Person and Adult at Risk of Abuse Policy. You may need to report the matter to protection services.
+      <data key="d4"><![CDATA[IMPORTANT: Where a client or a child is AT IMMEDIATE RISK OF ABUSE you must follow the CIvil Legal Advice Child, Young Person and Adult at Risk of Abuse Policy. You may need to report the matter to protection services.
 
 *Click 'Next' to continue*]]></data>
       <data key="d5"><![CDATA[REMEMBER: report]]></data>
@@ -7396,7 +7396,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
 
 If the client wants legal advice to support of ongoing or recently completed mediation process this will be in scope. This can include making any agreement reached in mediation legally binding by applying to the court (a consent order).
 
-*Please note: Mediation must be ongoing or have concluded. Clients will not qualify for CLA advice where mediation has not yet taken place or they have only attended Mediation Assessment Information Meeting (MIAM).*]]></data>
+*Please note: Mediation must be ongoing or have concluded. Clients will not qualify for CIvil Legal Advice advice where mediation has not yet taken place or they have only attended Mediation Assessment Information Meeting (MIAM).*]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="946.25" y="450.0"/>
@@ -7444,7 +7444,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Based on what you have told me today your problem may be covered by legal aid. But you will still need to show that you qualify financially.*
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will direct you to alternative help.*
 
 *I can’t guarantee that these organisations/this organisation will take on your case under legal aid so please check with them to see whether they are able to help you. If you do not qualify for legal aid you may have to pay for their service. So check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*]]></data>
       <data key="d5"><![CDATA[Primary question: Cl]]></data>
@@ -7901,11 +7901,9 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n354">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not usually available for the type of family issue you are calling about unless you are willing to try mediation.*
+*Based on the information you have provided, I can tell you that legal aid is not usually available for the type of family issue you are calling about.*
 
-*You should be aware that if you apply for a court order about money, property, possessions, or arrangements about children. they will expect you to attend a 'mediation information and assessment meeting'. If you haven't been to one of these meetings the court may ask you to do so before it proceeds with your case.*
-
-*If you have Internet access I can tell you where to find more information and help for yourself online, including about mediation.*
+*If you have Internet access I can tell you where to find more information and help for yourself online.*
 
 *Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
 
@@ -8093,7 +8091,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n361">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8121,7 +8119,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n362">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8149,7 +8147,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n363">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8177,7 +8175,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n364">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8205,7 +8203,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n365">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8233,7 +8231,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n366">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8261,7 +8259,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n367">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8289,7 +8287,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n368">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8317,7 +8315,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n369">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8345,7 +8343,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n370">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8373,7 +8371,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n371">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CLA does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8451,7 +8449,7 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
       <data key="d4"><![CDATA[Forced marriage - the client wants advice]]></data>
       <data key="d5"><![CDATA[Client wants to prev]]></data>
       <data key="d9">6</data>
-      <data key="d10"><![CDATA[This is where a marriage is about to take place or has taken place without the full and free consent of each party. This may be due to actual or threats of physical force or violence, emotional pressure or psychological abuse. CLA Specialists can offer advice on seeking an order to protect the client from such a marriage occuring or how to end such a marriage.]]></data>
+      <data key="d10"><![CDATA[This is where a marriage is about to take place or has taken place without the full and free consent of each party. This may be due to actual or threats of physical force or violence, emotional pressure or psychological abuse. CIvil Legal Advice Specialists can offer advice on seeking an order to protect the client from such a marriage occuring or how to end such a marriage.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1908.2896825396826" y="450.0"/>

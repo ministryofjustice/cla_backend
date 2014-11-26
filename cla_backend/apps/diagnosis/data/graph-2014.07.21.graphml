@@ -2727,7 +2727,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n120">
-      <data key="d4"><![CDATA[Provision of a service]]></data>
+      <data key="d4"><![CDATA[Provision of a service (eg a restaurant, a hospital)]]></data>
       <data key="d5"><![CDATA[Provision of a servi]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -2859,7 +2859,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n126">
-      <data key="d4"><![CDATA[Premises (eg shops, restaurants, rental accommodation)]]></data>
+      <data key="d4"><![CDATA[At home (in rental accommodation)]]></data>
       <data key="d5"><![CDATA[Premises]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -3296,7 +3296,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n146">
-      <data key="d4"><![CDATA[Provision of a service]]></data>
+      <data key="d4"><![CDATA[Provision of a service (eg a restaurant, a hospital)]]></data>
       <data key="d5"><![CDATA[Provision of a servi]]></data>
       <data key="d9">4</data>
       <data key="d13">

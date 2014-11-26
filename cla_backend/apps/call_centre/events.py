@@ -24,6 +24,14 @@ class AssignToProviderEvent(BaseEvent):
             'stops_timer': True,
             'set_requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
         },
+        'MANREF': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': 'Manually allocated to Specialist for course-correction',
+            'stops_timer': True,
+            'set_requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
+        },
         'SPOR': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
@@ -40,7 +48,11 @@ class AssignToProviderEvent(BaseEvent):
         if is_spor:
             return 'SPOR'
 
-        is_manual = kwargs['is_manual']
+        is_manual_ref = kwargs.get('is_manual_ref', False)
+        is_manual = kwargs.get('is_manual', False)
+
+        if is_manual_ref:
+            return 'MANREF'
 
         if is_manual:
             return 'MANALC'

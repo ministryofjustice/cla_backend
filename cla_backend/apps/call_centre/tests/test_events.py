@@ -21,6 +21,16 @@ class AssignToProviderEventTestCase(EventTestCaseMixin, TestCase):
             dummy_case=eligible_case
         )
 
+    def test_assign_to_provider_MANREF(self):
+        eligible_case = make_recipe('legalaid.eligible_case')
+        self._test_process_with_implicit_code(
+            'MANREF',
+            process_kwargs={
+                'is_manual_ref': True
+            },
+            dummy_case=eligible_case
+        )
+
     def test_assign_to_provider_automatically(self):
         eligible_case = make_recipe('legalaid.eligible_case')
         self.assertEqual(eligible_case.eligibility_check.state, 'yes')

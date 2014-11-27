@@ -1,8 +1,8 @@
-from cla_common.constants import ELIGIBILITY_STATES, REQUIRES_ACTION_BY
+from cla_common.constants import REQUIRES_ACTION_BY
 
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES
-from cla_eventlog.events import BaseEvent, None_if_owned_by_operator
+from cla_eventlog.events import BaseEvent, None_if_owned_by_op_or_op_manager
 
 
 class AssignToProviderEvent(BaseEvent):
@@ -24,6 +24,14 @@ class AssignToProviderEvent(BaseEvent):
             'stops_timer': True,
             'set_requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
         },
+        'MANREF': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': 'Manually allocated to Specialist for course-correction',
+            'stops_timer': True,
+            'set_requires_action_by': REQUIRES_ACTION_BY.PROVIDER_REVIEW
+        },
         'SPOR': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
@@ -40,7 +48,11 @@ class AssignToProviderEvent(BaseEvent):
         if is_spor:
             return 'SPOR'
 
-        is_manual = kwargs['is_manual']
+        is_manual_ref = kwargs.get('is_manual_ref', False)
+        is_manual = kwargs.get('is_manual', False)
+
+        if is_manual_ref:
+            return 'MANREF'
 
         if is_manual:
             return 'MANALC'
@@ -73,7 +85,7 @@ class DeclineHelpEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Client declined Specialist',
             'stops_timer': True,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'DECL': {
             'type': LOG_TYPES.OUTCOME,
@@ -81,7 +93,7 @@ class DeclineHelpEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Client declined all help options',
             'stops_timer': True,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'NRES': {
             'type': LOG_TYPES.OUTCOME,
@@ -89,7 +101,7 @@ class DeclineHelpEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'No resources available to help',
             'stops_timer': True,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
     }
 event_registry.register(DeclineHelpEvent)
@@ -149,7 +161,7 @@ class StopCallMeBackEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Callback Cancelled',
             'stops_timer': True,
-            'set_requires_action_by': None_if_owned_by_operator
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'CALLBACK_COMPLETE': {
             'type': LOG_TYPES.SYSTEM,

@@ -149,20 +149,20 @@ class CaseEventAvoidDuplicatesTestCase(EventTestCaseMixin, TestCase):
 class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
     EVENT_KEY = 'suspend_case'
 
-    CODES = ['INSUF', 'ABND', 'TERM', 'IRCB', 'NCOE', 'CPTA']
+    CODES = ['INSUF', 'ABND', 'TERM', 'IRCB', 'NCOE', 'CPTA', 'RDSP', 'SAME', 'WROF']
 
     def test_INSUF(self):
-        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
             self.CODES, code='INSUF', expected_level=LOG_LEVELS.HIGH
         )
 
     def test_ABND(self):
-        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
             self.CODES, code='ABND', expected_level=LOG_LEVELS.HIGH
         )
 
     def test_TERM(self):
-        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
             self.CODES, code='TERM', expected_level=LOG_LEVELS.HIGH
         )
 
@@ -176,3 +176,18 @@ class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
 
     def test_CPTA(self):
         self._test_process_with_expicit_code(self.CODES, code='CPTA')
+
+    def test_RDSP(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
+            self.CODES, code='RDSP', expected_level=LOG_LEVELS.HIGH
+        )
+
+    def test_WROF(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
+            self.CODES, code='WROF', expected_level=LOG_LEVELS.HIGH
+        )
+
+    def test_SAME(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
+            self.CODES, code='SAME', expected_level=LOG_LEVELS.HIGH
+        )

@@ -21,6 +21,16 @@ class AssignToProviderEventTestCase(EventTestCaseMixin, TestCase):
             dummy_case=eligible_case
         )
 
+    def test_assign_to_provider_MANREF(self):
+        eligible_case = make_recipe('legalaid.eligible_case')
+        self._test_process_with_implicit_code(
+            'MANREF',
+            process_kwargs={
+                'is_manual_ref': True
+            },
+            dummy_case=eligible_case
+        )
+
     def test_assign_to_provider_automatically(self):
         eligible_case = make_recipe('legalaid.eligible_case')
         self.assertEqual(eligible_case.eligibility_check.state, 'yes')
@@ -67,17 +77,17 @@ class DeclineHelpEventTestCase(EventTestCaseMixin, TestCase):
     CODES = ['DESP', 'DECL', 'NRES']
 
     def test_DESP(self):
-        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
             self.CODES, code='DESP'
         )
 
     def test_DECL(self):
-        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
             self.CODES, code='DECL'
         )
 
     def test_NRES(self):
-        self._test_process_with_expicit_code_and_requires_action_None_if_operator(
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
             self.CODES, code='NRES'
         )
 

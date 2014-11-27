@@ -387,7 +387,7 @@ class FullCaseViewSet(
                     END''',
                 'rejected': '''CASE
                     WHEN legalaid_case.outcome_code IN (
-                        'COI', 'MIS', 'MIS-OOS', 'MIS-MEAN')
+                        'COI', 'MIS')
                     THEN 1
                     ELSE 0
                 END'''})

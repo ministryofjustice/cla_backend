@@ -30,6 +30,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
 
     provider = forms.ChoiceField()
     is_manual = forms.BooleanField(required=False)
+    is_manual_ref = forms.BooleanField(required=False)
     is_spor = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
@@ -91,12 +92,16 @@ class ProviderAllocationForm(BaseCaseLogForm):
     def get_is_manual(self):
         return self.cleaned_data['is_manual']
 
+    def get_is_manual_ref(self):
+        return self.cleaned_data.get('is_manual_ref', False)
+
     def get_is_spor(self):
         return self.cleaned_data.get('is_spor', False)
 
     def get_kwargs(self):
         kwargs = super(ProviderAllocationForm, self).get_kwargs()
         kwargs['is_manual'] = self.get_is_manual()
+        kwargs['is_manual_ref'] = self.get_is_manual_ref()
         kwargs['is_spor'] = self.get_is_spor()
         return kwargs
 
@@ -125,6 +130,27 @@ class DeclineHelpCaseForm(EventSpecificLogForm):
 
 class SuspendCaseForm(EventSpecificLogForm):
     LOG_EVENT_KEY = 'suspend_case'
+
+    def clean_event_code(self):
+        code = self.cleaned_data.get('event_code')
+        if code:
+            if code == 'RDSP':
+                # check that the case has really been assigned to a specialist
+                if not self.case.provider:
+                    raise ValidationError(
+                        'You can only use RDSP if the case is assigned to a specialist'
+                    )
+
+            if code == 'SAME':
+                # check that the client has really received alternative help
+                event = event_registry.get_event('alternative_help')
+                if not self.case.log_set.filter(
+                    code__in=event.codes.keys()
+                ).count():
+                    raise ValidationError(
+                        'You can only use SAME if the client has received alternative help'
+                    )
+        return code
 
 
 class AlternativeHelpForm(EventSpecificLogForm):

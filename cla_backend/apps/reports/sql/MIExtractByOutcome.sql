@@ -50,7 +50,7 @@ WITH diversity_view as (
                 MIN(l.id)
               FROM cla_eventlog_log l
               WHERE l.case_id = e.case_id
-                    AND l.code  in ('REFSP', 'MANALC', 'SPOR')
+                    AND l.code  in ('REFSP', 'MANALC', 'MANREF', 'SPOR')
               GROUP BY l.case_id)
 )
 select

@@ -44,7 +44,7 @@ class BaseEventViewSet(viewsets.ViewSetMixin, views.APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        response_data = self.format_codes(event.codes)
+        response_data = self.format_codes(event.get_ordered_codes())
         return DRFResponse(response_data, status=status.HTTP_200_OK)
 
     def format_codes(self, codes):

@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 from historic.models import CaseArchived
-from legalaid.validators import ProviderCSVValidator
+from legalaid.utils.csvupload.validators import ProviderCSVValidator
 from rest_framework import serializers
 
 from core.drf.fields import ThreePartDateField

@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from cla_eventlog.models import Log
 from cla_eventlog.constants import LOG_TYPES
 
@@ -14,9 +16,28 @@ def None_if_owned_by_operator(case):
     return case.requires_action_by
 
 
+def None_if_owned_by_op_or_op_manager(case):
+    if case.requires_action_by_operator:
+        return None
+    if case.requires_action_by_operator_manager:
+        return None
+    return case.requires_action_by
+
+
 class BaseEvent(object):
     key = ''
     codes = {}
+
+    @classmethod
+    def get_ordered_codes(cls):
+        if not hasattr(cls, '_ordered_codes'):
+            cls._ordered_codes = OrderedDict(
+                sorted(
+                    cls.codes.items(),
+                    key=lambda code: code[1].get('order', 10000)
+                )
+            )
+        return cls._ordered_codes
 
     def get_log_code(self, **kwargs):
         if len(self.codes) > 1:

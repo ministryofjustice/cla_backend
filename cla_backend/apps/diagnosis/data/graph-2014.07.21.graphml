@@ -2727,7 +2727,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n120">
-      <data key="d4"><![CDATA[Provision of a service (eg a restaurant, a hospital)]]></data>
+      <data key="d4"><![CDATA[Provision of a service (eg a meal in a restaurant, access to a shopping mall)]]></data>
       <data key="d5"><![CDATA[Provision of a servi]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -2771,7 +2771,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n122">
-      <data key="d4"><![CDATA[Exercise of a public function]]></data>
+      <data key="d4"><![CDATA[Exercise of a public function (eg a police officer carrying out a search as part of a criminal investigation)]]></data>
       <data key="d5"><![CDATA[Exercise of a public]]></data>
       <data key="d9">4</data>
       <data key="d13">
@@ -2815,7 +2815,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n124">
-      <data key="d4"><![CDATA[Association or private club]]></data>
+      <data key="d4"><![CDATA[Association or private club (eg a golf club, a private members' club)]]></data>
       <data key="d5"><![CDATA[Association or priva]]></data>
       <data key="d9">5</data>
       <data key="d13">
@@ -3078,7 +3078,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n136">
-      <data key="d4"><![CDATA[Association or private club]]></data>
+      <data key="d4"><![CDATA[Association or private club (eg a golf club, a private members' club)]]></data>
       <data key="d5"><![CDATA[Association or priva]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -3296,7 +3296,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n146">
-      <data key="d4"><![CDATA[Provision of a service (eg a restaurant, a hospital)]]></data>
+      <data key="d4"><![CDATA[Provision of a service (eg a meal in a restaurant, access to a shopping mall)]]></data>
       <data key="d5"><![CDATA[Provision of a servi]]></data>
       <data key="d9">4</data>
       <data key="d13">
@@ -3340,7 +3340,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n148">
-      <data key="d4"><![CDATA[Exercise of a public function]]></data>
+      <data key="d4"><![CDATA[Exercise of a public function (eg a police officer carrying out a search)]]></data>
       <data key="d5"><![CDATA[Exercise of a public]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -3384,7 +3384,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n150">
-      <data key="d4"><![CDATA[Association or private club]]></data>
+      <data key="d4"><![CDATA[Association or private club (eg a golf club, a private members' club)]]></data>
       <data key="d5"><![CDATA[Association or priva]]></data>
       <data key="d9">3</data>
       <data key="d13">

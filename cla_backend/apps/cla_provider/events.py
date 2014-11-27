@@ -82,6 +82,21 @@ class CloseCaseEvent(BaseEvent):
 event_registry.register(CloseCaseEvent)
 
 
+class ReopenCaseEvent(BaseEvent):
+    key = 'reopen_case'
+    codes = {
+        'REOPEN': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': 'Reopened SP Case',
+            'stops_timer': False,
+            'set_requires_action_by': REQUIRES_ACTION_BY.PROVIDER
+        }
+    }
+event_registry.register(ReopenCaseEvent)
+
+
 class SplitCaseEvent(BaseEvent):
     key = 'split_case'
     codes = {

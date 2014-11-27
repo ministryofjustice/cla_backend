@@ -65,6 +65,21 @@ class CloseCaseForm(BaseCaseLogForm):
         return val
 
 
+class ReopenCaseForm(BaseCaseLogForm):
+    """
+    Reopens a case and resets case.provider_closed field
+    """
+    LOG_EVENT_KEY = 'reopen_case'
+
+    # def clean(self, *args, **kwargs):
+    #     super(ReopenCaseForm, )
+
+    def save(self, user):
+        val = super(ReopenCaseForm, self).save(user)
+        self.case.reopen_by_provider()
+        return val
+
+
 class SplitCaseForm(BaseCaseLogForm):
     LOG_EVENT_KEY = 'split_case'
 

@@ -90,8 +90,7 @@ class ReopenCaseEvent(BaseEvent):
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
             'description': 'Reopened SP Case',
-            'stops_timer': False,
-            'set_requires_action_by': REQUIRES_ACTION_BY.PROVIDER
+            'stops_timer': False
         }
     }
 event_registry.register(ReopenCaseEvent)

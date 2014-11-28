@@ -246,10 +246,6 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         return attrs
 
     def save(self, **kwargs):
-        # TODO double-check this, not sure...
-        if not self.object.on_passported_benefits:
-            self.object.specific_benefits = None
-
         obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
         obj.update_state()
         diff = obj.diff

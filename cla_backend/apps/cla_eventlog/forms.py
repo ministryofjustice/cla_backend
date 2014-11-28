@@ -5,12 +5,16 @@ from cla_eventlog.registry import event_registry
 
 class BaseCaseLogForm(forms.Form):
     LOG_EVENT_KEY = None
+    NOTES_MANDATORY = False
 
     notes = forms.CharField(required=False, max_length=500)
 
     def __init__(self, *args, **kwargs):
         self.case = kwargs.pop('case')
         super(BaseCaseLogForm, self).__init__(*args, **kwargs)
+
+        if self.NOTES_MANDATORY:
+            self.fields['notes'].required = True
 
     def get_event_key(self):
         if self.LOG_EVENT_KEY:

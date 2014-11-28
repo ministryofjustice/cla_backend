@@ -682,6 +682,10 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.provider_closed = datetime.datetime.utcnow().replace(tzinfo=utc)
         self.save(update_fields=['provider_closed'])
 
+    def reopen_by_provider(self):
+        self.provider_closed = None
+        self.save(update_fields=['provider_closed'])
+
     def assign_alternative_help(self, user, articles):
         self.alternative_help_articles.clear()
         for article in articles:

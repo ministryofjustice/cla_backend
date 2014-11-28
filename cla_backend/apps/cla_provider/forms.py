@@ -65,6 +65,31 @@ class CloseCaseForm(BaseCaseLogForm):
         return val
 
 
+class ReopenCaseForm(BaseCaseLogForm):
+    """
+    Reopens a case and resets case.provider_closed field
+    """
+    LOG_EVENT_KEY = 'reopen_case'
+    NOTES_MANDATORY = True
+
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(ReopenCaseForm, self).clean(*args, **kwargs)
+
+        if self._errors:  # if already in error => skip
+            return cleaned_data
+
+        if not self.case.provider_closed:
+            self._errors[NON_FIELD_ERRORS] = ErrorList([
+                "You can't reopen this case as it's still open"
+            ])
+        return cleaned_data
+
+    def save(self, user):
+        val = super(ReopenCaseForm, self).save(user)
+        self.case.reopen_by_provider()
+        return val
+
+
 class SplitCaseForm(BaseCaseLogForm):
     LOG_EVENT_KEY = 'split_case'
 

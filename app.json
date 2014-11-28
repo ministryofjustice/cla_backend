@@ -1,0 +1,13 @@
+{
+  "name": "CLA Backend API",
+  "description": "The CLA backend server",
+  "repository": "https://github.com/ministryofjustice/cla_backend",
+  "success_url": "/auth/login/",
+  "scripts": {
+    "postdeploy": "./manage.py syncdb --migrate --noinput && ./manage.py loaddata kb_from_knowledgebase.json initial_category.json test_provider.json initial_mattertype.json test_auth_clients.json initial_media_codes.json test_rotas.json"
+  },
+  "addons": [
+    "heroku-postgresql:hobby-dev"
+  ],
+  "keywords": ["uk", "ministryofjustice", "legalaid", "python", "angularjs"]
+}

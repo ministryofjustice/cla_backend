@@ -381,6 +381,62 @@ class CloseCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         self.assertNotEqual(self.resource.provider_closed, None)
 
 
+class ReopenCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+    NO_BODY_RESPONSE = False
+
+    def setUp(self):
+        super(ReopenCaseTestCase, self).setUp()
+        self.resource.provider_closed = timezone.now()
+        self.resource.save()
+
+    def get_url(self, reference=None):
+        reference = reference or self.resource.reference
+        return reverse(
+            'cla_provider:case-reopen', args=(),
+            kwargs={'reference': reference}
+        )
+
+    def test_fails_if_case_not_closed(self):
+        # setting provider closed to None
+        self.resource.provider_closed = None
+        self.resource.save()
+
+        # before, no logs
+        self.assertEqual(Log.objects.count(), 0)
+
+        response = self.client.post(
+            self.url, data={
+                'notes': 'lorem ipsum'
+            }, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(response.data, {
+            '__all__': [u"You can't reopen this case as it's still open"]
+        })
+
+        # still no log
+        self.assertEqual(Log.objects.count(), 0)
+
+    def test_notes_mandatory(self):
+        # before, no logs
+        self.assertEqual(Log.objects.count(), 0)
+
+        response = self.client.post(
+            self.url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertDictEqual(response.data, {
+            'notes': [u'This field is required.']
+        })
+
+        # still no log
+        self.assertEqual(Log.objects.count(), 0)
+
+
 class SplitCaseTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def setUp(self):
         super(SplitCaseTestCase, self).setUp()

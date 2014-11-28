@@ -173,7 +173,7 @@ class CaseViewSet(
         """
         Reopens a case
         """
-        return self._form_action(request, Form=ReopenCaseForm)
+        return self._form_action(request, Form=ReopenCaseForm, no_body=False)
 
     @link()
     def legal_help_form_extract(self, *args, **kwargs):

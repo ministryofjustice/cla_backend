@@ -240,7 +240,7 @@ class StaffSerializer(ExtendedUserSerializerBase):
 
 class FeedbackSerializer(FeedbackSerializerBase):
     issue = serializers.ChoiceField(choices=FEEDBACK_ISSUE)
-    comment = serializers.CharField(max_length=1024, required=False)
+    comment = serializers.CharField(max_length=5000, required=False)
     class Meta(FeedbackSerializerBase.Meta):
         fields = (
             'reference',

@@ -1,6 +1,6 @@
 import itertools
 
-SERVICE_ADAPTATIONS = {u'CBI', u'LLI', u'BSL', u'MIN', u'TYP', u'SWC', u'AOD',
+SERVICE_ADAPTATIONS = {u'CBI', u'LLI', u'BSL', u'MIN', u'TYP', u'SWC', u'OAD',
                        u'TPC', u'TAF', u'FRS', u'NAR', u'OTH', u'MAR'}
 
 EXEMPTION_CODES = {u'ECHI', u'EDET', u'EPRE'}

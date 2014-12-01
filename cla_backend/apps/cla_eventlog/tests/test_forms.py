@@ -50,7 +50,7 @@ class BaseCaseLogFormTestCaseMixin(object):
         self.assertEqual(Log.objects.count(), 0)
 
         data = self.get_default_data()
-        data['notes'] = 'l'*501
+        data['notes'] = 'l'*5001
         form = self.FORM(case=case, data=data)
 
         self.assertFalse(form.is_valid())
@@ -58,7 +58,7 @@ class BaseCaseLogFormTestCaseMixin(object):
         self.assertEqual(len(form.errors), 1)
         self.assertItemsEqual(
             form.errors['notes'],
-            [u'Ensure this value has at most 500 characters (it has 501).']
+            [u'Ensure this value has at most 5000 characters (it has 5001).']
         )
 
         # nothing has changed

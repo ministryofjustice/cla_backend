@@ -792,14 +792,10 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertEqual(response.data['on_passported_benefits'], data['on_passported_benefits'])
         self.assertEqual(response.data['specific_benefits'], data['specific_benefits'])
 
-        # with specific_benefits == False
+        # with on_passported_benefits == False and specific_benefits == {}
         data = {
             'on_passported_benefits': False,
-            'specific_benefits': {    #  this should get reset because on_passported_benefits == False
-                SPECIFIC_BENEFITS.UNIVERSAL_CREDIT: False,
-                SPECIFIC_BENEFITS.INCOME_SUPPORT: True,
-                SPECIFIC_BENEFITS.PENSION_CREDIT: True
-            }
+            'specific_benefits': {}
         }
         response = self.client.patch(
             self.detail_url, data=data, format='json',
@@ -807,7 +803,21 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['on_passported_benefits'], data['on_passported_benefits'])
-        self.assertEqual(response.data['specific_benefits'], None)  # None because on_passported_benefits == False
+        self.assertEqual(response.data['specific_benefits'], {})
+
+        # with on_passported_benefits == True and specific_benefits == None
+        #   => should keep the same values
+        data = {
+            'on_passported_benefits': True,
+            'specific_benefits': None
+        }
+        response = self.client.patch(
+            self.detail_url, data=data, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['on_passported_benefits'], data['on_passported_benefits'])
+        self.assertEqual(response.data['specific_benefits'], None)
 
     def test_patch_properties(self):
         """

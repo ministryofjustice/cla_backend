@@ -8,13 +8,14 @@ from cla_eventlog.events import BaseEvent
 class RejectCaseEvent(BaseEvent):
     key = 'reject_case'
     codes = {
-        'MIS': {
+        'MIS-OOS': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
-            'description': 'Misdiagnosed, assigned to wrong Specialist or another Specialist is dealing with client',
+            'description': 'Misdiagnosed, out of scope',
             'stops_timer': False,
-            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
+            'order': 10,
+            'set_requires_action_by': None
         },
         'MIS-MEANS': {
             'type': LOG_TYPES.OUTCOME,
@@ -22,14 +23,7 @@ class RejectCaseEvent(BaseEvent):
             'selectable_by': [],
             'description': 'Misdiagnosed, means test isn\'t correct',
             'stops_timer': False,
-            'set_requires_action_by': None
-        },
-        'MIS-OOS': {
-            'type': LOG_TYPES.OUTCOME,
-            'level': LOG_LEVELS.HIGH,
-            'selectable_by': [],
-            'description': 'Misdiagnosed, out of scope',
-            'stops_timer': False,
+            'order': 20,
             'set_requires_action_by': None
         },
         'COI': {
@@ -38,6 +32,16 @@ class RejectCaseEvent(BaseEvent):
             'selectable_by': [LOG_ROLES.SPECIALIST],
             'description': 'Conflict of Interest',
             'stops_timer': False,
+            'order': 30,
+            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
+        },
+        'MIS': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': 'Misdiagnosed, assigned to wrong Specialist or another Specialist is dealing with client',
+            'stops_timer': False,
+            'order': 40,
             'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
         },
     }
@@ -80,6 +84,20 @@ class CloseCaseEvent(BaseEvent):
         }
     }
 event_registry.register(CloseCaseEvent)
+
+
+class ReopenCaseEvent(BaseEvent):
+    key = 'reopen_case'
+    codes = {
+        'REOPEN': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': 'Reopened SP Case',
+            'stops_timer': False
+        }
+    }
+event_registry.register(ReopenCaseEvent)
 
 
 class SplitCaseEvent(BaseEvent):

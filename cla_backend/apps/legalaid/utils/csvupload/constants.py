@@ -86,6 +86,7 @@ CATEGORY_SPEC = {
 PREFIX_CATEGORY_LOOKUP = {
     u'D': u'debt',
     u'W': u'welfare',
+    u'H': u'housing',
     u'F': u'family',
     u'E': u'education',
     u'Q': u'discrimination'

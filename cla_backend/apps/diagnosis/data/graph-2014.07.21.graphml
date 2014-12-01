@@ -207,7 +207,7 @@ Record in Operator Notes what documents client has received. These may include a
       </data>
     </node>
     <node id="n6">
-      <data key="d4"><![CDATA[The client has received a warrant of possession]]></data>
+      <data key="d4"><![CDATA[A warrant of possession has been received by client]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -251,7 +251,7 @@ Record in Operator Notes what documents client has received. These may include a
       </data>
     </node>
     <node id="n8">
-      <data key="d4"><![CDATA[The client has received a claim form]]></data>
+      <data key="d4"><![CDATA[A claim form has been received by client]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
       <data key="d9">3</data>
       <data key="d13">
@@ -381,7 +381,7 @@ Record in Operator Notes what documents client has received. These may include a
       </data>
     </node>
     <node id="n14">
-      <data key="d4"><![CDATA[Sale on client's home is being forced in order to recoup a charging order on their property. ]]></data>
+      <data key="d4"><![CDATA[Sale of client's home is being forced in order to recoup a charging order on their property. ]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
       <data key="d9">2</data>
       <data key="d10"><![CDATA[A Charging Order is placed on a property by the court securing an outstanding debt against the home or other property.
@@ -433,7 +433,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n16">
-      <data key="d4"><![CDATA[Client has received a Letter Before Action]]></data>
+      <data key="d4"><![CDATA[Letter Before Action received by client]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
       <data key="d9">1</data>
       <data key="d10"><![CDATA[client is being taken to court on a given date due to debt]]></data>
@@ -538,7 +538,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n21">
-      <data key="d4"><![CDATA[Client has received a Statutory Demand]]></data>
+      <data key="d4"><![CDATA[Statutory Demand received by client]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
       <data key="d9">2</data>
       <data key="d10"><![CDATA[court has ordered the client sell their house]]></data>
@@ -584,7 +584,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n23">
-      <data key="d4"><![CDATA[Client has received a Bankruptcy Petition]]></data>
+      <data key="d4"><![CDATA[Bankruptcy Petition received by client]]></data>
       <data key="d5"><![CDATA[Client has received ]]></data>
       <data key="d9">1</data>
       <data key="d10"><![CDATA[formal notification that third party wants to make client bankrupt through the courts]]></data>
@@ -1445,7 +1445,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n63">
-      <data key="d4"><![CDATA[The client has received a possession order from the court (outlining the decision of the court).]]></data>
+      <data key="d4"><![CDATA[The client has received a possession order from the court (outlining the decision of the court)]]></data>
       <data key="d5"><![CDATA[Client received a po]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -5714,7 +5714,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
       </data>
     </node>
     <node id="n259">
-      <data key="d4"><![CDATA[The client's problem is about bullying]]></data>
+      <data key="d4"><![CDATA[Bullying problem]]></data>
       <data key="d5"><![CDATA[Bullying]]></data>
       <data key="d9">2</data>
       <data key="d13">
@@ -5754,7 +5754,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
       </data>
     </node>
     <node id="n261">
-      <data key="d4"><![CDATA[The client's problem is about exclusion from school ]]></data>
+      <data key="d4"><![CDATA[Exclusion from school ]]></data>
       <data key="d5"><![CDATA[Exclusions]]></data>
       <data key="d9">9</data>
       <data key="d13">
@@ -5774,7 +5774,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
       </data>
     </node>
     <node id="n262">
-      <data key="d4"><![CDATA[The client's problem is about further education]]></data>
+      <data key="d4"><![CDATA[Further education]]></data>
       <data key="d5"><![CDATA[Further education]]></data>
       <data key="d9">5</data>
       <data key="d13">
@@ -5815,7 +5815,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n264">
-      <data key="d4"><![CDATA[The client's problem is about higher education]]></data>
+      <data key="d4"><![CDATA[Higher education problem]]></data>
       <data key="d5"><![CDATA[Higher education]]></data>
       <data key="d9">7</data>
       <data key="d13">
@@ -5854,7 +5854,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n266">
-      <data key="d4"><![CDATA[The client's problem is about transport]]></data>
+      <data key="d4"><![CDATA[Transport problem]]></data>
       <data key="d5"><![CDATA[Transport]]></data>
       <data key="d9">8</data>
       <data key="d13">
@@ -6124,7 +6124,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n278">
-      <data key="d4"><![CDATA[The client's problem is about negligence in the provision of education]]></data>
+      <data key="d4"><![CDATA[Negligence in the provision of education]]></data>
       <data key="d5"><![CDATA[Education negligence]]></data>
       <data key="d9">4</data>
       <data key="d13">
@@ -8053,7 +8053,7 @@ I can’t guarantee that they will be able to help you so please check with them
 
 *If you have Internet access I can tell you where to find more information and help for yourself online.*
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*]]></data>
+*Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*]]></data>
       <data key="d5"><![CDATA[Public Law]]></data>
       <data key="d9">11</data>
       <data key="d13">
@@ -8081,7 +8081,7 @@ I can’t guarantee that they will be able to help you so please check with them
 
 *If you have Internet access I can tell you where to find more information and help for yourself online.*
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*]]></data>
+*Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*]]></data>
       <data key="d5"><![CDATA[Public Law]]></data>
       <data key="d9">11</data>
       <data key="d13">
@@ -8109,7 +8109,7 @@ I can’t guarantee that they will be able to help you so please check with them
 
 *If you have Internet access I can tell you where to find more information and help for yourself online.*
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*]]></data>
+*Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*]]></data>
       <data key="d5"><![CDATA[Public Law]]></data>
       <data key="d9">11</data>
       <data key="d13">
@@ -8221,7 +8221,7 @@ I can’t guarantee that they will be able to help you so please check with them
 
 *If you have Internet access I can tell you where to find more information and help for yourself online.*
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*]]></data>
+*Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*]]></data>
       <data key="d5"><![CDATA[Public Law]]></data>
       <data key="d9">11</data>
       <data key="d13">
@@ -8915,11 +8915,11 @@ eg divorce, contact with children, finances]]></data>
     <node id="n394">
       <data key="d4"><![CDATA[Please read out the following to the client:
 
-*"From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*"From the information you have provided, legal aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
 
 *If you have Internet access I can tell you where to find more information and help for yourself online.*
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
+*Or I can see if I can suggest another helpline or face to face advice service, which may be able to help you.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this."*]]></data>
       <data key="d5"><![CDATA[Primary question: Cl]]></data>

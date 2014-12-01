@@ -2,6 +2,7 @@ import datetime
 import sys
 import os
 from os.path import join, abspath, dirname
+import dj_database_url
 
 # PATH vars
 
@@ -55,6 +56,13 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default.
     }
 }
+
+# Support heroku
+DJ_DATABASE_URL = os.environ.get('DATABASE_URL')
+if DJ_DATABASE_URL:
+    DATABASES =  {
+        'default': dj_database_url.parse(DJ_DATABASE_URL)
+    }
 
 SITE_HOSTNAME = os.environ.get('SITE_HOSTNAME', 'cla.local:8000')
 
@@ -222,24 +230,6 @@ LOGGING = {
         }
     },
     'handlers': {
-        'production_file':{
-            'level' : 'INFO',
-            'class' : 'logging.handlers.RotatingFileHandler',
-            'filename' : '/var/log/wsgi/app.log',
-            'maxBytes': 1024*1024*5, # 5 MB
-            'backupCount' : 7,
-            'formatter': 'logstash',
-            'filters': ['require_debug_false'],
-        },
-        'debug_file':{
-            'level' : 'DEBUG',
-            'class' : 'logging.handlers.RotatingFileHandler',
-            'filename' : '/var/log/wsgi/debug.log',
-            'maxBytes': 1024*1024*5, # 5 MB
-            'backupCount' : 7,
-            'formatter': 'verbose',
-            'filters': ['require_debug_true'],
-        },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
@@ -251,11 +241,7 @@ LOGGING = {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
-        },
-        '': {
-            'handlers': ['production_file', 'debug_file'],
-            'level': "DEBUG",
-        },
+        }
     }
 }
 

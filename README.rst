@@ -121,3 +121,13 @@ postgres as necessary):
 
 
 
+Try it on Heroku
+----------------
+
+You can deploy directly to Heroku if you want to get started quickly,
+just click here: |Deploy|_.
+Keep a note of the URL it gets hosted on as you will need it when you deploy
+the frontend component.
+
+.. |Deploy| image:: https://www.herokucdn.com/deploy/button.png
+.. _Deploy: https://heroku.com/deploy

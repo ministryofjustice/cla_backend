@@ -827,6 +827,9 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB1')
+        self.assertEqual(log.context, {
+            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+        })
 
     def test_successful_CB2(self):
         self.resource.callback_attempt = 1
@@ -836,6 +839,9 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB2')
+        self.assertEqual(log.context, {
+            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+        })
 
     def test_successful_CB3(self):
         self.resource.callback_attempt = 2
@@ -845,6 +851,9 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB3')
+        self.assertEqual(log.context, {
+            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+        })
 
 
 class StopCallMeBackTestCase(

@@ -287,19 +287,18 @@ class ProviderCSVValidator(object):
         if time_spent_in_minutes > 18:
             raise serializers.ValidationError('Time spent (%s) must not be greater than 18 minutes' % time_spent_in_minutes)
 
+    @depends_on('Exempted Code Reason', check=TRUTHY)
     @depends_on('Determination', check=FALSEY)
     def _validate_exemption(self, cleaned_data, category):
-        check_category = False
-        if cleaned_data.get('Date Opened') > datetime.datetime(2013, 4, 1):
+        EXEMPT_CATEGORIES = {u'debt', u'discrimination', u'education'}
+        if cleaned_data.get('Date Opened') > datetime.datetime(2013, 4, 1) and category in EXEMPT_CATEGORIES:
             validate_present(
                 cleaned_data.get('Exempted Code Reason', cleaned_data.get('CLA Reference Number')),
                 message='Exempt Code Reason or CLA Reference number required before case was opened after 1st Apr 2013'
             )
-            check_category = True
-        if cleaned_data.get('Exceptional Cases (ref)'):
-            check_category = True
 
-        if check_category and category not in {u'debt', u'discrimination', u'education'}:
+
+        if category not in EXEMPT_CATEGORIES:
             raise serializers.ValidationError(
                 'An Exemption Reason can only be entered for Debt, '
                 'Discrimination and Education matters')

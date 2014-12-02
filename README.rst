@@ -110,7 +110,7 @@ following commands to get the server running again:
 Troubleshooting
 ---------------
 
-If you are experiencing errors when creating and sycning the database,
+If you are experiencing errors when creating and syncing the database,
 make sure the following are added to your ``PATH`` var (amend path to
 postgres as necessary):
 

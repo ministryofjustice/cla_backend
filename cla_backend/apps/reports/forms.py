@@ -510,31 +510,32 @@ class MISurveyExtract(SQLFileReport):
 
 
 class MICB1Extract(SQLFileReport):
-    QUERY_FILE = 'MICB1s.sql'
+    QUERY_FILE = 'MICB1sSLA.sql'
 
 
     def get_headers(self):
-        return ['LAA_Reference',
-                'Hash_ID_personal_details_captured',
-                'Case_ID',
-                'Provider_ID_if_allocated',
-                'Law_Category_Name',
-                'Date_Case_Created',
-                'Last_Modified_Date',
-                'Outcome_Code_Child',
-                'Billable_Time',
-                'Matter_Type_1',
-                'Matter_Type_2',
-                'User_ID',
-                'Scope_Status',
-                'Eligibility_Status',
-                'Time_to_OS_Access',
-                'Outcome_Created_At',
-                'Username',
-                'Requires_Action_At',
-                'Log_Notes',
-                'Time_to_view_after_requires_action_at',
-                'Time_to_action_after_requires_action_at',
-                'Time_to_view_after_requires_action_at_for_humans',
-                'Time_to_action_after_requires_action_at_for_humans',
-                'Next_Outcome']
+        return [
+            "LAA_Reference"
+            ,"Hash_ID_personal_details_captured"
+            ,"Case_ID"
+            ,"Provider_ID_if_allocated"
+            ,"Law_Category_Name"
+            ,"Date_Case_Created"
+            ,"Last_Modified_Date"
+            ,"Outcome_Code_Child"
+            ,"Matter_Type_1"
+            ,"Matter_Type_2"
+            ,"created_by_id"
+            ,"Scope_Status"
+            ,"Eligibility_Status"
+            ,"Outcome_Created_At"
+            ,"Username"
+            ,"operator_first_view_after_cb1__created"
+            ,"operator_first_log_after_cb1__created"
+            ,"Next_Outcome"
+            ,"requires_action_at"
+            ,"sla_15"
+            ,"sla_120"
+            ,"is_over_sla_15"
+            ,"is_over_sla_120"
+        ]

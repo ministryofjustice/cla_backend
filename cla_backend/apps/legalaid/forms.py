@@ -1,7 +1,32 @@
+from datetime import timedelta
+
+from django.utils import timezone
+from django.conf import settings
 from django.utils import timezone
 
+from cla_common.call_centre_availability import OpeningHours, available_days, time_slots
 from cla_eventlog.forms import BaseCaseLogForm
 
+
+def is_in_business_hours(dt):
+    OPERATOR_HOURS = OpeningHours(**settings.OPERATOR_HOURS)
+    in_business_hours = dt in OPERATOR_HOURS
+    if in_business_hours:
+        return (True, None)
+    else:
+        end_of_day = timezone.make_aware(time_slots(dt.date())[-1] + timedelta(minutes=15), timezone.get_default_timezone())
+        remainder = dt - end_of_day
+        return (False, remainder)
+
+def get_sla_time(start_time, minutes):
+    simple_delta = start_time + timedelta(minutes=minutes)
+    in_business_hours, remainder_delta = is_in_business_hours(simple_delta)
+    if not in_business_hours:
+        next_business_day = filter(lambda x: x.date() > start_time.date(), available_days(2))[0]
+        start_of_next_business_day = time_slots(next_business_day.date())[0]
+        return start_of_next_business_day + remainder_delta
+
+    return simple_delta
 
 class BaseCallMeBackForm(BaseCaseLogForm):
     LOG_EVENT_KEY = 'call_me_back'
@@ -10,8 +35,12 @@ class BaseCallMeBackForm(BaseCaseLogForm):
         raise NotImplementedError()
 
     def get_context(self):
+        requires_action_at = self.get_requires_action_at()
+
         return {
-            'requires_action_at': self.get_requires_action_at()
+            'requires_action_at': requires_action_at,
+            'sla_15': get_sla_time(requires_action_at, 15),
+            'sla_120': get_sla_time(requires_action_at, 120)
         }
 
     def get_notes(self):

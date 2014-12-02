@@ -110,7 +110,7 @@ following commands to get the server running again:
 Troubleshooting
 ---------------
 
-If you are experiencing errors when creating and sycning the database,
+If you are experiencing errors when creating and syncing the database,
 make sure the following are added to your ``PATH`` var (amend path to
 postgres as necessary):
 
@@ -121,3 +121,13 @@ postgres as necessary):
 
 
 
+Try it on Heroku
+----------------
+
+You can deploy directly to Heroku if you want to get started quickly,
+just click here: |Deploy|_.
+Keep a note of the URL it gets hosted on as you will need it when you deploy
+the frontend component.
+
+.. |Deploy| image:: https://www.herokucdn.com/deploy/button.png
+.. _Deploy: https://heroku.com/deploy

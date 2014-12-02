@@ -78,7 +78,7 @@ class ThirdPartyPersonalDetailsSerializer(ThirdPartyPersonalDetailsSerializerBas
     class Meta(ThirdPartyPersonalDetailsSerializerBase.Meta):
         fields = (
             'reference', 'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone', 'email'
+            'mobile_phone', 'home_phone', 'email', 'safe_to_contact'
         )
 
 
@@ -240,7 +240,7 @@ class StaffSerializer(ExtendedUserSerializerBase):
 
 class FeedbackSerializer(FeedbackSerializerBase):
     issue = serializers.ChoiceField(choices=FEEDBACK_ISSUE)
-    comment = serializers.CharField(max_length=1024, required=False)
+    comment = serializers.CharField(max_length=5000, required=False)
     class Meta(FeedbackSerializerBase.Meta):
         fields = (
             'reference',

@@ -7,7 +7,7 @@ class BaseCaseLogForm(forms.Form):
     LOG_EVENT_KEY = None
     NOTES_MANDATORY = False
 
-    notes = forms.CharField(required=False, max_length=500)
+    notes = forms.CharField(required=False, max_length=5000)
 
     def __init__(self, *args, **kwargs):
         self.case = kwargs.pop('case')

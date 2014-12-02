@@ -299,29 +299,27 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
         cleaned_data = self.dummy_cleaned_data.copy()
         cleaned_data['Date Opened'] = datetime.datetime(2014, 1, 1)
+        cleaned_data['Exempted Code Reason'] = u'aa'
         cleaned_data['Determination'] = False
 
         validator._validate_exemption(cleaned_data, u'debt')
 
+        cleaned_data['Date Opened'] = datetime.datetime(2014, 1, 2)
 
         with self.assertRaisesRegexp(
                 serializers.ValidationError,
                 "[u'An Exemption Reason can only be entered for Debt, Discrimination and Education matter]"):
             validator._validate_exemption(cleaned_data, u'welfare')
 
-        cleaned_data['Exempted Reason Code'] = u''
+        cleaned_data['Exempted Code Reason'] = u''
         cleaned_data['CLA Reference Number'] = u''
-
-        with self.assertRaisesRegexp(
-                serializers.ValidationError,
-                "[u'Exempt Code Reason or CLA Reference number required before case was opened after 1st Apr 2013']"):
-            validator._validate_exemption(cleaned_data, u'debt')
 
 
         cleaned_data['Date Opened'] = datetime.datetime(2011, 1, 1)
         cleaned_data['Exceptional Cases (ref)'] = u'foo'
 
         validator._validate_exemption(cleaned_data, u'debt')
+        cleaned_data['Exempted Code Reason'] = u'aa'
         with self.assertRaisesRegexp(
                 serializers.ValidationError,
                 "[u'An Exemption Reason can only be entered for Debt, Discrimination and Education matter]"):

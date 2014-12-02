@@ -9,6 +9,11 @@ class BaseCallMeBackForm(BaseCaseLogForm):
     def get_requires_action_at(self):
         raise NotImplementedError()
 
+    def get_context(self):
+        return {
+            'requires_action_at': self.get_requires_action_at()
+        }
+
     def get_notes(self):
         dt = timezone.localtime(self.get_requires_action_at())
         return u"Callback scheduled for {dt}. {notes}".format(

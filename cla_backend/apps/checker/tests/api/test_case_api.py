@@ -244,6 +244,9 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
                 timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M")
             )
         )
+        self.assertEqual(log.context, {
+            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+        })
 
         # checking email
         self.assertEquals(len(mail.outbox), 1)

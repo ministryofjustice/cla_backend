@@ -84,7 +84,7 @@ class ThirdPartyPersonalDetailsSerializer(ThirdPartyPersonalDetailsSerializerBas
     class Meta(ThirdPartyPersonalDetailsSerializerBase.Meta):
         fields = (
             'reference', 'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone', 'email'
+            'mobile_phone', 'home_phone', 'email', 'safe_to_contact'
         )
 
 
@@ -218,7 +218,8 @@ class CaseListSerializer(CaseSerializer):
             'category',
             'outcome_code',
             'case_count',
-            'source'
+            'source',
+            'requires_action_at'
         )
 
 class CreateCaseSerializer(CaseSerializer):

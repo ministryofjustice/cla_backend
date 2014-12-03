@@ -1,16 +1,21 @@
-from cla_provider.forms import AdminStaffForm
 from django.contrib import admin
 
-from .models import Provider, ProviderAllocation, Staff, OutOfHoursRota
+from core.admin.modeladmin import OneToOneUserAdmin
+
+from ..models import Provider, ProviderAllocation, Staff, OutOfHoursRota
+
+from .forms import AdminStaffForm
 
 
-class StaffInline(admin.TabularInline):
+class StaffAdmin(OneToOneUserAdmin):
     model = Staff
     form = AdminStaffForm
 
-class StaffAdmin(admin.ModelAdmin):
-    model = Staff
-    form = AdminStaffForm
+    list_display = (
+        'username_display', 'email_display',
+        'first_name_display', 'last_name_display',
+        'provider', 'is_manager'
+    )
 
 
 class ProviderAllocationInline(admin.TabularInline):
@@ -18,10 +23,7 @@ class ProviderAllocationInline(admin.TabularInline):
 
 
 class ProviderAdmin(admin.ModelAdmin):
-    inlines = [
-        ProviderAllocationInline,
-        StaffInline,
-    ]
+    inlines = [ProviderAllocationInline]
 
     list_display = ['name', 'law_categories']
 

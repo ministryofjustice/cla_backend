@@ -1,7 +1,5 @@
-from cla_provider.models import Staff
 from django import forms
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from django.forms import Form, PasswordInput
+from django.forms import Form
 from django.forms.util import ErrorList
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
@@ -246,27 +244,3 @@ class ProviderExtractForm(Form):
         if data:
             data = data.strip().upper()
         return data
-
-
-class AdminStaffForm(forms.ModelForm):
-    chs_password = ReadOnlyPasswordHashField(widget=PasswordInput(),
-                                             required=False,
-                                             help_text='Password can only be set, not viewed.')
-    chs_organisation = forms.CharField(initial=None, required=False)
-    chs_user = forms.CharField(initial=None, required=False)
-
-
-    def clean(self):
-        data = self.cleaned_data
-        if not data['chs_password']:
-            del self.cleaned_data['chs_password']
-        return data
-
-    def save(self, commit=True):
-        raw_password = self.cleaned_data.get('chs_password')
-        if raw_password:
-            self.instance.set_chs_password(raw_password)
-        return super(AdminStaffForm, self).save(commit=commit)
-
-    class Meta:
-        model = Staff

@@ -3,6 +3,7 @@ from django.contrib.admin.options import IS_POPUP_VAR
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.views.decorators.debug import sensitive_post_parameters
+from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
@@ -11,8 +12,13 @@ from django.utils.html import escape
 from django.contrib import messages
 from django.contrib.auth.forms import AdminPasswordChangeForm
 
+from django_statsd.clients import statsd
+
+from cla_auth.models import AccessAttempt
+
 
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
+require_POST_m = method_decorator(require_POST)
 
 
 class OneToOneUserAdmin(admin.ModelAdmin):
@@ -42,8 +48,26 @@ class OneToOneUserAdmin(admin.ModelAdmin):
         from django.conf.urls import patterns
         return patterns('',
             (r'^(\d+)/password/$',
-             self.admin_site.admin_view(self.user_change_password))
+             self.admin_site.admin_view(self.user_change_password)),
+            (r'^(\d+)/reset-lockout/$',
+             self.admin_site.admin_view(self.reset_lockout))
         ) + super(OneToOneUserAdmin, self).get_urls()
+
+    @require_POST_m
+    def reset_lockout(self, request, id):
+        if not self.has_change_permission(request):
+            raise PermissionDenied
+
+        one2one_model = get_object_or_404(self.get_queryset(request), pk=id)
+        user = one2one_model.user
+
+        AccessAttempt.objects.delete_for_username(user.username)
+        statsd.incr('account.lockout.reset')
+
+        self.log_change(request, user, 'Reset locked account (user %s)' % user.username)
+        msg = ugettext('Account unlocked successfully.')
+        messages.success(request, msg)
+        return HttpResponseRedirect('..')
 
     @sensitive_post_parameters_m
     def user_change_password(self, request, id, form_url=''):

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.admin import widgets
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -16,12 +17,18 @@ class OneToOneUserAdminForm(forms.ModelForm):
                       "@/./+/-/_ only."),
         error_messages={
             'invalid': _("This value may contain only letters, numbers and "
-                         "@/./+/-/_ characters.")})
+                         "@/./+/-/_ characters.")},
+        widget=widgets.AdminTextInputWidget
+        )
 
     # password fields are actually set dynamically depending on if we're creating or
     # updating an operator. The values in PASSWORD_FIELDS are used instead.
-    password = forms.CharField(label=_("Password"))
-    password2 = forms.CharField(label=_("Password confirmation"))
+    password = forms.CharField(
+        label=_("Password"), widget=widgets.AdminTextInputWidget
+    )
+    password2 = forms.CharField(
+        label=_("Password confirmation"), widget=widgets.AdminTextInputWidget
+    )
     PASSWORD_FIELDS = {
         'CREATE': {
             'password': forms.CharField(
@@ -44,9 +51,15 @@ class OneToOneUserAdminForm(forms.ModelForm):
         }
     }
 
-    first_name = forms.CharField(max_length=30, required=False)
-    last_name = forms.CharField(max_length=30, required=False)
-    email = forms.EmailField(required=False)
+    first_name = forms.CharField(
+        max_length=30, required=False, widget=widgets.AdminTextInputWidget
+    )
+    last_name = forms.CharField(
+        max_length=30, required=False, widget=widgets.AdminTextInputWidget
+    )
+    email = forms.EmailField(
+        required=False, widget=widgets.AdminTextInputWidget
+    )
 
     def adjust_password_fields(self, instance):
         for field_name in ['password', 'password2']:

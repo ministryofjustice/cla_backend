@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.admin import widgets
 from django.forms import PasswordInput
 
 from core.admin.forms import OneToOneUserAdminForm
@@ -8,11 +9,18 @@ from ..models import Staff
 
 
 class AdminStaffForm(OneToOneUserAdminForm):
-    chs_password = ReadOnlyPasswordHashField(widget=PasswordInput(),
-                                             required=False,
-                                             help_text='Password can only be set, not viewed.')
-    chs_organisation = forms.CharField(initial=None, required=False)
-    chs_user = forms.CharField(initial=None, required=False)
+    chs_password = ReadOnlyPasswordHashField(
+        widget=PasswordInput(attrs={'class': 'vTextField'}), required=False,
+        help_text='Password can only be set, not viewed.'
+    )
+    chs_organisation = forms.CharField(
+        initial=None, required=False,
+        widget=widgets.AdminTextInputWidget
+    )
+    chs_user = forms.CharField(
+        initial=None, required=False,
+        widget=widgets.AdminTextInputWidget
+    )
 
     def clean(self):
         data = self.cleaned_data

@@ -11,6 +11,7 @@ class StaffAdmin(OneToOneUserAdmin):
     model = Staff
     form = AdminStaffForm
 
+    actions = None
     list_display = (
         'username_display', 'email_display',
         'first_name_display', 'last_name_display',

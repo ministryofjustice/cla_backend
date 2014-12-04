@@ -27,7 +27,7 @@ class ProviderManager(models.Manager):
 
 class Provider(TimeStampedModel):
     name = models.CharField(max_length=255)
-    opening_hours = models.CharField(max_length=100)
+    opening_hours = models.CharField(max_length=100, blank=True)
     law_category = models.ManyToManyField('legalaid.Category',
                                           through='ProviderAllocation')
     active = models.BooleanField(default=False)

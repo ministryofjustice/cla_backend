@@ -19,7 +19,12 @@
                 ["add_operator", "call_centre", "operator"], 
                 ["change_operator", "call_centre", "operator"],
                 ["add_staff", "cla_provider", "staff"],
-                ["change_staff", "cla_provider", "staff"]
+                ["change_staff", "cla_provider", "staff"],
+                ["add_provider", "cla_provider", "provider"],
+                ["change_provider", "cla_provider", "provider"],
+                ["add_providerallocation", "cla_provider", "providerallocation"],
+                ["change_providerallocation", "cla_provider", "providerallocation"],
+                ["delete_providerallocation", "cla_provider", "providerallocation"]
             ]
         }
     }

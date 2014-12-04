@@ -24,8 +24,13 @@ class ProviderAllocationInline(admin.TabularInline):
 
 
 class ProviderAdmin(admin.ModelAdmin):
+    actions = None
     inlines = [ProviderAllocationInline]
 
+    fields = (
+        'name', 'short_code', 'telephone_frontdoor', 'telephone_backdoor',
+        'email_address', 'active'
+    )
     list_display = ['name', 'law_categories']
 
     def law_categories(self, obj):

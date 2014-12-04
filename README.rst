@@ -84,7 +84,7 @@ Load initial data:
 
 ::
 
-    ./manage.py loaddata kb_from_knowledgebase.json initial_category.json initial_groups.json test_provider.json initial_mattertype.json test_auth_clients.json initial_media_codes.json test_rotas.json
+    ./manage.py loaddata kb_from_knowledgebase.json initial_category.json initial_groups.json test_provider.json test_provider_allocations.json initial_mattertype.json test_auth_clients.json initial_media_codes.json test_rotas.json
 
 Start the server:
 

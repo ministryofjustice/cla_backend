@@ -1,0 +1,24 @@
+[
+    {
+        "pk": 1, 
+        "model": "auth.group", 
+        "fields": {
+            "name": "Operator Managers", 
+            "permissions": [
+                ["add_operator", "call_centre", "operator"], 
+                ["change_operator", "call_centre", "operator"]
+            ]
+        }
+    },
+    {
+        "pk": 2, 
+        "model": "auth.group", 
+        "fields": {
+            "name": "CLA Superusers", 
+            "permissions": [
+                ["add_operator", "call_centre", "operator"], 
+                ["change_operator", "call_centre", "operator"]
+            ]
+        }
+    }
+]

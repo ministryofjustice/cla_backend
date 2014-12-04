@@ -26,36 +26,6 @@
         }
     },
     {
-        "pk": 3,
-        "model": "auth.user",
-        "fields": {
-            "username": "test_staff",
-            "first_name": "",
-            "last_name": "",
-            "is_active": true,
-            "is_superuser": false,
-            "is_staff": false,
-            "last_login": "2014-03-20T14:12:16Z",
-            "groups": [],
-            "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$8zY9UFaR6zm8$FeWdkxAx+jz7oVMTGBiRmAhRlCG5814SqZk9L0ihBdw=",
-            "email": "",
-            "date_joined": "2014-03-20T14:12:16Z"
-        }
-    },
-    {
-        "pk": 1,
-        "model": "cla_provider.staff",
-        "fields": {
-            "is_manager": false,
-            "user": 3,
-            "provider": 1,
-            "modified": "2014-03-20T14:13:31.624Z",
-            "created": "2014-03-20T14:13:31.607Z"
-        }
-    },
-
-    {
         "pk": 2,
         "model": "auth.user",
         "fields": {
@@ -82,11 +52,33 @@
             "last_name": "",
             "is_active": true,
             "is_superuser": false,
-            "is_staff": false,
+            "is_staff": true,
             "last_login": "2014-03-19T16:26:31.018Z",
-            "groups": [],
+            "groups": [
+                1
+            ],
             "user_permissions": [],
             "password": "pbkdf2_sha256$12000$sT8aqMErQFhh$L0jCyOnpcr5t++N4OhGqRAExtnJHhAAdkZB4ndpOaI8=",
+            "email": "",
+            "date_joined": "2014-03-19T16:26:31.018Z"
+        }
+    },
+    {
+        "pk": 80,
+        "model": "auth.user",
+        "fields": {
+            "username": "test_cla_superuser",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "last_login": "2014-03-19T16:26:31.018Z",
+            "groups": [
+                2
+            ],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$12000$feBd60sk36Tw$KIXpTNsv/kuOb3wYUoPLhfEETptZyx5/XINYjk2ex1A=", 
             "email": "",
             "date_joined": "2014-03-19T16:26:31.018Z"
         }
@@ -97,6 +89,7 @@
         "fields": {
             "user": 2,
             "is_manager": false,
+            "is_cla_superuser": false,
             "modified": "2014-03-19T16:27:32.004Z",
             "created": "2014-03-19T16:27:31.999Z"
         }
@@ -107,6 +100,18 @@
         "fields": {
             "user": 6,
             "is_manager": true,
+            "is_cla_superuser": false,
+            "modified": "2014-03-19T16:27:32.004Z",
+            "created": "2014-03-19T16:27:31.999Z"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "call_centre.operator",
+        "fields": {
+            "user": 80,
+            "is_manager": false,
+            "is_cla_superuser": true,
             "modified": "2014-03-19T16:27:32.004Z",
             "created": "2014-03-19T16:27:31.999Z"
         }

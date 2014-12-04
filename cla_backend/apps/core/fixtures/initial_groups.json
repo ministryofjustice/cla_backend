@@ -18,6 +18,7 @@
             "permissions": [
                 ["add_operator", "call_centre", "operator"], 
                 ["change_operator", "call_centre", "operator"],
+                ["add_staff", "cla_provider", "staff"],
                 ["change_staff", "cla_provider", "staff"]
             ]
         }

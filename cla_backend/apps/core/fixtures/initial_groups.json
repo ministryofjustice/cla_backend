@@ -6,7 +6,8 @@
             "name": "Operator Managers", 
             "permissions": [
                 ["add_operator", "call_centre", "operator"], 
-                ["change_operator", "call_centre", "operator"]
+                ["change_operator", "call_centre", "operator"],
+                ["run_reports", "legalaid", "case"]
             ]
         }
     },
@@ -24,7 +25,8 @@
                 ["change_provider", "cla_provider", "provider"],
                 ["add_providerallocation", "cla_provider", "providerallocation"],
                 ["change_providerallocation", "cla_provider", "providerallocation"],
-                ["delete_providerallocation", "cla_provider", "providerallocation"]
+                ["delete_providerallocation", "cla_provider", "providerallocation"],
+                ["run_reports", "legalaid", "case"]
             ]
         }
     }

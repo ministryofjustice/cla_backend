@@ -13,15 +13,21 @@ class Operator(TimeStampedModel):
     def __unicode__(self):
         return self.user.username
 
+    @property
     def is_cla_superuser_or_manager(self):
         return self.is_manager or self.is_cla_superuser
 
     def save(self, *args, **kwargs):
+        # if is_cla_superuser == True then
+        #   set is_manager to True as well
+        if self.is_cla_superuser:
+            self.is_manager = True
+
         super(Operator, self).save(*args, **kwargs)
 
         # is_staff should be True for op managers / cla superusers
         # and False otherwise
-        is_special_user = self.is_cla_superuser_or_manager()
+        is_special_user = self.is_cla_superuser_or_manager
         if self.user.is_staff != is_special_user:
             self.user.is_staff = is_special_user
             self.user.save(update_fields=['is_staff'])

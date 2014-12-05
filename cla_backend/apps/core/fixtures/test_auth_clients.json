@@ -110,7 +110,7 @@
         "model": "call_centre.operator",
         "fields": {
             "user": 80,
-            "is_manager": false,
+            "is_manager": true,
             "is_cla_superuser": true,
             "modified": "2014-03-19T16:27:32.004Z",
             "created": "2014-03-19T16:27:31.999Z"

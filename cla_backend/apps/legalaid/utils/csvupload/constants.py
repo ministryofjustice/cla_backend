@@ -22,8 +22,9 @@ CATEGORY_SPEC = {
         'OUTCOME_CODES': {u'DA', u'DC', u'DD', u'DG', u'DH', u'DI', u'DU',
                           u'DV', u'DW', u'DX', u'DY', u'DZ'},
         'MATTER_TYPE1': {u'DPDE', u'DNPD', u'DMDE', u'DMCA', u'DMAP', u'DIVB',
-                         u'DORH', u'DTOT', u'DSCH'},
-        'MATTER_TYPE2': {u'DVAL', u'DMIX', u'DCRE', u'DIBP', u'DORD', u'DOTH'},
+                         u'DORH', u'DTOT'},
+        'MATTER_TYPE2': {u'DVAL', u'DMIX', u'DCRE', u'DIBP', u'DORD', u'DOTH', 
+                         u'DSCH'},
         'STAGE_REACHED': {u'DA', u'DB', u'DC', u'DD'}
     },
     u'discrimination': {

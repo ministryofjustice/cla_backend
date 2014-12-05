@@ -6,10 +6,7 @@ from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .forms import ProviderCaseClosure, OperatorCaseClosure, \
-    OperatorCaseCreate, CaseReport, NewCasesWithAdaptationCount, \
-    CaseVolumeAndAvgDurationByDay, ReferredCasesByCategory, \
-    AllocatedCasesNoOutcome, MICaseExtract, MIFeedbackExtract, \
+from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
     MISurveyExtract, MICB1Extract
 
@@ -59,55 +56,6 @@ def make_csv_download_response(filename):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
     return response
-
-
-@staff_member_required
-@permission_required('legalaid.run_reports')
-@report_view(ProviderCaseClosure, 'Provider Closure Volume')
-def provider_closure_volume():
-    pass
-
-
-@staff_member_required
-@permission_required('legalaid.run_reports')
-@report_view(OperatorCaseClosure, 'Operator Closure Volume')
-def operator_closure_volume():
-    pass
-
-
-@staff_member_required
-@permission_required('legalaid.run_reports')
-@report_view(CaseReport, 'All Cases')
-def all_cases():
-    pass
-
-
-@staff_member_required
-@permission_required('legalaid.run_reports')
-@report_view(NewCasesWithAdaptationCount, 'New Cases with Adaptations')
-def adaptation_counts():
-    pass
-
-
-@staff_member_required
-@permission_required('legalaid.run_reports')
-@report_view(CaseVolumeAndAvgDurationByDay, 'Case Volume and Average Duration by Operator by Day')
-def case_volume_avg_duration_by_operator_day():
-    pass
-
-
-@staff_member_required
-@permission_required('legalaid.run_reports')
-@report_view(ReferredCasesByCategory, 'Cases Referred to Specialist by Category')
-def referred_cases_by_category():
-    pass
-
-
-@staff_member_required
-@permission_required('legalaid.run_reports')
-@report_view(AllocatedCasesNoOutcome, 'Allocated Cases with No Outcome')
-def allocated_no_outcome():
-    pass
 
 
 @staff_member_required

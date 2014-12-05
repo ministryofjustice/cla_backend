@@ -37,6 +37,9 @@ class ArticleCategory(TimeStampedModel):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = "Article categories"
+
 
 class ArticleCategoryMatrix(TimeStampedModel):
     article = models.ForeignKey(Article)
@@ -46,3 +49,6 @@ class ArticleCategoryMatrix(TimeStampedModel):
     def __unicode__(self):
         return u"%s - %s" % (self.article.__unicode__(),
                              self.article_category.__unicode__())
+
+    class Meta:
+        verbose_name_plural = "Article category matrixes"

@@ -1,10 +1,13 @@
-from decimal import Decimal, InvalidOperation
+from collections import defaultdict
 import datetime
+from decimal import Decimal, InvalidOperation
+from django.forms.util import ErrorList
 import types
 import re
 
 from rest_framework import serializers
 from dateutil.parser import parse
+from django.core import exceptions
 
 from legalaid.utils.csvupload.constants import AGE_RANGE, POSTCODE_RE, \
     ELIGIBILITY_CODES, DISABILITY_INDICATOR, EXEMPTION_CODES, \
@@ -97,7 +100,8 @@ def inverted_reduce(x, f):
 
 TRUTHY = lambda x: bool(x)
 FALSEY = lambda x: not bool(x)
-AFTER_APR_2013 = lambda x: x > datetime.datetime(2013, 4, 1)
+NOT_EQUAL = lambda y: lambda x: x != y
+AFTER_APR_2013 = lambda x: x and x > datetime.datetime(2013, 4, 1)
 
 class depends_on(object):
     """
@@ -134,6 +138,14 @@ class depends_on(object):
         return wrapped_f
 
 
+def excel_col_name(col): # col is 1 based
+    excel_col = ''
+    div = col
+    while div:
+        (div, mod) = divmod(div-1, 26) # will return (x, 0 .. 25)
+        excel_col = chr(mod + 65) + excel_col
+    return excel_col
+
 
 class ProviderCSVValidator(object):
     # the index is the offset in the csv
@@ -146,7 +158,7 @@ class ProviderCSVValidator(object):
                                            flags=re.IGNORECASE)]),  #3
         ('First Name', [validate_present]),  #4
         ('Surname', [validate_present]),  #5
-        ('DOB', [validate_present, validate_date]),  #6
+        ('DOB', [validate_date]),  #6
         ('Age Range', [validate_present, validate_in(AGE_RANGE)]),  #7
         ('Gender', [validate_present]),  #8
         ('Ethnicity', [validate_present]),  #9
@@ -202,8 +214,8 @@ class ProviderCSVValidator(object):
             return cleaned_value
 
         except serializers.ValidationError as ve:
-            ve.message = 'Row: %s Field (%s): %s - %s' % (
-                row_num + 1, idx + 1, field_name, ve.message)
+            ve.message = 'Row: %s Field (%s / %s): %s - %s' % (
+                row_num + 1, idx + 1, excel_col_name(idx + 1), field_name, ve.message)
             raise ve
 
     def _validate_fields(self):
@@ -214,6 +226,7 @@ class ProviderCSVValidator(object):
         field spec (self.fields)
         """
         cleaned_data = {}
+        errors = ErrorList()
 
         for row_num, row in enumerate(self.rows):
             if len(row) != len(self.fields):
@@ -223,15 +236,24 @@ class ProviderCSVValidator(object):
 
             for idx, field_value in enumerate(row):
                 field_name, validators = self.fields[idx]
-                cleaned_data[field_name] = self._validate_field(field_name,
+                try:
+                    cleaned_data[field_name] = self._validate_field(field_name,
                                                                 field_value,
                                                                 idx, row_num,
                                                                 validators)
+                except serializers.ValidationError as ve:
+                    errors.append(ve)
+            try:
+                # Global Validation
+                self.cleaned_data.append(
+                    self._validate_data(cleaned_data, row_num)
+                )
+            except serializers.ValidationError as ve:
+                errors.extend(ve.error_list)
 
-            # Global Validation
-            self.cleaned_data.append(
-                self._validate_data(cleaned_data, row_num)
-            )
+
+        if len(errors):
+            raise serializers.ValidationError(errors)
 
 
     def _validate_open_closed_date(self, cleaned_data):
@@ -281,11 +303,20 @@ class ProviderCSVValidator(object):
 
         return PREFIX_CATEGORY_LOOKUP[list(prefixes)[0]]
 
+    @depends_on('Age Range', check=NOT_EQUAL(u'U'))
+    def _validate_dob_present(self, cleaned_data):
+        validate_present(cleaned_data.get('DOB'), "A date of birth is required unless"
+                                                  " Age range is set to 'U'")
+
     @depends_on('Determination', check=TRUTHY)
-    def _validate_time_spent(self, cleaned_data):
+    def _validate_time_spent(self, cleaned_data, category):
+        MAX_TIME_ALLOWED = 18
+        if category == u'discrimination':
+            MAX_TIME_ALLOWED = 42
+
         time_spent_in_minutes = cleaned_data.get('Time Spent', 0)
-        if time_spent_in_minutes > 18:
-            raise serializers.ValidationError('Time spent (%s) must not be greater than 18 minutes' % time_spent_in_minutes)
+        if time_spent_in_minutes > MAX_TIME_ALLOWED:
+            raise serializers.ValidationError('Time spent (%s) must not be greater than %s minutes' % (time_spent_in_minutes, MAX_TIME_ALLOWED))
 
     @depends_on('Exempted Code Reason', check=TRUTHY)
     @depends_on('Determination', check=FALSEY)
@@ -328,23 +359,48 @@ class ProviderCSVValidator(object):
         """
         Like django's clean method, use this to validate across fields
         """
+        def _format_message(s):
+            return 'Row: %s - %s' % (row_num + 1, s)
+
+        errors = ErrorList()
+
+        validation_methods = [
+            self._validate_open_closed_date,
+            self._validate_service_adaptation,
+            self._validate_media_code,
+            self._validate_eligibility_code,
+            self._validate_stage_reached,
+            self._validate_dob_present,
+            self._validate_open_closed_date
+        ]
+        validation_methods_depend_on_category = [
+            self._validate_time_spent,
+            self._validate_exemption,
+            self._validate_telephone_or_online_advice
+        ]
+
+        for m in validation_methods:
+            try:
+                m(cleaned_data)
+            except serializers.ValidationError as ve:
+                errors.append(_format_message(ve.message))
+
         try:
-            self._validate_open_closed_date(cleaned_data)
-            self._validate_service_adaptation(cleaned_data)
-            self._validate_media_code(cleaned_data)
-            self._validate_eligibility_code(cleaned_data)
-            self._validate_time_spent(cleaned_data)
-            self._validate_stage_reached(cleaned_data)
             category = self._validate_category_consistency(cleaned_data)
-            self._validate_exemption(cleaned_data, category)
-            self._validate_telephone_or_online_advice(cleaned_data, category)
-
-            return cleaned_data
         except serializers.ValidationError as ve:
-            ve.message = 'Row: %s - %s' % (
-                row_num + 1, ve.message)
-            raise ve
+            errors.append(_format_message(ve.message))
+            raise serializers.ValidationError(errors)
 
+        for m in validation_methods_depend_on_category:
+            try:
+                m(cleaned_data, category)
+            except serializers.ValidationError as ve:
+                errors.append(_format_message(ve.message))
+
+        if len(errors):
+            raise serializers.ValidationError(errors)
+
+        return cleaned_data
 
     def validate(self):
         self._validate_fields()

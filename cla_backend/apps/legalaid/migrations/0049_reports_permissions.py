@@ -7,11 +7,14 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-        ct, created = orm['contenttypes.ContentType'].objects.get_or_create(
-            model='case', app_label='legalaid')
-        perm, created = orm['auth.permission'].objects.get_or_create(
-            content_type=ct, codename='run_reports', defaults=dict(name=u'Can run reports'))
+        """
+        Makes sure that 'run_reports' permission is there by creating potential
+        new permissions
+        """
+        from django.db.models import get_app
+        from django.contrib.auth.management import create_permissions
+
+        create_permissions(get_app('legalaid'), [], 0)
 
     def backwards(self, orm):
         "Write your backwards methods here."
@@ -382,5 +385,5 @@ class Migration(DataMigration):
         }
     }
 
-    complete_apps = ['contenttypes', 'auth', 'legalaid']
+    complete_apps = ['legalaid']
     symmetrical = True

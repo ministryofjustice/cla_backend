@@ -737,6 +737,11 @@ class Case(TimeStampedModel, ModelDiffMixin):
     def requires_action_by_operator_manager(self):
         return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR_MANAGER
 
+    class Meta:
+        permissions = (
+            ("run_reports", "Can run reports"),
+        )
+
 
 class CaseNotesHistory(TimeStampedModel):
     case = models.ForeignKey(Case, db_index=True)

@@ -286,11 +286,14 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         cleaned_data['Determination'] = True
 
         cleaned_data['Time Spent'] = 9
-        validator._validate_time_spent(cleaned_data)
+        validator._validate_time_spent(cleaned_data, u'welfare')
         cleaned_data['Time Spent'] = 999
 
+        with self.assertRaisesRegexp(serializers.ValidationError, "[u'Time spent (999) must not be greater than 42 minutes']"):
+            validator._validate_time_spent(cleaned_data, u'discrimination')
+
         with self.assertRaisesRegexp(serializers.ValidationError, "[u'Time spent (999) must not be greater than 18 minutes']"):
-            validator._validate_time_spent(cleaned_data)
+            validator._validate_time_spent(cleaned_data, u'welfare')
 
 
     def test_validation_exemption_code_or_cla_ref_required(self):

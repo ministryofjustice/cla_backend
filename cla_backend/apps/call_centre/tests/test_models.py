@@ -3,6 +3,8 @@ from django.utils.unittest import skip
 
 from core.tests.mommy_utils import make_recipe
 
+from ..models import OP_MANAGER_GROUP_NAME, CLA_SUPERUSER_GROUP_NAME
+
 
 class OperatorTestCase(TestCase):
     def test_save_sets_is_manager_True_if_is_cla_superuser_True(self):
@@ -76,3 +78,55 @@ class OperatorTestCase(TestCase):
         operator.save()
 
         self.assertFalse(operator.user.is_staff)
+
+    def test_save_sets_groups_accordingly(self):
+        # 1.
+        # is_manager = False
+        # is_cla_superuser = False
+        #       => No groups
+        operator = make_recipe(
+            'call_centre.operator', is_cla_superuser=False, is_manager=False
+        )
+
+        operator.save()
+        self.assertEqual(operator.user.groups.count(), 0)
+
+        # 2.
+        # is_manager = True
+        # is_cla_superuser = False
+        #       => only OP_MANAGER_GROUP_NAME
+        operator.is_manager = True
+        operator.is_cla_superuser = False
+        operator.save()
+        self.assertEqual(operator.user.groups.count(), 1)
+        self.assertEqual(operator.user.groups.filter(name=OP_MANAGER_GROUP_NAME).count(), 1)
+
+        # 3.
+        # is_manager = True
+        # is_cla_superuser = True
+        #       => OP_MANAGER_GROUP_NAME, CLA_SUPERUSER_GROUP_NAME
+        operator.is_manager = True
+        operator.is_cla_superuser = True
+        operator.save()
+        self.assertEqual(operator.user.groups.count(), 2)
+        self.assertEqual(operator.user.groups.filter(name=OP_MANAGER_GROUP_NAME).count(), 1)
+        self.assertEqual(operator.user.groups.filter(name=CLA_SUPERUSER_GROUP_NAME).count(), 1)
+
+        # 4. back to
+        # is_manager = True
+        # is_cla_superuser = False
+        #       => only OP_MANAGER_GROUP_NAME
+        operator.is_manager = True
+        operator.is_cla_superuser = False
+        operator.save()
+        self.assertEqual(operator.user.groups.count(), 1)
+        self.assertEqual(operator.user.groups.filter(name=OP_MANAGER_GROUP_NAME).count(), 1)
+
+        # 5. back to
+        # is_manager = False
+        # is_cla_superuser = False
+        #       => No groups
+        operator.is_manager = False
+        operator.is_cla_superuser = False
+        operator.save()
+        self.assertEqual(operator.user.groups.count(), 0)

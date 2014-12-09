@@ -9,21 +9,28 @@ from cla_eventlog.forms import BaseCaseLogForm
 
 
 def is_in_business_hours(dt):
+    if not dt.tzinfo:
+        dt = timezone.make_aware(dt, timezone.get_default_timezone())
+
     OPERATOR_HOURS = OpeningHours(**settings.OPERATOR_HOURS)
     in_business_hours = dt in OPERATOR_HOURS
     if in_business_hours:
         return (True, None)
     else:
-        end_of_day = timezone.make_aware(time_slots(dt.date())[-1] + timedelta(minutes=15), timezone.get_default_timezone())
-        remainder = dt - end_of_day
+        available_slots = time_slots(dt.date())
+        remainder = timedelta(minutes=15)
+        if available_slots:
+            end_of_day = timezone.make_aware(available_slots[-1] + timedelta(minutes=15), timezone.get_default_timezone())
+            remainder = dt - end_of_day
+
         return (False, remainder)
 
 def get_sla_time(start_time, minutes):
     simple_delta = start_time + timedelta(minutes=minutes)
     in_business_hours, remainder_delta = is_in_business_hours(simple_delta)
     if not in_business_hours:
-        next_business_day = filter(lambda x: x.date() > start_time.date(), available_days(2))[0]
-        start_of_next_business_day = time_slots(next_business_day.date())[0]
+        next_business_day = filter(lambda x: x.date() > start_time.date(), available_days(365))[0]
+        start_of_next_business_day = timezone.make_aware(time_slots(next_business_day.date())[0], timezone.get_default_timezone())
         return start_of_next_business_day + remainder_delta
 
     return simple_delta

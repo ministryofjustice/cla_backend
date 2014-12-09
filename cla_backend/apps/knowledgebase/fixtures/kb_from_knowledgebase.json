@@ -450,14 +450,14 @@
         "created": "2014-06-27T14:52:55.547Z", 
         "service_name": "Find a Solicitor", 
         "organisation": "Law Society", 
-        "helpline": "Tel. 0870 606 2555 (Inside the UK). Select Option 6", 
+        "helpline": "Tel. +44 (0)20 7320 5650 (Monday to Friday from 09:00 to 17:30 charged at local call rates)", 
         "modified": "2014-09-26T10:41:38.057Z", 
         "accessibility": "", 
         "when_to_use": "Clients seeking a face-to-face immigration provider for an out of scope issue.", 
         "how_to_use": "Refer those with internet access to website, those without to telephone", 
         "address": "", 
         "keywords": "law, society, solicitor, solicitors, advocacy, agricultural, business, charity, commercial, litigation, property, company, construction, civil, contract, conveyancing, investment, tax, international.", 
-        "opening_hours": "Web 24 hours, Telephone 08.00 to 18.00, Monday, Wednesday, Thursday, Friday 09.30 to 18.00, Tuesday", 
+        "opening_hours": "", 
         "resource_type": "LEGAL"
     }
 },

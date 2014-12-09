@@ -2,7 +2,7 @@
 # After the first "pip install -r", just run "pip freeze" and add the version
 # to each package in each requirements/*.txt.
 
-Django==1.6.6
+Django==1.6.8
 
 django-model-utils==2.0
 
@@ -19,7 +19,7 @@ Markdown==2.4.1
 bleach==1.4
 django-oauth2-provider==0.2.6.1
 
-git+git://github.com/ministryofjustice/cla_common.git@0.1.54#egg=cla_common==0.1.54
+git+git://github.com/ministryofjustice/cla_common.git@0.1.55#egg=cla_common==0.1.55
 django-extended-choices==0.3.0
 django-filter==0.7
 jsonpatch==1.7
@@ -32,3 +32,4 @@ django-ipware==0.0.8
 csvkit==0.9.0
 requests==2.4.3
 pytz==2014.7
+dj-database-url==0.3.0

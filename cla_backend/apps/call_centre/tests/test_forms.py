@@ -411,6 +411,10 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         )
         self.assertEqual(log.created_by, self.user)
         self.assertEqual(log.case, case)
+        self.assertNotEqual(case.requires_action_at, None)
+        self.assertEqual(log.context, {
+            'requires_action_at': dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+        })
 
         self.assertEqual(
             case.requires_action_at,

@@ -25,7 +25,6 @@ from legalaid.views import BaseUserViewSet, \
     DescCaseOrderingFilter
 
 from diagnosis.views import BaseDiagnosisViewSet
-from cla_common.constants import REQUIRES_ACTION_BY
 
 from .models import Staff
 from .permissions import CLAProviderClientIDPermission
@@ -37,7 +36,8 @@ from .serializers import EligibilityCheckSerializer, \
     LogSerializer, FeedbackSerializer, ExtendedEligibilityCheckSerializer, \
     CaseListSerializer, CaseNotesHistorySerializer, CSVUploadSerializer, \
     CSVUploadDetailSerializer
-from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm
+from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, \
+    SplitCaseForm, ReopenCaseForm
 
 logger = logging.getLogger(__name__)
 
@@ -167,6 +167,13 @@ class CaseViewSet(
         Closes a case
         """
         return self._form_action(request, Form=CloseCaseForm)
+
+    @action()
+    def reopen(self, request, reference=None, **kwargs):
+        """
+        Reopens a case
+        """
+        return self._form_action(request, Form=ReopenCaseForm, no_body=False)
 
     @link()
     def legal_help_form_extract(self, *args, **kwargs):

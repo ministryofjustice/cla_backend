@@ -43,7 +43,7 @@ class FeedbackSerializerBase(serializers.ModelSerializer):
     created_by = serializers.CharField(source='created_by.user.username', read_only=True)
     case = serializers.SlugRelatedField(slug_field='reference', read_only=True)
 
-    comment = serializers.CharField(max_length=1024, read_only=True)
+    comment = serializers.CharField(max_length=5000, read_only=True)
 
     justified = serializers.BooleanField(read_only=True)
     resolved = serializers.BooleanField(read_only=True)
@@ -246,10 +246,6 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         return attrs
 
     def save(self, **kwargs):
-        # TODO double-check this, not sure...
-        if not self.object.on_passported_benefits:
-            self.object.specific_benefits = None
-
         obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
         obj.update_state()
         diff = obj.diff

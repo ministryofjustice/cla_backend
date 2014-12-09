@@ -31,7 +31,7 @@ class ProviderAdmin(admin.ModelAdmin):
         'name', 'short_code', 'telephone_frontdoor', 'telephone_backdoor',
         'email_address', 'active'
     )
-    list_display = ['name', 'law_categories']
+    list_display = ['name', 'law_categories', 'active']
 
     def law_categories(self, obj):
         return u', '.join(

@@ -27,7 +27,7 @@ class ProviderAllocationHelper(object):
         """
         if not self._providers_in_category:
             self._providers_in_category = ProviderAllocation.objects.filter(
-                category=category)
+                category=category, provider__active=True)
 
         return self._providers_in_category
 
@@ -82,7 +82,7 @@ class ProviderAllocationHelper(object):
         try:
             rota = OutOfHoursRota.objects.get_current(category,
                                                       as_of=self.as_of)
-            return rota.provider if rota else None
+            return rota.provider if rota and rota.provider.active else None
         except OutOfHoursRota.MultipleObjectsReturned:
             # this should be prevented by OutOfHoursRota.clean but what
             # if something slipped the net. How should it be handled?

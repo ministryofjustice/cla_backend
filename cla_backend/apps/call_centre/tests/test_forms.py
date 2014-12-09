@@ -21,8 +21,8 @@ def _mock_datetime_now_with(date, *mocks):
         mock.return_value = date.replace(
             tzinfo=timezone.get_current_timezone())
 
-class ProviderAllocationFormTestCase(TestCase):
 
+class ProviderAllocationFormTestCase(TestCase):
     @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_in_office_hours(self, timezone_mock):
         _mock_datetime_now_with(datetime.datetime(2014, 1, 2, 9, 1, 0),

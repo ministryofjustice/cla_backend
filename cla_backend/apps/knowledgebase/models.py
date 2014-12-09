@@ -51,4 +51,4 @@ class ArticleCategoryMatrix(TimeStampedModel):
                              self.article_category.__unicode__())
 
     class Meta:
-        verbose_name_plural = "Article category matrixes"
+        verbose_name_plural = "Article category matrices"

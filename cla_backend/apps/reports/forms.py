@@ -538,4 +538,6 @@ class MICB1Extract(SQLFileReport):
             ,"sla_120"
             ,"is_over_sla_15"
             ,"is_over_sla_120"
+            ,"Source"
+            ,"Code"
         ]

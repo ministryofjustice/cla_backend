@@ -67,6 +67,8 @@ WITH
         ,trim((log.context->'sla_120')::text, '"')::timestamptz as sla_120
         ,operator_first_log_after_cb1.rn
         ,operator_first_view_after_cb1.rn
+        ,c.source
+        ,log.code
       from cla_eventlog_log as log
         JOIN legalaid_case as c on c.id = log.case_id
         LEFT OUTER JOIN legalaid_personaldetails as pd on c.personal_details_id = pd.id
@@ -107,6 +109,8 @@ select
   ,sla_120
   ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_15 ELSE operator_first_log_after_cb1__created > sla_15 END as is_over_sla_15
   ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_120 ELSE operator_first_log_after_cb1__created > sla_120 END as is_over_sla_120
+  ,source
+  ,code
 from all_rows
 WHERE (requires_action_at, sla_120) OVERLAPS (%s, %s)
 ;

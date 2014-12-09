@@ -15,7 +15,7 @@ class OperatorAdmin(OneToOneUserAdmin):
     list_display = (
         'username_display', 'email_display',
         'first_name_display', 'last_name_display',
-        'is_manager', 'is_cla_superuser'
+        'is_active_display', 'is_manager', 'is_cla_superuser'
     )
 
     def _is_loggedin_superuser(self, request):

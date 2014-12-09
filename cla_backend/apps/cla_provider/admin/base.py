@@ -4,18 +4,18 @@ from core.admin.modeladmin import OneToOneUserAdmin
 
 from ..models import Provider, ProviderAllocation, Staff, OutOfHoursRota
 
-from .forms import AdminStaffForm
+from .forms import StaffAdminForm
 
 
 class StaffAdmin(OneToOneUserAdmin):
     model = Staff
-    form = AdminStaffForm
+    form = StaffAdminForm
 
     actions = None
     list_display = (
         'username_display', 'email_display',
         'first_name_display', 'last_name_display',
-        'provider', 'is_manager'
+        'provider', 'is_active_display', 'is_manager'
     )
 
 

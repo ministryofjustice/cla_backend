@@ -8,7 +8,7 @@ class OperatorAdminForm(OneToOneUserAdminForm):
         model = Operator
         fields = [
             'username', 'password', 'password2', 'first_name',
-            'last_name', 'email', 'is_manager'
+            'last_name', 'email', 'is_active', 'is_manager'
         ]
 
 
@@ -20,5 +20,6 @@ class FullOperatorAdminForm(OneToOneUserAdminForm):
         model = Operator
         fields = [
             'username', 'password', 'password2', 'first_name',
-            'last_name', 'email', 'is_manager', 'is_cla_superuser'
+            'last_name', 'email',
+            'is_active', 'is_manager', 'is_cla_superuser'
         ]

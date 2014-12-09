@@ -60,6 +60,7 @@ class OneToOneUserAdminForm(forms.ModelForm):
     email = forms.EmailField(
         required=False, widget=widgets.AdminTextInputWidget
     )
+    is_active = forms.BooleanField(required=False)
 
     def adjust_password_fields(self, instance):
         for field_name in ['password', 'password2']:
@@ -81,6 +82,7 @@ class OneToOneUserAdminForm(forms.ModelForm):
         initial['email'] = instance.user.email
         initial['password'] = instance.user.password
         initial['password2'] = instance.user.password
+        initial['is_active'] = instance.user.is_active
 
         return initial
 
@@ -135,6 +137,7 @@ class OneToOneUserAdminForm(forms.ModelForm):
         onetoone_model.user.first_name = self.cleaned_data['first_name']
         onetoone_model.user.last_name = self.cleaned_data['last_name']
         onetoone_model.user.email = self.cleaned_data['email']
+        onetoone_model.user.is_active = self.cleaned_data['is_active']
 
         if not self.instance.pk:
             onetoone_model.user.set_password(self.cleaned_data["password"])

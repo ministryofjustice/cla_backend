@@ -806,6 +806,14 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             self.__default_dt = dt.replace(hour=10, minute=0, second=0, microsecond=0)
         return self.__default_dt
 
+    @property
+    def _default_dt_sla_15(self):
+        return self._default_dt + datetime.timedelta(minutes=15)
+
+    @property
+    def _default_dt_sla_120(self):
+        return self._default_dt + datetime.timedelta(minutes=120)
+
     def get_expected_notes(self, data):
         return 'Callback scheduled for %s. %s' % (
             timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M"),
@@ -828,7 +836,9 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB1')
         self.assertEqual(log.context, {
-            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 
     def test_successful_CB2(self):
@@ -840,7 +850,9 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB2')
         self.assertEqual(log.context, {
-            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 
     def test_successful_CB3(self):
@@ -852,7 +864,9 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB3')
         self.assertEqual(log.context, {
-            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 
 

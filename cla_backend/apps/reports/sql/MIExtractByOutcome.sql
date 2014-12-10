@@ -1,5 +1,6 @@
 WITH diversity_view as (
   select id, {diversity_expression} as diversity
+--   select id, '{}'::json as diversity
   from legalaid_personaldetails
 ), latest_outcome as (
     select
@@ -13,7 +14,8 @@ WITH diversity_view as (
         and l.type = 'outcome'
       group by l.case_id)
 
-), operator_first_view as (
+),
+operator_first_access as (
     SELECT e.* FROM
       cla_eventlog_log as e
 
@@ -26,7 +28,23 @@ WITH diversity_view as (
       group by l.case_id)
 
 
-), provider_first_view as (
+),
+operator_first_action as (
+    SELECT e.* FROM
+      cla_eventlog_log as e
+
+    WHERE
+      e.id = (SELECT MIN(l.id) FROM cla_eventlog_log l
+        JOIN auth_user as u on l.created_by_id = u.id
+        JOIN call_centre_operator as op on u.id = op.user_id
+      WHERE l.case_id = e.case_id
+            and l.code != 'CASE_CREATED'
+            and l.level >= 29
+      group by l.case_id)
+
+
+),
+    provider_first_view as (
     SELECT
       e.*
     FROM
@@ -128,7 +146,7 @@ select
   ,c.source as "Contact_Type"
   ,null as "Call_Back_Request_Time"
   ,null as "Call_Back_Actioned_Time"
-  ,ceil(EXTRACT(EPOCH FROM operator_first_view.created-c.created)) as "Time_to_OS_Access"
+  ,ceil(EXTRACT(EPOCH FROM operator_first_access.created-c.created)) as "Time_to_OS_Access"
   ,ceil(EXTRACT(EPOCH FROM provider_first_view.created-provider_first_assign.created))  as "Time_to_SP_Access"
   ,'PASS' as "Residency_Test"
   ,null as "Repeat_Contact"
@@ -142,11 +160,12 @@ select
   ,null as "Complaint_Outcome"
   ,pd.contact_for_research as "Agree_Feedback"
   ,c.exempt_user_reason as "Exempt_Client"
-  ,CASE upper(adapt.language) WHEN upper('Welsh') THEN true ELSE false END as "Language"
+  ,CASE upper(adapt.language) WHEN upper('Welsh') THEN true ELSE false END as "Has_Language"
   ,adapt.language as "Language"
   ,log.created as "Outcome_Created_At"
   ,u.username as "Username"
   ,c.thirdparty_details_id::bool as "Has_Third_Party"
+  ,ceil(EXTRACT(EPOCH FROM operator_first_action.created-c.created)) as "Time_to_OS_Action"
 from cla_eventlog_log as log
   JOIN legalaid_case as c on c.id = log.case_id
   LEFT OUTER JOIN legalaid_personaldetails as pd on c.personal_details_id = pd.id
@@ -163,7 +182,8 @@ from cla_eventlog_log as log
   LEFT OUTER JOIN cla_provider_staff as staff on u.id = staff.user_id
   LEFT OUTER JOIN legalaid_mediacode as mc on mc.id = c.media_code_id
   LEFT OUTER JOIN latest_outcome on latest_outcome.case_id = c.id
-  LEFT OUTER JOIN operator_first_view on operator_first_view.case_id = c.id
+  LEFT OUTER JOIN operator_first_action on operator_first_action.case_id = c.id
+  LEFT OUTER JOIN operator_first_access on operator_first_access.case_id = c.id
   LEFT OUTER JOIN provider_first_view on provider_first_view.case_id = c.id
   LEFT OUTER JOIN provider_first_assign on provider_first_assign.case_id = c.id
   LEFT OUTER JOIN legalaid_case split_case on c.from_case_id = split_case.id

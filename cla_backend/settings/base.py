@@ -153,6 +153,8 @@ TEMPLATE_DIRS = (
     root('templates'),
 )
 
+BACKEND_ENABLED = os.environ.get('BACKEND_ENABLED', 'True') == 'True'
+ADMIN_ENABLED = os.environ.get('ADMIN_ENABLED', 'True') == 'True'
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -160,14 +162,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.admin',
     'django_statsd',
     'south',
-    'rest_framework',
-    'pagedown',
-    'provider',
-    'provider.oauth2',
-    'reports'
 )
 
 PROJECT_APPS = (
@@ -186,6 +182,19 @@ PROJECT_APPS = (
 )
 
 INSTALLED_APPS += PROJECT_APPS
+
+if BACKEND_ENABLED:
+    INSTALLED_APPS += (
+        'rest_framework',
+        'provider',
+        'provider.oauth2',
+    )
+if ADMIN_ENABLED:
+    INSTALLED_APPS += (
+        'django.contrib.admin',
+        'pagedown',
+        'reports',
+    )
 
 # DIAGNOSIS
 

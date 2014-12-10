@@ -1,4 +1,3 @@
-from collections import defaultdict
 import datetime
 from decimal import Decimal, InvalidOperation
 from django.forms.util import ErrorList
@@ -7,7 +6,6 @@ import re
 
 from rest_framework import serializers
 from dateutil.parser import parse
-from django.core import exceptions
 
 from legalaid.utils.csvupload.constants import AGE_RANGE, POSTCODE_RE, \
     ELIGIBILITY_CODES, DISABILITY_INDICATOR, EXEMPTION_CODES, \
@@ -79,10 +77,13 @@ def validate_regex(regex, flags=None):
     def _validate_regex(val):
         if val and (not compiled_re.match(val)):
             raise serializers.ValidationError(
-                'Field doesn\'t match pattern: %s' % regex)
+                'Field value (%s) doesn\'t match pattern: %s' % (val, regex))
         return val
 
     return _validate_regex
+
+validate_postcode = validate_regex(POSTCODE_RE,
+                                   flags=re.VERBOSE | re.I)
 
 
 def validate_in(iterable):
@@ -164,9 +165,7 @@ class ProviderCSVValidator(object):
         ('Ethnicity', [validate_present]),  #9
         ('Unused1', [validate_not_present]),  #10
         ('Unused2', [validate_not_present]),  #11
-        ('Postcode', [validate_present,
-                     validate_regex(POSTCODE_RE, flags=re.VERBOSE | re.I)
-        ]),
+        ('Postcode', [validate_present, validate_postcode]),
         #12
         ('Eligibility Code', [validate_in(ELIGIBILITY_CODES)]),  #13
         ('Matter Type 1', [validate_present, validate_in(VALID_MATTER_TYPE1)]),
@@ -238,7 +237,7 @@ class ProviderCSVValidator(object):
                 field_name, validators = self.fields[idx]
                 try:
                     cleaned_data[field_name] = self._validate_field(field_name,
-                                                                field_value,
+                                                                field_value.strip(),
                                                                 idx, row_num,
                                                                 validators)
                 except serializers.ValidationError as ve:
@@ -371,7 +370,6 @@ class ProviderCSVValidator(object):
             self._validate_eligibility_code,
             self._validate_stage_reached,
             self._validate_dob_present,
-            self._validate_open_closed_date
         ]
         validation_methods_depend_on_category = [
             self._validate_time_spent,

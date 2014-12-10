@@ -17,6 +17,7 @@ from legalaid.utils.csvupload.constants import AGE_RANGE, POSTCODE_RE, \
 def validate_decimal(val):
     if val:
         try:
+            val = val.replace(u',', u'')
             val = Decimal(val)
             return val
         except (ValueError, InvalidOperation) as ve:
@@ -261,7 +262,7 @@ class ProviderCSVValidator(object):
         if (opened and closed) and (closed < opened):
             raise serializers.ValidationError(
                 'Closed date (%s) must be after opened date (%s)' % (
-                    closed, opened))
+                    closed.date().isoformat(), opened.date().isoformat()))
 
     @depends_on('Determination', check=FALSEY)
     @depends_on('Date Opened', check=AFTER_APR_2013)

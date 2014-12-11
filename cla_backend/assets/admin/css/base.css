@@ -1,0 +1,869 @@
+/*! Copyright (c) 2011 by Margaret Calvert & Henrik Kubel. All rights reserved. The font has been customised for exclusive use on gov.uk. This cut is not commercially available. */
+@font-face { font-family: 'nta'; font-weight: normal; font-style: normal; src: url("../../fonts/NTA-Light.eot");
+  /* IE9 Compat Modes */
+  src: url("../../fonts/NTA-Light.eot?#iefix") format("embedded-opentype"), url("../../fonts/NTA-Light.woff") format("woff"); }
+@font-face { font-family: 'nta'; font-weight: bold; src: url("../../fonts/NTA-Bold.eot");
+  /* IE9 Compat Modes */
+  src: url("../../fonts/NTA-Bold.eot?#iefix") format("embedded-opentype"), url("../../fonts/NTA-Bold.woff") format("woff"); }
+@font-face { font-family: 'ntatabularnumbers'; font-weight: normal; font-style: normal; src: url("../../fonts/NTATabularNumbers-Light.eot");
+  /* IE9 Compat Modes */
+  src: url("../../fonts/NTATabularNumbers-Light.eot?#iefix") format("embedded-opentype"), url("../../fonts/NTATabularNumbers-Light.woff") format("woff"); }
+@font-face { font-family: 'ntatabularnumbers'; font-weight: bold; src: url("../../fonts/NTATabularNumbers-Bold.eot");
+/* IE9 Compat Modes */
+  src: url("../../fonts/NTATabularNumbers-Bold.eot?#iefix") format("embedded-opentype"), url("../../fonts/NTATabularNumbers-Bold.woff") format("woff"); }
+
+
+/* Give a strong clear visual idea as to what is currently in focus */
+a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
+}
+a:focus {
+  background-color: #ffbf47;
+  outline: 3px solid #ffbf47;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  outline: 3px solid #ffbf47;
+}
+
+/*
+    DJANGO Admin styles
+*/
+
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 62.5%;
+    font-family: "nta", Arial, sans-serif;
+    color: #0b0c0c;
+    background: #fff;
+}
+
+/* LINKS */
+
+a, a:link {
+    color: #005ea5;
+}
+a:visited {
+    color: #4c2c92;
+}
+a:hover {
+    color: #2e8aca;
+}
+
+a img {
+    border: none;
+}
+
+a.section:link, a.section:visited {
+    color: white;
+    text-decoration: none;
+}
+
+/* GLOBAL DEFAULTS */
+
+p, ol, ul, dl {
+    font-size: 16px;
+    margin: .2em 0 .8em 0;
+}
+
+p {
+    padding: 0;
+    line-height: 140%;
+}
+
+h1,h2,h3,h4,h5 {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 36px;
+    font-weight: 700;
+    padding: 0 6px 0 0;
+    margin: 0 0 .2em 0;
+}
+
+h2 {
+    font-size: 27px;
+    font-weight: 700;
+    margin: 1em 0 .5em 0;
+}
+
+h2.subhead {
+    font-weight: normal;
+    margin-top: 0;
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: 400;
+    margin: .8em 0 .3em 0;
+}
+
+h4 {
+    font-size: 19px;
+    font-weight: 400;
+    margin: 1em 0 .8em 0;
+    padding-bottom: 3px;
+}
+
+h5 {
+    font-size: 16px;
+    margin: 1.5em 0 .5em 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+ul li {
+    list-style-type: square;
+    padding: 1px 0;
+}
+
+ul.plainlist {
+    margin-left: 0 !important;
+}
+
+ul.plainlist li {
+    list-style-type: none;
+}
+
+li ul {
+    margin-bottom: 0;
+}
+
+dt {
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+dd {
+    margin-left: 0;
+}
+
+form {
+    margin: 0;
+    padding: 0;
+}
+
+fieldset {
+    margin: 0;
+    padding: 0;
+}
+
+blockquote {
+    font-size: 11px;
+    color: #777;
+    margin-left: 2px;
+    padding-left: 10px;
+    border-left: 5px solid #ddd;
+}
+
+code, pre {
+    font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+    background: inherit;
+    color: #666;
+    font-size: 11px;
+}
+
+pre.literal-block {
+    margin: 10px;
+    background: #eee;
+    padding: 6px 8px;
+}
+
+code strong {
+    color: #930;
+}
+
+hr {
+    clear: both;
+    color: #eee;
+    background-color: #eee;
+    height: 1px;
+    border: none;
+    margin: 0;
+    padding: 0;
+    font-size: 1px;
+    line-height: 1px;
+}
+
+/* TEXT STYLES & MODIFIERS */
+
+.small {
+    font-size: 11px;
+}
+
+.tiny {
+    font-size: 10px;
+}
+
+p.tiny {
+    margin-top: -2px;
+}
+
+.mini {
+    font-size: 14px;
+}
+
+p.mini {
+    margin-top: -3px;
+}
+
+.help, p.help, .helptext {
+    display: block;
+    font-size: 14px !important;
+    color: #6f777b;
+}
+
+img.help-tooltip {
+    cursor: help;
+}
+
+p img, h1 img, h2 img, h3 img, h4 img, td img {
+    vertical-align: middle;
+}
+
+.quiet, a.quiet:link, a.quiet:visited {
+    color: #999 !important;
+    font-weight: normal !important;
+}
+
+.quiet strong {
+    font-weight: bold !important;
+}
+
+.float-right {
+    float: right;
+}
+
+.float-left {
+    float: left;
+}
+
+.clear {
+    clear: both;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.example {
+    margin: 10px 0;
+    padding: 5px 10px;
+    background: #efefef;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+/* TABLES */
+
+table {
+    border-collapse: collapse;
+}
+
+td, th {
+    font-size: 14px;
+    vertical-align: top;
+    padding: 12px 10px;
+    font-family: "nta", Arial, sans-serif;
+}
+
+th {
+    text-align: left;
+    font-weight: normal;
+}
+
+tbody th, tbody td {
+    border-width: 1px 0;
+    border-color: #bfc1c3;
+    border-style: solid;
+}
+
+thead th,
+tfoot td {
+    /*padding: 2px 5px;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;*/
+}
+
+tfoot td {
+    border-bottom: none;
+    border-top: 1px solid #ddd;
+}
+
+thead th:first-child,
+tfoot td:first-child {
+    border-left: none !important;
+}
+
+thead th.optional {
+    font-weight: normal !important;
+}
+
+tr.row-label td {
+    font-size: 9px;
+    padding-top: 2px;
+    padding-bottom: 0;
+    border-bottom: none;
+    color: #666;
+    margin-top: -1px;
+}
+
+tr.alt {
+    background: #f6f6f6;
+}
+
+.row1 {
+    background: #F8F8F8;
+}
+
+.row2 {
+    background: #F8F8F8;
+}
+
+/* SORTABLE TABLES */
+
+thead th {
+    padding: 12px 10px;
+    line-height: normal;
+}
+
+thead th.sorted .text {
+  padding-right: 42px;
+}
+
+table thead th .text span {
+    display:block;
+}
+
+table thead th .text a {
+    display: block;
+    cursor: pointer;
+    padding: 2px 5px;
+}
+
+thead th.sorted a.sortremove {
+    visibility: hidden;
+}
+
+table thead th.sorted:hover a.sortremove {
+    visibility: visible;
+}
+
+table thead th.sorted .sortoptions {
+    display: block;
+    padding: 4px 5px 0 5px;
+    float: right;
+    text-align: right;
+}
+
+table thead th.sorted .sortpriority {
+    font-size: .8em;
+    min-width: 12px;
+    text-align: center;
+    vertical-align: top;
+}
+
+table thead th.sorted .sortoptions a {
+    width: 14px;
+    height: 12px;
+    display: inline-block;
+}
+
+table thead th.sorted .sortoptions a.sortremove {
+    background: url(../img/sorting-icons.gif) -4px -5px no-repeat;
+}
+
+table thead th.sorted .sortoptions a.sortremove:hover {
+    background: url(../img/sorting-icons.gif) -4px -27px no-repeat;
+}
+
+table thead th.sorted .sortoptions a.ascending {
+    background: url(../img/sorting-icons.gif) -5px -50px no-repeat;
+}
+
+table thead th.sorted .sortoptions a.ascending:hover {
+    background: url(../img/sorting-icons.gif) -5px -72px no-repeat;
+}
+
+table thead th.sorted .sortoptions a.descending {
+    background: url(../img/sorting-icons.gif) -5px -94px no-repeat;
+}
+
+table thead th.sorted .sortoptions a.descending:hover {
+    background: url(../img/sorting-icons.gif) -5px -115px no-repeat;
+}
+
+/* ORDERABLE TABLES */
+
+table.orderable tbody tr td:hover {
+    cursor: move;
+}
+
+table.orderable tbody tr td:first-child {
+    padding-left: 14px;
+    background-image: url(../img/nav-bg-grabber.gif);
+    background-repeat: repeat-y;
+}
+
+table.orderable-initalized .order-cell, body>tr>td.order-cell {
+    display: none;
+}
+
+/* FORM DEFAULTS */
+
+input, textarea, select, .form-row p {
+    margin: 2px 0;
+    padding: 2px 3px;
+    vertical-align: middle;
+    font-family: "nta", Arial, sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+textarea {
+    vertical-align: top !important;
+}
+
+input[type=text], input[type=password], input[type=email], input[type=url], input[type=number],
+textarea, select, .vTextField {
+    border: 1px solid #ccc;
+    background: #fff;
+}
+
+/* FORM BUTTONS */
+
+.button, input[type=submit], input[type=button], .submit-row input {
+    position: relative;
+    display: -moz-inline-stack;
+    display: inline-block;
+    padding: 0.29286em 0.71429em;
+    -webkit-appearance: none;
+    font-size: 14px;
+    line-height: 1.42857;
+    font-weight: 400;
+    text-transform: none;
+    text-decoration: none;
+    -webkit-font-smoothing: antialiased;
+    cursor: pointer;
+    border: 1px solid #dee0e2;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #f8f8f8;
+    color: #0b0c0c;
+}
+.button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover {
+  background-color: #ebebeb;
+}
+.button:active, input[type=submit]:active, input[type=button]:active, .submit-row input:active {
+  border-color: #8a8e92;
+}
+
+.button[disabled], input[type=submit][disabled], input[type=button][disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.button.default, input[type=submit].default, .submit-row input.default {
+    background-color: #00823b;
+    border: 1px solid #00823b;
+    color: #fff;
+}
+.button.default:hover, input[type=submit].default:hover, .submit-row input.default:hover {
+    background-color: #00692f;
+}
+
+
+/* MODULES */
+
+.module {
+    margin: 20px 0;
+}
+
+.module p, .module ul, .module h3, .module h4, .module dl, .module pre {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.module blockquote {
+    /*margin-left: 12px;*/
+}
+
+.module ul, .module ol {
+    /*margin-left: 1.5em;*/
+}
+
+.module h3 {
+    margin-top: .6em;
+}
+
+.module h2, .module caption, .inline-group h2 {
+    margin: 0;
+    padding: 4px 0 8px;
+    font-size: 19px;
+    text-align: left;
+    font-weight: normal;
+}
+.module caption a {
+  color: #0b0c0c !important;
+}
+
+.module table {
+    border-collapse: collapse;
+    border-color: none;
+    border-spacing: 0;
+}
+.module table td a {
+    background: none;
+    padding: 0;
+}
+
+/* MESSAGES & ERRORS */
+
+ul.messagelist {
+    padding: 10px;
+    margin: 0;
+}
+
+ul.messagelist li {
+    font-size: 14px;
+    line-height: 1.42857;
+    font-weight: 400;
+    text-transform: none;
+    background-color: #cce0d6;
+    border-left: 3px solid #006435;
+    padding: 10px 10px 10px 31px;
+    margin: 5px 0;
+    list-style: none;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-image: url(../img/icon_success.gif);
+    
+}
+
+ul.messagelist li.warning{
+    background-image: url(../img/icon_alert.gif);
+    background-color: #fde4d4;
+    border-color: #f47738;
+}
+
+ul.messagelist li.error{
+    background-image: url(../img/icon_error.gif);
+    background-color: #FAEBEC;
+    border-color: #df3034;
+}
+
+.errornote {
+    background-color: #FAEBEC;
+    border: 3px solid #df3034;
+    padding: 1.5em 2em 1em;
+    margin-top: 1em;
+    margin-bottom: 3em;
+}
+
+ul.errorlist {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none;
+}
+
+.errorlist li {
+    font-size: 14px;
+    line-height: 1.42857;
+    font-weight: 400;
+    text-transform: none;
+    background-color: #FAEBEC;
+    border-left: 3px solid #df3034;
+    padding: 10px 10px 10px 7px;
+    list-style: none;
+}
+
+.errorlist li a {
+  color: white;
+    text-decoration: underline;
+}
+
+td ul.errorlist {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+td ul.errorlist li {
+    margin: 0 !important;
+}
+
+.errors {
+    background: #ffc;
+}
+
+.errors input, .errors select, .errors textarea {
+    border: 1px solid red;
+}
+
+div.system-message {
+    background: #ffc;
+    margin: 10px;
+    padding: 6px 8px;
+    font-size: .8em;
+}
+
+div.system-message p.system-message-title {
+    padding: 4px 5px 4px 25px;
+    margin: 0;
+    color: red;
+    background: #ffc url(../img/icon_error.gif) 5px .3em no-repeat;
+}
+
+.description {
+    font-size: 12px;
+    padding: 5px 0 0 12px;
+}
+
+/* BREADCRUMBS */
+
+div.breadcrumbs {
+    padding: 12px 15px;
+    font-size: 14px;
+    border-bottom: 1px solid #bfc1c3;
+    text-align: left;
+}
+
+/* ACTION ICONS */
+
+.addlink, 
+.changelink, 
+.deletelink {
+    padding-left: 20px;
+    background-position: 0 5px;
+    background-repeat: no-repeat;
+}
+
+.addlink {
+    background-image: url(../img/icon_addlink.gif);
+}
+
+.changelink {
+    background-image: url(../img/icon_changelink.gif);
+}
+
+.deletelink {
+    background-image: url(../img/icon_deletelink.gif);
+}
+
+a.deletelink:link, a.deletelink:visited {
+    color: #CC3434;
+}
+
+a.deletelink:hover {
+    color: #993333;
+}
+
+/* OBJECT TOOLS */
+
+.object-tools {
+    padding-left: 0;
+    float: right;
+    position: relative;
+    margin-top: -2.4em;
+    margin-bottom: -2em;
+}
+
+.form-row .object-tools {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    float: none;
+    height: 2em;
+    padding-left: 3.5em;
+}
+
+.object-tools li {
+    display: block;
+    float: left;
+    padding: 0 0 0 8px;
+    margin-left: 2px;
+    height: 16px;
+}
+
+.object-tools li a {
+    position: relative;
+    display: -moz-inline-stack;
+    display: inline-block;
+    padding: 0.29286em 0.71429em;
+    -webkit-appearance: none;
+    font-size: 14px;
+    line-height: 1.42857;
+    font-weight: 400;
+    text-transform: none;
+    text-decoration: none;
+    -webkit-font-smoothing: antialiased;
+    cursor: pointer;
+    border: 1px solid #dee0e2;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #f8f8f8;
+    color: #0b0c0c;
+}
+.object-tools li a:hover {
+  background-color: #ebebeb;
+}
+
+.object-tools a.addlink {
+    background-image: none;
+}
+.object-tools a.addlink:before {
+    content: "+";
+    display: inline-block;
+    font-size: 20px;
+    line-height: 14px;
+    position: relative;
+    top: 3px;
+    margin-right: 3px;
+}
+
+/* OBJECT HISTORY */
+
+table#change-history {
+    width: 100%;
+}
+
+table#change-history tbody th {
+    width: 16em;
+}
+
+/* PAGE STRUCTURE */
+
+#container {
+    position: relative;
+    width: 100%;
+    min-width: 760px;
+    padding: 0;
+}
+
+#content {
+    margin: 25px 10px;
+}
+
+#header {
+    width: 100%;
+
+}
+
+#content-main {
+    float: left;
+    width: 100%;
+}
+
+#content-related {
+    float: right;
+    width: 20em;
+    position: relative;
+    margin-right: -24em;
+}
+
+#footer {
+    clear: both;
+    padding: 10px;
+}
+
+/* COLUMN TYPES */
+
+.colMS {
+    margin-right: 24em !important;
+}
+
+.colSM {
+    margin-left: 24em !important;
+}
+
+.colSM #content-related {
+    float: left;
+    margin-right: 0;
+    margin-left: -24em;
+}
+
+.colSM #content-main {
+    float: right;
+}
+
+.popup .colM {
+    width: 95%;
+}
+
+.subcol {
+    float: left;
+    width: 46%;
+    margin-right: 15px;
+}
+
+.dashboard #content {
+    width: 500px;
+}
+
+/* HEADER */
+
+#header {
+    background: #0b0c0c;
+    color: #fff;
+    overflow: hidden;
+}
+#header:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+#header #branding {
+  float: left;
+}
+#header h1 {
+    color: #fff;
+    font-size: 19px;
+    padding: 11px 10px 9px 48px;
+    font-size: 19px;
+    margin: 0;
+    font-weight: 700;
+    background: url(../../images/gov.uk_logotype_crown.png) 10px 11px no-repeat;
+}
+
+#header a:link, #header a:visited {
+    color: white;
+}
+
+#header a:hover {
+    text-decoration: underline;
+}
+
+#user-tools {
+    float: right;
+    padding: 14px 15px 12px 15px;
+    font-size: 14px;
+    text-align: right;
+}
+
+/* SIDEBAR */
+
+#content-related h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+#content-related h4 {
+    /*font-size: 11px;*/
+}
+
+#content-related .module h2 {
+    /*background: #eee url(../img/nav-bg.gif) bottom left repeat-x;
+    color: #666;*/
+}
+

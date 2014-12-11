@@ -1,0 +1,66 @@
+/* LOGIN FORM */
+
+body.login {
+    /*background: #eee;*/
+}
+
+.login #container {
+    /*background: white;*/
+    /*border: 1px solid #ccc;*/
+    /*width: 28em;*/
+    /*min-width: 300px;*/
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+    /*margin-top: 100px;*/
+}
+
+.login #content {
+    width: 59.375%;
+    margin-left: 20.3125%;
+}
+
+.login form {
+    margin-top: 1em;
+}
+
+.login .form-row {
+    padding: 4px 0;
+    float: left;
+    width: 100%;
+}
+
+.login .form-row label {
+    padding: 10px 0 1px;
+    font-size: 14px;
+    display: block;
+}
+
+.login .form-row #id_username, .login .form-row #id_password {
+    padding: 6px;
+    width: 230px;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.login span.help {
+    font-size: 10px;
+    display: block;
+}
+
+.login .submit-row {
+    clear: both;
+    padding: 15px 0;
+}
+.login .submit-row input[type=submit] {
+    background-color: #00823b;
+    border: 1px solid #00823b;
+    color: #fff;
+}
+.login .submit-row input[type=submit]:hover {
+    background-color: #00692f;
+}
+
+.login .password-reset-link {
+    text-align: center;
+}

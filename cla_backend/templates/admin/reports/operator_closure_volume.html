@@ -2,8 +2,10 @@
 
 {% block inner_form %}
   {{ form.as_p }}
+{% endblock inner_form %}
 
+{% block submit_row %}
   <div class="form_submit submit-row">
     <input type="submit" name="action" value="Export" class="button default">
   </div>
-{% endblock inner_form %}
+{% endblock submit_row %}

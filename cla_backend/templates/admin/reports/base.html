@@ -38,15 +38,14 @@
 {% block content %}
   <div id="content-main">
     <div id="changelist" class="module">
-      <div id="toolbar">
-        <form id="claimpricing_form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
-          <div>
+      <form id="claimpricing_form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+        <div id="toolbar">
           {% block inner_form %}
-
           {% endblock inner_form %}
-          </div>
-        </form>
-      </div>
+        </div>
+        {% block submit_row %}
+        {% endblock submit_row %}
+      </form>
     </div>
   </div>
 {% endblock %}

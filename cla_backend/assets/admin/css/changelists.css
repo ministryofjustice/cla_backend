@@ -47,7 +47,6 @@
 /* CHANGELIST TABLES */
 
 #changelist table thead th {
-    /*padding: 0;*/
     white-space: nowrap;
     vertical-align: middle;
 }
@@ -57,13 +56,8 @@
     text-align: center;
 }
 
-#changelist table tbody td, #changelist table tbody th {
-    /*border-left: 1px solid #ddd;*/
-}
-
 #changelist table tbody td:first-child, #changelist table tbody th:first-child {
     border-left: 0;
-    /*border-right: 1px solid #ddd;*/
 }
 
 #changelist table tbody td.action-checkbox {
@@ -180,12 +174,9 @@
     margin: 15px 0;
 }
 
-/*.paginator a:link, .paginator a:visited {
-    padding: 2px 6px;
-    border: solid 1px #ccc;
-    background: white;
-    text-decoration: none;
-}*/
+.paginator a {
+    padding: 0 3px;
+}
 
 .paginator a.showall {
     padding: 0 !important;
@@ -203,16 +194,9 @@
 }
 
 .paginator .this-page {
-    padding: 2px 6px;
+    padding: 0 3px;
     font-weight: bold;
-    font-size: 13px;
     vertical-align: top;
-}
-
-.paginator a:hover {
-    color: white;
-    background: #5b80b2;
-    border-color: #036;
 }
 
 /* ACTIONS */

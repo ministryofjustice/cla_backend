@@ -17,6 +17,10 @@ class StaffAdmin(OneToOneUserAdmin):
         'first_name_display', 'last_name_display',
         'provider', 'is_active_display', 'is_manager'
     )
+    search_fields = [
+        'user__username',
+        'user__first_name', 'user__last_name', 'user__email'
+    ]
 
 
 class ProviderAllocationInline(admin.TabularInline):

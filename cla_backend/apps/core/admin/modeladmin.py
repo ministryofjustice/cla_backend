@@ -28,23 +28,28 @@ class OneToOneUserAdmin(admin.ModelAdmin):
     def username_display(self, one2one_model):
         return one2one_model.user.username
     username_display.short_description = 'Username'
+    username_display.admin_order_field = 'user__username'
 
     def first_name_display(self, one2one_model):
         return one2one_model.user.first_name
-    first_name_display.short_description = 'First Name'
+    first_name_display.short_description = 'First name'
+    first_name_display.admin_order_field = 'user__first_name'
 
     def last_name_display(self, one2one_model):
         return one2one_model.user.last_name
-    last_name_display.short_description = 'Last Name'
+    last_name_display.short_description = 'Last name'
+    last_name_display.admin_order_field = 'user__last_name'
 
     def email_display(self, one2one_model):
         return one2one_model.user.email
     email_display.short_description = 'Email'
+    email_display.admin_order_field = 'user__email'
 
     def is_active_display(self, one2one_model):
         return one2one_model.user.is_active
-    is_active_display.short_description = 'Is Active'
+    is_active_display.short_description = 'Is active'
     is_active_display.boolean = True
+    is_active_display.admin_order_field = 'user__is_active'
 
     def save_model(self, request, obj, form, change):
         user = obj.user

@@ -17,6 +17,10 @@ class OperatorAdmin(OneToOneUserAdmin):
         'first_name_display', 'last_name_display',
         'is_active_display', 'is_manager', 'is_cla_superuser'
     )
+    search_fields = [
+        'user__username',
+        'user__first_name', 'user__last_name', 'user__email'
+    ]
 
     def _is_loggedin_superuser(self, request):
         user = request.user

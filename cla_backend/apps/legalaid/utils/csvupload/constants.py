@@ -23,7 +23,7 @@ CATEGORY_SPEC = {
                           u'DV', u'DW', u'DX', u'DY', u'DZ'},
         'MATTER_TYPE1': {u'DPDE', u'DNPD', u'DMDE', u'DMCA', u'DMAP', u'DIVB',
                          u'DORH', u'DTOT'},
-        'MATTER_TYPE2': {u'DVAL', u'DMIX', u'DCRE', u'DIBP', u'DORD', u'DOTH', 
+        'MATTER_TYPE2': {u'DVAL', u'DMIX', u'DCRE', u'DIBP', u'DORD', u'DOTH',
                          u'DSCH'},
         'STAGE_REACHED': {u'DA', u'DB', u'DC', u'DD'}
     },
@@ -41,7 +41,7 @@ CATEGORY_SPEC = {
     u'education': {
         'OUTCOME_CODES': {u'EA', u'EB', u'EC', u'ED', u'EE', u'EF', u'EG',
                           u'EH', u'EI', u'EJ', u'EK', u'EU', u'EV', u'EW',
-                          u'EX', u'EY'},
+                          u'EX', u'EY', u'EZ'},
         'MATTER_TYPE1': {u'ESEN', u'ENEG', u'EXCE', u'EDOT', u'EADM', u'EGTO',
                          u'EPRO', u'EDDA', u'EREO', u'EEQU'},
         'MATTER_TYPE2': {u'ENUR', u'EDSC', u'EPRU', u'ECOL', u'EUNI', u'EAAP',

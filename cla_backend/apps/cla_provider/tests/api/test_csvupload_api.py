@@ -410,7 +410,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self.assertEqual(val, validator(val))
 
         with self.assertRaisesRegexp(serializers.ValidationError,
-                                     'Field doesn\'t match'):
+                                     '[u"Field value (BAR) doesn\'t match pattern: foo"]'):
             validator('BAR')
 
     def test_validate_in_iterable(self):

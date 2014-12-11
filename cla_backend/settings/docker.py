@@ -10,7 +10,7 @@ ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(',')
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Marco Fucci', 'marco.fucci@digital.justice.co.uk'),
+    ('Marco Fucci', 'marco.fucci@digital.justice.gov.uk'),
     ('Rai Kotecha', 'ravi.kotecha@digital.justice.gov.uk'),
 )
 

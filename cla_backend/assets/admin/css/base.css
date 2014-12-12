@@ -289,13 +289,6 @@ tbody th, tbody td {
     border-style: solid;
 }
 
-thead th,
-tfoot td {
-    /*padding: 2px 5px;
-    border-left: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;*/
-}
-
 tfoot td {
     border-bottom: none;
     border-top: 1px solid #ddd;
@@ -494,14 +487,6 @@ textarea, select, .vTextField {
 .module p, .module ul, .module h3, .module h4, .module dl, .module pre {
     padding-left: 10px;
     padding-right: 10px;
-}
-
-.module blockquote {
-    /*margin-left: 12px;*/
-}
-
-.module ul, .module ol {
-    /*margin-left: 1.5em;*/
 }
 
 .module h3 {
@@ -856,14 +841,5 @@ table#change-history tbody th {
 #content-related h3 {
     font-size: 16px;
     margin-bottom: 10px;
-}
-
-#content-related h4 {
-    /*font-size: 11px;*/
-}
-
-#content-related .module h2 {
-    /*background: #eee url(../img/nav-bg.gif) bottom left repeat-x;
-    color: #666;*/
 }
 

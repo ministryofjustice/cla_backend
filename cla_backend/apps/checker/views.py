@@ -44,10 +44,6 @@ class ArticleViewSet(PublicAPIViewSetMixin, BaseArticleViewSet):
 
     filter_class = ArticleCategoryNameFilter
 
-    filter_backends = BaseArticleViewSet.filter_backends\
-        + (filters.OrderingFilter,)
-    ordering = ('-articlecategorymatrix__preferred_signpost',)
-
 
 class EligibilityCheckViewSet(
     PublicAPIViewSetMixin,

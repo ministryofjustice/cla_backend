@@ -25,9 +25,12 @@ class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (
         filters.SearchFilter,
         filters.DjangoFilterBackend,
+        filters.OrderingFilter
     )
 
     filter_class = ArticleCategoryFilter
+
+    ordering = ('-articlecategorymatrix__preferred_signpost',)
 
     search_fields = ('organisation', 'service_name', 'description',
                      'keywords', 'when_to_use', 'type_of_service',

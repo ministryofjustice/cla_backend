@@ -22,4 +22,7 @@ urlpatterns = patterns('',
     url(r'^mi-cb1-extract/$',
         views.mi_cb1_extract,
         name="mi_cb1_extract"),
+    url(r'^mi-voice-extract/$',
+        views.mi_voice_extract,
+        name="mi_voice_extract"),
 )

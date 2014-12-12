@@ -12,6 +12,7 @@ from legalaid.utils import diversity
 from cla_eventlog.constants import LOG_TYPES
 
 from . import sql
+from reports.widgets import MonthYearWidget
 
 
 class ConvertDateMixin(object):
@@ -47,22 +48,90 @@ class DateRangeReportForm(ReportForm):
                 self.cleaned_data['date_to'] + timedelta(days=1))
         )
 
+class MonthRangeReportForm(ReportForm):
+    date = forms.DateField(widget=MonthYearWidget)
 
-class SQLFileReport(DateRangeReportForm):
+    @property
+    def month(self):
+        return self._convert_date(self.cleaned_data['date'])
+
+class SQLFileReportMixin(object):
     def __init__(self, *args, **kwargs):
-        super(DateRangeReportForm, self).__init__(*args, **kwargs)
+        super(SQLFileReportMixin, self).__init__(*args, **kwargs)
         path = os.path.join(sql.__path__[0], self.QUERY_FILE)
         with open(path, 'r') as f:
             self.query = f.read()
 
+    def get_sql_params(self):
+        raise NotImplementedError()
+
     def get_queryset(self):
         cursor = connection.cursor()
-        cursor.execute(self.query, self.date_range)
+        cursor.execute(self.query, self.get_sql_params())
         self.description = cursor.description
         return cursor.fetchall()
 
+class SQLFileDateRangeReport(SQLFileReportMixin, DateRangeReportForm):
 
-class MICaseExtract(SQLFileReport):
+    def get_sql_params(self):
+        return self.date_range
+
+
+class SQLFileMonthRangeReport(SQLFileReportMixin, MonthRangeReportForm):
+
+    def get_sql_params(self):
+        return (self.month,)
+
+class MIVoiceReport(SQLFileMonthRangeReport):
+    QUERY_FILE = 'MIVoiceReport.sql'
+
+    def get_headers(self):
+        return [
+            'id',
+            'created',
+            'modified',
+            'provider_id',
+            'created_by_id',
+            'LAA_Reference',
+            'Client_Ref',
+            'Account_Number',
+            'First_Name',
+            'Surname',
+            'DOB',
+            'Age_Range',
+            'Gender',
+            'Ethnicity',
+            'Postcode',
+            'Eligibility_Code',
+            'Matter_Type_1',
+            'Matter_Type_2',
+            'Stage_Reached',
+            'Outcome_Code',
+            'Date_Opened',
+            'Date_Closed',
+            'Time_Spent',
+            'Case_Costs',
+            'Disability_Code',
+            'Disbursements',
+            'Travel_Costs',
+            'Determination',
+            'Suitable_For_Telephone_Advice',
+            'Exceptional_Case_ref',
+            'Exempted_Reason_Code',
+            'Adaptations',
+            'Signposting_or_Referral',
+            'Media_Code',
+            'Telephone_or_Online',
+            'month',
+            'Provider',
+            'has_linked_case_in_system',
+            'OS_BillableTime',
+            'count_of_timers',
+            'count_of_outcomes'
+
+        ]
+
+class MICaseExtract(SQLFileDateRangeReport):
     QUERY_FILE = 'MIExtractByOutcome.sql'
 
     passphrase = forms.CharField(
@@ -122,7 +191,7 @@ class MICaseExtract(SQLFileReport):
         return cursor.fetchall()
 
 
-class MIFeedbackExtract(SQLFileReport):
+class MIFeedbackExtract(SQLFileDateRangeReport):
     QUERY_FILE = 'MIExtractByFeedback.sql'
 
     def get_headers(self):
@@ -137,7 +206,7 @@ class MIFeedbackExtract(SQLFileReport):
         ]
 
 
-class MIAlternativeHelpExtract(SQLFileReport):
+class MIAlternativeHelpExtract(SQLFileDateRangeReport):
     QUERY_FILE = 'MIAlternativeHelp.sql'
 
     def get_headers(self):
@@ -154,7 +223,7 @@ class MIAlternativeHelpExtract(SQLFileReport):
         ]
 
 
-class MIContactsPerCaseByCategoryExtract(SQLFileReport):
+class MIContactsPerCaseByCategoryExtract(SQLFileDateRangeReport):
     QUERY_FILE = 'MIContactsPerCaseByCategory.sql'
 
     def get_headers(self):
@@ -182,7 +251,7 @@ class MIContactsPerCaseByCategoryExtract(SQLFileReport):
         return cursor.fetchall()
 
 
-class MISurveyExtract(SQLFileReport):
+class MISurveyExtract(SQLFileDateRangeReport):
     QUERY_FILE = 'MISurveyExtract.sql'
 
     def get_headers(self):
@@ -202,7 +271,7 @@ class MISurveyExtract(SQLFileReport):
         ]
 
 
-class MICB1Extract(SQLFileReport):
+class MICB1Extract(SQLFileDateRangeReport):
     QUERY_FILE = 'MICB1sSLA.sql'
 
     def get_headers(self):

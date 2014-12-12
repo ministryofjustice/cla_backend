@@ -178,10 +178,11 @@ PROJECT_APPS = (
     'diagnosis',
     'status',
     'historic',
-    'cla_auth'
+    'cla_auth',
+    'checker',
+    'eligibility_calculator'
 )
 
-INSTALLED_APPS += PROJECT_APPS
 
 if BACKEND_ENABLED:
     INSTALLED_APPS += (
@@ -195,6 +196,8 @@ if ADMIN_ENABLED:
         'pagedown',
         'reports',
     )
+
+INSTALLED_APPS += PROJECT_APPS
 
 # DIAGNOSIS
 

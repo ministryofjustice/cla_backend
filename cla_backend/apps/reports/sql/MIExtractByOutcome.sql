@@ -1,8 +1,4 @@
-WITH diversity_view as (
-  select id, {diversity_expression} as diversity
---   select id, '{}'::json as diversity
-  from legalaid_personaldetails
-), latest_outcome as (
+WITH latest_outcome as (
     select
       e.*
       FROM legalaid_case c
@@ -187,9 +183,9 @@ from cla_eventlog_log as log
   LEFT OUTER JOIN provider_first_view on provider_first_view.case_id = c.id
   LEFT OUTER JOIN provider_first_assign on provider_first_assign.case_id = c.id
   LEFT OUTER JOIN legalaid_case split_case on c.from_case_id = split_case.id
-  LEFT OUTER JOIN diversity_view on pd.id = diversity_view.id
   LEFT OUTER JOIN cla_provider_provider as assigned_provider on trim((log.context->'provider_id')::text, '"')::numeric = assigned_provider.id
-
+  LEFT OUTER JOIN (select id, {diversity_expression} as diversity
+                   from legalaid_personaldetails) as diversity_view on pd.id = diversity_view.id
 where
   log.type = 'outcome'
   and log.created >= %s

@@ -2,13 +2,11 @@ import contextlib
 import csvkit as csv
 
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .forms import ProviderCaseClosure, OperatorCaseClosure, \
-    OperatorCaseCreate, CaseReport, NewCasesWithAdaptationCount, \
-    CaseVolumeAndAvgDurationByDay, ReferredCasesByCategory, \
-    AllocatedCasesNoOutcome, MICaseExtract, MIFeedbackExtract, \
+from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
     MISurveyExtract, MICB1Extract
 
@@ -61,74 +59,42 @@ def make_csv_download_response(filename):
 
 
 @staff_member_required
-@report_view(ProviderCaseClosure, 'Provider Closure Volume')
-def provider_closure_volume():
-    pass
-
-
-@staff_member_required
-@report_view(OperatorCaseClosure, 'Operator Closure Volume')
-def operator_closure_volume():
-    pass
-
-
-@staff_member_required
-@report_view(CaseReport, 'All Cases')
-def all_cases():
-    pass
-
-
-@staff_member_required
-@report_view(NewCasesWithAdaptationCount, 'New Cases with Adaptations')
-def adaptation_counts():
-    pass
-
-
-@staff_member_required
-@report_view(CaseVolumeAndAvgDurationByDay, 'Case Volume and Average Duration by Operator by Day')
-def case_volume_avg_duration_by_operator_day():
-    pass
-
-
-@staff_member_required
-@report_view(ReferredCasesByCategory, 'Cases Referred to Specialist by Category')
-def referred_cases_by_category():
-    pass
-
-
-@staff_member_required
-@report_view(AllocatedCasesNoOutcome, 'Allocated Cases with No Outcome')
-def allocated_no_outcome():
-    pass
-
-
-@staff_member_required
+@permission_required('legalaid.run_reports')
 @report_view(MICaseExtract, 'MI Case Extract')
 def mi_case_extract():
     pass
 
+
 @staff_member_required
+@permission_required('legalaid.run_reports')
 @report_view(MIFeedbackExtract, 'MI Feedback Extract')
 def mi_feedback_extract():
     pass
 
 
 @staff_member_required
+@permission_required('legalaid.run_reports')
 @report_view(MIContactsPerCaseByCategoryExtract, 'MI Contacts Per Case By Category')
 def mi_contacts_extract():
     pass
 
+
 @staff_member_required
+@permission_required('legalaid.run_reports')
 @report_view(MIAlternativeHelpExtract, 'MI Alternative Help Extract')
 def mi_alternative_help_extract():
     pass
 
+
 @staff_member_required
+@permission_required('legalaid.run_reports')
 @report_view(MISurveyExtract, 'MI Survey Extract (ONLY RUN ON DOM1)')
 def mi_survey_extract():
     pass
 
+
 @staff_member_required
+@permission_required('legalaid.run_reports')
 @report_view(MICB1Extract, 'MI CB1 Extract')
 def mi_cb1_extract():
     pass

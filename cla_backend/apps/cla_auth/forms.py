@@ -78,8 +78,11 @@ class ClientIdPasswordGrantForm(PasswordGrantForm):
 
         data = self.cleaned_data
         try:
-            ModelClazz.objects.get(user__username=data.get('username'))
+            model = ModelClazz.objects.get(user__username=data.get('username'))
         except ModelClazz.DoesNotExist as e:
             raise OAuthValidationError({'error': 'invalid_grant'})
+
+        if not model.user.is_active:
+            raise OAuthValidationError({'error': 'account_disabled'})
 
         return super(ClientIdPasswordGrantForm, self).clean()

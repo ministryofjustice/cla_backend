@@ -15,6 +15,7 @@ Operator user {0} at {1}:
 
 Username: {2}
 Is manager: {3}
+Is CLA Superuser: {4}
 """
 
 
@@ -24,7 +25,8 @@ def log_operator_created(sender, instance, created, **kwargs):
 
         logger.info('Operator user created', extra={
             'USERNAME': instance.user.username,
-            'IS_MANAGER': unicode(instance.is_manager)
+            'IS_MANAGER': unicode(instance.is_manager),
+            'IS_CLA_SUPERUSER': unicode(instance.is_cla_superuser)
         })
 
         message = email_template.format(
@@ -32,6 +34,7 @@ def log_operator_created(sender, instance, created, **kwargs):
             date_format(localtime(now()), 'SHORT_DATETIME_FORMAT'),
             instance.user.username,
             unicode(instance.is_manager),
+            unicode(instance.is_cla_superuser),
         )
         send_mail('Operator user added', message,
                   settings.EMAIL_FROM_ADDRESS,
@@ -49,7 +52,8 @@ def log_operator_modified(sender, instance, **kwargs):
 
     logger.info('Operator user modified', extra={
         'USERNAME': instance.user.username,
-        'IS_MANAGER': unicode(instance.is_manager)
+        'IS_MANAGER': unicode(instance.is_manager),
+        'IS_CLA_SUPERUSER': unicode(instance.is_cla_superuser)
     })
 
     message = email_template.format(
@@ -57,6 +61,7 @@ def log_operator_modified(sender, instance, **kwargs):
         date_format(localtime(now()), 'SHORT_DATETIME_FORMAT'),
         instance.user.username,
         unicode(instance.is_manager),
+        unicode(instance.is_cla_superuser),
     )
     send_mail('Operator user modified', message,
               settings.EMAIL_FROM_ADDRESS,

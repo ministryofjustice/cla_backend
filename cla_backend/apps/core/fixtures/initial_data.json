@@ -1,0 +1,43 @@
+[
+    {
+        "pk": 1, 
+        "model": "auth.group", 
+        "fields": {
+            "name": "Operator Managers", 
+            "permissions": [
+                ["add_operator", "call_centre", "operator"], 
+                ["change_operator", "call_centre", "operator"],
+                ["run_reports", "legalaid", "case"],
+                ["add_article", "knowledgebase", "article"],
+                ["change_article", "knowledgebase", "article"],
+                ["change_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
+                ["add_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
+                ["delete_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"]
+            ]
+        }
+    },
+    {
+        "pk": 2, 
+        "model": "auth.group", 
+        "fields": {
+            "name": "CLA Superusers", 
+            "permissions": [
+                ["add_operator", "call_centre", "operator"], 
+                ["change_operator", "call_centre", "operator"],
+                ["add_staff", "cla_provider", "staff"],
+                ["change_staff", "cla_provider", "staff"],
+                ["add_provider", "cla_provider", "provider"],
+                ["change_provider", "cla_provider", "provider"],
+                ["add_providerallocation", "cla_provider", "providerallocation"],
+                ["change_providerallocation", "cla_provider", "providerallocation"],
+                ["delete_providerallocation", "cla_provider", "providerallocation"],
+                ["run_reports", "legalaid", "case"],
+                ["add_article", "knowledgebase", "article"],
+                ["change_article", "knowledgebase", "article"],
+                ["change_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
+                ["add_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
+                ["delete_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"]
+            ]
+        }
+    }
+]

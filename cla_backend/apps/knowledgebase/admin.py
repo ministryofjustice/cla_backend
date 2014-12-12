@@ -27,4 +27,24 @@ class ArticleAdmin(admin.ModelAdmin):
     ]
 
 
+class ArticleCategoryMatrixAdmin(admin.ModelAdmin):
+    list_display = (
+        'preferred_signpost',
+        'category_name',
+        'service_name',)
+    list_editable = ('preferred_signpost',)
+    list_display_links = ('service_name',)
+    ordering = (
+        'article_category__name',
+        '-preferred_signpost',
+        'article__service_name')
+
+    def service_name(self, obj):
+        return obj.article.service_name
+
+    def category_name(self, obj):
+        return obj.article_category.name
+
+
 admin.site.register(Article, ArticleAdmin)
+admin.site.register(ArticleCategoryMatrix, ArticleCategoryMatrixAdmin)

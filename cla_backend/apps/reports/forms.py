@@ -167,7 +167,7 @@ class MICaseExtract(SQLFileDateRangeReport):
             "Complaint_Classification", "Complaint_Outcome",
             "Agree_Feedback", "Exempt_Client",
             "Welsh", "Language", "Outcome_Created_At",
-            "Username", "Has_Third_Party"
+            "Username", "Has_Third_Party", "Time_to_OS_Action"
         ]
 
     def get_queryset(self):

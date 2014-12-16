@@ -1,5 +1,6 @@
 from uuid import UUID
 from dateutil import parser
+from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
@@ -30,7 +31,8 @@ from legalaid.views import BaseUserViewSet, \
     BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
     BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
-    BaseCaseNotesHistoryViewSet, AscCaseOrderingFilter
+    BaseCaseNotesHistoryViewSet, AscCaseOrderingFilter, \
+    BaseCSVUploadReadOnlyViewSet
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -45,7 +47,7 @@ from .serializers import EligibilityCheckSerializer, \
     BarePersonalDetailsSerializer, \
     ThirdPartyDetailsSerializer, LogSerializer, FeedbackSerializer, \
     CreateCaseSerializer, CaseListSerializer, CaseArchivedSerializer, \
-    CaseNotesHistorySerializer
+    CaseNotesHistorySerializer, CSVUploadSerializer, CSVUploadDetailSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm, \
@@ -496,3 +498,20 @@ class CaseNotesHistoryViewSet(
     CallCentrePermissionsViewSetMixin, BaseCaseNotesHistoryViewSet
 ):
     serializer_class = CaseNotesHistorySerializer
+
+
+class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin,
+                       BaseCSVUploadReadOnlyViewSet):
+
+
+    serializer_class = CSVUploadSerializer
+    serializer_detail_class = CSVUploadDetailSerializer
+
+    ordering = ('-created')
+    def get_queryset(self, *args, **kwargs):
+        # only return last 18 months worth
+        after = (timezone.now() - relativedelta(months=18)).date().replace(day=1)
+
+        qs = super(CSVUploadViewSet, self).get_queryset(*args, **kwargs).filter(
+            month__gte=after)
+        return qs

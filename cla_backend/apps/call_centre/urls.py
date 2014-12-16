@@ -24,7 +24,7 @@ router.register(r'mattertype', views.MatterTypeViewSet)
 router.register(r'mediacode', views.MediaCodeViewSet)
 router.register(r'feedback', views.FeedbackViewSet)
 router.register(r'case_archive', views.CaseArchivedViewSet)
-
+router.register(r'csvupload', views.CSVUploadViewSet)
 
 timer_router = core_routers.SingletonRouter()
 timer_router.register(r'timer', views.TimerViewSet, base_name='timer')

@@ -81,8 +81,24 @@ class CloseCaseEvent(BaseEvent):
             'description': 'Closed SP Case',
             'stops_timer': False,
             'set_requires_action_by': None
-        }
+        },
+        'DREFER': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': 'Arranged an appointment with a F2F specialist',
+            'stops_timer': False,
+            'set_requires_action_by': None
+        },
     }
+
+    def get_log_code(self, **kwargs):
+        is_debt_referral = kwargs.get('is_debt_referral')
+
+        if is_debt_referral:
+            return 'DREFER'
+
+        return 'CLSP'
 event_registry.register(CloseCaseEvent)
 
 

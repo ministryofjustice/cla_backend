@@ -57,6 +57,28 @@ class CloseCaseForm(BaseCaseLogForm):
     """
     LOG_EVENT_KEY = 'close_case'
 
+    is_debt_referral = forms.BooleanField(required=False)
+
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CloseCaseForm, self).clean(*args, **kwargs)
+
+        if self._errors:  # if already in error => skip
+            return cleaned_data
+
+        if self.get_is_debt_referral() and not cleaned_data.get('notes'):
+            self._errors['notes'] = ErrorList([
+                "This field is required"
+            ])
+        return cleaned_data
+
+    def get_is_debt_referral(self):
+        return self.cleaned_data.get('is_debt_referral')
+
+    def get_kwargs(self):
+        kwargs = super(CloseCaseForm, self).get_kwargs()
+        kwargs['is_debt_referral'] = self.get_is_debt_referral()
+        return kwargs
+
     def save(self, user):
         val = super(CloseCaseForm, self).save(user)
         self.case.close_by_provider()

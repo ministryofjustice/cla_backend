@@ -62,11 +62,22 @@ class RejectCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
 class CloseCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     FORM = CloseCaseForm
 
-    def test_save_successfull(self):
+    def test_CLSP_save_successfull(self):
         case = make_recipe('legalaid.case')
 
         self.assertEqual(case.provider_closed, None)
         self._test_save_successfull(case=case)
+
+        self.assertNotEqual(case.provider_closed, None)
+
+    def test_DREFER_save_successfull(self):
+        case = make_recipe('legalaid.case')
+
+        self.assertEqual(case.provider_closed, None)
+        self._test_save_successfull(case=case, data={
+            'is_debt_referral': True,
+            'notes': 'lorem ipsum'
+        })
 
         self.assertNotEqual(case.provider_closed, None)
 

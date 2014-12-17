@@ -10,7 +10,7 @@ except KeyError as e:
 
 DEBUG = True if os.environ.get('SET_DEBUG') == 'True' else False
 
-ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
 
 TEMPLATE_DEBUG = DEBUG
 

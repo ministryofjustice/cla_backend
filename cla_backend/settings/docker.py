@@ -1,7 +1,12 @@
 from .base import *
 import os
 
-SECRET_KEY = os.environ["SECRET_KEY"]
+try:
+    SECRET_KEY = os.environ["SECRET_KEY"]
+except KeyError as e:
+    print "Secret key not found, using a default key for the docker build step only, please set the SECRET_KEY in your environment"
+    SECRET_KEY = "CHANGE_ME"
+    pass
 
 DEBUG = True if os.environ.get('SET_DEBUG') == 'True' else False
 

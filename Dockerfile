@@ -65,5 +65,8 @@ ADD ./docker/uwsgi.service /etc/service/uwsgi/run
 #sym-link to local.py, which overrides all common settings.
 RUN ln -s /home/app/django/cla_backend/settings/docker.py /home/app/django/cla_backend/settings/local.py
 
+# Collect static
+RUN cd /home/app/django && python manage.py collectstatic --noinput
+
 # Expose ports.
 EXPOSE 80

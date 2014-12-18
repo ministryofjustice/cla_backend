@@ -99,6 +99,9 @@ def mi_survey_extract():
 def mi_cb1_extract():
     pass
 
+
+@staff_member_required
+@permission_required('legalaid.run_reports')
 @report_view(MIVoiceReport, 'MI Voice Report')
 def mi_voice_extract():
     pass

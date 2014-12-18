@@ -29,15 +29,21 @@ class ArticleAdmin(admin.ModelAdmin):
 
 class ArticleCategoryMatrixAdmin(admin.ModelAdmin):
     list_display = (
-        'preferred_signpost',
+        'service_name',
         'category_name',
-        'service_name',)
+        'preferred_signpost',
+    )
+    actions = None
     list_editable = ('preferred_signpost',)
     list_display_links = ('service_name',)
+    search_fields = [
+        'article_category__name', 'article__service_name'
+    ]
     ordering = (
         'article_category__name',
         '-preferred_signpost',
-        'article__service_name')
+        'article__service_name'
+    )
 
     def service_name(self, obj):
         return obj.article.service_name

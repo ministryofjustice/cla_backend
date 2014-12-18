@@ -14,8 +14,6 @@ python manage.py loaddata kb_from_knowledgebase.json >> /var/log/wsgi/db_scripts
 python manage.py loaddata initial_outcome_codes.json >> /var/log/wsgi/db_scripts.log 2>&1
 python manage.py loaddata initial_media_codes.json >> /var/log/wsgi/db_scripts.log 2>&1
 
-python manage.py collectstatic --noinput >> /var/log/wsgi/db_scripts.log 2>&1
-
 echo "from django.contrib.auth.models import User; User.objects.create_superuser('cla_admin','peter.idah@digital.justice.gov.uk', '$ADMIN_PASSWORD')" | ./manage.py shell || echo "user already exists"
 
 exec /usr/local/bin/uwsgi --ini /etc/wsgi/conf.d/cla_backend.ini

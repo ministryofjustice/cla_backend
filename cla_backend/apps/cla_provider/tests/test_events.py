@@ -32,3 +32,11 @@ class CloseCaseEventTestCase(EventTestCaseMixin, TestCase):
 
     def test_close_case(self):
         self._test_process_with_implicit_code('CLSP')
+
+    def test_close_case_with_DREFER(self):
+        self._test_process_with_implicit_code(
+            'DREFER',
+            process_kwargs={
+                'is_debt_referral': True
+            }
+        )

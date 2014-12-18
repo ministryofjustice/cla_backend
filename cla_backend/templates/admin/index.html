@@ -12,6 +12,7 @@
 {% block content %}
 <div id="content-main">
 
+{% if perms.legalaid.run_reports %}
     {% load reports_tags %}
     {% report_links as urls %}
     <div class="app-auth module">
@@ -30,6 +31,7 @@
             </tbody>
         </table>
     </div>
+{% endif %}
 
 {% if app_list %}
     {% for app in app_list %}

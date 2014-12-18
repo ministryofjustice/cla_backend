@@ -1,7 +1,5 @@
-from cla_provider.models import Staff
 from django import forms
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from django.forms import Form, PasswordInput
+from django.forms import Form
 from django.forms.util import ErrorList
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import transaction
@@ -58,6 +56,28 @@ class CloseCaseForm(BaseCaseLogForm):
     Closes a case and sets case.provider_closed field
     """
     LOG_EVENT_KEY = 'close_case'
+
+    is_debt_referral = forms.BooleanField(required=False)
+
+    def clean(self, *args, **kwargs):
+        cleaned_data = super(CloseCaseForm, self).clean(*args, **kwargs)
+
+        if self._errors:  # if already in error => skip
+            return cleaned_data
+
+        if self.get_is_debt_referral() and not cleaned_data.get('notes'):
+            self._errors['notes'] = ErrorList([
+                "This field is required"
+            ])
+        return cleaned_data
+
+    def get_is_debt_referral(self):
+        return self.cleaned_data.get('is_debt_referral')
+
+    def get_kwargs(self):
+        kwargs = super(CloseCaseForm, self).get_kwargs()
+        kwargs['is_debt_referral'] = self.get_is_debt_referral()
+        return kwargs
 
     def save(self, user):
         val = super(CloseCaseForm, self).save(user)
@@ -246,27 +266,3 @@ class ProviderExtractForm(Form):
         if data:
             data = data.strip().upper()
         return data
-
-
-class AdminStaffForm(forms.ModelForm):
-    chs_password = ReadOnlyPasswordHashField(widget=PasswordInput(),
-                                             required=False,
-                                             help_text='Password can only be set, not viewed.')
-    chs_organisation = forms.CharField(initial=None, required=False)
-    chs_user = forms.CharField(initial=None, required=False)
-
-
-    def clean(self):
-        data = self.cleaned_data
-        if not data['chs_password']:
-            del self.cleaned_data['chs_password']
-        return data
-
-    def save(self, commit=True):
-        raw_password = self.cleaned_data.get('chs_password')
-        if raw_password:
-            self.instance.set_chs_password(raw_password)
-        return super(AdminStaffForm, self).save(commit=commit)
-
-    class Meta:
-        model = Staff

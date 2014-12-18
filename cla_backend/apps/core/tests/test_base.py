@@ -131,7 +131,7 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
                 for item in data:
                     self.assertItemsEqual(item, keys)
             elif isinstance(data, types.DictType):
-                self.assertItemsEqual(data, keys)
+                self.assertItemsEqual(data.keys(), keys)
         else:
             raise ValueError(
                 'Must be called with response object with a .data '

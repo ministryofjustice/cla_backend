@@ -436,6 +436,22 @@ class BaseFeedbackViewSet(
     PARENT_FIELD = 'provider_feedback'
     lookup_field = 'reference'
 
+
+class BaseCSVUploadReadOnlyViewSet(
+    DetailSerializerMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
+    model = CSVUpload
+
+    serializer_class = CSVUploadSerializerBase
+    serializer_detail_class = CSVUploadSerializerBase
+
+    filter_backends = (
+        OrderingFilter,
+    )
+
 class BaseCSVUploadViewSet(
     DetailSerializerMixin,
     mixins.ListModelMixin,

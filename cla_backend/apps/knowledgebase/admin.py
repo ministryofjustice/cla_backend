@@ -1,8 +1,56 @@
 from django.contrib import admin
 
-from .models import Article, ArticleCategory, ArticleCategoryMatrix
+from .models import Article, ArticleCategoryMatrix
 
 
-admin.site.register(Article)
-admin.site.register(ArticleCategory)
-admin.site.register(ArticleCategoryMatrix)
+class ArticleCategoryMatrixInline(admin.TabularInline):
+    model = ArticleCategoryMatrix
+
+
+class ArticleAdmin(admin.ModelAdmin):
+    actions = None
+    inlines = [ArticleCategoryMatrixInline]
+    ordering = ['service_name']
+
+    fields = (
+        'resource_type', 'service_name', 'organisation', 'website',
+        'description', 'how_to_use', 'when_to_use', 'address', 'helpline',
+        'opening_hours', 'keywords', 'geographic_coverage',
+        'type_of_service', 'accessibility'
+    )
+    list_display = (
+        'service_name', 'resource_type'
+    )
+    search_fields = [
+        'service_name', 'organisation', 'description', 'how_to_use',
+        'when_to_use', 'keywords', 'type_of_service'
+    ]
+
+
+class ArticleCategoryMatrixAdmin(admin.ModelAdmin):
+    list_display = (
+        'service_name',
+        'category_name',
+        'preferred_signpost',
+    )
+    actions = None
+    list_editable = ('preferred_signpost',)
+    list_display_links = ('service_name',)
+    search_fields = [
+        'article_category__name', 'article__service_name'
+    ]
+    ordering = (
+        'article_category__name',
+        '-preferred_signpost',
+        'article__service_name'
+    )
+
+    def service_name(self, obj):
+        return obj.article.service_name
+
+    def category_name(self, obj):
+        return obj.article_category.name
+
+
+admin.site.register(Article, ArticleAdmin)
+admin.site.register(ArticleCategoryMatrix, ArticleCategoryMatrixAdmin)

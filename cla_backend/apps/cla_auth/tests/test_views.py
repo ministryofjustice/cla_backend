@@ -209,3 +209,33 @@ class LoginTestCase(TestCase):
                 self.url, data=self.get_operator_data()
             )
             self.assertEqual(response.status_code, 429)
+
+    def test_inactive_operator_failure(self):
+        # active operator => success
+        data = self.get_operator_data()
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, 200)
+
+        # inactive operator => failure
+        op_user = User.objects.get(username=data['username'])
+        op_user.is_active = False
+        op_user.save()
+
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.content, '{"error": "account_disabled"}')
+
+    def test_inactive_provider_failure(self):
+        # active specialist => success
+        data = self.get_provider_data()
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, 200)
+
+        # inactive specialist => failure
+        sp_user = User.objects.get(username=data['username'])
+        sp_user.is_active = False
+        sp_user.save()
+
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.content, '{"error": "account_disabled"}')

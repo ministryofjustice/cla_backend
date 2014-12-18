@@ -14,7 +14,7 @@ from legalaid.serializers import EligibilityCheckSerializerBase, \
     ThirdPartyPersonalDetailsSerializerBase, \
     ThirdPartyDetailsSerializerBase, PersonSerializerBase, \
     FeedbackSerializerBase, CaseArchivedSerializerBase, \
-    CaseNotesHistorySerializerBase
+    CaseNotesHistorySerializerBase, CSVUploadSerializerBase
 
 from .models import Operator
 
@@ -311,3 +311,30 @@ class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):
             'created_by', 'created', 'operator_notes', 'provider_notes',
             'type_notes'
         )
+
+
+class CSVUploadSerializer(CSVUploadSerializerBase):
+
+    class Meta(CSVUploadSerializerBase.Meta):
+        fields = [
+            'id',
+            'provider',
+            'created_by',
+            'comment',
+            'rows',
+            'month',
+            'created',
+            ]
+
+class CSVUploadDetailSerializer(CSVUploadSerializerBase):
+
+    class Meta(CSVUploadSerializerBase.Meta):
+        fields = [
+            'id',
+            'provider',
+            'created_by',
+            'comment',
+            'body',
+            'month',
+            'created',
+            ]

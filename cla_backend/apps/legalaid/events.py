@@ -137,21 +137,22 @@ class SuspendCaseEvent(BaseEvent):
             'order': 40,
             'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR_MANAGER
         },
-        'NCOE': {
-            'type': LOG_TYPES.OUTCOME,
-            'level': LOG_LEVELS.MODERATE,
-            'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Case opened in error',
-            'order': 50,
-            'stops_timer': False
-        },
-        'CPTA': {
+        'COPE': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Transfer back to Capita',
+            'description': 'Case opened in error',
+            'order': 50,
             'stops_timer': True,
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
+        },
+        'DUPL': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Duplicate',
             'order': 60,
+            'stops_timer': True,
             'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
         'WROF': {

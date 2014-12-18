@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if change %}
+  <form method="post" action="reset-lockout/">{% csrf_token %}
+    <div class="submit-row">
+    <input type="submit" value="{% trans 'Reset lockout' %}" />
+    </div>
+  </form>
+{% endif %}

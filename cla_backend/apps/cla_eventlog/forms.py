@@ -4,6 +4,17 @@ from cla_eventlog.registry import event_registry
 
 
 class BaseCaseLogForm(forms.Form):
+    """
+    Use this class if your event is of one of these types:
+
+        1. one code event where something happens and you want an event
+            log to get created
+        2. implicit code event where something happens and the system
+            chooses which code to use.
+            In this case, you need to override the `get_kwargs` method
+            and add your logic. The same kwargs will be passed to the
+            `Event.get_log_code`.
+    """
     LOG_EVENT_KEY = None
     NOTES_MANDATORY = False
 
@@ -50,6 +61,10 @@ class BaseCaseLogForm(forms.Form):
 
 
 class EventSpecificLogForm(BaseCaseLogForm):
+    """
+    Use this class if your event is a selectable code event where
+    the client chooses which code to use.
+    """
     event_code = forms.ChoiceField(
         choices=()
     )
@@ -72,6 +87,9 @@ class EventSpecificLogForm(BaseCaseLogForm):
 
 
 class SelectableEventLogForm(EventSpecificLogForm):
+    """
+    Not currently used.
+    """
     ROLE = None
 
     def get_role(self):

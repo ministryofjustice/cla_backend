@@ -40,6 +40,20 @@ from cla_common.constants import CASE_SOURCE
 logger = logging.getLogger(__name__)
 
 
+def _make_reference():
+    from django.utils.crypto import get_random_string
+
+    return u'%s-%s-%s' % (
+        # exclude B8G6I1l0OQDS5Z2
+        get_random_string(length=2,
+                          allowed_chars='ACEFHJKMNPRTUVWXY3479'),
+        get_random_string(length=4, allowed_chars='123456789'),
+        get_random_string(length=4, allowed_chars='123456789')
+    )
+
+def _check_reference_unique(reference):
+    return not Case.objects.filter(reference=reference).exists()
+
 class Category(TimeStampedModel):
     name = models.CharField(max_length=500)
     code = models.CharField(max_length=50, unique=True)
@@ -557,17 +571,17 @@ class Case(TimeStampedModel, ModelDiffMixin):
         max_length=20, choices=CASE_SOURCE, default=CASE_SOURCE.PHONE
     )
 
-    def _set_reference_if_necessary(self):
-        if not self.reference:
-            # TODO make it better
-            from django.utils.crypto import get_random_string
 
-            self.reference = u'%s-%s-%s' % (
-                get_random_string(length=2,
-                                  allowed_chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'),
-                get_random_string(length=4, allowed_chars='0123456789'),
-                get_random_string(length=4, allowed_chars='0123456789')
-            )
+    def _set_reference_if_necessary(self):
+        max_retries = 10
+        tries = 0
+        if not self.reference:
+            reference = _make_reference()
+            while (not _check_reference_unique(reference) and tries < max_retries):
+                reference = _make_reference()
+                tries = tries + 1
+
+            self.reference = reference
 
     def is_part_of_split(self):
         """

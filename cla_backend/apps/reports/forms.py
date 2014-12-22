@@ -40,7 +40,7 @@ class DateRangeReportForm(ReportForm):
     date_from = forms.DateField(widget=widgets.AdminDateWidget)
     date_to = forms.DateField(widget=widgets.AdminDateWidget)
 
-    max_range = None
+    max_date_range = None
 
     def clean(self):
         cleaned_data = super(DateRangeReportForm, self).clean()

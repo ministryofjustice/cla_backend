@@ -46,7 +46,7 @@ def _make_reference():
     return u'%s-%s-%s' % (
         # exclude B8G6I1l0OQDS5Z2
         get_random_string(length=2,
-                          allowed_chars='ACEFHJKLMNPRTUVWXY3479'),
+                          allowed_chars='ACEFHJKMNPRTUVWXY3479'),
         get_random_string(length=4, allowed_chars='123456789'),
         get_random_string(length=4, allowed_chars='123456789')
     )

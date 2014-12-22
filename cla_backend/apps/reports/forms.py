@@ -40,6 +40,17 @@ class DateRangeReportForm(ReportForm):
     date_from = forms.DateField(widget=widgets.AdminDateWidget)
     date_to = forms.DateField(widget=widgets.AdminDateWidget)
 
+    max_date_range = None
+
+    def clean(self):
+        cleaned_data = super(DateRangeReportForm, self).clean()
+        if self.max_date_range:
+            from_, to = self.date_range
+            delta = to - from_
+            if delta > timedelta(days=self.max_date_range):
+                raise forms.ValidationError('The date range (%s) should span no more than %s working days' % (delta, str(self.max_date_range)))
+        return cleaned_data # can be removed in django 1.7
+
     @property
     def date_range(self):
         return (
@@ -273,6 +284,8 @@ class MISurveyExtract(SQLFileDateRangeReport):
 
 class MICB1Extract(SQLFileDateRangeReport):
     QUERY_FILE = 'MICB1sSLA.sql'
+
+    max_date_range = 3
 
     def get_headers(self):
         return [

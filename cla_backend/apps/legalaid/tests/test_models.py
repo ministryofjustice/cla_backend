@@ -612,6 +612,25 @@ class CaseTestCase(TestCase):
         # it is 7 digits long
         self.assertEqual(len(unicode(case.laa_reference)), 7)
 
+
+    def test_case_doesnt_get_duplicate_reference(self):
+        with mock.patch('legalaid.models._make_reference') as mr:
+            mr.return_value = 'AA-1234-1234'
+            c1 = Case()
+            c1._set_reference_if_necessary()
+            self.assertEqual(c1.reference, 'AA-1234-1234')
+            self.assertEqual(mr.call_count, 1)
+            c1.save()
+
+        with mock.patch('legalaid.models._make_reference') as mr:
+            mr.return_value = c1.reference
+            c2 = Case()
+            c2._set_reference_if_necessary()
+            self.assertEqual(c1.reference, c2.reference)
+            self.assertTrue(mr.called)
+            self.assertEqual(mr.call_count, 11) #max retries + initial try
+
+
     def test_assign_to_provider_overriding_provider(self):
         providers = make_recipe('cla_provider.provider', _quantity=2)
 

@@ -148,7 +148,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     search_field = models.TextField(null=True, blank=True, db_index=True)
 
     cloning_config = {
-        'excludes': ['reference', 'created', 'modified', 'case_count']
+        'excludes': ['reference', 'created', 'modified', 'case_count', 'search_field']
     }
 
     def _set_search_field(self):
@@ -662,7 +662,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
-                    'callback_attempt'
+                    'callback_attempt', 'search_field'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details'

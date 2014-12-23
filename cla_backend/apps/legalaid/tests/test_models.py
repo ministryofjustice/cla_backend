@@ -1030,7 +1030,7 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
                 'title', 'full_name', 'postcode', 'street', 'mobile_phone',
                 'home_phone', 'email', 'date_of_birth', 'ni_number',
                 'contact_for_research', 'vulnerable_user', 'safe_to_contact',
-                'safe_to_email', 'diversity', 'diversity_modified'
+                'safe_to_email', 'diversity', 'diversity_modified', 'search_field'
             ]
         )
 
@@ -1220,7 +1220,8 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'adaptation_details', 'billable_time', 'matter_type1', 'matter_type2',
             'outcome_code', 'level', 'reference', 'laa_reference', 'from_case',
             'outcome_code_id', 'requires_action_at', 'callback_attempt',
-            'provider_viewed', 'provider_accepted', 'provider_closed'
+            'provider_viewed', 'provider_accepted', 'provider_closed',
+            'search_field'
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',

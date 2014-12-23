@@ -448,11 +448,13 @@ class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
     serializer_class = FeedbackSerializer
 
     filter_backends = (
+        DjangoFilterBackend,
         OrderingFilter,
         DateRangeFilter,
     )
     ordering = ('resolved', '-created',)
     date_range_field = 'created'
+    filter_fields = ('resolved',)
 
     queryset = Feedback.objects.all().select_related(
         'case', 'created_by', 'created_by__provider'

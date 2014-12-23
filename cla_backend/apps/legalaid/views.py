@@ -352,8 +352,10 @@ class FullCaseViewSet(
         'personal_details__full_name',
         'personal_details__postcode',
         'personal_details__street',
+        'personal_details__search_field',
         'reference',
-        'laa_reference'
+        'laa_reference',
+        'search_field'
     )
     paginate_by = 20
     paginate_by_param = 'page_size'

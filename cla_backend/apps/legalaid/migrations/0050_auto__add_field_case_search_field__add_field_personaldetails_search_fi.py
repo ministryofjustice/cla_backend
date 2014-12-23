@@ -19,11 +19,11 @@ class Migration(SchemaMigration):
                       keep_default=False)
 
         db.execute('''
-        UPDATE legalaid_case SET search_field = replace(reference, '-', '')
+        UPDATE legalaid_case SET search_field = replace(reference, '-', '') WHERE reference is not null
         ''')
 
         db.execute('''
-        UPDATE legalaid_personaldetails SET search_field = replace(postcode, ' ', '')
+        UPDATE legalaid_personaldetails SET search_field = replace(postcode, ' ', '') where postcode is not null
         ''')
 
     def backwards(self, orm):

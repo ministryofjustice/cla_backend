@@ -152,7 +152,8 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     }
 
     def _set_search_field(self):
-        self.search_field =  self.postcode.replace(' ', '')
+        if self.postcode:
+            self.search_field =  self.postcode.replace(' ', '')
 
     def save(self, *args, **kwargs):
         self._set_search_field()
@@ -600,7 +601,8 @@ class Case(TimeStampedModel, ModelDiffMixin):
 
 
     def _set_search_field(self):
-        self.search_field = self.reference.replace('-', '')
+        if self.reference:
+            self.search_field = self.reference.replace('-', '')
 
     def is_part_of_split(self):
         """

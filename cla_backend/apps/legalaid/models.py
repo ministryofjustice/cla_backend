@@ -144,9 +144,20 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         auto_now=False, blank=True, null=True, editable=False
     )
 
+    # only normalised version of post code for now
+    search_field = models.TextField(null=True, blank=True, db_index=True)
+
     cloning_config = {
-        'excludes': ['reference', 'created', 'modified', 'case_count']
+        'excludes': ['reference', 'created', 'modified', 'case_count', 'search_field']
     }
+
+    def _set_search_field(self):
+        if self.postcode:
+            self.search_field =  self.postcode.replace(' ', '')
+
+    def save(self, *args, **kwargs):
+        self._set_search_field()
+        super(PersonalDetails, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "personal details"
@@ -571,6 +582,11 @@ class Case(TimeStampedModel, ModelDiffMixin):
         max_length=20, choices=CASE_SOURCE, default=CASE_SOURCE.PHONE
     )
 
+    # for now it's a '-' stripped version of the reference only
+    # we could start getting smart and putting in all permutations of
+    # a reference x ambiguous characters but not for now
+    search_field = models.TextField(null=True, blank=True, db_index=True)
+
 
     def _set_reference_if_necessary(self):
         max_retries = 10
@@ -582,6 +598,11 @@ class Case(TimeStampedModel, ModelDiffMixin):
                 tries = tries + 1
 
             self.reference = reference
+
+
+    def _set_search_field(self):
+        if self.reference:
+            self.search_field = self.reference.replace('-', '')
 
     def is_part_of_split(self):
         """
@@ -641,7 +662,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
-                    'callback_attempt'
+                    'callback_attempt', 'search_field'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details'
@@ -659,6 +680,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
 
     def save(self, *args, **kwargs):
         self._set_reference_if_necessary()
+        self._set_search_field()
 
         if not self.pk:
             super(Case, self).save(*args, **kwargs)

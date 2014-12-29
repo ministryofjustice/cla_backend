@@ -788,6 +788,7 @@ class CaseNotesHistory(TimeStampedModel):
     include_in_summary = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
+        self.include_in_summary = True
         super(CaseNotesHistory, self).save(*args, **kwargs)
 
         qs = CaseNotesHistory.objects.filter(

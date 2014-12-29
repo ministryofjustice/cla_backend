@@ -530,9 +530,13 @@ class BaseCaseNotesHistoryViewSet(
     def get_queryset(self, **kwargs):
         qs = super(BaseCaseNotesHistoryViewSet, self).get_queryset(**kwargs)
         type_param = self.request.QUERY_PARAMS.get('type', None)
+        summary = self.request.QUERY_PARAMS.get('summary', False)
 
         if type_param == 'operator':
             qs = qs.filter(provider_notes__isnull=True)
         elif type_param == 'cla_provider':
             qs = qs.filter(operator_notes__isnull=True)
+
+        if summary == 'true':
+            qs = qs.filter(include_in_summary=True)
         return qs

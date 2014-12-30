@@ -117,7 +117,7 @@ postgres as necessary):
 ::
 
     export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin/:$PATH"
-    export DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/Versions/9.4/lib/:$DYLD_LIBRARY_PATH"
+    export DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/Versions/9.3/lib/:$DYLD_LIBRARY_PATH"
 
 
 

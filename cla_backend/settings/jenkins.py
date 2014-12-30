@@ -28,7 +28,7 @@ DATABASES = {
     }
 }
 
-#JENKINS_TEST_RUNNER = 'core.test_runners.AdvancedCITestSuiteRunner'
+JENKINS_TEST_RUNNER = 'core.testing.CLADiscoverRunner'
 
 #HOST_NAME = ""
 

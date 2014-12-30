@@ -84,7 +84,7 @@ Load initial data:
 
 ::
 
-    ./manage.py loaddata kb_from_knowledgebase.json initial_category.json test_provider.json test_provider_allocations.json initial_mattertype.json test_auth_clients.json initial_media_codes.json test_rotas.json
+    ./manage.py loaddata initial_groups.json kb_from_knowledgebase.json initial_category.json test_provider.json test_provider_allocations.json initial_mattertype.json test_auth_clients.json initial_media_codes.json test_rotas.json
 
 Start the server:
 
@@ -116,8 +116,8 @@ postgres as necessary):
 
 ::
 
-    export PATH="/Applications/Postgres.app/Contents/MacOS/bin/:$PATH"
-    export DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/MacOS/lib/
+    export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin/:$PATH"
+    export DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/Versions/9.3/lib/:$DYLD_LIBRARY_PATH"
 
 
 

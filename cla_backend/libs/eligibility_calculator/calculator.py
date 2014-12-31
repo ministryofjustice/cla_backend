@@ -183,7 +183,6 @@ class EligibilityChecker(object):
 
     @cached_calcs_property
     def dependants_allowance(self):
-        # TODO 2 values for children...
         return self.case_data.facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE
 
     @cached_calcs_property

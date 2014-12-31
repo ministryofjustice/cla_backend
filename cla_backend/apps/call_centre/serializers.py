@@ -259,11 +259,13 @@ class OutOfHoursRotaSerializer(OutOfHoursRotaSerializerBase):
 
 
 class OperatorSerializer(ExtendedUserSerializerBase):
+    is_cla_superuser = serializers.CharField(read_only=True)
+
     class Meta:
         model = Operator
         fields = (
             'username', 'first_name', 'last_name', 'email', 'is_manager', 'password',
-            'created', 'last_login'
+            'created', 'last_login', 'is_cla_superuser'
         )
 
 class FeedbackSerializer(FeedbackSerializerBase):

@@ -15,13 +15,13 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
             'last_name': u'',
             'email': u'lennon@thebeatles.com',
             'is_manager': False,
+            'is_cla_superuser': False
         }, data)
         self.assertTrue('last_login' in data)
         self.assertTrue('created' in data)
 
     def get_other_users(self):
         return make_recipe('call_centre.operator', _quantity=3)
-
 
     def test_rest_password_other_user_as_manager(self):
         other_user = self.other_users[0].user

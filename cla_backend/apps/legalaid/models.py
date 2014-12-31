@@ -336,8 +336,6 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
         except PropertyExpectedException as e:
             return (ELIGIBILITY_STATES.UNKNOWN, ec)
 
-            # TODO what do we do when we get a different exception? (which shouldn't happen)
-
     def update_state(self):
         self.state, checker = self.get_eligibility_state()
 

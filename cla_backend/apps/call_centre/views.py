@@ -306,10 +306,10 @@ class CaseViewSet(
     @action()
     def link_personal_details(self, request, reference=None, **kwargs):
         """
-            TODO: refactor everything!
-                * if not DATA.personal_details => return 400
-                * if obj.personal_details != None => return 400
-                * if personal_details does not exist => return 400
+        * if not DATA.personal_details => return 400
+        * if obj.personal_details != None => return 400
+        * if personal_details does not exist => return 400
+        * else link personal details
         """
         def error_response(msg):
             return DRFResponse(

@@ -24,7 +24,7 @@ class ClientIdPasswordGrantForm(PasswordGrantForm):
         self.account_lockedout = False
 
     def get_user_model(self):
-        # TODO terrible! But working :-)
+        # WARNING terrible! But working :-)
         ModelClazz = None
         if self.client:
             if self.client.name == 'operator':

@@ -32,7 +32,7 @@ class BaseEventViewSet(viewsets.ViewSetMixin, views.APIView):
         return self.list_by_event_key(request, action, *args, **kwargs)
 
     def selectable(self, request, *args, **kwargs):
-        # TODO will come soon
+        # Not implemented as not needed at the moment
         raise NotImplementedError()
 
     def list_by_event_key(self, request, event_key, *args, **kwargs):

@@ -1,5 +1,8 @@
+import logging
+
 from rest_framework.exceptions import ParseError
 from rest_framework.fields import ChoiceField, SerializerMethodField
+from rest_framework.relations import SlugRelatedField
 
 from core.serializers import ClaModelSerializer
 from diagnosis.models import DiagnosisTraversal
@@ -8,8 +11,9 @@ from cla_common.constants import DIAGNOSIS_SCOPE
 from legalaid.models import Category
 
 from .graph import graph
-from rest_framework.relations import SlugRelatedField
 from .utils import is_terminal, is_pre_end_node, get_node_scope_value
+
+logger = logging.getLogger(__name__)
 
 
 class DiagnosisSerializer(ClaModelSerializer):
@@ -95,8 +99,11 @@ class DiagnosisSerializer(ClaModelSerializer):
                     category = Category.objects.get(code=category_name)
                     obj.category = category
                 except Category.DoesNotExist:
-                    # TODO log it in sentry
-                    pass
+                    logger.warning(
+                        u'Category %s for diagnosis node id=%s not a valid option' % (
+                            category_name, obj.current_node_id
+                        )
+                    )
         else:
             obj.state = DIAGNOSIS_SCOPE.UNKNOWN
             obj.category = None

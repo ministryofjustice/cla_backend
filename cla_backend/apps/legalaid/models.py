@@ -1,5 +1,6 @@
 import logging
 import datetime
+from django.utils import timezone
 
 from jsonfield import JSONField
 
@@ -334,8 +335,6 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
                 return (ELIGIBILITY_STATES.NO, ec)
         except PropertyExpectedException as e:
             return (ELIGIBILITY_STATES.UNKNOWN, ec)
-
-            # TODO what do we do when we get a different exception? (which shouldn't happen)
 
     def update_state(self):
         self.state, checker = self.get_eligibility_state()
@@ -784,6 +783,19 @@ class CaseNotesHistory(TimeStampedModel):
     operator_notes = models.TextField(null=True, blank=True)
     provider_notes = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    include_in_summary = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        self.include_in_summary = True
+        super(CaseNotesHistory, self).save(*args, **kwargs)
+
+        qs = CaseNotesHistory.objects.filter(
+            case=self.case,
+            created__gte=timezone.now() - datetime.timedelta(minutes=30),
+            created_by=self.created_by
+        ).exclude(pk=self.pk)
+        qs.update(include_in_summary=False)
+
 
     class Meta:
         ordering = ['-created']

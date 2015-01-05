@@ -1,3 +1,7 @@
+import os
+import tempfile
+from zipfile import ZipFile
+from shutil import rmtree
 import contextlib
 import csvkit as csv
 
@@ -5,10 +9,15 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.db import connection
+
+from rest_framework.views import APIView
+from rest_framework import permissions
 
 from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
     MISurveyExtract, MICB1Extract, MIVoiceReport
+from legalaid.utils import diversity
 
 
 def report_view(form_class, title, template='case_report'):
@@ -105,3 +114,70 @@ def mi_cb1_extract():
 @report_view(MIVoiceReport, 'MI Voice Report')
 def mi_voice_extract():
     pass
+
+
+class DBExportView(APIView):
+    sql_files = {
+        'cases': 'ExportCases.sql',
+        'personal_details': 'ExportPersonalDetails.sql',
+        'standard': 'ExportStandardTables.sql',
+        'media_code_group': 'ExportMediaCodeGroup.sql',
+    }
+
+    permission_classes = (permissions.AllowAny,)
+
+    filename = 'cla_database.zip'
+
+    def get(self, request, format=None):
+        """
+        dt_from, dt_to: ISO 8601 datetime string (2014-08-29T23:59:59)
+        passphrase: diversity GPG private key passphrase
+        """
+        dt_from = request.QUERY_PARAMS.get('from', '')
+        dt_to = request.QUERY_PARAMS.get('to', '')
+        passphrase = request.QUERY_PARAMS.get('passphrase', '')
+
+        export_path = tempfile.mkdtemp()
+
+        for query_name, sql in self.sql_files.items():
+            path = os.path.join(os.path.dirname(__file__), 'sql', sql)
+            with open(path, 'r') as f:
+                query = f.read()
+
+            if query_name == 'personal_details':
+                de = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".\
+                    format(
+                        key=diversity.get_private_key()
+                    )
+                query = query.format(diversity_expression=de, path=export_path)
+            else:
+                query = query.format(path=export_path)
+
+            params = {
+                'cases': [dt_from, dt_to],
+                'personal_details': [passphrase, dt_from, dt_to],
+                'standard': [dt_from, dt_to],
+                'media_code_group': [],
+            }[query_name]
+
+            cursor = connection.cursor()
+            cursor.execute(query, params)
+
+        os.chdir(export_path)
+        zip = open(self.filename, 'w+b')
+
+        with ZipFile(zip, 'w') as z:
+            for root, dirs, files in os.walk('.'):
+                for f in filter(lambda x: x.endswith('.csv'), files):
+                    z.write(f)
+        zip.seek(0)
+
+        response = HttpResponse(zip.read(),
+                                content_type='application/x-zip-compressed')
+        response['Content-Disposition'] = ('attachment; filename="%s"' %
+                                           self.filename)
+
+        zip.close()
+        rmtree(export_path)
+
+        return response

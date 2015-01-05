@@ -25,4 +25,7 @@ urlpatterns = patterns('',
     url(r'^mi-voice-extract/$',
         views.mi_voice_extract,
         name="mi_voice_extract"),
+    url(r'^db-export/$',
+        views.DBExportView.as_view(),
+        name='db_export')
 )

@@ -187,6 +187,7 @@ PROJECT_APPS = (
 if BACKEND_ENABLED:
     INSTALLED_APPS += (
         'rest_framework',
+        'rest_framework_httpsignature',
         'provider',
         'provider.oauth2',
     )

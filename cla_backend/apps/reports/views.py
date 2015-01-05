@@ -18,6 +18,7 @@ from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
     MISurveyExtract, MICB1Extract, MIVoiceReport
 from legalaid.utils import diversity
+from cla_auth.auth import OBIEESignatureAuthentication
 
 
 def report_view(form_class, title, template='case_report'):
@@ -124,7 +125,8 @@ class DBExportView(APIView):
         'media_code_group': 'ExportMediaCodeGroup.sql',
     }
 
-    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (OBIEESignatureAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     filename = 'cla_database.zip'
 

@@ -4,11 +4,12 @@ from rest_framework.exceptions import ParseError
 from rest_framework.fields import ChoiceField, SerializerMethodField
 from rest_framework.relations import SlugRelatedField
 
-from core.serializers import ClaModelSerializer
-from diagnosis.models import DiagnosisTraversal
 from cla_common.constants import DIAGNOSIS_SCOPE
 
-from legalaid.models import Category
+from core.serializers import ClaModelSerializer
+from diagnosis.models import DiagnosisTraversal
+
+from legalaid.models import Category, MatterType
 
 from .graph import graph
 from .utils import is_terminal, is_pre_end_node, get_node_scope_value
@@ -21,6 +22,8 @@ class DiagnosisSerializer(ClaModelSerializer):
     nodes = SerializerMethodField('get_nodes')
     current_node_id = ChoiceField(choices=[])
     category = SlugRelatedField('category', slug_field='code', required=False)
+    matter_type1 = SlugRelatedField('matter_type1', slug_field='code', required=False)
+    matter_type2 = SlugRelatedField('matter_type2', slug_field='code', required=False)
     version_in_conflict = SerializerMethodField('is_version_in_conflict')
 
     def __init__(self, *args, **kwargs):
@@ -89,24 +92,58 @@ class DiagnosisSerializer(ClaModelSerializer):
                 context.update(node['context'] or {})
         return context
 
+    def _get_from_context(self, context, node_id):
+        def get_category(category_code, node_id):
+            if category_code:
+                try:
+                    return Category.objects.get(code=category_code)
+                except Category.DoesNotExist:
+                    # this should never happen as we unit test the diagnosis graph
+                    logger.warning(
+                        u'Category %s for diagnosis node id=%s not a valid option' % (
+                            category_code, node_id
+                        )
+                    )
+            return None
+
+        def get_matter_type(matter_type_code, node_id):
+            if matter_type_code:
+                try:
+                    return MatterType.objects.get(code=matter_type_code)
+                except MatterType.DoesNotExist:
+                    # this should never happen as we unit test the diagnosis graph
+                    logger.warning(
+                        u'MatterType %s for diagnosis node id=%s not a valid option' % (
+                            matter_type_code, node_id
+                        )
+                    )
+            return None
+
+        category_code = context.get('category')
+        matter_type1_code = context.get('matter-type-1')
+        matter_type2_code = context.get('matter-type-2')
+
+        return {
+            'category': get_category(category_code, node_id),
+            'matter_type1': get_matter_type(matter_type1_code, node_id),
+            'matter_type2': get_matter_type(matter_type2_code, node_id),
+        }
+
     def _set_state(self, obj):
         if is_terminal(self.graph, obj.current_node_id):
             obj.state = get_node_scope_value(self.graph, obj.current_node_id)
 
-            category_name = self.get_context(obj).get('category')
-            if category_name:
-                try:
-                    category = Category.objects.get(code=category_name)
-                    obj.category = category
-                except Category.DoesNotExist:
-                    logger.warning(
-                        u'Category %s for diagnosis node id=%s not a valid option' % (
-                            category_name, obj.current_node_id
-                        )
-                    )
+            context_data = self._get_from_context(
+                self.get_context(obj), obj.current_node_id
+            )
+            obj.category = context_data['category']
+            obj.matter_type1 = context_data['matter_type1']
+            obj.matter_type2 = context_data['matter_type2']
         else:
             obj.state = DIAGNOSIS_SCOPE.UNKNOWN
             obj.category = None
+            obj.matter_type1 = None
+            obj.matter_type2 = None
 
     def process_obj(self, obj):
         if obj.current_node_id:
@@ -176,5 +213,7 @@ class DiagnosisSerializer(ClaModelSerializer):
                   'current_node_id',
                   'state',
                   'category',
+                  'matter_type1',
+                  'matter_type2',
                   'version_in_conflict'
                   )

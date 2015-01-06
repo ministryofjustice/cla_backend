@@ -1,3 +1,7 @@
+import os
+import tempfile
+from zipfile import ZipFile
+from shutil import rmtree
 from uuid import UUID
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
@@ -6,10 +10,15 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
+from django.db import connection
+from django.http import HttpResponse
+
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
+from legalaid.utils import diversity
 
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins, status, permissions
+from rest_framework.views import APIView
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
@@ -19,6 +28,7 @@ from cla_provider.models import Provider, OutOfHoursRota, Feedback
 from cla_eventlog import event_registry
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
+from cla_auth.auth import OBIEESignatureAuthentication
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.mixins import FormActionMixin
@@ -517,3 +527,71 @@ class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin,
         qs = super(CSVUploadViewSet, self).get_queryset(*args, **kwargs).filter(
             month__gte=after)
         return qs
+
+
+class DBExportView(APIView):
+    sql_files = {
+        'cases': 'ExportCases.sql',
+        'personal_details': 'ExportPersonalDetails.sql',
+        'standard': 'ExportStandardTables.sql',
+        'media_code_group': 'ExportMediaCodeGroup.sql',
+    }
+
+    authentication_classes = (OBIEESignatureAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    filename = 'cla_database.zip'
+
+    def get(self, request, format=None):
+        """
+        dt_from, dt_to: ISO 8601 datetime string (2014-08-29T23:59:59)
+        passphrase: diversity GPG private key passphrase
+        """
+        dt_from = request.QUERY_PARAMS.get('from', '')
+        dt_to = request.QUERY_PARAMS.get('to', '')
+        passphrase = request.QUERY_PARAMS.get('passphrase', '')
+
+        export_path = tempfile.mkdtemp()
+
+        for query_name, sql in self.sql_files.items():
+            path = os.path.join(os.path.dirname(__file__), 'sql', sql)
+            with open(path, 'r') as f:
+                query = f.read()
+
+            if query_name == 'personal_details':
+                de = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".\
+                    format(
+                        key=diversity.get_private_key()
+                    )
+                query = query.format(diversity_expression=de, path=export_path)
+            else:
+                query = query.format(path=export_path)
+
+            params = {
+                'cases': [dt_from, dt_to],
+                'personal_details': [passphrase, dt_from, dt_to],
+                'standard': [dt_from, dt_to],
+                'media_code_group': [],
+            }[query_name]
+
+            cursor = connection.cursor()
+            cursor.execute(query, params)
+
+        os.chdir(export_path)
+        zip = open(self.filename, 'w+b')
+
+        with ZipFile(zip, 'w') as z:
+            for root, dirs, files in os.walk('.'):
+                for f in filter(lambda x: x.endswith('.csv'), files):
+                    z.write(f)
+        zip.seek(0)
+
+        response = HttpResponse(zip.read(),
+                                content_type='application/x-zip-compressed')
+        response['Content-Disposition'] = ('attachment; filename="%s"' %
+                                           self.filename)
+
+        zip.close()
+        rmtree(export_path)
+
+        return response

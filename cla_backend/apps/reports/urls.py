@@ -24,8 +24,5 @@ urlpatterns = patterns('',
         name="mi_cb1_extract"),
     url(r'^mi-voice-extract/$',
         views.mi_voice_extract,
-        name="mi_voice_extract"),
-    url(r'^db-export/$',
-        views.DBExportView.as_view(),
-        name='db_export')
+        name="mi_voice_extract")
 )

@@ -578,20 +578,20 @@ class DBExportView(APIView):
             cursor.execute(query, params)
 
         os.chdir(export_path)
-        zip = open(self.filename, 'w+b')
+        zp = open(self.filename, 'w+b')
 
-        with ZipFile(zip, 'w') as z:
+        with ZipFile(zp, 'w') as z:
             for root, dirs, files in os.walk('.'):
                 for f in filter(lambda x: x.endswith('.csv'), files):
                     z.write(f)
-        zip.seek(0)
+        zp.seek(0)
 
-        response = HttpResponse(zip.read(),
+        response = HttpResponse(zp.read(),
                                 content_type='application/x-zip-compressed')
         response['Content-Disposition'] = ('attachment; filename="%s"' %
                                            self.filename)
 
-        zip.close()
+        zp.close()
         rmtree(export_path)
 
         return response

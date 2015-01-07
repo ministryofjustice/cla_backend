@@ -174,7 +174,7 @@ class AlternativeHelpForm(EventSpecificLogForm):
     def get_event_code(self):
         code = self.cleaned_data['event_code']
 
-        category = self.case.eligibility_check.category.code if self.case.eligibility_check and self.case.eligibility_check.category else None
+        category = self.case.diagnosis.category.code if self.case.diagnosis and self.case.diagnosis.category else None
 
         if code == 'COSPF':
             if category in ('family', 'housing'):

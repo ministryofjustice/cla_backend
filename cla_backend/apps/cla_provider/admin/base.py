@@ -44,6 +44,5 @@ class ProviderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Provider, ProviderAdmin)
-admin.site.register(ProviderAllocation)
 admin.site.register(OutOfHoursRota)
 admin.site.register(Staff, StaffAdmin)

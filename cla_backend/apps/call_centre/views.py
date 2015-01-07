@@ -11,7 +11,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
 from django.db import connection
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
@@ -547,9 +547,12 @@ class DBExportView(APIView):
         dt_from, dt_to: ISO 8601 datetime string (2014-08-29T23:59:59)
         passphrase: diversity GPG private key passphrase
         """
-        dt_from = request.QUERY_PARAMS.get('from', '')
-        dt_to = request.QUERY_PARAMS.get('to', '')
-        passphrase = request.QUERY_PARAMS.get('passphrase', '')
+        try:
+            dt_from = request.QUERY_PARAMS['from']
+            dt_to = request.QUERY_PARAMS['to']
+            passphrase = request.QUERY_PARAMS['passphrase']
+        except KeyError:
+            return HttpResponseBadRequest()
 
         export_path = tempfile.mkdtemp()
 

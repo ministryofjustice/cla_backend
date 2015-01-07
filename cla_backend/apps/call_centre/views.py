@@ -64,6 +64,7 @@ from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     CallMeBackForm, StopCallMeBackForm, DiversityForm
 
 from .models import Operator
+from .throttling import OBIEERateThrottle
 
 
 class CallCentrePermissionsViewSetMixin(object):
@@ -538,6 +539,7 @@ class DBExportView(APIView):
     }
 
     authentication_classes = (OBIEESignatureAuthentication,)
+    throttle_classes = (OBIEERateThrottle,)
     permission_classes = (permissions.IsAuthenticated,)
 
     filename = 'cla_database.zip'

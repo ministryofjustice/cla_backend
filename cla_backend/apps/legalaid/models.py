@@ -1,5 +1,6 @@
 import logging
 import datetime
+from django.utils import timezone
 
 from jsonfield import JSONField
 
@@ -39,6 +40,20 @@ from cla_common.constants import CASE_SOURCE
 
 logger = logging.getLogger(__name__)
 
+
+def _make_reference():
+    from django.utils.crypto import get_random_string
+
+    return u'%s-%s-%s' % (
+        # exclude B8G6I1l0OQDS5Z2
+        get_random_string(length=2,
+                          allowed_chars='ACEFHJKMNPRTUVWXY3479'),
+        get_random_string(length=4, allowed_chars='123456789'),
+        get_random_string(length=4, allowed_chars='123456789')
+    )
+
+def _check_reference_unique(reference):
+    return not Case.objects.filter(reference=reference).exists()
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=500)
@@ -130,9 +145,20 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         auto_now=False, blank=True, null=True, editable=False
     )
 
+    # only normalised version of post code for now
+    search_field = models.TextField(null=True, blank=True, db_index=True)
+
     cloning_config = {
-        'excludes': ['reference', 'created', 'modified', 'case_count']
+        'excludes': ['reference', 'created', 'modified', 'case_count', 'search_field']
     }
+
+    def _set_search_field(self):
+        if self.postcode:
+            self.search_field =  self.postcode.replace(' ', '')
+
+    def save(self, *args, **kwargs):
+        self._set_search_field()
+        super(PersonalDetails, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "personal details"
@@ -309,8 +335,6 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
                 return (ELIGIBILITY_STATES.NO, ec)
         except PropertyExpectedException as e:
             return (ELIGIBILITY_STATES.UNKNOWN, ec)
-
-            # TODO what do we do when we get a different exception? (which shouldn't happen)
 
     def update_state(self):
         self.state, checker = self.get_eligibility_state()
@@ -557,17 +581,27 @@ class Case(TimeStampedModel, ModelDiffMixin):
         max_length=20, choices=CASE_SOURCE, default=CASE_SOURCE.PHONE
     )
 
-    def _set_reference_if_necessary(self):
-        if not self.reference:
-            # TODO make it better
-            from django.utils.crypto import get_random_string
+    # for now it's a '-' stripped version of the reference only
+    # we could start getting smart and putting in all permutations of
+    # a reference x ambiguous characters but not for now
+    search_field = models.TextField(null=True, blank=True, db_index=True)
 
-            self.reference = u'%s-%s-%s' % (
-                get_random_string(length=2,
-                                  allowed_chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'),
-                get_random_string(length=4, allowed_chars='0123456789'),
-                get_random_string(length=4, allowed_chars='0123456789')
-            )
+
+    def _set_reference_if_necessary(self):
+        max_retries = 10
+        tries = 0
+        if not self.reference:
+            reference = _make_reference()
+            while (not _check_reference_unique(reference) and tries < max_retries):
+                reference = _make_reference()
+                tries = tries + 1
+
+            self.reference = reference
+
+
+    def _set_search_field(self):
+        if self.reference:
+            self.search_field = self.reference.replace('-', '')
 
     def is_part_of_split(self):
         """
@@ -627,7 +661,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
-                    'callback_attempt'
+                    'callback_attempt', 'search_field'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details'
@@ -645,6 +679,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
 
     def save(self, *args, **kwargs):
         self._set_reference_if_necessary()
+        self._set_search_field()
 
         if not self.pk:
             super(Case, self).save(*args, **kwargs)
@@ -748,6 +783,19 @@ class CaseNotesHistory(TimeStampedModel):
     operator_notes = models.TextField(null=True, blank=True)
     provider_notes = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
+    include_in_summary = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        self.include_in_summary = True
+        super(CaseNotesHistory, self).save(*args, **kwargs)
+
+        qs = CaseNotesHistory.objects.filter(
+            case=self.case,
+            created__gte=timezone.now() - datetime.timedelta(minutes=30),
+            created_by=self.created_by
+        ).exclude(pk=self.pk)
+        qs.update(include_in_summary=False)
+
 
     class Meta:
         ordering = ['-created']

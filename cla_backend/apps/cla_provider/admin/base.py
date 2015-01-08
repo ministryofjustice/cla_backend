@@ -5,6 +5,7 @@ from core.admin.modeladmin import OneToOneUserAdmin
 from ..models import Provider, ProviderAllocation, Staff, OutOfHoursRota
 
 from .forms import StaffAdminForm
+from .formsets import ProviderAllocationInlineFormset
 
 
 class StaffAdmin(OneToOneUserAdmin):
@@ -25,6 +26,7 @@ class StaffAdmin(OneToOneUserAdmin):
 
 class ProviderAllocationInline(admin.TabularInline):
     model = ProviderAllocation
+    formset = ProviderAllocationInlineFormset
 
 
 class ProviderAdmin(admin.ModelAdmin):
@@ -44,6 +46,5 @@ class ProviderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Provider, ProviderAdmin)
-admin.site.register(ProviderAllocation)
 admin.site.register(OutOfHoursRota)
 admin.site.register(Staff, StaffAdmin)

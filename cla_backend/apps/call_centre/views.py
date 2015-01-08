@@ -306,10 +306,10 @@ class CaseViewSet(
     @action()
     def link_personal_details(self, request, reference=None, **kwargs):
         """
-            TODO: refactor everything!
-                * if not DATA.personal_details => return 400
-                * if obj.personal_details != None => return 400
-                * if personal_details does not exist => return 400
+        * if not DATA.personal_details => return 400
+        * if obj.personal_details != None => return 400
+        * if personal_details does not exist => return 400
+        * else link personal details
         """
         def error_response(msg):
             return DRFResponse(
@@ -448,11 +448,13 @@ class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
     serializer_class = FeedbackSerializer
 
     filter_backends = (
+        DjangoFilterBackend,
         OrderingFilter,
         DateRangeFilter,
     )
     ordering = ('resolved', '-created',)
     date_range_field = 'created'
+    filter_fields = ('resolved',)
 
     queryset = Feedback.objects.all().select_related(
         'case', 'created_by', 'created_by__provider'

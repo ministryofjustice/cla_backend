@@ -612,6 +612,25 @@ class CaseTestCase(TestCase):
         # it is 7 digits long
         self.assertEqual(len(unicode(case.laa_reference)), 7)
 
+
+    def test_case_doesnt_get_duplicate_reference(self):
+        with mock.patch('legalaid.models._make_reference') as mr:
+            mr.return_value = 'AA-1234-1234'
+            c1 = Case()
+            c1._set_reference_if_necessary()
+            self.assertEqual(c1.reference, 'AA-1234-1234')
+            self.assertEqual(mr.call_count, 1)
+            c1.save()
+
+        with mock.patch('legalaid.models._make_reference') as mr:
+            mr.return_value = c1.reference
+            c2 = Case()
+            c2._set_reference_if_necessary()
+            self.assertEqual(c1.reference, c2.reference)
+            self.assertTrue(mr.called)
+            self.assertEqual(mr.call_count, 11) #max retries + initial try
+
+
     def test_assign_to_provider_overriding_provider(self):
         providers = make_recipe('cla_provider.provider', _quantity=2)
 
@@ -1011,7 +1030,7 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
                 'title', 'full_name', 'postcode', 'street', 'mobile_phone',
                 'home_phone', 'email', 'date_of_birth', 'ni_number',
                 'contact_for_research', 'vulnerable_user', 'safe_to_contact',
-                'safe_to_email', 'diversity', 'diversity_modified'
+                'safe_to_email', 'diversity', 'diversity_modified', 'search_field'
             ]
         )
 
@@ -1201,7 +1220,8 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'adaptation_details', 'billable_time', 'matter_type1', 'matter_type2',
             'outcome_code', 'level', 'reference', 'laa_reference', 'from_case',
             'outcome_code_id', 'requires_action_at', 'callback_attempt',
-            'provider_viewed', 'provider_accepted', 'provider_closed'
+            'provider_viewed', 'provider_accepted', 'provider_closed',
+            'search_field'
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',

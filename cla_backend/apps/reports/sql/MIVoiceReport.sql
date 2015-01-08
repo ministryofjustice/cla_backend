@@ -68,7 +68,7 @@ select
    ) as count_of_outcomes
 from csvupload csv
   left JOIN cla_provider_provider p on csv.provider_id = p.id
-  left outer join legalaid_case c on c.laa_reference = trim((csv.body->0)::text, '"')::INT
+  left outer join legalaid_case c on c.laa_reference::TEXT = trim((csv.body->0)::text, '"')::TEXT
 WHERE csv.month = %s
 ;
 

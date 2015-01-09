@@ -166,10 +166,14 @@ class CaseViewSet(
 
     @list_route()
     def future_callbacks(self, request, **kwargs):
+        """
+        Returns a list of callback cases between start_of_day and
+            start_of_day + 7 days (excluded)
+        """
         now = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
         in_7_days = now + datetime.timedelta(days=7)
         qs = self.get_queryset().filter(
-            requires_action_at__gt=now,
+            requires_action_at__gte=now,
             requires_action_at__lt=in_7_days
         ).order_by('requires_action_at')
         self.object_list = self.filter_queryset(qs)

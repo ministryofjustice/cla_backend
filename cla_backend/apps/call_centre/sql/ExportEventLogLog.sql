@@ -9,7 +9,7 @@ type,
 level,
 created_by_id,
 '[deleted]' AS notes,
-patch,
+'[deleted]' AS patch,
 context
 FROM cla_eventlog_log
 WHERE modified >= %s::timestamp AND modified <= %s::timestamp)

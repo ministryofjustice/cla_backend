@@ -5,7 +5,7 @@ modified,
 reference,
 case_id,
 created_by_id,
-comment,
+'[deleted]' AS comment,
 justified,
 resolved,
 issue

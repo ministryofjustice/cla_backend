@@ -9,7 +9,7 @@ COPY (SELECT id
 ,locked_at
 ,provider_id
 ,'[deleted]' AS notes
-,provider_notes
+,'[deleted]' AS provider_notes
 ,laa_reference
 ,thirdparty_details_id
 ,adaptation_details_id

@@ -33,5 +33,5 @@ COPY (SELECT id
 ,provider_closed
 ,provider_accepted
 FROM legalaid_case
-WHERE created >= %s::timestamp AND created <= %s::timestamp)
-TO '{path}/public.legalaid_case.csv' CSV HEADER;
+WHERE modified >= %s::timestamp AND modified <= %s::timestamp)
+TO '{path}/legalaid_case.csv' CSV HEADER;

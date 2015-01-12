@@ -531,12 +531,44 @@ class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin,
 
 
 class DBExportView(APIView):
-    sql_files = {
-        'cases': 'ExportCases.sql',
-        'personal_details': 'ExportPersonalDetails.sql',
-        'standard': 'ExportStandardTables.sql',
-        'media_code_group': 'ExportMediaCodeGroup.sql',
-    }
+    basic_sql_files = [
+        'ExportAuthUser.sql',
+        'ExportCallCentreOperator.sql',
+        'ExportDiagnosisDiagnosisTraversal.sql',
+        'ExportEventLogLog.sql',
+        'ExportKnowledgeBaseArticle.sql',
+        'ExportKnowledgeBaseArticleCategory.sql',
+        'ExportKnowledgeBaseArticleCategoryMatrix.sql',
+        'ExportLegalAidCallCentreOperator.sql',
+        'ExportLegalAidCase.sql',
+        'ExportLegalAidCaseKnowledgeBaseAssignment.sql',
+        'ExportLegalAidCategory.sql',
+        'ExportLegalAidDeductions.sql',
+        'ExportLegalAidEligibilityCheck.sql',
+        'ExportLegalAidIncome.sql',
+        'ExportLegalAidMatterType.sql',
+        'ExportLegalAidMediaCode.sql',
+        'ExportLegalAidPerson.sql',
+        'ExportLegalAidProperty.sql',
+        'ExportLegalAidSavings.sql',
+        'ExportLegalAidThirdPartyDetails.sql',
+        'ExportProviderCSVUpload.sql',
+        'ExportProviderFeedback.sql',
+        'ExportProviderOutOfHoursRota.sql',
+        'ExportProviderProvider.sql',
+        'ExportProviderProviderAllocation.sql',
+        'ExportProviderStaff.sql',
+        'ExportTimerTimer.sql',
+    ]
+
+    no_timestamp_sql_files = [
+        'ExportAuthGroup.sql',
+        'ExportAuthUserGroups.sql',
+        'ExportMediaCodeGroup.sql'
+    ]
+
+    personal_details_sql_file = 'ExportPersonalDetails.sql'
+    sql_path = os.path.dirname(__file__)
 
     authentication_classes = (OBIEESignatureAuthentication,)
     throttle_classes = (OBIEERateThrottle,)
@@ -558,38 +590,11 @@ class DBExportView(APIView):
 
         export_path = tempfile.mkdtemp()
 
-        for query_name, sql in self.sql_files.items():
-            path = os.path.join(os.path.dirname(__file__), 'sql', sql)
-            with open(path, 'r') as f:
-                query = f.read()
+        self.export_basic_tables(export_path, dt_from, dt_to)
+        self.export_no_timestamp_tables(export_path)
+        self.export_personal_details(export_path, passphrase, dt_from, dt_to)
 
-            if query_name == 'personal_details':
-                de = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".\
-                    format(
-                        key=diversity.get_private_key()
-                    )
-                query = query.format(diversity_expression=de, path=export_path)
-            else:
-                query = query.format(path=export_path)
-
-            params = {
-                'cases': [dt_from, dt_to],
-                'personal_details': [passphrase, dt_from, dt_to],
-                'standard': [dt_from, dt_to],
-                'media_code_group': [],
-            }[query_name]
-
-            cursor = connection.cursor()
-            cursor.execute(query, params)
-
-        os.chdir(export_path)
-        zp = open(self.filename, 'w+b')
-
-        with ZipFile(zp, 'w') as z:
-            for root, dirs, files in os.walk('.'):
-                for f in filter(lambda x: x.endswith('.csv'), files):
-                    z.write(f)
-        zp.seek(0)
+        zp = self.generate_zip(export_path)
 
         response = HttpResponse(zp.read(),
                                 content_type='application/x-zip-compressed')
@@ -600,3 +605,53 @@ class DBExportView(APIView):
         rmtree(export_path)
 
         return response
+
+    def export_basic_tables(self, export_path, dt_from, dt_to):
+        cursor = connection.cursor()
+
+        for sql in self.basic_sql_files:
+            path = os.path.join(self.sql_path, 'sql', sql)
+            with open(path, 'r') as f:
+                query = f.read()
+                query = query.format(path=export_path)
+
+            cursor.execute(query, [dt_from, dt_to])
+        cursor.close()
+
+    def export_no_timestamp_tables(self, export_path):
+        cursor = connection.cursor()
+
+        for sql in self.no_timestamp_sql_files:
+            path = os.path.join(self.sql_path, 'sql', sql)
+            with open(path, 'r') as f:
+                query = f.read()
+                query = query.format(path=export_path)
+            cursor.execute(query)
+        cursor.close()
+
+    def export_personal_details(self, export_path, passphrase, dt_from, dt_to):
+        path = os.path.join(self.sql_path, 'sql',
+                            self.personal_details_sql_file)
+        with open(path, 'r') as f:
+            query = f.read()
+            de = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".\
+                format(
+                    key=diversity.get_private_key()
+                )
+            query = query.format(diversity_expression=de, path=export_path)
+
+        cursor = connection.cursor()
+        cursor.execute(query, [passphrase, dt_from, dt_to])
+        cursor.close()
+
+    def generate_zip(self, export_path):
+        os.chdir(export_path)
+        zp = open(self.filename, 'w+b')
+
+        with ZipFile(zp, 'w') as z:
+            for root, dirs, files in os.walk('.'):
+                for f in filter(lambda x: x.endswith('.csv'), files):
+                    z.write(f)
+        zp.seek(0)
+
+        return zp

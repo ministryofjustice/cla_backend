@@ -315,3 +315,17 @@ class MICB1Extract(SQLFileDateRangeReport):
             ,"Source"
             ,"Code"
         ]
+
+
+class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
+    QUERY_FILE = 'MIDigitalCaseTypes.sql'
+
+    def get_headers(self):
+        return [
+            'laa_reference',
+            'case_ref',
+            'contact_type',
+            'case_created_by',
+            'means_test_completed_online',
+            'call_me_back_only'
+        ]

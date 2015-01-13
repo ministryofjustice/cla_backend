@@ -5,43 +5,6 @@ from cla_eventlog.events import BaseEvent
 from cla_eventlog.registry import EventRegistry
 
 
-#
-# class SystemEventsTestCase(TestCase):
-#     def test_means_test_events(self):
-#         event = event_registry.get_event('means_test')()
-#
-#         # means test created
-#         res = event.process(status='created', notes='means test created')
-#         self.assertEqual(res, ('MT_CREATED', LOG_TYPES.SYSTEM, 'means test created'))
-#
-#         # means test changed
-#         res = event.process(status='changed', notes='Notes field changed from xxx to yyy')
-#         self.assertEqual(res, ('MT_CHANGED', LOG_TYPES.SYSTEM, 'Notes field changed from xxx to yyy'))
-#
-#         # means test passed
-#         res = event.process(status='passed', notes='Means test passed')
-#         self.assertEqual(res, ('MT_PASSED', LOG_TYPES.SYSTEM, 'Means test passed'))
-#
-#         # means test failed
-#         res = event.process(status='failed', notes='Means test failed')
-#         self.assertEqual(res, ('MT_FAILED', LOG_TYPES.SYSTEM, 'Means test failed'))
-#
-#     def test_case_events(self):
-#         event = event_registry.get_event('case')()
-#
-#         # case created digitally
-#         res = event.process(status='created', notes='Case created digitally')
-#         self.assertEqual(res, ('CASE_CREATED', LOG_TYPES.SYSTEM, 'Case created digitally'))
-#
-#         # case created NOT digitally
-#         res = event.process(status='created', notes='Case created')
-#         self.assertEqual(res, ('CASE_CREATED', LOG_TYPES.SYSTEM, 'Case created'))
-#
-#         # case viewed
-#         res = event.process(status='viewed', notes='Case viewed')
-#         self.assertEqual(res, ('CASE_VIEWED', LOG_TYPES.SYSTEM, 'Case viewed'))
-
-
 class RegistryStartupChecksTestCase(TestCase):
     def test_event_without_key_fails(self):
         registry = EventRegistry()

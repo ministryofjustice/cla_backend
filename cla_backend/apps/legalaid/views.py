@@ -181,10 +181,10 @@ class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet
 
         means_test_event = event_registry.get_event('means_test')()
         status = 'changed' if not created else 'created'
-
         kwargs = {
             'created_by': user,
-            'status': status
+            'status': status,
+            'context': {'state': obj.state}
         }
         kwargs = self.get_means_test_event_kwargs(kwargs)
         means_test_event.process(obj.case, **kwargs)
@@ -322,6 +322,28 @@ class AscCaseOrderingFilter(BaseCaseOrderingFilter):
 class DescCaseOrderingFilter(BaseCaseOrderingFilter):
     default_modified = '-modified'
 
+class BaseCaseLogMixin(object):
+
+    def get_log_notes(self, obj):
+        raise NotImplementedError()
+
+    def get_log_context(self, obj):
+        context = {}
+        if obj.eligibility_check:
+            context['eligibility_state'] = obj.eligibility_check.state
+        return context
+
+    def post_save(self, obj, created=False):
+        super(BaseCaseLogMixin, self).post_save(obj, created=created)
+
+        if created:
+            event = event_registry.get_event('case')()
+            event.process(
+                obj, status='created',
+                created_by=obj.created_by,
+                notes=self.get_log_notes(obj),
+                context=self.get_log_context(obj)
+            )
 
 class FullCaseViewSet(
     DetailSerializerMixin,

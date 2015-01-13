@@ -32,7 +32,7 @@ from legalaid.views import BaseUserViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
     BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
     BaseCaseNotesHistoryViewSet, AscCaseOrderingFilter, \
-    BaseCSVUploadReadOnlyViewSet
+    BaseCSVUploadReadOnlyViewSet, BaseCaseLogMixin
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -115,7 +115,8 @@ class DateRangeFilter(BaseFilterBackend):
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin, FullCaseViewSet
+    mixins.CreateModelMixin, BaseCaseLogMixin,
+    FullCaseViewSet
 ):
     serializer_class = CaseListSerializer
     serializer_detail_class = CaseSerializer  # using CreateCaseSerializer during creation
@@ -260,15 +261,8 @@ class CaseViewSet(
     def assign_alternative_help(self, request, **kwargs):
         return self._form_action(request, AlternativeHelpForm)
 
-    def post_save(self, obj, created=False):
-        super(CaseViewSet, self).post_save(obj, created=created)
-
-        if created:
-            event = event_registry.get_event('case')()
-            event.process(
-                obj, status='created', created_by=self.request.user,
-                notes="Case created"
-            )
+    def get_log_notes(self, obj):
+        return "Case created"
 
     @link()
     def search_for_personal_details(self, request, reference=None, **kwargs):

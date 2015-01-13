@@ -581,8 +581,7 @@ class DBExportView(APIView):
 
     authentication_classes = (OBIEESignatureAuthentication,)
     throttle_classes = (OBIEERateThrottle,)
-    #permission_classes = (permissions.IsAuthenticated,)
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     filename = 'cla_database.zip'
 

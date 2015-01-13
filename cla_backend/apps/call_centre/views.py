@@ -1,3 +1,4 @@
+import sys
 import os
 import tempfile
 from zipfile import ZipFile
@@ -116,9 +117,11 @@ class DateRangeFilter(BaseFilterBackend):
         end_date = request.QUERY_PARAMS.get('end', None)
 
         if start_date is not None:
-            filter['{field}__gte'.format(field=view.date_range_field)] = parser.parse(start_date).replace(tzinfo=timezone.get_current_timezone())
+            filter['{field}__gte'.format(field=view.date_range_field)] = parser.parse(
+                start_date).replace(tzinfo=timezone.get_current_timezone())
         if end_date is not None:
-            filter['{field}__lte'.format(field=view.date_range_field)] = parser.parse(end_date).replace(tzinfo=timezone.get_current_timezone())
+            filter['{field}__lte'.format(field=view.date_range_field)] = parser.parse(
+                end_date).replace(tzinfo=timezone.get_current_timezone())
 
         qs = qs.filter(**filter)
         return qs
@@ -129,9 +132,11 @@ class CaseViewSet(
     mixins.CreateModelMixin, FullCaseViewSet
 ):
     serializer_class = CaseListSerializer
-    serializer_detail_class = CaseSerializer  # using CreateCaseSerializer during creation
+    # using CreateCaseSerializer during creation
+    serializer_detail_class = CaseSerializer
 
-    queryset = Case.objects.all().select_related('diagnosis', 'eligibility_check', 'personal_details')
+    queryset = Case.objects.all().select_related(
+        'diagnosis', 'eligibility_check', 'personal_details')
     queryset_detail = Case.objects.all().select_related(
         'eligibility_check', 'personal_details',
         'adaptation_details', 'matter_type1', 'matter_type2',
@@ -160,7 +165,8 @@ class CaseViewSet(
             qs = qs.filter(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
 
         qs = qs.filter(
-            Q(requires_action_at__isnull=True) | Q(requires_action_at__lte=timezone.now())
+            Q(requires_action_at__isnull=True) | Q(
+                requires_action_at__lte=timezone.now())
         )
 
         return qs
@@ -388,7 +394,8 @@ class OutOfHoursRotaViewSet(
 class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     model = Operator
 
-    permission_classes = (CallCentreClientIDPermission, IsManagerOrMePermission)
+    permission_classes = (
+        CallCentreClientIDPermission, IsManagerOrMePermission)
     serializer_class = OperatorSerializer
 
     def get_logged_in_user_model(self):
@@ -478,6 +485,7 @@ class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
 
 
 class CaseArchivedSearchFilter(SearchFilter):
+
     def get_search_terms(self, request):
         terms = super(CaseArchivedSearchFilter, self).get_search_terms(request)
         return [term.upper() for term in terms]
@@ -490,7 +498,6 @@ class CaseArchivedViewSet(CallCentrePermissionsViewSetMixin,
                           mixins.ListModelMixin,
                           mixins.RetrieveModelMixin,
                           viewsets.GenericViewSet):
-
 
     lookup_field = 'laa_reference'
     model = CaseArchived
@@ -516,14 +523,15 @@ class CaseNotesHistoryViewSet(
 class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin,
                        BaseCSVUploadReadOnlyViewSet):
 
-
     serializer_class = CSVUploadSerializer
     serializer_detail_class = CSVUploadDetailSerializer
 
     ordering = ('-created')
+
     def get_queryset(self, *args, **kwargs):
         # only return last 18 months worth
-        after = (timezone.now() - relativedelta(months=18)).date().replace(day=1)
+        after = (
+            timezone.now() - relativedelta(months=18)).date().replace(day=1)
 
         qs = super(CSVUploadViewSet, self).get_queryset(*args, **kwargs).filter(
             month__gte=after)
@@ -532,47 +540,49 @@ class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin,
 
 class DBExportView(APIView):
     basic_sql_files = [
-        'ExportAuthUser.sql',
-        'ExportCallCentreOperator.sql',
-        'ExportDiagnosisDiagnosisTraversal.sql',
-        'ExportEventLogLog.sql',
-        'ExportKnowledgeBaseArticle.sql',
-        'ExportKnowledgeBaseArticleCategory.sql',
-        'ExportKnowledgeBaseArticleCategoryMatrix.sql',
-        'ExportLegalAidCallCentreOperator.sql',
-        'ExportLegalAidCase.sql',
-        'ExportLegalAidCaseKnowledgeBaseAssignment.sql',
-        'ExportLegalAidCategory.sql',
-        'ExportLegalAidDeductions.sql',
-        'ExportLegalAidEligibilityCheck.sql',
-        'ExportLegalAidIncome.sql',
-        'ExportLegalAidMatterType.sql',
-        'ExportLegalAidMediaCode.sql',
-        'ExportLegalAidPerson.sql',
-        'ExportLegalAidProperty.sql',
-        'ExportLegalAidSavings.sql',
-        'ExportLegalAidThirdPartyDetails.sql',
-        'ExportProviderCSVUpload.sql',
-        'ExportProviderFeedback.sql',
-        'ExportProviderOutOfHoursRota.sql',
-        'ExportProviderProvider.sql',
-        'ExportProviderProviderAllocation.sql',
-        'ExportProviderStaff.sql',
-        'ExportTimerTimer.sql',
+        'export_auth_user.sql',
+        'export_call_centre_operator.sql',
+        'export_diagnosis_diagnosis_traversal.sql',
+        'export_event_log_log.sql',
+        'export_knowledge_base_article.sql',
+        'export_knowledge_base_article_category.sql',
+        'export_knowledge_base_article_category_matrix.sql',
+        'export_legal_aid_call_centre_operator.sql',
+        'export_legal_aid_case.sql',
+        'export_legal_aid_case_knowledge_base_assignment.sql',
+        'export_legal_aid_category.sql',
+        'export_legal_aid_deductions.sql',
+        'export_legal_aid_eligibility_check.sql',
+        'export_legal_aid_income.sql',
+        'export_legal_aid_matter_type.sql',
+        'export_legal_aid_media_code.sql',
+        'export_legal_aid_person.sql',
+        'export_legal_aid_property.sql',
+        'export_legal_aid_savings.sql',
+        'export_legal_aid_third_party_details.sql',
+        'export_provider_csv_upload.sql',
+        'export_provider_feedback.sql',
+        'export_provider_out_of_hours_rota.sql',
+        'export_provider_provider.sql',
+        'export_provider_provider_allocation.sql',
+        'export_provider_staff.sql',
+        'export_timer_timer.sql',
     ]
 
     no_timestamp_sql_files = [
-        'ExportAuthGroup.sql',
-        'ExportAuthUserGroups.sql',
-        'ExportMediaCodeGroup.sql'
+
+        'export_auth_group.sql',
+        'export_auth_user_groups.sql',
+        'export_media_code_group.sql',
     ]
 
-    personal_details_sql_file = 'ExportPersonalDetails.sql'
+    personal_details_sql_file = 'export_personal_details.sql'
     sql_path = os.path.dirname(__file__)
 
     authentication_classes = (OBIEESignatureAuthentication,)
     throttle_classes = (OBIEERateThrottle,)
-    permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
 
     filename = 'cla_database.zip'
 
@@ -607,42 +617,58 @@ class DBExportView(APIView):
         return response
 
     def export_basic_tables(self, export_path, dt_from, dt_to):
-        cursor = connection.cursor()
-
         for sql in self.basic_sql_files:
-            path = os.path.join(self.sql_path, 'sql', sql)
-            with open(path, 'r') as f:
+            sql_path = os.path.join(self.sql_path, 'sql', sql)
+            with open(sql_path, 'r') as f:
                 query = f.read()
                 query = query.format(path=export_path)
 
-            cursor.execute(query, [dt_from, dt_to])
-        cursor.close()
+            csv_filename = self.csv_filename_from_sql_path(sql_path)
+            args = [dt_from, dt_to]
+
+            self.execute_csv_export(export_path, csv_filename, query, args)
 
     def export_no_timestamp_tables(self, export_path):
-        cursor = connection.cursor()
-
         for sql in self.no_timestamp_sql_files:
-            path = os.path.join(self.sql_path, 'sql', sql)
-            with open(path, 'r') as f:
+            sql_path = os.path.join(self.sql_path, 'sql', sql)
+            with open(sql_path, 'r') as f:
                 query = f.read()
-                query = query.format(path=export_path)
-            cursor.execute(query)
-        cursor.close()
+
+            csv_filename = self.csv_filename_from_sql_path(sql_path)
+
+            self.execute_csv_export(export_path, csv_filename, query)
 
     def export_personal_details(self, export_path, passphrase, dt_from, dt_to):
-        path = os.path.join(self.sql_path, 'sql',
-                            self.personal_details_sql_file)
-        with open(path, 'r') as f:
+        sql_path = os.path.join(self.sql_path, 'sql',
+                                self.personal_details_sql_file)
+
+        with open(sql_path, 'r') as f:
             query = f.read()
             de = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".\
                 format(
                     key=diversity.get_private_key()
                 )
-            query = query.format(diversity_expression=de, path=export_path)
+            query = query.format(diversity_expression=de)
 
-        cursor = connection.cursor()
-        cursor.execute(query, [passphrase, dt_from, dt_to])
-        cursor.close()
+        csv_filename = self.csv_filename_from_sql_path(
+            self.personal_details_sql_file)
+        args = [passphrase, dt_from, dt_to]
+
+        self.execute_csv_export(export_path, csv_filename, query, args)
+
+    def execute_csv_export(self, export_path, filename, query, args=None):
+        if not args:
+            args = []
+
+        with open(os.path.join(export_path, filename), 'w') as d:
+            cursor = connection.cursor()
+            q = cursor.mogrify(query, args)
+            cursor.copy_expert(q, d)
+            cursor.close()
+
+    def csv_filename_from_sql_path(self, filename):
+        filename = filename.split('/')[-1]
+        return filename.replace('export_', '').replace('.sql', '.csv')
 
     def generate_zip(self, export_path):
         os.chdir(export_path)

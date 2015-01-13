@@ -620,7 +620,6 @@ class DBExportView(APIView):
             sql_path = os.path.join(self.sql_path, 'sql', sql)
             with open(sql_path, 'r') as f:
                 query = f.read()
-                query = query.format(path=export_path)
 
             csv_filename = self.csv_filename_from_sql_path(sql_path)
             args = [dt_from, dt_to]

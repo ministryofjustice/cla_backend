@@ -83,7 +83,7 @@ class CaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         self.assertItemsEqual(
-            response.data.keys(), ['eligibility_check', 'personal_details']
+            response.data.keys(), ['personal_details']
         )
 
         self.assertEqual(Case.objects.count(), 0)

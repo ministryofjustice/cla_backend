@@ -83,7 +83,7 @@ class CaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         self.assertItemsEqual(
-            response.data.keys(), ['eligibility_check', 'personal_details']
+            response.data.keys(), ['personal_details']
         )
 
         self.assertEqual(Case.objects.count(), 0)
@@ -244,9 +244,10 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
                 timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M")
             )
         )
-        self.assertEqual(log.context, {
+        self.assertDictEqual(log.context, {
             'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': (self._default_dt + datetime.timedelta(minutes=120)).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_480': (self._default_dt + datetime.timedelta(minutes=480)).strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_15': (self._default_dt + datetime.timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 

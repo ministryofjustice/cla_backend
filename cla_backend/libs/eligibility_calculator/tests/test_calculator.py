@@ -7,11 +7,31 @@ import random
 from ..calculator import EligibilityChecker, CapitalCalculator
 from ..models import CaseData, Facts
 from .. import constants
+from ..exceptions import PropertyExpectedException
 
 from . import fixtures
 
 
 class TestCapitalCalculator(unittest.TestCase):
+    def test_incomplete_property_raises_exception(self):
+        for i in range(5):
+            prop = [24000000, 8000000, 100, True, True]
+            prop[i] = None
+            self.assertRaises(
+                PropertyExpectedException, CapitalCalculator,
+                properties=[
+                    self.make_property(*prop),
+                ]
+            )
+
+    def test_empty_properties_dont_count(self):
+        calc = CapitalCalculator(properties=[
+            self.make_property(24000000, 8000000, 50, True, True),
+            self.make_property(None, None, None, None, None),
+            self.make_property(32000000, 24000000, 50, False, False),
+        ])
+        self.assertEqual(len(calc.properties), 2)
+
     def test_without_properties(self):
         # default params
         calc = CapitalCalculator()
@@ -54,30 +74,6 @@ class TestCapitalCalculator(unittest.TestCase):
             'disputed': disputed,
             'main': main
         }
-
-    def test_with_incomplete_properties(self):
-        # Incomplete property (containing None values) should be skipped
-
-        calc = CapitalCalculator(properties=[
-            self.make_property(24000000, 8000000, 50, True, True),
-            self.make_property(None, None, None, None, None),
-            self.make_property(32000000, None, 50, False, False),
-            self.make_property(32000000, 15000000, None, False, False),
-            self.make_property(32000000, 15000000, 50, None, False),
-            self.make_property(32000000, 15000000, 50, False, None),
-            self.make_property(9000000, 8000000, 50, True, False),
-        ])
-        capital = calc.calculate_capital()
-
-        self.assertEqual(capital, 500000)
-        self.assertEqual(calc.main_property['equity'], 0)
-        self.assertDictEqual(
-            calc.calcs, {
-                'property_equities': [0, 0, 0, 0, 0, 0, 500000],
-                'property_capital': 500000,
-                'liquid_capital': 0
-            }
-        )
 
     def test_scenario_smod_1(self):
         # The applicant has a home worth £320,000 and the mortgage is £150,000.

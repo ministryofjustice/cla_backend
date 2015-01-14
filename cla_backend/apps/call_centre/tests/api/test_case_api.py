@@ -814,12 +814,15 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def _default_dt_sla_120(self):
         return self._default_dt + datetime.timedelta(minutes=120)
 
+    @property
+    def _default_dt_sla_480(self):
+        return self._default_dt + datetime.timedelta(minutes=480)
+
     def get_expected_notes(self, data):
         return 'Callback scheduled for %s. %s' % (
             timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M"),
             data['notes']
         )
-        return data['notes']
 
     def get_default_post_data(self):
         return {
@@ -835,9 +838,10 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB1')
-        self.assertEqual(log.context, {
+        self.assertDictEqual(log.context, {
             'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 
@@ -849,9 +853,10 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB2')
-        self.assertEqual(log.context, {
+        self.assertDictEqual(log.context, {
             'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 
@@ -863,9 +868,10 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB3')
-        self.assertEqual(log.context, {
+        self.assertDictEqual(log.context, {
             'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 

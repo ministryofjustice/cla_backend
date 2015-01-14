@@ -65,6 +65,7 @@ WITH
         ,trim((log.context->'requires_action_at')::text, '"')::timestamptz as requires_action_at
         ,trim((log.context->'sla_15')::text, '"')::timestamptz as sla_15
         ,trim((log.context->'sla_120')::text, '"')::timestamptz as sla_120
+        ,trim((log.context->'sla_480')::text, '"')::timestamptz as sla_480
         ,operator_first_log_after_cb1.rn
         ,operator_first_view_after_cb1.rn
         ,c.source
@@ -107,8 +108,10 @@ select
   ,requires_action_at
   ,sla_15
   ,sla_120
+  ,sla_480
   ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_15 ELSE operator_first_log_after_cb1__created > sla_15 END as is_over_sla_15
   ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_120 ELSE operator_first_log_after_cb1__created > sla_120 END as is_over_sla_120
+  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_480 ELSE operator_first_log_after_cb1__created > sla_480 END as is_over_sla_480
   ,source
   ,code
 from all_rows

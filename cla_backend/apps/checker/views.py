@@ -13,7 +13,8 @@ from knowledgebase.views import BaseArticleViewSet, \
     ArticleCategoryFilter
 
 from legalaid.models import EligibilityCheck, Property, Case
-from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet
+from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet, \
+    BaseCaseLogMixin
 from cla_common.constants import CASE_SOURCE
 
 from .serializers import EligibilityCheckSerializer, \
@@ -102,6 +103,7 @@ class PropertyViewSet(
 
 class CaseViewSet(
     PublicAPIViewSetMixin,
+    BaseCaseLogMixin,
     mixins.CreateModelMixin,
     viewsets.GenericViewSet
 ):
@@ -116,17 +118,13 @@ class CaseViewSet(
             obj.created_by = get_web_user()
         obj.source = CASE_SOURCE.WEB
 
+    def get_log_notes(self, obj):
+        return "Case created digitally"
+
     def post_save(self, obj, created=False):
         super(CaseViewSet, self).post_save(obj, created=created)
 
-        if created:
-            event = event_registry.get_event('case')()
-            event.process(
-                obj, status='created', created_by=obj.created_by,
-                notes="Case created digitally"
-            )
-
-            if obj.requires_action_at:
+        if created and obj.requires_action_at:
                 form = WebCallMeBackForm(
                     case=obj, data={},
                     requires_action_at=obj.requires_action_at

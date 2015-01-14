@@ -1,5 +1,10 @@
+import contextlib
+import os
+
+
 class NoDefaultProvided(object):
     pass
+
 
 def getattrd(obj, name, default=NoDefaultProvided):
     """
@@ -29,6 +34,7 @@ def _transform_patch_line(item):
         'value': item.get('value', 'None')
     }
 
+
 def format_patch(patch):
     lines = []
     for change in patch:
@@ -37,3 +43,10 @@ def format_patch(patch):
     return '\n'.join(lines)
 
 
+@contextlib.contextmanager
+def remember_cwd():
+    curdir = os.getcwd()
+    try:
+        yield
+    finally:
+        os.chdir(curdir)

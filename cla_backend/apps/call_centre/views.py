@@ -1,4 +1,3 @@
-import sys
 import os
 import tempfile
 from zipfile import ZipFile
@@ -33,6 +32,7 @@ from cla_auth.auth import OBIEESignatureAuthentication
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.mixins import FormActionMixin
+from core.utils import remember_cwd
 
 from timer.views import BaseTimerViewSet
 
@@ -669,13 +669,14 @@ class DBExportView(APIView):
         return filename.replace('export_', '').replace('.sql', '.csv')
 
     def generate_zip(self, export_path):
-        os.chdir(export_path)
-        zp = open(self.filename, 'w+b')
+        with remember_cwd():
+            os.chdir(export_path)
+            zp = open(self.filename, 'w+b')
 
-        with ZipFile(zp, 'w') as z:
-            for root, dirs, files in os.walk('.'):
-                for f in filter(lambda x: x.endswith('.csv'), files):
-                    z.write(f)
-        zp.seek(0)
+            with ZipFile(zp, 'w') as z:
+                for root, dirs, files in os.walk('.'):
+                    for f in filter(lambda x: x.endswith('.csv'), files):
+                        z.write(f)
+            zp.seek(0)
 
         return zp

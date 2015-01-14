@@ -310,8 +310,10 @@ class MICB1Extract(SQLFileDateRangeReport):
             ,"requires_action_at"
             ,"sla_15"
             ,"sla_120"
+            ,"sla_480"
             ,"is_over_sla_15"
             ,"is_over_sla_120"
+            ,"is_over_sla_480"
             ,"Source"
             ,"Code"
         ]

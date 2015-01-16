@@ -1,5 +1,5 @@
 import os
-from datetime import timedelta, time, datetime
+from datetime import timedelta, time, datetime, date
 from cla_eventlog import event_registry
 
 from django import forms
@@ -59,8 +59,14 @@ class DateRangeReportForm(ReportForm):
                 self.cleaned_data['date_to'] + timedelta(days=1))
         )
 
+def year_range(backward=0, forward=10):
+    this_year = date.today().year
+    return range(this_year-backward, this_year+forward)
+
 class MonthRangeReportForm(ReportForm):
-    date = forms.DateField(widget=MonthYearWidget)
+    date = forms.DateField(widget=MonthYearWidget(
+        years=year_range(backward=4, forward=3)
+    ))
 
     @property
     def month(self):

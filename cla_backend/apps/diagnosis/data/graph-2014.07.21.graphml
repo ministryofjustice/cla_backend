@@ -5696,7 +5696,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
     <node id="n258">
       <data key="d4"><![CDATA[The client's problem is about admissions]]></data>
       <data key="d5"><![CDATA[Admissions]]></data>
-      <data key="d9">1</data>
+      <data key="d9">3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12285.084920634921" y="375.0"/>
@@ -5716,7 +5716,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
     <node id="n259">
       <data key="d4"><![CDATA[Bullying problem]]></data>
       <data key="d5"><![CDATA[Bullying]]></data>
-      <data key="d9">2</data>
+      <data key="d9">9</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10119.461111111112" y="375.0"/>
@@ -5736,7 +5736,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
     <node id="n260">
       <data key="d4"><![CDATA[A child or young person is out of school or in a Pupil Referral Unit]]></data>
       <data key="d5"><![CDATA[Child out of school]]></data>
-      <data key="d9">3</data>
+      <data key="d9">1</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10299.461111111112" y="375.0"/>
@@ -5756,7 +5756,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
     <node id="n261">
       <data key="d4"><![CDATA[Exclusion from school ]]></data>
       <data key="d5"><![CDATA[Exclusions]]></data>
-      <data key="d9">9</data>
+      <data key="d9">2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10659.461111111112" y="375.0"/>

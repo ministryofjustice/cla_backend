@@ -623,6 +623,52 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         )
 
 
+class FutureCallbacksCaseTestCase(BaseCaseTestCase):
+    def test_get_list(self):
+        Case.objects.all().delete()
+
+        now = timezone.now()
+        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        # obj1.requires_action_at == past => EXCLUDED
+        # obj2.requires_action_at == None => EXCLUDED
+        # obj3.requires_action_at == start_of_day+7 => INCLUDED
+        # obj4.requires_action_at > start_of_day+7 => EXCLUDED
+        # obj5.requires_action_at == start_of_day => INCLUDED
+        obj1 = make_recipe(
+            'legalaid.case', reference='ref1',
+            requires_action_at=start_of_day - datetime.timedelta(seconds=1)
+        )
+        obj2 = make_recipe(
+            'legalaid.case', reference='ref2',
+            requires_action_at=None
+        )
+        obj3 = make_recipe(
+            'legalaid.case', reference='ref3',
+            requires_action_at=start_of_day + datetime.timedelta(days=7) - datetime.timedelta(seconds=1)
+        )
+        obj4 = make_recipe(
+            'legalaid.case', reference='ref4',
+            requires_action_at=start_of_day + datetime.timedelta(days=7)
+        )
+        obj5 = make_recipe(
+            'legalaid.case', reference='ref5',
+            requires_action_at=start_of_day
+        )
+
+        # searching
+        url = reverse('call_centre:case-future-callbacks')
+        response = self.client.get(
+            url, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(2, len(response.data))
+        self.assertItemsEqual(
+            [case['reference'] for case in response.data],
+            ['ref5', 'ref3']
+        )
+
+
 class SearchForPersonalDetailsTestCase(BaseCaseTestCase):
     def make_resource(self, **kwargs):
         """

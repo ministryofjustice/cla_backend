@@ -122,7 +122,7 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
 
 
 class CaseSerializer(CaseSerializerBase):
-    eligibility_check = UUIDSerializer(slug_field='reference')
+    eligibility_check = UUIDSerializer(slug_field='reference', required=False)
     adaptation_details = AdaptationDetailsSerializer(required=False)
     personal_details = PersonalDetailsSerializer()
     requires_action_at = serializers.DateTimeField(required=False)

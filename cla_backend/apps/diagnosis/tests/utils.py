@@ -25,7 +25,9 @@ class MockedGraph(mock.MagicMock):
             '3ab': {'label': '3ab', 'order': 1, 'context': None, 'help': None},
             '3ba': {'label': '3ba', 'order': 1, 'context': None, 'help': None},
             'INSCOPE': {'label': 'INSCOPE', 'order': 1, 'context': {
-                'category': 'debt'
+                'category': 'debt',
+                'matter-type-1': 'mt1',
+                'matter-type-2': 'mt2'
             }, 'help': None},
         }
         self.children = {

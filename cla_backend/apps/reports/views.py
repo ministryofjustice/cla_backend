@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
     MISurveyExtract, MICB1Extract, MIVoiceReport
+from reports.forms import MIDigitalCaseTypesExtract
 
 
 def report_view(form_class, title, template='case_report'):
@@ -104,4 +105,11 @@ def mi_cb1_extract():
 @permission_required('legalaid.run_reports')
 @report_view(MIVoiceReport, 'MI Voice Report')
 def mi_voice_extract():
+    pass
+
+
+@staff_member_required
+@permission_required('legalaid.run_reports')
+@report_view(MIDigitalCaseTypesExtract, 'MI Digital Case Types Report')
+def mi_digital_case_type_extract():
     pass

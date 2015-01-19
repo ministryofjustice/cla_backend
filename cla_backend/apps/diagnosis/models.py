@@ -4,7 +4,7 @@ from model_utils.models import TimeStampedModel
 
 from django.db import models
 
-from cla_common.constants import DIAGNOSIS_SCOPE
+from cla_common.constants import DIAGNOSIS_SCOPE, MATTER_TYPE_LEVELS
 
 
 class DiagnosisTraversalManager(models.Manager):
@@ -27,6 +27,16 @@ class DiagnosisTraversal(TimeStampedModel):
 
     state = models.CharField(blank=True, null=True, max_length=50, default=DIAGNOSIS_SCOPE.UNKNOWN)
     category = models.ForeignKey('legalaid.Category', null=True, blank=True)
+    matter_type1 = models.ForeignKey(
+        'legalaid.MatterType', blank=True, null=True,
+        limit_choices_to={'level': MATTER_TYPE_LEVELS.ONE},
+        related_name='+'
+    )
+    matter_type2 = models.ForeignKey(
+        'legalaid.MatterType', blank=True, null=True,
+        limit_choices_to={'level': MATTER_TYPE_LEVELS.TWO},
+        related_name='+'
+    )
 
     objects = DiagnosisTraversalManager()
 

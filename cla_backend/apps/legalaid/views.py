@@ -181,10 +181,10 @@ class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet
 
         means_test_event = event_registry.get_event('means_test')()
         status = 'changed' if not created else 'created'
-
         kwargs = {
             'created_by': user,
-            'status': status
+            'status': status,
+            'context': {'state': obj.state}
         }
         kwargs = self.get_means_test_event_kwargs(kwargs)
         means_test_event.process(obj.case, **kwargs)
@@ -293,26 +293,24 @@ class BaseCaseOrderingFilter(OrderingFilter):
 
     def filter_queryset(self, request, queryset, view):
         ordering = self.get_ordering(request)
-
-        if ordering:
-            ordering = self.remove_invalid_fields(queryset, ordering, view)
-
-            if isinstance(ordering, basestring):
-                if ',' in ordering:
-                    ordering = ordering.split(',')
-                else:
-                    ordering = [ordering]
-
-            if 'modified' not in ordering and '-modified' not in ordering:
-                ordering.append(self.default_modified)
-
         if not ordering:
             ordering = self.get_default_ordering(view)
 
-        if ordering:
-            return queryset.order_by(*ordering)
+        if isinstance(ordering, basestring):
+            if ',' in ordering:
+                ordering = ordering.split(',')
+            else:
+                ordering = [ordering]
 
-        return queryset
+        if 'requires_action_at' not in ordering:
+            ordering.append('requires_action_at')
+
+        if 'modified' not in ordering:
+            ordering.append(self.default_modified)
+
+        ordering = self.remove_invalid_fields(queryset, ordering, view)
+
+        return queryset.order_by(*ordering)
 
 
 class AscCaseOrderingFilter(BaseCaseOrderingFilter):
@@ -322,6 +320,29 @@ class AscCaseOrderingFilter(BaseCaseOrderingFilter):
 class DescCaseOrderingFilter(BaseCaseOrderingFilter):
     default_modified = '-modified'
 
+
+class BaseCaseLogMixin(object):
+
+    def get_log_notes(self, obj):
+        raise NotImplementedError()
+
+    def get_log_context(self, obj):
+        context = {}
+        if obj.eligibility_check:
+            context['eligibility_state'] = obj.eligibility_check.state
+        return context
+
+    def post_save(self, obj, created=False):
+        super(BaseCaseLogMixin, self).post_save(obj, created=created)
+
+        if created:
+            event = event_registry.get_event('case')()
+            event.process(
+                obj, status='created',
+                created_by=obj.created_by,
+                notes=self.get_log_notes(obj),
+                context=self.get_log_context(obj)
+            )
 
 class FullCaseViewSet(
     DetailSerializerMixin,
@@ -343,10 +364,12 @@ class FullCaseViewSet(
         SearchFilter,
     )
 
-    ordering_fields = ('modified', 'personal_details__full_name',
-            'personal_details__date_of_birth', 'personal_details__postcode',
-            'eligibility_check__category__name', 'priority', 'null_priority')
-    ordering = ('null_priority', '-priority', 'modified')
+    ordering_fields = (
+        'modified', 'personal_details__full_name', 'requires_action_at',
+        'personal_details__date_of_birth', 'personal_details__postcode',
+        'eligibility_check__category__name', 'priority', 'null_priority'
+    )
+    ordering = ['-priority']
 
     search_fields = (
         'personal_details__full_name',

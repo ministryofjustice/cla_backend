@@ -24,7 +24,20 @@ class DiagnosisSerializerTestCase(TestCase):
         )
 
     def setUp(self):
-        self.category = make_recipe('legalaid.Category', code='debt')
+        graph_inscope_context = self.mocked_graph.node['INSCOPE']['context']
+        self.category = make_recipe(
+            'legalaid.Category', code=graph_inscope_context['category']
+        )
+        self.matter_type1 = make_recipe(
+            'legalaid.matter_type1',
+            code=graph_inscope_context['matter-type-1'],
+            category=self.category
+        )
+        self.matter_type2 = make_recipe(
+            'legalaid.matter_type2',
+            code=graph_inscope_context['matter-type-2'],
+            category=self.category
+        )
 
     # GET
 
@@ -52,6 +65,8 @@ class DiagnosisSerializerTestCase(TestCase):
         self.assertEqual(data['current_node_id'], '2a')
         self.assertEqual(data['state'], DIAGNOSIS_SCOPE.UNKNOWN)
         self.assertEqual(data['category'], None)
+        self.assertEqual(data['matter_type1'], None)
+        self.assertEqual(data['matter_type2'], None)
         self.assertEqual(data['version_in_conflict'], False)
 
     def test_get_with_ongoing_diagnosis_different_version(self):
@@ -75,6 +90,8 @@ class DiagnosisSerializerTestCase(TestCase):
         self.assertEqual(data['current_node_id'], '2a')
         self.assertEqual(data['state'], DIAGNOSIS_SCOPE.UNKNOWN)
         self.assertEqual(data['category'], None)
+        self.assertEqual(data['matter_type1'], None)
+        self.assertEqual(data['matter_type2'], None)
         self.assertEqual(data['version_in_conflict'], True)
 
     def test_get_with_inscope_diagnosis_different_version(self):
@@ -90,6 +107,9 @@ class DiagnosisSerializerTestCase(TestCase):
                 self.mocked_graph.get_node_dict('3ab'),
                 self.mocked_graph.get_node_dict('INSCOPE'),
             ],
+            category=self.category,
+            matter_type1=self.matter_type1,
+            matter_type2=self.matter_type2,
             state=DIAGNOSIS_SCOPE.INSCOPE
         )
         serializer = DiagnosisSerializer(instance=traversal)
@@ -100,6 +120,9 @@ class DiagnosisSerializerTestCase(TestCase):
             self.mocked_graph.get_node_dict('INSCOPE'),
         ])
         self.assertItemsEqual(data['choices'], [])
+        self.assertItemsEqual(data['category'], self.category.code)
+        self.assertItemsEqual(data['matter_type1'], self.matter_type1.code)
+        self.assertItemsEqual(data['matter_type2'], self.matter_type2.code)
         self.assertEqual(data['version_in_conflict'], False)
 
     def test_get_with_new_diagnosis(self):
@@ -121,6 +144,8 @@ class DiagnosisSerializerTestCase(TestCase):
         self.assertEqual(data['current_node_id'], '')
         self.assertEqual(data['state'], DIAGNOSIS_SCOPE.UNKNOWN)
         self.assertEqual(data['category'], None)
+        self.assertEqual(data['matter_type1'], None)
+        self.assertEqual(data['matter_type2'], None)
         self.assertEqual(data['version_in_conflict'], False)
 
     # MOVE DOWN (update)
@@ -176,8 +201,10 @@ class DiagnosisSerializerTestCase(TestCase):
             self.mocked_graph.get_node_dict('3ab'),
             self.mocked_graph.get_node_dict('INSCOPE')
         ])
-        self.assertEqual(traversal.category.code, 'debt')
         self.assertEqual(traversal.state, DIAGNOSIS_SCOPE.INSCOPE)
+        self.assertEqual(traversal.category.code, self.category.code)
+        self.assertEqual(traversal.matter_type1.code, self.matter_type1.code)
+        self.assertEqual(traversal.matter_type2.code, self.matter_type2.code)
 
     # MOVE UP
 
@@ -218,6 +245,8 @@ class DiagnosisSerializerTestCase(TestCase):
                 self.mocked_graph.get_node_dict('INSCOPE'),
             ],
             category=self.category,
+            matter_type1=self.matter_type1,
+            matter_type2=self.matter_type2,
             state=DIAGNOSIS_SCOPE.INSCOPE
         )
         serializer = DiagnosisSerializer(instance=traversal)
@@ -230,4 +259,6 @@ class DiagnosisSerializerTestCase(TestCase):
             self.mocked_graph.get_node_dict('2a')
         ])
         self.assertEqual(traversal.category, None)
+        self.assertEqual(traversal.matter_type1, None)
+        self.assertEqual(traversal.matter_type2, None)
         self.assertEqual(traversal.state, DIAGNOSIS_SCOPE.UNKNOWN)

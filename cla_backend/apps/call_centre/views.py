@@ -1,3 +1,4 @@
+import datetime
 import os
 import tempfile
 from zipfile import ZipFile
@@ -31,6 +32,7 @@ from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 from cla_auth.auth import OBIEESignatureAuthentication
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
+from core.drf.decorators import list_route
 from core.drf.mixins import FormActionMixin
 from core.utils import remember_cwd
 
@@ -43,7 +45,7 @@ from legalaid.views import BaseUserViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
     BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
     BaseCaseNotesHistoryViewSet, AscCaseOrderingFilter, \
-    BaseCSVUploadReadOnlyViewSet
+    BaseCSVUploadReadOnlyViewSet, BaseCaseLogMixin
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -129,7 +131,8 @@ class DateRangeFilter(BaseFilterBackend):
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin, FullCaseViewSet
+    mixins.CreateModelMixin, BaseCaseLogMixin,
+    FullCaseViewSet
 ):
     serializer_class = CaseListSerializer
     # using CreateCaseSerializer during creation
@@ -177,6 +180,24 @@ class CaseViewSet(
         user = self.request.user
         if not obj.pk and not isinstance(user, AnonymousUser):
             obj.created_by = user
+
+    @list_route()
+    def future_callbacks(self, request, **kwargs):
+        """
+        Returns a list of callback cases between start_of_day and
+            start_of_day + 7 days (excluded)
+        """
+        now = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        in_7_days = now + datetime.timedelta(days=7)
+        qs = self.get_queryset().filter(
+            requires_action_at__gte=now,
+            requires_action_at__lt=in_7_days
+        ).order_by('requires_action_at')
+        self.object_list = self.filter_queryset(qs)
+
+        serializer = self.get_serializer(self.object_list, many=True)
+
+        return DRFResponse(serializer.data)
 
     @link()
     def assign_suggest(self, request, reference=None, **kwargs):
@@ -277,15 +298,8 @@ class CaseViewSet(
     def assign_alternative_help(self, request, **kwargs):
         return self._form_action(request, AlternativeHelpForm)
 
-    def post_save(self, obj, created=False):
-        super(CaseViewSet, self).post_save(obj, created=created)
-
-        if created:
-            event = event_registry.get_event('case')()
-            event.process(
-                obj, status='created', created_by=self.request.user,
-                notes="Case created"
-            )
+    def get_log_notes(self, obj):
+        return "Case created"
 
     @link()
     def search_for_personal_details(self, request, reference=None, **kwargs):

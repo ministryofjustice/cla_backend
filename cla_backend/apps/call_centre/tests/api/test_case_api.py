@@ -520,32 +520,53 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         # obj3.requires_action_by == OPERATOR => INCLUDED
         # obj4.requires_action_at > now => EXCLUDED
         # obj5.requires_action_at < now => INCLUDED
+        # obj6.requires_action_at < now => INCLUDED
+        # obj7.requires_action_at < now => INCLUDED
         obj1 = make_recipe(
             'legalaid.case',
             reference='ref1', provider=self.provider,
+            outcome_code='REF-EXT',
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER
         )
         obj2 = make_recipe(
             'legalaid.case',
             reference='ref2', provider=None,
+            outcome_code='MIS',
             requires_action_by=None
         )
         obj3 = make_recipe(
             'legalaid.case',
             reference='ref3', provider=None,
+            outcome_code='COI',
             requires_action_by=REQUIRES_ACTION_BY.OPERATOR
         )
         obj4 = make_recipe(
             'legalaid.case',
             reference='ref4', provider=None,
             requires_action_by=REQUIRES_ACTION_BY.OPERATOR,
+            outcome_code='CB1',
             requires_action_at=now + datetime.timedelta(seconds=2)
         )
         obj5 = make_recipe(
             'legalaid.case',
             reference='ref5', provider=None,
             requires_action_by=REQUIRES_ACTION_BY.OPERATOR,
+            outcome_code='CB1',
             requires_action_at=now - datetime.timedelta(seconds=1)
+        )
+        obj6 = make_recipe(
+            'legalaid.case',
+            reference='ref6', provider=None,
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR,
+            outcome_code='CB1',
+            requires_action_at=now - datetime.timedelta(days=1)
+        )
+        obj7 = make_recipe(
+            'legalaid.case',
+            reference='ref7', provider=None,
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR,
+            outcome_code='CB2',
+            requires_action_at=now - datetime.timedelta(days=2)
         )
 
         # searching via dashboard param => should return obj3, obj4, obj5
@@ -554,10 +575,10 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(2, len(response.data['results']))
-        self.assertItemsEqual(
+        self.assertEqual(4, len(response.data['results']))
+        self.assertEqual(
             [case['reference'] for case in response.data['results']],
-            ['ref3', 'ref5']
+            ['ref3', 'ref6', 'ref5', 'ref7']
         )
 
         # searching without dashboard param => should return all of them
@@ -566,10 +587,10 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(5, len(response.data['results']))
-        self.assertItemsEqual(
+        self.assertEqual(7, len(response.data['results']))
+        self.assertEqual(
             [case['reference'] for case in response.data['results']],
-            ['ref1', 'ref2', 'ref3', 'ref4', 'ref5']
+            ['ref1', 'ref2', 'ref3', 'ref6', 'ref5', 'ref4', 'ref7']
         )
 
     # person_ref PARAM
@@ -620,6 +641,52 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         self.assertItemsEqual(
             [case['reference'] for case in response.data['results']],
             ['ref2']
+        )
+
+
+class FutureCallbacksCaseTestCase(BaseCaseTestCase):
+    def test_get_list(self):
+        Case.objects.all().delete()
+
+        now = timezone.now()
+        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        # obj1.requires_action_at == past => EXCLUDED
+        # obj2.requires_action_at == None => EXCLUDED
+        # obj3.requires_action_at == start_of_day+7 => INCLUDED
+        # obj4.requires_action_at > start_of_day+7 => EXCLUDED
+        # obj5.requires_action_at == start_of_day => INCLUDED
+        obj1 = make_recipe(
+            'legalaid.case', reference='ref1',
+            requires_action_at=start_of_day - datetime.timedelta(seconds=1)
+        )
+        obj2 = make_recipe(
+            'legalaid.case', reference='ref2',
+            requires_action_at=None
+        )
+        obj3 = make_recipe(
+            'legalaid.case', reference='ref3',
+            requires_action_at=start_of_day + datetime.timedelta(days=7) - datetime.timedelta(seconds=1)
+        )
+        obj4 = make_recipe(
+            'legalaid.case', reference='ref4',
+            requires_action_at=start_of_day + datetime.timedelta(days=7)
+        )
+        obj5 = make_recipe(
+            'legalaid.case', reference='ref5',
+            requires_action_at=start_of_day
+        )
+
+        # searching
+        url = reverse('call_centre:case-future-callbacks')
+        response = self.client.get(
+            url, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(2, len(response.data))
+        self.assertItemsEqual(
+            [case['reference'] for case in response.data],
+            ['ref5', 'ref3']
         )
 
 
@@ -814,12 +881,15 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def _default_dt_sla_120(self):
         return self._default_dt + datetime.timedelta(minutes=120)
 
+    @property
+    def _default_dt_sla_480(self):
+        return self._default_dt + datetime.timedelta(minutes=480)
+
     def get_expected_notes(self, data):
         return 'Callback scheduled for %s. %s' % (
             timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M"),
             data['notes']
         )
-        return data['notes']
 
     def get_default_post_data(self):
         return {
@@ -835,9 +905,10 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB1')
-        self.assertEqual(log.context, {
+        self.assertDictEqual(log.context, {
             'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 
@@ -849,9 +920,10 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB2')
-        self.assertEqual(log.context, {
+        self.assertDictEqual(log.context, {
             'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 
@@ -863,9 +935,10 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB3')
-        self.assertEqual(log.context, {
+        self.assertDictEqual(log.context, {
             'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 

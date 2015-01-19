@@ -1,4 +1,5 @@
 from . import constants
+from . import exceptions
 
 
 class cached_calcs_property(object):
@@ -29,6 +30,17 @@ class CapitalCalculator(object):
     def _parse_props(self, props):
         l = []
         for p in (props or []):
+            # check property
+            invalid_props, is_empty = self._is_property_invalid(p)
+            if invalid_props:
+                if not is_empty:
+                    raise exceptions.PropertyExpectedException(
+                        "'Property' requires attribute '{kw}' and was not given at __init__".format(
+                            kw=invalid_props
+                        )
+                    )
+                continue
+
             parsed_prop = p.copy()
             parsed_prop['equity'] = 0
             l.append(parsed_prop)
@@ -53,15 +65,21 @@ class CapitalCalculator(object):
                 self._other_properties = [prop for prop in self.properties if not prop['main']]
         return self._other_properties
 
-    def _is_property_valid(self, prop):
+    def _is_property_invalid(self, prop):
+        """
+        Returns tuple (<is-invalid>, <is-empty>) where:
+            is-invalid: is a list of invalid (none-values) keys
+            is-empty: True if all the values are None
+        """
         if not prop:
-            return False
+            return (True, True)
 
-        return not any(v is None for v in prop.values())
+        none_values = [k for k, v in prop.items() if v == None]
+        return (none_values, len(none_values) == len(prop))
 
     # for each other property
     def _calculate_property_equity(self, prop):
-        if not self._is_property_valid(prop):
+        if not prop:
             return
 
         mortgage_disregard = min(prop['mortgage_left'], self.mortgage_disregard_available)

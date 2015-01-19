@@ -1089,3 +1089,4 @@ class NestedEligibilityCheckAPIMixin(NestedSimpleResourceAPIMixin, EligibilityCh
         """
         ### DETAIL
         self._test_delete_not_allowed(self.detail_url)
+

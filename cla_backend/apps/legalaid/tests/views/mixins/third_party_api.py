@@ -93,7 +93,12 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
         else:
             for prop in ['pass_phrase', 'reason', 'personal_relationship',
                          'personal_relationship_note']:
-                val = obj[prop] if isinstance(obj, dict) else unicode(getattr(obj, prop))
+                if isinstance(obj, dict):
+                    val = obj[prop]
+                else:
+                    val = getattr(obj, prop)
+                    if val:
+                        val = unicode(val)
                 self.assertEqual(val, data[prop])
 
     def test_methods_not_allowed(self):

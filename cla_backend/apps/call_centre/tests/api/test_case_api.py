@@ -520,6 +520,8 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         # obj3.requires_action_by == OPERATOR => INCLUDED
         # obj4.requires_action_at > now => EXCLUDED
         # obj5.requires_action_at < now => INCLUDED
+        # obj6.requires_action_at < now => INCLUDED
+        # obj7.requires_action_at < now => INCLUDED
         obj1 = make_recipe(
             'legalaid.case',
             reference='ref1', provider=self.provider,
@@ -539,13 +541,29 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             'legalaid.case',
             reference='ref4', provider=None,
             requires_action_by=REQUIRES_ACTION_BY.OPERATOR,
+            outcome_code='CB1',
             requires_action_at=now + datetime.timedelta(seconds=2)
         )
         obj5 = make_recipe(
             'legalaid.case',
             reference='ref5', provider=None,
             requires_action_by=REQUIRES_ACTION_BY.OPERATOR,
+            outcome_code='CB1',
             requires_action_at=now - datetime.timedelta(seconds=1)
+        )
+        obj6 = make_recipe(
+            'legalaid.case',
+            reference='ref6', provider=None,
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR,
+            outcome_code='CB1',
+            requires_action_at=now - datetime.timedelta(days=1)
+        )
+        obj7 = make_recipe(
+            'legalaid.case',
+            reference='ref7', provider=None,
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR,
+            outcome_code='CB2',
+            requires_action_at=now - datetime.timedelta(days=2)
         )
 
         # searching via dashboard param => should return obj3, obj4, obj5
@@ -554,10 +572,10 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(2, len(response.data['results']))
-        self.assertItemsEqual(
+        self.assertEqual(4, len(response.data['results']))
+        self.assertEqual(
             [case['reference'] for case in response.data['results']],
-            ['ref3', 'ref5']
+            ['ref6', 'ref5', 'ref7', 'ref3']
         )
 
         # searching without dashboard param => should return all of them
@@ -566,10 +584,10 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(5, len(response.data['results']))
-        self.assertItemsEqual(
+        self.assertEqual(7, len(response.data['results']))
+        self.assertEqual(
             [case['reference'] for case in response.data['results']],
-            ['ref1', 'ref2', 'ref3', 'ref4', 'ref5']
+            ['ref6', 'ref5', 'ref4', 'ref7', 'ref1', 'ref2', 'ref3']
         )
 
     # person_ref PARAM

@@ -525,16 +525,19 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         obj1 = make_recipe(
             'legalaid.case',
             reference='ref1', provider=self.provider,
+            outcome_code='REF-EXT',
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER
         )
         obj2 = make_recipe(
             'legalaid.case',
             reference='ref2', provider=None,
+            outcome_code='MIS',
             requires_action_by=None
         )
         obj3 = make_recipe(
             'legalaid.case',
             reference='ref3', provider=None,
+            outcome_code='COI',
             requires_action_by=REQUIRES_ACTION_BY.OPERATOR
         )
         obj4 = make_recipe(
@@ -575,7 +578,7 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         self.assertEqual(4, len(response.data['results']))
         self.assertEqual(
             [case['reference'] for case in response.data['results']],
-            ['ref6', 'ref5', 'ref7', 'ref3']
+            ['ref3', 'ref6', 'ref5', 'ref7']
         )
 
         # searching without dashboard param => should return all of them
@@ -587,7 +590,7 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         self.assertEqual(7, len(response.data['results']))
         self.assertEqual(
             [case['reference'] for case in response.data['results']],
-            ['ref6', 'ref5', 'ref4', 'ref7', 'ref1', 'ref2', 'ref3']
+            ['ref1', 'ref2', 'ref3', 'ref6', 'ref5', 'ref4', 'ref7']
         )
 
     # person_ref PARAM

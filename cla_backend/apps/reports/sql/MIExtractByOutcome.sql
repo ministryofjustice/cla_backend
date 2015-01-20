@@ -1,71 +1,55 @@
 WITH latest_outcome as (
     select
       e.*
-      FROM legalaid_case c
+      ,row_number() over (PARTITION BY e.case_id order by e.id desc) as rn
+    FROM legalaid_case c
       join cla_eventlog_log e on e.case_id = c.id
-
-    where  e.id = (
-      SELECT MAX(l.id) FROM cla_eventlog_log l WHERE
-        l.case_id = c.id
-        and l.type = 'outcome'
-      group by l.case_id)
+    where
+      e.type = 'outcome'
 
 ),
-operator_first_access as (
-    SELECT e.* FROM
-      cla_eventlog_log as e
-
-    WHERE
-      e.id = (SELECT MIN(l.id) FROM cla_eventlog_log l
-        JOIN auth_user as u on l.created_by_id = u.id
+    operator_first_access as (
+      SELECT e.*
+        ,row_number() over (PARTITION BY e.case_id order by e.id asc) as rn
+      FROM
+        cla_eventlog_log as e
+        JOIN auth_user as u on e.created_by_id = u.id
         JOIN call_centre_operator as op on u.id = op.user_id
-      WHERE l.case_id = e.case_id
-            and l.code != 'CASE_CREATED'
-      group by l.case_id)
+      WHERE
+        e.code != 'CASE_CREATED'
 
-
-),
-operator_first_action as (
-    SELECT e.* FROM
-      cla_eventlog_log as e
-
-    WHERE
-      e.id = (SELECT MIN(l.id) FROM cla_eventlog_log l
-        JOIN auth_user as u on l.created_by_id = u.id
+  ),
+    operator_first_action as (
+      SELECT e.*
+        ,row_number() over (PARTITION BY e.case_id order by e.id asc) as rn
+      FROM
+        cla_eventlog_log as e
+        JOIN auth_user as u on e.created_by_id = u.id
         JOIN call_centre_operator as op on u.id = op.user_id
-      WHERE l.case_id = e.case_id
-            and l.code != 'CASE_CREATED'
-            and l.level >= 29
-      group by l.case_id)
-
-
-),
+      WHERE
+        e.code != 'CASE_CREATED'
+        and e.level >= 29
+  ),
     provider_first_view as (
+      SELECT
+        e.*
+        ,row_number() over (PARTITION BY e.case_id order by e.id asc) as rn
+      FROM
+        cla_eventlog_log AS e
+        JOIN auth_user AS u ON e.created_by_id = u.id
+        JOIN cla_provider_staff AS staff ON u.id = staff.user_id
+      WHERE
+        e.code != 'CASE_CREATED'
+
+  ), provider_first_assign as (
     SELECT
       e.*
+      ,row_number() over (PARTITION BY e.case_id order by e.id asc) as rn
     FROM
       cla_eventlog_log AS e
     WHERE
-      e.id = (SELECT
-                MIN(l.id)
-              FROM cla_eventlog_log l
-                JOIN auth_user AS u ON l.created_by_id = u.id
-                JOIN cla_provider_staff AS staff ON u.id = staff.user_id
-              WHERE l.case_id = e.case_id
-                    AND l.code != 'CASE_CREATED'
-              GROUP BY l.case_id)
-), provider_first_assign as (
-    SELECT
-      e.*
-    FROM
-      cla_eventlog_log AS e
-    WHERE
-      e.id = (SELECT
-                MIN(l.id)
-              FROM cla_eventlog_log l
-              WHERE l.case_id = e.case_id
-                    AND l.code  in ('REFSP', 'MANALC', 'MANREF', 'SPOR')
-              GROUP BY l.case_id)
+      e.code  in ('REFSP', 'MANALC', 'MANREF', 'SPOR')
+
 )
 select
   c.laa_reference as "LAA_Reference"
@@ -177,13 +161,13 @@ from cla_eventlog_log as log
   LEFT OUTER JOIN call_centre_operator as op on u.id = op.user_id
   LEFT OUTER JOIN cla_provider_staff as staff on u.id = staff.user_id
   LEFT OUTER JOIN legalaid_mediacode as mc on mc.id = c.media_code_id
-  LEFT OUTER JOIN latest_outcome on latest_outcome.case_id = c.id
-  LEFT OUTER JOIN operator_first_action on operator_first_action.case_id = c.id
-  LEFT OUTER JOIN operator_first_access on operator_first_access.case_id = c.id
-  LEFT OUTER JOIN provider_first_view on provider_first_view.case_id = c.id
-  LEFT OUTER JOIN provider_first_assign on provider_first_assign.case_id = c.id
+  LEFT OUTER JOIN latest_outcome on latest_outcome.case_id = c.id and latest_outcome.rn = 1
+  LEFT OUTER JOIN operator_first_action on operator_first_action.case_id = c.id and operator_first_action.rn = 1
+  LEFT OUTER JOIN operator_first_access on operator_first_access.case_id = c.id and operator_first_access.rn = 1
+  LEFT OUTER JOIN provider_first_view on provider_first_view.case_id = c.id and provider_first_view.rn = 1
+  LEFT OUTER JOIN provider_first_assign on provider_first_assign.case_id = c.id and provider_first_assign.rn = 1
   LEFT OUTER JOIN legalaid_case split_case on c.from_case_id = split_case.id
-  LEFT OUTER JOIN cla_provider_provider as assigned_provider on trim((log.context->'provider_id')::text, '"')::numeric = assigned_provider.id
+  LEFT OUTER JOIN cla_provider_provider as assigned_provider on (log.context->>'provider_id')::numeric = assigned_provider.id
   LEFT OUTER JOIN (select id, {diversity_expression} as diversity
                    from legalaid_personaldetails) as diversity_view on pd.id = diversity_view.id
 where

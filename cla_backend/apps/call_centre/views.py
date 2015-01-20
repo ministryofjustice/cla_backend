@@ -1,3 +1,5 @@
+import datetime
+
 from uuid import UUID
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
@@ -21,6 +23,7 @@ from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
+from core.drf.decorators import list_route
 from core.drf.mixins import FormActionMixin
 
 from timer.views import BaseTimerViewSet
@@ -161,6 +164,24 @@ class CaseViewSet(
         user = self.request.user
         if not obj.pk and not isinstance(user, AnonymousUser):
             obj.created_by = user
+
+    @list_route()
+    def future_callbacks(self, request, **kwargs):
+        """
+        Returns a list of callback cases between start_of_day and
+            start_of_day + 7 days (excluded)
+        """
+        now = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        in_7_days = now + datetime.timedelta(days=7)
+        qs = self.get_queryset().filter(
+            requires_action_at__gte=now,
+            requires_action_at__lt=in_7_days
+        ).order_by('requires_action_at')
+        self.object_list = self.filter_queryset(qs)
+
+        serializer = self.get_serializer(self.object_list, many=True)
+
+        return DRFResponse(serializer.data)
 
     @link()
     def assign_suggest(self, request, reference=None, **kwargs):

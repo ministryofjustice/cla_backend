@@ -293,26 +293,24 @@ class BaseCaseOrderingFilter(OrderingFilter):
 
     def filter_queryset(self, request, queryset, view):
         ordering = self.get_ordering(request)
-
-        if ordering:
-            ordering = self.remove_invalid_fields(queryset, ordering, view)
-
-            if isinstance(ordering, basestring):
-                if ',' in ordering:
-                    ordering = ordering.split(',')
-                else:
-                    ordering = [ordering]
-
-            if 'modified' not in ordering and '-modified' not in ordering:
-                ordering.append(self.default_modified)
-
         if not ordering:
             ordering = self.get_default_ordering(view)
 
-        if ordering:
-            return queryset.order_by(*ordering)
+        if isinstance(ordering, basestring):
+            if ',' in ordering:
+                ordering = ordering.split(',')
+            else:
+                ordering = [ordering]
 
-        return queryset
+        if 'requires_action_at' not in ordering:
+            ordering.append('requires_action_at')
+
+        if 'modified' not in ordering:
+            ordering.append(self.default_modified)
+
+        ordering = self.remove_invalid_fields(queryset, ordering, view)
+
+        return queryset.order_by(*ordering)
 
 
 class AscCaseOrderingFilter(BaseCaseOrderingFilter):
@@ -321,6 +319,7 @@ class AscCaseOrderingFilter(BaseCaseOrderingFilter):
 
 class DescCaseOrderingFilter(BaseCaseOrderingFilter):
     default_modified = '-modified'
+
 
 class BaseCaseLogMixin(object):
 
@@ -365,10 +364,12 @@ class FullCaseViewSet(
         SearchFilter,
     )
 
-    ordering_fields = ('modified', 'personal_details__full_name',
-            'personal_details__date_of_birth', 'personal_details__postcode',
-            'eligibility_check__category__name', 'priority', 'null_priority')
-    ordering = ('null_priority', '-priority', 'modified')
+    ordering_fields = (
+        'modified', 'personal_details__full_name', 'requires_action_at',
+        'personal_details__date_of_birth', 'personal_details__postcode',
+        'eligibility_check__category__name', 'priority', 'null_priority'
+    )
+    ordering = ['-priority']
 
     search_fields = (
         'personal_details__full_name',

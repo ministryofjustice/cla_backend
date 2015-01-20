@@ -98,9 +98,10 @@ class CaseViewSet(
         SearchFilter,
     )
 
-    ordering_fields = ('modified', 'null_priority', 'priority',
-                       'personal_details__full_name', 'personal_details__postcode')
-    ordering = ('null_priority', '-priority', '-modified')
+    ordering_fields = (
+        'modified', 'null_priority', 'priority',
+        'personal_details__full_name', 'personal_details__postcode'
+    )
 
     def get_queryset(self, **kwargs):
         """

@@ -135,6 +135,7 @@ class ProviderAllocationHelperTestCase(TestCase):
         )
 
     def test_get_suggested_provider_random(self):
+
         as_of = timezone.make_aware(
             datetime.datetime(day=8, month=12, year=2014, hour=10, minute=0),
             timezone.get_current_timezone()
@@ -161,6 +162,60 @@ class ProviderAllocationHelperTestCase(TestCase):
         helper = ProviderAllocationHelper(as_of=as_of)
         choosen_provider = helper.get_suggested_provider(category)
         self.assertEqual(choosen_provider, None)
+
+
+    def test_get_suggested_provider_best_fit(self):
+        # slightly brute force test
+        with mock.patch.dict('os.environ', {'USE_BEST_FIT_PROVIDER': 'TRUE'}):
+            as_of = timezone.make_aware(
+                datetime.datetime(day=8, month=12, year=2014, hour=10, minute=0),
+                timezone.get_current_timezone()
+            )
+
+            category = make_recipe('legalaid.category')
+
+            provider1 = make_recipe('cla_provider.provider', active=True)
+            provider2 = make_recipe('cla_provider.provider', active=True)
+            make_recipe(
+                'cla_provider.provider_allocation',
+                weighted_distribution=0.5,
+                provider=provider1,
+                category=category
+            )
+            make_recipe(
+                'cla_provider.provider_allocation',
+                weighted_distribution=1,
+                provider=provider2,
+                category=category
+            )
+
+            helper = ProviderAllocationHelper(as_of=as_of)
+            counts = {provider1: 0, provider2: 0}
+            # quick sanity check that random allocation is working
+            for i in range(100):
+                sugg = helper.get_suggested_provider(category)
+                counts[sugg] = counts[sugg] + 1
+            self.assertTrue(counts[provider2] > counts[provider1])
+
+            case1 = make_recipe('legalaid.eligible_case', diagnosis__category=category)
+            case1.assign_to_provider(provider1)
+
+
+            # cases assigned at != today are ignored, so expect same as before
+            counts = {provider1: 0, provider2: 0}
+            for i in range(100):
+                sugg = helper.get_suggested_provider(category)
+                counts[sugg] = counts[sugg] + 1
+            self.assertTrue(counts[provider2] > counts[provider1])
+
+
+            case1.provider_assigned_at = as_of
+            case1.save()
+
+            for i in range(100):
+                self.assertEqual(helper.get_suggested_provider(category), provider2)
+                # should always be provider 2
+
 
     def test_get_suggested_provider_rota(self):
         as_of = timezone.make_aware(

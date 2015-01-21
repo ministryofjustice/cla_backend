@@ -2,7 +2,6 @@ from collections import defaultdict
 import random
 import mock
 import datetime
-from os import environ
 
 from django.utils import timezone
 from django.test import TestCase
@@ -230,5 +229,4 @@ class ProviderDistributionHelperTestCase(TestCase):
 
         self.assertEqual(actual_dist_after, {provider_1.id: 2})
 
-        print actual_dist
 

@@ -23,8 +23,6 @@ from eligibility_calculator.exceptions import PropertyExpectedException
 
 from diagnosis.models import DiagnosisTraversal
 
-# from jsonfield import JSONField
-
 from cla_common.db.mixins import ModelDiffMixin
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
@@ -34,6 +32,7 @@ from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     EMAIL_SAFETY
 
 from legalaid.fields import MoneyField
+from legalaid import monitoring
 
 from cla_common.constants import CASE_SOURCE
 

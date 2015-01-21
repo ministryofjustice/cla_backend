@@ -381,7 +381,7 @@ class Migration(SchemaMigration):
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
             'no_contact_reason': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'organisation_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'pass_phrase': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'pass_phrase': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'personal_details': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.PersonalDetails']"}),
             'personal_relationship': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
             'personal_relationship_note': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
@@ -391,4 +391,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['legalaid', 'cla_eventlog']
+    complete_apps = ['legalaid']

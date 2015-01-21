@@ -32,7 +32,6 @@ from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     EMAIL_SAFETY
 
 from legalaid.fields import MoneyField
-from legalaid import monitoring
 
 from cla_common.constants import CASE_SOURCE
 

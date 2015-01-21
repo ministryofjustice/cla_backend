@@ -3,8 +3,8 @@ import datetime
 from itertools import groupby
 from operator import itemgetter
 import random
-from os import environ
 
+from django.core.cache import cache
 from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
 from django.template import Context
@@ -208,7 +208,7 @@ class ProviderAllocationHelper(object):
     def get_suggested_provider(self, category):
         if self.as_of not in PROVIDER_HOURS:
             return self._get_rota_provider(category)
-        if environ.get('USE_BEST_FIT_PROVIDER', '').upper() == 'TRUE':
+        if cache.get('USE_BEST_FIT_PROVIDER', True):
             return self._get_best_fit_provider(category)
         return self._get_random_provider(category)
 

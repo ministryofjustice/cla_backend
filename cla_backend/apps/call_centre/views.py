@@ -207,7 +207,6 @@ class CaseViewSet(
             if suggested:
                 suggested_provider = ProviderSerializer(suggested).data
                 ProviderPreAllocation.objects.pre_allocate(category, suggested, obj)
-                monitoring.log_preallocate(suggested_provider, obj, add=True)
             else:
                 suggested_provider = None
         else:
@@ -256,11 +255,7 @@ class CaseViewSet(
             provider = form.save(request.user)
 
             ProviderPreAllocation.objects.clear(case=obj)
-            monitoring.log_preallocate(provider, obj, add=False)
-
             notify_case_assigned(provider, form.case)
-
-            monitoring.log_assignment(provider, obj)
 
             provider_serialised = ProviderSerializer(provider)
             return DRFResponse(data=provider_serialised.data)

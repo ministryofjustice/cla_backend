@@ -573,11 +573,13 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         obj8 = make_recipe(
             'legalaid.empty_case',
             reference='ref8',
+            requires_action_at=now,
             requires_action_by=REQUIRES_ACTION_BY.OPERATOR
         )
         obj9 = make_recipe(
             'legalaid.empty_case',
             reference='ref9',
+            requires_action_at=now,
             requires_action_by=REQUIRES_ACTION_BY.OPERATOR
         )
         Case.objects.filter(id=obj9.id).update(

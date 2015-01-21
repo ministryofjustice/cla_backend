@@ -156,6 +156,13 @@ class CaseViewSet(
             Q(requires_action_at__isnull=True) | Q(requires_action_at__lte=timezone.now())
         )
 
+        # exclude empty cases more than 24 hours old
+        qs = qs.exclude(
+            personal_details__isnull=True, eligibility_check__isnull=True,
+            diagnosis__isnull=True, notes='',
+            modified__lte=timezone.now() - datetime.timedelta(hours=24)
+        )
+
         return qs
 
     def pre_save(self, obj, *args, **kwargs):

@@ -19,7 +19,6 @@ from cla_provider.models import Provider, OutOfHoursRota, Feedback, \
     ProviderPreAllocation
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
-from legalaid import monitoring
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 

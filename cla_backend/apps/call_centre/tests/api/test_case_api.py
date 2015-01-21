@@ -605,7 +605,7 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(9, len(response.data['results']))
-        self.assertEqual(
+        self.assertItemsEqual(
             [case['reference'] for case in response.data['results']],
             ['ref1', 'ref2', 'ref3', 'ref6', 'ref5', 'ref4', 'ref7', 'ref9', 'ref8']
         )

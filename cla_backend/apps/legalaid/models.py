@@ -23,8 +23,6 @@ from eligibility_calculator.exceptions import PropertyExpectedException
 
 from diagnosis.models import DiagnosisTraversal
 
-# from jsonfield import JSONField
-
 from cla_common.db.mixins import ModelDiffMixin
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
@@ -34,6 +32,7 @@ from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     EMAIL_SAFETY
 
 from legalaid.fields import MoneyField
+from legalaid import monitoring
 
 from cla_common.constants import CASE_SOURCE
 
@@ -574,6 +573,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     #   that is, the original case being split
     from_case = models.ForeignKey('self', blank=True, null=True, related_name='split_cases')
 
+    provider_assigned_at = models.DateTimeField(blank=True, null=True)
     provider_viewed = models.DateTimeField(blank=True, null=True)
     provider_accepted = models.DateTimeField(blank=True, null=True)
     provider_closed = models.DateTimeField(blank=True, null=True)
@@ -645,13 +645,15 @@ class Case(TimeStampedModel, ModelDiffMixin):
             'from_case': self,
             'provider_viewed': None,
             'provider_accepted': None,
-            'provider_closed': None
+            'provider_closed': None,
         }
         if assignment_internal:
             override_values['requires_action_by'] = self.requires_action_by
+            override_values['provider_assigned_at'] = self.provider_assigned_at
         else:
             override_values['provider'] = None
             override_values['requires_action_by'] = REQUIRES_ACTION_BY.OPERATOR
+            override_values['provider_assigned_at'] = None
 
         new_case = clone_model(
             cls=self.__class__,
@@ -661,7 +663,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
-                    'callback_attempt', 'search_field'
+                    'callback_attempt', 'search_field', 'provider_assigned_at'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details'
@@ -695,12 +697,13 @@ class Case(TimeStampedModel, ModelDiffMixin):
 
     def assign_to_provider(self, provider):
         self.provider = provider
+        self.provider_assigned_at = timezone.now()
         self.provider_viewed = None
         self.provider_accepted = None
         self.provider_closed = None
         self.save(update_fields=[
             'provider', 'provider_viewed', 'provider_accepted',
-            'provider_closed', 'modified'
+            'provider_closed', 'modified', 'provider_assigned_at'
         ])
         self.reset_requires_action_at()
 

@@ -34,7 +34,8 @@ class RejectCaseForm(EventSpecificLogForm):
             self.case.close_by_provider()
         else:  # if requires_action_by == REQUIRES_ACTION_BY.OPERATOR
             self.case.provider = None
-            self.case.save(update_fields=['provider'])
+            self.case.provider_assigned_at = None
+            self.case.save(update_fields=['provider', 'provider_assigned_at'])
 
         return val
 

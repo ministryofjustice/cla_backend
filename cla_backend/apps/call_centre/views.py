@@ -8,8 +8,6 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
-from historic.models import CaseArchived
-from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
@@ -17,8 +15,11 @@ from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
     SearchFilter, BaseFilterBackend
 
-from cla_provider.models import Provider, OutOfHoursRota, Feedback
-from cla_eventlog import event_registry
+from cla_provider.models import Provider, OutOfHoursRota, Feedback, \
+    ProviderPreAllocation
+from historic.models import CaseArchived
+from legalaid.permissions import IsManagerOrMePermission
+from legalaid import monitoring
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
@@ -200,10 +201,13 @@ class CaseViewSet(
 
         if hasattr(obj, 'eligibility_check') and obj.eligibility_check != None and obj.eligibility_check.category:
             category = obj.eligibility_check.category
+            ProviderPreAllocation.objects.clear(case=obj)
             suggested = helper.get_suggested_provider(category)
 
             if suggested:
                 suggested_provider = ProviderSerializer(suggested).data
+                ProviderPreAllocation.objects.pre_allocate(category, suggested, obj)
+                monitoring.log_preallocate(suggested_provider, obj, add=True)
             else:
                 suggested_provider = None
         else:
@@ -250,7 +254,14 @@ class CaseViewSet(
 
         if form.is_valid():
             provider = form.save(request.user)
+
+            ProviderPreAllocation.objects.clear(case=obj)
+            monitoring.log_preallocate(provider, obj, add=False)
+
             notify_case_assigned(provider, form.case)
+
+            monitoring.log_assignment(provider, obj)
+
             provider_serialised = ProviderSerializer(provider)
             return DRFResponse(data=provider_serialised.data)
 

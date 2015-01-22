@@ -67,19 +67,20 @@ class ProviderPreAllocationManager(models.Manager):
 
     def get_queryset(self):
         super(ProviderPreAllocationManager, self).get_queryset().filter(
-            created__lte=timezone.now() - timedelta(seconds=30)
+            created__lte=timezone.now() - timedelta(seconds=60)
         ).delete()
 
         return super(ProviderPreAllocationManager, self).get_queryset()
 
     def pre_allocate(self, category, provider, case):
         self.get_queryset().filter(case=case).delete()
-        self.get_queryset().create(category=category, provider=provider, case=case)
+        if not case.provider:
+            self.get_queryset().create(category=category, provider=provider, case=case)
 
     def clear(self, case=None):
         qs = self.get_queryset()
         if case:
-            qs.filter(case=case)
+            qs = qs.filter(case=case)
         qs.delete()
 
 class ProviderPreAllocation(TimeStampedModel):

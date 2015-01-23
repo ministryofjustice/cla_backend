@@ -25,11 +25,17 @@ class ProviderDistributionHelper(object):
         self.date = dt.replace(hour=0, minute=0, second=0)
 
     def get_distribution(self, category, include_pre_allocations=False):
+        last_update = ProviderAllocation.objects.filter(category=category).order_by('-modified').first()
+
         raw = Case.objects.filter(diagnosis__category=category)\
             .exclude(log__code='MANREF')\
             .exclude(provider=None)\
-            .filter(provider_assigned_at__gte=self.date)\
-            .values('provider')\
+            .filter(provider_assigned_at__gte=self.date)
+
+        if last_update and last_update.modified > self.date:
+            raw = raw.filter(provider_assigned_at__gte=last_update.modified)
+
+        raw = raw.values('provider')\
             .annotate(num_allocations=Count('id'))
         ret = defaultdict(int)
         for item in raw:

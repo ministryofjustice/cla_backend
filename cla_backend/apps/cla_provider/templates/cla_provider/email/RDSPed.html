@@ -1,0 +1,19 @@
+<p>
+Hello,
+</p>
+<p>
+You have received this email as notification that an RDSP code has been applied to the CLA Case with reference {{ case.reference }} at {{ now|time:"H:i" }} on {{ now|date:"D d M Y" }}.
+</p>
+<p>
+Please keep in touch with the client if the call has not been already transferred to you directly.
+To access the case, you can click on the following link, or copy and paste it into your web browser's address bar if it is not clickable:
+</p>
+<p>
+<a href="{{ case_url }}">View case {{ case.reference }}</a>
+</p>
+<p>
+Kind regards,
+</p>
+<p>
+CLA Bot
+</p>

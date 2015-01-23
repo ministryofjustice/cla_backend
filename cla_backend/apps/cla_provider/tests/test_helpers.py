@@ -1,3 +1,4 @@
+from cla_provider.models import ProviderAllocation
 import mock
 import datetime
 from collections import defaultdict
@@ -180,14 +181,15 @@ class ProviderAllocationHelperTestCase(TestCase):
             'cla_provider.provider_allocation',
             weighted_distribution=0.5,
             provider=provider1,
-            category=category
+            category=category,
         )
         make_recipe(
             'cla_provider.provider_allocation',
             weighted_distribution=1,
             provider=provider2,
-            category=category
+            category=category,
         )
+        ProviderAllocation.objects.update(modified=as_of-datetime.timedelta(days=1))
 
         helper = ProviderAllocationHelper(as_of=as_of)
         counts = {provider1: 0, provider2: 0}

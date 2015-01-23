@@ -271,6 +271,7 @@ class CSVUploadSerializer(CSVUploadSerializerBase):
             'body',
             'month',
             'created',
+            'modified',
         ]
 
 class CSVUploadDetailSerializer(CSVUploadSerializerBase):
@@ -284,6 +285,7 @@ class CSVUploadDetailSerializer(CSVUploadSerializerBase):
             'body',
             'month',
             'created',
+            'modified',
         ]
 
 class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):

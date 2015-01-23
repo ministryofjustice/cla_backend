@@ -30,6 +30,7 @@ class CSVUploadAPIMixin(SimpleResourceAPIMixin):
             'rows',
             'month',
             'created',
+            'modified',
         ]
 
     @property

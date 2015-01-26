@@ -165,7 +165,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_statsd',
     'south',
-    'hawkrest',
 )
 
 PROJECT_APPS = (

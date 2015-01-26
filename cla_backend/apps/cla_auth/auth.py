@@ -3,6 +3,7 @@ import sys
 import traceback
 
 from django.conf import settings
+from django.core.cache import cache
 
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
@@ -12,8 +13,6 @@ from provider.oauth2.models import Client
 from mohawk import Receiver
 from mohawk.exc import HawkFail, TokenExpired
 from mohawk.util import parse_authorization_header
-
-from hawkrest import seen_nonce
 
 log = logging.getLogger(__name__)
 # Number of seconds until a Hawkmessage expires.
@@ -74,3 +73,22 @@ def lookup_credentials(cr_id):
         }
     except Client.DoesNotExist:
         raise LookupError('No Hawk ID of {id}'.format(id=cr_id))
+
+
+def seen_nonce(nonce, timestamp):
+    """
+    Returns True if the Hawk nonce has been seen already.
+    """
+    key = '{n}:{ts}'.format(n=nonce, ts=timestamp)
+    if cache.get(key):
+        log.warning('replay attack? already processed nonce {k}'
+                    .format(k=key))
+        return True
+    else:
+        log.debug('caching nonce {k}'.format(k=key))
+        cache.set(key, True,
+                  # We only need the nonce until the message itself expires.
+                  # This also adds a little bit of padding.
+                  timeout=getattr(settings, 'HAWK_MESSAGE_EXPIRATION',
+                                  default_message_expiration) + 5)
+        return False

@@ -35,3 +35,4 @@ csvkit==0.9.0
 requests==2.4.3
 pytz==2014.7
 dj-database-url==0.3.0
+hawkrest==0.0.3

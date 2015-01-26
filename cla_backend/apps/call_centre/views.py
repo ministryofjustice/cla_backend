@@ -26,10 +26,9 @@ from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
     SearchFilter, BaseFilterBackend
 
 from cla_provider.models import Provider, OutOfHoursRota, Feedback
-from cla_eventlog import event_registry
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
-from cla_auth.auth import OBIEESignatureAuthentication
+from cla_auth.auth import OBIEEHawkAuthentication
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.decorators import list_route
@@ -593,7 +592,7 @@ class DBExportView(APIView):
     personal_details_sql_file = 'export_personal_details.sql'
     sql_path = os.path.dirname(__file__)
 
-    authentication_classes = (OBIEESignatureAuthentication,)
+    authentication_classes = (OBIEEHawkAuthentication,)
     throttle_classes = (OBIEERateThrottle,)
     permission_classes = (permissions.IsAuthenticated,)
 

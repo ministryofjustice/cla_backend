@@ -142,6 +142,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cla_auth.middleware.OBIEEHawkResponseMiddleware',
 )
 
 ROOT_URLCONF = 'cla_backend.urls'
@@ -164,6 +165,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_statsd',
     'south',
+    'hawkrest',
 )
 
 PROJECT_APPS = (
@@ -341,6 +343,7 @@ OPERATOR_HOURS = {
     'saturday': (datetime.time(9, 0), datetime.time(12, 30))
 }
 
+HAWK_MESSAGE_EXPIRATION = 60
 
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and 'test' == sys.argv[1]:

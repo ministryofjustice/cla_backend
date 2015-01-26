@@ -26,8 +26,6 @@ jsonpatch==1.7
 networkx==1.9
 lxml==3.3.5
 drf-extensions==0.2.5
-httpsig==1.1.0
-djangorestframework-httpsignature==0.2.1
 django-statsd-mozilla==0.3.13
 logstash-formatter==0.5.8
 django-ipware==0.0.8

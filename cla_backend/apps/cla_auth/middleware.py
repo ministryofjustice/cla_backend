@@ -27,12 +27,16 @@ class OBIEEHawkResponseMiddleware:
             'HTTP_AUTHORIZATION', '').startswith('Hawk')
         receiver = request.META.get('hawk.receiver', None)
 
-        if is_hawk_request and receiver:
-            # Sign our response, so clients can trust us.
-            log.debug('Hawk signing the response')
-            receiver.respond(content=response.content,
-                             content_type=response['Content-Type'])
-            response['Server-Authorization'] = receiver.response_header
+        if is_hawk_request:
+            if receiver:
+                # Sign our response, so clients can trust us.
+                log.debug('Hawk signing the response')
+                receiver.respond(content=response.content,
+                                 content_type=response['Content-Type'])
+                response['Server-Authorization'] = receiver.response_header
+            else:
+                log.debug('Hawk auth present in header but receiver missing, '
+                          'not signing')
         else:
             log.debug('NOT Hawk signing the response, not a Hawk request')
 

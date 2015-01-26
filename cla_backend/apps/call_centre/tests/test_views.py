@@ -8,6 +8,7 @@ from call_centre.views import DBExportView
 
 
 class MockDBExportView(DBExportView):
+    authentication_classes = ()
     permission_classes = (permissions.AllowAny,)
 
 

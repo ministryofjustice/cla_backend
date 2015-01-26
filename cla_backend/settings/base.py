@@ -343,6 +343,10 @@ OPERATOR_HOURS = {
 
 HAWK_MESSAGE_EXPIRATION = 60
 
+OBIEE_IP_PERMISSIONS = (
+    '*',
+)
+
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and 'test' == sys.argv[1]:
     from .testing import *

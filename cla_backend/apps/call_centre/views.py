@@ -29,6 +29,7 @@ from cla_provider.models import Provider, OutOfHoursRota, Feedback
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 from cla_auth.auth import OBIEEHawkAuthentication
+from cla_auth.permissions import OBIEEIPPermission
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.decorators import list_route
@@ -594,7 +595,7 @@ class DBExportView(APIView):
 
     authentication_classes = (OBIEEHawkAuthentication,)
     throttle_classes = (OBIEERateThrottle,)
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, OBIEEIPPermission)
 
     filename = 'cla_database.zip'
 

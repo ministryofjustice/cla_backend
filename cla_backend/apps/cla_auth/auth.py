@@ -20,6 +20,7 @@ default_message_expiration = 60
 
 
 class OBIEEHawkAuthentication(BaseAuthentication):
+
     def authenticate(self, request):
         if not request.META.get('HTTP_AUTHORIZATION'):
             log.debug('request did not send an Authorization header')

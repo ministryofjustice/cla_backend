@@ -12,11 +12,12 @@ log = logging.getLogger(__name__)
 
 
 class OBIEEHawkResponseMiddleware:
+
     def process_exception(self, request, exception):
         if isinstance(exception, TokenExpired):
-            resp = HttpResponse(dumps({'detail': 'invalid timestamp'}), 
-                status=401,
-                content_type='application/json')
+            resp = HttpResponse(dumps({'detail': 'invalid timestamp'}),
+                                status=401,
+                                content_type='application/json')
             resp['WWW-Authenticate'] = exception.www_authenticate
             return resp
         return None
@@ -34,6 +35,5 @@ class OBIEEHawkResponseMiddleware:
             response['Server-Authorization'] = receiver.response_header
         else:
             log.debug('NOT Hawk signing the response, not a Hawk request')
-
 
         return response

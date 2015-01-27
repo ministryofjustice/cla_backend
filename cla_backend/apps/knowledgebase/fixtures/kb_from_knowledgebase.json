@@ -11,7 +11,7 @@
         "accessibility": "Text relay and Welsh helpline service available.Website has range of features including read aloud service and resizeable text.", 
         "service_name": "ACAS", 
         "organisation": "ACAS (Advisory, Conciliation and Arbitration Service)", 
-        "modified": "2015-01-27T12:11:46.825Z", 
+        "modified": "2015-01-27T18:12:10.751Z", 
         "service_tag": "[PREF DISCRIMINATION]", 
         "when_to_use": "Clients seeking legal advice for out of scope employment and discrimination problems", 
         "how_to_use": "Refer those who wish to self help to website. Refer those needing guidance to helpline.", 
@@ -19,7 +19,7 @@
         "address": "", 
         "keywords": "employment, helpline, employers, contract, tribunal, grievance, employee, redundancy, misconduct, maternity, redundant, dismissal, wage, helpline, stress, absence, ACAS, acas", 
         "opening_hours": "Monday-Friday, 8am-8pm\nSaturday, 9am-1pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -35,7 +35,7 @@
         "accessibility": "Website available in Welsh", 
         "service_name": "Action against medical accidents (AVMA)", 
         "organisation": "Action against medical accidents (AVMA)", 
-        "modified": "2015-01-27T12:11:46.831Z", 
+        "modified": "2015-01-27T18:12:10.756Z", 
         "service_tag": "", 
         "when_to_use": "Clients on a low income seeking legal advice after a medical accident.", 
         "how_to_use": "Refer those wishing to self help to website, those who wish to speak to to someone to helpline.", 
@@ -43,7 +43,7 @@
         "address": "Action against Medical Accidents\n\n\nFreedman House\n\n\nChristopher Wren Yard \n\n\n117 High Street\n\n\nCroydon     \n\n\nCR0 1QG", 
         "keywords": "action, medical, accidents, negligence, clinical, doctor, nurse, gp, nhs, hospital, surgery, injury, patient, avma, helpline", 
         "opening_hours": "Monday - Friday, 10am-5pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -59,7 +59,7 @@
         "accessibility": "Options on website, Text Relay", 
         "service_name": "Advice Guide", 
         "organisation": "Citizens Advice", 
-        "modified": "2015-01-27T12:11:46.851Z", 
+        "modified": "2015-01-27T18:12:10.775Z", 
         "service_tag": "[PREF DEBT] [PREF HOUSING]", 
         "when_to_use": "Clients seeking legal advice for out of scope Debt, Housing, Immigration problems", 
         "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to website.", 
@@ -67,7 +67,7 @@
         "address": "", 
         "keywords": "cab, CAB, citizens, bureau, advice", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -83,7 +83,7 @@
         "accessibility": "Email, webform", 
         "service_name": "Association of Personal Injury Lawyers (APIL) Find A Lawyer", 
         "organisation": "Association of Personal Injury Lawyers (APIL)", 
-        "modified": "2015-01-27T12:11:46.855Z", 
+        "modified": "2015-01-27T18:12:10.780Z", 
         "service_tag": "", 
         "when_to_use": "Clients seeking legal advice for personal injury problems", 
         "how_to_use": "Refer those looking for a lawyer to helpline, those who require information to website.", 
@@ -91,7 +91,7 @@
         "address": "APIL\n\n\n3 Alder Court, Rennie Hogg Road\n\n\nNottingham, NG2 1RX", 
         "keywords": "apil, personal, injury, lawyers, injuries, claim, compensation, helpline, accident, accidents", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -107,7 +107,7 @@
         "accessibility": "", 
         "service_name": "Asylum Aid", 
         "organisation": "Asylum Aid", 
-        "modified": "2015-01-27T12:11:46.861Z", 
+        "modified": "2015-01-27T18:12:10.784Z", 
         "service_tag": "", 
         "when_to_use": "For clients seeking legal advice for out of scope asylum and immigration problems", 
         "how_to_use": "Refer clients seeking advice to helpline", 
@@ -115,7 +115,7 @@
         "address": "Club Union House\n\n\n253-254 Upper Street\n\n\nLondon\n\n\nN1 1RY", 
         "keywords": "asylum, immigration, tribunal, refugee, refugees, entry, aid,nationality, immigrated, helpline", 
         "opening_hours": "Tuesdays, 1-4pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -131,7 +131,7 @@
         "accessibility": "Interpretation and text relay services available. Accessibility features on website.", 
         "service_name": "Benefits Calculator", 
         "organisation": "Turn2us", 
-        "modified": "2015-01-27T12:11:46.866Z", 
+        "modified": "2015-01-27T18:12:10.787Z", 
         "service_tag": "", 
         "when_to_use": "Clients wishing to check entitlement to welfare benefits using online calculator", 
         "how_to_use": "Refer those who are able to self-help to website and those who need extra help to helpline.", 
@@ -139,7 +139,7 @@
         "address": "Turn2us\n\n\nUnit 9\n\n\nCefn Coed Parc\n\n\nNantgarw\n\n\nCardiff \n\n\nCF15 7QQ", 
         "keywords": "benefits, benefit, check, entitled, JSA, ESA, DLA, incapacity, financial, debt, money, tax credits, help, entitlement", 
         "opening_hours": "Monday-Friday, 8am-8pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -155,7 +155,7 @@
         "accessibility": "", 
         "service_name": "Business Debt Line", 
         "organisation": "Money Advice Trust", 
-        "modified": "2015-01-27T12:11:46.872Z", 
+        "modified": "2015-01-27T18:12:10.792Z", 
         "service_tag": "", 
         "when_to_use": "Clients seeking advice about business debts", 
         "how_to_use": "Refer clients seeking advice to website", 
@@ -163,7 +163,7 @@
         "address": "", 
         "keywords": "debt, helpline, self employed, director, bankruptcy, bankrupt, insolvent, insolvency, business, debtline, bailiff, bailiffs, landlords, debt recovery", 
         "opening_hours": "Monday - Friday, 9am - 5pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -179,7 +179,7 @@
         "accessibility": "Email, Browsealoud, some information in other formats and languages, including BSL", 
         "service_name": "Care Quality Commission", 
         "organisation": "Care Quality Commission", 
-        "modified": "2015-01-27T12:11:46.877Z", 
+        "modified": "2015-01-27T18:12:10.796Z", 
         "service_tag": "", 
         "when_to_use": "Refer clients with concerns about care services in hospitals, care homes, dental and GP surgeries, and all other care services", 
         "how_to_use": "Refer those who are able to self help to website and those who need assistance to helpline.", 
@@ -187,7 +187,7 @@
         "address": "", 
         "keywords": "care, quality, commission, cqc, social, home, regulator, regulates, health, carer, helpline", 
         "opening_hours": "Monday - Friday, 8.30am - 5:30pm,", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -203,7 +203,7 @@
         "accessibility": "Interpretation service, web chat, information in other formats. accessibility options on website and Welsh version available.", 
         "service_name": "Child Maintenance Options", 
         "organisation": "Child Maintenance Group", 
-        "modified": "2015-01-27T12:11:46.903Z", 
+        "modified": "2015-01-27T18:12:10.821Z", 
         "service_tag": "[PREF FAMILY]", 
         "when_to_use": "Clients seeking legal advice or support regarding child maintenance arrangements, including making decisions.", 
         "how_to_use": "Refer clients wanting to self-help to websites and those who need more support to helpline", 
@@ -211,7 +211,7 @@
         "address": "", 
         "keywords": "child, support, agency, children, parent, parents, maintenance, payments, families, family, CSA, options, child, maintenance, options,", 
         "opening_hours": "Monday - Friday, 8am - 8pm\nSaturday, 9am - 4pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -227,7 +227,7 @@
         "accessibility": "", 
         "service_name": "Cafcass (Children and Family Court Advisory and Support Service)", 
         "organisation": "Department for Education", 
-        "modified": "2015-01-27T12:11:46.908Z", 
+        "modified": "2015-01-27T18:12:10.826Z", 
         "service_tag": "[PREF FAMILY]", 
         "when_to_use": "For children and young people (or their parents) seeking support for issues at court including  care or adoption proceedings, or for children whose parents have separated and can't agree about future arrangements for their children.", 
         "how_to_use": "Refer those willing to self help to factsheets, those who need to talk to somebody about their case to the helpline. List of regional offices supplied on website.", 
@@ -235,7 +235,7 @@
         "address": "", 
         "keywords": "children, young people, family, family court, divorce, separation, adoption, care, children in care, custody, contact with children", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -251,7 +251,7 @@
         "accessibility": "Email, accessibility options on website, Text Relay", 
         "service_name": "Citizens Advice Consumer Service", 
         "organisation": "Citizens Advice", 
-        "modified": "2015-01-27T12:11:46.916Z", 
+        "modified": "2015-01-27T18:12:10.832Z", 
         "service_tag": "", 
         "when_to_use": "Clients seeking advice on consumer issues", 
         "how_to_use": "Refer clients seeking advice to helpline. For online information see AdviceGuide.", 
@@ -259,7 +259,7 @@
         "address": "Citizens Advice consumer service\n\n\nPost Point 24\n\n\nTown Hall\n\n\nWalliscote Grove Road\n\n\nWeston super Mare\n\n\nNorth Somerset\n\n\nBS23 1UJ", 
         "keywords": "citizens, advice, consumer, helpline, direct, cab, goods, service, services, selling, warranty, warranties, citizen", 
         "opening_hours": "Monday - Friday, 9am - 5pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -275,7 +275,7 @@
         "accessibility": "Email. Some translated content on website.", 
         "service_name": "Contact a Family", 
         "organisation": "Contact a Family", 
-        "modified": "2015-01-27T12:11:46.925Z", 
+        "modified": "2015-01-27T18:12:10.838Z", 
         "service_tag": "", 
         "when_to_use": "Refer those seeking information or advice on any aspect of caring for a disabled child", 
         "how_to_use": "Refer those who wish to self help to website. Those who need specialist education advice or information on debt advice services to helpline.", 
@@ -283,7 +283,7 @@
         "address": "", 
         "keywords": "contact, family, disabled, children, families, disabilities, disability", 
         "opening_hours": "Monday to Friday, 9.30am - 5.00pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -299,7 +299,7 @@
         "accessibility": "Interpretation service, Texttalk.  Browsealoud on website.", 
         "service_name": "Coram Family, Child & Education Legal Advice", 
         "organisation": "Coram Children's Legal Centre", 
-        "modified": "2015-01-27T12:11:46.931Z", 
+        "modified": "2015-01-27T18:12:10.843Z", 
         "service_tag": "[PREF EDUCATION]", 
         "when_to_use": "Clients seeking legal advice or representation for children's rights issues", 
         "how_to_use": "Refer clients wishing to self-help to website, those who require support to helpline", 
@@ -307,7 +307,7 @@
         "address": "", 
         "keywords": "child, children, childrens, Children's, legal, centre, clc, young, protection, maintenance, parental, parents, responsibility, care, proceedings, coram, family law, family, child protection, school, admissions", 
         "opening_hours": "Monday to Friday, 8am - 8pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -323,7 +323,7 @@
         "accessibility": "Online Advice", 
         "service_name": "Disability Law Service", 
         "organisation": "Disability Law Service", 
-        "modified": "2015-01-27T12:11:46.940Z", 
+        "modified": "2015-01-27T18:12:10.851Z", 
         "service_tag": "", 
         "when_to_use": "Clients seeking advice or information for disability-related legal issues", 
         "how_to_use": "Refer those willing to self-help to factsheets, those who need advice to helpline.", 
@@ -331,7 +331,7 @@
         "address": "12 City Forum\n\n\n250 City Road\n\n\nLondon\n\n\nEC1V 8AF", 
         "keywords": "disability, disabled, law, service, carer, carers, dls, deaf", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -347,7 +347,7 @@
         "accessibility": "Online enquiry form & email. Various accessibility features on website including visual display settings, BrowseAloud and Welsh language. List of information resources in other languages.", 
         "service_name": "Education Rights Service", 
         "organisation": "National Autistic Society", 
-        "modified": "2015-01-27T12:11:46.945Z", 
+        "modified": "2015-01-27T18:12:10.857Z", 
         "service_tag": "", 
         "when_to_use": "Clients with autism seeking advice for education matters", 
         "how_to_use": "Refer those who wish to self help to website. Tell those needing guidance to contact helpline - not suitable for urgent cases - this will be a call back service. Client will need to provide name, number, brief details of why they are contacting and best times to call back. Will usually receive a call within a few days.", 
@@ -355,7 +355,7 @@
         "address": "", 
         "keywords": "education, rights, sen, special, educational, needs, autism, aspergers, autistic, asperger", 
         "opening_hours": "N/A call back service", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -371,7 +371,7 @@
         "accessibility": "Text phone, letter or email or Skype (BSL users)", 
         "service_name": "Equality Advisory Support Service", 
         "organisation": "Equality Advisory Support Service", 
-        "modified": "2015-01-27T12:11:46.964Z", 
+        "modified": "2015-01-27T18:12:10.872Z", 
         "service_tag": "[PREF DISCRIMINATION]", 
         "when_to_use": "Clients seeking advice and support on discrimination and human rights issues", 
         "how_to_use": "Refer those who wish to self help to 'Ask a Question' search function. Refer those needing advice, support or to look for local sources of help helpline.", 
@@ -379,7 +379,7 @@
         "address": "FREEPOST EQUALITY ADVISORY SUPPORT SERVICE FPN4431", 
         "keywords": "equality, advisory, support, services, human, rights, commission, race, disability, civil, discrimination, liberties, EASS, employment", 
         "opening_hours": "Monday - Friday, 9am - 8pm\nSaturday, 10am - 2pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -395,7 +395,7 @@
         "accessibility": "", 
         "service_name": "Families Need Fathers", 
         "organisation": "Families Need Fathers", 
-        "modified": "2015-01-27T12:11:46.969Z", 
+        "modified": "2015-01-27T18:12:10.877Z", 
         "service_tag": "", 
         "when_to_use": "Clients seeking advice on child contact after separation or divorce", 
         "how_to_use": "Refer clients wishing to self-help to website, those who require support to helpline", 
@@ -403,7 +403,7 @@
         "address": "", 
         "keywords": "families, fathers, father, family, support, child, children, contact, residence, paternity", 
         "opening_hours": "7 days a week, 7 am - midnight", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -419,7 +419,7 @@
         "accessibility": "", 
         "service_name": "Family Mediation Council", 
         "organisation": "Family Mediation Council", 
-        "modified": "2015-01-27T12:11:46.972Z", 
+        "modified": "2015-01-27T18:12:10.880Z", 
         "service_tag": "[PREF FAMILY MEDIATION]", 
         "when_to_use": "Clients looking for information about mediation and/or who wish to search for providers carrying out non-legally-aided work", 
         "how_to_use": "Refer clients seeking mediation.", 
@@ -427,7 +427,7 @@
         "address": "", 
         "keywords": "", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -443,7 +443,7 @@
         "accessibility": "Interpretation service available on helpline", 
         "service_name": "Family Rights Group", 
         "organisation": "Family Rights Group", 
-        "modified": "2015-01-27T12:11:46.976Z", 
+        "modified": "2015-01-27T18:12:10.884Z", 
         "service_tag": "", 
         "when_to_use": "Clients whose family is involved with or seeking help from local authority children's services for information and advice.", 
         "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to website.", 
@@ -451,7 +451,7 @@
         "address": "The Print House, 18 Ashwin Street, London E8 3DL", 
         "keywords": "family, rights, group, families, social, services, protection, child, children", 
         "opening_hours": "Monday - Friday,  9.30am-3pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -467,7 +467,7 @@
         "accessibility": "Email, Text Relay, Browsealoud. Information in variety of formats, some in other languages including BSL and audio and video clips.", 
         "service_name": "Financial Ombudsman Service", 
         "organisation": "Financial Ombudsman Service", 
-        "modified": "2015-01-27T12:11:46.984Z", 
+        "modified": "2015-01-27T18:12:10.890Z", 
         "service_tag": "", 
         "when_to_use": "Clients with consumer complaint about a financial service", 
         "how_to_use": "Refer those who are able to self help to website and those who need assistance to helpline.", 
@@ -475,7 +475,7 @@
         "address": "The Financial Ombudsman Service\n\n\nSouth Quay Plaza\n\n\n183 Marsh Wall\n\n\nLondon E14 9SR", 
         "keywords": "financial, ombudsman, service, investments, investment, invest, consumer, consumers, dispute, disputes, money, finances, bank, banks", 
         "opening_hours": "Monday - Friday, 8am - 8pm\nSaturday, 9am - 1pm", 
-        "email": null, 
+        "email": "complaint.info@financial-ombudsman.org.uk", 
         "resource_type": "LEGAL"
     }
 },
@@ -491,7 +491,7 @@
         "accessibility": "", 
         "service_name": "Find a Solicitor", 
         "organisation": "Law Society", 
-        "modified": "2015-01-27T12:11:47.672Z", 
+        "modified": "2015-01-27T18:12:11.390Z", 
         "service_tag": "", 
         "when_to_use": "Clients seeking a face-to-face immigration provider for an out of scope issue.", 
         "how_to_use": "Refer those with internet access to website, those without to telephone", 
@@ -499,7 +499,7 @@
         "address": "", 
         "keywords": "law, society, solicitor, solicitors, advocacy, agricultural, business, charity, commercial, litigation, property, company, construction, civil, contract, conveyancing, investment, tax, international.", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -515,7 +515,7 @@
         "accessibility": "Interpretation service available on helpline. Some video content on website.", 
         "service_name": "Gingerbread Single Parent Helpline", 
         "organisation": "Gingerbread Single Parent Helpline", 
-        "modified": "2015-01-27T12:11:46.994Z", 
+        "modified": "2015-01-27T18:12:10.899Z", 
         "service_tag": "", 
         "when_to_use": "Clients seeking support or advice on family-related issues including child maintenance, contact, employment, education, welfare benefits and tax credits, housing and debt.", 
         "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to website or email advice service.", 
@@ -523,7 +523,7 @@
         "address": "", 
         "keywords": "ginger, gingerbread, single, parent, parents, family, lone, child, children", 
         "opening_hours": "Mondays, 10am - 6pm    \nTuesdays/Thursdays/Fridays, 10am - 4pm    \nWednesdays, 10am-1pm and 5pm-7pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -539,7 +539,7 @@
         "accessibility": "", 
         "service_name": "GOV.UK", 
         "organisation": "GOV.UK", 
-        "modified": "2015-01-27T12:11:46.897Z", 
+        "modified": "2015-01-27T18:12:10.817Z", 
         "service_tag": "", 
         "when_to_use": "Clients looking for government services and information.", 
         "how_to_use": "Refer clients who require government services, policies and general information. Sections include:\n\n\n Working, jobs and pensions:  https://www.gov.uk/browse/working\n\n\n Money (court claims, debt and bankruptcy): https://www.gov.uk/browse/tax/court-claims-debt-bankruptcy\n\n\n Benefits: https://www.gov.uk/browse/benefits\n\n\n Housing & local services: https://www.gov.uk/browse/housing\n\n\n Births, marriages, deaths and care (includes power of attorney): https://www.gov.uk/browse/births-deaths-marriages \n\n\n Education https://www.gov.uk/browse/education \n\n\n Crime: https://www.gov.uk/browse/justice\n\n\n Information for disabled people: https://www.gov.uk/browse/disabilities", 
@@ -547,7 +547,7 @@
         "address": "", 
         "keywords": "", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -563,7 +563,7 @@
         "accessibility": "Textphone, Text Relay. Other adjustments with individual courts/Tribunal office", 
         "service_name": "HMCTS", 
         "organisation": "HMCTS", 
-        "modified": "2015-01-27T12:11:46.955Z", 
+        "modified": "2015-01-27T18:12:10.864Z", 
         "service_tag": "", 
         "when_to_use": "Clients with case specific enquiries with court or tribunal office", 
         "how_to_use": "Refer clients with case specific enquiries with court or tribunal office", 
@@ -571,7 +571,7 @@
         "address": "", 
         "keywords": "HMCS - hmcs, court, courts, claim, claims, hearing, duty, justice\n\n\n\n\n\nTribunals Service - tribunal, dispute, tribunals, service, welfare, benefits, employment, immigration, education, asylum,", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -587,7 +587,7 @@
         "accessibility": "Email, visual display settings on website", 
         "service_name": "Independent Age", 
         "organisation": "Independent Age", 
-        "modified": "2015-01-27T12:11:47.003Z", 
+        "modified": "2015-01-27T18:12:10.905Z", 
         "service_tag": "", 
         "when_to_use": "Older people, families and carers looking for information and support", 
         "how_to_use": "Refer those who are able to self help to website and those who need assistance to helpline.", 
@@ -595,7 +595,7 @@
         "address": "", 
         "keywords": "", 
         "opening_hours": "Monday - Friday, 10am -  4pm", 
-        "email": null, 
+        "email": "advice@independentage.org", 
         "resource_type": "LEGAL"
     }
 },
@@ -611,15 +611,15 @@
         "accessibility": "Call back booking service, email information service", 
         "service_name": "Independent Parental Special Education Advice (IPSEA)", 
         "organisation": "Independent Parental Special Education Advice (IPSEA)", 
-        "modified": "2015-01-27T15:19:03.856Z", 
+        "modified": "2015-01-27T18:12:10.910Z", 
         "service_tag": "[PREF EDUCATION]", 
         "when_to_use": "Clients seeking legal advice regarding children with special educational needs", 
-        "how_to_use": "Refer those who wish to self help to website. Refer those who have right of appeal against LEA decision regarding SEN or who want advice about making disability discrimination claim to helpline. Subject to availability.\r\n\r\n\r\n\r\n\r\n\r\nFor Tribunal appeals use: http://www.ipsea.org.uk/How-we-can-help/Tribunal-Helpline.aspx", 
-        "public_description": "Independent Parental Special Education Advice (IPSEA) is a registered charity offering free and independent advice to parents of children with special educational needs in England and Wales on:\r\n\r\n* local authorities' legal duties to assess and provide for children with special educational needs \r\n* exclusions of children with special needs or disabilities\r\n* action or inaction by local authorities and/or schools which\u00a0discriminates against children with disabilities ", 
+        "how_to_use": "Refer those who wish to self help to website. Refer those who have right of appeal against LEA decision regarding SEN or who want advice about making disability discrimination claim to helpline. Subject to availability.\n\n\n\n\n\nFor Tribunal appeals use: http://www.ipsea.org.uk/How-we-can-help/Tribunal-Helpline.aspx", 
+        "public_description": "Independent Parental Special Education Advice (IPSEA) is a registered charity offering free and independent adviceto parents of children with special educational needs in England and Wales on:\n\n* local authorities' legal duties to assess and provide for children with special educational needs\n\n* exclusions of children with special needs or disabilities\n\n* action or inaction by local authorities and/or schools whichdiscriminates against children with disabilities", 
         "address": "", 
         "keywords": "ipsea, education, parental, parent, special, independent, educational, school, sen, disability, discrimination", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -635,7 +635,7 @@
         "accessibility": "Email, Text relay. Information in other languages, BSL and braille", 
         "service_name": "Independent Police Complaints Commission (IPCC)", 
         "organisation": "Independent Police Complaints Commission (IPCC)", 
-        "modified": "2015-01-27T12:11:47.015Z", 
+        "modified": "2015-01-27T18:12:10.916Z", 
         "service_tag": "", 
         "when_to_use": "Clients who wish to make a complaint about the police.", 
         "how_to_use": "Refer those who are able to self-help to the website and those who need assistance to the helpline.", 
@@ -643,7 +643,7 @@
         "address": "", 
         "keywords": "ipcc, police, complaints, witness, law, laws, arrest, arrested, unlawful, rights, commission, policeman, policewoman, independent, helpline", 
         "opening_hours": "Monday to Friday, 9am - 5pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -659,7 +659,7 @@
         "accessibility": "", 
         "service_name": "Law Centre Network", 
         "organisation": "Law Centre Network", 
-        "modified": "2015-01-27T12:11:47.024Z", 
+        "modified": "2015-01-27T18:12:10.925Z", 
         "service_tag": "[PREF HOUSING] [PREF DISCRIMINATION]", 
         "when_to_use": "Clients seeking a face to face provider for Discrimination, Housing, Welfare Benefits, Employment, Immigration", 
         "how_to_use": "Refer clients to search for local Law Centre", 
@@ -667,7 +667,7 @@
         "address": "", 
         "keywords": "law, centres, centre, local, advice, legal,", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -683,7 +683,7 @@
         "accessibility": "", 
         "service_name": "LawWorks", 
         "organisation": "LawWorks", 
-        "modified": "2015-01-27T12:11:47.030Z", 
+        "modified": "2015-01-27T18:12:10.931Z", 
         "service_tag": "", 
         "when_to_use": "Refer clients seeking advice and representation for out of scope debt, housing and welfare benefits issues", 
         "how_to_use": "Refer those who wish to self-help to web resources,  those who need initial advice to Clinics Network and those requiring a Solicitor to Free Legal Casework service.", 
@@ -691,7 +691,7 @@
         "address": "", 
         "keywords": "pro, bono, free, legal, help, lawworks, solicitor, lawyer, aid, casework, caseworker", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -707,7 +707,7 @@
         "accessibility": "", 
         "service_name": "Leasehold Advisory Service", 
         "organisation": "Leasehold Advisory Service", 
-        "modified": "2015-01-27T12:11:47.038Z", 
+        "modified": "2015-01-27T18:12:10.937Z", 
         "service_tag": "", 
         "when_to_use": "Refer clients seeking information on the law affecting residential leasehold property", 
         "how_to_use": "Refer those able to self help, those seeking advice to helpline.", 
@@ -715,7 +715,7 @@
         "address": "", 
         "keywords": "", 
         "opening_hours": "Monday - Friday, 9am - 5pm.", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -731,7 +731,7 @@
         "accessibility": "", 
         "service_name": "Mediation Directory", 
         "organisation": "Ministry of Justice", 
-        "modified": "2015-01-27T12:11:47.041Z", 
+        "modified": "2015-01-27T18:12:10.941Z", 
         "service_tag": "", 
         "when_to_use": "Refer clients seeking mediation for all types of family dispute, including those who wish to find a mediator specialising abduction, ancillary relief, children, domestic violence, finance, langauges, MIAMs", 
         "how_to_use": "Refer clients who wish to search for a mediation provider", 
@@ -739,7 +739,7 @@
         "address": "", 
         "keywords": "", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -755,7 +755,7 @@
         "accessibility": "Interpretation service, Texttalk.  Browsealoud on website.", 
         "service_name": "Migrant Children's Project Adviceline", 
         "organisation": "Coram Children's Legal Centre", 
-        "modified": "2015-01-27T12:11:47.049Z", 
+        "modified": "2015-01-27T18:12:10.947Z", 
         "service_tag": "", 
         "when_to_use": "Refer clients seeking advice on migrant children's rights to helpline.", 
         "how_to_use": "Refer clients wishing to self help to website, those who require support to helpline", 
@@ -763,7 +763,7 @@
         "address": "", 
         "keywords": "N/A", 
         "opening_hours": "Monday - Friday, 10am - 6pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -779,7 +779,7 @@
         "accessibility": "Email, Interpretation and textphone services available", 
         "service_name": "Mind Legal Advice Line", 
         "organisation": "Mind", 
-        "modified": "2015-01-27T12:11:47.054Z", 
+        "modified": "2015-01-27T18:12:10.951Z", 
         "service_tag": "", 
         "when_to_use": "Refer clients seeking legal advice relating to mental health issues (ncluding community care & discriminatin/equality)", 
         "how_to_use": "Refer those who wish to self help to website. Tell those needing advice to contact helpline", 
@@ -787,7 +787,7 @@
         "address": "Mind LAS\n\n\nPO Box 277 \n\n\nManchester \n\n\nM60 3XN", 
         "keywords": "mind, legal, mental, health, capacity, sectioned, community, care, human, rights, discrimination", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "legal@mind.org.uk", 
         "resource_type": "LEGAL"
     }
 },
@@ -803,15 +803,15 @@
         "accessibility": "Typetalk: 18001 0300 500 5000. Face to face appointments possible", 
         "service_name": "Money Advice Service", 
         "organisation": "MA", 
-        "modified": "2015-01-27T15:16:36.726Z", 
+        "modified": "2015-01-27T18:12:10.956Z", 
         "service_tag": "[PREF DEBT]", 
         "when_to_use": "Clients seeking information online about money-related issues.", 
         "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to website", 
-        "public_description": "Free and impartial money advice service, set up by government. The service includes:\r\n\r\n* online advice and guides to help improve your finances\r\n* online tools and calculators to help you keep track and plan ahead\r\n* support in person, over the phone and online", 
+        "public_description": "Free and impartial money advice service, set up by government. The service includes:\n\n* online advice and guides to help improve your finances\n\n* online tools and calculators to help you keep track and plan ahead\n\n* support in person, over the phone and online", 
         "address": "", 
         "keywords": "money, advice, finances, financial, ma,", 
         "opening_hours": "Monday - Friday, 8am-8pm\nSaturday, 9am-12pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -827,7 +827,7 @@
         "accessibility": "Online advice service", 
         "service_name": "My Money Steps", 
         "organisation": "Money Advice Trust", 
-        "modified": "2015-01-27T12:11:47.064Z", 
+        "modified": "2015-01-27T18:12:10.959Z", 
         "service_tag": "[PREF DEBT]", 
         "when_to_use": "Clients seeking information online relating to debt.", 
         "how_to_use": "Refer clients willing to self help websites.", 
@@ -835,7 +835,7 @@
         "address": "", 
         "keywords": "debt, bills, money, finances, management, budget, my, steps", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -851,7 +851,7 @@
         "accessibility": "Email", 
         "service_name": "National Debtline", 
         "organisation": "Money Advice Trust", 
-        "modified": "2015-01-27T12:11:47.069Z", 
+        "modified": "2015-01-27T18:12:10.963Z", 
         "service_tag": "[PREF DEBT]", 
         "when_to_use": "Clients seeking debt advice.", 
         "how_to_use": "Refer clients seeking advice to helpline, those willing to self help websites.", 
@@ -859,7 +859,7 @@
         "address": "National Debtline\n\n\nTricorn House,\n\n\n51-53 Hagley Road,\n\n\nEdgbaston,\n\n\nBirmingham\n\n\nB16 8TP", 
         "keywords": "national, debtline, debt, helpline, loan, loans, bankrupt, bankruptcy, bailiff, bailiffs, bank, manage, management, personal,,", 
         "opening_hours": "Monday - Friday, 9am-9pm\nSaturday, 9.30am-1pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -875,7 +875,7 @@
         "accessibility": "", 
         "service_name": "Office of the Immigration Services Commissioner", 
         "organisation": "Office of the Immigration Services Commissioner", 
-        "modified": "2015-01-27T12:11:47.075Z", 
+        "modified": "2015-01-27T18:12:10.967Z", 
         "service_tag": "", 
         "when_to_use": "Clients who wish to search for an Immigration advice provider", 
         "how_to_use": "Refer clients who wish to search for an Immigration advice provider", 
@@ -883,7 +883,7 @@
         "address": "The Office of the Immigration Services Commissioner\n\n5th Floor\n\nCounting House\n\n53 Tooley Street\n\nLondon\n\nSE1 2QN", 
         "keywords": "asylum, immigration, tribunal, refugee, refugees, entry, aid,nationality, immigrated, helpline, oisc, commissioner", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -899,7 +899,7 @@
         "accessibility": "Visual display settings and Browsealoud on website", 
         "service_name": "Office of the Independent Adjudicator", 
         "organisation": "Office of the Independent Adjudicator", 
-        "modified": "2015-01-27T12:11:47.079Z", 
+        "modified": "2015-01-27T18:12:10.970Z", 
         "service_tag": "", 
         "when_to_use": "Clients who have exhausted their university's complaints procedure", 
         "how_to_use": "Refer clients who have exhausted their university's complaints procedure and wish to take their complaint to the next step.", 
@@ -907,7 +907,7 @@
         "address": "Third Floor\n\n\nKings Reach\n\n\n38  50 Kings Road\n\n\nREADING\n\n\nRG1 3AA", 
         "keywords": "education, student, university, complaint, college, academic, teaching, accommodation, research, BA, BSC, PHD, MA, MSC, MPhil, degree, appeal, discrimination, office, independant, adjudicator,", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -923,7 +923,7 @@
         "accessibility": "Email, information available in other languages.", 
         "service_name": "Prisoners Advice Service", 
         "organisation": "Prisoners Advice Service", 
-        "modified": "2015-01-27T12:11:47.085Z", 
+        "modified": "2015-01-27T18:12:10.975Z", 
         "service_tag": "", 
         "when_to_use": "Clients seeking advice on prisoners' rights and the application of the prison rules.", 
         "how_to_use": "Refer those who are able to self help to website and those who need assistance to helpline.", 
@@ -931,7 +931,7 @@
         "address": "PAS\n\n\nPO Box 46199 \n\n\nLondon\n\n\nEC1M 4XA", 
         "keywords": "prisoners, advice, crime, prisoner, prison, jail, detainee", 
         "opening_hours": "Monday, Wednesday and Friday, 9.30am - 1pm and 2pm -5.30pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -947,7 +947,7 @@
         "accessibility": "", 
         "service_name": "Public Law Project Civil Legal Aid Adviceline", 
         "organisation": "Public Law Project Civil Legal Aid Adviceline", 
-        "modified": "2015-01-27T12:11:47.092Z", 
+        "modified": "2015-01-27T18:12:10.982Z", 
         "service_tag": "", 
         "when_to_use": "Clients seeking information about public law.", 
         "how_to_use": "Refer those who wish to self help to website. Tell those needing advice to contact helpline", 
@@ -955,7 +955,7 @@
         "address": "150 Caledonian Road\n\n\nLondon\n\n\nN1 9RD", 
         "keywords": "", 
         "opening_hours": "Mondays, Tuesdays, Wednesdays and Fridays, 10am to 11am", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -971,7 +971,7 @@
         "accessibility": "Email advice service", 
         "service_name": "Shelter Adviceline", 
         "organisation": "Shelter Adviceline", 
-        "modified": "2015-01-27T12:11:47.099Z", 
+        "modified": "2015-01-27T18:12:10.989Z", 
         "service_tag": "[PREF HOUSING]", 
         "when_to_use": "Clients seeking advice and practical help with housing issues.", 
         "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to websites.", 
@@ -979,7 +979,7 @@
         "address": "N/A", 
         "keywords": "shelter, advice, line, helpline, possession, repossession, house, housing, homeless, homelessness, landlord, tenant, tenants, disrepair, neighbour, neighbours, rent, mortgage", 
         "opening_hours": "Monday-Friday, 8am-8pm\nSaturday-Sunday, 8am-5pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -995,7 +995,7 @@
         "accessibility": "", 
         "service_name": "Sorting Out Separation", 
         "organisation": "Sorting Out Separation", 
-        "modified": "2015-01-27T12:11:47.103Z", 
+        "modified": "2015-01-27T18:12:10.992Z", 
         "service_tag": "[PREF FAMILY]", 
         "when_to_use": "Clients seeking advice about separation.", 
         "how_to_use": "Refer clients who wish to self-help or to search for other support services.", 
@@ -1003,7 +1003,7 @@
         "address": "", 
         "keywords": "sorting, out, seperation, break, up, relationship, family, separation, divorce,", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -1019,7 +1019,7 @@
         "accessibility": "Options on website, Request a call back", 
         "service_name": "Step Change Debt Charity                            (formerly CCCS)", 
         "organisation": "Step Change Debt Charity", 
-        "modified": "2015-01-27T12:11:47.107Z", 
+        "modified": "2015-01-27T18:12:10.995Z", 
         "service_tag": "[PREF DEBT]", 
         "when_to_use": "Clients seeking advice for debt-related issues.", 
         "how_to_use": "Refer clients seeking advice to helpline, those willing to self help to website", 
@@ -1027,7 +1027,7 @@
         "address": "Wade House, Merrion Centre, Leeds, LS2 8NG", 
         "keywords": "step, change, debt, charity, cccs, counselling, money, manage, management, finances, financial, loan, loans, debt, debts, arrear, arrears, creditors, creditor, iva, bankrupt, bankruptcy", 
         "opening_hours": "Web 24 hours", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -1043,7 +1043,7 @@
         "accessibility": "", 
         "service_name": "Stonewall", 
         "organisation": "Stonewall", 
-        "modified": "2015-01-27T12:11:47.114Z", 
+        "modified": "2015-01-27T18:12:11.001Z", 
         "service_tag": "", 
         "when_to_use": "Clients who are seeking information in relation to issues relating to gay rights.", 
         "how_to_use": "Refer clients requiring general information to website, those who require support to helpline", 
@@ -1051,7 +1051,7 @@
         "address": "Tower Building\n\n\nYork Road\n\n\nLondon SE1 7NX", 
         "keywords": "stonewall, stone, discrimination, lesbian, gay, bisexual, sexuality, equality", 
         "opening_hours": "Monday-Friday,  9.30am - 5.30pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "LEGAL"
     }
 },
@@ -1067,7 +1067,7 @@
         "accessibility": "", 
         "service_name": "A Guide to Using a Solicitor", 
         "organisation": "Law Society", 
-        "modified": "2015-01-27T12:11:47.126Z", 
+        "modified": "2015-01-27T18:12:11.011Z", 
         "service_tag": "", 
         "when_to_use": "Clients looking for information about finding and using a solicitor.", 
         "how_to_use": "To be used as supplement to category specific referrals", 
@@ -1075,7 +1075,7 @@
         "address": "", 
         "keywords": "Lawyers, solicitor, representation, help, court, legal executive, advocate, lawyer", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1091,7 +1091,7 @@
         "accessibility": "", 
         "service_name": "Age UK", 
         "organisation": "Age UK", 
-        "modified": "2015-01-27T12:11:47.134Z", 
+        "modified": "2015-01-27T18:12:11.018Z", 
         "service_tag": "", 
         "when_to_use": "Advice and support service for older people.", 
         "how_to_use": "To be used as supplement to category specific referrals. Refer those who are able to to self help to website, refer those who wish to speak to someone to helpline", 
@@ -1099,7 +1099,7 @@
         "address": "Tavis House\n\n\n1-6 Tavistock Square\n\n\nLondon\n\n\nWC1H 9NA", 
         "keywords": "age, uk, concern, old, elderly, pension, pensions, funeral, disabled, aged, older, helpline, fuel, benefits, care, residential, community", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1115,7 +1115,7 @@
         "accessibility": "Online Chat, Email", 
         "service_name": "Broken Rainbow", 
         "organisation": "Broken Rainbow", 
-        "modified": "2015-01-27T12:11:47.141Z", 
+        "modified": "2015-01-27T18:12:11.023Z", 
         "service_tag": "", 
         "when_to_use": "All members of the LGBT communities who are victims of domestic violence . Offer in addition to other resources, including referral to CLA Specialist.", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1123,7 +1123,7 @@
         "address": "", 
         "keywords": "broken, rainbow, gay, bisexual, lesbian, transgender, homophobic, transphobic, domestic, violence, dv", 
         "opening_hours": "Monday, 10am-8pm\nTuesday, 10am-5pm , (1pm-5pm Tuesday is a trans-specific service)\nWednesday, 10am-5pm \nThursday, 10am - 8pm", 
-        "email": null, 
+        "email": "help@brokenrainbow.org.uk", 
         "resource_type": "OTHER"
     }
 },
@@ -1139,7 +1139,7 @@
         "accessibility": "", 
         "service_name": "Can I get legal aid?", 
         "organisation": "Legal Aid Agency", 
-        "modified": "2015-01-27T12:11:47.173Z", 
+        "modified": "2015-01-27T18:12:11.045Z", 
         "service_tag": "", 
         "when_to_use": "Clients who wish to find out about legal aid eligibility.", 
         "how_to_use": "To be used as supplement to category specific referrals", 
@@ -1147,7 +1147,7 @@
         "address": "", 
         "keywords": "can I get legal aid, legal aid, eligibility, debt, housing, education, discrimination, family, welfare benefits", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1163,7 +1163,7 @@
         "accessibility": "", 
         "service_name": "Civil Legal Advice", 
         "organisation": "Legal Aid Agency", 
-        "modified": "2015-01-27T12:11:47.206Z", 
+        "modified": "2015-01-27T18:12:11.067Z", 
         "service_tag": "", 
         "when_to_use": "Clients looking for information about CLA.", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1171,7 +1171,7 @@
         "address": "", 
         "keywords": "civil, legal, advice, cla, aid, directory, online, email, abroad", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1187,7 +1187,7 @@
         "accessibility": "", 
         "service_name": "CLA Online Advice", 
         "organisation": "Legal Aid Agency", 
-        "modified": "2015-01-27T12:11:47.239Z", 
+        "modified": "2015-01-27T18:12:11.090Z", 
         "service_tag": "", 
         "when_to_use": "Clients seeking Online Advice from CLA.", 
         "how_to_use": "To be used as supplement to category specific referrals", 
@@ -1195,7 +1195,7 @@
         "address": "", 
         "keywords": "", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1211,7 +1211,7 @@
         "accessibility": "Visual display settings and Browsealoud on website", 
         "service_name": "DIAL UK", 
         "organisation": "Scope", 
-        "modified": "2015-01-27T12:11:47.244Z", 
+        "modified": "2015-01-27T18:12:11.094Z", 
         "service_tag": "", 
         "when_to_use": "Information, advice and support for disabled people and their families.", 
         "how_to_use": "To be used as supplement to category specific referrals", 
@@ -1219,7 +1219,7 @@
         "address": "Scope\n\n\n6 Market Road\n\n\nLondon\n\n\nN7 9PW\n\n\nEngland\n\n\nUK", 
         "keywords": "", 
         "opening_hours": "Monday-Friday, 9am-5pm", 
-        "email": null, 
+        "email": "response@scope.org.uk", 
         "resource_type": "OTHER"
     }
 },
@@ -1235,7 +1235,7 @@
         "accessibility": "", 
         "service_name": "Friends, Families and Travellers", 
         "organisation": "", 
-        "modified": "2015-01-27T12:11:47.254Z", 
+        "modified": "2015-01-27T18:12:11.099Z", 
         "service_tag": "", 
         "when_to_use": "Advice on issues affecting gypsies and travellers", 
         "how_to_use": "To be used as supplement to category-specific referrals.", 
@@ -1243,7 +1243,7 @@
         "address": "FFT\n\n\nCommunity Base\n\n\n113 Queens Road\n\n\nBrighton\n\n\nEast Sussex, BN1 3XG", 
         "keywords": "travellers, gypsies, housing, caravan, family, families, mobile home, caravan rental, eviction, illegal site, romany gypsy, gypsey, gypsie", 
         "opening_hours": "Monday - Friday, 10am - 5pm (not Wednesdays)", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1259,7 +1259,7 @@
         "accessibility": "Webchat, email, text", 
         "service_name": "Get Connected", 
         "organisation": "", 
-        "modified": "2015-01-27T12:11:47.269Z", 
+        "modified": "2015-01-27T18:12:11.107Z", 
         "service_tag": "", 
         "when_to_use": "General support service for people aged under 25", 
         "how_to_use": "To be used as a supplement to category-specific referrals", 
@@ -1267,7 +1267,7 @@
         "address": "", 
         "keywords": "get, connected, crime, family, welfare, benefits, homeless, housing, employment, education, bullying, harassment, discrimination, domestic, violence, rape, sex, relationship, mental, health, depression, bereavement, addiction, drugs, alcohol, social, services, mediation, carer, fostering, health, disability, disabled, young, self harming,", 
         "opening_hours": "Monday - Sunday, 1pm - 11pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1283,7 +1283,7 @@
         "accessibility": "", 
         "service_name": "Information Access and Rights", 
         "organisation": "", 
-        "modified": "2015-01-27T12:11:47.275Z", 
+        "modified": "2015-01-27T18:12:11.112Z", 
         "service_tag": "", 
         "when_to_use": "Information about data protection and Freedom of Information requests", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1291,7 +1291,7 @@
         "address": "", 
         "keywords": "access, information, data protection, freedom of information, transparency data, FOI,", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1307,7 +1307,7 @@
         "accessibility": "", 
         "service_name": "Isle of Man Courts of Justice - civil legal aid and legal costs", 
         "organisation": "", 
-        "modified": "2015-01-27T12:11:47.286Z", 
+        "modified": "2015-01-27T18:12:11.119Z", 
         "service_tag": "", 
         "when_to_use": "Legal aid enquiries for the  Isle of Man", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1315,7 +1315,7 @@
         "address": "", 
         "keywords": "isle, man, legal, aid, court, courts, justice, civil,", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1331,7 +1331,7 @@
         "accessibility": "", 
         "service_name": "Jersey Legal Aid Office", 
         "organisation": "", 
-        "modified": "2015-01-27T12:11:47.320Z", 
+        "modified": "2015-01-27T18:12:11.142Z", 
         "service_tag": "", 
         "when_to_use": "Legal aid in Jersey", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1339,7 +1339,7 @@
         "address": "40 Don Street,\n\n\nSt Helier,\n\n\nJersey,\n\n\nChannel Islands,\n\n\nJE1 4XD.", 
         "keywords": "jersey, legal, aid, channel", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "email@legalaid.je", 
         "resource_type": "OTHER"
     }
 },
@@ -1355,7 +1355,7 @@
         "accessibility": "", 
         "service_name": "LAA Customer Services", 
         "organisation": "Legal Aid Agency", 
-        "modified": "2015-01-27T12:11:47.353Z", 
+        "modified": "2015-01-27T18:12:11.166Z", 
         "service_tag": "", 
         "when_to_use": "For general enquiries (not specific to a case) about legal aid.", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1363,7 +1363,7 @@
         "address": "", 
         "keywords": "lsc, legal, services, commission,  general, enquiries, aid, certificate, laa, LAA", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1379,7 +1379,7 @@
         "accessibility": "", 
         "service_name": "Legal Adviser Finder", 
         "organisation": "Legal Aid Agency", 
-        "modified": "2015-01-27T12:11:47.386Z", 
+        "modified": "2015-01-27T18:12:11.187Z", 
         "service_tag": "", 
         "when_to_use": "Clients who want to find a legal adviser or family mediator in England and Wales.", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1387,7 +1387,7 @@
         "address": "", 
         "keywords": "directory, legal aid, abroad contact number, search for solicitors, f2f referral, signposting, signpost to f2f, cla", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1403,7 +1403,7 @@
         "accessibility": "", 
         "service_name": "Legal Aid Around the World", 
         "organisation": "", 
-        "modified": "2015-01-27T12:11:47.419Z", 
+        "modified": "2015-01-27T18:12:11.208Z", 
         "service_tag": "", 
         "when_to_use": "For clients asking about legal aid in other countries.", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1411,7 +1411,7 @@
         "address": "", 
         "keywords": "legal aid, international, overseas, abroad,", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1427,7 +1427,7 @@
         "accessibility": "", 
         "service_name": "Legal Ombudsman", 
         "organisation": "", 
-        "modified": "2015-01-27T12:11:47.453Z", 
+        "modified": "2015-01-27T18:12:11.229Z", 
         "service_tag": "", 
         "when_to_use": "For clients who want to complain about legal advice services", 
         "how_to_use": "To be used as a supplement to category-specific referrals", 
@@ -1435,7 +1435,7 @@
         "address": "Legal Ombudsman\n\n\nPO Box 6806,\n\n\nWolverhampton,\n\n\nWV1 9WJ", 
         "keywords": "office, legal, services, ombudsman, solicitor, solicitors, attorney, conveyancer, complaint, complaints", 
         "opening_hours": "Monday -Friday, 8.30am - 5.30pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1451,7 +1451,7 @@
         "accessibility": "", 
         "service_name": "Ministry of Justice", 
         "organisation": "Ministry of Justice", 
-        "modified": "2015-01-27T12:11:47.484Z", 
+        "modified": "2015-01-27T18:12:11.252Z", 
         "service_tag": "", 
         "when_to_use": "Read out the description to anyone who is asking about how legal aid is funded.", 
         "how_to_use": "To be used as supplement to category-specific referrals. Refer those looking for more information.", 
@@ -1459,7 +1459,7 @@
         "address": "", 
         "keywords": "ministry of justice, MOJ, legal aid, ministry, justice", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1475,7 +1475,7 @@
         "accessibility": "", 
         "service_name": "Ministry of Justice (Legal Aid Policy Complaints)", 
         "organisation": "Ministry of Justice", 
-        "modified": "2015-01-27T12:11:47.516Z", 
+        "modified": "2015-01-27T18:12:11.273Z", 
         "service_tag": "", 
         "when_to_use": "For clients who want to complain about legal aid policy", 
         "how_to_use": "To be used as supplement to category-specific referrals. Only give address to clients who have complained about legal aid policy", 
@@ -1483,7 +1483,7 @@
         "address": "Legal Aid Policy, Law and Access to Justice Group\n\n\n\n\n\n4th Floor \n\n\n102 Petty France \n\n\nLondon \n\n\nSW1H 9AJ", 
         "keywords": "lsc, legal, aid, complaint, limit, eligiblity, eligible, ineligible, ministry, justice", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1499,7 +1499,7 @@
         "accessibility": "", 
         "service_name": "Northern Ireland Legal Services Commission", 
         "organisation": "", 
-        "modified": "2015-01-27T12:11:47.549Z", 
+        "modified": "2015-01-27T18:12:11.296Z", 
         "service_tag": "", 
         "when_to_use": "For clients in Northern Ireland seeking legal aid", 
         "how_to_use": "To be used as a supplement to category-specific referrals", 
@@ -1507,7 +1507,7 @@
         "address": "The Northern Ireland Legal Services Commission\n\n\n2nd Floor,\n\n\nWaterfront Plaza,\n\n\n8 Laganbank Road,\n\n\nMays Meadow,\n\n\nBelfast,\n\n\nNorthern Ireland,\n\n\nUnited Kingdom,\n\n\nBT1 3BN", 
         "keywords": "northern, ireland, NI, legal, aid, eligible, eligibility, means, assessment, commission", 
         "opening_hours": "Monday to Friday, 9.15am - 5.15pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1523,7 +1523,7 @@
         "accessibility": "", 
         "service_name": "Ombudsman Association", 
         "organisation": "", 
-        "modified": "2015-01-27T12:11:47.581Z", 
+        "modified": "2015-01-27T18:12:11.317Z", 
         "service_tag": "", 
         "when_to_use": "For clients looking for complaints bodies or an ombudsman.", 
         "how_to_use": "To be used as supplement to category specific referrals. Refer those wishing to search for relevant complaints body or Ombudsman", 
@@ -1531,7 +1531,7 @@
         "address": "", 
         "keywords": "british, irish, ombudsman, association, complain, complaint, ombudsmans", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1547,7 +1547,7 @@
         "accessibility": "", 
         "service_name": "Paying for your legal aid", 
         "organisation": "Legal Aid Agency", 
-        "modified": "2015-01-27T12:11:47.614Z", 
+        "modified": "2015-01-27T18:12:11.343Z", 
         "service_tag": "", 
         "when_to_use": "Information on what is covered by legal aid and when clients may have to contribute to the cost of their case.", 
         "how_to_use": "To be used as supplement to category specific referrals", 
@@ -1555,7 +1555,7 @@
         "address": "", 
         "keywords": "", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1571,7 +1571,7 @@
         "accessibility": "Minicom, text, Skype, email", 
         "service_name": "POhWER", 
         "organisation": "", 
-        "modified": "2015-01-27T12:11:47.621Z", 
+        "modified": "2015-01-27T18:12:11.347Z", 
         "service_tag": "", 
         "when_to_use": "For clients who are disabled, vulnerable, distressed or socially excluded.", 
         "how_to_use": "To be used as a supplement to category-specific referrals", 
@@ -1579,7 +1579,7 @@
         "address": "PO Box 14043, Birmingham, B6 9BL", 
         "keywords": "pohwer, POHWER, POhWER, advocacy, disability, social exclusion, disabled, vulnerable, support", 
         "opening_hours": "Monday - Friday, 8am - 6pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1595,7 +1595,7 @@
         "accessibility": "Interpretation and TypeTalk service available.", 
         "service_name": "Men's Advice Line", 
         "organisation": "Respect", 
-        "modified": "2015-01-27T12:11:47.627Z", 
+        "modified": "2015-01-27T18:12:11.352Z", 
         "service_tag": "[PREF FAMILY DV]", 
         "when_to_use": "Refer male victims of domestic violence seeking support, information and advice. Offer on top of other resources, including referral to a CLA specialist.", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1603,7 +1603,7 @@
         "address": "", 
         "keywords": "men, mens, men's, advice, line, male, abuse, domestic, dv, violence", 
         "opening_hours": "Monday - Friday, 9am - 5pm", 
-        "email": null, 
+        "email": "info@mensadviceline.org.uk", 
         "resource_type": "OTHER"
     }
 },
@@ -1619,7 +1619,7 @@
         "accessibility": "Interpretation and TypeTalk service available.", 
         "service_name": "Respect", 
         "organisation": "Respect", 
-        "modified": "2015-01-27T12:11:47.632Z", 
+        "modified": "2015-01-27T18:12:11.356Z", 
         "service_tag": "[PREF FAMILY DV]", 
         "when_to_use": "Refer perpetrators of domestic violence seeking information and advice about stopping their violence and changing their abusive behaviours.", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1627,7 +1627,7 @@
         "address": "", 
         "keywords": "respect, phoneline, domestic, violence, abusive, abuse, family, dv", 
         "opening_hours": "Monday - Friday 9am-5pm", 
-        "email": null, 
+        "email": "info@respectphoneline.org.uk", 
         "resource_type": "OTHER"
     }
 },
@@ -1643,7 +1643,7 @@
         "accessibility": "Email", 
         "service_name": "Samaritans", 
         "organisation": "Samaritans", 
-        "modified": "2015-01-27T12:11:47.641Z", 
+        "modified": "2015-01-27T18:12:11.362Z", 
         "service_tag": "", 
         "when_to_use": "Clients who wish to talk about any issue affecting them, including divorce, money, work, stress and debt problems.", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1651,7 +1651,7 @@
         "address": "Freepost RSRB-KKBY-CYJK\n\n\nChris\n\n\nPO Box 9090\n\n\nStirling\n\n\nFK8 2SA", 
         "keywords": "support, emotional, helpline, distress, suicide, stress, mental, disorder, samaritan, sectioned, samaritan, samaritans, lonely, loneliness, isolation, isolated,", 
         "opening_hours": "24 hours a day, 365 days a year", 
-        "email": null, 
+        "email": "jo@samaritans.org", 
         "resource_type": "OTHER"
     }
 },
@@ -1667,7 +1667,7 @@
         "accessibility": "", 
         "service_name": "Scottish Legal Aid Board", 
         "organisation": "Scottish Legal Aid Board", 
-        "modified": "2015-01-27T12:11:47.652Z", 
+        "modified": "2015-01-27T18:12:11.369Z", 
         "service_tag": "", 
         "when_to_use": "Legal aid enquiries in Scotland.", 
         "how_to_use": "Refer all legal aid enquiries from clients in Scotland.", 
@@ -1675,7 +1675,7 @@
         "address": "", 
         "keywords": "scottish, scotland, legal, aid, eligible, eligibility, means, assessment, civil, criminal, slab", 
         "opening_hours": "", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1691,7 +1691,7 @@
         "accessibility": "Email, Text Relay and interpretation.", 
         "service_name": "Victim Supportline", 
         "organisation": "Victim Supportline", 
-        "modified": "2015-01-27T12:11:47.662Z", 
+        "modified": "2015-01-27T18:12:11.378Z", 
         "service_tag": "[PREF FAMILY DV]", 
         "when_to_use": "For clients who have been the victims of crime and need support.", 
         "how_to_use": "To be used as supplement to category-specific referrals", 
@@ -1699,7 +1699,7 @@
         "address": "The Supportline address for letters only is:\n\n\nHannibal House\n\n\nElephant and Castle Shopping Centre\n\n\nLondon\n\n\nSE1 6TB", 
         "keywords": "helpline, crime, compensation, support, violence,\n\n\ndomestic, criminal, injury, stalk, stalking, witness, dv, victim, supportline", 
         "opening_hours": "Monday to Friday, 9am - 9pm\nWeekends, 9am - 7pm \nBank holidays, 9am - 5pm", 
-        "email": null, 
+        "email": "", 
         "resource_type": "OTHER"
     }
 },
@@ -1715,7 +1715,7 @@
         "accessibility": "Interpretation service available. Type Talk for calers with hearing difficulties. Womens Aid and Refuge websites provide some information in other languages", 
         "service_name": "24 hour National Domestic Violence Helpline", 
         "organisation": "Women's Aid & Refuge", 
-        "modified": "2015-01-27T12:11:47.657Z", 
+        "modified": "2015-01-27T18:12:11.373Z", 
         "service_tag": "[PREF FAMILY DV]", 
         "when_to_use": "Emergency service for women and children who are experiencing, or have experienced, domestic violence. Offer in addition to other resources, including referral to CLA specialist.", 
         "how_to_use": "To be used as supplement to category specific referrals", 
@@ -1723,7 +1723,7 @@
         "address": "", 
         "keywords": "", 
         "opening_hours": "24 hours a day, 365 days a year", 
-        "email": null, 
+        "email": "helpline@womensaid.org.uk", 
         "resource_type": "OTHER"
     }
 },

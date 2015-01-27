@@ -347,6 +347,8 @@ OBIEE_IP_PERMISSIONS = (
     '*',
 )
 
+OBIEE_ENABLED = os.environ.get('OBIEE_ENABLED', 'True') == 'True'
+
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and 'test' == sys.argv[1]:
     from .testing import *

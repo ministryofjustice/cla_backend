@@ -41,7 +41,7 @@ class OBIEEHawkAuthentication(BaseAuthentication):
                 timestamp_skew_in_seconds=getattr(settings,
                                                   'HAWK_MESSAGE_EXPIRATION',
                                                   default_message_expiration))
-        except TokenExpired as expiry:
+        except TokenExpired:
             raise
         except HawkFail:
             etype, val, tb = sys.exc_info()

@@ -8,6 +8,7 @@ class Article(TimeStampedModel):
     service_name = models.CharField(max_length=255, null=True, blank=True)
     service_tag = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
+    public_description = models.TextField(blank=True, null=True)
 
     website = models.CharField(max_length=255, null=True, blank=True)
     keywords = models.TextField(blank=True, null=True)
@@ -57,5 +58,5 @@ class ArticleCategoryMatrix(TimeStampedModel):
 
 class TelephoneNumber(TimeStampedModel):
     article = models.ForeignKey('Article')
-    name = models.CharField(max_length=50, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     number = models.CharField(max_length=25)

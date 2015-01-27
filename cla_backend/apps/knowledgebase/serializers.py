@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from .models import Article, ArticleCategoryMatrix, ArticleCategory
+from .models import Article, ArticleCategoryMatrix, ArticleCategory, \
+    TelephoneNumber
 
 
 class ArticleCategoryMatrixSerializer(serializers.ModelSerializer):
@@ -13,9 +14,17 @@ class ArticleCategoryMatrixSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'preferred_signpost')
 
 
+class TelephoneNumberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TelephoneNumber
+        exclude = ('created', 'modified')
+
+
 class ArticleSerializer(serializers.ModelSerializer):
     categories = ArticleCategoryMatrixSerializer(
         source='articlecategorymatrix_set', many=True)
+    telephone_numbers = TelephoneNumberSerializer(
+        source='telephonenumber_set', many=True)
 
     class Meta:
         model = Article

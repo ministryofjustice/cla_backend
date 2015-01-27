@@ -14,7 +14,7 @@ class Migration(SchemaMigration):
             ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
             ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
             ('article', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['knowledgebase.Article'])),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
             ('number', self.gf('django.db.models.fields.CharField')(max_length=25)),
         ))
         db.send_create_signal(u'knowledgebase', ['TelephoneNumber'])
@@ -25,6 +25,11 @@ class Migration(SchemaMigration):
         # Adding field 'Article.service_tag'
         db.add_column(u'knowledgebase_article', 'service_tag',
                       self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Article.public_description'
+        db.add_column(u'knowledgebase_article', 'public_description',
+                      self.gf('django.db.models.fields.TextField')(null=True, blank=True),
                       keep_default=False)
 
         # Adding field 'Article.email'
@@ -44,6 +49,9 @@ class Migration(SchemaMigration):
 
         # Deleting field 'Article.service_tag'
         db.delete_column(u'knowledgebase_article', 'service_tag')
+
+        # Deleting field 'Article.public_description'
+        db.delete_column(u'knowledgebase_article', 'public_description')
 
         # Deleting field 'Article.email'
         db.delete_column(u'knowledgebase_article', 'email')
@@ -65,6 +73,7 @@ class Migration(SchemaMigration):
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
             'opening_hours': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'organisation': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'public_description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'resource_type': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
             'service_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'service_tag': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
@@ -94,7 +103,7 @@ class Migration(SchemaMigration):
             'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'number': ('django.db.models.fields.CharField', [], {'max_length': '25'})
         }
     }

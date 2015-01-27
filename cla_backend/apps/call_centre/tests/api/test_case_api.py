@@ -46,7 +46,8 @@ class BaseCaseTestCase(
             'date_of_birth', 'category',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
             'case_count', 'outcome_code',
-            'requires_action_at', 'callback_attempt', 'source'
+            'requires_action_at', 'callback_attempt', 'source',
+            'complaint_flag'
         ]
 
 

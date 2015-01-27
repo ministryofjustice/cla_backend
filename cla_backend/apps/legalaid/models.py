@@ -585,6 +585,8 @@ class Case(TimeStampedModel, ModelDiffMixin):
     # a reference x ambiguous characters but not for now
     search_field = models.TextField(null=True, blank=True, db_index=True)
 
+    complaint_flag = models.BooleanField(default=False)
+
 
     def _set_reference_if_necessary(self):
         max_retries = 10

@@ -6,12 +6,14 @@ class Article(TimeStampedModel):
 
     organisation = models.CharField(max_length=255, null=True, blank=True)
     service_name = models.CharField(max_length=255, null=True, blank=True)
+    service_tag = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
+    public_description = models.TextField(blank=True, null=True)
 
     website = models.CharField(max_length=255, null=True, blank=True)
     keywords = models.TextField(blank=True, null=True)
     when_to_use = models.TextField(blank=True, null=True)
-    helpline = models.CharField(max_length=255, null=True, blank=True)
+    email = models.EmailField(blank=True, null=True)
 
     geographic_coverage = models.CharField(
         max_length=255, null=True, blank=True)
@@ -52,3 +54,9 @@ class ArticleCategoryMatrix(TimeStampedModel):
 
     class Meta:
         verbose_name_plural = "Article category matrices"
+
+
+class TelephoneNumber(TimeStampedModel):
+    article = models.ForeignKey('Article')
+    name = models.CharField(max_length=100, blank=True, null=True)
+    number = models.CharField(max_length=25)

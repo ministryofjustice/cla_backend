@@ -17,7 +17,7 @@ class ArticleCategoryMatrixSerializer(serializers.ModelSerializer):
 class TelephoneNumberSerializer(serializers.ModelSerializer):
     class Meta:
         model = TelephoneNumber
-        exclude = ('created', 'modified')
+        exclude = ('id', 'article', 'created', 'modified')
 
 
 class ArticleSerializer(serializers.ModelSerializer):

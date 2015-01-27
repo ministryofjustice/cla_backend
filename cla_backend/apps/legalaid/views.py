@@ -448,6 +448,21 @@ class FullCaseViewSet(
                 cpnh.created_by = self.request.user
                 cpnh.save()
 
+            if 'complaint_flag' in obj.changed_fields:
+                event = event_registry.get_event('case')()
+                event.process(
+                    obj,
+                    status='complaint_flag_toggled',
+                    created_by=self.request.user,
+                    notes='Complaint flag toggled: %s' % obj.complaint_flag
+                )
+
+            # if we want to add more checks on changed fields then we should
+            # probably refactor this method to look at a list on the view
+            # called 'action_on_changed_fields' and enumerate that and perform
+            # the appropriate thing instead of adding more stuff here
+
+
 
 class BaseFeedbackViewSet(
     NestedGenericModelMixin,

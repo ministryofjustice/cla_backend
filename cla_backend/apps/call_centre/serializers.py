@@ -196,7 +196,8 @@ class CaseSerializer(CaseSerializerFull):
             'date_of_birth', 'category', 'outcome_code',
             'exempt_user', 'exempt_user_reason',
             'ecf_statement', 'case_count',
-            'requires_action_at', 'callback_attempt', 'source'
+            'requires_action_at', 'callback_attempt', 'source',
+            'complaint_flag'
         )
 
 class CaseListSerializer(CaseSerializer):

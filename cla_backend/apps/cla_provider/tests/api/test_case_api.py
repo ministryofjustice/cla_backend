@@ -39,7 +39,7 @@ class BaseCaseTestCase(
             'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
             'postcode', 'diagnosis_state', 'thirdparty_details',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
-            'date_of_birth', 'category', 'source'
+            'date_of_birth', 'category', 'source', 'complaint_flag'
         ]
 
     def get_extra_search_make_recipe_kwargs(self):

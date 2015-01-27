@@ -69,6 +69,13 @@ class CaseEvent(BaseEvent):
             'description': "Case viewed",
             'stops_timer': False
         },
+        'COMPLAINT_FLAG_TOGGLED': {
+            'type': LOG_TYPES.SYSTEM,
+            'level': LOG_LEVELS.MINOR,
+            'selectable_by': [],
+            'description': "Complaint flag toggled",
+            'stops_timer': False
+        },
     }
 
     def save_log(self, log):
@@ -80,7 +87,7 @@ class CaseEvent(BaseEvent):
             # events.
             # TODO: might be slow, is there a better way?
             to_be_saved = Log.objects.filter(
-                timer=log.timer, case=log.case, 
+                timer=log.timer, case=log.case,
                 code__in=['CASE_CREATED', 'CASE_VIEWED']
             ).count() == 0
 
@@ -92,6 +99,7 @@ class CaseEvent(BaseEvent):
         lookup = {
             'created': 'CASE_CREATED',
             'viewed': 'CASE_VIEWED',
+            'complaint_flag_toggled': 'COMPLAINT_FLAG_TOGGLED'
         }
 
         return lookup[status]

@@ -2,8 +2,6 @@
 from django.core import validators
 from django.db import models
 
-from south.modelsinspector import add_introspection_rules
-
 
 class MoneyField(models.BigIntegerField):
     """
@@ -20,14 +18,3 @@ class MoneyField(models.BigIntegerField):
             self.validators.append(validators.MaxValueValidator(max_value))
         if min_value is not None:
             self.validators.append(validators.MinValueValidator(min_value))
-
-add_introspection_rules([
-    (
-        [MoneyField], # Class(es) these apply to
-        [],         # Positional arguments (not used)
-        {           # Keyword argument
-            "min_value": ["min_value", {"default": None}],
-            "max_value": ["max_value", {"default": None}],
-        },
-    ),
-], ["^legalaid\.fields\.MoneyField"])

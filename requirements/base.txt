@@ -7,7 +7,6 @@ Django==1.7.4
 django-model-utils==2.2
 
 psycopg2==2.5.4
-pip==6.0.6
 raven==5.1.1
 
 djangorestframework==2.3.14

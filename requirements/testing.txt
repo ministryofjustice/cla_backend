@@ -1,5 +1,5 @@
 -r base.txt
 
 mock==1.0.1
-model-mommy==1.2
+model-mommy==1.2.3
 git+git://github.com/tomchristie/django-pdb.git@e28e9ee73e52e7df4a125ec7326882e5d8e83740#egg=django-pdb==0.3.2-dev

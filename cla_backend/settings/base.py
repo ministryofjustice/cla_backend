@@ -80,8 +80,6 @@ TIME_ZONE = 'Europe/London'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-gb'
 
-SITE_ID = 1
-
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = False
@@ -128,10 +126,10 @@ STATICFILES_FINDERS = (
 SECRET_KEY = 'o=>4$)9?38N@^}d&pj,VL9^{r][xM9L.9cfE:xZZNk(N?v27+i'
 
 # List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
+# TEMPLATE_LOADERS = (
+#     'django.template.loaders.filesystem.Loader',
+#     'django.template.loaders.app_directories.Loader',
+# )
 
 MIDDLEWARE_CLASSES = (
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
@@ -159,7 +157,6 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_statsd'
@@ -185,7 +182,7 @@ PROJECT_APPS = (
 if BACKEND_ENABLED:
     INSTALLED_APPS += (
         'rest_framework',
-        'provider',
+        # 'provider',
         'provider.oauth2',
     )
 if ADMIN_ENABLED:

@@ -15,6 +15,7 @@ class CategoryModelForm(forms.ModelForm):
 
     class Meta:
         model = Category
+        exclude = []
 
     def save(self, *args, **kwargs):
         self.instance.description = markdown.markdown(self.instance.raw_description)

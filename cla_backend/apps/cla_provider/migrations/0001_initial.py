@@ -1,169 +1,131 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import model_utils.fields
+import jsonfield.fields
+from django.conf import settings
+import django.utils.timezone
+import core.validators
+import uuidfield.fields
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    depends_on = (
-        ('legalaid', '0001_initial'),
-    )
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+    ]
 
-    def forwards(self, orm):
-        # Adding model 'Provider'
-        db.create_table(u'cla_provider_provider', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
-            ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('opening_hours', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('active', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('short_code', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
-            ('telephone_frontdoor', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
-            ('telephone_backdoor', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
-        ))
-        db.send_create_signal(u'cla_provider', ['Provider'])
-
-        # Adding model 'ProviderAllocation'
-        db.create_table(u'cla_provider_providerallocation', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
-            ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
-            ('provider', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cla_provider.Provider'])),
-            ('category', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['legalaid.Category'])),
-            ('weighted_distribution', self.gf('django.db.models.fields.FloatField')()),
-        ))
-        db.send_create_signal(u'cla_provider', ['ProviderAllocation'])
-
-        # Adding model 'Staff'
-        db.create_table(u'cla_provider_staff', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
-            ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
-            ('provider', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cla_provider.Provider'])),
-            ('is_manager', self.gf('django.db.models.fields.BooleanField')(default=False)),
-        ))
-        db.send_create_signal(u'cla_provider', ['Staff'])
-
-        # Adding model 'OutOfHoursRota'
-        db.create_table(u'cla_provider_outofhoursrota', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created', self.gf('model_utils.fields.AutoCreatedField')(default=datetime.datetime.now)),
-            ('modified', self.gf('model_utils.fields.AutoLastModifiedField')(default=datetime.datetime.now)),
-            ('start_date', self.gf('django.db.models.fields.DateTimeField')()),
-            ('end_date', self.gf('django.db.models.fields.DateTimeField')()),
-            ('category', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['legalaid.Category'])),
-            ('provider', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cla_provider.Provider'])),
-        ))
-        db.send_create_signal(u'cla_provider', ['OutOfHoursRota'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Provider'
-        db.delete_table(u'cla_provider_provider')
-
-        # Deleting model 'ProviderAllocation'
-        db.delete_table(u'cla_provider_providerallocation')
-
-        # Deleting model 'Staff'
-        db.delete_table(u'cla_provider_staff')
-
-        # Deleting model 'OutOfHoursRota'
-        db.delete_table(u'cla_provider_outofhoursrota')
-
-
-    models = {
-        u'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        u'auth.permission': {
-            'Meta': {'ordering': "(u'content_type__app_label', u'content_type__model', u'codename')", 'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'auth.user': {
-            'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        u'cla_provider.outofhoursrota': {
-            'Meta': {'object_name': 'OutOfHoursRota'},
-            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Category']"}),
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'end_date': ('django.db.models.fields.DateTimeField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cla_provider.Provider']"}),
-            'start_date': ('django.db.models.fields.DateTimeField', [], {})
-        },
-        u'cla_provider.provider': {
-            'Meta': {'object_name': 'Provider'},
-            'active': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'law_category': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['legalaid.Category']", 'through': u"orm['cla_provider.ProviderAllocation']", 'symmetrical': 'False'}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'opening_hours': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'short_code': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'telephone_backdoor': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'telephone_frontdoor': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
-        },
-        u'cla_provider.providerallocation': {
-            'Meta': {'object_name': 'ProviderAllocation'},
-            'category': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['legalaid.Category']"}),
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cla_provider.Provider']"}),
-            'weighted_distribution': ('django.db.models.fields.FloatField', [], {})
-        },
-        u'cla_provider.staff': {
-            'Meta': {'object_name': 'Staff'},
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_manager': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'provider': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cla_provider.Provider']"}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
-        },
-        u'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        u'legalaid.category': {
-            'Meta': {'ordering': "['order']", 'object_name': 'Category'},
-            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '50'}),
-            'created': ('model_utils.fields.AutoCreatedField', [], {'default': 'datetime.datetime.now'}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modified': ('model_utils.fields.AutoLastModifiedField', [], {'default': 'datetime.datetime.now'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'order': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'raw_description': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-        }
-    }
-
-    complete_apps = ['cla_provider']
+    operations = [
+        migrations.CreateModel(
+            name='CSVUpload',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('comment', models.TextField(null=True, blank=True)),
+                ('body', jsonfield.fields.JSONField()),
+                ('month', models.DateField(validators=[core.validators.validate_first_of_month])),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Feedback',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('reference', uuidfield.fields.UUIDField(unique=True, max_length=32, editable=False, blank=True)),
+                ('comment', models.TextField()),
+                ('justified', models.BooleanField(default=False)),
+                ('resolved', models.BooleanField(default=False)),
+                ('issue', models.CharField(max_length=100, choices=[(b'ADCO', b'Advisor conduct'), (b'ACPR', b'Access problems'), (b'ARRA', b'Already receiving/received advice'), (b'COLI', b'Category of law is incorrect'), (b'DLAY', b'Delay in advising (lack of follow up information)'), (b'DLAO', b'Delay in advising (other)'), (b'INEL', b'Incorrect eligibility calculation'), (b'INDI', b'Incorrect diagnosis (out of scope)'), (b'INIP', b'Incorrect information provided (diagnosis)'), (b'INTC', b'Incorrect transferring of calls (provider)'), (b'INFB', b'Incorrect transferring of calls (front/back)'), (b'IMCD', b'Incorrect/missing contact details or DOB'), (b'ODDE', b'Other data entry errors'), (b'SESE', b'System Error'), (b'OTHR', b'Other')])),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='OutOfHoursRota',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('start_date', models.DateTimeField()),
+                ('end_date', models.DateTimeField()),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Provider',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('name', models.CharField(max_length=255)),
+                ('opening_hours', models.CharField(max_length=100, blank=True)),
+                ('active', models.BooleanField(default=False)),
+                ('short_code', models.CharField(max_length=100, blank=True)),
+                ('telephone_frontdoor', models.CharField(max_length=100, blank=True)),
+                ('telephone_backdoor', models.CharField(max_length=100, blank=True)),
+                ('email_address', models.EmailField(max_length=75, blank=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ProviderAllocation',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('weighted_distribution', models.FloatField()),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ProviderPreAllocation',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Staff',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
+                ('is_manager', models.BooleanField(default=False)),
+                ('chs_organisation', models.CharField(help_text=b'Fake field to mirror old CHS extract, user can set this to whatever they like', max_length=500, null=True, blank=True)),
+                ('chs_user', models.CharField(help_text=b'Fake field to mirror old CHS extract, user can set this to whatever they like', max_length=500, null=True, blank=True)),
+                ('chs_password', models.CharField(help_text=b'Fake field to mirror old CHS extract, user can set this to whatever they like', max_length=500, null=True, blank=True)),
+                ('provider', models.ForeignKey(to='cla_provider.Provider')),
+                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'verbose_name_plural': 'staff',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AlterUniqueTogether(
+            name='staff',
+            unique_together=set([('chs_organisation', 'chs_user')]),
+        ),
+    ]

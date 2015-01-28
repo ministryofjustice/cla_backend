@@ -1,9 +1,8 @@
 from django.test import TestCase
-from django.utils.unittest import skip
 
 from core.tests.mommy_utils import make_recipe
 
-from ..models import OP_MANAGER_GROUP_NAME, CLA_SUPERUSER_GROUP_NAME
+from call_centre.models import OP_MANAGER_GROUP_NAME, CLA_SUPERUSER_GROUP_NAME
 
 
 class OperatorTestCase(TestCase):

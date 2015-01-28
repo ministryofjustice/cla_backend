@@ -3,8 +3,8 @@ from django.core.exceptions import MultipleObjectsReturned
 
 
 class RunningTimerManager(models.Manager):
-    def get_query_set(self):
-        qs = super(RunningTimerManager, self).get_query_set()
+    def get_queryset(self):
+        qs = super(RunningTimerManager, self).get_queryset()
         return qs.filter(stopped__isnull=True, cancelled=False)
 
     def get_by_user(self, user_pk):

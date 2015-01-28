@@ -162,8 +162,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_statsd',
-    'south',
+    'django_statsd'
 )
 
 PROJECT_APPS = (
@@ -172,7 +171,6 @@ PROJECT_APPS = (
     'cla_provider',
     'call_centre',
     'cla_eventlog',
-    'reports',
     'knowledgebase',
     'timer',
     'diagnosis',

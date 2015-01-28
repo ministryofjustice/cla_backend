@@ -70,7 +70,7 @@ class OneToOneUserAdminForm(forms.ModelForm):
     def adjust_username_field(self, instance):
         attrs = self.base_fields['username'].widget.attrs
         if instance:
-            attrs['readonly'] = True
+            attrs['readonly'] = 'True'
         else:
             if 'readonly' in attrs:
                 del attrs['readonly']

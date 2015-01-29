@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
+from django.db import IntegrityError
 from django.core.exceptions import MultipleObjectsReturned
 
 from core.tests.mommy_utils import make_recipe, make_user
@@ -18,16 +19,18 @@ class RunningTimerManagerTestCase(TestCase):
         self.assertItemsEqual(timers, [timer1, timer3])
 
     def test_get_by_user_fails_with_multiple_timers(self):
-        user = make_user()
-        make_recipe(
-            'timer.Timer', stopped=None, created_by=user,
-            _quantity=2
-        )
+        try:
+            user = make_user()
+            make_recipe(
+                'timer.Timer', stopped=None, created_by=user,
+                _quantity=2
+            )
 
-        self.assertRaises(
-            MultipleObjectsReturned,
-            Timer.running_objects.get_by_user, user
-        )
+            Timer.running_objects.get_by_user(user)
+        except (MultipleObjectsReturned, IntegrityError):
+            pass
+        else:
+            self.assertTrue(False, 'It should raise MultipleObjectsReturned or IntegrityError')
 
     def test_get_by_user_fails_when_no_timer(self):
         user = make_user()

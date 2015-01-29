@@ -7,6 +7,7 @@ Dependencies
 ------------
 
 -  `Virtualenv <http://www.virtualenv.org/en/latest/>`__
+-  `Recent version of pip`
 -  `Python 2.7 <http://www.python.org/>`__ (Can be installed using ``brew``)
 -  `Postgres 9.3+ <http://www.postgresql.org/>`__
 
@@ -27,6 +28,11 @@ Next, create the environment and start it up:
     virtualenv env --prompt=\(cla_be\)
 
     source env/bin/activate
+
+Update pip to the latest version:
+
+::
+    pip install -U pip
 
 Install python dependencies:
 
@@ -77,7 +83,6 @@ accept all defaults and use password 'admin'.
 
 ::
 
-    ./manage.py syncdb
     ./manage.py migrate
 
 Load initial data:

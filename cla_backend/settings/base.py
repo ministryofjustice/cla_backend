@@ -145,6 +145,11 @@ MIDDLEWARE_CLASSES = (
     'cla_auth.middleware.OBIEEHawkResponseMiddleware',
 )
 
+AUTHENTICATION_BACKENDS = (
+    'cla_auth.auth.OBIEEHawkAuthentication',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 ROOT_URLCONF = 'cla_backend.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.

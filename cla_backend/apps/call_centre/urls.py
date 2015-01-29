@@ -48,7 +48,4 @@ urlpatterns = patterns('',
     url(r'^', include(adv_router.urls)),
     url(r'^', include(router.urls)),
     url(r'^', include(timer_router.urls)),
-    url(r'^dbexport/$',
-        views.DBExportView.as_view(),
-        name='db_export')
 )

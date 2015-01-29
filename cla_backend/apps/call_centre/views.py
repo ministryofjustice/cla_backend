@@ -6,13 +6,18 @@ from shutil import rmtree
 from uuid import UUID
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
+from json import dumps
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth import authenticate
 from django.db.models import Q
 from django.utils import timezone
 from django.db import connection
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import (HttpResponse, HttpResponseBadRequest, 
+                         HttpResponseForbidden)
+from django.views.generic import View
+from django.core.exceptions import PermissionDenied
 
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
@@ -25,11 +30,12 @@ from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
     SearchFilter, BaseFilterBackend
 
+from mohawk.exc import TokenExpired
+
 from cla_provider.models import Provider, OutOfHoursRota, Feedback
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 from cla_auth.auth import OBIEEHawkAuthentication
-from cla_auth.permissions import OBIEEIPPermission
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.decorators import list_route
@@ -67,7 +73,6 @@ from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     CallMeBackForm, StopCallMeBackForm, DiversityForm
 
 from .models import Operator
-from .throttling import OBIEERateThrottle
 
 
 class CallCentrePermissionsViewSetMixin(object):
@@ -552,7 +557,7 @@ class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin,
         return qs
 
 
-class DBExportView(APIView):
+class DBExportView(View):
     basic_sql_files = [
         'export_auth_user.sql',
         'export_call_centre_operator.sql',
@@ -593,10 +598,6 @@ class DBExportView(APIView):
     personal_details_sql_file = 'export_personal_details.sql'
     sql_path = os.path.dirname(__file__)
 
-    authentication_classes = (OBIEEHawkAuthentication,)
-    throttle_classes = (OBIEERateThrottle,)
-    permission_classes = (permissions.IsAuthenticated, OBIEEIPPermission)
-
     filename = 'cla_database.zip'
 
     def get(self, request, format=None):
@@ -605,9 +606,19 @@ class DBExportView(APIView):
         passphrase: diversity GPG private key passphrase
         """
         try:
-            dt_from = request.QUERY_PARAMS['from']
-            dt_to = request.QUERY_PARAMS['to']
-            passphrase = request.QUERY_PARAMS['passphrase']
+            if not authenticate(request=request):
+                return HttpResponseForbidden()
+        except TokenExpired as exc:
+            resp = HttpResponse(dumps({'detail': 'invalid timestamp'}),
+                                status=401,
+                                content_type='application/json')
+            resp['WWW-Authenticate'] = exc.www_authenticate
+            return resp
+
+        try:
+            dt_from = request.GET['from']
+            dt_to = request.GET['to']
+            passphrase = request.GET['passphrase']
         except KeyError:
             return HttpResponseBadRequest()
 

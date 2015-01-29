@@ -4,6 +4,8 @@ import traceback
 
 from django.conf import settings
 from django.core.cache import cache
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.models import User
 
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
@@ -19,12 +21,19 @@ log = logging.getLogger(__name__)
 default_message_expiration = 60
 
 
-class OBIEEHawkAuthentication(BaseAuthentication):
+class OBIEEHawkAuthentication(object):
 
     def authenticate(self, request):
+
         if not request.META.get('HTTP_AUTHORIZATION'):
             log.debug('request did not send an Authorization header')
-            raise AuthenticationFailed('missing authorization header')
+            raise PermissionDenied()
+
+        ip_addr = request.META['REMOTE_ADDR']
+        whitelist = settings.OBIEE_IP_PERMISSIONS
+
+        if '*' not in whitelist and ip_addr not in whitelist:
+            raise PermissionDenied()            
 
         try:
             receiver = Receiver(
@@ -48,7 +57,7 @@ class OBIEEHawkAuthentication(BaseAuthentication):
             log.debug(traceback.format_exc())
             log.info('Hawk: denying access because of '
                      '{etype}: {val}'.format(etype=etype, val=val))
-            raise AuthenticationFailed('authentication failed')
+            raise PermissionDenied()
 
         # Pass our receiver object to the middleware so the request header
         # doesn't need to be parsed again.
@@ -59,10 +68,15 @@ class OBIEEHawkAuthentication(BaseAuthentication):
             client_id = parse_authorization_header(
                 request.META['HTTP_AUTHORIZATION'])['id']
             client = Client.objects.get(client_id=client_id)
-            return (client.user, None)
+            return client.user
         except (KeyError, Client.DoesNotExist):
             return None
 
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
 
 def lookup_credentials(cr_id):
     try:
@@ -74,7 +88,6 @@ def lookup_credentials(cr_id):
         }
     except Client.DoesNotExist:
         raise LookupError('No Hawk ID of {id}'.format(id=cr_id))
-
 
 def seen_nonce(nonce, timestamp):
     """

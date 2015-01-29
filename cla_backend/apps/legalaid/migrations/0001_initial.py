@@ -18,7 +18,7 @@ import core.cloning
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('knowledgebase', '__first__'),
+        ('knowledgebase', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('diagnosis', '0001_initial'),
         ('cla_provider', '0001_initial'),

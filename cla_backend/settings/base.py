@@ -182,7 +182,6 @@ PROJECT_APPS = (
 if BACKEND_ENABLED:
     INSTALLED_APPS += (
         'rest_framework',
-        # 'provider',
         'provider.oauth2',
     )
 if ADMIN_ENABLED:

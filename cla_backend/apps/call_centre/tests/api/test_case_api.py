@@ -3,6 +3,7 @@ import mock
 
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+from django.core import mail
 
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -45,7 +46,8 @@ class BaseCaseTestCase(
             'date_of_birth', 'category',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
             'case_count', 'outcome_code',
-            'requires_action_at', 'callback_attempt', 'source'
+            'requires_action_at', 'callback_attempt', 'source',
+            'complaint_flag'
         ]
 
 
@@ -439,8 +441,13 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         self.assertEqual(Log.objects.count(), 0)
 
     def test_RDSP_successful(self):
+        self.assertEquals(len(mail.outbox), 0)
+
         # assign case to provider
-        provider = make_recipe('cla_provider.provider', active=True)
+        provider = make_recipe(
+            'cla_provider.provider',
+            active=True, email_address='example@example.com'
+        )
         self.resource.assign_to_provider(provider)
 
         # before, no logs
@@ -460,6 +467,8 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         self.assertEqual(log.case, self.resource)
         self.assertEqual(log.notes, self.get_expected_notes(data))
         self.assertEqual(log.created_by, self.user)
+
+        self.assertEquals(len(mail.outbox), 1)
 
     def test_SAME_fails_if_case_hasnt_received_alternative_help(self):
         self.assertEqual(Log.objects.count(), 0)

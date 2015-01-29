@@ -1,14 +1,12 @@
 from checker.helpers import notify_callback_created
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from knowledgebase.views import BaseArticleViewSet
 
 from rest_framework.permissions import AllowAny
-from rest_framework import viewsets, mixins, filters
+from rest_framework import viewsets, mixins
 
 from core.models import get_web_user
 
-from cla_eventlog import event_registry
 from knowledgebase.views import BaseArticleViewSet, \
     ArticleCategoryFilter
 

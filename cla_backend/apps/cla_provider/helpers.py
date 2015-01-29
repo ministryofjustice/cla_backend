@@ -25,11 +25,17 @@ class ProviderDistributionHelper(object):
         self.date = dt.replace(hour=0, minute=0, second=0)
 
     def get_distribution(self, category, include_pre_allocations=False):
+        last_update = ProviderAllocation.objects.filter(category=category).order_by('-modified').first()
+
         raw = Case.objects.filter(diagnosis__category=category)\
             .exclude(log__code='MANREF')\
             .exclude(provider=None)\
-            .filter(provider_assigned_at__gte=self.date)\
-            .values('provider')\
+            .filter(provider_assigned_at__gte=self.date)
+
+        if last_update and last_update.modified > self.date:
+            raw = raw.filter(provider_assigned_at__gte=last_update.modified)
+
+        raw = raw.values('provider')\
             .annotate(num_allocations=Count('id'))
         ret = defaultdict(int)
         for item in raw:
@@ -212,10 +218,26 @@ class ProviderAllocationHelper(object):
 
 
 def notify_case_assigned(provider, case):
+    _notify_case_sent_to_provider(
+        provider, case,
+        subject='CLA Case {ref} has been assigned to {provider}',
+        template_name='assigned'
+    )
+
+
+def notify_case_RDSPed(provider, case):
+    _notify_case_sent_to_provider(
+        provider, case,
+        subject='CLA Case {ref} needs actioning - RDSP',
+        template_name='RDSPed'
+    )
+
+
+def _notify_case_sent_to_provider(provider, case, subject, template_name):
     if not provider.email_address:
         return
     from_address = 'no-reply@digital.justice.gov.uk'
-    subject = 'CLA Case {ref} has been assigned to {provider}'.format(**{
+    subject = subject.format(**{
         'ref': case.reference,
         'provider': provider.name})
     case_url = 'https://{0}/provider/{1}/'
@@ -224,9 +246,9 @@ def notify_case_assigned(provider, case):
         'now': datetime.datetime.now(),
         'case_url': case_url.format(settings.SITE_HOSTNAME, case.reference),
         'case': case}
-    template = 'cla_provider/email/assigned.{0}'
-    text = render_to_string(template.format('txt'), template_params)
-    html = render_to_string(template.format('html'), template_params)
+    template = 'cla_provider/email/{0}.{1}'
+    text = render_to_string(template.format(template_name, 'txt'), template_params)
+    html = render_to_string(template.format(template_name, 'html'), template_params)
     email = EmailMultiAlternatives(
         subject, text, from_address, [provider.email_address])
     email.attach_alternative(html, 'text/html')

@@ -7,7 +7,7 @@ Dependencies
 ------------
 
 -  `Virtualenv <http://www.virtualenv.org/en/latest/>`__
--  `Recent version of pip`
+-  `Most recent version of pip`
 -  `Python 2.7 <http://www.python.org/>`__ (Can be installed using ``brew``)
 -  `Postgres 9.3+ <http://www.postgresql.org/>`__
 
@@ -32,6 +32,7 @@ Next, create the environment and start it up:
 Update pip to the latest version:
 
 ::
+
     pip install -U pip
 
 Install python dependencies:
@@ -78,12 +79,17 @@ Create a ``local.py`` settings file from the example file:
 
     cp cla_backend/settings/.example.local.py cla_backend/settings/local.py
 
-Sync and migrate the database: When prompted to create an Admin user,
-accept all defaults and use password 'admin'.
+Sync and migrate the database:
 
 ::
 
     ./manage.py migrate
+
+Create an admin user by running the following command and specifying username == password == 'admin':
+
+::
+
+    ./manage.py createsuperuser
 
 Load initial data:
 

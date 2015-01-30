@@ -146,7 +146,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    'cla_auth.auth.OBIEEHawkAuthentication',
+    #'cla_auth.auth.OBIEEHawkAuthentication',
     'django.contrib.auth.backends.ModelBackend',
 )
 

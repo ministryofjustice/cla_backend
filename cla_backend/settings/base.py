@@ -142,7 +142,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'cla_auth.middleware.OBIEEHawkResponseMiddleware',
+    #'cla_auth.middleware.OBIEEHawkResponseMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (

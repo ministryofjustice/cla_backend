@@ -55,6 +55,7 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
             'matter_type1', 'matter_type2', 'diagnosis', 'media_code',
             'postcode', 'diagnosis_state', 'thirdparty_details',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
+            'complaint_flag'
         ]
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -391,3 +392,19 @@ class BaseUpdateCaseTestCase(BaseFullCaseAPIMixin):
         self.assertCaseEqual(response.data, case)
 
         self.assertNoLogInDB()
+
+    def test_complaint_flag_update_creates_log(self):
+        data = {'complaint_flag': True}
+
+        log_count = Log.objects.count()
+        response = self.client.patch(
+            self.detail_url,
+            data=data,
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Log.objects.count(),  log_count + 1)
+        log = Log.objects.all().first()
+        self.assertEqual(log.code, 'COMPLAINT_FLAG_TOGGLED')
+        self.assertTrue(log.notes.endswith('True'))

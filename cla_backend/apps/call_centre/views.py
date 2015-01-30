@@ -14,17 +14,15 @@ from django.contrib.auth import authenticate
 from django.db.models import Q
 from django.utils import timezone
 from django.db import connection
-from django.http import (HttpResponse, HttpResponseBadRequest, 
+from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden)
 from django.views.generic import View
-from django.core.exceptions import PermissionDenied
 
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
 from legalaid.utils import diversity
 
-from rest_framework import viewsets, mixins, status, permissions
-from rest_framework.views import APIView
+from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
@@ -32,10 +30,10 @@ from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
 
 from mohawk.exc import TokenExpired
 
-from cla_provider.models import Provider, OutOfHoursRota, Feedback
+from cla_provider.models import Provider, OutOfHoursRota, Feedback, \
+    ProviderPreAllocation
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
-from cla_auth.auth import OBIEEHawkAuthentication
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.decorators import list_route
@@ -221,10 +219,13 @@ class CaseViewSet(
 
         if hasattr(obj, 'eligibility_check') and obj.eligibility_check != None and obj.eligibility_check.category:
             category = obj.eligibility_check.category
+            ProviderPreAllocation.objects.clear(case=obj)
             suggested = helper.get_suggested_provider(category)
 
             if suggested:
                 suggested_provider = ProviderSerializer(suggested).data
+                ProviderPreAllocation.objects.pre_allocate(
+                    category, suggested, obj)
             else:
                 suggested_provider = None
         else:
@@ -271,7 +272,10 @@ class CaseViewSet(
 
         if form.is_valid():
             provider = form.save(request.user)
+
+            ProviderPreAllocation.objects.clear(case=obj)
             notify_case_assigned(provider, form.case)
+
             provider_serialised = ProviderSerializer(provider)
             return DRFResponse(data=provider_serialised.data)
 

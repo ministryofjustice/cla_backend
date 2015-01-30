@@ -1,4 +1,5 @@
 import uuid
+from datetime import timedelta
 
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
@@ -7,6 +8,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.db.models.signals import post_save, pre_save
+from django.db import transaction
 
 from jsonfield import JSONField
 from model_utils.models import TimeStampedModel
@@ -61,6 +63,32 @@ class ProviderAllocation(TimeStampedModel):
     def __unicode__(self):
         return u'%s provides %s' % (self.provider, self.category)
 
+class ProviderPreAllocationManager(models.Manager):
+
+    def get_queryset(self):
+        super(ProviderPreAllocationManager, self).get_queryset().filter(
+            created__lte=timezone.now() - timedelta(seconds=60)
+        ).delete()
+
+        return super(ProviderPreAllocationManager, self).get_queryset()
+
+    def pre_allocate(self, category, provider, case):
+        self.get_queryset().filter(case=case).delete()
+        if not case.provider:
+            self.get_queryset().create(category=category, provider=provider, case=case)
+
+    def clear(self, case=None):
+        qs = self.get_queryset()
+        if case:
+            qs = qs.filter(case=case)
+        qs.delete()
+
+class ProviderPreAllocation(TimeStampedModel):
+    provider = models.ForeignKey(Provider)
+    category = models.ForeignKey('legalaid.Category')
+    case = models.ForeignKey('legalaid.Case')
+
+    objects = ProviderPreAllocationManager()
 
 class Staff(TimeStampedModel):
     user = models.OneToOneField('auth.User')

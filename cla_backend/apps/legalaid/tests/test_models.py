@@ -88,7 +88,8 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         source=CASE_SOURCE.WEB,
         provider_viewed=timezone.now(),
         provider_accepted=timezone.now(),
-        provider_closed=timezone.now()
+        provider_closed=timezone.now(),
+        provider_assigned_at=timezone.now()
     )
     CaseKnowledgebaseAssignment.objects.create(
         case=case, assigned_by=make_user(),
@@ -650,6 +651,7 @@ class CaseTestCase(TestCase):
         case.assign_to_provider(provider)
 
         self.assertEqual(case.provider, provider)
+        self.assertNotEqual(case.provider_assigned_at, None)
 
     def test_assign_to_provider_resets_provider_viewed_accepted_closed(self):
         providers = make_recipe('cla_provider.provider', _quantity=2)
@@ -659,6 +661,7 @@ class CaseTestCase(TestCase):
             provider=providers[0],
             provider_viewed=timezone.now(),
             provider_accepted=timezone.now(),
+            provider_assigned_at=timezone.now(),
             provider_closed=timezone.now()
         )
 
@@ -666,6 +669,7 @@ class CaseTestCase(TestCase):
         self.assertNotEqual(case.provider_viewed, None)
         self.assertNotEqual(case.provider_accepted, None)
         self.assertNotEqual(case.provider_closed, None)
+        self.assertNotEqual(case.provider_assigned_at, None)
 
         case.assign_to_provider(providers[1])
 
@@ -1225,13 +1229,14 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
-            'exempt_user', 'exempt_user_reason', 'ecf_statement', 'source'
+            'exempt_user', 'exempt_user_reason', 'ecf_statement', 'source',
+            'complaint_flag'
         ]
 
         if internal:
-            equal_fields += ['provider', 'requires_action_by']
+            equal_fields += ['provider', 'requires_action_by', 'provider_assigned_at']
         else:
-            non_equal_fields += ['provider', 'requires_action_by']
+            non_equal_fields += ['provider', 'requires_action_by', 'provider_assigned_at']
 
         self._check_model_fields(
             Case, case, new_case, non_equal_fields, equal_fields
@@ -1278,11 +1283,13 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             expected_values.update({
                 'requires_action_by': case.requires_action_by,
                 'provider': case.provider,
+                'provider_assigned_at': case.provider_assigned_at
             })
         else:
             expected_values.update({
                 'requires_action_by': REQUIRES_ACTION_BY.OPERATOR,
                 'provider': None,
+                'provider_assigned_at': None
             })
 
         for field, value in expected_values.items():

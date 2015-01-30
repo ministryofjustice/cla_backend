@@ -1,6 +1,10 @@
 from django.contrib import admin
 
-from .models import Article, ArticleCategoryMatrix
+from .models import Article, ArticleCategoryMatrix, TelephoneNumber
+
+
+class TelephoneNumberInline(admin.TabularInline):
+    model = TelephoneNumber
 
 
 class ArticleCategoryMatrixInline(admin.TabularInline):
@@ -9,14 +13,14 @@ class ArticleCategoryMatrixInline(admin.TabularInline):
 
 class ArticleAdmin(admin.ModelAdmin):
     actions = None
-    inlines = [ArticleCategoryMatrixInline]
+    inlines = [TelephoneNumberInline, ArticleCategoryMatrixInline]
     ordering = ['service_name']
 
     fields = (
-        'resource_type', 'service_name', 'organisation', 'website',
-        'description', 'how_to_use', 'when_to_use', 'address', 'helpline',
-        'opening_hours', 'keywords', 'geographic_coverage',
-        'type_of_service', 'accessibility'
+        'resource_type', 'service_name', 'service_tag', 'organisation',
+        'website', 'email', 'description', 'public_description', 'how_to_use',
+        'when_to_use', 'address', 'opening_hours', 'keywords',
+        'geographic_coverage', 'type_of_service', 'accessibility'
     )
     list_display = (
         'service_name', 'resource_type'

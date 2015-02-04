@@ -140,6 +140,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cla_auth.middleware.OBIEEHawkResponseMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'cla_auth.auth.OBIEEHawkAuthentication',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 ROOT_URLCONF = 'cla_backend.urls'
@@ -334,6 +340,13 @@ OPERATOR_HOURS = {
     'saturday': (datetime.time(9, 0), datetime.time(12, 30))
 }
 
+HAWK_MESSAGE_EXPIRATION = 60
+
+OBIEE_IP_PERMISSIONS = (
+    '*',
+)
+
+OBIEE_ENABLED = os.environ.get('OBIEE_ENABLED', 'True') == 'True'
 
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and 'test' == sys.argv[1]:

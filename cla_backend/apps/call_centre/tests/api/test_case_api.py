@@ -441,6 +441,7 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         self.assertEqual(Log.objects.count(), 0)
 
     def test_RDSP_successful(self):
+        mail.outbox = []
         self.assertEquals(len(mail.outbox), 0)
 
         # assign case to provider

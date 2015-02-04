@@ -17,7 +17,7 @@ class CaseworkerAdminForm(OneToOneUserAdminForm):
     is_active = forms.BooleanField(required=False, initial=True)
 
     def get_defaults(self):
-        defaults = super(CaseworkerAdminForm, self).get_default_fields()
+        defaults = super(CaseworkerAdminForm, self).get_defaults()
         defaults.update({'is_staff': True})
         return defaults
 

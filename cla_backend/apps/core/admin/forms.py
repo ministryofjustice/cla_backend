@@ -138,7 +138,7 @@ class OneToOneUserAdminForm(forms.ModelForm):
             'is_active'
         ]
 
-    def get_default_fields(self):
+    def get_defaults(self):
         return {}
 
     def save(self, commit=True):

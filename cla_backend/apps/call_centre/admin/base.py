@@ -99,7 +99,6 @@ class CaseworkerAdmin(OneToOneUserAdmin):
         """
         Rule:
         - django superuser can do everything
-        - operator manager can only change operators != cla superusers
         - cla superusers can do everything
         """
         # if no permissions from standard django, don't even bother
@@ -114,9 +113,14 @@ class CaseworkerAdmin(OneToOneUserAdmin):
         if self._is_loggedin_superuser(request):
             return True
 
-        # at this point, logged-in user is operator manager or simple django staff
-        # so he can only change the obj if the obj is not a cla superuser
-        return True
+
+        if obj and request.user == obj.user:
+            return True
+
+        # anyone else can't do anything.
+
+
+        return False
 
 admin.site.register(Operator, OperatorAdmin)
 admin.site.register(Caseworker, CaseworkerAdmin)

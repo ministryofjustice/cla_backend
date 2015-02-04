@@ -522,7 +522,6 @@ class CaseworkerAdminViewTestCase(TestCase):
             'first_name': 'New Name',
             'last_name': 'New Last Name',
             'email': 'new_email@example.com',
-            'is_staff': True,
             '_save': 'Save'
         }
         self._test_change_form(
@@ -540,7 +539,6 @@ class CaseworkerAdminViewTestCase(TestCase):
             'first_name': 'New Name',
             'last_name': 'New Last Name',
             'email': 'new_email@example.com',
-            'is_staff': True,
             '_save': 'Save'
         }
         self._test_change_form(
@@ -563,7 +561,6 @@ class CaseworkerAdminViewTestCase(TestCase):
             'first_name': 'New Name',
             'last_name': 'New Last Name',
             'email': 'new_email@example.com',
-            'is_staff': True,
             '_save': 'Save'
         }
         self._test_add_form(
@@ -583,7 +580,6 @@ class CaseworkerAdminViewTestCase(TestCase):
             'first_name': 'New Name',
             'last_name': 'New Last Name',
             'email': 'new_email@example.com',
-            'is_staff': True,
             '_save': 'Save'
         }
         self._test_add_form(

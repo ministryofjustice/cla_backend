@@ -138,6 +138,9 @@ class OneToOneUserAdminForm(forms.ModelForm):
             'is_active'
         ]
 
+    def get_default_fields(self):
+        return {}
+
     def save(self, commit=True):
         onetoone_model = super(OneToOneUserAdminForm, self).save(commit=False)
 
@@ -145,6 +148,9 @@ class OneToOneUserAdminForm(forms.ModelForm):
             onetoone_model.user = User()
         for f in self.get_user_fields():
             setattr(onetoone_model.user, f, self.cleaned_data[f])
+
+        for k, v in self.get_defaults().items():
+            setattr(onetoone_model.user, k, v)
 
         if not self.instance.pk:
             onetoone_model.user.set_password(self.cleaned_data["password"])

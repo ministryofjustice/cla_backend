@@ -62,6 +62,8 @@ class OneToOneUserAdminForm(forms.ModelForm):
     )
     is_active = forms.BooleanField(required=False)
 
+
+
     def adjust_password_fields(self, instance):
         for field_name in ['password', 'password2']:
             action = 'CREATE' if not instance else 'UPDATE'
@@ -127,17 +129,22 @@ class OneToOneUserAdminForm(forms.ModelForm):
             return self.initial["password"]
         return self.cleaned_data['password']
 
+    def get_user_fields(self):
+        return [
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'is_active'
+        ]
+
     def save(self, commit=True):
         onetoone_model = super(OneToOneUserAdminForm, self).save(commit=False)
 
         if not self.instance.pk:
             onetoone_model.user = User()
-
-        onetoone_model.user.username = self.cleaned_data['username']
-        onetoone_model.user.first_name = self.cleaned_data['first_name']
-        onetoone_model.user.last_name = self.cleaned_data['last_name']
-        onetoone_model.user.email = self.cleaned_data['email']
-        onetoone_model.user.is_active = self.cleaned_data['is_active']
+        for f in self.get_user_fields():
+            setattr(onetoone_model.user, f, self.cleaned_data[f])
 
         if not self.instance.pk:
             onetoone_model.user.set_password(self.cleaned_data["password"])

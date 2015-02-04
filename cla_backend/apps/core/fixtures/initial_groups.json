@@ -1,11 +1,11 @@
 [
     {
-        "pk": 1, 
-        "model": "auth.group", 
+        "pk": 1,
+        "model": "auth.group",
         "fields": {
-            "name": "Operator Managers", 
+            "name": "Operator Managers",
             "permissions": [
-                ["add_operator", "call_centre", "operator"], 
+                ["add_operator", "call_centre", "operator"],
                 ["change_operator", "call_centre", "operator"],
                 ["run_reports", "legalaid", "case"],
                 ["add_article", "knowledgebase", "article"],
@@ -17,13 +17,15 @@
         }
     },
     {
-        "pk": 2, 
-        "model": "auth.group", 
+        "pk": 2,
+        "model": "auth.group",
         "fields": {
-            "name": "CLA Superusers", 
+            "name": "CLA Superusers",
             "permissions": [
-                ["add_operator", "call_centre", "operator"], 
+                ["add_operator", "call_centre", "operator"],
                 ["change_operator", "call_centre", "operator"],
+                ["add_caseworker", "call_centre", "caseworker"],
+                ["change_caseworker", "call_centre", "caseworker"],
                 ["add_staff", "cla_provider", "staff"],
                 ["change_staff", "cla_provider", "staff"],
                 ["add_provider", "cla_provider", "provider"],
@@ -37,6 +39,16 @@
                 ["change_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
                 ["add_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
                 ["delete_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"]
+            ]
+        }
+    },
+  {
+        "pk": 3,
+        "model": "auth.group",
+        "fields": {
+            "name": "LAA Caseworker",
+            "permissions": [
+              ["run_reports", "legalaid", "case"]
             ]
         }
     }

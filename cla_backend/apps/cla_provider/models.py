@@ -83,6 +83,7 @@ class ProviderPreAllocationManager(models.Manager):
             qs = qs.filter(case=case)
         qs.delete()
 
+
 class ProviderPreAllocation(TimeStampedModel):
     provider = models.ForeignKey(Provider)
     category = models.ForeignKey('legalaid.Category')
@@ -90,13 +91,14 @@ class ProviderPreAllocation(TimeStampedModel):
 
     objects = ProviderPreAllocationManager()
 
+
 class Staff(TimeStampedModel):
     user = models.OneToOneField('auth.User')
     provider = models.ForeignKey(Provider)
     is_manager = models.BooleanField(default=False)
 
-    chs_organisation = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True, default=random_uuid_str)
-    chs_user = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True, default=random_uuid_str)
+    chs_organisation = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
+    chs_user = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
     chs_password = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
 
     def set_chs_password(self, raw_password):
@@ -108,6 +110,12 @@ class Staff(TimeStampedModel):
 
     def __unicode__(self):
         return self.user.username
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.chs_organisation = self.chs_organisation or random_uuid_str()
+            self.chs_user = self.chs_user or random_uuid_str()
+        return super(Staff, self).save(*args, **kwargs)
 
 
 class OutOfHoursRotaManager(models.Manager):

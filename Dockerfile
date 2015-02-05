@@ -19,7 +19,7 @@ RUN echo "Europe/London" > /etc/timezone  &&  dpkg-reconfigure -f noninteractive
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 
 # Dependencies
-RUN DEBIAN_FRONTEND='noninteractive' \ 
+RUN DEBIAN_FRONTEND='noninteractive' \
   apt-get update && \
   apt-get -y --force-yes install bash apt-utils python-pip python-dev build-essential git software-properties-common python-software-properties libpq-dev g++ make libpcre3 libpcre3-dev \
   libxslt-dev libxml2-dev && \
@@ -48,13 +48,22 @@ VOLUME ["/data", "/var/log/nginx", "/var/log/wsgi"]
 # APP_HOME
 ENV APP_HOME /home/app/django
 
+# Add requirements to docker
+ADD ./requirements /tmp/requirements
+
+# PIP INSTALL APPLICATION
+RUN cd /tmp/requirements && pip install -r production.txt && find . -name '*.pyc' -delete
+
 # Add project directory to docker
 ADD . /home/app/django
 
 RUN cd /home/app/django && cat docker/version >> /etc/profile
 
-# PIP INSTALL APPLICATION
-RUN cd /home/app/django && pip install -r requirements/production.txt && find . -name '*.pyc' -delete
+# PYCLEAN
+RUN cd /home/app/django && find . -name '*.pyc' -delete
+
+# install startup files for runit
+ADD ./docker/migrations.startup /etc/my_init.d/migrations.startup
 
 # install service files for runit
 ADD ./docker/nginx.service /etc/service/nginx/run
@@ -70,3 +79,4 @@ RUN cd /home/app/django && python manage.py collectstatic --noinput
 
 # Expose ports.
 EXPOSE 80
+

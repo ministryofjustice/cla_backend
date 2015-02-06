@@ -1,3 +1,4 @@
 #!/bin/bash
 
+chown -R www-data:www-data /var/log/wsgi
 exec /usr/local/bin/uwsgi --ini /etc/wsgi/conf.d/cla_backend.ini

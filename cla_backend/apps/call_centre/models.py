@@ -8,8 +8,20 @@ from .signals import log_operator_created, log_operator_modified
 
 
 OP_MANAGER_GROUP_NAME = 'Operator Managers'
+LAA_CASEWORKER_GROUP_NAME = 'LAA Caseworker'
 CLA_SUPERUSER_GROUP_NAME = 'CLA Superusers'
 
+class Caseworker(TimeStampedModel):
+    user = models.OneToOneField('auth.User')
+
+    def __unicode__(self):
+        return self.user.username
+
+    def save(self, *args, **kwargs):
+        obj = super(Caseworker, self).save(*args, **kwargs)
+        group = Group.objects.get(name=LAA_CASEWORKER_GROUP_NAME)
+        group.user_set.add(self.user)
+        return obj
 
 class Operator(TimeStampedModel):
     user = models.OneToOneField('auth.User')

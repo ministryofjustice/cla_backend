@@ -2,8 +2,8 @@ from django.test import TestCase
 
 from model_mommy.recipe import Recipe
 
-from ..admin_support.forms import CategoryModelForm
-from ..models import Category
+from legalaid.admin_support.forms import CategoryModelForm
+from legalaid.models import Category
 
 
 category_recipe = Recipe(Category)

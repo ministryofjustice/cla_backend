@@ -80,8 +80,6 @@ TIME_ZONE = 'Europe/London'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-gb'
 
-SITE_ID = 1
-
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = False
@@ -128,10 +126,10 @@ STATICFILES_FINDERS = (
 SECRET_KEY = 'o=>4$)9?38N@^}d&pj,VL9^{r][xM9L.9cfE:xZZNk(N?v27+i'
 
 # List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
+# TEMPLATE_LOADERS = (
+#     'django.template.loaders.filesystem.Loader',
+#     'django.template.loaders.app_directories.Loader',
+# )
 
 MIDDLEWARE_CLASSES = (
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
@@ -142,6 +140,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cla_auth.middleware.OBIEEHawkResponseMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'cla_auth.auth.OBIEEHawkAuthentication',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 ROOT_URLCONF = 'cla_backend.urls'
@@ -159,11 +163,9 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_statsd',
-    'south',
+    'django_statsd'
 )
 
 PROJECT_APPS = (
@@ -172,7 +174,6 @@ PROJECT_APPS = (
     'cla_provider',
     'call_centre',
     'cla_eventlog',
-    'reports',
     'knowledgebase',
     'timer',
     'diagnosis',
@@ -187,7 +188,6 @@ PROJECT_APPS = (
 if BACKEND_ENABLED:
     INSTALLED_APPS += (
         'rest_framework',
-        'provider',
         'provider.oauth2',
     )
 if ADMIN_ENABLED:
@@ -340,6 +340,13 @@ OPERATOR_HOURS = {
     'saturday': (datetime.time(9, 0), datetime.time(12, 30))
 }
 
+HAWK_MESSAGE_EXPIRATION = 60
+
+OBIEE_IP_PERMISSIONS = (
+    '*',
+)
+
+OBIEE_ENABLED = os.environ.get('OBIEE_ENABLED', 'True') == 'True'
 
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and 'test' == sys.argv[1]:

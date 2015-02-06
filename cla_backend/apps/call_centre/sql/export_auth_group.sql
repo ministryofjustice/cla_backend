@@ -1,0 +1,5 @@
+COPY (SELECT
+id,
+name
+FROM auth_group)
+TO STDOUT CSV HEADER;

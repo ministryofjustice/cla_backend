@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
+from call_centre import views as call_centre_views
 
 
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -18,6 +19,13 @@ if settings.ADMIN_ENABLED:
         '',
         url(r'^admin/', include(admin.site.urls)),
         url(r'^admin/reports/', include('reports.urls', namespace='reports')),
+    )
+
+if settings.OBIEE_ENABLED:
+    urlpatterns += patterns('',
+        url(r'^obiee/dbexport/$',
+            call_centre_views.DBExportView.as_view(),
+            name='db_export')
     )
 
 if settings.BACKEND_ENABLED:

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import random
 import subprocess
 import os
 import sys
@@ -40,4 +41,11 @@ run('%s/pip install -r requirements/jenkins.txt' % bin_path)
 run("find . -name '*.pyc' -delete")
 
 # run tests
+print 'starting...'
+
+backend_port = random.randint(8005, 8999)
+frontend_port = backend_port + 1
+os.environ['BACKEND_BASE_PORT'] = '%s' % backend_port
+os.environ['FRONTEND_BASE_PORT'] = '%s' % frontend_port
+
 run("%s/python manage.py jenkins --coverage-rcfile=.coveragerc --settings=cla_backend.settings.jenkins" % bin_path)

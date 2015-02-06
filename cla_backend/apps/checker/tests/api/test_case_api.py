@@ -248,7 +248,8 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
             'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': (self._default_dt + datetime.timedelta(minutes=120)).strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_480': (self._default_dt + datetime.timedelta(minutes=480)).strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_15': (self._default_dt + datetime.timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M:%SZ')
+            'sla_15': (self._default_dt + datetime.timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_30': (self._default_dt + datetime.timedelta(minutes=30)).strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 
         # checking email

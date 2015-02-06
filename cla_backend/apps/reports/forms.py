@@ -322,6 +322,8 @@ class MICB1Extract(SQLFileDateRangeReport):
             ,"is_over_sla_480"
             ,"Source"
             ,"Code"
+            ,"sla_30"
+            ,"is_over_sla_30"
         ]
 
 

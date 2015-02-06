@@ -888,6 +888,10 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         return self._default_dt + datetime.timedelta(minutes=15)
 
     @property
+    def _default_dt_sla_30(self):
+        return self._default_dt + datetime.timedelta(minutes=30)
+
+    @property
     def _default_dt_sla_120(self):
         return self._default_dt + datetime.timedelta(minutes=120)
 
@@ -919,7 +923,8 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
+            'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_30': self._default_dt_sla_30.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 
     def test_successful_CB2(self):
@@ -934,6 +939,7 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_30': self._default_dt_sla_30.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 
@@ -949,6 +955,7 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_30': self._default_dt_sla_30.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 

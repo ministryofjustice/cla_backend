@@ -51,6 +51,7 @@ class BaseCallMeBackForm(BaseCaseLogForm):
         return {
             'requires_action_at': requires_action_at,
             'sla_15': get_sla_time(requires_action_at, 15),
+            'sla_30': get_sla_time(requires_action_at, 30),
             'sla_120': get_sla_time(requires_action_at, 120),
             'sla_480': get_sla_time(requires_action_at, 480)
         }

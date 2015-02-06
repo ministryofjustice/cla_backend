@@ -64,6 +64,7 @@ WITH
         ,operator_first_log_after_cb1.code as "Next_Outcome"
         ,trim((log.context->'requires_action_at')::text, '"')::timestamptz as requires_action_at
         ,trim((log.context->'sla_15')::text, '"')::timestamptz as sla_15
+        ,CAST(log.context->>'sla_30' AS TIMESTAMPTZ) as sla_30
         ,trim((log.context->'sla_120')::text, '"')::timestamptz as sla_120
         ,trim((log.context->'sla_480')::text, '"')::timestamptz as sla_480
         ,operator_first_log_after_cb1.rn
@@ -114,6 +115,8 @@ select
   ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_480 ELSE operator_first_log_after_cb1__created > sla_480 END as is_over_sla_480
   ,source
   ,code
+  ,sla_30
+  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_30 ELSE operator_first_log_after_cb1__created > sla_30 END as is_over_sla_30
 from all_rows
 WHERE (requires_action_at, sla_120) OVERLAPS (%s, %s)
 ;

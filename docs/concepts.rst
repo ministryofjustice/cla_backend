@@ -64,7 +64,7 @@ something like:
                 'set_requires_action_by': None # which user type needs to action this
                                                # if any.
             }
-        }
+     }
 
     event_registry.register(AppEvents)
 
@@ -78,11 +78,41 @@ An example of this is ``AcceptCaseEvent`` from the ``cla_provider`` app.
 How does it relate to Outcome Codes?
 ++++++++++++++++++++++++++++++++++++
 
+Outcome codes are a subset of event logs that have some sort of
+significance to the management information or something that 
+should be displayed to the operator.  An example of an outcome 
+code is ``SPOP`` as shown in the previous example. On the other
+hand a ``CASE_VIEWED`` event isn't and outcome code. To define 
+one set the type to ``LOG_TYPES.OUTCOME`` in the event definition
+in ``events.py``.
+
 Fields that are demoralised onto case?
 ++++++++++++++++++++++++++++++++++++++
 
+During the initial design we didn't foresee needing to query
+information stored in the event log to create the dashboard views,
+it turns out that some fields are frequently queried and we had 
+to denorm the following:
+
+    * ``outcome_code`` The last outcome code processed on the case
+    * ``outcome_code_id`` the primary key of the above to make joins
+      cheaper
+    * ``provider_assigned_at`` the time this case was assigned
+    * ``provider_viewed`` the time the provider first viewed this
+      case after getting it assigned to them
+    * ``provider_accepted`` time when provider first accepted a case
+    * ``provider_closed`` time when provider closed the case
+    * ``search_field`` a special field for free text search, includes
+      the case reference without dashes but other things can be added
+      according to the operator's needs
+
 Reporting and Management Information
 ++++++++++++++++++++++++++++++++++++
+
+The reports that exist in the system are temporary and will eventually
+be replaced by the LAA's enterprise reporting solution. Here is a
+short summary of what each one does. 
+
 
 
 Timers

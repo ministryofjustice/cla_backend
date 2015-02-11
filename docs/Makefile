@@ -24,7 +24,11 @@ clean:
 	-rm -rf $(BUILDDIR)/*
 
 html:
-	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)
+	DJANGO_SETTINGS_MODULE=cla_backend.settings.docs $(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)."
 
+livehtml:
+	DJANGO_SETTINGS_MODULE=cla_backend.settings.docs sphinx-autobuild -p 9000 -b html $(ALLSPHINXOPTS) $(BUILDDIR)
+	@echo
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)."

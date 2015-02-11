@@ -7,6 +7,7 @@
    :maxdepth: 2
    :hidden:
 
+   concepts
    public api
    operator api
    provider api

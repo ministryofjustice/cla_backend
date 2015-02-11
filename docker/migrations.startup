@@ -7,7 +7,6 @@ sentry_config() {
 }
 
 migrations() {
-    # temporary fake migrations for django1.7
     (
     if [ "$ADMIN_ENABLED" == "True" ]; then
 

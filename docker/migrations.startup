@@ -11,19 +11,6 @@ migrations() {
     (
     if [ "$ADMIN_ENABLED" == "True" ]; then
 
-    python manage.py migrate admin 0001_initial --fake
-    python manage.py migrate auth 0001_initial --fake
-    python manage.py migrate call_centre 0001_initial --fake
-    python manage.py migrate cla_auth 0001_initial --fake
-    python manage.py migrate cla_eventlog 0002_analyse_20150127_1540 --fake
-    python manage.py migrate cla_provider 0002_auto_20150127_1536 --fake
-    python manage.py migrate diagnosis 0002_auto_20150127_1536 --fake
-    python manage.py migrate historic 0001_initial --fake
-    python manage.py migrate knowledgebase 0001_initial --fake
-    python manage.py migrate legalaid 0001_initial --fake
-    python manage.py migrate sessions 0001_initial --fake
-    python manage.py migrate timer 0002_only_1_running_constraint_20150127_1512 --fake
-
     # manage syncdb migrate
     python manage.py migrate
 

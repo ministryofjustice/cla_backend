@@ -109,16 +109,23 @@ Once you have an event call ``.process`` on it to save::
         created_by=request.user,
     )
 
-Storing Context
-***************
-A fancy say
-
 
 Here is a real life example of how we save a ``CASE_VIEWED`` event log:
 
 .. literalinclude:: /../cla_backend/apps/legalaid/views.py
     :pyobject: FullCaseViewSet.retrieve
     :emphasize-lines: 5-8
+
+
+Storing Context
+***************
+If you need to save some data along with an event then you can
+assign a dictionary to the ``context`` kwarg. We do this for storing the
+provider a case was assigned to when a case assignment is done. This is because
+a provider can reject an assignment and then the case could be assigned to another
+provider. We would lose all record of the initial assignment if we didn't
+store that in the context.
+
 
 How does it relate to Outcome Codes?
 ++++++++++++++++++++++++++++++++++++
@@ -151,21 +158,69 @@ to denormalise the following:
       the case reference without dashes but other things can be added
       according to the operator's needs
 
+This is starting to get unmanageable and if more fields need to be denormalised
+then it would be a good idea to create a ``CaseDenorm`` model that's a OneToOne
+relation of ``legalaid.Case`` and store all the denormalised fields there.
+
 Reporting and Management Information
 ------------------------------------
+.. automodule:: reports.forms
+
+.. py:currentmodule:: reports.forms
 
 The reports that exist in the system are temporary and will eventually
 be replaced by the LAA's enterprise reporting solution OBIEE_. Here is a
 short summary of what each one does.
 
-
+    * :py:class:`MIVoiceReport`
+        A report that allows contract management to download a unified report
+        of all the billing CSVs that providers have uploaded to the system.
+    * :py:class:`MICaseExtract`
+        This is the most comprehensive report, it dumps all event logs created
+        between the specified date range. The logs are joined with cases,
+        personal details, diagnosis, eligibility checks and is pretty much
+        a single place where you can find out almost anything that has
+        happened in the system.
+    * :py:class:`MIFeedbackExtract`
+        This extract shows all provider feedback left on cases for the operators
+    * :py:class:`MIAlternativeHelpExtract`
+        This shows how many cases were referred to alternative help organisations
+        and which organisations they were referred to.
+    * :py:class:`MIContactsPerCaseByCategory`
+        This extract shows the average number of contacts made per case in each
+        legal aid category.
+    * :py:class:`MISurveyExtract`
+        The contact details for people who have agreed to be contracted for
+        user research. Requires a password
+    * :py:class:`M1CB1Extract`
+        Report to show if the operator service handled contacts
+        that require a callback within their SLAs or not.
+    * :py:class:`MIDigitalCaseTypesExtract`
+        Shows if a case was created on/by:
+            * Web (full means test completed)
+            * Web (callback only)
+            * SMS
+            * Voicemail
+            * Phone
 
 Timers
 ------
 
-timers are weird
-timers can be cancelled
-timers don't relate to the phone system
+Timers exist to keep track of how much billable time has been spent on a case
+by an **operator**.  They are not created automatically. They can't be because
+we have no way of integrating with the telephony system the operators use.
+
+A timer is created by hitting the ``/timer/`` endpoint with a HTTP POST request.
+
+.. literalinclude:: /../cla_backend/apps/timer/views.py
+    :pyobject: BaseTimerViewSet.get_or_create
+
+You'll get a reference to the timer which you can later use to cancel it by
+issuing a DELETE request to ``/timer/<reference>/``.
+
+It's not always necessary to cancel a timer; in some situations creating an
+event can stop a timer too.
+
 
 Status Check
 ------------

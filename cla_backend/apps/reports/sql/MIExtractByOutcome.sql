@@ -147,7 +147,7 @@ select
   ,c.thirdparty_details_id::bool as "Has_Third_Party"
   ,ceil(EXTRACT(EPOCH FROM operator_first_action.created-c.created)) as "Time_to_OS_Action"
 from cla_eventlog_log as log
-  JOIN legalaid_case as c on c.id = log.case_id
+  JOIN legalaid_case as c on c.id = log.case_id and not (c.eligibility_check_id is null and c.diagnosis_id is null and personal_details_id is null)
   LEFT OUTER JOIN legalaid_personaldetails as pd on c.personal_details_id = pd.id
   LEFT OUTER JOIN cla_provider_provider as provider on c.provider_id = provider.id
   LEFT OUTER JOIN diagnosis_diagnosistraversal as diagnosis on c.diagnosis_id = diagnosis.id

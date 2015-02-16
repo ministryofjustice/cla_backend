@@ -8,7 +8,7 @@ sentry_config() {
 
 migrations() {
     (
-    if [ "$ADMIN_ENABLED" == "True" ]; then
+    if [ "$BACKEND_ENABLED" == "True" ]; then
 
     # manage syncdb migrate
     python manage.py migrate

@@ -16,7 +16,6 @@ migrations() {
     python manage.py loaddata initial_groups.json
     python manage.py loaddata initial_category.json
     python manage.py loaddata initial_mattertype.json
-    python manage.py loaddata kb_from_knowledgebase.json
     python manage.py loaddata initial_media_codes.json
     
     fi 

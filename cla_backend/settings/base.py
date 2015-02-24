@@ -181,7 +181,8 @@ PROJECT_APPS = (
     'historic',
     'cla_auth',
     'checker',
-    'eligibility_calculator'
+    'eligibility_calculator',
+    'guidance',
 )
 
 

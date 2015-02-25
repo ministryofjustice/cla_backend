@@ -1,31 +1,33 @@
-#!/bin/bash
+#!/bin/bash -e
 
-! $([[  "$CLA_ENV" == "prod" || "$CLA_ENV" == "staging" ]]) ||  grep sentry /etc/hosts > /dev/null 2>&1 || echo "$SENTRY_IPADDRESS $SENTRY_HOSTNAME" >> /etc/hosts
-if [ "$ADMIN_ENABLED" == "True" ]
-then
-    cd /home/app/django
-    # temporary fake migrations for django1.7
-    python manage.py migrate admin 0001_initial --fake  >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py migrate auth 0001_initial --fake  >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py migrate call_centre 0001_initial --fake  >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py migrate cla_auth 0001_initial --fake  >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py migrate cla_eventlog 0002_analyse_20150127_1540 --fake  >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py migrate cla_provider 0002_auto_20150127_1536 --fake  >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py migrate diagnosis 0002_auto_20150127_1536 --fake  >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py migrate historic 0001_initial --fake >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py migrate knowledgebase 0001_initial --fake >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py migrate legalaid 0001_initial --fake >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py migrate sessions 0001_initial --fake >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py migrate timer 0002_only_1_running_constraint_20150127_1512 --fake >> /var/log/wsgi/db_scripts.log 2>&1
+sentry_config() {
+! $([[  "$CLA_ENV" == "prod" || "$CLA_ENV" == "staging" ]]) ||
+    grep sentry /etc/hosts > /dev/null 2>&1 ||
+    echo "$SENTRY_IPADDRESS $SENTRY_HOSTNAME" >> /etc/hosts
+}
+
+migrations() {
+    (
+    if [ "$BACKEND_ENABLED" == "True" ]; then
 
     # manage syncdb migrate
-    python manage.py migrate  >> /var/log/wsgi/db_scripts.log 2>&1
+    python manage.py migrate
 
-    python manage.py loaddata initial_groups.json >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py loaddata initial_category.json >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py loaddata initial_mattertype.json >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py loaddata kb_from_knowledgebase.json >> /var/log/wsgi/db_scripts.log 2>&1
-    python manage.py loaddata initial_media_codes.json >> /var/log/wsgi/db_scripts.log 2>&1
+    python manage.py loaddata initial_groups.json
+    python manage.py loaddata initial_category.json
+    python manage.py loaddata initial_mattertype.json
+    python manage.py loaddata initial_media_codes.json
+    
+    fi 
+    ) >> /var/log/wsgi/db_scripts.log 2>&1
+}  
 
-    echo "from django.contrib.auth.models import User; User.objects.create_superuser('cla_admin','peter.idah@digital.justice.gov.uk', '$ADMIN_PASSWORD')" | ./manage.py shell || echo "user already exists"
-fi
+admin_password() {
+echo "from django.contrib.auth.models import User; User.objects.create_superuser('cla_admin','peter.idah@digital.justice.gov.uk', '$ADMIN_PASSWORD')" | ./manage.py shell || echo "user already exists"
+}
+
+cd /home/app/django
+
+sentry_config
+migrations
+admin_password

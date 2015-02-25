@@ -417,7 +417,8 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
             'requires_action_at': dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_120': (dt + datetime.timedelta(minutes=120)).strftime('%Y-%m-%dT%H:%M:%SZ'),
             'sla_480': (dt + datetime.timedelta(minutes=480)).strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_15': (dt + datetime.timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M:%SZ')
+            'sla_15': (dt + datetime.timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'sla_30': (dt + datetime.timedelta(minutes=30)).strftime('%Y-%m-%dT%H:%M:%SZ')
         })
 
         self.assertEqual(

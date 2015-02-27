@@ -2,6 +2,8 @@
 from django.db import models
 
 from model_utils.models import TimeStampedModel
+from djorm_pgfulltext.fields import VectorField
+from djorm_pgfulltext.models import SearchManager
 
 
 class Tag(models.Model):
@@ -28,6 +30,13 @@ class Note(TimeStampedModel):
     title = models.CharField(max_length=100)
     body = models.TextField()
     tags = models.ManyToManyField('Tag', related_name='notes', through='NoteTagRelation')
+
+    search_index = VectorField()
+
+    objects = SearchManager(
+        fields=('title', 'tags__title'),
+        auto_update_search_field=True
+    )
 
     def __unicode__(self):
         return self.title

@@ -33,3 +33,6 @@ requests==2.5.1
 pytz==2014.10
 dj-database-url==0.3.0
 mohawk==0.2.2
+
+# Fork PgFulltext - PR added
+git+git://github.com/s-block/djorm-ext-pgfulltext.git@ce4ab346aedf622411ca9013d817f6f9b694d08a

@@ -34,7 +34,11 @@ class Note(TimeStampedModel):
     search_index = VectorField()
 
     objects = SearchManager(
-        fields=('title', 'tags__title'),
+        fields=(
+            ('title', 'A'),
+            ('tags__title', 'B'),
+            ('body', 'D'),
+        ),
         auto_update_search_field=True
     )
 

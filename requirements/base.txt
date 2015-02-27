@@ -35,4 +35,4 @@ dj-database-url==0.3.0
 mohawk==0.2.2
 
 # Fork PgFulltext - PR added
-git+git://github.com/s-block/djorm-ext-pgfulltext.git@ce4ab346aedf622411ca9013d817f6f9b694d08a
+git+git://github.com/s-block/djorm-ext-pgfulltext.git@e890ba52a50a5251493628ec7b331c43b37eda7f

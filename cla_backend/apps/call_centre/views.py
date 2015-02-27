@@ -54,6 +54,7 @@ from legalaid.views import BaseUserViewSet, \
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 from diagnosis.views import BaseDiagnosisViewSet
+from guidance.views import BaseGuidanceNoteViewSet
 
 from .permissions import CallCentreClientIDPermission, \
     OperatorManagerPermission
@@ -709,3 +710,10 @@ class DBExportView(View):
             zp.seek(0)
 
         return zp
+
+
+class GuidanceNoteViewSet(
+    CallCentrePermissionsViewSetMixin,
+    BaseGuidanceNoteViewSet
+):
+    pass

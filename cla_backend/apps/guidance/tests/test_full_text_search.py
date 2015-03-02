@@ -3,10 +3,15 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 
 from guidance.models import Note
+from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 
 
-class FullTextSearchTestCase(TestCase):
+class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
     fixtures = ['initial_guidance_notes']
+
+    def _get_with_auth(self, *args, **kwargs):
+        return self.client.get(
+            *args, HTTP_AUTHORIZATION='Bearer %s' % self.token, **kwargs)
 
     def _get_search_results(self, q):
         return Note.objects.word_tree_search(q)
@@ -30,10 +35,10 @@ class FullTextSearchTestCase(TestCase):
             u'Education prompts',
             u'Family Prompts',
             u'Handling gender reassignment discrimination cases',
+            u'Special Educational Needs',
             u'Homelessness',
             u'Housing Prompts',
             u'Opening Call',
-            u'Special Educational Needs',
             u'Welfare Benefit Prompts',
             u'Zero income prompts'
         ]
@@ -51,16 +56,18 @@ class FullTextSearchTestCase(TestCase):
     def test_api_endpoint(self):
         url = reverse('call_centre:guidance_note-list')
 
-        response = self.client.get(url, {'search': 'prompt'})
+        response = self._get_with_auth(url, {'search': 'prompt'})
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.data, list)
         self.assertEqual(len(response.data), 13)
 
-        response = self.client.get(url, {'search': 'prompt | Debt &'})
+        response = self._get_with_auth(url, {'search': 'prompt | Debt &'})
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.get(url, {'search': 'qs &^&£^*£@ 3425 $%@£$%£$@& || |||'})
+        response = self._get_with_auth(
+            url, {'search': 'qs &^&£^*£@ 3425 $%@£$%£$@& || |||'})
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.get(url, {'search': ''})
+        response = self._get_with_auth(url, {'search': ''})
         self.assertEqual(response.status_code, 200)
+

@@ -22,6 +22,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=50)),
                 ('title', models.CharField(max_length=100)),
                 ('body', models.TextField()),
+                ('raw_body', models.TextField()),
                 ('search_index', djorm_pgfulltext.fields.VectorField(default=b'', serialize=False, null=True, editable=False)),
             ],
             options={

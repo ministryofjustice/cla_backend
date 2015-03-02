@@ -29,6 +29,7 @@ class Note(TimeStampedModel):
     name = models.CharField(max_length=50)
     title = models.CharField(max_length=100)
     body = models.TextField()
+    raw_body = models.TextField()
     tags = models.ManyToManyField('Tag', related_name='notes', through='NoteTagRelation')
 
     search_index = VectorField()
@@ -37,7 +38,7 @@ class Note(TimeStampedModel):
         fields=(
             ('title', 'A'),
             ('tags__title', 'B'),
-            ('body', 'D'),
+            ('raw_body', 'D'),
         ),
         auto_update_search_field=True
     )

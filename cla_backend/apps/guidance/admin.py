@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
+from .admin_support.forms import NoteModelForm
 from .models import Note, Tag
 
 
@@ -11,10 +12,11 @@ class TagInline(admin.TabularInline):
 class NoteAdmin(admin.ModelAdmin):
     ordering = ['title']
 
-    exclude = ('created', 'modified')
+    exclude = ('created', 'modified', 'body')
     list_display = ('name', 'title', 'modified', 'created')
     search_fields = ['title']
     inlines = [TagInline]
+    form = NoteModelForm
 
 
 admin.site.register(Tag)

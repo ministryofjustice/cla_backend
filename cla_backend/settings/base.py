@@ -165,7 +165,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_statsd'
+    'django_statsd',
+    'djorm_pgfulltext',
 )
 
 PROJECT_APPS = (

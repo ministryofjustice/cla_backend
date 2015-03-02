@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import markdown
 import os
 import re
 import sys
@@ -41,7 +42,8 @@ class Command(BaseCommand):
                     note, created = Note.objects.get_or_create(name=name)
                     note.name = name
                     note.title = title
-                    note.body = body
+                    note.raw_body = body
+                    note.body = markdown.markdown(unicode(body, encoding='utf8'))
                     note.save()
                     self.stdout.write('Saving note: %s - %s' % (name, title))
                     for tag_name in tags:

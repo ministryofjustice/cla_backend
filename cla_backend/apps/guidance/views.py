@@ -10,9 +10,8 @@ class PostgresFullTextSearchFilter(filters.BaseFilterBackend):
     search_param = filters.api_settings.SEARCH_PARAM
 
     def filter_queryset(self, request, queryset, view):
-        if not hasattr(queryset, 'search'):
-            return queryset
-        return queryset.search(request.QUERY_PARAMS.get(self.search_param, ''))
+        return queryset.word_tree_search(
+            request.QUERY_PARAMS.get(self.search_param, ''))
 
 
 class BaseGuidanceNoteViewSet(viewsets.ReadOnlyModelViewSet):

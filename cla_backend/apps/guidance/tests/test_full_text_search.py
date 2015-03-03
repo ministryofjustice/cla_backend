@@ -60,6 +60,8 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.data, list)
         self.assertEqual(len(response.data), 13)
+        self.assertIn('id', response.data[0])
+        self.assertIn('title', response.data[0])
 
         response = self._get_with_auth(url, {'search': 'prompt | Debt &'})
         self.assertEqual(response.status_code, 200)
@@ -70,4 +72,12 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
 
         response = self._get_with_auth(url, {'search': ''})
         self.assertEqual(response.status_code, 200)
+
+        url = reverse('call_centre:guidance_note-detail', args=[1])
+
+        response = self._get_with_auth(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.data, dict)
+        self.assertIn('body', response.data)
+        self.assertIn('title', response.data)
 

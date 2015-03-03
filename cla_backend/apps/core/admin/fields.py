@@ -42,12 +42,15 @@ class MarkdownAdminField(forms.CharField):
         self.markdown_whitelist = kwargs.pop(
             'markdown_whitelist', DEFAULT_MARKDOWN_WHITELIST
         )
+
+        self.extensions = kwargs.pop('extensions', [])
+
         super(MarkdownAdminField, self).__init__(*args, **kwargs)
 
     def clean(self, *args, **kwargs):
         value = super(MarkdownAdminField, self).clean(*args, **kwargs)
 
-        html_value = markdown.markdown(value)
+        html_value = markdown.markdown(value, extensions=self.extensions)
         bleached_html = bleach.clean(html_value, **self.markdown_whitelist)
 
         if html_value != bleached_html:

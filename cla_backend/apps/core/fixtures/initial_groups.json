@@ -38,7 +38,16 @@
                 ["change_article", "knowledgebase", "article"],
                 ["change_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
                 ["add_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
-                ["delete_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"]
+                ["delete_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
+                ["change_note", "guidance", "note"],
+                ["add_note", "guidance", "note"],
+                ["delete_note", "guidance", "note"],
+                ["change_notetagrelation", "guidance", "notetagrelation"],
+                ["add_notetagrelation", "guidance", "notetagrelation"],
+                ["delete_notetagrelation", "guidance", "notetagrelation"],
+                ["change_tag", "guidance", "tag"],
+                ["add_tag", "guidance", "tag"],
+                ["delete_tag", "guidance", "tag"]
             ]
         }
     },

@@ -165,7 +165,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_statsd'
+    'django_statsd',
+    'djorm_pgfulltext',
 )
 
 PROJECT_APPS = (
@@ -181,7 +182,8 @@ PROJECT_APPS = (
     'historic',
     'cla_auth',
     'checker',
-    'eligibility_calculator'
+    'eligibility_calculator',
+    'guidance',
 )
 
 

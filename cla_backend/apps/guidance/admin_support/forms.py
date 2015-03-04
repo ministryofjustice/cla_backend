@@ -13,7 +13,7 @@ markdown_whitelist['tags'].extend(['h1', 'h2', 'h3', 'a', 'em', 'table', 'tr',
                                    'th', 'td', 'tbody', 'thead'])
 markdown_whitelist['attributes'].extend(['id'])
 
-EXTENSIONS = ['markdown.extensions.tables']
+EXTENSIONS = ['tables']
 
 
 class NoteModelForm(forms.ModelForm):

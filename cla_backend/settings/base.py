@@ -139,13 +139,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'cla_auth.middleware.OBIEEHawkResponseMiddleware',
-)
-
-AUTHENTICATION_BACKENDS = (
-    'cla_auth.auth.OBIEEHawkAuthentication',
-    'django.contrib.auth.backends.ModelBackend',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 )
 
 ROOT_URLCONF = 'cla_backend.urls'
@@ -341,8 +335,6 @@ OPERATOR_HOURS = {
     'weekday': (datetime.time(9, 0), datetime.time(20, 0)),
     'saturday': (datetime.time(9, 0), datetime.time(12, 30))
 }
-
-HAWK_MESSAGE_EXPIRATION = 60
 
 OBIEE_IP_PERMISSIONS = (
     '*',

@@ -1,34 +1,21 @@
 import datetime
-import os
-import tempfile
-from zipfile import ZipFile
-from shutil import rmtree
 from uuid import UUID
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
-from json import dumps
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.auth import authenticate
 from django.db.models import Q
 from django.utils import timezone
-from django.db import connection
-from django.http import (HttpResponse, HttpResponseBadRequest,
-                         HttpResponseForbidden)
-from django.views.generic import View
 
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
-from legalaid.utils import diversity
 
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
     SearchFilter, BaseFilterBackend
-
-from mohawk.exc import TokenExpired
 
 from cla_provider.models import Provider, OutOfHoursRota, Feedback, \
     ProviderPreAllocation
@@ -38,7 +25,6 @@ from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.decorators import list_route
 from core.drf.mixins import FormActionMixin
-from core.utils import remember_cwd
 
 from timer.views import BaseTimerViewSet
 
@@ -560,156 +546,6 @@ class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin,
         qs = super(CSVUploadViewSet, self).get_queryset(*args, **kwargs).filter(
             month__gte=after)
         return qs
-
-
-class DBExportView(View):
-    basic_sql_files = [
-        'export_auth_user.sql',
-        'export_call_centre_operator.sql',
-        'export_diagnosis_diagnosis_traversal.sql',
-        'export_event_log_log.sql',
-        'export_knowledge_base_article.sql',
-        'export_knowledge_base_article_category.sql',
-        'export_knowledge_base_article_category_matrix.sql',
-        'export_legal_aid_call_centre_operator.sql',
-        'export_legal_aid_case.sql',
-        'export_legal_aid_case_knowledge_base_assignment.sql',
-        'export_legal_aid_category.sql',
-        'export_legal_aid_deductions.sql',
-        'export_legal_aid_eligibility_check.sql',
-        'export_legal_aid_income.sql',
-        'export_legal_aid_matter_type.sql',
-        'export_legal_aid_media_code.sql',
-        'export_legal_aid_person.sql',
-        'export_legal_aid_property.sql',
-        'export_legal_aid_savings.sql',
-        'export_legal_aid_third_party_details.sql',
-        'export_provider_csv_upload.sql',
-        'export_provider_feedback.sql',
-        'export_provider_out_of_hours_rota.sql',
-        'export_provider_provider.sql',
-        'export_provider_provider_allocation.sql',
-        'export_provider_staff.sql',
-        'export_timer_timer.sql',
-    ]
-
-    no_timestamp_sql_files = [
-
-        'export_auth_group.sql',
-        'export_auth_user_groups.sql',
-        'export_media_code_group.sql',
-    ]
-
-    personal_details_sql_file = 'export_personal_details.sql'
-    sql_path = os.path.dirname(__file__)
-
-    filename = 'cla_database.zip'
-
-    def get(self, request, format=None):
-        """
-        dt_from, dt_to: ISO 8601 datetime string (2014-08-29T23:59:59)
-        passphrase: diversity GPG private key passphrase
-        """
-        try:
-            if not authenticate(request=request):
-                return HttpResponseForbidden()
-        except TokenExpired as exc:
-            resp = HttpResponse(dumps({'detail': 'invalid timestamp'}),
-                                status=401,
-                                content_type='application/json')
-            resp['WWW-Authenticate'] = exc.www_authenticate
-            return resp
-
-        try:
-            dt_from = request.GET['from']
-            dt_to = request.GET['to']
-            passphrase = request.GET['passphrase']
-        except KeyError:
-            return HttpResponseBadRequest()
-
-        export_path = tempfile.mkdtemp()
-
-        self.export_basic_tables(export_path, dt_from, dt_to)
-        self.export_no_timestamp_tables(export_path)
-        self.export_personal_details(export_path, passphrase, dt_from, dt_to)
-
-        zp = self.generate_zip(export_path)
-
-        response = HttpResponse(zp.read(),
-                                content_type='application/x-zip-compressed')
-        response['Content-Disposition'] = ('attachment; filename="%s"' %
-                                           self.filename)
-
-        zp.close()
-        rmtree(export_path)
-
-        return response
-
-    def export_basic_tables(self, export_path, dt_from, dt_to):
-        for sql in self.basic_sql_files:
-            sql_path = os.path.join(self.sql_path, 'sql', sql)
-            with open(sql_path, 'r') as f:
-                query = f.read()
-
-            csv_filename = self.csv_filename_from_sql_path(sql_path)
-            args = [dt_from, dt_to]
-
-            self.execute_csv_export(export_path, csv_filename, query, args)
-
-    def export_no_timestamp_tables(self, export_path):
-        for sql in self.no_timestamp_sql_files:
-            sql_path = os.path.join(self.sql_path, 'sql', sql)
-            with open(sql_path, 'r') as f:
-                query = f.read()
-
-            csv_filename = self.csv_filename_from_sql_path(sql_path)
-
-            self.execute_csv_export(export_path, csv_filename, query)
-
-    def export_personal_details(self, export_path, passphrase, dt_from, dt_to):
-        sql_path = os.path.join(self.sql_path, 'sql',
-                                self.personal_details_sql_file)
-
-        with open(sql_path, 'r') as f:
-            query = f.read()
-            de = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".\
-                format(
-                    key=diversity.get_private_key()
-                )
-            query = query.format(diversity_expression=de)
-
-        csv_filename = self.csv_filename_from_sql_path(
-            self.personal_details_sql_file)
-        args = [passphrase, dt_from, dt_to]
-
-        self.execute_csv_export(export_path, csv_filename, query, args)
-
-    def execute_csv_export(self, export_path, filename, query, args=None):
-        if not args:
-            args = []
-
-        with open(os.path.join(export_path, filename), 'w') as d:
-            cursor = connection.cursor()
-            q = cursor.mogrify(query, args)
-            cursor.copy_expert(q, d)
-            cursor.close()
-
-    def csv_filename_from_sql_path(self, filename):
-        filename = filename.split('/')[-1]
-        return filename.replace('export_', '').replace('.sql', '.csv')
-
-    def generate_zip(self, export_path):
-        with remember_cwd():
-            os.chdir(export_path)
-            zp = open(self.filename, 'w+b')
-
-            with ZipFile(zp, 'w') as z:
-                for root, dirs, files in os.walk('.'):
-                    for f in filter(lambda x: x.endswith('.csv'), files):
-                        z.write(f)
-            zp.seek(0)
-
-        return zp
 
 
 class GuidanceNoteViewSet(

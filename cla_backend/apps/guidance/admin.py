@@ -13,8 +13,7 @@ class NoteAdmin(admin.ModelAdmin):
     ordering = ['title']
 
     exclude = ('created', 'modified', 'body')
-    readonly_fields = ['name']
-    list_display = ('name', 'title', 'modified', 'created')
+    list_display = ('title', 'modified', 'created')
     search_fields = ['title']
     inlines = [TagInline]
     form = NoteModelForm

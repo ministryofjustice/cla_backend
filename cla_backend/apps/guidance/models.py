@@ -26,7 +26,6 @@ class NoteTagRelation(models.Model):
 
 
 class Note(TimeStampedModel):
-    name = models.CharField(max_length=50)
     title = models.CharField(max_length=100)
     body = models.TextField()
     raw_body = models.TextField()

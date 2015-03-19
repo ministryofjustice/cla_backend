@@ -44,7 +44,8 @@ class SLATimeHelperTestCase(TestCase):
             d = self._get_next_mon().replace(hour=12, minute=29)
             next_sat = (d + datetime.timedelta(days=5))
             next_mon = (next_sat + datetime.timedelta(days=2)).replace(hour=9, minute=14)
-            self.assertEqual(get_sla_time(next_sat, 15), next_mon)
+            sla_time = get_sla_time(next_sat, 15)
+            self.assertEqual(sla_time, next_mon.replace(tzinfo=sla_time.tzinfo))
             self.assertTrue(bank_hol.called)
 
     def test_get_sla_time_delta_past_end_of_weekday_with_next_day_a_bank_hol_works(self):

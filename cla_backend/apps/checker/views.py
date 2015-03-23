@@ -1,5 +1,4 @@
 from checker.helpers import notify_callback_created
-from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
@@ -55,7 +54,7 @@ class EligibilityCheckViewSet(
     serializer_class = EligibilityCheckSerializer
 
     def get_request_user(self):
-        user = User.objects.get(username='web')
+        return get_web_user()
 
 
 class NestedModelMixin(object):

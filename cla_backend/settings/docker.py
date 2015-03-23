@@ -1,5 +1,6 @@
 from .base import *
 import os
+import sys
 
 try:
     SECRET_KEY = os.environ["SECRET_KEY"]
@@ -34,10 +35,11 @@ DATABASES = {
 #HOST_NAME = "http://"
 
 # LOGGING CONFIG FOR DOCKER ENV
+
 LOGGING['handlers']['production_file'] = {
     'level' : 'INFO',
     'class' : 'logging.handlers.RotatingFileHandler',
-    'filename' : '/var/log/wsgi/app.log',
+    'filename' : '/tmp/app.log',
     'maxBytes': 1024*1024*5, # 5 MB
     'backupCount' : 7,
     'formatter': 'logstash',
@@ -47,14 +49,20 @@ LOGGING['handlers']['production_file'] = {
 LOGGING['handlers']['debug_file'] = {
     'level' : 'DEBUG',
     'class' : 'logging.handlers.RotatingFileHandler',
-    'filename' : '/var/log/wsgi/debug.log',
+    'filename' : '/tmp/debug.log',
     'maxBytes': 1024*1024*5, # 5 MB
     'backupCount' : 7,
     'formatter': 'verbose',
     'filters': ['require_debug_true'],
 }
 
+LOGGING['handlers']['console'] = {
+   'level': 'DEBUG',
+   'class': 'logging.StreamHandler',
+   'stream': sys.stdout
+}
+
 LOGGING['loggers'][''] = {
-    'handlers': ['production_file', 'debug_file'],
+    'handlers': ['console'],
     'level': "DEBUG",
 }

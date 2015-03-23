@@ -2,6 +2,7 @@ import json
 from core.drf.exceptions import ConflictException
 
 from django import forms
+from django.contrib.auth.models import User
 from django.db import transaction, IntegrityError
 from django.core.paginator import Paginator
 
@@ -177,7 +178,10 @@ class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet
         except Case.DoesNotExist:
             return
 
-        user = self.request.user
+        if self.request.user:
+            user = self.request.user
+        else:
+            user = User.objects.get(username='web')
 
         means_test_event = event_registry.get_event('means_test')()
         status = 'changed' if not created else 'created'

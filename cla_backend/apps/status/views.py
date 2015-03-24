@@ -31,3 +31,7 @@ def status(request):
             message = str(e)
         finally:
             c.close()
+
+@csrf_exempt
+def hello(request):
+    return HttpResponse("hi there")

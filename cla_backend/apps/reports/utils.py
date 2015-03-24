@@ -1,8 +1,8 @@
 import os
 import tempfile
 import glob
-from zipfile import ZipFile
-from shutil import rmtree
+import zipfile
+import shutil
 from datetime import datetime, date, time, timedelta
 
 from django.db import connection
@@ -47,7 +47,7 @@ class OBIEEExporter(object):
         'export_media_code_group.sql',
     ]
 
-    personal_details_sql_file = 'export_personal_details.sql'
+    personal_details_sql_file = 'export_legal_aid_personaldetails.sql'
     sql_path = os.path.join(os.path.dirname(__file__), 'sql', 'obiee')
 
     filename = 'cla_database.zip'
@@ -94,7 +94,6 @@ class OBIEEExporter(object):
 
     def export_personal_details(self):
         sql_path = os.path.join(self.sql_path, self.personal_details_sql_file)
-
         with open(sql_path, 'r') as f:
             query = f.read()
             de = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".\
@@ -124,9 +123,11 @@ class OBIEEExporter(object):
         return filename.replace('export_', '').replace('.sql', '.csv')
 
     def generate_zip(self):
-        zip_path = os.path.join(self.export_path, self.filename)
-        with open(zip_path, 'w+b') as zp:
-            with ZipFile(zp, 'w') as z:
-                for f in glob.glob('%s/*.csv' % self.tmp_export_path):
+        os.chdir(self.tmp_export_path)
+        with open(self.filename, 'w+b') as zp:
+            with zipfile.ZipFile(zp, 'w', zipfile.ZIP_DEFLATED) as z:
+                for f in glob.glob('*.csv'):
                     z.write(f)
-        rmtree(self.tmp_export_path)
+        shutil.move('%s/%s' % (self.tmp_export_path, self.filename),
+                    '%s/%s' % (self.export_path, self.filename))
+        shutil.rmtree(self.tmp_export_path)

@@ -5,6 +5,6 @@ from . import views
 
 urlpatterns = patterns(
     '',
+    url(r'^hello/', views.hello),
     url(r'^', views.status),
-    url(r'^/hello', views.hello),
 )

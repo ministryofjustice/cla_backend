@@ -34,4 +34,4 @@ def status(request):
 
 @csrf_exempt
 def hello(request):
-    return HttpResponse("hi there")
+    return HttpResponse("hi there ciprian")

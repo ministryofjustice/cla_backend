@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
+from django.http import HttpResponse
 
 
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -24,6 +25,7 @@ if settings.BACKEND_ENABLED:
     urlpatterns += patterns(
         '',
         url(r'^status/', include('status.urls', namespace='status')),
+        url(r'^hello/', HttpResponse("Hi ciprian")),
 
         url(r'^checker/api/v1/', include('checker.urls', namespace='checker')),
         url(r'^call_centre/api/v1/', include('call_centre.urls', namespace='call_centre')),

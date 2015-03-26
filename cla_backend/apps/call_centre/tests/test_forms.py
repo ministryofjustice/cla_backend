@@ -447,7 +447,9 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
             data['datetime'] = datetime
             form = self.FORM(case=case, data=data)
 
-            self.assertFalse(form.is_valid())
+            self.assertFalse(
+                form.is_valid(),
+                '%s' % datetime)
 
             self.assertEqual(len(form.errors), 1)
             self.assertItemsEqual(

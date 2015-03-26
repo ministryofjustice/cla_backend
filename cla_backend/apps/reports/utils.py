@@ -19,6 +19,7 @@ class OBIEEExporter(object):
         'export_knowledge_base_article.sql',
         'export_knowledge_base_article_category.sql',
         'export_knowledge_base_article_category_matrix.sql',
+        'export_legal_aid_adaptationdetails.sql',
         'export_legal_aid_call_centre_operator.sql',
         'export_legal_aid_case.sql',
         'export_legal_aid_case_knowledge_base_assignment.sql',

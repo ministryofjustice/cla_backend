@@ -59,3 +59,6 @@ cla_backend/settings/local.py
 cla_backend/static/
 
 .DS_Store
+
+# PyCharm
+.idea

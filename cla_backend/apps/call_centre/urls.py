@@ -20,6 +20,8 @@ router.register(r'user', views.UserViewSet, base_name='user')
 router.register(r'event', views.EventViewSet, base_name='event')
 router.register(r'knowledgebase/article', views.ArticleViewSet)
 router.register(r'knowledgebase/category', views.ArticleCategoryViewSet)
+router.register(r'guidance/note', views.GuidanceNoteViewSet,
+                base_name='guidance_note')
 router.register(r'adaptations', views.AdaptationDetailsMetadataViewSet,
         base_name='adaptations-metadata')
 router.register(r'mattertype', views.MatterTypeViewSet)

@@ -171,13 +171,16 @@ class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet
     def get_means_test_event_kwargs(self, kwargs):
         return kwargs
 
+    def get_request_user(self):
+        return self.request.user
+
     def create_means_test_log(self, obj, created):
         try:
             obj.case
         except Case.DoesNotExist:
             return
 
-        user = self.request.user
+        user = self.get_request_user()
 
         means_test_event = event_registry.get_event('means_test')()
         status = 'changed' if not created else 'created'

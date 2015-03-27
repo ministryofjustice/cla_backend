@@ -4,7 +4,7 @@ TEST_APPS = (
     'django_pdb',
 )
 
-INSTALLED_APPS += TEST_APPS
+#INSTALLED_APPS += TEST_APPS
 
 TEST_MODE = True
 

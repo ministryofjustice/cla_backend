@@ -53,6 +53,9 @@ class EligibilityCheckViewSet(
 ):
     serializer_class = EligibilityCheckSerializer
 
+    def get_request_user(self):
+        return get_web_user()
+
 
 class NestedModelMixin(object):
 

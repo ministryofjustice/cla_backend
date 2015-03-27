@@ -1,9 +1,12 @@
 import inspect
 import datetime
+import tempfile
+import os
 
 from django.test import TestCase
 
 import reports.forms
+from reports.utils import OBIEEExporter
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
 
@@ -33,3 +36,13 @@ class ReportsDateRangeValidationWorks(TestCase):
         self.assertEqual(i.errors, {u'__all__': [u'The date range (6 days, 0:00:00) should span no more than 5 working days']} )
         i2 = T(data={'date_from': now - datetime.timedelta(days=1), 'date_to': now})
         self.assertTrue(i2.is_valid())
+
+
+class OBIEEExportOutputsZipTestCase(TestCase):
+    def test_zip_output(self):
+        td = tempfile.mkdtemp()
+
+        OBIEEExporter(td, 'cladev').export()
+        self.assertTrue(
+            os.path.isfile(os.path.join('%s/cla_database.zip' % td))
+        )

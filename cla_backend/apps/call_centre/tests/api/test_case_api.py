@@ -879,7 +879,7 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def __call__(self, runner, mocked_now, *args, **kwargs):
         self.mocked_now = mocked_now
         self.mocked_now.return_value = datetime.datetime(
-                2015, 3, 30, 10, 0, 0, 0
+                2015, 3, 23, 10, 0, 0, 0
             ).replace(tzinfo=timezone.utc)
 
         super(CallMeBackTestCase, self).__call__(
@@ -894,20 +894,24 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         return self.__default_dt
 
     @property
-    def _default_dt_sla_15(self):
-        return self._default_dt + datetime.timedelta(minutes=15)
+    def _default_local_dt(self):
+        return timezone.localtime(self._default_dt)
 
     @property
-    def _default_dt_sla_30(self):
-        return self._default_dt + datetime.timedelta(minutes=30)
+    def _default_local_dt_sla_15(self):
+        return self._default_local_dt + datetime.timedelta(minutes=15)
 
     @property
-    def _default_dt_sla_120(self):
-        return self._default_dt + datetime.timedelta(minutes=120)
+    def _default_local_dt_sla_30(self):
+        return self._default_local_dt + datetime.timedelta(minutes=30)
 
     @property
-    def _default_dt_sla_480(self):
-        return self._default_dt + datetime.timedelta(minutes=480)
+    def _default_local_dt_sla_120(self):
+        return self._default_local_dt + datetime.timedelta(minutes=120)
+
+    @property
+    def _default_local_dt_sla_480(self):
+        return self._default_local_dt + datetime.timedelta(minutes=480)
 
     def get_expected_notes(self, data):
         return 'Callback scheduled for %s. %s' % (
@@ -930,11 +934,11 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB1')
         self.assertDictEqual(log.context, {
-            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_30': self._default_dt_sla_30.strftime('%Y-%m-%dT%H:%M:%SZ')
+            'requires_action_at': self._default_local_dt.isoformat(),
+            'sla_120': self._default_local_dt_sla_120.isoformat(),
+            'sla_480': self._default_local_dt_sla_480.isoformat(),
+            'sla_15': self._default_local_dt_sla_15.isoformat(),
+            'sla_30': self._default_local_dt_sla_30.isoformat()
         })
 
     def test_successful_CB2(self):
@@ -946,11 +950,11 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB2')
         self.assertDictEqual(log.context, {
-            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_30': self._default_dt_sla_30.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
+            'requires_action_at': self._default_local_dt.isoformat(),
+            'sla_120': self._default_local_dt_sla_120.isoformat(),
+            'sla_480': self._default_local_dt_sla_480.isoformat(),
+            'sla_30': self._default_local_dt_sla_30.isoformat(),
+            'sla_15': self._default_local_dt_sla_15.isoformat()
         })
 
     def test_successful_CB3(self):
@@ -962,11 +966,11 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         log = self.resource.log_set.first()
         self.assertEqual(log.code, 'CB3')
         self.assertDictEqual(log.context, {
-            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_120': self._default_dt_sla_120.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_480': self._default_dt_sla_480.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_30': self._default_dt_sla_30.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_15': self._default_dt_sla_15.strftime('%Y-%m-%dT%H:%M:%SZ')
+            'requires_action_at': self._default_local_dt.isoformat(),
+            'sla_120': self._default_local_dt_sla_120.isoformat(),
+            'sla_480': self._default_local_dt_sla_480.isoformat(),
+            'sla_30': self._default_local_dt_sla_30.isoformat(),
+            'sla_15': self._default_local_dt_sla_15.isoformat()
         })
 
 

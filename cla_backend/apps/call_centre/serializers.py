@@ -213,7 +213,6 @@ class CaseListSerializer(CaseSerializer):
             'personal_details',
             'requires_action_by',
             'postcode',
-            'diagnosis_state',
             'rejected',
             'date_of_birth',
             'category',

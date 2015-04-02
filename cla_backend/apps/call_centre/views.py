@@ -129,7 +129,7 @@ class CaseViewSet(
     serializer_detail_class = CaseSerializer
 
     queryset = Case.objects.all().select_related(
-        'diagnosis', 'eligibility_check', 'personal_details')
+        'eligibility_check', 'personal_details')
     queryset_detail = Case.objects.all().select_related(
         'eligibility_check', 'personal_details',
         'adaptation_details', 'matter_type1', 'matter_type2',

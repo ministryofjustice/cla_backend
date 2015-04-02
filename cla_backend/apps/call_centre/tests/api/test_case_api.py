@@ -875,12 +875,22 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             kwargs={'reference': reference}
         )
 
+    @mock.patch('call_centre.forms.timezone.now')
+    def __call__(self, runner, mocked_now, *args, **kwargs):
+        self.mocked_now = mocked_now
+        self.mocked_now.return_value = datetime.datetime(
+                2015, 3, 30, 10, 0, 0, 0
+            ).replace(tzinfo=timezone.utc)
+
+        super(CallMeBackTestCase, self).__call__(
+            runner, *args, **kwargs
+        )
+
     @property
     def _default_dt(self):
         if not hasattr(self, '__default_dt'):
-            now = timezone.now()
-            dt = now + datetime.timedelta(days=7-now.weekday())
-            self.__default_dt = dt.replace(hour=10, minute=0, second=0, microsecond=0)
+            self.__default_dt = self.mocked_now()
+            self.__default_dt = self.__default_dt.replace(hour=11)
         return self.__default_dt
 
     @property

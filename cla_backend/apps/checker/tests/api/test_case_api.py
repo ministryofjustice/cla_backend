@@ -205,11 +205,9 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
     @property
     def _default_dt(self):
         if not hasattr(self, '__default_dt'):
-            now = timezone.now()
-            dt = now + datetime.timedelta(days=7-now.weekday())
-            self.__default_dt = dt.replace(
-                hour=10, minute=0, second=0, microsecond=0
-            )
+            self.__default_dt = datetime.datetime(
+                2015, 3, 30, 10, 0, 0, 0
+            ).replace(tzinfo=timezone.utc)
         return self.__default_dt
 
     def test_create_with_callmeback(self):

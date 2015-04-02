@@ -17,9 +17,12 @@ from call_centre.forms import DeferAssignmentCaseForm, ProviderAllocationForm, \
 
 
 def _mock_datetime_now_with(date, *mocks):
+    dt = date.replace(
+            tzinfo=timezone.get_current_timezone()
+    )
     for mock in mocks:
-        mock.return_value = date.replace(
-            tzinfo=timezone.get_current_timezone())
+        mock.return_value = dt
+    return dt
 
 
 class ProviderAllocationFormTestCase(TestCase):
@@ -114,7 +117,7 @@ class ProviderAllocationFormTestCase(TestCase):
                     provider=provider,
                     start_date=datetime.datetime(2013, 12, 30).replace(
                         tzinfo=timezone.get_current_timezone()),
-                    end_date=datetime.datetime(2014, 1, 2).replace(
+                    end_date=datetime.datetime(2014, 1, 2, 9, 0).replace(
                         tzinfo=timezone.get_current_timezone()),
                     category=category
                     )
@@ -354,14 +357,21 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     def _strftime(self, date):
         return date.strftime('%Y-%m-%d %H:%M')
 
-    def _get_next_mon(self):
-        now = timezone.now()
-        mon = now + datetime.timedelta(days=7-now.weekday())
-        return mon.replace(hour=10, minute=0, second=0, microsecond=0)
+    @mock.patch('call_centre.forms.timezone.now')
+    def __call__(self, runner, mocked_now, *args, **kwargs):
+        self.mocked_now = mocked_now
+        self.mocked_now.return_value = datetime.datetime(
+                2015, 3, 24, 10, 0, 0, 0
+            ).replace(tzinfo=timezone.utc)
+        self.default_dt = self.mocked_now().replace(day=30)
+
+        super(CallMeBackFormTestCase, self).__call__(
+            runner, *args, **kwargs
+        )
 
     def get_default_data(self, **kwargs):
         dt = kwargs.get(
-            'datetime', self._strftime(self._get_next_mon())
+            'datetime', self._strftime(self.default_dt)
         )
         return {
             'notes': 'lorem ipsum',
@@ -390,7 +400,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         self.assertEqual(Log.objects.count(), 0)
         self.assertEqual(case.callback_attempt, expected_attempt-1)
 
-        dt = self._get_next_mon()
+        dt = self.default_dt
         data = self.get_default_data(datetime=self._strftime(dt))
         form = self.FORM(case=case, data=data)
 
@@ -429,15 +439,12 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
             )
         )
 
-    def test_invalid_datetime(self):
-        def to_utc_date(days_delta, **replace_params):
-            # if this fails remove the pytz module
-
-            # from localtime to utc (that's because of BST)
-            dt = timezone.localtime(timezone.now())
-            dt += datetime.timedelta(days=days_delta-dt.weekday())
-            dt = dt.replace(**replace_params)
-            return timezone.localtime(dt, timezone.utc)
+    @mock.patch('call_centre.forms.timezone.now')
+    def test_invalid_datetime(self, mocked_now):
+        now_utc = datetime.datetime(2015, 3, 13, 10, 0).replace(
+            tzinfo=timezone.utc
+        )
+        mocked_now.return_value = now_utc
 
         case = make_recipe('legalaid.case')
         self.assertEqual(Log.objects.count(), 0)
@@ -466,25 +473,25 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         # invalid format
         _test(
             case,
-            timezone.now().strftime('%Y/%m/%d %H:%M'),
+            now_utc.strftime('%Y/%m/%d %H:%M'),
             u'Enter a valid date/time.'
         )
 
         # datetime in the past
         _test(
             case,
-            self._strftime(timezone.now()),
+            self._strftime(now_utc),
             u'Specify a date not in the current half hour.'
         )
 
         _test(
             case,
-            self._strftime(timezone.now() + datetime.timedelta(minutes=30)),
+            self._strftime(now_utc + datetime.timedelta(minutes=30)),
             u'Specify a date not in the current half hour.'
         )
 
         # Sat at 12.31
-        sat = to_utc_date(12, hour=12, minute=31, second=0, microsecond=0)
+        sat = now_utc.replace(day=14, hour=12, minute=31, second=0, microsecond=0)
 
         _test(
             case,
@@ -493,7 +500,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         )
 
         # Sun at 10am
-        sun = to_utc_date(13, hour=10, minute=0, second=0, microsecond=0)
+        sun = now_utc.replace(day=15, hour=10, minute=0, second=0, microsecond=0)
 
         _test(
             case,
@@ -502,7 +509,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         )
 
         # Mon at 8.59
-        mon = to_utc_date(7, hour=8, minute=59, second=0, microsecond=0)
+        mon = now_utc.replace(day=16, hour=8, minute=59, second=0, microsecond=0)
 
         _test(
             case,
@@ -511,7 +518,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         )
 
         # Mon at 20.01
-        mon = to_utc_date(7, hour=20, minute=1, second=0, microsecond=0)
+        mon = now_utc.replace(day=16, hour=20, minute=1, second=0, microsecond=0)
 
         _test(
             case,

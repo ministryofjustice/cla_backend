@@ -1,4 +1,5 @@
 import datetime
+from dateutil.parser import parse
 import mock
 
 from django.core.urlresolvers import reverse
@@ -925,53 +926,31 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             'datetime': self._default_dt.strftime('%Y-%m-%d %H:%M')
         }
 
-    def test_successful_CB1(self):
-        self.resource.callback_attempt = 0
+
+    def _test_cbx(self, cb_no):
+        self.resource.callback_attempt = cb_no - 1
         self.resource.save()
 
         self.test_successful()
 
         log = self.resource.log_set.first()
-        self.assertEqual(log.code, 'CB1')
-        self.assertDictEqual(log.context, {
-            'requires_action_at': self._default_local_dt.isoformat(),
-            'sla_120': self._default_local_dt_sla_120.isoformat(),
-            'sla_480': self._default_local_dt_sla_480.isoformat(),
-            'sla_15': self._default_local_dt_sla_15.isoformat(),
-            'sla_30': self._default_local_dt_sla_30.isoformat()
-        })
+        self.assertEqual(log.code, 'CB{}'.format(cb_no))
+        self.maxDiff = None
+        self.assertEqual(parse(log.context['requires_action_at']), self._default_dt)
+        self.assertEqual(parse(log.context['sla_120']), self._default_local_dt_sla_120)
+        self.assertEqual(parse(log.context['sla_480']), self._default_local_dt_sla_480)
+        self.assertEqual(parse(log.context['sla_15']), self._default_local_dt_sla_15)
+        self.assertEqual(parse(log.context['sla_30']), self._default_local_dt_sla_30)
+
+
+    def test_successful_CB1(self):
+        self._test_cbx(1)
 
     def test_successful_CB2(self):
-        self.resource.callback_attempt = 1
-        self.resource.save()
-
-        self.test_successful()
-
-        log = self.resource.log_set.first()
-        self.assertEqual(log.code, 'CB2')
-        self.assertDictEqual(log.context, {
-            'requires_action_at': self._default_local_dt.isoformat(),
-            'sla_120': self._default_local_dt_sla_120.isoformat(),
-            'sla_480': self._default_local_dt_sla_480.isoformat(),
-            'sla_30': self._default_local_dt_sla_30.isoformat(),
-            'sla_15': self._default_local_dt_sla_15.isoformat()
-        })
+        self._test_cbx(2)
 
     def test_successful_CB3(self):
-        self.resource.callback_attempt = 2
-        self.resource.save()
-
-        self.test_successful()
-
-        log = self.resource.log_set.first()
-        self.assertEqual(log.code, 'CB3')
-        self.assertDictEqual(log.context, {
-            'requires_action_at': self._default_local_dt.isoformat(),
-            'sla_120': self._default_local_dt_sla_120.isoformat(),
-            'sla_480': self._default_local_dt_sla_480.isoformat(),
-            'sla_30': self._default_local_dt_sla_30.isoformat(),
-            'sla_15': self._default_local_dt_sla_15.isoformat()
-        })
+        self._test_cbx(3)
 
 
 class StopCallMeBackTestCase(

@@ -67,9 +67,9 @@ class SLATimeHelperTestCase(TestCase):
 
             dates = [start_date + datetime.timedelta(days=x) for x in range(1, 100)]
             for date in dates:
-                random_hour = random.randint(9, 20)
-                random_minute = random.randint(0, 59)
-                date = date.replace(hour=random_hour, minute=random_minute)
+                random_hour = random.randint(9, 12)
+                random_minute = random.randint(0, 29)
+                date = date.replace(hour=random_hour, minute=random_minute, second=0, microsecond=0)
                 get_sla_time(date, 15)
                 get_sla_time(date, 120)
                 get_sla_time(date, 480)

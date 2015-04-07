@@ -207,9 +207,11 @@ class CallMeBackForm(BaseCallMeBackForm):
         return dt <= timezone.now() + datetime.timedelta(minutes=30)
 
     def _is_dt_out_of_hours(self, dt):
-        if timezone.is_naive(dt):
-            return timezone.make_aware(dt, timezone.utc) not in OPERATOR_HOURS
-        return dt not in OPERATOR_HOURS
+        _dt = dt
+        if timezone.is_naive(_dt):
+            _dt = timezone.make_aware(_dt, timezone.utc)
+        _dt = timezone.localtime(_dt)
+        return _dt not in OPERATOR_HOURS
 
     def clean_datetime(self):
         dt = self.cleaned_data['datetime']

@@ -27,8 +27,8 @@ class SLATimeHelperTestCase(TestCase):
 
     def test_get_sla_time_delta_past_end_of_weekday_works(self):
         with mock.patch('cla_common.call_centre_availability.bank_holidays', return_value=[]) as bank_hol:
-            d = self._get_next_mon().replace(hour=19, minute=59)
-            next_day = (d + datetime.timedelta(days=1)).replace(hour=9, minute=14)
+            d = self._get_next_mon().replace(hour=19, minute=59, tzinfo=timezone.get_default_timezone())
+            next_day = (d + datetime.timedelta(days=1)).replace(hour=9, minute=14, tzinfo=timezone.get_default_timezone())
             self.assertEqual(get_sla_time(d, 15), next_day)
 
             next_day_120 = next_day.replace(hour=10, minute=59)
@@ -41,20 +41,20 @@ class SLATimeHelperTestCase(TestCase):
 
     def test_get_sla_time_delta_past_end_of_saturday_works(self):
         with mock.patch('cla_common.call_centre_availability.bank_holidays', return_value=[]) as bank_hol:
-            d = self._get_next_mon().replace(hour=12, minute=29)
+            d = self._get_next_mon().replace(hour=12, minute=29, tzinfo=timezone.get_default_timezone())
             next_sat = (d + datetime.timedelta(days=5))
-            next_mon = (next_sat + datetime.timedelta(days=2)).replace(hour=9, minute=14)
+            next_mon = (next_sat + datetime.timedelta(days=2)).replace(hour=9, minute=14, tzinfo=timezone.get_default_timezone())
             self.assertEqual(get_sla_time(next_sat, 15), next_mon)
             self.assertTrue(bank_hol.called)
 
     def test_get_sla_time_delta_past_end_of_weekday_with_next_day_a_bank_hol_works(self):
-        d = self._get_next_mon().replace(hour=19, minute=44)
+        d = self._get_next_mon().replace(hour=19, minute=44, tzinfo=timezone.get_default_timezone())
         next_day = d + datetime.timedelta(days=1)
         next_day_as_bank_hol = datetime.datetime.combine(next_day, datetime.time())
-        next_day_plus1 = (next_day + datetime.timedelta(days=1)).replace(hour=10, minute=44)
-        next_day_plus1_480 = (next_day + datetime.timedelta(days=1)).replace(hour=16, minute=44)
+        next_day_plus1 = (next_day + datetime.timedelta(days=1)).replace(hour=10, minute=44, tzinfo=timezone.get_default_timezone())
+        next_day_plus1_480 = (next_day + datetime.timedelta(days=1)).replace(hour=16, minute=44, tzinfo=timezone.get_default_timezone())
         with mock.patch('cla_common.call_centre_availability.bank_holidays', return_value=[next_day_as_bank_hol]) as bank_hol:
-            end_of_day = d.replace(hour=19, minute=59)
+            end_of_day = d.replace(hour=19, minute=59, tzinfo=timezone.get_default_timezone())
             self.assertEqual(get_sla_time(d, 15), end_of_day)
             self.assertEqual(get_sla_time(d, 120), next_day_plus1)
             self.assertEqual(get_sla_time(d, 480), next_day_plus1_480)
@@ -69,7 +69,7 @@ class SLATimeHelperTestCase(TestCase):
             for date in dates:
                 random_hour = random.randint(9, 12)
                 random_minute = random.randint(0, 29)
-                date = date.replace(hour=random_hour, minute=random_minute, second=0, microsecond=0)
+                date = date.replace(hour=random_hour, minute=random_minute, second=0, microsecond=0, tzinfo=timezone.get_default_timezone())
                 get_sla_time(date, 15)
                 get_sla_time(date, 120)
                 get_sla_time(date, 480)

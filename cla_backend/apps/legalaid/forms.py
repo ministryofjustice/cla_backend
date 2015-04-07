@@ -6,6 +6,7 @@ from django.conf import settings
 from cla_common.call_centre_availability import SLOT_INTERVAL_MINS, \
     OpeningHours, available_days, time_slots
 from cla_eventlog.forms import BaseCaseLogForm
+from django.utils.timezone import localtime
 
 
 def is_in_business_hours(dt):
@@ -20,8 +21,9 @@ def get_remainder_from_end_of_day(day, dt):
     remainder = timedelta(minutes=SLOT_INTERVAL_MINS)
     if available_slots:
         end_of_day = available_slots[-1] + timedelta(minutes=SLOT_INTERVAL_MINS)
-        end_of_day = end_of_day.replace(tzinfo=timezone.get_default_timezone())
+        end_of_day = localtime(end_of_day.replace(tzinfo=timezone.get_default_timezone()))
         remainder = dt - end_of_day
+    # assert remainder >= timedelta(minutes=0)
     assert remainder >= timedelta(minutes=0)
     return remainder
 

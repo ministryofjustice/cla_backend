@@ -17,13 +17,13 @@ def is_in_business_hours(dt):
     return dt in OPERATOR_HOURS
 
 def get_remainder_from_end_of_day(day, dt):
+    assert dt.tzinfo == timezone.get_default_timezone()
     available_slots = time_slots(day)
     remainder = timedelta(minutes=SLOT_INTERVAL_MINS)
     if available_slots:
         end_of_day = available_slots[-1] + timedelta(minutes=SLOT_INTERVAL_MINS)
-        end_of_day = localtime(end_of_day.replace(tzinfo=timezone.get_default_timezone()))
+        end_of_day = end_of_day.replace(tzinfo=timezone.get_default_timezone())
         remainder = dt - end_of_day
-    # assert remainder >= timedelta(minutes=0)
     assert remainder >= timedelta(minutes=0)
     return remainder
 

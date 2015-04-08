@@ -6,7 +6,6 @@ from django.conf import settings
 from cla_common.call_centre_availability import SLOT_INTERVAL_MINS, \
     OpeningHours, available_days, time_slots
 from cla_eventlog.forms import BaseCaseLogForm
-from django.utils.timezone import localtime
 
 
 def is_in_business_hours(dt):
@@ -16,29 +15,34 @@ def is_in_business_hours(dt):
     OPERATOR_HOURS = OpeningHours(**settings.OPERATOR_HOURS)
     return dt in OPERATOR_HOURS
 
-def get_remainder_from_end_of_day(day, dt):
+def get_remainder_from_end_of_day(day, dt_until):
     available_slots = time_slots(day)
     remainder = timedelta(minutes=SLOT_INTERVAL_MINS)
     if available_slots:
         end_of_day = available_slots[-1] + timedelta(minutes=SLOT_INTERVAL_MINS)
         end_of_day = end_of_day.replace(tzinfo=timezone.get_default_timezone())
-        remainder = dt - end_of_day
-    assert remainder >= timedelta(minutes=0)
+        remainder = dt_until - end_of_day
+    assert remainder >= timedelta(microseconds=0)
     return remainder
 
+def get_next_business_day(start_date):
+    return filter(lambda x: x.date() > start_date, available_days(365))[0]
 
 def get_sla_time(start_time, minutes):
+    next_business_day = get_next_business_day(start_time.date())
+    start_of_next_business_day = time_slots(next_business_day.date())[0]
+    start_of_next_business_day = start_of_next_business_day.replace(
+        tzinfo=timezone.get_default_timezone()
+    )
+
+    if not is_in_business_hours(start_time):
+        start_time = start_of_next_business_day
+
     simple_delta = start_time + timedelta(minutes=minutes)
     in_business_hours = is_in_business_hours(simple_delta)
     if not in_business_hours:
         remainder_delta = get_remainder_from_end_of_day(start_time.date(), simple_delta)
-        next_business_day = filter(lambda x: x.date() > start_time.date(), available_days(365))[0]
-        start_of_next_business_day = time_slots(next_business_day.date())[0]
-        start_of_next_business_day = start_of_next_business_day.replace(
-            tzinfo=timezone.get_default_timezone()
-        )
         return get_sla_time(start_of_next_business_day, remainder_delta.total_seconds() // 60 )
-
     return simple_delta
 
 

@@ -65,10 +65,10 @@ class SLATimeHelperTestCase(TestCase):
         with mock.patch('cla_common.call_centre_availability.bank_holidays', return_value=[]) as bank_hol:
             start_date = timezone.now().replace(hour=9, minute=0)
 
-            dates = [start_date + datetime.timedelta(days=x) for x in range(1, 100)]
+            dates = [start_date + datetime.timedelta(days=x) for x in range(1, 300)]
             for date in dates:
-                random_hour = random.randint(9, 12)
-                random_minute = random.randint(0, 29)
+                random_hour = random.randint(0, 23)
+                random_minute = random.randint(0, 59)
                 date = date.replace(hour=random_hour, minute=random_minute, second=0, microsecond=0, tzinfo=timezone.get_default_timezone())
                 get_sla_time(date, 15)
                 get_sla_time(date, 120)

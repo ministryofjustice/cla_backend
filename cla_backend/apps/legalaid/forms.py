@@ -20,7 +20,7 @@ def get_remainder_from_end_of_day(day, dt_until):
     remainder = timedelta(minutes=SLOT_INTERVAL_MINS)
     if available_slots:
         end_of_day = available_slots[-1] + timedelta(minutes=SLOT_INTERVAL_MINS)
-        end_of_day = end_of_day.replace(tzinfo=timezone.get_default_timezone())
+        end_of_day = timezone.make_aware(end_of_day, timezone.get_default_timezone())
         remainder = dt_until - end_of_day
     assert remainder >= timedelta(microseconds=0)
     return remainder

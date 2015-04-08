@@ -31,9 +31,8 @@ def get_next_business_day(start_date):
 def get_sla_time(start_time, minutes):
     next_business_day = get_next_business_day(start_time.date())
     start_of_next_business_day = time_slots(next_business_day.date())[0]
-    start_of_next_business_day = start_of_next_business_day.replace(
-        tzinfo=timezone.get_default_timezone()
-    )
+    start_of_next_business_day = timezone.make_aware(start_of_next_business_day,
+        timezone.get_default_timezone())
 
     if not is_in_business_hours(start_time):
         start_time = start_of_next_business_day

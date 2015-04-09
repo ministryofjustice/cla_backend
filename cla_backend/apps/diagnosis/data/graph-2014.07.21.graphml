@@ -7964,7 +7964,7 @@ I can’t guarantee that they will be able to help you so please check with them
     <node id="n355">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*I’m afraid that CIvil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 
@@ -8756,7 +8756,7 @@ eg divorce, contact with children, finances]]></data>
     <node id="n387">
       <data key="d4"><![CDATA[Please read the following to the client:
 
-*"We may be able to put you through to a specialist who could help you with this area of law, but before I can transfer you we need to complete a short financial assessment to see if you can get legal aid.*
+*"We may be able to put you through to a specialist provider who could help you with this area of law, but before I can transfer you we need to complete a short financial assessment to see if you can get legal aid.*
 
 *Please note that before a specialist advisor can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof."*
 ]]></data>
@@ -8896,26 +8896,6 @@ eg divorce, contact with children, finances]]></data>
     <node id="n393">
       <data key="d4"/>
       <data key="d5"/>
-      <data key="d13">
-        <y:ShapeNode>
-          <y:Geometry height="30.0" width="30.0" x="5068.187571921749" y="411.31760644418955"/>
-          <y:Fill color="#FFCC00" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="26.763671875" x="1.6181640625" y="5.93359375">394<y:LabelModel>
-              <y:SmartNodeLabelModel distance="4.0"/>
-            </y:LabelModel>
-            <y:ModelParameter>
-              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
-            </y:ModelParameter>
-          </y:NodeLabel>
-          <y:Shape type="rectangle"/>
-        </y:ShapeNode>
-      </data>
-    </node>
-    <node id="n394">
-      <data key="d4"/>
-      <data key="d5"/>
-      <data key="d12"/>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="30.0" x="12358.524522028261" y="551.8121363258524"/>

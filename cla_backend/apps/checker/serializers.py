@@ -5,7 +5,7 @@ from legalaid.serializers import UUIDSerializer, \
     PersonalDetailsSerializerBase, CaseSerializerBase, \
     IncomeSerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, \
-    AdaptationDetailsSerializerBase
+    AdaptationDetailsSerializerBase, ThirdPartyDetailsSerializerBase
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -83,9 +83,6 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     # TODO: DRF doesn't validate, fields that aren't REQ'd = True
     # we need to figure out a way to deal with it
 
-    # dependants_young = IntegerField(default=0)
-    # dependants_old = IntegerField(default=0)
-
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
             'reference',
@@ -113,6 +110,13 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
             'safe_to_email'
         )
 
+class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
+    class Meta(ThirdPartyDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'personal_details', 'pass_phrase',
+            'personal_relationship',
+
+        )
 
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
@@ -125,10 +129,11 @@ class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field='reference', required=False)
     adaptation_details = AdaptationDetailsSerializer(required=False)
     personal_details = PersonalDetailsSerializer()
+    thirdparty_details = ThirdPartyDetailsSerializer(required=False)
     requires_action_at = serializers.DateTimeField(required=False)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference',
-            'requires_action_at', 'adaptation_details'
+            'requires_action_at', 'adaptation_details', 'thirdparty_details'
         )

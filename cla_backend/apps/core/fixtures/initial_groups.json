@@ -47,7 +47,10 @@
                 ["delete_notetagrelation", "guidance", "notetagrelation"],
                 ["change_tag", "guidance", "tag"],
                 ["add_tag", "guidance", "tag"],
-                ["delete_tag", "guidance", "tag"]
+                ["delete_tag", "guidance", "tag"],
+                ["add_telephonenumber", "knowledgebase", "telephonenumber"],
+                ["change_telephonenumber", "knowledgebase", "telephonenumber"],
+                ["delete_telephonenumber", "knowledgebase", "telephonenumber"]
             ]
         }
     },

@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url, include
 from rest_framework import routers
 
 from . import views
-from core.drf.router import AdvancedSimpleRouter, NestedCLARouter, NestedSimpleRouter
+from core.drf.router import NestedCLARouter, NestedSimpleRouter
 
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)
@@ -15,7 +15,6 @@ case_one2one_router = NestedCLARouter(router, 'case', lookup='case')
 case_one2one_router.register(r'diagnosis', views.DiagnosisViewSet, base_name='diagnosis')
 
 case_one2many_router = NestedSimpleRouter(router, r'case', lookup='case')
-
 
 urlpatterns = patterns('',
     url(r'^', include(case_one2one_router.urls)),

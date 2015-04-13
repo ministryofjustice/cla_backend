@@ -13,7 +13,7 @@ from knowledgebase.views import BaseArticleViewSet, \
 
 from legalaid.models import EligibilityCheck, Property, Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet, \
-    BaseCaseLogMixin, FullCaseViewSet
+    BaseCaseLogMixin, FullCaseViewSet, CaseFormActionMixin
 from cla_common.constants import CASE_SOURCE
 
 from .serializers import EligibilityCheckSerializer, \
@@ -107,11 +107,17 @@ class CaseViewSet(
     PublicAPIViewSetMixin,
     BaseCaseLogMixin,
     mixins.CreateModelMixin,
-    FullCaseViewSet
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    CaseFormActionMixin,
+    viewsets.GenericViewSet
 ):
 
     model = Case
     serializer_class = CaseSerializer
+
+    lookup_field = 'reference'
+    lookup_regex = r'[A-Z|\d]{2}-\d{4}-\d{4}'
 
     def pre_save(self, obj, *args, **kwargs):
         super(CaseViewSet, self).pre_save(obj, *args, **kwargs)

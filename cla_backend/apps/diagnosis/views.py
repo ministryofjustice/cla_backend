@@ -46,13 +46,11 @@ class BaseDiagnosisViewSet(
         except Case.DoesNotExist:
             return
 
-        user = self.request.user
-
         diagnosis_event = event_registry.get_event('diagnosis')()
         patch = json.dumps(self.get_serializer_class()(obj).data)
 
         kwargs = {
-            'created_by': user,
+            'created_by': self.get_current_user(),
             'status': status,
             'patch': patch
         }
@@ -76,3 +74,6 @@ class BaseDiagnosisViewSet(
             if not self._original_obj or self._original_obj.is_state_unknown():
                 self.create_diagnosis_log(obj, status='created')
         return ret
+
+    def get_current_user(self):
+        return self.request.user

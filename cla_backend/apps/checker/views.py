@@ -144,4 +144,5 @@ class CaseViewSet(
 
 
 class DiagnosisViewSet(PublicAPIViewSetMixin, BaseDiagnosisViewSet):
-    pass
+    def get_current_user(self):
+        return get_web_user()

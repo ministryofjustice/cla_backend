@@ -17,7 +17,7 @@ from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet, \
 from cla_common.constants import CASE_SOURCE
 
 from .serializers import EligibilityCheckSerializer, \
-    PropertySerializer, CaseSerializer
+    PropertySerializer, CaseSerializer, CheckerDiagnosisSerializer
 from .forms import WebCallMeBackForm
 
 
@@ -144,5 +144,7 @@ class CaseViewSet(
 
 
 class DiagnosisViewSet(PublicAPIViewSetMixin, BaseDiagnosisViewSet):
+    serializer_class = CheckerDiagnosisSerializer
+
     def get_current_user(self):
         return get_web_user()

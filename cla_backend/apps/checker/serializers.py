@@ -1,4 +1,8 @@
 from rest_framework import serializers
+from django.conf import settings
+from django.utils.functional import SimpleLazyObject
+from diagnosis.graph import get_graph
+from diagnosis.serializers import DiagnosisSerializer
 
 from legalaid.serializers import UUIDSerializer, \
     EligibilityCheckSerializerBase, PropertySerializerBase, \
@@ -6,6 +10,10 @@ from legalaid.serializers import UUIDSerializer, \
     IncomeSerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, \
     AdaptationDetailsSerializerBase, ThirdPartyDetailsSerializerBase
+
+
+checker_graph = SimpleLazyObject(lambda: get_graph(
+    file_name=settings.PUBLIC_DIAGNOSIS_FILE_NAME))
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -137,3 +145,8 @@ class CaseSerializer(CaseSerializerBase):
             'eligibility_check', 'personal_details', 'reference',
             'requires_action_at', 'adaptation_details', 'thirdparty_details'
         )
+
+
+class CheckerDiagnosisSerializer(DiagnosisSerializer):
+    def get_graph(self):
+        return checker_graph

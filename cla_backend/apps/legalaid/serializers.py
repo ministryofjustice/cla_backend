@@ -280,7 +280,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     eligibility_check = UUIDSerializer(slug_field='reference', read_only=True)
     diagnosis = UUIDSerializer(slug_field='reference', required=False, read_only=True)
     personal_details = PersonalDetailsSerializerBase()
-    notes = serializers.CharField(max_length=5000, required=False)
+    notes = serializers.CharField(max_length=10000, required=False)
     provider_notes = serializers.CharField(max_length=5000, required=False)
     matter_type1 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE))
     matter_type2 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO))

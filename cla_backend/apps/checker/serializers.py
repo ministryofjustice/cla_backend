@@ -13,7 +13,7 @@ from legalaid.serializers import UUIDSerializer, \
 
 
 checker_graph = SimpleLazyObject(lambda: get_graph(
-    file_name=settings.PUBLIC_DIAGNOSIS_FILE_NAME))
+    file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME))
 
 
 class PropertySerializer(PropertySerializerBase):

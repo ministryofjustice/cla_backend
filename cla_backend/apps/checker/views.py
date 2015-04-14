@@ -140,6 +140,10 @@ class CaseViewSet(
 class DiagnosisViewSet(
     PublicAPIViewSetMixin,
     DiagnosisModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     viewsets.GenericViewSet
 ):
     serializer_class = CheckerDiagnosisSerializer

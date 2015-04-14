@@ -14,12 +14,7 @@ from diagnosis.models import DiagnosisTraversal
 from diagnosis.serializers import DiagnosisSerializer
 
 
-class DiagnosisModelMixin(
-    mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-):
+class DiagnosisModelMixin(object):
     serializer_class = DiagnosisSerializer
     model = DiagnosisTraversal
     lookup_field = 'reference'
@@ -77,6 +72,10 @@ class DiagnosisModelMixin(
 
 class BaseDiagnosisViewSet(
     DiagnosisModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     NestedGenericModelMixin,
     viewsets.GenericViewSet
 ):

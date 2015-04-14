@@ -14,17 +14,13 @@ from diagnosis.models import DiagnosisTraversal
 from diagnosis.serializers import DiagnosisSerializer
 
 
-class BaseDiagnosisViewSet(
+class DiagnosisModelMixin(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
-    NestedGenericModelMixin,
-    viewsets.GenericViewSet
 ):
-
     serializer_class = DiagnosisSerializer
-    PARENT_FIELD = 'diagnosis'
     model = DiagnosisTraversal
     lookup_field = 'reference'
 
@@ -57,7 +53,7 @@ class BaseDiagnosisViewSet(
         diagnosis_event.process(obj.case, **kwargs)
 
     def post_delete(self, obj, *args, **kwargs):
-        ret = super(BaseDiagnosisViewSet, self).post_delete(obj, *args, **kwargs)
+        ret = super(DiagnosisModelMixin, self).post_delete(obj, *args, **kwargs)
         if obj.is_state_unknown():
             self.create_diagnosis_log(obj, status='incomplete_deleted')
         else:
@@ -66,10 +62,10 @@ class BaseDiagnosisViewSet(
 
     def pre_save(self, obj, *args, **kwargs):
         self._original_obj = self.get_object()
-        return super(BaseDiagnosisViewSet, self).pre_save(obj, *args, **kwargs)
+        return super(DiagnosisModelMixin, self).pre_save(obj, *args, **kwargs)
 
     def post_save(self, obj, *args, **kwargs):
-        ret = super(BaseDiagnosisViewSet, self).post_save(obj, *args, **kwargs)
+        ret = super(DiagnosisModelMixin, self).post_save(obj, *args, **kwargs)
         if not obj.is_state_unknown():
             if not self._original_obj or self._original_obj.is_state_unknown():
                 self.create_diagnosis_log(obj, status='created')
@@ -77,3 +73,11 @@ class BaseDiagnosisViewSet(
 
     def get_current_user(self):
         return self.request.user
+
+
+class BaseDiagnosisViewSet(
+    DiagnosisModelMixin,
+    NestedGenericModelMixin,
+    viewsets.GenericViewSet
+):
+    PARENT_FIELD = 'diagnosis'

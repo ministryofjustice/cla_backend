@@ -29,7 +29,7 @@ class DiagnosisSerializer(ClaModelSerializer):
     def __init__(self, *args, **kwargs):
         # self.full_nodes_dump = kwargs.pop('full', False)
         super(DiagnosisSerializer, self).__init__(*args, **kwargs)
-        self.graph = self.get_graph()
+        self.graph = self._get_graph()
 
         nodes_choices = self._get_nodes()
         self.fields['current_node_id'].choices = [
@@ -37,7 +37,7 @@ class DiagnosisSerializer(ClaModelSerializer):
         ]
         self.fields['current_node_id'].required = bool(nodes_choices)
 
-    def get_graph(self):
+    def _get_graph(self):
         return graph
 
     def is_version_in_conflict(self, request):

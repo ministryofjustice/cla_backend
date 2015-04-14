@@ -118,6 +118,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
             'safe_to_email'
         )
 
+
 class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
     class Meta(ThirdPartyDetailsSerializerBase.Meta):
         fields = (
@@ -125,6 +126,7 @@ class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
             'personal_relationship',
 
         )
+
 
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
@@ -148,5 +150,5 @@ class CaseSerializer(CaseSerializerBase):
 
 
 class CheckerDiagnosisSerializer(DiagnosisSerializer):
-    def get_graph(self):
+    def _get_graph(self):
         return checker_graph

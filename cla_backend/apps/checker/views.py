@@ -1,3 +1,4 @@
+from django.core.exceptions import ImproperlyConfigured
 from checker.helpers import notify_callback_created
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -6,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, mixins
 
 from core.models import get_web_user
-from diagnosis.views import BaseDiagnosisViewSet
+from diagnosis.views import BaseDiagnosisViewSet, DiagnosisModelMixin
 
 from knowledgebase.views import BaseArticleViewSet, \
     ArticleCategoryFilter
@@ -143,8 +144,19 @@ class CaseViewSet(
                     notify_callback_created(obj)
 
 
-class DiagnosisViewSet(PublicAPIViewSetMixin, BaseDiagnosisViewSet):
+class DiagnosisViewSet(
+    PublicAPIViewSetMixin,
+    DiagnosisModelMixin,
+    viewsets.GenericViewSet
+):
     serializer_class = CheckerDiagnosisSerializer
 
     def get_current_user(self):
         return get_web_user()
+
+    def pre_save(self, obj, *args, **kwargs):
+        try:
+            self._original_obj = self.get_object()
+        except ImproperlyConfigured:
+            pass
+        return super(DiagnosisModelMixin, self).pre_save(obj, *args, **kwargs)

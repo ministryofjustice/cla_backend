@@ -7,14 +7,14 @@ from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, mixins
 
 from core.models import get_web_user
-from diagnosis.views import BaseDiagnosisViewSet, DiagnosisModelMixin
+from diagnosis.views import DiagnosisModelMixin
 
 from knowledgebase.views import BaseArticleViewSet, \
     ArticleCategoryFilter
 
 from legalaid.models import EligibilityCheck, Property, Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet, \
-    BaseCaseLogMixin, FullCaseViewSet, CaseFormActionMixin
+    BaseCaseLogMixin, CaseFormActionMixin
 from cla_common.constants import CASE_SOURCE
 
 from .serializers import EligibilityCheckSerializer, \

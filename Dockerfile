@@ -71,6 +71,9 @@ ADD ./docker/nginx.service /etc/service/nginx/run
 # install service files for runit
 ADD ./docker/uwsgi.service /etc/service/uwsgi/run
 
+# install service files for runit
+ADD ./docker/celery.service /etc/service/uwsgi/run
+
 #sym-link to local.py, which overrides all common settings.
 RUN ln -s /home/app/django/cla_backend/settings/docker.py /home/app/django/cla_backend/settings/local.py
 

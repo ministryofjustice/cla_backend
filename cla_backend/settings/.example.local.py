@@ -24,3 +24,7 @@ LOGGING = {
         },
     }
 }
+
+# don't bother with celery locally
+CELERY_ALWAYS_EAGER = True
+

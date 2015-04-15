@@ -1,10 +1,13 @@
-import os
-import tempfile
 import glob
-import zipfile
+import os
 import shutil
-from datetime import datetime, date, time, timedelta
+import tempfile
+import zipfile
+from datetime import date, datetime, time, timedelta
 
+from celery.exceptions import ImproperlyConfigured
+from django.conf import settings
+from django.core.mail import EmailMessage
 from django.db import connection
 
 from legalaid.utils import diversity
@@ -53,6 +56,10 @@ class OBIEEExporter(object):
 
     filename = 'cla_database.zip'
 
+    @property
+    def full_path(self):
+        return os.path.join(self.export_path, self.filename)
+
     def __init__(self, export_path, passphrase, dt_from=None, dt_to=None):
         self.export_path = export_path
         self.passphrase = passphrase
@@ -71,6 +78,8 @@ class OBIEEExporter(object):
         self.export_personal_details()
 
         self.generate_zip()
+        if os.path.exists(self.full_path):
+            return self.full_path
 
     def export_basic_tables(self):
         for sql in self.basic_sql_files:
@@ -132,3 +141,24 @@ class OBIEEExporter(object):
         shutil.move('%s/%s' % (self.tmp_export_path, self.filename),
                     '%s/%s' % (self.export_path, self.filename))
         shutil.rmtree(self.tmp_export_path)
+
+    def close(self):
+        if os.path.exists(self.full_path):
+            os.remove(self.full_path)
+
+def email_obiee_export(zip_path, dt_from, dt_to):
+    if hasattr(settings, 'OBIEE_EMAIL_TO'):
+        subject = 'CLA CHS Database Export: {from_} - {to}'.format(from_=dt_from, to=dt_to)
+        body = ''
+        to = settings.OBIEE_EMAIL_TO.split(',')
+
+        message = EmailMessage(
+            subject,
+            body,
+            settings.EMAIL_FROM_ADDRESS,
+            to
+        )
+        message.attach_file(zip_path)
+        message.send()
+    else:
+        raise ImproperlyConfigured('OBIEE_EMAIL_TO must be specified in settings')

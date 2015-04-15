@@ -1,0 +1,7 @@
+#!/bin/bash
+
+mkdir -p /var/run/celery/
+mkdir -p /var/log/celery/
+
+cd /home/app/django
+exec celery -A cla_backend worker -l info -c 1 --logfile=/var/log/celery/celery.log --pidfile=/var/run/celery/celery.pid

@@ -378,6 +378,9 @@ CELERY_IGNORE_RESULT = True # SQS doesn't support it
 CELERY_MESSAGE_COMPRESSION = 'gzip' # got to look after the pennies
 CELERY_DISABLE_RATE_LIMITS = True # they don't work with SQS
 CELERY_ENABLE_REMOTE_CONTROL = False # doesn't work well under docker
+# apps with celery tasks
+CELERY_IMPORTS = ['reports.tasks']
+
 
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and 'test' == sys.argv[1]:

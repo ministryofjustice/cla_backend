@@ -42,6 +42,7 @@ ADMINS = ()
 MANAGERS = ADMINS
 
 EMAIL_FROM_ADDRESS = 'no-reply@civillegaladvice.service.gov.uk'
+DEFAULT_EMAIL_TO = 'cla-alerts@digital.justice.gov.uk'
 
 OPERATOR_USER_ALERT_EMAILS = []
 SPECIALIST_USER_ALERT_EMAILS = []
@@ -325,7 +326,7 @@ if all([os.environ.get('SMTP_USER'),
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get('CALL_CENTRE_NOTIFY_EMAIL_ADDRESS', 'ravi.kotecha@digital.justice.gov.uk')
+CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get('CALL_CENTRE_NOTIFY_EMAIL_ADDRESS', DEFAULT_EMAIL_TO)
 
 PROVIDER_HOURS = {
     'weekday': (datetime.time(9, 0), datetime.time(17, 0))
@@ -341,6 +342,42 @@ OBIEE_IP_PERMISSIONS = (
 )
 
 OBIEE_ENABLED = os.environ.get('OBIEE_ENABLED', 'True') == 'True'
+OBIEE_EMAIL_TO = os.environ.get('OBIEE_EMAIL_TO', DEFAULT_EMAIL_TO)
+
+
+#celery
+if all([
+    os.environ.get('SQS_ACCESS_KEY'),
+    os.environ.get('SQS_SECRET_KEY')
+]):
+    import urllib
+    BROKER_URL = 'sqs://{access_key}:{secret_key}@'.format(
+        access_key=urllib.quote(os.environ.get('SQS_ACCESS_KEY'), safe=''),
+        secret_key=urllib.quote(os.environ.get('SQS_SECRET_KEY'), safe='')
+
+    )
+else:
+    # if no BROKER_URL specified then don't try to use celery
+    # because it'll just cause errors
+    CELERY_ALWAYS_EAGER = True
+
+BROKER_TRANSPORT_OPTIONS = {
+    'polling_interval': 10,
+    'region': 'eu-west-1',
+    'wait_time_seconds': 20,
+    'queue_name_prefix': 'env-{env}-'.format(
+        env=os.environ.get('CLA_ENV', 'local')
+    )
+}
+CELERY_ACCEPT_CONTENT = ['yaml'] # because json serializer doesn't support dates
+CELERY_TASK_SERIALIZER = 'yaml' # for consistency
+CELERY_RESULT_SERIALIZER = 'yaml' # as above but not actually used
+CELERY_ENABLE_UTC = True # I think this is the default now anyway
+CELERY_RESULT_BACKEND = None # SQS doesn't support it
+CELERY_IGNORE_RESULT = True # SQS doesn't support it
+CELERY_MESSAGE_COMPRESSION = 'gzip' # got to look after the pennies
+CELERY_DISABLE_RATE_LIMITS = True # they don't work with SQS
+
 
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and 'test' == sys.argv[1]:

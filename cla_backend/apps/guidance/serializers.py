@@ -13,4 +13,4 @@ class NoteSearchSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ('body', 'title')
+        fields = ('body', 'name', 'title')

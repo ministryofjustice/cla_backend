@@ -13,8 +13,9 @@ class NoteAdmin(admin.ModelAdmin):
     ordering = ['title']
 
     exclude = ('created', 'modified', 'body')
-    list_display = ('title', 'modified', 'created')
+    list_display = ('name', 'title', 'modified', 'created')
     search_fields = ['title']
+    prepopulated_fields = {"name": ("title",)}
     inlines = [TagInline]
     form = NoteModelForm
 

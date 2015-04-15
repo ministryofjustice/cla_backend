@@ -35,10 +35,10 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
             u'Education prompts',
             u'Family Prompts',
             u'Handling gender reassignment discrimination cases',
+            u'Special Educational Needs',
             u'Homelessness',
             u'Housing Prompts',
             u'Opening Call',
-            u'Special Educational Needs',
             u'Welfare Benefit Prompts',
             u'Zero income prompts'
         ]

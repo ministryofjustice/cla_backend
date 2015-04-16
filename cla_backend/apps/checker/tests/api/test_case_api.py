@@ -33,7 +33,7 @@ class BaseCaseTestCase(
         self.assertItemsEqual(
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
-                'requires_action_at', 'adaptation_details']
+                'requires_action_at', 'adaptation_details', 'thirdparty_details']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):

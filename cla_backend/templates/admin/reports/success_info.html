@@ -1,0 +1,14 @@
+{% extends "admin/reports/base.html" %}
+
+{% block inner_form %}
+  <h1>
+    Your report is being generated. You will recieve a file called {{ filename }}
+    via email.</h1>
+  <h2><b>It can take up to 15 minutes, do not run this report again.</b>
+    If there is a problem generating your report you will receive an email with
+    more information.
+  </h2>
+{% endblock inner_form %}
+
+{% block submit_row %}
+{% endblock submit_row %}

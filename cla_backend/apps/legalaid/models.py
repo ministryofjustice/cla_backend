@@ -779,6 +779,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     class Meta:
         permissions = (
             ("run_reports", "Can run reports"),
+            ("run_obiee_reports", "Can run obiee reports"),
         )
 
 

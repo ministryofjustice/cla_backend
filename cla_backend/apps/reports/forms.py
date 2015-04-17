@@ -1,3 +1,4 @@
+from dateutil.relativedelta import relativedelta
 import os
 from datetime import timedelta, time, datetime, date
 from cla_eventlog import event_registry
@@ -339,3 +340,20 @@ class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
             'means_test_completed_online',
             'call_me_back_only'
         ]
+
+class MIOBIEEExportExtract(MonthRangeReportForm):
+    passphrase = forms.CharField(
+        help_text='This is required, the diversity passpharse is required to'
+                  ' decrypt the diversity information that people have given '
+                  'to us. If not provided or wrong then the report will fail '
+                  'to generate.'
+    )
+
+    def clean(self):
+        cleaned_data = super(MIOBIEEExportExtract, self).clean()
+        from reports.tasks import obiee_export
+        start = self.month
+        end = self.month + relativedelta(months=1)
+        obiee_export.delay(cleaned_data['passphrase'], start, end)
+        return cleaned_data
+

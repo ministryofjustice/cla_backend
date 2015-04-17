@@ -344,6 +344,7 @@ OBIEE_IP_PERMISSIONS = (
 
 OBIEE_ENABLED = os.environ.get('OBIEE_ENABLED', 'True') == 'True'
 OBIEE_EMAIL_TO = os.environ.get('OBIEE_EMAIL_TO', DEFAULT_EMAIL_TO)
+OBIEE_ZIP_PASSWORD = os.environ.get('OBIEE_ZIP_PASSWORD')
 
 
 #celery

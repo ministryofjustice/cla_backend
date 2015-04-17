@@ -1,9 +1,11 @@
 from dateutil.relativedelta import relativedelta
+from django.core.exceptions import ImproperlyConfigured
 import os
 from datetime import timedelta, time, datetime, date
 from cla_eventlog import event_registry
 
 from django import forms
+from django.conf import settings
 from django.db import connection
 from django.utils import timezone
 from django.contrib.admin import widgets
@@ -354,6 +356,8 @@ class MIOBIEEExportExtract(MonthRangeReportForm):
         from reports.tasks import obiee_export
         start = self.month
         end = self.month + relativedelta(months=1)
+        if not settings.OBIEE_ZIP_PASSWORD:
+            raise ImproperlyConfigured('OBIEE Zip password must be set.')
         obiee_export.delay(cleaned_data['passphrase'], start, end)
         return cleaned_data
 

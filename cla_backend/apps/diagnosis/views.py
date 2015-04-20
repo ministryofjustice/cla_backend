@@ -14,17 +14,8 @@ from diagnosis.models import DiagnosisTraversal
 from diagnosis.serializers import DiagnosisSerializer
 
 
-class BaseDiagnosisViewSet(
-    mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-    NestedGenericModelMixin,
-    viewsets.GenericViewSet
-):
-
+class DiagnosisModelMixin(object):
     serializer_class = DiagnosisSerializer
-    PARENT_FIELD = 'diagnosis'
     model = DiagnosisTraversal
     lookup_field = 'reference'
 
@@ -46,20 +37,18 @@ class BaseDiagnosisViewSet(
         except Case.DoesNotExist:
             return
 
-        user = self.request.user
-
         diagnosis_event = event_registry.get_event('diagnosis')()
         patch = json.dumps(self.get_serializer_class()(obj).data)
 
         kwargs = {
-            'created_by': user,
+            'created_by': self.get_current_user(),
             'status': status,
             'patch': patch
         }
         diagnosis_event.process(obj.case, **kwargs)
 
     def post_delete(self, obj, *args, **kwargs):
-        ret = super(BaseDiagnosisViewSet, self).post_delete(obj, *args, **kwargs)
+        ret = super(DiagnosisModelMixin, self).post_delete(obj, *args, **kwargs)
         if obj.is_state_unknown():
             self.create_diagnosis_log(obj, status='incomplete_deleted')
         else:
@@ -68,11 +57,26 @@ class BaseDiagnosisViewSet(
 
     def pre_save(self, obj, *args, **kwargs):
         self._original_obj = self.get_object()
-        return super(BaseDiagnosisViewSet, self).pre_save(obj, *args, **kwargs)
+        return super(DiagnosisModelMixin, self).pre_save(obj, *args, **kwargs)
 
     def post_save(self, obj, *args, **kwargs):
-        ret = super(BaseDiagnosisViewSet, self).post_save(obj, *args, **kwargs)
+        ret = super(DiagnosisModelMixin, self).post_save(obj, *args, **kwargs)
         if not obj.is_state_unknown():
             if not self._original_obj or self._original_obj.is_state_unknown():
                 self.create_diagnosis_log(obj, status='created')
         return ret
+
+    def get_current_user(self):
+        return self.request.user
+
+
+class BaseDiagnosisViewSet(
+    DiagnosisModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    NestedGenericModelMixin,
+    viewsets.GenericViewSet
+):
+    PARENT_FIELD = 'diagnosis'

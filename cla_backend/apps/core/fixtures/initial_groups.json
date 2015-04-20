@@ -63,5 +63,15 @@
               ["run_reports", "legalaid", "case"]
             ]
         }
+    },
+  {
+        "pk": 4,
+        "model": "auth.group",
+        "fields": {
+            "name": "LAA OBIEE",
+            "permissions": [
+              ["run_obiee_reports", "legalaid", "case"]
+            ]
+        }
     }
 ]

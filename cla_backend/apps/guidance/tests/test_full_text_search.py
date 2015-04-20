@@ -73,7 +73,9 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
         response = self._get_with_auth(url, {'search': ''})
         self.assertEqual(response.status_code, 200)
 
-        url = reverse('call_centre:guidance_note-detail', args=[1])
+        url = reverse(
+            'call_centre:guidance_note-detail',
+            args=['eligibility_check'])
 
         response = self._get_with_auth(url)
         self.assertEqual(response.status_code, 200)

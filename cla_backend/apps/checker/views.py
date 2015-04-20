@@ -1,3 +1,4 @@
+from django.core.exceptions import ImproperlyConfigured
 from checker.helpers import notify_callback_created
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -6,6 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, mixins
 
 from core.models import get_web_user
+from diagnosis.views import DiagnosisModelMixin
 
 from knowledgebase.views import BaseArticleViewSet, \
     ArticleCategoryFilter
@@ -16,7 +18,7 @@ from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet, \
 from cla_common.constants import CASE_SOURCE
 
 from .serializers import EligibilityCheckSerializer, \
-    PropertySerializer, CaseSerializer
+    PropertySerializer, CaseSerializer, CheckerDiagnosisSerializer
 from .forms import WebCallMeBackForm
 
 
@@ -72,7 +74,6 @@ class NestedModelMixin(object):
             self.parent_model, **{self.nested_lookup: key})
 
         return super(NestedModelMixin, self).dispatch(request, *args, **kwargs)
-
 
     def get_queryset(self):
         qs = super(NestedModelMixin, self).get_queryset()
@@ -134,3 +135,25 @@ class CaseViewSet(
                 if form.is_valid():
                     form.save(obj.created_by)
                     notify_callback_created(obj)
+
+
+class DiagnosisViewSet(
+    PublicAPIViewSetMixin,
+    DiagnosisModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet
+):
+    serializer_class = CheckerDiagnosisSerializer
+
+    def get_current_user(self):
+        return get_web_user()
+
+    def pre_save(self, obj, *args, **kwargs):
+        try:
+            self._original_obj = self.get_object()
+        except ImproperlyConfigured:
+            pass
+        return super(DiagnosisModelMixin, self).pre_save(obj, *args, **kwargs)

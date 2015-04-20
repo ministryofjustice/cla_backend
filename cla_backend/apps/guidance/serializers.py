@@ -7,7 +7,7 @@ from .models import Note
 class NoteSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ('id', 'title')
+        fields = ('id', 'name', 'title')
 
 
 class NoteSerializer(serializers.ModelSerializer):

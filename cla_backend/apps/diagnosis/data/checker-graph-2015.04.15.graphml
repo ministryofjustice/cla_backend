@@ -3039,7 +3039,8 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n112::n10">
-          <data key="d3"><![CDATA[Problem relates to a child in care, or a care leaver, or user is a foster carer]]></data>
+          <data key="d3"><![CDATA[CONTACT]]></data>
+          <data key="d4"><![CDATA[Problem relates to a child in care, or a care leaver, or user is a foster carer]]></data>
           <data key="d8"><![CDATA[CONTACT]]></data>
           <data key="d10">
             <context xmlns="">
@@ -3325,7 +3326,8 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n112::n21">
-          <data key="d3"><![CDATA[Council is trying to take user's child into care]]></data>
+          <data key="d3"><![CDATA[CONTACT]]></data>
+          <data key="d4"><![CDATA[Council is trying to take user's child into care]]></data>
           <data key="d8"><![CDATA[CONTACT]]></data>
           <data key="d10">
             <context xmlns="">
@@ -3429,7 +3431,8 @@ OUTOFSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n112::n25">
-          <data key="d3"><![CDATA[User is at immediate risk of harm]]></data>
+          <data key="d3"><![CDATA[CONTACT]]></data>
+          <data key="d4"><![CDATA[User is at immediate risk of harm]]></data>
           <data key="d8"><![CDATA[CONTACT]]></data>
           <data key="d10">
             <context xmlns="">
@@ -6829,7 +6832,6 @@ CONTACT<y:LabelModel>
       </data>
     </edge>
     <edge id="e262" source="n3" target="n65::n4">
-      <data key="d17"/>
       <data key="d18">
         <y:PolyLineEdge>
           <y:Path sx="-12.9423828125" sy="-15.0" tx="43.73349609375" ty="15.0">
@@ -6843,7 +6845,6 @@ CONTACT<y:LabelModel>
       </data>
     </edge>
     <edge id="e263" source="n95" target="n65::n4">
-      <data key="d17"/>
       <data key="d18">
         <y:PolyLineEdge>
           <y:Path sx="12.9423828125" sy="-15.0" tx="-43.73349609375002" ty="15.0">

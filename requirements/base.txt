@@ -31,7 +31,7 @@ django-statsd-mozilla==0.3.14
 logstash-formatter==0.5.9
 django-ipware==0.1.0
 csvkit==0.9.0
-requests==2.5.1
+requests==2.6.0
 pytz==2014.10
 dj-database-url==0.3.0
 django-docopt-command==0.2.0

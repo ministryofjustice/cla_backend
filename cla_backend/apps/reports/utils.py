@@ -2,10 +2,11 @@ import glob
 import os
 import shutil
 import tempfile
-import zipfile
 from datetime import date, datetime, time, timedelta
 
 from celery.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured as DjangoImproperlyConfigured
+import pyminizip
 from django.conf import settings
 from django.core.mail import EmailMessage, send_mail
 from django.db import connection
@@ -133,12 +134,11 @@ class OBIEEExporter(object):
         return filename.replace('export_', '').replace('.sql', '.csv')
 
     def generate_zip(self):
+        if not settings.OBIEE_ZIP_PASSWORD:
+            raise DjangoImproperlyConfigured('OBIEE zip password must be set.')
         try:
             os.chdir(self.tmp_export_path)
-            with open(self.filename, 'w+b') as zp:
-                with zipfile.ZipFile(zp, 'w', zipfile.ZIP_DEFLATED) as z:
-                    for f in glob.glob('*.csv'):
-                        z.write(f)
+            pyminizip.compress_multiple(glob.glob('*.csv'), self.filename, settings.OBIEE_ZIP_PASSWORD, 9)
             shutil.move('%s/%s' % (self.tmp_export_path, self.filename),
                         '%s/%s' % (self.export_path, self.filename))
         finally:

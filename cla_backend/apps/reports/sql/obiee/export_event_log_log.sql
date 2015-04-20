@@ -8,7 +8,7 @@ code,
 type,
 level,
 created_by_id,
-notes,
+regexp_replace(notes, E'[\\n\\r\\u2028]+', ' ', 'g')
 patch,
 context
 FROM cla_eventlog_log

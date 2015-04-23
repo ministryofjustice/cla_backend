@@ -33,7 +33,7 @@ class BaseCaseTestCase(
         self.assertItemsEqual(
             response.data.keys(),
             ['eligibility_check', 'personal_details', 'reference',
-                'requires_action_at', 'adaptation_details']
+                'requires_action_at', 'adaptation_details', 'thirdparty_details']
         )
 
     def assertPersonalDetailsEqual(self, data, obj):
@@ -242,12 +242,13 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
                 timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M")
             )
         )
+        _dt = timezone.localtime(self._default_dt)
         self.assertDictEqual(log.context, {
-            'requires_action_at': self._default_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_120': (self._default_dt + datetime.timedelta(minutes=120)).strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_480': (self._default_dt + datetime.timedelta(minutes=480)).strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_15': (self._default_dt + datetime.timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'sla_30': (self._default_dt + datetime.timedelta(minutes=30)).strftime('%Y-%m-%dT%H:%M:%SZ')
+            'requires_action_at': _dt.isoformat(),
+            'sla_120': (_dt + datetime.timedelta(minutes=120)).isoformat(),
+            'sla_480': (_dt + datetime.timedelta(minutes=480)).isoformat(),
+            'sla_15': (_dt + datetime.timedelta(minutes=15)).isoformat(),
+            'sla_30': (_dt + datetime.timedelta(minutes=30)).isoformat()
         })
 
         # checking email

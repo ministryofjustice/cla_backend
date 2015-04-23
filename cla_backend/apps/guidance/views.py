@@ -18,6 +18,7 @@ class PostgresFullTextSearchFilter(filters.BaseFilterBackend):
 
 class BaseGuidanceNoteViewSet(viewsets.ReadOnlyModelViewSet):
     model = Note
+    lookup_field = 'name'
 
     filter_backends = (PostgresFullTextSearchFilter,)
 

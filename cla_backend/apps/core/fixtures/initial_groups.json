@@ -47,7 +47,10 @@
                 ["delete_notetagrelation", "guidance", "notetagrelation"],
                 ["change_tag", "guidance", "tag"],
                 ["add_tag", "guidance", "tag"],
-                ["delete_tag", "guidance", "tag"]
+                ["delete_tag", "guidance", "tag"],
+                ["add_telephonenumber", "knowledgebase", "telephonenumber"],
+                ["change_telephonenumber", "knowledgebase", "telephonenumber"],
+                ["delete_telephonenumber", "knowledgebase", "telephonenumber"]
             ]
         }
     },
@@ -58,6 +61,16 @@
             "name": "LAA Caseworker",
             "permissions": [
               ["run_reports", "legalaid", "case"]
+            ]
+        }
+    },
+  {
+        "pk": 4,
+        "model": "auth.group",
+        "fields": {
+            "name": "LAA OBIEE",
+            "permissions": [
+              ["run_obiee_reports", "legalaid", "case"]
             ]
         }
     }

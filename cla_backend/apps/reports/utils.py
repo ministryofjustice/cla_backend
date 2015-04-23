@@ -1,10 +1,14 @@
-import os
-import tempfile
 import glob
-import zipfile
+import os
 import shutil
-from datetime import datetime, date, time, timedelta
+import tempfile
+from datetime import date, datetime, time, timedelta
 
+from celery.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured as DjangoImproperlyConfigured
+import pyminizip
+from django.conf import settings
+from django.core.mail import EmailMessage, send_mail
 from django.db import connection
 
 from legalaid.utils import diversity
@@ -53,6 +57,10 @@ class OBIEEExporter(object):
 
     filename = 'cla_database.zip'
 
+    @property
+    def full_path(self):
+        return os.path.join(self.export_path, self.filename)
+
     def __init__(self, export_path, passphrase, dt_from=None, dt_to=None):
         self.export_path = export_path
         self.passphrase = passphrase
@@ -71,6 +79,8 @@ class OBIEEExporter(object):
         self.export_personal_details()
 
         self.generate_zip()
+        if os.path.exists(self.full_path):
+            return self.full_path
 
     def export_basic_tables(self):
         for sql in self.basic_sql_files:
@@ -124,11 +134,45 @@ class OBIEEExporter(object):
         return filename.replace('export_', '').replace('.sql', '.csv')
 
     def generate_zip(self):
-        os.chdir(self.tmp_export_path)
-        with open(self.filename, 'w+b') as zp:
-            with zipfile.ZipFile(zp, 'w', zipfile.ZIP_DEFLATED) as z:
-                for f in glob.glob('*.csv'):
-                    z.write(f)
-        shutil.move('%s/%s' % (self.tmp_export_path, self.filename),
-                    '%s/%s' % (self.export_path, self.filename))
-        shutil.rmtree(self.tmp_export_path)
+        if not settings.OBIEE_ZIP_PASSWORD:
+            raise DjangoImproperlyConfigured('OBIEE zip password must be set.')
+        try:
+            os.chdir(self.tmp_export_path)
+            pyminizip.compress_multiple(glob.glob('*.csv'), self.filename, settings.OBIEE_ZIP_PASSWORD, 9)
+            shutil.move('%s/%s' % (self.tmp_export_path, self.filename),
+                        '%s/%s' % (self.export_path, self.filename))
+        finally:
+            shutil.rmtree(self.tmp_export_path)
+
+    def close(self):
+        if os.path.exists(self.full_path):
+            os.remove(self.full_path)
+        if os.path.exists(self.tmp_export_path):
+            os.removedirs(self.tmp_export_path)
+
+def email_obiee_export(zip_path, dt_from, dt_to):
+    if hasattr(settings, 'OBIEE_EMAIL_TO'):
+        subject = 'CLA CHS Database Export: {from_} - {to}'.format(from_=dt_from, to=dt_to)
+        body = ''
+        to = settings.OBIEE_EMAIL_TO.split(',')
+
+        message = EmailMessage(
+            subject,
+            body,
+            settings.EMAIL_FROM_ADDRESS,
+            to
+        )
+        message.attach_file(zip_path)
+        message.send()
+    else:
+        raise ImproperlyConfigured('OBIEE_EMAIL_TO must be specified in settings')
+
+def email_obiee_export_failed_notification():
+    subject = 'CLA OBIEE EXPORT FAILED'
+    to = settings.OBIEE_EMAIL_TO.split(',')
+    message = 'Your export could not be generated due to an error. ' \
+              'Perhaps the diversity passpharse used was incorrect please ' \
+              'try again with the correct passphrase. ' \
+              '' \
+              'If you\'re sure the passphrase is correct then contact CLA support.'
+    send_mail(subject, message, settings.EMAIL_FROM_ADDRESS, to)

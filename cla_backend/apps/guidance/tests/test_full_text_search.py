@@ -35,10 +35,10 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
             u'Education prompts',
             u'Family Prompts',
             u'Handling gender reassignment discrimination cases',
+            u'Special Educational Needs',
             u'Homelessness',
             u'Housing Prompts',
             u'Opening Call',
-            u'Special Educational Needs',
             u'Welfare Benefit Prompts',
             u'Zero income prompts'
         ]
@@ -73,7 +73,9 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
         response = self._get_with_auth(url, {'search': ''})
         self.assertEqual(response.status_code, 200)
 
-        url = reverse('call_centre:guidance_note-detail', args=[1])
+        url = reverse(
+            'call_centre:guidance_note-detail',
+            args=['eligibility_check'])
 
         response = self._get_with_auth(url)
         self.assertEqual(response.status_code, 200)

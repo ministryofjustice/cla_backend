@@ -22,6 +22,9 @@ class GraphTestCase(TestCase):
         self.graph = get_graph(
             file_name=settings.ORIGINAL_DIAGNOSIS_FILE_NAME
         )
+        self.checker_graph = get_graph(
+            file_name=settings.ORIGINAL_CHECKER_DIAGNOSIS_FILE_NAME
+        )
         call_command('loaddata', 'initial_category')
         call_command('loaddata', 'initial_mattertype')
 
@@ -85,3 +88,13 @@ class GraphTestCase(TestCase):
 
         root_id = self.graph.graph['operator_root_id']
         move_down(root_id, {}, [])
+
+        root_id = self.checker_graph.graph['operator_root_id']
+        move_down(root_id, {}, [])
+
+    def test_nodes_have_heading(self):
+        checker_graph = get_graph(
+            file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME
+        )
+        node = checker_graph.node['n65::n2']
+        self.assertEqual(node['heading'], u'Select the option that best describes your situation')

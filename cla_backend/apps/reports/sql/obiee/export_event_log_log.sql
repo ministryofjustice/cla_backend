@@ -8,8 +8,8 @@ code,
 type,
 level,
 created_by_id,
-'[deleted]' AS notes,
-'[deleted]' AS patch,
+regexp_replace(notes, E'[\\n\\r\\u2028]+', ' ', 'g')
+patch,
 context
 FROM cla_eventlog_log
 WHERE modified >= %s::timestamp AND modified <= %s::timestamp)

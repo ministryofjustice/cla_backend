@@ -28,4 +28,7 @@ urlpatterns = patterns('',
     url(r'^mi-digital-case-type-extract/$',
         views.mi_digital_case_type_extract,
         name="mi_digital_case_type_extract"),
+    url(r'^mi-obiee-extract/$',
+        views.mi_obiee_extract,
+        name="mi_obiee_extract"),
 )

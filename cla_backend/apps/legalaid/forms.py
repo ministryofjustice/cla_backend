@@ -2,7 +2,6 @@ from datetime import timedelta
 
 from django.utils import timezone
 from django.conf import settings
-from django.utils import timezone
 
 from cla_common.call_centre_availability import SLOT_INTERVAL_MINS, \
     OpeningHours, available_days, time_slots
@@ -16,30 +15,35 @@ def is_in_business_hours(dt):
     OPERATOR_HOURS = OpeningHours(**settings.OPERATOR_HOURS)
     return dt in OPERATOR_HOURS
 
-def get_remainder_from_end_of_day(day, dt):
+def get_remainder_from_end_of_day(day, dt_until):
     available_slots = time_slots(day)
     remainder = timedelta(minutes=SLOT_INTERVAL_MINS)
     if available_slots:
-        end_of_day = timezone.make_aware(
-            available_slots[-1] + timedelta(minutes=SLOT_INTERVAL_MINS),
-            timezone.get_default_timezone())
-        remainder = dt - end_of_day
-    assert remainder >= timedelta(minutes=0)
+        end_of_day = available_slots[-1] + timedelta(minutes=SLOT_INTERVAL_MINS)
+        end_of_day = timezone.make_aware(end_of_day, timezone.get_default_timezone())
+        remainder = dt_until - end_of_day
+    assert remainder >= timedelta(microseconds=0)
     return remainder
 
+def get_next_business_day(start_date):
+    return filter(lambda x: x.date() > start_date, available_days(365))[0]
 
 def get_sla_time(start_time, minutes):
+    next_business_day = get_next_business_day(start_time.date())
+    start_of_next_business_day = time_slots(next_business_day.date())[0]
+    start_of_next_business_day = timezone.make_aware(start_of_next_business_day,
+        timezone.get_default_timezone())
+
+    if not is_in_business_hours(start_time):
+        start_time = start_of_next_business_day
+
     simple_delta = start_time + timedelta(minutes=minutes)
     in_business_hours = is_in_business_hours(simple_delta)
     if not in_business_hours:
         remainder_delta = get_remainder_from_end_of_day(start_time.date(), simple_delta)
-        next_business_day = filter(lambda x: x.date() > start_time.date(), available_days(365))[0]
-        start_of_next_business_day = timezone.make_aware(
-            time_slots(next_business_day.date())[0],
-            timezone.get_default_timezone())
         return get_sla_time(start_of_next_business_day, remainder_delta.total_seconds() // 60 )
-
     return simple_delta
+
 
 class BaseCallMeBackForm(BaseCaseLogForm):
     LOG_EVENT_KEY = 'call_me_back'
@@ -50,12 +54,13 @@ class BaseCallMeBackForm(BaseCaseLogForm):
     def get_context(self):
         requires_action_at = self.get_requires_action_at()
 
+        _dt = timezone.localtime(requires_action_at)
         return {
-            'requires_action_at': requires_action_at,
-            'sla_15': get_sla_time(requires_action_at, 15),
-            'sla_30': get_sla_time(requires_action_at, 30),
-            'sla_120': get_sla_time(requires_action_at, 120),
-            'sla_480': get_sla_time(requires_action_at, 480)
+            'requires_action_at': _dt,
+            'sla_15': get_sla_time(_dt, 15),
+            'sla_30': get_sla_time(_dt, 30),
+            'sla_120': get_sla_time(_dt, 120),
+            'sla_480': get_sla_time(_dt, 480)
         }
 
     def get_notes(self):

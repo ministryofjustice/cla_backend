@@ -19,6 +19,7 @@ class GraphImporter(object):
     KEY_OPERATOR_ROOT = 'operator_root'
     KEY_ORDER = 'order'
     KEY_HELP = 'help'
+    KEY_HEADING = 'heading'
 
     def __init__(self, file_path):
         self.file_path = file_path
@@ -51,7 +52,13 @@ class GraphImporter(object):
 
     def process_properties_declaration(self):
         def _get_id_default_dict_for(attr):
-            el = self.xpath_ns(self.doc, '//ns:key[@attr.name="%s"]' % attr)[0]
+            try:
+                el = self.xpath_ns(self.doc, '//ns:key[@attr.name="%s"]' % attr)[0]
+            except IndexError:
+                return {
+                    'id': None,
+                    'default': None
+                }
             d = {'id': el.attrib.get('id')}
 
             try:
@@ -68,6 +75,7 @@ class GraphImporter(object):
             self.KEY_OPERATOR_ROOT: _get_id_default_dict_for('operator_root'),
             self.KEY_ORDER: _get_id_default_dict_for('order'),
             self.KEY_HELP: _get_id_default_dict_for('help'),
+            self.KEY_HEADING: _get_id_default_dict_for('heading'),
         }
 
     def process_nodes(self):
@@ -119,7 +127,8 @@ class GraphImporter(object):
                 title=_get_node_data_value_or_default(node, self.KEY_TITLE),
                 order=order,
                 context=_process_context(node),
-                help_text=help_text
+                help_text=help_text,
+                heading=_get_node_data_value_or_default(node, self.KEY_HEADING)
             )
 
     def process_edges(self):

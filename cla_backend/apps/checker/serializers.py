@@ -1,11 +1,19 @@
 from rest_framework import serializers
+from django.conf import settings
+from django.utils.functional import SimpleLazyObject
+from diagnosis.graph import get_graph
+from diagnosis.serializers import DiagnosisSerializer
 
 from legalaid.serializers import UUIDSerializer, \
     EligibilityCheckSerializerBase, PropertySerializerBase, \
     PersonalDetailsSerializerBase, CaseSerializerBase, \
     IncomeSerializerBase, SavingsSerializerBase, \
     DeductionsSerializerBase, PersonSerializerBase, \
-    AdaptationDetailsSerializerBase
+    AdaptationDetailsSerializerBase, ThirdPartyDetailsSerializerBase
+
+
+checker_graph = SimpleLazyObject(lambda: get_graph(
+    file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME))
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -83,9 +91,6 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     # TODO: DRF doesn't validate, fields that aren't REQ'd = True
     # we need to figure out a way to deal with it
 
-    # dependants_young = IntegerField(default=0)
-    # dependants_old = IntegerField(default=0)
-
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
             'reference',
@@ -114,6 +119,15 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
         )
 
 
+class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
+    class Meta(ThirdPartyDetailsSerializerBase.Meta):
+        fields = (
+            'reference', 'personal_details', 'pass_phrase',
+            'personal_relationship',
+
+        )
+
+
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
         fields = (
@@ -125,10 +139,16 @@ class CaseSerializer(CaseSerializerBase):
     eligibility_check = UUIDSerializer(slug_field='reference', required=False)
     adaptation_details = AdaptationDetailsSerializer(required=False)
     personal_details = PersonalDetailsSerializer()
+    thirdparty_details = ThirdPartyDetailsSerializer(required=False)
     requires_action_at = serializers.DateTimeField(required=False)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
             'eligibility_check', 'personal_details', 'reference',
-            'requires_action_at', 'adaptation_details'
+            'requires_action_at', 'adaptation_details', 'thirdparty_details'
         )
+
+
+class CheckerDiagnosisSerializer(DiagnosisSerializer):
+    def _get_graph(self):
+        return checker_graph

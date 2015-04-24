@@ -165,7 +165,7 @@
     </node>
     <node id="n6">
       <data key="d3"><![CDATA[Becoming homeless]]></data>
-      <data key="d4"><![CDATA[You are at risk of becoming homeless within 28 days and you want to make an application to your local council to stop your home being taken away from you]]></data>
+      <data key="d4"><![CDATA[You are at risk of becoming homeless within 28 days (or 56 days if you live in Wales) and you want to make an application to your local council to stop your home being taken away from you]]></data>
       <data key="d6"><![CDATA[means_test]]></data>
       <data key="d11">1</data>
       <data key="d12"/>
@@ -2452,7 +2452,7 @@
     </node>
     <node id="n98">
       <data key="d3"><![CDATA[Becoming homeless]]></data>
-      <data key="d4"><![CDATA[You are at risk of becoming homeless within 28 days and you want to make an application to your local council to stop your home being taken away from you]]></data>
+      <data key="d4"><![CDATA[You are at risk of becoming homeless within 28 days (or 56 days if you live in Wales) and you want to make an application to your local council to stop your home being taken away from you]]></data>
       <data key="d6"><![CDATA[means_test]]></data>
       <data key="d11">1</data>
       <data key="d12"/>

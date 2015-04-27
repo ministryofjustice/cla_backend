@@ -337,14 +337,20 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
     def get_ineligible_reason(self, ec=None):
         ec = ec or EligibilityChecker(self.to_case_data())
         reasons = []
-        if not ec.is_disposable_capital_eligible():
-            reasons.append(ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
 
-        if not ec.is_gross_income_eligible():
-            reasons.append(ELIGIBILITY_REASONS.GROSS_INCOME)
+        def add_reason(meth, reason):
+            try:
+                if not meth():
+                    reasons.append(reason)
+            except PropertyExpectedException:
+                pass
 
-        if not ec.is_disposable_income_eligible():
-            reasons.append(ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
+        add_reason(ec.is_disposable_capital_eligible,
+                   ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
+        add_reason(ec.is_gross_income_eligible,
+                   ELIGIBILITY_REASONS.GROSS_INCOME)
+        add_reason(ec.is_disposable_income_eligible,
+                   ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
 
         return reasons
 

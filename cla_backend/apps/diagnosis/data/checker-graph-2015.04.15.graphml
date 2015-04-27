@@ -2831,8 +2831,8 @@ OUTOFSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n112::n2">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d3"><![CDATA[INELIGIBLE]]></data>
+          <data key="d8"><![CDATA[INELIGIBLE]]></data>
           <data key="d10">
             <context xmlns="">
 <category>debt</category>
@@ -2842,10 +2842,10 @@ OUTOFSCOPE<y:LabelModel>
           <data key="d14">
             <y:ShapeNode>
               <y:Geometry height="30.0" width="92.205078125" x="5325.115710255455" y="1184.46484375"/>
-              <y:Fill color="#FF0000" transparent="false"/>
+              <y:Fill color="#FF00FF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="82.205078125" x="5.0" y="-1.1328125">DEBT
-OUTOFSCOPE<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="64.615234375" x="13.794921875" y="-1.1328125">DEBT
+INELIGIBLE<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -2883,8 +2883,8 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n112::n4">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d3"><![CDATA[INELIGIBLE]]></data>
+          <data key="d8"><![CDATA[INELIGIBLE]]></data>
           <data key="d10">
             <context xmlns="">
 <category>violence</category>
@@ -2894,10 +2894,10 @@ INSCOPE<y:LabelModel>
           <data key="d14">
             <y:ShapeNode>
               <y:Geometry height="30.0" width="92.205078125" x="5447.320868985615" y="1184.46484375"/>
-              <y:Fill color="#FF0000" transparent="false"/>
+              <y:Fill color="#FF00FF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="82.205078125" x="5.0" y="-1.1328125">VIOLENCE
-OUTOFSCOPE<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="64.615234375" x="13.794921875" y="-1.1328125">VIOLENCE
+INELIGIBLE<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -2935,8 +2935,8 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n112::n6">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d3"><![CDATA[INELIGIBLE]]></data>
+          <data key="d8"><![CDATA[INELIGIBLE]]></data>
           <data key="d10">
             <context xmlns="">
 <category>discrimination</category>
@@ -2946,10 +2946,10 @@ INSCOPE<y:LabelModel>
           <data key="d14">
             <y:ShapeNode>
               <y:Geometry height="30.0" width="112.42578125" x="3815.3446444072415" y="1184.46484375"/>
-              <y:Fill color="#FF0000" transparent="false"/>
+              <y:Fill color="#FF00FF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="102.42578125" x="5.0" y="-1.1328125">DISCRIMINATION
-OUTOFSCOPE<y:LabelModel>
+INELIGIBLE<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -2987,8 +2987,8 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n112::n8">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d3"><![CDATA[INELIGIBLE]]></data>
+          <data key="d8"><![CDATA[INELIGIBLE]]></data>
           <data key="d10">
             <context xmlns="">
 <category>education</category>
@@ -2998,10 +2998,10 @@ INSCOPE<y:LabelModel>
           <data key="d14">
             <y:ShapeNode>
               <y:Geometry height="30.0" width="92.205078125" x="188.45817057291615" y="1184.46484375"/>
-              <y:Fill color="#FF0000" transparent="false"/>
+              <y:Fill color="#FF00FF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="82.205078125" x="5.0" y="-1.1328125">EDUCATION
-OUTOFSCOPE<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="73.62109375" x="9.2919921875" y="-1.1328125">EDUCATION
+INELIGIBLE<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -3066,8 +3066,8 @@ CONTACT<y:LabelModel>
           </data>
         </node>
         <node id="n112::n11">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d3"><![CDATA[INELIGIBLE]]></data>
+          <data key="d8"><![CDATA[INELIGIBLE]]></data>
           <data key="d10">
             <context xmlns="">
 <category>employment</category>
@@ -3077,10 +3077,10 @@ CONTACT<y:LabelModel>
           <data key="d14">
             <y:ShapeNode>
               <y:Geometry height="30.0" width="93.962890625" x="5858.299502418155" y="1184.46484375"/>
-              <y:Fill color="#FF0000" transparent="false"/>
+              <y:Fill color="#FF00FF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="83.962890625" x="5.0" y="-1.1328125">EMPLOYMENT
-OUTOFSCOPE<y:LabelModel>
+INELIGIBLE<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -3092,8 +3092,8 @@ OUTOFSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n112::n12">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d3"><![CDATA[INELIGIBLE]]></data>
+          <data key="d8"><![CDATA[INELIGIBLE]]></data>
           <data key="d10">
             <context xmlns="">
 <category>housing</category>
@@ -3103,10 +3103,10 @@ OUTOFSCOPE<y:LabelModel>
           <data key="d14">
             <y:ShapeNode>
               <y:Geometry height="30.0" width="92.205078125" x="2510.9256308903764" y="1184.46484375"/>
-              <y:Fill color="#FF0000" transparent="false"/>
+              <y:Fill color="#FF00FF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="82.205078125" x="5.0" y="-1.1328125">HOUSING
-OUTOFSCOPE<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="64.615234375" x="13.794921875" y="-1.1328125">HOUSING
+INELIGIBLE<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -3144,8 +3144,8 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n112::n14">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d3"><![CDATA[INELIGIBLE]]></data>
+          <data key="d8"><![CDATA[INELIGIBLE]]></data>
           <data key="d10">
             <context xmlns="">
 <category>immigration</category>
@@ -3155,10 +3155,10 @@ INSCOPE<y:LabelModel>
           <data key="d14">
             <y:ShapeNode>
               <y:Geometry height="30.0" width="95.357421875" x="6619.011363777281" y="1184.46484375"/>
-              <y:Fill color="#FF0000" transparent="false"/>
+              <y:Fill color="#FF00FF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="85.357421875" x="5.0" y="-1.1328125">IMMIGRATION
-OUTOFSCOPE<y:LabelModel>
+INELIGIBLE<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -3274,8 +3274,8 @@ OUTOFSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n112::n19">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d3"><![CDATA[INELIGIBLE]]></data>
+          <data key="d8"><![CDATA[INELIGIBLE]]></data>
           <data key="d10">
             <context xmlns="">
 <category>family</category>
@@ -3285,10 +3285,10 @@ OUTOFSCOPE<y:LabelModel>
           <data key="d14">
             <y:ShapeNode>
               <y:Geometry height="30.0" width="92.205078125" x="5642.5470594618055" y="1184.46484375"/>
-              <y:Fill color="#FF0000" transparent="false"/>
+              <y:Fill color="#FF00FF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="82.205078125" x="5.0" y="-1.1328125">FAMILY
-OUTOFSCOPE<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="64.615234375" x="13.794921875" y="-1.1328125">FAMILY
+INELIGIBLE<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -3405,8 +3405,8 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n112::n24">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d3"><![CDATA[INELIGIBLE]]></data>
+          <data key="d8"><![CDATA[INELIGIBLE]]></data>
           <data key="d10">
             <context xmlns="">
 <category>benefits</category>
@@ -3416,10 +3416,10 @@ INSCOPE<y:LabelModel>
           <data key="d14">
             <y:ShapeNode>
               <y:Geometry height="30.0" width="92.205078125" x="1702.9391229538685" y="1184.46484375"/>
-              <y:Fill color="#FF0000" transparent="false"/>
+              <y:Fill color="#FF00FF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="82.205078125" x="5.0" y="-1.1328125">BENEFITS
-OUTOFSCOPE<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="custom" textColor="#FFFFFF" visible="true" width="64.615234375" x="13.794921875" y="-1.1328125">BENEFITS
+INELIGIBLE<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>

@@ -89,9 +89,9 @@ class OBIEEExporter(object):
                 query = f.read()
 
             csv_filename = self.csv_filename_from_sql_path(sql_path)
-            args = [self.dt_from, self.dt_to]
+            kwargs = {'from_date': self.dt_from, 'to_date': self.dt_to}
 
-            self.execute_csv_export(csv_filename, query, args)
+            self.execute_csv_export(csv_filename, query, kwargs)
 
     def export_no_timestamp_tables(self):
         for sql in self.no_timestamp_sql_files:
@@ -107,7 +107,7 @@ class OBIEEExporter(object):
         sql_path = os.path.join(self.sql_path, self.personal_details_sql_file)
         with open(sql_path, 'r') as f:
             query = f.read()
-            de = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".\
+            de = "pgp_pub_decrypt(diversity, dearmor('{key}'), %(passphrase)s)::json".\
                 format(
                     key=diversity.get_private_key()
                 )
@@ -115,17 +115,21 @@ class OBIEEExporter(object):
 
         csv_filename = self.csv_filename_from_sql_path(
             self.personal_details_sql_file)
-        args = [self.passphrase, self.dt_from, self.dt_to]
+        kwargs = {
+            'passphrase': self.passphrase,
+            'from_date': self.dt_from,
+            'to_date': self.dt_to
+        }
 
-        self.execute_csv_export(csv_filename, query, args)
+        self.execute_csv_export(csv_filename, query, kwargs)
 
-    def execute_csv_export(self, filename, query, args=None):
-        if not args:
-            args = []
+    def execute_csv_export(self, filename, query, kwargs=None):
+        if not kwargs:
+            kwargs = {}
 
         with open(os.path.join(self.tmp_export_path, filename), 'w') as d:
             cursor = connection.cursor()
-            q = cursor.mogrify(query, args)
+            q = cursor.mogrify(query, kwargs)
             cursor.copy_expert(q, d)
             cursor.close()
 

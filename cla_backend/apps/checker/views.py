@@ -1,10 +1,12 @@
 from django.core.exceptions import ImproperlyConfigured
+from rest_framework.decorators import action
 from checker.helpers import notify_callback_created
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, mixins
+from rest_framework.response import Response as DRFResponse
 
 from core.models import get_web_user
 from diagnosis.views import DiagnosisModelMixin
@@ -57,6 +59,16 @@ class EligibilityCheckViewSet(
 
     def get_request_user(self):
         return get_web_user()
+
+    @action()
+    def is_eligible(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        response, ec, reasons = obj.get_eligibility_state()
+        return DRFResponse({
+            'is_eligible': response,
+            'reasons': reasons
+        })
 
 
 class NestedModelMixin(object):

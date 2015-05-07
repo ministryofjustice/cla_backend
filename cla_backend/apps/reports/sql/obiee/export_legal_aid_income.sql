@@ -28,5 +28,6 @@ other_income_per_interval_value,
 other_income,
 self_employed
 FROM legalaid_income
-WHERE modified >= %s::timestamp AND modified <= %s::timestamp)
+WHERE (modified >= %(from_date)s::timestamp AND modified <= %(to_date)s::timestamp)
+OR (created >= %(from_date)s::timestamp AND created <= %(to_date)s::timestamp))
 TO STDOUT CSV HEADER;

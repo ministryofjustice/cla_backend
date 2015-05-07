@@ -17,5 +17,7 @@ class Command(DocOptCommand):
     filename = 'cla_database.zip'
 
     def handle_docopt(self, args):
-        OBIEEExporter(args['<export_path>'], args['<diversity_keyphrase>'],
+        fp = OBIEEExporter(args['<export_path>'], args['<diversity_keyphrase>'],
                       args['--datetime-from'], args['--datetime-to']).export()
+
+        self.stdout.write(u'Export created at: %s' % fp)

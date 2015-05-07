@@ -240,7 +240,7 @@ class EligibilityChecker(object):
                 mortgage_or_rent += self.case_data.partner.deductions.mortgage
                 mortgage_or_rent += self.case_data.partner.deductions.rent
 
-            if not self.case_data.facts.dependant_children:
+            if not self.case_data.facts.dependant_children and not self.case_data.facts.has_partner:
                 mortgage_or_rent = min(mortgage_or_rent, constants.disposable_income.CHILDLESS_HOUSING_CAP)
             gross_income -= mortgage_or_rent
 

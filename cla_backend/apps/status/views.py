@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 
+from cla_common.smoketest import smoketest
+
 
 class JSONResponse(HttpResponse):
 
@@ -31,3 +33,14 @@ def status(request):
             message = str(e)
         finally:
             c.close()
+
+
+@csrf_exempt
+def smoketests(request):
+    """
+    Run smoke tests and return results as JSON datastructure
+    """
+
+    from cla_backend.apps.status.tests.smoketests import SmokeTests
+
+    return JSONResponse(smoketest(SmokeTests))

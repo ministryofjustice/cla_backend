@@ -29,7 +29,7 @@ from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS, \
     CONTACT_SAFETY, EXEMPT_USER_REASON, ECF_STATEMENT, REQUIRES_ACTION_BY, \
-    EMAIL_SAFETY
+    EMAIL_SAFETY, ELIGIBILITY_REASONS
 
 from legalaid.fields import MoneyField
 
@@ -328,14 +328,34 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
 
         try:
             if ec.is_eligible():
-                return (ELIGIBILITY_STATES.YES, ec)
+                return ELIGIBILITY_STATES.YES, ec, []
             else:
-                return (ELIGIBILITY_STATES.NO, ec)
-        except PropertyExpectedException as e:
-            return (ELIGIBILITY_STATES.UNKNOWN, ec)
+                return ELIGIBILITY_STATES.NO, ec, self.get_ineligible_reason(ec)
+        except PropertyExpectedException:
+            return ELIGIBILITY_STATES.UNKNOWN, ec, []
+
+    def get_ineligible_reason(self, ec=None):
+        ec = ec or EligibilityChecker(self.to_case_data())
+        reasons = []
+
+        def add_reason(meth, reason):
+            try:
+                if not meth():
+                    reasons.append(reason)
+            except PropertyExpectedException:
+                pass
+
+        add_reason(ec.is_disposable_capital_eligible,
+                   ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
+        add_reason(ec.is_gross_income_eligible,
+                   ELIGIBILITY_REASONS.GROSS_INCOME)
+        add_reason(ec.is_disposable_income_eligible,
+                   ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
+
+        return reasons
 
     def update_state(self):
-        self.state, checker = self.get_eligibility_state()
+        self.state, checker, reasons = self.get_eligibility_state()
 
         if self.state == ELIGIBILITY_STATES.UNKNOWN:
             self.calculations = None

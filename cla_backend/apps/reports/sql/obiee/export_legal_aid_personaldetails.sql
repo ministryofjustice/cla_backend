@@ -27,6 +27,7 @@ COPY (
     FROM legalaid_personaldetails AS pd
     JOIN (select id, {diversity_expression} as diversity
           from legalaid_personaldetails) as dv on pd.id = dv.id
-    WHERE pd.modified >= %s::timestamp AND pd.modified <= %s::timestamp
+    WHERE (pd.modified >= %(from_date)s::timestamp AND pd.modified <= %(to_date)s::timestamp)
+    OR (pd.created >= %(from_date)s::timestamp AND pd.created <= %(to_date)s::timestamp)
 )
 TO STDOUT CSV HEADER;

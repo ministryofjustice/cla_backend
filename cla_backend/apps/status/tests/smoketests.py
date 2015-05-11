@@ -20,7 +20,8 @@ class SmokeTests(unittest.TestCase):
     def test_can_access_celery(self):
         "connect to SQS"
         if not getattr(settings, 'CELERY_ALWAYS_EAGER', False):
-            conn = Celery('cla_backend').connection()
-            conn.config_from_object('django.conf:settings')
+            app = Celery('cla_backend')
+            app.config_from_object('django.conf:settings')
+            app.connection().connect()
             conn.connect()
             conn.release()

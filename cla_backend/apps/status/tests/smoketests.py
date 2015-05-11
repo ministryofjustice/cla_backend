@@ -22,6 +22,6 @@ class SmokeTests(unittest.TestCase):
         if not getattr(settings, 'CELERY_ALWAYS_EAGER', False):
             app = Celery('cla_backend')
             app.config_from_object('django.conf:settings')
-            app.connection().connect()
+            conn = app.connection()i
             conn.connect()
             conn.release()

@@ -14,7 +14,8 @@ from legalaid.serializers import EligibilityCheckSerializerBase, \
     ThirdPartyPersonalDetailsSerializerBase, \
     ThirdPartyDetailsSerializerBase, PersonSerializerBase, \
     FeedbackSerializerBase, CaseArchivedSerializerBase, \
-    CaseNotesHistorySerializerBase, CSVUploadSerializerBase
+    CaseNotesHistorySerializerBase, CSVUploadSerializerBase, \
+    EODDetailsSerializerBase
 
 from .models import Operator
 
@@ -128,6 +129,13 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
         )
 
 
+class EODDetailsSerializer(EODDetailsSerializerBase):
+    class Meta(EODDetailsSerializerBase.Meta):
+        fields = (
+            'categories', 'notes', 'reference',
+        )
+
+
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     property_set = PropertySerializer(
         allow_add_remove=True, many=True, required=False
@@ -197,7 +205,7 @@ class CaseSerializer(CaseSerializerFull):
             'exempt_user', 'exempt_user_reason',
             'ecf_statement', 'case_count',
             'requires_action_at', 'callback_attempt', 'source',
-            'complaint_flag'
+            'complaint_flag', 'eod_details',
         )
 
 class CaseListSerializer(CaseSerializer):

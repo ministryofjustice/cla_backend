@@ -48,7 +48,7 @@ class BaseCaseTestCase(
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
             'case_count', 'outcome_code',
             'requires_action_at', 'callback_attempt', 'source',
-            'complaint_flag'
+            'complaint_flag', 'eod_details',
         ]
 
 

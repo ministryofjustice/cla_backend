@@ -13,14 +13,14 @@ from eligibility_calculator.exceptions import PropertyExpectedException
 from cla_common.constants import ELIGIBILITY_STATES, CONTACT_SAFETY, \
     THIRDPARTY_REASON, THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, \
     REQUIRES_ACTION_BY, DIAGNOSIS_SCOPE, EXEMPT_USER_REASON, ECF_STATEMENT, \
-    CASE_SOURCE
+    CASE_SOURCE, EXPRESSIONS_OF_DISSATISFACTION
 from cla_common.money_interval.models import MoneyInterval
 
 from core.tests.mommy_utils import make_recipe, make_user
 
 from legalaid.models import Savings, Income, Deductions, PersonalDetails, \
     ThirdPartyDetails, AdaptationDetails, Person, Case, ValidateModelMixin, \
-    EligibilityCheck, Property, CaseKnowledgebaseAssignment
+    EligibilityCheck, Property, CaseKnowledgebaseAssignment, EODDetails
 
 
 def walk(coll):
@@ -75,6 +75,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         provider_notes='Provider Notes',
         thirdparty_details=make_recipe('legalaid.thirdparty_details'),
         adaptation_details=make_recipe('legalaid.adaptation_details'),
+        eod_details=make_recipe('legalaid.eod_details'),
         billable_time=2000,
         matter_type1=matter_type1,
         matter_type2=matter_type2,
@@ -1078,6 +1079,34 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
             ]
         )
 
+    def test_clone_eod_details(self):
+        def make_eod():
+            instance = make_recipe('legalaid.eod_details', notes='some notes')
+            make_recipe('legalaid.eod_details_category',
+                        eod_details=instance,
+                        category=EXPRESSIONS_OF_DISSATISFACTION.ATTITUDE,
+                        is_major=True)
+            return instance
+
+        self._test_clone(
+            Model=EODDetails,
+            instance_creator=make_eod,
+            non_equal_fields=['id', 'created', 'modified', 'reference'],
+            equal_fields=['notes'],
+        )
+
+        # _test_clone cannot do deep-model checking
+        eod_details = make_eod()
+        eod_details_clone = EODDetails.clone_from_obj(eod_details.pk)
+        for category in eod_details.categories.all():
+            match_count = 0
+            for category_clone in eod_details_clone.categories.all():
+                if category.category == category_clone.category and \
+                   category.is_major == category_clone.is_major and \
+                   category.eod_details_id != category_clone.eod_details_id:
+                    match_count += 1
+            self.assertEqual(match_count, 1, "EOD category sub-model wasn't cloned")
+
     def test_clone_person(self):
         self._test_clone(
             Model=Person,
@@ -1196,7 +1225,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'thirdparty_details', 'adaptation_details', 'media_code',
             'outcome_code', 'level', 'exempt_user', 'exempt_user_reason',
             'ecf_statement', 'provider_viewed', 'provider_accepted',
-            'provider_closed'
+            'provider_closed', 'eod_details',
         ]:
             self.assertEqual(getattr(new_case, field), None)
 
@@ -1225,7 +1254,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'outcome_code', 'level', 'reference', 'laa_reference', 'from_case',
             'outcome_code_id', 'requires_action_at', 'callback_attempt',
             'provider_viewed', 'provider_accepted', 'provider_closed',
-            'search_field'
+            'search_field', 'eod_details',
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
@@ -1250,7 +1279,8 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
         self.assertPersonalDetails(case.personal_details, new_case.personal_details)
         self.assertAlternativeHelpArticles(case, new_case)
 
-        for field in ['eligibility_check', 'diagnosis', 'thirdparty_details', 'adaptation_details']:
+        for field in ['eligibility_check', 'diagnosis', 'thirdparty_details',
+                      'adaptation_details', 'eod_details']:
             self.assertNotEqual(getattr(new_case, field), None)
             self.assertNotEqual(getattr(case, field), getattr(new_case, field))
 

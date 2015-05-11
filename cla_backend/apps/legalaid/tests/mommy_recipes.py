@@ -7,7 +7,8 @@ from diagnosis.tests.mommy_recipes import diagnosis_yes
 from ..models import Category, EligibilityCheck, Property, Savings, \
     Case, PersonalDetails, Income, Deductions, Person,\
     ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, \
-    MediaCodeGroup, CaseNotesHistory
+    MediaCodeGroup, CaseNotesHistory, \
+    EODDetails, EODDetailsCategory
 
 
 category = Recipe(Category,
@@ -74,6 +75,10 @@ thirdparty_details = Recipe(ThirdPartyDetails,
                           )
 
 adaptation_details = Recipe(AdaptationDetails)
+
+eod_details = Recipe(EODDetails)
+eod_details_category = Recipe(EODDetailsCategory,
+                              eod_details=foreign_key(eod_details))
 
 matter_type1 = Recipe(MatterType, level=1)
 matter_type2 = Recipe(MatterType, level=2)

@@ -31,11 +31,11 @@ from .serializers import CategorySerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
     AdaptationDetailsSerializerBase, CaseSerializerBase, \
     FeedbackSerializerBase, CaseNotesHistorySerializerBase, \
-    CSVUploadSerializerBase
+    CSVUploadSerializerBase, EODDetailsSerializerBase
 from cla_provider.models import Feedback, CSVUpload
 from .models import Case, Category, EligibilityCheck, \
     MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
-    AdaptationDetails, CaseNotesHistory
+    AdaptationDetails, CaseNotesHistory, EODDetails
 
 
 class CaseFormActionMixin(FormActionMixin):
@@ -289,6 +289,19 @@ class BaseAdaptationDetailsMetadataViewSet(
 
     def create(self, request, *args, **kwargs):
         self.http_method_not_allowed(request)
+
+
+class BaseEODDetailsViewSet(
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    NestedGenericModelMixin,
+    viewsets.GenericViewSet
+):
+    model = EODDetails
+    serializer_class = EODDetailsSerializerBase
+    lookup_field = 'reference'
+    PARENT_FIELD = 'eod_details'
 
 
 class BaseCaseOrderingFilter(OrderingFilter):

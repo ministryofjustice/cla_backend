@@ -24,7 +24,6 @@ if settings.ADMIN_ENABLED:
 if settings.BACKEND_ENABLED:
     urlpatterns += patterns(
         '',
-        url(r'^status/', include('status.urls', namespace='status')),
 
         url(r'^checker/api/v1/', include('checker.urls', namespace='checker')),
         url(r'^call_centre/api/v1/', include('call_centre.urls', namespace='call_centre')),

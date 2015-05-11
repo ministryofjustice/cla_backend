@@ -16,6 +16,7 @@ if settings.ADMIN_ENABLED:
 
     urlpatterns += patterns(
         '',
+        url(r'^status/', include('status.urls', namespace='status')),
         url(r'^admin/', include(admin.site.urls)),
         url(r'^admin/reports/', include('reports.urls', namespace='reports')),
     )

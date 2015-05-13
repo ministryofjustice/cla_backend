@@ -361,3 +361,44 @@ class MIOBIEEExportExtract(MonthRangeReportForm):
         obiee_export.delay(cleaned_data['passphrase'], start, end)
         return cleaned_data
 
+
+class MetricsReport(SQLFileDateRangeReport):
+    QUERY_FILE = 'metrics.sql'
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {
+            'from_date': from_date,
+            'to_date': to_date
+        }
+
+    def get_headers(self):
+        return [
+            'Date',
+            'Diagnosis_total',
+            'Scope_unknown',
+            'Outofscope',
+            'Scope_contact',
+            'Inscope',
+            'Eligibility_check_total',
+            'Eligibility_check_unknown',
+            'Eligibility_check_ineligible',
+            'Eligibility_check_eligible',
+            'Cases_total',
+            'Cases_unknown',
+            'Cases_ineligible',
+            'Cases_eligible',
+            'Time_total',
+            'Time_unknown',
+            'Time_ineligible',
+            'Time_eligible',
+            'Time_web_total',
+            'Time_web_unknown',
+            'Time_web_ineligible',
+            'Time_web_eligible',
+            'Time_phone_total',
+            'Time_phone_unknown',
+            'Time_phone_ineligible',
+            'Time_phone_eligible',
+        ]
+

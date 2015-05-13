@@ -8,18 +8,19 @@ WITH
       lc.id as id,
       date_trunc('day', lc.created) AS day,
       le.state as state,
-      lc.billable_time as billable_time
+      lc.billable_time as billable_time,
+      lc.source as source
     FROM legalaid_case lc
     LEFT OUTER JOIN legalaid_eligibilitycheck le ON le.id = lc.eligibility_check_id
-    WHERE lc.created >= '2015-04-01 00:00'::timestamp AND lc.created <= '2015-04-30 00:00'::timestamp
-    GROUP BY date_trunc('day', lc.created), lc.id, le.state
+    WHERE lc.created >= %(from_date)s::timestamp AND lc.created <= %(to_date)s::timestamp
+    GROUP BY date_trunc('day', lc.created), lc.id, le.state, lc.source
   ), diagnosis AS (
     SELECT
       id,
       state,
       date_trunc('day', created) AS day
     FROM diagnosis_diagnosistraversal
-    WHERE created >= '2015-04-01 00:00'::timestamp AND created <= '2015-04-30 00:00'::timestamp
+    WHERE created >= %(from_date)s::timestamp AND created <= %(to_date)s::timestamp
     GROUP BY date_trunc('day', created), diagnosis_diagnosistraversal.id
   ), eligibility_check AS (
     SELECT
@@ -27,7 +28,7 @@ WITH
       state,
       date_trunc('day', created) AS day
     FROM legalaid_eligibilitycheck
-    WHERE created >= '2015-04-01 00:00'::timestamp AND created <= '2015-04-30 00:00'::timestamp
+    WHERE created >= %(from_date)s::timestamp AND created <= %(to_date)s::timestamp
     GROUP BY date_trunc('day', created), legalaid_eligibilitycheck.id
   )
 SELECT
@@ -51,7 +52,17 @@ SELECT
   (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day) as "Time_total",
   (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'unknown') as "Time_unknown",
   (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'no') as "Time_ineligible",
-  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'yes') as "Time_eligible"
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'yes') as "Time_eligible",
+
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.source = 'WEB') as "Time_web_total",
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'unknown'AND report_cases.source = 'WEB') as "Time_web_unknown",
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'no'AND report_cases.source = 'WEB') as "Time_web_ineligible",
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'yes'AND report_cases.source = 'WEB') as "Time_web_eligible",
+
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.source = 'PHONE') as "Time_phone_total",
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'unknown' AND report_cases.source = 'PHONE') as "Time_phone_unknown",
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'no' AND report_cases.source = 'PHONE') as "Time_phone_ineligible",
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'yes' AND report_cases.source = 'PHONE') as "Time_phone_eligible"
 FROM report_dates
 GROUP BY report_dates.day
 ORDER BY report_dates.day;

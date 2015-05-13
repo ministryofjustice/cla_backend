@@ -8,7 +8,8 @@ from django.http import HttpResponse
 
 from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
-    MISurveyExtract, MICB1Extract, MIVoiceReport, MIOBIEEExportExtract
+    MISurveyExtract, MICB1Extract, MIVoiceReport, MIOBIEEExportExtract, \
+    MetricsReport
 from reports.forms import MIDigitalCaseTypesExtract
 
 
@@ -122,6 +123,7 @@ def mi_voice_extract():
 def mi_digital_case_type_extract():
     pass
 
+
 @staff_member_required
 @permission_required('legalaid.run_obiee_reports')
 @report_view(MIOBIEEExportExtract,
@@ -130,4 +132,11 @@ def mi_digital_case_type_extract():
              file_name='cla.database.zip'
 )
 def mi_obiee_extract():
+    pass
+
+
+@staff_member_required
+@permission_required('legalaid.run_reports')
+@report_view(MetricsReport, 'Metrics Report')
+def metrics_report():
     pass

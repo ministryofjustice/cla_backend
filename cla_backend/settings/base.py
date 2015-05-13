@@ -315,10 +315,12 @@ STATSD_PATCHES = [
 STATSD_HOST = os.environ.get('STATSD_HOST', 'localhost')
 STATSD_PORT = os.environ.get('STATSD_PORT', 8125)
 
+EMAIL_TIMEOUT = 60
+
 if all([os.environ.get('SMTP_USER'),
         os.environ.get('SMTP_PASSWORD'),
         os.environ.get('SMTP_HOST')]):
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_BACKEND = 'cla_backend.apps.core.mail.backends.TimeoutEmailBackend'
     EMAIL_HOST = os.environ.get('SMTP_HOST')
     EMAIL_HOST_USER = os.environ.get('SMTP_USER')
     EMAIL_HOST_PASSWORD = os.environ.get('SMTP_PASSWORD')

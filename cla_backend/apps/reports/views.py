@@ -11,8 +11,8 @@ from django.utils.six import text_type
 
 from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
-    MISurveyExtract, MICB1Extract, MIVoiceReport, MIOBIEEExportExtract, \
-    MetricsReport
+    MISurveyExtract, MICB1Extract, MIVoiceReport, MIEODReport, \
+    MIOBIEEExportExtract, MetricsReport
 from reports.forms import MIDigitalCaseTypesExtract
 
 
@@ -133,6 +133,13 @@ def mi_voice_extract():
 @permission_required('legalaid.run_reports')
 @report_view(MIDigitalCaseTypesExtract, 'MI Digital Case Types Report')
 def mi_digital_case_type_extract():
+    pass
+
+
+@staff_member_required
+@permission_required('legalaid.run_reports')
+@report_view(MIEODReport, 'MI EOD Report')
+def mi_eod_extract():
     pass
 
 

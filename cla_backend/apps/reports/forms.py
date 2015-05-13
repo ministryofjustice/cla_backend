@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.contrib.admin import widgets
 
 from legalaid.utils import diversity
-
+from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
 from cla_eventlog.constants import LOG_TYPES
 
 from . import sql
@@ -342,6 +342,32 @@ class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
             'means_test_completed_online',
             'call_me_back_only'
         ]
+
+
+class MIEODReport(SQLFileDateRangeReport):
+    QUERY_FILE = 'MIEOD.sql'
+
+    def get_headers(self):
+        return [
+            'LAA_Reference',
+            'Case_Reference',
+            'Case_Category',
+            # 'EOD_Created',
+            'EOD_Updated',
+            'EOD_Category',
+            'EOD_Notes',
+            'Major',
+            # 'Is_Escalated',
+            # 'Is_Resolved',
+            # 'Is_Justified',
+        ]
+
+    def get_rows(self):
+        for row in self.get_queryset():
+            row = list(row)  # row is a tuple
+            row[4] = EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT.get(row[4], 'Unknown')
+            yield row
+
 
 class MIOBIEEExportExtract(MonthRangeReportForm):
     passphrase = forms.CharField(

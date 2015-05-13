@@ -5,11 +5,13 @@ WITH
         AS day
   ), report_cases AS (
     SELECT
-      id,
-      date_trunc('day', created) AS day 
-    FROM legalaid_case 
-    WHERE created >= '2015-04-01 00:00'::timestamp AND created <= '2015-04-30 00:00'::timestamp
-    GROUP BY date_trunc('day', created), legalaid_case.id
+      lc.id as id,
+      date_trunc('day', lc.created) AS day,
+      le.state as state
+    FROM legalaid_case lc
+    LEFT OUTER JOIN legalaid_eligibilitycheck le ON le.id = lc.eligibility_check_id
+    WHERE lc.created >= '2015-04-01 00:00'::timestamp AND lc.created <= '2015-04-30 00:00'::timestamp
+    GROUP BY date_trunc('day', lc.created), lc.id, le.state
   ), diagnosis AS (
     SELECT
       id,
@@ -40,7 +42,10 @@ SELECT
   (SELECT COUNT(*) FROM eligibility_check WHERE state = 'no' AND eligibility_check.day = report_dates.day) as "Eligibility_check_ineligible",
   (SELECT COUNT(*) FROM eligibility_check WHERE state = 'yes' AND eligibility_check.day = report_dates.day) as "Eligibility_check_eligible",
   
-  (SELECT COUNT(*) FROM report_cases WHERE report_cases.day = report_dates.day) as "Cases_total"
+  (SELECT COUNT(*) FROM report_cases WHERE report_cases.day = report_dates.day) as "Cases_total",
+  (SELECT COUNT(*) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'unknown') as "Cases_unknown",
+  (SELECT COUNT(*) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'no') as "Cases_ineligible",
+  (SELECT COUNT(*) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'yes') as "Cases_eligible"
 FROM report_dates
 GROUP BY report_dates.day
 ORDER BY report_dates.day;

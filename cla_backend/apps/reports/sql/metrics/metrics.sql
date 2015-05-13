@@ -7,7 +7,8 @@ WITH
     SELECT
       lc.id as id,
       date_trunc('day', lc.created) AS day,
-      le.state as state
+      le.state as state,
+      lc.billable_time as billable_time
     FROM legalaid_case lc
     LEFT OUTER JOIN legalaid_eligibilitycheck le ON le.id = lc.eligibility_check_id
     WHERE lc.created >= '2015-04-01 00:00'::timestamp AND lc.created <= '2015-04-30 00:00'::timestamp
@@ -45,7 +46,12 @@ SELECT
   (SELECT COUNT(*) FROM report_cases WHERE report_cases.day = report_dates.day) as "Cases_total",
   (SELECT COUNT(*) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'unknown') as "Cases_unknown",
   (SELECT COUNT(*) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'no') as "Cases_ineligible",
-  (SELECT COUNT(*) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'yes') as "Cases_eligible"
+  (SELECT COUNT(*) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'yes') as "Cases_eligible",
+
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day) as "Time_total",
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'unknown') as "Time_unknown",
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'no') as "Time_ineligible",
+  (SELECT COALESCE(SUM(report_cases.billable_time), 0) FROM report_cases WHERE report_cases.day = report_dates.day AND report_cases.state = 'yes') as "Time_eligible"
 FROM report_dates
 GROUP BY report_dates.day
 ORDER BY report_dates.day;

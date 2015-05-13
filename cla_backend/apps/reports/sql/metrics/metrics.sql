@@ -18,17 +18,29 @@ WITH
     FROM diagnosis_diagnosistraversal
     WHERE created >= '2015-04-01 00:00'::timestamp AND created <= '2015-04-30 00:00'::timestamp
     GROUP BY date_trunc('day', created), diagnosis_diagnosistraversal.id
+  ), eligibility_check AS (
+    SELECT
+      id,
+      state,
+      date_trunc('day', created) AS day
+    FROM legalaid_eligibilitycheck
+    WHERE created >= '2015-04-01 00:00'::timestamp AND created <= '2015-04-30 00:00'::timestamp
+    GROUP BY date_trunc('day', created), legalaid_eligibilitycheck.id
   )
 SELECT
   report_dates.day as "Date",
-  COUNT(diagnosis.id) as "Diagnosis",
+  (SELECT COUNT(*) FROM diagnosis WHERE diagnosis.day = report_dates.day) as "Diagnosis_total",
   (SELECT COUNT(*) FROM diagnosis WHERE state = 'UNKNOWN' AND diagnosis.day = report_dates.day) as "Scope_unknown",
   (SELECT COUNT(*) FROM diagnosis WHERE state = 'OUTOFSCOPE' AND diagnosis.day = report_dates.day) as "Outofscope",
   (SELECT COUNT(*) FROM diagnosis WHERE state = 'CONTACT' AND diagnosis.day = report_dates.day) as "Scope_contact",
   (SELECT COUNT(*) FROM diagnosis WHERE state = 'INSCOPE' AND diagnosis.day = report_dates.day) as "Inscope",
-  COUNT(report_cases.id) as "Cases"
+  
+  (SELECT COUNT(*) FROM eligibility_check WHERE eligibility_check.day = report_dates.day) as "Eligibility_check_total",
+  (SELECT COUNT(*) FROM eligibility_check WHERE state = 'unknown' AND eligibility_check.day = report_dates.day) as "Eligibility_check_unknown",
+  (SELECT COUNT(*) FROM eligibility_check WHERE state = 'no' AND eligibility_check.day = report_dates.day) as "Eligibility_check_ineligible",
+  (SELECT COUNT(*) FROM eligibility_check WHERE state = 'yes' AND eligibility_check.day = report_dates.day) as "Eligibility_check_eligible",
+  
+  (SELECT COUNT(*) FROM report_cases WHERE report_cases.day = report_dates.day) as "Cases_total"
 FROM report_dates
-LEFT OUTER JOIN report_cases ON report_cases.day = report_dates.day
-LEFT OUTER JOIN diagnosis ON diagnosis.day = report_dates.day
 GROUP BY report_dates.day
 ORDER BY report_dates.day;

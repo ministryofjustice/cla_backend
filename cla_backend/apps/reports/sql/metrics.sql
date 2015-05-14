@@ -1,7 +1,7 @@
 WITH
   report_dates AS (
     SELECT day, 0 as blank_count FROM
-      generate_series('2015-04-01 00:00'::timestamp, '2015-04-30 00:00'::timestamp, '1 day')
+      generate_series(%(from_date)s::timestamp, %(to_date)s::timestamp, '1 day')
         AS day
   ), report_cases AS (
     SELECT

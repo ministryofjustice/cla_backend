@@ -362,10 +362,17 @@ class MIEODReport(SQLFileDateRangeReport):
             # 'Is_Justified',
         ]
 
+    def _get_col_index(self, column_name):
+        return self.get_headers().index(column_name)
+
     def get_rows(self):
+        eod_choices = EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT
         for row in self.get_queryset():
+            category_col = self._get_col_index('EOD_Category')
+            if not row[category_col] and not row[self._get_col_index('EOD_Notes')]:
+                continue
             row = list(row)  # row is a tuple
-            row[4] = EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT.get(row[4], 'Unknown')
+            row[category_col] = row[category_col] and eod_choices.get(row[category_col], 'Unknown') or 'Not set'
             yield row
 
 

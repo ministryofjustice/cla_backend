@@ -218,6 +218,13 @@ class EODDetailsSerializerBase(serializers.ModelSerializer):
         model = EODDetails
         fields = ()
 
+    def save(self, **kwargs):
+        # delete all existing EOD categories and use those from request as replacement set
+        if isinstance(self.object, EODDetails) and self.object.pk:
+            self.object.categories.all().delete()
+
+        return super(EODDetailsSerializerBase, self).save(**kwargs)
+
 
 class EligibilityCheckSerializerBase(ClaModelSerializer):
     property_set = PropertySerializerBase(

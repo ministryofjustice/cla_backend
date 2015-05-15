@@ -1,7 +1,7 @@
 WITH
   report_dates AS (
     SELECT day, 0 as blank_count FROM
-      generate_series(%(from_date)s::timestamp, %(to_date)s::timestamp, '1 day')
+      generate_series(date_trunc('day', %(from_date)s::timestamp), date_trunc('day', %(to_date)s::timestamp), '1 day')
         AS day
   ), report_cases AS (
     SELECT
@@ -12,24 +12,24 @@ WITH
       lc.source as source
     FROM legalaid_case lc
     LEFT OUTER JOIN legalaid_eligibilitycheck le ON le.id = lc.eligibility_check_id
-    WHERE lc.created >= %(from_date)s::timestamp AND lc.created <= %(to_date)s::timestamp
+     WHERE lc.created >= %(from_date)s::timestamp AND lc.created <= %(to_date)s::timestamp
     GROUP BY date_trunc('day', lc.created), lc.id, le.state, lc.source
   ), diagnosis AS (
     SELECT
       id,
       state,
-      date_trunc('day', created) AS day
+      date_trunc('day', diagnosis_diagnosistraversal.created) AS day
     FROM diagnosis_diagnosistraversal
-    WHERE created >= %(from_date)s::timestamp AND created <= %(to_date)s::timestamp
-    GROUP BY date_trunc('day', created), diagnosis_diagnosistraversal.id
+    WHERE diagnosis_diagnosistraversal.created >= %(from_date)s::timestamp AND diagnosis_diagnosistraversal.created <= %(to_date)s::timestamp
+    GROUP BY date_trunc('day', diagnosis_diagnosistraversal.created), diagnosis_diagnosistraversal.id
   ), eligibility_check AS (
     SELECT
       id,
       state,
-      date_trunc('day', created) AS day
+      date_trunc('day', legalaid_eligibilitycheck.created) AS day
     FROM legalaid_eligibilitycheck
-    WHERE created >= %(from_date)s::timestamp AND created <= %(to_date)s::timestamp
-    GROUP BY date_trunc('day', created), legalaid_eligibilitycheck.id
+    WHERE legalaid_eligibilitycheck.created >= %(from_date)s::timestamp AND legalaid_eligibilitycheck.created <= %(to_date)s::timestamp
+    GROUP BY date_trunc('day', legalaid_eligibilitycheck.created), legalaid_eligibilitycheck.id
   )
 SELECT
   rd.day as "Date",

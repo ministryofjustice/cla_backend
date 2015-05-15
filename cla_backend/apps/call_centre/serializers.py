@@ -227,7 +227,8 @@ class CaseListSerializer(CaseSerializer):
             'outcome_code',
             'case_count',
             'source',
-            'requires_action_at'
+            'requires_action_at',
+            'flagged_with_eod',
         )
 
 class CreateCaseSerializer(CaseSerializer):

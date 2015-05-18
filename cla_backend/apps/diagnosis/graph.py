@@ -2,7 +2,7 @@ import hashlib
 import re
 import codecs
 import networkx as nx
-from lxml import objectify
+from lxml import etree, objectify
 
 from os.path import join, abspath, dirname
 
@@ -27,6 +27,35 @@ class GraphImporter(object):
         self.doc = None
         self.ns = None
         self.prop_mapping = None
+
+    def internationalise(self, output_path=None):
+        """
+        Makes an internationalised Django template of the input graphml
+        """
+        # NB: objectify does not allow mutation so must use etree
+        self.doc = etree.parse(self.file_path)
+        self.ns = self.doc.getroot().nsmap[None]
+        self.process_properties_declaration()
+
+        internationalised_keys = [self.KEY_BODY, self.KEY_TITLE, self.KEY_HELP, self.KEY_HEADING]
+        internationalised_keys = [self.prop_mapping[key]['id'] for key in internationalised_keys]
+
+        for data_element in self.xpath_ns(self.doc, '//ns:data'):
+            data_type = data_element.attrib.get('key', None)
+            if data_type in internationalised_keys and data_element.text:
+                if u'"' in data_element.text or len(data_element.text.splitlines()) > 1:
+                    data_element.text = u'{%% blocktrans %%}%s{%% endblocktrans %%}' % data_element.text
+                else:
+                    data_element.text = u'{%% trans "%s" %%}' % data_element.text
+
+        if not output_path:
+            output_path = '%s.tpl' % self.file_path
+
+        with open(output_path, 'w+') as output:
+            graph_str = etree.tostring(self.doc, encoding='UTF-8', xml_declaration=True, standalone=False,
+                                       pretty_print=True)
+            output.write(u'{% load i18n %}'.encode('utf-8'))
+            output.write(graph_str)
 
     def process(self):
         with open(self.file_path, 'rb') as afile:
@@ -62,7 +91,7 @@ class GraphImporter(object):
             d = {'id': el.attrib.get('id')}
 
             try:
-                d['default'] = el['default'].text
+                d['default'] = el.find('ns:default', namespaces={'ns': self.ns}).text
             except AttributeError:
                 d['default'] = None
 

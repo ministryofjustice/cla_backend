@@ -7,9 +7,14 @@ from lxml import etree, objectify
 from os.path import join, abspath, dirname
 
 from django.conf import settings
-from django.utils.functional import SimpleLazyObject
+from django.template.loader import get_template_from_string, Context
+from django.utils.encoding import force_text
+from django.utils.functional import lazy, SimpleLazyObject
+from django.utils.six import text_type
 
 import markdown
+
+USE_TEMPLATES = True
 
 
 class GraphImporter(object):
@@ -57,21 +62,22 @@ class GraphImporter(object):
             output.write(u'{% load i18n %}'.encode('utf-8'))
             output.write(graph_str)
 
-    def process(self):
+    def process(self, is_templated=USE_TEMPLATES):
         with open(self.file_path, 'rb') as afile:
             version = hashlib.md5(afile.read()).hexdigest()
         self.graph = nx.MultiDiGraph(version=version)
 
         with codecs.open(self.file_path, 'r', encoding="utf-8") as f:
             # encoding declaration causes problems so deleting it
-            g_str = re.sub(r'encoding="UTF-8"', '', f.read())
+            g_str = re.sub(r'encoding=("|\')UTF-8("|\')', '', f.read())
+            g_str = re.sub(r'{% load .*?%}', '', g_str)
 
             self.doc = objectify.fromstring(g_str)
             # objectify.deannotate(self.doc, xsi_nil=True, cleanup_namespaces=True)
             self.ns = self.doc.nsmap[None]
 
             self.process_properties_declaration()
-            node_id_map = self.process_nodes()
+            node_id_map = self.process_nodes(is_templated=is_templated)
             self.process_edges(node_id_map)
 
         return self.graph
@@ -107,9 +113,20 @@ class GraphImporter(object):
             self.KEY_PERMANENT_ID: _get_id_default_dict_for('permanent_id'),
         }
 
-    def process_nodes(self):
+    def process_nodes(self, is_templated=USE_TEMPLATES):
         node_id_map = dict()
         context_key = self.prop_mapping[self.KEY_CONTEXT]['id']
+
+        def _get_text(a_node):
+            if is_templated and a_node.text and '{%' in a_node.text:
+                tpl = get_template_from_string(u'{%% load i18n %%}%s' % a_node.text)
+                return lazy(lambda: tpl.render(Context()), text_type)()
+            return a_node.text
+
+        def _get_markdown(_text):
+            if is_templated:
+                return lazy(lambda: markdown.markdown(force_text(_text)), text_type)()
+            return _text
 
         def _process_context(_node):
             xml_context = self.xpath_ns(_node, 'ns:data[@key="%s"]' % context_key)
@@ -122,13 +139,14 @@ class GraphImporter(object):
 
             context = {}
             for child in xml_context.getchildren():
-                context[child.tag] = child.text
+                context[child.tag] = _get_text(child)
             return context
 
         def _get_node_data_value_or_default(_node, key):
             attr_key = self.prop_mapping[key]['id']
             try:
-                return self.xpath_ns(_node, 'ns:data[@key="%s"]' % attr_key)[0].text
+                data_node = self.xpath_ns(node, 'ns:data[@key="%s"]' % attr_key)[0]
+                return _get_text(data_node)
             except IndexError:
                 return self.prop_mapping[key]['default']
 
@@ -146,11 +164,11 @@ class GraphImporter(object):
 
             label = _get_node_data_value_or_default(node, self.KEY_BODY)
             if label:
-                label = markdown.markdown(label)
+                label = _get_markdown(label)
 
             help_text = _get_node_data_value_or_default(node, self.KEY_HELP)
             if help_text:
-                help_text = markdown.markdown(help_text)
+                help_text = _get_markdown(help_text)
 
             self.graph.add_node(
                 permanent_node_id,
@@ -171,11 +189,13 @@ class GraphImporter(object):
             self.graph.add_edge(node_id_map[source], node_id_map[target])
 
 
-def get_graph(file_name=settings.DIAGNOSIS_FILE_NAME):
+def get_graph(file_name=settings.DIAGNOSIS_FILE_NAME, is_templated=USE_TEMPLATES):
     file_path = join(abspath(dirname(__file__)), 'data', file_name)
+    if is_templated:
+        file_path += ".tpl"
     importer = GraphImporter(file_path)
 
-    return importer.process()
+    return importer.process(is_templated=is_templated)
 
 
 def get_graph_mock():

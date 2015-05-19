@@ -14,4 +14,5 @@ class Command(LabelCommand):
     def handle_label(self, file_path, **options):
         from diagnosis.graph import GraphImporter
 
+        self.stdout.write('Internationalising GraphML file %s' % file_path)
         GraphImporter(file_path).internationalise()

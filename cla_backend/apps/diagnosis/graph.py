@@ -14,8 +14,6 @@ from django.utils.six import text_type
 
 import markdown
 
-USE_TEMPLATES = True
-
 
 class GraphImporter(object):
     KEY_BODY = 'body'
@@ -62,7 +60,7 @@ class GraphImporter(object):
             output.write(u'{% load i18n %}'.encode('utf-8'))
             output.write(graph_str)
 
-    def process(self, is_templated=USE_TEMPLATES):
+    def process(self, is_templated=settings.DIAGNOSES_USE_TEMPLATES):
         with open(self.file_path, 'rb') as afile:
             version = hashlib.md5(afile.read()).hexdigest()
         self.graph = nx.MultiDiGraph(version=version)
@@ -113,7 +111,7 @@ class GraphImporter(object):
             self.KEY_PERMANENT_ID: _get_id_default_dict_for('permanent_id'),
         }
 
-    def process_nodes(self, is_templated=USE_TEMPLATES):
+    def process_nodes(self, is_templated=settings.DIAGNOSES_USE_TEMPLATES):
         node_id_map = dict()
         context_key = self.prop_mapping[self.KEY_CONTEXT]['id']
 
@@ -189,7 +187,7 @@ class GraphImporter(object):
             self.graph.add_edge(node_id_map[source], node_id_map[target])
 
 
-def get_graph(file_name=settings.DIAGNOSIS_FILE_NAME, is_templated=USE_TEMPLATES):
+def get_graph(file_name=settings.DIAGNOSIS_FILE_NAME, is_templated=settings.DIAGNOSES_USE_TEMPLATES):
     file_path = join(abspath(dirname(__file__)), 'data', file_name)
     if is_templated:
         file_path += ".tpl"

@@ -1,6 +1,6 @@
 {% load i18n %}<?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
-  <!--Created by yEd 3.14.1-->
+  <!--Created by yEd 3.14.2-->
   <key for="port" id="d0" yfiles.type="portgraphics"/>
   <key for="port" id="d1" yfiles.type="portgeometry"/>
   <key for="port" id="d2" yfiles.type="portuserdata"/>
@@ -12,18 +12,16 @@
   <key attr.name="context:xml" for="node" id="d6">
     <default/>
   </key>
-  <key attr.name="operator_root" attr.type="string" for="node" id="d7">
-    <default>false</default>
-  </key>
-  <key attr.name="order" attr.type="int" for="node" id="d8">
+  <key attr.name="order" attr.type="int" for="node" id="d7">
     <default>9999</default>
   </key>
-  <key attr.name="help" attr.type="string" for="node" id="d9">
+  <key attr.name="help" attr.type="string" for="node" id="d8">
     <default/>
   </key>
-  <key attr.name="heading" attr.type="string" for="node" id="d10">
+  <key attr.name="heading" attr.type="string" for="node" id="d9">
     <default/>
   </key>
+  <key attr.name="permanent_id" attr.type="string" for="node" id="d10"/>
   <key attr.name="url" attr.type="string" for="node" id="d11"/>
   <key attr.name="description" attr.type="string" for="node" id="d12"/>
   <key for="node" id="d13" yfiles.type="nodegraphics"/>
@@ -35,8 +33,8 @@
     <node id="n0">
       <data key="d3">{% trans "Education" %}</data>
       <data key="d4">{% trans "Education" %}</data>
-      <data key="d8">4</data>
-      <data key="d9">{% blocktrans %}The education category of law covers all issues arising out of education including:
+      <data key="d7">4</data>
+      <data key="d8">{% blocktrans %}The education category of law covers all issues arising out of education including:
 
 * Special Educational Needs (SEN)
 * learning difficulties
@@ -47,6 +45,7 @@
 * children being out of school
 
 Please note education covers nursery education, primary, secondary and higher education as well as home schooling, training and apprenticeships.{% endblocktrans %}</data>
+      <data key="d10">n0</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8310.245238095238" y="130.0"/>
@@ -67,7 +66,7 @@ Please note education covers nursery education, primary, secondary and higher ed
       <data key="d3">{% trans "Diagnosis for operators" %}</data>
       <data key="d4">{% trans "Diagnosis for operators" %}</data>
       <data key="d5">testcontext</data>
-      <data key="d7">true</data>
+      <data key="d10">start</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10885.126587301587" y="0.0"/>
@@ -87,8 +86,8 @@ Please note education covers nursery education, primary, secondary and higher ed
     <node id="n2">
       <data key="d3">{% trans "Debt and housing - loss of home" %}</data>
       <data key="d4">{% trans "Debt/Housing - Loss of Home" %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% blocktrans %}This category covers the legal area of Debt, and the areas of Housing covering home loss.
+      <data key="d7">1</data>
+      <data key="d8">{% blocktrans %}This category covers the legal area of Debt, and the areas of Housing covering home loss.
 
 Debt covers advice on
 
@@ -116,8 +115,9 @@ The following are covered in 'other housing'.
 * disrepair / poor housing conditions
 * ASBO/ASBI
 
-Clients in temporary accommodation will be covered for in scope housing. 
+Clients in temporary accommodation will be covered for in scope housing.
 {% endblocktrans %}</data>
+      <data key="d10">n2</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4177.745238095238" y="130.0"/>
@@ -137,8 +137,8 @@ Clients in temporary accommodation will be covered for in scope housing.
     <node id="n3">
       <data key="d3">{% trans "Home owner, and the nature of the debt means they are at immediate risk of losing their home *(Includes shared ownership if the client is living in the property)*" %}</data>
       <data key="d4">{% trans "Client owns a house " %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% blocktrans %}A client's home is defined as the house, caravan, houseboat or other vehicle or structure that is their only or main residence. The references to caravan, houseboat or other vehicle include the land on which it is located or to which it is moored.
+      <data key="d7">1</data>
+      <data key="d8">{% blocktrans %}A client's home is defined as the house, caravan, houseboat or other vehicle or structure that is their only or main residence. The references to caravan, houseboat or other vehicle include the land on which it is located or to which it is moored.
 
 Operators should interpret the definition as a client would only be in scope if they lived in the home in question. If someone lives or owns another property and the matter relates to a different proeperty to the one they live in then this would be out of scope.
 
@@ -147,6 +147,7 @@ If the client is a co-owner of the property and they live in it as their only or
 Search guidance for 'timeline' to see the home repossession timeline.
 
 *FYI: Debt matters need to arise from an issue where the client owns their own home. Problems relating to homes that are rented or leased from another person fall within Housing.*{% endblocktrans %}</data>
+      <data key="d10">n3</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4916.495238095238" y="200.0"/>
@@ -166,13 +167,14 @@ Search guidance for 'timeline' to see the home repossession timeline.
     <node id="n4">
       <data key="d3">{% trans "The mortgage lender is seeking or has sought a court order to recover the property (due to mortgage arrears)" %}</data>
       <data key="d4">{% trans "Mortgage lender is s" %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% blocktrans %}Check the mortgage possession timeline in guidance - search for 'timeline'.
+      <data key="d7">1</data>
+      <data key="d8">{% blocktrans %}Check the mortgage possession timeline in guidance - search for 'timeline'.
 
 Record here how you have identified that the mortgage lender is seeking/has sought a court order enabling them to recover possession of the client's property.
 
 Record in Operator Notes what documents client has received. These may include a Default Notice or Possession Warrant.{% endblocktrans %}</data>
-      <data key="d10">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d9">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d10">n4</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -193,8 +195,9 @@ Record in Operator Notes what documents client has received. These may include a
     <node id="n5">
       <data key="d3">{% trans "A warrant of possession has been received by client" %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
-      <data key="d8">2</data>
-      <data key="d10">{% trans "HEADING ON WARRANT" %}</data>
+      <data key="d7">2</data>
+      <data key="d9">{% trans "HEADING ON WARRANT" %}</data>
+      <data key="d10">n5</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -220,6 +223,7 @@ Record in Operator Notes what documents client has received. These may include a
 	<category>debt</category>
 </context>
       </data>
+      <data key="d10">n6</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6157.745238095238" y="531.1328125"/>
@@ -239,8 +243,9 @@ Record in Operator Notes what documents client has received. These may include a
     <node id="n7">
       <data key="d3">{% trans "A claim form has been received by client" %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
-      <data key="d8">3</data>
-      <data key="d10">{% trans "HEADING ON CLAIM FORM" %}</data>
+      <data key="d7">3</data>
+      <data key="d9">{% trans "HEADING ON CLAIM FORM" %}</data>
+      <data key="d10">n7</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -266,6 +271,7 @@ Record in Operator Notes what documents client has received. These may include a
 	<category>debt</category>
 </context>
       </data>
+      <data key="d10">n8</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5977.745238095238" y="531.1328125"/>
@@ -285,8 +291,9 @@ Record in Operator Notes what documents client has received. These may include a
     <node id="n9">
       <data key="d3">{% trans "The client has other documentation that places their home at immediate (date-based) risk" %}</data>
       <data key="d4">{% trans "Other documentation " %}</data>
-      <data key="d8">4</data>
-      <data key="d10">{% trans "HEADING ON OTHER" %}</data>
+      <data key="d7">4</data>
+      <data key="d9">{% trans "HEADING ON OTHER" %}</data>
+      <data key="d10">n9</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -312,6 +319,7 @@ Record in Operator Notes what documents client has received. These may include a
 	<category>debt</category>
 </context>
       </data>
+      <data key="d10">n10</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5797.745238095238" y="531.1328125"/>
@@ -331,8 +339,9 @@ Record in Operator Notes what documents client has received. These may include a
     <node id="n11">
       <data key="d3">{% trans "A creditor is seeking a court order forcing the sale of the client’s property to recoup the debt they are owed" %}</data>
       <data key="d4">{% trans "Creditor is seeking " %}</data>
-      <data key="d8">2</data>
-      <data key="d10">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d7">2</data>
+      <data key="d9">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d10">n11</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -353,14 +362,15 @@ Record in Operator Notes what documents client has received. These may include a
     <node id="n12">
       <data key="d3">{% trans "Sale of client's home is being forced in order to recoup a charging order on their property. " %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
-      <data key="d8">2</data>
-      <data key="d9">{% blocktrans %}A Charging Order is placed on a property by the court securing an outstanding debt against the home or other property.
+      <data key="d7">2</data>
+      <data key="d8">{% blocktrans %}A Charging Order is placed on a property by the court securing an outstanding debt against the home or other property.
 
 This alone will not constitute a serious risk to the client's home, but if there is a court order forcing the sale of the home in order to recoup the debt then this will be in scope.
 
 If a client disagrees with a charging order that is in place, and wants to know how to set it aside, or requires general advice regarding the order, then this will be out of scope unless a court is forcing them to sell their home to recoup the debt.
 
 If client has received a charging order please record this in Operator Notes.{% endblocktrans %}</data>
+      <data key="d10">n12</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4897.745238095238" y="470.0"/>
@@ -386,6 +396,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>debt</category>
 </context>
       </data>
+      <data key="d10">n13</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4897.745238095238" y="531.1328125"/>
@@ -405,8 +416,9 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n14">
       <data key="d3">{% trans "Letter Before Action received by client" %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% trans "client is being taken to court on a given date due to debt" %}</data>
+      <data key="d7">1</data>
+      <data key="d8">{% trans "client is being taken to court on a given date due to debt" %}</data>
+      <data key="d10">n14</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5077.745238095238" y="470.0"/>
@@ -431,6 +443,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>debt</category>
 </context>
       </data>
+      <data key="d10">n15</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5077.745238095238" y="531.1328125"/>
@@ -450,6 +463,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n16">
       <data key="d3">{% trans "Other documentation that places client’s own home at immediate (date based) risk." %}</data>
       <data key="d4">{% trans "Other documentation " %}</data>
+      <data key="d10">n16</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4717.745238095238" y="470.0"/>
@@ -469,8 +483,9 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n17">
       <data key="d3">{% trans "A creditor is seeking to make the client bankrupt in order to recoup the debt they are owed and the client’s estate includes their own home" %}</data>
       <data key="d4">{% trans "Creditor is seeking " %}</data>
-      <data key="d8">3</data>
-      <data key="d10">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d7">3</data>
+      <data key="d9">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d10">n17</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -491,8 +506,9 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n18">
       <data key="d3">{% trans "Statutory Demand" %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
-      <data key="d8">2</data>
-      <data key="d9">{% trans "court has ordered the client sell their house" %}</data>
+      <data key="d7">2</data>
+      <data key="d8">{% trans "court has ordered the client sell their house" %}</data>
+      <data key="d10">n18</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5617.745238095238" y="470.0"/>
@@ -518,6 +534,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>debt</category>
 </context>
       </data>
+      <data key="d10">n19</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5617.745238095238" y="531.1328125"/>
@@ -537,8 +554,9 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n20">
       <data key="d3">{% trans "Bankruptcy Petition" %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% trans "formal notification that third party wants to make client bankrupt through the courts" %}</data>
+      <data key="d7">1</data>
+      <data key="d8">{% trans "formal notification that third party wants to make client bankrupt through the courts" %}</data>
+      <data key="d10">n20</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -564,6 +582,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>debt</category>
 </context>
       </data>
+      <data key="d10">n21</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5437.745238095238" y="531.1328125"/>
@@ -583,6 +602,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n22">
       <data key="d3">{% trans "Other documentation that places client’s own home at immediate (date based) risk." %}</data>
       <data key="d4">{% trans "Other documentation " %}</data>
+      <data key="d10">n22</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5257.745238095238" y="470.0"/>
@@ -607,6 +627,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>debt</category>
 </context>
       </data>
+      <data key="d10">n23</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="5257.745238095238" y="531.1328125"/>
@@ -626,7 +647,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n24">
       <data key="d3">{% trans "In rented accommodation" %}</data>
       <data key="d4">{% trans "client in rented acc" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n24</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3240.245238095238" y="200.0"/>
@@ -646,8 +668,9 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n25">
       <data key="d3">{% trans "The landlord is seeking to recover possession of the property" %}</data>
       <data key="d4">{% trans "Landlord is seeking " %}</data>
-      <data key="d8">1</data>
-      <data key="d10">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d7">1</data>
+      <data key="d9">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d10">n25</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -668,7 +691,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n26">
       <data key="d3">{% trans "Letter from the landlord confirming that informal arrangements can no longer continue" %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n26</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3637.745238095238" y="470.0"/>
@@ -693,6 +717,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n27</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3637.745238095238" y="531.1328125"/>
@@ -712,7 +737,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n28">
       <data key="d3">{% trans "Notice to Quit (a letter from the landlord giving the tenant notice to leave the property - for cases where the renting arrangement does not have a secure tenure)" %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n28</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2557.745238095238" y="470.0"/>
@@ -737,6 +763,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n29</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2480.4694444444444" y="531.1328125"/>
@@ -756,7 +783,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n30">
       <data key="d3">{% trans "Letter Before Action (a letter the landlord sends before starting proceedings to recover possession of the property)" %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
-      <data key="d8">3</data>
+      <data key="d7">3</data>
+      <data key="d10">n30</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3277.745238095238" y="470.0"/>
@@ -781,6 +809,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n31</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3277.745238095238" y="531.1328125"/>
@@ -800,7 +829,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n32">
       <data key="d3">{% trans "Notices from the landlord under section 83 of the Housing Act 1985 and sections 8 and 21 of the Housing Act 1988 (these give the client notice before the landlord starts formal possession proceedings for the property)" %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
-      <data key="d8">4</data>
+      <data key="d7">4</data>
+      <data key="d10">n32</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3817.745238095238" y="470.0"/>
@@ -825,6 +855,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n33</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3817.745238095238" y="531.1328125"/>
@@ -844,7 +875,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n34">
       <data key="d3">{% trans "Possession proceedings - issued by the court and giving the client notice of a hearing date for possession proceedings" %}</data>
       <data key="d4">{% trans "Possession proceedin" %}</data>
-      <data key="d8">8</data>
+      <data key="d7">8</data>
+      <data key="d10">n34</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3097.745238095238" y="470.0"/>
@@ -869,6 +901,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n35</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3097.745238095238" y="531.1328125"/>
@@ -888,7 +921,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n36">
       <data key="d3">{% trans "Possession Order from the court (this gives the client notice of possession - at the end of the specified period the creditor may apply to bailiffs to execute a warrant for possession)" %}</data>
       <data key="d4">{% trans "The client has recei" %}</data>
-      <data key="d8">5</data>
+      <data key="d7">5</data>
+      <data key="d10">n36</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2917.745238095238" y="470.0"/>
@@ -913,6 +947,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n37</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2917.745238095238" y="531.1328125"/>
@@ -932,7 +967,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n38">
       <data key="d3">{% trans "Warrant for eviction from the court bailiffs (this gives county court bailiffs the power to evict occupiers and change the locks)" %}</data>
       <data key="d4">{% trans "The client has recei" %}</data>
-      <data key="d8">6</data>
+      <data key="d7">6</data>
+      <data key="d10">n38</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3997.745238095238" y="470.0"/>
@@ -957,6 +993,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n39</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3997.745238095238" y="531.1328125"/>
@@ -976,7 +1013,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n40">
       <data key="d3">{% trans "There is other evidence that landlord is seeking to recover possession and placing the home at immediate risk" %}</data>
       <data key="d4">{% trans "There is other evide" %}</data>
-      <data key="d8">7</data>
+      <data key="d7">7</data>
+      <data key="d10">n40</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3457.745238095238" y="470.0"/>
@@ -1002,6 +1040,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n41</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="3457.745238095238" y="531.1328125"/>
@@ -1021,6 +1060,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n42">
       <data key="d3">{% trans "None of the above - consider whether discrimination might apply" %}</data>
       <data key="d4">{% trans "If none of the above" %}</data>
+      <data key="d10">n42</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -1041,7 +1081,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n43">
       <data key="d3">{% trans "The landlord is unlawfully evicting the client without due process (eg will be changing the locks)" %}</data>
       <data key="d4">{% trans "Landlord is unlawful" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n43</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2377.745238095238" y="340.0"/>
@@ -1061,6 +1102,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n44">
       <data key="d3">{% trans "Describe scenario carefully in notes - client's circumstances and why they believe they are facing eviction or have been evicted. *Then click 'next' to continue*" %}</data>
       <data key="d4">{% trans "Describe scenario ca" %}</data>
+      <data key="d10">n44</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2377.745238095238" y="470.0"/>
@@ -1085,6 +1127,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n45</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2300.4694444444444" y="531.1328125"/>
@@ -1104,8 +1147,9 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n46">
       <data key="d3">{% trans "Homeless or at risk of becoming homeless within 28 days (or 56 days if the client lives in Wales)" %}</data>
       <data key="d4">{% trans "Client becoming homeless" %}</data>
-      <data key="d8">3</data>
-      <data key="d10">{% trans "Select the option that best describes the client’s situation." %}</data>
+      <data key="d7">3</data>
+      <data key="d9">{% trans "Select the option that best describes the client’s situation." %}</data>
+      <data key="d10">n46</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -1127,7 +1171,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n47">
       <data key="d3">{% trans "The landlord has unlawfully evicted the client without due process" %}</data>
       <data key="d4">{% trans "Landlord has unlawfu" %}</data>
-      <data key="d9">{% trans " (eg changed the locks)" %}</data>
+      <data key="d8">{% trans " (eg changed the locks)" %}</data>
+      <data key="d10">n47</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="397.7452380952381" y="340.0"/>
@@ -1147,6 +1192,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n48">
       <data key="d3">{% trans "Describe scenario carefully in notes - including the client's circumstances and why they believe they are facing eviction or have been evicted" %}</data>
       <data key="d4">{% trans "Describe scenario ca" %}</data>
+      <data key="d10">n48</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="360.2452380952381" y="470.0"/>
@@ -1171,6 +1217,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n49</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="360.2452380952381" y="531.1328125"/>
@@ -1190,6 +1237,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n50">
       <data key="d3">{% trans "An informal licensing or renting arrangement is ending" %}</data>
       <data key="d4">{% trans "Informal licensing/r" %}</data>
+      <data key="d10">n50</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="757.745238095238" y="340.0"/>
@@ -1214,6 +1262,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n51</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="757.745238095238" y="470.0"/>
@@ -1233,6 +1282,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n52">
       <data key="d3">{% trans "The client has received a Notice to Quit from the landlord" %}</data>
       <data key="d4">{% trans "Notice to Quit from " %}</data>
+      <data key="d10">n52</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1117.7452380952382" y="340.0"/>
@@ -1257,6 +1307,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n53</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1117.7452380952382" y="470.0"/>
@@ -1276,6 +1327,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n54">
       <data key="d3">{% trans "The client can't access their home (eg due to letter from partner, closure order for property)" %}</data>
       <data key="d4">{% trans "Client unable to acc" %}</data>
+      <data key="d10">n54</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1657.7452380952382" y="340.0"/>
@@ -1300,6 +1352,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n55</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1657.7452380952382" y="470.0"/>
@@ -1319,6 +1372,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n56">
       <data key="d3">{% trans "A court has issued possession proceedings" %}</data>
       <data key="d4">{% trans "Possession proceedin" %}</data>
+      <data key="d10">n56</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="937.745238095238" y="340.0"/>
@@ -1343,6 +1397,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n57</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="937.745238095238" y="470.0"/>
@@ -1362,6 +1417,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n58">
       <data key="d3">{% trans "The client has received a possession order from the court (outlining the decision of the court)" %}</data>
       <data key="d4">{% trans "Client received a po" %}</data>
+      <data key="d10">n58</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1837.7452380952382" y="340.0"/>
@@ -1386,6 +1442,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n59</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1837.7452380952382" y="470.0"/>
@@ -1405,6 +1462,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n60">
       <data key="d3">{% trans "The client has received a warrant for eviction from the court bailliffs" %}</data>
       <data key="d4">{% trans "Client received a wa" %}</data>
+      <data key="d10">n60</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1477.7452380952382" y="340.0"/>
@@ -1429,6 +1487,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n61</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1477.7452380952382" y="470.0"/>
@@ -1448,6 +1507,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n62">
       <data key="d3">{% trans "The client has received a letter from the local authority saying that they do not qualify for accommodation or assistance and they want to challenge this decision" %}</data>
       <data key="d4">{% trans "Client received a le" %}</data>
+      <data key="d10">n62</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1297.7452380952382" y="340.0"/>
@@ -1472,6 +1532,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n63</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="1297.7452380952382" y="470.0"/>
@@ -1491,6 +1552,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n64">
       <data key="d3">{% trans "The client believes it is not reasonable to continue to occupy the property (eg a recently disabled person can't easily access the property, the client can't afford to live in the property, there is a threat of violence towards the client or their family)" %}</data>
       <data key="d4">{% trans "Client believes that" %}</data>
+      <data key="d10">n64</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2017.7452380952382" y="340.0"/>
@@ -1515,6 +1577,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n65</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2017.7452380952382" y="470.0"/>
@@ -1534,6 +1597,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n66">
       <data key="d3">{% trans "The client is being refused accommodation or has had it terminated by the UK Border Force" %}</data>
       <data key="d4">{% trans "Client is being refu" %}</data>
+      <data key="d10">n66</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2197.745238095238" y="340.0"/>
@@ -1558,6 +1622,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n67</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2197.745238095238" y="470.0"/>
@@ -1577,7 +1642,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n68">
       <data key="d3">{% trans "Other (please give details in notes)" %}</data>
       <data key="d4">{% trans "Other" %}</data>
-      <data key="d8">99999</data>
+      <data key="d7">99999</data>
+      <data key="d10">n68</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="577.745238095238" y="340.0"/>
@@ -1602,6 +1668,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n69</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="540.245238095238" y="470.0"/>
@@ -1621,7 +1688,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n70">
       <data key="d3">{% trans "Owes other money (check that the consequences of this don’t place the client in another category of debt)" %}</data>
       <data key="d4">{% trans "Other money owed (ch" %}</data>
-      <data key="d8">4</data>
+      <data key="d7">4</data>
+      <data key="d10">n70</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4177.745238095238" y="200.0"/>
@@ -1644,6 +1712,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       <data key="d6">
         <context xmlns=""> 	<category>debt</category> </context>
       </data>
+      <data key="d10">n71</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4177.745238095238" y="470.0"/>
@@ -1663,12 +1732,13 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n72">
       <data key="d3">{% trans "None of the above -  consider whether discrimination might apply and click on 'Help' for examples" %}</data>
       <data key="d4">{% trans "If none of the above" %}</data>
-      <data key="d9">{% blocktrans %}Examples of discrimination in the debt and housing category might include:
+      <data key="d8">{% blocktrans %}Examples of discrimination in the debt and housing category might include:
 
 * the client has been treated differently by their landlord compared to other tenants of the same landlord
 * the landlord has refused to make reasonable adjustments to the property to accommodate a client's disability
 * an estate agent is only offering a minority group properties that are considered hard to let
 {% endblocktrans %}</data>
+      <data key="d10">n72</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4395.245238095238" y="340.0"/>
@@ -1688,8 +1758,8 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n73">
       <data key="d3">{% trans "Other housing matters" %}</data>
       <data key="d4">{% trans "Other housing matter" %}</data>
-      <data key="d8">2</data>
-      <data key="d9">{% blocktrans %}This category covers the legal area of Housing outside home loss.
+      <data key="d7">2</data>
+      <data key="d8">{% blocktrans %}This category covers the legal area of Housing outside home loss.
 
 It covers advice on
 
@@ -1699,6 +1769,7 @@ It covers advice on
 
 For loss of home please click 'back' and select the first category.
 {% endblocktrans %}</data>
+      <data key="d10">n73</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11567.626587301587" y="130.0"/>
@@ -1718,8 +1789,9 @@ For loss of home please click 'back' and select the first category.
     <node id="n74">
       <data key="d3">{% trans "Housing disrepair (necessary repairs have not been carried out) - for people in **rented** accomodation only" %}</data>
       <data key="d4">{% trans "Housing disrepair is" %}</data>
-      <data key="d8">1</data>
-      <data key="d10">{% trans "Select the option that best describes the client’s situation." %}</data>
+      <data key="d7">1</data>
+      <data key="d9">{% trans "Select the option that best describes the client’s situation." %}</data>
+      <data key="d10">n74</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -1740,7 +1812,8 @@ For loss of home please click 'back' and select the first category.
     <node id="n75">
       <data key="d3">{% trans "Client has photos of disrepair AND the disrepair puts them or their family at serious risk of harm or injury (this includes an injury or illness that has already happened)" %}</data>
       <data key="d4">{% trans "Client has photos of" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n75</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12325.126587301587" y="340.0"/>
@@ -1765,6 +1838,7 @@ For loss of home please click 'back' and select the first category.
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n76</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12685.126587301587" y="470.0"/>
@@ -1784,7 +1858,8 @@ For loss of home please click 'back' and select the first category.
     <node id="n77">
       <data key="d3">{% trans "Client has report by an expert (e.g. a surveyor) on the disrepair AND the disrepair puts them or their family at serious risk of harm, injury or illness " %}</data>
       <data key="d4">{% trans "Client has report by" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n77</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12145.126587301587" y="340.0"/>
@@ -1809,6 +1884,7 @@ For loss of home please click 'back' and select the first category.
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n78</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12505.126587301587" y="470.0"/>
@@ -1828,7 +1904,8 @@ For loss of home please click 'back' and select the first category.
     <node id="n79">
       <data key="d3">{% trans "ASBO/ASBI (Antisocial Behaviour Order/Antisocial Behaviour Injunction)" %}</data>
       <data key="d4">{% trans "ASBO/ASBI" %}</data>
-      <data key="d8">3</data>
+      <data key="d7">3</data>
+      <data key="d10">n79</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11747.626587301587" y="200.0"/>
@@ -1848,7 +1925,8 @@ For loss of home please click 'back' and select the first category.
     <node id="n80">
       <data key="d3">{% trans "The client’s social landlord intends to get (or has got) an Antisocial Behaviour Order or Antisocial Behaviour Injunction against the client or someone living with them." %}</data>
       <data key="d4">{% trans "Has the client’s s" %}</data>
-      <data key="d10">{% trans "Select the option that best describes the client’s situation." %}</data>
+      <data key="d9">{% trans "Select the option that best describes the client’s situation." %}</data>
+      <data key="d10">n80</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -1869,6 +1947,7 @@ For loss of home please click 'back' and select the first category.
     <node id="n81">
       <data key="d3">{% trans "Client has received a letter from their social landlord (including local authorities) confirming an intention to apply for an ASBO or ASBI" %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
+      <data key="d10">n81</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12145.126587301587" y="470.0"/>
@@ -1893,6 +1972,7 @@ For loss of home please click 'back' and select the first category.
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n82</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12145.126587301587" y="531.1328125"/>
@@ -1912,6 +1992,7 @@ For loss of home please click 'back' and select the first category.
     <node id="n83">
       <data key="d3">{% trans "Court has issued notice of ASBO/ASBI proceedings" %}</data>
       <data key="d4">{% trans "Court has issued not" %}</data>
+      <data key="d10">n83</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11965.126587301587" y="470.0"/>
@@ -1936,6 +2017,7 @@ For loss of home please click 'back' and select the first category.
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n84</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11965.126587301587" y="531.1328125"/>
@@ -1955,6 +2037,7 @@ For loss of home please click 'back' and select the first category.
     <node id="n85">
       <data key="d3">{% trans "Client has received an ASBO/ASBI and wishes to challenge" %}</data>
       <data key="d4">{% trans "Client has received " %}</data>
+      <data key="d10">n85</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11785.126587301587" y="470.0"/>
@@ -1979,6 +2062,7 @@ For loss of home please click 'back' and select the first category.
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n86</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11785.126587301587" y="531.1328125"/>
@@ -1998,6 +2082,7 @@ For loss of home please click 'back' and select the first category.
     <node id="n87">
       <data key="d3">{% trans "Client has private landlord" %}</data>
       <data key="d4">{% trans "Client has private l" %}</data>
+      <data key="d10">n87</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11605.126587301587" y="340.0"/>
@@ -2022,6 +2107,7 @@ For loss of home please click 'back' and select the first category.
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n88</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11605.126587301587" y="531.1328125"/>
@@ -2041,7 +2127,8 @@ For loss of home please click 'back' and select the first category.
     <node id="n89">
       <data key="d3">{% trans "Harassment (being threatened or disturbed in your home, on more than one occasion)" %}</data>
       <data key="d4">{% trans "Harrassment (being d" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n89</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11567.626587301587" y="200.0"/>
@@ -2061,6 +2148,7 @@ For loss of home please click 'back' and select the first category.
     <node id="n90">
       <data key="d3">{% trans "Client is being harassed by a landlord and needs injunction or restraining order" %}</data>
       <data key="d4">{% trans "Client is being hara" %}</data>
+      <data key="d10">n90</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11425.126587301587" y="340.0"/>
@@ -2085,6 +2173,7 @@ For loss of home please click 'back' and select the first category.
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n91</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11425.126587301587" y="470.0"/>
@@ -2104,6 +2193,7 @@ For loss of home please click 'back' and select the first category.
     <node id="n92">
       <data key="d3">{% trans "Client is being harassed by a neighbour and needs injunction or restraining order" %}</data>
       <data key="d4">{% trans "Client is being hara" %}</data>
+      <data key="d10">n92</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11245.126587301587" y="340.0"/>
@@ -2128,6 +2218,7 @@ For loss of home please click 'back' and select the first category.
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n93</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11245.126587301587" y="470.0"/>
@@ -2147,6 +2238,7 @@ For loss of home please click 'back' and select the first category.
     <node id="n94">
       <data key="d3">{% trans "Other out of scope, rediagnose" %}</data>
       <data key="d4">{% trans "Other out of" %}</data>
+      <data key="d10">n94</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11065.126587301587" y="340.0"/>
@@ -2171,6 +2263,7 @@ For loss of home please click 'back' and select the first category.
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n95</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11065.126587301587" y="531.1328125"/>
@@ -2190,6 +2283,7 @@ For loss of home please click 'back' and select the first category.
     <node id="n96">
       <data key="d3">{% trans "None of the above" %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n96</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11387.626587301587" y="200.0"/>
@@ -2209,8 +2303,8 @@ For loss of home please click 'back' and select the first category.
     <node id="n97">
       <data key="d3">{% trans "Family" %}</data>
       <data key="d4">{% trans "Family" %}</data>
-      <data key="d8">3</data>
-      <data key="d9">{% blocktrans %}The family category of law includes advice on:
+      <data key="d7">3</data>
+      <data key="d8">{% blocktrans %}The family category of law includes advice on:
 
 * difficulty in getting contact with children or being denied contact
 * trying to get custody and parental rights
@@ -2222,6 +2316,7 @@ For loss of home please click 'back' and select the first category.
 * enforcing previous court orders
 * child abduction
 {% endblocktrans %}</data>
+      <data key="d10">n97</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14329.405952380952" y="130.0"/>
@@ -2241,13 +2336,14 @@ For loss of home please click 'back' and select the first category.
     <node id="n98">
       <data key="d3">{% trans "Domestic violence or abuse (including child abuse) - the client wants to protect themselves or their children" %}</data>
       <data key="d4">{% trans "Client protecting self" %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% blocktrans %}DV/CA - Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order (an injunction) that tells a person they're not allowed to do a certain act. There are two main forms of injunction
+      <data key="d7">1</data>
+      <data key="d8">{% blocktrans %}DV/CA - Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order (an injunction) that tells a person they're not allowed to do a certain act. There are two main forms of injunction
 
 A non-molestation order - aimed at preventing a client's partner or ex-partner from using or threatening violence against them or their child, or intimidating, harassing or pestering them.
 
 An occupation order can restrict who can live in the family home, and even restrict the abuser from entering the surrounding area. They can also be used where clients do not feel safe continuing to live with their partner, or if they have already left home because of abuse, but want to return and exclude the abuser.
 {% endblocktrans %}</data>
+      <data key="d10">n98</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="16009.346031746032" y="340.0"/>
@@ -2272,6 +2368,7 @@ An occupation order can restrict who can live in the family home, and even restr
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n99</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15851.336111111112" y="531.1328125"/>
@@ -2291,8 +2388,9 @@ An occupation order can restrict who can live in the family home, and even restr
     <node id="n100">
       <data key="d3">{% trans "Child abduction - the client wants advice" %}</data>
       <data key="d4">{% trans "Client wants to prev" %}</data>
-      <data key="d8">5</data>
-      <data key="d9">{% trans "Seeking protection from the unlawful removal of a child from the UK or the return of a child who has been unlawfully removed from the UK or unlawfully removed within the UK. A child is someone under 18 and the client must be the parent or someone with parental responsibility for that child." %}</data>
+      <data key="d7">5</data>
+      <data key="d8">{% trans "Seeking protection from the unlawful removal of a child from the UK or the return of a child who has been unlawfully removed from the UK or unlawfully removed within the UK. A child is someone under 18 and the client must be the parent or someone with parental responsibility for that child." %}</data>
+      <data key="d10">n100</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15618.326190476191" y="340.0"/>
@@ -2317,6 +2415,7 @@ An occupation order can restrict who can live in the family home, and even restr
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n101</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15618.326190476191" y="470.0"/>
@@ -2334,12 +2433,13 @@ An occupation order can restrict who can live in the family home, and even restr
       </data>
     </node>
     <node id="n102">
-      <data key="d3">{% blocktrans %}Public law problem (the local council is involved) 
+      <data key="d3">{% blocktrans %}Public law problem (the local council is involved)
 eg care proceedings or adoption{% endblocktrans %}</data>
       <data key="d4">{% trans "Public law
 " %}</data>
-      <data key="d8">2</data>
-      <data key="d9">{% trans "Typically the local council is involved due to child protection concerns." %}</data>
+      <data key="d7">2</data>
+      <data key="d8">{% trans "Typically the local council is involved due to child protection concerns." %}</data>
+      <data key="d10">n102</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="16189.346031746032" y="200.0"/>
@@ -2364,6 +2464,7 @@ eg care proceedings or adoption{% endblocktrans %}</data>
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n103</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="16189.346031746032" y="470.0"/>
@@ -2383,7 +2484,8 @@ eg care proceedings or adoption{% endblocktrans %}</data>
     <node id="n104">
       <data key="d3">{% trans "None of the above (including guardianship, wills and probate, power of attorney, finding a family mediator)" %}</data>
       <data key="d4">{% trans "None of the above (i" %}</data>
-      <data key="d8">4</data>
+      <data key="d7">4</data>
+      <data key="d10">n104</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13950.655952380952" y="340.0"/>
@@ -2408,6 +2510,7 @@ eg care proceedings or adoption{% endblocktrans %}</data>
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n105</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13898.155952380952" y="1076.1328125"/>
@@ -2427,8 +2530,8 @@ eg care proceedings or adoption{% endblocktrans %}</data>
     <node id="n106">
       <data key="d3">{% trans "Discrimination" %}</data>
       <data key="d4">{% trans "Discrimination" %}</data>
-      <data key="d8">5</data>
-      <data key="d9">{% blocktrans %}The discrimination category covers advice on cases that contravene the Equalities Act 2010. 
+      <data key="d7">5</data>
+      <data key="d8">{% blocktrans %}The discrimination category covers advice on cases that contravene the Equalities Act 2010.
 
 It is against the law to discriminate against anyone because of:
 
@@ -2448,6 +2551,7 @@ The client's problem could start in another category (eg housing) but the client
 
 
 {% endblocktrans %}</data>
+      <data key="d10">n106</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9497.626587301587" y="130.0"/>
@@ -2465,7 +2569,7 @@ The client's problem could start in another category (eg housing) but the client
       </data>
     </node>
     <node id="n107">
-      <data key="d3">{% blocktrans %}The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else’s discrimination claim 
+      <data key="d3">{% blocktrans %}The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else’s discrimination claim
 
 It is against the law to discriminate against anyone because of:
 
@@ -2479,7 +2583,8 @@ It is against the law to discriminate against anyone because of:
 * sex
 * sexual orientation{% endblocktrans %}</data>
       <data key="d4">{% trans "Has the client been " %}</data>
-      <data key="d10">{% trans "Select the type of discrimination that applies" %}</data>
+      <data key="d9">{% trans "Select the type of discrimination that applies" %}</data>
+      <data key="d10">n107</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -2500,10 +2605,11 @@ It is against the law to discriminate against anyone because of:
     <node id="n108">
       <data key="d3">{% trans "Direct discrimination" %}</data>
       <data key="d4">{% trans "Direct discriminatio" %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% trans "Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result." %}</data>
-      <data key="d10">{% blocktrans %}On what basis has the client been discriminated against?
+      <data key="d7">1</data>
+      <data key="d8">{% trans "Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result." %}</data>
+      <data key="d9">{% blocktrans %}On what basis has the client been discriminated against?
 Give details in the operator notes, especially if more than one option applies.{% endblocktrans %}</data>
+      <data key="d10">n108</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -2524,13 +2630,14 @@ Give details in the operator notes, especially if more than one option applies.{
     <node id="n109">
       <data key="d3">{% trans "Disability" %}</data>
       <data key="d4">{% trans "Disability Pregnancy" %}</data>
-      <data key="d8">5</data>
-      <data key="d9">{% blocktrans %}Disability is defined as a physical or mental impairment, which has a substantial and long term adverse effect on a person's ability to carry out normal day-to-day activities.
+      <data key="d7">5</data>
+      <data key="d8">{% blocktrans %}Disability is defined as a physical or mental impairment, which has a substantial and long term adverse effect on a person's ability to carry out normal day-to-day activities.
 
 People with cancer or who are HIV+ are classed as having a disability.
 
 The disability does not have to have a name or a diagnosis to meet this definition.{% endblocktrans %}</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n109</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -2551,7 +2658,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n110">
       <data key="d3">{% trans "Work" %}</data>
       <data key="d4">{% trans "Work" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n110</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10683.0623015873" y="1736.1328125"/>
@@ -2576,6 +2684,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n111</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10683.0623015873" y="1786.1328125"/>
@@ -2595,7 +2704,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n112">
       <data key="d3">{% trans "Provision of a service (eg a meal in a restaurant, access to a shopping mall)" %}</data>
       <data key="d4">{% trans "Provision of a servi" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n112</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10503.0623015873" y="1736.1328125"/>
@@ -2620,6 +2730,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n113</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10503.0623015873" y="1786.1328125"/>
@@ -2639,7 +2750,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n114">
       <data key="d3">{% trans "Exercise of a public function (eg a police officer carrying out a search as part of a criminal investigation)" %}</data>
       <data key="d4">{% trans "Exercise of a public" %}</data>
-      <data key="d8">4</data>
+      <data key="d7">4</data>
+      <data key="d10">n114</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10323.0623015873" y="1736.1328125"/>
@@ -2664,6 +2776,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n115</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10323.0623015873" y="1786.1328125"/>
@@ -2683,7 +2796,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n116">
       <data key="d3">{% trans "Association or private club (eg a golf club, a private members' club)" %}</data>
       <data key="d4">{% trans "Association or priva" %}</data>
-      <data key="d8">5</data>
+      <data key="d7">5</data>
+      <data key="d10">n116</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10143.0623015873" y="1736.1328125"/>
@@ -2708,6 +2822,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n117</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10143.0623015873" y="1786.1328125"/>
@@ -2727,7 +2842,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n118">
       <data key="d3">{% trans "At home (in rental accommodation)" %}</data>
       <data key="d4">{% trans "Premises" %}</data>
-      <data key="d8">3</data>
+      <data key="d7">3</data>
+      <data key="d10">n118</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9963.0623015873" y="1736.1328125"/>
@@ -2752,6 +2868,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n119</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9963.0623015873" y="1786.1328125"/>
@@ -2771,7 +2888,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n120">
       <data key="d3">{% trans "Education (schools)" %}</data>
       <data key="d4">{% trans "Education (schools)" %}</data>
-      <data key="d8">6</data>
+      <data key="d7">6</data>
+      <data key="d10">n120</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9783.0623015873" y="1736.1328125"/>
@@ -2796,6 +2914,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n121</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9783.0623015873" y="1786.1328125"/>
@@ -2815,7 +2934,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n122">
       <data key="d3">{% trans "Education (higher education or general qualification bodies)" %}</data>
       <data key="d4">{% trans "Education (higher ed" %}</data>
-      <data key="d8">7</data>
+      <data key="d7">7</data>
+      <data key="d10">n122</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9603.0623015873" y="1736.1328125"/>
@@ -2840,6 +2960,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n123</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9603.0623015873" y="1786.1328125"/>
@@ -2859,11 +2980,12 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n124">
       <data key="d3">{% trans "Age (the client is under 18)" %}</data>
       <data key="d4">{% trans "Age (where client is" %}</data>
-      <data key="d8">2</data>
-      <data key="d9">{% blocktrans %}This refers to discrimination against people of a:
+      <data key="d7">2</data>
+      <data key="d8">{% blocktrans %}This refers to discrimination against people of a:
 * particular age (eg 17-year-olds), or
 * range of ages (eg 10 to 15-year-olds){% endblocktrans %}</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n124</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -2885,7 +3007,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n125">
       <data key="d3">{% trans "Work" %}</data>
       <data key="d4">{% trans "Work" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n125</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12324.9373015873" y="1736.1328125"/>
@@ -2910,6 +3033,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n126</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12324.9373015873" y="1786.1328125"/>
@@ -2929,7 +3053,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n127">
       <data key="d3">{% trans "Association or private club (eg a golf club, a private members' club)" %}</data>
       <data key="d4">{% trans "Association or priva" %}</data>
-      <data key="d8">3</data>
+      <data key="d7">3</data>
+      <data key="d10">n127</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12504.9373015873" y="1736.1328125"/>
@@ -2954,6 +3079,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n128</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12504.9373015873" y="1786.1328125"/>
@@ -2973,7 +3099,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n129">
       <data key="d3">{% trans "Education (higher education/general qualification bodies)" %}</data>
       <data key="d4">{% trans "Education (higher ed" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n129</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12684.9373015873" y="1736.1328125"/>
@@ -2998,6 +3125,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n130</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12684.9373015873" y="1786.1328125"/>
@@ -3017,6 +3145,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n131">
       <data key="d3">{% trans "Other" %}</data>
       <data key="d4">{% trans "Other" %}</data>
+      <data key="d10">n131</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12864.9373015873" y="1736.1328125"/>
@@ -3041,6 +3170,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n132</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12864.9373015873" y="1836.1328125"/>
@@ -3060,11 +3190,12 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n133">
       <data key="d3">{% trans "Age (the client is 18 or over)" %}</data>
       <data key="d4">{% trans "Age (where client is" %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% blocktrans %}This refers to discrimination against people of a:
+      <data key="d7">1</data>
+      <data key="d8">{% blocktrans %}This refers to discrimination against people of a:
 * particular age (eg 19-year-olds), or
 * range of ages (eg 60 to 80-year-olds){% endblocktrans %}</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n133</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -3086,7 +3217,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n134">
       <data key="d3">{% trans "Work" %}</data>
       <data key="d4">{% trans "Work" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n134</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11964.9373015873" y="1736.1328125"/>
@@ -3111,6 +3243,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n135</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11964.9373015873" y="1786.1328125"/>
@@ -3130,7 +3263,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n136">
       <data key="d3">{% trans "Provision of a service (eg a meal in a restaurant, access to a shopping mall)" %}</data>
       <data key="d4">{% trans "Provision of a servi" %}</data>
-      <data key="d8">4</data>
+      <data key="d7">4</data>
+      <data key="d10">n136</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11784.9373015873" y="1736.1328125"/>
@@ -3155,6 +3289,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n137</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11784.9373015873" y="1786.1328125"/>
@@ -3174,7 +3309,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n138">
       <data key="d3">{% trans "Exercise of a public function (eg a police officer carrying out a search)" %}</data>
       <data key="d4">{% trans "Exercise of a public" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n138</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11244.9373015873" y="1736.1328125"/>
@@ -3199,6 +3335,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n139</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11244.9373015873" y="1786.1328125"/>
@@ -3218,7 +3355,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n140">
       <data key="d3">{% trans "Association or private club (eg a golf club, a private members' club)" %}</data>
       <data key="d4">{% trans "Association or priva" %}</data>
-      <data key="d8">3</data>
+      <data key="d7">3</data>
+      <data key="d10">n140</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11604.9373015873" y="1736.1328125"/>
@@ -3243,6 +3381,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n141</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11604.9373015873" y="1786.1328125"/>
@@ -3262,7 +3401,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n142">
       <data key="d3">{% trans "Education (higher education/general qualification bodies)" %}</data>
       <data key="d4">{% trans "Education (higher ed" %}</data>
-      <data key="d8">5</data>
+      <data key="d7">5</data>
+      <data key="d10">n142</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11424.9373015873" y="1736.1328125"/>
@@ -3287,6 +3427,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n143</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11424.9373015873" y="1786.1328125"/>
@@ -3306,6 +3447,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n144">
       <data key="d3">{% trans "Other" %}</data>
       <data key="d4">{% trans "Other" %}</data>
+      <data key="d10">n144</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12144.9373015873" y="1736.1328125"/>
@@ -3330,6 +3472,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n145</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12144.9373015873" y="1836.1328125"/>
@@ -3349,9 +3492,10 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n146">
       <data key="d3">{% trans "Being married or in a civil partnership" %}</data>
       <data key="d4">{% trans "Marriage and civil p" %}</data>
-      <data key="d8">6</data>
-      <data key="d9">{% trans "This refers to people who are married or in a civil partnership, including same sex couples. " %}</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d7">6</data>
+      <data key="d8">{% trans "This refers to people who are married or in a civil partnership, including same sex couples. " %}</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n146</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -3372,7 +3516,8 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n147">
       <data key="d3">{% trans "Work" %}</data>
       <data key="d4">{% trans "Work" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n147</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11064.9373015873" y="1736.1328125"/>
@@ -3397,6 +3542,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n148</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11064.9373015873" y="1786.1328125"/>
@@ -3416,6 +3562,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n149">
       <data key="d3">{% trans "Other" %}</data>
       <data key="d4">{% trans "Other" %}</data>
+      <data key="d10">n149</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10884.9373015873" y="1736.1328125"/>
@@ -3440,6 +3587,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n150</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10884.9373015873" y="1836.1328125"/>
@@ -3459,10 +3607,11 @@ The disability does not have to have a name or a diagnosis to meet this definiti
     <node id="n151">
       <data key="d3">{% trans "Indirect discrimination" %}</data>
       <data key="d4">{% trans "Indirect discriminat" %}</data>
-      <data key="d8">2</data>
-      <data key="d9">{% trans "The client thinks that new ways of doing things have put them at a disadvantage compared to someone else because of a protected characteristic (eg an employer states that employees cannot have dreadlocks or a pub refuses access to people with hats. This puts employees or patrons of a certain religion at a disadvantage when compared to others.)" %}</data>
-      <data key="d10">{% blocktrans %}On what basis has the client been discriminated against?
+      <data key="d7">2</data>
+      <data key="d8">{% trans "The client thinks that new ways of doing things have put them at a disadvantage compared to someone else because of a protected characteristic (eg an employer states that employees cannot have dreadlocks or a pub refuses access to people with hats. This puts employees or patrons of a certain religion at a disadvantage when compared to others.)" %}</data>
+      <data key="d9">{% blocktrans %}On what basis has the client been discriminated against?
 Give details in the operator notes, especially if more than one option applies.{% endblocktrans %}</data>
+      <data key="d10">n151</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -3483,10 +3632,11 @@ Give details in the operator notes, especially if more than one option applies.{
     <node id="n152">
       <data key="d3">{% trans "Harassment" %}</data>
       <data key="d4">{% trans "Harassment - Somethi" %}</data>
-      <data key="d8">6</data>
-      <data key="d9">{% trans "Something happened to make the client feel that they were in an environment that was intimidating, hostile, degrading, humiliating or offensive or that violated their dignity." %}</data>
-      <data key="d10">{% blocktrans %}On what basis has the client been discriminated against?
+      <data key="d7">6</data>
+      <data key="d8">{% trans "Something happened to make the client feel that they were in an environment that was intimidating, hostile, degrading, humiliating or offensive or that violated their dignity." %}</data>
+      <data key="d9">{% blocktrans %}On what basis has the client been discriminated against?
 Give details in the operator notes, especially if more than one option applies.{% endblocktrans %}</data>
+      <data key="d10">n152</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -3507,10 +3657,11 @@ Give details in the operator notes, especially if more than one option applies.{
     <node id="n153">
       <data key="d3">{% trans "Victimisation due to a discrimination claim " %}</data>
       <data key="d4">{% trans "Victimisation due to" %}</data>
-      <data key="d8">3</data>
-      <data key="d9">{% trans "The client thinks that they have been treated worse, or disadvantaged in some way, because they have brought a claim of discrimination, given evidence or information in relation to someone else’s claim of discrimination, made a complaint of discrimination, or been suspected of doing one of these things. For example, an employee is dismissed after making a discrimination claim." %}</data>
-      <data key="d10">{% blocktrans %}On what basis has the client been discriminated against?
+      <data key="d7">3</data>
+      <data key="d8">{% trans "The client thinks that they have been treated worse, or disadvantaged in some way, because they have brought a claim of discrimination, given evidence or information in relation to someone else’s claim of discrimination, made a complaint of discrimination, or been suspected of doing one of these things. For example, an employee is dismissed after making a discrimination claim." %}</data>
+      <data key="d9">{% blocktrans %}On what basis has the client been discriminated against?
 Give details in the operator notes, especially if more than one option applies.{% endblocktrans %}</data>
+      <data key="d10">n153</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -3532,7 +3683,8 @@ Give details in the operator notes, especially if more than one option applies.{
       <data key="d3">{% trans "Special educational needs (SEN) in a child or young person under 25 - client could be the parent or the child or young person
 " %}</data>
       <data key="d4">{% trans "Client has parental " %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n154</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9407.626587301587" y="200.0"/>
@@ -3557,6 +3709,7 @@ Give details in the operator notes, especially if more than one option applies.{
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n155</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9407.626587301587" y="340.0"/>
@@ -3576,7 +3729,8 @@ Give details in the operator notes, especially if more than one option applies.{
     <node id="n156">
       <data key="d3">{% trans "Advised to bring judicial review proceedings in an education matter" %}</data>
       <data key="d4">{% trans "They have been advis" %}</data>
-      <data key="d8">4</data>
+      <data key="d7">4</data>
+      <data key="d10">n156</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9227.626587301587" y="200.0"/>
@@ -3601,6 +3755,7 @@ Give details in the operator notes, especially if more than one option applies.{
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n157</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9227.626587301587" y="340.0"/>
@@ -3620,8 +3775,9 @@ Give details in the operator notes, especially if more than one option applies.{
     <node id="n158">
       <data key="d3">{% trans "Discrimination may have occurred due to the child or young person’s SEN or other protected characteristic (eg a school excludes a disabled child from a school trip, a student is being bullied because they're gay but the school is taking no action)" %}</data>
       <data key="d4">{% trans "Discrimination may a" %}</data>
-      <data key="d8">3</data>
-      <data key="d9">{% trans "Search guidance for 'discrimination education' for more information and a list of questions to ask. " %}</data>
+      <data key="d7">3</data>
+      <data key="d8">{% trans "Search guidance for 'discrimination education' for more information and a list of questions to ask. " %}</data>
+      <data key="d10">n158</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6517.745238095238" y="200.0"/>
@@ -3641,7 +3797,8 @@ Give details in the operator notes, especially if more than one option applies.{
     <node id="n159">
       <data key="d3">{% trans "The client's problem is about admissions, exclusions, other disciplinary procedures, school trips, bullying, any problems at school caused by a child’s disability or any other similar situation" %}</data>
       <data key="d4">{% trans "Problem covers admis" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n159</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -3662,6 +3819,7 @@ Give details in the operator notes, especially if more than one option applies.{
     <node id="n160">
       <data key="d3">{% trans "Any other education problem" %}</data>
       <data key="d4">{% trans "None of the above" %}</data>
+      <data key="d10">n160</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8310.245238095238" y="200.0"/>
@@ -3681,7 +3839,8 @@ Give details in the operator notes, especially if more than one option applies.{
     <node id="n161">
       <data key="d3">{% trans "The client is a teacher or employee of the local authority" %}</data>
       <data key="d4">{% trans "Teacher or employee " %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n161</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6517.745238095238" y="340.0"/>
@@ -3706,6 +3865,7 @@ Give details in the operator notes, especially if more than one option applies.{
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n162</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6517.745238095238" y="470.0"/>
@@ -3725,6 +3885,7 @@ Give details in the operator notes, especially if more than one option applies.{
     <node id="n163">
       <data key="d3">{% trans "The client is calling for general advice, not about a legal issue specific to them (eg they want to know if a school can stop them removing their child, as opposed to calling after the school has taken action against them for removing their child)" %}</data>
       <data key="d4">{% trans "Calling for general " %}</data>
+      <data key="d10">n163</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6337.745238095238" y="340.0"/>
@@ -3749,6 +3910,7 @@ Give details in the operator notes, especially if more than one option applies.{
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n164</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6337.745238095238" y="470.0"/>
@@ -3768,8 +3930,8 @@ Give details in the operator notes, especially if more than one option applies.{
     <node id="n165">
       <data key="d3">{% trans "Welfare benefits" %}</data>
       <data key="d4">{% trans "Welfare benefits" %}</data>
-      <data key="d8">6</data>
-      <data key="d9">{% blocktrans %}The welfare benefits category of law covers advice on:
+      <data key="d7">6</data>
+      <data key="d8">{% blocktrans %}The welfare benefits category of law covers advice on:
 
 * entitlement to benefits and help when benefits are refused
 * benefit appeals and tribunals
@@ -3782,6 +3944,7 @@ The client's problem will be in scope for legal aid if:
 * a first-tier tribunal has refused them permission to appeal a benefits decision in the Upper Tribunal, and they want advice about how to appeal this decision
 
 All other benefit problems are out of scope. {% endblocktrans %}</data>
+      <data key="d10">n165</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9767.626587301587" y="130.0"/>
@@ -3801,7 +3964,8 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n166">
       <data key="d3">{% trans "The client wants to appeal their benefits decision on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court. (Or a first-tier tribunal has refused the client permission to appeal their benefits decision in the Upper Tribunal and they want advice about how to appeal this decision.)" %}</data>
       <data key="d4">{% trans "Primary question: Cl" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n166</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9947.626587301587" y="200.0"/>
@@ -3826,6 +3990,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
 	<category>benefits</category>
 </context>
       </data>
+      <data key="d10">n167</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9947.626587301587" y="470.0"/>
@@ -3845,6 +4010,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n168">
       <data key="d3">{% trans "None of the above" %}</data>
       <data key="d4">{% trans "None of the above" %}</data>
+      <data key="d10">n168</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9767.626587301587" y="200.0"/>
@@ -3869,6 +4035,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
 	<category>benefits</category>
 </context>
       </data>
+      <data key="d10">n169</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9767.626587301587" y="470.0"/>
@@ -3888,8 +4055,8 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n170">
       <data key="d3">{% trans "Employment" %}</data>
       <data key="d4">{% trans "Employment" %}</data>
-      <data key="d8">7</data>
-      <data key="d9">{% blocktrans %}The employment category covers advice on
+      <data key="d7">7</data>
+      <data key="d8">{% blocktrans %}The employment category covers advice on
 
 * redundancies, dismissals and disciplinaries
 * contracts, workers' rights and working hours
@@ -3897,6 +4064,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
 * employment status
 * holidays, time off, sick leave, maternity &amp; paternity leave and other absence
 * pay, tax and the National Minimum Wage.{% endblocktrans %}</data>
+      <data key="d10">n170</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10630.126587301587" y="130.0"/>
@@ -3916,14 +4084,15 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n171">
       <data key="d3">{% trans "The client may have been discriminated against (eg employer not making reasonable adjustments for a disability)" %}</data>
       <data key="d4">{% trans "Discrimination may a" %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% blocktrans %}More examples of discrimination issues include issues around:
+      <data key="d7">1</data>
+      <data key="d8">{% blocktrans %}More examples of discrimination issues include issues around:
 
 * equal pay
 * being treated worse due to pregnancy or maternity leave
 * sexual harassment in the workplace
 * being victimised due to having made a claim of discrimination in the workplace
 {% endblocktrans %}</data>
+      <data key="d10">n171</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10487.626587301587" y="200.0"/>
@@ -3943,6 +4112,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n172">
       <data key="d3">{% trans "Discrimination does not apply (Confirm no other matters such as homelessness arise as a result of employment issue)" %}</data>
       <data key="d4">{% trans "Discrimination does " %}</data>
+      <data key="d10">n172</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10667.626587301587" y="200.0"/>
@@ -3967,6 +4137,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
 	<category>employment</category>
 </context>
       </data>
+      <data key="d10">n173</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10520.396031746031" y="470.0"/>
@@ -3986,8 +4157,9 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n174">
       <data key="d3">{% trans "Consumer" %}</data>
       <data key="d4">{% trans "Consumer" %}</data>
-      <data key="d8">8</data>
-      <data key="d9">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other consumer cases will be out of scope. " %}</data>
+      <data key="d7">8</data>
+      <data key="d8">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other consumer cases will be out of scope. " %}</data>
+      <data key="d10">n174</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10270.126587301587" y="130.0"/>
@@ -4008,6 +4180,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
       <data key="d3">{% trans "The client may have been discriminated against
 " %}</data>
       <data key="d4">{% trans "Emp discrimination?" %}</data>
+      <data key="d10">n175</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10127.626587301587" y="200.0"/>
@@ -4027,6 +4200,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n176">
       <data key="d3">{% trans "Discrimination does not apply" %}</data>
       <data key="d4">{% trans "out of sco" %}</data>
+      <data key="d10">n176</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10307.626587301587" y="200.0"/>
@@ -4051,6 +4225,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
 	<category>consumer</category>
 </context>
       </data>
+      <data key="d10">n177</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10307.626587301587" y="470.0"/>
@@ -4070,8 +4245,9 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n178">
       <data key="d3">{% trans "Actions against the police" %}</data>
       <data key="d4">{% trans "Actions against the " %}</data>
-      <data key="d8">9</data>
-      <data key="d9">{% trans "The key thing to determine in actions against the police is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow. " %}</data>
+      <data key="d7">9</data>
+      <data key="d8">{% trans "The key thing to determine in actions against the police is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow. " %}</data>
+      <data key="d10">n178</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10885.126587301587" y="130.0"/>
@@ -4091,7 +4267,8 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n179">
       <data key="d3">{% trans "The client has been discriminated against (eg a police officer used racially abusive language when making an arrest) " %}</data>
       <data key="d4">{% trans "Client has been subj" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n179</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10847.626587301587" y="200.0"/>
@@ -4111,6 +4288,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n180">
       <data key="d3">{% trans "Discrimination does not apply" %}</data>
       <data key="d4">{% trans "Client has not been " %}</data>
+      <data key="d10">n180</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11027.626587301587" y="200.0"/>
@@ -4135,6 +4313,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
 	<category>aap</category>
 </context>
       </data>
+      <data key="d10">n181</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10705.126587301587" y="470.0"/>
@@ -4154,7 +4333,8 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n182">
       <data key="d3">{% trans "Crime" %}</data>
       <data key="d4">{% trans "Crime" %}</data>
-      <data key="d8">10</data>
+      <data key="d7">10</data>
+      <data key="d10">n182</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13590.655952380952" y="130.0"/>
@@ -4179,6 +4359,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
 	<category>crime</category>
 </context>
       </data>
+      <data key="d10">n183</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13590.655952380952" y="340.0"/>
@@ -4198,9 +4379,10 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
     <node id="n184">
       <data key="d3">{% trans "Clinical negligence" %}</data>
       <data key="d4">{% trans "Clinical Negligence" %}</data>
-      <data key="d8">12</data>
-      <data key="d9">{% blocktrans %}Signpost clinical negligence cases to face-to-face providers in the client's area. 
+      <data key="d7">12</data>
+      <data key="d8">{% blocktrans %}Signpost clinical negligence cases to face-to-face providers in the client's area.
 Generally, only cases that relate to infants with a brain injury are in scope for legal aid but it's possible that other cases may qualify for exceptional case funding. {% endblocktrans %}</data>
+      <data key="d10">n184</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13410.655952380952" y="130.0"/>
@@ -4225,6 +4407,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 	<category>clinneg</category>
 </context>
       </data>
+      <data key="d10">n185</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13410.655952380952" y="340.0"/>
@@ -4244,7 +4427,8 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n186">
       <data key="d3">{% trans "Immigration and asylum" %}</data>
       <data key="d4">{% trans "Immigration and Asyl" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n186</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13088.155952380952" y="130.0"/>
@@ -4264,6 +4448,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n187">
       <data key="d3">{% trans "Any other matter" %}</data>
       <data key="d4">{% trans "Client not subject t" %}</data>
+      <data key="d10">n187</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13050.655952380952" y="200.0"/>
@@ -4288,6 +4473,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 	<category>immigration</category>
 </context>
       </data>
+      <data key="d10">n188</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13050.655952380952" y="470.0"/>
@@ -4307,7 +4493,8 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n189">
       <data key="d3">{% trans "The client is losing their home due to the Border Force refusing to support them or withdrawing their support" %}</data>
       <data key="d4">{% trans "Client is losing hom" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n189</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13230.655952380952" y="200.0"/>
@@ -4332,6 +4519,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n190</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13230.655952380952" y="340.0"/>
@@ -4351,7 +4539,8 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n191">
       <data key="d3">{% trans "Mental health" %}</data>
       <data key="d4">{% trans "Mental Health" %}</data>
-      <data key="d8">13</data>
+      <data key="d7">13</data>
+      <data key="d10">n191</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12867.89126984127" y="130.0"/>
@@ -4376,6 +4565,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 	<category>mentalhealth</category>
 </context>
       </data>
+      <data key="d10">n192</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12867.89126984127" y="340.0"/>
@@ -4395,8 +4585,9 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n193">
       <data key="d3">{% trans "Personal injury" %}</data>
       <data key="d4">{% trans "Personal Injury" %}</data>
-      <data key="d8">14</data>
-      <data key="d9">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other personal injury cases will be out of scope. " %}</data>
+      <data key="d7">14</data>
+      <data key="d8">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other personal injury cases will be out of scope. " %}</data>
+      <data key="d10">n193</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12685.126587301587" y="130.0"/>
@@ -4421,6 +4612,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 	<category>pi</category>
 </context>
       </data>
+      <data key="d10">n194</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12685.126587301587" y="340.0"/>
@@ -4442,7 +4634,8 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       <data key="d4"/>
       <data key="d5">Discrimination applies
 </data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n195</data>
       <data key="d12">The client has been discriminated against
 </data>
       <data key="d13">
@@ -4465,6 +4658,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n196">
       <data key="d3">{% trans "Discrimination does not apply" %}</data>
       <data key="d4"/>
+      <data key="d10">n196</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="30.0" x="2699.796825396825" y="531.1328125"/>
@@ -4490,6 +4684,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n197</data>
       <data key="d12">OUTOFSCOPE</data>
       <data key="d13">
         <y:ShapeNode>
@@ -4511,7 +4706,8 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n198">
       <data key="d3">{% trans "The client has been discriminated against" %}</data>
       <data key="d4">{% trans "If none of the above" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n198</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4537.745238095238" y="470.0"/>
@@ -4532,7 +4728,8 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n199">
       <data key="d3">{% trans "Discrimination does not apply" %}</data>
       <data key="d4">{% trans "No discrimination" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n199</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4357.745238095238" y="470.0"/>
@@ -4553,7 +4750,8 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n200">
       <data key="d3">{% trans "Client in rented accomodation" %}</data>
       <data key="d4">{% trans "Rented property" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n200</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4215.245238095238" y="531.1328125"/>
@@ -4575,7 +4773,8 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n201">
       <data key="d3">{% trans "Client is homeowner" %}</data>
       <data key="d4">{% trans "Client is homeowner" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n201</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4395.245238095238" y="531.1328125"/>
@@ -4597,7 +4796,8 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       <data key="d3">{% trans "None of the above apply" %}</data>
       <data key="d4">{% trans "None of above
 " %}</data>
-      <data key="d8">4</data>
+      <data key="d7">4</data>
+      <data key="d10">n202</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4627.745238095238" y="340.0"/>
@@ -4622,6 +4822,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 	<category>debt</category>
 </context>
       </data>
+      <data key="d10">n203</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4665.245238095238" y="616.1328125"/>
@@ -4641,6 +4842,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n204">
       <data key="d3">{% trans "Client does not have BOTH evidence of the disrepair AND reason to believe the disrepair poses a serious risk of harm, injury or illness to them or their family " %}</data>
       <data key="d4">{% trans "Not both" %}</data>
+      <data key="d10">n204</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11965.126587301587" y="340.0"/>
@@ -4666,6 +4868,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n205</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12325.126587301587" y="531.1328125"/>
@@ -4690,6 +4893,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 	<category>debt</category>
 </context>
       </data>
+      <data key="d10">n206</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4395.245238095238" y="696.1328125"/>
@@ -4709,8 +4913,8 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
     <node id="n207">
       <data key="d3">{% trans "Client is the alleged abusive partner and wants to defend an injunction. This will be in scope for Civil Legal Advice." %}</data>
       <data key="d4">{% trans "Client wants to contest injunction DV" %}</data>
-      <data key="d8">4</data>
-      <data key="d9">{% blocktrans %}Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act. There are two main forms of injunction
+      <data key="d7">4</data>
+      <data key="d8">{% blocktrans %}Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act. There are two main forms of injunction
 
 * A non-molestation order - aimed at preventing your partner or ex-partner from using or threatening violence against you or your child, or intimidating, harassing or pestering you, in order to ensure the health, safety and well-being of yourself and your children.
 
@@ -4718,6 +4922,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 
 Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it.
 {% endblocktrans %}</data>
+      <data key="d10">n207</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="181.01944444444462" x="15406.736309523809" y="340.0"/>
@@ -4742,6 +4947,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n208</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15422.246031746032" y="470.0"/>
@@ -4761,9 +4967,10 @@ Some clients who are the alleged abuser do not agree with the injunction against
     <node id="n209">
       <data key="d3">{% trans "The client is being harassed by a partner, ex-partner or family member" %}</data>
       <data key="d4">{% trans "Client being harassed by partner or ex-partner" %}</data>
-      <data key="d8">3</data>
-      <data key="d9">{% trans "Seeking protection from a partner, ex partner or other family member due to a fear of violence or unwanted behaviour which is causing them alarm or distress. Also covers client who have previously taken action to stop harassment (i.e. sought an injunction) but this is not being complied with.
+      <data key="d7">3</data>
+      <data key="d8">{% trans "Seeking protection from a partner, ex partner or other family member due to a fear of violence or unwanted behaviour which is causing them alarm or distress. Also covers client who have previously taken action to stop harassment (i.e. sought an injunction) but this is not being complied with.
 " %}</data>
+      <data key="d10">n209</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="181.01944444444462" x="15195.146230158729" y="340.0"/>
@@ -4788,6 +4995,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n210</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15210.655952380952" y="470.0"/>
@@ -4807,7 +5015,8 @@ Some clients who are the alleged abuser do not agree with the injunction against
     <node id="n211">
       <data key="d3">{% trans "The client's problem is about admissions" %}</data>
       <data key="d4">{% trans "Admissions" %}</data>
-      <data key="d8">3</data>
+      <data key="d7">3</data>
+      <data key="d10">n211</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8867.626587301587" y="340.0"/>
@@ -4827,7 +5036,8 @@ Some clients who are the alleged abuser do not agree with the injunction against
     <node id="n212">
       <data key="d3">{% trans "The client's problem is about bullying, and none of the other issues above apply" %}</data>
       <data key="d4">{% trans "Bullying" %}</data>
-      <data key="d8">9</data>
+      <data key="d7">9</data>
+      <data key="d10">n212</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9047.626587301587" y="340.0"/>
@@ -4847,7 +5057,8 @@ Some clients who are the alleged abuser do not agree with the injunction against
     <node id="n213">
       <data key="d3">{% trans "A child or young person is out of school or in a Pupil Referral Unit, or is not receiving full-time education" %}</data>
       <data key="d4">{% trans "Child out of school" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n213</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8687.626587301587" y="340.0"/>
@@ -4867,7 +5078,8 @@ Some clients who are the alleged abuser do not agree with the injunction against
     <node id="n214">
       <data key="d3">{% trans "The client's problem is about exclusion from school" %}</data>
       <data key="d4">{% trans "Exclusions" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n214</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8507.626587301587" y="340.0"/>
@@ -4887,7 +5099,8 @@ Some clients who are the alleged abuser do not agree with the injunction against
     <node id="n215">
       <data key="d3">{% trans "The client's problem is about further education" %}</data>
       <data key="d4">{% trans "Further education" %}</data>
-      <data key="d8">5</data>
+      <data key="d7">5</data>
+      <data key="d10">n215</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7417.745238095238" y="340.0"/>
@@ -4905,10 +5118,11 @@ Some clients who are the alleged abuser do not agree with the injunction against
       </data>
     </node>
     <node id="n216">
-      <data key="d3">{% blocktrans %}The problem is about a school, college or local authority's failure to 
+      <data key="d3">{% blocktrans %}The problem is about a school, college or local authority's failure to
 provide for a child or young person's educational needs, or specifically about the failure to provide the support set out in the assessment of their needs{% endblocktrans %}</data>
       <data key="d4">{% trans "Failure to provide support" %}</data>
-      <data key="d8">6</data>
+      <data key="d7">6</data>
+      <data key="d10">n216</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8317.745238095238" y="340.0"/>
@@ -4928,7 +5142,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n217">
       <data key="d3">{% trans "The client's problem is about higher education" %}</data>
       <data key="d4">{% trans "Higher education" %}</data>
-      <data key="d8">7</data>
+      <data key="d7">7</data>
+      <data key="d10">n217</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7758.995238095238" y="340.0"/>
@@ -4948,6 +5163,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n218">
       <data key="d3">{% trans "None of the above" %}</data>
       <data key="d4">{% trans "None of the above" %}</data>
+      <data key="d10">n218</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7237.745238095238" y="340.0"/>
@@ -4967,7 +5183,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n219">
       <data key="d3">{% trans "The client's problem is about transport" %}</data>
       <data key="d4">{% trans "Transport" %}</data>
-      <data key="d8">8</data>
+      <data key="d7">8</data>
+      <data key="d10">n219</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8137.745238095238" y="340.0"/>
@@ -4992,6 +5209,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n220</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8857.745238095238" y="470.0"/>
@@ -5016,6 +5234,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n221</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8317.745238095238" y="470.0"/>
@@ -5040,6 +5259,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n222</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9404.814682539683" y="470.0"/>
@@ -5059,7 +5279,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n223">
       <data key="d3">{% trans "Any other issue" %}</data>
       <data key="d4">{% trans "Any other issue" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n223</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9037.745238095238" y="470.0"/>
@@ -5079,6 +5300,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n224">
       <data key="d3">{% trans "The client is enquiring about an application or admissions appeal in the normal admissions round (ie reception and secondary school transfers) " %}</data>
       <data key="d4">{% trans "Normal admissions round" %}</data>
+      <data key="d10">n224</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9219.874206349206" y="470.0"/>
@@ -5103,6 +5325,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n225</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9219.874206349206" y="616.1328125"/>
@@ -5127,6 +5350,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n226</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9037.745238095238" y="531.1328125"/>
@@ -5146,7 +5370,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n227">
       <data key="d3">{% trans "Negligence in the provision of education" %}</data>
       <data key="d4">{% trans "Education negligence" %}</data>
-      <data key="d8">4</data>
+      <data key="d7">4</data>
+      <data key="d10">n227</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7057.745238095238" y="340.0"/>
@@ -5171,6 +5396,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n228</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8137.745238095238" y="470.0"/>
@@ -5190,7 +5416,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n229">
       <data key="d3">{% trans "The client's problem relates to special needs not being met properly for a child of compulsory school age, or a young person in compulsory or further education" %}</data>
       <data key="d4">{% trans "SEN negligence" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n229</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6877.745238095238" y="470.0"/>
@@ -5210,6 +5437,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n230">
       <data key="d3">{% trans "Any other problem" %}</data>
       <data key="d4">{% trans "Education negligence" %}</data>
+      <data key="d10">n230</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6697.745238095238" y="470.0"/>
@@ -5234,6 +5462,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n231</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6877.745238095238" y="531.1328125"/>
@@ -5258,6 +5487,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n232</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6697.745238095238" y="616.1328125"/>
@@ -5277,7 +5507,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n233">
       <data key="d3">{% trans "There has been a formal fixed term exclusion from school (a suspension) of up to five days and the child has not received more than one other fixed term exclusion in the last school year" %}</data>
       <data key="d4">{% trans "Suspension" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n233</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8677.745238095238" y="470.0"/>
@@ -5297,7 +5528,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n234">
       <data key="d3">{% trans "Other" %}</data>
       <data key="d4">{% trans "Other" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n234</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8497.745238095238" y="470.0"/>
@@ -5322,6 +5554,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n235</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8497.745238095238" y="531.1328125"/>
@@ -5346,6 +5579,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n236</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8677.745238095238" y="616.1328125"/>
@@ -5365,7 +5599,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n237">
       <data key="d3">{% trans "Other" %}</data>
       <data key="d4">{% trans "Other" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n237</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7057.745238095238" y="470.0"/>
@@ -5390,6 +5625,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n238</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7057.745238095238" y="616.1328125"/>
@@ -5409,7 +5645,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n239">
       <data key="d3">{% trans "The client's problem is about SEN, transport, admissions or exclusions" %}</data>
       <data key="d4">{% trans "SEN, transport etc" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n239</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7237.745238095238" y="470.0"/>
@@ -5434,6 +5671,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n240</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7237.745238095238" y="531.1328125"/>
@@ -5453,7 +5691,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n241">
       <data key="d3">{% trans "The client's problem is about fees or funding" %}</data>
       <data key="d4">{% trans "Fees or funding" %}</data>
-      <data key="d8">3</data>
+      <data key="d7">3</data>
+      <data key="d10">n241</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7957.745238095238" y="470.0"/>
@@ -5478,6 +5717,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n242</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7957.745238095238" y="531.1328125"/>
@@ -5497,7 +5737,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n243">
       <data key="d3">{% trans "The client's problem is about admissions" %}</data>
       <data key="d4">{% trans "Admissions case" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n243</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7597.745238095238" y="470.0"/>
@@ -5522,6 +5763,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n244</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7597.745238095238" y="531.1328125"/>
@@ -5541,7 +5783,8 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n245">
       <data key="d3">{% trans "The client's problem is about exclusion - but not for failure at exams or malpractice allegations eg plagiarism" %}</data>
       <data key="d4">{% trans "Exclusion case" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n245</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7417.745238095238" y="470.0"/>
@@ -5566,6 +5809,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n246</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7417.745238095238" y="531.1328125"/>
@@ -5585,6 +5829,7 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n247">
       <data key="d3">{% trans "Any other problem" %}</data>
       <data key="d4">{% trans "Other" %}</data>
+      <data key="d10">n247</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7777.745238095238" y="470.0"/>
@@ -5609,6 +5854,7 @@ provide for a child or young person's educational needs, or specifically about t
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n248</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7777.745238095238" y="616.1328125"/>
@@ -5628,13 +5874,14 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n249">
       <data key="d3">{% trans "Pregnancy or maternity" %}</data>
       <data key="d4">{% trans "Disability Pregnancy" %}</data>
-      <data key="d8">4</data>
-      <data key="d9">{% blocktrans %}This refers to:
+      <data key="d7">4</data>
+      <data key="d8">{% blocktrans %}This refers to:
 * pregnancy
 * having recently given birth (and can include the need to breastfeed)
 
 {% endblocktrans %}</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n249</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -5655,9 +5902,10 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n250">
       <data key="d3">{% trans "Race" %}</data>
       <data key="d4">{% trans "Race" %}</data>
-      <data key="d8">7</data>
-      <data key="d9">{% trans "Race refers to a group of people defined by their race, colour, nationality (including citizenship), ethnic or national origins." %}</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d7">7</data>
+      <data key="d8">{% trans "Race refers to a group of people defined by their race, colour, nationality (including citizenship), ethnic or national origins." %}</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n250</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -5678,10 +5926,11 @@ provide for a child or young person's educational needs, or specifically about t
     <node id="n251">
       <data key="d3">{% trans "Religion or belief (or lack of belief)" %}</data>
       <data key="d4">{% trans "Disability Pregnancy" %}</data>
-      <data key="d8">8</data>
-      <data key="d9">{% blocktrans %}Religion refers to any religious or philosophical belief. This also includes a lack of religious belief (eg atheism).
+      <data key="d7">8</data>
+      <data key="d8">{% blocktrans %}Religion refers to any religious or philosophical belief. This also includes a lack of religious belief (eg atheism).
 Generally, a belief should affect your life choices or the way you live for it to be included in the definition.{% endblocktrans %}</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n251</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -5702,8 +5951,9 @@ Generally, a belief should affect your life choices or the way you live for it t
     <node id="n252">
       <data key="d3">{% trans "Sex" %}</data>
       <data key="d4">{% trans "sex" %}</data>
-      <data key="d8">9</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d7">9</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n252</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -5724,10 +5974,11 @@ Generally, a belief should affect your life choices or the way you live for it t
     <node id="n253">
       <data key="d3">{% trans "Sexual orientation" %}</data>
       <data key="d4">{% trans "sexual orientation" %}</data>
-      <data key="d8">10</data>
-      <data key="d9">{% blocktrans %}Sexual orientation is whether a person's sexual attraction is towards their own sex, the opposite sex or to both sexes.
+      <data key="d7">10</data>
+      <data key="d8">{% blocktrans %}Sexual orientation is whether a person's sexual attraction is towards their own sex, the opposite sex or to both sexes.
 This can also cover situations where discrimination is based on perceived sexual orientation, which may not be the case.{% endblocktrans %}</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n253</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -5748,14 +5999,15 @@ This can also cover situations where discrimination is based on perceived sexual
     <node id="n254">
       <data key="d3">{% trans "Gender reassignment" %}</data>
       <data key="d4">{% trans "gender reassignment" %}</data>
-      <data key="d8">3</data>
-      <data key="d9">{% blocktrans %}It is unlawful to discriminate against someone due to their gender reassignment.
+      <data key="d7">3</data>
+      <data key="d8">{% blocktrans %}It is unlawful to discriminate against someone due to their gender reassignment.
 
-This includes where someone is: 
+This includes where someone is:
 * is proposing to undergo gender reassignment
 * is currently undergoing gender reassignment
 * has already undergone (or partially undergone) the process of gender reassignment{% endblocktrans %}</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n254</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -5776,8 +6028,9 @@ This includes where someone is:
     <node id="n255">
       <data key="d3">{% trans "Pregnancy or maternity" %}</data>
       <data key="d4">{% trans "Discrimination due to pregnancy or having a child" %}</data>
-      <data key="d8">5</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d7">5</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n255</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -5798,8 +6051,9 @@ This includes where someone is:
     <node id="n256">
       <data key="d3">{% trans "Disability or failure to make reasonable adjustments for a disabled person" %}</data>
       <data key="d4">{% trans "Disability Pregnancy" %}</data>
-      <data key="d8">6</data>
-      <data key="d10">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d7">6</data>
+      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">n256</data>
       <data key="d11"/>
       <data key="d13">
         <y:ShapeNode>
@@ -5820,7 +6074,8 @@ This includes where someone is:
     <node id="n257">
       <data key="d3">{% trans "Public law" %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n257</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12505.126587301587" y="130.0"/>
@@ -5845,6 +6100,7 @@ This includes where someone is:
 	<category>publiclaw</category>
 </context>
       </data>
+      <data key="d10">n258</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12505.126587301587" y="340.0"/>
@@ -5864,7 +6120,8 @@ This includes where someone is:
     <node id="n259">
       <data key="d3">{% trans "Community care" %}</data>
       <data key="d4">{% trans "Community Care" %}</data>
-      <data key="d8">10</data>
+      <data key="d7">10</data>
+      <data key="d10">n259</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="322.9904761904762" y="130.0"/>
@@ -5890,6 +6147,7 @@ This includes where someone is:
 	<category>commcare</category>
 </context>
       </data>
+      <data key="d10">n260</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="180.2452380952381" y="470.0"/>
@@ -5909,7 +6167,8 @@ This includes where someone is:
     <node id="n261">
       <data key="d3">{% trans "The client has been identified as homeless through a Community Care Assessment" %}</data>
       <data key="d4">{% trans "Community Care Assesment - Homeless" %}</data>
-      <data key="d8">10</data>
+      <data key="d7">10</data>
+      <data key="d10">n261</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="360.4904761904762" y="200.0"/>
@@ -5930,7 +6189,8 @@ This includes where someone is:
     <node id="n262">
       <data key="d3">{% trans "The client has not been identified as homeless through a Community Care Assessment" %}</data>
       <data key="d4">{% trans "ComCare: Not homeless" %}</data>
-      <data key="d8">10</data>
+      <data key="d7">10</data>
+      <data key="d10">n262</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="180.2452380952381" y="200.0"/>
@@ -5950,13 +6210,14 @@ This includes where someone is:
     <node id="n263">
       <data key="d3">{% trans "Client wants advice about international family maintenance " %}</data>
       <data key="d4">{% trans "International family maintenance" %}</data>
-      <data key="d8">3</data>
-      <data key="d9">{% blocktrans %}Covers enforcement of maintenance orders made outside the UK. Clients who have obtained maintenance orders in one country can apply to have them registered and enforced in another country. 
+      <data key="d7">3</data>
+      <data key="d8">{% blocktrans %}Covers enforcement of maintenance orders made outside the UK. Clients who have obtained maintenance orders in one country can apply to have them registered and enforced in another country. 
 
 So where a client wants to obtain an order outside the UK this will not be in scope.
 
 **NOTE: These are very unusual cases.**
 {% endblocktrans %}</data>
+      <data key="d10">n263</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14130.655952380952" y="470.0"/>
@@ -5982,6 +6243,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n264</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14130.655952380952" y="531.1328125"/>
@@ -6001,7 +6263,8 @@ So where a client wants to obtain an order outside the UK this will not be in sc
     <node id="n265">
       <data key="d3">{% trans "None of the above" %}</data>
       <data key="d4">{% trans "none of the above" %}</data>
-      <data key="d8">999</data>
+      <data key="d7">999</data>
+      <data key="d10">n265</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9227.4373015873" y="1076.1328125"/>
@@ -6027,6 +6290,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n266</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9227.4373015873" y="1786.1328125"/>
@@ -6046,6 +6310,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
     <node id="n267">
       <data key="d3">{% trans "Other" %}</data>
       <data key="d4">{% trans "Other" %}</data>
+      <data key="d10">n267</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9423.0623015873" y="1736.1328125"/>
@@ -6070,6 +6335,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
 	<category>discrimination</category>
 </context>
       </data>
+      <data key="d10">n268</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9423.0623015873" y="1836.1328125"/>
@@ -6089,7 +6355,8 @@ So where a client wants to obtain an order outside the UK this will not be in sc
     <node id="n269">
       <data key="d3">{% trans "Discrimination" %}</data>
       <data key="d4">{% trans "Discrimination" %}</data>
-      <data key="d8">4</data>
+      <data key="d7">4</data>
+      <data key="d10">n269</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11207.626587301587" y="200.0"/>
@@ -6110,7 +6377,8 @@ So where a client wants to obtain an order outside the UK this will not be in sc
       <data key="d3">{% trans "None of the above" %}</data>
       <data key="d4">{% trans "Personal Injury" %}</data>
       <data key="d6"/>
-      <data key="d9">{% trans "Not a Civil Legal Advice category or legal problem." %}</data>
+      <data key="d8">{% trans "Not a Civil Legal Advice category or legal problem." %}</data>
+      <data key="d10">n270</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="0.0" y="130.0"/>
@@ -6135,6 +6403,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
 	<category>none</category>
 </context>
       </data>
+      <data key="d10">n271</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="0.0" y="340.0"/>
@@ -6156,7 +6425,8 @@ So where a client wants to obtain an order outside the UK this will not be in sc
 
 *Click 'Next' to continue*{% endblocktrans %}</data>
       <data key="d4">{% trans "REMEMBER: report" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n272</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15851.336111111112" y="470.0"/>
@@ -6176,12 +6446,13 @@ So where a client wants to obtain an order outside the UK this will not be in sc
     <node id="n273">
       <data key="d3">{% trans "Legal advice in support of family mediation" %}</data>
       <data key="d4">{% trans "Mediation" %}</data>
-      <data key="d8">3</data>
-      <data key="d9">{% blocktrans %}Family mediation can help people whose relationships have broken down to reach their own agreement about money, property and childcare, without going to court. 
+      <data key="d7">3</data>
+      <data key="d8">{% blocktrans %}Family mediation can help people whose relationships have broken down to reach their own agreement about money, property and childcare, without going to court.
 
 If the client wants legal advice to support of ongoing or recently completed mediation process this will be in scope. This can include making any agreement reached in mediation legally binding by applying to the court (a consent order).
 
 *Please note: Mediation must be ongoing or have concluded. Clients will not qualify for Civil Legal Advice advice where mediation has not yet taken place or they have only attended Mediation Assessment Information Meeting (MIAM).*{% endblocktrans %}</data>
+      <data key="d10">n273</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14130.655952380952" y="340.0"/>
@@ -6207,6 +6478,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n274</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13950.655952380952" y="470.0"/>
@@ -6233,7 +6505,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that these organisations/this organisation will take on your case under legal aid so please check with them to see whether they are able to help you. If you do not qualify for legal aid you may have to pay for their service. So check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Primary question: Cl" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n275</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9947.626587301587" y="340.0"/>
@@ -6262,6 +6535,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n276</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10885.126587301587" y="340.0"/>
@@ -6289,6 +6563,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n277</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11605.126587301587" y="470.0"/>
@@ -6316,6 +6591,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n278</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12325.126587301587" y="470.0"/>
@@ -6343,6 +6619,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n279</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4665.245238095238" y="531.1328125"/>
@@ -6370,6 +6647,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n280</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4395.245238095238" y="616.1328125"/>
@@ -6397,6 +6675,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n281</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="2677.296825396825" y="616.1328125"/>
@@ -6424,6 +6703,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n282</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9219.874206349206" y="531.1328125"/>
@@ -6451,6 +6731,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n283</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="8677.745238095238" y="531.1328125"/>
@@ -6478,6 +6759,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n284</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6697.745238095238" y="531.1328125"/>
@@ -6505,6 +6787,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n285</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7057.745238095238" y="531.1328125"/>
@@ -6532,6 +6815,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n286</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="7777.745238095238" y="531.1328125"/>
@@ -6559,6 +6843,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n287</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="11065.126587301587" y="470.0"/>
@@ -6587,6 +6872,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 *I can’t guarantee that they will be able to help so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
 {% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n288</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13860.655952380952" y="696.1328125"/>
@@ -6614,6 +6900,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n289</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="4177.745238095238" y="340.0"/>
@@ -6641,6 +6928,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n290</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9227.4373015873" y="1736.1328125"/>
@@ -6668,6 +6956,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n291</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12864.9373015873" y="1786.1328125"/>
@@ -6695,6 +6984,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n292</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12144.9373015873" y="1786.1328125"/>
@@ -6722,6 +7012,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n293</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10884.9373015873" y="1786.1328125"/>
@@ -6749,6 +7040,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n294</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9423.0623015873" y="1786.1328125"/>
@@ -6776,7 +7068,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n295</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12505.126587301587" y="200.0"/>
@@ -6804,7 +7097,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n296</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13590.655952380952" y="200.0"/>
@@ -6832,7 +7126,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n297</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="0.0" y="200.0"/>
@@ -6860,7 +7155,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n298</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13410.655952380952" y="200.0"/>
@@ -6888,7 +7184,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n299</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12685.126587301587" y="200.0"/>
@@ -6916,7 +7213,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n300</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="180.2452380952381" y="340.0"/>
@@ -6944,7 +7242,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n301</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="12867.89126984127" y="200.0"/>
@@ -6972,7 +7271,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n302</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13050.655952380952" y="340.0"/>
@@ -7000,7 +7300,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n303</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10520.396031746031" y="340.0"/>
@@ -7028,7 +7329,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n304</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10705.126587301587" y="340.0"/>
@@ -7056,7 +7358,8 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
       <data key="d4">{% trans "Public Law" %}</data>
-      <data key="d8">11</data>
+      <data key="d7">11</data>
+      <data key="d10">n305</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10307.626587301587" y="340.0"/>
@@ -7081,6 +7384,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 	<category>housing</category>
 </context>
       </data>
+      <data key="d10">n306</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10885.126587301587" y="470.0"/>
@@ -7100,12 +7404,13 @@ If the client wants legal advice to support of ongoing or recently completed med
     <node id="n307">
       <data key="d3">{% trans "Domestic violence or abuse – including issues arising from forced marriage, child abduction, and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser." %}</data>
       <data key="d4">{% trans "Client wants to prev" %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% blocktrans %}Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act.
+      <data key="d7">1</data>
+      <data key="d8">{% blocktrans %}Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act.
 
-Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it. 
+Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it.
 
 Guidance contains an article "Domestic violence and abuse - definition" for more information. Search for 'dv' or 'abuse' to find it quickest.{% endblocktrans %}</data>
+      <data key="d10">n307</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15434.746031746032" y="200.0"/>
@@ -7125,8 +7430,9 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
     <node id="n308">
       <data key="d3">{% trans "Forced marriage - the client wants advice" %}</data>
       <data key="d4">{% trans "Client wants to prev" %}</data>
-      <data key="d8">6</data>
-      <data key="d9">{% trans "This is where a marriage is about to take place or has taken place without the full and free consent of each party. This may be due to actual or threats of physical force or violence, emotional pressure or psychological abuse. Civil Legal Advice Specialists can offer advice on seeking an order to protect the client from such a marriage occuring or how to end such a marriage." %}</data>
+      <data key="d7">6</data>
+      <data key="d8">{% trans "This is where a marriage is about to take place or has taken place without the full and free consent of each party. This may be due to actual or threats of physical force or violence, emotional pressure or psychological abuse. Civil Legal Advice Specialists can offer advice on seeking an order to protect the client from such a marriage occuring or how to end such a marriage." %}</data>
+      <data key="d10">n308</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15015.146031746031" y="340.0"/>
@@ -7151,6 +7457,7 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n309</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="15030.655952380952" y="470.0"/>
@@ -7170,6 +7477,7 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
     <node id="n310">
       <data key="d3">{% trans "Other" %}</data>
       <data key="d4">{% trans "Other" %}</data>
+      <data key="d10">n310</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13770.655952380952" y="200.0"/>
@@ -7194,6 +7502,7 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n311</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13770.655952380952" y="470.0"/>
@@ -7221,6 +7530,7 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n312</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13770.655952380952" y="340.0"/>
@@ -7242,17 +7552,18 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
 
 *On the following screen please select if they want to find a local mediator, or that mediation isn't relevant to the problem. Click next to continue.*{% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above (i" %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% blocktrans %}Family mediators are trained to work with people whose relationships have broken down. They will listen to both sides of the argument and help you to reach your own agreement about money, property and childcare, without going to court.
+      <data key="d7">1</data>
+      <data key="d8">{% blocktrans %}Family mediators are trained to work with people whose relationships have broken down. They will listen to both sides of the argument and help you to reach your own agreement about money, property and childcare, without going to court.
 
 It is not just separating couples that can use mediation. It may also help grandparents or step-families resolve their issues.
 
-Mediation provides a safe and neutral setting for you to talk and explore your concerns and needs to each other.  
+Mediation provides a safe and neutral setting for you to talk and explore your concerns and needs to each other.
 
 Search for 'Family Mediation' in the guidance search box for more help.
 
 If you are qualify you can get legal aid for family mediation as well as legal advice to support the mediation process. This can include the cost of making any agreement that you reach in mediation legally binding by applying to the court - this is called applying for a consent order.
 {% endblocktrans %}</data>
+      <data key="d10">n313</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13898.155952380952" y="531.1328125"/>
@@ -7272,7 +7583,8 @@ If you are qualify you can get legal aid for family mediation as well as legal a
     <node id="n314">
       <data key="d3">{% trans "Client wishes to find mediator." %}</data>
       <data key="d4">{% trans "None of the above (i" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n314</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14078.155952380952" y="616.1328125"/>
@@ -7292,7 +7604,8 @@ If you are qualify you can get legal aid for family mediation as well as legal a
     <node id="n315">
       <data key="d3">{% trans "Client does not wish to find a mediator." %}</data>
       <data key="d4">{% trans "None of the above (i" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n315</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13898.155952380952" y="616.1328125"/>
@@ -7321,6 +7634,7 @@ If you are qualify you can get legal aid for family mediation as well as legal a
 You should now direct the client to their nearest contracted quality assured family mediation service using the directory (Find An Adviser tool)
 {% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n316</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14078.155952380952" y="696.1328125"/>
@@ -7340,9 +7654,10 @@ You should now direct the client to their nearest contracted quality assured fam
     <node id="n317">
       <data key="d3">{% trans "The client has already taken action to stop domestic violence (e.g. via an injunction) but needs to take further action as the order is not being complied with" %}</data>
       <data key="d4">{% trans "Client being harassed by partner or ex-partner" %}</data>
-      <data key="d8">2</data>
-      <data key="d9">{% trans "
+      <data key="d7">2</data>
+      <data key="d8">{% trans "
 " %}</data>
+      <data key="d10">n317</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="181.01944444444462" x="15798.326388888889" y="340.0"/>
@@ -7363,8 +7678,9 @@ You should now direct the client to their nearest contracted quality assured fam
       <data key="d3">{% blocktrans %}Private law problem (between two individuals)
 eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d4">{% trans "Private Law" %}</data>
-      <data key="d8">3</data>
-      <data key="d9">{% trans "Between two or more individuals." %}</data>
+      <data key="d7">3</data>
+      <data key="d8">{% trans "Between two or more individuals." %}</data>
+      <data key="d10">n318</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14310.655952380952" y="200.0"/>
@@ -7384,12 +7700,13 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n319">
       <data key="d3">{% trans "Divorce/Nullity/Dissolution" %}</data>
       <data key="d4">{% trans "Divorce" %}</data>
-      <data key="d8">1</data>
-      <data key="d9">{% blocktrans %}* Divorce - ending a marriage
+      <data key="d7">1</data>
+      <data key="d8">{% blocktrans %}* Divorce - ending a marriage
 * Nullity - declaring a marriage null and void so it is regarded not to have taken place
 * Dissolution - ending a same sex Civil Partnership
 
 {% endblocktrans %}</data>
+      <data key="d10">n319</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14701.905952380952" y="340.0"/>
@@ -7409,13 +7726,14 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n320">
       <data key="d3">{% trans "Children disputes (eg contact with children)" %}</data>
       <data key="d4">{% trans "Children disputes (a" %}</data>
-      <data key="d8">2</data>
-      <data key="d9">{% blocktrans %}Includes advice on the following areas
+      <data key="d7">2</data>
+      <data key="d8">{% blocktrans %}Includes advice on the following areas
 
 * Parental Responsibility
 * Contact
 * Residence
 * Transferring status of Parentage{% endblocktrans %}</data>
+      <data key="d10">n320</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14509.405952380952" y="340.0"/>
@@ -7435,12 +7753,13 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n321">
       <data key="d3">{% trans "Financial matters" %}</data>
       <data key="d4">{% trans "Financial matters" %}</data>
-      <data key="d8">3</data>
-      <data key="d9">{% blocktrans %}Includes advice on financial disputes arising out of:
+      <data key="d7">3</data>
+      <data key="d8">{% blocktrans %}Includes advice on financial disputes arising out of:
 
 * Divorce/separation (including civil partnerships) including Inheritance and trusts of land
 * Transfer of tenancies on divorce/separation
 * Maintenance{% endblocktrans %}</data>
+      <data key="d10">n321</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14310.655952380952" y="340.0"/>
@@ -7460,7 +7779,8 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n322">
       <data key="d3">{% trans "Not a dispute for which mediation is relevant." %}</data>
       <data key="d4">{% trans "None of the above (i" %}</data>
-      <data key="d8">3</data>
+      <data key="d7">3</data>
+      <data key="d10">n322</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13718.155952380952" y="616.1328125"/>
@@ -7481,7 +7801,8 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d3">{% trans "Domestic abuse during the last 2 years, or their abuser has a current criminal conviction
 " %}</data>
       <data key="d4">{% trans "Client has been subj" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n323</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14670.655952380952" y="470.0"/>
@@ -7503,7 +7824,8 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d3">{% blocktrans %}The client's child has experienced child abuse within the family within the last two years, or the abuser has a current criminal conviction
 (Remember that if the caller is the abuser, this will not be in scope) {% endblocktrans %}</data>
       <data key="d4">{% trans "Relationship has inv" %}</data>
-      <data key="d8">3</data>
+      <data key="d7">3</data>
+      <data key="d10">n324</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14850.655952380952" y="470.0"/>
@@ -7524,7 +7846,8 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n325">
       <data key="d3">{% trans "The client is under 18" %}</data>
       <data key="d4">{% trans "Client is under 18" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n325</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14490.655952380952" y="470.0"/>
@@ -7544,7 +7867,8 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n326">
       <data key="d3">{% trans "No abuse." %}</data>
       <data key="d4">{% trans "Client is under 18" %}</data>
-      <data key="d8">4</data>
+      <data key="d7">4</data>
+      <data key="d10">n326</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14310.655952380952" y="470.0"/>
@@ -7569,6 +7893,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n327</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14708.155952380952" y="616.1328125"/>
@@ -7593,6 +7918,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
 *Please note that before a specialist advisor can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof."*
 {% endblocktrans %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n328</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14708.155952380952" y="531.1328125"/>
@@ -7617,6 +7943,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
 	<category>family</category>
 </context>
       </data>
+      <data key="d10">n329</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="14490.655952380952" y="531.1328125"/>
@@ -7644,7 +7971,8 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
 
 *I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this."*{% endblocktrans %}</data>
       <data key="d4">{% trans "Primary question: Cl" %}</data>
-      <data key="d8">1</data>
+      <data key="d7">1</data>
+      <data key="d10">n330</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9767.626587301587" y="340.0"/>
@@ -7665,7 +7993,8 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n331">
       <data key="d3">{% trans "The matter relates to a child in care, a care leaver, or the call is made by a foster carer. " %}</data>
       <data key="d4">{% trans "Child in care" %}</data>
-      <data key="d8">5</data>
+      <data key="d7">5</data>
+      <data key="d10">n331</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6877.745238095238" y="200.0"/>
@@ -7690,6 +8019,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
 	<category>education</category>
 </context>
       </data>
+      <data key="d10">n332</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="6877.745238095238" y="340.0"/>
@@ -7709,6 +8039,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n333">
       <data key="d3">{% trans "Please note: if a local authority is trying to take a child into care, no financial assessment is needed for the parent. " %}</data>
       <data key="d4">{% trans "None of the above, a" %}</data>
+      <data key="d10">n333</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="16189.346031746032" y="340.0"/>
@@ -7728,7 +8059,8 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n334">
       <data key="d3">{% trans "The client may have been discriminated against (select this button to proceed to the discrimination category)" %}</data>
       <data key="d4">{% trans "Discrimination?" %}</data>
-      <data key="d8">2</data>
+      <data key="d7">2</data>
+      <data key="d10">n334</data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="9587.626587301587" y="200.0"/>
@@ -13040,7 +13372,6 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       </data>
     </edge>
     <edge id="e447" source="n159" target="n107">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="-33.33333333333394" ty="-15.0">
@@ -13056,7 +13387,6 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       </data>
     </edge>
     <edge id="e448" source="n334" target="n107">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0">
@@ -13070,7 +13400,6 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       </data>
     </edge>
     <edge id="e449" source="n175" target="n107">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="16.66666666666606" ty="-15.0"/>
@@ -13081,7 +13410,6 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       </data>
     </edge>
     <edge id="e450" source="n171" target="n107">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="33.33333333333394" ty="-15.0">
@@ -13097,7 +13425,6 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       </data>
     </edge>
     <edge id="e451" source="n179" target="n107">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="50.0" ty="-15.0">
@@ -13113,7 +13440,6 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       </data>
     </edge>
     <edge id="e452" source="n269" target="n107">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="66.66666666666606" ty="-15.0">
@@ -13129,7 +13455,6 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       </data>
     </edge>
     <edge id="e453" source="n198" target="n107">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="-50.0" ty="-15.0">
@@ -13143,7 +13468,6 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       </data>
     </edge>
     <edge id="e454" source="n195" target="n107">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="15.0" tx="-66.66666666666667" ty="-15.0">

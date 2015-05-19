@@ -22,10 +22,13 @@ class Command(LabelCommand):
 
     @classmethod
     def action_update(cls, **options):
-        def graphml_file_map(graphml_file):
-            return os.path.abspath(os.path.join(settings.PROJECT_ROOT, 'apps', 'diagnosis', 'data', graphml_file))
-        graphml_files = [settings.DIAGNOSIS_FILE_NAME, settings.CHECKER_DIAGNOSIS_FILE_NAME]
-        graphml_files = map(graphml_file_map, graphml_files)
+        def graphml_file_map(graphml_path):
+            return os.path.abspath(os.path.join(settings.PROJECT_ROOT, 'apps', 'diagnosis', *graphml_path))
+        graphml_paths = [
+            ('data', settings.DIAGNOSIS_FILE_NAME),
+            ('data', settings.CHECKER_DIAGNOSIS_FILE_NAME),
+        ]
+        graphml_files = map(graphml_file_map, graphml_paths)
         call_command('internationalise_graphs', *graphml_files, **options)
 
         cwd = os.getcwd()

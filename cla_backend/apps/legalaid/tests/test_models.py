@@ -20,7 +20,7 @@ from core.tests.mommy_utils import make_recipe, make_user
 
 from legalaid.models import Savings, Income, Deductions, PersonalDetails, \
     ThirdPartyDetails, AdaptationDetails, Person, Case, ValidateModelMixin, \
-    EligibilityCheck, Property, CaseKnowledgebaseAssignment, EODDetails
+    EligibilityCheck, Property, CaseKnowledgebaseAssignment
 
 
 def walk(coll):
@@ -1079,34 +1079,6 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
             ]
         )
 
-    def test_clone_eod_details(self):
-        def make_eod():
-            instance = make_recipe('legalaid.eod_details', notes='some notes')
-            make_recipe('legalaid.eod_details_category',
-                        eod_details=instance,
-                        category=EXPRESSIONS_OF_DISSATISFACTION.ATTITUDE,
-                        is_major=True)
-            return instance
-
-        self._test_clone(
-            Model=EODDetails,
-            instance_creator=make_eod,
-            non_equal_fields=['id', 'created', 'modified', 'reference'],
-            equal_fields=['notes'],
-        )
-
-        # _test_clone cannot do deep-model checking
-        eod_details = make_eod()
-        eod_details_clone = EODDetails.clone_from_obj(eod_details.pk)
-        for category in eod_details.categories.all():
-            match_count = 0
-            for category_clone in eod_details_clone.categories.all():
-                if category.category == category_clone.category and \
-                   category.is_major == category_clone.is_major and \
-                   category.eod_details_id != category_clone.eod_details_id:
-                    match_count += 1
-            self.assertEqual(match_count, 1, "EOD category sub-model wasn't cloned")
-
     def test_clone_person(self):
         self._test_clone(
             Model=Person,
@@ -1280,7 +1252,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
         self.assertAlternativeHelpArticles(case, new_case)
 
         for field in ['eligibility_check', 'diagnosis', 'thirdparty_details',
-                      'adaptation_details', 'eod_details']:
+                      'adaptation_details']:
             self.assertNotEqual(getattr(new_case, field), None)
             self.assertNotEqual(getattr(case, field), getattr(new_case, field))
 

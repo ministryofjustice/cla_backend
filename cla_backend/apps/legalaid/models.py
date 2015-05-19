@@ -205,31 +205,12 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     }
 
 
-class EODDetails(CloneModelMixin, TimeStampedModel):
+class EODDetails(TimeStampedModel):
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
 
-    cloning_config = {
-        'excludes': ['reference', 'created', 'modified'],
-    }
 
-    @classmethod
-    def clone_from_obj(cls, pk, config=None):
-        eod_details = super(EODDetails, cls).clone_from_obj(pk, config)
-
-        # deep-copy EOD categories
-        if not pk or not eod_details:
-            return None
-        instance = cls.objects.get(pk=pk)
-        copied_categories = [EODDetailsCategory(eod_details_id=eod_details.id,
-                                                category=category.category,
-                                                is_major=category.is_major) for category in instance.categories.all()]
-        eod_details.categories = copied_categories
-
-        return eod_details
-
-
-class EODDetailsCategory(CloneModelMixin, models.Model):
+class EODDetailsCategory(models.Model):
     eod_details = models.ForeignKey(EODDetails, related_name='categories')
     category = models.CharField(max_length=30, choices=EXPRESSIONS_OF_DISSATISFACTION,
                                 blank=True, null=True)
@@ -715,10 +696,11 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
-                    'callback_attempt', 'search_field', 'provider_assigned_at'
+                    'callback_attempt', 'search_field', 'provider_assigned_at',
+                    'eod_details',
                 ],
                 'clone_fks': [
-                    'thirdparty_details', 'adaptation_details', 'eod_details',
+                    'thirdparty_details', 'adaptation_details',
                 ],
                 'override_values': override_values
             }

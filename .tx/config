@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[cla-backend.django]
+file_filter = cla_backend/translations/<lang>/LC_MESSAGES/django.po
+source_file = cla_backend/translations/django.pot
+source_lang = en_GB
+type = PO

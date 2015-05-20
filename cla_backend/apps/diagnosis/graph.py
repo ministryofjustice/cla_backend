@@ -40,7 +40,7 @@ class GraphImporter(object):
         self.ns = self.doc.getroot().nsmap[None]
         self.process_properties_declaration()
 
-        internationalised_keys = [self.KEY_BODY, self.KEY_TITLE, self.KEY_HELP, self.KEY_HEADING]
+        internationalised_keys = [self.KEY_BODY, self.KEY_HELP, self.KEY_HEADING]
         internationalised_keys = [self.prop_mapping[key]['id'] for key in internationalised_keys]
 
         for data_element in self.xpath_ns(self.doc, '//ns:data'):

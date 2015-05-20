@@ -2250,7 +2250,7 @@
       <graph edgedefault="directed" id="n82:">
         <node id="n82::n0">
           <data key="d3">{% trans "OUTOFSCOPE" %}</data>
-          <data key="d7">{% trans "OUTOFSCOPE" %}</data>
+          <data key="d7">OUTOFSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>clinneg</category>
@@ -2277,7 +2277,7 @@ OUTOFSCOPE<y:LabelModel>
         </node>
         <node id="n82::n1">
           <data key="d3">{% trans "OUTOFSCOPE" %}</data>
-          <data key="d7">{% trans "OUTOFSCOPE" %}</data>
+          <data key="d7">OUTOFSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>commcare</category>
@@ -2304,7 +2304,7 @@ OUTOFSCOPE<y:LabelModel>
         </node>
         <node id="n82::n2">
           <data key="d3">{% trans "INELIGIBLE" %}</data>
-          <data key="d7">{% trans "INELIGIBLE" %}</data>
+          <data key="d7">INELIGIBLE</data>
           <data key="d9">
             <context xmlns="">
 <category>debt</category>
@@ -2331,7 +2331,7 @@ INELIGIBLE<y:LabelModel>
         </node>
         <node id="n82::n3">
           <data key="d3">{% trans "INSCOPE" %}</data>
-          <data key="d7">{% trans "INSCOPE" %}</data>
+          <data key="d7">INSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>debt</category>
@@ -2358,7 +2358,7 @@ INSCOPE<y:LabelModel>
         </node>
         <node id="n82::n4">
           <data key="d3">{% trans "INELIGIBLE" %}</data>
-          <data key="d7">{% trans "INELIGIBLE" %}</data>
+          <data key="d7">INELIGIBLE</data>
           <data key="d9">
             <context xmlns="">
 <category>violence</category>
@@ -2385,7 +2385,7 @@ INELIGIBLE<y:LabelModel>
         </node>
         <node id="n82::n5">
           <data key="d3">{% trans "INSCOPE" %}</data>
-          <data key="d7">{% trans "INSCOPE" %}</data>
+          <data key="d7">INSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>violence</category>
@@ -2412,7 +2412,7 @@ INSCOPE<y:LabelModel>
         </node>
         <node id="n82::n6">
           <data key="d3">{% trans "INELIGIBLE" %}</data>
-          <data key="d7">{% trans "INELIGIBLE" %}</data>
+          <data key="d7">INELIGIBLE</data>
           <data key="d9">
             <context xmlns="">
 <category>discrimination</category>
@@ -2439,7 +2439,7 @@ INELIGIBLE<y:LabelModel>
         </node>
         <node id="n82::n7">
           <data key="d3">{% trans "INSCOPE" %}</data>
-          <data key="d7">{% trans "INSCOPE" %}</data>
+          <data key="d7">INSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>discrimination</category>
@@ -2466,7 +2466,7 @@ INSCOPE<y:LabelModel>
         </node>
         <node id="n82::n8">
           <data key="d3">{% trans "INELIGIBLE" %}</data>
-          <data key="d7">{% trans "INELIGIBLE" %}</data>
+          <data key="d7">INELIGIBLE</data>
           <data key="d9">
             <context xmlns="">
 <category>education</category>
@@ -2493,7 +2493,7 @@ INELIGIBLE<y:LabelModel>
         </node>
         <node id="n82::n9">
           <data key="d3">{% trans "INSCOPE" %}</data>
-          <data key="d7">{% trans "INSCOPE" %}</data>
+          <data key="d7">INSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>education</category>
@@ -2521,7 +2521,7 @@ INSCOPE<y:LabelModel>
         <node id="n82::n10">
           <data key="d3">{% trans "CONTACT" %}</data>
           <data key="d4">{% trans "Problem relates to a child in care, or a care leaver, or user is a foster carer" %}</data>
-          <data key="d7">{% trans "CONTACT" %}</data>
+          <data key="d7">CONTACT</data>
           <data key="d9">
             <context xmlns="">
 <category>education</category>
@@ -2548,7 +2548,7 @@ CONTACT<y:LabelModel>
         </node>
         <node id="n82::n11">
           <data key="d3">{% trans "INELIGIBLE" %}</data>
-          <data key="d7">{% trans "INELIGIBLE" %}</data>
+          <data key="d7">INELIGIBLE</data>
           <data key="d9">
             <context xmlns="">
 <category>employment</category>
@@ -2575,7 +2575,7 @@ INELIGIBLE<y:LabelModel>
         </node>
         <node id="n82::n12">
           <data key="d3">{% trans "INELIGIBLE" %}</data>
-          <data key="d7">{% trans "INELIGIBLE" %}</data>
+          <data key="d7">INELIGIBLE</data>
           <data key="d9">
             <context xmlns="">
 <category>housing</category>
@@ -2602,7 +2602,7 @@ INELIGIBLE<y:LabelModel>
         </node>
         <node id="n82::n13">
           <data key="d3">{% trans "INSCOPE" %}</data>
-          <data key="d7">{% trans "INSCOPE" %}</data>
+          <data key="d7">INSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>housing</category>
@@ -2629,7 +2629,7 @@ INSCOPE<y:LabelModel>
         </node>
         <node id="n82::n14">
           <data key="d3">{% trans "INELIGIBLE" %}</data>
-          <data key="d7">{% trans "INELIGIBLE" %}</data>
+          <data key="d7">INELIGIBLE</data>
           <data key="d9">
             <context xmlns="">
 <category>immigration</category>
@@ -2656,7 +2656,7 @@ INELIGIBLE<y:LabelModel>
         </node>
         <node id="n82::n15">
           <data key="d3">{% trans "INSCOPE" %}</data>
-          <data key="d7">{% trans "INSCOPE" %}</data>
+          <data key="d7">INSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>housing</category>
@@ -2683,7 +2683,7 @@ INSCOPE<y:LabelModel>
         </node>
         <node id="n82::n16">
           <data key="d3">{% trans "OUTOFSCOPE" %}</data>
-          <data key="d7">{% trans "OUTOFSCOPE" %}</data>
+          <data key="d7">OUTOFSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>mentalhealth</category>
@@ -2710,7 +2710,7 @@ OUTOFSCOPE<y:LabelModel>
         </node>
         <node id="n82::n17">
           <data key="d3">{% trans "OUTOFSCOPE" %}</data>
-          <data key="d7">{% trans "OUTOFSCOPE" %}</data>
+          <data key="d7">OUTOFSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>pi</category>
@@ -2737,7 +2737,7 @@ OUTOFSCOPE<y:LabelModel>
         </node>
         <node id="n82::n18">
           <data key="d3">{% trans "OUTOFSCOPE" %}</data>
-          <data key="d7">{% trans "OUTOFSCOPE" %}</data>
+          <data key="d7">OUTOFSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>publiclaw</category>
@@ -2764,7 +2764,7 @@ OUTOFSCOPE<y:LabelModel>
         </node>
         <node id="n82::n19">
           <data key="d3">{% trans "INELIGIBLE" %}</data>
-          <data key="d7">{% trans "INELIGIBLE" %}</data>
+          <data key="d7">INELIGIBLE</data>
           <data key="d9">
             <context xmlns="">
 <category>family</category>
@@ -2791,7 +2791,7 @@ INELIGIBLE<y:LabelModel>
         </node>
         <node id="n82::n20">
           <data key="d3">{% trans "INSCOPE" %}</data>
-          <data key="d7">{% trans "INSCOPE" %}</data>
+          <data key="d7">INSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>family</category>
@@ -2819,7 +2819,7 @@ INSCOPE<y:LabelModel>
         <node id="n82::n21">
           <data key="d3">{% trans "CONTACT" %}</data>
           <data key="d4">{% trans "Council is trying to take user's child into care" %}</data>
-          <data key="d7">{% trans "CONTACT" %}</data>
+          <data key="d7">CONTACT</data>
           <data key="d9">
             <context xmlns="">
 <category>family</category>
@@ -2846,7 +2846,7 @@ CONTACT<y:LabelModel>
         </node>
         <node id="n82::n22">
           <data key="d3">{% trans "OUTOFSCOPE" %}</data>
-          <data key="d7">{% trans "OUTOFSCOPE" %}</data>
+          <data key="d7">OUTOFSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>aap</category>
@@ -2873,7 +2873,7 @@ OUTOFSCOPE<y:LabelModel>
         </node>
         <node id="n82::n23">
           <data key="d3">{% trans "INSCOPE" %}</data>
-          <data key="d7">{% trans "INSCOPE" %}</data>
+          <data key="d7">INSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>benefits</category>
@@ -2900,7 +2900,7 @@ INSCOPE<y:LabelModel>
         </node>
         <node id="n82::n24">
           <data key="d3">{% trans "INELIGIBLE" %}</data>
-          <data key="d7">{% trans "INELIGIBLE" %}</data>
+          <data key="d7">INELIGIBLE</data>
           <data key="d9">
             <context xmlns="">
 <category>welfare-benefits</category>
@@ -2928,7 +2928,7 @@ INELIGIBLE<y:LabelModel>
         <node id="n82::n25">
           <data key="d3">{% trans "CONTACT" %}</data>
           <data key="d4">{% trans "User is at immediate risk of harm" %}</data>
-          <data key="d7">{% trans "CONTACT" %}</data>
+          <data key="d7">CONTACT</data>
           <data key="d9">
             <context xmlns="">
 <category>violence</category>
@@ -2956,7 +2956,7 @@ CONTACT<y:LabelModel>
         <node id="n82::n26">
           <data key="d3">{% trans "CONTACT" %}</data>
           <data key="d4">{% trans "User is under 18 years old" %}</data>
-          <data key="d7">{% trans "CONTACT" %}</data>
+          <data key="d7">CONTACT</data>
           <data key="d9">
             <context xmlns="">
 <category>discrimination</category>
@@ -2984,7 +2984,7 @@ CONTACT<y:LabelModel>
         <node id="n82::n27">
           <data key="d3">{% trans "CONTACT" %}</data>
           <data key="d4">{% trans "User is under 18 years old" %}</data>
-          <data key="d7">{% trans "CONTACT" %}</data>
+          <data key="d7">CONTACT</data>
           <data key="d9">
             <context xmlns="">
 <category>family</category>
@@ -3012,7 +3012,7 @@ CONTACT<y:LabelModel>
         <node id="n82::n28">
           <data key="d3">{% trans "CONTACT" %}</data>
           <data key="d4">{% trans "User is living outside the UK but user's child has been taken to the UK" %}</data>
-          <data key="d7">{% trans "CONTACT" %}</data>
+          <data key="d7">CONTACT</data>
           <data key="d9">
             <context xmlns="">
 <category>family</category>
@@ -3039,7 +3039,7 @@ CONTACT<y:LabelModel>
         </node>
         <node id="n82::n29">
           <data key="d3">{% trans "MEDIATION" %}</data>
-          <data key="d7">{% trans "MEDIATION" %}</data>
+          <data key="d7">MEDIATION</data>
           <data key="d9">
             <context xmlns="">
 <category>family</category>
@@ -3066,7 +3066,7 @@ MEDIATION<y:LabelModel>
         </node>
         <node id="n82::n30">
           <data key="d3">{% trans "OUTOFSCOPE" %}</data>
-          <data key="d7">{% trans "OUTOFSCOPE" %}</data>
+          <data key="d7">OUTOFSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>debt</category>
@@ -3093,7 +3093,7 @@ OUTOFSCOPE<y:LabelModel>
         </node>
         <node id="n82::n31">
           <data key="d3">{% trans "OUTOFSCOPE" %}</data>
-          <data key="d7">{% trans "OUTOFSCOPE" %}</data>
+          <data key="d7">OUTOFSCOPE</data>
           <data key="d9">
             <context xmlns="">
 <category>housing</category>
@@ -3735,7 +3735,7 @@ OUTOFSCOPE<y:LabelModel>
     <node id="n111">
       <data key="d3">{% trans "Other" %}</data>
       <data key="d6">ineligible</data>
-      <data key="d7">{% trans "Other" %}</data>
+      <data key="d7">Other</data>
       <data key="d11">n111</data>
       <data key="d12"/>
       <data key="d14">
@@ -3757,7 +3757,7 @@ OUTOFSCOPE<y:LabelModel>
     <node id="n112">
       <data key="d3">{% trans "At home (in rented accommodation)" %}</data>
       <data key="d6">means_test</data>
-      <data key="d7">{% trans "Other" %}</data>
+      <data key="d7">Other</data>
       <data key="d10">2</data>
       <data key="d11">n112</data>
       <data key="d12"/>

@@ -315,7 +315,7 @@ STATSD_PATCHES = [
 STATSD_HOST = os.environ.get('STATSD_HOST', 'localhost')
 STATSD_PORT = os.environ.get('STATSD_PORT', 8125)
 
-EMAIL_TIMEOUT = 60
+EMAIL_TIMEOUT = 10
 
 if all([os.environ.get('SMTP_USER'),
         os.environ.get('SMTP_PASSWORD'),

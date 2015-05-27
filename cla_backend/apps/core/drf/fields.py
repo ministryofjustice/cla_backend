@@ -23,7 +23,8 @@ class ThreePartDateField(serializers.WritableField):
 
     default_error_messages = {
         'invalid':
-            _('Date field has wrong format. Use   { "day": 25, "month": 12, "year": 2012 }'),
+            # Translators: '{ "day": 25, "month": 12, "year": 2012 }' should be left in as-is
+            _('Date field has wrong format. Use { "day": 25, "month": 12, "year": 2012 }'),
     }
 
     def from_native(self, value):

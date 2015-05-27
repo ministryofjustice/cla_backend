@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-16 16:13+0100\n"
+"POT-Creation-Date: 2015-06-16 16:21+0100\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -24,11 +24,13 @@ msgid "Can't assign to specialist provider without setting matter_type1 and matt
 msgstr ""
 
 #: apps/call_centre/forms.py:68
-msgid "Category of matter type 1: {} must match category of matter type 2: {}"
+#, python-brace-format
+msgid "Category of matter type 1: {category1} must match category of matter type 2: {category2}"
 msgstr ""
 
 #: apps/call_centre/forms.py:79
-msgid "Category of Matter Types: {},{} must match category of case: {}"
+#, python-brace-format
+msgid "Category of Matter Types: {category1}, {category2} must match category of case: {case_category}"
 msgstr ""
 
 #: apps/cla_provider/models.py:155
@@ -95,8 +97,9 @@ msgstr ""
 msgid "Change password: %s"
 msgstr ""
 
-#: apps/core/drf/fields.py:26
-msgid "Date field has wrong format. Use   { \"day\": 25, \"month\": 12, \"year\": 2012 }"
+#. Translators: '{ "day": 25, "month": 12, "year": 2012 }' should be left in as-is
+#: apps/core/drf/fields.py:27
+msgid "Date field has wrong format. Use { \"day\": 25, \"month\": 12, \"year\": 2012 }"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:41

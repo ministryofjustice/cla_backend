@@ -65,20 +65,22 @@ class ProviderAllocationForm(BaseCaseLogForm):
         if (self.case.matter_type1 and self.case.matter_type2) and (
                 not self.case.matter_type1.category == self.case.matter_type2.category):
             nfe.append(_(
-                u"Category of matter type 1: {} must match category of matter type 2: {}".format(
-                    self.case.matter_type1.category.name,
-                    self.case.matter_type2.category)))
+                u"Category of matter type 1: {category1} must match category of matter type 2: {category2}".format(
+                    category1=self.case.matter_type1.category.name,
+                    category2=self.case.matter_type2.category.name)))
 
         if self.case.eligibility_check:
             case_category = self.case.eligibility_check.category
             mt1_category = self.case.matter_type1.category if self.case.matter_type1 else None
             mt2_category = self.case.matter_type2.category if self.case.matter_type2 else None
-            if (case_category and mt1_category and mt2_category):
-                if (case_category != mt1_category or case_category != mt2_category):
+            if case_category and mt1_category and mt2_category:
+                if case_category != mt1_category or case_category != mt2_category:
                     nfe.append(_(
-                        u"Category of Matter Types: {},{} must match category of case: {}".format(
-                            mt1_category.name, mt2_category.name,
-                            case_category.name)))
+                        u"Category of Matter Types: {category1}, {category2} must match category of case: "
+                        u"{case_category}".format(
+                            category1=mt1_category.name,
+                            category2=mt2_category.name,
+                            case_category=case_category.name)))
 
         if nfe:
             self._errors[NON_FIELD_ERRORS] = ErrorList(nfe)

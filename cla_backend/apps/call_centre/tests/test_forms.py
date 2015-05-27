@@ -338,9 +338,19 @@ class ProviderAllocationFormTestCase(TestCase):
             category))
 
         self.assertFalse(form.is_valid())
-        self.assertDictEqual(form.errors, {'__all__': [
-            u'Category of matter type 1: {} must match category of matter type 2: {}'.format(category.name, other_category.name),
-            u'Category of Matter Types: {c1},{c2} must match category of case: {c1}'.format(c1=category.name, c2=other_category.name)]})
+        self.assertDictEqual(form.errors, {
+            '__all__': [
+                u'Category of matter type 1: {category1} must match category of matter type 2: {category2}'.format(
+                    category1=category.name,
+                    category2=other_category.name
+                ),
+                u'Category of Matter Types: {category1}, {category2} must match category of case: {case_category}'.format(
+                    category1=category.name,
+                    category2=other_category.name,
+                    case_category=category.name,
+                )
+            ]
+        })
 
 
 class DeferAssignmentCaseFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):

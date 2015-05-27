@@ -96,5 +96,5 @@ class GraphTestCase(TestCase):
         checker_graph = get_graph(
             file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME
         )
-        node = checker_graph.node['n65::n2']
+        node = checker_graph.node['n44::n2']
         self.assertEqual(node['heading'], u'Select the option that best describes your situation')

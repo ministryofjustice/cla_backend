@@ -3015,7 +3015,7 @@ OUTOFSCOPE<y:LabelModel>
       </graph>
     </node>
     <node id="n84">
-      <data key="d3"><![CDATA[You are losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing their support from you]]></data>
+      <data key="d3"><![CDATA[You are applying for or losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing their support from you]]></data>
       <data key="d11">2</data>
       <data key="d12"/>
       <data key="d14">

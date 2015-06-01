@@ -37,6 +37,7 @@ case_one2one_router = NestedCLARouter(adv_router, 'case', lookup='case')
 case_one2one_router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_name='eligibility_check')
 case_one2one_router.register(r'personal_details', views.PersonalDetailsViewSet)
 case_one2one_router.register(r'adaptation_details', views.AdaptationDetailsViewSet)
+case_one2one_router.register(r'eod_details', views.EODDetailsViewSet)
 case_one2one_router.register(r'thirdparty_details', views.ThirdPartyDetailsViewSet)
 case_one2one_router.register(r'diagnosis', views.DiagnosisViewSet, base_name='diagnosis')
 

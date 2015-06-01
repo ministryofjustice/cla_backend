@@ -199,7 +199,7 @@ INSTALLED_APPS += PROJECT_APPS
 # DIAGNOSIS
 
 DIAGNOSIS_FILE_NAME = 'graph-2015.05.06.graphml'
-CHECKER_DIAGNOSIS_FILE_NAME = 'checker-graph-2015.05.01.graphml'
+CHECKER_DIAGNOSIS_FILE_NAME = 'checker-graph-2015.05.18.graphml'
 
 
 # DIVERSITY
@@ -315,7 +315,7 @@ STATSD_PATCHES = [
 STATSD_HOST = os.environ.get('STATSD_HOST', 'localhost')
 STATSD_PORT = os.environ.get('STATSD_PORT', 8125)
 
-EMAIL_TIMEOUT = 60
+EMAIL_TIMEOUT = 10
 
 if all([os.environ.get('SMTP_USER'),
         os.environ.get('SMTP_PASSWORD'),

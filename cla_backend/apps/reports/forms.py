@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.contrib.admin import widgets
 
 from legalaid.utils import diversity
-
+from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
 from cla_eventlog.constants import LOG_TYPES
 
 from . import sql
@@ -343,6 +343,39 @@ class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
             'call_me_back_only'
         ]
 
+
+class MIEODReport(SQLFileDateRangeReport):
+    QUERY_FILE = 'MIEOD.sql'
+
+    def get_headers(self):
+        return [
+            'LAA_Reference',
+            'Case_Reference',
+            'Case_Category',
+            # 'EOD_Created',
+            'EOD_Updated',
+            'EOD_Category',
+            'EOD_Notes',
+            'Major',
+            # 'Is_Escalated',
+            # 'Is_Resolved',
+            # 'Is_Justified',
+        ]
+
+    def _get_col_index(self, column_name):
+        return self.get_headers().index(column_name)
+
+    def get_rows(self):
+        eod_choices = EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT
+        for row in self.get_queryset():
+            category_col = self._get_col_index('EOD_Category')
+            if not row[category_col] and not row[self._get_col_index('EOD_Notes')]:
+                continue
+            row = list(row)  # row is a tuple
+            row[category_col] = row[category_col] and eod_choices.get(row[category_col], 'Unknown') or 'Not set'
+            yield row
+
+
 class MIOBIEEExportExtract(MonthRangeReportForm):
     passphrase = forms.CharField(
         help_text='This is required, the diversity passpharse is required to'
@@ -360,4 +393,45 @@ class MIOBIEEExportExtract(MonthRangeReportForm):
             raise ImproperlyConfigured('OBIEE Zip password must be set.')
         obiee_export.delay(cleaned_data['passphrase'], start, end)
         return cleaned_data
+
+
+class MetricsReport(SQLFileDateRangeReport):
+    QUERY_FILE = 'metrics.sql'
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {
+            'from_date': from_date,
+            'to_date': to_date
+        }
+
+    def get_headers(self):
+        return [
+            'Date',
+            'Diagnosis_total',
+            'Scope_unknown',
+            'Outofscope',
+            'Scope_contact',
+            'Inscope',
+            'Eligibility_check_total',
+            'Eligibility_check_unknown',
+            'Eligibility_check_ineligible',
+            'Eligibility_check_eligible',
+            'Cases_total',
+            'Cases_unknown',
+            'Cases_ineligible',
+            'Cases_eligible',
+            'Time_total',
+            'Time_unknown',
+            'Time_ineligible',
+            'Time_eligible',
+            'Time_web_total',
+            'Time_web_unknown',
+            'Time_web_ineligible',
+            'Time_web_eligible',
+            'Time_phone_total',
+            'Time_phone_unknown',
+            'Time_phone_ineligible',
+            'Time_phone_eligible',
+        ]
 

@@ -1,14 +1,18 @@
 import contextlib
 import csvkit as csv
 
+from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
+from django.db import InternalError
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
+from django.utils.six import text_type
 
 from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
-    MISurveyExtract, MICB1Extract, MIVoiceReport, MIOBIEEExportExtract
+    MISurveyExtract, MICB1Extract, MIVoiceReport, MIEODReport, \
+    MIOBIEEExportExtract, MetricsReport
 from reports.forms import MIDigitalCaseTypesExtract
 
 
@@ -37,7 +41,16 @@ def report_view(form_class, title, template='case_report', success_action=csv_do
             form = form_class()
 
             if valid_submit(request, form):
-                return success_action(filename, form)
+                try:
+                    return success_action(filename, form)
+                except InternalError as error:
+                    error_message = text_type(error).strip()
+                    if 'wrong key' in error_message.lower() or 'corrupt data' in error_message.lower():
+                        # e.g. if pgcrypto key is incorrect
+                        error_message = 'Check passphrase and try again'
+                    else:
+                        error_message = u'An error occurred:\n%s' % error_message
+                    messages.error(request, error_message)
 
             return render(request, tmpl, {'title': title, 'form': form})
 
@@ -122,6 +135,14 @@ def mi_voice_extract():
 def mi_digital_case_type_extract():
     pass
 
+
+@staff_member_required
+@permission_required('legalaid.run_reports')
+@report_view(MIEODReport, 'MI EOD Report')
+def mi_eod_extract():
+    pass
+
+
 @staff_member_required
 @permission_required('legalaid.run_obiee_reports')
 @report_view(MIOBIEEExportExtract,
@@ -130,4 +151,11 @@ def mi_digital_case_type_extract():
              file_name='cla.database.zip'
 )
 def mi_obiee_extract():
+    pass
+
+
+@staff_member_required
+@permission_required('legalaid.run_reports')
+@report_view(MetricsReport, 'Metrics Report')
+def metrics_report():
     pass

@@ -13,7 +13,7 @@
     <default/>
   </key>
   <key attr.name="operator_root" attr.type="string" for="node" id="d7">
-    <default><![CDATA[false1]]></default>
+    <default><![CDATA[false]]></default>
   </key>
   <key attr.name="order" attr.type="int" for="node" id="d8">
     <default>9999</default>

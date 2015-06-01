@@ -35,7 +35,8 @@ from legalaid.views import BaseUserViewSet, \
     BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
     BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
     BaseCaseNotesHistoryViewSet, AscCaseOrderingFilter, \
-    BaseCSVUploadReadOnlyViewSet, BaseCaseLogMixin
+    BaseCSVUploadReadOnlyViewSet, BaseCaseLogMixin, \
+    BaseEODDetailsViewSet
 
 from cla_common.constants import REQUIRES_ACTION_BY
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
@@ -51,7 +52,8 @@ from .serializers import EligibilityCheckSerializer, \
     BarePersonalDetailsSerializer, \
     ThirdPartyDetailsSerializer, LogSerializer, FeedbackSerializer, \
     CreateCaseSerializer, CaseListSerializer, CaseArchivedSerializer, \
-    CaseNotesHistorySerializer, CSVUploadSerializer, CSVUploadDetailSerializer
+    CaseNotesHistorySerializer, CSVUploadSerializer, CSVUploadDetailSerializer, \
+    EODDetailsSerializer
 
 from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
     DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm, \
@@ -133,6 +135,7 @@ class CaseViewSet(
     queryset_detail = Case.objects.all().select_related(
         'eligibility_check', 'personal_details',
         'adaptation_details', 'matter_type1', 'matter_type2',
+        'eod_details',
         'diagnosis', 'media_code', 'eligibility_check__category',
         'created_by'
     )
@@ -439,6 +442,11 @@ class AdaptationDetailsMetadataViewSet(
     BaseAdaptationDetailsMetadataViewSet
 ):
     serializer_class = AdaptationDetailsSerializer
+
+
+class EODDetailsViewSet(CallCentrePermissionsViewSetMixin,
+                        BaseEODDetailsViewSet):
+    serializer_class = EODDetailsSerializer
 
 
 class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):

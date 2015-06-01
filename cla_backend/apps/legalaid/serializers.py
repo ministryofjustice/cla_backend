@@ -18,7 +18,7 @@ from cla_provider.models import Provider, OutOfHoursRota, Feedback, CSVUpload
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
     ThirdPartyDetails, AdaptationDetails, MatterType, MediaCode, \
-    CaseNotesHistory
+    CaseNotesHistory, EODDetails, EODDetailsCategory
 
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
@@ -203,6 +203,29 @@ class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
         fields = ()
 
 
+class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
+    class Meta:
+        model = EODDetailsCategory
+        fields = ('category', 'is_major')
+
+
+class EODDetailsSerializerBase(serializers.ModelSerializer):
+    notes = serializers.CharField(max_length=5000, required=False)
+    categories = EODDetailsCategorySerializerBase(many=True,
+                                                  allow_add_remove=True, required=False)
+
+    class Meta:
+        model = EODDetails
+        fields = ()
+
+    def save(self, **kwargs):
+        # delete all existing EOD categories and use those from request as replacement set
+        if isinstance(self.object, EODDetails) and self.object.pk:
+            self.object.categories.all().delete()
+
+        return super(EODDetailsSerializerBase, self).save(**kwargs)
+
+
 class EligibilityCheckSerializerBase(ClaModelSerializer):
     property_set = PropertySerializerBase(
         allow_add_remove=True, many=True, required=False
@@ -313,6 +336,9 @@ class CaseSerializerFull(CaseSerializerBase):
     personal_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
     thirdparty_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
     adaptation_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
+
+    eod_details = UUIDSerializer(required=False, slug_field='reference', read_only=True)
+    flagged_with_eod = serializers.BooleanField(source='flagged_with_eod', read_only=True)
 
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)

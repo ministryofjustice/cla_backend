@@ -29,7 +29,7 @@ from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS, \
     CONTACT_SAFETY, EXEMPT_USER_REASON, ECF_STATEMENT, REQUIRES_ACTION_BY, \
-    EMAIL_SAFETY, ELIGIBILITY_REASONS
+    EMAIL_SAFETY, ELIGIBILITY_REASONS, EXPRESSIONS_OF_DISSATISFACTION
 
 from legalaid.fields import MoneyField
 
@@ -203,6 +203,18 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     cloning_config = {
         'excludes': ['reference', 'created', 'modified']
     }
+
+
+class EODDetails(TimeStampedModel):
+    notes = models.TextField(blank=True)
+    reference = UUIDField(auto=True, unique=True)
+
+
+class EODDetailsCategory(models.Model):
+    eod_details = models.ForeignKey(EODDetails, related_name='categories')
+    category = models.CharField(max_length=30, choices=EXPRESSIONS_OF_DISSATISFACTION,
+                                blank=True, null=True)
+    is_major = models.BooleanField(default=False)
 
 
 class Person(CloneModelMixin, TimeStampedModel):
@@ -606,7 +618,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     search_field = models.TextField(null=True, blank=True, db_index=True)
 
     complaint_flag = models.BooleanField(default=False)
-
+    eod_details = models.ForeignKey(EODDetails, blank=True, null=True)
 
     def _set_reference_if_necessary(self):
         max_retries = 10
@@ -684,10 +696,11 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'reference', 'locked_by', 'locked_at',
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
-                    'callback_attempt', 'search_field', 'provider_assigned_at'
+                    'callback_attempt', 'search_field', 'provider_assigned_at',
+                    'eod_details',
                 ],
                 'clone_fks': [
-                    'thirdparty_details', 'adaptation_details'
+                    'thirdparty_details', 'adaptation_details',
                 ],
                 'override_values': override_values
             }

@@ -31,11 +31,11 @@ from .serializers import CategorySerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
     AdaptationDetailsSerializerBase, CaseSerializerBase, \
     FeedbackSerializerBase, CaseNotesHistorySerializerBase, \
-    CSVUploadSerializerBase
+    CSVUploadSerializerBase, EODDetailsSerializerBase
 from cla_provider.models import Feedback, CSVUpload
 from .models import Case, Category, EligibilityCheck, \
     MatterType, MediaCode, PersonalDetails, ThirdPartyDetails, \
-    AdaptationDetails, CaseNotesHistory
+    AdaptationDetails, CaseNotesHistory, EODDetails
 
 
 class CaseFormActionMixin(FormActionMixin):
@@ -291,6 +291,19 @@ class BaseAdaptationDetailsMetadataViewSet(
         self.http_method_not_allowed(request)
 
 
+class BaseEODDetailsViewSet(
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    NestedGenericModelMixin,
+    viewsets.GenericViewSet
+):
+    model = EODDetails
+    serializer_class = EODDetailsSerializerBase
+    lookup_field = 'reference'
+    PARENT_FIELD = 'eod_details'
+
+
 class BaseCaseOrderingFilter(OrderingFilter):
     default_modified = 'modified'
 
@@ -370,7 +383,8 @@ class FullCaseViewSet(
     ordering_fields = (
         'modified', 'personal_details__full_name', 'requires_action_at',
         'personal_details__date_of_birth', 'personal_details__postcode',
-        'eligibility_check__category__name', 'priority', 'null_priority'
+        'eligibility_check__category__name', 'priority', 'null_priority',
+        'flagged_with_eod',
     )
     ordering = ['-priority']
 
@@ -418,7 +432,19 @@ class FullCaseViewSet(
                         'COI', 'MIS')
                     THEN 1
                     ELSE 0
-                END'''})
+                END''',
+                'flagged_with_eod': '''
+                    SELECT legalaid_case.eod_details_id IS NOT NULL AND (
+                        (SELECT notes IS NOT NULL AND length(notes) > 0
+                            FROM legalaid_eoddetails
+                            WHERE legalaid_eoddetails.id=legalaid_case.eod_details_id)
+                        OR
+                        (SELECT COUNT(id) > 0
+                            FROM legalaid_eoddetailscategory
+                            WHERE legalaid_eoddetailscategory.eod_details_id=legalaid_case.eod_details_id)
+                    )
+                ''',
+            })
 
         return qs
 

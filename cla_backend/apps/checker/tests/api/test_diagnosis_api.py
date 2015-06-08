@@ -44,7 +44,7 @@ class DiagnosisAPITestCase(
         move_down_url = self.get_detail_url(reference, suffix='move-down')
         move_up_url = self.get_detail_url(reference, suffix='move-up')
 
-        for node_id in ['n44::n2', 'n2']:
+        for node_id in ['n43::n2', 'n2']:
             response = self.client.post(
                 move_down_url,
                 data={'current_node_id': node_id},
@@ -61,7 +61,7 @@ class DiagnosisAPITestCase(
             format='json'
         )
 
-        self.assertEqual(response.data.get('current_node_id'), 'n44::n2')
+        self.assertEqual(response.data.get('current_node_id'), 'n43::n2')
         self.assertEqual(response.data.get('category'), None)
         self.assertEqual(len(response.data.get('nodes')), 1)
         self.assertEqual(len(response.data.get('choices')), 4)

@@ -170,8 +170,8 @@ class CaseViewSet(
                 created_by=this_operator.user
             )
         elif only_param == 'eod':
-            qs = qs.filter(
-                eod_details__isnull=False
+            qs = qs.extra(
+                where=[self.FLAGGED_WITH_EOD_SQL]
             )
         elif only_param == 'web':
             qs = qs.filter(

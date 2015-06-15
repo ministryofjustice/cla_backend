@@ -655,6 +655,96 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         )
 
 
+class FilteredSearchCaseTestCase(BaseCaseTestCase):
+    def setUp(self):
+        """
+            obj1 created by current operator (phone implicit)
+            obj2 created by another operator (phone implicit)
+            obj3 case by phone (explicit)
+            obj4 case from web (explicit)
+            obj5 case with EOD (web explicit)
+        """
+        super(FilteredSearchCaseTestCase, self).setUp()
+
+        Case.objects.all().delete()
+
+        # operator1 = make_recipe('call_centre.operator')
+        # operator2 = make_recipe('call_centre.operator')
+        eod_details = make_recipe('legalaid.eod_details', notes='hello')
+
+        self.cases = [
+            # obj1 created by current operator (phone implicit)
+            make_recipe(
+                'legalaid.case',
+                reference='ref1',
+                created_by=self.operator.user
+            ),
+
+            # obj2 created by another operator (phone implicit)
+            make_recipe(
+                'legalaid.case',
+                reference='ref2',
+                created_by=self.operator_manager.user
+            ),
+
+            # obj3 case by phone
+            make_recipe(
+                'legalaid.case',
+                reference='ref3',
+                created_by=self.operator.user,
+                source=CASE_SOURCE.PHONE
+            ),
+            # obj4 case from web
+            make_recipe(
+                'legalaid.case',
+                reference='ref4',
+                created_by=self.operator.user,
+                source=CASE_SOURCE.WEB
+            ),
+
+            # obj5 case with EOD (from web)
+            make_recipe(
+                'legalaid.case',
+                reference='ref5',
+                created_by=self.operator.user,
+                eod_details=eod_details,
+                source=CASE_SOURCE.WEB
+            )
+        ]
+
+    def getAndAssertValidResponse(self, filter_name, expected):
+        response = self.client.get(
+            u'%s?only=%s' % (self.list_url, filter_name), format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(expected), response.data['count'])
+        self.assertItemsEqual(
+            [c['reference'] for c in response.data['results']],
+            expected
+        )
+
+    def test_all_cases(self):
+        self.getAndAssertValidResponse('',
+            ['ref1', 'ref2', 'ref3', 'ref4', 'ref5'])
+
+    def test_phone_cases(self):
+        self.getAndAssertValidResponse('phone',
+            ['ref1', 'ref2', 'ref3'])
+
+    def test_web_cases(self):
+        self.getAndAssertValidResponse('web',
+            ['ref4', 'ref5'])
+
+    def test_operator_cases(self):
+        self.getAndAssertValidResponse('my',
+            ['ref1', 'ref3', 'ref4', 'ref5'])
+
+    def test_eod_cases(self):
+        self.getAndAssertValidResponse('eod',
+            ['ref5'])
+
+
 class FutureCallbacksCaseTestCase(BaseCaseTestCase):
     def test_get_list(self):
         Case.objects.all().delete()

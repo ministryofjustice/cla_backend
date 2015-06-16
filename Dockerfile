@@ -80,6 +80,9 @@ RUN ln -s /home/app/django/cla_backend/settings/docker.py /home/app/django/cla_b
 # Collect static
 RUN cd /home/app/django && python manage.py collectstatic --noinput
 
+# Compile messages
+RUN cd /home/app/django && python manage.py compilemessages
+
 # Expose ports.
 EXPOSE 80
 

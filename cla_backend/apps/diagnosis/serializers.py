@@ -72,9 +72,7 @@ class DiagnosisSerializer(ClaModelSerializer):
         if not self.object or not self.object.is_state_unknown():
             return []
 
-        current_node_id = self.object.current_node_id
-        if not current_node_id:
-            current_node_id = self.graph.graph['operator_root_id']
+        current_node_id = self.object.current_node_id or 'start'
 
         # populating choices
         children = self.graph.successors(current_node_id)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime
+from django.utils import timezone
 from django.db import models
 from django.conf import settings
 from model_utils.models import TimeStampedModel
@@ -9,7 +9,7 @@ from .constants import NOTIFICATION_TYPES
 
 class NotificationManager(models.Manager):
     def live(self):
-        now = datetime.datetime.utcnow()
+        now = timezone.now()
         return self.get_queryset().filter(
             start_time__lt=now,
             end_time__gt=now
@@ -17,7 +17,7 @@ class NotificationManager(models.Manager):
 
 
 class Notification(TimeStampedModel):
-    type = models.CharField(max_length=10, choices=NOTIFICATION_TYPES)
+    type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
     notification = models.CharField(max_length=100)
     description = models.CharField(max_length=600)
     notes = models.TextField(null=True, blank=True)

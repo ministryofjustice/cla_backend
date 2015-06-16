@@ -185,6 +185,7 @@ PROJECT_APPS = (
     'checker',
     'eligibility_calculator',
     'guidance',
+    'notifications',
 )
 
 

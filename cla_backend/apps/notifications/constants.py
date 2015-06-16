@@ -3,5 +3,6 @@ from __future__ import unicode_literals
 
 
 NOTIFICATION_TYPES = (
-    ('alert', 'Alert')
+    ('alert', 'Alert'),
+    ('notification', 'Notification'),
 )

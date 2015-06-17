@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
@@ -38,7 +39,7 @@ from legalaid.views import BaseUserViewSet, \
     BaseCSVUploadReadOnlyViewSet, BaseCaseLogMixin, \
     BaseEODDetailsViewSet
 
-from cla_common.constants import REQUIRES_ACTION_BY
+from cla_common.constants import REQUIRES_ACTION_BY, CASE_SOURCE
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 from diagnosis.views import BaseDiagnosisViewSet
 from guidance.views import BaseGuidanceNoteViewSet
@@ -144,6 +145,44 @@ class CaseViewSet(
         AscCaseOrderingFilter,
         SearchFilter,
     )
+
+    def get_queryset(self, **kwargs):
+        """
+        Returns the following:
+            all:
+                no querystring
+            operator:
+                only == 'operator'
+            eod:
+                only == 'eod'
+            web:
+                only == 'web'
+            phone:
+                only == 'phone'
+        """
+        this_operator = get_object_or_404(
+            Operator, user=self.request.user)
+        qs = super(CaseViewSet, self).get_queryset(**kwargs)
+
+        only_param = self.request.QUERY_PARAMS.get('only')
+        if only_param == 'my':
+            qs = qs.filter(
+                created_by=this_operator.user
+            )
+        elif only_param == 'eod':
+            qs = qs.extra(
+                where=[self.FLAGGED_WITH_EOD_SQL]
+            )
+        elif only_param == 'web':
+            qs = qs.filter(
+                source=CASE_SOURCE.WEB
+            )
+        elif only_param == 'phone':
+            qs = qs.filter(
+                source=CASE_SOURCE.PHONE
+            )
+
+        return qs
 
     def get_serializer_class(self):
         # if POST create request => use special Serializer

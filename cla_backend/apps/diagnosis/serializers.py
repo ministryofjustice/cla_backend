@@ -12,7 +12,7 @@ from diagnosis.models import DiagnosisTraversal
 from legalaid.models import Category, MatterType
 
 from .graph import graph
-from .utils import is_terminal, is_pre_end_node, get_node_scope_value
+from .utils import is_terminal, is_pre_end_node, get_node_scope_value, eval_promise
 
 logger = logging.getLogger(__name__)
 
@@ -150,6 +150,11 @@ class DiagnosisSerializer(ClaModelSerializer):
         if obj.current_node_id:
             current_node = self.graph.node[obj.current_node_id]
             current_node['id'] = obj.current_node_id
+
+            current_node = dict(map(
+                lambda (key, value): (key, eval_promise(value)),
+                current_node.items()
+            ))
 
             # delete all nodes after current_node_id and add current not
             nodes = []

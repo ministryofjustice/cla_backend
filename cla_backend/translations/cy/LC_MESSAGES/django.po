@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-16 16:43+0100\n"
+"POT-Creation-Date: 2015-06-17 11:43+0100\n"
 "PO-Revision-Date: 2015-06-16 15:36+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: Welsh (http://www.transifex.com/projects/p/cla-backend/language/cy/)\n"
@@ -726,160 +726,6 @@ msgstr "Cynhaliaeth Plant Rhynglwadol "
 msgid "You're seeking advice about International Family Maintenance, to enforce a maintenance order made outside the UK"
 msgstr "Rydych yn ceisio am gyngor ynglŷn â Chynhaliaeth Plant Rhyngwladol, i orfodi gorchymyn cynhaliaeth a wnaethpwyd y tu allan i'r DU"
 
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2252
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2279
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2685
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2712
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2739
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2848
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:3068
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:3095
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1710
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2103
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2259
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2506
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3166
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3468
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3583
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3861
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3906
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3986
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4031
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4133
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4221
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4309
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4355
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4403
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4469
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4561
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4608
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4680
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4818
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4864
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4889
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5255
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5321
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5483
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5575
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5621
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5850
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6096
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6143
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6286
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6331
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6399
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7380
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7498
-msgid "OUTOFSCOPE"
-msgstr "OUTOFSCOPE"
-
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2306
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2360
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2414
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2468
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2550
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2577
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2631
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2766
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2902
-msgid "INELIGIBLE"
-msgstr "INELIGIBLE"
-
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2333
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2387
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2441
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2495
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2604
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2658
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2793
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2875
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:219
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:267
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:315
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:392
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:439
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:530
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:578
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:623
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:713
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:759
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:805
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:851
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:897
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:943
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:989
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1036
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1123
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1213
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1258
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1303
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1348
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1393
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1438
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1483
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1528
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1573
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1618
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1664
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1834
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1880
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1968
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2013
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2058
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2169
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2214
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2364
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2411
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2460
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2680
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2726
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2772
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2818
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2864
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2910
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2956
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3029
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3075
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3121
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3239
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3285
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3331
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3377
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3423
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3538
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3705
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3751
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4515
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4943
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4991
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5205
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5230
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5346
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5392
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5458
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5550
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5667
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5713
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5759
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5805
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6239
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6474
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7453
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7889
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7939
-#: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:8015
-msgid "INSCOPE"
-msgstr "INSCOPE"
-
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2522
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2820
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2929
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2957
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2985
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:3013
-msgid "CONTACT"
-msgstr "CONTACT"
-
 #: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:2523
 msgid "Problem relates to a child in care, or a care leaver, or user is a foster carer"
 msgstr "Problem ynghylch plentyn mewn gofal, neu blentyn yn gadael gofal, neu fod y defnyddiwr yn ofalwr maeth "
@@ -900,10 +746,6 @@ msgstr "Defnyddiwr dan 18 oed"
 #: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:3014
 msgid "User is living outside the UK but user's child has been taken to the UK"
 msgstr "Mae'r defnyddiwr yn byw y tu allan i'r DU ond aethpwyd â phlentyn y defnyddiwr i'r DU "
-
-#: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:3041
-msgid "MEDIATION"
-msgstr "MEDIATION"
 
 #: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:3124
 msgid "You're applying for accommodation or you're losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you"

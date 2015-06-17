@@ -216,7 +216,7 @@ Record in Operator Notes what documents client has received. These may include a
       </data>
     </node>
     <node id="n6">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -264,7 +264,7 @@ Record in Operator Notes what documents client has received. These may include a
       </data>
     </node>
     <node id="n8">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -312,7 +312,7 @@ Record in Operator Notes what documents client has received. These may include a
       </data>
     </node>
     <node id="n10">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -389,7 +389,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n13">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -436,7 +436,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n15">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -527,7 +527,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n19">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -575,7 +575,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n21">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -620,7 +620,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n23">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -710,7 +710,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n27">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -756,7 +756,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n29">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -802,7 +802,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n31">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -848,7 +848,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n33">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -894,7 +894,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n35">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -940,7 +940,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n37">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -986,7 +986,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n39">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1033,7 +1033,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n41">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1120,7 +1120,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n45">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1210,7 +1210,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n49">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1255,7 +1255,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n51">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1300,7 +1300,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n53">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1345,7 +1345,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n55">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1390,7 +1390,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n57">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1435,7 +1435,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n59">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1480,7 +1480,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n61">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1525,7 +1525,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n63">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1570,7 +1570,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n65">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1615,7 +1615,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n67">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1661,7 +1661,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n69">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1707,7 +1707,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </data>
     </node>
     <node id="n71">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns=""> 	<category>debt</category> </context>
@@ -1831,7 +1831,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n76">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1877,7 +1877,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n78">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -1965,7 +1965,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n82">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -2010,7 +2010,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n84">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -2055,7 +2055,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n86">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -2100,7 +2100,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n88">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -2166,7 +2166,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n91">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -2211,7 +2211,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n93">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -2256,7 +2256,7 @@ For loss of home please click 'back' and select the first category.
       </data>
     </node>
     <node id="n95">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -2361,7 +2361,7 @@ An occupation order can restrict who can live in the family home, and even restr
       </data>
     </node>
     <node id="n99">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -2408,7 +2408,7 @@ An occupation order can restrict who can live in the family home, and even restr
       </data>
     </node>
     <node id="n101">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -2457,7 +2457,7 @@ eg care proceedings or adoption{% endblocktrans %}</data>
       </data>
     </node>
     <node id="n103">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -2503,7 +2503,7 @@ eg care proceedings or adoption{% endblocktrans %}</data>
       </data>
     </node>
     <node id="n105">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -2677,7 +2677,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n111">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -2723,7 +2723,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n113">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -2769,7 +2769,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n115">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -2815,7 +2815,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n117">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -2861,7 +2861,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n119">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -2907,7 +2907,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n121">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -2953,7 +2953,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n123">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -3026,7 +3026,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n126">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -3072,7 +3072,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n128">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -3118,7 +3118,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n130">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -3163,7 +3163,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n132">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOF</data>
       <data key="d6">
         <context xmlns="">
@@ -3236,7 +3236,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n135">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -3282,7 +3282,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n137">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -3328,7 +3328,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n139">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -3374,7 +3374,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n141">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -3420,7 +3420,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n143">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -3465,7 +3465,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n145">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOF</data>
       <data key="d6">
         <context xmlns="">
@@ -3535,7 +3535,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n148">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">DISCRIMINATION INSCO</data>
       <data key="d6">
         <context xmlns="">
@@ -3580,7 +3580,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       </data>
     </node>
     <node id="n150">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOF</data>
       <data key="d6">
         <context xmlns="">
@@ -3702,7 +3702,7 @@ Give details in the operator notes, especially if more than one option applies.{
       </data>
     </node>
     <node id="n155">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -3748,7 +3748,7 @@ Give details in the operator notes, especially if more than one option applies.{
       </data>
     </node>
     <node id="n157">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -3858,7 +3858,7 @@ Give details in the operator notes, especially if more than one option applies.{
       </data>
     </node>
     <node id="n162">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -3903,7 +3903,7 @@ Give details in the operator notes, especially if more than one option applies.{
       </data>
     </node>
     <node id="n164">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -3983,7 +3983,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
       </data>
     </node>
     <node id="n167">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -4028,7 +4028,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
       </data>
     </node>
     <node id="n169">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -4130,7 +4130,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
       </data>
     </node>
     <node id="n173">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -4218,7 +4218,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
       </data>
     </node>
     <node id="n177">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE </data>
       <data key="d6">
         <context xmlns="">
@@ -4306,7 +4306,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
       </data>
     </node>
     <node id="n181">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE DISCL</data>
       <data key="d6">
         <context xmlns="">
@@ -4352,7 +4352,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
       </data>
     </node>
     <node id="n183">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE DISCLAIME</data>
       <data key="d6">
         <context xmlns="">
@@ -4400,7 +4400,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       </data>
     </node>
     <node id="n185">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -4466,7 +4466,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       </data>
     </node>
     <node id="n188">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE DISCLAIME</data>
       <data key="d6">
         <context xmlns="">
@@ -4512,7 +4512,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       </data>
     </node>
     <node id="n190">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -4558,7 +4558,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       </data>
     </node>
     <node id="n192">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE D</data>
       <data key="d6">
         <context xmlns="">
@@ -4605,7 +4605,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       </data>
     </node>
     <node id="n194">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE DISCLA</data>
       <data key="d6">
         <context xmlns="">
@@ -4677,7 +4677,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       </data>
     </node>
     <node id="n197">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4"/>
       <data key="d6">
         <context xmlns="">
@@ -4815,7 +4815,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       </data>
     </node>
     <node id="n203">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -4861,7 +4861,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       </data>
     </node>
     <node id="n205">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -4886,7 +4886,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       </data>
     </node>
     <node id="n206">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -4940,7 +4940,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
       </data>
     </node>
     <node id="n208">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -4988,7 +4988,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
       </data>
     </node>
     <node id="n210">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5202,7 +5202,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n220">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5227,7 +5227,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n221">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5252,7 +5252,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n222">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5318,7 +5318,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n225">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5343,7 +5343,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n226">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5389,7 +5389,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n228">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5455,7 +5455,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n231">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5480,7 +5480,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n232">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5547,7 +5547,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n235">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5572,7 +5572,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n236">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5618,7 +5618,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n238">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5664,7 +5664,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n240">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5710,7 +5710,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n242">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5756,7 +5756,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n244">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5802,7 +5802,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n246">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -5847,7 +5847,7 @@ provide for a child or young person's educational needs, or specifically about t
       </data>
     </node>
     <node id="n248">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -6093,7 +6093,7 @@ This includes where someone is:
       </data>
     </node>
     <node id="n258">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE DISCLAIME</data>
       <data key="d6">
         <context xmlns="">
@@ -6140,7 +6140,7 @@ This includes where someone is:
       </data>
     </node>
     <node id="n260">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE DISCLAIME</data>
       <data key="d6">
         <context xmlns="">
@@ -6236,7 +6236,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
       </data>
     </node>
     <node id="n264">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -6283,7 +6283,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
       </data>
     </node>
     <node id="n266">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOF</data>
       <data key="d6">
         <context xmlns="">
@@ -6328,7 +6328,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
       </data>
     </node>
     <node id="n268">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOF</data>
       <data key="d6">
         <context xmlns="">
@@ -6396,7 +6396,7 @@ So where a client wants to obtain an order outside the UK this will not be in sc
       </data>
     </node>
     <node id="n271">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE DISCLA</data>
       <data key="d6">
         <context xmlns="">
@@ -6471,7 +6471,7 @@ If the client wants legal advice to support of ongoing or recently completed med
       </data>
     </node>
     <node id="n274">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -7377,7 +7377,7 @@ If the client wants legal advice to support of ongoing or recently completed med
       </data>
     </node>
     <node id="n306">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -7450,7 +7450,7 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
       </data>
     </node>
     <node id="n309">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -7495,7 +7495,7 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
       </data>
     </node>
     <node id="n311">
-      <data key="d3">{% trans "OUTOFSCOPE" %}</data>
+      <data key="d3">OUTOFSCOPE</data>
       <data key="d4">OUTOFSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -7886,7 +7886,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       </data>
     </node>
     <node id="n327">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -7936,7 +7936,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       </data>
     </node>
     <node id="n329">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">
@@ -8012,7 +8012,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       </data>
     </node>
     <node id="n332">
-      <data key="d3">{% trans "INSCOPE" %}</data>
+      <data key="d3">INSCOPE</data>
       <data key="d4">INSCOPE</data>
       <data key="d6">
         <context xmlns="">

@@ -14,6 +14,8 @@ from django.utils.six import text_type
 
 import markdown
 
+from cla_common.constants import DIAGNOSIS_SCOPE
+
 
 class GraphImporter(object):
     KEY_BODY = 'body'
@@ -43,10 +45,14 @@ class GraphImporter(object):
         internationalised_keys = [self.KEY_BODY, self.KEY_HELP, self.KEY_HEADING]
         internationalised_keys = [self.prop_mapping[key]['id'] for key in internationalised_keys]
 
+        skipped_values = DIAGNOSIS_SCOPE.CHOICES_CONST_DICT.values()
+
         for data_element in self.xpath_ns(self.doc, '//ns:data'):
             data_type = data_element.attrib.get('key', None)
             if data_type in internationalised_keys and data_element.text:
-                if u'"' in data_element.text or len(data_element.text.splitlines()) > 1:
+                if data_element.text in skipped_values:
+                    continue
+                elif u'"' in data_element.text or len(data_element.text.splitlines()) > 1:
                     data_element.text = u'{%% blocktrans %%}%s{%% endblocktrans %%}' % data_element.text
                 else:
                     data_element.text = u'{%% trans "%s" %%}' % data_element.text

@@ -11,4 +11,4 @@ class BaseNotificationViewSet(
     viewsets.GenericViewSet
 ):
     serializer_class = NotificationSerializer
-    model = Notification
+    queryset = Notification.objects.live()

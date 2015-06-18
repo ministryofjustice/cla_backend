@@ -1,0 +1,31 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools %}
+
+  {{ block.super }}
+
+  <div class="module">
+    {% with category_stats=opts.model.get_category_stats %}
+
+      <table>
+        <thead>
+          <tr>
+            <th colspan="2">
+              <h2>Percentage of {{ category_stats.total_count }} responses choosing:</h2>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for category in category_stats.categories %}
+            <tr>
+              <td>{{ category.description }}</td>
+              <td>{{ category.percentage|stringformat:'.0f%%' }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    {% endwith %}
+  </div>
+
+{% endblock %}

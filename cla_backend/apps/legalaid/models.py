@@ -620,6 +620,12 @@ class Case(TimeStampedModel, ModelDiffMixin):
     complaint_flag = models.BooleanField(default=False)
     eod_details = models.ForeignKey(EODDetails, blank=True, null=True)
 
+    class Meta(object):
+        ordering = ('-created',)
+
+    def __unicode__(self):
+        return self.reference
+
     def _set_reference_if_necessary(self):
         max_retries = 10
         tries = 0
@@ -630,7 +636,6 @@ class Case(TimeStampedModel, ModelDiffMixin):
                 tries = tries + 1
 
             self.reference = reference
-
 
     def _set_search_field(self):
         if self.reference:

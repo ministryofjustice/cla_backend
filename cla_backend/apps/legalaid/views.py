@@ -303,6 +303,13 @@ class BaseEODDetailsViewSet(
     lookup_field = 'reference'
     PARENT_FIELD = 'eod_details'
 
+    def pre_save(self, obj):
+        # delete all existing EOD categories and use those from request as replacement set
+        if isinstance(obj, EODDetails) and obj.pk:
+            obj.categories.all().delete()
+
+        super(BaseEODDetailsViewSet, self).pre_save(obj)
+
 
 class BaseCaseOrderingFilter(OrderingFilter):
     default_modified = 'modified'

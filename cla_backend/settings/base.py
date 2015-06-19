@@ -211,10 +211,13 @@ if ADMIN_ENABLED:
 INSTALLED_APPS += PROJECT_APPS
 
 # DIAGNOSIS
-
 DIAGNOSIS_FILE_NAME = 'graph-2015.06.10.graphml'
 CHECKER_DIAGNOSIS_FILE_NAME = 'checker-graph-2015.06.10.graphml'
 DIAGNOSES_USE_TEMPLATES = True
+
+# Address of server to send notifications to frontend
+FRONTEND_HOST_NAME = os.environ.get('FRONTEND_HOST_NAME', 'http://127.0.0.1')
+EXPRESS_SERVER_PORT = os.environ.get('EXPRESS_SERVER_PORT', 8005)
 
 # DIVERSITY
 
@@ -387,8 +390,9 @@ CELERY_IGNORE_RESULT = True # SQS doesn't support it
 CELERY_MESSAGE_COMPRESSION = 'gzip' # got to look after the pennies
 CELERY_DISABLE_RATE_LIMITS = True # they don't work with SQS
 CELERY_ENABLE_REMOTE_CONTROL = False # doesn't work well under docker
+CELERY_TIMEZONE = 'UTC'
 # apps with celery tasks
-CELERY_IMPORTS = ['reports.tasks']
+CELERY_IMPORTS = ['reports.tasks', 'notifications.tasks']
 
 
 # .local.py overrides all the common settings.

@@ -930,7 +930,7 @@
     </node>
     <node id="n40">
       <data key="d3"><![CDATA[Special educational needs]]></data>
-      <data key="d4"><![CDATA[Your child has special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit]]></data>
+      <data key="d4"><![CDATA[You have (or your child has) special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit]]></data>
       <data key="d6"><![CDATA[means_test]]></data>
       <data key="d10">2</data>
       <data key="d11"><![CDATA[n40]]></data>

@@ -930,7 +930,7 @@
     </node>
     <node id="n40">
       <data key="d3">{% trans "Special educational needs" %}</data>
-      <data key="d4">{% trans "Your child has special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit" %}</data>
+      <data key="d4">{% trans "You have (or your child has) special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">2</data>
       <data key="d11">n40</data>

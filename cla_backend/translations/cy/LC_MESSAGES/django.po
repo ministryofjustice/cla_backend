@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-17 11:43+0100\n"
+"POT-Creation-Date: 2015-06-19 17:06+0100\n"
 "PO-Revision-Date: 2015-06-16 15:36+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: Welsh (http://www.transifex.com/projects/p/cla-backend/language/cy/)\n"
@@ -444,8 +444,8 @@ msgid "Special educational needs"
 msgstr "Anghenion addysgol arbennig"
 
 #: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:933
-msgid "Your child has special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
-msgstr "Mae gan eich plentyn anghenion addysgol arbennig - mae hyn yn cynnwys problemau mewn perthynas â thrafnidiaeth, peidio â bod mewn ysgol neu bod mewn uned cyfeirio disgyblion"
+msgid "You have (or your child has) special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:956
 msgid "For example admissions or exclusions"
@@ -2281,3 +2281,6 @@ msgstr "Adroddiadau"
 
 #~ msgid "The client's problem is about discrimination"
 #~ msgstr "Mae problem y cleient ynghylch gwahaniaethu"
+
+#~ msgid "Your child has special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
+#~ msgstr "Mae gan eich plentyn anghenion addysgol arbennig - mae hyn yn cynnwys problemau mewn perthynas â thrafnidiaeth, peidio â bod mewn ysgol neu bod mewn uned cyfeirio disgyblion"

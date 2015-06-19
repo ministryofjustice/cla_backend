@@ -23,7 +23,7 @@ class NotificationAdmin(admin.ModelAdmin):
     actions = (set_end_time_in_past,)
 
     def save_model(self, request, obj, form, change):
-        if not obj.created_by:
+        if not obj.pk:
             obj.created_by = request.user
         obj.save()
 

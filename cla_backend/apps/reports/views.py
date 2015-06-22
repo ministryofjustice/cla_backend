@@ -12,7 +12,7 @@ from django.utils.six import text_type
 from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
     MISurveyExtract, MICB1Extract, MIVoiceReport, MIEODReport, \
-    MIOBIEEExportExtract, MetricsReport
+    MIOBIEEExportExtract, MetricsReport, MIDuplicateCaseExtract
 from reports.forms import MIDigitalCaseTypesExtract
 
 
@@ -91,6 +91,13 @@ def mi_case_extract():
 @permission_required('legalaid.run_reports')
 @report_view(MIFeedbackExtract, 'MI Feedback Extract')
 def mi_feedback_extract():
+    pass
+
+
+@staff_member_required
+@permission_required('legalaid.run_reports')
+@report_view(MIDuplicateCaseExtract, 'MI Duplicate Case Extract')
+def mi_duplicate_case_extract():
     pass
 
 

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-17 11:43+0100\n"
+"POT-Creation-Date: 2015-06-19 17:16+0100\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -444,7 +444,7 @@ msgid "Special educational needs"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:933
-msgid "Your child has special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
+msgid "You have (or your child has) special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:956

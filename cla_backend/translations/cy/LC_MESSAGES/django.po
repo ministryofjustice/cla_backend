@@ -3,9 +3,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-17 11:43+0100\n"
-"PO-Revision-Date: 2015-06-16 15:36+0000\n"
-"Last-Translator: Igor U\n"
+"POT-Creation-Date: 2015-06-19 17:16+0100\n"
+"PO-Revision-Date: 2015-06-19 14:52+0000\n"
+"Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/projects/p/cla-backend/language/cy/)\n"
 "Language: cy\n"
 "MIME-Version: 1.0\n"
@@ -444,8 +444,8 @@ msgid "Special educational needs"
 msgstr "Anghenion addysgol arbennig"
 
 #: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:933
-msgid "Your child has special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
-msgstr "Mae gan eich plentyn anghenion addysgol arbennig - mae hyn yn cynnwys problemau mewn perthynas â thrafnidiaeth, peidio â bod mewn ysgol neu bod mewn uned cyfeirio disgyblion"
+msgid "You have (or your child has) special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph-2015.06.10.graphml.tpl:956
 msgid "For example admissions or exclusions"
@@ -1203,6 +1203,15 @@ msgid ""
 "\n"
 "For loss of home please click 'back' and select the first category.\n"
 msgstr ""
+"Mae'r categori yn ymdrin â maes cyfreithiol Tai sydd y tu allan i golli cartref.\n"
+"\n"
+"Mae'n ymdrin â chyngor am\n"
+"\n"
+"* fygythiad o golli cartref neu aflonyddwch gan landlordiaid\n"
+"* diffyg atgyweirio/ cyflwr cartref gwael - dim ond llety rhent.\n"
+"* ASBO/ASBI\n"
+"\n"
+"Cliciwch 'yn ôl' ar gyfer colli cartref a dewiswch y categori cyntaf.\n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:1790
 msgid "Housing disrepair (necessary repairs have not been carried out) - for people in **rented** accomodation only"
@@ -1294,6 +1303,11 @@ msgid ""
 "\n"
 "An occupation order can restrict who can live in the family home, and even restrict the abuser from entering the surrounding area. They can also be used where clients do not feel safe continuing to live with their partner, or if they have already left home because of abuse, but want to return and exclude the abuser.\n"
 msgstr ""
+"DV/CA - Pan fo Cleient eisiau ceisio am orchymyn llys i ddiogelu eu hunain neu blentyn rhag camdriniaeth drwy orchymyn llys (sef gwaharddeb) sy'n dweud wrth unigolyn nad oes ganddynt hawl i wneud gweithred bendodol. Mae dau brif fath o waharddeb: \n"
+"\n"
+"* Gorchymyn rhag molestu - wedi ei anelu at atal eich partner neu gyn bartner rhag defnyddio neu fygwth defnyddio trais yn eu herbyn neu eu plentyn, neu eu bygwth, aflonyddu neu eu poeni.\n"
+"\n"
+"* Gall gorchymyn anheddu cyfyngu ar bwy y gall fyw yng nghartref y teulu, a hefyd gall gyfyngu eich camdriniwr rhag dod i'r ardal gyfagos. Gellir ei ddefnyddio pan nad yw'r cleientiaid yn teimlo'n ddiogel i barhau i fyw gyda'u partner, neu eich bod wedi gadael y cartref oherwydd trais, ond eisiau dychwelyd a chau eich camdriniwr allan. \n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2389
 msgid "Child abduction - the client wants advice"
@@ -1301,7 +1315,7 @@ msgstr "Herwgydio plentyn - mae'r cleient eisiau cyngor"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2392
 msgid "Seeking protection from the unlawful removal of a child from the UK or the return of a child who has been unlawfully removed from the UK or unlawfully removed within the UK. A child is someone under 18 and the client must be the parent or someone with parental responsibility for that child."
-msgstr ""
+msgstr "Ceisio diogelu rhag symud plentyn yn anghyfreithlon o'r DU, neu ddychwelyd plentyn sydd wedi cael ei symud yn anghyfreithlon o'r DU, neu wedi ei symud yn anghyfreithlon o fewn y DU. Plentyn yw rhywun sydd o dan 18 oed a rhaid i'r cleient fod yn rhiant neu rywun sydd â chyfrifoldeb rhiant am y plentyn hwnnw.  "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2436
 msgid ""
@@ -1342,6 +1356,24 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
+"Mae'r categori gwahaniaethu yn ymdrin â chyngor am achosion sy'n mynd yn groes i Ddeddf Cydraddoldeb 2010. \n"
+"\n"
+"Mae'n erbyn y gyfraith i wahaniaethu rhywun oherwydd:\n"
+"\n"
+"* oed\n"
+"* ailbennu rhywedd\n"
+"* bod yn briod neu mewn partneriaeth sifil  \n"
+"* bod yn feichiog neu wedi rhoi genedigaeth yn ddiweddar\n"
+"* hil gan gynnwys lliw, cenedligrwydd, tarddiad ethnig neu wlad\n"
+"* crefydd, cred neu ddiffyg cred neu grefydd\n"
+"* rhyw\n"
+"* cyfeiriadedd rhywiol\n"
+"\n"
+"Gelwir y rhain yn 'nodweddion gwarchodedig'. I gael rhagor o wybodaeth, ewch i ganllaw 'nodweddion gwarchodedig'.\n"
+"\n"
+"Gall problem y cleient ddechrau mewn categori arall (e.e. tai) ond bydd y cleient yn credu eu bod wedi cael eu gwahaniaethu, eu haflonyddu neu eu herlid.\n"
+"\n"
+"\n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2572
 msgid ""
@@ -1359,6 +1391,19 @@ msgid ""
 "* sex\n"
 "* sexual orientation"
 msgstr ""
+"Mae'r cleient wedi cael ei wahaniaethu, neu wedi cael eu trin yn wael oherwydd eu bod wedi cwyno am wahaniaethu neu wedi cefnogi honiad rhywun arall o wahaniaethu\n"
+"\n"
+"Mae hi'n erbyn y gyfraith i wahaniaethu rhywun oherwydd:\n"
+"\n"
+"* oed\n"
+"* ailbennu rhywedd\n"
+"* bod yn briod neu mewn partneriaeth sifil\n"
+"* bod yn feichiog neu wedi rhoi genedigaeth yn ddiweddar\n"
+"* anabledd\n"
+"* hil gan gynnwys lliw, cenedligrwydd, tarddiad ethnig neu wlad\n"
+"* crefydd, cred neu ddiffyg cred neu grefydd\n"
+"* rhyw\n"
+"* cyfeiriadedd rhywiol "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2586
 msgid "Select the type of discrimination that applies"
@@ -1370,7 +1415,7 @@ msgstr "Gwahaniaethu uniongyrchol"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2609
 msgid "Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result."
-msgstr ""
+msgstr "Gwahaniaethu uniongyrchol yw cael eich trin yn llai ffafriol na rhywun arall sydd mewn amgylchiadau tebyg oherwydd nodweddion gwarchodedig (e.e. mae'r cleient yn credu eu bod wedi cael eu dethol i'w trin yn waeth neu dan anfantais o'i gymharu â rhywun arall). Mae hyn yn cynnwys sefyllfaoedd lle mae cleientiaid yn gysylltiedig ag unigolyn sydd â nodweddion gwarchodedig ac yn cael trin yn llai ffafriol o ganlyniad i hyn. "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2610
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3612
@@ -1391,6 +1436,11 @@ msgid ""
 "\n"
 "The disability does not have to have a name or a diagnosis to meet this definition."
 msgstr ""
+"Diffinnir anabledd fel nam corfforol neu feddyliol, sydd ag effaith sylweddol a thymor hir ar allu unigolyn i gyflawni gweithgareddau dydd i ddydd.\n"
+"\n"
+"Mae pobl sydd â chancr neu sydd ag HIV+ yn cael eu cynnwys fel bod ag anabledd.\n"
+"\n"
+"Nid oes rhaid i'r anabledd gael enw neu ddiagnosis i fodloni'r diffiniad hwn. "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2659
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3008
@@ -1406,7 +1456,7 @@ msgstr "Darpariaeth gwasanaeth (h.y pryd o fwyd mewn bwyty, mynediad i ganolfan 
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2751
 msgid "Exercise of a public function (eg a police officer carrying out a search as part of a criminal investigation)"
-msgstr ""
+msgstr "Cyflawni gweithred gyhoeddus (e.e. heddwas yn cyflawni archwiliad fel rhan o ymchwiliad i droseddu) "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:2797
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3054
@@ -1461,7 +1511,7 @@ msgstr ""
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3310
 msgid "Exercise of a public function (eg a police officer carrying out a search)"
-msgstr ""
+msgstr "Cyflawni gweithred gyhoeddus (e.e. heddwas yn cyflawni archwiliad) "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3493
 msgid "Being married or in a civil partnership"
@@ -1477,7 +1527,7 @@ msgstr "Gwahaniaethu anuniongyrchol"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3611
 msgid "The client thinks that new ways of doing things have put them at a disadvantage compared to someone else because of a protected characteristic (eg an employer states that employees cannot have dreadlocks or a pub refuses access to people with hats. This puts employees or patrons of a certain religion at a disadvantage when compared to others.)"
-msgstr ""
+msgstr "Mae'r cleient yn credu bod y ffyrdd newydd o wneud pethau wedi ei roi dan anfantais o'i gymharu â rhywun arall oherwydd nodweddion gwarchodedig (e.e. mae cyflogwr yn nodi na all weithwyr gael gwallt rhaffog neu mae tafarn yn gwrthod mynediad i bobl sydd yn gwisgo hetiau. Mae hyn yn rhoi gweithwyr neu noddwr crefydd benodedig dan anfantais o'i gymharu ag eraill.)"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3636
 msgid "Something happened to make the client feel that they were in an environment that was intimidating, hostile, degrading, humiliating or offensive or that violated their dignity."
@@ -1485,19 +1535,19 @@ msgstr "Digwyddodd rhywbeth i'r cleient i wneud iddynt deimlo eu bod mewn amgylc
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3658
 msgid "Victimisation due to a discrimination claim "
-msgstr ""
+msgstr "Cael eich erlid oherwydd hawliad am wahaniaethu "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3661
 msgid "The client thinks that they have been treated worse, or disadvantaged in some way, because they have brought a claim of discrimination, given evidence or information in relation to someone else’s claim of discrimination, made a complaint of discrimination, or been suspected of doing one of these things. For example, an employee is dismissed after making a discrimination claim."
-msgstr ""
+msgstr "Mae'r cleient yn credu ei fod wedi cael ei drin yn waeth, neu o dan anfantais mewn rhyw ffordd, oherwydd eu bod wedi gwneud hawliad am wahaniaethu, rhoi tystiolaeth neu wybodaeth mewn perthynas â hawliad rhywun arall am wahaniaethu, wedi gwneud cwyn am wahaniaethu, neu wedi cael ei ddrwgdybio o wneud un o'r rhain. Er enghraifft, mae gweithiwr yn cael ei diswyddo ar ôl gwneud hawliad am wahaniaethu.  "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3730
 msgid "Advised to bring judicial review proceedings in an education matter"
-msgstr ""
+msgstr "Cynghorwyd i ddechrau achos am adolygiad barnwrol mewn perthynas â mater addysg"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3776
 msgid "Discrimination may have occurred due to the child or young person’s SEN or other protected characteristic (eg a school excludes a disabled child from a school trip, a student is being bullied because they're gay but the school is taking no action)"
-msgstr ""
+msgstr "Gallai'r gwahaniaethu wedi digwydd oherwydd SEN y plentyn neu'r unigolyn ifanc neu nodweddion gwarchodedig eraill (e.e. ysgol yn gwahardd plentyn anabl rhag mynd ar drip ysgol, myfyriwr yn cael ei fwlio oherwydd ei fod yn hoyw ond nid yw'r ysgol yn gwneud rhywbeth)"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:3779
 msgid "Search guidance for 'discrimination education' for more information and a list of questions to ask. "
@@ -1563,10 +1613,18 @@ msgid ""
 "* holidays, time off, sick leave, maternity &amp; paternity leave and other absence\n"
 "* pay, tax and the National Minimum Wage."
 msgstr ""
+"Mae'r categori cyflogaeth yn ymdrin â chyngor am\n"
+"\n"
+"* ddileu swydd, diswyddiadau a disgyblu\n"
+"* cytundebau, hawliau gweithwyr ac oriau gwaith\n"
+"* hawliau yn y gwaith gan gynnwys iechyd &amp; diogelwch a damweiniau yn y gwaith\n"
+"* statws cyflogaeth\n"
+"* gwyliau, amser i ffwrdd, absenoldeb salwch, mamolaeth &amp; absenoldeb tadolaeth ac absenoldebau eraill\n"
+"* tâl, treth ac Isafswm Cyflog Cenedlaethol."
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4085
 msgid "The client may have been discriminated against (eg employer not making reasonable adjustments for a disability)"
-msgstr ""
+msgstr "Efallai cafodd y cleient ei wahaniaethu (e.e. nid oedd cyflogwr yn gwneud addasiadau rhesymol ar gyfer anabledd)"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4088
 msgid ""
@@ -1577,10 +1635,16 @@ msgid ""
 "* sexual harassment in the workplace\n"
 "* being victimised due to having made a claim of discrimination in the workplace\n"
 msgstr ""
+"Rhagor o enghreifftiau o faterion gwahaniaethu yn cynnwys materion am:\n"
+"\n"
+"* dâl cyfartal\n"
+"*  cael eu trin yn waeth oherwydd beichiogrwydd neu gyfnod mamolaeth\n"
+"* aflonyddwch rhywiol yn y gweithle\n"
+"* cael cam oherwydd eu bod wedi honni bod gwahaniaethu wedi digwydd yn y gweithle\n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4113
 msgid "Discrimination does not apply (Confirm no other matters such as homelessness arise as a result of employment issue)"
-msgstr ""
+msgstr "Nid yw gwahaniaethu yn berthnasol (Cadarnhau nad oes materion eraill megis bod yn ddigartref yn codi o ganlyniad i broblem cyflogaeth) "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4158
 msgid "Consumer"
@@ -1588,7 +1652,7 @@ msgstr "Defnyddiwr"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4161
 msgid "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other consumer cases will be out of scope. "
-msgstr ""
+msgstr "Y peth allweddol sydd i'w benderfynu yn y categori hwn yw a chafodd y cleient ei wahaniaethu neu beidio. Bydd achosion gwahaniaethu mewn cwmpas. Bydd holl achosion defnyddwyr eraill allan o'r cwmpas."
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4201
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4289
@@ -1603,7 +1667,7 @@ msgstr "Trafferth gyda’r heddlu "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4249
 msgid "The key thing to determine in actions against the police is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow. "
-msgstr ""
+msgstr "Y peth allweddol i'w benderfynu yng nghamau yn erbyn yr heddlu yw a gafodd y cleient ei wahaniaethu. Os yw'r cleient yn dweud ei fod wedi cael ei wahaniaethu, neu eich bod wedi sylweddoli eu bod wedi cael eu gwahaniaethu o'r hyn y maent yn ei ddweud, dewiswch 'Mae'r cleient wedi cael ei wahaniaethu' ar y sgrin nesaf i barhau a'r llif gwahaniaethu."
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4268
 msgid "The client has been discriminated against (eg a police officer used racially abusive language when making an arrest) "
@@ -1618,6 +1682,8 @@ msgid ""
 "Signpost clinical negligence cases to face-to-face providers in the client's area.\n"
 "Generally, only cases that relate to infants with a brain injury are in scope for legal aid but it's possible that other cases may qualify for exceptional case funding. "
 msgstr ""
+"Cyfeirio achosion esgeuluster clinigol i ddarparwyr wyneb yn wyneb ym maes y cleient.\n"
+"Yn gyffredinol, dim ond achosion sy'n berthnasol i blant bach ag anaf i'r ymenydd sydd mewn cwmpas am gymorth cyfreithiol, ond mae'n bosibl y gall achosion eraill fod yn gymwys am gyllid i achosion arbennig. "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4449
 msgid "Any other matter"
@@ -1625,16 +1691,16 @@ msgstr "Unrhyw fater arall"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4494
 msgid "The client is losing their home due to the Border Force refusing to support them or withdrawing their support"
-msgstr ""
+msgstr "Mae'r cleient yn colli eu cartref oherwydd bod Llu'r Ffiniau yn gwrthod eu cefnogi neu yn tynnu eu cefnogaeth yn ôl. "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4589
 msgid "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other personal injury cases will be out of scope. "
-msgstr ""
+msgstr "Y peth allweddol yn y categori hwn yw a gafodd y cleient ei wahaniaethu neu beidio. Bydd achosion o wahaniaethu yn y cwmpas. Bydd holl achosion anaf personol eraill tu allan i'r cwmpas. "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4633
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4707
 msgid "The client has been discriminated against"
-msgstr ""
+msgstr "Mae'r cleient wedi cael ei wahaniaethu"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4751
 msgid "Client in rented accomodation"
@@ -1650,11 +1716,11 @@ msgstr "Nid oes un o'r uchod yn berthnasol"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4843
 msgid "Client does not have BOTH evidence of the disrepair AND reason to believe the disrepair poses a serious risk of harm, injury or illness to them or their family "
-msgstr ""
+msgstr "Nid oes gan y cleient y DDAU sef tystiolaeth o'r diffyg atgyweirio A'R rheswm dros feddwl bod y diffyg atgyweirio yn gosod risg o niwed, anaf neu salwch difrifol iddynt hwy neu eu teulu. "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4914
 msgid "Client is the alleged abusive partner and wants to defend an injunction. This will be in scope for Civil Legal Advice."
-msgstr ""
+msgstr "Y cleient yw'r partner camdriniol honedig ac mae eisiau amddiffyn gwaharddeb. Bydd hyn mewn cwmpas i gael Cyngor Cyfreithiol Sifil. "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4917
 msgid ""
@@ -1666,6 +1732,13 @@ msgid ""
 "\n"
 "Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it.\n"
 msgstr ""
+"Pan fo Cleient eisiau ceisio am orchymyn llys i ddiogelu eu hunain neu blentyn rhag camdriniaeth drwy orchymyn llys sef 'gwaharddeb' sy'n dweud wrth unigolyn nad oes ganddynt hawl i wneud gweithred bendodol. Mae dau brif fath o waharddeb:\n"
+"\n"
+"* Gorchymyn rhag molestu - wedi ei anelu at atal eich partner neu gyn bartner rhag defnyddio neu fygwth defnyddio trais yn eich erbyn neu eich plentyn, neu eich bygwth, aflonyddu neu eich poeni, er mwyn sicrhau iechyd, diogelwch a lles eich hunain a'ch plant.\n"
+"\n"
+"* Gall gorchymyn anheddu anelu at wneud penderfyniad ynghylch pwy all fyw yng nghartref y teulu, a hefyd gall gyfyngu eich camdriniwr rhag dod i'r ardal gyfagos. Os nad ydych yn teimlo'n ddiogel i barhau i fyw gyda'ch partner, neu eich bod wedi gadael eich cartref oherwydd trais, ond eisiau dychwelyd a chau eich camdriniwr allan, efallai y dylech wneud cais am orchymyn anheddu.\n"
+"\n"
+"Nid yw rhai cleientiaid sy'n gadriniwyr honedig yn cytuno ar y waharddeb yn eu herbyn ac yn dymuno cael cymorth i'w amddiffyn eu hunain yn ei erbyn.   \n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:4968
 msgid "The client is being harassed by a partner, ex-partner or family member"
@@ -1682,11 +1755,11 @@ msgstr "Bwlio yw problem y cleient, ac nid yw'r un o'r uchod yn berthnasol"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5058
 msgid "A child or young person is out of school or in a Pupil Referral Unit, or is not receiving full-time education"
-msgstr ""
+msgstr "Nid yw'r plentyn neu'r unigolyn ifanc yn yr ysgol neu mewn Uned Cyfeirio Disgyblion, neu nid yw'n cael addysg llawn amser"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5079
 msgid "The client's problem is about exclusion from school"
-msgstr ""
+msgstr "Mae problem y cleient ynghylch gwaharddiad o'r ysgol"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5100
 msgid "The client's problem is about further education"
@@ -1697,6 +1770,8 @@ msgid ""
 "The problem is about a school, college or local authority's failure to\n"
 "provide for a child or young person's educational needs, or specifically about the failure to provide the support set out in the assessment of their needs"
 msgstr ""
+"Mae'r broblem ynghylch methiant ysgol, coleg neu awdurdod lleol i\n"
+"ddarparu anghenion addysgol unigolyn ifanc, neu yn benodol am y methiant i ddarparu cefnogaeth a nodir yn yr asesiad o'u hanghenion."
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5143
 msgid "The client's problem is about higher education"
@@ -1712,31 +1787,31 @@ msgstr "Unrhyw fater arall"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5301
 msgid "The client is enquiring about an application or admissions appeal in the normal admissions round (ie reception and secondary school transfers) "
-msgstr ""
+msgstr "Mae'r cleient yn ymholi ynghylch cais neu apêl addefiadau yn y rownd addefiadau arferol (h.y. trosglwyddiadau yn ysgol derbyn ac ysgol uwchradd)"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5371
 msgid "Negligence in the provision of education"
-msgstr ""
+msgstr "Esgeluster yn narpariaeth addysg"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5417
 msgid "The client's problem relates to special needs not being met properly for a child of compulsory school age, or a young person in compulsory or further education"
-msgstr ""
+msgstr "Mae problem y cleient ynghylch anghenion arbennig sydd ddim yn cael eu bodloni'n iawn i blentyn mewn oedran ysgol gorfodol, neu unigolyn ifanc mewn addysg orfodol neu uwch"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5508
 msgid "There has been a formal fixed term exclusion from school (a suspension) of up to five days and the child has not received more than one other fixed term exclusion in the last school year"
-msgstr ""
+msgstr "Mae gwaharddiad cyfnod penodol ffurfiol wedi bod o'r ysgol (gwaharddiad dros dro) hyd at bum diwrnod, ac nid yw'r plentyn wedi cael mwy nag un gwaharddiad cyfnodpenodol yn y flwyddyn ysgol ddiwethaf. "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5646
 msgid "The client's problem is about SEN, transport, admissions or exclusions"
-msgstr ""
+msgstr "Mae problem y cleient ynghylch SEN, trafnidiaeth, addefiadau neu waharddiadau"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5692
 msgid "The client's problem is about fees or funding"
-msgstr ""
+msgstr "Mae problem y cleient ynghylch ffioedd a chyllid "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5784
 msgid "The client's problem is about exclusion - but not for failure at exams or malpractice allegations eg plagiarism"
-msgstr ""
+msgstr "Mae problem y cleient ynghylch gwaharddiad - nid am fethu yn yr arholiadau neu honiadau camymddwyn e.e. llên-ladrad"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5878
 msgid ""
@@ -1745,10 +1820,14 @@ msgid ""
 "* having recently given birth (and can include the need to breastfeed)\n"
 "\n"
 msgstr ""
+"Mae hyn yn cyfeirio at:\n"
+"* beichiogrwydd\n"
+"* wedi rhoi genedigaeth yn ddiweddar (a gall gynnwys yr angen i fwydo ar y fron)\n"
+"\n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5906
 msgid "Race refers to a group of people defined by their race, colour, nationality (including citizenship), ethnic or national origins."
-msgstr ""
+msgstr "Mae hil yn cyfeirio at grŵp o bobl sy'n cael eu diffinio gan eu hil, lliw, cenedligrwydd (gan gynnwys dinasyddiaeth), tarddiad ethnig neu wlad."
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5927
 msgid "Religion or belief (or lack of belief)"
@@ -1759,6 +1838,8 @@ msgid ""
 "Religion refers to any religious or philosophical belief. This also includes a lack of religious belief (eg atheism).\n"
 "Generally, a belief should affect your life choices or the way you live for it to be included in the definition."
 msgstr ""
+"Mae crefydd yn cyfeirio at unrhyw gred grefyddol neu athronyddol. Mae hyn yn cynnwys diffyg cred (e.e. atheistiaeth).\n"
+"Yn gyffredinol, dylai'r diffiniad gynnwys y dylai cred effeithio ar eich dewisiadau mewn bywyd neu'r ffordd yr ydych yn byw iddo. "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:5952
 msgid "Sex"
@@ -1773,6 +1854,8 @@ msgid ""
 "Sexual orientation is whether a person's sexual attraction is towards their own sex, the opposite sex or to both sexes.\n"
 "This can also cover situations where discrimination is based on perceived sexual orientation, which may not be the case."
 msgstr ""
+"Cyfeiriadedd rhywiol yw pan mae atyniad rhywiol unigolyn tuag at ei ryw ei hun, y rhyw arall neu'r ddau ryw.\n"
+"Gall hyn ymdrin â sefyllfaoedd lle mae gwahaniaethu wedi seilio ar gyfeiriadedd rhywiol ymddangosiadol, efallai nid fel yna mae hi."
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6000
 msgid "Gender reassignment"
@@ -1787,22 +1870,28 @@ msgid ""
 "* is currently undergoing gender reassignment\n"
 "* has already undergone (or partially undergone) the process of gender reassignment"
 msgstr ""
+"Mae'n anghyfreithlon i wahaniaethu rhywun oherwydd ailbennu rhywedd.\n"
+"\n"
+"Mae hyn yn cynnwys pan fydd rhywun:\n"
+"* yn bwriadu cael triniaeth ailbennu rhywedd\n"
+"* yn cael triniaeth ailbennu rhywedd ar hyn o bryd\n"
+"* wedi cael (neu wedi cael yn rhannol) y broses ailbennu rhywedd yn barod"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6052
 msgid "Disability or failure to make reasonable adjustments for a disabled person"
-msgstr ""
+msgstr "Anabledd neu fethiant i wneud addasiadau rhesymol ar gyfer unigolyn anabl"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6168
 msgid "The client has been identified as homeless through a Community Care Assessment"
-msgstr ""
+msgstr "Mae'r cleient wedi cael ei ddynodi yn ddigartref drwy Asesiad Gofal Cymunedol "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6190
 msgid "The client has not been identified as homeless through a Community Care Assessment"
-msgstr ""
+msgstr "Nid yw'r cleient wedi cael ei ddynodi yn ddigartref drwy Asesiad Gofal Cymunedol"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6211
 msgid "Client wants advice about international family maintenance "
-msgstr ""
+msgstr "Mae'r cleient eisiau cyngor am gynhaliaeth teulu rhyngwladol "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6214
 msgid ""
@@ -1812,10 +1901,15 @@ msgid ""
 "\n"
 "**NOTE: These are very unusual cases.**\n"
 msgstr ""
+"Mae'n ymdrin â gorchmynion gorfodi cynhaliaeth a wneir y tu allan i'r DU. Gall cleientiaid sydd wedi cael gorchmynion cynhaliaeth mewn un wlad wneud cais i'w cofrestru a'u gorfodi mewn gwlad arall.\n"
+"\n"
+"Felly pan fydd cleient yn cael gorchymyn y tu allan i'r DU, ni fydd hyn mewn cwmpas.\n"
+"\n"
+"** NODYN: Mae'r rhain yn achosion anghyffredin.\n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6380
 msgid "Not a Civil Legal Advice category or legal problem."
-msgstr ""
+msgstr "Nid yw'n gategori Cyngor Cyfreithiol Sifil nac yn broblem gyfreithiol"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6424
 msgid ""
@@ -1823,10 +1917,13 @@ msgid ""
 "\n"
 "*Click 'Next' to continue*"
 msgstr ""
+"PWYSIG: Lle bo cleient neu blentyn mewn RISG O GAMDRINIAETH YN SYTH, mae'n rhaid i chi ddilyn Polisi Plentyn, Unigolyn Ifanc ac Oedolyn sydd mewn Risg o Gamdriniaeth. Efallai bydd angen i chi adrodd y mater i wasanaethau diogelu.\n"
+"\n"
+"* Cliciwch 'Nesaf' i barhau* "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6447
 msgid "Legal advice in support of family mediation"
-msgstr ""
+msgstr "Cyngor cyfreithiol i gefnogi cyfryngu teulu"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6450
 msgid ""
@@ -1836,6 +1933,11 @@ msgid ""
 "\n"
 "*Please note: Mediation must be ongoing or have concluded. Clients will not qualify for Civil Legal Advice advice where mediation has not yet taken place or they have only attended Mediation Assessment Information Meeting (MIAM).*"
 msgstr ""
+"Gall cyfryngu teulu helpu pobl sydd â pherthynas sydd wedi chwalu, i ddod i gytundeb eu hunain ynghylch arian, eiddo a gofal plant heb fynd i'r llys.\n"
+"\n"
+"Os yw'r cleient eisiau cyngor cyfreithiol i gefnogi proses cyfryngu parhaus neu gyfryngu sydd wedi dod i ben yn ddiweddar, yna bydd hyn o fewn y cwmpas. Gall hyn gynnwys gwneud unrhyw gytundeb a ddaethpwyd iddo yn y cyfarfod cyfryngu a'i rhwymo mewn cyfraith drwy wneud cais i'r llys (gorchymyn cydsynio).\n"
+"\n"
+"* Sylwch: Rhaid i'r cyfryngu fod yn barhaus neu wedi dod i ben. Ni fydd cleientiaid yn gymwys am gyngor gan Cyngor Cyfreithiol Sifil os na fydd y cyfryngu wedi digwydd eto neu os mai dim ond Cyfarfod Cyfryngu, Gwybodaeth ac Asesu (MIAM) y maent wedi'i fynychu.*"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6499
 msgid ""
@@ -1848,6 +1950,13 @@ msgid ""
 "\n"
 "*I can’t guarantee that these organisations/this organisation will take on your case under legal aid so please check with them to see whether they are able to help you. If you do not qualify for legal aid you may have to pay for their service. So check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*"
 msgstr ""
+"Darllenwch y canlynol i'r cleient:\n"
+"\n"
+"* Wedi seilio ar yr hyn yr ydych wedi ddweud wrthyf fi heddiw, efallai bydd eich problem yn gymwys i gymorth cyfreithiol. Ond bydd rhaid i chi dal ddangos eich bod yn gymwys yn ariannol. * \n"
+"\n"
+"* Mae arna'i ofn nad yw Cyngor Cyfreithiol Sifil yn darparu cyngor ynghylch y mater yr ydych yn ffonio amdano i'w drafod. Ond nid ein gwasanaeth ni yw eich unig opsiwn, a byddaf yn ceisio eich cyfeirio at gymorth gwahanol.*\n"
+"\n"
+"* Ni allaf warantu y bydd y sefydliadau/ sefydliad hwn yn cymryd eich achos dan gymorth cyfriethiol felly gwiriwch gyda hwy i weld os allant eich helpu. Os nad ydych yn gymwys am gymroth cyfreithiol efallai bydd rhaid i chi dalu am eu gwasanaeth. Felly gwiriwch unrhyw gostau, eu horiau agor ac os gallwch wneud apwyntiad. Hefyd, gwiriwch unrhyw bolisiau yswiriant sydd gennych efallai a all ddarparu sicrwydd cyfreithiol a gallai unrhyw gostau posibl cael eu sicrhau gan hwn.*"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6528
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6556
@@ -1879,6 +1988,15 @@ msgid ""
 "\n"
 "*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*"
 msgstr ""
+"Darllenwch y canlynol i'r cleient:\n"
+"\n"
+"* Wedi seilio ar yr wybodaeth yr ydych wedi ei ddarparu, nid yw Cymorth Cyfreithiol ar gael ar gyfer y mater yr ydych yn ffonio amdano i'w drafod.*\n"
+"\n"
+"* Os oes gennych fynediad i'r rhyngrwyd, gallaf ddweud wrthych ble i ddod o hyd i ragor o wybodaeth a chymorth eich hun ar-lein.*\n"
+"\n"
+"* Neu gallaf awgrymu llinell gymorth arall neu wasanaeth cyngor wyneb yn wyneb a allai eich helpu.*\n"
+"\n"
+"* Ni allaf warantu y gallant eich helpu, felly gwiriwch gyda hwy. Efallai bydd rhaid i chi dalu am eu gwasanaeth felly gwiriwch unrhyw gostau, eu horiau agor ac os gallwch wneud apwyntiad. Hefyd, gwiriwch unrhyw bolisiau yswiriant sydd gennych efallai a all ddarparu sicrwydd cyfreithiol a gallai unrhyw gostau posibl cael eu sicrhau gan hwn.*"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:6864
 msgid ""
@@ -1892,6 +2010,15 @@ msgid ""
 "\n"
 "*I can’t guarantee that they will be able to help so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*\n"
 msgstr ""
+"Darllenwch y canlynol i'r cleient:\n"
+"\n"
+"* Wedi seilio ar yr wybodaeth yr ydych wedi ei ddarparu, gallaf ddweud wrthych nad yw cymorth cyfreithiol ar gael fel arfer am y math o fater teulu yr ydych yn ffonio amdano i'w drafod.*\n"
+"\n"
+"* Os oes gennych fynediad i'r rhyngrwyd, gallaf ddweud wrthych ble i ddod o hyd i ragor o wybodaeth a chymorth eich hun ar-lein.*\n"
+"\n"
+"* Neu gallaf awgrymu llinell gymorth arall neu wasanaeth cyngor wyneb yn wyneb a allai eich helpu.*\n"
+"\n"
+"* Ni allaf warantu y gallant eich helpu, felly gwiriwch gyda hwy. Efallai bydd rhaid i chi dalu am eu gwasanaeth felly gwiriwch unrhyw gostau, eu horiau agor ac os gallwch wneud apwyntiad. Hefyd, gwiriwch unrhyw bolisiau yswiriant sydd gennych efallai a all ddarparu sicrwydd cyfreithiol a gallai unrhyw gostau posibl cael eu sicrhau gan hwn.*\n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7061
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7090
@@ -1908,6 +2035,15 @@ msgid ""
 "\n"
 "*Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*"
 msgstr ""
+"Darllenwch y canlynol i'r cleient:\n"
+"\n"
+"* Mae arna'i ofn nad yw Cyngor Cyfreithiol Sifil yn darparu cyngor ynghylch y mater yr ydych yn ffonio amdano i'w drafod. Ond nid ein gwasanaeth ni yw eich unig opsiwn, a byddaf yn ceisio eich cyfeirio at gymorth gwahanol.*\n"
+"\n"
+"* Ni allaf warantu y gallant eich helpu, felly gwiriwch gyda hwy. Efallai bydd rhaid i chi dalu am eu gwasanaeth felly gwiriwch unrhyw gostau, eu horiau agor ac os gallwch wneud apwyntiad. Hefyd, gwiriwch unrhyw bolisiau yswiriant sydd gennych efallai a all ddarparu sicrwydd cyfreithiol ac efallai gall unrhyw gostau posibl cael eu sicrhau gan hwn.*\n"
+"\n"
+"* Os oes gennych fynediad i'r rhyngrwyd, gallaf ddweud wrthych ble i ddod o hyd i ragor o wybodaeth a chymorth eich hun ar-lein.*\n"
+"\n"
+"* Neu gallaf awgrymu llinell gymorth arall neu wasanaeth cyngor wyneb yn wyneb a allai eich helpu.*"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7148
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7177
@@ -1927,10 +2063,19 @@ msgid ""
 "\n"
 "*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*"
 msgstr ""
+"Darllenwch y canlynol i'r cleient:\n"
+"\n"
+"* Mae arna'i ofn nad yw Cyngor Cyfreithiol Sifil yn darparu cyngor ynghylch y mater yr ydych yn ffonio amdano i'w drafod. Ond nid ein gwasanaeth ni yw eich unig opsiwn, a byddaf yn ceisio eich cyfeirio at gymorth gwahanol.*\n"
+"\n"
+"* Ni allaf warantu y gallant eich helpu, felly gwiriwch gyda hwy. Efallai bydd rhaid i chi dalu am eu gwasanaeth felly gwiriwch unrhyw gostau, eu horiau agor ac os gallwch wneud apwyntiad. Hefyd, gwiriwch unrhyw bolisiau yswiriant sydd gennych efallai a all ddarparu sicrwydd cyfreithiol ac efallai gall unrhyw gostau posibl cael eu sicrhau gan hwn.*\n"
+"\n"
+"* Os oes gennych fynediad i'r rhyngrwyd, gallaf ddweud wrthych ble i ddod o hyd i ragor o wybodaeth a chymorth eich hun ar-lein.*\n"
+"\n"
+"* Neu gallaf awgrymu llinell gymorth arall neu wasanaeth cyngor wyneb yn wyneb a allai eich helpu.*"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7405
 msgid "Domestic violence or abuse – including issues arising from forced marriage, child abduction, and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser."
-msgstr ""
+msgstr "Trais neu gamdriniaeth domestig - gan gynnwys problemau sy'n codi mewn priodas dan orfod, herwgydio plentyn, ac aflonyddu. Hefyd yn cynnwys amddiffyniad yn erbyn gorchymyn anheddu neu orchymyn rhag molestu lle mai'r camdriniwr honedig yw'r cleient.  "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7408
 msgid ""
@@ -1940,6 +2085,11 @@ msgid ""
 "\n"
 "Guidance contains an article \"Domestic violence and abuse - definition\" for more information. Search for 'dv' or 'abuse' to find it quickest."
 msgstr ""
+"Pan fo cleient eisiau ceisio am orchymyn llys i ddiogelu eu hunain neu blentyn rhag camdriniaeth drwy orchymyn llys 'gwaharddeb' sy'n dweud wrth unigolyn nad ydynt yn cael cyflawni gweithred benodol. \n"
+"\n"
+"Ni fydd rhai cleientiaid sy'n gamdrinwyr honedig yn cytuno â'r waharddeb yn eu herbyn ac yn dymuno cael cymorth i amddiffyn eu hunain yn ei erbyn.\n"
+"\n"
+"Mae'r Canllaw yn cynnwys erthygl \"Trais a Chamdriniaeth Domestig - diffiniad\" i gael rhagor o wybodaeth. Chwiliwch am 'dv' neu 'abuse' i ddod o hyd iddi'n gynt."
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7431
 msgid "Forced marriage - the client wants advice"
@@ -1947,7 +2097,7 @@ msgstr "Priodas dan orfod - mae'r cleient eisiau cyngor"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7434
 msgid "This is where a marriage is about to take place or has taken place without the full and free consent of each party. This may be due to actual or threats of physical force or violence, emotional pressure or psychological abuse. Civil Legal Advice Specialists can offer advice on seeking an order to protect the client from such a marriage occuring or how to end such a marriage."
-msgstr ""
+msgstr "Dyma ble mae'r briodas ar fin cael ei chynnal neu wedi'i chynnal heb ganiatad llawn a rhydd gan bob parti, Gall hyn fod oherwydd bygythiadau gwirioneddol neu fygythiadau i drais neu rym corfforol, pwysau emosiynol neu camdriniaeth seicolegol. Gall Arbenigwyr Cyngor Cyfreithiol Sifil gynnig cyngor ar geisio gorchymyn i ddiogelu'r cleient rhag i briodas o'r fath ddigwydd neu sut i ddod â phriodas o'r fath i ben. "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7551
 msgid ""
@@ -1955,6 +2105,9 @@ msgid ""
 "\n"
 "*On the following screen please select if they want to find a local mediator, or that mediation isn't relevant to the problem. Click next to continue.*"
 msgstr ""
+"A oedd anghydfod lle mae cyfryngu teulu yn berthnasol? Os ydy, gwiriwch os yw'r cleient wedi clywed am/ac wedi ystyried Cyfryngu Teulu.\n"
+"\n"
+"* Ar y sgrîn canlynol, bydd angen dewis os ydynt angen cyfryngwr lleol, neu nad yw cyfryngu yn berthnasol i'r broblem. Cliciwch nesaf i barhau.*"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7556
 msgid ""
@@ -1968,6 +2121,15 @@ msgid ""
 "\n"
 "If you are qualify you can get legal aid for family mediation as well as legal advice to support the mediation process. This can include the cost of making any agreement that you reach in mediation legally binding by applying to the court - this is called applying for a consent order.\n"
 msgstr ""
+"Mae cyfryngwyr teulu wedi cael eu hyfforddi i weithio gyda phobl sydd â pherthynas wedi chwalu. Byddant yn gwrando ar ddwy ochr o'r ddadl ac yn eich helpu i ddod i gytundeb eich hunain ynghylch arian, eiddo a gofal plant, heb fynd i'r llys.\n"
+"\n"
+"Nid cyplau sy'n gwahanu yn unig y gall ddefnyddio gwasanaeth cyfryngu. Gall helpu teidiau a neiniau neu lys deuluoedd i ddatrys eu problemau.\n"
+"\n"
+"Mae cyfryngu yn darparu sefyllfa ddiogel a diduedd i chi siarad ac edrych ar eich pryderon ac anghenion eich gilydd.\n"
+"\n"
+"Chwiliwch am 'Cyfryngu Teulu' yn y blwch chwili yn y canllaw i gael rhagor o gymorth.\n"
+"\n"
+"Os ydych yn gymwys cewch gymorth cyfreithiol i gael cyfryngu teulu yn ogystal â chyngor cyfreithiol i'ch cefnogi yn y broses cyfryngu. Gall hyn gynnwys cost o wneud unrhyw gytundeb yr ydych yn dod iddo yn y cyfryngu yn rhwymo mewn cyfraith drwy ei gyflwyno i'r llys - gelwir hyn yn wneud cais am orchymyn cydsynio. \n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7584
 msgid "Client wishes to find mediator."
@@ -1989,10 +2151,19 @@ msgid ""
 "\n"
 "You should now direct the client to their nearest contracted quality assured family mediation service using the directory (Find An Adviser tool)\n"
 msgstr ""
+"Darllenwch y canlynol i'r cleient:\n"
+"\n"
+"* Os oes gennych fynediad i'r rhyngrwyd, gallaf ddweud wrthych ble i gael rhagor o wybodaeth am Gyfryngu Teulu a sut i chwilio am gyfryngwr teulu.*\n"
+"\n"
+"* Neu gallaf ddod o hyd i wasanaeth cyfryngu i chi yn awr.*\n"
+"\n"
+"* Os ydych yn gymwys cewch gymorth cyfreithiol i ymdrin â chostau Cyfryngu Teulu yn ogystal â chyngor cyfreithiol i gefnogi'r broses cyfryngu. Neu efallai bydd angen i chi dalu am y gwasanaeth hwn. Siaradwch â'r gwasanaeth cyfryngu i gael rhagor o wybodaeth.*\n"
+"\n"
+"Dylech gyfeirio'r cleient i'r gwasanaeth cyfryngu teulu sydd â sicrhad ansawdd agosaf atynt gan ddefnyddio'r cyfeiriadur (arf Dod o hyd i Gynghorwr)\n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7655
 msgid "The client has already taken action to stop domestic violence (e.g. via an injunction) but needs to take further action as the order is not being complied with"
-msgstr ""
+msgstr "Mae'r cleient wedi cymryd cam gweithredu i atal trais domestig (e.e. drwy waharddeb) ond mae angen cymryd camau pellach gan na chydymffurfir â'r gorchymyn "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7678
 msgid ""
@@ -2017,10 +2188,13 @@ msgid ""
 "* Dissolution - ending a same sex Civil Partnership\n"
 "\n"
 msgstr ""
+"* Ysgariad - dod â phriodas i ben\n"
+"* Dirymiad - datgan priodas yn ddi-rym felly ni ystyrir ei fod wedi digwydd\n"
+"* Diddymiad - dod â Phartneriaeth Sifil o'r un rhyw i ben\n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7727
 msgid "Children disputes (eg contact with children)"
-msgstr ""
+msgstr "Anghydfod Plant (e.e. cyswllt gyda phlant) "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7730
 msgid ""
@@ -2031,6 +2205,12 @@ msgid ""
 "* Residence\n"
 "* Transferring status of Parentage"
 msgstr ""
+"Cynnwys cyngor ar y meysydd canlynol\n"
+"\n"
+"* Cyfrifoldeb Rhiant\n"
+"* Cyswllt\n"
+"* Preswylio\n"
+"* Trosglwyddo statws teulu "
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7754
 msgid "Financial matters"
@@ -2044,16 +2224,23 @@ msgid ""
 "* Transfer of tenancies on divorce/separation\n"
 "* Maintenance"
 msgstr ""
+"Yn cynnwys cyngor am anghydfod ariannol sy'n codi mewn:\n"
+"\n"
+"* Ysgariad/gwahaniad (gan gynnwys partneriaeth sifil) gan gynnwys Etifeddiaeth ac ymddiriedolaeth tir\n"
+"* Trosglwyddo tenantiaeth ar ôl ysgariad/ gwahaniad\n"
+"* Cynhaliaeth"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7780
 msgid "Not a dispute for which mediation is relevant."
-msgstr ""
+msgstr "Nid yw'n anghydfod sy'n berthnasol i gyfryngu."
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7824
 msgid ""
 "The client's child has experienced child abuse within the family within the last two years, or the abuser has a current criminal conviction\n"
 "(Remember that if the caller is the abuser, this will not be in scope) "
 msgstr ""
+"Mae plentyn y cleient wedi cael profiad o gamdriniaeth plentyn o fewn y teulu yn y ddwy flynedd diwethaf, neu mae gan y camdriniwr euogfarn troseddol gyfredol\n"
+"(Cofiwch os mai'r camdriniwr yw'r galwr, ni fyddant yn y cwmpas)"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7847
 msgid "The client is under 18"
@@ -2061,7 +2248,7 @@ msgstr "Mae'r cleient o dan 18 oed"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7868
 msgid "No abuse."
-msgstr ""
+msgstr "Dim camdriniaeth"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7914
 msgid ""
@@ -2071,6 +2258,11 @@ msgid ""
 "\n"
 "*Please note that before a specialist advisor can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof.\"*\n"
 msgstr ""
+"Darllenwch y canlynol i'r cleient:\n"
+"\n"
+"* \"Efallai gallwn eich rhoi drwy i ddarparwr arbenigol a allai eich helpu gyda'r maes cyfraith hwn, ond cyn y gallaf eich trosglwyddo mae angen i ni gwblhau asesiad ariannol byr i ganfod os gallwch gael cymorth cyfreithiol.*\n"
+"\n"
+"* Sylwch cyn y gall cynghorydd arbenigol eich cynorthwyo, bydd angen i chi ddarparu prawf o'r hyn yr ydych wedi dweud wrthyf heddiw. Byddant yn egluro i chi beth y gallwch ei ddefnyddio fel prawf.\"*\n"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7964
 msgid ""
@@ -2084,18 +2276,27 @@ msgid ""
 "\n"
 "*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.\"*"
 msgstr ""
+"Darllenwch y canlynol i'r cleient:\n"
+"\n"
+"* O'r wybodaeth yr ydych wedi ei ddarparu, nid yw cymorth cyfreithiol ar gael ar gyfer y mater yr ydych yn ffonio amdano i'w drafod. Fodd bynnag nid ein gwasanaeth ni yw eich unig opsiwn, a byddaf yn ceisio eich cyfeirio at gymorth yn rhywle arall.*\n"
+"\n"
+"* Os oes gennych fynediad i'r rhyngrwyd, gallaf ddweud wrthych ble i ddod o hyd i ragor o wybodaeth a chymorth eich hun ar-lein.*\n"
+"\n"
+"* Neu gallaf awgrymu llinell gymorth arall neu wasanaeth cyngor wyneb yn wyneb a allai eich helpu.*\n"
+"\n"
+"* Ni allaf warantu y gallant eich helpu, felly gwiriwch gyda hwy. Efallai bydd rhaid i chi dalu am eu gwasanaeth felly gwiriwch unrhyw gostau, eu horiau agor ac os gallwch wneud apwyntiad. Hefyd, gwiriwch unrhyw bolisiau yswiriant sydd gennych efallai a all ddarparu sicrwydd cyfreithiol a gallai unrhyw gostau posibl cael eu sicrhau gan hwn.*"
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:7994
 msgid "The matter relates to a child in care, a care leaver, or the call is made by a foster carer. "
-msgstr ""
+msgstr "Mae'r mater yn ymwneud â phlentyn sydd mewn gofal, plentyn yn gadael gofal, neu mae'r alwad yn cael ei wneud gan ofalwr maeth."
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:8040
 msgid "Please note: if a local authority is trying to take a child into care, no financial assessment is needed for the parent. "
-msgstr ""
+msgstr "Sylwch: os yw'r awdurdod lleol yn ceisio rhoi'r plentyn mewn gofal, nid oes angen asesiad ariannol ar gyfer y rhiant."
 
 #: apps/diagnosis/data/graph-2015.06.10.graphml.tpl:8060
 msgid "The client may have been discriminated against (select this button to proceed to the discrimination category)"
-msgstr ""
+msgstr "Efallai bod y cleient wedi cael ei wahaniaethu (dewiswch y botwm hwn i barhau i'r categori gwahaniaethu)"
 
 #: templates/admin/base_site.html:4
 msgid "Django site admin"
@@ -2107,7 +2308,7 @@ msgstr "Cyngor Cyfreithiol Sifil"
 
 #: templates/admin/common/reset_lockout_form.html:5
 msgid "Reset lockout"
-msgstr ""
+msgstr "Ailosod y clo"
 
 #: templates/admin/index.html:41
 #, python-format
@@ -2281,3 +2482,6 @@ msgstr "Adroddiadau"
 
 #~ msgid "The client's problem is about discrimination"
 #~ msgstr "Mae problem y cleient ynghylch gwahaniaethu"
+
+#~ msgid "Your child has special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
+#~ msgstr "Mae gan eich plentyn anghenion addysgol arbennig - mae hyn yn cynnwys problemau mewn perthynas â thrafnidiaeth, peidio â bod mewn ysgol neu bod mewn uned cyfeirio disgyblion"

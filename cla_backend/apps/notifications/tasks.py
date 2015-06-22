@@ -5,7 +5,6 @@ from celery import shared_task
 from django.conf import settings
 from django.core.cache import cache
 from django.core.serializers.json import DjangoJSONEncoder
-from simplejson import JSONDecodeError
 
 from .models import Notification
 from .serializers import NotificationSerializer
@@ -32,7 +31,7 @@ def send_notifications():
     try:
         success = response.json()['success']
         assert success is True
-    except (JSONDecodeError, AssertionError) as e:
+    except (ValueError, AssertionError) as e:
         raise send_notifications.retry(exc=e)
     else:
         return success

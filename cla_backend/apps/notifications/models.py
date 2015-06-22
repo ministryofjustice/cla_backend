@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from django.utils import timezone
+import datetime
+import pytz
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save, post_delete
@@ -11,7 +12,7 @@ from .signals import send_notifications_to_users
 
 class NotificationManager(models.Manager):
     def live(self):
-        now = timezone.now()
+        now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         return self.get_queryset().filter(
             start_time__lt=now,
             end_time__gt=now

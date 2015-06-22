@@ -1,4 +1,5 @@
 from django.template.defaultfilters import striptags
+from django.utils.encoding import force_text, Promise
 
 from cla_common.constants import DIAGNOSIS_SCOPE
 
@@ -27,8 +28,15 @@ def get_node_scope_value(digraph, g_node_id):
         return None
 
     node = digraph.node[g_node_id]
-    label = striptags(node['label']+"    ").strip()
+    label = striptags(eval_promise(node['label']) + "    ").strip()
 
     return DIAGNOSIS_SCOPE.CHOICES_CONST_DICT.get(
         label, DIAGNOSIS_SCOPE.UNKNOWN
     )
+
+
+def eval_promise(value):
+    """
+    Used to convert lazy translations to text
+    """
+    return isinstance(value, Promise) and force_text(value) or value

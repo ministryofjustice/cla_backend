@@ -2,24 +2,29 @@ import hashlib
 import re
 import codecs
 import networkx as nx
-from lxml import objectify
+from lxml import etree, objectify
 
 from os.path import join, abspath, dirname
 
 from django.conf import settings
-from django.utils.functional import SimpleLazyObject
+from django.template.loader import get_template_from_string, Context
+from django.utils.encoding import force_text
+from django.utils.functional import lazy, SimpleLazyObject
+from django.utils.six import text_type
 
 import markdown
+
+from cla_common.constants import DIAGNOSIS_SCOPE
 
 
 class GraphImporter(object):
     KEY_BODY = 'body'
     KEY_TITLE = 'title'
     KEY_CONTEXT = 'context'
-    KEY_OPERATOR_ROOT = 'operator_root'
     KEY_ORDER = 'order'
     KEY_HELP = 'help'
     KEY_HEADING = 'heading'
+    KEY_PERMANENT_ID = 'permanent_id'
 
     def __init__(self, file_path):
         self.file_path = file_path
@@ -28,22 +33,56 @@ class GraphImporter(object):
         self.ns = None
         self.prop_mapping = None
 
-    def process(self):
+    def internationalise(self, output_path=None):
+        """
+        Makes an internationalised Django template of the input graphml
+        """
+        # NB: objectify does not allow mutation so must use etree
+        self.doc = etree.parse(self.file_path)
+        self.ns = self.doc.getroot().nsmap[None]
+        self.process_properties_declaration()
+
+        internationalised_keys = [self.KEY_BODY, self.KEY_HELP, self.KEY_HEADING]
+        internationalised_keys = [self.prop_mapping[key]['id'] for key in internationalised_keys]
+
+        skipped_values = DIAGNOSIS_SCOPE.CHOICES_CONST_DICT.values()
+
+        for data_element in self.xpath_ns(self.doc, '//ns:data'):
+            data_type = data_element.attrib.get('key', None)
+            if data_type in internationalised_keys and data_element.text:
+                if data_element.text in skipped_values:
+                    continue
+                elif u'"' in data_element.text or len(data_element.text.splitlines()) > 1:
+                    data_element.text = u'{%% blocktrans %%}%s{%% endblocktrans %%}' % data_element.text
+                else:
+                    data_element.text = u'{%% trans "%s" %%}' % data_element.text
+
+        if not output_path:
+            output_path = '%s.tpl' % self.file_path
+
+        with open(output_path, 'w+') as output:
+            graph_str = etree.tostring(self.doc, encoding='UTF-8', xml_declaration=True, standalone=False,
+                                       pretty_print=True)
+            output.write(u'{% load i18n %}'.encode('utf-8'))
+            output.write(graph_str)
+
+    def process(self, is_templated=settings.DIAGNOSES_USE_TEMPLATES):
         with open(self.file_path, 'rb') as afile:
             version = hashlib.md5(afile.read()).hexdigest()
         self.graph = nx.MultiDiGraph(version=version)
 
         with codecs.open(self.file_path, 'r', encoding="utf-8") as f:
             # encoding declaration causes problems so deleting it
-            g_str = re.sub(r'encoding="UTF-8"', '', f.read())
+            g_str = re.sub(r'encoding=("|\')UTF-8("|\')', '', f.read())
+            g_str = re.sub(r'{% load .*?%}', '', g_str)
 
             self.doc = objectify.fromstring(g_str)
             # objectify.deannotate(self.doc, xsi_nil=True, cleanup_namespaces=True)
             self.ns = self.doc.nsmap[None]
 
             self.process_properties_declaration()
-            self.process_nodes()
-            self.process_edges()
+            node_id_map = self.process_nodes(is_templated=is_templated)
+            self.process_edges(node_id_map)
 
         return self.graph
 
@@ -62,7 +101,7 @@ class GraphImporter(object):
             d = {'id': el.attrib.get('id')}
 
             try:
-                d['default'] = el['default'].text
+                d['default'] = el.find('ns:default', namespaces={'ns': self.ns}).text
             except AttributeError:
                 d['default'] = None
 
@@ -72,17 +111,29 @@ class GraphImporter(object):
             self.KEY_BODY: _get_id_default_dict_for('body'),
             self.KEY_TITLE: _get_id_default_dict_for('title'),
             self.KEY_CONTEXT: _get_id_default_dict_for('context:xml'),
-            self.KEY_OPERATOR_ROOT: _get_id_default_dict_for('operator_root'),
             self.KEY_ORDER: _get_id_default_dict_for('order'),
             self.KEY_HELP: _get_id_default_dict_for('help'),
             self.KEY_HEADING: _get_id_default_dict_for('heading'),
+            self.KEY_PERMANENT_ID: _get_id_default_dict_for('permanent_id'),
         }
 
-    def process_nodes(self):
+    def process_nodes(self, is_templated=settings.DIAGNOSES_USE_TEMPLATES):
+        node_id_map = dict()
         context_key = self.prop_mapping[self.KEY_CONTEXT]['id']
 
-        def _process_context(node):
-            xml_context = self.xpath_ns(node, 'ns:data[@key="%s"]' % context_key)
+        def _get_text(a_node):
+            if is_templated and a_node.text and '{%' in a_node.text:
+                tpl = get_template_from_string(u'{%% load i18n %%}%s' % a_node.text)
+                return lazy(lambda: tpl.render(Context()), text_type)()
+            return a_node.text
+
+        def _get_markdown(_text):
+            if is_templated:
+                return lazy(lambda: markdown.markdown(force_text(_text)), text_type)()
+            return _text
+
+        def _process_context(_node):
+            xml_context = self.xpath_ns(_node, 'ns:data[@key="%s"]' % context_key)
             if not xml_context:
                 return None
             xml_context = xml_context[0].find('context')
@@ -92,21 +143,23 @@ class GraphImporter(object):
 
             context = {}
             for child in xml_context.getchildren():
-                context[child.tag] = child.text
+                context[child.tag] = _get_text(child)
             return context
 
-        def _get_node_data_value_or_default(node, key):
+        def _get_node_data_value_or_default(_node, key):
             attr_key = self.prop_mapping[key]['id']
             try:
-                return self.xpath_ns(node, 'ns:data[@key="%s"]' % attr_key)[0].text
+                data_node = self.xpath_ns(node, 'ns:data[@key="%s"]' % attr_key)[0]
+                return _get_text(data_node)
             except IndexError:
                 return self.prop_mapping[key]['default']
 
         # looping through the nodes
-        for node in self.xpath_ns(self.doc, '//ns:node'):
-            if _get_node_data_value_or_default(
-                    node, self.KEY_OPERATOR_ROOT) == 'true':
-                self.graph.graph['operator_root_id'] = self.xpath_ns(node, '@id')[0]
+        nodes = self.xpath_ns(self.doc, '//ns:node')
+        for node in nodes:
+            node_id = node.attrib['id']
+            permanent_node_id = _get_node_data_value_or_default(node, self.KEY_PERMANENT_ID)
+            node_id_map[node_id] = permanent_node_id
 
             try:
                 order = int(_get_node_data_value_or_default(node, self.KEY_ORDER))
@@ -115,43 +168,49 @@ class GraphImporter(object):
 
             label = _get_node_data_value_or_default(node, self.KEY_BODY)
             if label:
-                label = markdown.markdown(label)
+                label = _get_markdown(label)
 
             help_text = _get_node_data_value_or_default(node, self.KEY_HELP)
             if help_text:
-                help_text = markdown.markdown(help_text)
+                help_text = _get_markdown(help_text)
 
             self.graph.add_node(
-                node.attrib['id'],
+                permanent_node_id,
                 label=label,
                 title=_get_node_data_value_or_default(node, self.KEY_TITLE),
                 order=order,
                 context=_process_context(node),
                 help_text=help_text,
-                heading=_get_node_data_value_or_default(node, self.KEY_HEADING)
+                heading=_get_node_data_value_or_default(node, self.KEY_HEADING),
             )
 
-    def process_edges(self):
+        return node_id_map
+
+    def process_edges(self, node_id_map):
         for edge in self.xpath_ns(self.doc, '//ns:edge'):
-            self.graph.add_edge(edge.attrib['source'], edge.attrib['target'])
+            source = edge.attrib['source']
+            target = edge.attrib['target']
+            self.graph.add_edge(node_id_map[source], node_id_map[target])
 
 
-def get_graph(file_name=settings.DIAGNOSIS_FILE_NAME):
+def get_graph(file_name=settings.DIAGNOSIS_FILE_NAME, is_templated=settings.DIAGNOSES_USE_TEMPLATES):
     file_path = join(abspath(dirname(__file__)), 'data', file_name)
+    if is_templated:
+        file_path += ".tpl"
     importer = GraphImporter(file_path)
 
-    return importer.process()
+    return importer.process(is_templated=is_templated)
 
 
 def get_graph_mock():
-    G = nx.DiGraph()
-    G.add_node('root', label="what's your problem")
-    G.add_node('c1', label="You are my problem")
-    G.add_node('c2', label="Don't have any problem")
+    g = nx.DiGraph()
+    g.add_node('root', label="what's your problem")
+    g.add_node('c1', label="You are my problem")
+    g.add_node('c2', label="Don't have any problem")
 
-    G.add_edge('root', 'c1')
-    G.add_edge('root', 'c2')
-    return G
+    g.add_edge('root', 'c1')
+    g.add_edge('root', 'c2')
+    return g
 
 
 graph = SimpleLazyObject(lambda: get_graph())

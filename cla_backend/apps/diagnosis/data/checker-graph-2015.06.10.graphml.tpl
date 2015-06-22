@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
-  <!--Created by yEd 3.14-->
+{% load i18n %}<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+  <!--Created by yEd 3.14.2-->
   <key for="port" id="d0" yfiles.type="portgraphics"/>
   <key for="port" id="d1" yfiles.type="portgeometry"/>
   <key for="port" id="d2" yfiles.type="portuserdata"/>
@@ -16,21 +16,19 @@
   <key attr.name="outcome" attr.type="string" for="node" id="d6">
     <default/>
   </key>
-  <key attr.name="operator_root" attr.type="string" for="node" id="d7">
-    <default><![CDATA[false]]></default>
-  </key>
-  <key attr.name="title" attr.type="string" for="node" id="d8">
+  <key attr.name="title" attr.type="string" for="node" id="d7">
     <default/>
   </key>
-  <key attr.name="context:test" attr.type="string" for="node" id="d9">
+  <key attr.name="context:test" attr.type="string" for="node" id="d8">
     <default/>
   </key>
-  <key attr.name="context:xml" for="node" id="d10">
+  <key attr.name="context:xml" for="node" id="d9">
     <default/>
   </key>
-  <key attr.name="order" attr.type="int" for="node" id="d11">
+  <key attr.name="order" attr.type="int" for="node" id="d10">
     <default>9999</default>
   </key>
+  <key attr.name="permanent_id" attr.type="string" for="node" id="d11"/>
   <key attr.name="url" attr.type="string" for="node" id="d12"/>
   <key attr.name="description" attr.type="string" for="node" id="d13"/>
   <key for="node" id="d14" yfiles.type="nodegraphics"/>
@@ -40,9 +38,10 @@
   <key for="edge" id="d18" yfiles.type="edgegraphics"/>
   <graph edgedefault="directed" id="G">
     <node id="n0">
-      <data key="d3"><![CDATA[You own your own home]]></data>
-      <data key="d5"><![CDATA[Are you at risk of losing your home because of bankruptcy, repossession or mortgage debt?]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "You own your own home" %}</data>
+      <data key="d5">{% trans "Are you at risk of losing your home because of bankruptcy, repossession or mortgage debt?" %}</data>
+      <data key="d10">1</data>
+      <data key="d11">n0</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -61,9 +60,10 @@
       </data>
     </node>
     <node id="n1">
-      <data key="d3"><![CDATA[You're living in rented accommodation]]></data>
-      <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "You're living in rented accommodation" %}</data>
+      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n1</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -82,9 +82,10 @@
       </data>
     </node>
     <node id="n2">
-      <data key="d3"><![CDATA[You are homeless]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "You are homeless" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">3</data>
+      <data key="d11">n2</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -103,9 +104,10 @@
       </data>
     </node>
     <node id="n3">
-      <data key="d3"><![CDATA[You owe money (for example, bank loans, credit card debt) but this is not putting your home at risk]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
-      <data key="d11">4</data>
+      <data key="d3">{% trans "You owe money (for example, bank loans, credit card debt) but this is not putting your home at risk" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d10">4</data>
+      <data key="d11">n3</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -124,10 +126,11 @@
       </data>
     </node>
     <node id="n4">
-      <data key="d3"><![CDATA[Becoming homeless]]></data>
-      <data key="d4"><![CDATA[You are at risk of becoming homeless within 28 days (or 56 days if you live in Wales) and you want to make an application to your local council to stop your home being taken away from you]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Becoming homeless" %}</data>
+      <data key="d4">{% trans "You are at risk of becoming homeless within 28 days (or 56 days if you live in Wales) and you want to make an application to your local council to stop your home being taken away from you" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n4</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -146,10 +149,11 @@
       </data>
     </node>
     <node id="n5">
-      <data key="d3"><![CDATA[Eviction]]></data>
-      <data key="d4"><![CDATA[You are being evicted from your home]]></data>
-      <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "Eviction" %}</data>
+      <data key="d4">{% trans "You are being evicted from your home" %}</data>
+      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n5</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -168,9 +172,10 @@
       </data>
     </node>
     <node id="n6">
-      <data key="d3"><![CDATA[Your home is in a serious state of disrepair]]></data>
-      <data key="d5"><![CDATA[Is this putting you or your family at serious risk of illness or injury?]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "Your home is in a serious state of disrepair" %}</data>
+      <data key="d5">{% trans "Is this putting you or your family at serious risk of illness or injury?" %}</data>
+      <data key="d10">3</data>
+      <data key="d11">n6</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -189,10 +194,11 @@
       </data>
     </node>
     <node id="n7">
-      <data key="d3"><![CDATA[Harassment]]></data>
-      <data key="d4"><![CDATA[You've been harassed in your home on more than one occasion]]></data>
-      <data key="d5"><![CDATA[Who is harassing you?]]></data>
-      <data key="d11">4</data>
+      <data key="d3">{% trans "Harassment" %}</data>
+      <data key="d4">{% trans "You've been harassed in your home on more than one occasion" %}</data>
+      <data key="d5">{% trans "Who is harassing you?" %}</data>
+      <data key="d10">4</data>
+      <data key="d11">n7</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -211,10 +217,11 @@
       </data>
     </node>
     <node id="n8">
-      <data key="d3"><![CDATA[ASBO or ASBI]]></data>
-      <data key="d4"><![CDATA[Your landlord has taken out an antisocial behaviour order or antisocial behaviour injunction (ASBO or ASBI) against you or someone who lives with you]]></data>
-      <data key="d5"><![CDATA[Your landlord is:]]></data>
-      <data key="d11">5</data>
+      <data key="d3">{% trans "ASBO or ASBI" %}</data>
+      <data key="d4">{% trans "Your landlord has taken out an antisocial behaviour order or antisocial behaviour injunction (ASBO or ASBI) against you or someone who lives with you" %}</data>
+      <data key="d5">{% trans "Your landlord is:" %}</data>
+      <data key="d10">5</data>
+      <data key="d11">n8</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -233,8 +240,9 @@
       </data>
     </node>
     <node id="n9">
-      <data key="d3"><![CDATA[None of the above]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "None of the above" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n9</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -253,11 +261,11 @@
       </data>
     </node>
     <node id="n10">
-      <data key="d5"><![CDATA[Choose one of the options]]></data>
-      <data key="d7"><![CDATA[true]]></data>
-      <data key="d9"><![CDATA[testcontext]]></data>
+      <data key="d5">{% trans "Choose one of the options" %}</data>
+      <data key="d8">testcontext</data>
+      <data key="d11">start</data>
       <data key="d12"/>
-      <data key="d13"><![CDATA[Public Site Diagnosis]]></data>
+      <data key="d13">Public Site Diagnosis</data>
       <data key="d14">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="40.630859375" x="3711.206197296627" y="0.0"/>
@@ -275,10 +283,11 @@
       </data>
     </node>
     <node id="n11">
-      <data key="d3"><![CDATA[A social housing landlord]]></data>
-      <data key="d4"><![CDATA[For example, housing association, council housing]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "A social housing landlord" %}</data>
+      <data key="d4">{% trans "For example, housing association, council housing" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n11</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -297,9 +306,10 @@
       </data>
     </node>
     <node id="n12">
-      <data key="d3"><![CDATA[A private landlord]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "A private landlord" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d10">2</data>
+      <data key="d11">n12</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -318,10 +328,11 @@
       </data>
     </node>
     <node id="n13">
-      <data key="d3"><![CDATA[Unlawful eviction]]></data>
-      <data key="d4"><![CDATA[Your landlord is unlawfully evicting you without due process - for example, changing the locks]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Unlawful eviction" %}</data>
+      <data key="d4">{% trans "Your landlord is unlawfully evicting you without due process - for example, changing the locks" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n13</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -340,10 +351,11 @@
       </data>
     </node>
     <node id="n14">
-      <data key="d3"><![CDATA[Eviction with notice]]></data>
-      <data key="d4"><![CDATA[You have received notification of eviction from your landlord or the council]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "Eviction with notice" %}</data>
+      <data key="d4">{% trans "You have received notification of eviction from your landlord or the council" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">2</data>
+      <data key="d11">n14</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -362,9 +374,10 @@
       </data>
     </node>
     <node id="n15">
-      <data key="d3"><![CDATA[A neighbour or your landlord]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "A neighbour or your landlord" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n15</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -383,9 +396,10 @@
       </data>
     </node>
     <node id="n16">
-      <data key="d3"><![CDATA[A partner, ex-partner or family member]]></data>
-      <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "A partner, ex-partner or family member" %}</data>
+      <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n16</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -404,8 +418,9 @@
       </data>
     </node>
     <node id="n17">
-      <data key="d3"><![CDATA[Someone else]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "Someone else" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n17</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -424,9 +439,10 @@
       </data>
     </node>
     <node id="n18">
-      <data key="d3"><![CDATA[Yes]]></data>
-      <data key="d6"><![CDATA[call_me_back]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Yes" %}</data>
+      <data key="d6">call_me_back</data>
+      <data key="d10">1</data>
+      <data key="d11">n18</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -445,9 +461,10 @@
       </data>
     </node>
     <node id="n19">
-      <data key="d3"><![CDATA[No]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "No" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">2</data>
+      <data key="d11">n19</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -466,10 +483,11 @@
       </data>
     </node>
     <node id="n20">
-      <data key="d3"><![CDATA[Benefits appeal]]></data>
-      <data key="d4"><![CDATA[You want to appeal your benefits decision on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Benefits appeal" %}</data>
+      <data key="d4">{% trans "You want to appeal your benefits decision on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n20</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -488,10 +506,11 @@
       </data>
     </node>
     <node id="n21">
-      <data key="d3"><![CDATA[Permission to appeal refused]]></data>
-      <data key="d4"><![CDATA[A first-tier tribunal has refused you permission to appeal your benefits decision in the Upper Tribunal and you want advice about how to appeal this decision]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "Permission to appeal refused" %}</data>
+      <data key="d4">{% trans "A first-tier tribunal has refused you permission to appeal your benefits decision in the Upper Tribunal and you want advice about how to appeal this decision" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">2</data>
+      <data key="d11">n21</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -510,8 +529,9 @@
       </data>
     </node>
     <node id="n22">
-      <data key="d3"><![CDATA[None of the above]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "None of the above" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n22</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -530,9 +550,10 @@
       </data>
     </node>
     <node id="n23">
-      <data key="d3"><![CDATA[Age]]></data>
-      <data key="d5"><![CDATA[How old are you?]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Age" %}</data>
+      <data key="d5">{% trans "How old are you?" %}</data>
+      <data key="d10">1</data>
+      <data key="d11">n23</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -551,9 +572,10 @@
       </data>
     </node>
     <node id="n24">
-      <data key="d3"><![CDATA[Disability]]></data>
-      <data key="d5"><![CDATA[Where did the discrimination occur?]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "Disability" %}</data>
+      <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n24</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -572,9 +594,10 @@
       </data>
     </node>
     <node id="n25">
-      <data key="d3"><![CDATA[Gender, gender reassignment or sexual orientation]]></data>
-      <data key="d5"><![CDATA[Where did the discrimination occur?]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "Gender, gender reassignment or sexual orientation" %}</data>
+      <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">3</data>
+      <data key="d11">n25</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -593,9 +616,10 @@
       </data>
     </node>
     <node id="n26">
-      <data key="d3"><![CDATA[Marriage or civil partnership]]></data>
-      <data key="d5"><![CDATA[Where did the discrimination occur?]]></data>
-      <data key="d11">4</data>
+      <data key="d3">{% trans "Marriage or civil partnership" %}</data>
+      <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">4</data>
+      <data key="d11">n26</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -614,9 +638,10 @@
       </data>
     </node>
     <node id="n27">
-      <data key="d3"><![CDATA[Pregnancy or maternity]]></data>
-      <data key="d5"><![CDATA[Where did the discrimination occur?]]></data>
-      <data key="d11">5</data>
+      <data key="d3">{% trans "Pregnancy or maternity" %}</data>
+      <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">5</data>
+      <data key="d11">n27</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -635,10 +660,11 @@
       </data>
     </node>
     <node id="n28">
-      <data key="d3"><![CDATA[Race]]></data>
-      <data key="d4"><![CDATA[Including nationality, citizenship, ethnicity or national origin]]></data>
-      <data key="d5"><![CDATA[Where did the discrimination occur?]]></data>
-      <data key="d11">6</data>
+      <data key="d3">{% trans "Race" %}</data>
+      <data key="d4">{% trans "Including nationality, citizenship, ethnicity or national origin" %}</data>
+      <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">6</data>
+      <data key="d11">n28</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -657,9 +683,10 @@
       </data>
     </node>
     <node id="n29">
-      <data key="d3"><![CDATA[Religion, belief, or lack of religion or belief]]></data>
-      <data key="d5"><![CDATA[Where did the discrimination occur?]]></data>
-      <data key="d11">7</data>
+      <data key="d3">{% trans "Religion, belief, or lack of religion or belief" %}</data>
+      <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">7</data>
+      <data key="d11">n29</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -678,8 +705,9 @@
       </data>
     </node>
     <node id="n30">
-      <data key="d3"><![CDATA[None of the above]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "None of the above" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n30</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -698,9 +726,10 @@
       </data>
     </node>
     <node id="n31">
-      <data key="d3"><![CDATA[At work]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "At work" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n31</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -719,10 +748,11 @@
       </data>
     </node>
     <node id="n32">
-      <data key="d3"><![CDATA[While you were using a service]]></data>
-      <data key="d4"><![CDATA[For example, having a meal in a restaurant or getting access to a shop]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "While you were using a service" %}</data>
+      <data key="d4">{% trans "For example, having a meal in a restaurant or getting access to a shop" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">3</data>
+      <data key="d11">n32</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -741,10 +771,11 @@
       </data>
     </node>
     <node id="n33">
-      <data key="d3"><![CDATA[At a private club]]></data>
-      <data key="d4"><![CDATA[Or association]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">4</data>
+      <data key="d3">{% trans "At a private club" %}</data>
+      <data key="d4">{% trans "Or association" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">4</data>
+      <data key="d11">n33</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -763,10 +794,11 @@
       </data>
     </node>
     <node id="n34">
-      <data key="d3"><![CDATA[When someone was carrying out a public function]]></data>
-      <data key="d4"><![CDATA[For example, a police officer carrying out a search as part of a criminal investigation]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">5</data>
+      <data key="d3">{% trans "When someone was carrying out a public function" %}</data>
+      <data key="d4">{% trans "For example, a police officer carrying out a search as part of a criminal investigation" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">5</data>
+      <data key="d11">n34</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -785,9 +817,10 @@
       </data>
     </node>
     <node id="n35">
-      <data key="d3"><![CDATA[At school or college]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">6</data>
+      <data key="d3">{% trans "At school or college" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">6</data>
+      <data key="d11">n35</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -806,10 +839,11 @@
       </data>
     </node>
     <node id="n36">
-      <data key="d3"><![CDATA[At university]]></data>
-      <data key="d4"><![CDATA[Or other higher education institution]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">7</data>
+      <data key="d3">{% trans "At university" %}</data>
+      <data key="d4">{% trans "Or other higher education institution" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">7</data>
+      <data key="d11">n36</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -828,9 +862,10 @@
       </data>
     </node>
     <node id="n37">
-      <data key="d3"><![CDATA[18 or over]]></data>
-      <data key="d5"><![CDATA[Where did the discrimination occur?]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "18 or over" %}</data>
+      <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10">1</data>
+      <data key="d11">n37</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -849,10 +884,11 @@
       </data>
     </node>
     <node id="n38">
-      <data key="d3"><![CDATA[Under 18]]></data>
-      <data key="d5"><![CDATA[Where did the discrimination occur?]]></data>
-      <data key="d6"><![CDATA[contact]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "Under 18" %}</data>
+      <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d6">contact</data>
+      <data key="d10">2</data>
+      <data key="d11">n38</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -871,9 +907,10 @@
       </data>
     </node>
     <node id="n39">
-      <data key="d3"><![CDATA[A child in care or a care leaver - or you are a foster carer]]></data>
-      <data key="d6"><![CDATA[eligible]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "A child in care or a care leaver - or you are a foster carer" %}</data>
+      <data key="d6">eligible</data>
+      <data key="d10">1</data>
+      <data key="d11">n39</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -892,10 +929,11 @@
       </data>
     </node>
     <node id="n40">
-      <data key="d3"><![CDATA[Special educational needs]]></data>
-      <data key="d4"><![CDATA[Your child has special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "Special educational needs" %}</data>
+      <data key="d4">{% trans "You have (or your child has) special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">2</data>
+      <data key="d11">n40</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -914,9 +952,10 @@
       </data>
     </node>
     <node id="n41">
-      <data key="d3"><![CDATA[None of the above]]></data>
-      <data key="d4"><![CDATA[For example admissions or exclusions]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "None of the above" %}</data>
+      <data key="d4">{% trans "For example admissions or exclusions" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n41</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -935,8 +974,9 @@
       </data>
     </node>
     <node id="n42">
-      <data key="d3"><![CDATA[Any other problem]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "Any other problem" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n42</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -955,6 +995,7 @@
       </data>
     </node>
     <node id="n43" yfiles.foldertype="group">
+      <data key="d11">n43</data>
       <data key="d12"/>
       <data key="d14">
         <y:ProxyAutoBoundsNode>
@@ -984,10 +1025,11 @@
       </data>
       <graph edgedefault="directed" id="n43:">
         <node id="n43::n0">
-          <data key="d3"><![CDATA[Clinical negligence]]></data>
-          <data key="d4"><![CDATA[Doctors and nurses not treating you with due care during medical treatment]]></data>
-          <data key="d6"><![CDATA[f2f]]></data>
-          <data key="d11">1</data>
+          <data key="d3">{% trans "Clinical negligence" %}</data>
+          <data key="d4">{% trans "Doctors and nurses not treating you with due care during medical treatment" %}</data>
+          <data key="d6">f2f</data>
+          <data key="d10">1</data>
+          <data key="d11">n43n0</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1006,10 +1048,11 @@
           </data>
         </node>
         <node id="n43::n1">
-          <data key="d3"><![CDATA[Community care]]></data>
-          <data key="d4"><![CDATA[You’re unhappy with the care being provided for yourself or a relative due to age, disability or special educational needs - for example, in a care home or your own home]]></data>
-          <data key="d6"><![CDATA[f2f]]></data>
-          <data key="d11">2</data>
+          <data key="d3">{% trans "Community care" %}</data>
+          <data key="d4">{% trans "You’re unhappy with the care being provided for yourself or a relative due to age, disability or special educational needs - for example, in a care home or your own home" %}</data>
+          <data key="d6">f2f</data>
+          <data key="d10">2</data>
+          <data key="d11">n43n1</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1028,10 +1071,11 @@
           </data>
         </node>
         <node id="n43::n2">
-          <data key="d3"><![CDATA[Debt]]></data>
-          <data key="d4"><![CDATA[Bankruptcy, repossession, mortgage debt that is putting your home at risk]]></data>
-          <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-          <data key="d11">3</data>
+          <data key="d3">{% trans "Debt" %}</data>
+          <data key="d4">{% trans "Bankruptcy, repossession, mortgage debt that is putting your home at risk" %}</data>
+          <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+          <data key="d10">3</data>
+          <data key="d11">n43n2</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1050,10 +1094,11 @@
           </data>
         </node>
         <node id="n43::n3">
-          <data key="d3"><![CDATA[Domestic violence]]></data>
-          <data key="d4"><![CDATA[Abuse at home (whether psychological, physical, financial, sexual or emotional), child abuse, harassment by an ex-partner, forced marriage]]></data>
-          <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-          <data key="d11">4</data>
+          <data key="d3">{% trans "Domestic violence" %}</data>
+          <data key="d4">{% trans "Abuse at home (whether psychological, physical, financial, sexual or emotional), child abuse, harassment by an ex-partner, forced marriage" %}</data>
+          <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+          <data key="d10">4</data>
+          <data key="d11">n43n3</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1072,10 +1117,11 @@
           </data>
         </node>
         <node id="n43::n4">
-          <data key="d3"><![CDATA[Discrimination]]></data>
-          <data key="d4"><![CDATA[Being treated unfairly because of your race, gender or sexual orientation, for example]]></data>
-          <data key="d5"><![CDATA[You've been discriminated against because of your:]]></data>
-          <data key="d11">5</data>
+          <data key="d3">{% trans "Discrimination" %}</data>
+          <data key="d4">{% trans "Being treated unfairly because of your race, gender or sexual orientation, for example" %}</data>
+          <data key="d5">{% trans "You've been discriminated against because of your:" %}</data>
+          <data key="d10">5</data>
+          <data key="d11">n43n4</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1094,10 +1140,11 @@
           </data>
         </node>
         <node id="n43::n5">
-          <data key="d3"><![CDATA[Education]]></data>
-          <data key="d4"><![CDATA[Special educational needs, problems with school places, exclusions, learning difficulties]]></data>
-          <data key="d5"><![CDATA[What is your problem about?]]></data>
-          <data key="d11">6</data>
+          <data key="d3">{% trans "Education" %}</data>
+          <data key="d4">{% trans "Special educational needs, problems with school places, exclusions, learning difficulties" %}</data>
+          <data key="d5">{% trans "What is your problem about?" %}</data>
+          <data key="d10">6</data>
+          <data key="d11">n43n5</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1116,10 +1163,11 @@
           </data>
         </node>
         <node id="n43::n6">
-          <data key="d3"><![CDATA[Employment]]></data>
-          <data key="d4"><![CDATA[Being treated unfairly at work, unfair dismissal, employment tribunals]]></data>
-          <data key="d5"><![CDATA[What is your problem about?]]></data>
-          <data key="d11">7</data>
+          <data key="d3">{% trans "Employment" %}</data>
+          <data key="d4">{% trans "Being treated unfairly at work, unfair dismissal, employment tribunals" %}</data>
+          <data key="d5">{% trans "What is your problem about?" %}</data>
+          <data key="d10">7</data>
+          <data key="d11">n43n6</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1138,10 +1186,11 @@
           </data>
         </node>
         <node id="n43::n7">
-          <data key="d3"><![CDATA[Housing]]></data>
-          <data key="d4"><![CDATA[Eviction, homelessness, losing your rented home, rent arrears, harassment by a landlord or neighbour, health and safety issues with your home]]></data>
-          <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-          <data key="d11">9</data>
+          <data key="d3">{% trans "Housing" %}</data>
+          <data key="d4">{% trans "Eviction, homelessness, losing your rented home, rent arrears, harassment by a landlord or neighbour, health and safety issues with your home" %}</data>
+          <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+          <data key="d10">9</data>
+          <data key="d11">n43n7</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1160,10 +1209,11 @@
           </data>
         </node>
         <node id="n43::n8">
-          <data key="d3"><![CDATA[Immigration and asylum]]></data>
-          <data key="d4"><![CDATA[Applying for asylum or permission to stay in the UK, including for victims of human trafficking]]></data>
-          <data key="d5"><![CDATA[Select the option that best describes your situation.]]></data>
-          <data key="d11">10</data>
+          <data key="d3">{% trans "Immigration and asylum" %}</data>
+          <data key="d4">{% trans "Applying for asylum or permission to stay in the UK, including for victims of human trafficking" %}</data>
+          <data key="d5">{% trans "Select the option that best describes your situation." %}</data>
+          <data key="d10">10</data>
+          <data key="d11">n43n8</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1182,10 +1232,11 @@
           </data>
         </node>
         <node id="n43::n9">
-          <data key="d3"><![CDATA[Mental health]]></data>
-          <data key="d4"><![CDATA[Help with mental health and mental capacity legal issues]]></data>
-          <data key="d6"><![CDATA[f2f]]></data>
-          <data key="d11">11</data>
+          <data key="d3">{% trans "Mental health" %}</data>
+          <data key="d4">{% trans "Help with mental health and mental capacity legal issues" %}</data>
+          <data key="d6">f2f</data>
+          <data key="d10">11</data>
+          <data key="d11">n43n9</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1204,10 +1255,11 @@
           </data>
         </node>
         <node id="n43::n10">
-          <data key="d3"><![CDATA[Personal injury]]></data>
-          <data key="d4"><![CDATA[An accident that was not your fault]]></data>
-          <data key="d6"><![CDATA[f2f]]></data>
-          <data key="d11">12</data>
+          <data key="d3">{% trans "Personal injury" %}</data>
+          <data key="d4">{% trans "An accident that was not your fault" %}</data>
+          <data key="d6">f2f</data>
+          <data key="d10">12</data>
+          <data key="d11">n43n10</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1226,10 +1278,11 @@
           </data>
         </node>
         <node id="n43::n11">
-          <data key="d3"><![CDATA[Public law]]></data>
-          <data key="d4"><![CDATA[Taking legal action against a public body, like your local council]]></data>
-          <data key="d6"><![CDATA[f2f]]></data>
-          <data key="d11">13</data>
+          <data key="d3">{% trans "Public law" %}</data>
+          <data key="d4">{% trans "Taking legal action against a public body, like your local council" %}</data>
+          <data key="d6">f2f</data>
+          <data key="d10">13</data>
+          <data key="d11">n43n11</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1248,9 +1301,10 @@
           </data>
         </node>
         <node id="n43::n12">
-          <data key="d3"><![CDATA[Trouble with the police and other public authorities]]></data>
-          <data key="d4"><![CDATA[Being treated unlawfully by authorities who detain, imprison and prosecute (for example, the police), abuse in care cases]]></data>
-          <data key="d11">14</data>
+          <data key="d3">{% trans "Trouble with the police and other public authorities" %}</data>
+          <data key="d4">{% trans "Being treated unlawfully by authorities who detain, imprison and prosecute (for example, the police), abuse in care cases" %}</data>
+          <data key="d10">14</data>
+          <data key="d11">n43n12</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1269,10 +1323,11 @@
           </data>
         </node>
         <node id="n43::n13">
-          <data key="d3"><![CDATA[Welfare benefits]]></data>
-          <data key="d4"><![CDATA[Problems with your benefits, appealing a decision about your benefits]]></data>
-          <data key="d5"><![CDATA[What is your problem about?]]></data>
-          <data key="d11">15</data>
+          <data key="d3">{% trans "Welfare benefits" %}</data>
+          <data key="d4">{% trans "Problems with your benefits, appealing a decision about your benefits" %}</data>
+          <data key="d5">{% trans "What is your problem about?" %}</data>
+          <data key="d10">15</data>
+          <data key="d11">n43n13</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1291,10 +1346,11 @@
           </data>
         </node>
         <node id="n43::n14">
-          <data key="d3"><![CDATA[Family]]></data>
-          <data key="d4"><![CDATA[Divorce, separation, dissolution, financial arrangements, family mediation, arrangements for your children, children being taken into care, child abduction]]></data>
-          <data key="d5"><![CDATA[What is your problem about?]]></data>
-          <data key="d11">8</data>
+          <data key="d3">{% trans "Family" %}</data>
+          <data key="d4">{% trans "Divorce, separation, dissolution, financial arrangements, family mediation, arrangements for your children, children being taken into care, child abduction" %}</data>
+          <data key="d5">{% trans "What is your problem about?" %}</data>
+          <data key="d10">8</data>
+          <data key="d11">n43n14</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -1315,10 +1371,11 @@
       </graph>
     </node>
     <node id="n44">
-      <data key="d3"><![CDATA[Domestic violence]]></data>
-      <data key="d4"><![CDATA[You want to protect yourself or your children against domestic violence]]></data>
-      <data key="d5"><![CDATA[Are you or your child at immediate risk of harm?]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Domestic violence" %}</data>
+      <data key="d4">{% trans "You want to protect yourself or your children against domestic violence" %}</data>
+      <data key="d5">{% trans "Are you or your child at immediate risk of harm?" %}</data>
+      <data key="d10">1</data>
+      <data key="d11">n44</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1337,10 +1394,11 @@
       </data>
     </node>
     <node id="n45">
-      <data key="d3"><![CDATA[Enforcing an injunction]]></data>
-      <data key="d4"><![CDATA[Your partner or ex-partner is ignoring an injunction you have taken out against them]]></data>
-      <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "Enforcing an injunction" %}</data>
+      <data key="d4">{% trans "Your partner or ex-partner is ignoring an injunction you have taken out against them" %}</data>
+      <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n45</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1359,10 +1417,11 @@
       </data>
     </node>
     <node id="n46">
-      <data key="d3"><![CDATA[Harassment]]></data>
-      <data key="d4"><![CDATA[You are being harassed by  a partner, ex-partner or family member]]></data>
-      <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "Harassment" %}</data>
+      <data key="d4">{% trans "You are being harassed by  a partner, ex-partner or family member" %}</data>
+      <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
+      <data key="d10">3</data>
+      <data key="d11">n46</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1381,10 +1440,11 @@
       </data>
     </node>
     <node id="n47">
-      <data key="d3"><![CDATA[Contesting an injunction]]></data>
-      <data key="d4"><![CDATA[You want to contest an injunction that has been taken out against you]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">4</data>
+      <data key="d3">{% trans "Contesting an injunction" %}</data>
+      <data key="d4">{% trans "You want to contest an injunction that has been taken out against you" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">4</data>
+      <data key="d11">n47</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1403,10 +1463,11 @@
       </data>
     </node>
     <node id="n48">
-      <data key="d3"><![CDATA[Forced marriage]]></data>
-      <data key="d4"><![CDATA[You want advice about forced marriage]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">5</data>
+      <data key="d3">{% trans "Forced marriage" %}</data>
+      <data key="d4">{% trans "You want advice about forced marriage" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">5</data>
+      <data key="d11">n48</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1425,8 +1486,9 @@
       </data>
     </node>
     <node id="n49">
-      <data key="d3"><![CDATA[Any other problem]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "Any other problem" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n49</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1445,10 +1507,11 @@
       </data>
     </node>
     <node id="n50">
-      <data key="d3"><![CDATA[Your local council is involved]]></data>
-      <data key="d4"><![CDATA[Children in care and adoption]]></data>
-      <data key="d5"><![CDATA[Is the local council trying to take your child into care?]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Your local council is involved" %}</data>
+      <data key="d4">{% trans "Children in care and adoption" %}</data>
+      <data key="d5">{% trans "Is the local council trying to take your child into care?" %}</data>
+      <data key="d10">1</data>
+      <data key="d11">n50</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1467,10 +1530,11 @@
       </data>
     </node>
     <node id="n51">
-      <data key="d3"><![CDATA[A problem with your ex-partner]]></data>
-      <data key="d4"><![CDATA[Divorce, separation, dissolution, financial settlement following a divorce or separation]]></data>
-      <data key="d5"><![CDATA[Your problem is about:]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "A problem with your ex-partner" %}</data>
+      <data key="d4">{% trans "Divorce, separation, dissolution, financial settlement following a divorce or separation" %}</data>
+      <data key="d5">{% trans "Your problem is about:" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n51</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1489,11 +1553,12 @@
       </data>
     </node>
     <node id="n52">
-      <data key="d3"><![CDATA[Child abduction]]></data>
-      <data key="d4"><![CDATA[You want advice about child abduction]]></data>
-      <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">4</data>
+      <data key="d3">{% trans "Child abduction" %}</data>
+      <data key="d4">{% trans "You want advice about child abduction" %}</data>
+      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">4</data>
+      <data key="d11">n52</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1512,8 +1577,9 @@
       </data>
     </node>
     <node id="n53">
-      <data key="d3"><![CDATA[Any other problem]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "Any other problem" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n53</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1532,9 +1598,10 @@
       </data>
     </node>
     <node id="n54">
-      <data key="d3"><![CDATA[Yes]]></data>
-      <data key="d6"><![CDATA[eligible]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Yes" %}</data>
+      <data key="d6">eligible</data>
+      <data key="d10">1</data>
+      <data key="d11">n54</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1553,9 +1620,10 @@
       </data>
     </node>
     <node id="n55">
-      <data key="d3"><![CDATA[No]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "No" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">2</data>
+      <data key="d11">n55</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1574,9 +1642,10 @@
       </data>
     </node>
     <node id="n56">
-      <data key="d3"><![CDATA[Divorce, separation or dissolution]]></data>
-      <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Divorce, separation or dissolution" %}</data>
+      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d10">1</data>
+      <data key="d11">n56</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1595,9 +1664,10 @@
       </data>
     </node>
     <node id="n57">
-      <data key="d3"><![CDATA[Disputes over children]]></data>
-      <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "Disputes over children" %}</data>
+      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n57</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1616,10 +1686,11 @@
       </data>
     </node>
     <node id="n58">
-      <data key="d3"><![CDATA[Financial settlement]]></data>
-      <data key="d4"><![CDATA[Following a divorce or separation]]></data>
-      <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "Financial settlement" %}</data>
+      <data key="d4">{% trans "Following a divorce or separation" %}</data>
+      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d10">3</data>
+      <data key="d11">n58</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1638,10 +1709,11 @@
       </data>
     </node>
     <node id="n59">
-      <data key="d3"><![CDATA[Family mediation]]></data>
-      <data key="d4"><![CDATA[You're looking to start family mediation or you're seeking legal advice in support of it]]></data>
-      <data key="d5"><![CDATA[Have you already started family mediation? (This includes cases that have already finished)]]></data>
-      <data key="d11">5</data>
+      <data key="d3">{% trans "Family mediation" %}</data>
+      <data key="d4">{% trans "You're looking to start family mediation or you're seeking legal advice in support of it" %}</data>
+      <data key="d5">{% trans "Have you already started family mediation? (This includes cases that have already finished)" %}</data>
+      <data key="d10">5</data>
+      <data key="d11">n59</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1660,8 +1732,9 @@
       </data>
     </node>
     <node id="n60">
-      <data key="d3"><![CDATA[Any other problem]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "Any other problem" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n60</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1680,9 +1753,10 @@
       </data>
     </node>
     <node id="n61">
-      <data key="d3"><![CDATA[You are under 18]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "You are under 18" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n61</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1701,10 +1775,11 @@
       </data>
     </node>
     <node id="n62">
-      <data key="d3"><![CDATA[Domestic abuse]]></data>
-      <data key="d4"><![CDATA[You or your children have suffered domestic abuse in the last 2 years, or your abuser has a current criminal conviction]]></data>
-      <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "Domestic abuse" %}</data>
+      <data key="d4">{% trans "You or your children have suffered domestic abuse in the last 2 years, or your abuser has a current criminal conviction" %}</data>
+      <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n62</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1723,8 +1798,9 @@
       </data>
     </node>
     <node id="n63">
-      <data key="d3"><![CDATA[Any other problem]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "Any other problem" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n63</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1743,10 +1819,11 @@
       </data>
     </node>
     <node id="n64">
-      <data key="d3"><![CDATA[International Family Maintenance]]></data>
-      <data key="d4"><![CDATA[You're seeking advice about International Family Maintenance, to enforce a maintenance order made outside the UK]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "International Family Maintenance" %}</data>
+      <data key="d4">{% trans "You're seeking advice about International Family Maintenance, to enforce a maintenance order made outside the UK" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">3</data>
+      <data key="d11">n64</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1765,9 +1842,10 @@
       </data>
     </node>
     <node id="n65">
-      <data key="d3"><![CDATA[Yes]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Yes" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n65</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1786,9 +1864,10 @@
       </data>
     </node>
     <node id="n66">
-      <data key="d3"><![CDATA[No]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "No" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d10">2</data>
+      <data key="d11">n66</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1807,9 +1886,10 @@
       </data>
     </node>
     <node id="n67">
-      <data key="d3"><![CDATA[You're living in rented accommodation]]></data>
-      <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "You're living in rented accommodation" %}</data>
+      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n67</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1828,8 +1908,9 @@
       </data>
     </node>
     <node id="n68">
-      <data key="d3"><![CDATA[You are homeless]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "You are homeless" %}</data>
+      <data key="d10">3</data>
+      <data key="d11">n68</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1848,8 +1929,9 @@
       </data>
     </node>
     <node id="n69">
-      <data key="d3"><![CDATA[You owe money (for example, bank loans, credit card debt) but this is not putting your home at risk]]></data>
-      <data key="d11">4</data>
+      <data key="d3">{% trans "You owe money (for example, bank loans, credit card debt) but this is not putting your home at risk" %}</data>
+      <data key="d10">4</data>
+      <data key="d11">n69</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1868,10 +1950,11 @@
       </data>
     </node>
     <node id="n70">
-      <data key="d3"><![CDATA[Becoming homeless]]></data>
-      <data key="d4"><![CDATA[You are at risk of becoming homeless within 28 days (or 56 days if you live in Wales) and you want to make an application to your local council to stop your home being taken away from you]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Becoming homeless" %}</data>
+      <data key="d4">{% trans "You are at risk of becoming homeless within 28 days (or 56 days if you live in Wales) and you want to make an application to your local council to stop your home being taken away from you" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n70</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1890,10 +1973,11 @@
       </data>
     </node>
     <node id="n71">
-      <data key="d3"><![CDATA[Eviction]]></data>
-      <data key="d4"><![CDATA[You are being evicted from your home]]></data>
-      <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "Eviction" %}</data>
+      <data key="d4">{% trans "You are being evicted from your home" %}</data>
+      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n71</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1912,10 +1996,11 @@
       </data>
     </node>
     <node id="n72">
-      <data key="d3"><![CDATA[Harassment]]></data>
-      <data key="d4"><![CDATA[You've been harassed in your home on more than one occasion]]></data>
-      <data key="d5"><![CDATA[Who is harassing you?]]></data>
-      <data key="d11">4</data>
+      <data key="d3">{% trans "Harassment" %}</data>
+      <data key="d4">{% trans "You've been harassed in your home on more than one occasion" %}</data>
+      <data key="d5">{% trans "Who is harassing you?" %}</data>
+      <data key="d10">4</data>
+      <data key="d11">n72</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1934,10 +2019,11 @@
       </data>
     </node>
     <node id="n73">
-      <data key="d3"><![CDATA[ASBO or ASBI]]></data>
-      <data key="d4"><![CDATA[Your landlord has taken out an antisocial behaviour order or antisocial behaviour injunction (ASBO or ASBI) against you or someone who lives with you]]></data>
-      <data key="d5"><![CDATA[Your landlord is:]]></data>
-      <data key="d11">5</data>
+      <data key="d3">{% trans "ASBO or ASBI" %}</data>
+      <data key="d4">{% trans "Your landlord has taken out an antisocial behaviour order or antisocial behaviour injunction (ASBO or ASBI) against you or someone who lives with you" %}</data>
+      <data key="d5">{% trans "Your landlord is:" %}</data>
+      <data key="d10">5</data>
+      <data key="d11">n73</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1956,8 +2042,9 @@
       </data>
     </node>
     <node id="n74">
-      <data key="d3"><![CDATA[None of the above]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "None of the above" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n74</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1976,10 +2063,11 @@
       </data>
     </node>
     <node id="n75">
-      <data key="d3"><![CDATA[A social housing landlord]]></data>
-      <data key="d4"><![CDATA[For example, housing association, council housing]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "A social housing landlord" %}</data>
+      <data key="d4">{% trans "For example, housing association, council housing" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n75</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -1998,9 +2086,10 @@
       </data>
     </node>
     <node id="n76">
-      <data key="d3"><![CDATA[A private landlord]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "A private landlord" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d10">2</data>
+      <data key="d11">n76</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -2019,10 +2108,11 @@
       </data>
     </node>
     <node id="n77">
-      <data key="d3"><![CDATA[Unlawful eviction]]></data>
-      <data key="d4"><![CDATA[Your landlord is unlawfully evicting you without due process - for example, changing the locks]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Unlawful eviction" %}</data>
+      <data key="d4">{% trans "Your landlord is unlawfully evicting you without due process - for example, changing the locks" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n77</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -2041,10 +2131,11 @@
       </data>
     </node>
     <node id="n78">
-      <data key="d3"><![CDATA[Eviction with notice]]></data>
-      <data key="d4"><![CDATA[You have received notification of eviction from your landlord or the council]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "Eviction with notice" %}</data>
+      <data key="d4">{% trans "You have received notification of eviction from your landlord or the council" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">2</data>
+      <data key="d11">n78</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -2063,9 +2154,10 @@
       </data>
     </node>
     <node id="n79">
-      <data key="d3"><![CDATA[A neighbour or your landlord]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "A neighbour or your landlord" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n79</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -2084,9 +2176,10 @@
       </data>
     </node>
     <node id="n80">
-      <data key="d3"><![CDATA[A partner, ex-partner or family member]]></data>
-      <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "A partner, ex-partner or family member" %}</data>
+      <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n80</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -2105,8 +2198,9 @@
       </data>
     </node>
     <node id="n81">
-      <data key="d3"><![CDATA[Someone else]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "Someone else" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n81</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -2125,6 +2219,7 @@
       </data>
     </node>
     <node id="n82" yfiles.foldertype="group">
+      <data key="d11">n82</data>
       <data key="d12"/>
       <data key="d14">
         <y:ProxyAutoBoundsNode>
@@ -2154,13 +2249,14 @@
       </data>
       <graph edgedefault="directed" id="n82:">
         <node id="n82::n0">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">OUTOFSCOPE</data>
+          <data key="d7">OUTOFSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>clinneg</category>
 </context>
           </data>
+          <data key="d11">n82n0</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2180,13 +2276,14 @@ OUTOFSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n1">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">OUTOFSCOPE</data>
+          <data key="d7">OUTOFSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>commcare</category>
 </context>
           </data>
+          <data key="d11">n82n1</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2206,13 +2303,14 @@ OUTOFSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n2">
-          <data key="d3"><![CDATA[INELIGIBLE]]></data>
-          <data key="d8"><![CDATA[INELIGIBLE]]></data>
-          <data key="d10">
+          <data key="d3">INELIGIBLE</data>
+          <data key="d7">INELIGIBLE</data>
+          <data key="d9">
             <context xmlns="">
 <category>debt</category>
 </context>
           </data>
+          <data key="d11">n82n2</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2232,13 +2330,14 @@ INELIGIBLE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n3">
-          <data key="d3"><![CDATA[INSCOPE]]></data>
-          <data key="d8"><![CDATA[INSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">INSCOPE</data>
+          <data key="d7">INSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>debt</category>
 </context>
           </data>
+          <data key="d11">n82n3</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2258,13 +2357,14 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n4">
-          <data key="d3"><![CDATA[INELIGIBLE]]></data>
-          <data key="d8"><![CDATA[INELIGIBLE]]></data>
-          <data key="d10">
+          <data key="d3">INELIGIBLE</data>
+          <data key="d7">INELIGIBLE</data>
+          <data key="d9">
             <context xmlns="">
 <category>violence</category>
 </context>
           </data>
+          <data key="d11">n82n4</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2284,13 +2384,14 @@ INELIGIBLE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n5">
-          <data key="d3"><![CDATA[INSCOPE]]></data>
-          <data key="d8"><![CDATA[INSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">INSCOPE</data>
+          <data key="d7">INSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>violence</category>
 </context>
           </data>
+          <data key="d11">n82n5</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2310,13 +2411,14 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n6">
-          <data key="d3"><![CDATA[INELIGIBLE]]></data>
-          <data key="d8"><![CDATA[INELIGIBLE]]></data>
-          <data key="d10">
+          <data key="d3">INELIGIBLE</data>
+          <data key="d7">INELIGIBLE</data>
+          <data key="d9">
             <context xmlns="">
 <category>discrimination</category>
 </context>
           </data>
+          <data key="d11">n82n6</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2336,13 +2438,14 @@ INELIGIBLE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n7">
-          <data key="d3"><![CDATA[INSCOPE]]></data>
-          <data key="d8"><![CDATA[INSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">INSCOPE</data>
+          <data key="d7">INSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>discrimination</category>
 </context>
           </data>
+          <data key="d11">n82n7</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2362,13 +2465,14 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n8">
-          <data key="d3"><![CDATA[INELIGIBLE]]></data>
-          <data key="d8"><![CDATA[INELIGIBLE]]></data>
-          <data key="d10">
+          <data key="d3">INELIGIBLE</data>
+          <data key="d7">INELIGIBLE</data>
+          <data key="d9">
             <context xmlns="">
 <category>education</category>
 </context>
           </data>
+          <data key="d11">n82n8</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2388,13 +2492,14 @@ INELIGIBLE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n9">
-          <data key="d3"><![CDATA[INSCOPE]]></data>
-          <data key="d8"><![CDATA[INSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">INSCOPE</data>
+          <data key="d7">INSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>education</category>
 </context>
           </data>
+          <data key="d11">n82n9</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2414,14 +2519,15 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n10">
-          <data key="d3"><![CDATA[CONTACT]]></data>
-          <data key="d4"><![CDATA[Problem relates to a child in care, or a care leaver, or user is a foster carer]]></data>
-          <data key="d8"><![CDATA[CONTACT]]></data>
-          <data key="d10">
+          <data key="d3">CONTACT</data>
+          <data key="d4">{% trans "Problem relates to a child in care, or a care leaver, or user is a foster carer" %}</data>
+          <data key="d7">CONTACT</data>
+          <data key="d9">
             <context xmlns="">
 <category>education</category>
 </context>
           </data>
+          <data key="d11">n82n10</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2441,13 +2547,14 @@ CONTACT<y:LabelModel>
           </data>
         </node>
         <node id="n82::n11">
-          <data key="d3"><![CDATA[INELIGIBLE]]></data>
-          <data key="d8"><![CDATA[INELIGIBLE]]></data>
-          <data key="d10">
+          <data key="d3">INELIGIBLE</data>
+          <data key="d7">INELIGIBLE</data>
+          <data key="d9">
             <context xmlns="">
 <category>employment</category>
 </context>
           </data>
+          <data key="d11">n82n11</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2467,13 +2574,14 @@ INELIGIBLE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n12">
-          <data key="d3"><![CDATA[INELIGIBLE]]></data>
-          <data key="d8"><![CDATA[INELIGIBLE]]></data>
-          <data key="d10">
+          <data key="d3">INELIGIBLE</data>
+          <data key="d7">INELIGIBLE</data>
+          <data key="d9">
             <context xmlns="">
 <category>housing</category>
 </context>
           </data>
+          <data key="d11">n82n12</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2493,13 +2601,14 @@ INELIGIBLE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n13">
-          <data key="d3"><![CDATA[INSCOPE]]></data>
-          <data key="d8"><![CDATA[INSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">INSCOPE</data>
+          <data key="d7">INSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>housing</category>
 </context>
           </data>
+          <data key="d11">n82n13</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2519,13 +2628,14 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n14">
-          <data key="d3"><![CDATA[INELIGIBLE]]></data>
-          <data key="d8"><![CDATA[INELIGIBLE]]></data>
-          <data key="d10">
+          <data key="d3">INELIGIBLE</data>
+          <data key="d7">INELIGIBLE</data>
+          <data key="d9">
             <context xmlns="">
 <category>immigration</category>
 </context>
           </data>
+          <data key="d11">n82n14</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2545,13 +2655,14 @@ INELIGIBLE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n15">
-          <data key="d3"><![CDATA[INSCOPE]]></data>
-          <data key="d8"><![CDATA[INSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">INSCOPE</data>
+          <data key="d7">INSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>housing</category>
 </context>
           </data>
+          <data key="d11">n82n15</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2571,13 +2682,14 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n16">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">OUTOFSCOPE</data>
+          <data key="d7">OUTOFSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>mentalhealth</category>
 </context>
           </data>
+          <data key="d11">n82n16</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2597,13 +2709,14 @@ OUTOFSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n17">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">OUTOFSCOPE</data>
+          <data key="d7">OUTOFSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>pi</category>
 </context>
           </data>
+          <data key="d11">n82n17</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2623,13 +2736,14 @@ OUTOFSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n18">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">OUTOFSCOPE</data>
+          <data key="d7">OUTOFSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>publiclaw</category>
 </context>
           </data>
+          <data key="d11">n82n18</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2649,13 +2763,14 @@ OUTOFSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n19">
-          <data key="d3"><![CDATA[INELIGIBLE]]></data>
-          <data key="d8"><![CDATA[INELIGIBLE]]></data>
-          <data key="d10">
+          <data key="d3">INELIGIBLE</data>
+          <data key="d7">INELIGIBLE</data>
+          <data key="d9">
             <context xmlns="">
 <category>family</category>
 </context>
           </data>
+          <data key="d11">n82n19</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2675,13 +2790,14 @@ INELIGIBLE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n20">
-          <data key="d3"><![CDATA[INSCOPE]]></data>
-          <data key="d8"><![CDATA[INSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">INSCOPE</data>
+          <data key="d7">INSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>family</category>
 </context>
           </data>
+          <data key="d11">n82n20</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2701,14 +2817,15 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n21">
-          <data key="d3"><![CDATA[CONTACT]]></data>
-          <data key="d4"><![CDATA[Council is trying to take user's child into care]]></data>
-          <data key="d8"><![CDATA[CONTACT]]></data>
-          <data key="d10">
+          <data key="d3">CONTACT</data>
+          <data key="d4">{% trans "Council is trying to take user's child into care" %}</data>
+          <data key="d7">CONTACT</data>
+          <data key="d9">
             <context xmlns="">
 <category>family</category>
 </context>
           </data>
+          <data key="d11">n82n21</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2728,13 +2845,14 @@ CONTACT<y:LabelModel>
           </data>
         </node>
         <node id="n82::n22">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">OUTOFSCOPE</data>
+          <data key="d7">OUTOFSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>aap</category>
 </context>
           </data>
+          <data key="d11">n82n22</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2754,13 +2872,14 @@ OUTOFSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n23">
-          <data key="d3"><![CDATA[INSCOPE]]></data>
-          <data key="d8"><![CDATA[INSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">INSCOPE</data>
+          <data key="d7">INSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>benefits</category>
 </context>
           </data>
+          <data key="d11">n82n23</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2780,13 +2899,14 @@ INSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n24">
-          <data key="d3"><![CDATA[INELIGIBLE]]></data>
-          <data key="d8"><![CDATA[INELIGIBLE]]></data>
-          <data key="d10">
+          <data key="d3">INELIGIBLE</data>
+          <data key="d7">INELIGIBLE</data>
+          <data key="d9">
             <context xmlns="">
 <category>welfare-benefits</category>
 </context>
           </data>
+          <data key="d11">n82n24</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2806,14 +2926,15 @@ INELIGIBLE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n25">
-          <data key="d3"><![CDATA[CONTACT]]></data>
-          <data key="d4"><![CDATA[User is at immediate risk of harm]]></data>
-          <data key="d8"><![CDATA[CONTACT]]></data>
-          <data key="d10">
+          <data key="d3">CONTACT</data>
+          <data key="d4">{% trans "User is at immediate risk of harm" %}</data>
+          <data key="d7">CONTACT</data>
+          <data key="d9">
             <context xmlns="">
 <category>violence</category>
 </context>
           </data>
+          <data key="d11">n82n25</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2833,14 +2954,15 @@ CONTACT<y:LabelModel>
           </data>
         </node>
         <node id="n82::n26">
-          <data key="d3"><![CDATA[CONTACT]]></data>
-          <data key="d4"><![CDATA[User is under 18 years old]]></data>
-          <data key="d8"><![CDATA[CONTACT]]></data>
-          <data key="d10">
+          <data key="d3">CONTACT</data>
+          <data key="d4">{% trans "User is under 18 years old" %}</data>
+          <data key="d7">CONTACT</data>
+          <data key="d9">
             <context xmlns="">
 <category>discrimination</category>
 </context>
           </data>
+          <data key="d11">n82n26</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2860,14 +2982,15 @@ CONTACT<y:LabelModel>
           </data>
         </node>
         <node id="n82::n27">
-          <data key="d3"><![CDATA[CONTACT]]></data>
-          <data key="d4"><![CDATA[User is under 18 years old]]></data>
-          <data key="d8"><![CDATA[CONTACT]]></data>
-          <data key="d10">
+          <data key="d3">CONTACT</data>
+          <data key="d4">{% trans "User is under 18 years old" %}</data>
+          <data key="d7">CONTACT</data>
+          <data key="d9">
             <context xmlns="">
 <category>family</category>
 </context>
           </data>
+          <data key="d11">n82n27</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2887,14 +3010,15 @@ CONTACT<y:LabelModel>
           </data>
         </node>
         <node id="n82::n28">
-          <data key="d3"><![CDATA[CONTACT]]></data>
-          <data key="d4"><![CDATA[User is living outside the UK but user's child has been taken to the UK]]></data>
-          <data key="d8"><![CDATA[CONTACT]]></data>
-          <data key="d10">
+          <data key="d3">CONTACT</data>
+          <data key="d4">{% trans "User is living outside the UK but user's child has been taken to the UK" %}</data>
+          <data key="d7">CONTACT</data>
+          <data key="d9">
             <context xmlns="">
 <category>family</category>
 </context>
           </data>
+          <data key="d11">n82n28</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2914,13 +3038,14 @@ CONTACT<y:LabelModel>
           </data>
         </node>
         <node id="n82::n29">
-          <data key="d3"><![CDATA[MEDIATION]]></data>
-          <data key="d8"><![CDATA[MEDIATION]]></data>
-          <data key="d10">
+          <data key="d3">MEDIATION</data>
+          <data key="d7">MEDIATION</data>
+          <data key="d9">
             <context xmlns="">
 <category>family</category>
 </context>
           </data>
+          <data key="d11">n82n29</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2940,13 +3065,14 @@ MEDIATION<y:LabelModel>
           </data>
         </node>
         <node id="n82::n30">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">OUTOFSCOPE</data>
+          <data key="d7">OUTOFSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>debt</category>
 </context>
           </data>
+          <data key="d11">n82n30</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2966,13 +3092,14 @@ OUTOFSCOPE<y:LabelModel>
           </data>
         </node>
         <node id="n82::n31">
-          <data key="d3"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d8"><![CDATA[OUTOFSCOPE]]></data>
-          <data key="d10">
+          <data key="d3">OUTOFSCOPE</data>
+          <data key="d7">OUTOFSCOPE</data>
+          <data key="d9">
             <context xmlns="">
 <category>housing</category>
 </context>
           </data>
+          <data key="d11">n82n31</data>
           <data key="d12"/>
           <data key="d14">
             <y:ShapeNode>
@@ -2994,8 +3121,9 @@ OUTOFSCOPE<y:LabelModel>
       </graph>
     </node>
     <node id="n83">
-      <data key="d3"><![CDATA[You're applying for accommodation or you're losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "You're applying for accommodation or you're losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n83</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3014,8 +3142,9 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n84">
-      <data key="d3"><![CDATA[You want advice on seeking asylum]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "You want advice on seeking asylum" %}</data>
+      <data key="d10">1</data>
+      <data key="d11">n84</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3034,7 +3163,8 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n85">
-      <data key="d3"><![CDATA[None of the above]]></data>
+      <data key="d3">{% trans "None of the above" %}</data>
+      <data key="d11">n85</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3053,8 +3183,9 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n86">
-      <data key="d3"><![CDATA[You are a victim of human trafficking or domestic violence]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "You are a victim of human trafficking or domestic violence" %}</data>
+      <data key="d10">3</data>
+      <data key="d11">n86</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3073,9 +3204,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n87">
-      <data key="d3"><![CDATA[Yes]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Yes" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n87</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3094,9 +3226,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n88">
-      <data key="d3"><![CDATA[No]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "No" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d10">2</data>
+      <data key="d11">n88</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3115,9 +3248,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n89">
-      <data key="d3"><![CDATA[Your home is in a serious state of disrepair]]></data>
-      <data key="d5"><![CDATA[Is this putting you or your family at serious risk of illness or injury?]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "Your home is in a serious state of disrepair" %}</data>
+      <data key="d5">{% trans "Is this putting you or your family at serious risk of illness or injury?" %}</data>
+      <data key="d10">3</data>
+      <data key="d11">n89</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3136,9 +3270,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n90">
-      <data key="d3"><![CDATA[Yes]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Yes" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n90</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3157,9 +3292,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n91">
-      <data key="d3"><![CDATA[No]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "No" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d10">2</data>
+      <data key="d11">n91</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3178,9 +3314,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n92">
-      <data key="d3"><![CDATA[You own your own home]]></data>
-      <data key="d5"><![CDATA[Are you at risk of losing your home because of bankruptcy, repossession or mortgage debt?]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "You own your own home" %}</data>
+      <data key="d5">{% trans "Are you at risk of losing your home because of bankruptcy, repossession or mortgage debt?" %}</data>
+      <data key="d10">1</data>
+      <data key="d11">n92</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3199,9 +3336,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n93">
-      <data key="d3"><![CDATA[A neighbour]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "A neighbour" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n93</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3220,9 +3358,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n94">
-      <data key="d3"><![CDATA[Your child has been abducted]]></data>
-      <data key="d5"><![CDATA[Are you living abroad but your child has been taken to the UK?]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Your child has been abducted" %}</data>
+      <data key="d5">{% trans "Are you living abroad but your child has been taken to the UK?" %}</data>
+      <data key="d10">1</data>
+      <data key="d11">n94</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3241,9 +3380,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n95">
-      <data key="d3"><![CDATA[You've been accused of abducting a child]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "You've been accused of abducting a child" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">2</data>
+      <data key="d11">n95</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3262,8 +3402,9 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n96">
-      <data key="d3"><![CDATA[None of the above]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
+      <data key="d3">{% trans "None of the above" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d11">n96</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3282,10 +3423,11 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n97">
-      <data key="d3"><![CDATA[Domestic violence or harassment]]></data>
-      <data key="d4"><![CDATA[Abuse at home, child abuse, harassment]]></data>
-      <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-      <data key="d11">4</data>
+      <data key="d3">{% trans "Domestic violence or harassment" %}</data>
+      <data key="d4">{% trans "Abuse at home, child abuse, harassment" %}</data>
+      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d10">4</data>
+      <data key="d11">n97</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3304,9 +3446,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n98">
-      <data key="d3"><![CDATA[Yes]]></data>
-      <data key="d6"><![CDATA[INSCOPE]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Yes" %}</data>
+      <data key="d6">INSCOPE</data>
+      <data key="d10">1</data>
+      <data key="d11">n98</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3325,9 +3468,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n99">
-      <data key="d3"><![CDATA[No]]></data>
-      <data key="d6"><![CDATA[INELIGIBLE]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "No" %}</data>
+      <data key="d6">INELIGIBLE</data>
+      <data key="d10">2</data>
+      <data key="d11">n99</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3346,9 +3490,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n100">
-      <data key="d3"><![CDATA[Yes]]></data>
-      <data key="d6"><![CDATA[INSCOPE]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Yes" %}</data>
+      <data key="d6">INSCOPE</data>
+      <data key="d10">1</data>
+      <data key="d11">n100</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3367,9 +3512,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n101">
-      <data key="d3"><![CDATA[No]]></data>
-      <data key="d6"><![CDATA[INELIGIBLE]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "No" %}</data>
+      <data key="d6">INELIGIBLE</data>
+      <data key="d10">2</data>
+      <data key="d11">n101</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3388,9 +3534,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n102">
-      <data key="d3"><![CDATA[Yes]]></data>
-      <data key="d6"><![CDATA[eligible]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Yes" %}</data>
+      <data key="d6">eligible</data>
+      <data key="d10">1</data>
+      <data key="d11">n102</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3409,9 +3556,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n103">
-      <data key="d3"><![CDATA[No]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "No" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">2</data>
+      <data key="d11">n103</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3430,10 +3578,11 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n104">
-      <data key="d3"><![CDATA[Female genital mutilation]]></data>
-      <data key="d4"><![CDATA[You're worried that you may become a victim of female genital mutilation]]></data>
-      <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
-      <data key="d11">6</data>
+      <data key="d3">{% trans "Female genital mutilation" %}</data>
+      <data key="d4">{% trans "You're worried that you may become a victim of female genital mutilation" %}</data>
+      <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
+      <data key="d10">6</data>
+      <data key="d11">n104</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3452,9 +3601,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n105">
-      <data key="d3"><![CDATA[Disputes over children]]></data>
-      <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "Disputes over children" %}</data>
+      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d10">3</data>
+      <data key="d11">n105</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3473,9 +3623,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n106">
-      <data key="d3"><![CDATA[You're in a dispute with your ex-partner over your children]]></data>
-      <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "You're in a dispute with your ex-partner over your children" %}</data>
+      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d10">1</data>
+      <data key="d11">n106</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3494,9 +3645,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n107">
-      <data key="d3"><![CDATA[You're a relative (for example, a grandparent) seeking contact with a child in your family]]></data>
-      <data key="d5"><![CDATA[Has the child been a victim of child abuse within the family?]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "You're a relative (for example, a grandparent) seeking contact with a child in your family" %}</data>
+      <data key="d5">{% trans "Has the child been a victim of child abuse within the family?" %}</data>
+      <data key="d10">2</data>
+      <data key="d11">n107</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3515,9 +3667,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n108">
-      <data key="d3"><![CDATA[Yes]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">1</data>
+      <data key="d3">{% trans "Yes" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">1</data>
+      <data key="d11">n108</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3536,9 +3689,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n109">
-      <data key="d3"><![CDATA[No]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "No" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d10">2</data>
+      <data key="d11">n109</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3557,9 +3711,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n110">
-      <data key="d3"><![CDATA[You're seeking an order to prevent the removal of a child]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d11">3</data>
+      <data key="d3">{% trans "You're seeking an order to prevent the removal of a child" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d10">3</data>
+      <data key="d11">n110</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3578,9 +3733,10 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n111">
-      <data key="d3"><![CDATA[Other]]></data>
-      <data key="d6"><![CDATA[ineligible]]></data>
-      <data key="d8"><![CDATA[Other]]></data>
+      <data key="d3">{% trans "Other" %}</data>
+      <data key="d6">ineligible</data>
+      <data key="d7">Other</data>
+      <data key="d11">n111</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>
@@ -3599,10 +3755,11 @@ OUTOFSCOPE<y:LabelModel>
       </data>
     </node>
     <node id="n112">
-      <data key="d3"><![CDATA[At home (in rented accommodation)]]></data>
-      <data key="d6"><![CDATA[means_test]]></data>
-      <data key="d8"><![CDATA[Other]]></data>
-      <data key="d11">2</data>
+      <data key="d3">{% trans "At home (in rented accommodation)" %}</data>
+      <data key="d6">means_test</data>
+      <data key="d7">Other</data>
+      <data key="d10">2</data>
+      <data key="d11">n112</data>
       <data key="d12"/>
       <data key="d14">
         <y:ShapeNode>

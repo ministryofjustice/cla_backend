@@ -80,10 +80,15 @@ TIME_ZONE = 'Europe/London'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-gb'
+LANGUAGES = (
+    ('en-gb', 'English'),
+    ('cy', 'Cymraeg'),
+)
+LOCALE_PATHS = (root('translations'),)
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = False
+USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
@@ -136,6 +141,7 @@ MIDDLEWARE_CLASSES = (
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
     'core.middleware.GraphiteMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -198,9 +204,9 @@ INSTALLED_APPS += PROJECT_APPS
 
 # DIAGNOSIS
 
-DIAGNOSIS_FILE_NAME = 'graph-2015.05.06.graphml'
-CHECKER_DIAGNOSIS_FILE_NAME = 'checker-graph-2015.05.18.graphml'
-
+DIAGNOSIS_FILE_NAME = 'graph-2015.06.10.graphml'
+CHECKER_DIAGNOSIS_FILE_NAME = 'checker-graph-2015.06.10.graphml'
+DIAGNOSES_USE_TEMPLATES = True
 
 # DIVERSITY
 

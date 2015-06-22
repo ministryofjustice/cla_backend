@@ -10,20 +10,15 @@ from legalaid.models import Category, MatterType
 from diagnosis.graph import get_graph
 from diagnosis.utils import get_node_scope_value
 
-if not hasattr(settings, 'ORIGINAL_DIAGNOSIS_FILE_NAME'):
-    raise Exception(
-        'Please set ORIGINAL_DIAGNOSIS_FILE_NAME to the original path_file'
-    )
-
 
 class GraphTestCase(TestCase):
 
     def setUp(self):
         self.graph = get_graph(
-            file_name=settings.ORIGINAL_DIAGNOSIS_FILE_NAME
+            file_name=settings.DIAGNOSIS_FILE_NAME
         )
         self.checker_graph = get_graph(
-            file_name=settings.ORIGINAL_CHECKER_DIAGNOSIS_FILE_NAME
+            file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME
         )
         call_command('loaddata', 'initial_category')
         call_command('loaddata', 'initial_mattertype')
@@ -86,15 +81,13 @@ class GraphTestCase(TestCase):
             for child_id in self.graph.successors(node_id):
                 move_down(child_id, context, nodes)
 
-        root_id = self.graph.graph['operator_root_id']
-        move_down(root_id, {}, [])
+        move_down('start', {}, [])
 
-        root_id = self.checker_graph.graph['operator_root_id']
-        move_down(root_id, {}, [])
+        move_down('start', {}, [])
 
     def test_nodes_have_heading(self):
         checker_graph = get_graph(
             file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME
         )
-        node = checker_graph.node['n43::n2']
+        node = checker_graph.node['n43n2']
         self.assertEqual(node['heading'], u'Select the option that best describes your situation')

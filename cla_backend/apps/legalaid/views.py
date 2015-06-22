@@ -401,6 +401,18 @@ class FullCaseViewSet(
     paginate_by_param = 'page_size'
     max_paginate_by = 100
 
+    FLAGGED_WITH_EOD_SQL = '''
+    SELECT legalaid_case.eod_details_id IS NOT NULL AND (
+        (SELECT notes IS NOT NULL AND length(notes) > 0
+            FROM legalaid_eoddetails
+            WHERE legalaid_eoddetails.id=legalaid_case.eod_details_id)
+        OR
+        (SELECT COUNT(id) > 0
+            FROM legalaid_eoddetailscategory
+            WHERE legalaid_eoddetailscategory.eod_details_id=legalaid_case.eod_details_id)
+    )
+    '''
+
     def get_queryset(self, **kwargs):
         qs = super(FullCaseViewSet, self).get_queryset(**kwargs)
         person_ref_param = self.request.QUERY_PARAMS.get('person_ref', None)
@@ -433,17 +445,7 @@ class FullCaseViewSet(
                     THEN 1
                     ELSE 0
                 END''',
-                'flagged_with_eod': '''
-                    SELECT legalaid_case.eod_details_id IS NOT NULL AND (
-                        (SELECT notes IS NOT NULL AND length(notes) > 0
-                            FROM legalaid_eoddetails
-                            WHERE legalaid_eoddetails.id=legalaid_case.eod_details_id)
-                        OR
-                        (SELECT COUNT(id) > 0
-                            FROM legalaid_eoddetailscategory
-                            WHERE legalaid_eoddetailscategory.eod_details_id=legalaid_case.eod_details_id)
-                    )
-                ''',
+                'flagged_with_eod': self.FLAGGED_WITH_EOD_SQL,
             })
 
         return qs

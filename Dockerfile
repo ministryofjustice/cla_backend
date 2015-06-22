@@ -84,7 +84,7 @@ RUN cd /home/app/django && python manage.py collectstatic --noinput
 RUN cd /home/app/django && python manage.py compilemessages
 
 # Allow write to cache directory
-RUN chmod -R 0755 /home/app/django/cache
+RUN chmod -R 0777 /home/app/django/cache
 
 # Expose ports.
 EXPOSE 80

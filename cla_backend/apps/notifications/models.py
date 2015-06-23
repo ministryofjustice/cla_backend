@@ -20,9 +20,10 @@ class NotificationManager(models.Manager):
 
 
 class Notification(TimeStampedModel):
-    type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
+    type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES,
+                            default='notification')
     notification = models.CharField(max_length=100)
-    description = models.CharField(max_length=600)
+    description = models.CharField(max_length=600, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()

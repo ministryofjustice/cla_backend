@@ -12,7 +12,7 @@ set_end_time_in_past.short_description = "Set end time in the past to " \
 
 
 class NotificationAdmin(admin.ModelAdmin):
-    exclude = ('created_by',)
+    exclude = ('created_by', 'description', 'type')
     list_display = (
         'id',
         'notification',

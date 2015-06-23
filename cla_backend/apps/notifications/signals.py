@@ -1,26 +1,19 @@
 # -*- coding: utf-8 -*-
 import datetime
-from django.core.cache import cache
 import pytz
 
 
+TASK_ID_PREFIX = 'cla_backend.notifications.task.notifications'
+
+
 def get_update_client_times(instance):
-    from .tasks import CACHE_KEY
     times = []
-    cached_notifications = cache.get(CACHE_KEY, [])
     now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    task_id = '%s-%s' % (TASK_ID_PREFIX, instance.pk)
 
-    try:
-        cached_instance_data = next(n for (i, n) in
-                                    enumerate(cached_notifications)
-                                    if n["id"] == instance.pk)
-        if cached_instance_data['start_time'] < now < instance.start_time:
-            times.append({})
-    except StopIteration:
-        pass
-
-    task_id = '%s-%s' % (CACHE_KEY, instance.pk)
-    times.append({'eta': instance.start_time, 'task_id': '%s-start' % task_id})
+    times.append({})
+    if instance.start_time > now:
+        times.append({'eta': instance.start_time, 'task_id': '%s-start' % task_id})
     times.append({'eta': instance.end_time, 'task_id': '%s-end' % task_id})
 
     return times

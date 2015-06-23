@@ -3,14 +3,10 @@ import json
 import requests
 from celery import shared_task
 from django.conf import settings
-from django.core.cache import cache
 from django.core.serializers.json import DjangoJSONEncoder
 
 from .models import Notification
 from .serializers import NotificationSerializer
-
-
-CACHE_KEY = 'cla_backend.notifications.task.notifications'
 
 
 @shared_task(default_retry_delay=1, max_retries=12)
@@ -20,7 +16,6 @@ def send_notifications():
             Notification.objects.live(),
             many=True).data
     }
-    cache.set(CACHE_KEY, data['notifications'])
 
     response = requests.post(
         '%s:%s/admin/notifications/' % (settings.FRONTEND_HOST_NAME,

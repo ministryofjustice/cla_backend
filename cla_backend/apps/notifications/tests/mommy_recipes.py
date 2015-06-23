@@ -10,20 +10,22 @@ def now():
     return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
 
 
+def hour_in_past():
+    return now() - datetime.timedelta(hours=1)
+
+
 def hour_in_future():
-    return datetime.datetime.utcnow().replace(tzinfo=pytz.utc) + \
-        datetime.timedelta(hours=1)
+    return now() + datetime.timedelta(hours=1)
 
 
 def hours_in_future():
-    return datetime.datetime.utcnow().replace(tzinfo=pytz.utc) + \
-        datetime.timedelta(hours=2)
+    return now() + datetime.timedelta(hours=2)
 
 
 notification = Recipe(
     Notification,
     notification=seq('Notification'),
-    start_time=now,
+    start_time=hour_in_past,
     end_time=hour_in_future
 )
 

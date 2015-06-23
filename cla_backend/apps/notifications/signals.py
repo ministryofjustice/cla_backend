@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
+import datetime
 from django.core.cache import cache
-from django.utils import timezone
+import pytz
 
 
 def get_update_client_times(instance):
     from .tasks import CACHE_KEY
     times = []
     cached_notifications = cache.get(CACHE_KEY, [])
-    now = timezone.now()
+    now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
 
     try:
         cached_instance_data = next(n for (i, n) in

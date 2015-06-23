@@ -47,6 +47,19 @@ class ReasonForContacting(TimeStampedModel):
             category['percentage'] *= percentage_total
         return dict(categories=categories, total_count=total_count)
 
+    @classmethod
+    def get_top_referrers(cls, count=5):
+        total_count = cls.objects.count()
+        percentage_total = 100.0 / total_count if total_count else 0.0
+        data = cls.objects.values('referrer').annotate(count=models.Count('referrer')).order_by('-count', 'referrer')
+        return [
+            {
+                'referrer': item['referrer'],
+                'percentage': item['count'] * percentage_total,
+            }
+            for item in data
+        ]
+
     @property
     def reason_categories(self):
         if self.reasons.count():

@@ -26,6 +26,7 @@ from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.decorators import list_route
 from core.drf.mixins import FormActionMixin
+from notifications.views import BaseNotificationViewSet
 
 from timer.views import BaseTimerViewSet
 
@@ -598,5 +599,12 @@ class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin,
 class GuidanceNoteViewSet(
     CallCentrePermissionsViewSetMixin,
     BaseGuidanceNoteViewSet
+):
+    pass
+
+
+class NotificationViewSet(
+    CallCentrePermissionsViewSetMixin,
+    BaseNotificationViewSet
 ):
     pass

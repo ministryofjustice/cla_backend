@@ -281,15 +281,6 @@ if 'RAVEN_CONFIG_DSN' in os.environ:
 LOGIN_FAILURE_LIMIT = 5
 LOGIN_FAILURE_COOLOFF_TIME = 60  # in minutes
 
-
-# .local.py overrides all the common settings.
-try:
-    from .local import *
-except ImportError:
-    pass
-
-
-
 # Django rest-framework-auth
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -390,6 +381,13 @@ CELERY_DISABLE_RATE_LIMITS = True # they don't work with SQS
 CELERY_ENABLE_REMOTE_CONTROL = False # doesn't work well under docker
 # apps with celery tasks
 CELERY_IMPORTS = ['reports.tasks']
+
+
+# .local.py overrides all the common settings.
+try:
+    from .local import *
+except ImportError:
+    pass
 
 
 # importing test settings file if necessary (TODO chould be done better)

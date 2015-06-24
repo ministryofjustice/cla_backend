@@ -19,8 +19,10 @@ from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet, \
     BaseCaseLogMixin
 from cla_common.constants import CASE_SOURCE
 
+from .models import ReasonForContacting
 from .serializers import EligibilityCheckSerializer, \
-    PropertySerializer, CaseSerializer, CheckerDiagnosisSerializer
+    PropertySerializer, CaseSerializer, CheckerDiagnosisSerializer, \
+    ReasonForContactingSerializer
 from .forms import WebCallMeBackForm
 
 
@@ -169,3 +171,21 @@ class DiagnosisViewSet(
         except ImproperlyConfigured:
             pass
         return super(DiagnosisModelMixin, self).pre_save(obj, *args, **kwargs)
+
+
+class ReasonForContactingViewSet(
+    PublicAPIViewSetMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet
+):
+    model = ReasonForContacting
+    serializer_class = ReasonForContactingSerializer
+    lookup_field = 'reference'
+
+    def pre_save(self, obj):
+        # delete all existing reasons and use those from request as replacement set if provided
+        if obj.pk and 'reasons' in self.request.DATA:
+            obj.reasons.all().delete()
+
+        super(ReasonForContactingViewSet, self).pre_save(obj)

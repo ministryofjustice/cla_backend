@@ -1,6 +1,7 @@
-from rest_framework import serializers
 from django.conf import settings
 from django.utils.functional import SimpleLazyObject
+from rest_framework import serializers
+
 from diagnosis.graph import get_graph
 from diagnosis.serializers import DiagnosisSerializer
 
@@ -11,6 +12,7 @@ from legalaid.serializers import UUIDSerializer, \
     DeductionsSerializerBase, PersonSerializerBase, \
     AdaptationDetailsSerializerBase, ThirdPartyDetailsSerializerBase
 
+from checker.models import ReasonForContacting, ReasonForContactingCategory
 
 checker_graph = SimpleLazyObject(lambda: get_graph(
     file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME))
@@ -152,3 +154,22 @@ class CaseSerializer(CaseSerializerBase):
 class CheckerDiagnosisSerializer(DiagnosisSerializer):
     def _get_graph(self):
         return checker_graph
+
+
+class ReasonForContactingCategorySerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model = ReasonForContactingCategory
+        fields = ('category',)
+
+
+class ReasonForContactingSerializer(serializers.ModelSerializer):
+    reasons = ReasonForContactingCategorySerializer(
+        many=True, allow_add_remove=True, required=False
+    )
+    case = serializers.SlugRelatedField(slug_field='reference', read_only=False,
+                                        required=False)
+
+    class Meta(object):
+        model = ReasonForContacting
+        fields = ('reference', 'reasons', 'other_reasons', 'case',
+                  'referrer', 'user_agent',)

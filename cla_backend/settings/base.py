@@ -205,7 +205,7 @@ INSTALLED_APPS += PROJECT_APPS
 
 # DIAGNOSIS
 DIAGNOSIS_FILE_NAME = 'graph-2015.06.10.graphml'
-CHECKER_DIAGNOSIS_FILE_NAME = 'checker-graph-2015.06.10.graphml'
+CHECKER_DIAGNOSIS_FILE_NAME = 'checker-graph-2015.06.25.graphml'
 DIAGNOSES_USE_TEMPLATES = True
 
 # Address of server to send notifications to frontend

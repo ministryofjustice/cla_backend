@@ -64,6 +64,4 @@ class DiagnosisAPITestCase(
         self.assertEqual(response.data.get('current_node_id'), 'n43n2')
         self.assertEqual(response.data.get('category'), None)
         self.assertEqual(len(response.data.get('nodes')), 1)
-        self.assertEqual(len(response.data.get('choices')), 4)
-
-
+        self.assertEqual(len(response.data.get('choices')), 5)

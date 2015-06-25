@@ -3917,8 +3917,7 @@ CONTACT<y:LabelModel>
       </data>
     </node>
     <node id="n118">
-      <data key="d3"><![CDATA[Losing your accommodation]]></data>
-      <data key="d4"><![CDATA[You’re losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you]]></data>
+      <data key="d3"><![CDATA[You’re losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you]]></data>
       <data key="d10">2</data>
       <data key="d11"><![CDATA[n118]]></data>
       <data key="d12"/>

@@ -1372,8 +1372,7 @@
       <data key="d12"/>
       </node>
     <node id="n118">
-      <data key="d3">{% trans "Losing your accommodation" %}</data>
-      <data key="d4">{% trans "You’re losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you" %}</data>
+      <data key="d3">{% trans "You’re losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you" %}</data>
       <data key="d10">2</data>
       <data key="d11">n118</data>
       <data key="d12"/>

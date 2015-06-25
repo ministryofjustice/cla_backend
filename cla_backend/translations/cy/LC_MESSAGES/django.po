@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-25 12:11+0100\n"
+"POT-Creation-Date: 2015-06-25 12:34+0100\n"
 "PO-Revision-Date: 2015-06-19 14:52+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/projects/p/cla-backend/language/cy/)\n"
@@ -752,12 +752,11 @@ msgid "User is living outside the UK but user's child has been taken to the UK"
 msgstr "Mae'r defnyddiwr yn byw y tu allan i'r DU ond aethpwyd â phlentyn y defnyddiwr i'r DU "
 
 #: apps/diagnosis/data/checker-graph-2015.06.25.graphml.tpl:1132
-#: apps/diagnosis/data/checker-graph-2015.06.25.graphml.tpl:1375
 msgid "Losing your accommodation"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph-2015.06.25.graphml.tpl:1133
-#: apps/diagnosis/data/checker-graph-2015.06.25.graphml.tpl:1376
+#: apps/diagnosis/data/checker-graph-2015.06.25.graphml.tpl:1375
 msgid "You’re losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you"
 msgstr ""
 

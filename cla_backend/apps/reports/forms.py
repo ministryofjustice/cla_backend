@@ -226,6 +226,21 @@ class MIFeedbackExtract(SQLFileDateRangeReport):
         ]
 
 
+class MIDuplicateCaseExtract(SQLFileDateRangeReport):
+    QUERY_FILE = 'MIDuplicateCases.sql'
+
+    def get_headers(self):
+        return [
+            "LAA_Reference",
+            "Reference",
+            "Category",
+            "Created",
+            "Full_name",
+            "DOB",
+            "Postcode",
+        ]
+
+
 class MIAlternativeHelpExtract(SQLFileDateRangeReport):
     QUERY_FILE = 'MIAlternativeHelp.sql'
 

@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.core.management.base import NoArgsCommand
 from django.utils.html import strip_tags
+from django.utils.six import text_type
+
 from diagnosis.graph import get_graph
 
 
@@ -24,7 +26,7 @@ class Command(NoArgsCommand):
                 path = nodes[1:]
                 text = ''
                 for node in path:
-                    label = graph.node[node]['label']
+                    label = text_type(graph.node[node]['label'])
                     text += ' - %s\n' % strip_tags(label)
                 paths['/'.join(path)] = text
 

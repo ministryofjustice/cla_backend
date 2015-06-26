@@ -26,6 +26,9 @@ class GraphImporter(object):
     KEY_HEADING = 'heading'
     KEY_PERMANENT_ID = 'permanent_id'
 
+    KEY_NODE_GRAPHICS = 'nodegraphics'
+    KEY_EDGE_GRAPHICS = 'edgegraphics'
+
     def __init__(self, file_path):
         self.file_path = file_path
         self.graph = None
@@ -40,7 +43,13 @@ class GraphImporter(object):
         # NB: objectify does not allow mutation so must use etree
         self.doc = etree.parse(self.file_path)
         self.ns = self.doc.getroot().nsmap[None]
-        self.process_properties_declaration()
+        self.process_properties_declaration(True)
+
+        # drop unnecessary elements from templates
+        for key in [self.KEY_NODE_GRAPHICS, self.KEY_EDGE_GRAPHICS]:
+            elements = self.xpath_ns(self.doc, '//ns:data[@key="%s"]' % self.prop_mapping[key]['id'])
+            for element in elements:
+                element.getparent().remove(element)
 
         internationalised_keys = [self.KEY_BODY, self.KEY_HELP, self.KEY_HEADING]
         internationalised_keys = [self.prop_mapping[key]['id'] for key in internationalised_keys]
@@ -89,10 +98,11 @@ class GraphImporter(object):
     def xpath_ns(self, el, s):
         return el.xpath(s, namespaces={'ns': self.ns})
 
-    def process_properties_declaration(self):
-        def _get_id_default_dict_for(attr):
+    def process_properties_declaration(self, load_additional=False):
+        def _get_id_default_dict_for(attr, attr_name='attr.name', element='node'):
             try:
-                el = self.xpath_ns(self.doc, '//ns:key[@attr.name="%s"]' % attr)[0]
+                xpath = '//ns:key[@%s="%s"][@for="%s"]' % (attr_name, attr, element)
+                el = self.xpath_ns(self.doc, xpath)[0]
             except IndexError:
                 return {
                     'id': None,
@@ -116,6 +126,12 @@ class GraphImporter(object):
             self.KEY_HEADING: _get_id_default_dict_for('heading'),
             self.KEY_PERMANENT_ID: _get_id_default_dict_for('permanent_id'),
         }
+
+        if load_additional:
+            self.prop_mapping.update({
+                self.KEY_NODE_GRAPHICS: _get_id_default_dict_for('nodegraphics', 'yfiles.type'),
+                self.KEY_EDGE_GRAPHICS: _get_id_default_dict_for('edgegraphics', 'yfiles.type', 'edge'),
+            })
 
     def process_nodes(self, is_templated=settings.DIAGNOSES_USE_TEMPLATES):
         node_id_map = dict()

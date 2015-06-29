@@ -12,7 +12,10 @@
                 ["change_article", "knowledgebase", "article"],
                 ["change_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
                 ["add_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
-                ["delete_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"]
+                ["delete_articlecategorymatrix", "knowledgebase", "articlecategorymatrix"],
+                ["add_notification", "notifications", "notification"],
+                ["change_notification", "notifications", "notification"],
+                ["delete_notification", "notifications", "notification"]
             ]
         }
     },
@@ -50,7 +53,11 @@
                 ["delete_tag", "guidance", "tag"],
                 ["add_telephonenumber", "knowledgebase", "telephonenumber"],
                 ["change_telephonenumber", "knowledgebase", "telephonenumber"],
-                ["delete_telephonenumber", "knowledgebase", "telephonenumber"]
+                ["delete_telephonenumber", "knowledgebase", "telephonenumber"],
+                ["change_reasonforcontacting", "checker", "reasonforcontacting"],
+                ["add_notification", "notifications", "notification"],
+                ["change_notification", "notifications", "notification"],
+                ["delete_notification", "notifications", "notification"]
             ]
         }
     },

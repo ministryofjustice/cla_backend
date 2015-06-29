@@ -1,16 +1,17 @@
 import inspect
 import datetime
-import tempfile
-import shutil
-from psycopg2 import InternalError
-from legalaid.utils.diversity import save_diversity_data
 import os
+import shutil
+import tempfile
 
 from django.test import TestCase
+from psycopg2 import InternalError
 
 from core.tests.mommy_utils import make_recipe
+from legalaid.utils.diversity import save_diversity_data
 import reports.forms
 from reports.utils import OBIEEExporter
+
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
 
@@ -28,6 +29,7 @@ class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
                 inst.get_queryset()
                 self.assertEqual(len(inst.description), len(inst.get_headers()), 'Number of columns in %s.get_headers() doesn\'t match the number of columns returned by the sql query.' % n)
 
+
 class ReportsDateRangeValidationWorks(TestCase):
 
     def test_range_validation_works(self):
@@ -40,6 +42,51 @@ class ReportsDateRangeValidationWorks(TestCase):
         self.assertEqual(i.errors, {u'__all__': [u'The date range (6 days, 0:00:00) should span no more than 5 working days']} )
         i2 = T(data={'date_from': now - datetime.timedelta(days=1), 'date_to': now})
         self.assertTrue(i2.is_valid())
+
+
+class MIDuplicateCasesTestCase(TestCase):
+    def test_duplicate_cases(self):
+        # random data
+        for _ in range(20):
+            personal_details = make_recipe('legalaid.personal_details',
+                                           _fill_optional=['full_name', 'date_of_birth', 'postcode'])
+            make_recipe('legalaid.case',
+                        personal_details=personal_details)
+
+        # data with one pair of duplicates
+        data = (
+            dict(full_name='Mary Smith',
+                 date_of_birth=datetime.date(1980, 5, 1),
+                 postcode='SW1A 1AA'),
+            dict(full_name='Mary Smith',
+                 date_of_birth=datetime.date(1975, 4, 10),
+                 postcode='SW1A 1AA'),
+            dict(full_name='mary smith',
+                 date_of_birth=datetime.date(1980, 5, 1),
+                 postcode='sw1a1aa'),
+        )
+        for details in data:
+            personal_details = make_recipe('legalaid.personal_details',
+                                           **details)
+            make_recipe('legalaid.case',
+                        personal_details=personal_details)
+
+        from legalaid.models import Case
+
+        self.assertEqual(Case.objects.count(), 23)
+
+        form = reports.forms.MIDuplicateCaseExtract(data={
+            'date_from': datetime.date.today() - datetime.timedelta(days=1),
+            'date_to': datetime.date.today()
+        })
+        self.assertTrue(form.is_valid())
+        query_result = form.get_queryset()
+        self.assertEqual(len(query_result), 2)
+        saved_data = [list(row[-3:]) for row in query_result]
+        self.assertListEqual(saved_data, [
+            ['mary smith', datetime.date(1980, 5, 1), 'sw1a1aa'],
+            ['Mary Smith', datetime.date(1980, 5, 1), 'SW1A 1AA'],
+        ])
 
 
 class OBIEEExportOutputsZipTestCase(TestCase):

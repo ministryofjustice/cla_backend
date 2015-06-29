@@ -21,7 +21,7 @@ class PPSerializer(object):
     @property
     def id(self):
         return base64.b64encode(
-            '.'.join([self.time_string, self.period, self.variable])
+            '.'.join([self.time_string, self.period, self._variable])
         )
 
     @property
@@ -42,6 +42,10 @@ class PPSerializer(object):
     @property
     def url(self):
         return '%s%s' % (settings.PERFORMANCE_PLATFORM_API, self.endpoint)
+
+    @property
+    def _variable(self):
+        raise NotImplementedError
 
     def _count(self):
         raise NotImplementedError
@@ -78,6 +82,10 @@ class ApplicationStageVolumeSerializer(PPSerializer):
     """
     endpoint = 'application-stage-volumes'
 
+    @property
+    def _variable(self):
+        return self.stage
+
     def _count(self):
         return 100
 
@@ -95,6 +103,10 @@ class ApplicationStateVolumeSerializer(PPSerializer):
     """
     endpoint = 'application-state-volumes'
 
+    @property
+    def _variable(self):
+        return self.state
+
     def _count(self):
         return 1000
 
@@ -111,19 +123,11 @@ class TransactionsByChannelTypeSerializer(PPSerializer):
         "count": 2000
     }
     """
-    variable_key = 'channel'
     endpoint = 'transactions-by-channel-type'
 
     @property
-    def id(self):
-        return base64.b64encode(
-            '.'.join([
-                self.time_string,
-                self.period,
-                self.channel_type,
-                self.channel
-            ])
-        )
+    def _variable(self):
+        return '.'.join([self.channel_type, self.channel])
 
     def _count(self):
         return 2000

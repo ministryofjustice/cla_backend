@@ -5,6 +5,8 @@ from cla_common.constants import CASE_SOURCE
 import requests
 from celery import shared_task
 from celery import Task
+from performance.constants import PERFORMANCE_STAGES, PERFORMANCE_STATES, \
+    PERFORMANCE_CHANNELS
 
 from .serializers import ApplicationStageVolumeSerializer, \
     ApplicationStateVolumeSerializer, TransactionsByChannelTypeSerializer
@@ -62,14 +64,14 @@ class BasePerformanceTask(Task):
 
 class ApplicationStageVolumeTask(BasePerformanceTask):
     variables = {
-        'stage': ['created']
+        'stage': PERFORMANCE_STAGES
     }
     serializer_class = ApplicationStageVolumeSerializer
 
 
 class ApplicationStateVolumeTask(BasePerformanceTask):
     variables = {
-        'state': ['started']
+        'state': PERFORMANCE_STATES
     }
     serializer_class = ApplicationStateVolumeSerializer
 
@@ -77,7 +79,7 @@ class ApplicationStateVolumeTask(BasePerformanceTask):
 class TransactionsByChannelTypeTask(BasePerformanceTask):
     variables = {
         'channel_type': [c[0] for c in CASE_SOURCE],
-        'channel': ['digital'],
+        'channel': PERFORMANCE_CHANNELS
     }
     serializer_class = TransactionsByChannelTypeSerializer
 

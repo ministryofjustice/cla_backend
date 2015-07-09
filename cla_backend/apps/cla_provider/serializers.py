@@ -184,8 +184,8 @@ class CaseSerializer(CaseSerializerFull):
             'matter_type1', 'matter_type2', 'requires_action_by', 'diagnosis',
             'media_code', 'postcode', 'diagnosis_state',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
-            'date_of_birth', 'category', 'outcome_code', 'source',
-            'complaint_flag'
+            'date_of_birth', 'category', 'outcome_code', 'outcome_description',
+            'source', 'complaint_flag'
         )
 
 class CaseListSerializer(CaseSerializer):
@@ -205,6 +205,7 @@ class CaseListSerializer(CaseSerializer):
             'date_of_birth',
             'category',
             'outcome_code',
+            'outcome_description',
             'case_count',
             'provider_viewed',
             'provider_accepted',

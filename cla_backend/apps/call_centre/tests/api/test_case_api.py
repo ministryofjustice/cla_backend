@@ -46,7 +46,7 @@ class BaseCaseTestCase(
             'postcode', 'diagnosis_state', 'thirdparty_details', 'rejected',
             'date_of_birth', 'category',
             'exempt_user', 'exempt_user_reason', 'ecf_statement',
-            'case_count', 'outcome_code',
+            'case_count', 'outcome_code', 'outcome_description',
             'requires_action_at', 'callback_attempt', 'source',
             'complaint_flag', 'eod_details',
         ]

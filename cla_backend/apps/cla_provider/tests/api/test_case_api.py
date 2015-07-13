@@ -32,8 +32,8 @@ class BaseCaseTestCase(
         return [
             'eligibility_check', 'personal_details', 'reference',
             'created', 'modified', 'created_by', 'outcome_code',
-            'provider', 'notes', 'provider_notes', 'provider_viewed',
-            'provider_accepted', 'provider_closed',
+            'outcome_description',  'provider', 'notes', 'provider_notes',
+            'provider_viewed', 'provider_accepted', 'provider_closed',
             'full_name', 'laa_reference', 'eligibility_state',
             'adaptation_details', 'requires_action_by',
             'matter_type1', 'matter_type2', 'diagnosis', 'media_code',

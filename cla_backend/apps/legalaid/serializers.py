@@ -14,6 +14,7 @@ from cla_common.constants import MATTER_TYPE_LEVELS, SPECIFIC_BENEFITS
 from cla_common.money_interval.models import MoneyInterval
 
 from cla_provider.models import Provider, OutOfHoursRota, Feedback, CSVUpload
+from cla_eventlog import registry as event_registry
 
 from .models import Category, Property, EligibilityCheck, Income, \
     Savings, Deductions, Person, PersonalDetails, Case, \
@@ -141,7 +142,6 @@ class DeductionsSerializerBase(TotalsModelSerializer):
             'maintenance',
             'childcare',
             'mortgage', 'rent',
-
         }
 
     class Meta:
@@ -302,6 +302,10 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     matter_type2 = serializers.SlugRelatedField(slug_field='code', required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO))
     media_code = serializers.SlugRelatedField(slug_field='code', required=False)
     outcome_code = serializers.CharField(max_length=50, required=False)
+    outcome_description = serializers.SerializerMethodField('_get_outcome_description')
+
+    def _get_outcome_description(self, case):
+        return event_registry.event_registry.all().get(case.outcome_code, {}).get('description', '')
 
     def _get_fields_for_partial_update(self):
         fields = super(CaseSerializerBase, self)._get_fields_for_partial_update()

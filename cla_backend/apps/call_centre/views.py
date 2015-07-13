@@ -584,7 +584,11 @@ class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin,
     serializer_class = CSVUploadSerializer
     serializer_detail_class = CSVUploadDetailSerializer
 
-    ordering = ('-created')
+    ordering = ('-month',)
+
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
 
     def get_queryset(self, *args, **kwargs):
         # only return last 18 months worth

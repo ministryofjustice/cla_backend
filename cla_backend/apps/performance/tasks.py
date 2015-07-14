@@ -78,8 +78,8 @@ class ApplicationStateVolumeTask(BasePerformanceTask):
 
 class TransactionsByChannelTypeTask(BasePerformanceTask):
     variables = {
-        'channel_type': [c[0] for c in CASE_SOURCE],
-        'channel': PERFORMANCE_CHANNELS
+        'channel_type': PERFORMANCE_CHANNELS,
+        'channel': [c[0] for c in CASE_SOURCE]
     }
     serializer_class = TransactionsByChannelTypeSerializer
 
@@ -87,8 +87,8 @@ class TransactionsByChannelTypeTask(BasePerformanceTask):
 
 @shared_task(default_retry_delay=10, max_retries=12)
 def send_all_performance_data():
-    ApplicationStageVolumeTask().delay()
-    ApplicationStateVolumeTask().delay()
+    # ApplicationStageVolumeTask().delay()
+    # ApplicationStateVolumeTask().delay()
     TransactionsByChannelTypeTask().delay()
 
 

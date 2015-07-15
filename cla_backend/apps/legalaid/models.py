@@ -494,7 +494,7 @@ class Property(TimeStampedModel):
     share = models.PositiveIntegerField(default=None,
                                         validators=[MaxValueValidator(100)],
                                         null=True, blank=True)
-    eligibility_check = models.ForeignKey(EligibilityCheck)
+    eligibility_check = models.ForeignKey(EligibilityCheck, related_query_name='property_set')
     disputed = models.NullBooleanField(default=None)
     main = models.NullBooleanField(default=None)
 

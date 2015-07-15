@@ -173,7 +173,9 @@ class TransactionsByChannelTypeSerializer(PPSerializer):
         if self.channel != 'WEB':
             return 0
         cases = self._get_cases().filter(
-            ~Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
+            ~Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN) |
+            Q(Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN) &
+              Q(eligibility_check__property_set__share__isnull=True))
         )
         ecs = self._get_eligibility_checks().filter(
             ~Q(state=ELIGIBILITY_STATES.UNKNOWN) & Q(case__isnull=True)
@@ -187,7 +189,10 @@ class TransactionsByChannelTypeSerializer(PPSerializer):
         if self.channel != 'WEB':
             return 0
         cases = self._get_cases().filter(
-            Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN) | Q(eligibility_check__isnull=True)
+            Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN) |
+            Q(eligibility_check__isnull=True) &
+            ~Q(Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN) &
+               Q(eligibility_check__property_set__share__isnull=True))
         )
         return cases.count()
 

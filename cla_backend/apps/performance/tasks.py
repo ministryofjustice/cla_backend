@@ -98,5 +98,3 @@ def send_all_performance_data():
     # ApplicationStageVolumeTask().delay()
     # ApplicationStateVolumeTask().delay()
     TransactionsByChannelTypeTask().delay()
-
-

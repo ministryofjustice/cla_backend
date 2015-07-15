@@ -212,5 +212,3 @@ class TransactionsByChannelTypeSerializer(PPSerializer):
                     (self.channel_type, self.channel, val))
 
         return val
-
-

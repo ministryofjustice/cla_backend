@@ -5,11 +5,14 @@ from cla_common.constants import CASE_SOURCE
 import requests
 from celery import shared_task
 from celery import Task
+import logging
+
 from performance.constants import PERFORMANCE_STAGES, PERFORMANCE_STATES, \
     PERFORMANCE_CHANNELS
-
 from .serializers import ApplicationStageVolumeSerializer, \
     ApplicationStateVolumeSerializer, TransactionsByChannelTypeSerializer
+
+logger = logging.getLogger(__name__)
 
 
 @shared_task(default_retry_delay=10, max_retries=12, bind=True)
@@ -20,6 +23,11 @@ def post_task(self, url, data, headers):
         headers=headers
     )
     if response.status_code != 200 and response.json().get('status') != 'ok':
+        logger.error('Performance post failure to %s' % url, extra={
+            'data': data,
+            'headers': headers,
+            'response_text': response.text
+        })
         self.retry(args=[url, data, headers])
 
 

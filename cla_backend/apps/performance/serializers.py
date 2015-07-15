@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 
 class PPSerializer(object):
     endpoint = None
-    variables = {}
 
     def __init__(self, timestamp, period='week', **data_types):
         self.timestamp = timestamp

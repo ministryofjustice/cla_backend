@@ -85,8 +85,7 @@ The following are covered in 'other housing'.
 * disrepair / poor housing conditions
 * ASBO/ASBI
 
-Clients in temporary accommodation will be covered for in scope housing.
-{% endblocktrans %}</data>
+Clients in temporary accommodation will be covered for in scope housing.{% endblocktrans %}</data>
       <data key="d10">n2</data>
       </node>
     <node id="n3">
@@ -180,7 +179,7 @@ Record in Operator Notes what documents client has received. These may include a
       <data key="d11"/>
       </node>
     <node id="n12">
-      <data key="d3">{% trans "Sale of client's home is being forced in order to recoup a charging order on their property. " %}</data>
+      <data key="d3">{% trans "Sale of client's home is being forced in order to recoup a charging order on their property." %}</data>
       <data key="d4">Client has received </data>
       <data key="d7">2</data>
       <data key="d8">{% blocktrans %}A Charging Order is placed on a property by the court securing an outstanding debt against the home or other property.
@@ -462,7 +461,7 @@ If client has received a charging order please record this in Operator Notes.{% 
     <node id="n47">
       <data key="d3">{% trans "The landlord has unlawfully evicted the client without due process" %}</data>
       <data key="d4">Landlord has unlawfu</data>
-      <data key="d8">{% trans " (eg changed the locks)" %}</data>
+      <data key="d8">{% trans "(eg changed the locks)" %}</data>
       <data key="d10">n47</data>
       </node>
     <node id="n48">
@@ -652,8 +651,7 @@ If client has received a charging order please record this in Operator Notes.{% 
 
 * the client has been treated differently by their landlord compared to other tenants of the same landlord
 * the landlord has refused to make reasonable adjustments to the property to accommodate a client's disability
-* an estate agent is only offering a minority group properties that are considered hard to let
-{% endblocktrans %}</data>
+* an estate agent is only offering a minority group properties that are considered hard to let{% endblocktrans %}</data>
       <data key="d10">n72</data>
       </node>
     <node id="n73">
@@ -668,8 +666,7 @@ It covers advice on
 * disrepair / poor housing conditions - only where rented accomodation.
 * ASBO/ASBI
 
-For loss of home please click 'back' and select the first category.
-{% endblocktrans %}</data>
+For loss of home please click 'back' and select the first category.{% endblocktrans %}</data>
       <data key="d10">n73</data>
       </node>
     <node id="n74">
@@ -697,7 +694,7 @@ For loss of home please click 'back' and select the first category.
       <data key="d10">n76</data>
       </node>
     <node id="n77">
-      <data key="d3">{% trans "Client has report by an expert (e.g. a surveyor) on the disrepair AND the disrepair puts them or their family at serious risk of harm, injury or illness " %}</data>
+      <data key="d3">{% trans "Client has report by an expert (e.g. a surveyor) on the disrepair AND the disrepair puts them or their family at serious risk of harm, injury or illness" %}</data>
       <data key="d4">Client has report by</data>
       <data key="d7">2</data>
       <data key="d10">n77</data>
@@ -855,8 +852,7 @@ For loss of home please click 'back' and select the first category.
 * appointing a guardian and the rights of a guardian
 * trying to adopt a child who's in care
 * enforcing previous court orders
-* child abduction
-{% endblocktrans %}</data>
+* child abduction{% endblocktrans %}</data>
       <data key="d10">n97</data>
       </node>
     <node id="n98">
@@ -867,8 +863,7 @@ For loss of home please click 'back' and select the first category.
 
 A non-molestation order - aimed at preventing a client's partner or ex-partner from using or threatening violence against them or their child, or intimidating, harassing or pestering them.
 
-An occupation order can restrict who can live in the family home, and even restrict the abuser from entering the surrounding area. They can also be used where clients do not feel safe continuing to live with their partner, or if they have already left home because of abuse, but want to return and exclude the abuser.
-{% endblocktrans %}</data>
+An occupation order can restrict who can live in the family home, and even restrict the abuser from entering the surrounding area. They can also be used where clients do not feel safe continuing to live with their partner, or if they have already left home because of abuse, but want to return and exclude the abuser.{% endblocktrans %}</data>
       <data key="d10">n98</data>
       </node>
     <node id="n99">
@@ -953,10 +948,7 @@ It is against the law to discriminate against anyone because of:
 
 These are called 'protected characteristics'. To find out more, search the guidance for 'protected characteristics'.
 
-The client's problem could start in another category (eg housing) but the client will believe that thay have been discriminated against, harassed or victimised.
-
-
-{% endblocktrans %}</data>
+The client's problem could start in another category (eg housing) but the client will believe that thay have been discriminated against, harassed or victimised.{% endblocktrans %}</data>
       <data key="d10">n106</data>
       </node>
     <node id="n107">
@@ -1297,7 +1289,7 @@ The disability does not have to have a name or a diagnosis to meet this definiti
       <data key="d3">{% trans "Being married or in a civil partnership" %}</data>
       <data key="d4">Marriage and civil p</data>
       <data key="d7">6</data>
-      <data key="d8">{% trans "This refers to people who are married or in a civil partnership, including same sex couples. " %}</data>
+      <data key="d8">{% trans "This refers to people who are married or in a civil partnership, including same sex couples." %}</data>
       <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
       <data key="d10">n146</data>
       <data key="d11"/>
@@ -1354,7 +1346,7 @@ Give details in the operator notes, especially if more than one option applies.{
       <data key="d11"/>
       </node>
     <node id="n153">
-      <data key="d3">{% trans "Victimisation due to a discrimination claim " %}</data>
+      <data key="d3">{% trans "Victimisation due to a discrimination claim" %}</data>
       <data key="d4">Victimisation due to</data>
       <data key="d7">3</data>
       <data key="d8">{% trans "The client thinks that they have been treated worse, or disadvantaged in some way, because they have brought a claim of discrimination, given evidence or information in relation to someone else’s claim of discrimination, made a complaint of discrimination, or been suspected of doing one of these things. For example, an employee is dismissed after making a discrimination claim." %}</data>
@@ -1364,8 +1356,7 @@ Give details in the operator notes, especially if more than one option applies.{
       <data key="d11"/>
       </node>
     <node id="n154">
-      <data key="d3">{% trans "Special educational needs (SEN) in a child or young person under 25 - client could be the parent or the child or young person
-" %}</data>
+      <data key="d3">{% trans "Special educational needs (SEN) in a child or young person under 25 - client could be the parent or the child or young person" %}</data>
       <data key="d4">Client has parental </data>
       <data key="d7">1</data>
       <data key="d10">n154</data>
@@ -1400,7 +1391,7 @@ Give details in the operator notes, especially if more than one option applies.{
       <data key="d3">{% trans "Discrimination may have occurred due to the child or young person’s SEN or other protected characteristic (eg a school excludes a disabled child from a school trip, a student is being bullied because they're gay but the school is taking no action)" %}</data>
       <data key="d4">Discrimination may a</data>
       <data key="d7">3</data>
-      <data key="d8">{% trans "Search guidance for 'discrimination education' for more information and a list of questions to ask. " %}</data>
+      <data key="d8">{% trans "Search guidance for 'discrimination education' for more information and a list of questions to ask." %}</data>
       <data key="d10">n158</data>
       </node>
     <node id="n159">
@@ -1462,7 +1453,7 @@ The client's problem will be in scope for legal aid if:
 * they want to appeal a benefits decision on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court
 * a first-tier tribunal has refused them permission to appeal a benefits decision in the Upper Tribunal, and they want advice about how to appeal this decision
 
-All other benefit problems are out of scope. {% endblocktrans %}</data>
+All other benefit problems are out of scope.{% endblocktrans %}</data>
       <data key="d10">n165</data>
       </node>
     <node id="n166">
@@ -1519,8 +1510,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
 * equal pay
 * being treated worse due to pregnancy or maternity leave
 * sexual harassment in the workplace
-* being victimised due to having made a claim of discrimination in the workplace
-{% endblocktrans %}</data>
+* being victimised due to having made a claim of discrimination in the workplace{% endblocktrans %}</data>
       <data key="d10">n171</data>
       </node>
     <node id="n172">
@@ -1542,12 +1532,11 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
       <data key="d3">{% trans "Consumer" %}</data>
       <data key="d4">Consumer</data>
       <data key="d7">8</data>
-      <data key="d8">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other consumer cases will be out of scope. " %}</data>
+      <data key="d8">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other consumer cases will be out of scope." %}</data>
       <data key="d10">n174</data>
       </node>
     <node id="n175">
-      <data key="d3">{% trans "The client may have been discriminated against
-" %}</data>
+      <data key="d3">{% trans "The client may have been discriminated against" %}</data>
       <data key="d4">Emp discrimination?</data>
       <data key="d10">n175</data>
       </node>
@@ -1570,11 +1559,11 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
       <data key="d3">{% trans "Actions against the police" %}</data>
       <data key="d4">Actions against the </data>
       <data key="d7">9</data>
-      <data key="d8">{% trans "The key thing to determine in actions against the police is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow. " %}</data>
+      <data key="d8">{% trans "The key thing to determine in actions against the police is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow." %}</data>
       <data key="d10">n178</data>
       </node>
     <node id="n179">
-      <data key="d3">{% trans "The client has been discriminated against (eg a police officer used racially abusive language when making an arrest) " %}</data>
+      <data key="d3">{% trans "The client has been discriminated against (eg a police officer used racially abusive language when making an arrest)" %}</data>
       <data key="d4">Client has been subj</data>
       <data key="d7">1</data>
       <data key="d10">n179</data>
@@ -1615,7 +1604,7 @@ All other benefit problems are out of scope. {% endblocktrans %}</data>
       <data key="d4">Clinical Negligence</data>
       <data key="d7">12</data>
       <data key="d8">{% blocktrans %}Signpost clinical negligence cases to face-to-face providers in the client's area.
-Generally, only cases that relate to infants with a brain injury are in scope for legal aid but it's possible that other cases may qualify for exceptional case funding. {% endblocktrans %}</data>
+Generally, only cases that relate to infants with a brain injury are in scope for legal aid but it's possible that other cases may qualify for exceptional case funding.{% endblocktrans %}</data>
       <data key="d10">n184</data>
       </node>
     <node id="n185">
@@ -1685,7 +1674,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       <data key="d3">{% trans "Personal injury" %}</data>
       <data key="d4">Personal Injury</data>
       <data key="d7">14</data>
-      <data key="d8">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other personal injury cases will be out of scope. " %}</data>
+      <data key="d8">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other personal injury cases will be out of scope." %}</data>
       <data key="d10">n193</data>
       </node>
     <node id="n194">
@@ -1766,7 +1755,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       <data key="d10">n203</data>
       </node>
     <node id="n204">
-      <data key="d3">{% trans "Client does not have BOTH evidence of the disrepair AND reason to believe the disrepair poses a serious risk of harm, injury or illness to them or their family " %}</data>
+      <data key="d3">{% trans "Client does not have BOTH evidence of the disrepair AND reason to believe the disrepair poses a serious risk of harm, injury or illness to them or their family" %}</data>
       <data key="d4">Not both</data>
       <data key="d10">n204</data>
       </node>
@@ -1800,8 +1789,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 
 * An occupation order can aimed at deciding who can live in the family home, and can also restrict your abuser from entering the surrounding area. If you do not feel safe continuing to live with your partner, or if you have left home because of violence, but want to return and exclude your abuser, you may want to apply for an occupation order.
 
-Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it.
-{% endblocktrans %}</data>
+Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it.{% endblocktrans %}</data>
       <data key="d10">n207</data>
       </node>
     <node id="n208">
@@ -1818,8 +1806,7 @@ Some clients who are the alleged abuser do not agree with the injunction against
       <data key="d3">{% trans "The client is being harassed by a partner, ex-partner or family member" %}</data>
       <data key="d4">Client being harassed by partner or ex-partner</data>
       <data key="d7">3</data>
-      <data key="d8">{% trans "Seeking protection from a partner, ex partner or other family member due to a fear of violence or unwanted behaviour which is causing them alarm or distress. Also covers client who have previously taken action to stop harassment (i.e. sought an injunction) but this is not being complied with.
-" %}</data>
+      <data key="d8">{% trans "Seeking protection from a partner, ex partner or other family member due to a fear of violence or unwanted behaviour which is causing them alarm or distress. Also covers client who have previously taken action to stop harassment (i.e. sought an injunction) but this is not being complied with." %}</data>
       <data key="d10">n209</data>
       </node>
     <node id="n210">
@@ -1923,7 +1910,7 @@ provide for a child or young person's educational needs, or specifically about t
       <data key="d10">n223</data>
       </node>
     <node id="n224">
-      <data key="d3">{% trans "The client is enquiring about an application or admissions appeal in the normal admissions round (ie reception and secondary school transfers) " %}</data>
+      <data key="d3">{% trans "The client is enquiring about an application or admissions appeal in the normal admissions round (ie reception and secondary school transfers)" %}</data>
       <data key="d4">Normal admissions round</data>
       <data key="d10">n224</data>
       </node>
@@ -2127,9 +2114,7 @@ provide for a child or young person's educational needs, or specifically about t
       <data key="d7">4</data>
       <data key="d8">{% blocktrans %}This refers to:
 * pregnancy
-* having recently given birth (and can include the need to breastfeed)
-
-{% endblocktrans %}</data>
+* having recently given birth (and can include the need to breastfeed){% endblocktrans %}</data>
       <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
       <data key="d10">n249</data>
       <data key="d11"/>
@@ -2246,15 +2231,14 @@ This includes where someone is:
       <data key="d10">n262</data>
       </node>
     <node id="n263">
-      <data key="d3">{% trans "Client wants advice about international family maintenance " %}</data>
+      <data key="d3">{% trans "Client wants advice about international family maintenance" %}</data>
       <data key="d4">International family maintenance</data>
       <data key="d7">3</data>
       <data key="d8">{% blocktrans %}Covers enforcement of maintenance orders made outside the UK. Clients who have obtained maintenance orders in one country can apply to have them registered and enforced in another country. 
 
 So where a client wants to obtain an order outside the UK this will not be in scope.
 
-**NOTE: These are very unusual cases.**
-{% endblocktrans %}</data>
+**NOTE: These are very unusual cases.**{% endblocktrans %}</data>
       <data key="d10">n263</data>
       </node>
     <node id="n264">
@@ -2528,8 +2512,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 
 *Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
 
-*I can’t guarantee that they will be able to help so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
-{% endblocktrans %}</data>
+*I can’t guarantee that they will be able to help so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n288</data>
       </node>
@@ -2845,8 +2828,7 @@ Mediation provides a safe and neutral setting for you to talk and explore your c
 
 Search for 'Family Mediation' in the guidance search box for more help.
 
-If you are qualify you can get legal aid for family mediation as well as legal advice to support the mediation process. This can include the cost of making any agreement that you reach in mediation legally binding by applying to the court - this is called applying for a consent order.
-{% endblocktrans %}</data>
+If you are qualify you can get legal aid for family mediation as well as legal advice to support the mediation process. This can include the cost of making any agreement that you reach in mediation legally binding by applying to the court - this is called applying for a consent order.{% endblocktrans %}</data>
       <data key="d10">n313</data>
       </node>
     <node id="n314">
@@ -2870,8 +2852,7 @@ If you are qualify you can get legal aid for family mediation as well as legal a
 
 *If you qualify you may be able to get legal aid to cover the costs of Family Mediation as well as legal advice to support the mediation process. Or you may need to pay for the service. Please speak to the mediation service to find out more.*
 
-You should now direct the client to their nearest contracted quality assured family mediation service using the directory (Find An Adviser tool)
-{% endblocktrans %}</data>
+You should now direct the client to their nearest contracted quality assured family mediation service using the directory (Find An Adviser tool){% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n316</data>
       </node>
@@ -2879,8 +2860,7 @@ You should now direct the client to their nearest contracted quality assured fam
       <data key="d3">{% trans "The client has already taken action to stop domestic violence (e.g. via an injunction) but needs to take further action as the order is not being complied with" %}</data>
       <data key="d4">Client being harassed by partner or ex-partner</data>
       <data key="d7">2</data>
-      <data key="d8">{% trans "
-" %}</data>
+      <data key="d8"/>
       <data key="d10">n317</data>
       </node>
     <node id="n318">
@@ -2897,9 +2877,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d7">1</data>
       <data key="d8">{% blocktrans %}* Divorce - ending a marriage
 * Nullity - declaring a marriage null and void so it is regarded not to have taken place
-* Dissolution - ending a same sex Civil Partnership
-
-{% endblocktrans %}</data>
+* Dissolution - ending a same sex Civil Partnership{% endblocktrans %}</data>
       <data key="d10">n319</data>
       </node>
     <node id="n320">
@@ -2932,15 +2910,14 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d10">n322</data>
       </node>
     <node id="n323">
-      <data key="d3">{% trans "Domestic abuse during the last 2 years, or their abuser has a current criminal conviction
-" %}</data>
+      <data key="d3">{% trans "Domestic abuse during the last 2 years, or their abuser has a current criminal conviction" %}</data>
       <data key="d4">Client has been subj</data>
       <data key="d7">2</data>
       <data key="d10">n323</data>
       </node>
     <node id="n324">
       <data key="d3">{% blocktrans %}The client's child has experienced child abuse within the family within the last two years, or the abuser has a current criminal conviction
-(Remember that if the caller is the abuser, this will not be in scope) {% endblocktrans %}</data>
+(Remember that if the caller is the abuser, this will not be in scope){% endblocktrans %}</data>
       <data key="d4">Relationship has inv</data>
       <data key="d7">3</data>
       <data key="d10">n324</data>
@@ -2972,8 +2949,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
 
 *"We may be able to put you through to a specialist provider who could help you with this area of law, but before I can transfer you we need to complete a short financial assessment to see if you can get legal aid.*
 
-*Please note that before a specialist advisor can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof."*
-{% endblocktrans %}</data>
+*Please note that before a specialist advisor can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof."*{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n328</data>
       </node>
@@ -3002,7 +2978,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d10">n330</data>
       </node>
     <node id="n331">
-      <data key="d3">{% trans "The matter relates to a child in care, a care leaver, or the call is made by a foster carer. " %}</data>
+      <data key="d3">{% trans "The matter relates to a child in care, a care leaver, or the call is made by a foster carer." %}</data>
       <data key="d4">Child in care</data>
       <data key="d7">5</data>
       <data key="d10">n331</data>
@@ -3018,7 +2994,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d10">n332</data>
       </node>
     <node id="n333">
-      <data key="d3">{% trans "Please note: if a local authority is trying to take a child into care, no financial assessment is needed for the parent. " %}</data>
+      <data key="d3">{% trans "Please note: if a local authority is trying to take a child into care, no financial assessment is needed for the parent." %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n333</data>
       </node>

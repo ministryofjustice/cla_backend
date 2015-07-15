@@ -584,7 +584,12 @@ class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin,
     serializer_class = CSVUploadSerializer
     serializer_detail_class = CSVUploadDetailSerializer
 
+    filter_backends = (
+        DjangoFilterBackend,
+        OrderingFilter,
+    )
     ordering = ('-month',)
+    filter_fields = ('month', 'provider_id')
 
     paginate_by = 20
     paginate_by_param = 'page_size'

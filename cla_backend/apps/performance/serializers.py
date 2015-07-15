@@ -95,6 +95,12 @@ class ApplicationStageVolumeSerializer(PPSerializer):
         "stage": "created",
         "count": 100
     }
+
+    - checked (by call-centre agents irrespective of channel)
+    - verified (met criteria set down by agents following call-back)
+    - referred (notification sent to specialist solicitor)
+    - accepted (case checked and accepted by specialist
+    - closed (case complete)
     """
     endpoint = 'application-stage-volumes'
 
@@ -202,4 +208,5 @@ class TransactionsByChannelTypeSerializer(PPSerializer):
         print '%s, %s: %s' % (self.channel_type, self.channel, val)
 
         return val
+
 

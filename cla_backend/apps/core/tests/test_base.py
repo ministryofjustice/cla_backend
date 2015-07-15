@@ -122,11 +122,13 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
     def resource_lookup_value(self):
         return getattr(self.resource, self.LOOKUP_KEY)
 
-    def assertResponseKeys(self, response, keys=None):
+    def assertResponseKeys(self, response, keys=None, paginated=False):
         if not keys:
             keys = self.response_keys
         if hasattr(response, 'data'):
             data = response.data
+            if paginated:
+                data = data['results']
             if isinstance(data, types.ListType):
                 for item in data:
                     self.assertItemsEqual(item, keys)
@@ -137,7 +139,6 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
                 'Must be called with response object with a .data '
                 'attribute which contains a list of dicts or a dict'
             )
-
 
     def get_list_url(self):
         return reverse(

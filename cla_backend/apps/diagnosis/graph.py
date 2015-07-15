@@ -58,13 +58,14 @@ class GraphImporter(object):
 
         for data_element in self.xpath_ns(self.doc, '//ns:data'):
             data_type = data_element.attrib.get('key', None)
-            if data_type in internationalised_keys and data_element.text:
-                if data_element.text in skipped_values:
+            text = data_element.text and data_element.text.strip() or ''
+            if data_type in internationalised_keys and text:
+                if text in skipped_values:
                     continue
-                elif u'"' in data_element.text or len(data_element.text.splitlines()) > 1:
-                    data_element.text = u'{%% blocktrans %%}%s{%% endblocktrans %%}' % data_element.text
+                elif u'"' in text or len(text.splitlines()) > 1:
+                    data_element.text = u'{%% blocktrans %%}%s{%% endblocktrans %%}' % text
                 else:
-                    data_element.text = u'{%% trans "%s" %%}' % data_element.text
+                    data_element.text = u'{%% trans "%s" %%}' % text
 
         if not output_path:
             output_path = '%s.tpl' % self.file_path

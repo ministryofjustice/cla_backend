@@ -22,7 +22,14 @@ def post_task(self, url, data, headers):
         data=data,
         headers=headers
     )
-    if response.status_code != 200 and response.json().get('status') != 'ok':
+
+    try:
+        response_json = response.json()
+    except ValueError:
+        response_json = None
+
+    if response.status_code != 200 and response_json is not None and \
+            response_json.get('status') != 'ok':
         logger.error('Performance post failure to %s' % url, extra={
             'data': data,
             'headers': headers,

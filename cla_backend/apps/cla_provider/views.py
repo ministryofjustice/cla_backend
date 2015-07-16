@@ -331,7 +331,11 @@ class CSVUploadViewSet(CLAProviderPermissionViewSetMixin,
     serializer_class = CSVUploadSerializer
     serializer_detail_class = CSVUploadDetailSerializer
 
-    ordering = ('-created')
+    ordering = ('-month',)
+
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
 
     def get_queryset(self, *args, **kwargs):
         this_provider = get_object_or_404(
@@ -345,8 +349,6 @@ class CSVUploadViewSet(CLAProviderPermissionViewSetMixin,
         obj.provider = user.provider
         obj.created_by = user
         super(CSVUploadViewSet, self).pre_save(obj)
-
-
 
 
 class CaseNotesHistoryViewSet(

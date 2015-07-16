@@ -71,12 +71,12 @@ class CSVUploadTestCase(CSVUploadAPIMixin,
             scope=0
         )
 
-
-    def assertResponseKeys(self, response, detail=False):
-        return \
-            super(CSVUploadTestCase, self).assertResponseKeys(
-                response,
-                keys=self.response_keys_details if detail else None)
+    def assertResponseKeys(self, response, detail=False, paginated=False):
+        return super(CSVUploadTestCase, self).assertResponseKeys(
+            response,
+            keys=self.response_keys_details if detail else None,
+            paginated=paginated,
+        )
 
     def test_get(self):
         response = self.client.get(
@@ -89,19 +89,20 @@ class CSVUploadTestCase(CSVUploadAPIMixin,
         )
 
     def test_get_list(self):
-        response = \
-            self.client.get(self.list_url,
-                            HTTP_AUTHORIZATION=self.get_http_authorization())
+        response = self.client.get(
+            self.list_url,
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
 
-        self.assertResponseKeys(response)
+        self.assertResponseKeys(response, paginated=True)
 
     def test_get_list_with_wrong_provider(self):
-        response = \
-            self.client.get(
-                self.list_url,
-                HTTP_AUTHORIZATION=self.get_http_authorization(token=self.wrong_staff_token))
+        response = self.client.get(
+            self.list_url,
+            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.wrong_staff_token)
+        )
 
-        self.assertListEqual(response.data, [])
+        self.assertListEqual(response.data['results'], [])
 
     def test_methods_not_authorized(self):
         self._test_get_not_authorized(self.list_url, self.invalid_token)
@@ -119,12 +120,12 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
              u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
              u'X', u'EPRO', u'ESOS', u'EA', u'EB', u'', u'01/01/1901',
              u'01/01/1902', u'99', u'99.5', u'', u'ILL', u'0', u'0',
-             u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA' ],
+             u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA'],
 
-            [ u'2222222', u'0000', u'1A111A', u'A', u'Corgi', u'01/01/1901',
-              u'D', u'F', u'1', u'', u'', u'SW1A 1AA', u'', u'EPRO',
-              u'ESOS', u'', u'', u'', u'', u'', u'18', u'99.5', u'', u'MOB',
-              u'', u'', u'FINI', u'', u'', u'', u'NAR', u'', u'', u'TA' ]
+            [u'2222222', u'0000', u'1A111A', u'A', u'Corgi', u'01/01/1901',
+             u'D', u'F', u'1', u'', u'', u'SW1A 1AA', u'', u'EPRO',
+             u'ESOS', u'', u'', u'', u'', u'', u'18', u'99.5', u'', u'MOB',
+             u'', u'', u'FINI', u'', u'', u'', u'NAR', u'', u'', u'TA']
         ]
 
         self.dummy_cleaned_data = {
@@ -157,11 +158,10 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self.assertEqual(len(validator.validate()), 2)
 
     def test_invalid_field_count(self):
-        validator = v.ProviderCSVValidator([[],[]])
+        validator = v.ProviderCSVValidator([[], []])
         with self.assertRaisesRegexp(serializers.ValidationError,
                                      r'Row: 1 - Incorrect number of columns'):
             validator.validate()
-
 
     def test_closed_date_after_opened_date_invariant(self):
         validator = v.ProviderCSVValidator([
@@ -169,7 +169,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
              u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
              u'X', u'EADM', u'ESOS', u'EB', u'EB', u'', u'01/01/2014',
              u'01/01/1902', u'99', u'99.5', u'', u'ILL', u'0', u'0',
-             u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA' ],
+             u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA'],
         ])
         with self.assertRaisesRegexp(serializers.ValidationError, 'Row: 1 - .*must be after'):
             validator.validate()
@@ -184,11 +184,10 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
              u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
              u'X', u'EPRO', u'ESOS', u'EB', u'EB', u'', u'01/01/1901',
              u'01/01/1902', u'99', u'99.5', u'', u'ILL', u'0', u'0',
-             u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA' ],
+             u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA'],
         ])
         with self.assertRaises(serializers.ValidationError):
             validator.validate()
-
 
     def test_service_adapation_validation_valid(self):
         validator = v.ProviderCSVValidator([
@@ -200,7 +199,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
              u'LOL',
 
-             u'', u'DK', u'TA' ],
+             u'', u'DK', u'TA'],
             ])
         with self.assertRaisesRegexp(serializers.ValidationError, r'Adjustments / Adaptations - LOL must be one of'):
             validator.validate()
@@ -209,7 +208,6 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
         validator = v.ProviderCSVValidator(self.data)
 
-
         cleaned_data = self.dummy_cleaned_data.copy()
 
         cleaned_data['Adjustments / Adaptations '] = u''
@@ -217,11 +215,9 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         with self.assertRaisesRegexp(serializers.ValidationError, r'Adjustments / Adaptations field is required'):
             validator._validate_service_adaptation(cleaned_data)
 
-
     def test_eligibility_code_validation_required(self):
 
         validator = v.ProviderCSVValidator(self.data)
-
 
         cleaned_data = self.dummy_cleaned_data.copy()
 
@@ -258,9 +254,9 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
         cleaned_data['Time Spent'] = 999
 
-        with self.assertRaisesRegexp(serializers.ValidationError, r'The eligibility code .* you have entered is not valid'):
+        with self.assertRaisesRegexp(serializers.ValidationError,
+                                     r'The eligibility code .* you have entered is not valid'):
             validator._validate_eligibility_code(cleaned_data)
-
 
     def test_validation_time_spent_less_than_18(self):
 
@@ -273,10 +269,9 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         validator._validate_eligibility_code(cleaned_data)
         cleaned_data['Time Spent'] = 999
 
-        with self.assertRaisesRegexp(serializers.ValidationError, r'The eligibility code .* you have entered is not valid with'):
+        with self.assertRaisesRegexp(serializers.ValidationError,
+                                     r'The eligibility code .* you have entered is not valid with'):
             validator._validate_eligibility_code(cleaned_data)
-
-
 
     def test_validation_time_spent_more_than_18_with_determination_not_valid(self):
 
@@ -290,12 +285,13 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         validator._validate_time_spent(cleaned_data, u'welfare')
         cleaned_data['Time Spent'] = 999
 
-        with self.assertRaisesRegexp(serializers.ValidationError, "[u'Time spent (999) must not be greater than 42 minutes']"):
+        with self.assertRaisesRegexp(serializers.ValidationError,
+                                     "[u'Time spent (999) must not be greater than 42 minutes']"):
             validator._validate_time_spent(cleaned_data, u'discrimination')
 
-        with self.assertRaisesRegexp(serializers.ValidationError, "[u'Time spent (999) must not be greater than 18 minutes']"):
+        with self.assertRaisesRegexp(serializers.ValidationError,
+                                     "[u'Time spent (999) must not be greater than 18 minutes']"):
             validator._validate_time_spent(cleaned_data, u'welfare')
-
 
     def test_validation_exemption_code_or_cla_ref_required(self):
 
@@ -318,7 +314,6 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         cleaned_data['Exempted Code Reason'] = u''
         cleaned_data['CLA Reference Number'] = u''
 
-
         cleaned_data['Date Opened'] = datetime.datetime(2011, 1, 1)
         cleaned_data['Exceptional Cases (ref)'] = u'foo'
 
@@ -337,36 +332,41 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         cleaned_data['Matter Type 1'] = u'S'
         cleaned_data['Matter Type 2'] = u'P'
 
-        with self.assertRaisesRegexp(serializers.ValidationError, r'fields must be of the same category'):
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                r'fields must be of the same category'):
             validator._validate_category_consistency(cleaned_data)
 
-
     def test_staged_reached_validate_required_mt1s(self):
-
         validator = v.ProviderCSVValidator(self.data)
 
         cleaned_data = self.dummy_cleaned_data.copy()
         cleaned_data['Matter Type 1'] = u'DMCA'
         cleaned_data['Stage Reached'] = u''
 
-        with self.assertRaisesRegexp(serializers.ValidationError, r'.*is required because Matter Type 1: DMCA was specified.*'):
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                r'.*is required because Matter Type 1: DMCA was specified.*'):
             validator._validate_stage_reached(cleaned_data)
 
     def test_staged_reached_validate_not_allowed_mt1s(self):
-
         validator = v.ProviderCSVValidator(self.data)
 
         cleaned_data = self.dummy_cleaned_data.copy()
         cleaned_data['Matter Type 1'] = u'WBAA'
 
-        with self.assertRaisesRegexp(serializers.ValidationError, r'.*is not allowed because Matter Type 1: WBAA was specified.*'):
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                r'.*is not allowed because Matter Type 1: WBAA was specified.*'):
             validator._validate_stage_reached(cleaned_data)
 
     def test_gte_validator(self):
         gte_0 = v.validate_gte(0)
 
         self.assertEqual(1, gte_0(1))
-        with self.assertRaisesRegexp(serializers.ValidationError, '.*must be > 0'):
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                '.*must be > 0'):
             gte_0(-1)
 
     def test_validate_not_current_month(self):
@@ -374,12 +374,16 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
         self.assertEqual(d, v.validate_not_current_month(d))
 
-        with self.assertRaisesRegexp(serializers.ValidationError, r'.*must not be from current month'):
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                r'.*must not be from current month'):
             v.validate_not_current_month(datetime.datetime.now())
 
     def test_decimal_validator(self):
         self.assertEqual(Decimal('1.0'), v.validate_decimal('1.0'))
-        with self.assertRaisesRegexp(serializers.ValidationError, r'Invalid literal'):
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                r'Invalid literal'):
             v.validate_decimal('QQ')
 
     def test_integer_validator(self):
@@ -396,7 +400,9 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     def test_date_validator(self):
         val = '10/12/2014'
         self.assertEqual(datetime.datetime(2014, 12, 10), v.validate_date(val))
-        with self.assertRaisesRegexp(serializers.ValidationError, r'is not a valid date'):
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                r'is not a valid date'):
             v.validate_date('FOO BAR BAZ')
 
     def test_not_present_validator(self):
@@ -410,49 +416,46 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         val = 'FOO'
         self.assertEqual(val, validator(val))
 
-        with self.assertRaisesRegexp(serializers.ValidationError,
-                                     '[u"Field value (BAR) doesn\'t match pattern: foo"]'):
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                '[u"Field value (BAR) doesn\'t match pattern: foo"]'):
             validator('BAR')
 
     def test_validate_in_iterable(self):
         test_in = v.validate_in({'a', 'b', 'c'})
         self.assertEqual('a', test_in('a'))
 
-        with self.assertRaisesRegexp(serializers.ValidationError, r'.*must be one of'):
+        with self.assertRaisesRegexp(
+                serializers.ValidationError,
+                r'.*must be one of'):
             test_in('q')
+
 
 class DependsOnDecoratorTestCase(unittest.TestCase):
 
     def test_method_called(self):
-
         class Test1(object):
             @v.depends_on('a', check=v.TRUTHY)
             def do_something(self, d):
                 return 1
+
         inst = Test1()
-        self.assertEqual(1,
-                         inst.do_something({'a': True})
-        )
+        self.assertEqual(1, inst.do_something({'a': True}))
 
     def test_method_called_default_check_is_TRUTHY(self):
-
         class Test1(object):
             @v.depends_on('a')
             def do_something(self, d):
                 return 1
-        inst = Test1()
-        self.assertEqual(1,
-                         inst.do_something({'a': True})
-        )
 
+        inst = Test1()
+        self.assertEqual(1, inst.do_something({'a': True}))
 
     def test_method_not_called(self):
-
         class Test1(object):
             @v.depends_on('a', check=v.FALSEY)
             def do_something(self, d):
                 return 1
+
         inst = Test1()
-        self.assertEqual(None,
-                         inst.do_something({'a': True})
-        )
+        self.assertEqual(None, inst.do_something({'a': True}))

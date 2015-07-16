@@ -29,18 +29,16 @@ class CSVUploadAPIMixin(SimpleResourceAPIMixin):
         return keys
 
 
-
-
 class CSVUploadTestCase(CSVUploadAPIMixin,
                         CLAOperatorAuthBaseApiTestMixin,
                         APITestCase):
 
-
-    def assertResponseKeys(self, response, detail=False):
-        return \
-            super(CSVUploadTestCase, self).assertResponseKeys(
-                response,
-                keys=self.response_keys_details if detail else None)
+    def assertResponseKeys(self, response, detail=False, paginated=False):
+        return super(CSVUploadTestCase, self).assertResponseKeys(
+            response,
+            keys=self.response_keys_details if detail else None,
+            paginated=paginated,
+        )
 
     def test_get(self):
         response = self.client.get(
@@ -53,14 +51,13 @@ class CSVUploadTestCase(CSVUploadAPIMixin,
         )
 
     def test_get_list(self):
-        response = \
-            self.client.get(self.list_url,
-                            HTTP_AUTHORIZATION=self.get_http_authorization(self.operator_manager_token))
+        response = self.client.get(
+            self.list_url,
+            HTTP_AUTHORIZATION=self.get_http_authorization(self.operator_manager_token)
+        )
 
-        self.assertResponseKeys(response)
+        self.assertResponseKeys(response, paginated=True)
 
     def test_methods_not_authorized(self):
         self._test_get_not_authorized(self.list_url, self.invalid_token)
         self._test_get_not_authorized(self.detail_url, self.invalid_token)
-
-

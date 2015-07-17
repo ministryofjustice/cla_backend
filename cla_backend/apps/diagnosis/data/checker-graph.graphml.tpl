@@ -29,33 +29,36 @@
     <default>9999</default>
   </key>
   <key attr.name="permanent_id" attr.type="string" for="node" id="d11"/>
-  <key attr.name="url" attr.type="string" for="node" id="d12"/>
-  <key attr.name="description" attr.type="string" for="node" id="d13"/>
-  <key for="node" id="d14" yfiles.type="nodegraphics"/>
-  <key for="graphml" id="d15" yfiles.type="resources"/>
-  <key attr.name="url" attr.type="string" for="edge" id="d16"/>
-  <key attr.name="description" attr.type="string" for="edge" id="d17"/>
-  <key for="edge" id="d18" yfiles.type="edgegraphics"/>
+  <key attr.name="data_safety" attr.type="string" for="node" id="d12">
+    <default>false</default>
+  </key>
+  <key attr.name="url" attr.type="string" for="node" id="d13"/>
+  <key attr.name="description" attr.type="string" for="node" id="d14"/>
+  <key for="node" id="d15" yfiles.type="nodegraphics"/>
+  <key for="graphml" id="d16" yfiles.type="resources"/>
+  <key attr.name="url" attr.type="string" for="edge" id="d17"/>
+  <key attr.name="description" attr.type="string" for="edge" id="d18"/>
+  <key for="edge" id="d19" yfiles.type="edgegraphics"/>
   <graph edgedefault="directed" id="G">
     <node id="n0">
       <data key="d3">{% trans "You’re a home owner, and you’re at risk of losing your home due to bankruptcy, mortgage debt or repossession" %}</data>
       <data key="d10">1</data>
       <data key="d11">n0</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n1">
       <data key="d3">{% trans "You owe money (for example, bank loans, credit card debt) but this is not putting your home at risk" %}</data>
       <data key="d6">ineligible</data>
       <data key="d10">3</data>
       <data key="d11">n3</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n2">
       <data key="d3">{% trans "Your home is in a serious state of disrepair" %}</data>
       <data key="d5">{% trans "Is this putting you or your family at serious risk of illness or injury?" %}</data>
       <data key="d10">3</data>
       <data key="d11">n6</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n3">
       <data key="d3">{% trans "Harassment" %}</data>
@@ -63,7 +66,7 @@
       <data key="d5">{% trans "Who is harassing you?" %}</data>
       <data key="d10">4</data>
       <data key="d11">n7</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n4">
       <data key="d3">{% trans "ASBO or ASBI" %}</data>
@@ -71,14 +74,14 @@
       <data key="d5">{% trans "Your landlord is:" %}</data>
       <data key="d10">5</data>
       <data key="d11">n8</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n5">
       <data key="d5">{% trans "Choose one of the options" %}</data>
       <data key="d8">testcontext</data>
       <data key="d11">start</data>
-      <data key="d12"/>
-      <data key="d13">Public Site Diagnosis</data>
+      <data key="d13"/>
+      <data key="d14">Public Site Diagnosis</data>
       </node>
     <node id="n6">
       <data key="d3">{% trans "A social housing landlord" %}</data>
@@ -86,48 +89,49 @@
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n11</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n7">
       <data key="d3">{% trans "A private landlord" %}</data>
       <data key="d6">ineligible</data>
       <data key="d10">2</data>
       <data key="d11">n12</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n8">
       <data key="d3">{% trans "A neighbour or your landlord" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n15</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n9">
       <data key="d3">{% trans "A partner, ex-partner or family member" %}</data>
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n16</data>
-      <data key="d12"/>
+      <data key="d12">true</data>
+      <data key="d13"/>
       </node>
     <node id="n10">
       <data key="d3">{% trans "Someone else" %}</data>
       <data key="d6">ineligible</data>
       <data key="d11">n17</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n11">
       <data key="d3">{% trans "Yes" %}</data>
       <data key="d6">call_me_back</data>
       <data key="d10">1</data>
       <data key="d11">n18</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n12">
       <data key="d3">{% trans "No" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">2</data>
       <data key="d11">n19</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n13">
       <data key="d3">{% trans "Benefits appeal" %}</data>
@@ -135,7 +139,7 @@
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n20</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n14">
       <data key="d3">{% trans "Permission to appeal refused" %}</data>
@@ -143,48 +147,48 @@
       <data key="d6">means_test</data>
       <data key="d10">2</data>
       <data key="d11">n21</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n15">
       <data key="d3">{% trans "None of the above" %}</data>
       <data key="d6">ineligible</data>
       <data key="d11">n22</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n16">
       <data key="d3">{% trans "Age" %}</data>
       <data key="d5">{% trans "How old are you?" %}</data>
       <data key="d10">1</data>
       <data key="d11">n23</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n17">
       <data key="d3">{% trans "Disability" %}</data>
       <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n24</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n18">
       <data key="d3">{% trans "Gender, gender reassignment or sexual orientation" %}</data>
       <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
       <data key="d10">3</data>
       <data key="d11">n25</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n19">
       <data key="d3">{% trans "Marriage or civil partnership" %}</data>
       <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
       <data key="d10">4</data>
       <data key="d11">n26</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n20">
       <data key="d3">{% trans "Pregnancy or maternity" %}</data>
       <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
       <data key="d10">5</data>
       <data key="d11">n27</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n21">
       <data key="d3">{% trans "Race" %}</data>
@@ -192,27 +196,27 @@
       <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
       <data key="d10">6</data>
       <data key="d11">n28</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n22">
       <data key="d3">{% trans "Religion, belief, or lack of religion or belief" %}</data>
       <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
       <data key="d10">7</data>
       <data key="d11">n29</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n23">
       <data key="d3">{% trans "None of the above" %}</data>
       <data key="d6">ineligible</data>
       <data key="d11">n30</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n24">
       <data key="d3">{% trans "At work" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n31</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n25">
       <data key="d3">{% trans "While you were using a service" %}</data>
@@ -220,7 +224,7 @@
       <data key="d6">means_test</data>
       <data key="d10">3</data>
       <data key="d11">n32</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n26">
       <data key="d3">{% trans "At a private club" %}</data>
@@ -228,7 +232,7 @@
       <data key="d6">means_test</data>
       <data key="d10">4</data>
       <data key="d11">n33</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n27">
       <data key="d3">{% trans "When someone was carrying out a public function" %}</data>
@@ -236,14 +240,14 @@
       <data key="d6">means_test</data>
       <data key="d10">5</data>
       <data key="d11">n34</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n28">
       <data key="d3">{% trans "At school or college" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">6</data>
       <data key="d11">n35</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n29">
       <data key="d3">{% trans "At university" %}</data>
@@ -251,14 +255,14 @@
       <data key="d6">means_test</data>
       <data key="d10">7</data>
       <data key="d11">n36</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n30">
       <data key="d3">{% trans "18 or over" %}</data>
       <data key="d5">{% trans "Where did the discrimination occur?" %}</data>
       <data key="d10">1</data>
       <data key="d11">n37</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n31">
       <data key="d3">{% trans "Under 18" %}</data>
@@ -266,14 +270,14 @@
       <data key="d6">contact</data>
       <data key="d10">2</data>
       <data key="d11">n38</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n32">
       <data key="d3">{% trans "A child in care or a care leaver - or you are a foster carer" %}</data>
       <data key="d6">eligible</data>
       <data key="d10">1</data>
       <data key="d11">n39</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n33">
       <data key="d3">{% trans "Special educational needs" %}</data>
@@ -281,24 +285,24 @@
       <data key="d6">means_test</data>
       <data key="d10">2</data>
       <data key="d11">n40</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n34">
       <data key="d3">{% trans "None of the above" %}</data>
       <data key="d4">{% trans "For example admissions or exclusions" %}</data>
       <data key="d6">ineligible</data>
       <data key="d11">n41</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n35">
       <data key="d3">{% trans "Any other problem" %}</data>
       <data key="d6">ineligible</data>
       <data key="d11">n42</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n36" yfiles.foldertype="group">
       <data key="d11">n43</data>
-      <data key="d12"/>
+      <data key="d13"/>
       <graph edgedefault="directed" id="n36:">
         <node id="n36::n0">
           <data key="d3">{% trans "Clinical negligence" %}</data>
@@ -306,7 +310,7 @@
           <data key="d6">f2f</data>
           <data key="d10">1</data>
           <data key="d11">n43n0</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n1">
           <data key="d3">{% trans "Community care" %}</data>
@@ -314,7 +318,7 @@
           <data key="d6">f2f</data>
           <data key="d10">2</data>
           <data key="d11">n43n1</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n2">
           <data key="d3">{% trans "Debt" %}</data>
@@ -322,7 +326,7 @@
           <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
           <data key="d10">3</data>
           <data key="d11">n43n2</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n3">
           <data key="d3">{% trans "Domestic abuse" %}</data>
@@ -330,7 +334,7 @@
           <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
           <data key="d10">4</data>
           <data key="d11">n43n3</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n4">
           <data key="d3">{% trans "Discrimination" %}</data>
@@ -338,7 +342,7 @@
           <data key="d5">{% trans "You've been discriminated against because of your:" %}</data>
           <data key="d10">5</data>
           <data key="d11">n43n4</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n5">
           <data key="d3">{% trans "Education" %}</data>
@@ -346,7 +350,7 @@
           <data key="d5">{% trans "What is your problem about?" %}</data>
           <data key="d10">6</data>
           <data key="d11">n43n5</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n6">
           <data key="d3">{% trans "Employment" %}</data>
@@ -354,7 +358,7 @@
           <data key="d5">{% trans "What is your problem about?" %}</data>
           <data key="d10">7</data>
           <data key="d11">n43n6</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n7">
           <data key="d3">{% trans "Housing" %}</data>
@@ -362,7 +366,7 @@
           <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
           <data key="d10">9</data>
           <data key="d11">n43n7</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n8">
           <data key="d3">{% trans "Immigration and asylum" %}</data>
@@ -370,7 +374,7 @@
           <data key="d5">{% trans "Select the option that best describes your situation." %}</data>
           <data key="d10">10</data>
           <data key="d11">n43n8</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n9">
           <data key="d3">{% trans "Mental health" %}</data>
@@ -378,7 +382,7 @@
           <data key="d6">f2f</data>
           <data key="d10">11</data>
           <data key="d11">n43n9</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n10">
           <data key="d3">{% trans "Personal injury" %}</data>
@@ -386,7 +390,7 @@
           <data key="d6">f2f</data>
           <data key="d10">12</data>
           <data key="d11">n43n10</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n11">
           <data key="d3">{% trans "Public law" %}</data>
@@ -394,14 +398,14 @@
           <data key="d6">f2f</data>
           <data key="d10">13</data>
           <data key="d11">n43n11</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n12">
           <data key="d3">{% trans "Trouble with the police and other public authorities" %}</data>
           <data key="d4">{% trans "Being treated unlawfully by authorities who detain, imprison and prosecute (for example, the police), abuse in care cases" %}</data>
           <data key="d10">14</data>
           <data key="d11">n43n12</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n13">
           <data key="d3">{% trans "Welfare benefits" %}</data>
@@ -409,7 +413,7 @@
           <data key="d5">{% trans "What is your problem about?" %}</data>
           <data key="d10">15</data>
           <data key="d11">n43n13</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n36::n14">
           <data key="d3">{% trans "Family" %}</data>
@@ -417,7 +421,7 @@
           <data key="d5">{% trans "What is your problem about?" %}</data>
           <data key="d10">8</data>
           <data key="d11">n43n14</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
       </graph>
     </node>
@@ -427,7 +431,8 @@
       <data key="d5">{% trans "Are you or your child at immediate risk of harm?" %}</data>
       <data key="d10">1</data>
       <data key="d11">n44</data>
-      <data key="d12"/>
+      <data key="d12">true</data>
+      <data key="d13"/>
       </node>
     <node id="n38">
       <data key="d3">{% trans "Enforcing an injunction" %}</data>
@@ -435,7 +440,8 @@
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n45</data>
-      <data key="d12"/>
+      <data key="d12">true</data>
+      <data key="d13"/>
       </node>
     <node id="n39">
       <data key="d3">{% trans "Harassment" %}</data>
@@ -443,7 +449,8 @@
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">3</data>
       <data key="d11">n46</data>
-      <data key="d12"/>
+      <data key="d12">true</data>
+      <data key="d13"/>
       </node>
     <node id="n40">
       <data key="d3">{% trans "Contesting an injunction" %}</data>
@@ -451,7 +458,7 @@
       <data key="d6">means_test</data>
       <data key="d10">4</data>
       <data key="d11">n47</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n41">
       <data key="d3">{% trans "Forced marriage" %}</data>
@@ -459,13 +466,13 @@
       <data key="d6">means_test</data>
       <data key="d10">5</data>
       <data key="d11">n48</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n42">
       <data key="d3">{% trans "Any other problem" %}</data>
       <data key="d6">ineligible</data>
       <data key="d11">n49</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n43">
       <data key="d3">{% trans "Children being taken into care and adoption" %}</data>
@@ -473,7 +480,7 @@
       <data key="d5">{% trans "Is the local council trying to take your child into care?" %}</data>
       <data key="d10">6</data>
       <data key="d11">n50</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n44">
       <data key="d3">{% trans "Child abduction" %}</data>
@@ -482,34 +489,34 @@
       <data key="d6">contact</data>
       <data key="d10">7</data>
       <data key="d11">n52</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n45">
       <data key="d3">{% trans "Any other problem" %}</data>
       <data key="d6">ineligible</data>
       <data key="d11">n53</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n46">
       <data key="d3">{% trans "Yes" %}</data>
       <data key="d6">eligible</data>
       <data key="d10">1</data>
       <data key="d11">n54</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n47">
       <data key="d3">{% trans "No" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">2</data>
       <data key="d11">n55</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n48">
       <data key="d3">{% trans "Divorce, separation or dissolution" %}</data>
       <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
       <data key="d10">1</data>
       <data key="d11">n56</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n49">
       <data key="d3">{% trans "Financial settlement" %}</data>
@@ -517,7 +524,7 @@
       <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
       <data key="d10">3</data>
       <data key="d11">n58</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n50">
       <data key="d3">{% trans "Family mediation" %}</data>
@@ -525,14 +532,14 @@
       <data key="d5">{% trans "Have you already started family mediation? (This includes cases that have already finished)" %}</data>
       <data key="d10">4</data>
       <data key="d11">n59</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n51">
       <data key="d3">{% trans "You are under 18" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n61</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n52">
       <data key="d3">{% trans "Domestic abuse" %}</data>
@@ -540,13 +547,14 @@
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n62</data>
-      <data key="d12"/>
+      <data key="d12">true</data>
+      <data key="d13"/>
       </node>
     <node id="n53">
       <data key="d3">{% trans "Any other problem" %}</data>
       <data key="d6">ineligible</data>
       <data key="d11">n99</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n54">
       <data key="d3">{% trans "International Family Maintenance" %}</data>
@@ -554,40 +562,40 @@
       <data key="d6">means_test</data>
       <data key="d10">3</data>
       <data key="d11">n64</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n55">
       <data key="d3">{% trans "Yes" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n65</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n56">
       <data key="d3">{% trans "No" %}</data>
       <data key="d6">ineligible</data>
       <data key="d10">2</data>
       <data key="d11">n66</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n57">
       <data key="d3">{% trans "You're living in rented accommodation" %}</data>
       <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
       <data key="d10">2</data>
       <data key="d11">n67</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n58">
       <data key="d3">{% trans "You are homeless" %}</data>
       <data key="d10">3</data>
       <data key="d11">n68</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n59">
       <data key="d3">{% trans "Any other housing problem" %}</data>
       <data key="d10">5</data>
       <data key="d11">n69</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n60">
       <data key="d3">{% trans "Becoming homeless" %}</data>
@@ -595,7 +603,7 @@
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n70</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n61">
       <data key="d3">{% trans "Eviction" %}</data>
@@ -604,7 +612,7 @@
       <data key="d6">means_test</data>
       <data key="d10">2</data>
       <data key="d11">n71</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n62">
       <data key="d3">{% trans "Harassment" %}</data>
@@ -612,7 +620,7 @@
       <data key="d5">{% trans "Who is harassing you?" %}</data>
       <data key="d10">4</data>
       <data key="d11">n72</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n63">
       <data key="d3">{% trans "ASBO or ASBI" %}</data>
@@ -620,13 +628,13 @@
       <data key="d5">{% trans "Your landlord is:" %}</data>
       <data key="d10">5</data>
       <data key="d11">n73</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n64">
       <data key="d3">{% trans "None of the above" %}</data>
       <data key="d6">ineligible</data>
       <data key="d11">n74</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n65">
       <data key="d3">{% trans "A social housing landlord" %}</data>
@@ -634,38 +642,39 @@
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n75</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n66">
       <data key="d3">{% trans "A private landlord" %}</data>
       <data key="d6">ineligible</data>
       <data key="d10">2</data>
       <data key="d11">n76</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n67">
       <data key="d3">{% trans "A neighbour or your landlord" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n79</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n68">
       <data key="d3">{% trans "A partner, ex-partner or family member" %}</data>
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n80</data>
-      <data key="d12"/>
+      <data key="d12">true</data>
+      <data key="d13"/>
       </node>
     <node id="n69">
       <data key="d3">{% trans "Someone else" %}</data>
       <data key="d6">ineligible</data>
       <data key="d11">n81</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n70" yfiles.foldertype="group">
       <data key="d11">n82</data>
-      <data key="d12"/>
+      <data key="d13"/>
       <graph edgedefault="directed" id="n70:">
         <node id="n70::n0">
           <data key="d3">OUTOFSCOPE</data>
@@ -676,7 +685,7 @@
 </context>
           </data>
           <data key="d11">n82n0</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n1">
           <data key="d3">OUTOFSCOPE</data>
@@ -687,7 +696,7 @@
 </context>
           </data>
           <data key="d11">n82n1</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n2">
           <data key="d3">INELIGIBLE</data>
@@ -698,7 +707,7 @@
 </context>
           </data>
           <data key="d11">n82n2</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n3">
           <data key="d3">INSCOPE</data>
@@ -709,7 +718,7 @@
 </context>
           </data>
           <data key="d11">n82n3</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n4">
           <data key="d3">INELIGIBLE</data>
@@ -720,7 +729,7 @@
 </context>
           </data>
           <data key="d11">n82n4</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n5">
           <data key="d3">INSCOPE</data>
@@ -731,7 +740,7 @@
 </context>
           </data>
           <data key="d11">n82n5</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n6">
           <data key="d3">INELIGIBLE</data>
@@ -742,7 +751,7 @@
 </context>
           </data>
           <data key="d11">n82n6</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n7">
           <data key="d3">INSCOPE</data>
@@ -753,7 +762,7 @@
 </context>
           </data>
           <data key="d11">n82n7</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n8">
           <data key="d3">INELIGIBLE</data>
@@ -764,7 +773,7 @@
 </context>
           </data>
           <data key="d11">n82n8</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n9">
           <data key="d3">INSCOPE</data>
@@ -775,7 +784,7 @@
 </context>
           </data>
           <data key="d11">n82n9</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n10">
           <data key="d3">CONTACT</data>
@@ -787,7 +796,7 @@
 </context>
           </data>
           <data key="d11">n82n10</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n11">
           <data key="d3">INELIGIBLE</data>
@@ -798,7 +807,7 @@
 </context>
           </data>
           <data key="d11">n82n11</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n12">
           <data key="d3">INELIGIBLE</data>
@@ -809,7 +818,7 @@
 </context>
           </data>
           <data key="d11">n82n12</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n13">
           <data key="d3">INSCOPE</data>
@@ -820,7 +829,7 @@
 </context>
           </data>
           <data key="d11">n82n13</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n14">
           <data key="d3">INELIGIBLE</data>
@@ -831,7 +840,7 @@
 </context>
           </data>
           <data key="d11">n82n14</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n15">
           <data key="d3">INSCOPE</data>
@@ -842,7 +851,7 @@
 </context>
           </data>
           <data key="d11">n82n15</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n16">
           <data key="d3">OUTOFSCOPE</data>
@@ -853,7 +862,7 @@
 </context>
           </data>
           <data key="d11">n82n16</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n17">
           <data key="d3">OUTOFSCOPE</data>
@@ -864,7 +873,7 @@
 </context>
           </data>
           <data key="d11">n82n17</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n18">
           <data key="d3">OUTOFSCOPE</data>
@@ -875,7 +884,7 @@
 </context>
           </data>
           <data key="d11">n82n18</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n19">
           <data key="d3">INELIGIBLE</data>
@@ -886,7 +895,7 @@
 </context>
           </data>
           <data key="d11">n82n19</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n20">
           <data key="d3">INSCOPE</data>
@@ -897,7 +906,7 @@
 </context>
           </data>
           <data key="d11">n82n20</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n21">
           <data key="d3">CONTACT</data>
@@ -909,7 +918,7 @@
 </context>
           </data>
           <data key="d11">n82n21</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n22">
           <data key="d3">OUTOFSCOPE</data>
@@ -920,7 +929,7 @@
 </context>
           </data>
           <data key="d11">n82n22</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n23">
           <data key="d3">INSCOPE</data>
@@ -931,7 +940,7 @@
 </context>
           </data>
           <data key="d11">n82n23</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n24">
           <data key="d3">INELIGIBLE</data>
@@ -942,7 +951,7 @@
 </context>
           </data>
           <data key="d11">n82n24</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n25">
           <data key="d3">CONTACT</data>
@@ -954,7 +963,7 @@
 </context>
           </data>
           <data key="d11">n82n25</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n26">
           <data key="d3">CONTACT</data>
@@ -966,7 +975,7 @@
 </context>
           </data>
           <data key="d11">n82n26</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n27">
           <data key="d3">CONTACT</data>
@@ -978,7 +987,7 @@
 </context>
           </data>
           <data key="d11">n82n27</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n28">
           <data key="d3">CONTACT</data>
@@ -990,7 +999,7 @@
 </context>
           </data>
           <data key="d11">n82n28</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n29">
           <data key="d3">MEDIATION</data>
@@ -1001,7 +1010,7 @@
 </context>
           </data>
           <data key="d11">n82n29</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n30">
           <data key="d3">OUTOFSCOPE</data>
@@ -1012,7 +1021,7 @@
 </context>
           </data>
           <data key="d11">n82n30</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n31">
           <data key="d3">OUTOFSCOPE</data>
@@ -1023,7 +1032,7 @@
 </context>
           </data>
           <data key="d11">n82n31</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
         <node id="n70::n32">
           <data key="d3">CONTACT</data>
@@ -1035,7 +1044,7 @@
 </context>
           </data>
           <data key="d11">n82n32</data>
-          <data key="d12"/>
+          <data key="d13"/>
           </node>
       </graph>
     </node>
@@ -1044,74 +1053,75 @@
       <data key="d4">{% trans "You’re losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you" %}</data>
       <data key="d10">2</data>
       <data key="d11">n83</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n72">
       <data key="d3">{% trans "You want advice on seeking asylum" %}</data>
       <data key="d10">1</data>
       <data key="d11">n84</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n73">
       <data key="d3">{% trans "None of the above" %}</data>
       <data key="d11">n85</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n74">
       <data key="d3">{% trans "You are a victim of human trafficking or domestic violence" %}</data>
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">3</data>
       <data key="d11">n86</data>
-      <data key="d12"/>
+      <data key="d12">true</data>
+      <data key="d13"/>
       </node>
     <node id="n75">
       <data key="d3">{% trans "Yes" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n87</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n76">
       <data key="d3">{% trans "No" %}</data>
       <data key="d6">ineligible</data>
       <data key="d10">2</data>
       <data key="d11">n88</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n77">
       <data key="d3">{% trans "Your home is in a serious state of disrepair" %}</data>
       <data key="d5">{% trans "Is this putting you or your family at serious risk of illness or injury?" %}</data>
       <data key="d10">3</data>
       <data key="d11">n89</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n78">
       <data key="d3">{% trans "Yes" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n90</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n79">
       <data key="d3">{% trans "No" %}</data>
       <data key="d6">ineligible</data>
       <data key="d10">2</data>
       <data key="d11">n91</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n80">
       <data key="d3">{% trans "You own your own home" %}</data>
       <data key="d5">{% trans "Are you at risk of losing your home because of bankruptcy, repossession or mortgage debt?" %}</data>
       <data key="d10">1</data>
       <data key="d11">n92</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n81">
       <data key="d3">{% trans "A neighbour" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n93</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n82">
       <data key="d3">{% trans "Domestic abuse or harassment" %}</data>
@@ -1119,21 +1129,21 @@
       <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
       <data key="d10">5</data>
       <data key="d11">n97</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n83">
       <data key="d3">{% trans "Yes" %}</data>
       <data key="d6">INSCOPE</data>
       <data key="d10">1</data>
       <data key="d11">n100</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n84">
       <data key="d3">{% trans "No" %}</data>
       <data key="d6">INELIGIBLE</data>
       <data key="d10">2</data>
       <data key="d11">n101</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n85">
       <data key="d3">{% trans "Female genital mutilation" %}</data>
@@ -1141,49 +1151,50 @@
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">6</data>
       <data key="d11">n104</data>
-      <data key="d12"/>
+      <data key="d12">true</data>
+      <data key="d13"/>
       </node>
     <node id="n86">
       <data key="d3">{% trans "Disputes over children" %}</data>
       <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
       <data key="d10">2</data>
       <data key="d11">n105</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n87">
       <data key="d3">{% trans "You're in a dispute with your ex-partner over your children" %}</data>
       <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
       <data key="d10">1</data>
       <data key="d11">n106</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n88">
       <data key="d3">{% trans "You're a relative (for example, a grandparent) seeking contact with a child in your family" %}</data>
       <data key="d5">{% trans "Has the child been a victim of child abuse within the family?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n107</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n89">
       <data key="d3">{% trans "Yes" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n108</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n90">
       <data key="d3">{% trans "No" %}</data>
       <data key="d6">ineligible</data>
       <data key="d10">2</data>
       <data key="d11">n109</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n91">
       <data key="d3">{% trans "Other" %}</data>
       <data key="d6">ineligible</data>
       <data key="d7">Other</data>
       <data key="d11">n111</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n92">
       <data key="d3">{% trans "At home (in rented accommodation)" %}</data>
@@ -1191,52 +1202,52 @@
       <data key="d7">Other</data>
       <data key="d10">2</data>
       <data key="d11">n112</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n93">
       <data key="d3">{% trans "You’re an asylum seeker applying for accommodation" %}</data>
       <data key="d6">ineligible</data>
       <data key="d10">4</data>
       <data key="d11">n114</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n94">
       <data key="d3">{% trans "You’re an asylum seeker applying for accommodation" %}</data>
       <data key="d10">1</data>
       <data key="d11">n115</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n95">
       <data key="d3">{% trans "Yes" %}</data>
       <data key="d6">call_me_back</data>
       <data key="d10">1</data>
       <data key="d11">n116</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n96">
       <data key="d3">{% trans "No" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">2</data>
       <data key="d11">n117</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n97">
       <data key="d3">{% trans "You’re losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you" %}</data>
       <data key="d10">2</data>
       <data key="d11">n118</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n98">
       <data key="d3">{% trans "You’re living in rented accommodation and you’re being evicted because of a debt to your landlord" %}</data>
       <data key="d10">2</data>
       <data key="d11">n1</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <node id="n99">
       <data key="d3">{% trans "Any other problem to do with divorce, separation or dissolution" %}</data>
       <data key="d6">ineligible</data>
       <data key="d11">n63</data>
-      <data key="d12"/>
+      <data key="d13"/>
       </node>
     <edge id="e0" source="n5" target="n36::n0">
       </edge>
@@ -1741,7 +1752,7 @@
     <edge id="e247" source="n44" target="n70::n28">
       </edge>
   </graph>
-  <data key="d15">
+  <data key="d16">
     <y:Resources/>
   </data>
 </graphml>

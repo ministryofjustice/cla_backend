@@ -25,6 +25,7 @@ class GraphImporter(object):
     KEY_HELP = 'help'
     KEY_HEADING = 'heading'
     KEY_PERMANENT_ID = 'permanent_id'
+    KEY_DATA_SAFETY = 'data_safety'
 
     KEY_NODE_GRAPHICS = 'nodegraphics'
     KEY_EDGE_GRAPHICS = 'edgegraphics'
@@ -126,6 +127,7 @@ class GraphImporter(object):
             self.KEY_HELP: _get_id_default_dict_for('help'),
             self.KEY_HEADING: _get_id_default_dict_for('heading'),
             self.KEY_PERMANENT_ID: _get_id_default_dict_for('permanent_id'),
+            self.KEY_DATA_SAFETY: _get_id_default_dict_for('data_safety'),
         }
 
         if load_additional:
@@ -163,13 +165,18 @@ class GraphImporter(object):
                 context[child.tag] = _get_text(child)
             return context
 
-        def _get_node_data_value_or_default(_node, key):
+        def _get_node_data_value_or_default(_node, key, as_type=None):
             attr_key = self.prop_mapping[key]['id']
             try:
-                data_node = self.xpath_ns(node, 'ns:data[@key="%s"]' % attr_key)[0]
-                return _get_text(data_node)
+                data_node = self.xpath_ns(_node, 'ns:data[@key="%s"]' % attr_key)[0]
+                value = _get_text(data_node)
             except IndexError:
-                return self.prop_mapping[key]['default']
+                value = self.prop_mapping[key]['default']
+            if callable(as_type) and value:
+                return as_type(value)
+            return value
+
+        str_to_bool = lambda s: s.lower() == "true"
 
         # looping through the nodes
         nodes = self.xpath_ns(self.doc, '//ns:node')
@@ -199,6 +206,7 @@ class GraphImporter(object):
                 context=_process_context(node),
                 help_text=help_text,
                 heading=_get_node_data_value_or_default(node, self.KEY_HEADING),
+                data_safety=_get_node_data_value_or_default(node, self.KEY_DATA_SAFETY, str_to_bool),
             )
 
         return node_id_map

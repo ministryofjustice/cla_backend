@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-15 16:09+0100\n"
+"POT-Creation-Date: 2015-07-17 14:31+0100\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -102,143 +102,143 @@ msgstr ""
 msgid "Date field has wrong format. Use { \"day\": 25, \"month\": 12, \"year\": 2012 }"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:41
+#: apps/diagnosis/data/checker-graph.graphml.tpl:44
 msgid "You’re a home owner, and you’re at risk of losing your home due to bankruptcy, mortgage debt or repossession"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:47
+#: apps/diagnosis/data/checker-graph.graphml.tpl:50
 msgid "You owe money (for example, bank loans, credit card debt) but this is not putting your home at risk"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:54
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1082
+#: apps/diagnosis/data/checker-graph.graphml.tpl:57
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1092
 msgid "Your home is in a serious state of disrepair"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:55
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1083
+#: apps/diagnosis/data/checker-graph.graphml.tpl:58
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1093
 msgid "Is this putting you or your family at serious risk of illness or injury?"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:61
-#: apps/diagnosis/data/checker-graph.graphml.tpl:441
-#: apps/diagnosis/data/checker-graph.graphml.tpl:610
+#: apps/diagnosis/data/checker-graph.graphml.tpl:64
+#: apps/diagnosis/data/checker-graph.graphml.tpl:447
+#: apps/diagnosis/data/checker-graph.graphml.tpl:618
 #: apps/diagnosis/data/graph.graphml.tpl:1339
 msgid "Harassment"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:62
-#: apps/diagnosis/data/checker-graph.graphml.tpl:611
+#: apps/diagnosis/data/checker-graph.graphml.tpl:65
+#: apps/diagnosis/data/checker-graph.graphml.tpl:619
 msgid "You've been harassed in your home on more than one occasion"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:63
-#: apps/diagnosis/data/checker-graph.graphml.tpl:612
+#: apps/diagnosis/data/checker-graph.graphml.tpl:66
+#: apps/diagnosis/data/checker-graph.graphml.tpl:620
 msgid "Who is harassing you?"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:69
-#: apps/diagnosis/data/checker-graph.graphml.tpl:618
+#: apps/diagnosis/data/checker-graph.graphml.tpl:72
+#: apps/diagnosis/data/checker-graph.graphml.tpl:626
 msgid "ASBO or ASBI"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:70
-#: apps/diagnosis/data/checker-graph.graphml.tpl:619
+#: apps/diagnosis/data/checker-graph.graphml.tpl:73
+#: apps/diagnosis/data/checker-graph.graphml.tpl:627
 msgid "Your landlord has taken out an antisocial behaviour order or antisocial behaviour injunction (ASBO or ASBI) against you or someone who lives with you"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:71
-#: apps/diagnosis/data/checker-graph.graphml.tpl:620
+#: apps/diagnosis/data/checker-graph.graphml.tpl:74
+#: apps/diagnosis/data/checker-graph.graphml.tpl:628
 msgid "Your landlord is:"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:77
+#: apps/diagnosis/data/checker-graph.graphml.tpl:80
 msgid "Choose one of the options"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:84
-#: apps/diagnosis/data/checker-graph.graphml.tpl:632
+#: apps/diagnosis/data/checker-graph.graphml.tpl:87
+#: apps/diagnosis/data/checker-graph.graphml.tpl:640
 msgid "A social housing landlord"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:85
-#: apps/diagnosis/data/checker-graph.graphml.tpl:633
+#: apps/diagnosis/data/checker-graph.graphml.tpl:88
+#: apps/diagnosis/data/checker-graph.graphml.tpl:641
 msgid "For example, housing association, council housing"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:92
-#: apps/diagnosis/data/checker-graph.graphml.tpl:640
+#: apps/diagnosis/data/checker-graph.graphml.tpl:95
+#: apps/diagnosis/data/checker-graph.graphml.tpl:648
 msgid "A private landlord"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:99
-#: apps/diagnosis/data/checker-graph.graphml.tpl:647
+#: apps/diagnosis/data/checker-graph.graphml.tpl:102
+#: apps/diagnosis/data/checker-graph.graphml.tpl:655
 msgid "A neighbour or your landlord"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:106
-#: apps/diagnosis/data/checker-graph.graphml.tpl:654
+#: apps/diagnosis/data/checker-graph.graphml.tpl:109
+#: apps/diagnosis/data/checker-graph.graphml.tpl:662
 msgid "A partner, ex-partner or family member"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:107
-#: apps/diagnosis/data/checker-graph.graphml.tpl:435
-#: apps/diagnosis/data/checker-graph.graphml.tpl:443
-#: apps/diagnosis/data/checker-graph.graphml.tpl:540
-#: apps/diagnosis/data/checker-graph.graphml.tpl:655
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1062
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1141
+#: apps/diagnosis/data/checker-graph.graphml.tpl:110
+#: apps/diagnosis/data/checker-graph.graphml.tpl:440
+#: apps/diagnosis/data/checker-graph.graphml.tpl:449
+#: apps/diagnosis/data/checker-graph.graphml.tpl:547
+#: apps/diagnosis/data/checker-graph.graphml.tpl:663
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1071
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1151
 msgid "Are you at immediate risk of harm?"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:113
-#: apps/diagnosis/data/checker-graph.graphml.tpl:661
+#: apps/diagnosis/data/checker-graph.graphml.tpl:117
+#: apps/diagnosis/data/checker-graph.graphml.tpl:670
 msgid "Someone else"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:119
-#: apps/diagnosis/data/checker-graph.graphml.tpl:494
-#: apps/diagnosis/data/checker-graph.graphml.tpl:560
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1068
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1089
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1125
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1168
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1210
+#: apps/diagnosis/data/checker-graph.graphml.tpl:123
+#: apps/diagnosis/data/checker-graph.graphml.tpl:501
+#: apps/diagnosis/data/checker-graph.graphml.tpl:568
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1078
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1099
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1135
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1179
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1221
 msgid "Yes"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:126
-#: apps/diagnosis/data/checker-graph.graphml.tpl:501
-#: apps/diagnosis/data/checker-graph.graphml.tpl:567
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1075
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1096
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1132
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1175
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1217
+#: apps/diagnosis/data/checker-graph.graphml.tpl:130
+#: apps/diagnosis/data/checker-graph.graphml.tpl:508
+#: apps/diagnosis/data/checker-graph.graphml.tpl:575
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1085
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1106
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1142
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1186
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1228
 msgid "No"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:133
+#: apps/diagnosis/data/checker-graph.graphml.tpl:137
 msgid "Benefits appeal"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:134
+#: apps/diagnosis/data/checker-graph.graphml.tpl:138
 msgid "You want to appeal your benefits decision on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:141
+#: apps/diagnosis/data/checker-graph.graphml.tpl:145
 msgid "Permission to appeal refused"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:142
+#: apps/diagnosis/data/checker-graph.graphml.tpl:146
 msgid "A first-tier tribunal has refused you permission to appeal your benefits decision in the Upper Tribunal and you want advice about how to appeal this decision"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:149
-#: apps/diagnosis/data/checker-graph.graphml.tpl:205
-#: apps/diagnosis/data/checker-graph.graphml.tpl:287
-#: apps/diagnosis/data/checker-graph.graphml.tpl:626
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1056
+#: apps/diagnosis/data/checker-graph.graphml.tpl:153
+#: apps/diagnosis/data/checker-graph.graphml.tpl:209
+#: apps/diagnosis/data/checker-graph.graphml.tpl:291
+#: apps/diagnosis/data/checker-graph.graphml.tpl:634
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1065
 #: apps/diagnosis/data/graph.graphml.tpl:837
 #: apps/diagnosis/data/graph.graphml.tpl:1476
 #: apps/diagnosis/data/graph.graphml.tpl:1866
@@ -247,27 +247,27 @@ msgstr ""
 msgid "None of the above"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:155
+#: apps/diagnosis/data/checker-graph.graphml.tpl:159
 msgid "Age"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:156
+#: apps/diagnosis/data/checker-graph.graphml.tpl:160
 msgid "How old are you?"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:162
+#: apps/diagnosis/data/checker-graph.graphml.tpl:166
 #: apps/diagnosis/data/graph.graphml.tpl:984
 msgid "Disability"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:163
-#: apps/diagnosis/data/checker-graph.graphml.tpl:170
-#: apps/diagnosis/data/checker-graph.graphml.tpl:177
-#: apps/diagnosis/data/checker-graph.graphml.tpl:184
-#: apps/diagnosis/data/checker-graph.graphml.tpl:192
-#: apps/diagnosis/data/checker-graph.graphml.tpl:199
-#: apps/diagnosis/data/checker-graph.graphml.tpl:258
-#: apps/diagnosis/data/checker-graph.graphml.tpl:265
+#: apps/diagnosis/data/checker-graph.graphml.tpl:167
+#: apps/diagnosis/data/checker-graph.graphml.tpl:174
+#: apps/diagnosis/data/checker-graph.graphml.tpl:181
+#: apps/diagnosis/data/checker-graph.graphml.tpl:188
+#: apps/diagnosis/data/checker-graph.graphml.tpl:196
+#: apps/diagnosis/data/checker-graph.graphml.tpl:203
+#: apps/diagnosis/data/checker-graph.graphml.tpl:262
+#: apps/diagnosis/data/checker-graph.graphml.tpl:269
 #: apps/diagnosis/data/graph.graphml.tpl:992
 #: apps/diagnosis/data/graph.graphml.tpl:1115
 #: apps/diagnosis/data/graph.graphml.tpl:1189
@@ -283,477 +283,477 @@ msgstr ""
 msgid "Where did the discrimination occur?"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:169
+#: apps/diagnosis/data/checker-graph.graphml.tpl:173
 msgid "Gender, gender reassignment or sexual orientation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:176
+#: apps/diagnosis/data/checker-graph.graphml.tpl:180
 msgid "Marriage or civil partnership"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:183
+#: apps/diagnosis/data/checker-graph.graphml.tpl:187
 #: apps/diagnosis/data/graph.graphml.tpl:2112
 #: apps/diagnosis/data/graph.graphml.tpl:2174
 msgid "Pregnancy or maternity"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:190
+#: apps/diagnosis/data/checker-graph.graphml.tpl:194
 #: apps/diagnosis/data/graph.graphml.tpl:2123
 msgid "Race"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:191
+#: apps/diagnosis/data/checker-graph.graphml.tpl:195
 msgid "Including nationality, citizenship, ethnicity or national origin"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:198
+#: apps/diagnosis/data/checker-graph.graphml.tpl:202
 msgid "Religion, belief, or lack of religion or belief"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:211
+#: apps/diagnosis/data/checker-graph.graphml.tpl:215
 msgid "At work"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:218
+#: apps/diagnosis/data/checker-graph.graphml.tpl:222
 msgid "While you were using a service"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:219
+#: apps/diagnosis/data/checker-graph.graphml.tpl:223
 msgid "For example, having a meal in a restaurant or getting access to a shop"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:226
+#: apps/diagnosis/data/checker-graph.graphml.tpl:230
 msgid "At a private club"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:227
+#: apps/diagnosis/data/checker-graph.graphml.tpl:231
 msgid "Or association"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:234
+#: apps/diagnosis/data/checker-graph.graphml.tpl:238
 msgid "When someone was carrying out a public function"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:235
+#: apps/diagnosis/data/checker-graph.graphml.tpl:239
 msgid "For example, a police officer carrying out a search as part of a criminal investigation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:242
+#: apps/diagnosis/data/checker-graph.graphml.tpl:246
 msgid "At school or college"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:249
+#: apps/diagnosis/data/checker-graph.graphml.tpl:253
 msgid "At university"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:250
+#: apps/diagnosis/data/checker-graph.graphml.tpl:254
 msgid "Or other higher education institution"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:257
+#: apps/diagnosis/data/checker-graph.graphml.tpl:261
 msgid "18 or over"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:264
+#: apps/diagnosis/data/checker-graph.graphml.tpl:268
 msgid "Under 18"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:272
+#: apps/diagnosis/data/checker-graph.graphml.tpl:276
 msgid "A child in care or a care leaver - or you are a foster carer"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:279
+#: apps/diagnosis/data/checker-graph.graphml.tpl:283
 msgid "Special educational needs"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:280
+#: apps/diagnosis/data/checker-graph.graphml.tpl:284
 msgid "You have (or your child has) special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:288
+#: apps/diagnosis/data/checker-graph.graphml.tpl:292
 msgid "For example admissions or exclusions"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:294
-#: apps/diagnosis/data/checker-graph.graphml.tpl:465
-#: apps/diagnosis/data/checker-graph.graphml.tpl:488
-#: apps/diagnosis/data/checker-graph.graphml.tpl:546
+#: apps/diagnosis/data/checker-graph.graphml.tpl:298
+#: apps/diagnosis/data/checker-graph.graphml.tpl:472
+#: apps/diagnosis/data/checker-graph.graphml.tpl:495
+#: apps/diagnosis/data/checker-graph.graphml.tpl:554
 #: apps/diagnosis/data/graph.graphml.tpl:1960
 #: apps/diagnosis/data/graph.graphml.tpl:2097
 msgid "Any other problem"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:304
+#: apps/diagnosis/data/checker-graph.graphml.tpl:308
 #: apps/diagnosis/data/graph.graphml.tpl:1603
 msgid "Clinical negligence"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:305
+#: apps/diagnosis/data/checker-graph.graphml.tpl:309
 msgid "Doctors and nurses not treating you with due care during medical treatment"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:312
+#: apps/diagnosis/data/checker-graph.graphml.tpl:316
 #: apps/diagnosis/data/graph.graphml.tpl:2206
 msgid "Community care"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:313
+#: apps/diagnosis/data/checker-graph.graphml.tpl:317
 msgid "You’re unhappy with the care being provided for yourself or a relative due to age, disability or special educational needs - for example, in a care home or your own home"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:320
+#: apps/diagnosis/data/checker-graph.graphml.tpl:324
 msgid "Debt"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:321
+#: apps/diagnosis/data/checker-graph.graphml.tpl:325
 msgid "Bankruptcy, repossession, mortgage debt that is putting your home at risk"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:322
-#: apps/diagnosis/data/checker-graph.graphml.tpl:330
-#: apps/diagnosis/data/checker-graph.graphml.tpl:362
-#: apps/diagnosis/data/checker-graph.graphml.tpl:481
-#: apps/diagnosis/data/checker-graph.graphml.tpl:509
-#: apps/diagnosis/data/checker-graph.graphml.tpl:517
-#: apps/diagnosis/data/checker-graph.graphml.tpl:575
-#: apps/diagnosis/data/checker-graph.graphml.tpl:603
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1119
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1148
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1155
+#: apps/diagnosis/data/checker-graph.graphml.tpl:326
+#: apps/diagnosis/data/checker-graph.graphml.tpl:334
+#: apps/diagnosis/data/checker-graph.graphml.tpl:366
+#: apps/diagnosis/data/checker-graph.graphml.tpl:488
+#: apps/diagnosis/data/checker-graph.graphml.tpl:516
+#: apps/diagnosis/data/checker-graph.graphml.tpl:524
+#: apps/diagnosis/data/checker-graph.graphml.tpl:583
+#: apps/diagnosis/data/checker-graph.graphml.tpl:611
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1129
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1159
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1166
 msgid "Select the option that best describes your situation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:328
-#: apps/diagnosis/data/checker-graph.graphml.tpl:425
-#: apps/diagnosis/data/checker-graph.graphml.tpl:538
+#: apps/diagnosis/data/checker-graph.graphml.tpl:332
+#: apps/diagnosis/data/checker-graph.graphml.tpl:429
+#: apps/diagnosis/data/checker-graph.graphml.tpl:545
 msgid "Domestic abuse"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:329
+#: apps/diagnosis/data/checker-graph.graphml.tpl:333
 msgid "Abuse at home (whether psychological, physical, financial, sexual or emotional), child abuse, harassment by an ex-partner, forced marriage"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:336
+#: apps/diagnosis/data/checker-graph.graphml.tpl:340
 #: apps/diagnosis/data/graph.graphml.tpl:932
 #: apps/diagnosis/data/graph.graphml.tpl:2286
 msgid "Discrimination"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:337
+#: apps/diagnosis/data/checker-graph.graphml.tpl:341
 msgid "Being treated unfairly because of your race, gender or sexual orientation, for example"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:338
+#: apps/diagnosis/data/checker-graph.graphml.tpl:342
 msgid "You've been discriminated against because of your:"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:344
+#: apps/diagnosis/data/checker-graph.graphml.tpl:348
 #: apps/diagnosis/data/graph.graphml.tpl:34
 msgid "Education"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:345
+#: apps/diagnosis/data/checker-graph.graphml.tpl:349
 msgid "Special educational needs, problems with school places, exclusions, learning difficulties"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:346
-#: apps/diagnosis/data/checker-graph.graphml.tpl:354
-#: apps/diagnosis/data/checker-graph.graphml.tpl:409
-#: apps/diagnosis/data/checker-graph.graphml.tpl:417
+#: apps/diagnosis/data/checker-graph.graphml.tpl:350
+#: apps/diagnosis/data/checker-graph.graphml.tpl:358
+#: apps/diagnosis/data/checker-graph.graphml.tpl:413
+#: apps/diagnosis/data/checker-graph.graphml.tpl:421
 msgid "What is your problem about?"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:352
+#: apps/diagnosis/data/checker-graph.graphml.tpl:356
 #: apps/diagnosis/data/graph.graphml.tpl:1491
 msgid "Employment"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:353
+#: apps/diagnosis/data/checker-graph.graphml.tpl:357
 msgid "Being treated unfairly at work, unfair dismissal, employment tribunals"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:360
+#: apps/diagnosis/data/checker-graph.graphml.tpl:364
 msgid "Housing"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:361
+#: apps/diagnosis/data/checker-graph.graphml.tpl:365
 msgid "Eviction, homelessness, losing your rented home, rent arrears, harassment by a landlord or neighbour, health and safety issues with your home"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:368
+#: apps/diagnosis/data/checker-graph.graphml.tpl:372
 #: apps/diagnosis/data/graph.graphml.tpl:1621
 msgid "Immigration and asylum"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:369
+#: apps/diagnosis/data/checker-graph.graphml.tpl:373
 msgid "Applying for asylum or permission to stay in the UK, including for victims of human trafficking"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:370
+#: apps/diagnosis/data/checker-graph.graphml.tpl:374
 msgid "Select the option that best describes your situation."
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:376
+#: apps/diagnosis/data/checker-graph.graphml.tpl:380
 #: apps/diagnosis/data/graph.graphml.tpl:1658
 msgid "Mental health"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:377
+#: apps/diagnosis/data/checker-graph.graphml.tpl:381
 msgid "Help with mental health and mental capacity legal issues"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:384
+#: apps/diagnosis/data/checker-graph.graphml.tpl:388
 #: apps/diagnosis/data/graph.graphml.tpl:1674
 msgid "Personal injury"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:385
+#: apps/diagnosis/data/checker-graph.graphml.tpl:389
 msgid "An accident that was not your fault"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:392
+#: apps/diagnosis/data/checker-graph.graphml.tpl:396
 #: apps/diagnosis/data/graph.graphml.tpl:2190
 msgid "Public law"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:393
+#: apps/diagnosis/data/checker-graph.graphml.tpl:397
 msgid "Taking legal action against a public body, like your local council"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:400
+#: apps/diagnosis/data/checker-graph.graphml.tpl:404
 msgid "Trouble with the police and other public authorities"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:401
+#: apps/diagnosis/data/checker-graph.graphml.tpl:405
 msgid "Being treated unlawfully by authorities who detain, imprison and prosecute (for example, the police), abuse in care cases"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:407
+#: apps/diagnosis/data/checker-graph.graphml.tpl:411
 #: apps/diagnosis/data/graph.graphml.tpl:1441
 msgid "Welfare benefits"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:408
+#: apps/diagnosis/data/checker-graph.graphml.tpl:412
 msgid "Problems with your benefits, appealing a decision about your benefits"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:415
+#: apps/diagnosis/data/checker-graph.graphml.tpl:419
 #: apps/diagnosis/data/graph.graphml.tpl:842
 msgid "Family"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:416
+#: apps/diagnosis/data/checker-graph.graphml.tpl:420
 msgid "Divorce, separation, dissolution, financial arrangements, family mediation, arrangements for your children, children being taken into care, child abduction"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:426
+#: apps/diagnosis/data/checker-graph.graphml.tpl:430
 msgid "You want to protect yourself or your children against domestic violence"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:427
+#: apps/diagnosis/data/checker-graph.graphml.tpl:431
 msgid "Are you or your child at immediate risk of harm?"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:433
+#: apps/diagnosis/data/checker-graph.graphml.tpl:438
 msgid "Enforcing an injunction"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:434
+#: apps/diagnosis/data/checker-graph.graphml.tpl:439
 msgid "Your partner or ex-partner is ignoring an injunction you have taken out against them"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:442
+#: apps/diagnosis/data/checker-graph.graphml.tpl:448
 msgid "You are being harassed by  a partner, ex-partner or family member"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:449
+#: apps/diagnosis/data/checker-graph.graphml.tpl:456
 msgid "Contesting an injunction"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:450
+#: apps/diagnosis/data/checker-graph.graphml.tpl:457
 msgid "You want to contest an injunction that has been taken out against you"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:457
+#: apps/diagnosis/data/checker-graph.graphml.tpl:464
 msgid "Forced marriage"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:458
+#: apps/diagnosis/data/checker-graph.graphml.tpl:465
 msgid "You want advice about forced marriage"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:471
+#: apps/diagnosis/data/checker-graph.graphml.tpl:478
 msgid "Children being taken into care and adoption"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:472
+#: apps/diagnosis/data/checker-graph.graphml.tpl:479
 msgid "Your local council is involved"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:473
+#: apps/diagnosis/data/checker-graph.graphml.tpl:480
 msgid "Is the local council trying to take your child into care?"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:479
+#: apps/diagnosis/data/checker-graph.graphml.tpl:486
 msgid "Child abduction"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:480
+#: apps/diagnosis/data/checker-graph.graphml.tpl:487
 msgid "You want advice about child abduction"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:508
+#: apps/diagnosis/data/checker-graph.graphml.tpl:515
 msgid "Divorce, separation or dissolution"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:515
+#: apps/diagnosis/data/checker-graph.graphml.tpl:522
 msgid "Financial settlement"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:516
+#: apps/diagnosis/data/checker-graph.graphml.tpl:523
 msgid "Following a divorce or separation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:523
+#: apps/diagnosis/data/checker-graph.graphml.tpl:530
 msgid "Family mediation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:524
+#: apps/diagnosis/data/checker-graph.graphml.tpl:531
 msgid "You're looking to start family mediation or you're seeking legal advice in support of it"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:525
+#: apps/diagnosis/data/checker-graph.graphml.tpl:532
 msgid "Have you already started family mediation? (This includes cases that have already finished)"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:531
+#: apps/diagnosis/data/checker-graph.graphml.tpl:538
 msgid "You are under 18"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:539
+#: apps/diagnosis/data/checker-graph.graphml.tpl:546
 msgid "You or your children have suffered domestic abuse in the last 2 years, or your abuser has a current criminal conviction"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:552
+#: apps/diagnosis/data/checker-graph.graphml.tpl:560
 msgid "International Family Maintenance"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:553
+#: apps/diagnosis/data/checker-graph.graphml.tpl:561
 msgid "You're seeking advice about International Family Maintenance, to enforce a maintenance order made outside the UK"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:574
+#: apps/diagnosis/data/checker-graph.graphml.tpl:582
 msgid "You're living in rented accommodation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:581
+#: apps/diagnosis/data/checker-graph.graphml.tpl:589
 msgid "You are homeless"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:587
+#: apps/diagnosis/data/checker-graph.graphml.tpl:595
 msgid "Any other housing problem"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:593
+#: apps/diagnosis/data/checker-graph.graphml.tpl:601
 msgid "Becoming homeless"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:594
+#: apps/diagnosis/data/checker-graph.graphml.tpl:602
 msgid "You are at risk of becoming homeless within 28 days (or 56 days if you live in Wales) and you want to make an application to your local council to stop your home being taken away from you"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:601
+#: apps/diagnosis/data/checker-graph.graphml.tpl:609
 msgid "Eviction"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:602
+#: apps/diagnosis/data/checker-graph.graphml.tpl:610
 msgid "You are being evicted from your home"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:782
+#: apps/diagnosis/data/checker-graph.graphml.tpl:791
 msgid "Problem relates to a child in care, or a care leaver, or user is a foster carer"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:904
+#: apps/diagnosis/data/checker-graph.graphml.tpl:913
 msgid "Council is trying to take user's child into care"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:949
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1030
+#: apps/diagnosis/data/checker-graph.graphml.tpl:958
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1039
 msgid "User is at immediate risk of harm"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:961
-#: apps/diagnosis/data/checker-graph.graphml.tpl:973
+#: apps/diagnosis/data/checker-graph.graphml.tpl:970
+#: apps/diagnosis/data/checker-graph.graphml.tpl:982
 msgid "User is under 18 years old"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:985
+#: apps/diagnosis/data/checker-graph.graphml.tpl:994
 msgid "User is living outside the UK but user's child has been taken to the UK"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1043
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1052
 msgid "Losing your accommodation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1044
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1224
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1053
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1235
 msgid "You’re losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1050
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1059
 msgid "You want advice on seeking asylum"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1061
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1070
 msgid "You are a victim of human trafficking or domestic violence"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1103
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1113
 msgid "You own your own home"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1104
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1114
 msgid "Are you at risk of losing your home because of bankruptcy, repossession or mortgage debt?"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1110
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1120
 msgid "A neighbour"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1117
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1127
 msgid "Domestic abuse or harassment"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1118
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1128
 msgid "Abuse at home, child abuse, harassment"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1139
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1149
 msgid "Female genital mutilation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1140
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1150
 msgid "You're worried that you may become a victim of female genital mutilation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1147
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1158
 msgid "Disputes over children"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1154
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1165
 msgid "You're in a dispute with your ex-partner over your children"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1161
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1172
 msgid "You're a relative (for example, a grandparent) seeking contact with a child in your family"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1162
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1173
 msgid "Has the child been a victim of child abuse within the family?"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1182
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1193
 #: apps/diagnosis/data/graph.graphml.tpl:1168
 #: apps/diagnosis/data/graph.graphml.tpl:1274
 #: apps/diagnosis/data/graph.graphml.tpl:1314
@@ -764,20 +764,20 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1189
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1200
 msgid "At home (in rented accommodation)"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1197
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1204
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1208
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1215
 msgid "You’re an asylum seeker applying for accommodation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1230
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1241
 msgid "You’re living in rented accommodation and you’re being evicted because of a debt to your landlord"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1236
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1247
 msgid "Any other problem to do with divorce, separation or dissolution"
 msgstr ""
 

@@ -100,7 +100,7 @@ class SQLFileDateRangeReport(SQLFileReportMixin, DateRangeReportForm):
 class SQLFileMonthRangeReport(SQLFileReportMixin, MonthRangeReportForm):
 
     def get_sql_params(self):
-        return (self.month,)
+        return (self.month.date(),)
 
 class MIVoiceReport(SQLFileMonthRangeReport):
     QUERY_FILE = 'MIVoiceReport.sql'

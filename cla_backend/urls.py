@@ -12,6 +12,8 @@ urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.ADMIN_ENABLED:
     # Uncomment the next two lines to enable the admin:
     from django.contrib import admin
+    from core.forms import CLALoginForm
+    admin.site.login_form = CLALoginForm
     admin.autodiscover()
 
     urlpatterns += patterns(

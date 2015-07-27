@@ -8,7 +8,7 @@ code,
 type,
 level,
 created_by_id,
-'' as patch,
+left(regexp_replace(notes, E'[\\n\\r\\u2028]+', ' ', 'g'), 40) as patch,
 context
 FROM cla_eventlog_log
 WHERE (modified >= %(from_date)s::timestamp AND modified <= %(to_date)s::timestamp)

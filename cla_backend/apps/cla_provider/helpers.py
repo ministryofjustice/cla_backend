@@ -206,9 +206,6 @@ class ProviderAllocationHelper(object):
         # else everyone doesn't have any allocation so just pick randomly
         return self._get_random_provider(category)
 
-
-
-
     def get_suggested_provider(self, category):
         if self.as_of not in PROVIDER_HOURS:
             return self._get_rota_provider(category)

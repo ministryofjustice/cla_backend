@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from collections import OrderedDict
 import datetime
 from django.core.management.base import BaseCommand
+from django.contrib.admin.models import LogEntry
+from django.contrib.contenttypes.models import ContentType
 
 from legalaid.models import Case
 
@@ -76,6 +78,18 @@ class Command(BaseCommand):
 
         self.stdout.write('\n\nTotal bunched: %s/%s\n\n' % (total_bunched,
                                                             total_cases))
+
+        self.stdout.write('Dates of edited Allocations')
+
+        ct = ContentType.objects.get(model='providerallocation')
+        le = LogEntry.objects.filter(content_type_id=ct.pk)
+
+        for l in le:
+            self.stdout.write('Date: %s' % l.action_time)
+
+
+
+
 
 
 

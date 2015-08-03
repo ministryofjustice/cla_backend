@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 13:31+0100\n"
+"POT-Creation-Date: 2015-08-03 13:58+0100\n"
 "PO-Revision-Date: 2015-06-19 14:52+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/projects/p/cla-backend/language/cy/)\n"
@@ -323,12 +323,12 @@ msgid "For example, having a meal in a restaurant or getting access to a shop"
 msgstr "Er enghraifft, wrth gael pryd o fwyd mewn bwyty neu yn mynd i mewn i siop"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:229
-msgid "At a private club"
-msgstr "Mewn clwb preifat"
+msgid "In an association"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:230
-msgid "Or association"
-msgstr "Neu gymdeithas"
+msgid "For example, a private club or political organisation"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:237
 msgid "When someone was carrying out a public function"
@@ -347,8 +347,8 @@ msgid "At university"
 msgstr "yn y brifysgol"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:253
-msgid "Or other higher education institution"
-msgstr "Neu sefydliad addysg uwch arall"
+msgid "Or other further education or higher education institution"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:260
 msgid "18 or over"
@@ -2330,6 +2330,9 @@ msgstr "Hafan"
 #: templates/admin/reports/base.html:31
 msgid "Reports"
 msgstr "Adroddiadau"
+
+#~ msgid "At a private club"
+#~ msgstr "Mewn clwb preifat"
 
 #~ msgid "Your child has been abducted"
 #~ msgstr "Mae eich plentyn wedi cael ei herwgydio "

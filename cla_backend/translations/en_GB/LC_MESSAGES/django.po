@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 13:31+0100\n"
+"POT-Creation-Date: 2015-08-03 13:58+0100\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -323,11 +323,11 @@ msgid "For example, having a meal in a restaurant or getting access to a shop"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:229
-msgid "At a private club"
+msgid "In an association"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:230
-msgid "Or association"
+msgid "For example, a private club or political organisation"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:237
@@ -347,7 +347,7 @@ msgid "At university"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:253
-msgid "Or other higher education institution"
+msgid "Or other further education or higher education institution"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:260

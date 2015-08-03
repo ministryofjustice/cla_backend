@@ -616,8 +616,8 @@
       </data>
     </node>
     <node id="n26">
-      <data key="d3"><![CDATA[At a private club]]></data>
-      <data key="d4"><![CDATA[Or association]]></data>
+      <data key="d3"><![CDATA[In an association]]></data>
+      <data key="d4"><![CDATA[For example, a private club or political organisation]]></data>
       <data key="d6"><![CDATA[means_test]]></data>
       <data key="d10">4</data>
       <data key="d11"><![CDATA[n33]]></data>
@@ -627,7 +627,7 @@
           <y:Geometry height="30.0" width="82.35546875" x="1300.241313244048" y="1091.666015625"/>
           <y:Fill color="#00FFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="72.35546875" x="5.0" y="5.93359375">private club<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="69.25" x="6.552734375" y="5.93359375">association<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -685,7 +685,7 @@
     </node>
     <node id="n29">
       <data key="d3"><![CDATA[At university]]></data>
-      <data key="d4"><![CDATA[Or other higher education institution]]></data>
+      <data key="d4"><![CDATA[Or other further education or higher education institution]]></data>
       <data key="d6"><![CDATA[means_test]]></data>
       <data key="d10">7</data>
       <data key="d11"><![CDATA[n36]]></data>

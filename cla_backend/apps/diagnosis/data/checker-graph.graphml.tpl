@@ -226,8 +226,8 @@
       <data key="d13"/>
       </node>
     <node id="n26">
-      <data key="d3">{% trans "At a private club" %}</data>
-      <data key="d4">{% trans "Or association" %}</data>
+      <data key="d3">{% trans "In an association" %}</data>
+      <data key="d4">{% trans "For example, a private club or political organisation" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">4</data>
       <data key="d11">n33</data>
@@ -250,7 +250,7 @@
       </node>
     <node id="n29">
       <data key="d3">{% trans "At university" %}</data>
-      <data key="d4">{% trans "Or other higher education institution" %}</data>
+      <data key="d4">{% trans "Or other further education or higher education institution" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">7</data>
       <data key="d11">n36</data>

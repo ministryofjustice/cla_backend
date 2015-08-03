@@ -3,10 +3,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 14:54+0100\n"
-"PO-Revision-Date: 2015-06-19 14:52+0000\n"
+"POT-Creation-Date: 2015-08-03 15:25+0100\n"
+"PO-Revision-Date: 2015-08-03 13:52+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
-"Language-Team: Welsh (http://www.transifex.com/projects/p/cla-backend/language/cy/)\n"
+"Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
 "Language: cy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,26 +17,26 @@ msgstr ""
 
 #: apps/call_centre/forms.py:56
 msgid "There is no provider specified in the system to handle cases of this law category."
-msgstr "Nid oes darparwr penodol ar y system i ddelio achosion yn y categori o'r gyfraith hon."
+msgstr "Nid oes darparwr penodol ar y system i ddelio ag achosion yn y categori hwn o'r gyfraith."
 
 #: apps/call_centre/forms.py:62
 msgid "Can't assign to specialist provider without setting matter_type1 and matter_type2"
-msgstr "Ni ellir aseinio i ddarpawr arbenigol heb nodi matter_type1 a matter_type2"
+msgstr "Ni ellir aseinio i ddarparwr arbenigol heb nodi matter_type1 a matter_type2"
 
 #: apps/call_centre/forms.py:68
 #, python-brace-format
 msgid "Category of matter type 1: {category1} must match category of matter type 2: {category2}"
-msgstr "Categori mater math 1: rhaid i {category1} baru â chategori mater math 2: {category2}"
+msgstr "Categori mater math 1: rhaid i {category1} gyd-fynd â chategori mater math 2: {category2}"
 
 #: apps/call_centre/forms.py:79
 #, python-brace-format
 msgid "Category of Matter Types: {category1}, {category2} must match category of case: {case_category}"
-msgstr "Categori mathau o faterion: rhaid i {category1} a {category2} baru â chategori achos: {case_category}"
+msgstr "Categori mathau o faterion: rhaid i {category1} a {category2} gyd-fynd â chategori'r achos: {case_category}"
 
 #: apps/cla_provider/models.py:155
 #, python-brace-format
 msgid "Provider {provider} doesn't offer help for {category}"
-msgstr "Nid yw darparwr {provider} yn cynnig help ar gyfer {category}"
+msgstr "Nid yw'r darparwr {provider} yn cynnig help ar gyfer {category}"
 
 #: apps/cla_provider/models.py:168
 msgid "Overlapping rota allocation not allowed"
@@ -44,15 +44,15 @@ msgstr "Ni chaniateir dyrannu rota sy'n gwrthdaro"
 
 #: apps/core/admin/fields.py:59
 msgid "One or more tags not allowed. Allowed tags: "
-msgstr "Ni chanaiateir un neu fwy o dagiau. Tagiau a ganiateir: "
+msgstr "Ni chaniateir un neu fwy o dagiau. Tagiau a ganiateir: "
 
 #: apps/core/admin/forms.py:10
 msgid "A user with that username already exists."
-msgstr "Mae defnyddiwr gyda'r enw'r defnyddiwr hwnnw yn bodoli'n barod."
+msgstr "Mae defnyddiwr gyda'r enw defnyddiwr hwn yn bodoli'n barod."
 
 #: apps/core/admin/forms.py:11
 msgid "The two password fields didn't match."
-msgstr "Nid oedd y ddau faes cyfrinair yn cyfateb."
+msgstr "Nid oedd y ddau faes cyfrinair yr un fath."
 
 #: apps/core/admin/forms.py:14
 msgid "Username"
@@ -64,7 +64,7 @@ msgstr "Gofynnol. 30 nod neu lai. Llythrennau, rhifau a @/./+/-/_ yn unig."
 
 #: apps/core/admin/forms.py:19
 msgid "This value may contain only letters, numbers and @/./+/-/_ characters."
-msgstr "Dim ond llythrennau, rhifau a nodau @/./+/-/_ yn unig y gellir ei gynnwys yn y gwerth hwn."
+msgstr "Dim ond llythrennau, rhifau a nodau @/./+/-/_ y gellir eu cynnwys yn y gwerth hwn."
 
 #: apps/core/admin/forms.py:27 apps/core/admin/forms.py:35
 #: apps/core/admin/forms.py:45 apps/core/forms.py:20
@@ -86,7 +86,7 @@ msgstr "Nid yw cyfrineiriau crai yn cael eu storio, felly nid oes modd gweld cyf
 
 #: apps/core/admin/modeladmin.py:82
 msgid "Account unlocked successfully."
-msgstr "Mae'r cyfrif wedi'i datgloi yn llwyddiannus."
+msgstr "Mae'r cyfrif wedi'i ddatgloi yn llwyddiannus."
 
 #: apps/core/admin/modeladmin.py:98
 msgid "Password changed successfully."
@@ -100,7 +100,7 @@ msgstr "Newid cyfrinair: %s"
 #. Translators: '{ "day": 25, "month": 12, "year": 2012 }' should be left in as-is
 #: apps/core/drf/fields.py:27
 msgid "Date field has wrong format. Use { \"day\": 25, \"month\": 12, \"year\": 2012 }"
-msgstr "Mae fformat anghywir yn y maes dyddiad. Denfyddiwch { \"day\": 25, \"month\": 12, \"year\": 2012 }"
+msgstr "Mae fformat anghywir yn y maes dyddiad. Defnyddiwch { \"day\": 25, \"month\": 12, \"year\": 2012 }"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:44
 msgid "You’re a home owner, and you’re at risk of losing your home due to bankruptcy, mortgage debt or repossession"
@@ -108,11 +108,11 @@ msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:50
 msgid "You owe money (for example, bank loans, credit card debt) but this is not putting your home at risk"
-msgstr "Rydych mewn dyled (er enghraifft benthyciadau banc, dyled cardiau credyd) ond nid yw hyn yn rhoi risg i'ch cartref"
+msgstr "Rydych chi mewn dyled (er enghraifft, benthyciadau banc, dyled cardiau credyd) ond nid yw hyn yn rhoi eich cartref mewn perygl"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:57
 msgid "Choose one of the options"
-msgstr "Dewiswch o leiaf un opsiwn"
+msgstr "Dewiswch un o'r opsiynau"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:64
 #: apps/diagnosis/data/checker-graph.graphml.tpl:442
@@ -139,16 +139,12 @@ msgid "Benefits appeal"
 msgstr "Apêl budd-daliadau"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:79
-#, fuzzy
-#| msgid "Problems with your benefits, appealing a decision about your benefits"
 msgid "You want to appeal a decision about your benefits"
-msgstr "Problemau gyda'ch budd-daliadau, apelio penderfyniad ynghylch eich budd-daliadau"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:80
-#, fuzzy
-#| msgid "Problems with your benefits, appealing a decision about your benefits"
 msgid "You want to appeal a benefits decision:"
-msgstr "Problemau gyda'ch budd-daliadau, apelio penderfyniad ynghylch eich budd-daliadau"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:87
 msgid "Permission to appeal refused"
@@ -599,7 +595,7 @@ msgstr "Mynd yn ddigartref"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:542
 msgid "You are at risk of becoming homeless within 28 days (or 56 days if you live in Wales) and you want to make an application to your local council to stop your home being taken away from you"
-msgstr "Rydych chi mewn perygl o fynd yn ddigartref o fewn 28 diwrnod (neu 56 diwrnod os ydych yn byw yng Nghymru) a'ch bod eisiau gwneud cais i'ch cyngor lleol i atal eich cartref gael ei gymryd oddi wrthych chi"
+msgstr "Rydych chi mewn perygl o fynd yn ddigartref o fewn 28 diwrnod (neu 56 diwrnod os ydych yn byw yng Nghymru) a'ch bod eisiau gwneud cais i'ch cyngor lleol i atal eich cartref rhag cael ei gymryd oddi wrthych chi"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:549
 msgid "Eviction"
@@ -614,16 +610,12 @@ msgid "Your landlord or neighbour is harassing you"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:565
-#, fuzzy
-#| msgid "Contesting an injunction"
 msgid "Contesting an injunction for antisocial behaviour"
-msgstr "Herio gwaharddeb"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:566
-#, fuzzy
-#| msgid "Your landlord has taken out an antisocial behaviour order or antisocial behaviour injunction (ASBO or ASBI) against you or someone who lives with you"
 msgid "Your landlord has taken out an injunction against you or someone who lives with you"
-msgstr "Mae eich landlord wedi cael gorchymyn ymddygiad gwrthgymdeithasol neu waharddeb ymddygiad gwrthgymdeithasol (ASBO neu ASBI) yn eich erbyn neu yn erbyn rhywun sy'n byw gyda chi"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:693
 msgid "Problem relates to a child in care, or a care leaver, or user is a foster carer"
@@ -657,16 +649,12 @@ msgid "You’re losing your accommodation because UK Visas and Immigration (UKVI
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:972
-#, fuzzy
-#| msgid "Problems with your benefits, appealing a decision about your benefits"
 msgid "You want advice on seeking asylum or appealing a decision about your asylum"
-msgstr "Problemau gyda'ch budd-daliadau, apelio penderfyniad ynghylch eich budd-daliadau"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:983
-#, fuzzy
-#| msgid "You are a victim of human trafficking or domestic violence"
 msgid "You’re a victim of domestic violence"
-msgstr "Rydych chi'n ddioddefwr i fasnachu pobl neu drais domestig"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:990
 msgid "Your home is in a serious state of disrepair"
@@ -674,11 +662,11 @@ msgstr "Mae eich cartref mewn cyflwr adfeiliedig difrifol "
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:991
 msgid "Is this putting you or your family at serious risk of illness or injury?"
-msgstr "Yw hyn yn rhoi eich teulu neu chithau mewn perygl difrifol o salwch neu anaf?"
+msgstr "A yw hyn yn rhoi eich teulu neu chithau mewn perygl difrifol o salwch neu anaf?"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1011
 msgid "You own your own home"
-msgstr "Rydych chi'n berchen â'ch cartref eich hun"
+msgstr "Rydych chi'n berchen ar eich cartref eich hun"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1012
 msgid "Are you at risk of losing your home because of bankruptcy, repossession or mortgage debt?"
@@ -750,16 +738,12 @@ msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1150
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1154
-#, fuzzy
-#| msgid "You are a victim of human trafficking or domestic violence"
 msgid "You’re a victim of human trafficking or modern slavery"
-msgstr "Rydych chi'n ddioddefwr i fasnachu pobl neu drais domestig"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1161
-#, fuzzy
-#| msgid "You want to appeal your benefits decision on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court"
 msgid "On a point of law in the Upper Tribunal, Court of Appeal or Supreme Court"
-msgstr "Rydych chi eisiau apelio penderfyniad ar eich budd-daliadau ar bwynt cyfreithiol yn yr Uwch Dribiwnlys, Llys Apêl neu'r Goruchaf Lys"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1165
 msgid "In the first-tier tribunal"
@@ -2031,7 +2015,7 @@ msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2762
 msgid "Domestic violence or abuse – including issues arising from forced marriage, child abduction, female genital mutilation and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser."
-msgstr ""
+msgstr "Trais neu gamdriniaeth domestig - gan gynnwys problemau sy'n codi mewn priodas dan orfod, herwgydio plentyn, ac aflonyddu. Hefyd yn cynnwys amddiffyniad yn erbyn gorchymyn anheddu neu orchymyn rhag molestu lle mai'r camdriniwr honedig yw'r cleient."
 
 #: apps/diagnosis/data/graph.graphml.tpl:2765
 msgid ""
@@ -2319,6 +2303,12 @@ msgstr "Hafan"
 msgid "Reports"
 msgstr "Adroddiadau"
 
+#~ msgid "You've been harassed in your home on more than one occasion"
+#~ msgstr "Rydych chi wedi cael eich aflonyddu yn eich cartref ar fwy nag un achlysur"
+
+#~ msgid "Who is harassing you?"
+#~ msgstr "Pwy sy'n aflonyddu arnoch chi?"
+
 #~ msgid "ASBO or ASBI"
 #~ msgstr "ASBO neu ASBI"
 
@@ -2334,11 +2324,17 @@ msgstr "Adroddiadau"
 #~ msgid "A private landlord"
 #~ msgstr "Landlord preifat"
 
-#~ msgid "You've been harassed in your home on more than one occasion"
-#~ msgstr "Rydych chi wedi cael eich aflonyddu yn eich cartref ar fwy nag un achlysur"
+#~ msgid "Unlawful eviction"
+#~ msgstr "Troi allan anghyfreithlon"
 
-#~ msgid "Who is harassing you?"
-#~ msgstr "Pwy sydd yn eich aflonyddu?"
+#~ msgid "Your landlord is unlawfully evicting you without due process - for example, changing the locks"
+#~ msgstr "Mae eich landlord yn eich troi allan yn anghyfreithlon, heb ddilyn y broses gywir - er enghraifft, newid y cloeon"
+
+#~ msgid "Eviction with notice"
+#~ msgstr "Troi allan gyda rhybudd"
+
+#~ msgid "You have received notification of eviction from your landlord or the council"
+#~ msgstr "Rydych wedi cael hysbysiad troi allan gan eich landlord neu'r cyngor"
 
 #~ msgid "A neighbour or your landlord"
 #~ msgstr "Cymydog neu eich landlord"
@@ -2349,35 +2345,8 @@ msgstr "Adroddiadau"
 #~ msgid "Someone else"
 #~ msgstr "Rhywun arall"
 
-#~ msgid "You want advice on seeking asylum"
-#~ msgstr "Rydych chi eisiau cyngor ynghylch ceisio lloches"
-
 #~ msgid "At a private club"
 #~ msgstr "Mewn clwb preifat"
-
-#~ msgid "Your child has been abducted"
-#~ msgstr "Mae eich plentyn wedi cael ei herwgydio "
-
-#~ msgid "Are you living abroad but your child has been taken to the UK?"
-#~ msgstr "Ydych chi'n byw dramor ond mae rhywun wedi mynd â'ch plentyn i'r DU?"
-
-#~ msgid "You've been accused of abducting a child"
-#~ msgstr "Rydych chi wedi cael eich cyhuddo o herwgydio plentyn"
-
-#~ msgid "You're seeking an order to prevent the removal of a child"
-#~ msgstr "Rydych yn ceisio am orchymyn i atal symud plentyn"
-
-#~ msgid "Unlawful eviction"
-#~ msgstr "Troi allan anghyfreithlon"
-
-#~ msgid "Your landlord is unlawfully evicting you without due process - for example, changing the locks"
-#~ msgstr "Mae eich landlord yn eich troi allan heb ddilyn y broses gywir - er enghraifft, newid y cloeon"
-
-#~ msgid "Eviction with notice"
-#~ msgstr "Troi allan heb rybudd"
-
-#~ msgid "You have received notification of eviction from your landlord or the council"
-#~ msgstr "Rydych wedi cael hysbysiad o droi allan gan eich landlord neu'r cyngor"
 
 #~ msgid "Domestic violence"
 #~ msgstr "Trais domestig"
@@ -2391,141 +2360,17 @@ msgstr "Adroddiadau"
 #~ msgid "Your problem is about:"
 #~ msgstr "Mae eich problem ynghylch:"
 
-#~ msgid "Client has received a warrant of possession"
-#~ msgstr "Mae'r cleient wedi cael gwarant i feddiannu"
+#~ msgid "You want advice on seeking asylum"
+#~ msgstr "Rydych chi eisiau cyngor ynghylch ceisio lloches"
 
-#~ msgid "Client has received a claim form"
-#~ msgstr "Mae'r cleient wedi cael ffurflen hawlio"
+#~ msgid "Your child has been abducted"
+#~ msgstr "Mae eich plentyn wedi cael ei herwgydio "
 
-#~ msgid "Client has received a Statutory Demand"
-#~ msgstr "Mae'r cleient wedi cael Hawliad Statudol"
+#~ msgid "Are you living abroad but your child has been taken to the UK?"
+#~ msgstr "Ydych chi'n byw dramor ond mae rhywun wedi mynd â'ch plentyn i'r DU?"
 
-#~ msgid "Client has received a Bankruptcy Petition"
-#~ msgstr "Mae'r cleient wedi cael Deiseb Methdalu"
+#~ msgid "You've been accused of abducting a child"
+#~ msgstr "Rydych chi wedi cael eich cyhuddo o herwgydio plentyn"
 
-#~ msgid "Notice to Quit from landlord"
-#~ msgstr "Rhybudd i Adael gan y landlord"
-
-#~ msgid "ASBO/ASBI"
-#~ msgstr "ASBO/ASBI"
-
-#~ msgid "Divorce or separation"
-#~ msgstr "Ysgariad neu wahaniad"
-
-#~ msgid "Premises"
-#~ msgstr "Safleoedd"
-
-#~ msgid "Age (where client is under 18)"
-#~ msgstr "Oed (pan fo'r cleient dan 18 oed)"
-
-#~ msgid "Age (where client is over 18)"
-#~ msgstr "Oed (pan fo'r cleient dros 18 oed)"
-
-#~ msgid "Marriage and civil partnership"
-#~ msgstr " Priodas a phartneriaeth sifil"
-
-#~ msgid "Pregnancy and maternity discrimination"
-#~ msgstr "Gwahaniaethu yn erbyn beichiogrwydd neu famolaeth "
-
-#~ msgid "On the next screen, select the type of discrimination the client has experienced. Click 'Next' to continue."
-#~ msgstr "Ar y sgrin nesaf, dewiswch y math o wahaniaethu y mae'r cleient wedi'i brofi. Cliciwch 'Nesaf' i barhau. "
-
-#~ msgid "Direct or indirect discrimination or harassment"
-#~ msgstr "Gwahaniaethu neu aflonyddwch uniongyrchol neu anuniongyrchol."
-
-#~ msgid "Choose which protected characteristic most applies (record specifics and multiple categories, if needed, in operator notes).  Search operator guidance for ‘protected characteristics’ for more information."
-#~ msgstr "Dewiswch pa nodwedd gwarchodedig sydd fwyaf perthnasol (cofnodwch bethau priodol a mwy nag un categori, os oes angen, yn nodiadau'r gweithredwr). Chwiliwch y canllawiau i weithredwyr am 'nodweddion gwarchodedig' i gael rhagor o wybodaeth.  "
-
-#~ msgid "Disability, pregnancy or maternity, race, religion or belief, sexual orientation, gender or gender reassignment "
-#~ msgstr "Anabledd, beichiogrwydd neu famolaeth, hilm crefydd neu gred, cyfeiriadedd rhywiol, rhyw neu ailbennu rhywedd"
-
-#~ msgid "Indicate where the discrimination occurred"
-#~ msgstr "Nodwch lle ddigwyddodd y gwahaniaethu "
-
-#~ msgid "Indicate where it occurred"
-#~ msgstr "Nodwch lle ddigwyddodd hyn"
-
-#~ msgid "Discrimination due to disability or failure to make reasonable adjustments for a disabled person"
-#~ msgstr "Gwahaniaethu oherwydd anabledd neu fethiant i wneud addasiadau rhesymol i unigolyn anabl"
-
-#~ msgid "Welfare Benefits"
-#~ msgstr "Budd-daliadau Lles"
-
-#~ msgid "The client believes (or you suspect) they have been discriminated against. Click to proceed to discrimination."
-#~ msgstr "Mae'r cleient yn credu (neu rydych chi'n amau) eu bod wedi cael eu gwahaniaethu. Cliciwch i barhau i wahaniaethu."
-
-#~ msgid "Discrimination may apply e.g. equal pay, equal opportunities, not making adjustment for a disability, applying for job, treated worse due to pregancy/maternity leave, sexual harassment in the workplace"
-#~ msgstr "Gall wahaniaethu fod yn berthnasol e.e. cyflog cyfartal, cyfleoedd cyfartal, peidio â gwneud addasiadau i anabledd, ymgeisio am swydd, cael eich trîn yn salach oherwydd beichiogrwydd/ absenoldeb mamolaeth, aflonyddwch rhywiol yn y gweithle "
-
-#~ msgid ""
-#~ "The client may have been discriminated against (eg a restaurant refuses to serve a customer with a disabled child)\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Mae'r cleient wedi cael ei wahaniaethu yn ei erbyn (e.e. bwyty yn gwrthod gwasanaethu cwsmer gyda phlentyn anabl)\n"
-#~ "\n"
-
-#~ msgid "The police have discriminated against the client (eg a police officer used racially abusive language when making an arrest) "
-#~ msgstr "Mae'r heddlu wedi gwahaniaethu yn erbyn y cleient (e.e. heddwas wedi defnyddio iaith ddifrïol hiliol wrth arestio)"
-
-#~ msgid "Clinical Negligence"
-#~ msgstr "Esgeuluster Clinigol"
-
-#~ msgid "Immigration and Asylum"
-#~ msgstr "Mewnfudo a Lloches"
-
-#~ msgid "“Guidance notes”"
-#~ msgstr "“Canllawiau”"
-
-#~ msgid "Client has been subject to discrimination"
-#~ msgstr "Mae' cleient wedi bod yn destun gwahaniaethu"
-
-#~ msgid "Client not subject to discrimination"
-#~ msgstr "Nid yw'r cleient yn destun gwahaniaethu"
-
-#~ msgid "Mental Health"
-#~ msgstr "Iechyd Meddwl"
-
-#~ msgid "Personal Injury"
-#~ msgstr "Anaf Personol"
-
-#~ msgid "Client doesn't have both illness and evidence of disrepair"
-#~ msgstr "Nid oes gan y cleient y salwch na thystiolaeth o ddiffyg atgyweirio"
-
-#~ msgid "The client wants to contest an injunction against them in a family matter"
-#~ msgstr "Mae'r cleient eisiau herio gwaharddeb yn eu herbyn mewn mater teulu "
-
-#~ msgid "The client's problem is about bullying"
-#~ msgstr "Bwlio yw problem y cleient"
-
-#~ msgid "A child or young person is out of school or in a Pupil Referral Unit"
-#~ msgstr "Nid yw plentyn neu unigolyn ifanc yn yr ysgol neu mae mewn Uned Cyfeirio Disgyblion"
-
-#~ msgid "The client's problem is about exclusion from school "
-#~ msgstr "Gwaharddiad o'r ysgol yw problem y cleient"
-
-#~ msgid "The client has received a decision on their appeal from the schools adjudicator "
-#~ msgstr "Mae'r cleient wedi derbyn penderfyniad am eu hapêl gan ddyfarnwr yr ysgol"
-
-#~ msgid "The client has not yet received a decision on their appeal"
-#~ msgstr "Nid yw'r cleient wedi derbyn penderfyniad am eu hapêl eto"
-
-#~ msgid "The client's problem is about negligence in the provision of education"
-#~ msgstr "Esgeuluster mewn darpariaeth addysg yw problem y cleient"
-
-#~ msgid "The child has been permanently excluded from school or told to go home"
-#~ msgstr "Mae'r plentyn wedi ei wahardd yn barhaol o'r ysgol neu dywedwyd wrtho i fynd adref"
-
-#~ msgid "The client's problem is about discrimination"
-#~ msgstr "Mae problem y cleient ynghylch gwahaniaethu"
-
-#~ msgid "Your child has special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
-#~ msgstr "Mae gan eich plentyn anghenion addysgol arbennig - mae hyn yn cynnwys problemau mewn perthynas â thrafnidiaeth, peidio â bod mewn ysgol neu bod mewn uned cyfeirio disgyblion"
-
-#~ msgid "Children in care and adoption"
-#~ msgstr "Plant mewn gofal a mabwysiadu"
-
-#~ msgid "Domestic violence or harassment"
-#~ msgstr "Trais domestig neu aflonyddwch"
-
-#~ msgid "Domestic violence or abuse – including issues arising from forced marriage, child abduction, and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser."
-#~ msgstr "Trais neu gamdriniaeth domestig - gan gynnwys problemau sy'n codi mewn priodas dan orfod, herwgydio plentyn, ac aflonyddu. Hefyd yn cynnwys amddiffyniad yn erbyn gorchymyn anheddu neu orchymyn rhag molestu lle mai'r camdriniwr honedig yw'r cleient.  "
+#~ msgid "You're seeking an order to prevent the removal of a child"
+#~ msgstr "Rydych yn ceisio am orchymyn i atal symud plentyn"

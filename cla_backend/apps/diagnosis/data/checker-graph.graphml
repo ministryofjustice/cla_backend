@@ -245,7 +245,6 @@
       <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
       <data key="d10">2</data>
       <data key="d11"><![CDATA[n16]]></data>
-      <data key="d12"><![CDATA[true]]></data>
       <data key="d13"/>
       <data key="d15">
         <y:ShapeNode>
@@ -945,6 +944,7 @@
           <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
           <data key="d10">4</data>
           <data key="d11"><![CDATA[n43n3]]></data>
+          <data key="d12"><![CDATA[true]]></data>
           <data key="d13"/>
           <data key="d15">
             <y:ShapeNode>
@@ -1197,6 +1197,7 @@
           <data key="d5"><![CDATA[What is your problem about?]]></data>
           <data key="d10">8</data>
           <data key="d11"><![CDATA[n43n14]]></data>
+          <data key="d12"><![CDATA[true]]></data>
           <data key="d13"/>
           <data key="d15">
             <y:ShapeNode>
@@ -1222,7 +1223,6 @@
       <data key="d5"><![CDATA[Are you or your child at immediate risk of harm?]]></data>
       <data key="d10">1</data>
       <data key="d11"><![CDATA[n44]]></data>
-      <data key="d12"><![CDATA[true]]></data>
       <data key="d13"/>
       <data key="d15">
         <y:ShapeNode>
@@ -1246,7 +1246,6 @@
       <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
       <data key="d10">2</data>
       <data key="d11"><![CDATA[n45]]></data>
-      <data key="d12"><![CDATA[true]]></data>
       <data key="d13"/>
       <data key="d15">
         <y:ShapeNode>
@@ -1270,7 +1269,6 @@
       <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
       <data key="d10">3</data>
       <data key="d11"><![CDATA[n46]]></data>
-      <data key="d12"><![CDATA[true]]></data>
       <data key="d13"/>
       <data key="d15">
         <y:ShapeNode>
@@ -1563,7 +1561,6 @@
       <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
       <data key="d10">2</data>
       <data key="d11"><![CDATA[n62]]></data>
-      <data key="d12"><![CDATA[true]]></data>
       <data key="d13"/>
       <data key="d15">
         <y:ShapeNode>
@@ -1919,7 +1916,6 @@
       <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
       <data key="d10">2</data>
       <data key="d11"><![CDATA[n80]]></data>
-      <data key="d12"><![CDATA[true]]></data>
       <data key="d13"/>
       <data key="d15">
         <y:ShapeNode>
@@ -2956,7 +2952,6 @@ CONTACT<y:LabelModel>
       <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
       <data key="d10">3</data>
       <data key="d11"><![CDATA[n86]]></data>
-      <data key="d12"><![CDATA[true]]></data>
       <data key="d13"/>
       <data key="d15">
         <y:ShapeNode>
@@ -3201,7 +3196,6 @@ CONTACT<y:LabelModel>
       <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
       <data key="d10">6</data>
       <data key="d11"><![CDATA[n104]]></data>
-      <data key="d12"><![CDATA[true]]></data>
       <data key="d13"/>
       <data key="d15">
         <y:ShapeNode>

@@ -110,7 +110,6 @@
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n16</data>
-      <data key="d12">true</data>
       <data key="d13"/>
       </node>
     <node id="n10">
@@ -334,6 +333,7 @@
           <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
           <data key="d10">4</data>
           <data key="d11">n43n3</data>
+          <data key="d12">true</data>
           <data key="d13"/>
           </node>
         <node id="n36::n4">
@@ -421,6 +421,7 @@
           <data key="d5">{% trans "What is your problem about?" %}</data>
           <data key="d10">8</data>
           <data key="d11">n43n14</data>
+          <data key="d12">true</data>
           <data key="d13"/>
           </node>
       </graph>
@@ -431,7 +432,6 @@
       <data key="d5">{% trans "Are you or your child at immediate risk of harm?" %}</data>
       <data key="d10">1</data>
       <data key="d11">n44</data>
-      <data key="d12">true</data>
       <data key="d13"/>
       </node>
     <node id="n38">
@@ -440,7 +440,6 @@
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n45</data>
-      <data key="d12">true</data>
       <data key="d13"/>
       </node>
     <node id="n39">
@@ -449,7 +448,6 @@
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">3</data>
       <data key="d11">n46</data>
-      <data key="d12">true</data>
       <data key="d13"/>
       </node>
     <node id="n40">
@@ -547,7 +545,6 @@
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n62</data>
-      <data key="d12">true</data>
       <data key="d13"/>
       </node>
     <node id="n53">
@@ -663,7 +660,6 @@
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n80</data>
-      <data key="d12">true</data>
       <data key="d13"/>
       </node>
     <node id="n69">
@@ -1071,7 +1067,6 @@
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">3</data>
       <data key="d11">n86</data>
-      <data key="d12">true</data>
       <data key="d13"/>
       </node>
     <node id="n75">
@@ -1151,7 +1146,6 @@
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">6</data>
       <data key="d11">n104</data>
-      <data key="d12">true</data>
       <data key="d13"/>
       </node>
     <node id="n86">

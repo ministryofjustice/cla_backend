@@ -189,6 +189,24 @@ class SuspendCaseEvent(BaseEvent):
             'stops_timer': True,
             'order': 90,
             'set_requires_action_by': None_if_owned_by_op_or_op_manager
+        },
+        'MRNB': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Manager reviewed non-billable',
+            'stops_timer': True,
+            'order': 100,
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
+        },
+        'MRCC': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Manager reviewed compliant case',
+            'stops_timer': True,
+            'order': 110,
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
         }
     }
 event_registry.register(SuspendCaseEvent)

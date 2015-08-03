@@ -437,6 +437,7 @@ class FullCaseViewSet(
                     ELSE 0
                 END''',
                 'priority': '''CASE legalaid_case.outcome_code
+                        WHEN 'PCB' THEN 10
                         WHEN 'REF-EXT' THEN 8
                         WHEN 'IRCB' THEN 7
                         WHEN 'MIS' THEN 6

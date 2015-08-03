@@ -204,6 +204,7 @@ class CallMeBackForm(BaseCallMeBackForm):
 
     # format "2013-12-29 23:59" always in UTC
     datetime = forms.DateTimeField()
+    priority_callback = forms.BooleanField(required=False)
 
     def _is_dt_too_soon(self, dt):
         return dt <= timezone.now() + datetime.timedelta(minutes=30)
@@ -214,6 +215,11 @@ class CallMeBackForm(BaseCallMeBackForm):
             _dt = timezone.make_aware(_dt, timezone.utc)
         _dt = timezone.localtime(_dt)
         return _dt not in OPERATOR_HOURS
+
+    def get_kwargs(self):
+        kwargs = super(CallMeBackForm, self).get_kwargs()
+        kwargs['priority_callback'] = self.get_priority_callback()
+        return kwargs
 
     def clean_datetime(self):
         dt = self.cleaned_data['datetime']
@@ -246,6 +252,9 @@ class CallMeBackForm(BaseCallMeBackForm):
 
     def get_requires_action_at(self):
         return self.cleaned_data['datetime']
+
+    def get_priority_callback(self):
+        return self.cleaned_data.get('priority_callback', False)
 
 
 class StopCallMeBackForm(BaseCaseLogForm):

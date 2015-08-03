@@ -133,13 +133,23 @@ class CallMeBackEvent(BaseEvent):
             'description': 'Callback 3',
             'stops_timer': True,
             'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
+        },
+        'PCB': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Priority callback',
+            'stops_timer': True,
+            'set_requires_action_by': REQUIRES_ACTION_BY.OPERATOR
         }
     }
 
-    def get_log_code(self, case=None, **kwargs):
+    def get_log_code(self, case=None, priority_callback=None, **kwargs):
         if not case:
             raise ValueError('a case obj should be passed in')
 
+        if priority_callback:
+            return 'PCB'
         if case.callback_attempt == 0:
             return 'CB1'
         if case.callback_attempt == 1:

@@ -14,6 +14,9 @@ from legalaid.utils.csvupload.constants import AGE_RANGE, POSTCODE_RE, \
     PREFIX_CATEGORY_LOOKUP, STAGE_REACHED_NOT_ALLOWED_MT1S, STAGE_REACHED_REQUIRED_MT1S
 
 
+date_pattern = re.compile("^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$")
+
+
 def validate_decimal(val):
     if val:
         try:
@@ -52,10 +55,12 @@ def validate_date(val):
     val = val.strip()
     if val:
         try:
+            assert date_pattern.match(val)
+            # day, month, year = val.split('/')
             val = parse(val, dayfirst=True)
             return val
-        except (ValueError, TypeError) as ve:
-            raise serializers.ValidationError('%s is not a valid date' % val)
+        except (ValueError, TypeError, AssertionError) as ve:
+            raise serializers.ValidationError('%s is not a valid date (DD/MM/YYYY)' % val)
 
 
 def validate_not_present(val, message=None):

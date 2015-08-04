@@ -56,9 +56,8 @@ def validate_date(val):
     if val:
         try:
             assert date_pattern.match(val)
-            # day, month, year = val.split('/')
-            val = parse(val, dayfirst=True)
-            return val
+            day, month, year = val.split('/')
+            return datetime.datetime(int(year), int(month), int(day))
         except (ValueError, TypeError, AssertionError) as ve:
             raise serializers.ValidationError('%s is not a valid date (DD/MM/YYYY)' % val)
 

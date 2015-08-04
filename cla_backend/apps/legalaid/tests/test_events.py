@@ -149,7 +149,7 @@ class CaseEventAvoidDuplicatesTestCase(EventTestCaseMixin, TestCase):
 class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
     EVENT_KEY = 'suspend_case'
 
-    CODES = ['INSUF', 'ABND', 'TERM', 'IRCB', 'COPE', 'DUPL', 'RDSP', 'SAME', 'WROF']
+    CODES = ['INSUF', 'ABND', 'TERM', 'IRCB', 'COPE', 'DUPL', 'RDSP', 'SAME', 'WROF', 'MRNB', 'MRCC']
 
     def test_INSUF(self):
         self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(

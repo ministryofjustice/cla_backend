@@ -265,7 +265,7 @@
         <node id="n28::n2">
           <data key="d3">{% trans "Debt" %}</data>
           <data key="d4">{% trans "Bankruptcy, repossession, mortgage debt that is putting your home at risk" %}</data>
-          <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+          <data key="d5">{% trans "Choose the option that best describes your debt problem" %}</data>
           <data key="d10">3</data>
           <data key="d11">n43n2</data>
           <data key="d13"/>
@@ -273,7 +273,7 @@
         <node id="n28::n3">
           <data key="d3">{% trans "Domestic abuse" %}</data>
           <data key="d4">{% trans "Abuse at home (whether psychological, physical, financial, sexual or emotional), child abuse, harassment by an ex-partner, forced marriage" %}</data>
-          <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+          <data key="d5">{% trans "Choose the option that best describes your personal situation" %}</data>
           <data key="d10">4</data>
           <data key="d11">n43n3</data>
           <data key="d12">true</data>
@@ -282,7 +282,7 @@
         <node id="n28::n4">
           <data key="d3">{% trans "Discrimination" %}</data>
           <data key="d4">{% trans "Being treated unfairly because of your race, gender or sexual orientation, for example" %}</data>
-          <data key="d5">{% trans "You've been discriminated against because of your:" %}</data>
+          <data key="d5">{% trans "On what grounds have you been discriminated against?" %}</data>
           <data key="d10">5</data>
           <data key="d11">n43n4</data>
           <data key="d13"/>
@@ -290,7 +290,7 @@
         <node id="n28::n5">
           <data key="d3">{% trans "Education" %}</data>
           <data key="d4">{% trans "Special educational needs, problems with school places, exclusions, learning difficulties" %}</data>
-          <data key="d5">{% trans "What is your problem about?" %}</data>
+          <data key="d5">{% trans "What is your education problem about?" %}</data>
           <data key="d10">6</data>
           <data key="d11">n43n5</data>
           <data key="d13"/>
@@ -298,7 +298,7 @@
         <node id="n28::n6">
           <data key="d3">{% trans "Employment" %}</data>
           <data key="d4">{% trans "Being treated unfairly at work, unfair dismissal, employment tribunals" %}</data>
-          <data key="d5">{% trans "What is your problem about?" %}</data>
+          <data key="d5">{% trans "What is your employment problem about?" %}</data>
           <data key="d10">7</data>
           <data key="d11">n43n6</data>
           <data key="d13"/>
@@ -306,7 +306,7 @@
         <node id="n28::n7">
           <data key="d3">{% trans "Housing" %}</data>
           <data key="d4">{% trans "Eviction, homelessness, losing your rented home, rent arrears, harassment by a landlord or neighbour, health and safety issues with your home" %}</data>
-          <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+          <data key="d5">{% trans "Choose the option that best describes your housing situation" %}</data>
           <data key="d10">9</data>
           <data key="d11">n43n7</data>
           <data key="d13"/>
@@ -314,7 +314,7 @@
         <node id="n28::n8">
           <data key="d3">{% trans "Immigration and asylum" %}</data>
           <data key="d4">{% trans "Applying for asylum or permission to stay in the UK, including for victims of human trafficking" %}</data>
-          <data key="d5">{% trans "Select the option that best describes your situation." %}</data>
+          <data key="d5">{% trans "Choose the option that best describes your situation" %}</data>
           <data key="d10">10</data>
           <data key="d11">n43n8</data>
           <data key="d13"/>
@@ -353,7 +353,7 @@
         <node id="n28::n13">
           <data key="d3">{% trans "Welfare benefits" %}</data>
           <data key="d4">{% trans "Problems with your benefits, appealing a decision about your benefits" %}</data>
-          <data key="d5">{% trans "What is your problem about?" %}</data>
+          <data key="d5">{% trans "What is your benefits problem about?" %}</data>
           <data key="d10">15</data>
           <data key="d11">n43n13</data>
           <data key="d13"/>
@@ -361,7 +361,7 @@
         <node id="n28::n14">
           <data key="d3">{% trans "Family" %}</data>
           <data key="d4">{% trans "Divorce, separation, dissolution, financial arrangements, family mediation, arrangements for your children, children being taken into care, child abduction" %}</data>
-          <data key="d5">{% trans "What is your problem about?" %}</data>
+          <data key="d5">{% trans "What is your family problem about?" %}</data>
           <data key="d10">8</data>
           <data key="d11">n43n14</data>
           <data key="d12">true</data>
@@ -372,7 +372,7 @@
     <node id="n29">
       <data key="d3">{% trans "Domestic abuse" %}</data>
       <data key="d4">{% trans "You want to protect yourself or your children against domestic violence" %}</data>
-      <data key="d5">{% trans "Are you or your child at immediate risk of harm?" %}</data>
+      <data key="d5">{% trans "Are you or your children at immediate risk of harm?" %}</data>
       <data key="d10">1</data>
       <data key="d11">n44</data>
       <data key="d13"/>
@@ -454,7 +454,7 @@
       </node>
     <node id="n40">
       <data key="d3">{% trans "Divorce, separation or dissolution" %}</data>
-      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d5">{% trans "Choose the option that best describes your situation" %}</data>
       <data key="d10">1</data>
       <data key="d11">n56</data>
       <data key="d13"/>
@@ -462,7 +462,7 @@
     <node id="n41">
       <data key="d3">{% trans "Financial settlement" %}</data>
       <data key="d4">{% trans "Following a divorce or separation" %}</data>
-      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d5">{% trans "Choose the option that best describes your situation" %}</data>
       <data key="d10">3</data>
       <data key="d11">n58</data>
       <data key="d13"/>
@@ -520,7 +520,7 @@
       </node>
     <node id="n49">
       <data key="d3">{% trans "You're living in rented accommodation" %}</data>
-      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d5">{% trans "What is your housing problem about?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n67</data>
       <data key="d13"/>
@@ -988,7 +988,7 @@
       </node>
     <node id="n62">
       <data key="d3">{% trans "Your home is in a serious state of disrepair" %}</data>
-      <data key="d5">{% trans "Is this putting you or your family at serious risk of illness or injury?" %}</data>
+      <data key="d5">{% trans "Does this create a serious risk of illness or injury?" %}</data>
       <data key="d10">3</data>
       <data key="d11">n89</data>
       <data key="d13"/>
@@ -1053,7 +1053,7 @@
       </node>
     <node id="n71">
       <data key="d3">{% trans "Disputes over children" %}</data>
-      <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
+      <data key="d5">{% trans "What kind of dispute is it?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n105</data>
       <data key="d13"/>
@@ -1067,7 +1067,7 @@
       </node>
     <node id="n73">
       <data key="d3">{% trans "You're a relative (for example, a grandparent) seeking contact with a child in your family" %}</data>
-      <data key="d5">{% trans "Has the child been a victim of child abuse within the family?" %}</data>
+      <data key="d5">{% trans "Is the child a victim of child abuse within the family?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n107</data>
       <data key="d13"/>
@@ -1645,7 +1645,6 @@
     <edge id="e232" source="n28::n7" target="n89">
       </edge>
     <edge id="e233" source="n55" target="n57::n12">
-      <data key="d18"/>
       </edge>
   </graph>
   <data key="d16">

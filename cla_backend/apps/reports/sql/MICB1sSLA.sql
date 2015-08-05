@@ -84,7 +84,7 @@ WITH
         LEFT OUTER JOIN operator_first_log_after_cb1 on operator_first_log_after_cb1.o_id = log.id and operator_first_log_after_cb1.rn = 1
         LEFT OUTER JOIN operator_first_view_after_cb1 on operator_first_view_after_cb1.o_id = log.id and operator_first_view_after_cb1.rn = 1
       where
-        log.code in ('CB1', 'CB2', 'CB3')
+        log.code in ('CB1', 'CB2', 'CB3', 'PCB')
 
   )
 select

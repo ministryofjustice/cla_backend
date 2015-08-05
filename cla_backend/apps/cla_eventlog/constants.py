@@ -14,7 +14,8 @@ LOG_LEVELS = Choices(
 LOG_TYPES = Choices(
     # constant, db_id, friendly string
     ('OUTCOME', 'outcome', 'outcome'),  # codes that CLA understands and uses. E.g. CLSP
-    ('SYSTEM', 'system', 'system')  # system codes, somethimes shown to users as well. E.g. CASE_CREATED
+    ('SYSTEM', 'system', 'system'),  # system codes, somethimes shown to users as well. E.g. CASE_CREATED
+    ('EVENT', 'event', 'event')
 )
 
 

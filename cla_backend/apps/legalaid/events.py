@@ -76,6 +76,13 @@ class CaseEvent(BaseEvent):
             'description': "Complaint flag toggled",
             'stops_timer': False
         },
+        'CALL_STARTED': {
+            'type': LOG_TYPES.EVENT,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': "Operator started call",
+            'stops_timer': False
+        },
     }
 
     def save_log(self, log):
@@ -90,6 +97,11 @@ class CaseEvent(BaseEvent):
                 timer=log.timer, case=log.case,
                 code__in=['CASE_CREATED', 'CASE_VIEWED']
             ).count() == 0
+        elif log.code == 'CALL_STARTED':
+            to_be_saved = Log.objects.filter(
+                case=log.case,
+                code='CALL_STARTED'
+            ).count() == 0
 
         if to_be_saved:
             log.save(force_insert=True)
@@ -99,7 +111,8 @@ class CaseEvent(BaseEvent):
         lookup = {
             'created': 'CASE_CREATED',
             'viewed': 'CASE_VIEWED',
-            'complaint_flag_toggled': 'COMPLAINT_FLAG_TOGGLED'
+            'complaint_flag_toggled': 'COMPLAINT_FLAG_TOGGLED',
+            'call_started': 'CALL_STARTED',
         }
 
         return lookup[status]

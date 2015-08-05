@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-05 10:24+0100\n"
+"POT-Creation-Date: 2015-08-05 11:21+0100\n"
 "PO-Revision-Date: 2015-08-03 13:52+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -570,7 +570,7 @@ msgid "Family mediation"
 msgstr "Cyfryngu Teulu"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:472
-msgid "You're looking to start family mediation or you're seeking legal advice in support of it"
+msgid "You’re looking to start family mediation or you’re seeking legal advice in support of it"
 msgstr "Rydych yn ystyried dechrau cyfryngu teuluol neu'n ceisio am gyngor cyfreithiol i'w gefnogi"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:473
@@ -590,11 +590,11 @@ msgid "International Family Maintenance"
 msgstr "Cynhaliaeth Plant Rhynglwadol "
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:501
-msgid "You're seeking advice about International Family Maintenance, to enforce a maintenance order made outside the UK"
+msgid "You’re seeking advice about International Family Maintenance, to enforce a maintenance order made outside the UK"
 msgstr "Rydych yn ceisio am gyngor ynglŷn â Chynhaliaeth Plant Rhyngwladol, i orfodi gorchymyn cynhaliaeth a wnaethpwyd y tu allan i'r DU"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:522
-msgid "You're living in rented accommodation"
+msgid "You’re living in rented accommodation"
 msgstr "Rydych chi'n byw mewn llety rhent"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:523
@@ -642,7 +642,7 @@ msgid "Problem relates to a child in care, or a care leaver, or user is a foster
 msgstr "Problem ynghylch plentyn mewn gofal, neu blentyn yn gadael gofal, neu fod y defnyddiwr yn ofalwr maeth "
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:815
-msgid "Council is trying to take user's child into care"
+msgid "Council is trying to take user’s child into care"
 msgstr "Cyngor yn ceisio rhoi plentyn y defnyddiwr mewn gofal"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:860
@@ -656,7 +656,7 @@ msgid "User is under 18 years old"
 msgstr "Defnyddiwr dan 18 oed"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:896
-msgid "User is living outside the UK but user's child has been taken to the UK"
+msgid "User is living outside the UK but user’s child has been taken to the UK"
 msgstr "Mae'r defnyddiwr yn byw y tu allan i'r DU ond aethpwyd â phlentyn y defnyddiwr i'r DU "
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:965
@@ -709,7 +709,7 @@ msgid "Female genital mutilation"
 msgstr "Anffurfio organau cenhedlu benywod"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1048
-msgid "You're worried that you may become a victim of female genital mutilation"
+msgid "You’re worried that you may become a victim of female genital mutilation"
 msgstr "Rydych chi'n poeni y byddwch yn ddioddefwr anffurfio organau cenhedlu benywod"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1055
@@ -721,11 +721,11 @@ msgid "What kind of dispute is it?"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1062
-msgid "You're in a dispute with your ex-partner over your children"
+msgid "You’re in a dispute with your ex-partner over your children"
 msgstr "Rydych chi mewn anghydfod gyda'ch cyn-bartner ynghylch eich plant"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1069
-msgid "You're a relative (for example, a grandparent) seeking contact with a child in your family"
+msgid "You’re a relative (for example, a grandparent) seeking contact with a child in your family"
 msgstr "Rydych chi'n berthynas (er enghraifft, taid neu nain) yn ceisio am gyswllt gyda phlentyn yn eich teulu"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1070

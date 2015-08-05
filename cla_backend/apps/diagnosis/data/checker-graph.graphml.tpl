@@ -469,7 +469,7 @@
       </node>
     <node id="n42">
       <data key="d3">{% trans "Family mediation" %}</data>
-      <data key="d4">{% trans "You're looking to start family mediation or you're seeking legal advice in support of it" %}</data>
+      <data key="d4">{% trans "You’re looking to start family mediation or you’re seeking legal advice in support of it" %}</data>
       <data key="d5">{% trans "Have you already started family mediation? (This includes cases that have already finished)" %}</data>
       <data key="d10">4</data>
       <data key="d11">n59</data>
@@ -498,7 +498,7 @@
       </node>
     <node id="n46">
       <data key="d3">{% trans "International Family Maintenance" %}</data>
-      <data key="d4">{% trans "You're seeking advice about International Family Maintenance, to enforce a maintenance order made outside the UK" %}</data>
+      <data key="d4">{% trans "You’re seeking advice about International Family Maintenance, to enforce a maintenance order made outside the UK" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">3</data>
       <data key="d11">n64</data>
@@ -519,7 +519,7 @@
       <data key="d13"/>
       </node>
     <node id="n49">
-      <data key="d3">{% trans "You're living in rented accommodation" %}</data>
+      <data key="d3">{% trans "You’re living in rented accommodation" %}</data>
       <data key="d5">{% trans "What is your housing problem about?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n67</data>
@@ -812,7 +812,7 @@
           </node>
         <node id="n57::n21">
           <data key="d3">CONTACT</data>
-          <data key="d4">{% trans "Council is trying to take user's child into care" %}</data>
+          <data key="d4">{% trans "Council is trying to take user’s child into care" %}</data>
           <data key="d7">CONTACT</data>
           <data key="d9">
             <context xmlns="">
@@ -893,7 +893,7 @@
           </node>
         <node id="n57::n28">
           <data key="d3">CONTACT</data>
-          <data key="d4">{% trans "User is living outside the UK but user's child has been taken to the UK" %}</data>
+          <data key="d4">{% trans "User is living outside the UK but user’s child has been taken to the UK" %}</data>
           <data key="d7">CONTACT</data>
           <data key="d9">
             <context xmlns="">
@@ -1045,7 +1045,7 @@
       </node>
     <node id="n70">
       <data key="d3">{% trans "Female genital mutilation" %}</data>
-      <data key="d4">{% trans "You're worried that you may become a victim of female genital mutilation" %}</data>
+      <data key="d4">{% trans "You’re worried that you may become a victim of female genital mutilation" %}</data>
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">6</data>
       <data key="d11">n104</data>
@@ -1059,14 +1059,14 @@
       <data key="d13"/>
       </node>
     <node id="n72">
-      <data key="d3">{% trans "You're in a dispute with your ex-partner over your children" %}</data>
+      <data key="d3">{% trans "You’re in a dispute with your ex-partner over your children" %}</data>
       <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
       <data key="d10">1</data>
       <data key="d11">n106</data>
       <data key="d13"/>
       </node>
     <node id="n73">
-      <data key="d3">{% trans "You're a relative (for example, a grandparent) seeking contact with a child in your family" %}</data>
+      <data key="d3">{% trans "You’re a relative (for example, a grandparent) seeking contact with a child in your family" %}</data>
       <data key="d5">{% trans "Is the child a victim of child abuse within the family?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n107</data>

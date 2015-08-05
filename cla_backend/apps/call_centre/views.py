@@ -8,6 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from cla_eventlog import event_registry
 
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
@@ -418,6 +419,16 @@ class CaseViewSet(
     @action()
     def stop_call_me_back(self, request, reference=None, **kwargs):
         return self._form_action(request, StopCallMeBackForm)
+
+    @action()
+    def start_call(self, request, reference=None, **kwargs):
+        obj = self.get_object()
+        event = event_registry.get_event('case')()
+        event.process(
+            obj, status='call_started', created_by=request.user,
+            notes='Call started'
+        )
+        return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):

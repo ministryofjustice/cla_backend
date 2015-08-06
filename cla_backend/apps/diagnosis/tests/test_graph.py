@@ -90,4 +90,4 @@ class GraphTestCase(TestCase):
             file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME
         )
         node = checker_graph.node['n43n2']
-        self.assertEqual(node['heading'], u'Select the option that best describes your situation')
+        self.assertEqual(node['heading'], u'Choose the option that best describes your debt problem')

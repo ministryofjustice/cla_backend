@@ -310,7 +310,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
         return Log.objects.filter(
             case=case,
             code='CALL_STARTED'
-        ).count() != 0
+        ).exists()
 
     def _get_outcome_description(self, case):
         return event_registry.event_registry.all().get(case.outcome_code, {}).get('description', '')

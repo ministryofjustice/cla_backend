@@ -93,15 +93,15 @@ class CaseEvent(BaseEvent):
             # for this timer in the db already do that I don't duplicate
             # events.
             # TODO: might be slow, is there a better way?
-            to_be_saved = Log.objects.filter(
+            to_be_saved = not Log.objects.filter(
                 timer=log.timer, case=log.case,
                 code__in=['CASE_CREATED', 'CASE_VIEWED']
-            ).count() == 0
+            ).exists()
         elif log.code == 'CALL_STARTED':
-            to_be_saved = Log.objects.filter(
+            to_be_saved = not Log.objects.filter(
                 case=log.case,
                 code='CALL_STARTED'
-            ).count() == 0
+            ).exists()
 
         if to_be_saved:
             log.save(force_insert=True)

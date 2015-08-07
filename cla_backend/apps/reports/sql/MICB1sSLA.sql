@@ -27,7 +27,7 @@ WITH
                                    o.case_id = no.case_id
                                    and no.id > o.id
         JOIN call_centre_operator AS op ON no.created_by_id = op.user_id
-      WHERE no.level >= 29 and no.type = 'outcome'
+      WHERE no.level >= 29 and no.type in ('outcome', 'event')
       order by no.id asc
 
   ),

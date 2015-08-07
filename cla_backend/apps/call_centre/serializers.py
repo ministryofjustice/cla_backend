@@ -205,7 +205,7 @@ class CaseSerializer(CaseSerializerFull):
             'exempt_user', 'exempt_user_reason',
             'ecf_statement', 'case_count',
             'requires_action_at', 'callback_attempt', 'source',
-            'complaint_flag', 'eod_details',
+            'complaint_flag', 'eod_details', 'call_started',
         )
 
 class CaseListSerializer(CaseSerializer):

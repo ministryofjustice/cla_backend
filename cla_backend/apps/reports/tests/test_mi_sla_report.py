@@ -43,7 +43,7 @@ class MiSlaTestCase(TestCase):
                 },
             )
 
-        case.requires_action_at = datetime.datetime(2015, 1, 2, 9, 1, 0)
+        case.requires_action_at = _dt
         case.save()
 
         event = event_registry.get_event('case')()

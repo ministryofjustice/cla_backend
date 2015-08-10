@@ -2,13 +2,20 @@
 from contextlib import contextmanager
 import datetime
 from django.test import TestCase
-from legalaid.forms import get_sla_time
+from django.utils import timezone
 import mock
 
 from core.tests.mommy_utils import make_recipe, make_user
 from cla_eventlog import event_registry
 from cla_eventlog.models import Log
+from legalaid.forms import get_sla_time
 from reports.forms import MICB1Extract
+
+
+def _make_datetime(year, month, day, hour=0, minute=0, second=0):
+    dt = datetime.datetime(year, month, day, hour, minute, second)
+    tz = timezone.get_current_timezone()
+    return timezone.make_aware(dt, tz)
 
 
 @contextmanager
@@ -21,15 +28,15 @@ def patch_field(cls, field_name, dt):
 
 class MiSlaTestCase(TestCase):
     def test_call_started_sla(self):
-        with patch_field(Log, 'created', datetime.datetime(2015, 1, 2, 9, 0, 0)):
+        with patch_field(Log, 'created', _make_datetime(2015, 1, 2, 9, 0, 0)):
             case = make_recipe('legalaid.case')
 
         user = make_user()
         make_recipe('call_centre.operator', user=user)
 
         event = event_registry.get_event('call_me_back')()
-        _dt = datetime.datetime(2015, 1, 2, 9, 1, 0)
-        with patch_field(Log, 'created', datetime.datetime(2015, 1, 2, 9, 1, 0)):
+        _dt = _make_datetime(2015, 1, 2, 9, 1, 0)
+        with patch_field(Log, 'created', _make_datetime(2015, 1, 2, 9, 1, 0)):
             event.get_log_code(case=case)
             event.process(
                 case, created_by=user,
@@ -47,15 +54,15 @@ class MiSlaTestCase(TestCase):
         case.save()
 
         event = event_registry.get_event('case')()
-        with patch_field(Log, 'created', datetime.datetime(2015, 1, 2, 9, 30, 0)):
+        with patch_field(Log, 'created', _make_datetime(2015, 1, 2, 9, 30, 0)):
             event.process(
                 case, status='call_started', created_by=user,
                 notes='Call started'
             )
 
         date_range = (
-            datetime.datetime(2015, 1, 1),
-            datetime.datetime(2015, 2, 1)
+            _make_datetime(2015, 1, 1),
+            _make_datetime(2015, 2, 1)
         )
 
         with mock.patch('reports.forms.MICB1Extract.date_range', date_range):

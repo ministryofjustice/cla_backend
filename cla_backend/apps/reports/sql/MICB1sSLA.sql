@@ -27,7 +27,7 @@ WITH
                                    o.case_id = no.case_id
                                    and no.id > o.id
         JOIN call_centre_operator AS op ON no.created_by_id = op.user_id
-      WHERE no.level >= 29 and no.type = 'outcome'
+      WHERE no.level >= 29 and no.type in ('outcome', 'event')
       order by no.id asc
 
   ),
@@ -84,7 +84,7 @@ WITH
         LEFT OUTER JOIN operator_first_log_after_cb1 on operator_first_log_after_cb1.o_id = log.id and operator_first_log_after_cb1.rn = 1
         LEFT OUTER JOIN operator_first_view_after_cb1 on operator_first_view_after_cb1.o_id = log.id and operator_first_view_after_cb1.rn = 1
       where
-        log.code in ('CB1', 'CB2', 'CB3')
+        log.code in ('CB1', 'CB2', 'CB3', 'PCB')
 
   )
 select

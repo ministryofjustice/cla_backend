@@ -21,6 +21,7 @@ class GraphStructureTestCase(TestCase):
             self.fail('Cannot find graph "permanent_id" key id in %s' % graph_file)
 
         permanent_id_set = set()
+        uniqueness_keys = set()
         nodes = graph.xpath('//g:node', **ns)
         for node in nodes:
             node_id = node.attrib['id']
@@ -29,10 +30,13 @@ class GraphStructureTestCase(TestCase):
                              'Node %s in %s does not have exactly 1 permanent_id key' %
                              (node_id, graph_file))
             permanent_id = data_keys[0].text
+            if permanent_id in permanent_id_set:
+                uniqueness_keys.add(permanent_id)
             permanent_id_set.add(permanent_id)
 
         self.assertEqual(len(permanent_id_set), len(nodes),
-                         'Not all nodes in %s have a unique permanent id' % graph_file)
+                         'Not all nodes in %s have a unique permanent id: %s' %
+                         (graph_file, ", ".join(sorted(uniqueness_keys))))
         self.assertIn('start', permanent_id_set,
                       'Graph %s must have one node with permanent id "start"' % graph_file)
 

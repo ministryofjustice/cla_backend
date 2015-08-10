@@ -1,3 +1,4 @@
+from cla_eventlog.models import Log
 from core.validators import validate_first_of_month
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
@@ -303,6 +304,13 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     media_code = serializers.SlugRelatedField(slug_field='code', required=False)
     outcome_code = serializers.CharField(max_length=50, required=False)
     outcome_description = serializers.SerializerMethodField('_get_outcome_description')
+    call_started = serializers.SerializerMethodField('_call_started')
+
+    def _call_started(self, case):
+        return Log.objects.filter(
+            case=case,
+            code='CALL_STARTED'
+        ).exists()
 
     def _get_outcome_description(self, case):
         return event_registry.event_registry.all().get(case.outcome_code, {}).get('description', '')

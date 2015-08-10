@@ -76,6 +76,13 @@ class CaseEvent(BaseEvent):
             'description': "Complaint flag toggled",
             'stops_timer': False
         },
+        'CALL_STARTED': {
+            'type': LOG_TYPES.EVENT,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': "Operator started call",
+            'stops_timer': False
+        },
     }
 
     def save_log(self, log):
@@ -86,10 +93,15 @@ class CaseEvent(BaseEvent):
             # for this timer in the db already do that I don't duplicate
             # events.
             # TODO: might be slow, is there a better way?
-            to_be_saved = Log.objects.filter(
+            to_be_saved = not Log.objects.filter(
                 timer=log.timer, case=log.case,
                 code__in=['CASE_CREATED', 'CASE_VIEWED']
-            ).count() == 0
+            ).exists()
+        elif log.code == 'CALL_STARTED':
+            to_be_saved = not Log.objects.filter(
+                case=log.case,
+                code='CALL_STARTED'
+            ).exists()
 
         if to_be_saved:
             log.save(force_insert=True)
@@ -99,7 +111,8 @@ class CaseEvent(BaseEvent):
         lookup = {
             'created': 'CASE_CREATED',
             'viewed': 'CASE_VIEWED',
-            'complaint_flag_toggled': 'COMPLAINT_FLAG_TOGGLED'
+            'complaint_flag_toggled': 'COMPLAINT_FLAG_TOGGLED',
+            'call_started': 'CALL_STARTED',
         }
 
         return lookup[status]
@@ -188,6 +201,24 @@ class SuspendCaseEvent(BaseEvent):
             'description': 'Read out prior alternate help',
             'stops_timer': True,
             'order': 90,
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
+        },
+        'MRNB': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Manager reviewed non-billable',
+            'stops_timer': True,
+            'order': 100,
+            'set_requires_action_by': None_if_owned_by_op_or_op_manager
+        },
+        'MRCC': {
+            'type': LOG_TYPES.OUTCOME,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Manager reviewed compliant case',
+            'stops_timer': True,
+            'order': 110,
             'set_requires_action_by': None_if_owned_by_op_or_op_manager
         }
     }

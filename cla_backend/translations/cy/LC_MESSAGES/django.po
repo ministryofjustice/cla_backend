@@ -3,10 +3,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-15 16:09+0100\n"
-"PO-Revision-Date: 2015-06-19 14:52+0000\n"
+"POT-Creation-Date: 2015-08-05 11:21+0100\n"
+"PO-Revision-Date: 2015-08-03 13:52+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
-"Language-Team: Welsh (http://www.transifex.com/projects/p/cla-backend/language/cy/)\n"
+"Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
 "Language: cy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,26 +17,26 @@ msgstr ""
 
 #: apps/call_centre/forms.py:56
 msgid "There is no provider specified in the system to handle cases of this law category."
-msgstr "Nid oes darparwr penodol ar y system i ddelio achosion yn y categori o'r gyfraith hon."
+msgstr "Nid oes darparwr penodol ar y system i ddelio ag achosion yn y categori hwn o'r gyfraith."
 
 #: apps/call_centre/forms.py:62
 msgid "Can't assign to specialist provider without setting matter_type1 and matter_type2"
-msgstr "Ni ellir aseinio i ddarpawr arbenigol heb nodi matter_type1 a matter_type2"
+msgstr "Ni ellir aseinio i ddarparwr arbenigol heb nodi matter_type1 a matter_type2"
 
 #: apps/call_centre/forms.py:68
 #, python-brace-format
 msgid "Category of matter type 1: {category1} must match category of matter type 2: {category2}"
-msgstr "Categori mater math 1: rhaid i {category1} baru â chategori mater math 2: {category2}"
+msgstr "Categori mater math 1: rhaid i {category1} gyd-fynd â chategori mater math 2: {category2}"
 
 #: apps/call_centre/forms.py:79
 #, python-brace-format
 msgid "Category of Matter Types: {category1}, {category2} must match category of case: {case_category}"
-msgstr "Categori mathau o faterion: rhaid i {category1} a {category2} baru â chategori achos: {case_category}"
+msgstr "Categori mathau o faterion: rhaid i {category1} a {category2} gyd-fynd â chategori'r achos: {case_category}"
 
 #: apps/cla_provider/models.py:155
 #, python-brace-format
 msgid "Provider {provider} doesn't offer help for {category}"
-msgstr "Nid yw darparwr {provider} yn cynnig help ar gyfer {category}"
+msgstr "Nid yw'r darparwr {provider} yn cynnig help ar gyfer {category}"
 
 #: apps/cla_provider/models.py:168
 msgid "Overlapping rota allocation not allowed"
@@ -44,15 +44,15 @@ msgstr "Ni chaniateir dyrannu rota sy'n gwrthdaro"
 
 #: apps/core/admin/fields.py:59
 msgid "One or more tags not allowed. Allowed tags: "
-msgstr "Ni chanaiateir un neu fwy o dagiau. Tagiau a ganiateir: "
+msgstr "Ni chaniateir un neu fwy o dagiau. Tagiau a ganiateir: "
 
 #: apps/core/admin/forms.py:10
 msgid "A user with that username already exists."
-msgstr "Mae defnyddiwr gyda'r enw'r defnyddiwr hwnnw yn bodoli'n barod."
+msgstr "Mae defnyddiwr gyda'r enw defnyddiwr hwn yn bodoli'n barod."
 
 #: apps/core/admin/forms.py:11
 msgid "The two password fields didn't match."
-msgstr "Nid oedd y ddau faes cyfrinair yn cyfateb."
+msgstr "Nid oedd y ddau faes cyfrinair yr un fath."
 
 #: apps/core/admin/forms.py:14
 msgid "Username"
@@ -64,10 +64,10 @@ msgstr "Gofynnol. 30 nod neu lai. Llythrennau, rhifau a @/./+/-/_ yn unig."
 
 #: apps/core/admin/forms.py:19
 msgid "This value may contain only letters, numbers and @/./+/-/_ characters."
-msgstr "Dim ond llythrennau, rhifau a nodau @/./+/-/_ yn unig y gellir ei gynnwys yn y gwerth hwn."
+msgstr "Dim ond llythrennau, rhifau a nodau @/./+/-/_ y gellir eu cynnwys yn y gwerth hwn."
 
 #: apps/core/admin/forms.py:27 apps/core/admin/forms.py:35
-#: apps/core/admin/forms.py:45
+#: apps/core/admin/forms.py:45 apps/core/forms.py:20
 msgid "Password"
 msgstr "Cyfrinair"
 
@@ -86,7 +86,7 @@ msgstr "Nid yw cyfrineiriau crai yn cael eu storio, felly nid oes modd gweld cyf
 
 #: apps/core/admin/modeladmin.py:82
 msgid "Account unlocked successfully."
-msgstr "Mae'r cyfrif wedi'i datgloi yn llwyddiannus."
+msgstr "Mae'r cyfrif wedi'i ddatgloi yn llwyddiannus."
 
 #: apps/core/admin/modeladmin.py:98
 msgid "Password changed successfully."
@@ -100,145 +100,65 @@ msgstr "Newid cyfrinair: %s"
 #. Translators: '{ "day": 25, "month": 12, "year": 2012 }' should be left in as-is
 #: apps/core/drf/fields.py:27
 msgid "Date field has wrong format. Use { \"day\": 25, \"month\": 12, \"year\": 2012 }"
-msgstr "Mae fformat anghywir yn y maes dyddiad. Denfyddiwch { \"day\": 25, \"month\": 12, \"year\": 2012 }"
+msgstr "Mae fformat anghywir yn y maes dyddiad. Defnyddiwch { \"day\": 25, \"month\": 12, \"year\": 2012 }"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:41
+#: apps/diagnosis/data/checker-graph.graphml.tpl:44
 msgid "You’re a home owner, and you’re at risk of losing your home due to bankruptcy, mortgage debt or repossession"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:47
+#: apps/diagnosis/data/checker-graph.graphml.tpl:50
 msgid "You owe money (for example, bank loans, credit card debt) but this is not putting your home at risk"
-msgstr "Rydych mewn dyled (er enghraifft benthyciadau banc, dyled cardiau credyd) ond nid yw hyn yn rhoi risg i'ch cartref"
+msgstr "Rydych chi mewn dyled (er enghraifft, benthyciadau banc, dyled cardiau credyd) ond nid yw hyn yn rhoi eich cartref mewn perygl"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:54
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1082
-msgid "Your home is in a serious state of disrepair"
-msgstr "Mae eich cartref mewn cyflwr adfeiliedig difrifol "
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:55
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1083
-msgid "Is this putting you or your family at serious risk of illness or injury?"
-msgstr "Yw hyn yn rhoi eich teulu neu chithau mewn perygl difrifol o salwch neu anaf?"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:61
-#: apps/diagnosis/data/checker-graph.graphml.tpl:441
-#: apps/diagnosis/data/checker-graph.graphml.tpl:610
-#: apps/diagnosis/data/graph.graphml.tpl:1339
-msgid "Harassment"
-msgstr "Aflonyddwch"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:62
-#: apps/diagnosis/data/checker-graph.graphml.tpl:611
-msgid "You've been harassed in your home on more than one occasion"
-msgstr "Rydych chi wedi cael eich aflonyddu yn eich cartref ar fwy nag un achlysur"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:63
-#: apps/diagnosis/data/checker-graph.graphml.tpl:612
-msgid "Who is harassing you?"
-msgstr "Pwy sydd yn eich aflonyddu?"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:69
-#: apps/diagnosis/data/checker-graph.graphml.tpl:618
-msgid "ASBO or ASBI"
-msgstr "ASBO neu ASBI"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:70
-#: apps/diagnosis/data/checker-graph.graphml.tpl:619
-msgid "Your landlord has taken out an antisocial behaviour order or antisocial behaviour injunction (ASBO or ASBI) against you or someone who lives with you"
-msgstr "Mae eich landlord wedi cael gorchymyn ymddygiad gwrthgymdeithasol neu waharddeb ymddygiad gwrthgymdeithasol (ASBO neu ASBI) yn eich erbyn neu yn erbyn rhywun sy'n byw gyda chi"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:71
-#: apps/diagnosis/data/checker-graph.graphml.tpl:620
-msgid "Your landlord is:"
-msgstr "Eich landlord yw:"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:77
+#: apps/diagnosis/data/checker-graph.graphml.tpl:57
 msgid "Choose one of the options"
-msgstr "Dewiswch o leiaf un opsiwn"
+msgstr "Dewiswch un o'r opsiynau"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:84
-#: apps/diagnosis/data/checker-graph.graphml.tpl:632
-msgid "A social housing landlord"
-msgstr "Landlord tai cymdeithasol"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:85
-#: apps/diagnosis/data/checker-graph.graphml.tpl:633
-msgid "For example, housing association, council housing"
-msgstr "Er enghraifft, cymdeithas dai, tai cyngor"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:92
-#: apps/diagnosis/data/checker-graph.graphml.tpl:640
-msgid "A private landlord"
-msgstr "Landlord preifat"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:99
-#: apps/diagnosis/data/checker-graph.graphml.tpl:647
-msgid "A neighbour or your landlord"
-msgstr "Cymydog neu eich landlord"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:106
-#: apps/diagnosis/data/checker-graph.graphml.tpl:654
-msgid "A partner, ex-partner or family member"
-msgstr "Partner, cyn-bartner neu aelod o'r teulu"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:107
-#: apps/diagnosis/data/checker-graph.graphml.tpl:435
-#: apps/diagnosis/data/checker-graph.graphml.tpl:443
-#: apps/diagnosis/data/checker-graph.graphml.tpl:540
-#: apps/diagnosis/data/checker-graph.graphml.tpl:655
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1062
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1141
-msgid "Are you at immediate risk of harm?"
-msgstr "Ydych chi mewn perygl o niwed yn syth?"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:113
-#: apps/diagnosis/data/checker-graph.graphml.tpl:661
-msgid "Someone else"
-msgstr "Rhywun arall"
-
-#: apps/diagnosis/data/checker-graph.graphml.tpl:119
-#: apps/diagnosis/data/checker-graph.graphml.tpl:494
-#: apps/diagnosis/data/checker-graph.graphml.tpl:560
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1068
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1089
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1125
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1168
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1210
+#: apps/diagnosis/data/checker-graph.graphml.tpl:64
+#: apps/diagnosis/data/checker-graph.graphml.tpl:442
+#: apps/diagnosis/data/checker-graph.graphml.tpl:508
+#: apps/diagnosis/data/checker-graph.graphml.tpl:997
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1033
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1076
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1118
 msgid "Yes"
 msgstr "Ie"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:126
-#: apps/diagnosis/data/checker-graph.graphml.tpl:501
-#: apps/diagnosis/data/checker-graph.graphml.tpl:567
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1075
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1096
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1132
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1175
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1217
+#: apps/diagnosis/data/checker-graph.graphml.tpl:71
+#: apps/diagnosis/data/checker-graph.graphml.tpl:449
+#: apps/diagnosis/data/checker-graph.graphml.tpl:515
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1004
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1040
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1083
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1125
 msgid "No"
 msgstr "Na"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:133
+#: apps/diagnosis/data/checker-graph.graphml.tpl:78
 msgid "Benefits appeal"
 msgstr "Apêl budd-daliadau"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:134
-msgid "You want to appeal your benefits decision on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court"
-msgstr "Rydych chi eisiau apelio penderfyniad ar eich budd-daliadau ar bwynt cyfreithiol yn yr Uwch Dribiwnlys, Llys Apêl neu'r Goruchaf Lys"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:79
+msgid "You want to appeal a decision about your benefits"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:141
+#: apps/diagnosis/data/checker-graph.graphml.tpl:80
+msgid "You want to appeal a benefits decision:"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:87
 msgid "Permission to appeal refused"
 msgstr "Gwrthodwyd caniatâd i apelio"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:142
+#: apps/diagnosis/data/checker-graph.graphml.tpl:88
 msgid "A first-tier tribunal has refused you permission to appeal your benefits decision in the Upper Tribunal and you want advice about how to appeal this decision"
 msgstr "Mae tribiwnlys haen gyntaf wedi gwrthod rhoi caniatâd i chi apelio penderfyniad eich budd-daliadau yn yr Uwch Dribiwnlys, ac rydych eisiau cyngor ynghylch sut i apelio'r penderfyniad hwn"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:149
-#: apps/diagnosis/data/checker-graph.graphml.tpl:205
-#: apps/diagnosis/data/checker-graph.graphml.tpl:287
-#: apps/diagnosis/data/checker-graph.graphml.tpl:626
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1056
+#: apps/diagnosis/data/checker-graph.graphml.tpl:95
+#: apps/diagnosis/data/checker-graph.graphml.tpl:151
+#: apps/diagnosis/data/checker-graph.graphml.tpl:233
+#: apps/diagnosis/data/checker-graph.graphml.tpl:572
+#: apps/diagnosis/data/checker-graph.graphml.tpl:978
 #: apps/diagnosis/data/graph.graphml.tpl:837
 #: apps/diagnosis/data/graph.graphml.tpl:1476
 #: apps/diagnosis/data/graph.graphml.tpl:1866
@@ -247,27 +167,27 @@ msgstr "Mae tribiwnlys haen gyntaf wedi gwrthod rhoi caniatâd i chi apelio pend
 msgid "None of the above"
 msgstr "Dim o'r uchod"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:155
+#: apps/diagnosis/data/checker-graph.graphml.tpl:101
 msgid "Age"
 msgstr "Oed"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:156
+#: apps/diagnosis/data/checker-graph.graphml.tpl:102
 msgid "How old are you?"
 msgstr "Faint yw eich oed?"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:162
+#: apps/diagnosis/data/checker-graph.graphml.tpl:108
 #: apps/diagnosis/data/graph.graphml.tpl:984
 msgid "Disability"
 msgstr "Anabledd"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:163
-#: apps/diagnosis/data/checker-graph.graphml.tpl:170
-#: apps/diagnosis/data/checker-graph.graphml.tpl:177
-#: apps/diagnosis/data/checker-graph.graphml.tpl:184
-#: apps/diagnosis/data/checker-graph.graphml.tpl:192
-#: apps/diagnosis/data/checker-graph.graphml.tpl:199
-#: apps/diagnosis/data/checker-graph.graphml.tpl:258
-#: apps/diagnosis/data/checker-graph.graphml.tpl:265
+#: apps/diagnosis/data/checker-graph.graphml.tpl:109
+#: apps/diagnosis/data/checker-graph.graphml.tpl:116
+#: apps/diagnosis/data/checker-graph.graphml.tpl:123
+#: apps/diagnosis/data/checker-graph.graphml.tpl:130
+#: apps/diagnosis/data/checker-graph.graphml.tpl:138
+#: apps/diagnosis/data/checker-graph.graphml.tpl:145
+#: apps/diagnosis/data/checker-graph.graphml.tpl:204
+#: apps/diagnosis/data/checker-graph.graphml.tpl:211
 #: apps/diagnosis/data/graph.graphml.tpl:992
 #: apps/diagnosis/data/graph.graphml.tpl:1115
 #: apps/diagnosis/data/graph.graphml.tpl:1189
@@ -283,477 +203,536 @@ msgstr "Anabledd"
 msgid "Where did the discrimination occur?"
 msgstr "Ym mhle ddigwyddodd y gwahaniaethu?"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:169
+#: apps/diagnosis/data/checker-graph.graphml.tpl:115
 msgid "Gender, gender reassignment or sexual orientation"
 msgstr "Rhyw, ailbennu rhywedd neu chyfeiriadedd rhywiol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:176
+#: apps/diagnosis/data/checker-graph.graphml.tpl:122
 msgid "Marriage or civil partnership"
 msgstr "Priodas neu bartneriaeth sifil"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:183
+#: apps/diagnosis/data/checker-graph.graphml.tpl:129
 #: apps/diagnosis/data/graph.graphml.tpl:2112
 #: apps/diagnosis/data/graph.graphml.tpl:2174
 msgid "Pregnancy or maternity"
 msgstr "Beichiogrwydd neu famolaeth"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:190
+#: apps/diagnosis/data/checker-graph.graphml.tpl:136
 #: apps/diagnosis/data/graph.graphml.tpl:2123
 msgid "Race"
 msgstr "Hil"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:191
+#: apps/diagnosis/data/checker-graph.graphml.tpl:137
 msgid "Including nationality, citizenship, ethnicity or national origin"
 msgstr "Gan gynnwys cenedligrwydd, dinasyddiaeth, ethnigrwydd neu darddiad cenedlaethol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:198
+#: apps/diagnosis/data/checker-graph.graphml.tpl:144
 msgid "Religion, belief, or lack of religion or belief"
 msgstr "Crefydd, cred neu ddiffyg crefydd neu gred"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:211
+#: apps/diagnosis/data/checker-graph.graphml.tpl:157
 msgid "At work"
 msgstr "Yn y gwaith"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:218
+#: apps/diagnosis/data/checker-graph.graphml.tpl:164
 msgid "While you were using a service"
 msgstr "Tra roeddech yn defnyddio gwasanaeth"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:219
+#: apps/diagnosis/data/checker-graph.graphml.tpl:165
 msgid "For example, having a meal in a restaurant or getting access to a shop"
 msgstr "Er enghraifft, wrth gael pryd o fwyd mewn bwyty neu yn mynd i mewn i siop"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:226
-msgid "At a private club"
-msgstr "Mewn clwb preifat"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:172
+msgid "In an association"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:227
-msgid "Or association"
-msgstr "Neu gymdeithas"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:173
+msgid "For example, a private club or political organisation"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:234
+#: apps/diagnosis/data/checker-graph.graphml.tpl:180
 msgid "When someone was carrying out a public function"
 msgstr "Tra roedd rhywun yn cynnal gweithred gyhoeddus"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:235
+#: apps/diagnosis/data/checker-graph.graphml.tpl:181
 msgid "For example, a police officer carrying out a search as part of a criminal investigation"
 msgstr "Er enghraifft, heddwas yn cynnal chwiliad fel rhan o ymchwiliad troseddol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:242
+#: apps/diagnosis/data/checker-graph.graphml.tpl:188
 msgid "At school or college"
 msgstr "Yn yr ysgol neu goleg"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:249
+#: apps/diagnosis/data/checker-graph.graphml.tpl:195
 msgid "At university"
 msgstr "yn y brifysgol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:250
-msgid "Or other higher education institution"
-msgstr "Neu sefydliad addysg uwch arall"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:196
+msgid "Or other further education or higher education institution"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:257
+#: apps/diagnosis/data/checker-graph.graphml.tpl:203
 msgid "18 or over"
 msgstr "18 neu hŷn"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:264
+#: apps/diagnosis/data/checker-graph.graphml.tpl:210
 msgid "Under 18"
 msgstr "Dan 18"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:272
+#: apps/diagnosis/data/checker-graph.graphml.tpl:218
 msgid "A child in care or a care leaver - or you are a foster carer"
 msgstr "Plentyn mewn gofal neu un sy'n gadael gofal - neu a ydych chi'n ofalwr maeth"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:279
+#: apps/diagnosis/data/checker-graph.graphml.tpl:225
 msgid "Special educational needs"
 msgstr "Anghenion addysgol arbennig"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:280
+#: apps/diagnosis/data/checker-graph.graphml.tpl:226
 msgid "You have (or your child has) special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:288
+#: apps/diagnosis/data/checker-graph.graphml.tpl:234
 msgid "For example admissions or exclusions"
 msgstr "Er enghraifft addefiad neu gau allan"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:294
-#: apps/diagnosis/data/checker-graph.graphml.tpl:465
-#: apps/diagnosis/data/checker-graph.graphml.tpl:488
-#: apps/diagnosis/data/checker-graph.graphml.tpl:546
+#: apps/diagnosis/data/checker-graph.graphml.tpl:240
+#: apps/diagnosis/data/checker-graph.graphml.tpl:413
+#: apps/diagnosis/data/checker-graph.graphml.tpl:436
+#: apps/diagnosis/data/checker-graph.graphml.tpl:494
 #: apps/diagnosis/data/graph.graphml.tpl:1960
 #: apps/diagnosis/data/graph.graphml.tpl:2097
 msgid "Any other problem"
 msgstr "Unrhyw broblem arall"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:304
+#: apps/diagnosis/data/checker-graph.graphml.tpl:250
 #: apps/diagnosis/data/graph.graphml.tpl:1603
 msgid "Clinical negligence"
 msgstr "Esgeuluster clinigol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:305
+#: apps/diagnosis/data/checker-graph.graphml.tpl:251
 msgid "Doctors and nurses not treating you with due care during medical treatment"
 msgstr "Meddygon a nyrsys heb eich trin â gofal dyladwy yn ystod triniaeth feddygol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:312
+#: apps/diagnosis/data/checker-graph.graphml.tpl:258
 #: apps/diagnosis/data/graph.graphml.tpl:2206
 msgid "Community care"
 msgstr "Gofal cymunedol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:313
+#: apps/diagnosis/data/checker-graph.graphml.tpl:259
 msgid "You’re unhappy with the care being provided for yourself or a relative due to age, disability or special educational needs - for example, in a care home or your own home"
 msgstr "Nid ydych chi’n fodlon ar y gofal sy’n cael ei ddarparu i chi neu i berthynas oherwydd oed, anabledd neu anghenion addysgol arbennig - er enghraifft, mewn cartref gofal neu yn eich cartref eich hun"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:320
+#: apps/diagnosis/data/checker-graph.graphml.tpl:266
 msgid "Debt"
 msgstr "Dyled"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:321
+#: apps/diagnosis/data/checker-graph.graphml.tpl:267
 msgid "Bankruptcy, repossession, mortgage debt that is putting your home at risk"
 msgstr "Methdaliad, adfeddiannu’ch cartref, dyled morgais sy’n rhoi’ch cartref mewn perygl"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:322
-#: apps/diagnosis/data/checker-graph.graphml.tpl:330
-#: apps/diagnosis/data/checker-graph.graphml.tpl:362
-#: apps/diagnosis/data/checker-graph.graphml.tpl:481
-#: apps/diagnosis/data/checker-graph.graphml.tpl:509
-#: apps/diagnosis/data/checker-graph.graphml.tpl:517
-#: apps/diagnosis/data/checker-graph.graphml.tpl:575
-#: apps/diagnosis/data/checker-graph.graphml.tpl:603
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1119
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1148
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1155
-msgid "Select the option that best describes your situation"
-msgstr "Dewiswch yr opsiwn sy'n disgrifio eich sefyllfa orau"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:268
+msgid "Choose the option that best describes your debt problem"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:328
-#: apps/diagnosis/data/checker-graph.graphml.tpl:425
-#: apps/diagnosis/data/checker-graph.graphml.tpl:538
+#: apps/diagnosis/data/checker-graph.graphml.tpl:274
+#: apps/diagnosis/data/checker-graph.graphml.tpl:373
+#: apps/diagnosis/data/checker-graph.graphml.tpl:486
 msgid "Domestic abuse"
 msgstr "Camdriniaeth domestig"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:329
+#: apps/diagnosis/data/checker-graph.graphml.tpl:275
 msgid "Abuse at home (whether psychological, physical, financial, sexual or emotional), child abuse, harassment by an ex-partner, forced marriage"
 msgstr "Camdriniaeth yn y cartref (naill ai'n seicolegol, corfforol, ariannol, rhywiol neu emosiynol), camdriniaeth plant, aflonyddwch gan gyn-bartner, priodas dan orfod"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:336
+#: apps/diagnosis/data/checker-graph.graphml.tpl:276
+msgid "Choose the option that best describes your personal situation"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:283
 #: apps/diagnosis/data/graph.graphml.tpl:932
 #: apps/diagnosis/data/graph.graphml.tpl:2286
 msgid "Discrimination"
 msgstr "Gwahaniaethu"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:337
+#: apps/diagnosis/data/checker-graph.graphml.tpl:284
 msgid "Being treated unfairly because of your race, gender or sexual orientation, for example"
 msgstr "Cael eich trin yn annheg oherwydd eich hil, rhyw neu gyfeiriadedd rhyw, er enghraifft"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:338
-msgid "You've been discriminated against because of your:"
-msgstr "Rydych wedi cael eich gwahaniaethu oherwydd eich:"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:285
+msgid "On what grounds have you been discriminated against?"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:344
+#: apps/diagnosis/data/checker-graph.graphml.tpl:291
 #: apps/diagnosis/data/graph.graphml.tpl:34
 msgid "Education"
 msgstr "Addysg"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:345
+#: apps/diagnosis/data/checker-graph.graphml.tpl:292
 msgid "Special educational needs, problems with school places, exclusions, learning difficulties"
 msgstr "Anghenion addysgol arbennig, problemau â lleoedd mewn ysgolion, gwahardd o’r ysgol, anawsterau dysgu"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:346
-#: apps/diagnosis/data/checker-graph.graphml.tpl:354
-#: apps/diagnosis/data/checker-graph.graphml.tpl:409
-#: apps/diagnosis/data/checker-graph.graphml.tpl:417
-msgid "What is your problem about?"
-msgstr "Beth yw eich problem?"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:293
+msgid "What is your education problem about?"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:352
+#: apps/diagnosis/data/checker-graph.graphml.tpl:299
 #: apps/diagnosis/data/graph.graphml.tpl:1491
 msgid "Employment"
 msgstr "Cyflogaeth"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:353
+#: apps/diagnosis/data/checker-graph.graphml.tpl:300
 msgid "Being treated unfairly at work, unfair dismissal, employment tribunals"
 msgstr "Cael eich trin yn annheg yn y gwaith, diswyddo annheg, tribiwnlysoedd cyflogaeth"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:360
+#: apps/diagnosis/data/checker-graph.graphml.tpl:301
+msgid "What is your employment problem about?"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:307
 msgid "Housing"
 msgstr "Tai"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:361
+#: apps/diagnosis/data/checker-graph.graphml.tpl:308
 msgid "Eviction, homelessness, losing your rented home, rent arrears, harassment by a landlord or neighbour, health and safety issues with your home"
 msgstr "Troi allan, digartrefedd, colli cartref wedi’i rentu, ôl-ddyledion rhent, aflonyddu gan landlord neu gymydog, materion iechyd a diogelwch sy’n ymwneud â’ch cartref."
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:368
+#: apps/diagnosis/data/checker-graph.graphml.tpl:309
+msgid "Choose the option that best describes your housing situation"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:315
 #: apps/diagnosis/data/graph.graphml.tpl:1621
 msgid "Immigration and asylum"
 msgstr "Mewnfudo a lloches"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:369
+#: apps/diagnosis/data/checker-graph.graphml.tpl:316
 msgid "Applying for asylum or permission to stay in the UK, including for victims of human trafficking"
 msgstr "Gwneud cais am loches neu ganiatâd i aros yn y DU, gan gynnwys dioddefwyr masnachu mewn pobl"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:370
-msgid "Select the option that best describes your situation."
-msgstr "Dewiswch yr opsiwn sy'n disgrifio eich sefyllfa orau."
+#: apps/diagnosis/data/checker-graph.graphml.tpl:317
+#: apps/diagnosis/data/checker-graph.graphml.tpl:457
+#: apps/diagnosis/data/checker-graph.graphml.tpl:465
+msgid "Choose the option that best describes your situation"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:376
+#: apps/diagnosis/data/checker-graph.graphml.tpl:323
 #: apps/diagnosis/data/graph.graphml.tpl:1658
 msgid "Mental health"
 msgstr "Iechyd meddwl"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:377
+#: apps/diagnosis/data/checker-graph.graphml.tpl:324
 msgid "Help with mental health and mental capacity legal issues"
 msgstr "Help gyda materion cyfreithiol sy’n ymwneud ag iechyd meddwl a galluedd meddyliol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:384
+#: apps/diagnosis/data/checker-graph.graphml.tpl:331
 #: apps/diagnosis/data/graph.graphml.tpl:1674
 msgid "Personal injury"
 msgstr "Anaf personol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:385
+#: apps/diagnosis/data/checker-graph.graphml.tpl:332
 msgid "An accident that was not your fault"
 msgstr "Damwain lle nad oeddech chi ar fai"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:392
+#: apps/diagnosis/data/checker-graph.graphml.tpl:339
 #: apps/diagnosis/data/graph.graphml.tpl:2190
 msgid "Public law"
 msgstr "Cyfraith gyhoeddus"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:393
+#: apps/diagnosis/data/checker-graph.graphml.tpl:340
 msgid "Taking legal action against a public body, like your local council"
 msgstr "Cymryd camau cyfreithiol yn erbyn corff cyhoeddus, fel y cyngor lleol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:400
+#: apps/diagnosis/data/checker-graph.graphml.tpl:347
 msgid "Trouble with the police and other public authorities"
 msgstr "Trafferth gyda'r heddlu ac awdurdodau cyhoeddus eraill"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:401
+#: apps/diagnosis/data/checker-graph.graphml.tpl:348
 msgid "Being treated unlawfully by authorities who detain, imprison and prosecute (for example, the police), abuse in care cases"
 msgstr "Cael eich trin yn anghyfreithlon gan awdurdodau sy’n cadw, yn carcharu ac yn erlyn pobl (er enghraifft, yr heddlu), cam-drin mewn achosion gofal"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:407
+#: apps/diagnosis/data/checker-graph.graphml.tpl:354
 #: apps/diagnosis/data/graph.graphml.tpl:1441
 msgid "Welfare benefits"
 msgstr "Budd-daliadau lles"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:408
+#: apps/diagnosis/data/checker-graph.graphml.tpl:355
 msgid "Problems with your benefits, appealing a decision about your benefits"
 msgstr "Problemau gyda'ch budd-daliadau, apelio penderfyniad ynghylch eich budd-daliadau"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:415
+#: apps/diagnosis/data/checker-graph.graphml.tpl:356
+msgid "What is your benefits problem about?"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:362
 #: apps/diagnosis/data/graph.graphml.tpl:842
 msgid "Family"
 msgstr "Teulu"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:416
+#: apps/diagnosis/data/checker-graph.graphml.tpl:363
 msgid "Divorce, separation, dissolution, financial arrangements, family mediation, arrangements for your children, children being taken into care, child abduction"
 msgstr "Ysgariad, gwahaniad, diddymiad, trefniadau ariannol, cyfryngu teuluol, trefniadau ar gyfer eich plant, plant yn cael eu rhoi mewn gofal, herwgydio plentyn"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:426
+#: apps/diagnosis/data/checker-graph.graphml.tpl:364
+msgid "What is your family problem about?"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:374
 msgid "You want to protect yourself or your children against domestic violence"
 msgstr "Rydych chi eisiau diogelu eich hun neu eich plant yn erbyn trais domestig"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:427
-msgid "Are you or your child at immediate risk of harm?"
-msgstr "Ydych chi neu eich plant mewn perygl o gael niwed yn syth?"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:375
+msgid "Are you or your children at immediate risk of harm?"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:433
+#: apps/diagnosis/data/checker-graph.graphml.tpl:381
 msgid "Enforcing an injunction"
 msgstr "Gorfodi gwaharddeb"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:434
+#: apps/diagnosis/data/checker-graph.graphml.tpl:382
 msgid "Your partner or ex-partner is ignoring an injunction you have taken out against them"
 msgstr "Mae eich partner neu gyn-bartner yn anwybyddu gwaharddeb sydd gennych yn eu herbyn"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:442
+#: apps/diagnosis/data/checker-graph.graphml.tpl:383
+#: apps/diagnosis/data/checker-graph.graphml.tpl:391
+#: apps/diagnosis/data/checker-graph.graphml.tpl:488
+#: apps/diagnosis/data/checker-graph.graphml.tpl:984
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1049
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1155
+msgid "Are you at immediate risk of harm?"
+msgstr "Ydych chi mewn perygl o niwed yn syth?"
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:389
+#: apps/diagnosis/data/checker-graph.graphml.tpl:558
+#: apps/diagnosis/data/graph.graphml.tpl:1339
+msgid "Harassment"
+msgstr "Aflonyddwch"
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:390
 msgid "You are being harassed by  a partner, ex-partner or family member"
 msgstr "Rydych yn cael eich aflonyddu gan bartner, cyn-bartner neu aelod o'r teulu"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:449
+#: apps/diagnosis/data/checker-graph.graphml.tpl:397
 msgid "Contesting an injunction"
 msgstr "Herio gwaharddeb"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:450
+#: apps/diagnosis/data/checker-graph.graphml.tpl:398
 msgid "You want to contest an injunction that has been taken out against you"
 msgstr "Rydych eisiau herio gwaharddeb sydd yn eich erbyn"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:457
+#: apps/diagnosis/data/checker-graph.graphml.tpl:405
 msgid "Forced marriage"
 msgstr "Priodas dan Orfod"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:458
+#: apps/diagnosis/data/checker-graph.graphml.tpl:406
 msgid "You want advice about forced marriage"
 msgstr "Rydych eisiau cyngor ynghylch priodi dan orfod"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:471
+#: apps/diagnosis/data/checker-graph.graphml.tpl:419
 msgid "Children being taken into care and adoption"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:472
+#: apps/diagnosis/data/checker-graph.graphml.tpl:420
 msgid "Your local council is involved"
 msgstr "Mae eich cyngor lleol yn gysylltiedig"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:473
+#: apps/diagnosis/data/checker-graph.graphml.tpl:421
 msgid "Is the local council trying to take your child into care?"
 msgstr "Yw'r cyngor lleol yn ceisio rhoi eich plentyn mewn gofal?"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:479
+#: apps/diagnosis/data/checker-graph.graphml.tpl:427
 msgid "Child abduction"
 msgstr "Herwgydio plentyn"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:480
+#: apps/diagnosis/data/checker-graph.graphml.tpl:428
 msgid "You want advice about child abduction"
 msgstr "Rydych eisiau cyngor ynghylch herwgydio plentyn"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:508
+#: apps/diagnosis/data/checker-graph.graphml.tpl:429
+#: apps/diagnosis/data/checker-graph.graphml.tpl:551
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1027
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1063
+msgid "Select the option that best describes your situation"
+msgstr "Dewiswch yr opsiwn sy'n disgrifio eich sefyllfa orau"
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:456
 msgid "Divorce, separation or dissolution"
 msgstr "Ysgariad, gwahaniad neu ddiddymiad "
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:515
+#: apps/diagnosis/data/checker-graph.graphml.tpl:463
 msgid "Financial settlement"
 msgstr "Setliad ariannol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:516
+#: apps/diagnosis/data/checker-graph.graphml.tpl:464
 msgid "Following a divorce or separation"
 msgstr "Yn dilyn ysgariad neu wahaniad "
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:523
+#: apps/diagnosis/data/checker-graph.graphml.tpl:471
 msgid "Family mediation"
 msgstr "Cyfryngu Teulu"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:524
-msgid "You're looking to start family mediation or you're seeking legal advice in support of it"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:472
+msgid "You’re looking to start family mediation or you’re seeking legal advice in support of it"
 msgstr "Rydych yn ystyried dechrau cyfryngu teuluol neu'n ceisio am gyngor cyfreithiol i'w gefnogi"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:525
+#: apps/diagnosis/data/checker-graph.graphml.tpl:473
 msgid "Have you already started family mediation? (This includes cases that have already finished)"
 msgstr "Ydych chi wedi dechrau cyfryngu teuluol eisoes? (Mae hyn yn cynnwys achosion sydd wedi dod i ben eisoes)"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:531
+#: apps/diagnosis/data/checker-graph.graphml.tpl:479
 msgid "You are under 18"
 msgstr "Rydych chi dan 18 oed"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:539
+#: apps/diagnosis/data/checker-graph.graphml.tpl:487
 msgid "You or your children have suffered domestic abuse in the last 2 years, or your abuser has a current criminal conviction"
 msgstr "Rydych chi neu eich plant wedi dioddef camdriniaeth domestig yn y 2 flynedd diwethaf, neu mae gan eich camdriniwr euogfarn troseddol cyfredol"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:552
+#: apps/diagnosis/data/checker-graph.graphml.tpl:500
 msgid "International Family Maintenance"
 msgstr "Cynhaliaeth Plant Rhynglwadol "
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:553
-msgid "You're seeking advice about International Family Maintenance, to enforce a maintenance order made outside the UK"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:501
+msgid "You’re seeking advice about International Family Maintenance, to enforce a maintenance order made outside the UK"
 msgstr "Rydych yn ceisio am gyngor ynglŷn â Chynhaliaeth Plant Rhyngwladol, i orfodi gorchymyn cynhaliaeth a wnaethpwyd y tu allan i'r DU"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:574
-msgid "You're living in rented accommodation"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:522
+msgid "You’re living in rented accommodation"
 msgstr "Rydych chi'n byw mewn llety rhent"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:581
+#: apps/diagnosis/data/checker-graph.graphml.tpl:523
+msgid "What is your housing problem about?"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:529
 msgid "You are homeless"
 msgstr "Rydych chi'n ddigartref "
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:587
+#: apps/diagnosis/data/checker-graph.graphml.tpl:535
 msgid "Any other housing problem"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:593
+#: apps/diagnosis/data/checker-graph.graphml.tpl:541
 msgid "Becoming homeless"
 msgstr "Mynd yn ddigartref"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:594
+#: apps/diagnosis/data/checker-graph.graphml.tpl:542
 msgid "You are at risk of becoming homeless within 28 days (or 56 days if you live in Wales) and you want to make an application to your local council to stop your home being taken away from you"
-msgstr "Rydych chi mewn perygl o fynd yn ddigartref o fewn 28 diwrnod (neu 56 diwrnod os ydych yn byw yng Nghymru) a'ch bod eisiau gwneud cais i'ch cyngor lleol i atal eich cartref gael ei gymryd oddi wrthych chi"
+msgstr "Rydych chi mewn perygl o fynd yn ddigartref o fewn 28 diwrnod (neu 56 diwrnod os ydych yn byw yng Nghymru) a'ch bod eisiau gwneud cais i'ch cyngor lleol i atal eich cartref rhag cael ei gymryd oddi wrthych chi"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:601
+#: apps/diagnosis/data/checker-graph.graphml.tpl:549
 msgid "Eviction"
 msgstr "Troi allan"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:602
+#: apps/diagnosis/data/checker-graph.graphml.tpl:550
 msgid "You are being evicted from your home"
 msgstr "Rydych chi'n cael eich troi allan o'ch cartref"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:782
+#: apps/diagnosis/data/checker-graph.graphml.tpl:559
+msgid "Your landlord or neighbour is harassing you"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:565
+msgid "Contesting an injunction for antisocial behaviour"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:566
+msgid "Your landlord has taken out an injunction against you or someone who lives with you"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:693
 msgid "Problem relates to a child in care, or a care leaver, or user is a foster carer"
 msgstr "Problem ynghylch plentyn mewn gofal, neu blentyn yn gadael gofal, neu fod y defnyddiwr yn ofalwr maeth "
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:904
-msgid "Council is trying to take user's child into care"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:815
+msgid "Council is trying to take user’s child into care"
 msgstr "Cyngor yn ceisio rhoi plentyn y defnyddiwr mewn gofal"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:949
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1030
+#: apps/diagnosis/data/checker-graph.graphml.tpl:860
+#: apps/diagnosis/data/checker-graph.graphml.tpl:941
 msgid "User is at immediate risk of harm"
 msgstr "Mae'r defnyddiwr mewn perygl o niwed yn syth"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:961
-#: apps/diagnosis/data/checker-graph.graphml.tpl:973
+#: apps/diagnosis/data/checker-graph.graphml.tpl:872
+#: apps/diagnosis/data/checker-graph.graphml.tpl:884
 msgid "User is under 18 years old"
 msgstr "Defnyddiwr dan 18 oed"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:985
-msgid "User is living outside the UK but user's child has been taken to the UK"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:896
+msgid "User is living outside the UK but user’s child has been taken to the UK"
 msgstr "Mae'r defnyddiwr yn byw y tu allan i'r DU ond aethpwyd â phlentyn y defnyddiwr i'r DU "
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1043
+#: apps/diagnosis/data/checker-graph.graphml.tpl:965
 msgid "Losing your accommodation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1044
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1224
+#: apps/diagnosis/data/checker-graph.graphml.tpl:966
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1132
 msgid "You’re losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1050
-msgid "You want advice on seeking asylum"
-msgstr "Rydych chi eisiau cyngor ynghylch ceisio lloches"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:972
+msgid "You want advice on seeking asylum or appealing a decision about your asylum"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1061
-msgid "You are a victim of human trafficking or domestic violence"
-msgstr "Rydych chi'n ddioddefwr i fasnachu pobl neu drais domestig"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:983
+msgid "You’re a victim of domestic violence"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1103
+#: apps/diagnosis/data/checker-graph.graphml.tpl:990
+msgid "Your home is in a serious state of disrepair"
+msgstr "Mae eich cartref mewn cyflwr adfeiliedig difrifol "
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:991
+msgid "Does this create a serious risk of illness or injury?"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1011
 msgid "You own your own home"
-msgstr "Rydych chi'n berchen â'ch cartref eich hun"
+msgstr "Rydych chi'n berchen ar eich cartref eich hun"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1104
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1012
 msgid "Are you at risk of losing your home because of bankruptcy, repossession or mortgage debt?"
 msgstr "Ydych chi mewn perygl o golli eich cartref oherwydd methdaliad, ailfeddiannu neu ddyled morgais?"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1110
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1018
 msgid "A neighbour"
 msgstr "Cymydog"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1117
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1025
 msgid "Domestic abuse or harassment"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1118
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1026
 msgid "Abuse at home, child abuse, harassment"
 msgstr "Camdriniaeth yn y cartref, cam-drin plentyn, aflonyddu "
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1139
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1047
 msgid "Female genital mutilation"
 msgstr "Anffurfio organau cenhedlu benywod"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1140
-msgid "You're worried that you may become a victim of female genital mutilation"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1048
+msgid "You’re worried that you may become a victim of female genital mutilation"
 msgstr "Rydych chi'n poeni y byddwch yn ddioddefwr anffurfio organau cenhedlu benywod"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1147
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1055
 msgid "Disputes over children"
 msgstr "Anghydfod ynghylch plant"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1154
-msgid "You're in a dispute with your ex-partner over your children"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1056
+msgid "What kind of dispute is it?"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1062
+msgid "You’re in a dispute with your ex-partner over your children"
 msgstr "Rydych chi mewn anghydfod gyda'ch cyn-bartner ynghylch eich plant"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1161
-msgid "You're a relative (for example, a grandparent) seeking contact with a child in your family"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1069
+msgid "You’re a relative (for example, a grandparent) seeking contact with a child in your family"
 msgstr "Rydych chi'n berthynas (er enghraifft, taid neu nain) yn ceisio am gyswllt gyda phlentyn yn eich teulu"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1162
-msgid "Has the child been a victim of child abuse within the family?"
-msgstr "Yw'r plentyn wedi bod yn ddioddefwr o gamdriniaeth o fewn y teulu?"
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1070
+msgid "Is the child a victim of child abuse within the family?"
+msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1182
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1090
 #: apps/diagnosis/data/graph.graphml.tpl:1168
 #: apps/diagnosis/data/graph.graphml.tpl:1274
 #: apps/diagnosis/data/graph.graphml.tpl:1314
@@ -764,21 +743,38 @@ msgstr "Yw'r plentyn wedi bod yn ddioddefwr o gamdriniaeth o fewn y teulu?"
 msgid "Other"
 msgstr "Arall"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1189
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1097
 msgid "At home (in rented accommodation)"
 msgstr "Gartref (mewn llety rhent)"
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1197
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1204
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1105
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1112
 msgid "You’re an asylum seeker applying for accommodation"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1230
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1138
 msgid "You’re living in rented accommodation and you’re being evicted because of a debt to your landlord"
 msgstr ""
 
-#: apps/diagnosis/data/checker-graph.graphml.tpl:1236
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1144
 msgid "Any other problem to do with divorce, separation or dissolution"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1150
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1154
+msgid "You’re a victim of human trafficking or modern slavery"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1161
+msgid "On a point of law in the Upper Tribunal, Court of Appeal or Supreme Court"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1165
+msgid "In the first-tier tribunal"
+msgstr ""
+
+#: apps/diagnosis/data/checker-graph.graphml.tpl:1169
+msgid "You’re a landlord applying for an injunction against a tenant for antisocial behaviour"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:37
@@ -2043,7 +2039,7 @@ msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2762
 msgid "Domestic violence or abuse – including issues arising from forced marriage, child abduction, female genital mutilation and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser."
-msgstr ""
+msgstr "Trais neu gamdriniaeth domestig - gan gynnwys problemau sy'n codi mewn priodas dan orfod, herwgydio plentyn, ac aflonyddu. Hefyd yn cynnwys amddiffyniad yn erbyn gorchymyn anheddu neu orchymyn rhag molestu lle mai'r camdriniwr honedig yw'r cleient."
 
 #: apps/diagnosis/data/graph.graphml.tpl:2765
 msgid ""
@@ -2331,29 +2327,53 @@ msgstr "Hafan"
 msgid "Reports"
 msgstr "Adroddiadau"
 
-#~ msgid "Your child has been abducted"
-#~ msgstr "Mae eich plentyn wedi cael ei herwgydio "
+#~ msgid "You've been discriminated against because of your:"
+#~ msgstr "Rydych wedi cael eich gwahaniaethu oherwydd eich:"
 
-#~ msgid "Are you living abroad but your child has been taken to the UK?"
-#~ msgstr "Ydych chi'n byw dramor ond mae rhywun wedi mynd â'ch plentyn i'r DU?"
+#~ msgid "You've been harassed in your home on more than one occasion"
+#~ msgstr "Rydych chi wedi cael eich aflonyddu yn eich cartref ar fwy nag un achlysur"
 
-#~ msgid "You've been accused of abducting a child"
-#~ msgstr "Rydych chi wedi cael eich cyhuddo o herwgydio plentyn"
+#~ msgid "Who is harassing you?"
+#~ msgstr "Pwy sy'n aflonyddu arnoch chi?"
 
-#~ msgid "You're seeking an order to prevent the removal of a child"
-#~ msgstr "Rydych yn ceisio am orchymyn i atal symud plentyn"
+#~ msgid "ASBO or ASBI"
+#~ msgstr "ASBO neu ASBI"
+
+#~ msgid "Your landlord is:"
+#~ msgstr "Eich landlord yw:"
+
+#~ msgid "A social housing landlord"
+#~ msgstr "Landlord tai cymdeithasol"
+
+#~ msgid "For example, housing association, council housing"
+#~ msgstr "Er enghraifft, cymdeithas dai, tai cyngor"
+
+#~ msgid "A private landlord"
+#~ msgstr "Landlord preifat"
 
 #~ msgid "Unlawful eviction"
 #~ msgstr "Troi allan anghyfreithlon"
 
 #~ msgid "Your landlord is unlawfully evicting you without due process - for example, changing the locks"
-#~ msgstr "Mae eich landlord yn eich troi allan heb ddilyn y broses gywir - er enghraifft, newid y cloeon"
+#~ msgstr "Mae eich landlord yn eich troi allan yn anghyfreithlon, heb ddilyn y broses gywir - er enghraifft, newid y cloeon"
 
 #~ msgid "Eviction with notice"
-#~ msgstr "Troi allan heb rybudd"
+#~ msgstr "Troi allan gyda rhybudd"
 
 #~ msgid "You have received notification of eviction from your landlord or the council"
-#~ msgstr "Rydych wedi cael hysbysiad o droi allan gan eich landlord neu'r cyngor"
+#~ msgstr "Rydych wedi cael hysbysiad troi allan gan eich landlord neu'r cyngor"
+
+#~ msgid "A neighbour or your landlord"
+#~ msgstr "Cymydog neu eich landlord"
+
+#~ msgid "A partner, ex-partner or family member"
+#~ msgstr "Partner, cyn-bartner neu aelod o'r teulu"
+
+#~ msgid "Someone else"
+#~ msgstr "Rhywun arall"
+
+#~ msgid "At a private club"
+#~ msgstr "Mewn clwb preifat"
 
 #~ msgid "Domestic violence"
 #~ msgstr "Trais domestig"
@@ -2367,141 +2387,29 @@ msgstr "Adroddiadau"
 #~ msgid "Your problem is about:"
 #~ msgstr "Mae eich problem ynghylch:"
 
-#~ msgid "Client has received a warrant of possession"
-#~ msgstr "Mae'r cleient wedi cael gwarant i feddiannu"
+#~ msgid "You want advice on seeking asylum"
+#~ msgstr "Rydych chi eisiau cyngor ynghylch ceisio lloches"
 
-#~ msgid "Client has received a claim form"
-#~ msgstr "Mae'r cleient wedi cael ffurflen hawlio"
+#~ msgid "Your child has been abducted"
+#~ msgstr "Mae eich plentyn wedi cael ei herwgydio "
 
-#~ msgid "Client has received a Statutory Demand"
-#~ msgstr "Mae'r cleient wedi cael Hawliad Statudol"
+#~ msgid "Are you living abroad but your child has been taken to the UK?"
+#~ msgstr "Ydych chi'n byw dramor ond mae rhywun wedi mynd â'ch plentyn i'r DU?"
 
-#~ msgid "Client has received a Bankruptcy Petition"
-#~ msgstr "Mae'r cleient wedi cael Deiseb Methdalu"
+#~ msgid "You've been accused of abducting a child"
+#~ msgstr "Rydych chi wedi cael eich cyhuddo o herwgydio plentyn"
 
-#~ msgid "Notice to Quit from landlord"
-#~ msgstr "Rhybudd i Adael gan y landlord"
+#~ msgid "You're seeking an order to prevent the removal of a child"
+#~ msgstr "Rydych yn ceisio am orchymyn i atal symud plentyn"
 
-#~ msgid "ASBO/ASBI"
-#~ msgstr "ASBO/ASBI"
+#~ msgid "What is your problem about?"
+#~ msgstr "Beth yw eich problem?"
 
-#~ msgid "Divorce or separation"
-#~ msgstr "Ysgariad neu wahaniad"
+#~ msgid "Are you or your child at immediate risk of harm?"
+#~ msgstr "Ydych chi neu eich plant mewn perygl o gael niwed yn syth?"
 
-#~ msgid "Premises"
-#~ msgstr "Safleoedd"
+#~ msgid "Is this putting you or your family at serious risk of illness or injury?"
+#~ msgstr "A yw hyn yn rhoi eich teulu neu chithau mewn perygl difrifol o salwch neu anaf?"
 
-#~ msgid "Age (where client is under 18)"
-#~ msgstr "Oed (pan fo'r cleient dan 18 oed)"
-
-#~ msgid "Age (where client is over 18)"
-#~ msgstr "Oed (pan fo'r cleient dros 18 oed)"
-
-#~ msgid "Marriage and civil partnership"
-#~ msgstr " Priodas a phartneriaeth sifil"
-
-#~ msgid "Pregnancy and maternity discrimination"
-#~ msgstr "Gwahaniaethu yn erbyn beichiogrwydd neu famolaeth "
-
-#~ msgid "On the next screen, select the type of discrimination the client has experienced. Click 'Next' to continue."
-#~ msgstr "Ar y sgrin nesaf, dewiswch y math o wahaniaethu y mae'r cleient wedi'i brofi. Cliciwch 'Nesaf' i barhau. "
-
-#~ msgid "Direct or indirect discrimination or harassment"
-#~ msgstr "Gwahaniaethu neu aflonyddwch uniongyrchol neu anuniongyrchol."
-
-#~ msgid "Choose which protected characteristic most applies (record specifics and multiple categories, if needed, in operator notes).  Search operator guidance for ‘protected characteristics’ for more information."
-#~ msgstr "Dewiswch pa nodwedd gwarchodedig sydd fwyaf perthnasol (cofnodwch bethau priodol a mwy nag un categori, os oes angen, yn nodiadau'r gweithredwr). Chwiliwch y canllawiau i weithredwyr am 'nodweddion gwarchodedig' i gael rhagor o wybodaeth.  "
-
-#~ msgid "Disability, pregnancy or maternity, race, religion or belief, sexual orientation, gender or gender reassignment "
-#~ msgstr "Anabledd, beichiogrwydd neu famolaeth, hilm crefydd neu gred, cyfeiriadedd rhywiol, rhyw neu ailbennu rhywedd"
-
-#~ msgid "Indicate where the discrimination occurred"
-#~ msgstr "Nodwch lle ddigwyddodd y gwahaniaethu "
-
-#~ msgid "Indicate where it occurred"
-#~ msgstr "Nodwch lle ddigwyddodd hyn"
-
-#~ msgid "Discrimination due to disability or failure to make reasonable adjustments for a disabled person"
-#~ msgstr "Gwahaniaethu oherwydd anabledd neu fethiant i wneud addasiadau rhesymol i unigolyn anabl"
-
-#~ msgid "Welfare Benefits"
-#~ msgstr "Budd-daliadau Lles"
-
-#~ msgid "The client believes (or you suspect) they have been discriminated against. Click to proceed to discrimination."
-#~ msgstr "Mae'r cleient yn credu (neu rydych chi'n amau) eu bod wedi cael eu gwahaniaethu. Cliciwch i barhau i wahaniaethu."
-
-#~ msgid "Discrimination may apply e.g. equal pay, equal opportunities, not making adjustment for a disability, applying for job, treated worse due to pregancy/maternity leave, sexual harassment in the workplace"
-#~ msgstr "Gall wahaniaethu fod yn berthnasol e.e. cyflog cyfartal, cyfleoedd cyfartal, peidio â gwneud addasiadau i anabledd, ymgeisio am swydd, cael eich trîn yn salach oherwydd beichiogrwydd/ absenoldeb mamolaeth, aflonyddwch rhywiol yn y gweithle "
-
-#~ msgid ""
-#~ "The client may have been discriminated against (eg a restaurant refuses to serve a customer with a disabled child)\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Mae'r cleient wedi cael ei wahaniaethu yn ei erbyn (e.e. bwyty yn gwrthod gwasanaethu cwsmer gyda phlentyn anabl)\n"
-#~ "\n"
-
-#~ msgid "The police have discriminated against the client (eg a police officer used racially abusive language when making an arrest) "
-#~ msgstr "Mae'r heddlu wedi gwahaniaethu yn erbyn y cleient (e.e. heddwas wedi defnyddio iaith ddifrïol hiliol wrth arestio)"
-
-#~ msgid "Clinical Negligence"
-#~ msgstr "Esgeuluster Clinigol"
-
-#~ msgid "Immigration and Asylum"
-#~ msgstr "Mewnfudo a Lloches"
-
-#~ msgid "“Guidance notes”"
-#~ msgstr "“Canllawiau”"
-
-#~ msgid "Client has been subject to discrimination"
-#~ msgstr "Mae' cleient wedi bod yn destun gwahaniaethu"
-
-#~ msgid "Client not subject to discrimination"
-#~ msgstr "Nid yw'r cleient yn destun gwahaniaethu"
-
-#~ msgid "Mental Health"
-#~ msgstr "Iechyd Meddwl"
-
-#~ msgid "Personal Injury"
-#~ msgstr "Anaf Personol"
-
-#~ msgid "Client doesn't have both illness and evidence of disrepair"
-#~ msgstr "Nid oes gan y cleient y salwch na thystiolaeth o ddiffyg atgyweirio"
-
-#~ msgid "The client wants to contest an injunction against them in a family matter"
-#~ msgstr "Mae'r cleient eisiau herio gwaharddeb yn eu herbyn mewn mater teulu "
-
-#~ msgid "The client's problem is about bullying"
-#~ msgstr "Bwlio yw problem y cleient"
-
-#~ msgid "A child or young person is out of school or in a Pupil Referral Unit"
-#~ msgstr "Nid yw plentyn neu unigolyn ifanc yn yr ysgol neu mae mewn Uned Cyfeirio Disgyblion"
-
-#~ msgid "The client's problem is about exclusion from school "
-#~ msgstr "Gwaharddiad o'r ysgol yw problem y cleient"
-
-#~ msgid "The client has received a decision on their appeal from the schools adjudicator "
-#~ msgstr "Mae'r cleient wedi derbyn penderfyniad am eu hapêl gan ddyfarnwr yr ysgol"
-
-#~ msgid "The client has not yet received a decision on their appeal"
-#~ msgstr "Nid yw'r cleient wedi derbyn penderfyniad am eu hapêl eto"
-
-#~ msgid "The client's problem is about negligence in the provision of education"
-#~ msgstr "Esgeuluster mewn darpariaeth addysg yw problem y cleient"
-
-#~ msgid "The child has been permanently excluded from school or told to go home"
-#~ msgstr "Mae'r plentyn wedi ei wahardd yn barhaol o'r ysgol neu dywedwyd wrtho i fynd adref"
-
-#~ msgid "The client's problem is about discrimination"
-#~ msgstr "Mae problem y cleient ynghylch gwahaniaethu"
-
-#~ msgid "Your child has special educational needs - this includes problems about transport, being out of school or being in a pupil referral unit"
-#~ msgstr "Mae gan eich plentyn anghenion addysgol arbennig - mae hyn yn cynnwys problemau mewn perthynas â thrafnidiaeth, peidio â bod mewn ysgol neu bod mewn uned cyfeirio disgyblion"
-
-#~ msgid "Children in care and adoption"
-#~ msgstr "Plant mewn gofal a mabwysiadu"
-
-#~ msgid "Domestic violence or harassment"
-#~ msgstr "Trais domestig neu aflonyddwch"
-
-#~ msgid "Domestic violence or abuse – including issues arising from forced marriage, child abduction, and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser."
-#~ msgstr "Trais neu gamdriniaeth domestig - gan gynnwys problemau sy'n codi mewn priodas dan orfod, herwgydio plentyn, ac aflonyddu. Hefyd yn cynnwys amddiffyniad yn erbyn gorchymyn anheddu neu orchymyn rhag molestu lle mai'r camdriniwr honedig yw'r cleient.  "
+#~ msgid "Has the child been a victim of child abuse within the family?"
+#~ msgstr "Yw'r plentyn wedi bod yn ddioddefwr o gamdriniaeth o fewn y teulu?"

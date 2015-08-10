@@ -248,7 +248,7 @@
       <graph edgedefault="directed" id="n28:">
         <node id="n28::n0">
           <data key="d3">{% trans "Clinical negligence" %}</data>
-          <data key="d4">{% trans "Doctors and nurses not treating you with due care during medical treatment" %}</data>
+          <data key="d4">{% trans "Problems with your medical care and treatment" %}</data>
           <data key="d6">f2f</data>
           <data key="d10">1</data>
           <data key="d11">n43n0</data>
@@ -256,7 +256,7 @@
           </node>
         <node id="n28::n1">
           <data key="d3">{% trans "Community care" %}</data>
-          <data key="d4">{% trans "You’re unhappy with the care being provided for yourself or a relative due to age, disability or special educational needs - for example, in a care home or your own home" %}</data>
+          <data key="d4">{% trans "You’re unhappy with the care you or a relative are getting due to disability, age or special educational needs eg in a care home or your own home" %}</data>
           <data key="d6">f2f</data>
           <data key="d10">2</data>
           <data key="d11">n43n1</data>
@@ -272,7 +272,7 @@
           </node>
         <node id="n28::n3">
           <data key="d3">{% trans "Domestic abuse" %}</data>
-          <data key="d4">{% trans "Abuse at home (whether psychological, physical, financial, sexual or emotional), child abuse, harassment by an ex-partner, forced marriage" %}</data>
+          <data key="d4">{% trans "Abuse at home (psychological, physical, financial, sexual or emotional), child abuse, harassment by an ex-partner, forced marriage" %}</data>
           <data key="d5">{% trans "Choose the option that best describes your personal situation" %}</data>
           <data key="d10">4</data>
           <data key="d11">n43n3</data>
@@ -282,7 +282,7 @@
         <node id="n28::n4">
           <data key="d3">{% trans "Discrimination" %}</data>
           <data key="d4">{% trans "Being treated unfairly because of your race, gender or sexual orientation, for example" %}</data>
-          <data key="d5">{% trans "On what grounds have you been discriminated against?" %}</data>
+          <data key="d5">{% trans "Being treated unfairly because of eg your race, gender or sexual orientation" %}</data>
           <data key="d10">5</data>
           <data key="d11">n43n4</data>
           <data key="d13"/>
@@ -345,7 +345,7 @@
           </node>
         <node id="n28::n12">
           <data key="d3">{% trans "Trouble with the police and other public authorities" %}</data>
-          <data key="d4">{% trans "Being treated unlawfully by authorities who detain, imprison and prosecute (for example, the police), abuse in care cases" %}</data>
+          <data key="d4">{% trans "You’ve been treated wrongly by the police or other authorities with the power to detain, imprison or prosecute you" %}</data>
           <data key="d10">14</data>
           <data key="d11">n43n12</data>
           <data key="d13"/>

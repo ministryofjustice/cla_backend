@@ -281,8 +281,8 @@
           </node>
         <node id="n28::n4">
           <data key="d3">{% trans "Discrimination" %}</data>
-          <data key="d4">{% trans "Being treated unfairly because of your race, gender or sexual orientation, for example" %}</data>
-          <data key="d5">{% trans "Being treated unfairly because of eg your race, gender or sexual orientation" %}</data>
+          <data key="d4">{% trans "Being treated unfairly because of eg your race, gender or sexual orientation" %}</data>
+          <data key="d5">{% trans "On what grounds have you been discriminated against?" %}</data>
           <data key="d10">5</data>
           <data key="d11">n43n4</data>
           <data key="d13"/>

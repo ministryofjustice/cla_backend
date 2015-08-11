@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-10 17:17+0100\n"
+"POT-Creation-Date: 2015-08-11 11:52+0100\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -354,11 +354,11 @@ msgid "Discrimination"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:284
-msgid "Being treated unfairly because of your race, gender or sexual orientation, for example"
+msgid "Being treated unfairly because of eg your race, gender or sexual orientation"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:285
-msgid "Being treated unfairly because of eg your race, gender or sexual orientation"
+msgid "On what grounds have you been discriminated against?"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:291

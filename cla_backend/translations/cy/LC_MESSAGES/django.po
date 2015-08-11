@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-10 17:17+0100\n"
+"POT-Creation-Date: 2015-08-11 11:52+0100\n"
 "PO-Revision-Date: 2015-08-03 13:52+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -354,11 +354,11 @@ msgid "Discrimination"
 msgstr "Gwahaniaethu"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:284
-msgid "Being treated unfairly because of your race, gender or sexual orientation, for example"
-msgstr "Cael eich trin yn annheg oherwydd eich hil, rhyw neu gyfeiriadedd rhyw, er enghraifft"
+msgid "Being treated unfairly because of eg your race, gender or sexual orientation"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:285
-msgid "Being treated unfairly because of eg your race, gender or sexual orientation"
+msgid "On what grounds have you been discriminated against?"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:291
@@ -2326,6 +2326,9 @@ msgstr "Hafan"
 #: templates/admin/reports/base.html:31
 msgid "Reports"
 msgstr "Adroddiadau"
+
+#~ msgid "Being treated unfairly because of your race, gender or sexual orientation, for example"
+#~ msgstr "Cael eich trin yn annheg oherwydd eich hil, rhyw neu gyfeiriadedd rhyw, er enghraifft"
 
 #~ msgid "Doctors and nurses not treating you with due care during medical treatment"
 #~ msgstr "Meddygon a nyrsys heb eich trin â gofal dyladwy yn ystod triniaeth feddygol"

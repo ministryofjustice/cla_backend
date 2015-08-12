@@ -85,7 +85,8 @@ class ThirdPartyPersonalDetailsSerializer(ThirdPartyPersonalDetailsSerializerBas
     class Meta(ThirdPartyPersonalDetailsSerializerBase.Meta):
         fields = (
             'reference', 'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone', 'email', 'safe_to_contact'
+            'mobile_phone', 'home_phone', 'email', 'safe_to_contact',
+            'contact_for_research'
         )
 
 

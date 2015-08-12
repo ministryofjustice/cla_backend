@@ -6,6 +6,8 @@ from django_statsd.clients import statsd
 from model_utils.models import TimeStampedModel
 
 from .constants import LOG_LEVELS, LOG_TYPES
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 
 class Log(TimeStampedModel):
@@ -30,6 +32,10 @@ class Log(TimeStampedModel):
     patch = JSONField(null=True, blank=True)
     context = JSONField(null=True, blank=True, help_text='Field to store extra event data for reporting')
 
+    content_type = models.ForeignKey(ContentType, null=True, blank=True)
+    object_id = models.PositiveIntegerField(null=True, blank=True)
+    content_object = GenericForeignKey()
+
     def __unicode__(self):
         return u'%s - %s:%s' % (self.case, self.type, self.code)
 
@@ -47,3 +53,18 @@ class Log(TimeStampedModel):
 
     class Meta(object):
         ordering = ['-created']
+
+
+class ComplaintLog(Log):
+
+    def __unicode__(self):
+        return u'%s: %s - %s:%s' % (self.complaint, self.case, self.type, self.code)
+
+    def save(self, *args, **kwargs):
+        super(Log, self).save(*args, **kwargs)
+        if self.code == 'COMPLAINT_CLOSED':
+            self.complaint.closed_at = self.created
+            self.complaint.save()
+
+    class Meta(Log.Meta):
+        proxy = True

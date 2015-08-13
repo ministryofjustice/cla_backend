@@ -29,6 +29,9 @@ from core.drf.decorators import list_route
 from core.drf.mixins import FormActionMixin
 from notifications.views import BaseNotificationViewSet
 
+from complaints.views import BaseComplaintViewSet, \
+    BaseComplaintCategoryViewSet
+
 from timer.views import BaseTimerViewSet
 
 from legalaid.models import PersonalDetails, Case
@@ -626,5 +629,19 @@ class GuidanceNoteViewSet(
 class NotificationViewSet(
     CallCentrePermissionsViewSetMixin,
     BaseNotificationViewSet
+):
+    pass
+
+
+class ComplaintViewSet(
+    CallCentrePermissionsViewSetMixin,
+    BaseComplaintViewSet
+):
+    pass
+
+
+class ComplaintCategoryViewSet(
+    CallCentrePermissionsViewSetMixin,
+    BaseComplaintCategoryViewSet
 ):
     pass

@@ -15,6 +15,13 @@ class ComplaintEvent(BaseEvent):
             'description': 'Complaint created',
             'stops_timer': False
         },
+        'OWNER_SET': {
+            'type': LOG_TYPES.EVENT,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': 'Owner set',
+            'stops_timer': False
+        },
         'HOLDING_LETTER_SENT': {
             'type': LOG_TYPES.EVENT,
             'level': LOG_LEVELS.HIGH,
@@ -33,14 +40,14 @@ class ComplaintEvent(BaseEvent):
             'type': LOG_TYPES.EVENT,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Complaint created',
+            'description': 'Complaint resolved',
             'stops_timer': False
         },
         'COMPLAINT_CLOSED': {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Complaint created',
+            'description': 'Complaint closed',
             'stops_timer': False
         },
     }

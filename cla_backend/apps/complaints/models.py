@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from cla_common.constants import REQUIRES_ACTION_BY
 from django.conf import settings
 from cla_eventlog.constants import LOG_LEVELS
 from django.contrib.contenttypes.fields import GenericRelation
@@ -14,25 +13,37 @@ class Complaint(TimeStampedModel):
     eod = models.ForeignKey('legalaid.EODDetails')
 
     description = models.TextField(null=True, blank=True)
-    source = models.CharField(max_length=15, choices=COMPLAINT_SOURCE.CHOICES)
+    source = models.CharField(max_length=15, choices=COMPLAINT_SOURCE)
     level = models.PositiveSmallIntegerField(choices=LOG_LEVELS.CHOICES)
+    justified = models.NullBooleanField()
     category = models.ForeignKey('Category')
 
-    requires_action_by = models.CharField(
-        max_length=50, choices=REQUIRES_ACTION_BY.CHOICES,
-        default=REQUIRES_ACTION_BY.OPERATOR,
-        blank=True, null=True, editable=False
-    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='%(app_label)s_%(class)s_owner',
+        limit_choices_to={'operator__is_manager': True},
+        blank=True,
+        null=True)
+
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='%(app_label)s_%(class)s_created_by',
+        limit_choices_to={'operator__isnull': False},
+        blank=True,
+        null=True)
 
     logs = GenericRelation('cla_eventlog.ComplaintLog',
                            related_query_name='complaint')
 
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True,
-                                   null=True)
-
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name
 
 
 

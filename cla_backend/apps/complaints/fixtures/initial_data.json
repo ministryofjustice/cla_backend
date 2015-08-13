@@ -1,0 +1,119 @@
+[
+{
+    "fields": {
+        "modified": "2015-08-13T13:47:47.827Z",
+        "name": "Access Problems",
+        "created": "2015-08-13T13:47:47.827Z"
+    },
+    "model": "complaints.category",
+    "pk": 1
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:50:52.489Z",
+        "name": "Advisor Conduct",
+        "created": "2015-08-13T13:50:52.488Z"
+    },
+    "model": "complaints.category",
+    "pk": 2
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:47:31.347Z",
+        "name": "Assessment of scope incorrect - Operator believed matter in scope & SP disagreed",
+        "created": "2015-08-13T13:47:07.589Z"
+    },
+    "model": "complaints.category",
+    "pk": 3
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:48:40.963Z",
+        "name": "Client believes financial eligibility assessment is wrong",
+        "created": "2015-08-13T13:48:40.963Z"
+    },
+    "model": "complaints.category",
+    "pk": 4
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:48:25.257Z",
+        "name": "Client believes CLA should be able to assist with matter",
+        "created": "2015-08-13T13:48:25.257Z"
+    },
+    "model": "complaints.category",
+    "pk": 5
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:48:16.946Z",
+        "name": "Client believes scope assessment is wrong",
+        "created": "2015-08-13T13:48:16.946Z"
+    },
+    "model": "complaints.category",
+    "pk": 6
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:48:57.727Z",
+        "name": "Deletion of details",
+        "created": "2015-08-13T13:48:57.726Z"
+    },
+    "model": "complaints.category",
+    "pk": 7
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:48:08.823Z",
+        "name": "Inaccurate information provided",
+        "created": "2015-08-13T13:48:08.823Z"
+    },
+    "model": "complaints.category",
+    "pk": 8
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:47:55.908Z",
+        "name": "Language Line",
+        "created": "2015-08-13T13:47:55.907Z"
+    },
+    "model": "complaints.category",
+    "pk": 9
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:47:39.337Z",
+        "name": "Online Advice",
+        "created": "2015-08-13T13:47:39.336Z"
+    },
+    "model": "complaints.category",
+    "pk": 10
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:48:32.785Z",
+        "name": "Slow response time or delay",
+        "created": "2015-08-13T13:48:32.785Z"
+    },
+    "model": "complaints.category",
+    "pk": 11
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:48:49.683Z",
+        "name": "Specialist Advisor Conduct / Chasing for response",
+        "created": "2015-08-13T13:48:49.682Z"
+    },
+    "model": "complaints.category",
+    "pk": 12
+},
+{
+    "fields": {
+        "modified": "2015-08-13T13:49:05.310Z",
+        "name": "Other",
+        "created": "2015-08-13T13:49:05.310Z"
+    },
+    "model": "complaints.category",
+    "pk": 13
+}
+]

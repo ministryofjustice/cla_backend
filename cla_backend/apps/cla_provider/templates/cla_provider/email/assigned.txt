@@ -1,7 +1,9 @@
 Hello,
 {% filter wordwrap:78 %}
 You have received this email as notification that a CLA Case (reference {{ case.reference }}) in category {{ case.eligibility_check.category }} has been assigned to you at {{ now|time:"H:i" }} on {{ now|date:"D d M Y" }}.
-
+{% if case.outcome_code == 'SPOR' %}
+This case has been referred for a second opinion.
+{% endif %}
 Please click on the following link, or copy and paste it into your web browser's address bar if it is not clickable, to view the case:
 {% endfilter %}
 {{ case_url }}

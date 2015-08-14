@@ -8,6 +8,14 @@ from model_utils.models import TimeStampedModel
 from complaints.constants import COMPLAINT_SOURCE
 
 
+class ComplaintManager(models.Manager):
+    def get_queryset(self):
+        return super(ComplaintManager, self).get_queryset().slelct_related(
+            'eod',
+            'eod__case',
+        )
+
+
 class Complaint(TimeStampedModel):
     eod = models.ForeignKey('legalaid.EODDetails')
 
@@ -33,6 +41,10 @@ class Complaint(TimeStampedModel):
 
     logs = GenericRelation('cla_eventlog.ComplaintLog',
                            related_query_name='complaint')
+
+    @property
+    def case(self):
+        return self.eod.case
 
 
 class Category(TimeStampedModel):

@@ -10,7 +10,7 @@ from complaints.constants import COMPLAINT_SOURCE
 
 class ComplaintManager(models.Manager):
     def get_queryset(self):
-        return super(ComplaintManager, self).get_queryset().slelct_related(
+        return super(ComplaintManager, self).get_queryset().select_related(
             'eod',
             'eod__case',
         )
@@ -41,6 +41,8 @@ class Complaint(TimeStampedModel):
 
     logs = GenericRelation('cla_eventlog.ComplaintLog',
                            related_query_name='complaint')
+
+    objects = ComplaintManager()
 
     @property
     def case(self):

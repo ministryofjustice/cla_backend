@@ -643,7 +643,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     search_field = models.TextField(null=True, blank=True, db_index=True)
 
     complaint_flag = models.BooleanField(default=False)
-    eod_details = models.ForeignKey(EODDetails, blank=True, null=True)
+    eod_details = models.OneToOneField(EODDetails, blank=True, null=True)
 
     class Meta(object):
         ordering = ('-created',)

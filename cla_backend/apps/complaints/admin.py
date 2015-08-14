@@ -6,7 +6,7 @@ from .models import Category, Complaint
 
 class ComplaintAdmin(admin.ModelAdmin):
 
-    raw_id_fields = ['case', 'eod']
+    raw_id_fields = ['eod']
 
     def save_model(self, request, obj, form, change):
         if not obj.pk:

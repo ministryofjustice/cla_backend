@@ -9,7 +9,6 @@ from complaints.constants import COMPLAINT_SOURCE
 
 
 class Complaint(TimeStampedModel):
-    case = models.ForeignKey('legalaid.Case')
     eod = models.ForeignKey('legalaid.EODDetails')
 
     description = models.TextField(null=True, blank=True)

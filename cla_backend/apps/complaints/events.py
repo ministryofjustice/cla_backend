@@ -17,7 +17,7 @@ class ComplaintEvent(BaseEvent):
         },
         'OWNER_SET': {
             'type': LOG_TYPES.EVENT,
-            'level': LOG_LEVELS.HIGH,
+            'level': LOG_LEVELS.MODERATE,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Owner set',
             'stops_timer': False

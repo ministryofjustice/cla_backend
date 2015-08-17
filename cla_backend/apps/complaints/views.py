@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-from rest_framework import mixins, viewsets
+from rest_framework import viewsets, mixins, status
+from rest_framework.response import Response as DRFResponse
+from complaints.forms import BaseComplaintLogForm
 from core.drf.mixins import FormActionMixin
+from django.contrib.auth.models import AnonymousUser
 
 from .models import Complaint, Category
+from rest_framework.decorators import action
 from .serializers import ComplaintSerializerBase, CategorySerializerBase
 
 
@@ -23,6 +27,25 @@ class BaseComplaintViewSet(
 ):
     model = Complaint
     serializer_class = ComplaintSerializerBase
+
+    def pre_save(self, obj, *args, **kwargs):
+        super(BaseComplaintViewSet, self).pre_save(obj)
+
+        user = self.request.user
+        if not obj.pk and not isinstance(user, AnonymousUser):
+            obj.created_by = user
+
+    @action()
+    def add_event(self, request, **kwargs):
+        obj = self.get_object()
+        form = BaseComplaintLogForm(complaint=obj, data=request.DATA)
+        if form.is_valid():
+            form.save(request.user)
+            return DRFResponse(status=status.HTTP_204_NO_CONTENT)
+
+        return DRFResponse(
+            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class BaseComplaintCategoryViewSet(

@@ -13,6 +13,12 @@ class ComplaintManager(models.Manager):
         return super(ComplaintManager, self).get_queryset().select_related(
             'eod',
             'eod__case',
+            'eod__case__personal_details',
+            'eod__case__eligibility_check',
+            'eod__case__eligibility_check__category',
+            'category',
+        ).prefetch_related(
+            'eod__categories',
         )
 
 

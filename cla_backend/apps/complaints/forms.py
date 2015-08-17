@@ -6,6 +6,11 @@ from cla_eventlog.forms import BaseCaseLogForm
 class BaseComplaintForm(BaseCaseLogForm):
     LOG_EVENT_KEY = 'complaint'
 
+    def __init__(self, *args, **kwargs):
+        self.complaint = kwargs.pop('complaint')
+        super(BaseComplaintForm, self).__init__(
+            *args, case=self.complaint.eod.case, **kwargs)
+
     def get_requires_action_at(self):
         raise NotImplementedError()
 

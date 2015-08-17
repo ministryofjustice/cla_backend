@@ -60,10 +60,7 @@ class ComplaintEvent(BaseEvent):
         super(ComplaintEvent, self).process(*args, **kwargs)
 
     def get_log_code(self, case=None, **kwargs):
-        my_param = kwargs.get('my_param')
-        if my_param == 'something':
-            return 'CODE1'
-        return 'CODE2'
+        return kwargs.get('action')
 
 
 event_registry.register(ComplaintEvent)

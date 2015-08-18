@@ -60,7 +60,7 @@ class ComplaintEvent(BaseEvent):
         super(ComplaintEvent, self).process(*args, **kwargs)
 
     def get_log_code(self, case=None, **kwargs):
-        return kwargs.get('action')
+        return kwargs.get('code')
 
 
 event_registry.register(ComplaintEvent)

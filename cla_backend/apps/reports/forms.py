@@ -302,7 +302,8 @@ class MISurveyExtract(SQLFileDateRangeReport):
             'date_of_birth',
             'ni_number',
             'contact_for_research',
-            'safe_to_contact'
+            'safe_to_contact',
+            'Third Party Contact',
         ]
 
 

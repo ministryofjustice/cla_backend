@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-05 11:21+0100\n"
+"POT-Creation-Date: 2015-08-11 11:52+0100\n"
 "PO-Revision-Date: 2015-08-03 13:52+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -309,8 +309,8 @@ msgid "Clinical negligence"
 msgstr "Esgeuluster clinigol"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:251
-msgid "Doctors and nurses not treating you with due care during medical treatment"
-msgstr "Meddygon a nyrsys heb eich trin â gofal dyladwy yn ystod triniaeth feddygol"
+msgid "Problems with your medical care and treatment"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:258
 #: apps/diagnosis/data/graph.graphml.tpl:2206
@@ -318,8 +318,8 @@ msgid "Community care"
 msgstr "Gofal cymunedol"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:259
-msgid "You’re unhappy with the care being provided for yourself or a relative due to age, disability or special educational needs - for example, in a care home or your own home"
-msgstr "Nid ydych chi’n fodlon ar y gofal sy’n cael ei ddarparu i chi neu i berthynas oherwydd oed, anabledd neu anghenion addysgol arbennig - er enghraifft, mewn cartref gofal neu yn eich cartref eich hun"
+msgid "You’re unhappy with the care you or a relative are getting due to disability, age or special educational needs eg in a care home or your own home"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:266
 msgid "Debt"
@@ -340,8 +340,8 @@ msgid "Domestic abuse"
 msgstr "Camdriniaeth domestig"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:275
-msgid "Abuse at home (whether psychological, physical, financial, sexual or emotional), child abuse, harassment by an ex-partner, forced marriage"
-msgstr "Camdriniaeth yn y cartref (naill ai'n seicolegol, corfforol, ariannol, rhywiol neu emosiynol), camdriniaeth plant, aflonyddwch gan gyn-bartner, priodas dan orfod"
+msgid "Abuse at home (psychological, physical, financial, sexual or emotional), child abuse, harassment by an ex-partner, forced marriage"
+msgstr "Camdriniaeth yn y cartref (seicolegol, corfforol, ariannol, rhywiol neu emosiynol), camdriniaeth plant, aflonyddwch gan gyn-bartner, priodas dan orfod"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:276
 msgid "Choose the option that best describes your personal situation"
@@ -354,8 +354,8 @@ msgid "Discrimination"
 msgstr "Gwahaniaethu"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:284
-msgid "Being treated unfairly because of your race, gender or sexual orientation, for example"
-msgstr "Cael eich trin yn annheg oherwydd eich hil, rhyw neu gyfeiriadedd rhyw, er enghraifft"
+msgid "Being treated unfairly because of eg your race, gender or sexual orientation"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:285
 msgid "On what grounds have you been discriminated against?"
@@ -446,8 +446,8 @@ msgid "Trouble with the police and other public authorities"
 msgstr "Trafferth gyda'r heddlu ac awdurdodau cyhoeddus eraill"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:348
-msgid "Being treated unlawfully by authorities who detain, imprison and prosecute (for example, the police), abuse in care cases"
-msgstr "Cael eich trin yn anghyfreithlon gan awdurdodau sy’n cadw, yn carcharu ac yn erlyn pobl (er enghraifft, yr heddlu), cam-drin mewn achosion gofal"
+msgid "You’ve been treated wrongly by the police or other authorities with the power to detain, imprison or prosecute you"
+msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:354
 #: apps/diagnosis/data/graph.graphml.tpl:1441
@@ -2326,6 +2326,15 @@ msgstr "Hafan"
 #: templates/admin/reports/base.html:31
 msgid "Reports"
 msgstr "Adroddiadau"
+
+#~ msgid "Being treated unfairly because of your race, gender or sexual orientation, for example"
+#~ msgstr "Cael eich trin yn annheg oherwydd eich hil, rhyw neu gyfeiriadedd rhyw, er enghraifft"
+
+#~ msgid "Doctors and nurses not treating you with due care during medical treatment"
+#~ msgstr "Meddygon a nyrsys heb eich trin â gofal dyladwy yn ystod triniaeth feddygol"
+
+#~ msgid "Being treated unlawfully by authorities who detain, imprison and prosecute (for example, the police), abuse in care cases"
+#~ msgstr "Cael eich trin yn anghyfreithlon gan awdurdodau sy’n cadw, yn carcharu ac yn erlyn pobl (er enghraifft, yr heddlu), cam-drin mewn achosion gofal"
 
 #~ msgid "You've been discriminated against because of your:"
 #~ msgstr "Rydych wedi cael eich gwahaniaethu oherwydd eich:"

@@ -5,6 +5,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.response import Response as DRFResponse
 from rest_framework import status
+from django.db.models.fields.related import SingleRelatedObjectDescriptor, \
+    ReverseSingleRelatedObjectDescriptor
 
 
 class NoParentReferenceException(BaseException):
@@ -39,7 +41,9 @@ class NestedGenericModelMixin(object):
 
     def is_one_to_one_nested(self):
         descriptor = getattr(self.parent.model, self.PARENT_FIELD)
-        return not hasattr(descriptor, 'related')
+        return not hasattr(descriptor, 'related') or \
+               isinstance(descriptor, SingleRelatedObjectDescriptor) or \
+               isinstance(descriptor, ReverseSingleRelatedObjectDescriptor)
 
     def get_object(self):
         if self.is_one_to_one_nested():

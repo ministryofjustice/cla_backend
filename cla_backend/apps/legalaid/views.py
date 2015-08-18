@@ -408,14 +408,17 @@ class FullCaseViewSet(
     max_paginate_by = 100
 
     FLAGGED_WITH_EOD_SQL = '''
-    SELECT legalaid_case.eod_details_id IS NOT NULL AND (
-        (SELECT notes IS NOT NULL AND length(notes) > 0
-            FROM legalaid_eoddetails
-            WHERE legalaid_eoddetails.id=legalaid_case.eod_details_id)
-        OR
-        (SELECT COUNT(id) > 0
+    SELECT COUNT(id) > 0 from legalaid_eoddetails
+    WHERE legalaid_case.id = legalaid_eoddetails.case_id
+    AND (
+        (
+          legalaid_eoddetails.notes IS NOT NULL
+          AND length(legalaid_eoddetails.notes) > 0
+        ) OR (
+          SELECT COUNT(id) > 0
             FROM legalaid_eoddetailscategory
-            WHERE legalaid_eoddetailscategory.eod_details_id=legalaid_case.eod_details_id)
+            WHERE legalaid_eoddetailscategory.eod_details_id=legalaid_eoddetails.id
+        )
     )
     '''
 

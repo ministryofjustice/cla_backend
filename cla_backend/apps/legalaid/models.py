@@ -217,6 +217,8 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
 
 
 class EODDetails(TimeStampedModel):
+    case = models.OneToOneField('Case', related_name='eod_details',
+                                related_query_name='eod_details')
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
 
@@ -643,7 +645,6 @@ class Case(TimeStampedModel, ModelDiffMixin):
     search_field = models.TextField(null=True, blank=True, db_index=True)
 
     complaint_flag = models.BooleanField(default=False)
-    eod_details = models.OneToOneField(EODDetails, blank=True, null=True)
 
     class Meta(object):
         ordering = ('-created',)

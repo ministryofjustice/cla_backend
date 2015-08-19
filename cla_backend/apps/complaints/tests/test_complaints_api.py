@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+from complaints.models import Complaint
+from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
 from django.core.urlresolvers import NoReverseMatch
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin, \
     CLAProviderAuthBaseApiTestMixin
+from rest_framework import status
 from rest_framework.test import APITestCase
 
 
@@ -19,6 +22,7 @@ class BaseComplaintTestCase(
     @property
     def response_keys(self):
         return [
+            'category_name',
             'category',
             'full_name',
             'category_of_law',
@@ -42,6 +46,35 @@ class BaseComplaintTestCase(
     def test_response_keys(self):
         self.maxDiff = None
         self.assertResponseKeys(response=self.client.get(self.detail_url))
+
+    def test_create_and_event_log(self):
+        complaint_count = Complaint.objects.all().count()
+        eod = make_recipe('legalaid.eod_details')
+        complaint_cat = make_recipe('complaints.category')
+        response = self.client.post(self.list_url, {
+            'category': complaint_cat.pk,
+            'eod': eod.pk,
+            'description': 'TEST DESCRIPTION',
+            'source': 'EMAIL',
+            'level': 29,
+            'justified': True,
+            'owner': self.operator_manager.pk
+        })
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(complaint_count + 1, Complaint.objects.all().count())
+
+    def test_patch(self):
+        response = self.client.patch(self.detail_url, {
+            'description': 'TEST DESCRIPTION',
+        })
+        print response.status_code
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        resource = Complaint.objects.get(pk=self.resource_lookup_value)
+        self.assertEqual(resource.description, 'TEST DESCRIPTION')
+
 
 
 class BaseProviderComplaintTestCase(

@@ -11,7 +11,9 @@ class CategorySerializerBase(serializers.ModelSerializer):
 
 
 class ComplaintSerializerBase(serializers.ModelSerializer):
-    category = CategorySerializerBase()
+    category_name = serializers.CharField(
+        source='category.name',
+        read_only=True)
     full_name = serializers.CharField(
         source='eod.case.personal_details.full_name',
         read_only=True)

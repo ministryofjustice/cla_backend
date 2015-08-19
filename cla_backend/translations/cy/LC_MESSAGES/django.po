@@ -2282,7 +2282,7 @@ msgid "Seeking protection from the unlawful removal of a child from the UK or th
 msgstr "Ceisio diogelu rhag symud plentyn yn anghyfreithlon o'r DU, neu ddychwelyd plentyn sydd wedi cael ei symud yn anghyfreithlon o'r DU, neu wedi ei symud yn anghyfreithlon o fewn y DU. Plentyn yw rhywun sydd o dan 18 oed a rhaid i'r cleient fod yn rhiant neu rywun sydd â chyfrifoldeb rhiant am y plentyn hwnnw.  "
 
 #: apps/diagnosis/data/graph.graphml.tpl:3085
-msgid "Bypass means test"
+msgid "No financial assessment is needed for this problem."
 msgstr ""
 
 #: templates/admin/base_site.html:4

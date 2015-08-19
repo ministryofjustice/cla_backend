@@ -3082,7 +3082,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d10">n342</data>
       </node>
     <node id="n343">
-      <data key="d3">{% trans "Bypass means test" %}</data>
+      <data key="d3">{% trans "No financial assessment is needed for this problem." %}</data>
       <data key="d4"/>
       <data key="d10">n343</data>
       </node>

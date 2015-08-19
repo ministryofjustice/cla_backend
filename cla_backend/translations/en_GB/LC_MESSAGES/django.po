@@ -1983,7 +1983,7 @@ msgid "Seeking protection from the unlawful removal of a child from the UK or th
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:3085
-msgid "Bypass means test"
+msgid "No financial assessment is needed for this problem."
 msgstr ""
 
 #: templates/admin/base_site.html:4

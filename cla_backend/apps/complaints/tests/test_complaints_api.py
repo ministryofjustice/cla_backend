@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+from call_centre.models import Operator
 from cla_eventlog.models import ComplaintLog, Log
 from complaints.models import Complaint
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
+from django.contrib.auth.models import User
 from django.core.urlresolvers import NoReverseMatch
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin, \
     CLAProviderAuthBaseApiTestMixin
@@ -19,6 +21,12 @@ class BaseComplaintTestCase(
     ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin,
     SimpleResourceAPIMixin, APITestCase,
 ):
+
+    def assertSingleEventCreated(self, resource, event_code):
+        created_log = ComplaintLog.objects.get(
+            object_id=resource.pk, code=event_code)
+
+        self.assertEqual(created_log.code, event_code)
 
     @property
     def response_keys(self):
@@ -67,13 +75,11 @@ class BaseComplaintTestCase(
         self.assertEqual(complaint_count + 1, Complaint.objects.all().count())
 
         resource = Complaint.objects.get(pk=response.data['id'])
-
-        created_log = ComplaintLog.objects.get(object_id=resource.pk)
-
-        self.assertEqual(created_log.code, 'COMPLAINT_CREATED')
+        self.assertSingleEventCreated(resource, 'COMPLAINT_CREATED')
+        self.assertSingleEventCreated(resource, 'OWNER_SET')
 
     def test_patch(self):
-        response = self.client.patch(self.detail_url, {
+        response = self._patch({
             'description': 'TEST DESCRIPTION',
         })
 
@@ -81,6 +87,20 @@ class BaseComplaintTestCase(
 
         resource = Complaint.objects.get(pk=self.resource_lookup_value)
         self.assertEqual(resource.description, 'TEST DESCRIPTION')
+
+    def test_owner_set_on_change(self):
+        mgr_user = User.objects.create_user('x', 'x@x.com', 'OnionMan77')
+        operator_manager = Operator.objects.create(user=mgr_user,
+                                                        is_manager=True)
+
+        response = self._patch({
+            'owner': operator_manager.pk,
+        })
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        resource = Complaint.objects.get(pk=self.resource_lookup_value)
+        self.assertSingleEventCreated(resource, 'OWNER_SET')
 
 
 class BaseProviderComplaintTestCase(

@@ -34,8 +34,13 @@ class BaseComplaintViewSet(
         super(BaseComplaintViewSet, self).pre_save(obj)
 
         user = self.request.user
-        if not obj.pk and not isinstance(user, AnonymousUser):
-            obj.created_by = user
+        if not obj.pk :
+            if not isinstance(user, AnonymousUser):
+                obj.created_by = user
+            obj.update_owner = True
+        else:
+            original_obj = self.model.objects.get(pk=obj.pk)
+            obj.update_owner = original_obj.owner_id = obj.owner_id
 
     def post_save(self, obj, created=False):
         if created:
@@ -53,6 +58,16 @@ class BaseComplaintViewSet(
                 notes=notes,
                 complaint=obj,
                 code='COMPLAINT_CREATED'
+            )
+
+        if getattr(obj, 'update_owner', False):
+            event = event_registry.get_event('complaint')()
+            event.process(
+                obj.eod.case,
+                created_by=self.request.user,
+                notes=u'Owner set to %s' % self.request.user.username,
+                complaint=obj,
+                code='OWNER_SET'
             )
 
     @action()

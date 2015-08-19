@@ -92,7 +92,7 @@ class BaseComplaintTestCase(
     def test_owner_set_on_change(self):
         mgr_user = User.objects.create_user('x', 'x@x.com', 'OnionMan77')
         operator_manager = Operator.objects.create(user=mgr_user,
-                                                        is_manager=True)
+                                                   is_manager=True)
 
         response = self._patch({
             'owner': operator_manager.pk,

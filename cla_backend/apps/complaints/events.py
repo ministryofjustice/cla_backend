@@ -3,6 +3,7 @@ from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES
 from cla_eventlog.events import BaseEvent
 from cla_eventlog.models import ComplaintLog
+from django.contrib.contenttypes.models import ContentType
 
 
 class ComplaintEvent(BaseEvent):
@@ -53,7 +54,12 @@ class ComplaintEvent(BaseEvent):
     }
 
     def create_log(self, **kwargs):
-        return ComplaintLog(complaint=self.complaint, **kwargs)
+        content_type = ContentType.objects.get_for_model(
+            self.complaint.__class__)
+        return ComplaintLog(
+            object_id=self.complaint.pk,
+            content_type=content_type,
+            **kwargs)
 
     def process(self, *args, **kwargs):
         self.complaint = kwargs.pop('complaint', None)

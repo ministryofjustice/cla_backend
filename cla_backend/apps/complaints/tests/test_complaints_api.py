@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from cla_eventlog.models import ComplaintLog, Log
 from complaints.models import Complaint
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
@@ -51,7 +52,7 @@ class BaseComplaintTestCase(
         complaint_count = Complaint.objects.all().count()
         eod = make_recipe('legalaid.eod_details')
         complaint_cat = make_recipe('complaints.category')
-        response = self.client.post(self.list_url, {
+        response = self._create({
             'category': complaint_cat.pk,
             'eod': eod.pk,
             'description': 'TEST DESCRIPTION',
@@ -65,16 +66,21 @@ class BaseComplaintTestCase(
 
         self.assertEqual(complaint_count + 1, Complaint.objects.all().count())
 
+        resource = Complaint.objects.get(pk=response.data['id'])
+
+        created_log = ComplaintLog.objects.get(object_id=resource.pk)
+
+        self.assertEqual(created_log.code, 'COMPLAINT_CREATED')
+
     def test_patch(self):
         response = self.client.patch(self.detail_url, {
             'description': 'TEST DESCRIPTION',
         })
-        print response.status_code
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         resource = Complaint.objects.get(pk=self.resource_lookup_value)
         self.assertEqual(resource.description, 'TEST DESCRIPTION')
-
 
 
 class BaseProviderComplaintTestCase(

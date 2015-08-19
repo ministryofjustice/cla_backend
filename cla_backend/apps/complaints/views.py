@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from cla_eventlog import event_registry
+from django.utils import timezone
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response as DRFResponse
 from complaints.forms import BaseComplaintLogForm
@@ -34,6 +36,24 @@ class BaseComplaintViewSet(
         user = self.request.user
         if not obj.pk and not isinstance(user, AnonymousUser):
             obj.created_by = user
+
+    def post_save(self, obj, created=False):
+        if created:
+            dt = timezone.now()
+            notes = u"Complaint created on {dt} by {user}. {notes}".format(
+                dt=dt.strftime("%d/%m/%Y %H:%M"),
+                user=self.request.user.username,
+                notes=obj.description
+            )
+
+            event = event_registry.get_event('complaint')()
+            event.process(
+                obj.eod.case,
+                created_by=self.request.user,
+                notes=notes,
+                complaint=obj,
+                code='COMPLAINT_CREATED'
+            )
 
     @action()
     def add_event(self, request, **kwargs):

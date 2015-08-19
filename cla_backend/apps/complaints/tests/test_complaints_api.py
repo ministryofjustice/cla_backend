@@ -111,7 +111,6 @@ class BaseComplaintTestCase(
             'COMPLAINT_CLOSED',
         ]
         for code in codes:
-            print code
             response = self._create({
                 'event_code': code,
                 'notes': 'x' * 10000

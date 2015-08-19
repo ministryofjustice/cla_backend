@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from core.tests.test_base import SimpleResourceAPIMixin
 from django.core.urlresolvers import NoReverseMatch
-from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin, CLAProviderAuthBaseApiTestMixin
+from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin, \
+    CLAProviderAuthBaseApiTestMixin
 from rest_framework.test import APITestCase
 
 
@@ -11,8 +12,8 @@ class ComplaintTestMixin(object):
 
 
 class BaseComplaintTestCase(
-    ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase,
-
+    ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin,
+    SimpleResourceAPIMixin, APITestCase,
 ):
 
     @property
@@ -44,8 +45,8 @@ class BaseComplaintTestCase(
 
 
 class BaseProviderComplaintTestCase(
-    ComplaintTestMixin, CLAProviderAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase,
-
+    ComplaintTestMixin, CLAProviderAuthBaseApiTestMixin,
+    SimpleResourceAPIMixin, APITestCase,
 ):
     def assertUrlsNonExistant(self, url_property_function):
         try:

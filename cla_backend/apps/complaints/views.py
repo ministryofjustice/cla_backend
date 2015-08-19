@@ -71,7 +71,7 @@ class BaseComplaintViewSet(
             )
 
     @action()
-    def add_event(self, request, **kwargs):
+    def add_event(self, request, pk):
         obj = self.get_object()
         form = BaseComplaintLogForm(complaint=obj, data=request.DATA)
         if form.is_valid():

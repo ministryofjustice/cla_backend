@@ -19,7 +19,7 @@ class ComplaintFormMixin(object):
         return kwargs
 
 
-class BaseComplaintLogForm(EventSpecificLogForm, ComplaintFormMixin):
+class BaseComplaintLogForm(ComplaintFormMixin, EventSpecificLogForm):
     notes = forms.CharField(required=True, max_length=10000)
 
     def get_event_code_choices(self):

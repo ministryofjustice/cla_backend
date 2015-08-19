@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from call_centre.models import Operator
 from cla_eventlog.models import ComplaintLog, Log
+from complaints.events import ComplaintEvent
 from complaints.models import Complaint
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
@@ -101,6 +102,21 @@ class BaseComplaintTestCase(
 
         resource = Complaint.objects.get(pk=self.resource_lookup_value)
         self.assertSingleEventCreated(resource, 'OWNER_SET')
+
+    def test_add_events_to_complaints(self):
+        for code in ComplaintEvent.codes.keys()[2:]:
+            response = self._create({
+                'event_code': code,
+                'notes': 'x' * 10000
+            }, self.event_url)
+
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+            self.assertSingleEventCreated(self.resource, code)
+
+    @property
+    def event_url(self):
+        return '%sadd_event/' % self.detail_url
 
 
 class BaseProviderComplaintTestCase(

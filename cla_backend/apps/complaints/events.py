@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES
 from cla_eventlog.events import BaseEvent
@@ -8,50 +9,50 @@ from django.contrib.contenttypes.models import ContentType
 
 class ComplaintEvent(BaseEvent):
     key = 'complaint'
-    codes = {
-        'COMPLAINT_CREATED': {
+    codes = OrderedDict([
+        ('COMPLAINT_CREATED', {
             'type': LOG_TYPES.EVENT,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Complaint created',
             'stops_timer': False
-        },
-        'OWNER_SET': {
+        }),
+        ('OWNER_SET', {
             'type': LOG_TYPES.EVENT,
             'level': LOG_LEVELS.MODERATE,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Owner set',
             'stops_timer': False
-        },
-        'HOLDING_LETTER_SENT': {
+        }),
+        ('HOLDING_LETTER_SENT', {
             'type': LOG_TYPES.EVENT,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Holding letter sent',
             'stops_timer': False,
-        },
-        'FULL_RESPONSE_SENT': {
+        }),
+        ('FULL_RESPONSE_SENT', {
             'type': LOG_TYPES.EVENT,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Full response sent',
             'stops_timer': False
-        },
-        'COMPLAINT_RESOLVED': {
+        }),
+        ('COMPLAINT_RESOLVED', {
             'type': LOG_TYPES.EVENT,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Complaint resolved',
             'stops_timer': False
-        },
-        'COMPLAINT_CLOSED': {
+        }),
+        ('COMPLAINT_CLOSED', {
             'type': LOG_TYPES.OUTCOME,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Complaint closed',
             'stops_timer': False
-        },
-    }
+        }),
+    ])
 
     def create_log(self, **kwargs):
         content_type = ContentType.objects.get_for_model(

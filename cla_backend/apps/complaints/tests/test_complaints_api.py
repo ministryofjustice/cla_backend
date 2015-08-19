@@ -104,7 +104,14 @@ class BaseComplaintTestCase(
         self.assertSingleEventCreated(resource, 'OWNER_SET')
 
     def test_add_events_to_complaints(self):
-        for code in ComplaintEvent.codes.keys()[2:]:
+        codes = [
+            'HOLDING_LETTER_SENT',
+            'FULL_RESPONSE_SENT',
+            'COMPLAINT_RESOLVED',
+            'COMPLAINT_CLOSED',
+        ]
+        for code in codes:
+            print code
             response = self._create({
                 'event_code': code,
                 'notes': 'x' * 10000

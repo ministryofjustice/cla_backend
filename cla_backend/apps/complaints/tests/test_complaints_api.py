@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 from core.tests.test_base import SimpleResourceAPIMixin
-from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
+from django.core.urlresolvers import NoReverseMatch
+from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin, CLAProviderAuthBaseApiTestMixin
 from rest_framework.test import APITestCase
 
 
-class BaseComplaintTestCase(
-    CLAOperatorAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase
-):
+class ComplaintTestMixin(object):
     API_URL_BASE_NAME = 'complaints'
     RESOURCE_RECIPE = 'complaints.complaint'
+
+
+class BaseComplaintTestCase(
+    ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase,
+
+):
 
     @property
     def response_keys(self):
@@ -30,15 +35,25 @@ class BaseComplaintTestCase(
         ]
 
     def test_methods_not_allowed(self):
-        """
-        Ensure that we can't POST, PUT or DELETE
-        """
-        ### LIST
         self._test_delete_not_allowed(self.list_url)
-
-        # ### DETAIL
         self._test_delete_not_allowed(self.detail_url)
 
     def test_response_keys(self):
         self.maxDiff = None
         self.assertResponseKeys(response=self.client.get(self.detail_url))
+
+
+class BaseProviderComplaintTestCase(
+    ComplaintTestMixin, CLAProviderAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase,
+
+):
+    def assertUrlsNonExistant(self, url_property_function):
+        try:
+            url_property_function()
+            self.fail('Complaint url should not exist for providers')
+        except NoReverseMatch:
+            pass
+
+    def test_methods_not_allowed(self):
+        self.assertUrlsNonExistant(lambda: self.list_url)
+        self.assertUrlsNonExistant(lambda: self.detail_url)

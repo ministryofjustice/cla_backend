@@ -30,6 +30,7 @@ from core.drf.mixins import FormActionMixin
 from notifications.views import BaseNotificationViewSet
 
 from complaints.views import BaseComplaintViewSet, \
+    BaseComplaintConstantsView, \
     BaseComplaintCategoryViewSet
 
 from timer.views import BaseTimerViewSet
@@ -645,5 +646,12 @@ class ComplaintViewSet(
 class ComplaintCategoryViewSet(
     CallCentrePermissionsViewSetMixin,
     BaseComplaintCategoryViewSet
+):
+    pass
+
+
+class ComplaintConstantsView(
+    CallCentrePermissionsViewSetMixin,
+    BaseComplaintConstantsView,
 ):
     pass

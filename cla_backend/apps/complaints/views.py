@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from cla_eventlog import event_registry
 from django.utils import timezone
-from rest_framework import viewsets, mixins, status
+from django.utils.text import capfirst, force_text
+from rest_framework import viewsets, mixins, status, views as rest_views
 from rest_framework.response import Response as DRFResponse
 from complaints.forms import BaseComplaintLogForm
 from core.drf.mixins import FormActionMixin
@@ -90,3 +91,31 @@ class BaseComplaintCategoryViewSet(
 ):
     model = Category
     serializer_class = CategorySerializerBase
+
+
+class BaseComplaintConstantsView(rest_views.APIView):
+    @classmethod
+    def get_field_choices(cls, key):
+        return [
+            {
+                'value': choice[0],
+                'description': capfirst(force_text(choice[1]).lower()),
+            }
+            for choice in Complaint._meta.get_field(key).choices
+        ]
+
+    def get(self, *args, **kwargs):
+        return DRFResponse({
+            'levels': self.get_field_choices('level'),
+            'sources': self.get_field_choices('source'),
+            'justified': [
+                {
+                    'value': True,
+                    'description': 'Justified',
+                },
+                {
+                    'value': False,
+                    'description': 'Unjustified',
+                },
+            ],
+        })

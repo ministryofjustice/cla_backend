@@ -50,6 +50,7 @@ case_one2many_router.register(r'logs', views.LogViewSet)
 case_one2many_router.register(r'notes_history', views.CaseNotesHistoryViewSet)
 
 urlpatterns = patterns('',
+    url(r'^complaints/constants/?$', views.ComplaintConstantsView.as_view()),
     url(r'^', include(case_one2one_router.urls)),
     url(r'^', include(case_one2many_router.urls)),
     url(r'^', include(adv_router.urls)),

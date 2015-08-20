@@ -55,7 +55,10 @@ class BaseComplaintTestCase(
 
     def test_response_keys(self):
         self.maxDiff = None
-        self.assertResponseKeys(response=self.client.get(self.detail_url))
+        self.assertResponseKeys(
+            response=self.client.get(
+                self.detail_url,
+                HTTP_AUTHORIZATION=self.get_http_authorization()))
 
     def test_create_and_event_log(self):
         complaint_count = Complaint.objects.all().count()

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
+from cla_eventlog.models import ComplaintLog
 
 from .models import Category, Complaint
 
@@ -29,3 +30,8 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
         read_only_fields = (
             'created', 'modified', 'created_by',
         )
+
+
+class ComplaintLogSerializerBase(serializers.ModelSerializer):
+    class Meta:
+        model = ComplaintLog

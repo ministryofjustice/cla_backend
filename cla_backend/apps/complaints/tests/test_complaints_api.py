@@ -120,9 +120,23 @@ class BaseComplaintTestCase(
 
             self.assertSingleEventCreated(self.resource, code)
 
+        response = self.client.get(
+            self.log_url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(len(response.data), 4)
+
+
     @property
     def event_url(self):
         return '%sadd_event/' % self.detail_url
+
+    @property
+    def log_url(self):
+        return '%slogs/' % self.detail_url
 
 
 class BaseProviderComplaintTestCase(

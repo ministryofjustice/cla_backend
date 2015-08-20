@@ -4,13 +4,16 @@ from django.utils import timezone
 from django.utils.text import capfirst, force_text
 from rest_framework import viewsets, mixins, status, views as rest_views
 from rest_framework.response import Response as DRFResponse
+from cla_eventlog.models import ComplaintLog
 from complaints.forms import BaseComplaintLogForm
-from core.drf.mixins import FormActionMixin
+from core.drf.mixins import FormActionMixin, NestedGenericModelMixin
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.contenttypes.models import ContentType
 
 from .models import Complaint, Category
 from rest_framework.decorators import action
-from .serializers import ComplaintSerializerBase, CategorySerializerBase
+from .serializers import ComplaintSerializerBase, CategorySerializerBase, \
+    ComplaintLogSerializerBase
 
 
 class ComplaintFormActionMixin(FormActionMixin):
@@ -93,6 +96,7 @@ class BaseComplaintCategoryViewSet(
     serializer_class = CategorySerializerBase
 
 
+
 class BaseComplaintConstantsView(rest_views.APIView):
     @classmethod
     def get_field_choices(cls, key):
@@ -119,3 +123,22 @@ class BaseComplaintConstantsView(rest_views.APIView):
                 },
             ],
         })
+
+
+class BaseComplaintLogViewset(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    NestedGenericModelMixin,
+    viewsets.GenericViewSet
+):
+    model = ComplaintLog
+    serializer_class = ComplaintLogSerializerBase
+    lookup_field = 'pk'
+    PARENT_FIELD = 'logs'
+
+    def get_queryset(self):
+        content_type = ContentType.objects.get_for_model(
+            Complaint)
+        return self.model.objects.filter(
+            object_id=self.kwargs.get('complaint_pk'),
+            content_type=content_type)

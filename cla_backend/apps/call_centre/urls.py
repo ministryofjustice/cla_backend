@@ -29,7 +29,7 @@ router.register(r'mediacode', views.MediaCodeViewSet)
 router.register(r'feedback', views.FeedbackViewSet)
 router.register(r'case_archive', views.CaseArchivedViewSet)
 router.register(r'csvupload', views.CSVUploadViewSet)
-router.register(r'complaints/complaint', views.ComplaintViewSet,
+adv_router.register(r'complaints/complaint', views.ComplaintViewSet,
                 base_name='complaints')
 router.register(r'complaints/category', views.ComplaintCategoryViewSet,
                 base_name='complaints-categories')
@@ -49,8 +49,15 @@ case_one2many_router = NestedSimpleRouter(adv_router, r'case', lookup='case')
 case_one2many_router.register(r'logs', views.LogViewSet)
 case_one2many_router.register(r'notes_history', views.CaseNotesHistoryViewSet)
 
+complaint_one2many_router = NestedSimpleRouter(adv_router,
+                                               r'complaints/complaint',
+                                               lookup='complaint')
+complaint_one2many_router.register(r'logs', views.ComplaintLogViewset)
+
+
 urlpatterns = patterns('',
     url(r'^complaints/constants/?$', views.ComplaintConstantsView.as_view()),
+    url(r'^', include(complaint_one2many_router.urls)),
     url(r'^', include(case_one2one_router.urls)),
     url(r'^', include(case_one2many_router.urls)),
     url(r'^', include(adv_router.urls)),

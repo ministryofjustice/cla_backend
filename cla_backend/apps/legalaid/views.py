@@ -306,6 +306,8 @@ class BaseEODDetailsViewSet(
         if isinstance(obj, EODDetails) and obj.pk:
             obj.categories.all().delete()
 
+        obj.case = Case.objects.get(reference=self.kwargs.get('case_reference'))
+
         super(BaseEODDetailsViewSet, self).pre_save(obj)
 
 

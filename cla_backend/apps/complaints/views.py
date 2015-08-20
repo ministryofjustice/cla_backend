@@ -44,7 +44,7 @@ class BaseComplaintViewSet(
             obj.update_owner = True
         else:
             original_obj = self.model.objects.get(pk=obj.pk)
-            obj.update_owner = original_obj.owner_id = obj.owner_id
+            obj.update_owner = original_obj.owner_id == obj.owner_id
 
     def post_save(self, obj, created=False):
         if created:

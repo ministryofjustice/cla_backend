@@ -96,7 +96,6 @@ class BaseComplaintCategoryViewSet(
     serializer_class = CategorySerializerBase
 
 
-
 class BaseComplaintConstantsView(rest_views.APIView):
     @classmethod
     def get_field_choices(cls, key):

@@ -204,6 +204,21 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         with self.assertRaisesRegexp(serializers.ValidationError, r'Adjustments / Adaptations - LOL must be one of'):
             validator.validate()
 
+    def test_allowed_no_outcome_code_and_dates_if_determination_code(self):
+        validator = v.ProviderCSVValidator([
+            [u'3333333', u'0001', u'2B222B', u'A N Other', u'Corgi',
+             u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
+             u'X', u'EPRO', u'ESOS', u'', u'', u'', u'',
+             u'', u'18', u'99.5', u'', u'ILL', u'0', u'0',
+             u'DVCA',
+             u'N', u'', u'', u'', u'', u'DK', u'TA'],
+            ])
+
+        try:
+            validator.validate()
+        except serializers.ValidationError:
+            self.fail('Should not need outcome code or closed and opened dated if determination code present')
+
     def test_service_adapation_validation_required(self):
 
         validator = v.ProviderCSVValidator(self.data)

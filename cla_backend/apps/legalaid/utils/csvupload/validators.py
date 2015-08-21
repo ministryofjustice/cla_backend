@@ -255,18 +255,22 @@ class ProviderCSVValidator(object):
             except serializers.ValidationError as ve:
                 errors.extend(ve.error_list)
 
-
         if len(errors):
             raise serializers.ValidationError(errors)
-
 
     def _validate_open_closed_date(self, cleaned_data):
         opened = cleaned_data.get('Date Opened')
         closed = cleaned_data.get('Date Closed')
-        if (opened and closed) and (closed < opened):
-            raise serializers.ValidationError(
-                'Closed date (%s) must be after opened date (%s)' % (
-                    closed.date().isoformat(), opened.date().isoformat()))
+        if closed and not opened:
+            raise serializers.ValidationError('If you have Closed date you '
+                                              'must also have an Opened date')
+        if opened and closed:
+            if closed < datetime.datetime(2013, 4, 1):
+                raise serializers.ValidationError('Closed date must be after 01/04/2013')
+            if closed < opened:
+                raise serializers.ValidationError(
+                    'Closed date (%s) must be after opened date (%s)' % (
+                        closed.date().isoformat(), opened.date().isoformat()))
 
     @depends_on('Determination', check=FALSEY)
     @depends_on('Date Opened', check=AFTER_APR_2013)

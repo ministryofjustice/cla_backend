@@ -60,11 +60,9 @@ class ComplaintLog(Log):
     def __unicode__(self):
         return u'%s: %s - %s:%s' % (self.complaint, self.case, self.type, self.code)
 
-    def save(self, *args, **kwargs):
-        super(Log, self).save(*args, **kwargs)
-        if self.code == 'COMPLAINT_CLOSED':
-            self.content_object.closed_at = self.created
-            self.content_object.save()
+    @property
+    def complaint(self):
+        return self.content_object
 
     class Meta(Log.Meta):
         proxy = True

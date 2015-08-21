@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
 from cla_eventlog.models import ComplaintLog
+from cla_eventlog.serializers import LogSerializerBase
 
 from .models import Category, Complaint
 
@@ -43,6 +44,6 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
         )
 
 
-class ComplaintLogSerializerBase(serializers.ModelSerializer):
+class ComplaintLogSerializerBase(LogSerializerBase):
     class Meta:
         model = ComplaintLog

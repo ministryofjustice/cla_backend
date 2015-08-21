@@ -466,6 +466,9 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
         CallCentreClientIDPermission, IsManagerOrMePermission)
     serializer_class = OperatorSerializer
 
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('is_manager',)
+
     def get_logged_in_user_model(self):
         return self.request.user.operator
 

@@ -74,7 +74,6 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         provider_notes='Provider Notes',
         thirdparty_details=make_recipe('legalaid.thirdparty_details'),
         adaptation_details=make_recipe('legalaid.adaptation_details'),
-        eod_details=make_recipe('legalaid.eod_details'),
         billable_time=2000,
         matter_type1=matter_type1,
         matter_type2=matter_type2,
@@ -91,6 +90,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         provider_closed=timezone.now(),
         provider_assigned_at=timezone.now()
     )
+    make_recipe('legalaid.eod_details', notes='EOD notes', case=case)
     CaseKnowledgebaseAssignment.objects.create(
         case=case, assigned_by=make_user(),
         alternative_help_article=make_recipe('knowledgebase.article')
@@ -1226,7 +1226,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'thirdparty_details', 'adaptation_details', 'media_code',
             'outcome_code', 'level', 'exempt_user', 'exempt_user_reason',
             'ecf_statement', 'provider_viewed', 'provider_accepted',
-            'provider_closed', 'eod_details',
+            'provider_closed',
         ]:
             self.assertEqual(getattr(new_case, field), None)
 
@@ -1255,7 +1255,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'outcome_code', 'level', 'reference', 'laa_reference', 'from_case',
             'outcome_code_id', 'requires_action_at', 'callback_attempt',
             'provider_viewed', 'provider_accepted', 'provider_closed',
-            'search_field', 'eod_details',
+            'search_field',
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
@@ -1284,6 +1284,9 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
                       'adaptation_details']:
             self.assertNotEqual(getattr(new_case, field), None)
             self.assertNotEqual(getattr(case, field), getattr(new_case, field))
+
+        with self.assertRaises(Case.eod_details.RelatedObjectDoesNotExist):
+            new_case.eod_details.notes = ''
 
         expected_values = {
             'created_by': self.user,

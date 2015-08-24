@@ -12,7 +12,7 @@ SELECT
     -- is_justified is unknown currently
 FROM legalaid_eoddetails AS eod
     LEFT OUTER JOIN legalaid_eoddetailscategory as eod_cat ON eod_cat.eod_details_id = eod.id
-    JOIN legalaid_case AS c ON c.eod_details_id = eod.id
+    JOIN legalaid_case AS c ON c.id = eod.case_id
     LEFT OUTER JOIN diagnosis_diagnosistraversal AS diagnosis ON c.diagnosis_id = diagnosis.id
     LEFT OUTER JOIN legalaid_category AS category ON diagnosis.category_id = category.id
 WHERE c.created >= %s AND c.created < %s

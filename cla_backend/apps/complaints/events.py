@@ -46,7 +46,7 @@ class ComplaintEvent(BaseEvent):
             'stops_timer': False
         }),
         ('COMPLAINT_CLOSED', {
-            'type': LOG_TYPES.OUTCOME,
+            'type': LOG_TYPES.OUTCOME,  # TODO: should this be LOG_TYPES.EVENT?
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
             'description': 'Complaint closed',
@@ -54,17 +54,25 @@ class ComplaintEvent(BaseEvent):
         }),
     ])
 
-    def create_log(self, **kwargs):
+    def __init__(self):
+        super(ComplaintEvent, self).__init__()
+        self.complaint = None
+
+    def create_log(self, *args, **kwargs):
+        if not self.complaint:
+            return super(ComplaintEvent, self).create_log(*args, **kwargs)
+
         content_type = ContentType.objects.get_for_model(
             self.complaint.__class__)
         return ComplaintLog(
             object_id=self.complaint.pk,
             content_type=content_type,
+            *args,
             **kwargs)
 
     def process(self, *args, **kwargs):
         self.complaint = kwargs.pop('complaint', None)
-        super(ComplaintEvent, self).process(*args, **kwargs)
+        return super(ComplaintEvent, self).process(*args, **kwargs)
 
     def get_log_code(self, case=None, **kwargs):
         return kwargs.get('code')

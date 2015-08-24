@@ -217,8 +217,7 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
 
 
 class EODDetails(TimeStampedModel):
-    case = models.OneToOneField('Case', related_name='eod_details',
-                                related_query_name='eod_details')
+    case = models.OneToOneField('Case', related_name='eod_details')
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
 
@@ -732,7 +731,6 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
                     'callback_attempt', 'search_field', 'provider_assigned_at',
-                    'eod_details',
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details',

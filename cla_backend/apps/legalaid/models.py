@@ -155,6 +155,9 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     class Meta(object):
         verbose_name_plural = "personal details"
 
+    def __unicode__(self):
+        return u'%s' % self.full_name
+
     def _set_search_field(self):
         if self.postcode:
             self.search_field =  self.postcode.replace(' ', '')
@@ -189,6 +192,12 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
         'excludes': ['reference', 'created', 'modified'],
         'clone_fks': ['personal_details']
     }
+
+    class Meta(object):
+        verbose_name_plural = "third party details"
+
+    def __unicode__(self):
+        return u'%s' % self.personal_details.full_name
 
 
 class AdaptationDetails(CloneModelMixin, TimeStampedModel):
@@ -228,6 +237,10 @@ class Person(CloneModelMixin, TimeStampedModel):
         'excludes': ['created', 'modified'],
         'clone_fks': ['income', 'savings', 'deductions']
     }
+
+    class Meta(object):
+        ordering = ('-created',)
+        verbose_name_plural = 'people'
 
     @classmethod
     def from_dict(cls, d):
@@ -315,6 +328,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
     has_partner = models.NullBooleanField(default=None)
 
     calculations = JSONField(null=True, blank=True)
+
+    class Meta(object):
+        ordering = ('-created',)
+
+    def __unicode__(self):
+        return u'EligibilityCheck(%s)' % self.reference
 
     def get_dependencies(self):
         deps = {'category',
@@ -503,7 +522,8 @@ class Property(TimeStampedModel):
     main = models.NullBooleanField(default=None)
 
     class Meta(object):
-        verbose_name_plural = "properties"
+        verbose_name_plural = 'properties'
+        ordering = ('-created',)
 
 
 class MatterType(TimeStampedModel):
@@ -831,6 +851,9 @@ class CaseNotesHistory(TimeStampedModel):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
     include_in_summary = models.BooleanField(default=True)
 
+    class Meta(object):
+        ordering = ('-created',)
+
     def save(self, *args, **kwargs):
         self.include_in_summary = True
         super(CaseNotesHistory, self).save(*args, **kwargs)
@@ -841,9 +864,6 @@ class CaseNotesHistory(TimeStampedModel):
             created_by=self.created_by
         ).exclude(pk=self.pk)
         qs.update(include_in_summary=False)
-
-    class Meta(object):
-        ordering = ['-created']
 
 
 class CaseKnowledgebaseAssignment(TimeStampedModel):

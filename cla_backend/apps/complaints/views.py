@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
-from cla_eventlog import event_registry
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from django.utils.text import capfirst, force_text
 from rest_framework import viewsets, mixins, status, views as rest_views
+from rest_framework.decorators import action
 from rest_framework.response import Response as DRFResponse
+
+from cla_eventlog import event_registry
+from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.models import ComplaintLog
 from complaints.forms import BaseComplaintLogForm
 from core.drf.mixins import FormActionMixin, NestedGenericModelMixin
-from django.contrib.auth.models import AnonymousUser
-from django.contrib.contenttypes.models import ContentType
 
 from .models import Complaint, Category
-from rest_framework.decorators import action
 from .serializers import ComplaintSerializerBase, CategorySerializerBase, \
     ComplaintLogSerializerBase
 
@@ -109,7 +111,16 @@ class BaseComplaintConstantsView(rest_views.APIView):
 
     def get(self, *args, **kwargs):
         return DRFResponse({
-            'levels': self.get_field_choices('level'),
+            'levels': [
+                {
+                    'value': LOG_LEVELS.HIGH,
+                    'description': 'Major',
+                },
+                {
+                    'value': LOG_LEVELS.MINOR,
+                    'description': 'Minor',
+                },
+            ],
             'sources': self.get_field_choices('source'),
             'justified': [
                 {

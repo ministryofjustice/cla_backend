@@ -50,6 +50,9 @@ class Complaint(TimeStampedModel):
 
     objects = ComplaintManager()
 
+    class Meta(object):
+        ordering = ('-created',)
+
     @property
     def case(self):
         return self.eod.case

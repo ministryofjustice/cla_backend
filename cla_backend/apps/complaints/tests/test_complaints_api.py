@@ -70,7 +70,7 @@ class BaseComplaintTestCase(
             'source': 'EMAIL',
             'level': 29,
             'justified': True,
-            'owner': self.operator_manager.pk
+            'owner': self.operator_manager.user.username
         })
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -93,11 +93,10 @@ class BaseComplaintTestCase(
 
     def test_owner_set_on_change(self):
         mgr_user = User.objects.create_user('x', 'x@x.com', 'OnionMan77')
-        operator_manager = Operator.objects.create(user=mgr_user,
-                                                   is_manager=True)
+        Operator.objects.create(user=mgr_user, is_manager=True)
 
         response = self._patch({
-            'owner': operator_manager.pk,
+            'owner': mgr_user.username,
         })
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

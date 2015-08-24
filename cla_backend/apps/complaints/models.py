@@ -53,6 +53,9 @@ class Complaint(TimeStampedModel):
     class Meta(object):
         ordering = ('-created',)
 
+    def __unicode__(self):
+        return u'Complaint on case %s' % self.eod.case.reference
+
     @property
     def case(self):
         return self.eod.case
@@ -62,11 +65,8 @@ class Category(TimeStampedModel):
     name = models.CharField(max_length=255)
 
     class Meta:
-        ordering = ['name']
+        ordering = ('name',)
+        verbose_name_plural = 'categories'
 
     def __unicode__(self):
         return self.name
-
-
-
-

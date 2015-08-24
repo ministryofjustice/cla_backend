@@ -40,7 +40,7 @@ class BaseComplaintViewSet(
         super(BaseComplaintViewSet, self).pre_save(obj)
 
         user = self.request.user
-        if not obj.pk :
+        if not obj.pk:
             if not isinstance(user, AnonymousUser):
                 obj.created_by = user
             obj.update_owner = True

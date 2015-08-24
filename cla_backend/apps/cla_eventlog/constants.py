@@ -18,7 +18,6 @@ LOG_TYPES = Choices(
     ('EVENT', 'event', 'event')
 )
 
-
 LOG_ROLES = Choices(
     # constant, db_id, friendly string
     # Not currently used.

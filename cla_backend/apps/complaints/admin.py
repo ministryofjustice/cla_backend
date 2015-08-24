@@ -5,7 +5,6 @@ from .models import Category, Complaint
 
 
 class ComplaintAdmin(admin.ModelAdmin):
-
     raw_id_fields = ['eod']
 
     def save_model(self, request, obj, form, change):
@@ -16,5 +15,3 @@ class ComplaintAdmin(admin.ModelAdmin):
 
 admin.site.register(Complaint, ComplaintAdmin)
 admin.site.register(Category)
-
-

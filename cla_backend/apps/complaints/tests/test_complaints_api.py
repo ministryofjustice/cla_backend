@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from call_centre.models import Operator
-from cla_eventlog.models import ComplaintLog, Log
-from complaints.events import ComplaintEvent
+from cla_eventlog.models import ComplaintLog
 from complaints.models import Complaint
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
@@ -131,7 +130,6 @@ class BaseComplaintTestCase(
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         self.assertEqual(len(response.data), 4)
-
 
     @property
     def event_url(self):

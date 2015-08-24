@@ -36,6 +36,9 @@ class Log(TimeStampedModel):
     object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = GenericForeignKey()
 
+    class Meta(object):
+        ordering = ('-created',)
+
     def __unicode__(self):
         return u'%s - %s:%s' % (self.case, self.type, self.code)
 
@@ -51,11 +54,10 @@ class Log(TimeStampedModel):
             self.case.view_by_provider(self.created_by.staff.provider)
         statsd.incr('outcome.%s' % self.code)
 
-    class Meta(object):
-        ordering = ['-created']
-
 
 class ComplaintLog(Log):
+    class Meta(Log.Meta):
+        proxy = True
 
     def __unicode__(self):
         return u'%s: %s - %s:%s' % (self.complaint, self.case, self.type, self.code)
@@ -63,6 +65,3 @@ class ComplaintLog(Log):
     @property
     def complaint(self):
         return self.content_object
-
-    class Meta(Log.Meta):
-        proxy = True

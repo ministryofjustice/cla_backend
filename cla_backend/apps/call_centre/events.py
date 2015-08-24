@@ -1,5 +1,4 @@
 from cla_common.constants import REQUIRES_ACTION_BY
-
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES
 from cla_eventlog.events import BaseEvent, None_if_owned_by_op_or_op_manager
@@ -59,6 +58,7 @@ class AssignToProviderEvent(BaseEvent):
 
         return 'REFSP'
 
+
 event_registry.register(AssignToProviderEvent)
 
 
@@ -73,6 +73,8 @@ class DeferAssignmentEvent(BaseEvent):
             'stops_timer': True
         }
     }
+
+
 event_registry.register(DeferAssignmentEvent)
 
 
@@ -104,6 +106,8 @@ class DeclineHelpEvent(BaseEvent):
             'set_requires_action_by': None_if_owned_by_op_or_op_manager
         },
     }
+
+
 event_registry.register(DeclineHelpEvent)
 
 
@@ -159,6 +163,7 @@ class CallMeBackEvent(BaseEvent):
 
         raise ValueError('Reached max number of callbacks allowed')
 
+
 event_registry.register(CallMeBackEvent)
 
 
@@ -200,5 +205,6 @@ class StopCallMeBackEvent(BaseEvent):
             if case.callback_attempt == 0:
                 raise ValueError('Cannot mark callback as complete without previous CBx')
             return 'CALLBACK_COMPLETE'
+
 
 event_registry.register(StopCallMeBackEvent)

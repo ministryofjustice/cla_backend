@@ -1,9 +1,9 @@
+import types
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
-import types
 
 
 class CLABaseApiTestMixin(object):
@@ -152,8 +152,10 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
         )
 
     def _create(self, data=None, url=None):
-        if not data: data = {}
-        if not url: url = self.get_list_url()
+        if not data:
+            data = {}
+        if not url:
+            url = self.get_list_url()
         return self.client.post(
             url, data=data, format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization()
@@ -196,7 +198,6 @@ class NestedSimpleResourceAPIMixin(SimpleResourceAPIMixin):
         * self.list_url, self.details_url ==> url to list and details
         * a bunch of extra things (look around)
     """
-
     LOOKUP_KEY = None  # e.g. case_reference
     PARENT_LOOKUP_KEY = None  # e.g. reference
     PARENT_RESOURCE_RECIPE = None  # e.g. legalaid.case

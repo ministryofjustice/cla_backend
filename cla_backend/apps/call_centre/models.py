@@ -11,6 +11,7 @@ OP_MANAGER_GROUP_NAME = 'Operator Managers'
 LAA_CASEWORKER_GROUP_NAME = 'LAA Caseworker'
 CLA_SUPERUSER_GROUP_NAME = 'CLA Superusers'
 
+
 class Caseworker(TimeStampedModel):
     user = models.OneToOneField('auth.User')
 
@@ -22,6 +23,7 @@ class Caseworker(TimeStampedModel):
         group = Group.objects.get(name=LAA_CASEWORKER_GROUP_NAME)
         group.user_set.add(self.user)
         return obj
+
 
 class Operator(TimeStampedModel):
     user = models.OneToOneField('auth.User')

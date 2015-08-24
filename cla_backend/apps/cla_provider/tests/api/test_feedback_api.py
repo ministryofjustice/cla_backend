@@ -16,7 +16,6 @@ class FeedbackAPIMixin(NestedSimpleResourceAPIMixin):
     PK_FIELD = 'case'
     ONE_TO_ONE_RESOURCE = False
 
-
     def make_resource(self, **kwargs):
 
         kwargs.update({

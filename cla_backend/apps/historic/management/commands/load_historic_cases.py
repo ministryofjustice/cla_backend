@@ -1,46 +1,41 @@
 from collections import defaultdict
 import csv
-from operator import attrgetter
 import datetime
-from django.utils.itercompat import is_iterable
-from historic.models import CaseArchived
-import os
-import sys
 from optparse import make_option
+
 from dateutil.parser import parse
+from django.core.management.base import BaseCommand
+from django.utils.itercompat import is_iterable
 from django.utils.timezone import make_aware, UTC
 
+from historic.models import CaseArchived
 
-
-from django.core.management.base import BaseCommand
 
 def yesno(str):
     return True if str.upper() == 'YES' else False
+
 
 def parse_dt(str):
     str = str.strip()
     if str and is_iterable(str):
         try:
             return make_aware(parse(str, dayfirst=True), UTC())
-        except Exception as e:
+        except Exception:
             import pdb; pdb.set_trace()
-
 
 
 class Command(BaseCommand):
 
     option_list = BaseCommand.option_list + (
-        make_option('-c','--case_file',
+        make_option('-c', '--case_file',
                     dest='case_file',
-                    help='path to historic cases .csv file'
-        ),
-        make_option('-k','--kb_file',
+                    help='path to historic cases .csv file'),
+        make_option('-k', '--kb_file',
                     dest='kb_file',
-                    help='path to accompanying knowledge-base .csv file'
-        ),
+                    help='path to accompanying knowledge-base .csv file'),
     )
 
-    help = ('Create CaseArchived object from a case and knowledge-base CSV')
+    help = 'Create CaseArchived object from a case and knowledge-base CSV'
 
     required_args = (
         'case_file',
@@ -54,7 +49,6 @@ class Command(BaseCommand):
         self.stderr.write('Loading referrals from %s' % options['kb_file'])
         self.load_referrals(options['kb_file'])
         self.stderr.write('Found referrals %s for cases' % len(self.referrals))
-
 
         # Load cases
         self.stderr.write('Loading cases from %s' % options['case_file'])
@@ -76,7 +70,6 @@ class Command(BaseCommand):
 
         CaseArchived.objects.bulk_create(self.cases)
 
-
     def get_referrals(self, laa_reference):
         all_refs = self.referrals.get(laa_reference)
         if all_refs:
@@ -90,7 +83,6 @@ class Command(BaseCommand):
                 if count % 20 == 0:
                     self.stderr.write('.', ending='')
                 self.referrals[row['CaseID']].append(unicode(row['Title'], "ISO-8859-1"))
-
 
     def load_cases(self, filename):
 

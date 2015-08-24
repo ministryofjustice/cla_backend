@@ -22,4 +22,3 @@ class ProviderExtractTests(CLAProviderAuthBaseApiTestMixin, ProviderExtractAPIMi
         o = objectify.fromstring(response.content)
 
         self.assertListEqual(o.attrib.keys(), ['CRN', 'CaseCreated'])
-

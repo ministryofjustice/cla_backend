@@ -5,7 +5,6 @@ from cla_common.constants import GENDERS, ETHNICITIES, RELIGIONS,\
 
 from legalaid.utils import diversity
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
-
 from legalaid.tests.views.mixins.personal_details_api import \
     PersonalDetailsAPIMixin
 
@@ -93,7 +92,6 @@ class PersonalDetailsTestCase(
 
         first_diversity_modified = self.resource.diversity_modified
         self.assertNotEqual(first_diversity_modified, None)
-
 
         # 2. SECOND TIME => VALUES OVERRIDDEN
         new_post_data = post_data.copy()

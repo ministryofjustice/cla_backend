@@ -4,11 +4,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.utils.timezone import now, localtime
 from django.utils.formats import date_format
-
 from django_statsd.clients import statsd
 
 logger = logging.getLogger(__name__)
-
 
 email_template = u"""
 Operator user {0} at {1}:

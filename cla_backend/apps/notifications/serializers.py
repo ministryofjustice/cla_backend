@@ -5,7 +5,7 @@ from .models import Notification
 
 
 class NotificationSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(object):
         model = Notification
         fields = (
             'id',

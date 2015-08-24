@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.conf import settings
+import django.core.validators
 from django.db import models, migrations
-import cla_common.db.mixins
-import model_utils.fields
-import cla_common.money_interval.fields
-import jsonfield.fields
 import django.db.models.deletion
 import django.utils.timezone
-from django.conf import settings
-import uuidfield.fields
-import django.core.validators
-import legalaid.fields
+
 import core.cloning
+import cla_common.db.mixins
+import cla_common.money_interval.fields
+import model_utils.fields
+import jsonfield.fields
+import uuidfield.fields
+import legalaid.fields
 
 
 class Migration(migrations.Migration):

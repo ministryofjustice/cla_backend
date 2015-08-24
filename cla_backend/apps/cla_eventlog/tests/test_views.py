@@ -1,15 +1,12 @@
 from django.core.urlresolvers import reverse, NoReverseMatch
-
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
-from core.tests.test_base import \
-    NestedSimpleResourceAPIMixin
+from core.tests.test_base import NestedSimpleResourceAPIMixin
 
 from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.models import Log
 from cla_eventlog import event_registry
-
 
 
 class EventAPIMixin(object):
@@ -35,14 +32,16 @@ class EventAPIMixin(object):
 
         self.assertRaises(NoReverseMatch, reverse, '%s:event-list' % self.API_URL_NAMESPACE)
 
-        ### DETAIL
+        # DETAIL
         self._test_post_not_allowed(self.detail_url)
         self._test_put_not_allowed(self.detail_url)
         self._test_delete_not_allowed(self.detail_url)
 
     def test_get_using_event_key(self):
-        response = self.client.get(self.detail_url,
-            HTTP_AUTHORIZATION='Bearer %s' % self.token, format='json'
+        response = self.client.get(
+            self.detail_url,
+            HTTP_AUTHORIZATION='Bearer %s' % self.token,
+            format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -59,14 +58,15 @@ class EventAPIMixin(object):
 
     def test_get_using_wrong_event_key_404(self):
         detail_url = self.get_detail_url('__wrong__')
-        response = self.client.get(detail_url,
+        response = self.client.get(
+            detail_url,
             HTTP_AUTHORIZATION='Bearer %s' % self.token,
             format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_methods_not_authorized(self):
-        ### DETAIL
+        # DETAIL
         self._test_post_not_authorized(self.detail_url, token=self.invalid_token)
         self._test_put_not_authorized(self.detail_url, token=self.invalid_token)
         self._test_delete_not_authorized(self.detail_url, token=self.invalid_token)
@@ -96,8 +96,9 @@ class ImplicitEventCodeViewTestCaseMixin(object):
     def test_invalid_reference(self):
         url = self.get_url(reference='invalid')
 
-        response = self.client.post(url, data={},
-            format='json', HTTP_AUTHORIZATION='Bearer %s' % self.token
+        response = self.client.post(
+            url, data={}, format='json',
+            HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -120,7 +121,7 @@ class ImplicitEventCodeViewTestCaseMixin(object):
         # before, no logs
         self.assertEqual(Log.objects.count(), 0)
 
-        if data == None:
+        if data is None:
             data = self.get_default_post_data()
 
         response = self.client.post(

@@ -1,16 +1,14 @@
-import mock
 import datetime
+
+import mock
 from django.test import TestCase
 from django.utils import timezone
 
 from core.tests.mommy_utils import make_recipe, make_user
 from cla_eventlog.tests.test_forms import BaseCaseLogFormTestCaseMixin, \
     EventSpecificLogFormTestCaseMixin
-
 from cla_eventlog.models import Log
-
 from legalaid.models import Case
-
 from cla_provider.helpers import ProviderAllocationHelper
 from call_centre.forms import DeferAssignmentCaseForm, ProviderAllocationForm, \
     DeclineHelpCaseForm, CallMeBackForm, StopCallMeBackForm
@@ -18,10 +16,10 @@ from call_centre.forms import DeferAssignmentCaseForm, ProviderAllocationForm, \
 
 def _mock_datetime_now_with(date, *mocks):
     dt = date.replace(
-            tzinfo=timezone.get_current_timezone()
+        tzinfo=timezone.get_current_timezone()
     )
-    for mock in mocks:
-        mock.return_value = dt
+    for _mock in mocks:
+        _mock.return_value = dt
     return dt
 
 
@@ -57,8 +55,6 @@ class ProviderAllocationFormTestCase(TestCase):
 
         self.assertEqual(case.provider, provider)
         self.assertEqual(Log.objects.count(), 1)
-
-
 
     @mock.patch('cla_provider.models.timezone.now')
     @mock.patch('cla_provider.helpers.timezone.now')
@@ -181,9 +177,7 @@ class ProviderAllocationFormTestCase(TestCase):
                     provider=provider,
                     category=category)
 
-
         with mock.patch.object(ProviderAllocationHelper, '_get_random_provider', return_value=in_hours_provider) as mocked_get_random_provider:
-
             helper = ProviderAllocationHelper()
 
             form = ProviderAllocationForm(case=case, data={
@@ -304,7 +298,7 @@ class ProviderAllocationFormTestCase(TestCase):
     @mock.patch('cla_provider.models.timezone.now')
     @mock.patch('cla_provider.helpers.timezone.now')
     def test_save_without_matter_type_category_mismatch(self, timezone_mock,
-                                               models_timezone_mock):
+                                                        models_timezone_mock):
         _mock_datetime_now_with(datetime.datetime(2014, 1, 2, 12, 59, 0),
                                 timezone_mock, models_timezone_mock)
 
@@ -371,8 +365,8 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     def __call__(self, runner, mocked_now, *args, **kwargs):
         self.mocked_now = mocked_now
         self.mocked_now.return_value = datetime.datetime(
-                2015, 3, 24, 10, 0, 0, 0
-            ).replace(tzinfo=timezone.utc)
+            2015, 3, 24, 10, 0, 0, 0
+        ).replace(tzinfo=timezone.utc)
         self.default_dt = self.mocked_now().replace(day=30)
 
         super(CallMeBackFormTestCase, self).__call__(
@@ -404,9 +398,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         case = make_recipe('legalaid.case', callback_attempt=2)
         self._test_save_successfull(case, 3, 'CB3')
 
-    def _test_save_successfull(
-        self, case, expected_attempt, expected_outcome
-    ):
+    def _test_save_successfull(self, case, expected_attempt, expected_outcome):
         self.assertEqual(Log.objects.count(), 0)
         self.assertEqual(case.callback_attempt, expected_attempt-1)
 

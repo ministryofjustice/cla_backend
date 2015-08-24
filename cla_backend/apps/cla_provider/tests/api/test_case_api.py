@@ -66,11 +66,11 @@ class CaseGeneralTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         """
         Ensure that we can't POST, PUT or DELETE
         """
-        ### LIST
+        # LIST
         self._test_delete_not_allowed(self.list_url)
         self._test_post_not_allowed(self.list_url)
 
-        # ### DETAIL
+        # DETAIL
         self._test_delete_not_allowed(self.detail_url)
 
 
@@ -281,8 +281,6 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
         """
         Test that provider can post provider notes
         """
-
-
         self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
 
         response = self.client.patch(

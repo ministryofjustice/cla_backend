@@ -38,7 +38,7 @@ class BaseEventViewSet(viewsets.ViewSetMixin, views.APIView):
     def list_by_event_key(self, request, event_key, *args, **kwargs):
         try:
             event = event_registry.get_event(event_key)
-        except ValueError as e:
+        except ValueError:
             return DRFResponse(
                 {'detail': 'Not found'},
                 status=status.HTTP_404_NOT_FOUND
@@ -64,4 +64,3 @@ class BaseLogViewSet(
     def get_queryset(self):
         qs = super(BaseLogViewSet, self).get_queryset()
         return qs.filter(level__gt=LOG_LEVELS.MINOR)
-

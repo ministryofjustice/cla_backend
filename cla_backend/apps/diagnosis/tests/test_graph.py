@@ -1,12 +1,9 @@
 from django.test import TestCase
-
 from django.conf import settings
 from django.core.management import call_command
 
 from cla_common.constants import DIAGNOSIS_SCOPE, MATTER_TYPE_LEVELS
-
 from legalaid.models import Category, MatterType
-
 from diagnosis.graph import get_graph
 from diagnosis.utils import get_node_scope_value
 
@@ -42,7 +39,7 @@ class GraphTestCase(TestCase):
             self.assertTrue(False,
                 'MatterType2 (%s) set but MatterType1 == None for nodes in this path (%s)' % (
                     matter_type2_code,
-                    '\n'.join([node['label']+' '+node['id'] for node in nodes])
+                    '\n'.join([node['label'] + ' ' + node['id'] for node in nodes])
                 )
             )
 
@@ -58,7 +55,7 @@ class GraphTestCase(TestCase):
                 self.assertTrue(False,
                     'MatterType (%s) for nodes in this path (%s) doesn\'t match any record in the database (level %s, category %s)' % (
                         matter_type_code,
-                        '\n'.join([node['label']+' '+node['id'] for node in nodes]),
+                        '\n'.join([node['label'] + ' ' + node['id'] for node in nodes]),
                         level, category.code
                 ))
 
@@ -82,7 +79,6 @@ class GraphTestCase(TestCase):
                 move_down(child_id, context, nodes)
 
         move_down('start', {}, [])
-
         move_down('start', {}, [])
 
     def test_nodes_have_heading(self):

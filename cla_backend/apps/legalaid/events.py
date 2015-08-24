@@ -37,18 +37,20 @@ class MeansTestEvent(BaseEvent):
             'description': "Means test failed",
             'stops_timer': False
         },
-        }
+    }
 
     def get_log_code(self, **kwargs):
         status = kwargs['status']
         lookup = {
             'created': 'MT_CREATED',
             'changed': 'MT_CHANGED',
-            'passed':  'MT_PASSED',
-            'failed':  'MT_FAILED',
-            }
+            'passed': 'MT_PASSED',
+            'failed': 'MT_FAILED',
+        }
 
         return lookup[status]
+
+
 event_registry.register(MeansTestEvent)
 
 
@@ -116,6 +118,8 @@ class CaseEvent(BaseEvent):
         }
 
         return lookup[status]
+
+
 event_registry.register(CaseEvent)
 
 
@@ -222,4 +226,6 @@ class SuspendCaseEvent(BaseEvent):
             'set_requires_action_by': None_if_owned_by_op_or_op_manager
         }
     }
+
+
 event_registry.register(SuspendCaseEvent)

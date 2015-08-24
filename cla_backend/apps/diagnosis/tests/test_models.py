@@ -1,9 +1,7 @@
 from django.test import TestCase
 
 from cla_common.constants import DIAGNOSIS_SCOPE
-
 from core.tests.mommy_utils import make_recipe
-
 from diagnosis.models import DiagnosisTraversal
 
 

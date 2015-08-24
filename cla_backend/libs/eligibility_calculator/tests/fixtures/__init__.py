@@ -5,7 +5,7 @@ case_data_dict = {
     'facts': {
         'is_you_or_your_partner_over_60': False,
         'on_passported_benefits': False,
-        'on_nass_benefits' : False,
+        'on_nass_benefits': False,
         'has_partner': False,
         'is_partner_opponent': False,
         'dependants_young': 0,
@@ -45,7 +45,6 @@ case_data_dict = {
 }
 
 
-
 def get_default_case_data(**kwargs):
     """
     gives default case_data with each kwarg
@@ -60,12 +59,12 @@ def get_default_case_data(**kwargs):
         keys_vals = sorted([(kw.split('__'), v) for kw, v in kwargs.items()], key=lambda x: len(x[0]))
         for (k, v) in keys_vals:
             level = defaults
-            for i in range(0,len(k)):
+            for i in range(0, len(k)):
                 if k[0:i+1] == k:
                     level[k[i]] = v
                 else:
                     new_level = level.get(k[i])
-                    if new_level == None and not i == len(k):
+                    if new_level is None and i != len(k):
                         level[k[i]] = {}
                     level = level[k[i]]
 

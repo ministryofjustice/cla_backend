@@ -23,12 +23,13 @@ def csv_download(filename, form):
         map(writer.writerow, csv_data)
     return response
 
+
 def submit_info(filename, form, template='success_info'):
     tmpl = 'admin/reports/{0}.html'.format(template)
     return render_to_response(tmpl, {'filename': filename, 'form': form})
 
-def report_view(form_class, title, template='case_report', success_action=csv_download, file_name=None):
 
+def report_view(form_class, title, template='case_report', success_action=csv_download, file_name=None):
     def wrapper(fn):
         slug = title.lower().replace(' ', '_')
         if not file_name:
@@ -65,8 +66,6 @@ def valid_submit(request, form):
         form.is_bound = True
         return form.is_valid()
     return False
-
-
 
 
 @contextlib.contextmanager

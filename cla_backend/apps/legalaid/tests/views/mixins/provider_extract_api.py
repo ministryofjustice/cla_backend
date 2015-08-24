@@ -25,7 +25,6 @@ class ProviderExtractAPIMixin(object):
 
         self.detail_url = self.get_detail_url()
 
-
     def get_valid_post_data(self, **kwargs):
         data = {
             'CHSOrganisationID': self.creds['chs_org'],
@@ -44,11 +43,9 @@ class ProviderExtractAPIMixin(object):
         """
         Ensure that we can't POST, PUT or DELETE
         """
-
-        ### DETAIL
+        # DETAIL
         self._test_put_not_allowed(self.detail_url, data=self.get_valid_post_data())
         self._test_patch_not_allowed(self.detail_url, data=self.get_valid_post_data())
-
 
     def test_post_to_get_extract_malformed_bad_request(self):
         response = self.client.post(
@@ -91,7 +88,7 @@ class ProviderExtractAPIMixin(object):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_methods_not_authorized(self):
-        ### DETAIL
+        # DETAIL
         self._test_patch_not_authorized(self.detail_url, token=None)
         self._test_get_not_authorized(self.detail_url, token=None)
         self._test_put_not_authorized(self.detail_url, token=None)

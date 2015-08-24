@@ -7,7 +7,6 @@ from django.core.paginator import Paginator
 
 from django_statsd.clients import statsd
 
-from legalaid.permissions import IsManagerOrMePermission
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.exceptions import PermissionDenied
@@ -67,7 +66,6 @@ class PasswordResetForm(forms.Form):
                 raise PermissionDenied({'__all__':["Old password doesn't match."]})
         return old_password
 
-
     def save(self, _):
         new_password = self.cleaned_data['new_password']
         self.reset_user.set_password(new_password)
@@ -108,7 +106,7 @@ class BaseUserViewSet(
         if lookup == self.me_lookup_url_kwargs:
             self.kwargs[lookup_url_kwarg] = self.request.user.username
 
-        obj =  super(BaseUserViewSet, self).get_object(*args, **kwargs)
+        obj = super(BaseUserViewSet, self).get_object(*args, **kwargs)
         self.check_object_permissions(self.request, obj)
         return obj
 
@@ -201,8 +199,8 @@ class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet
 
 
 class BaseNestedEligibilityCheckViewSet(
-        NestedGenericModelMixin, BaseEligibilityCheckViewSet
-    ):
+    NestedGenericModelMixin, BaseEligibilityCheckViewSet
+):
 
     PARENT_FIELD = 'eligibility_check'
 
@@ -367,6 +365,7 @@ class BaseCaseLogMixin(object):
                 context=self.get_log_context(obj)
             )
 
+
 class FullCaseViewSet(
     DetailSerializerMixin,
     mixins.UpdateModelMixin,
@@ -502,7 +501,6 @@ class FullCaseViewSet(
             # the appropriate thing instead of adding more stuff here
 
 
-
 class BaseFeedbackViewSet(
     NestedGenericModelMixin,
     mixins.ListModelMixin,
@@ -531,6 +529,7 @@ class BaseCSVUploadReadOnlyViewSet(
         OrderingFilter,
     )
 
+
 class BaseCSVUploadViewSet(
     DetailSerializerMixin,
     mixins.ListModelMixin,
@@ -558,6 +557,7 @@ class BaseCSVUploadViewSet(
             # Don't allow PATCH because they should DELETE+POST or PUT
             return self.http_method_not_allowed(request, *args, **kwargs)
         return super(BaseCSVUploadViewSet, self).update(request, *args, **kwargs)
+
 
 class PaginatorWithExtraItem(Paginator):
     """

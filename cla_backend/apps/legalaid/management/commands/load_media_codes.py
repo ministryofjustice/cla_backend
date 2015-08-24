@@ -7,7 +7,6 @@ from django.core.management.base import BaseCommand
 
 from ._media_codes import MediaCodeList
 
-
 FIXTURE_PATH = 'cla_backend/apps/legalaid/fixtures/media_codes.json'
 
 
@@ -26,7 +25,6 @@ def readable(path):
 
 
 class Command(BaseCommand):
-
     args = 'CSV_FILE.csv'
     help = ('Converts a CSV spreadsheet of media codes into a fixture ready '
             'to be loaddata\'d into the database')

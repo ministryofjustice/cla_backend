@@ -32,7 +32,7 @@ def get_or_create_timer(user):
     if not current_timer:
         current_timer = _create_timer(user)
         created = True
-    return (current_timer, created)
+    return current_timer, created
 
 
 def stop_timer(user):

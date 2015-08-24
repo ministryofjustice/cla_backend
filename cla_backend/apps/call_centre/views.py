@@ -1,15 +1,15 @@
 import datetime
 from uuid import UUID
+
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
-
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
-from cla_eventlog import event_registry
 
+from cla_eventlog import event_registry
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
 

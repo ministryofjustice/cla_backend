@@ -3,7 +3,6 @@ from rest_framework.test import APITestCase
 
 from core.tests.mommy_utils import make_recipe
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
-
 from legalaid.tests.views.mixins.user_api import UserAPIMixin
 
 
@@ -29,7 +28,7 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
         response = self.client.post(
             reset_url,
             {
-                'new_password': 'b'*10
+                'new_password': 'b' * 10
             },
             HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )

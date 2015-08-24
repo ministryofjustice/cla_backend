@@ -18,4 +18,3 @@ class CaseNotesHistoryViewSetTestCase(
         return super(CaseNotesHistoryViewSetTestCase, self).make_parent_resource(
             **kwargs
         )
-

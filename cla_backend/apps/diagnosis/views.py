@@ -1,15 +1,12 @@
 import json
 
-from core.drf.mixins import NestedGenericModelMixin
-
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from core.drf.mixins import NestedGenericModelMixin
 from cla_eventlog import event_registry
-
 from legalaid.models import Case
-
 from diagnosis.models import DiagnosisTraversal
 from diagnosis.serializers import DiagnosisSerializer
 

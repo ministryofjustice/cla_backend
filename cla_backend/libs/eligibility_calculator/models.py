@@ -80,11 +80,11 @@ class Income(ModelMixin, object):
 class Deductions(ModelMixin, object):
     PROPERTY_META = {
         'income_tax': None,
-        'national_insurance' : None,
+        'national_insurance': None,
         'maintenance': None,
         'childcare': None,
         'mortgage': None,
-        'rent' : None,
+        'rent': None,
         'criminal_legalaid_contributions': None
     }
 

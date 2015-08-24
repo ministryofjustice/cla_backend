@@ -30,4 +30,3 @@ def send_notifications():
         raise send_notifications.retry(exc=e)
     else:
         return success
-

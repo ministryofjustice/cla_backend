@@ -17,7 +17,7 @@ class NoteTagRelation(models.Model):
     tag = models.ForeignKey('Tag')
     note = models.ForeignKey('Note')
 
-    class Meta:
+    class Meta(object):
         unique_together = (('tag', 'note'),)
         verbose_name = 'Tag'
 

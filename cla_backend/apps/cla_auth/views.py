@@ -1,16 +1,14 @@
 import logging
 
-from rest_framework.exceptions import Throttled
-
 from django_statsd.clients import statsd
 from ipware.ip import get_ip
+from rest_framework.exceptions import Throttled
 
 from provider.oauth2.views import AccessTokenView as Oauth2AccessTokenView
 from provider.views import OAuthError
 
 from .forms import ClientIdPasswordGrantForm
 from .throttling import LoginRateThrottle
-
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +47,8 @@ class AccessTokenView(Oauth2AccessTokenView):
                 'HTTP_REFERER': request.META.get('HTTP_REFERER'),
                 'HTTP_USER_AGENT': request.META.get('HTTP_USER_AGENT')
             })
-            response = self.error_response({
+            response = self.error_response(
+                {
                     'error': 'throttled',
                     'detail': exc.detail
                 },

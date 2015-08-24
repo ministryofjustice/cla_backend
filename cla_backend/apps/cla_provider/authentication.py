@@ -1,8 +1,9 @@
-from cla_provider.models import Staff
 from django.contrib.auth.hashers import check_password
 from django_statsd.clients import statsd
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
+
+from cla_provider.models import Staff
 
 
 class LegacyCHSAuthentication(BaseAuthentication):
@@ -30,13 +31,12 @@ class LegacyCHSAuthentication(BaseAuthentication):
             statsd.incr('provider_extract.auth_failed')
             raise AuthenticationFailed('Invalid username/password')
 
-
         user = staff.user
         if user is None or not user.is_active or not check_password(password, staff.chs_password):
             statsd.incr('provider_extract.auth_failed')
             raise AuthenticationFailed('Invalid username/password')
 
-        return (user, None)
+        return user, None
 
     def authenticate_header(self, request):
         return None

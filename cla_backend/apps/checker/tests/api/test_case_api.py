@@ -3,20 +3,16 @@ import uuid
 
 from django.utils import timezone
 from django.core import mail
-
-from checker.serializers import CaseSerializer
-
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from cla_common.constants import CASE_SOURCE
 from cla_eventlog.models import Log
-
+from checker.serializers import CaseSerializer
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
-
 from legalaid.models import Case, PersonalDetails
 from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
-from cla_common.constants import CASE_SOURCE
 
 
 class BaseCaseTestCase(
@@ -68,7 +64,7 @@ class CaseTestCase(BaseCaseTestCase):
         """
         Ensure that we can't POST, PUT or DELETE
         """
-        ### LIST
+        # LIST
         self._test_delete_not_allowed(self.list_url)
 
     # CREATE
@@ -101,7 +97,8 @@ class CaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCaseResponseKeys(response)
 
-        self.assertCaseEqual(response.data,
+        self.assertCaseEqual(
+            response.data,
             Case(
                 reference=response.data['reference'],
                 eligibility_check=check,
@@ -131,12 +128,12 @@ class CaseTestCase(BaseCaseTestCase):
         data={
             'eligibility_check': invalid_uuid,
             'personal_details': {
-                "title": '1'*21,
-                "full_name": None,
-                "postcode": '1'*13,
-                "street": '1'*256,
-                "mobile_phone": '1'*21,
-                "home_phone": '1'*21,
+                'title': '1' * 21,
+                'full_name': None,
+                'postcode': '1' * 13,
+                'street': '1' * 256,
+                'mobile_phone': '1' * 21,
+                'home_phone': '1' * 21,
             }
         }
 
@@ -197,8 +194,7 @@ class CaseTestCase(BaseCaseTestCase):
         self.assertFalse(serializer.is_valid())
         self.assertDictEqual(
             serializer.errors,
-            {'eligibility_check':
-                 [u'Case with this Eligibility check already exists.']})
+            {'eligibility_check': [u'Case with this Eligibility check already exists.']})
 
 
 class CallMeBackCaseTestCase(BaseCaseTestCase):

@@ -1,12 +1,13 @@
-from decimal import Decimal
-import unittest
 import datetime
-from django.contrib.auth.models import User
-import legalaid.utils.csvupload.validators as v
+from decimal import Decimal
 import re
+import unittest
 
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.test import APITestCase
+
+import legalaid.utils.csvupload.validators as v
 from provider.oauth2.models import AccessToken
 
 from core.tests.mommy_utils import make_recipe

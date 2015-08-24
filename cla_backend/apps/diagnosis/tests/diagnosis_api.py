@@ -3,12 +3,8 @@ import mock
 from rest_framework import status
 
 from cla_common.constants import DIAGNOSIS_SCOPE
-
 from cla_eventlog.models import Log
-
-from core.tests.test_base import \
-    NestedSimpleResourceAPIMixin
-
+from core.tests.test_base import NestedSimpleResourceAPIMixin
 from diagnosis.models import DiagnosisTraversal
 from diagnosis.tests.utils import MockedGraph
 

@@ -5,7 +5,6 @@ from rest_framework_nested.routers import NestedSimpleRouter
 
 from . import views
 
-
 router = routers.DefaultRouter()
 router.register(r'category', views.CategoryViewSet)
 router.register(r'eligibility_check', views.EligibilityCheckViewSet, base_name='eligibility_check')
@@ -19,8 +18,7 @@ eligibility_check_router = \
 eligibility_check_router.register(r'property',
                                   views.PropertyViewSet,
                                   base_name='property',
-                                )
-
+                                  )
 
 urlpatterns = patterns('',
     url(r'^', include(router.urls)),

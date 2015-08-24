@@ -9,16 +9,14 @@ from django.conf import settings
 
 RE_DATE = re.compile(r'(\d{4})-(\d\d?)-(\d\d?)$')
 
+
 class MonthYearWidget(Widget):
     """
     A Widget that splits date input into two <select> boxes for month and year,
     with 'day' defaulting to the first of the month.
 
     Based on SelectDateWidget, in
-
     django/trunk/django/forms/extras/widgets.py
-
-
     """
     none_value = (0, '---')
     month_field = '%s_month'
@@ -72,6 +70,7 @@ class MonthYearWidget(Widget):
 
     def id_for_label(self, id_):
         return '%s_month' % id_
+
     id_for_label = classmethod(id_for_label)
 
     def value_from_datadict(self, data, files, name):
@@ -81,6 +80,5 @@ class MonthYearWidget(Widget):
             return None
         if y and m:
             return datetime.date(int(y), int(m), 1).strftime(
-                settings.DATE_INPUT_FORMATS[0]
-)
+                settings.DATE_INPUT_FORMATS[0])
         return data.get(name, None)

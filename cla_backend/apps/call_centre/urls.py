@@ -1,10 +1,8 @@
 from django.conf.urls import patterns, url, include
-
 from rest_framework import routers
 
 from core.drf.router import NestedSimpleRouter, NestedCLARouter, \
     AdvancedSimpleRouter
-
 from core import routers as core_routers
 
 from . import views
@@ -25,7 +23,7 @@ router.register(r'guidance/note', views.GuidanceNoteViewSet,
 router.register(r'notifications/notification', views.NotificationViewSet,
                 base_name='notifications')
 router.register(r'adaptations', views.AdaptationDetailsMetadataViewSet,
-        base_name='adaptations-metadata')
+                base_name='adaptations-metadata')
 router.register(r'mattertype', views.MatterTypeViewSet)
 router.register(r'mediacode', views.MediaCodeViewSet)
 router.register(r'feedback', views.FeedbackViewSet)

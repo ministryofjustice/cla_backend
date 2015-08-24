@@ -3,13 +3,15 @@ from __future__ import unicode_literals
 import base64
 import json
 import datetime
-from cla_common.constants import ELIGIBILITY_STATES, DIAGNOSIS_SCOPE
-import pytz
 import logging
+
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
-from diagnosis.models import DiagnosisTraversal
 from django.db.models import Q
+import pytz
+
+from cla_common.constants import ELIGIBILITY_STATES, DIAGNOSIS_SCOPE
+from diagnosis.models import DiagnosisTraversal
 from legalaid.models import Case, EligibilityCheck
 
 logger = logging.getLogger(__name__)

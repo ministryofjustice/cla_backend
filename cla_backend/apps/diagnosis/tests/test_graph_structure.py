@@ -1,5 +1,6 @@
 import os
 import re
+
 from django.conf import settings
 from django.test import TestCase
 from lxml import etree

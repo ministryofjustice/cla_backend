@@ -15,6 +15,7 @@ def is_in_business_hours(dt):
     OPERATOR_HOURS = OpeningHours(**settings.OPERATOR_HOURS)
     return dt in OPERATOR_HOURS
 
+
 def get_remainder_from_end_of_day(day, dt_until):
     available_slots = time_slots(day)
     remainder = timedelta(minutes=SLOT_INTERVAL_MINS)
@@ -25,8 +26,10 @@ def get_remainder_from_end_of_day(day, dt_until):
     assert remainder >= timedelta(microseconds=0)
     return remainder
 
+
 def get_next_business_day(start_date):
     return filter(lambda x: x.date() > start_date, available_days(365))[0]
+
 
 def get_sla_time(start_time, minutes):
     next_business_day = get_next_business_day(start_time.date())

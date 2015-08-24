@@ -1,7 +1,6 @@
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
-
 from core.tests.test_base import \
     NestedSimpleResourceAPIMixin
 
@@ -97,7 +96,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         """
         Ensure that we can't POST, PUT or DELETE
         """
-        ### LIST
+        # LIST
         if hasattr(self, 'list_url') and self.list_url:
             self._test_delete_not_allowed(self.list_url)
 

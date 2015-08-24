@@ -1,14 +1,13 @@
 from django.core.exceptions import ImproperlyConfigured
-from rest_framework.decorators import action
-from checker.helpers import notify_callback_created
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-
-from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, mixins
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response as DRFResponse
 
 from core.models import get_web_user
+from checker.helpers import notify_callback_created
 from diagnosis.views import DiagnosisModelMixin
 
 from knowledgebase.views import BaseArticleViewSet, \
@@ -74,15 +73,15 @@ class EligibilityCheckViewSet(
 
 
 class NestedModelMixin(object):
-
     parent_model = None
     parent_lookup = None
     nested_lookup = None
 
     @csrf_exempt
-    def dispatch(self, request,  *args, **kwargs):
-        key = kwargs['{parent_lookup}__{lookup}'. \
-            format(parent_lookup=self.parent_lookup, lookup=self.nested_lookup)]
+    def dispatch(self, request, *args, **kwargs):
+        key = kwargs['{parent_lookup}__{lookup}'.format(
+            parent_lookup=self.parent_lookup,
+            lookup=self.nested_lookup)]
 
         self.parent_instance = get_object_or_404(
             self.parent_model, **{self.nested_lookup: key})
@@ -141,14 +140,14 @@ class CaseViewSet(
         super(CaseViewSet, self).post_save(obj, created=created)
 
         if created and obj.requires_action_at:
-                form = WebCallMeBackForm(
-                    case=obj, data={},
-                    requires_action_at=obj.requires_action_at
-                )
+            form = WebCallMeBackForm(
+                case=obj, data={},
+                requires_action_at=obj.requires_action_at
+            )
 
-                if form.is_valid():
-                    form.save(obj.created_by)
-                    notify_callback_created(obj)
+            if form.is_valid():
+                form.save(obj.created_by)
+                notify_callback_created(obj)
 
 
 class DiagnosisViewSet(

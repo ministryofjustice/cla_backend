@@ -10,6 +10,7 @@ from timer.utils import get_timer
 #   `set_requires_action_by` quickly.
 # Choose one of them if you want something else than a simple single value
 
+
 def None_if_owned_by_operator(case):
     if case.requires_action_by_operator:
         return None

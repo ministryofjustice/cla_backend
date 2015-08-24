@@ -82,4 +82,3 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
         self.assertIsInstance(response.data, dict)
         self.assertIn('body', response.data)
         self.assertIn('title', response.data)
-

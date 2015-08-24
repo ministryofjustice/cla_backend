@@ -30,7 +30,7 @@ class RejectCaseForm(EventSpecificLogForm):
         #   mark case as closed (keep case.provider)
         # else:
         #   reset provider (case not beloging to provider anymore)
-        if code_data.get('set_requires_action_by', False) == None:
+        if code_data.get('set_requires_action_by', False) is None:
             self.case.close_by_provider()
         else:  # if requires_action_by == REQUIRES_ACTION_BY.OPERATOR
             self.case.provider = None
@@ -183,14 +183,14 @@ class SplitCaseForm(BaseCaseLogForm):
             self._errors[NON_FIELD_ERRORS] = ErrorList(non_fields_errors)
             return cleaned_data
 
-        ##### CATEGORY #####
+        # #### CATEGORY #####
         if category == self.case.eligibility_check.category:
             self._errors['category'] = ErrorList([
                 'Please choose a different category or law.'
             ])
             del cleaned_data['category']
 
-        ##### MATTER TYPES #####
+        # #### MATTER TYPES #####
         if not self.is_matter_type_valid(category, MATTER_TYPE_LEVELS.ONE,
                                          matter_type1):
             self._errors['matter_type1'] = ErrorList([
@@ -206,7 +206,7 @@ class SplitCaseForm(BaseCaseLogForm):
             ])
             del cleaned_data['matter_type2']
 
-        ##### INTERNAL #####
+        # #### INTERNAL #####
         can_deal = self.can_provider_deal_with_category(category)
         if internal and not can_deal:
             self._errors['internal'] = ErrorList([

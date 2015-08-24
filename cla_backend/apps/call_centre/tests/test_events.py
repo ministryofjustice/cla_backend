@@ -1,9 +1,7 @@
-from core.tests.mommy_utils import make_recipe
-
 from django.test import TestCase
 
+from core.tests.mommy_utils import make_recipe
 from cla_eventlog import event_registry
-
 from cla_eventlog.tests.base import EventTestCaseMixin
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
 
@@ -159,7 +157,8 @@ class StopCallMeBackEventTestCase(EventTestCaseMixin, TestCase):
     def test_CALLBACK_COMPLETE(self):
         # with callback_attempt == 1
         case = make_recipe('legalaid.case', callback_attempt=1)
-        self._test_process_with_implicit_code('CALLBACK_COMPLETE', dummy_case=case,
+        self._test_process_with_implicit_code(
+            'CALLBACK_COMPLETE', dummy_case=case,
             expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.HIGH,
             process_kwargs={
                 'complete': True
@@ -168,7 +167,8 @@ class StopCallMeBackEventTestCase(EventTestCaseMixin, TestCase):
 
         # with callback_attempt == 2
         case = make_recipe('legalaid.case', callback_attempt=2)
-        self._test_process_with_implicit_code('CALLBACK_COMPLETE', dummy_case=case,
+        self._test_process_with_implicit_code(
+            'CALLBACK_COMPLETE', dummy_case=case,
             expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.HIGH,
             process_kwargs={
                 'complete': True
@@ -177,7 +177,8 @@ class StopCallMeBackEventTestCase(EventTestCaseMixin, TestCase):
 
         # with callback_attempt == 3
         case = make_recipe('legalaid.case', callback_attempt=3)
-        self._test_process_with_implicit_code('CALLBACK_COMPLETE', dummy_case=case,
+        self._test_process_with_implicit_code(
+            'CALLBACK_COMPLETE', dummy_case=case,
             expected_type=LOG_TYPES.SYSTEM, expected_level=LOG_LEVELS.HIGH,
             process_kwargs={
                 'complete': True

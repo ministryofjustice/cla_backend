@@ -4,13 +4,7 @@ import warnings
 from django.core.management.base import BaseCommand
 
 from cla_common.constants import CASE_SOURCE
-
-from performance.constants import PERFORMANCE_STAGES, PERFORMANCE_STATES, \
-    PERFORMANCE_CHANNELS
-
 from cla_common.constants import ELIGIBILITY_STATES, DIAGNOSIS_SCOPE
-from django.conf import settings
-from django.core.serializers.json import DjangoJSONEncoder
 from diagnosis.models import DiagnosisTraversal
 from django.db.models import Q
 from legalaid.models import Case, EligibilityCheck
@@ -19,7 +13,7 @@ warnings.showwarning = lambda *x: None
 
 
 class Command(BaseCommand):
-    help = ('Prints out performance stats, nothing else.')
+    help = 'Prints out performance stats, nothing else.'
 
     def _get_cases(self, source=None):
         qs = Case.objects.filter(
@@ -33,7 +27,7 @@ class Command(BaseCommand):
     def _get_eligibility_checks(self):
         return EligibilityCheck.objects.filter(
             Q(case__isnull=True) | Q(case__source='WEB'),
-            #notes__contains='User selected',
+            # notes__contains='User selected',
             created__gte=self.from_time,
             created__lte=self.to_time
         )
@@ -104,7 +98,6 @@ class Command(BaseCommand):
             state=ELIGIBILITY_STATES.YES
         )
         self.stdout.write('Eligible eligibility checks: %s' % eligibility_checks.count())
-
 
         # Eligible people
         cases = self._get_cases(source='WEB').filter(eligibility_check__state=ELIGIBILITY_STATES.YES)

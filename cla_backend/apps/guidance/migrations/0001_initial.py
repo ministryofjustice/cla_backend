@@ -9,8 +9,7 @@ import djorm_pgfulltext.fields
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(

@@ -15,6 +15,6 @@ class LogSerializerBase(ClaModelSerializer):
     notes = serializers.CharField(read_only=True)
     patch = JSONField(read_only=True)
 
-    class Meta:
+    class Meta(object):
         model = Log
         fields = ()

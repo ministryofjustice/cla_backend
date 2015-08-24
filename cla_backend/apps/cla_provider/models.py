@@ -1,5 +1,5 @@
-import uuid
 from datetime import timedelta
+import uuid
 
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
@@ -8,7 +8,6 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django.db.models.signals import post_save, pre_save
-from django.db import transaction
 
 from jsonfield import JSONField
 from model_utils.models import TimeStampedModel
@@ -63,6 +62,7 @@ class ProviderAllocation(TimeStampedModel):
     def __unicode__(self):
         return u'%s provides %s' % (self.provider, self.category)
 
+
 class ProviderPreAllocationManager(models.Manager):
 
     def get_queryset(self):
@@ -104,7 +104,7 @@ class Staff(TimeStampedModel):
     def set_chs_password(self, raw_password):
         self.chs_password = make_password(raw_password)
 
-    class Meta:
+    class Meta(object):
         unique_together = (("chs_organisation", "chs_user"),)
         verbose_name_plural = 'staff'
 
@@ -123,8 +123,9 @@ class OutOfHoursRotaManager(models.Manager):
         if not as_of: as_of = timezone.localtime(timezone.now())
 
         return self.get_queryset().get(category=category,
-                                 start_date__lte=as_of,
-                                 end_date__gte=as_of)
+                                       start_date__lte=as_of,
+                                       end_date__gte=as_of)
+
 
 class OutOfHoursRota(TimeStampedModel):
     start_date = models.DateTimeField()
@@ -137,14 +138,13 @@ class OutOfHoursRota(TimeStampedModel):
     def __unicode__(self):
         return u'%s provides out of hours service for %s between %s - %s' \
                % (
-            self.provider,
-            self.category.code,
-            self.start_date,
-            self.end_date
-        )
+                   self.provider,
+                   self.category.code,
+                   self.start_date,
+                   self.end_date
+               )
 
     def clean(self):
-
         if not self.end_date > self.start_date:
             raise ValidationError("End date must be after start date.")
 
@@ -152,7 +152,7 @@ class OutOfHoursRota(TimeStampedModel):
         # is not able to provide.
         if self.category not in self.provider.law_category.all():
             raise ValidationError(
-                _(u"Provider {provider} doesn't offer help for {category}") \
+                _(u"Provider {provider} doesn't offer help for {category}")
                 .format(provider=self.provider, category=self.category))
 
         overlapping = self.__class__._default_manager.filter(
@@ -166,6 +166,7 @@ class OutOfHoursRota(TimeStampedModel):
         if overlapping:
             raise ValidationError(
                 _(u"Overlapping rota allocation not allowed"))
+
 
 class Feedback(TimeStampedModel):
     reference = UUIDField(auto=True, unique=True)
@@ -188,7 +189,7 @@ class CSVUpload(TimeStampedModel):
     body = JSONField()
     month = models.DateField(validators=[validate_first_of_month])
 
-    class Meta:
+    class Meta(object):
         unique_together = [
             ['provider', 'month']
         ]

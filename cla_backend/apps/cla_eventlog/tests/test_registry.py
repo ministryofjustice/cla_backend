@@ -16,7 +16,7 @@ class RegistryStartupChecksTestCase(TestCase):
                     'selectable_by': [],
                     'description': "my code"
                 },
-                }
+            }
 
         self.assertRaises(ValueError, registry.register, MyEvent)
 
@@ -39,7 +39,7 @@ class RegistryStartupChecksTestCase(TestCase):
                     'selectable_by': [],
                     'description': "my code"
                 },
-                }
+            }
             del _codes['MY_CODE'][missing_key]
 
             class MyEvent(BaseEvent):
@@ -59,7 +59,7 @@ class RegistryStartupChecksTestCase(TestCase):
                     'selectable_by': [],
                     'description': "my code"
                 },
-                }
+            }
             _codes['MY_CODE'][wrong_type_key] = float(1)  # not really great but hey...
 
             class MyEvent(BaseEvent):
@@ -78,7 +78,7 @@ class RegistryStartupChecksTestCase(TestCase):
                 'selectable_by': [],
                 'description': "my code"
             },
-            }
+        }
 
         class MyEvent(BaseEvent):
             key = 'my_key'
@@ -96,7 +96,7 @@ class RegistryStartupChecksTestCase(TestCase):
                 'selectable_by': [],
                 'description': "my code"
             },
-            }
+        }
 
         class MyEvent(BaseEvent):
             key = 'my_key'
@@ -114,7 +114,7 @@ class RegistryStartupChecksTestCase(TestCase):
                 'selectable_by': ['foo'],
                 'description': "my code"
             },
-            }
+        }
 
         class MyEvent(BaseEvent):
             key = 'my_key'
@@ -123,7 +123,6 @@ class RegistryStartupChecksTestCase(TestCase):
         self.assertRaises(ValueError, registry.register, MyEvent)
 
     def test_event_registry_all(self):
-
         registry = EventRegistry()
 
         _codes = {
@@ -147,7 +146,6 @@ class RegistryStartupChecksTestCase(TestCase):
         self.assertTrue('MY_CODE' in res, res)
 
     def test_event_registry_filter(self):
-
         registry = EventRegistry()
 
         _codes = {
@@ -158,7 +156,7 @@ class RegistryStartupChecksTestCase(TestCase):
                 'description': "my code",
                 'stops_timer': True
             },
-            }
+        }
 
         class MyEvent(BaseEvent):
             key = 'my_key'

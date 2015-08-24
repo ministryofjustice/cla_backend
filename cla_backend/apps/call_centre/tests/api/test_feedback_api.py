@@ -1,6 +1,6 @@
-from core.tests.test_base import SimpleResourceAPIMixin
 from rest_framework.test import APITestCase
 
+from core.tests.test_base import SimpleResourceAPIMixin
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 
 

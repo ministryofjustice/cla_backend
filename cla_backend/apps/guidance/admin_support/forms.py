@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
+from django import forms
 import markdown
 
-from django import forms
-
 from core.admin.fields import MarkdownAdminField, DEFAULT_MARKDOWN_WHITELIST
-
 from ..models import Note
 
 
@@ -26,7 +24,7 @@ class NoteModelForm(forms.ModelForm):
         markdown_whitelist=markdown_whitelist,
         extensions=EXTENSIONS)
 
-    class Meta:
+    class Meta(object):
         model = Note
         exclude = []
 
@@ -34,4 +32,3 @@ class NoteModelForm(forms.ModelForm):
         self.instance.body = markdown.markdown(
             self.instance.raw_body, extensions=EXTENSIONS)
         return super(NoteModelForm, self).save(*args, **kwargs)
-

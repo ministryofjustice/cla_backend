@@ -50,8 +50,10 @@ def _make_reference():
         get_random_string(length=4, allowed_chars='123456789')
     )
 
+
 def _check_reference_unique(reference):
     return not Case.objects.filter(reference=reference).exists()
+
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=500)
@@ -62,7 +64,7 @@ class Category(TimeStampedModel):
     description = models.TextField(blank=True, editable=False)
     order = models.PositiveIntegerField(default=0)
 
-    class Meta:
+    class Meta(object):
         ordering = ['order']
         verbose_name_plural = "categories"
 
@@ -150,6 +152,9 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         'excludes': ['reference', 'created', 'modified', 'case_count', 'search_field']
     }
 
+    class Meta(object):
+        verbose_name_plural = "personal details"
+
     def _set_search_field(self):
         if self.postcode:
             self.search_field =  self.postcode.replace(' ', '')
@@ -157,9 +162,6 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     def save(self, *args, **kwargs):
         self._set_search_field()
         super(PersonalDetails, self).save(*args, **kwargs)
-
-    class Meta:
-        verbose_name_plural = "personal details"
 
     def update_case_count(self):
         case_count = self.case_set.count()
@@ -250,7 +252,7 @@ class Person(CloneModelMixin, TimeStampedModel):
 
 
 class ValidateModelMixin(models.Model):
-    class Meta:
+    class Meta(object):
         abstract = True
 
     def get_dependencies(self):
@@ -383,13 +385,15 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
 
     def to_case_data(self):
         def compose_dict(model=self, props=None):
-            if not props: props = []
-            if not model: return None
+            if not props:
+                props = []
+            if not model:
+                return None
 
             obj = {}
             for prop in props:
                 value = getattr(model, prop)
-                if value != None:
+                if value is not None:
                     if isinstance(value, MoneyInterval):
                         value = value.as_monthly()
                     obj[prop] = value
@@ -498,7 +502,7 @@ class Property(TimeStampedModel):
     disputed = models.NullBooleanField(default=None)
     main = models.NullBooleanField(default=None)
 
-    class Meta:
+    class Meta(object):
         verbose_name_plural = "properties"
 
 
@@ -511,9 +515,10 @@ class MatterType(TimeStampedModel):
         validators=[MaxValueValidator(2)])
 
     def __unicode__(self):
-        return u'MatterType{} ({}): {} - {}'.format(self.get_level_display(), self.category.code, self.code, self.description)
+        return u'MatterType{} ({}): {} - {}'.format(
+            self.get_level_display(), self.category.code, self.code, self.description)
 
-    class Meta:
+    class Meta(object):
         unique_together = (("code", "level"),)
 
 
@@ -535,7 +540,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True,
                                              blank=True)
     diagnosis = models.OneToOneField('diagnosis.DiagnosisTraversal', null=True,
-                                             blank=True, on_delete=SET_NULL)
+                                     blank=True, on_delete=SET_NULL)
     personal_details = models.ForeignKey(PersonalDetails, blank=True,
                                          null=True)
 
@@ -622,6 +627,10 @@ class Case(TimeStampedModel, ModelDiffMixin):
 
     class Meta(object):
         ordering = ('-created',)
+        permissions = (
+            ("run_reports", "Can run reports"),
+            ("run_obiee_reports", "Can run obiee reports"),
+        )
 
     def __unicode__(self):
         return self.reference
@@ -633,7 +642,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
             reference = _make_reference()
             while (not _check_reference_unique(reference) and tries < max_retries):
                 reference = _make_reference()
-                tries = tries + 1
+                tries += 1
 
             self.reference = reference
 
@@ -814,12 +823,6 @@ class Case(TimeStampedModel, ModelDiffMixin):
     def requires_action_by_operator_manager(self):
         return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR_MANAGER
 
-    class Meta:
-        permissions = (
-            ("run_reports", "Can run reports"),
-            ("run_obiee_reports", "Can run obiee reports"),
-        )
-
 
 class CaseNotesHistory(TimeStampedModel):
     case = models.ForeignKey(Case, db_index=True)
@@ -839,8 +842,7 @@ class CaseNotesHistory(TimeStampedModel):
         ).exclude(pk=self.pk)
         qs.update(include_in_summary=False)
 
-
-    class Meta:
+    class Meta(object):
         ordering = ['-created']
 
 

@@ -1,8 +1,7 @@
-from cla_common.constants import FEEDBACK_ISSUE
 from rest_framework import serializers
 
+from cla_common.constants import FEEDBACK_ISSUE
 from core.serializers import UUIDSerializer
-
 from cla_eventlog.serializers import LogSerializerBase
 
 from legalaid.serializers import EligibilityCheckSerializerBase, \
@@ -181,7 +180,6 @@ class LogSerializer(LogSerializerBase):
         )
 
 
-
 class CaseSerializer(CaseSerializerFull):
     provider_notes = serializers.CharField(max_length=5000, required=False, read_only=True)
     billable_time = serializers.IntegerField(read_only=True)
@@ -209,8 +207,8 @@ class CaseSerializer(CaseSerializerFull):
             'complaint_flag', 'eod_details', 'call_started',
         )
 
-class CaseListSerializer(CaseSerializer):
 
+class CaseListSerializer(CaseSerializer):
     class Meta(CaseSerializer.Meta):
         fields = (
             'reference',
@@ -233,6 +231,7 @@ class CaseListSerializer(CaseSerializer):
             'flagged_with_eod',
         )
 
+
 class CreateCaseSerializer(CaseSerializer):
     """
     Case Serializer only used for creation.
@@ -242,7 +241,7 @@ class CreateCaseSerializer(CaseSerializer):
     """
     personal_details = UUIDSerializer(slug_field='reference', required=False)
 
-    # class Meta:
+    # class Meta(object):
     #     model = Case
     #     fields = ('reference', 'personal_details')
 
@@ -272,12 +271,13 @@ class OutOfHoursRotaSerializer(OutOfHoursRotaSerializerBase):
 class OperatorSerializer(ExtendedUserSerializerBase):
     is_cla_superuser = serializers.CharField(read_only=True)
 
-    class Meta:
+    class Meta(object):
         model = Operator
         fields = (
             'username', 'first_name', 'last_name', 'email', 'is_manager', 'password',
             'created', 'last_login', 'is_cla_superuser'
         )
+
 
 class FeedbackSerializer(FeedbackSerializerBase):
     justified = serializers.BooleanField(required=False)
@@ -298,8 +298,8 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'issue',
         )
 
-class CaseArchivedSerializer(CaseArchivedSerializerBase):
 
+class CaseArchivedSerializer(CaseArchivedSerializerBase):
     class Meta(CaseArchivedSerializerBase.Meta):
         fields = (
              'full_name',
@@ -327,7 +327,6 @@ class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):
 
 
 class CSVUploadSerializer(CSVUploadSerializerBase):
-
     class Meta(CSVUploadSerializerBase.Meta):
         fields = [
             'id',
@@ -340,8 +339,8 @@ class CSVUploadSerializer(CSVUploadSerializerBase):
             'modified',
             ]
 
-class CSVUploadDetailSerializer(CSVUploadSerializerBase):
 
+class CSVUploadDetailSerializer(CSVUploadSerializerBase):
     class Meta(CSVUploadSerializerBase.Meta):
         fields = [
             'id',

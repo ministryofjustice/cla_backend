@@ -211,7 +211,7 @@ class DiagnosisSerializer(ClaModelSerializer):
 
         return self.object
 
-    class Meta:
+    class Meta(object):
         model = DiagnosisTraversal
         fields = ('reference',
                   'nodes',
@@ -221,5 +221,4 @@ class DiagnosisSerializer(ClaModelSerializer):
                   'category',
                   'matter_type1',
                   'matter_type2',
-                  'version_in_conflict'
-                  )
+                  'version_in_conflict')

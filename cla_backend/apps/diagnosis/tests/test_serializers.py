@@ -1,16 +1,12 @@
 import mock
 
 from django.test import TestCase
-
 from rest_framework.exceptions import ParseError
 
 from core.tests.mommy_utils import make_recipe
-
 from cla_common.constants import DIAGNOSIS_SCOPE
-
 from diagnosis.serializers import DiagnosisSerializer
 from diagnosis.models import DiagnosisTraversal
-
 from diagnosis.tests.utils import MockedGraph
 
 

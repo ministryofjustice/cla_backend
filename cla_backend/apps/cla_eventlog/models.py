@@ -45,6 +45,5 @@ class Log(TimeStampedModel):
             self.case.view_by_provider(self.created_by.staff.provider)
         statsd.incr('outcome.%s' % self.code)
 
-
-    class Meta:
+    class Meta(object):
         ordering = ['-created']

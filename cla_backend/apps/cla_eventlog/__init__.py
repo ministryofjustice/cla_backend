@@ -1,5 +1,5 @@
 from registry import event_registry
-from django.conf import settings
+
 
 def autodiscover():
     """
@@ -7,7 +7,6 @@ def autodiscover():
     not present. This forces an import on them to register any admin bits they
     may want.
     """
-
     import copy
     from django.conf import settings
     from django.utils.importlib import import_module
@@ -31,5 +30,6 @@ def autodiscover():
             # attempting to import it, otherwise we want it to bubble up.
             if module_has_submodule(mod, 'events'):
                 raise
+
 
 autodiscover()

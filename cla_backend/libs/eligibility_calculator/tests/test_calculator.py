@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import unittest
 import mock
 import random
@@ -279,7 +278,8 @@ class TestCapitalCalculator(unittest.TestCase):
 
     def test_laa_scenario_A16(self):
         # Testing if mortgage disregard capped across all properties
-        calc = CapitalCalculator(properties=[
+        calc = CapitalCalculator(
+            properties=[
                 self.make_property(15000000, 5000000, 100, False, True),
                 self.make_property(7500000, 7500000, 100, False, False)
             ],
@@ -882,7 +882,7 @@ class TestCalculator(CalculatorTestBase):
         Should reject someone for having income more than 2657
         """
         too_much_money = constants.gross_income.BASE_LIMIT + 1
-        for dep_children in range(1,constants.gross_income.INCLUSIVE_CHILDREN_BASE+1):
+        for dep_children in range(1, constants.gross_income.INCLUSIVE_CHILDREN_BASE + 1):
             case_data = self.get_default_case_data(
                 you__income__earnings=too_much_money,
                 facts__dependants_young=dep_children,
@@ -1087,20 +1087,20 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
                     'main': True
                 }
             ],
-            you__income__earnings = 31506,
-            you__income__other_income = 59001,
-            you__savings__bank_balance = 800001,
-            you__savings__investment_balance = 1,
-            you__savings__asset_balance = 1,
-            you__savings__credit_balance = 1,
+            you__income__earnings=31506,
+            you__income__other_income=59001,
+            you__savings__bank_balance=800001,
+            you__savings__investment_balance=1,
+            you__savings__asset_balance=1,
+            you__savings__credit_balance=1,
 
-            you__deductions__mortgage = 54501,
-            you__deductions__rent = 2,
-            you__deductions__income_tax = 2,
-            you__deductions__national_insurance = 1,
-            you__deductions__maintenance = 1,
-            you__deductions__childcare = 1,
-            you__deductions__criminal_legalaid_contributions = 1,
+            you__deductions__mortgage=54501,
+            you__deductions__rent=2,
+            you__deductions__income_tax=2,
+            you__deductions__national_insurance=1,
+            you__deductions__maintenance=1,
+            you__deductions__childcare=1,
+            you__deductions__criminal_legalaid_contributions=1,
         )
         is_elig, checker = self._test_pensioner(case_data)
 

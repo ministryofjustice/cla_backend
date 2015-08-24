@@ -80,7 +80,6 @@ def code_fixture(index, row):
 
 
 class MediaCodeList(object):
-
     def __init__(self, csv_data):
         self.csv_data = list(csv_data)
 

@@ -1,18 +1,16 @@
-import hashlib
-import re
 import codecs
-import networkx as nx
-from lxml import etree, objectify
-
+import hashlib
 from os.path import join, abspath, dirname
+import re
 
 from django.conf import settings
 from django.template.loader import get_template_from_string, Context
 from django.utils.encoding import force_text
 from django.utils.functional import lazy, SimpleLazyObject
 from django.utils.six import text_type
-
+from lxml import etree, objectify
 import markdown
+import networkx as nx
 
 from cla_common.constants import DIAGNOSIS_SCOPE
 

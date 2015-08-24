@@ -12,6 +12,7 @@ from cla_provider.helpers import ProviderDistributionHelper, \
     ProviderAllocationHelper
 from legalaid.forms import get_sla_time
 
+
 class SLATimeHelperTestCase(TestCase):
 
     def _get_next_mon(self):
@@ -60,7 +61,6 @@ class SLATimeHelperTestCase(TestCase):
             self.assertEqual(get_sla_time(d, 480), next_day_plus1_480)
             self.assertTrue(bank_hol.called)
 
-
     def test_lots_of_dates_dont_break_it(self):
         with mock.patch('cla_common.call_centre_availability.bank_holidays', return_value=[]) as bank_hol:
             start_date = timezone.now().replace(hour=9, minute=0)
@@ -75,8 +75,8 @@ class SLATimeHelperTestCase(TestCase):
                 get_sla_time(date, 480)
                 self.assertTrue(bank_hol.called)
 
-class ProviderAllocationHelperTestCase(TestCase):
 
+class ProviderAllocationHelperTestCase(TestCase):
     def setUp(self):
         self.category = make_recipe('legalaid.category')
         self.helper = ProviderAllocationHelper()
@@ -97,7 +97,6 @@ class ProviderAllocationHelperTestCase(TestCase):
         self.assertTrue(mocked_helper.called)
         self.assertTrue(mocked_random_provider_helper.called)
         self.assertEqual(ret, 'TEST')
-
 
     @mock.patch('cla_provider.helpers.ProviderAllocationHelper._get_random_provider')
     @mock.patch('cla_provider.helpers.ProviderDistributionHelper.get_distribution')
@@ -149,8 +148,8 @@ class ProviderAllocationHelperTestCase(TestCase):
         mocked_random_provider_helper.assert_called_once_with(self.category, limit_choices_to=ideal.keys()[:2])
         self.assertEqual(ret, 'TEST')
 
-class ProviderDistributionHelperTestCase(TestCase):
 
+class ProviderDistributionHelperTestCase(TestCase):
     def setUp(self):
         self.category = make_recipe('legalaid.category')
         self.category2 = make_recipe('legalaid.category')
@@ -161,7 +160,6 @@ class ProviderDistributionHelperTestCase(TestCase):
 
         self.date = timezone.now().replace(hour=0, minute=0, second=0)
         self.helper = ProviderDistributionHelper(self.date)
-
 
     def _check_dist(self, num, allocs):
         ideal_dist = self.helper.make_ideal(num, allocs)
@@ -202,7 +200,6 @@ class ProviderDistributionHelperTestCase(TestCase):
         for n in range(0, 10):
             self._check_dist(n, self.uneven_provider_allocations)
 
-
     def test_get_distribution_works_ignore_preallocs(self):
         actual_dist = self.helper.get_distribution(self.category, include_pre_allocations=False)
         self.assertEqual(actual_dist, {})
@@ -228,5 +225,3 @@ class ProviderDistributionHelperTestCase(TestCase):
         self.assertNotEqual(actual_dist_after, actual_dist)
 
         self.assertEqual(actual_dist_after, {provider_1.id: 2})
-
-

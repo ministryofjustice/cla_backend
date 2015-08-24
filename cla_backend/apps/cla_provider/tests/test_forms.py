@@ -1,5 +1,5 @@
-import mock
 from django.test import TestCase
+import mock
 
 from cla_common.constants import REQUIRES_ACTION_BY
 
@@ -216,8 +216,8 @@ class SplitCaseFormTestCase(TestCase):
 
     def test_invalid_matter_types_in_error(self):
         """
-            - matter types not belonging to selected category
-            - matter types levels not matching
+        - matter types not belonging to selected category
+        - matter types levels not matching
         """
 
         # 1. MATTER TYPES NOT BELONGING TO SELECTED CATEGORY

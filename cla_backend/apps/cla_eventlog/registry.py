@@ -2,6 +2,7 @@ from collections import defaultdict
 import operator
 from .constants import LOG_LEVELS, LOG_TYPES, LOG_ROLES
 
+
 def is_code_valid(code):
     required_keys = {
         'type': basestring,
@@ -13,7 +14,7 @@ def is_code_valid(code):
     all_keys = required_keys.keys() + ['set_requires_action_by', 'order']
 
     for key, type_ in required_keys.items():
-        if not key in code:
+        if key not in code:
             raise ValueError('%s is missing from code definition' % key)
         if not isinstance(code[key], type_):
             raise ValueError('%s is not of expected type: %s' % (key, type_))

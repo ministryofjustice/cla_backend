@@ -34,7 +34,7 @@ class StaffAdminForm(OneToOneUserAdminForm):
             self.instance.set_chs_password(raw_password)
         return super(StaffAdminForm, self).save(commit=commit)
 
-    class Meta:
+    class Meta(object):
         model = Staff
         fields = [
             'username', 'password', 'password2', 'first_name',

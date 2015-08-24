@@ -2,7 +2,6 @@
 import datetime
 import pytz
 
-
 TASK_ID_PREFIX = 'cla_backend.notifications.task.notifications'
 
 
@@ -24,7 +23,3 @@ def send_notifications_to_users(sender, instance, **kwargs):
 
     for kwargs in get_update_client_times(instance):
         send_notifications.apply_async(**kwargs)
-
-
-
-

@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
                 ('timer', models.ForeignKey(blank=True, to='timer.Timer', null=True)),
             ],
             options={
-                'ordering': ['-created'],
+                'ordering': ('-created',),
             },
             bases=(models.Model,),
         ),

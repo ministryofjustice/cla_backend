@@ -13,6 +13,9 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='case',
-            options={'permissions': (('run_reports', 'Can run reports'), ('run_obiee_reports', 'Can run obiee reports'))},
+            options={
+                'ordering': ('-created',),
+                'permissions': (('run_reports', 'Can run reports'), ('run_obiee_reports', 'Can run obiee reports'))
+            },
         ),
     ]

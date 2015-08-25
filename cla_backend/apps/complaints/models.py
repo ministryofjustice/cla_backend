@@ -26,10 +26,12 @@ class Complaint(TimeStampedModel):
     eod = models.ForeignKey('legalaid.EODDetails')
 
     description = models.TextField(null=True, blank=True)
-    source = models.CharField(max_length=15, choices=COMPLAINT_SOURCE)
-    level = models.PositiveSmallIntegerField(choices=LOG_LEVELS.CHOICES)
+    source = models.CharField(max_length=15, choices=COMPLAINT_SOURCE,
+                              blank=True)
+    level = models.PositiveSmallIntegerField(choices=LOG_LEVELS.CHOICES,
+                                             default=LOG_LEVELS.MINOR)
     justified = models.NullBooleanField()
-    category = models.ForeignKey('Category')
+    category = models.ForeignKey('Category', blank=True, null=True)
 
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,

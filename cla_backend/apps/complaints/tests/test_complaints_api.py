@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.models import User
+from django.core.urlresolvers import NoReverseMatch
+from rest_framework import status
+from rest_framework.test import APITestCase
+
 from call_centre.models import Operator
+from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.models import ComplaintLog
 from complaints.models import Complaint
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
-from django.contrib.auth.models import User
-from django.core.urlresolvers import NoReverseMatch
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin, \
     CLAProviderAuthBaseApiTestMixin
-from rest_framework import status
-from rest_framework.test import APITestCase
 
 
 class ComplaintTestMixin(object):
@@ -59,18 +61,30 @@ class BaseComplaintTestCase(
                 self.detail_url,
                 HTTP_AUTHORIZATION=self.get_http_authorization()))
 
+    def test_escalate_eod(self):
+        complaint_count = Complaint.objects.all().count()
+        eod = make_recipe('legalaid.eod_details')
+        response = self._create({
+            'eod': unicode(eod.reference),
+            'description': 'TEST DESCRIPTION',
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Complaint.objects.all().count(), complaint_count + 1)
+        resource = Complaint.objects.get(pk=response.data['id'])
+        self.assertSingleEventCreated(resource, 'COMPLAINT_CREATED')
+
     def test_create_and_event_log(self):
         complaint_count = Complaint.objects.all().count()
         eod = make_recipe('legalaid.eod_details')
         complaint_cat = make_recipe('complaints.category')
         response = self._create({
             'category': complaint_cat.pk,
-            'eod': eod.pk,
+            'eod': unicode(eod.reference),
             'description': 'TEST DESCRIPTION',
             'source': 'EMAIL',
-            'level': 29,
+            'level': LOG_LEVELS.MODERATE,
             'justified': True,
-            'owner': self.operator_manager.user.username
+            'owner': self.operator_manager.user.username,
         })
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

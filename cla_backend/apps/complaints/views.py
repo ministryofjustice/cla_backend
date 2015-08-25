@@ -43,7 +43,7 @@ class BaseComplaintViewSet(
         if not obj.pk:
             if not isinstance(user, AnonymousUser):
                 obj.created_by = user
-            obj.update_owner = True
+            obj.update_owner = bool(obj.owner)
         else:
             original_obj = self.model.objects.get(pk=obj.pk)
             obj.update_owner = original_obj.owner_id != obj.owner_id
@@ -51,11 +51,11 @@ class BaseComplaintViewSet(
     def post_save(self, obj, created=False):
         if created:
             dt = timezone.now()
-            notes = u"Complaint created on {dt} by {user}. {notes}".format(
+            notes = u"Complaint created on {dt} by {user}.\n\n{notes}".format(
                 dt=dt.strftime("%d/%m/%Y %H:%M"),
                 user=self.request.user.username,
                 notes=obj.description
-            )
+            ).strip()
 
             event = event_registry.get_event('complaint')()
             event.process(

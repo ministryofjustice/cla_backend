@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='eoddetails',
             name='case',
-            field=models.OneToOneField(related_query_name=b'eod_details', related_name='eod_details', to='legalaid.Case'),
+            field=models.OneToOneField(related_name='eod_details', to='legalaid.Case'),
             preserve_default=True,
         ),
     ]

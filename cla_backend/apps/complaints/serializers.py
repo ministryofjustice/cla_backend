@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
+
 from cla_eventlog.models import ComplaintLog
 from cla_eventlog.serializers import LogSerializerBase
-
+from core.serializers import UUIDSerializer
 from .models import Category, Complaint
 
 
@@ -22,7 +23,8 @@ class CategorySerializerBase(serializers.ModelSerializer):
 
 
 class ComplaintSerializerBase(serializers.ModelSerializer):
-    owner = serializers.SlugRelatedField(slug_field='username')
+    eod = UUIDSerializer(slug_field='reference')
+    owner = serializers.SlugRelatedField(slug_field='username', required=False)
     created_by = CreatedByField(read_only=True)
     category_name = serializers.CharField(
         source='category.name',

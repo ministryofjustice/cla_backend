@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('legalaid', '0004_auto_20150803_1443'),
+        ('legalaid', '0008_remove_case_old_eod_details'),
     ]
 
     operations = [
@@ -34,7 +34,8 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
             ],
             options={
-                'ordering': ['name'],
+                'ordering': ('name',),
+                'verbose_name_plural': 'categories',
             },
             bases=(models.Model,),
         ),
@@ -45,16 +46,16 @@ class Migration(migrations.Migration):
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
                 ('description', models.TextField(null=True, blank=True)),
-                ('source', models.CharField(max_length=15, choices=[(b'EMAIL', b'email'), (b'PHONE', b'phone'), (b'LETTER', b'letter')])),
-                ('level', models.PositiveSmallIntegerField(choices=[(29, b'HIGH'), (21, b'MODERATE'), (11, b'MINOR')])),
+                ('source', models.CharField(blank=True, max_length=15, choices=[(b'EMAIL', b'email'), (b'PHONE', b'phone'), (b'LETTER', b'letter')])),
+                ('level', models.PositiveSmallIntegerField(default=11, choices=[(29, b'HIGH'), (21, b'MODERATE'), (11, b'MINOR')])),
                 ('justified', models.NullBooleanField()),
-                ('category', models.ForeignKey(to='complaints.Category')),
+                ('category', models.ForeignKey(blank=True, to='complaints.Category', null=True)),
                 ('created_by', models.ForeignKey(related_name='complaints_complaint_created_by', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
                 ('eod', models.ForeignKey(to='legalaid.EODDetails')),
                 ('owner', models.ForeignKey(related_name='complaints_complaint_owner', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
-                'abstract': False,
+                'ordering': ('-created',),
             },
             bases=(models.Model,),
         ),

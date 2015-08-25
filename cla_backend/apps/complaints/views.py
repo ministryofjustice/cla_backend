@@ -8,7 +8,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response as DRFResponse
 
 from cla_eventlog import event_registry
-from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.models import ComplaintLog
 from complaints.forms import BaseComplaintLogForm
 from core.drf.mixins import FormActionMixin, NestedGenericModelMixin
@@ -111,16 +110,7 @@ class BaseComplaintConstantsView(rest_views.APIView):
 
     def get(self, *args, **kwargs):
         return DRFResponse({
-            'levels': [
-                {
-                    'value': LOG_LEVELS.HIGH,
-                    'description': 'Major',
-                },
-                {
-                    'value': LOG_LEVELS.MINOR,
-                    'description': 'Minor',
-                },
-            ],
+            'levels': self.get_field_choices('level'),
             'sources': self.get_field_choices('source'),
             'justified': [
                 {

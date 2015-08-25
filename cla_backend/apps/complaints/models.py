@@ -28,8 +28,10 @@ class Complaint(TimeStampedModel):
     description = models.TextField(null=True, blank=True)
     source = models.CharField(max_length=15, choices=COMPLAINT_SOURCE,
                               blank=True)
-    level = models.PositiveSmallIntegerField(choices=LOG_LEVELS.CHOICES,
-                                             default=LOG_LEVELS.MINOR)
+    level = models.PositiveSmallIntegerField(
+        choices=tuple(filter(lambda (level, desc): level != 21, LOG_LEVELS.CHOICES)),
+        default=LOG_LEVELS.MINOR
+    )
     justified = models.NullBooleanField()
     category = models.ForeignKey('Category', blank=True, null=True)
 

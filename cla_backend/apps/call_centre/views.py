@@ -647,6 +647,12 @@ class ComplaintViewSet(
     )
     filter_fields = ('justified', 'level', 'category', 'owner', 'created_by')
 
+    ordering_fields = ('created', 'level', 'justified',
+                       'category__name',
+                       'eod__case__reference',
+                       'eod__case__personal_details__full_name')
+    ordering = ('-created',)
+
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100

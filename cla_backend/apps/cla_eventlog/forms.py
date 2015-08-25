@@ -75,7 +75,7 @@ class EventSpecificLogForm(BaseCaseLogForm):
 
     def get_event_code_choices(self):
         event = event_registry.get_event(self.get_event_key())()
-        return [(code,code) for code in event.codes.keys()]
+        return [(code, code) for code in event.codes.keys()]
 
     def get_event_code(self):
         return self.cleaned_data['event_code']

@@ -11,46 +11,46 @@ class ComplaintEvent(BaseEvent):
     key = 'complaint'
     codes = OrderedDict([
         ('COMPLAINT_CREATED', {
-            'type': LOG_TYPES.EVENT,
+            'type': LOG_TYPES.SYSTEM,
             'level': LOG_LEVELS.HIGH,
-            'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Complaint created',
-            'stops_timer': False
+            'selectable_by': [],
+            'description': u'Complaint created',
+            'stops_timer': False,
         }),
         ('OWNER_SET', {
-            'type': LOG_TYPES.EVENT,
-            'level': LOG_LEVELS.MODERATE,
+            'type': LOG_TYPES.SYSTEM,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [],
+            'description': u'Owner set',
+            'stops_timer': False,
+        }),
+        ('COMPLAINT_NOTE', {
+            'type': LOG_TYPES.SYSTEM,
+            'level': LOG_LEVELS.MINOR,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Owner set',
-            'stops_timer': False
+            'description': u'Complaint note',
+            'stops_timer': False,
         }),
         ('HOLDING_LETTER_SENT', {
-            'type': LOG_TYPES.EVENT,
+            'type': LOG_TYPES.SYSTEM,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Holding letter sent',
+            'description': u'Holding letter sent',
             'stops_timer': False,
         }),
         ('FULL_RESPONSE_SENT', {
-            'type': LOG_TYPES.EVENT,
+            'type': LOG_TYPES.SYSTEM,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Full response sent',
-            'stops_timer': False
-        }),
-        ('COMPLAINT_RESOLVED', {
-            'type': LOG_TYPES.EVENT,
-            'level': LOG_LEVELS.HIGH,
-            'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Complaint resolved',
-            'stops_timer': False
+            'description': u'Full response sent',
+            'stops_timer': False,
         }),
         ('COMPLAINT_CLOSED', {
-            'type': LOG_TYPES.OUTCOME,  # TODO: should this be LOG_TYPES.EVENT?
+            'type': LOG_TYPES.SYSTEM,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': 'Complaint closed',
-            'stops_timer': False
+            'description': u'Complaint closed',
+            'stops_timer': False,
         }),
     ])
 

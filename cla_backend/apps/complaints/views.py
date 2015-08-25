@@ -9,7 +9,7 @@ from rest_framework.response import Response as DRFResponse
 
 from cla_eventlog import event_registry
 from cla_eventlog.models import ComplaintLog
-from complaints.forms import BaseComplaintLogForm
+from complaints.forms import ComplaintLogForm
 from core.drf.mixins import FormActionMixin, NestedGenericModelMixin
 
 from .models import Complaint, Category
@@ -78,7 +78,7 @@ class BaseComplaintViewSet(
     @action()
     def add_event(self, request, pk):
         obj = self.get_object()
-        form = BaseComplaintLogForm(complaint=obj, data=request.DATA)
+        form = ComplaintLogForm(complaint=obj, data=request.DATA)
         if form.is_valid():
             form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)
@@ -108,19 +108,27 @@ class BaseComplaintConstantsView(rest_views.APIView):
             for choice in Complaint._meta.get_field(key).choices
         ]
 
+    @classmethod
+    def make_bool_choices(cls, *args):
+        return [
+            dict(zip(('value', 'description'), item))
+            for item
+            in zip((True, False), args)
+        ]
+
     def get(self, *args, **kwargs):
         return DRFResponse({
+            'justified': self.make_bool_choices('Justified', 'Unjustified'),
+            'resolved': self.make_bool_choices('Resolved', 'Unresolved'),
             'levels': self.get_field_choices('level'),
             'sources': self.get_field_choices('source'),
-            'justified': [
+            'actions': [
                 {
-                    'value': True,
-                    'description': 'Justified',
-                },
-                {
-                    'value': False,
-                    'description': 'Unjustified',
-                },
+                    'value': event_code,
+                    'description': event_details['description'],
+                }
+                for event_code, event_details
+                in ComplaintLogForm.get_operator_code_objects()
             ],
         })
 

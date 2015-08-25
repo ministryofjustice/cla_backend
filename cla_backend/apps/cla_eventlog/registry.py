@@ -40,19 +40,19 @@ class EventRegistry(object):
     def __init__(self):
         self._registry = {}
 
-    def register(self, EventClazz):
+    def register(self, event_cls):
         # checking that codes is not empty
-        if not EventClazz.codes:
-            raise ValueError('%s does not define any codes. Please add codes={} to the class' % EventClazz.__name__)
+        if not event_cls.codes:
+            raise ValueError('%s does not define any codes. Please add codes={} to the class' % event_cls.__name__)
 
-        if not EventClazz.key:
-            raise ValueError('%s does not define any key. Please add key=\'<action-key>\' to the class' % EventClazz.__name__)
+        if not event_cls.key:
+            raise ValueError('%s does not define any key. Please add key=\'<action-key>\' to the class' % event_cls.__name__)
 
         # checking that each code in codes has the right format
-        for code in EventClazz.codes.values():
+        for code in event_cls.codes.values():
             is_code_valid(code)
 
-        self._registry[EventClazz.key] = EventClazz
+        self._registry[event_cls.key] = event_cls
 
     def get_event(self, key):
         if key not in self._registry:
@@ -62,8 +62,8 @@ class EventRegistry(object):
     def get_selectable_events(self, role):
         events = defaultdict(list)
 
-        for action_key, EventClazz in self._registry.items():
-            selectable_codes = EventClazz.get_selectable_codes(role)
+        for action_key, event_cls in self._registry.items():
+            selectable_codes = event_cls.get_selectable_codes(role)
             if selectable_codes:
                 events[action_key] = selectable_codes
         return events
@@ -72,7 +72,7 @@ class EventRegistry(object):
         """
         :return: all codes in the registry as a unified dictionary
         """
-        return dict(reduce(operator.add, [EventClazz.codes.items() for EventClazz in self._registry.values()]))
+        return dict(reduce(operator.add, [event_cls.codes.items() for event_cls in self._registry.values()]))
 
     def filter(self, **kwargs):
         """

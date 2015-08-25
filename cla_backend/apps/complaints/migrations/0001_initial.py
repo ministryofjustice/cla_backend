@@ -9,7 +9,12 @@ import model_utils.fields
 
 
 def create_default_categories(apps, schema_editor):
-    call_command('loaddata', fixture_labels=['complaint_categories'])
+    call_command('loaddata', 'complaint_categories')
+
+
+def delete_all_categories(apps, schema_editor):
+    Category = apps.get_model('complaints', 'Category')
+    Category.objects.all().delete()
 
 
 class Migration(migrations.Migration):
@@ -53,5 +58,5 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
-        migrations.RunPython(create_default_categories),
+        migrations.RunPython(create_default_categories, delete_all_categories),
     ]

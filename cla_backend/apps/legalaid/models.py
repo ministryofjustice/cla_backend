@@ -221,12 +221,46 @@ class EODDetails(TimeStampedModel):
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
 
+    class Meta(object):
+        ordering = ('-created',)
+        verbose_name = 'EOD details'
+        verbose_name_plural = 'EOD details'
+
+    def __unicode__(self):
+        return u'EOD on case %s' % self.case
+
+    @classmethod
+    def get_eod_stats(cls):
+        data = dict(EODDetailsCategory.objects.values_list('category').
+                    annotate(count=models.Count('category')))
+        return {
+            'total_count': sum(data.values()),
+            'categories': [
+                {
+                    'description': description,
+                    'count': data.get(category, 0),
+                }
+                for category, description in EXPRESSIONS_OF_DISSATISFACTION.CHOICES
+            ]
+        }
+
+    @property
+    def is_major(self):
+        return self.categories.filter(is_major=True).exists()
+
 
 class EODDetailsCategory(models.Model):
     eod_details = models.ForeignKey(EODDetails, related_name='categories')
     category = models.CharField(max_length=30, choices=EXPRESSIONS_OF_DISSATISFACTION,
                                 blank=True, null=True)
     is_major = models.BooleanField(default=False)
+
+    class Meta(object):
+        verbose_name = 'EOD category'
+        verbose_name_plural = 'EOD categories'
+
+    def __unicode__(self):
+        return EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT.get(self.category)
 
 
 class Person(CloneModelMixin, TimeStampedModel):

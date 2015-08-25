@@ -54,7 +54,7 @@ class Complaint(TimeStampedModel):
         ordering = ('-created',)
 
     def __unicode__(self):
-        return u'Complaint on case %s' % self.eod.case.reference
+        return u'Complaint on case %s' % self.eod.case
 
     @property
     def case(self):

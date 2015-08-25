@@ -1,0 +1,35 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools %}
+
+  {{ block.super }}
+
+  <div class="module" style="overflow:hidden">
+
+    {% with eod_stats=opts.model.get_eod_stats %}
+      <table style="float:left">
+        <thead>
+          <tr>
+            <th colspan="2">
+              <h2>Number of times EOD category was selected</h2>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for category in eod_stats.categories %}
+            <tr>
+              <td>{{ category.description }}</td>
+              <td>{{ category.count }}</td>
+            </tr>
+          {% endfor %}
+          <tr>
+            <td>(Total)</td>
+            <td>{{ eod_stats.total_count }}</td>
+          </tr>
+        </tbody>
+      </table>
+    {% endwith %}
+
+  </div>
+
+{% endblock %}

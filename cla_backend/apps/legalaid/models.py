@@ -248,6 +248,10 @@ class EODDetails(TimeStampedModel):
     def is_major(self):
         return self.categories.filter(is_major=True).exists()
 
+    @property
+    def category_descriptions(self):
+        return list(map(unicode, self.categories.all()))
+
 
 class EODDetailsCategory(models.Model):
     eod_details = models.ForeignKey(EODDetails, related_name='categories')

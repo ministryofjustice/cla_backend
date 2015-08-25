@@ -50,10 +50,16 @@ class BaseComplaintViewSet(
     def post_save(self, obj, created=False):
         if created:
             dt = timezone.now()
-            notes = u"Complaint created on {dt} by {user}.\n\n{notes}".format(
+            description = u'%s\n\nOriginal expressions of dissatisfaction:\n%s\n\n%s' % (
+                obj.description or u'',
+                u'\n'.join(map(lambda desc: u'- %s' % desc,
+                               obj.eod.category_descriptions)),
+                obj.eod.notes,
+            )
+            notes = u'Complaint created on {dt} by {user}.\n\n{description}'.format(
                 dt=dt.strftime("%d/%m/%Y %H:%M"),
                 user=self.request.user.username,
-                notes=obj.description
+                description=description.strip(),
             ).strip()
 
             event = event_registry.get_event('complaint')()

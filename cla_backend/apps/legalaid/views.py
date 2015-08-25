@@ -310,6 +310,9 @@ class BaseEODDetailsViewSet(
 
         super(BaseEODDetailsViewSet, self).pre_save(obj)
 
+    def post_save(self, obj, created=False):
+        return super(BaseEODDetailsViewSet, self).post_save(obj, False)
+
 
 class BaseCaseOrderingFilter(OrderingFilter):
     default_modified = 'modified'

@@ -42,7 +42,7 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
     class Meta:
         model = Complaint
         read_only_fields = (
-            'created', 'modified',
+            'created', 'modified', 'resolved',
         )
 
 

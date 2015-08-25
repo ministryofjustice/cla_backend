@@ -33,6 +33,7 @@ class Complaint(TimeStampedModel):
         default=LOG_LEVELS.MINOR
     )
     justified = models.NullBooleanField()
+    resolved = models.NullBooleanField()
     category = models.ForeignKey('Category', blank=True, null=True)
 
     owner = models.ForeignKey(

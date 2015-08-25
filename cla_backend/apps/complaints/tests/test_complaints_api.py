@@ -19,7 +19,7 @@ class ComplaintTestMixin(object):
     RESOURCE_RECIPE = 'complaints.complaint'
 
 
-class BaseComplaintTestCase(
+class ComplaintTestCase(
     ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin,
     SimpleResourceAPIMixin, APITestCase,
 ):
@@ -46,8 +46,9 @@ class BaseComplaintTestCase(
             'source',
             'level',
             'justified',
+            'resolved',
             'owner',
-            'created_by'
+            'created_by',
         ]
 
     def test_methods_not_allowed(self):
@@ -82,13 +83,12 @@ class BaseComplaintTestCase(
             'eod': unicode(eod.reference),
             'description': 'TEST DESCRIPTION',
             'source': 'EMAIL',
-            'level': LOG_LEVELS.MODERATE,
+            'level': LOG_LEVELS.MINOR,
             'justified': True,
             'owner': self.operator_manager.user.username,
         })
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
         self.assertEqual(complaint_count + 1, Complaint.objects.all().count())
 
         resource = Complaint.objects.get(pk=response.data['id'])
@@ -120,19 +120,16 @@ class BaseComplaintTestCase(
 
     def test_add_events_to_complaints(self):
         codes = [
+            'COMPLAINT_NOTE',
             'HOLDING_LETTER_SENT',
             'FULL_RESPONSE_SENT',
-            'COMPLAINT_RESOLVED',
-            'COMPLAINT_CLOSED',
         ]
         for code in codes:
             response = self._create({
                 'event_code': code,
-                'notes': 'x' * 10000
+                'notes': 'x' * 10000,
             }, self.event_url)
-
             self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
             self.assertSingleEventCreated(self.resource, code)
 
         response = self.client.get(
@@ -141,8 +138,26 @@ class BaseComplaintTestCase(
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
 
-        self.assertEqual(len(response.data), 4)
+    def test_complaint_closing(self):
+        response = self._create({
+            'event_code': 'COMPLAINT_CLOSED',
+            'notes': 'x' * 10000,
+            'resolved': True,
+        }, self.event_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertSingleEventCreated(self.resource, 'COMPLAINT_CLOSED')
+
+        self.resource = Complaint.objects.get(pk=self.resource.pk)
+        self.assertTrue(self.resource.resolved, True)
+
+        response = self.client.get(
+            self.log_url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
 
     @property
     def event_url(self):
@@ -153,7 +168,7 @@ class BaseComplaintTestCase(
         return '%slogs/' % self.detail_url
 
 
-class BaseProviderComplaintTestCase(
+class ProviderComplaintTestCase(
     ComplaintTestMixin, CLAProviderAuthBaseApiTestMixin,
     SimpleResourceAPIMixin, APITestCase,
 ):

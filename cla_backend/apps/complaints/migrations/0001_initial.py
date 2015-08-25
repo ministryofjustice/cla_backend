@@ -49,6 +49,7 @@ class Migration(migrations.Migration):
                 ('source', models.CharField(blank=True, max_length=15, choices=[(b'EMAIL', b'email'), (b'PHONE', b'phone'), (b'LETTER', b'letter')])),
                 ('level', models.PositiveSmallIntegerField(default=11, choices=[(29, b'HIGH'), (11, b'MINOR')])),
                 ('justified', models.NullBooleanField()),
+                ('resolved', models.NullBooleanField()),
                 ('category', models.ForeignKey(blank=True, to='complaints.Category', null=True)),
                 ('created_by', models.ForeignKey(related_name='complaints_complaint_created_by', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
                 ('eod', models.ForeignKey(to='legalaid.EODDetails')),

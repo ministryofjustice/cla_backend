@@ -10,6 +10,7 @@ class ComplaintLogForm(EventSpecificLogForm):
     NOTES_MANDATORY = True
 
     notes = forms.CharField(required=True, max_length=10000)
+    resolved = forms.NullBooleanField(required=False)
 
     @classmethod
     def get_operator_code_objects(cls):
@@ -33,3 +34,16 @@ class ComplaintLogForm(EventSpecificLogForm):
             (code, details.get('description', code))
             for (code, details) in self.get_operator_code_objects()
         ]
+
+    def clean_resolved(self):
+        resolved = self.cleaned_data.get('resolved')
+        if self.cleaned_data.get('event_code') == 'COMPLAINT_CLOSED' \
+                and resolved not in (True, False):
+            raise forms.ValidationError('Closing a complaint requires a resolution')
+        return resolved
+
+    def save(self, user):
+        super(ComplaintLogForm, self).save(user)
+        if self.cleaned_data.get('event_code') == 'COMPLAINT_CLOSED':
+            self.complaint.resolved = self.cleaned_data.get('resolved')
+            self.complaint.save()

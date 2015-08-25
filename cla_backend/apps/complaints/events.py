@@ -59,9 +59,6 @@ class ComplaintEvent(BaseEvent):
         self.complaint = None
 
     def create_log(self, *args, **kwargs):
-        if not self.complaint:
-            return super(ComplaintEvent, self).create_log(*args, **kwargs)
-
         content_type = ContentType.objects.get_for_model(
             self.complaint.__class__)
         return ComplaintLog(

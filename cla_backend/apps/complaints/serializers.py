@@ -38,6 +38,7 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
     case_reference = serializers.CharField(
         source='eod.case.reference',
         read_only=True)
+    closed = serializers.DateTimeField(source='closed', read_only=True)
 
     class Meta:
         model = Complaint

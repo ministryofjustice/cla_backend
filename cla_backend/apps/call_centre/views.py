@@ -647,15 +647,20 @@ class ComplaintViewSet(
     )
     filter_fields = ('justified', 'level', 'category', 'owner', 'created_by')
 
-    ordering_fields = ('created', 'level', 'justified',
-                       'category__name',
-                       'eod__case__reference',
+    ordering_fields = ('created', 'level', 'justified', 'closed',
+                       'category__name', 'eod__case__reference',
                        'eod__case__personal_details__full_name')
     ordering = ('-created',)
 
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
+
+    def get_queryset(self, **kwargs):
+        dashboard = self.request.QUERY_PARAMS.get('dashboard') == 'True'
+        show_closed = self.request.QUERY_PARAMS.get('show_closed') == 'True'
+        return super(ComplaintViewSet, self).get_queryset(dashboard=dashboard,
+                                                          show_closed=show_closed)
 
 
 class ComplaintCategoryViewSet(

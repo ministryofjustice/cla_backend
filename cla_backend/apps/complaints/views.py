@@ -35,6 +35,41 @@ class BaseComplaintViewSet(
     model = Complaint
     serializer_class = ComplaintSerializerBase
 
+    def get_queryset(self, dashboard=False, show_closed=False):
+        qs = super(BaseComplaintViewSet, self).get_queryset()
+
+        sql_params = {
+            # NB: ensure these are always sql-safe
+            'complaint_ct': ContentType.objects.get_for_model(Complaint).id,
+            'closed_code': 'COMPLAINT_CLOSED',
+        }
+        qs = qs.extra(
+            select={
+                'closed': '''
+                SELECT cla_eventlog_log.created FROM cla_eventlog_log
+                WHERE
+                    cla_eventlog_log.content_type_id={complaint_ct}
+                    AND cla_eventlog_log.object_id=complaints_complaint.id
+                    AND cla_eventlog_log.code='{closed_code}'
+                ORDER BY cla_eventlog_log.created DESC
+                LIMIT 1
+                '''.format(**sql_params)
+            }
+        )
+        if dashboard and not show_closed:
+            qs = qs.extra(
+                where=[
+                    '''
+                    SELECT COUNT(id) < 1 FROM cla_eventlog_log
+                    WHERE
+                        cla_eventlog_log.content_type_id={complaint_ct}
+                        AND cla_eventlog_log.object_id=complaints_complaint.id
+                        AND cla_eventlog_log.code='{closed_code}'
+                    '''.format(**sql_params)
+                ]
+            )
+        return qs
+
     def pre_save(self, obj, *args, **kwargs):
         super(BaseComplaintViewSet, self).pre_save(obj)
 

@@ -413,7 +413,7 @@ class FullCaseViewSet(
     max_paginate_by = 100
 
     FLAGGED_WITH_EOD_SQL = '''
-    SELECT COUNT(id) > 0 from legalaid_eoddetails
+    SELECT COUNT(id) > 0 FROM legalaid_eoddetails
     WHERE legalaid_case.id = legalaid_eoddetails.case_id
     AND (
         (

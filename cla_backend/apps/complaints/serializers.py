@@ -38,7 +38,12 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
     case_reference = serializers.CharField(
         source='eod.case.reference',
         read_only=True)
+
+    # virtual fields created by extra SQL
     closed = serializers.DateTimeField(source='closed', read_only=True)
+
+    # virtual fields on model
+    status_label = serializers.CharField(source='status_label', read_only=True)
 
     class Meta:
         model = Complaint

@@ -65,6 +65,14 @@ class Complaint(TimeStampedModel):
     def case(self):
         return self.eod.case
 
+    @property
+    def status_label(self):
+        if self.resolved is not None:
+            return 'resolved' if self.resolved else 'unresolved'
+        if self.owner_id:
+            return 'pending'
+        return 'received'
+
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=255)

@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 from django.conf import settings
-from cla_eventlog.constants import LOG_LEVELS
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
+from django.utils import timezone
 
 from model_utils.models import TimeStampedModel
+from cla_eventlog.constants import LOG_LEVELS
 from complaints.constants import COMPLAINT_SOURCE
 
 
@@ -58,6 +61,10 @@ class Complaint(TimeStampedModel):
     class Meta(object):
         ordering = ('-created',)
 
+    def __init__(self, *args, **kwargs):
+        self._closed = NotImplemented
+        super(Complaint, self).__init__(*args, **kwargs)
+
     def __unicode__(self):
         return u'Complaint on case %s' % self.eod.case
 
@@ -72,6 +79,29 @@ class Complaint(TimeStampedModel):
         if self.owner_id:
             return 'pending'
         return 'received'
+
+    @property
+    def closed(self):
+        """
+        The date the complaint was closed if it has a closed event log
+        NB: Not loaded here if this model is being serialised in a complaint
+            view set
+        """
+        if self._closed is NotImplemented:
+            last_closed = self.logs.filter(code='COMPLAINT_CLOSED').order_by('-created').first()
+            self._closed = last_closed.created if last_closed else None
+        return self._closed
+
+    @closed.setter
+    def closed(self, value):
+        self._closed = value
+
+    @property
+    def out_of_sla(self):
+        """
+        True if complaint is unresolved for over 15 days.
+        """
+        return (self.closed or timezone.now()) - self.created > datetime.timedelta(days=15)
 
 
 class Category(TimeStampedModel):

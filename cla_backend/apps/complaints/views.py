@@ -47,14 +47,14 @@ class BaseComplaintViewSet(
         qs = qs.extra(
             select={
                 'closed': '''
-                SELECT cla_eventlog_log.created FROM cla_eventlog_log
-                WHERE
-                    cla_eventlog_log.content_type_id={complaint_ct}
-                    AND cla_eventlog_log.object_id=complaints_complaint.id
-                    AND cla_eventlog_log.code='{closed_code}'
-                ORDER BY cla_eventlog_log.created DESC
-                LIMIT 1
-                '''.format(**sql_params)
+                    SELECT cla_eventlog_log.created FROM cla_eventlog_log
+                    WHERE
+                        cla_eventlog_log.content_type_id={complaint_ct}
+                        AND cla_eventlog_log.object_id=complaints_complaint.id
+                        AND cla_eventlog_log.code='{closed_code}'
+                    ORDER BY cla_eventlog_log.created DESC
+                    LIMIT 1
+                    '''.format(**sql_params)
             }
         )
         if dashboard and not show_closed:

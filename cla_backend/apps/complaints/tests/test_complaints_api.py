@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+import datetime
+import mock
+
 from django.contrib.auth.models import User
 from django.core.urlresolvers import NoReverseMatch
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -33,22 +37,28 @@ class ComplaintTestCase(
     @property
     def response_keys(self):
         return [
-            'category_name',
-            'category',
-            'full_name',
-            'category_of_law',
-            'case_reference',
             'id',
             'created',
             'modified',
+
+            'case_reference',
+            'full_name',
+            'category_of_law',
+
+            'created_by',
             'eod',
+            'category',
+            'category_name',
             'description',
+            'owner',
             'source',
             'level',
             'justified',
+
+            'status_label',
             'resolved',
-            'owner',
-            'created_by',
+            'closed',
+            'out_of_sla',
         ]
 
     def test_methods_not_allowed(self):
@@ -71,6 +81,7 @@ class ComplaintTestCase(
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Complaint.objects.all().count(), complaint_count + 1)
+
         resource = Complaint.objects.get(pk=response.data['id'])
         self.assertSingleEventCreated(resource, 'COMPLAINT_CREATED')
 
@@ -102,21 +113,24 @@ class ComplaintTestCase(
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        resource = Complaint.objects.get(pk=self.resource_lookup_value)
-        self.assertEqual(resource.description, 'TEST DESCRIPTION')
+        self.refresh_resource()
+        self.assertEqual(self.resource.description, 'TEST DESCRIPTION')
 
     def test_owner_set_on_change(self):
         mgr_user = User.objects.create_user('x', 'x@x.com', 'OnionMan77')
         Operator.objects.create(user=mgr_user, is_manager=True)
 
+        self.assertEqual(self.resource.status_label, 'received')
         response = self._patch({
             'owner': mgr_user.username,
         })
+        self.refresh_resource()
+        self.assertEqual(self.resource.status_label, 'pending')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        resource = Complaint.objects.get(pk=self.resource_lookup_value)
-        self.assertSingleEventCreated(resource, 'OWNER_SET')
+        self.refresh_resource()
+        self.assertSingleEventCreated(self.resource, 'OWNER_SET')
 
     def test_add_events_to_complaints(self):
         codes = [
@@ -140,17 +154,22 @@ class ComplaintTestCase(
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 3)
 
+        self.refresh_resource()
+        self.assertEqual(self.resource.status_label, 'received')
+
     def test_complaint_closing(self):
         response = self._create({
             'event_code': 'COMPLAINT_CLOSED',
-            'notes': 'x' * 10000,
+            'notes': 'closing notes',
             'resolved': True,
         }, self.event_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertSingleEventCreated(self.resource, 'COMPLAINT_CLOSED')
 
-        self.resource = Complaint.objects.get(pk=self.resource.pk)
-        self.assertTrue(self.resource.resolved, True)
+        self.refresh_resource()
+        self.assertEqual(self.resource.resolved, True)
+        self.assertEqual(self.resource.status_label, 'resolved')
+        self.assertIsNotNone(self.resource.closed)
 
         response = self.client.get(
             self.log_url, format='json',
@@ -159,13 +178,43 @@ class ComplaintTestCase(
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
+    def test_complaint_reopening(self):
+        self._create({
+            'event_code': 'COMPLAINT_CLOSED',
+            'notes': 'some notes',
+            'resolved': False,
+        }, self.event_url)
+        self.assertSingleEventCreated(self.resource, 'COMPLAINT_CLOSED')
+        response = self._create({}, self.reopen_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertSingleEventCreated(self.resource, 'COMPLAINT_REOPENED')
+
+        self.assertIsNone(self.resource.resolved)
+        self.assertIsNone(self.resource.closed)
+
+    def test_complaint_sla(self):
+        self.assertEqual(self.resource.out_of_sla, False)
+        now = timezone.now()
+        fourteen_days_later = now + datetime.timedelta(days=14, hours=23)
+        fifteen_days_later = now + datetime.timedelta(days=15)
+        with mock.patch('django.utils.timezone.now') as mocked_now:
+            mocked_now.return_value = fourteen_days_later
+            self.assertEqual(self.resource.out_of_sla, False)
+        with mock.patch('django.utils.timezone.now') as mocked_now:
+            mocked_now.return_value = fifteen_days_later
+            self.assertEqual(self.resource.out_of_sla, True)
+
+    @property
+    def log_url(self):
+        return '%slogs/' % self.detail_url
+
     @property
     def event_url(self):
         return '%sadd_event/' % self.detail_url
 
     @property
-    def log_url(self):
-        return '%slogs/' % self.detail_url
+    def reopen_url(self):
+        return '%sreopen/' % self.detail_url
 
 
 class ProviderComplaintTestCase(

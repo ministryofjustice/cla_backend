@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from cla_eventlog.models import ComplaintLog
 from cla_eventlog.serializers import LogSerializerBase
+from core.fields import NullBooleanField
 from core.serializers import UUIDSerializer
 from .models import Category, Complaint
 
@@ -41,6 +42,7 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
 
     # virtual fields created by extra SQL
     closed = serializers.DateTimeField(source='closed', read_only=True)
+    out_of_sla = NullBooleanField(source='out_of_sla', read_only=True)
 
     # virtual fields on model
     status_label = serializers.CharField(source='status_label', read_only=True)

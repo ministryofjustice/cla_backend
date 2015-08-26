@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import textwrap
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
@@ -127,6 +128,40 @@ class BaseComplaintViewSet(
         return DRFResponse(
             dict(form.errors), status=status.HTTP_400_BAD_REQUEST
         )
+
+    @action()
+    def reopen(self, request, pk):
+        obj = self.get_object()
+        closed_logs = obj.logs.filter(code='COMPLAINT_CLOSED')
+        if not closed_logs.exists():
+            return DRFResponse('Cannot reopen a complaint that is not closed',
+                               status=status.HTTP_400_BAD_REQUEST)
+
+        dt = timezone.now()
+        last_closed = closed_logs.order_by('-created').first()
+        notes = u'''
+            Complaint reopened on {dt_reopen} by {user_reopen}.
+            Originally closed {dt_closed} by {user_closed}.
+        '''.format(
+            dt_reopen=dt.strftime("%d/%m/%Y %H:%M"),
+            user_reopen=request.user.username,
+            dt_closed=last_closed.created.strftime("%d/%m/%Y %H:%M"),
+            user_closed=last_closed.created_by.username,
+        )
+        notes = textwrap.dedent(notes).strip()
+        notes += u'\n\n' + last_closed.notes
+
+        event = event_registry.get_event('complaint')()
+        event.process(
+            obj.eod.case,
+            created_by=request.user,
+            notes=notes.strip(),
+            complaint=obj,
+            code='COMPLAINT_REOPENED',
+        )
+
+        closed_logs.delete()
+        return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
 
 class BaseComplaintCategoryViewSet(

@@ -106,6 +106,8 @@ class BaseComplaintViewSet(
                 complaint=obj,
                 code='COMPLAINT_CREATED'
             )
+            obj.eod.case.complaint_flag = True
+            obj.eod.case.save()
 
         if getattr(obj, 'update_owner', False):
             event = event_registry.get_event('complaint')()
@@ -159,6 +161,11 @@ class BaseComplaintViewSet(
             complaint=obj,
             code='COMPLAINT_REOPENED',
         )
+
+        obj.resolved = None
+        obj.save()
+        obj.eod.case.complaint_flag = True
+        obj.eod.case.save()
 
         closed_logs.delete()
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)

@@ -105,15 +105,15 @@ class ComplaintTestCase(
         resource = Complaint.objects.get(pk=response.data['id'])
         self.assertSingleEventCreated(resource, 'COMPLAINT_CREATED')
         self.assertSingleEventCreated(resource, 'OWNER_SET')
+        self.assertTrue(resource.eod.case.complaint_flag)
 
     def test_patch(self):
         response = self._patch({
             'description': 'TEST DESCRIPTION',
         })
+        self.refresh_resource()
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.refresh_resource()
         self.assertEqual(self.resource.description, 'TEST DESCRIPTION')
 
     def test_owner_set_on_change(self):
@@ -125,12 +125,9 @@ class ComplaintTestCase(
             'owner': mgr_user.username,
         })
         self.refresh_resource()
-        self.assertEqual(self.resource.status_label, 'pending')
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.refresh_resource()
         self.assertSingleEventCreated(self.resource, 'OWNER_SET')
+        self.assertEqual(self.resource.status_label, 'pending')
 
     def test_add_events_to_complaints(self):
         codes = [
@@ -150,11 +147,9 @@ class ComplaintTestCase(
             self.log_url, format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
-
+        self.refresh_resource()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 3)
-
-        self.refresh_resource()
         self.assertEqual(self.resource.status_label, 'received')
 
     def test_complaint_closing(self):
@@ -163,13 +158,13 @@ class ComplaintTestCase(
             'notes': 'closing notes',
             'resolved': True,
         }, self.event_url)
+        self.refresh_resource()
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertSingleEventCreated(self.resource, 'COMPLAINT_CLOSED')
-
-        self.refresh_resource()
         self.assertEqual(self.resource.resolved, True)
         self.assertEqual(self.resource.status_label, 'resolved')
         self.assertIsNotNone(self.resource.closed)
+        self.assertFalse(self.resource.eod.case.complaint_flag)
 
         response = self.client.get(
             self.log_url, format='json',
@@ -184,13 +179,17 @@ class ComplaintTestCase(
             'notes': 'some notes',
             'resolved': False,
         }, self.event_url)
+        self.refresh_resource()
         self.assertSingleEventCreated(self.resource, 'COMPLAINT_CLOSED')
+        self.assertFalse(self.resource.eod.case.complaint_flag)
+
         response = self._create({}, self.reopen_url)
+        self.refresh_resource()
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertSingleEventCreated(self.resource, 'COMPLAINT_REOPENED')
-
         self.assertIsNone(self.resource.resolved)
         self.assertIsNone(self.resource.closed)
+        self.assertTrue(self.resource.eod.case.complaint_flag)
 
     def test_complaint_sla(self):
         self.assertEqual(self.resource.out_of_sla, False)

@@ -2,7 +2,6 @@
 import textwrap
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
-from django.utils import timezone
 from django.utils.text import capfirst, force_text
 from rest_framework import viewsets, mixins, status, views as rest_views
 from rest_framework.decorators import action
@@ -85,16 +84,13 @@ class BaseComplaintViewSet(
 
     def post_save(self, obj, created=False):
         if created:
-            dt = timezone.now()
             description = u'%s\n\nOriginal expressions of dissatisfaction:\n%s\n\n%s' % (
                 obj.description or u'',
                 u'\n'.join(map(lambda desc: u'- %s' % desc,
                                obj.eod.category_descriptions)),
                 obj.eod.notes,
             )
-            notes = u'Complaint created on {dt} by {user}.\n\n{description}'.format(
-                dt=dt.strftime("%d/%m/%Y %H:%M"),
-                user=self.request.user.username,
+            notes = u'Complaint created.\n\n{description}'.format(
                 description=description.strip(),
             ).strip()
 
@@ -139,16 +135,13 @@ class BaseComplaintViewSet(
             return DRFResponse('Cannot reopen a complaint that is not closed',
                                status=status.HTTP_400_BAD_REQUEST)
 
-        dt = timezone.now()
         last_closed = closed_logs.order_by('-created').first()
         notes = u'''
-            Complaint reopened on {dt_reopen} by {user_reopen}.
-            Originally closed {dt_closed} by {user_closed}.
+            Complaint reopened.
+            Originally closed {closed} by {closed_by}.
         '''.format(
-            dt_reopen=dt.strftime("%d/%m/%Y %H:%M"),
-            user_reopen=request.user.username,
-            dt_closed=last_closed.created.strftime("%d/%m/%Y %H:%M"),
-            user_closed=last_closed.created_by.username,
+            closed=last_closed.created.strftime("%d/%m/%Y %H:%M"),
+            closed_by=last_closed.created_by.username,
         )
         notes = textwrap.dedent(notes).strip()
         notes += u'\n\n' + last_closed.notes

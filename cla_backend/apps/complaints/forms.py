@@ -42,6 +42,14 @@ class ComplaintLogForm(EventSpecificLogForm):
             raise forms.ValidationError('Closing a complaint requires a resolution')
         return resolved
 
+    def get_notes(self):
+        event_code = self.get_event_code()
+        event_cls = event_registry.get_event(self.LOG_EVENT_KEY)
+        event_description = event_cls.codes[event_code]['description']
+        notes = u'%s.\n%s' % (event_description,
+                              super(ComplaintLogForm, self).get_notes())
+        return notes.strip()
+
     def save(self, user):
         super(ComplaintLogForm, self).save(user)
         if self.cleaned_data.get('event_code') == 'COMPLAINT_CLOSED':

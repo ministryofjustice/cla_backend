@@ -21,7 +21,7 @@ class ComplaintEvent(BaseEvent):
             'type': LOG_TYPES.SYSTEM,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [],
-            'description': u'Owner set',
+            'description': u'Complaint owner set',
             'stops_timer': False,
         }),
         ('COMPLAINT_NOTE', {
@@ -35,14 +35,14 @@ class ComplaintEvent(BaseEvent):
             'type': LOG_TYPES.SYSTEM,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': u'Holding letter sent',
+            'description': u'Complaint holding letter sent',
             'stops_timer': False,
         }),
         ('FULL_RESPONSE_SENT', {
             'type': LOG_TYPES.SYSTEM,
             'level': LOG_LEVELS.HIGH,
             'selectable_by': [LOG_ROLES.OPERATOR],
-            'description': u'Full response sent',
+            'description': u'Complaint full response sent',
             'stops_timer': False,
         }),
         ('COMPLAINT_CLOSED', {

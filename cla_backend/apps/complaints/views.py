@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import textwrap
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import capfirst, force_text
@@ -77,15 +76,14 @@ class BaseComplaintViewSet(
         if not obj.pk:
             if not isinstance(user, AnonymousUser):
                 obj.created_by = user
-            obj.update_owner = bool(obj.owner)
+            obj._update_owner = bool(obj.owner)
         else:
             original_obj = self.model.objects.get(pk=obj.pk)
-            obj.update_owner = original_obj.owner_id != obj.owner_id
+            obj._update_owner = original_obj.owner_id != obj.owner_id
 
     def post_save(self, obj, created=False):
         if created:
-            description = u'%s\n\nOriginal expressions of dissatisfaction:\n%s\n\n%s' % (
-                obj.description or u'',
+            description = u'Original expressions of dissatisfaction:\n%s\n\n%s' % (
                 u'\n'.join(map(lambda desc: u'- %s' % desc,
                                obj.eod.category_descriptions)),
                 obj.eod.notes,
@@ -105,12 +103,12 @@ class BaseComplaintViewSet(
             obj.eod.case.complaint_flag = True
             obj.eod.case.save()
 
-        if getattr(obj, 'update_owner', False):
+        if getattr(obj, '_update_owner', False):
             event = event_registry.get_event('complaint')()
             event.process(
                 obj.eod.case,
                 created_by=self.request.user,
-                notes=u'Owner set to %s' % (obj.owner.get_full_name() or obj.owner.username),
+                notes=u'Complaint owner set to %s' % (obj.owner.get_full_name() or obj.owner.username),
                 complaint=obj,
                 code='OWNER_SET'
             )
@@ -136,14 +134,10 @@ class BaseComplaintViewSet(
                                status=status.HTTP_400_BAD_REQUEST)
 
         last_closed = closed_logs.order_by('-created').first()
-        notes = u'''
-            Complaint reopened.
-            Originally closed {closed} by {closed_by}.
-        '''.format(
+        notes = u'Complaint reopened.\nOriginally closed {closed} by {closed_by}.'.format(
             closed=last_closed.created.strftime("%d/%m/%Y %H:%M"),
             closed_by=last_closed.created_by.username,
         )
-        notes = textwrap.dedent(notes).strip()
         notes += u'\n\n' + last_closed.notes
 
         event = event_registry.get_event('complaint')()

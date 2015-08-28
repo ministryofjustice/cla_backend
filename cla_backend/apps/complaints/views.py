@@ -42,6 +42,8 @@ class BaseComplaintViewSet(
             # NB: ensure these are always sql-safe
             'complaint_ct': ContentType.objects.get_for_model(Complaint).id,
             'closed_code': 'COMPLAINT_CLOSED',
+            'holding_letter_code': 'HOLDING_LETTER_SENT',
+            'full_letter_code': 'FULL_RESPONSE_SENT',
         }
         qs = qs.extra(
             select={
@@ -53,7 +55,25 @@ class BaseComplaintViewSet(
                         AND cla_eventlog_log.code='{closed_code}'
                     ORDER BY cla_eventlog_log.created DESC
                     LIMIT 1
-                    '''.format(**sql_params)
+                    '''.format(**sql_params),
+                'holding_letter': '''
+                    SELECT cla_eventlog_log.created FROM cla_eventlog_log
+                    WHERE
+                        cla_eventlog_log.content_type_id={complaint_ct}
+                        AND cla_eventlog_log.object_id=complaints_complaint.id
+                        AND cla_eventlog_log.code='{holding_letter_code}'
+                    ORDER BY cla_eventlog_log.created DESC
+                    LIMIT 1
+                    '''.format(**sql_params),
+                'full_letter': '''
+                    SELECT cla_eventlog_log.created FROM cla_eventlog_log
+                    WHERE
+                        cla_eventlog_log.content_type_id={complaint_ct}
+                        AND cla_eventlog_log.object_id=complaints_complaint.id
+                        AND cla_eventlog_log.code='{full_letter_code}'
+                    ORDER BY cla_eventlog_log.created DESC
+                    LIMIT 1
+                    '''.format(**sql_params),
             }
         )
         if dashboard and not show_closed:

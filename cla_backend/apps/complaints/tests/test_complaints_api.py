@@ -58,6 +58,8 @@ class ComplaintTestCase(
             'status_label',
             'resolved',
             'closed',
+            'holding_letter',
+            'full_letter',
             'out_of_sla',
         ]
 
@@ -148,6 +150,8 @@ class ComplaintTestCase(
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.refresh_resource()
+        self.assertIsNotNone(self.resource.holding_letter)
+        self.assertIsNotNone(self.resource.full_letter)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 3)
         self.assertEqual(self.resource.status_label, 'received')

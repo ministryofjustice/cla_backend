@@ -647,7 +647,8 @@ class ComplaintViewSet(
     )
     filter_fields = ('justified', 'level', 'category', 'owner', 'created_by')
 
-    ordering_fields = ('created', 'level', 'justified', 'closed',
+    ordering_fields = ('created', 'level', 'justified',
+                       'closed', 'holding_letter', 'full_letter',
                        'category__name', 'eod__case__reference',
                        'eod__case__personal_details__full_name')
     ordering = ('-created',)

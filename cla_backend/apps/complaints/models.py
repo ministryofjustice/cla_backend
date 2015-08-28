@@ -63,6 +63,8 @@ class Complaint(TimeStampedModel):
 
     def __init__(self, *args, **kwargs):
         self._closed = NotImplemented
+        self._holding_letter = NotImplemented
+        self._full_letter = NotImplemented
         super(Complaint, self).__init__(*args, **kwargs)
 
     def __unicode__(self):
@@ -95,6 +97,38 @@ class Complaint(TimeStampedModel):
     @closed.setter
     def closed(self, value):
         self._closed = value
+
+    @property
+    def holding_letter(self):
+        """
+        The date the latest holding letter was sent
+        NB: Not loaded here if this model is being serialised in a complaint
+            view set
+        """
+        if self._holding_letter is NotImplemented:
+            last_closed = self.logs.filter(code='HOLDING_LETTER_SENT').order_by('-created').first()
+            self._holding_letter = last_closed.created if last_closed else None
+        return self._holding_letter
+
+    @holding_letter.setter
+    def holding_letter(self, value):
+        self._holding_letter = value
+
+    @property
+    def full_letter(self):
+        """
+        The date the latest full response was sent
+        NB: Not loaded here if this model is being serialised in a complaint
+            view set
+        """
+        if self._full_letter is NotImplemented:
+            last_closed = self.logs.filter(code='FULL_RESPONSE_SENT').order_by('-created').first()
+            self._full_letter = last_closed.created if last_closed else None
+        return self._full_letter
+
+    @full_letter.setter
+    def full_letter(self, value):
+        self._full_letter = value
 
     @property
     def out_of_sla(self):

@@ -42,6 +42,8 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
 
     # virtual fields created by extra SQL
     closed = serializers.DateTimeField(source='closed', read_only=True)
+    holding_letter = serializers.DateTimeField(source='holding_letter', read_only=True)
+    full_letter = serializers.DateTimeField(source='full_letter', read_only=True)
     out_of_sla = NullBooleanField(source='out_of_sla', read_only=True)
 
     # virtual fields on model

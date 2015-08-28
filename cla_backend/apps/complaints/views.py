@@ -7,6 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response as DRFResponse
 
 from cla_eventlog import event_registry
+from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.models import ComplaintLog
 from complaints.forms import ComplaintLogForm
 from core.drf.mixins import FormActionMixin, NestedGenericModelMixin
@@ -74,18 +75,29 @@ class BaseComplaintViewSet(
 
         user = self.request.user
         if not obj.pk:
+            # new complaint
             if not isinstance(user, AnonymousUser):
                 obj.created_by = user
             obj._update_owner = bool(obj.owner)
+
+            if 'level' not in self.request.DATA and obj.eod_id:
+                if obj.eod.is_major:
+                    obj.level = LOG_LEVELS.HIGH
+                else:
+                    obj.level = LOG_LEVELS.MINOR
+
         else:
+            # editing existing complaint
             original_obj = self.model.objects.get(pk=obj.pk)
             obj._update_owner = original_obj.owner_id != obj.owner_id
 
     def post_save(self, obj, created=False):
         if created:
             description = u'Original expressions of dissatisfaction:\n%s\n\n%s' % (
-                u'\n'.join(map(lambda desc: u'- %s' % desc,
-                               obj.eod.category_descriptions)),
+                u'\n'.join(map(
+                    lambda desc: u'- %s' % desc,
+                    obj.eod.get_category_descriptions(include_severity=True)
+                )),
                 obj.eod.notes,
             )
             notes = u'Complaint created.\n\n{description}'.format(

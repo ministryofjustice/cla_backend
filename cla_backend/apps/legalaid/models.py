@@ -248,9 +248,9 @@ class EODDetails(TimeStampedModel):
     def is_major(self):
         return self.categories.filter(is_major=True).exists()
 
-    @property
-    def category_descriptions(self):
-        return list(map(unicode, self.categories.all()))
+    def get_category_descriptions(self, include_severity=False):
+        mapper = (lambda cat: unicode(cat) + u' (Major)' if cat.is_major else u' (Minor)') if include_severity else unicode
+        return list(map(mapper, self.categories.all()))
 
 
 class EODDetailsCategory(models.Model):

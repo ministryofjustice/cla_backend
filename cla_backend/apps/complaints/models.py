@@ -8,7 +8,8 @@ from django.utils import timezone
 
 from model_utils.models import TimeStampedModel
 from cla_eventlog.constants import LOG_LEVELS
-from complaints.constants import COMPLAINT_SOURCE, SLA_DAYS
+from complaints.constants import COMPLAINT_SOURCE, SLA_DAYS, \
+    HOLDING_LETTER_SLA_DAYS
 
 
 class ComplaintManager(models.Manager):
@@ -136,6 +137,14 @@ class Complaint(TimeStampedModel):
         True if complaint is unresolved for over 15 days.
         """
         return (self.closed or timezone.now()) - self.created > datetime.timedelta(days=SLA_DAYS)
+
+    @property
+    def holding_letter_out_of_sla(self):
+        """
+        True if holding letter is not sent within 1 day.
+        """
+        # TODO: should only take into account business days
+        return (self.holding_letter or timezone.now()) - self.created > datetime.timedelta(days=HOLDING_LETTER_SLA_DAYS)
 
 
 class Category(TimeStampedModel):

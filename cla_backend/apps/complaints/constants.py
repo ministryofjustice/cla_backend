@@ -8,5 +8,8 @@ COMPLAINT_SOURCE = Choices(
     ('LETTER', 'letter', 'letter'),
 )
 
-# days between complaint creation to closing date (whether resolved or not)
+# days between complaint creation and closing date (whether resolved or not)
 SLA_DAYS = 15
+
+# days between complaint creation and holding letter being sent
+HOLDING_LETTER_SLA_DAYS = 1

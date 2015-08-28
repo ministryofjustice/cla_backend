@@ -45,6 +45,7 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
     holding_letter = serializers.DateTimeField(source='holding_letter', read_only=True)
     full_letter = serializers.DateTimeField(source='full_letter', read_only=True)
     out_of_sla = NullBooleanField(source='out_of_sla', read_only=True)
+    holding_letter_out_of_sla = NullBooleanField(source='holding_letter_out_of_sla', read_only=True)
 
     # virtual fields on model
     status_label = serializers.CharField(source='status_label', read_only=True)

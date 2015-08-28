@@ -61,6 +61,7 @@ class ComplaintTestCase(
             'holding_letter',
             'full_letter',
             'out_of_sla',
+            'holding_letter_out_of_sla',
         ]
 
     def test_methods_not_allowed(self):
@@ -203,9 +204,11 @@ class ComplaintTestCase(
         with mock.patch('django.utils.timezone.now') as mocked_now:
             mocked_now.return_value = fourteen_days_later
             self.assertEqual(self.resource.out_of_sla, False)
+            self.assertEqual(self.resource.holding_letter_out_of_sla, True)
         with mock.patch('django.utils.timezone.now') as mocked_now:
             mocked_now.return_value = fifteen_days_later
             self.assertEqual(self.resource.out_of_sla, True)
+            self.assertEqual(self.resource.holding_letter_out_of_sla, True)
 
     @property
     def log_url(self):

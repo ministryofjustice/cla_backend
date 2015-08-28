@@ -249,7 +249,7 @@ class EODDetails(TimeStampedModel):
         return self.categories.filter(is_major=True).exists()
 
     def get_category_descriptions(self, include_severity=False):
-        mapper = (lambda cat: unicode(cat) + u' (Major)' if cat.is_major else u' (Minor)') if include_severity else unicode
+        mapper = (lambda cat: unicode(cat) + (u' (Major)' if cat.is_major else u' (Minor)')) if include_severity else unicode
         return list(map(mapper, self.categories.all()))
 
 

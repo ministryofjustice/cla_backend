@@ -32,7 +32,7 @@ class Complaint(TimeStampedModel):
     source = models.CharField(max_length=15, choices=COMPLAINT_SOURCE,
                               blank=True)
     level = models.PositiveSmallIntegerField(
-        choices=tuple(filter(lambda (level, desc): level != 21, LOG_LEVELS.CHOICES)),
+        choices=((LOG_LEVELS.HIGH, 'Major'), (LOG_LEVELS.MINOR, 'Minor')),
         default=LOG_LEVELS.MINOR
     )
     justified = models.NullBooleanField()

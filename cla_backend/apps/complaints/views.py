@@ -173,7 +173,7 @@ class BaseComplaintConstantsView(rest_views.APIView):
         return [
             {
                 'value': choice[0],
-                'description': capfirst(force_text(choice[1]).lower()),
+                'description': capfirst(force_text(choice[1])),
             }
             for choice in Complaint._meta.get_field(key).choices
         ]

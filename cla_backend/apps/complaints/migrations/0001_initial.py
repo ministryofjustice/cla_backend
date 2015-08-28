@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
                 ('description', models.TextField(null=True, blank=True)),
                 ('source', models.CharField(blank=True, max_length=15, choices=[(b'EMAIL', b'email'), (b'PHONE', b'phone'), (b'LETTER', b'letter')])),
-                ('level', models.PositiveSmallIntegerField(default=11, choices=[(29, b'HIGH'), (11, b'MINOR')])),
+                ('level', models.PositiveSmallIntegerField(default=11, choices=[(29, b'Major'), (11, b'Minor')])),
                 ('justified', models.NullBooleanField()),
                 ('resolved', models.NullBooleanField()),
                 ('category', models.ForeignKey(blank=True, to='complaints.Category', null=True)),

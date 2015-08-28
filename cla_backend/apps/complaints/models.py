@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from model_utils.models import TimeStampedModel
 from cla_eventlog.constants import LOG_LEVELS
-from complaints.constants import COMPLAINT_SOURCE
+from complaints.constants import COMPLAINT_SOURCE, SLA_DAYS
 
 
 class ComplaintManager(models.Manager):
@@ -135,7 +135,7 @@ class Complaint(TimeStampedModel):
         """
         True if complaint is unresolved for over 15 days.
         """
-        return (self.closed or timezone.now()) - self.created > datetime.timedelta(days=15)
+        return (self.closed or timezone.now()) - self.created > datetime.timedelta(days=SLA_DAYS)
 
 
 class Category(TimeStampedModel):

@@ -686,8 +686,9 @@ class Case(TimeStampedModel, ModelDiffMixin):
     class Meta(object):
         ordering = ('-created',)
         permissions = (
-            ("run_reports", "Can run reports"),
-            ("run_obiee_reports", "Can run obiee reports"),
+            ('run_reports', u'Can run reports'),
+            ('run_obiee_reports', u'Can run OBIEE reports'),
+            ('run_complaints_report', u'Can run complaints report'),
         )
 
     def __unicode__(self):

@@ -7,3 +7,6 @@ COMPLAINT_SOURCE = Choices(
     ('PHONE', 'phone', 'phone'),
     ('LETTER', 'letter', 'letter'),
 )
+
+# days between complaint creation to closing date (whether resolved or not)
+SLA_DAYS = 15

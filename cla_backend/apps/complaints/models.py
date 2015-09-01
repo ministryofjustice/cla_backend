@@ -10,6 +10,7 @@ from model_utils.models import TimeStampedModel
 from cla_eventlog.constants import LOG_LEVELS
 from complaints.constants import COMPLAINT_SOURCE, SLA_DAYS, \
     HOLDING_LETTER_SLA_DAYS
+from legalaid.utils.sla import get_day_sla_time
 
 
 class ComplaintManager(models.Manager):
@@ -143,8 +144,8 @@ class Complaint(TimeStampedModel):
         """
         True if holding letter is not sent within 1 day.
         """
-        # TODO: should only take into account business days
-        return (self.holding_letter or timezone.now()) - self.created > datetime.timedelta(days=HOLDING_LETTER_SLA_DAYS)
+        holding_sla = get_day_sla_time(self.created, HOLDING_LETTER_SLA_DAYS)
+        return self.holding_letter is None and timezone.now() > holding_sla
 
 
 class Category(TimeStampedModel):

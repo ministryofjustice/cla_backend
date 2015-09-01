@@ -2,19 +2,9 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
-from django.core.management import call_command
 from django.db import models, migrations
 import django.utils.timezone
 import model_utils.fields
-
-
-def create_default_categories(apps, schema_editor):
-    call_command('loaddata', 'complaint_categories')
-
-
-def delete_all_categories(apps, schema_editor):
-    Category = apps.get_model('complaints', 'Category')
-    Category.objects.all().delete()
 
 
 class Migration(migrations.Migration):
@@ -60,5 +50,4 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
-        migrations.RunPython(create_default_categories, delete_all_categories),
     ]

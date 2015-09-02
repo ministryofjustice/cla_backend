@@ -216,10 +216,21 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     }
 
 
+class EODDetailsManager(models.Manager):
+    use_for_related_fields = True
+
+    def get_queryset(self):
+        return super(EODDetailsManager, self).get_queryset().select_related(
+            'case'
+        )
+
+
 class EODDetails(TimeStampedModel):
     case = models.OneToOneField('Case', related_name='eod_details')
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
+
+    objects = EODDetailsManager()
 
     class Meta(object):
         ordering = ('-created',)

@@ -40,15 +40,26 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
         source='eod.case.reference',
         read_only=True)
 
-    # virtual fields created by extra SQL
+    # # virtual fields created by extra SQL
     closed = serializers.DateTimeField(source='closed', read_only=True)
-    holding_letter = serializers.DateTimeField(source='holding_letter', read_only=True)
-    full_letter = serializers.DateTimeField(source='full_letter', read_only=True)
+    holding_letter = serializers.DateTimeField(
+        source='holding_letter',
+        read_only=True)
+    full_letter = serializers.DateTimeField(
+        source='full_letter',
+        read_only=True)
     out_of_sla = NullBooleanField(source='out_of_sla', read_only=True)
-    holding_letter_out_of_sla = NullBooleanField(source='holding_letter_out_of_sla', read_only=True)
+    holding_letter_out_of_sla = NullBooleanField(
+        source='holding_letter_out_of_sla',
+        read_only=True)
 
-    # virtual fields on model
-    status_label = serializers.CharField(source='status_label', read_only=True)
+    # # virtual fields on model
+    status_label = serializers.CharField(
+        source='status_label',
+        read_only=True)
+    requires_action_at = serializers.DateTimeField(
+        source='requires_action_at',
+        read_only=True)
 
     class Meta:
         model = Complaint

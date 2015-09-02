@@ -51,8 +51,7 @@ def get_day_sla_time(start_time, days):
     sla_time = start_time
     work_days = 0
     while work_days < days:
-        dt = start_time + timedelta(days=work_days + 1)
-        if not on_sunday(dt) and not on_bank_holiday(dt):
+        sla_time += timedelta(days=work_days + 1)
+        if not on_sunday(sla_time) and not on_bank_holiday(sla_time):
             work_days += 1
-            sla_time = dt
     return sla_time

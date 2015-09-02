@@ -138,7 +138,7 @@ class Complaint(TimeStampedModel):
         True if complaint is unresolved for over 15 working days.
         """
         sla = get_day_sla_time(self.created, SLA_DAYS)
-        return self.closed is None and timezone.now() > sla
+        return (self.closed or timezone.now()) > sla
 
     @property
     def holding_letter_out_of_sla(self):
@@ -146,7 +146,7 @@ class Complaint(TimeStampedModel):
         True if holding letter is not sent within 1 working day.
         """
         holding_sla = get_day_sla_time(self.created, HOLDING_LETTER_SLA_DAYS)
-        return self.holding_letter is None and timezone.now() > holding_sla
+        return (self.holding_letter or timezone.now()) > holding_sla
 
     def requires_action_at(self):
         if self.holding_letter is None:

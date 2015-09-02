@@ -62,6 +62,7 @@ class ComplaintTestCase(
             'full_letter',
             'out_of_sla',
             'holding_letter_out_of_sla',
+            'requires_action_at',
         ]
 
     def test_methods_not_allowed(self):

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import mock
+import pytz
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import NoReverseMatch
@@ -16,6 +17,8 @@ from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin, \
     CLAProviderAuthBaseApiTestMixin
+
+utc = pytz.utc
 
 
 class ComplaintTestMixin(object):
@@ -199,9 +202,10 @@ class ComplaintTestCase(
 
     def test_complaint_sla(self):
         self.assertEqual(self.resource.out_of_sla, False)
-        now = timezone.now()
-        fourteen_days_later = now + datetime.timedelta(days=14, hours=23)
-        fifteen_days_later = now + datetime.timedelta(days=15)
+        now = datetime.datetime(2015, 9, 2, 11, 30).replace(tzinfo=utc)
+        self.resource.created = now
+        fourteen_days_later = datetime.datetime(2015, 9, 19, 11, 29).replace(tzinfo=utc)
+        fifteen_days_later = datetime.datetime(2015, 9, 19, 11, 31).replace(tzinfo=utc)
         with mock.patch('django.utils.timezone.now') as mocked_now:
             mocked_now.return_value = fourteen_days_later
             self.assertEqual(self.resource.out_of_sla, False)
@@ -210,6 +214,9 @@ class ComplaintTestCase(
             mocked_now.return_value = fifteen_days_later
             self.assertEqual(self.resource.out_of_sla, True)
             self.assertEqual(self.resource.holding_letter_out_of_sla, True)
+
+    def test_days_from_sla(self):
+        pass
 
     @property
     def log_url(self):

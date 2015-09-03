@@ -149,6 +149,7 @@ class Complaint(TimeStampedModel):
         holding_sla = get_day_sla_time(self.created, HOLDING_LETTER_SLA_DAYS)
         return (self.holding_letter or timezone.now()) > holding_sla
 
+    @property
     def requires_action_at(self):
         if self.holding_letter is None:
             return get_day_sla_time(self.created, HOLDING_LETTER_SLA_DAYS)

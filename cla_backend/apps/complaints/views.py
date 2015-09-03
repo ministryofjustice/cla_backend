@@ -36,19 +36,6 @@ class BaseComplaintViewSet(
     model = Complaint
     serializer_class = ComplaintSerializerBase
 
-    filter_backends = (
-        SearchFilter,
-    )
-
-    search_fields = (
-        'eod__case__personal_details__full_name',
-        'eod__case__personal_details__postcode',
-        'eod__case__personal_details__street',
-        'eod__case__personal_details__search_field',
-        'eod__case__reference',
-        'eod__case__laa_reference',
-    )
-
     def get_queryset(self, dashboard=False, show_closed=False):
         qs = super(BaseComplaintViewSet, self).get_queryset()
 

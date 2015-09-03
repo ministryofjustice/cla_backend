@@ -644,8 +644,18 @@ class ComplaintViewSet(
     filter_backends = (
         DjangoFilterBackend,
         OrderingFilter,
+        SearchFilter,
     )
     filter_fields = ('justified', 'level', 'category', 'owner', 'created_by')
+
+    search_fields = (
+        'eod__case__personal_details__full_name',
+        'eod__case__personal_details__postcode',
+        'eod__case__personal_details__street',
+        'eod__case__personal_details__search_field',
+        'eod__case__reference',
+        'eod__case__laa_reference',
+    )
 
     ordering_fields = ('created', 'level', 'justified',
                        'closed', 'holding_letter', 'full_letter',

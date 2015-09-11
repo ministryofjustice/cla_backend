@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 import argparse
-import random
-import subprocess
 import os
+import subprocess
 import sys
 
 PROJECT_NAME = 'cla_backend'
@@ -33,6 +32,7 @@ def run(command, **kwargs):
     if return_code:
         sys.exit(return_code)
 
+
 # setting up virtualenv
 if not os.path.isdir(env_path):
     run('virtualenv %s' % env_path)
@@ -45,11 +45,6 @@ run("find . -name '*.pyc' -delete")
 
 # run tests
 print 'starting...'
-
-backend_port = random.randint(8005, 8999)
-frontend_port = backend_port + 1
-os.environ['BACKEND_BASE_PORT'] = str(backend_port)
-os.environ['FRONTEND_BASE_PORT'] = str(frontend_port)
 
 run('%s/python manage.py jenkins '
     '--coverage-rcfile=.coveragerc '

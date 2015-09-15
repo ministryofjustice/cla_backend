@@ -109,7 +109,7 @@ class Migration(migrations.Migration):
                 ('created_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={
-                'ordering': ['-created'],
+                'ordering': ('-created',),
             },
             bases=(models.Model,),
         ),
@@ -186,6 +186,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'ordering': ('-created',),
             },
             bases=(models.Model, cla_common.db.mixins.ModelDiffMixin),
         ),
@@ -276,6 +277,8 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'ordering': ('-created',),
+                'verbose_name_plural': 'people',
             },
             bases=(core.cloning.CloneModelMixin, models.Model),
         ),
@@ -323,6 +326,7 @@ class Migration(migrations.Migration):
                 ('eligibility_check', models.ForeignKey(to='legalaid.EligibilityCheck')),
             ],
             options={
+                'ordering': ('-created',),
                 'verbose_name_plural': 'properties',
             },
             bases=(models.Model,),
@@ -361,6 +365,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'verbose_name_plural': 'third party details',
             },
             bases=(core.cloning.CloneModelMixin, models.Model),
         ),

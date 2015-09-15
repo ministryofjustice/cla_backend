@@ -216,9 +216,52 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     }
 
 
+class EODDetailsManager(models.Manager):
+    use_for_related_fields = True
+
+    def get_queryset(self):
+        return super(EODDetailsManager, self).get_queryset().select_related(
+            'case'
+        )
+
+
 class EODDetails(TimeStampedModel):
+    case = models.OneToOneField('Case', related_name='eod_details')
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
+
+    objects = EODDetailsManager()
+
+    class Meta(object):
+        ordering = ('-created',)
+        verbose_name = 'EOD details'
+        verbose_name_plural = 'EOD details'
+
+    def __unicode__(self):
+        return u'EOD on case %s' % self.case
+
+    @classmethod
+    def get_eod_stats(cls):
+        data = dict(EODDetailsCategory.objects.values_list('category').
+                    annotate(count=models.Count('category')))
+        return {
+            'total_count': sum(data.values()),
+            'categories': [
+                {
+                    'description': description,
+                    'count': data.get(category, 0),
+                }
+                for category, description in EXPRESSIONS_OF_DISSATISFACTION.CHOICES
+            ]
+        }
+
+    @property
+    def is_major(self):
+        return self.categories.filter(is_major=True).exists()
+
+    def get_category_descriptions(self, include_severity=False):
+        mapper = (lambda cat: unicode(cat) + (u' (Major)' if cat.is_major else u' (Minor)')) if include_severity else unicode
+        return list(map(mapper, self.categories.all()))
 
 
 class EODDetailsCategory(models.Model):
@@ -226,6 +269,13 @@ class EODDetailsCategory(models.Model):
     category = models.CharField(max_length=30, choices=EXPRESSIONS_OF_DISSATISFACTION,
                                 blank=True, null=True)
     is_major = models.BooleanField(default=False)
+
+    class Meta(object):
+        verbose_name = 'EOD category'
+        verbose_name_plural = 'EOD categories'
+
+    def __unicode__(self):
+        return EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT.get(self.category)
 
 
 class Person(CloneModelMixin, TimeStampedModel):
@@ -643,13 +693,13 @@ class Case(TimeStampedModel, ModelDiffMixin):
     search_field = models.TextField(null=True, blank=True, db_index=True)
 
     complaint_flag = models.BooleanField(default=False)
-    eod_details = models.ForeignKey(EODDetails, blank=True, null=True)
 
     class Meta(object):
         ordering = ('-created',)
         permissions = (
-            ("run_reports", "Can run reports"),
-            ("run_obiee_reports", "Can run obiee reports"),
+            ('run_reports', u'Can run reports'),
+            ('run_obiee_reports', u'Can run OBIEE reports'),
+            ('run_complaints_report', u'Can run complaints report'),
         )
 
     def __unicode__(self):
@@ -731,7 +781,6 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
                     'callback_attempt', 'search_field', 'provider_assigned_at',
-                    'eod_details',
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details',

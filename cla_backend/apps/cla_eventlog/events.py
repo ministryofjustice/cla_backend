@@ -147,6 +147,9 @@ class BaseEvent(object):
     def save_log(self, log):
         log.save(force_insert=True)
 
+    def create_log(self, *args, **kwargs):
+        return Log(*args, **kwargs)
+
     def process(self, case, code=None, notes="", created_by=None, patch=None, context=None, **kwargs):
         """
         Processes the event and creates a log entry.
@@ -157,7 +160,7 @@ class BaseEvent(object):
         code_data = self.codes[code]
         timer = get_timer(created_by)
 
-        log = Log(
+        log = self.create_log(
             case=case,
             code=code,
             timer=timer,

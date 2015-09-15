@@ -667,7 +667,6 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
         # operator1 = make_recipe('call_centre.operator')
         # operator2 = make_recipe('call_centre.operator')
-        eod_details = make_recipe('legalaid.eod_details', notes='hello')
 
         self.cases = [
             # obj1 created by current operator (phone implicit)
@@ -704,10 +703,10 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
                 'legalaid.case',
                 reference='ref5',
                 created_by=self.operator.user,
-                eod_details=eod_details,
                 source=CASE_SOURCE.WEB
             )
         ]
+        make_recipe('legalaid.eod_details', notes='hello', case=self.cases[-1])
 
     def getAndAssertValidResponse(self, filter_name, expected):
         response = self.client.get(

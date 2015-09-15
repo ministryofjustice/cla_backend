@@ -161,8 +161,19 @@ class SimpleResourceAPIMixin(CLABaseApiTestMixin):
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
 
+    def _patch(self, data=None, url=None):
+        if not data: data = {}
+        if not url: url = self.detail_url
+        return self.client.patch(
+            url, data=data, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+
     def setup_resources(self):
         self.resource = self.make_resource()
+
+    def refresh_resource(self):
+        self.resource = self.resource.__class__.objects.get(pk=self.resource.pk)
 
     def setUp(self):
         super(SimpleResourceAPIMixin, self).setUp()

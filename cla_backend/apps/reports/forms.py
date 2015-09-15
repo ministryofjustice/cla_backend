@@ -12,7 +12,8 @@ from django.contrib.admin import widgets
 
 from legalaid.utils import diversity
 from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
-from cla_eventlog.constants import LOG_TYPES
+from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
+from complaints.constants import SLA_DAYS
 
 from . import sql
 from reports.widgets import MonthYearWidget
@@ -393,6 +394,40 @@ class MIEODReport(SQLFileDateRangeReport):
             row = list(row)  # row is a tuple
             row[category_col] = row[category_col] and eod_choices.get(row[category_col], 'Unknown') or 'Not set'
             yield row
+
+
+class ComplaintsReport(SQLFileDateRangeReport):
+    QUERY_FILE = 'Complaints.sql'
+
+    def get_headers(self):
+        return [
+            'LAA reference',
+            'Case reference',
+            'Full name',
+            'Case category',
+            'Created by operator',
+            'Operator manager owner',
+            'Complaint method',
+            'Complaint received',
+            'Complaint category',
+            'Holding letter sent',
+            'Full response sent',
+            'Major/minor',
+            'Justified?',
+            'Complaint closed',
+            'Resolved?',
+            'Within SLA?',
+        ]
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {
+            'from_date': from_date,
+            'to_date': to_date,
+            'major': LOG_LEVELS.HIGH,
+            'minor': LOG_LEVELS.MINOR,
+            'sla_days': '%d days' % SLA_DAYS,
+        }
 
 
 class MIOBIEEExportExtract(MonthRangeReportForm):

@@ -80,10 +80,6 @@ thirdparty_details = Recipe(ThirdPartyDetails,
 
 adaptation_details = Recipe(AdaptationDetails)
 
-eod_details = Recipe(EODDetails)
-eod_details_category = Recipe(EODDetailsCategory,
-                              eod_details=foreign_key(eod_details))
-
 matter_type1 = Recipe(MatterType, level=1)
 matter_type2 = Recipe(MatterType, level=2)
 
@@ -108,3 +104,9 @@ eligible_case = Recipe(
 )
 
 notes_history = Recipe(CaseNotesHistory)
+
+eod_details = Recipe(EODDetails, case=foreign_key(case))
+eod_details_category = Recipe(
+    EODDetailsCategory,
+    eod_details=foreign_key(eod_details)
+)

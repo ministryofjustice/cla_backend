@@ -33,8 +33,8 @@ ADD ./docker/nginx.conf /etc/nginx/nginx.conf
 ADD ./docker/htpassword /etc/nginx/conf.d/htpassword
 RUN rm -f /etc/nginx/sites-enabled/default && chown www-data:www-data /etc/nginx/conf.d/htpassword
 
-#Pip install Python packages
-
+# Pip install Python packages
+RUN pip install -U setuptools pip wheel
 RUN pip install GitPython uwsgi requests
 
 RUN mkdir -p /var/log/wsgi && touch /var/log/wsgi/app.log /var/log/wsgi/debug.log && chown -R www-data:www-data /var/log/wsgi && chmod -R g+s /var/log/wsgi

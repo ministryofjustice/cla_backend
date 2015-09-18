@@ -1,9 +1,7 @@
+from django import forms
 import markdown
 
-from django import forms
-
 from core.admin.fields import MarkdownAdminField
-
 from ..models import Category
 
 
@@ -13,7 +11,7 @@ class CategoryModelForm(forms.ModelForm):
     """
     raw_description = MarkdownAdminField(label=u'Description', required=False)
 
-    class Meta:
+    class Meta(object):
         model = Category
         exclude = []
 

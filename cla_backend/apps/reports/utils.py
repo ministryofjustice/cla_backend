@@ -154,6 +154,7 @@ class OBIEEExporter(object):
         if os.path.exists(self.tmp_export_path):
             os.removedirs(self.tmp_export_path)
 
+
 def email_obiee_export(zip_path, dt_from, dt_to):
     if hasattr(settings, 'OBIEE_EMAIL_TO'):
         subject = 'CLA CHS Database Export: {from_} - {to}'.format(from_=dt_from, to=dt_to)
@@ -170,6 +171,7 @@ def email_obiee_export(zip_path, dt_from, dt_to):
         message.send()
     else:
         raise ImproperlyConfigured('OBIEE_EMAIL_TO must be specified in settings')
+
 
 def email_obiee_export_failed_notification():
     subject = 'CLA OBIEE EXPORT FAILED'

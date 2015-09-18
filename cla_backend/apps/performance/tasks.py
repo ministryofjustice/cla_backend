@@ -99,7 +99,6 @@ class TransactionsByChannelTypeTask(BasePerformanceTask):
     serializer_class = TransactionsByChannelTypeSerializer
 
 
-
 @shared_task(default_retry_delay=10, max_retries=12)
 def send_all_performance_data():
     # ApplicationStageVolumeTask().delay()

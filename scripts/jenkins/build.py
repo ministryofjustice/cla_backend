@@ -1,41 +1,44 @@
 #!/usr/bin/env python
 import argparse
-import random
-import subprocess
 import os
+import subprocess
 import sys
 
-PROJECT_NAME = "cla_backend"
+PROJECT_NAME = 'cla_backend'
 
 # use python scripts/jenkins/build.py integration
 
 # args
-parser = argparse.ArgumentParser(description='Build project ready for testing by Jenkins.')
-parser.add_argument('envname', metavar='envname', type=str, nargs=1, help='e.g. integration, production, etc.')
+parser = argparse.ArgumentParser(
+    description='Build project ready for testing by Jenkins.'
+)
+parser.add_argument('envname', type=str,
+                    help='e.g. integration, production, etc.')
 args = parser.parse_args()
 
-env = args.envname[0]
-env_name = "%s-%s" % (PROJECT_NAME, env)
-env_path = "/tmp/jenkins/envs/%s" % env_name
-bin_path = "%s/bin" % env_path
+env = args.envname
+env_name = '%s-%s' % (PROJECT_NAME, env)
+env_path = '/tmp/jenkins/envs/%s' % env_name
+bin_path = '%s/bin' % env_path
 
 
 def run(command, **kwargs):
-	defaults = {
-		'shell': True
-	}
-	defaults.update(kwargs)
+    defaults = {
+        'shell': True
+    }
+    defaults.update(kwargs)
 
-	return_code = subprocess.call(command, **defaults)
-	if return_code:
-		sys.exit(return_code)
+    return_code = subprocess.call(command, **defaults)
+    if return_code:
+        sys.exit(return_code)
+
 
 # setting up virtualenv
 if not os.path.isdir(env_path):
-	run('virtualenv --no-site-packages %s' % env_path)
+    run('virtualenv %s' % env_path)
 
+run('%s/pip install -U setuptools pip wheel' % bin_path)
 run('%s/pip install -r requirements/jenkins.txt' % bin_path)
-
 
 # Remove .pyc files from the project
 run("find . -name '*.pyc' -delete")
@@ -43,9 +46,6 @@ run("find . -name '*.pyc' -delete")
 # run tests
 print 'starting...'
 
-backend_port = random.randint(8005, 8999)
-frontend_port = backend_port + 1
-os.environ['BACKEND_BASE_PORT'] = '%s' % backend_port
-os.environ['FRONTEND_BASE_PORT'] = '%s' % frontend_port
-
-run("%s/python manage.py jenkins --coverage-rcfile=.coveragerc --settings=cla_backend.settings.jenkins" % bin_path)
+run('%s/python manage.py jenkins '
+    '--coverage-rcfile=.coveragerc '
+    '--settings=cla_backend.settings.jenkins' % bin_path)

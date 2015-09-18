@@ -14,7 +14,7 @@ class OneToOneUserAdminForm(forms.ModelForm):
         label=_("Username"), max_length=30,
         regex=r'^[\w.@+-]+$',
         help_text=_("Required. 30 characters or fewer. Letters, digits and "
-                      "@/./+/-/_ only."),
+                    "@/./+/-/_ only."),
         error_messages={
             'invalid': _("This value may contain only letters, numbers and "
                          "@/./+/-/_ characters.")},
@@ -61,8 +61,6 @@ class OneToOneUserAdminForm(forms.ModelForm):
         required=False, widget=widgets.AdminTextInputWidget
     )
     is_active = forms.BooleanField(required=False)
-
-
 
     def adjust_password_fields(self, instance):
         for field_name in ['password', 'password2']:

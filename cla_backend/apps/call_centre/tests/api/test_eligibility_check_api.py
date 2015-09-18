@@ -2,7 +2,6 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
-
 from legalaid.tests.views.mixins.eligibility_check_api import \
     NestedEligibilityCheckAPIMixin
 
@@ -35,7 +34,7 @@ class EligibilityCheckTestCase(
         ]
 
     def test_notes_are_readonly(self):
-        data={
+        data = {
             'notes': 'just trying...',
             'your_problem_notes': 'ipsum lorem2',
         }

@@ -9,8 +9,7 @@ import djorm_pgfulltext.fields
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
@@ -48,6 +47,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=100)),
             ],
             options={
+                'ordering': ('title',)
             },
             bases=(models.Model,),
         ),

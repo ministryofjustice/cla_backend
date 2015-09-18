@@ -1,11 +1,8 @@
 from django.test import TestCase
-from django.utils.unittest import skip
 from django.core.urlresolvers import reverse
-from django.core.management import call_command
 from django.utils.crypto import get_random_string
 
 from core.tests.mommy_utils import make_recipe, make_user
-
 from call_centre.models import Operator, Caseworker
 
 
@@ -385,7 +382,6 @@ class OperatorAdminViewTestCase(TestCase):
         self._test_reset_lockout(loggedin_op_user, changing_op)
 
 
-
 class CaseworkerAdminViewTestCase(TestCase):
     def setUp(self):
         super(CaseworkerAdminViewTestCase, self).setUp()
@@ -426,7 +422,6 @@ class CaseworkerAdminViewTestCase(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
-
 
         # add/change details and save
         post_response = self.client.post(url, data=post_data, follow=True)
@@ -491,7 +486,6 @@ class CaseworkerAdminViewTestCase(TestCase):
 
     # CHANGE
 
-
     def test_op_manager_cant_change_laa_caseworker(self):
         loggedin_op = self.operators['op_manager1']
         changing_cw = self.operators['cw_1']
@@ -533,7 +527,6 @@ class CaseworkerAdminViewTestCase(TestCase):
         loggedin_user = self.django_admin
         changing_cw = self.operators['cw_1']
 
-
         post_data = {
             'username': changing_cw.user.username,
             'first_name': 'New Name',
@@ -547,7 +540,6 @@ class CaseworkerAdminViewTestCase(TestCase):
         )
 
     # CREATE
-
 
     def test_cla_superuser_can_create_cla_superusers(self):
         loggedin_op = self.operators['op_superuser1']
@@ -629,5 +621,3 @@ class CaseworkerAdminViewTestCase(TestCase):
         changing_cw = self.operators['cw_1']
 
         self._test_change_password(loggedin_op_user, changing_cw)
-
-

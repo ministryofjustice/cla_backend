@@ -1,10 +1,8 @@
 from django.conf.urls import patterns, url, include
-
 from rest_framework import routers
 
 from core.drf.router import NestedSimpleRouter, NestedCLARouter, \
     AdvancedSimpleRouter
-
 from core import routers as core_routers
 
 from . import views
@@ -25,12 +23,16 @@ router.register(r'guidance/note', views.GuidanceNoteViewSet,
 router.register(r'notifications/notification', views.NotificationViewSet,
                 base_name='notifications')
 router.register(r'adaptations', views.AdaptationDetailsMetadataViewSet,
-        base_name='adaptations-metadata')
+                base_name='adaptations-metadata')
 router.register(r'mattertype', views.MatterTypeViewSet)
 router.register(r'mediacode', views.MediaCodeViewSet)
 router.register(r'feedback', views.FeedbackViewSet)
 router.register(r'case_archive', views.CaseArchivedViewSet)
 router.register(r'csvupload', views.CSVUploadViewSet)
+adv_router.register(r'complaints/complaint', views.ComplaintViewSet,
+                base_name='complaints')
+router.register(r'complaints/category', views.ComplaintCategoryViewSet,
+                base_name='complaints-categories')
 
 timer_router = core_routers.SingletonRouter()
 timer_router.register(r'timer', views.TimerViewSet, base_name='timer')
@@ -47,7 +49,15 @@ case_one2many_router = NestedSimpleRouter(adv_router, r'case', lookup='case')
 case_one2many_router.register(r'logs', views.LogViewSet)
 case_one2many_router.register(r'notes_history', views.CaseNotesHistoryViewSet)
 
+complaint_one2many_router = NestedSimpleRouter(adv_router,
+                                               r'complaints/complaint',
+                                               lookup='complaint')
+complaint_one2many_router.register(r'logs', views.ComplaintLogViewset)
+
+
 urlpatterns = patterns('',
+    url(r'^complaints/constants/?$', views.ComplaintConstantsView.as_view()),
+    url(r'^', include(complaint_one2many_router.urls)),
     url(r'^', include(case_one2one_router.urls)),
     url(r'^', include(case_one2many_router.urls)),
     url(r'^', include(adv_router.urls)),

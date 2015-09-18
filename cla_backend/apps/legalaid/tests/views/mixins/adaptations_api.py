@@ -1,9 +1,7 @@
 from django.core.urlresolvers import reverse
-
 from rest_framework import status
 
-from core.tests.test_base import \
-    NestedSimpleResourceAPIMixin
+from core.tests.test_base import NestedSimpleResourceAPIMixin
 
 
 class AdaptationsMetadataAPIMixin(object):
@@ -90,7 +88,7 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         """
         Ensure that we can't DELETE to list url
         """
-        ### LIST
+        # LIST
         if hasattr(self, 'list_url') and self.list_url:
             self._test_delete_not_allowed(self.list_url)
 

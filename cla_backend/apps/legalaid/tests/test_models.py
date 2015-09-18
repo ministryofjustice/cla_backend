@@ -4,7 +4,6 @@ import random
 
 from django.conf import settings
 from django.test import TestCase
-from django.db import models
 from django.utils import timezone
 
 from eligibility_calculator.models import CaseData, ModelMixin
@@ -13,7 +12,7 @@ from eligibility_calculator.exceptions import PropertyExpectedException
 from cla_common.constants import ELIGIBILITY_STATES, CONTACT_SAFETY, \
     THIRDPARTY_REASON, THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, \
     REQUIRES_ACTION_BY, DIAGNOSIS_SCOPE, EXEMPT_USER_REASON, ECF_STATEMENT, \
-    CASE_SOURCE, EXPRESSIONS_OF_DISSATISFACTION
+    CASE_SOURCE
 from cla_common.money_interval.models import MoneyInterval
 
 from core.tests.mommy_utils import make_recipe, make_user
@@ -75,7 +74,6 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         provider_notes='Provider Notes',
         thirdparty_details=make_recipe('legalaid.thirdparty_details'),
         adaptation_details=make_recipe('legalaid.adaptation_details'),
-        eod_details=make_recipe('legalaid.eod_details'),
         billable_time=2000,
         matter_type1=matter_type1,
         matter_type2=matter_type2,
@@ -92,6 +90,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         provider_closed=timezone.now(),
         provider_assigned_at=timezone.now()
     )
+    make_recipe('legalaid.eod_details', notes='EOD notes', case=case)
     CaseKnowledgebaseAssignment.objects.create(
         case=case, assigned_by=make_user(),
         alternative_help_article=make_recipe('knowledgebase.article')
@@ -116,23 +115,26 @@ class EligibilityCheckTestCase(TestCase):
                 val1 = getattr(obj1, prop)
                 val2 = getattr(obj2, prop)
 
-                assertFunc = self.assertEqual
+                assert_func = self.assertEqual
                 if isinstance(val1, list) or isinstance(val2, list):
-                    assertFunc = self.assertItemsEqual
+                    assert_func = self.assertItemsEqual
                 if isinstance(val1, ModelMixin) or isinstance(val2, ModelMixin):
                     self.assertModelMixinEqual(val1, val2)
                     continue
 
-                assertFunc(val1, val2, u"%s: %s != %s" % (prop, val1, val2))
+                assert_func(val1, val2, u"%s: %s != %s" % (prop, val1, val2))
 
     def test_to_case_data_without_partner(self):
         """
         EligibilityCheck partner data won't be used during CaseData creation
         """
-        check = make_recipe('legalaid.eligibility_check',
+        check = make_recipe(
+            'legalaid.eligibility_check',
             category=make_recipe('legalaid.category', code='code'),
-            you=make_recipe('legalaid.person',
-                income= make_recipe('legalaid.income',
+            you=make_recipe(
+                'legalaid.person',
+                income= make_recipe(
+                    'legalaid.income',
                     earnings=MoneyInterval('per_month', pennies=100),
                     self_employment_drawings=MoneyInterval('per_month', pennies=200),
                     benefits=MoneyInterval('per_month', pennies=300),
@@ -143,13 +145,15 @@ class EligibilityCheckTestCase(TestCase):
                     other_income=MoneyInterval('per_month', pennies=800),
                     self_employed=True
                 ),
-                savings=make_recipe('legalaid.savings',
+                savings=make_recipe(
+                    'legalaid.savings',
                     bank_balance=100,
                     investment_balance=200,
                     asset_balance=300,
                     credit_balance=400,
                 ),
-                deductions=make_recipe('legalaid.deductions',
+                deductions=make_recipe(
+                    'legalaid.deductions',
                     income_tax=MoneyInterval('per_month', pennies=600),
                     national_insurance=MoneyInterval('per_month', pennies=100),
                     maintenance=MoneyInterval('per_month', pennies=710),
@@ -174,17 +178,17 @@ class EligibilityCheckTestCase(TestCase):
                 facts={
                     'dependants_young': 3,
                     'dependants_old': 2,
-                    'is_you_or_your_partner_over_60':True,
-                    'on_passported_benefits':True,
+                    'is_you_or_your_partner_over_60': True,
+                    'on_passported_benefits': True,
                     'on_nass_benefits': False,
                     'has_partner': False,
                     'is_partner_opponent': False,
                 },
                 you={
-                    'savings':{
-                        'bank_balance':100,
+                    'savings': {
+                        'bank_balance': 100,
                         'investment_balance': 200,
-                        'credit_balance':400,
+                        'credit_balance': 400,
                         'asset_balance': 300,
                     },
                     'income': {
@@ -209,7 +213,8 @@ class EligibilityCheckTestCase(TestCase):
                     }
                 },
                 property_data=[]
-        ))
+            )
+        )
 
     def test_to_case_data_with_partner_and_None_partner_child_benefits(self):
         """
@@ -219,10 +224,14 @@ class EligibilityCheckTestCase(TestCase):
         default value (0). This is because that field is not exposed yet
         (partner's child benefits can't be provided with).
         """
-        check = make_recipe('legalaid.eligibility_check',
-            category=make_recipe('legalaid.category', code='code'),
-            you=make_recipe('legalaid.person',
-                income=make_recipe('legalaid.income',
+        check = make_recipe(
+            'legalaid.eligibility_check',
+            category=make_recipe(
+                'legalaid.category', code='code'),
+            you=make_recipe(
+                'legalaid.person',
+                income=make_recipe(
+                    'legalaid.income',
                     earnings=MoneyInterval('per_month', pennies=100),
                     self_employment_drawings=MoneyInterval('per_month', pennies=200),
                     benefits=MoneyInterval('per_month', pennies=300),
@@ -233,13 +242,15 @@ class EligibilityCheckTestCase(TestCase):
                     other_income=MoneyInterval('per_month', pennies=800),
                     self_employed=True
                 ),
-                savings=make_recipe('legalaid.savings',
+                savings=make_recipe(
+                    'legalaid.savings',
                     bank_balance=100,
                     investment_balance=200,
                     asset_balance=300,
                     credit_balance=400,
                 ),
-                deductions=make_recipe('legalaid.deductions',
+                deductions=make_recipe(
+                    'legalaid.deductions',
                     income_tax=MoneyInterval('per_month', pennies=600),
                     national_insurance=MoneyInterval('per_month', pennies=100),
                     maintenance=MoneyInterval('per_month', pennies=710),
@@ -249,8 +260,10 @@ class EligibilityCheckTestCase(TestCase):
                     criminal_legalaid_contributions=730
                 )
             ),
-            partner=make_recipe('legalaid.person',
-                income= make_recipe('legalaid.income',
+            partner=make_recipe(
+                'legalaid.person',
+                income=make_recipe(
+                    'legalaid.income',
                     earnings=MoneyInterval('per_month', pennies=101),
                     self_employment_drawings=MoneyInterval('per_month', pennies=201),
                     benefits=MoneyInterval('per_month', pennies=301),
@@ -263,13 +276,15 @@ class EligibilityCheckTestCase(TestCase):
                     other_income=MoneyInterval('per_month', pennies=801),
                     self_employed=False
                 ),
-                savings= make_recipe('legalaid.savings',
+                savings=make_recipe(
+                    'legalaid.savings',
                     bank_balance=101,
                     investment_balance=201,
                     asset_balance=301,
                     credit_balance=401,
                 ),
-                deductions=make_recipe('legalaid.deductions',
+                deductions=make_recipe(
+                    'legalaid.deductions',
                     income_tax=MoneyInterval('per_month', pennies=700),
                     national_insurance=MoneyInterval('per_month', pennies=1),
                     maintenance=MoneyInterval('per_month', pennies=711),
@@ -292,17 +307,17 @@ class EligibilityCheckTestCase(TestCase):
             facts={
                 'dependants_young': 3,
                 'dependants_old': 2,
-                'is_you_or_your_partner_over_60':True,
+                'is_you_or_your_partner_over_60': True,
                 'on_passported_benefits': True,
                 'on_nass_benefits': False,
                 'has_partner': True,
                 'is_partner_opponent': False,
             },
             you={
-                'savings':{
-                    'bank_balance':100,
+                'savings': {
+                    'bank_balance': 100,
                     'investment_balance': 200,
-                    'credit_balance':400,
+                    'credit_balance': 400,
                     'asset_balance': 300,
                 },
                 'income': {
@@ -327,10 +342,10 @@ class EligibilityCheckTestCase(TestCase):
                 }
             },
             partner={
-                'savings':{
-                    'bank_balance':101,
+                'savings': {
+                    'bank_balance': 101,
                     'investment_balance': 201,
-                    'credit_balance':401,
+                    'credit_balance': 401,
                     'asset_balance': 301,
                 },
                 'income': {
@@ -364,10 +379,14 @@ class EligibilityCheckTestCase(TestCase):
         If partner.income.child_benefits is NOT None, the to_case_data will use
         that value and will not override it with 0
         """
-        check = make_recipe('legalaid.eligibility_check',
-            category=make_recipe('legalaid.category', code='code'),
-            you=make_recipe('legalaid.person',
-                income=make_recipe('legalaid.income',
+        check = make_recipe(
+            'legalaid.eligibility_check',
+            category=make_recipe(
+                'legalaid.category', code='code'),
+            you=make_recipe(
+                'legalaid.person',
+                income=make_recipe(
+                    'legalaid.income',
                     earnings=MoneyInterval('per_month', pennies=100),
                     self_employment_drawings=MoneyInterval('per_month', pennies=200),
                     benefits=MoneyInterval('per_month', pennies=300),
@@ -378,13 +397,15 @@ class EligibilityCheckTestCase(TestCase):
                     other_income=MoneyInterval('per_month', pennies=800),
                     self_employed=True
                 ),
-                savings=make_recipe('legalaid.savings',
+                savings=make_recipe(
+                    'legalaid.savings',
                     bank_balance=100,
                     investment_balance=200,
                     asset_balance=300,
                     credit_balance=400,
                 ),
-                deductions=make_recipe('legalaid.deductions',
+                deductions=make_recipe(
+                    'legalaid.deductions',
                     income_tax=MoneyInterval('per_month', pennies=600),
                     national_insurance=MoneyInterval('per_month', pennies=100),
                     maintenance=MoneyInterval('per_month', pennies=710),
@@ -394,8 +415,10 @@ class EligibilityCheckTestCase(TestCase):
                     criminal_legalaid_contributions=730
                 )
             ),
-            partner=make_recipe('legalaid.person',
-                income= make_recipe('legalaid.income',
+            partner=make_recipe(
+                'legalaid.person',
+                income=make_recipe(
+                    'legalaid.income',
                     earnings=MoneyInterval('per_month', pennies=101),
                     self_employment_drawings=MoneyInterval('per_month', pennies=201),
                     benefits=MoneyInterval('per_month', pennies=301),
@@ -408,13 +431,15 @@ class EligibilityCheckTestCase(TestCase):
                     other_income=MoneyInterval('per_month', pennies=801),
                     self_employed=False
                 ),
-                savings= make_recipe('legalaid.savings',
+                savings=make_recipe(
+                    'legalaid.savings',
                     bank_balance=101,
                     investment_balance=201,
                     asset_balance=301,
                     credit_balance=401,
                 ),
-                deductions=make_recipe('legalaid.deductions',
+                deductions=make_recipe(
+                    'legalaid.deductions',
                     income_tax=MoneyInterval('per_month', pennies=700),
                     national_insurance=MoneyInterval('per_month', pennies=1),
                     maintenance=MoneyInterval('per_month', pennies=711),
@@ -437,17 +462,17 @@ class EligibilityCheckTestCase(TestCase):
             facts={
                 'dependants_young': 3,
                 'dependants_old': 2,
-                'is_you_or_your_partner_over_60':True,
+                'is_you_or_your_partner_over_60': True,
                 'on_passported_benefits': True,
                 'on_nass_benefits': False,
                 'has_partner': True,
                 'is_partner_opponent': False,
             },
             you={
-                'savings':{
-                    'bank_balance':100,
+                'savings': {
+                    'bank_balance': 100,
                     'investment_balance': 200,
-                    'credit_balance':400,
+                    'credit_balance': 400,
                     'asset_balance': 300,
                 },
                 'income': {
@@ -472,10 +497,10 @@ class EligibilityCheckTestCase(TestCase):
                 }
             },
             partner={
-                'savings':{
-                    'bank_balance':101,
+                'savings': {
+                    'bank_balance': 101,
                     'investment_balance': 201,
-                    'credit_balance':401,
+                    'credit_balance': 401,
                     'asset_balance': 301,
                 },
                 'income': {
@@ -506,8 +531,10 @@ class EligibilityCheckTestCase(TestCase):
         check = make_recipe(
             'legalaid.eligibility_check',
             category=make_recipe('legalaid.category', code='code'),
-            you=make_recipe('legalaid.person',
-                income= make_recipe('legalaid.income',
+            you=make_recipe(
+                'legalaid.person',
+                income=make_recipe(
+                    'legalaid.income',
                     earnings=MoneyInterval('per_month', pennies=500),
                     self_employment_drawings=MoneyInterval('per_month', pennies=200),
                     benefits=MoneyInterval('per_month', pennies=300),
@@ -518,27 +545,29 @@ class EligibilityCheckTestCase(TestCase):
                     other_income=MoneyInterval('per_month', pennies=600),
                     self_employed=True
                 ),
-                savings=make_recipe('legalaid.savings',
+                savings=make_recipe(
+                    'legalaid.savings',
                     bank_balance=100,
                     investment_balance=200,
                     asset_balance=300,
                     credit_balance=400,
                 ),
-                deductions=make_recipe('legalaid.deductions',
-                   income_tax=MoneyInterval('per_month', pennies=600),
-                   national_insurance=MoneyInterval('per_month', pennies=100),
-                   maintenance=MoneyInterval('per_month', pennies=710),
-                   childcare=MoneyInterval('per_month', pennies=715),
-                   mortgage=MoneyInterval('per_month', pennies=700),
-                   rent=MoneyInterval('per_month', pennies=20),
-                   criminal_legalaid_contributions=730
+                deductions=make_recipe(
+                    'legalaid.deductions',
+                    income_tax=MoneyInterval('per_month', pennies=600),
+                    national_insurance=MoneyInterval('per_month', pennies=100),
+                    maintenance=MoneyInterval('per_month', pennies=710),
+                    childcare=MoneyInterval('per_month', pennies=715),
+                    mortgage=MoneyInterval('per_month', pennies=700),
+                    rent=MoneyInterval('per_month', pennies=20),
+                    criminal_legalaid_contributions=730
                 )
             ),
             dependants_young=3, dependants_old=2,
             is_you_or_your_partner_over_60=True,
             on_passported_benefits=True,
             has_partner=True,
-            )
+        )
         expected = {
             'warnings': {
                 'partner': {
@@ -570,12 +599,12 @@ class EligibilityCheckTestCase(TestCase):
     @mock.patch('legalaid.models.EligibilityChecker')
     def test_update_state(self, MockedEligibilityChecker):
         """
-            calling .is_eligible() sequencially will:
+        calling .is_eligible() sequencially will:
 
-            1. through PropertyExpectedException
-            2. return True
-            3. return False
-            4. through PropertyExpectedException again
+        1. through PropertyExpectedException
+        2. return True
+        3. return False
+        4. through PropertyExpectedException again
         """
         mocked_checker = MockedEligibilityChecker()
         mocked_checker.calcs = {}
@@ -614,7 +643,6 @@ class CaseTestCase(TestCase):
         # it is 7 digits long
         self.assertEqual(len(unicode(case.laa_reference)), 7)
 
-
     def test_case_doesnt_get_duplicate_reference(self):
         with mock.patch('legalaid.models._make_reference') as mr:
             mr.return_value = 'AA-1234-1234'
@@ -631,7 +659,6 @@ class CaseTestCase(TestCase):
             self.assertEqual(c1.reference, c2.reference)
             self.assertTrue(mr.called)
             self.assertEqual(mr.call_count, 11) #max retries + initial try
-
 
     def test_assign_to_provider_overriding_provider(self):
         providers = make_recipe('cla_provider.provider', _quantity=2)
@@ -816,28 +843,28 @@ class MoneyIntervalFieldTestCase(TestCase):
 
 
 # class ValidationModelMixinTestCase(TestCase):
-
+#
 #     class Model1(models.Model):
 #         name = models.CharField(max_length=20, blank=True, null=True)
-
+#
 #     class Model2(ValidateModelMixin, models.Model):
 #         name = models.CharField(max_length=20, blank=True, null=True)
-
+#
 #     class Model3(ValidateModelMixin, models.Model):
-
+#
 #         a = models.CharField(null=True, blank=True, max_length=100)
 #         b = models.CharField(null=True, blank=True, max_length=100)
 #         c = models.CharField(null=True, blank=True, max_length=100)
-
+#
 #         def get_dependencies(self):
 #             return {'a', 'b', 'c'}
-
+#
 #     class Model4(ValidateModelMixin, models.Model):
 #         related = models.ForeignKey('Model3')
-
+#
 #         def get_dependencies(self):
 #             return {'related__a', 'related__b', 'related__c'}
-
+#
 #     def setUp(self):
 #         super(ValidationModelMixinTestCase, self).setUp()
 #         self.model1 = self.Model1()
@@ -845,40 +872,42 @@ class MoneyIntervalFieldTestCase(TestCase):
 #         self.model3 = self.Model3()
 #         self.model4 = self.Model4()
 #         self.model4.related = self.model3
-
+#
 #     def test_mixin_worked(self):
 #         self.assertFalse(hasattr(self.model1, 'validate'))
 #         self.assertTrue(hasattr(self.model2, 'validate'))
 #         self.assertTrue(hasattr(self.model3, 'validate'))
-
+#
 #     def test_not_impl_error(self):
 #         with self.assertRaises(NotImplementedError):
 #             self.model2.get_dependencies()
-
+#
 #     def test_validate_all_invalid(self):
 #         expected = {'warnings': {'a': ['Field "a" is required'],
 #                                  'b': ['Field "b" is required'],
 #                                  'c': ['Field "c" is required']}}
 #         self.assertEqual(expected, self.model3.validate())
-
+#
 #     def test_validate_partial_invalid(self):
 #         self.model3.a = 'a'
 #         self.model3.b = 'b'
-
+#
 #         expected = {'warnings': { 'c': ['Field "c" is required']}}
 #         self.assertEqual(expected, self.model3.validate())
-
+#
 #     def test_validate_none_invalid(self):
 #         self.model3.a = 'a'
 #         self.model3.b = 'b'
 #         self.model3.c = 'c'
-
+#
 #         expected = {'warnings': {}}
 #         self.assertEqual(expected, self.model3.validate())
-
+#
 #     def test_validate_nested_invalid(self):
-#         expected = {'warnings': {'related': {'a': ['Field "a" is required'], 'c': ['Field "c" is required'], 'b': ['Field "b" is required']}}}
-
+#         expected = {'warnings': {'related': {'a': ['Field "a" is required'],
+#                                              'c': ['Field "c" is required'],
+#                                              'b': ['Field "b" is required']}}}
+#
 #         self.assertEqual(expected, self.model4.validate())
 
 
@@ -916,26 +945,26 @@ class CloneModelsTestCaseMixin(object):
         text = ''
         if added_fields:
             text = ('It seems like you have added some fields "%s". '
-                'This model gets cloned by the split case logic so now it\'s '
-                'up to you do decide it these new fields have to be cloned, reset '
-                'or just referenced. \n'
-                'In order to do this, you need to look for the `cloning_config` of the model: \n'
-                '1. if it\'s a fk and you want to create a new copy (with new id), add it to the '
-                'clone_fks. Otherwise, if you want to reference the same copy, don\'t do anything'
-                '2. if you want to exclude it (the default value will be used '
-                'in the cloned object), add it to the `excludes`\n'
-                '3. if you want to use a different value in your cloned version, you need to populate'
-                'the `override_values` dinamically.\n'
-                'After done this, just add the new field to the list of expected fields '
-                'in this test and you\'re done! \n'
-                % list(added_fields))
+                    'This model gets cloned by the split case logic so now it\'s '
+                    'up to you do decide it these new fields have to be cloned, reset '
+                    'or just referenced. \n'
+                    'In order to do this, you need to look for the `cloning_config` of the model: \n'
+                    '1. if it\'s a fk and you want to create a new copy (with new id), add it to the '
+                    'clone_fks. Otherwise, if you want to reference the same copy, don\'t do anything'
+                    '2. if you want to exclude it (the default value will be used '
+                    'in the cloned object), add it to the `excludes`\n'
+                    '3. if you want to use a different value in your cloned version, you need to populate'
+                    'the `override_values` dinamically.\n'
+                    'After done this, just add the new field to the list of expected fields '
+                    'in this test and you\'re done! \n'
+                    % list(added_fields))
         elif remoded_fields:
             text = ('It seems like you have removed some fields "%s" from your model. '
-                'All fine but just double-check that nothing is missing when cloning this '
-                'model by the split case logic. That means, double check the `cloning_config`'
-                'of your model.\n'
-                'After done this, just remove the old field from the list of expected fields '
-                'in this test and you\'re done!' % list(remoded_fields))
+                    'All fine but just double-check that nothing is missing when cloning this '
+                    'model by the split case logic. That means, double check the `cloning_config`'
+                    'of your model.\n'
+                    'After done this, just remove the old field from the list of expected fields '
+                    'in this test and you\'re done!' % list(remoded_fields))
 
         self.assertFalse(text, text)
 
@@ -1197,7 +1226,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'thirdparty_details', 'adaptation_details', 'media_code',
             'outcome_code', 'level', 'exempt_user', 'exempt_user_reason',
             'ecf_statement', 'provider_viewed', 'provider_accepted',
-            'provider_closed', 'eod_details',
+            'provider_closed',
         ]:
             self.assertEqual(getattr(new_case, field), None)
 
@@ -1226,7 +1255,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'outcome_code', 'level', 'reference', 'laa_reference', 'from_case',
             'outcome_code_id', 'requires_action_at', 'callback_attempt',
             'provider_viewed', 'provider_accepted', 'provider_closed',
-            'search_field', 'eod_details',
+            'search_field',
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
@@ -1255,6 +1284,9 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
                       'adaptation_details']:
             self.assertNotEqual(getattr(new_case, field), None)
             self.assertNotEqual(getattr(case, field), getattr(new_case, field))
+
+        with self.assertRaises(Case.eod_details.RelatedObjectDoesNotExist):
+            new_case.eod_details.notes = ''
 
         expected_values = {
             'created_by': self.user,

@@ -12,13 +12,12 @@ regex = re.compile(r'\(([^,]*)\)')
 class Command(BaseCommand):
 
     option_list = BaseCommand.option_list + (
-        make_option('-f','--file',
+        make_option('-f', '--file',
                     dest='file',
-                    help='path to .csv file'
-        ),
+                    help='path to .csv file'),
     )
 
-    help = ('Create model objects from csv file (-f file_path)')
+    help = 'Create model objects from csv file (-f file_path)'
 
     required_args = (
         'csv',

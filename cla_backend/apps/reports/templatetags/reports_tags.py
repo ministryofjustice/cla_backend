@@ -6,7 +6,6 @@ from django.template.defaultfilters import title
 
 from reports.urls import urlpatterns
 
-
 register = template.Library()
 
 

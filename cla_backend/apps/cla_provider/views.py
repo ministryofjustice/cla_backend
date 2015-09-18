@@ -211,11 +211,9 @@ class ProviderExtract(APIView):
         authentication and must have CORS headers in the response.
         """
         return DRFResponse(self.metadata(request),
-            content_type='application/json',
-            status=200,
-            headers={
-                'Access-Control-Allow-Origin': '*'
-            })
+                           content_type='application/json',
+                           status=200,
+                           headers={'Access-Control-Allow-Origin': '*'})
 
     def post(self, request):
         # this is to keep backward compatibility with the old system
@@ -230,11 +228,9 @@ class ProviderExtract(APIView):
                 case = Case.objects.get(reference__iexact=data['CHSCRN'])
             except Case.DoesNotExist:
                 return DRFResponse({'detail': 'Not found'},
-                    content_type='application/json',
-                    status=404,
-                    headers={
-                        'Access-Control-Allow-Origin': '*'
-                    })
+                                   content_type='application/json',
+                                   status=404,
+                                   headers={'Access-Control-Allow-Origin': '*'})
             self.check_object_permissions(request, case)
             statsd.incr('provider_extract.exported')
 
@@ -247,9 +243,7 @@ class ProviderExtract(APIView):
             statsd.incr('provider_extract.malformed')
             return DRFResponse(form.errors, content_type='text/xml',
                                status=400,
-                               headers={
-                                'Access-Control-Allow-Origin': '*'
-                                })
+                               headers={'Access-Control-Allow-Origin': '*'})
 
 
 class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
@@ -317,7 +311,7 @@ class FeedbackViewSet(CLAProviderPermissionViewSetMixin,
     filter_backends = (
         OrderingFilter,
     )
-    ordering = ('-created')
+    ordering = ('-created',)
 
     def pre_save(self, obj):
         if not obj.pk:

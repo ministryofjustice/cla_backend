@@ -1,20 +1,17 @@
 import datetime
-from dateutil.parser import parse
-import mock
 
+from dateutil.parser import parse
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.core import mail
-
+import mock
 from rest_framework.test import APITestCase
 from rest_framework import status
 
 from legalaid.models import Case, CaseNotesHistory
 from legalaid.tests.views.mixins.case_api import BaseFullCaseAPIMixin, \
     FullCaseAPIMixin, BaseSearchCaseAPIMixin, BaseUpdateCaseTestCase
-from cla_common.constants import CASE_SOURCE
-
-from cla_common.constants import REQUIRES_ACTION_BY
+from cla_common.constants import CASE_SOURCE, REQUIRES_ACTION_BY
 
 from cla_eventlog.models import Log
 from cla_eventlog.tests.test_views import ExplicitEventCodeViewTestCaseMixin, \
@@ -57,10 +54,10 @@ class CaseGeneralTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         """
         Ensure that we can't POST, PUT or DELETE
         """
-        ### LIST
+        # LIST
         self._test_delete_not_allowed(self.list_url)
 
-        # ### DETAIL
+        # DETAIL
         self._test_delete_not_allowed(self.detail_url)
 
 
@@ -68,7 +65,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
 
     def test_create_doesnt_set_readonly_values_but_only_personal_details(self):
         """
-            Only POST personal details allowed
+        Only POST personal details allowed
         """
         pd = make_recipe('legalaid.personal_details')
         eligibility_check = make_recipe('legalaid.eligibility_check')
@@ -108,8 +105,8 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertResponseKeys(response)
 
-        self.assertCaseEqual(response.data,
-            Case(
+        self.assertCaseEqual(
+            response.data, Case(
                 reference=response.data['reference'],
                 personal_details=pd,
                 eligibility_check=None,
@@ -175,8 +172,8 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertResponseKeys(response)
 
-        self.assertCaseEqual(response.data,
-            Case(
+        self.assertCaseEqual(
+            response.data, Case(
                 reference=response.data['reference'],
                 notes=data['notes'],
                 matter_type1=matter_type1,
@@ -199,17 +196,18 @@ class CreateCaseTestCase(BaseCaseTestCase):
         self.assertDictEqual(serializer.errors, {})
 
     def test_case_serializer_with_personal_details_reference(self):
-        personal_details = make_recipe('legalaid.personal_details', **{u'full_name': u'John Doe',
-                                      u'home_phone': u'9876543210',
-                                      u'mobile_phone': u'0123456789',
-                                      u'postcode': u'SW1H 9AJ',
-                                      u'street': u'102 Petty France',
-                                      u'title': u'MR'})
+        personal_details = make_recipe('legalaid.personal_details',
+                                       **{u'full_name': u'John Doe',
+                                          u'home_phone': u'9876543210',
+                                          u'mobile_phone': u'0123456789',
+                                          u'postcode': u'SW1H 9AJ',
+                                          u'street': u'102 Petty France',
+                                          u'title': u'MR'})
         data = {u'personal_details': unicode(personal_details.reference)}
 
         serializer = CaseSerializer(data=data)
         self.assertTrue(serializer.is_valid())
-        self.assertDictEqual( serializer.errors, {})
+        self.assertDictEqual(serializer.errors, {})
 
     def test_case_serializer_with_media_code(self):
         media_code = make_recipe('legalaid.media_code')
@@ -289,10 +287,10 @@ class AssignCaseTestCase(BaseCaseTestCase):
             case, category, tz_model_mock, tz_helper_tz, is_manual=False
         )
 
-    def _test_assign_successful(self,
-            case, category, tz_model_mock, tz_helper_tz, is_manual=True
-        ):
-        fake_day = datetime.datetime(2014, 1, 2, 9, 1, 0).replace(tzinfo=timezone.get_current_timezone())
+    def _test_assign_successful(self, case, category, tz_model_mock,
+                                tz_helper_tz, is_manual=True):
+        fake_day = datetime.datetime(2014, 1, 2, 9, 1, 0).\
+            replace(tzinfo=timezone.get_current_timezone())
         tz_model_mock.return_value = fake_day
         tz_helper_tz.return_value = fake_day
 
@@ -300,13 +298,12 @@ class AssignCaseTestCase(BaseCaseTestCase):
         case.matter_type2 = make_recipe('legalaid.matter_type2', category=category)
         case.save()
 
-
         # preparing for test
         provider = make_recipe('cla_provider.provider', name='Provider Name', active=True)
         make_recipe('cla_provider.provider_allocation',
-                                 weighted_distribution=0.5,
-                                 provider=provider,
-                                 category=category)
+                    weighted_distribution=0.5,
+                    provider=provider,
+                    category=category)
 
         # before being assigned, case is in the list
         case_list = self.client.get(
@@ -339,7 +336,7 @@ class AssignCaseTestCase(BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         case = Case.objects.get(pk=case.pk)
-        self.assertTrue(case.provider.pk != None)
+        self.assertIsNotNone(case.provider.pk)
 
         # after being assigned, it's gone from the dashboard...
         case_list = self.client.get(
@@ -658,11 +655,11 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
 class FilteredSearchCaseTestCase(BaseCaseTestCase):
     def setUp(self):
         """
-            obj1 created by current operator (phone implicit)
-            obj2 created by another operator (phone implicit)
-            obj3 case by phone (explicit)
-            obj4 case from web (explicit)
-            obj5 case with EOD (web explicit)
+        obj1 created by current operator (phone implicit)
+        obj2 created by another operator (phone implicit)
+        obj3 case by phone (explicit)
+        obj4 case from web (explicit)
+        obj5 case with EOD (web explicit)
         """
         super(FilteredSearchCaseTestCase, self).setUp()
 
@@ -670,7 +667,6 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 
         # operator1 = make_recipe('call_centre.operator')
         # operator2 = make_recipe('call_centre.operator')
-        eod_details = make_recipe('legalaid.eod_details', notes='hello')
 
         self.cases = [
             # obj1 created by current operator (phone implicit)
@@ -707,10 +703,10 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
                 'legalaid.case',
                 reference='ref5',
                 created_by=self.operator.user,
-                eod_details=eod_details,
                 source=CASE_SOURCE.WEB
             )
         ]
+        make_recipe('legalaid.eod_details', notes='hello', case=self.cases[-1])
 
     def getAndAssertValidResponse(self, filter_name, expected):
         response = self.client.get(
@@ -725,24 +721,20 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
         )
 
     def test_all_cases(self):
-        self.getAndAssertValidResponse('',
-            ['ref1', 'ref2', 'ref3', 'ref4', 'ref5'])
+        self.getAndAssertValidResponse('', ['ref1', 'ref2', 'ref3',
+                                            'ref4', 'ref5'])
 
     def test_phone_cases(self):
-        self.getAndAssertValidResponse('phone',
-            ['ref1', 'ref2', 'ref3'])
+        self.getAndAssertValidResponse('phone', ['ref1', 'ref2', 'ref3'])
 
     def test_web_cases(self):
-        self.getAndAssertValidResponse('web',
-            ['ref4', 'ref5'])
+        self.getAndAssertValidResponse('web', ['ref4', 'ref5'])
 
     def test_operator_cases(self):
-        self.getAndAssertValidResponse('my',
-            ['ref1', 'ref3', 'ref4', 'ref5'])
+        self.getAndAssertValidResponse('my', ['ref1', 'ref3', 'ref4', 'ref5'])
 
     def test_eod_cases(self):
-        self.getAndAssertValidResponse('eod',
-            ['ref5'])
+        self.getAndAssertValidResponse('eod', ['ref5'])
 
 
 class FutureCallbacksCaseTestCase(BaseCaseTestCase):
@@ -890,7 +882,7 @@ class SearchForPersonalDetailsTestCase(BaseCaseTestCase):
 class LinkPersonalDetailsTestCase(BaseCaseTestCase):
     def make_resource(self, **kwargs):
         """
-            Specifying case.personal_details == None by default
+        Specifying case.personal_details == None by default
         """
         kwargs['personal_details'] = None
         return super(LinkPersonalDetailsTestCase, self).make_resource(
@@ -970,8 +962,8 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
     def __call__(self, runner, mocked_now, *args, **kwargs):
         self.mocked_now = mocked_now
         self.mocked_now.return_value = datetime.datetime(
-                2015, 3, 23, 10, 0, 0, 0
-            ).replace(tzinfo=timezone.utc)
+            2015, 3, 23, 10, 0, 0, 0
+        ).replace(tzinfo=timezone.utc)
 
         super(CallMeBackTestCase, self).__call__(
             runner, *args, **kwargs
@@ -1016,7 +1008,6 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
             'datetime': self._default_dt.strftime('%Y-%m-%d %H:%M')
         }
 
-
     def _test_cbx(self, cb_no):
         self.resource.callback_attempt = cb_no - 1
         self.resource.save()
@@ -1031,7 +1022,6 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         self.assertEqual(parse(log.context['sla_480']), self._default_local_dt_sla_480)
         self.assertEqual(parse(log.context['sla_15']), self._default_local_dt_sla_15)
         self.assertEqual(parse(log.context['sla_30']), self._default_local_dt_sla_30)
-
 
     def test_successful_CB1(self):
         self._test_cbx(1)

@@ -12,7 +12,8 @@ from django.utils.six import text_type
 from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
     MISurveyExtract, MICB1Extract, MIVoiceReport, MIEODReport, \
-    MIOBIEEExportExtract, MetricsReport, MIDuplicateCaseExtract
+    MIOBIEEExportExtract, MetricsReport, MIDuplicateCaseExtract, \
+    ComplaintsReport
 from reports.forms import MIDigitalCaseTypesExtract
 
 
@@ -23,12 +24,13 @@ def csv_download(filename, form):
         map(writer.writerow, csv_data)
     return response
 
+
 def submit_info(filename, form, template='success_info'):
     tmpl = 'admin/reports/{0}.html'.format(template)
     return render_to_response(tmpl, {'filename': filename, 'form': form})
 
-def report_view(form_class, title, template='case_report', success_action=csv_download, file_name=None):
 
+def report_view(form_class, title, template='case_report', success_action=csv_download, file_name=None):
     def wrapper(fn):
         slug = title.lower().replace(' ', '_')
         if not file_name:
@@ -65,8 +67,6 @@ def valid_submit(request, form):
         form.is_bound = True
         return form.is_valid()
     return False
-
-
 
 
 @contextlib.contextmanager
@@ -151,12 +151,18 @@ def mi_eod_extract():
 
 
 @staff_member_required
+@permission_required('legalaid.run_complaints_report')
+@report_view(ComplaintsReport, 'Complaints Report')
+def mi_complaints():
+    pass
+
+
+@staff_member_required
 @permission_required('legalaid.run_obiee_reports')
 @report_view(MIOBIEEExportExtract,
              'MI Export to Email for OBIEE',
              success_action=submit_info,
-             file_name='cla.database.zip'
-)
+             file_name='cla.database.zip')
 def mi_obiee_extract():
     pass
 

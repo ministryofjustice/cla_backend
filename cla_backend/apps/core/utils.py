@@ -15,7 +15,7 @@ def getattrd(obj, name, default=NoDefaultProvided):
 
     try:
         return reduce(getattr, name.split("__"), obj)
-    except AttributeError, e:
+    except AttributeError:
         if default != NoDefaultProvided:
             return default
         raise
@@ -30,7 +30,7 @@ def _transform_patch_line(item):
 
     return {
         'action': lookup[item['op']],
-        'thing': item['path'].lstrip('/').replace('/','.'),
+        'thing': item['path'].lstrip('/').replace('/', '.'),
         'value': item.get('value', 'None')
     }
 

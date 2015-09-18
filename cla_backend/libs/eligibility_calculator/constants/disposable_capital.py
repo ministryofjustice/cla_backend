@@ -8,6 +8,7 @@ EQUITY_DISREGARD = 10000000
 LIMIT_IMMIGRATION = 300000
 LIMIT_DEFAULT = 800000
 
+
 def get_limit(category):
     # TODO category:
     #   * final codes

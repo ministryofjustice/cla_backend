@@ -1,4 +1,3 @@
-import mock
 import datetime
 
 from django.contrib.auth.models import User
@@ -7,14 +6,12 @@ from django.core.cache import cache
 from django.test import TestCase
 from django.conf import settings
 from django.utils import timezone
+import mock
 
 from provider.oauth2.models import Client
-
 from core.tests.mommy_utils import make_recipe
-
 from cla_provider.models import Staff
 from call_centre.models import Operator
-
 from cla_auth.models import AccessAttempt
 
 

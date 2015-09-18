@@ -24,13 +24,13 @@ from .models import Category, Property, EligibilityCheck, Income, \
 
 
 class CategorySerializerBase(serializers.HyperlinkedModelSerializer):
-    class Meta:
+    class Meta(object):
         model = Category
         fields = ('code', 'name', 'description', 'ecf_available', 'mandatory')
 
 
 class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
-    class Meta:
+    class Meta(object):
         model = Provider
 
 
@@ -38,7 +38,7 @@ class OutOfHoursRotaSerializerBase(ClaModelSerializer):
     category = serializers.SlugRelatedField(slug_field='code')
     provider = serializers.PrimaryKeyRelatedField()
 
-    class Meta:
+    class Meta(object):
         model = OutOfHoursRota
 
 class FeedbackSerializerBase(serializers.ModelSerializer):
@@ -54,7 +54,7 @@ class FeedbackSerializerBase(serializers.ModelSerializer):
     def get_provider(self, obj):
         return obj.created_by.provider
 
-    class Meta:
+    class Meta(object):
         model = Feedback
         fields = ()
 
@@ -82,12 +82,13 @@ class CSVUploadSerializerBase(serializers.ModelSerializer):
 
         return attrs
 
-    class Meta:
+    class Meta(object):
         model = CSVUpload
         fields = ()
 
+
 class PropertySerializerBase(ClaModelSerializer):
-    class Meta:
+    class Meta(object):
         model = Property
         fields = ()
 
@@ -118,7 +119,7 @@ class IncomeSerializerBase(TotalsModelSerializer):
         'other_income'
     }
 
-    class Meta:
+    class Meta(object):
         model = Income
         fields = ()
 
@@ -130,7 +131,7 @@ class SavingsSerializerBase(TotalsModelSerializer):
          'asset_balance',
          'credit_balance'}
 
-    class Meta:
+    class Meta(object):
         model = Savings
         fields = ()
 
@@ -145,13 +146,13 @@ class DeductionsSerializerBase(TotalsModelSerializer):
             'mortgage', 'rent',
         }
 
-    class Meta:
+    class Meta(object):
         model = Deductions
         fields = ()
 
 
 class PersonalDetailsSerializerBase(serializers.ModelSerializer):
-    class Meta:
+    class Meta(object):
         model = PersonalDetails
         fields = ()
 
@@ -175,7 +176,7 @@ class ThirdPartyPersonalDetailsSerializerBase(PersonalDetailsSerializerBase):
 class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
     personal_details = ThirdPartyPersonalDetailsSerializerBase(required=True)
 
-    class Meta:
+    class Meta(object):
         model = ThirdPartyDetails
         fields = ()
 
@@ -185,7 +186,7 @@ class PersonSerializerBase(ClaModelSerializer):
     savings = SavingsSerializerBase(required=False)
     deductions = DeductionsSerializerBase(required=False)
 
-    class Meta:
+    class Meta(object):
         model = Person
         fields = ()
 
@@ -199,13 +200,13 @@ class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
         label="Callback preference", required=False
     )
 
-    class Meta:
+    class Meta(object):
         model = AdaptationDetails
         fields = ()
 
 
 class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
-    class Meta:
+    class Meta(object):
         model = EODDetailsCategory
         fields = ('category', 'is_major')
 
@@ -213,9 +214,10 @@ class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
 class EODDetailsSerializerBase(serializers.ModelSerializer):
     notes = serializers.CharField(max_length=5000, required=False)
     categories = EODDetailsCategorySerializerBase(many=True,
-                                                  allow_add_remove=True, required=False)
+                                                  allow_add_remove=True,
+                                                  required=False)
 
-    class Meta:
+    class Meta(object):
         model = EODDetails
         fields = ()
 
@@ -231,7 +233,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     notes = serializers.CharField(max_length=5000, required=False)
     specific_benefits = JSONField(required=False)
 
-    class Meta:
+    class Meta(object):
         model = EligibilityCheck
         fields = ()
 
@@ -276,7 +278,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 class MatterTypeSerializerBase(ClaModelSerializer):
     category = serializers.SlugRelatedField(slug_field='code', read_only=True)
 
-    class Meta:
+    class Meta(object):
         model = MatterType
         fields = (
             'category', 'code', 'description', 'level'
@@ -286,7 +288,7 @@ class MatterTypeSerializerBase(ClaModelSerializer):
 class MediaCodeSerializerBase(ClaModelSerializer):
     group = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
-    class Meta:
+    class Meta(object):
         model = MediaCode
         fields = (
             'group', 'name', 'code'
@@ -326,7 +328,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
             raise ValidationError({u'exempt_user_reason': [u'A reason is required if client is exempt.']})
         return attrs
 
-    class Meta:
+    class Meta(object):
         model = Case
         fields = ()
 
@@ -360,11 +362,12 @@ class CaseSerializerFull(CaseSerializerBase):
     class Meta(CaseSerializerBase.Meta):
         fields = ()
 
-class UserSerializer(serializers.ModelSerializer):
 
-    class Meta:
+class UserSerializer(serializers.ModelSerializer):
+    class Meta(object):
         model = User
         fields = ('id', 'username', 'email', 'first_name', 'last_name')
+
 
 class ExtendedUserSerializerBase(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username')
@@ -399,8 +402,7 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
         restored.user = user
         return restored
 
-
-    class Meta:
+    class Meta(object):
         fields = ()
 
 
@@ -409,7 +411,7 @@ class CaseArchivedSerializerBase(serializers.ModelSerializer):
     date_specialist_referred = ThreePartDateField(required=False)
     date_specialist_closed = ThreePartDateField(required=False)
 
-    class Meta:
+    class Meta(object):
         model = CaseArchived
         fields = ()
 
@@ -426,6 +428,6 @@ class CaseNotesHistorySerializerBase(ClaModelSerializer):
             return obj.provider_notes
         return obj.operator_notes
 
-    class Meta:
+    class Meta(object):
         model = CaseNotesHistory
         fields = ()

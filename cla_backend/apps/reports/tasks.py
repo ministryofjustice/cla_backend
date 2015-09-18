@@ -12,6 +12,7 @@ from reports.utils import OBIEEExporter, email_obiee_export, \
 def obiee_export_failed_notification():
     email_obiee_export_failed_notification()
 
+
 @shared_task(bind=True)
 def obiee_export(self, diversity_keyphrase, dt_from, dt_to):
     """
@@ -38,4 +39,3 @@ def obiee_export(self, diversity_keyphrase, dt_from, dt_to):
             raise
         finally:
             shutil.rmtree(temp_path, ignore_errors=True)
-

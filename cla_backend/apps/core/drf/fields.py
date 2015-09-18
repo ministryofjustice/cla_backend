@@ -1,9 +1,9 @@
+import datetime
 import json
 from django.core.validators import EMPTY_VALUES
 from rest_framework import serializers
-from django.core import validators
 from django.utils.translation import ugettext_lazy as _
-import datetime
+
 
 class ThreePartDateField(serializers.WritableField):
     """
@@ -68,7 +68,6 @@ class ThreePartDateField(serializers.WritableField):
         """
         if value is None:
             return value
-
 
         if isinstance(value, datetime.date):
             value = {

@@ -1,15 +1,15 @@
 import datetime
 from uuid import UUID
+
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
-
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
-from cla_eventlog import event_registry
 
+from cla_eventlog import event_registry
 from historic.models import CaseArchived
 from legalaid.permissions import IsManagerOrMePermission
 
@@ -28,6 +28,10 @@ from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.decorators import list_route
 from core.drf.mixins import FormActionMixin
 from notifications.views import BaseNotificationViewSet
+
+from complaints.views import BaseComplaintViewSet, \
+    BaseComplaintConstantsView, BaseComplaintCategoryViewSet,\
+    BaseComplaintLogViewset
 
 from timer.views import BaseTimerViewSet
 
@@ -462,6 +466,9 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
         CallCentreClientIDPermission, IsManagerOrMePermission)
     serializer_class = OperatorSerializer
 
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('is_manager',)
+
     def get_logged_in_user_model(self):
         return self.request.user.operator
 
@@ -626,5 +633,63 @@ class GuidanceNoteViewSet(
 class NotificationViewSet(
     CallCentrePermissionsViewSetMixin,
     BaseNotificationViewSet
+):
+    pass
+
+
+class ComplaintViewSet(
+    CallCentrePermissionsViewSetMixin,
+    BaseComplaintViewSet
+):
+    filter_backends = (
+        DjangoFilterBackend,
+        OrderingFilter,
+        SearchFilter,
+    )
+    filter_fields = ('justified', 'level', 'category', 'owner', 'created_by')
+
+    search_fields = (
+        'eod__case__personal_details__full_name',
+        'eod__case__personal_details__postcode',
+        'eod__case__personal_details__street',
+        'eod__case__personal_details__search_field',
+        'eod__case__reference',
+        'eod__case__laa_reference',
+    )
+
+    ordering_fields = ('created', 'level', 'justified',
+                       'closed', 'holding_letter', 'full_letter',
+                       'category__name', 'eod__case__reference',
+                       'eod__case__personal_details__full_name')
+    ordering = ('-created',)
+
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
+    def get_queryset(self, **kwargs):
+        dashboard = self.request.QUERY_PARAMS.get('dashboard') == 'True'
+        show_closed = self.request.QUERY_PARAMS.get('show_closed') == 'True'
+        return super(ComplaintViewSet, self).get_queryset(dashboard=dashboard,
+                                                          show_closed=show_closed)
+
+
+class ComplaintCategoryViewSet(
+    CallCentrePermissionsViewSetMixin,
+    BaseComplaintCategoryViewSet
+):
+    pass
+
+
+class ComplaintConstantsView(
+    CallCentrePermissionsViewSetMixin,
+    BaseComplaintConstantsView,
+):
+    pass
+
+
+class ComplaintLogViewset(
+    CallCentrePermissionsViewSetMixin,
+    BaseComplaintLogViewset
 ):
     pass

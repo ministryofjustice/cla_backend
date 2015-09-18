@@ -9,13 +9,13 @@ class ArticleCategoryMatrixSerializer(serializers.ModelSerializer):
     name = serializers.Field(source='article_category.name')
     preferred_signpost = serializers.Field(source='preferred_signpost')
 
-    class Meta:
+    class Meta(object):
         model = ArticleCategoryMatrix
         fields = ('id', 'name', 'preferred_signpost')
 
 
 class TelephoneNumberSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(object):
         model = TelephoneNumber
         exclude = ('id', 'article', 'created', 'modified')
 
@@ -26,12 +26,12 @@ class ArticleSerializer(serializers.ModelSerializer):
     telephone_numbers = TelephoneNumberSerializer(
         source='telephonenumber_set', many=True)
 
-    class Meta:
+    class Meta(object):
         model = Article
         exclude = ('article_category',)
 
 
 class ArticleCategorySerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta(object):
         model = ArticleCategory
         exclude = ('created', 'modified')

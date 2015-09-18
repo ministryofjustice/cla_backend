@@ -12,7 +12,8 @@ from django.contrib.admin import widgets
 
 from legalaid.utils import diversity
 from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
-from cla_eventlog.constants import LOG_TYPES
+from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
+from complaints.constants import SLA_DAYS
 
 from . import sql
 from reports.widgets import MonthYearWidget
@@ -62,9 +63,11 @@ class DateRangeReportForm(ReportForm):
                 self.cleaned_data['date_to'] + timedelta(days=1))
         )
 
+
 def year_range(backward=0, forward=10):
     this_year = date.today().year
     return range(this_year-backward, this_year+forward)
+
 
 class MonthRangeReportForm(ReportForm):
     date = forms.DateField(widget=MonthYearWidget(
@@ -74,6 +77,7 @@ class MonthRangeReportForm(ReportForm):
     @property
     def month(self):
         return self._convert_date(self.cleaned_data['date'])
+
 
 class SQLFileReportMixin(object):
     def __init__(self, *args, **kwargs):
@@ -91,16 +95,16 @@ class SQLFileReportMixin(object):
         self.description = cursor.description
         return cursor.fetchall()
 
-class SQLFileDateRangeReport(SQLFileReportMixin, DateRangeReportForm):
 
+class SQLFileDateRangeReport(SQLFileReportMixin, DateRangeReportForm):
     def get_sql_params(self):
         return self.date_range
 
 
 class SQLFileMonthRangeReport(SQLFileReportMixin, MonthRangeReportForm):
-
     def get_sql_params(self):
-        return (self.month.date(),)
+        return self.month.date(),
+
 
 class MIVoiceReport(SQLFileMonthRangeReport):
     QUERY_FILE = 'MIVoiceReport.sql'
@@ -148,8 +152,8 @@ class MIVoiceReport(SQLFileMonthRangeReport):
             'OS_BillableTime',
             'count_of_timers',
             'count_of_outcomes'
-
         ]
+
 
 class MICaseExtract(SQLFileDateRangeReport):
     QUERY_FILE = 'MIExtractByOutcome.sql'
@@ -314,35 +318,35 @@ class MICB1Extract(SQLFileDateRangeReport):
 
     def get_headers(self):
         return [
-            "LAA_Reference"
-            ,"Hash_ID_personal_details_captured"
-            ,"Case_ID"
-            ,"Provider_ID_if_allocated"
-            ,"Law_Category_Name"
-            ,"Date_Case_Created"
-            ,"Last_Modified_Date"
-            ,"Outcome_Code_Child"
-            ,"Matter_Type_1"
-            ,"Matter_Type_2"
-            ,"created_by_id"
-            ,"Scope_Status"
-            ,"Eligibility_Status"
-            ,"Outcome_Created_At"
-            ,"Username"
-            ,"operator_first_view_after_cb1__created"
-            ,"operator_first_log_after_cb1__created"
-            ,"Next_Outcome"
-            ,"requires_action_at"
-            ,"sla_15"
-            ,"sla_120"
-            ,"sla_480"
-            ,"is_over_sla_15"
-            ,"is_over_sla_120"
-            ,"is_over_sla_480"
-            ,"Source"
-            ,"Code"
-            ,"sla_30"
-            ,"is_over_sla_30"
+            'LAA_Reference',
+            'Hash_ID_personal_details_captured',
+            'Case_ID',
+            'Provider_ID_if_allocated',
+            'Law_Category_Name',
+            'Date_Case_Created',
+            'Last_Modified_Date',
+            'Outcome_Code_Child',
+            'Matter_Type_1',
+            'Matter_Type_2',
+            'created_by_id',
+            'Scope_Status',
+            'Eligibility_Status',
+            'Outcome_Created_At',
+            'Username',
+            'operator_first_view_after_cb1__created',
+            'operator_first_log_after_cb1__created',
+            'Next_Outcome',
+            'requires_action_at',
+            'sla_15',
+            'sla_120',
+            'sla_480',
+            'is_over_sla_15',
+            'is_over_sla_120',
+            'is_over_sla_480',
+            'Source',
+            'Code',
+            'sla_30',
+            'is_over_sla_30',
         ]
 
 
@@ -390,6 +394,40 @@ class MIEODReport(SQLFileDateRangeReport):
             row = list(row)  # row is a tuple
             row[category_col] = row[category_col] and eod_choices.get(row[category_col], 'Unknown') or 'Not set'
             yield row
+
+
+class ComplaintsReport(SQLFileDateRangeReport):
+    QUERY_FILE = 'Complaints.sql'
+
+    def get_headers(self):
+        return [
+            'LAA reference',
+            'Case reference',
+            'Full name',
+            'Case category',
+            'Created by operator',
+            'Operator manager owner',
+            'Complaint method',
+            'Complaint received',
+            'Complaint category',
+            'Holding letter sent',
+            'Full response sent',
+            'Major/minor',
+            'Justified?',
+            'Complaint closed',
+            'Resolved?',
+            'Within SLA?',
+        ]
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {
+            'from_date': from_date,
+            'to_date': to_date,
+            'major': LOG_LEVELS.HIGH,
+            'minor': LOG_LEVELS.MINOR,
+            'sla_days': '%d days' % SLA_DAYS,
+        }
 
 
 class MIOBIEEExportExtract(MonthRangeReportForm):
@@ -450,4 +488,3 @@ class MetricsReport(SQLFileDateRangeReport):
             'Time_phone_ineligible',
             'Time_phone_eligible',
         ]
-

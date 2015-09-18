@@ -187,6 +187,7 @@ PROJECT_APPS = (
     'guidance',
     'notifications',
     'performance',
+    'complaints',
 )
 
 

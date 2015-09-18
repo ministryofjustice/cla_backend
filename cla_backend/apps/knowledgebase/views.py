@@ -9,7 +9,7 @@ from .serializers import ArticleSerializer, ArticleCategorySerializer
 class ArticleCategoryFilter(django_filters.FilterSet):
     article_category = django_filters.ModelMultipleChoiceFilter
 
-    class Meta:
+    class Meta(object):
         model = Article
         fields = ('article_category',)
 

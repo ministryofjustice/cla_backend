@@ -53,6 +53,8 @@ class RejectCaseEvent(BaseEvent):
             return 'COI'
 
         return super(RejectCaseEvent, self).get_log_code(**kwargs)
+
+
 event_registry.register(RejectCaseEvent)
 
 
@@ -68,6 +70,8 @@ class AcceptCaseEvent(BaseEvent):
             'set_requires_action_by': REQUIRES_ACTION_BY.PROVIDER
         },
     }
+
+
 event_registry.register(AcceptCaseEvent)
 
 
@@ -99,6 +103,8 @@ class CloseCaseEvent(BaseEvent):
             return 'DREFER'
 
         return 'CLSP'
+
+
 event_registry.register(CloseCaseEvent)
 
 
@@ -113,6 +119,8 @@ class ReopenCaseEvent(BaseEvent):
             'stops_timer': False
         }
     }
+
+
 event_registry.register(ReopenCaseEvent)
 
 
@@ -190,4 +198,6 @@ class SplitCaseEvent(BaseEvent):
             return 'REF-INT_CREATED'
         else:
             return 'REF-EXT_CREATED'
+
+
 event_registry.register(SplitCaseEvent)

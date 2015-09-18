@@ -4,6 +4,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 
+
 def notify_callback_created(case):
     to = settings.CALL_CENTRE_NOTIFY_EMAIL_ADDRESS
     if not to:

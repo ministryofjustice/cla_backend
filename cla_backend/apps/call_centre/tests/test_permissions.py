@@ -1,17 +1,14 @@
-from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 from django.conf.urls import patterns
-from django.contrib.auth.models import User
 from django.http import HttpResponse
-from provider.oauth2.models import Client, AccessToken
-from rest_framework import status
-
-from rest_framework.authentication import OAuth2Authentication
-
-from rest_framework.test import APIClient
-from rest_framework.views import APIView
 from django.test import TestCase
+from rest_framework import status
+from rest_framework.authentication import OAuth2Authentication
+from rest_framework.views import APIView
 
+from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
+from provider.oauth2.models import Client, AccessToken
 from .. import permissions
+
 
 class MockView(APIView):
     permission_classes = (permissions.CallCentreClientIDPermission,)
@@ -25,7 +22,9 @@ class MockView(APIView):
     def put(self, request):
         return HttpResponse({'a': 1, 'b': 2, 'c': 3})
 
-urlpatterns = patterns('',
+
+urlpatterns = patterns(
+    '',
     (r'^mock_view/$', MockView.as_view(authentication_classes=[OAuth2Authentication]))
 )
 

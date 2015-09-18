@@ -1,19 +1,17 @@
-import logging
 import datetime
+import logging
 
 from django.conf import settings
 from django.utils import timezone
+from django_statsd.clients import statsd
 
 from provider.oauth2.forms import PasswordGrantForm
 from provider.forms import OAuthValidationError
-
-from django_statsd.clients import statsd
 
 from call_centre.models import Operator
 from cla_provider.models import Staff
 
 from .models import AccessAttempt
-
 
 logger = logging.getLogger(__name__)
 
@@ -25,13 +23,13 @@ class ClientIdPasswordGrantForm(PasswordGrantForm):
 
     def get_user_model(self):
         # WARNING terrible! But working :-)
-        ModelClazz = None
+        cls = None
         if self.client:
             if self.client.name == 'operator':
-                ModelClazz = Operator
+                cls = Operator
             elif self.client.name == 'staff':
-                ModelClazz = Staff
-        return ModelClazz
+                cls = Staff
+        return cls
 
     def clean_login_attempts(self):
         username = self.cleaned_data['username']

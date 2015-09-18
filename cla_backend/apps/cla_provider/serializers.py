@@ -1,9 +1,8 @@
-from cla_common.constants import FEEDBACK_ISSUE
 from rest_framework import serializers
 
-from core.serializers import JSONField
-
+from cla_common.constants import FEEDBACK_ISSUE
 from cla_eventlog.serializers import LogSerializerBase
+from core.serializers import JSONField
 
 from legalaid.serializers import \
     EligibilityCheckSerializerBase, \
@@ -188,6 +187,7 @@ class CaseSerializer(CaseSerializerFull):
             'source', 'complaint_flag'
         )
 
+
 class CaseListSerializer(CaseSerializer):
 
     class Meta(CaseSerializer.Meta):
@@ -211,6 +211,7 @@ class CaseListSerializer(CaseSerializer):
             'provider_accepted',
             'provider_closed'
         )
+
 
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
@@ -240,9 +241,11 @@ class StaffSerializer(ExtendedUserSerializerBase):
             'last_login', 'created'
         )
 
+
 class FeedbackSerializer(FeedbackSerializerBase):
     issue = serializers.ChoiceField(choices=FEEDBACK_ISSUE)
     comment = serializers.CharField(max_length=5000, required=False)
+
     class Meta(FeedbackSerializerBase.Meta):
         fields = (
             'reference',
@@ -256,7 +259,6 @@ class FeedbackSerializer(FeedbackSerializerBase):
             'modified',
             'issue',
         )
-
 
 
 class CSVUploadSerializer(CSVUploadSerializerBase):
@@ -276,6 +278,7 @@ class CSVUploadSerializer(CSVUploadSerializerBase):
             'modified',
         ]
 
+
 class CSVUploadDetailSerializer(CSVUploadSerializerBase):
 
     class Meta(CSVUploadSerializerBase.Meta):
@@ -289,6 +292,7 @@ class CSVUploadDetailSerializer(CSVUploadSerializerBase):
             'created',
             'modified',
         ]
+
 
 class CaseNotesHistorySerializer(CaseNotesHistorySerializerBase):
     class Meta(CaseNotesHistorySerializerBase.Meta):

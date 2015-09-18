@@ -50,8 +50,10 @@ def _make_reference():
         get_random_string(length=4, allowed_chars='123456789')
     )
 
+
 def _check_reference_unique(reference):
     return not Case.objects.filter(reference=reference).exists()
+
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=500)
@@ -62,7 +64,7 @@ class Category(TimeStampedModel):
     description = models.TextField(blank=True, editable=False)
     order = models.PositiveIntegerField(default=0)
 
-    class Meta:
+    class Meta(object):
         ordering = ['order']
         verbose_name_plural = "categories"
 
@@ -150,6 +152,12 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         'excludes': ['reference', 'created', 'modified', 'case_count', 'search_field']
     }
 
+    class Meta(object):
+        verbose_name_plural = "personal details"
+
+    def __unicode__(self):
+        return u'%s' % self.full_name
+
     def _set_search_field(self):
         if self.postcode:
             self.search_field =  self.postcode.replace(' ', '')
@@ -157,9 +165,6 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     def save(self, *args, **kwargs):
         self._set_search_field()
         super(PersonalDetails, self).save(*args, **kwargs)
-
-    class Meta:
-        verbose_name_plural = "personal details"
 
     def update_case_count(self):
         case_count = self.case_set.count()
@@ -188,6 +193,12 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
         'clone_fks': ['personal_details']
     }
 
+    class Meta(object):
+        verbose_name_plural = "third party details"
+
+    def __unicode__(self):
+        return u'%s' % self.personal_details.full_name
+
 
 class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     bsl_webcam = models.BooleanField(default=False)
@@ -205,9 +216,52 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     }
 
 
+class EODDetailsManager(models.Manager):
+    use_for_related_fields = True
+
+    def get_queryset(self):
+        return super(EODDetailsManager, self).get_queryset().select_related(
+            'case'
+        )
+
+
 class EODDetails(TimeStampedModel):
+    case = models.OneToOneField('Case', related_name='eod_details')
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
+
+    objects = EODDetailsManager()
+
+    class Meta(object):
+        ordering = ('-created',)
+        verbose_name = 'EOD details'
+        verbose_name_plural = 'EOD details'
+
+    def __unicode__(self):
+        return u'EOD on case %s' % self.case
+
+    @classmethod
+    def get_eod_stats(cls):
+        data = dict(EODDetailsCategory.objects.values_list('category').
+                    annotate(count=models.Count('category')))
+        return {
+            'total_count': sum(data.values()),
+            'categories': [
+                {
+                    'description': description,
+                    'count': data.get(category, 0),
+                }
+                for category, description in EXPRESSIONS_OF_DISSATISFACTION.CHOICES
+            ]
+        }
+
+    @property
+    def is_major(self):
+        return self.categories.filter(is_major=True).exists()
+
+    def get_category_descriptions(self, include_severity=False):
+        mapper = (lambda cat: unicode(cat) + (u' (Major)' if cat.is_major else u' (Minor)')) if include_severity else unicode
+        return list(map(mapper, self.categories.all()))
 
 
 class EODDetailsCategory(models.Model):
@@ -215,6 +269,13 @@ class EODDetailsCategory(models.Model):
     category = models.CharField(max_length=30, choices=EXPRESSIONS_OF_DISSATISFACTION,
                                 blank=True, null=True)
     is_major = models.BooleanField(default=False)
+
+    class Meta(object):
+        verbose_name = 'EOD category'
+        verbose_name_plural = 'EOD categories'
+
+    def __unicode__(self):
+        return EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT.get(self.category)
 
 
 class Person(CloneModelMixin, TimeStampedModel):
@@ -226,6 +287,10 @@ class Person(CloneModelMixin, TimeStampedModel):
         'excludes': ['created', 'modified'],
         'clone_fks': ['income', 'savings', 'deductions']
     }
+
+    class Meta(object):
+        ordering = ('-created',)
+        verbose_name_plural = 'people'
 
     @classmethod
     def from_dict(cls, d):
@@ -250,7 +315,7 @@ class Person(CloneModelMixin, TimeStampedModel):
 
 
 class ValidateModelMixin(models.Model):
-    class Meta:
+    class Meta(object):
         abstract = True
 
     def get_dependencies(self):
@@ -313,6 +378,12 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
     has_partner = models.NullBooleanField(default=None)
 
     calculations = JSONField(null=True, blank=True)
+
+    class Meta(object):
+        ordering = ('-created',)
+
+    def __unicode__(self):
+        return u'EligibilityCheck(%s)' % self.reference
 
     def get_dependencies(self):
         deps = {'category',
@@ -383,13 +454,15 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
 
     def to_case_data(self):
         def compose_dict(model=self, props=None):
-            if not props: props = []
-            if not model: return None
+            if not props:
+                props = []
+            if not model:
+                return None
 
             obj = {}
             for prop in props:
                 value = getattr(model, prop)
-                if value != None:
+                if value is not None:
                     if isinstance(value, MoneyInterval):
                         value = value.as_monthly()
                     obj[prop] = value
@@ -498,8 +571,9 @@ class Property(TimeStampedModel):
     disputed = models.NullBooleanField(default=None)
     main = models.NullBooleanField(default=None)
 
-    class Meta:
-        verbose_name_plural = "properties"
+    class Meta(object):
+        verbose_name_plural = 'properties'
+        ordering = ('-created',)
 
 
 class MatterType(TimeStampedModel):
@@ -511,9 +585,10 @@ class MatterType(TimeStampedModel):
         validators=[MaxValueValidator(2)])
 
     def __unicode__(self):
-        return u'MatterType{} ({}): {} - {}'.format(self.get_level_display(), self.category.code, self.code, self.description)
+        return u'MatterType{} ({}): {} - {}'.format(
+            self.get_level_display(), self.category.code, self.code, self.description)
 
-    class Meta:
+    class Meta(object):
         unique_together = (("code", "level"),)
 
 
@@ -535,7 +610,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True,
                                              blank=True)
     diagnosis = models.OneToOneField('diagnosis.DiagnosisTraversal', null=True,
-                                             blank=True, on_delete=SET_NULL)
+                                     blank=True, on_delete=SET_NULL)
     personal_details = models.ForeignKey(PersonalDetails, blank=True,
                                          null=True)
 
@@ -618,10 +693,14 @@ class Case(TimeStampedModel, ModelDiffMixin):
     search_field = models.TextField(null=True, blank=True, db_index=True)
 
     complaint_flag = models.BooleanField(default=False)
-    eod_details = models.ForeignKey(EODDetails, blank=True, null=True)
 
     class Meta(object):
         ordering = ('-created',)
+        permissions = (
+            ('run_reports', u'Can run reports'),
+            ('run_obiee_reports', u'Can run OBIEE reports'),
+            ('run_complaints_report', u'Can run complaints report'),
+        )
 
     def __unicode__(self):
         return self.reference
@@ -633,7 +712,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
             reference = _make_reference()
             while (not _check_reference_unique(reference) and tries < max_retries):
                 reference = _make_reference()
-                tries = tries + 1
+                tries += 1
 
             self.reference = reference
 
@@ -702,7 +781,6 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
                     'callback_attempt', 'search_field', 'provider_assigned_at',
-                    'eod_details',
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details',
@@ -814,12 +892,6 @@ class Case(TimeStampedModel, ModelDiffMixin):
     def requires_action_by_operator_manager(self):
         return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR_MANAGER
 
-    class Meta:
-        permissions = (
-            ("run_reports", "Can run reports"),
-            ("run_obiee_reports", "Can run obiee reports"),
-        )
-
 
 class CaseNotesHistory(TimeStampedModel):
     case = models.ForeignKey(Case, db_index=True)
@@ -827,6 +899,9 @@ class CaseNotesHistory(TimeStampedModel):
     provider_notes = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
     include_in_summary = models.BooleanField(default=True)
+
+    class Meta(object):
+        ordering = ('-created',)
 
     def save(self, *args, **kwargs):
         self.include_in_summary = True
@@ -838,10 +913,6 @@ class CaseNotesHistory(TimeStampedModel):
             created_by=self.created_by
         ).exclude(pk=self.pk)
         qs.update(include_in_summary=False)
-
-
-    class Meta:
-        ordering = ['-created']
 
 
 class CaseKnowledgebaseAssignment(TimeStampedModel):

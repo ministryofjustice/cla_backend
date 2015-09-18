@@ -1,8 +1,7 @@
+from django.db import models
 from jsonfield import JSONField
 from uuidfield import UUIDField
 from model_utils.models import TimeStampedModel
-
-from django.db import models
 
 from cla_common.constants import DIAGNOSIS_SCOPE, MATTER_TYPE_LEVELS
 

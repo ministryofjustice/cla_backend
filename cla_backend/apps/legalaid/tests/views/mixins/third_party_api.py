@@ -28,38 +28,40 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
             ]
 
     def _get_default_post_data(self):
-        return {"personal_details": {
-                    "title": "Mr",
-                    "full_name": "Bob",
-                    "postcode": "SW1H 9AJ",
-                    "street": "102 Petty France",
-                    "mobile_phone": "07000000000",
-                    "home_phone": "01179000000",
-                    },
-                "pass_phrase": "monkey",
-                "reason": "CHILD_PATIENT",
-                "personal_relationship": "OTHER",
-                'personal_relationship_note': "Neighbour"
-                }
+        return {
+            'personal_details': {
+                'title': 'Mr',
+                'full_name': 'Bob',
+                'postcode': 'SW1H 9AJ',
+                'street': '102 Petty France',
+                'mobile_phone': '07000000000',
+                'home_phone': '01179000000',
+            },
+            'pass_phrase': 'monkey',
+            'reason': 'CHILD_PATIENT',
+            'personal_relationship': 'OTHER',
+            'personal_relationship_note': 'Neighbour'
+        }
 
     def _test_method_in_error(self, method, url):
         """
         Generic method called by 'create' and 'patch' to test against validation
         errors.
         """
-        data = {"personal_details": {
-                    "title": '1'*21,
-                    "full_name": '1'*456,
-                    "postcode": '1'*13,
-                    "street": '1'*256,
-                    "mobile_phone": '1'*21,
-                    "home_phone": '1'*21,
-                },
-                "pass_phrase": 'XXXXXXXXX',
-                "reason": "XXXXXXXXX",
-                "personal_relationship": "XXXXXXXXX",
-                "personal_relationship_note": "XXXXXXXX"
-                }
+        data = {
+            'personal_details': {
+                'title': '1' * 21,
+                'full_name': '1' * 456,
+                'postcode': '1' * 13,
+                'street': '1' * 256,
+                'mobile_phone': '1' * 21,
+                'home_phone': '1' * 21,
+            },
+            'pass_phrase': 'XXXXXXXXX',
+            'reason': 'XXXXXXXXX',
+            'personal_relationship': 'XXXXXXXXX',
+            'personal_relationship_note': 'XXXXXXXX'
+        }
 
         method_callable = getattr(self.client, method)
         response = method_callable(
@@ -105,7 +107,7 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
         """
         Ensure that we can't DELETE to list url
         """
-        ### LIST
+        # LIST
         if hasattr(self, 'list_url') and self.list_url:
             self._test_delete_not_allowed(self.list_url)
 

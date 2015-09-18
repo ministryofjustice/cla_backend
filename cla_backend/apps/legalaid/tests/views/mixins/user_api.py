@@ -1,5 +1,4 @@
 from django.core.urlresolvers import reverse
-
 from rest_framework import status
 
 from cla_auth.models import AccessAttempt
@@ -36,11 +35,11 @@ class UserAPIMixin(object):
         """
         Ensure that we can't POST, PUT or DELETE
         """
-        ### LIST
+        # LIST
         self._test_put_not_allowed(self.list_url)
         self._test_delete_not_allowed(self.list_url)
 
-        ### DETAIL
+        # DETAIL
         self._test_post_not_allowed(self.detail_url)
         self._test_put_not_allowed(self.detail_url)
         self._test_delete_not_allowed(self.detail_url)
@@ -52,20 +51,17 @@ class UserAPIMixin(object):
         raise NotImplementedError()
 
     def test_methods_not_authorized(self):
-
-        ### LIST
+        # LIST
         self._test_post_not_authorized(self.list_url, token=self.invalid_token)
         self._test_get_not_authorized(self.list_url, token=self.invalid_token)
-
 
         self._test_put_not_authorized(self.list_url, token=self.invalid_token)
         self._test_delete_not_authorized(self.list_url, token=self.invalid_token)
 
-        ### DETAIL
+        # DETAIL
         self._test_post_not_authorized(self.detail_url, token=self.invalid_token)
         self._test_put_not_authorized(self.detail_url, token=self.invalid_token)
         self._test_delete_not_authorized(self.detail_url, token=self.invalid_token)
-
 
         self._test_post_not_authorized(self.list_url, token=self.token)
         self._test_get_not_authorized(self.list_url, token=self.token)

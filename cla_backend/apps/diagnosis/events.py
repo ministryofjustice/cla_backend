@@ -38,4 +38,6 @@ class DiagnosisEvent(BaseEvent):
         }
 
         return lookup[status]
+
+
 event_registry.register(DiagnosisEvent)

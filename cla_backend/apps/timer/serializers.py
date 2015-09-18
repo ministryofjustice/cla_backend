@@ -1,12 +1,8 @@
-from rest_framework import serializers
-
 from core.serializers import ClaModelSerializer
-
 from .models import Timer
 
 
 class TimerSerializer(ClaModelSerializer):
-
-    class Meta:
+    class Meta(object):
         model = Timer
         fields = ('created',)

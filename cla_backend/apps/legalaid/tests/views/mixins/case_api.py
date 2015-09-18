@@ -7,8 +7,7 @@ from rest_framework import status
 from cla_common.constants import REQUIRES_ACTION_BY
 
 from core.tests.mommy_utils import make_recipe
-from core.tests.test_base import \
-    SimpleResourceAPIMixin
+from core.tests.test_base import SimpleResourceAPIMixin
 
 from legalaid.models import Case
 from cla_common.constants import CASE_SOURCE
@@ -86,7 +85,7 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
         }
 
         for field, fk_pk in fks.items():
-            if not field in data:
+            if field not in data:
                 continue
 
             val = getattr(case, field)
@@ -103,7 +102,7 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
             'source'
 
         ]:
-            if not field in data:
+            if field not in data:
                 continue
 
             self.assertEqual(getattr(case, field), data[field], '%s: %s - %s' % (
@@ -168,7 +167,6 @@ class BaseSearchCaseAPIMixin(BaseFullCaseAPIMixin):
         """
         GET search by name should work
         """
-
         obj = make_recipe(
             'legalaid.case',
             reference='ref1',
@@ -195,7 +193,6 @@ class BaseSearchCaseAPIMixin(BaseFullCaseAPIMixin):
         """
         GET search by name should work
         """
-
         obj = make_recipe(
             'legalaid.case',
             personal_details__full_name='abc',
@@ -215,7 +212,6 @@ class BaseSearchCaseAPIMixin(BaseFullCaseAPIMixin):
         """
         GET search by name should work
         """
-
         obj = make_recipe(
             'legalaid.case',
             personal_details__postcode='123',
@@ -235,7 +231,6 @@ class BaseSearchCaseAPIMixin(BaseFullCaseAPIMixin):
         """
         GET search by name should work
         """
-
         response = self.client.get(
             self.list_url, data={'search': self.resource.personal_details.postcode+'ss'},
             HTTP_AUTHORIZATION=self.get_http_authorization()
@@ -324,7 +319,8 @@ class BaseUpdateCaseTestCase(BaseFullCaseAPIMixin):
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertResponseKeys(response)
 
-            self.assertCaseEqual(response.data,
+            self.assertCaseEqual(
+                response.data,
                 Case(
                     reference=response.data['reference'],
                     personal_details=pd,

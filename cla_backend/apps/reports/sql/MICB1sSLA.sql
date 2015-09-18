@@ -118,7 +118,7 @@ select
   ,sla_30
   ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_30 ELSE operator_first_log_after_cb1__created > sla_30 END as is_over_sla_30
 from all_rows
-WHERE (requires_action_at, sla_120) OVERLAPS (%s, %s)
+WHERE %s < requires_action_at AND requires_action_at < %s
 ;
 
 

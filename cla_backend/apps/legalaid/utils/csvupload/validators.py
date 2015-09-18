@@ -1,11 +1,10 @@
 import datetime
 from decimal import Decimal, InvalidOperation
-from django.forms.util import ErrorList
 import types
 import re
 
+from django.forms.util import ErrorList
 from rest_framework import serializers
-from dateutil.parser import parse
 
 from legalaid.utils.csvupload.constants import AGE_RANGE, POSTCODE_RE, \
     ELIGIBILITY_CODES, DISABILITY_INDICATOR, EXEMPTION_CODES, \
@@ -35,6 +34,7 @@ def validate_integer(val):
         except ValueError as ve:
             raise serializers.ValidationError(str(ve))
 
+
 def validate_gte(minimum):
     minimum = minimum
     def _validate_gte(val):
@@ -43,6 +43,7 @@ def validate_gte(minimum):
                     'Field must be > %s' % minimum)
         return val
     return _validate_gte
+
 
 def validate_present(val, message=None):
     message = message or 'is required'
@@ -68,6 +69,7 @@ def validate_not_present(val, message=None):
         raise serializers.ValidationError(message)
     return val
 
+
 def validate_not_current_month(val):
     if val:
         now = datetime.datetime.now().replace(day=1).date()
@@ -75,6 +77,7 @@ def validate_not_current_month(val):
         if now == val_month:
             raise serializers.ValidationError('Date (%s) must not be from current month' % val.date())
     return val
+
 
 def validate_regex(regex, flags=None):
     compiled_re = re.compile(regex, flags)
@@ -87,13 +90,14 @@ def validate_regex(regex, flags=None):
 
     return _validate_regex
 
+
 validate_postcode = validate_regex(POSTCODE_RE,
                                    flags=re.VERBOSE | re.I)
 
 
 def validate_in(iterable):
     def _validate_in(val):
-        if val and (not val in iterable):
+        if val and (val not in iterable):
             raise serializers.ValidationError(
                 '%s must be one of %s' % (val, ', '.join(iterable)))
         return val
@@ -104,10 +108,12 @@ def validate_in(iterable):
 def inverted_reduce(x, f):
     return f(x)
 
+
 TRUTHY = lambda x: bool(x)
 FALSEY = lambda x: not bool(x)
 NOT_EQUAL = lambda y: lambda x: x != y
 AFTER_APR_2013 = lambda x: x and x > datetime.datetime(2013, 4, 1)
+
 
 class depends_on(object):
     """
@@ -161,43 +167,43 @@ class ProviderCSVValidator(object):
         ('Client Ref', [validate_present]),  # 2
         ('Account Number', [validate_present,
                             validate_regex(r'\d{1}[a-z]{1}\d{3}[a-z]{1}',
-                                           flags=re.IGNORECASE)]),  #3
-        ('First Name', [validate_present]),  #4
-        ('Surname', [validate_present]),  #5
-        ('DOB', [validate_date]),  #6
-        ('Age Range', [validate_present, validate_in(AGE_RANGE)]),  #7
-        ('Gender', [validate_present]),  #8
-        ('Ethnicity', [validate_present]),  #9
-        ('Unused1', [validate_not_present]),  #10
-        ('Unused2', [validate_not_present]),  #11
+                                           flags=re.IGNORECASE)]),  # 3
+        ('First Name', [validate_present]),  # 4
+        ('Surname', [validate_present]),  # 5
+        ('DOB', [validate_date]),  # 6
+        ('Age Range', [validate_present, validate_in(AGE_RANGE)]),  # 7
+        ('Gender', [validate_present]),  # 8
+        ('Ethnicity', [validate_present]),  # 9
+        ('Unused1', [validate_not_present]),  # 10
+        ('Unused2', [validate_not_present]),  # 11
         ('Postcode', [validate_present, validate_postcode]),
-        #12
-        ('Eligibility Code', [validate_in(ELIGIBILITY_CODES)]),  #13
+        # 12
+        ('Eligibility Code', [validate_in(ELIGIBILITY_CODES)]),  # 13
         ('Matter Type 1', [validate_present, validate_in(VALID_MATTER_TYPE1)]),
-        #14
+        # 14
         ('Matter Type 2', [validate_present, validate_in(VALID_MATTER_TYPE2)]),
-        #15
-        ('Stage Reached', [validate_in(VALID_STAGE_REACHED)]),  #16
-        ('Outcome Code', [validate_in(VALID_OUTCOMES)]),  #17
-        ('Unused3', [validate_not_present]),  #18
-        ('Date Opened', [validate_date]),  #19
-        ('Date Closed', [validate_date, validate_not_current_month]),  #20
-        ('Time Spent', [validate_present, validate_integer, validate_gte(0)]),  #21
-        ('Case Costs', [validate_present, validate_decimal]),  #22
-        ('Unused4', [validate_not_present]),  #23
+        # 15
+        ('Stage Reached', [validate_in(VALID_STAGE_REACHED)]),  # 16
+        ('Outcome Code', [validate_in(VALID_OUTCOMES)]),  # 17
+        ('Unused3', [validate_not_present]),  # 18
+        ('Date Opened', [validate_date]),  # 19
+        ('Date Closed', [validate_date, validate_not_current_month]),  # 20
+        ('Time Spent', [validate_present, validate_integer, validate_gte(0)]),  # 21
+        ('Case Costs', [validate_present, validate_decimal]),  # 22
+        ('Unused4', [validate_not_present]),  # 23
         ('Disability Code',
-         [validate_present, validate_in(DISABILITY_INDICATOR)]),  #24
-        ('Disbursements', [validate_decimal]),  #25
-        ('Travel Costs', [validate_decimal]),  #26
-        ('Determination', [validate_in(DETERMINATION_CODES)]),  #27
-        ('Suitable for Telephone Advice', [validate_in({u'Y', u'N'})]),  #28
+         [validate_present, validate_in(DISABILITY_INDICATOR)]),  # 24
+        ('Disbursements', [validate_decimal]),  # 25
+        ('Travel Costs', [validate_decimal]),  # 26
+        ('Determination', [validate_in(DETERMINATION_CODES)]),  # 27
+        ('Suitable for Telephone Advice', [validate_in({u'Y', u'N'})]),  # 28
         ('Exceptional Cases (ref)', [validate_regex(r'\d{7}[a-z]{2}', re.I)]),
-        #29
-        ('Exempted Reason Code', [validate_in(EXEMPTION_CODES)]),  #30
-        ('Adjustments / Adaptations', [validate_in(SERVICE_ADAPTATIONS)]),  #31
-        ('Signposting / Referral', []),  #32
+        # 29
+        ('Exempted Reason Code', [validate_in(EXEMPTION_CODES)]),  # 30
+        ('Adjustments / Adaptations', [validate_in(SERVICE_ADAPTATIONS)]),  # 31
+        ('Signposting / Referral', []),  # 32
         ('Media Code', []),
-        #33 TODO: Maybe put [validate_present]) back depending on reply from Alex A.
+        # 33 TODO: Maybe put [validate_present]) back depending on reply from Alex A.
         ('Telephone / Online', [validate_present, validate_in(ADVICE_TYPES)]),
         # 34
     )
@@ -255,18 +261,22 @@ class ProviderCSVValidator(object):
             except serializers.ValidationError as ve:
                 errors.extend(ve.error_list)
 
-
         if len(errors):
             raise serializers.ValidationError(errors)
-
 
     def _validate_open_closed_date(self, cleaned_data):
         opened = cleaned_data.get('Date Opened')
         closed = cleaned_data.get('Date Closed')
-        if (opened and closed) and (closed < opened):
-            raise serializers.ValidationError(
-                'Closed date (%s) must be after opened date (%s)' % (
-                    closed.date().isoformat(), opened.date().isoformat()))
+        if closed and not opened:
+            raise serializers.ValidationError('If you have Closed date you '
+                                              'must also have an Opened date')
+        if opened and closed:
+            if closed < datetime.datetime(2013, 4, 1):
+                raise serializers.ValidationError('Closed date must be after 01/04/2013')
+            if closed < opened:
+                raise serializers.ValidationError(
+                    'Closed date (%s) must be after opened date (%s)' % (
+                        closed.date().isoformat(), opened.date().isoformat()))
 
     @depends_on('Determination', check=FALSEY)
     @depends_on('Date Opened', check=AFTER_APR_2013)
@@ -302,7 +312,8 @@ class ProviderCSVValidator(object):
         prefixes = {x[0] for x in category_dependent_fields if x}
         if not len(prefixes) == 1:
             raise serializers.ValidationError(
-                'Matter Type 1 (%s), Matter Type 2 (%s), Outcome Code (%s) and Stage Reached (%s) fields must be of the same category.' % (
+                'Matter Type 1 (%s), Matter Type 2 (%s), Outcome Code (%s) '
+                'and Stage Reached (%s) fields must be of the same category.' % (
                     mt1, mt2, outcome, stage))
 
         return PREFIX_CATEGORY_LOOKUP[list(prefixes)[0]]
@@ -320,20 +331,20 @@ class ProviderCSVValidator(object):
 
         time_spent_in_minutes = cleaned_data.get('Time Spent', 0)
         if time_spent_in_minutes > MAX_TIME_ALLOWED:
-            raise serializers.ValidationError('Time spent (%s) must not be greater than %s minutes' % (time_spent_in_minutes, MAX_TIME_ALLOWED))
+            raise serializers.ValidationError('Time spent (%s) must not be greater than %s minutes' %
+                                              (time_spent_in_minutes, MAX_TIME_ALLOWED))
 
     @depends_on('Exempted Code Reason', check=TRUTHY)
     @depends_on('Determination', check=FALSEY)
     def _validate_exemption(self, cleaned_data, category):
-        EXEMPT_CATEGORIES = {u'debt', u'discrimination', u'education'}
-        if cleaned_data.get('Date Opened') > datetime.datetime(2013, 4, 1) and category in EXEMPT_CATEGORIES:
+        exempt_categories = {u'debt', u'discrimination', u'education'}
+        if cleaned_data.get('Date Opened') > datetime.datetime(2013, 4, 1) and category in exempt_categories:
             validate_present(
                 cleaned_data.get('Exempted Code Reason', cleaned_data.get('CLA Reference Number')),
                 message='Exempt Code Reason or CLA Reference number required before case was opened after 1st Apr 2013'
             )
 
-
-        if category not in EXEMPT_CATEGORIES:
+        if category not in exempt_categories:
             raise serializers.ValidationError(
                 'An Exemption Reason can only be entered for Debt, '
                 'Discrimination and Education matters')
@@ -345,7 +356,6 @@ class ProviderCSVValidator(object):
                 'code FF only valid for Telephone Advice/Online Advice field if '
                 'category is Education or Discrimination'
             )
-
 
     @depends_on('Determination', check=FALSEY)
     def _validate_stage_reached(self, cleaned_data):

@@ -1,10 +1,8 @@
-import markdown
 import bleach
-
 from django import forms
 from django.core import exceptions
 from django.utils.translation import ugettext_lazy as _
-
+import markdown
 from pagedown.widgets import AdminPagedownWidget
 
 

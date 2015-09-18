@@ -9,6 +9,9 @@ from djorm_pgfulltext.models import SearchManager
 class Tag(models.Model):
     title = models.CharField(max_length=100)
 
+    class Meta(object):
+        ordering = ('title',)
+
     def __unicode__(self):
         return self.title
 
@@ -17,7 +20,7 @@ class NoteTagRelation(models.Model):
     tag = models.ForeignKey('Tag')
     note = models.ForeignKey('Note')
 
-    class Meta:
+    class Meta(object):
         unique_together = (('tag', 'note'),)
         verbose_name = 'Tag'
 

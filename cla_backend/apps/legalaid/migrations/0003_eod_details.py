@@ -26,6 +26,9 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'ordering': ('-created',),
+                'verbose_name': 'EOD details',
+                'verbose_name_plural': 'EOD details',
             },
             bases=(core.cloning.CloneModelMixin, models.Model),
         ),
@@ -39,6 +42,8 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'verbose_name': 'EOD category',
+                'verbose_name_plural': 'EOD categories',
             },
             bases=(core.cloning.CloneModelMixin, models.Model),
         ),

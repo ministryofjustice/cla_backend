@@ -11,22 +11,21 @@ you can then load the fixture with-
 from django.core.management.base import BaseCommand
 import os
 import sys
-from pprint import pprint
 from ._csv_2_fixture import KnowledgebaseCsvParse
+
 
 class Command(BaseCommand):
     args = 'load_knowledgebase_csv CSV_FILE.csv'
-    help = ( 'Create a derived dataset. At present, just load_knowledgebase_csv '
-             'is implemented. It loads a CSV spreadsheet into a fixture ready '
-             'to be loaddata\'ed into DB'
-            )
-    
+    help = ('Create a derived dataset. At present, just load_knowledgebase_csv '
+            'is implemented. It loads a CSV spreadsheet into a fixture ready '
+            'to be loaddata\'ed into DB')
+
     KNOWLEDGEBASE_FIXTURE = 'cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json'
 
     def handle(self, *args, **options):
 
         if args[0] == 'load_knowledgebase_csv':
-            
+
             if len(args) != 2:
                 self.stdout.write("Last argument needs to be path to CSV file")
                 sys.exit(-1)
@@ -46,4 +45,3 @@ class Command(BaseCommand):
             f_out.close()
 
             self.stdout.write("Fixture written to %s" % self.KNOWLEDGEBASE_FIXTURE)
-            

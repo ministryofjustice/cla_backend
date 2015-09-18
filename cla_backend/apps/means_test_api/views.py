@@ -1,5 +1,4 @@
 from decimal import Decimal, InvalidOperation
-import json
 import re
 
 from rest_framework.decorators import api_view, permission_classes

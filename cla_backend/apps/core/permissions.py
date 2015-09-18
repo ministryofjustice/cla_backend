@@ -1,6 +1,7 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 from django.core.cache import cache
 
+
 class IsProviderPermission(BasePermission):
     """
     Check the request is being made by a provider user.
@@ -15,6 +16,7 @@ class IsProviderPermission(BasePermission):
             return True
         else:
             return obj.provider == request.user.staff.provider
+
 
 class ClientIDPermission(BasePermission):
     """
@@ -37,9 +39,10 @@ class ClientIDPermission(BasePermission):
             return False
         if hasattr(token, 'client_id'):  # OAuth 2
             return self.client_name == self.get_client_name(token)
-        assert False, ('TokenHasReadWriteScope requires the'
-                        '`OAuth2Authentication` authentication '
+        assert False, ('TokenHasReadWriteScope requires the '
+                       '`OAuth2Authentication` authentication '
                        'class to be used.')
+
 
 class AllowNone(BasePermission):
     """
@@ -50,4 +53,3 @@ class AllowNone(BasePermission):
     """
     def has_permission(self, request, view):
         return False
-

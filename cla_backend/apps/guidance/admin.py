@@ -22,4 +22,3 @@ class NoteAdmin(admin.ModelAdmin):
 
 admin.site.register(Tag)
 admin.site.register(Note, NoteAdmin)
-

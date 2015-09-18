@@ -1,7 +1,6 @@
 from django.test import TestCase
 
 from core.tests.mommy_utils import make_recipe
-
 from call_centre.models import OP_MANAGER_GROUP_NAME, CLA_SUPERUSER_GROUP_NAME
 
 

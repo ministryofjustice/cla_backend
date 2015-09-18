@@ -19,6 +19,7 @@ from legalaid.models import Case
 
 PROVIDER_HOURS = OpeningHours(**settings.PROVIDER_HOURS)
 
+
 class ProviderDistributionHelper(object):
 
     def __init__(self, dt):
@@ -50,10 +51,8 @@ class ProviderDistributionHelper(object):
 
         return ret
 
-
     def make_ideal(self, num_cases, weights):
         """
-
         :param num_cases: number of cases
         :type num_cases: int
         :param weights: weights for each of the provider
@@ -73,7 +72,6 @@ class ProviderDistributionHelper(object):
 
 
 class ProviderAllocationHelper(object):
-
     def __init__(self, as_of=None):
         self._providers_in_category = None
         self.as_of = timezone.localtime(as_of or timezone.now())
@@ -157,8 +155,8 @@ class ProviderAllocationHelper(object):
                             current_ideal_distribution):
         provider_alloc_diff = {}
         for provider_id, ideal_num_cases in current_ideal_distribution.items():
-            provider_alloc_diff[provider_id] = current_distribution[
-                                                   provider_id] - ideal_num_cases
+            provider_alloc_diff[provider_id] = current_distribution[provider_id] \
+                - ideal_num_cases
         return provider_alloc_diff
 
     def _group_dict_by_value(self, provider_alloc_diff):
@@ -257,8 +255,7 @@ class ProviderExtractFormatter(object):
         self.case = case
 
     def format(self):
-        ctx = {}
-        ctx['case'] = self.case
+        ctx = {'case': self.case}
         template = get_template('provider/case.xml')
         resp = HttpResponse(template.render(Context(ctx)),
                             content_type='text/xml')

@@ -22,9 +22,11 @@ if hasattr(settings, 'RAVEN_CONFIG'):
     register_logger_signal(client)
     register_signal(client)
 
+
 @app.task(bind=True)
 def debug_task(self):
     print('Request: {0!r}'.format(self.request))
+
 
 @app.task()
 def sentry_test_task():

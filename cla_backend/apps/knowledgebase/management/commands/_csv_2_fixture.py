@@ -4,70 +4,69 @@ Build a django json fixture from the CSV export of the Knowledgebase spreadsheet
 import csv
 import json
 import sys
-from pprint import pprint
 from datetime import datetime
 from django.utils import timezone
 
 
 class KnowledgebaseCsvParse(object):
     def __init__(self, csv_file_handle):
-        
+
         self.datetime_now = datetime.now().replace(tzinfo=timezone.get_current_timezone()).isoformat()
-        
+
         #                        csv_field -> django_field_name
         #                        only include fields which are used
-        self.field_mapping = {  'Organisation/Umbrella' : 'organisation',
-                                'Service (name resource will be given on KB)' : 'service_name',
+        self.field_mapping = {'Organisation/Umbrella': 'organisation',
+                              'Service (name resource will be given on KB)': 'service_name',
 
-                                'When to use (N.B. for in scope categories, signpost using directory in first instance).' : 'when_to_use',
-                                'Entry type' : 'resource_type',
-                                'Description' : 'description',
-                                'Type of service/client group' : 'type_of_service',
-                                'Guidance' : 'how_to_use',
+                              'When to use (N.B. for in scope categories, signpost using directory in first instance).': 'when_to_use',
+                              'Entry type': 'resource_type',
+                              'Description': 'description',
+                              'Type of service/client group': 'type_of_service',
+                              'Guidance': 'how_to_use',
 
-                                # <ArticleCategory>
-                                'Debt' : 'Debt',
-                                'Education' : 'Education',
-                                'Discrimination' : 'Discrimination',
-                                'Housing' : 'Housing',
-                                'Family' : 'Family',
-                                'Welfare Benefits' : 'Welfare benefits',
-                                'AAP' : 'Action against police',
-                                'Clin Neg' : 'Clinical negligence',
-                                'Comm Care' : 'Community care',
-                                'Consumer' : 'Consumer',
-                                'Crime' : 'Crime',
-                                'Employment' : 'Employment',
-                                'Immig & Ass' : 'Immigration and asylum',
-                                'MH' : 'Mental health',
-                                'Misc' : 'Miscellaneous',
-                                'PI' : 'Personal injury',
-                                'Public' : 'Public',
-                                'Generic' : 'Generic',
-                                # </ArticleCategory>
+                              # <ArticleCategory>
+                              'Debt': 'Debt',
+                              'Education': 'Education',
+                              'Discrimination': 'Discrimination',
+                              'Housing': 'Housing',
+                              'Family': 'Family',
+                              'Welfare Benefits': 'Welfare benefits',
+                              'AAP': 'Action against police',
+                              'Clin Neg': 'Clinical negligence',
+                              'Comm Care': 'Community care',
+                              'Consumer': 'Consumer',
+                              'Crime': 'Crime',
+                              'Employment': 'Employment',
+                              'Immig & Ass': 'Immigration and asylum',
+                              'MH': 'Mental health',
+                              'Misc': 'Miscellaneous',
+                              'PI': 'Personal injury',
+                              'Public': 'Public',
+                              'Generic': 'Generic',
+                              # </ArticleCategory>
 
-                                'Helpline' : 'helpline',
-                                'Website' : 'website',
-                                'Address' : 'address',
-                                'Opening Hours' : 'opening_hours',
-                                'Coverage' : 'geographic_coverage',
-                                'Accessibility' : 'accessibility',
-                                'Current keywords' : 'keywords'
-                            }
-        
+                              'Helpline': 'helpline',
+                              'Website': 'website',
+                              'Address': 'address',
+                              'Opening Hours': 'opening_hours',
+                              'Coverage': 'geographic_coverage',
+                              'Accessibility': 'accessibility',
+                              'Current keywords': 'keywords'
+                              }
+
         dialect = csv.Sniffer().sniff(csv_file_handle.read(1024))
         csv_file_handle.seek(0)
-        
+
         self.csv_reader = csv.DictReader(csv_file_handle, dialect=dialect)
         self.fields = [f for f in self.csv_reader.fieldnames]
-        
 
-        self.csv_article_category_fields =['Debt', 'Education', 'Discrimination',
-                                           'Housing', 'Family', 'Welfare Benefits',
-                                           'AAP', 'Clin Neg', 'Comm Care', 'Consumer',
-                                           'Crime', 'Employment', 'Immig & Ass', 'MH',
-                                           'Misc', 'PI', 'Public', 'Generic'
-                                          ]
+
+        self.csv_article_category_fields = ['Debt', 'Education', 'Discrimination',
+                                            'Housing', 'Family', 'Welfare Benefits',
+                                            'AAP', 'Clin Neg', 'Comm Care', 'Consumer',
+                                            'Crime', 'Employment', 'Immig & Ass', 'MH',
+                                            'Misc', 'PI', 'Public', 'Generic'
+                                            ]
         self._check_csv_fields()
 
     def _check_csv_fields(self):
@@ -80,7 +79,7 @@ class KnowledgebaseCsvParse(object):
 
         for missing_field in diff:
             self.log("Expected field '%s' missing from CSV and is needed" % missing_field)
-        
+
         if len(diff) > 0:
             sys.exit(-1)
 
@@ -91,7 +90,7 @@ class KnowledgebaseCsvParse(object):
         """
         fixture = []
         article_category_lookup = {}
-        position = 0        
+        position = 0
         for ac_field in self.csv_article_category_fields:
             position += 1
             d = {
@@ -105,17 +104,17 @@ class KnowledgebaseCsvParse(object):
             }
             fixture.append(d)
             article_category_lookup[ac_field] = position
-        return (fixture, article_category_lookup)
-    
+        return fixture, article_category_lookup
+
     def fixture_as_json(self):
         """
         @return: String of complete JSON doc. with all three record types.
         """
-        
+
         fixture = []
         ac_fixture, article_category_lookup = self._article_category_fixture()
         fixture.extend(ac_fixture)
-        
+
         stats = {'skipped' : 0, 'loaded' : 0}
         position = 0
         article_cat_position = 0
@@ -124,7 +123,7 @@ class KnowledgebaseCsvParse(object):
                r['Entry type'] != 'Legal resource for clients':
                 stats['skipped'] += 1
                 continue
-            
+
             stats['loaded'] += 1
             record_categories = {}
             position += 1
@@ -148,7 +147,7 @@ class KnowledgebaseCsvParse(object):
                         d["fields"][django_field_name] = 'OTHER'
 
                 elif django_field_name == 'website':
-                    
+
                     website = r[csv_field].decode('ascii', 'ignore')
                     if not website.startswith('http'):
                         website = 'http://' + website
@@ -158,10 +157,9 @@ class KnowledgebaseCsvParse(object):
                 else:
                     # normal field
                     d["fields"][django_field_name] = r[csv_field].decode('ascii', 'ignore')
-                    
 
             fixture.append(d)
-            
+
             # map ArticleCategory records via ArticleCategoryMatrix
             for csv_field, spreadsheet_value in record_categories.iteritems():
                 if len(spreadsheet_value) > 0:
@@ -178,17 +176,14 @@ class KnowledgebaseCsvParse(object):
                             "article": position,
                             "article_category": article_category_lookup[csv_field],
                             "preferred_signpost": spreadsheet_value.startswith('Preferred')
-                            }
-                         }
+                        }
+                    }
                     fixture.append(d)
 
         for stat, s_count in stats.iteritems():
             self.log("%s records %s" % (s_count, stat))
-        
-        
+
         return json.dumps(fixture, indent=4)
-        
 
     def log(self, msg):
-        sys.stderr.write(msg+"\n")
-
+        sys.stderr.write(msg + "\n")

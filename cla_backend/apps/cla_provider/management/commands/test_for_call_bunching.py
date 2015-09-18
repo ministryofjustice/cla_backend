@@ -82,14 +82,7 @@ class Command(BaseCommand):
         self.stdout.write('Dates of edited Allocations')
 
         ct = ContentType.objects.get(model='providerallocation')
-        le = LogEntry.objects.filter(content_type_id=ct.pk)
+        log_entries = LogEntry.objects.filter(content_type_id=ct.pk)
 
-        for l in le:
-            self.stdout.write('Date: %s' % l.action_time)
-
-
-
-
-
-
-
+        for log_entry in log_entries:
+            self.stdout.write('Date: %s' % log_entry.action_time)

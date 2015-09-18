@@ -1,8 +1,7 @@
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
-from core.tests.test_base import \
-    NestedSimpleResourceAPIMixin
+from core.tests.test_base import NestedSimpleResourceAPIMixin
 
 
 class CaseNotesHistoryAPIMixin(NestedSimpleResourceAPIMixin):
@@ -119,7 +118,7 @@ class CaseNotesHistoryAPIMixin(NestedSimpleResourceAPIMixin):
         self.assertEqual(len(response.data['results']), 6)
 
         for obj in response.data['results']:
-            if obj['provider_notes'] != None:
+            if obj['provider_notes'] is not None:
                 self.assertEqual(obj['provider_notes'], 'Provider notes')
                 self.assertEqual(obj['type_notes'], 'Provider notes')
             else:

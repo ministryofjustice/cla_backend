@@ -1,19 +1,19 @@
-from core.admin.forms import OneToOneUserAdminForm
 from django import forms
 
+from core.admin.forms import OneToOneUserAdminForm
 from ..models import Operator, Caseworker
 
 
 class OperatorAdminForm(OneToOneUserAdminForm):
-    class Meta:
+    class Meta(object):
         model = Operator
         fields = [
             'username', 'password', 'password2', 'first_name',
             'last_name', 'email', 'is_active', 'is_manager'
         ]
 
-class CaseworkerAdminForm(OneToOneUserAdminForm):
 
+class CaseworkerAdminForm(OneToOneUserAdminForm):
     is_active = forms.BooleanField(required=False, initial=True)
 
     def get_defaults(self):
@@ -21,7 +21,7 @@ class CaseworkerAdminForm(OneToOneUserAdminForm):
         defaults.update({'is_staff': True})
         return defaults
 
-    class Meta:
+    class Meta(object):
         model = Caseworker
         fields = [
             'username', 'password', 'password2', 'first_name',
@@ -29,13 +29,11 @@ class CaseworkerAdminForm(OneToOneUserAdminForm):
         ]
 
 
-
-
 class FullOperatorAdminForm(OneToOneUserAdminForm):
     """
     Like OperatorAdminForm but with 'is_cla_superuser' added.
     """
-    class Meta:
+    class Meta(object):
         model = Operator
         fields = [
             'username', 'password', 'password2', 'first_name',

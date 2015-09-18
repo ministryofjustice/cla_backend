@@ -39,4 +39,6 @@ class AlternativeHelpEvent(BaseEvent):
             'set_requires_action_by': None_if_owned_by_op_or_op_manager
         }
     }
+
+
 event_registry.register(AlternativeHelpEvent)

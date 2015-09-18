@@ -1,12 +1,13 @@
-from decimal import Decimal
-import unittest
 import datetime
-from django.contrib.auth.models import User
-import legalaid.utils.csvupload.validators as v
+from decimal import Decimal
 import re
+import unittest
 
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.test import APITestCase
+
+import legalaid.utils.csvupload.validators as v
 from provider.oauth2.models import AccessToken
 
 from core.tests.mommy_utils import make_recipe
@@ -117,19 +118,19 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     def setUp(self):
         self.data = [
             [u'3333333', u'0001', u'2B222B', u'A N Other', u'Corgi',
-             u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
-             u'X', u'EPRO', u'ESOS', u'EA', u'EB', u'', u'01/01/1901',
-             u'01/01/1902', u'99', u'99.5', u'', u'ILL', u'0', u'0',
+             u'02/01/2014', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
+             u'X', u'EPRO', u'ESOS', u'EA', u'EB', u'', u'01/01/2014',
+             u'01/01/2015', u'99', u'99.5', u'', u'ILL', u'0', u'0',
              u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA'],
 
-            [u'2222222', u'0000', u'1A111A', u'A', u'Corgi', u'01/01/1901',
+            [u'2222222', u'0000', u'1A111A', u'A', u'Corgi', u'01/01/2014',
              u'D', u'F', u'1', u'', u'', u'SW1A 1AA', u'', u'EPRO',
              u'ESOS', u'', u'', u'', u'', u'', u'18', u'99.5', u'', u'MOB',
              u'', u'', u'FINI', u'', u'', u'', u'NAR', u'', u'', u'TA']
         ]
 
         self.dummy_cleaned_data = {
-            'DOB': datetime.datetime(1901, 1, 2, 0, 0),
+            'DOB': datetime.datetime(2014, 1, 2, 0, 0),
             'Media Code': u'DK', 'Exempted Reason Code': u'',
             'Telephone / Online': u'TA',
             'First Name': u'A N Other', 'Unused1': u'',
@@ -166,9 +167,9 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     def test_closed_date_after_opened_date_invariant(self):
         validator = v.ProviderCSVValidator([
             [u'3333333', u'0001', u'2B222B', u'A N Other', u'Corgi',
-             u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
-             u'X', u'EADM', u'ESOS', u'EB', u'EB', u'', u'01/01/2014',
-             u'01/01/1902', u'99', u'99.5', u'', u'ILL', u'0', u'0',
+             u'02/01/2014', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
+             u'X', u'EADM', u'ESOS', u'EB', u'EB', u'', u'02/01/2014',
+             u'01/01/2014', u'99', u'99.5', u'', u'ILL', u'0', u'0',
              u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA'],
         ])
         with self.assertRaisesRegexp(serializers.ValidationError, 'Row: 1 - .*must be after'):
@@ -181,9 +182,9 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
              u'22222B',
 
              u'A N Other', u'Corgi',
-             u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
-             u'X', u'EPRO', u'ESOS', u'EB', u'EB', u'', u'01/01/1901',
-             u'01/01/1902', u'99', u'99.5', u'', u'ILL', u'0', u'0',
+             u'02/01/2014', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
+             u'X', u'EPRO', u'ESOS', u'EB', u'EB', u'', u'01/01/2014',
+             u'01/01/2015', u'99', u'99.5', u'', u'ILL', u'0', u'0',
              u'', u'N', u'', u'', u'NAR', u'', u'DK', u'TA'],
         ])
         with self.assertRaises(serializers.ValidationError):
@@ -192,7 +193,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     def test_service_adapation_validation_valid(self):
         validator = v.ProviderCSVValidator([
             [u'3333333', u'0001', u'2B222B', u'A N Other', u'Corgi',
-             u'02/01/1901', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
+             u'02/01/2014', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
              u'X', u'EPRO', u'ESOS', u'EB', u'EB', u'', u'01/01/2014',
              u'02/01/2014', u'99', u'99.5', u'', u'ILL', u'0', u'0',
              u'', u'N', u'', u'',
@@ -203,6 +204,21 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             ])
         with self.assertRaisesRegexp(serializers.ValidationError, r'Adjustments / Adaptations - LOL must be one of'):
             validator.validate()
+
+    def test_allowed_no_outcome_code_and_dates_if_determination_code(self):
+        validator = v.ProviderCSVValidator([
+            [u'3333333', u'0001', u'2B222B', u'A N Other', u'Corgi',
+             u'02/01/2014', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
+             u'X', u'EPRO', u'ESOS', u'', u'', u'', u'',
+             u'', u'18', u'99.5', u'', u'ILL', u'0', u'0',
+             u'DVCA',
+             u'N', u'', u'', u'', u'', u'DK', u'TA'],
+            ])
+
+        try:
+            validator.validate()
+        except serializers.ValidationError:
+            self.fail('Should not need outcome code or closed and opened dated if determination code present')
 
     def test_service_adapation_validation_required(self):
 
@@ -370,7 +386,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             gte_0(-1)
 
     def test_validate_not_current_month(self):
-        d = datetime.datetime(1901, 1, 1)
+        d = datetime.datetime(2014, 1, 1)
 
         self.assertEqual(d, v.validate_not_current_month(d))
 

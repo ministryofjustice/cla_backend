@@ -1,16 +1,15 @@
 from datetime import timedelta
 from itertools import cycle
-from cla_provider.models import ProviderAllocation
+
 from dateutil import parser
 from django.core.urlresolvers import reverse
 from django.utils import timezone
-
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from cla_provider.models import ProviderAllocation
 from core.tests.test_base import SimpleResourceAPIMixin
 from core.tests.mommy_utils import make_recipe
-
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 
 
@@ -64,13 +63,12 @@ class ProviderTestCase(
         """
         Ensure that we can't POST, PUT or DELETE
         """
-
-        ### LIST
+        # LIST
         self._test_post_not_allowed(self.list_url)
         self._test_put_not_allowed(self.list_url)
         self._test_delete_not_allowed(self.list_url)
 
-        ### DETAIL
+        # DETAIL
         self._test_post_not_allowed(self.detail_url)
         self._test_put_not_allowed(self.detail_url)
         self._test_delete_not_allowed(self.detail_url)
@@ -129,7 +127,6 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             kwargs={'pk': self.rotas[0].pk}
         )
 
-
     def _get_default_post_data(self):
         return {
             'start_date': '2014-01-01T00:00:00Z',
@@ -157,15 +154,19 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                                    format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertItemsEqual(response.data,
-            [{
-                'id': rota.id,
-                'start_date': rota.start_date,
-                'end_date': rota.end_date,
-                'category': rota.category.code,
-                'provider': rota.provider_id,
-                'provider_name': rota.provider.name
-            } for rota in self.rotas])
+        self.assertItemsEqual(
+            response.data,
+            [
+                {
+                    'id': rota.id,
+                    'start_date': rota.start_date,
+                    'end_date': rota.end_date,
+                    'category': rota.category.code,
+                    'provider': rota.provider_id,
+                    'provider_name': rota.provider.name
+                } for rota in self.rotas
+            ]
+        )
 
         # DETAIL
         response = self.client.get(self.detail_url,
@@ -175,16 +176,13 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], self.rotas[0].id)
 
-
-
     def test_post_allowed(self):
 
         response1 = self.client.get(self.list_url,
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
-                                   format='json')
+                                    HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                    format='json')
         self.assertEqual(response1.status_code, status.HTTP_200_OK)
         before_len = len(response1.data)
-
 
         post_data = self._get_default_post_data()
         response2 = self.client.post(self.list_url,
@@ -215,11 +213,11 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         # PATCH start date
         new_start_date = self.rotas[0].start_date + timedelta(days=1)
         response2 = self.client.patch(self.detail_url,
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
-                                   format='json',
-                                   data={
-                                       'start_date': str(new_start_date)
-                                   })
+                                      HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                      format='json',
+                                      data={
+                                          'start_date': str(new_start_date)
+                                      })
 
         self.assertOutOfHoursRotaCheckResponseKeys(response2)
         self.assertEqual(response2.status_code, status.HTTP_200_OK)
@@ -237,13 +235,11 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         # DELETE IT
         response = self.client.delete(self.detail_url,
-                                   HTTP_AUTHORIZATION='Bearer %s' % self.token,
-                                   format='json')
+                                      HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                      format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         # CHECK LIST LEN =- 1
-
-
         response = self.client.get(self.list_url,
                                    HTTP_AUTHORIZATION='Bearer %s' % self.token,
                                    format='json')
@@ -262,14 +258,12 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         ProviderAllocation.objects.filter(provider=self.providers[0],
                                           category=first_category).delete()
 
-
         response2 = self.client.post(self.list_url,
                                      HTTP_AUTHORIZATION='Bearer %s' % self.token,
                                      format='json',
                                      data=post_data)
         self.assertEqual(response2.data,
-                         {'__all__':
-                              [u"Provider Name2 doesn't offer help for Name1"]})
+                         {'__all__': [u"Provider Name2 doesn't offer help for Name1"]})
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_post_overlapping_timespan_not_allowed_overlaps_exactly(self):
@@ -281,7 +275,6 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         """
         post_data = self._get_default_post_data()
-
 
         response2 = self.client.post(self.list_url,
                                      HTTP_AUTHORIZATION='Bearer %s' % self.token,
@@ -301,17 +294,14 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
                          {'__all__':
                               [u"Overlapping rota allocation not allowed"]})
 
-
     def test_post_overlapping_timespan_not_allowed_overlaps_end(self):
         """
         don't allow posting new rota entries that overlap other
-            -   operator_id
-            -   law category
-            -   time span
-
+        -   operator_id
+        -   law category
+        -   time span
         """
         post_data = self._get_default_post_data()
-
 
         response2 = self.client.post(self.list_url,
                                      HTTP_AUTHORIZATION='Bearer %s' % self.token,
@@ -325,7 +315,7 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         post_data.update({
             'start_date': '2014-01-06T00:00:00Z',
             'end_date': '2014-01-08T00:00:00Z',
-            })
+        })
 
         response2 = self.client.post(self.list_url,
                                      HTTP_AUTHORIZATION='Bearer %s' % self.token,
@@ -334,16 +324,14 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response2.data,
-                         {'__all__':
-                              [u"Overlapping rota allocation not allowed"]})
+                         {'__all__': [u"Overlapping rota allocation not allowed"]})
 
     def test_post_overlapping_timespan_not_allowed_overlaps_start(self):
         """
         don't allow posting new rota entries that overlap other
-            -   operator_id
-            -   law category
-            -   time span
-
+        -   operator_id
+        -   law category
+        -   time span
         """
         post_data = self._get_default_post_data()
 
@@ -359,7 +347,7 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         post_data.update({
             'start_date': '2013-12-30T00:00:00Z',
             'end_date': '2014-01-02T00:00:00Z',
-            })
+        })
 
         response2 = self.client.post(self.list_url,
                                      HTTP_AUTHORIZATION='Bearer %s' % self.token,
@@ -368,8 +356,7 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
 
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response2.data,
-                         {'__all__':
-                              [u"Overlapping rota allocation not allowed"]})
+                         {'__all__': [u"Overlapping rota allocation not allowed"]})
 
     def test_end_date_must_be_greater_than_start_date(self):
 
@@ -379,9 +366,9 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'end_date': '2014-01-01T00:00:00Z',
         })
         response = self.client.post(self.list_url,
-                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
-                                     format='json',
-                                     data=post_data)
+                                    HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                    format='json',
+                                    data=post_data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data,
@@ -394,9 +381,9 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             'end_date': '2014-01-07T00:00:00Z',
         })
         response = self.client.post(self.list_url,
-                                     HTTP_AUTHORIZATION='Bearer %s' % self.token,
-                                     format='json',
-                                     data=post_data)
+                                    HTTP_AUTHORIZATION='Bearer %s' % self.token,
+                                    format='json',
+                                    data=post_data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data,

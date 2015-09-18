@@ -39,7 +39,7 @@ class ArticleCategory(TimeStampedModel):
     def __unicode__(self):
         return self.name
 
-    class Meta:
+    class Meta(object):
         verbose_name_plural = "Article categories"
 
 
@@ -52,7 +52,7 @@ class ArticleCategoryMatrix(TimeStampedModel):
         return u"%s - %s" % (self.article.__unicode__(),
                              self.article_category.__unicode__())
 
-    class Meta:
+    class Meta(object):
         verbose_name_plural = "Article category matrices"
 
 

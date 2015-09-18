@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.conf import settings
+import django.core.validators
 from django.db import models, migrations
-import cla_common.db.mixins
-import model_utils.fields
-import cla_common.money_interval.fields
-import jsonfield.fields
 import django.db.models.deletion
 import django.utils.timezone
-from django.conf import settings
-import uuidfield.fields
-import django.core.validators
-import legalaid.fields
+
 import core.cloning
+import cla_common.db.mixins
+import cla_common.money_interval.fields
+import model_utils.fields
+import jsonfield.fields
+import uuidfield.fields
+import legalaid.fields
 
 
 class Migration(migrations.Migration):
@@ -108,7 +109,7 @@ class Migration(migrations.Migration):
                 ('created_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={
-                'ordering': ['-created'],
+                'ordering': ('-created',),
             },
             bases=(models.Model,),
         ),
@@ -185,6 +186,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'ordering': ('-created',),
             },
             bases=(models.Model, cla_common.db.mixins.ModelDiffMixin),
         ),
@@ -275,6 +277,8 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'ordering': ('-created',),
+                'verbose_name_plural': 'people',
             },
             bases=(core.cloning.CloneModelMixin, models.Model),
         ),
@@ -322,6 +326,7 @@ class Migration(migrations.Migration):
                 ('eligibility_check', models.ForeignKey(to='legalaid.EligibilityCheck')),
             ],
             options={
+                'ordering': ('-created',),
                 'verbose_name_plural': 'properties',
             },
             bases=(models.Model,),
@@ -360,6 +365,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'verbose_name_plural': 'third party details',
             },
             bases=(core.cloning.CloneModelMixin, models.Model),
         ),

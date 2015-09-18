@@ -9,8 +9,8 @@ class MoneyField(models.BigIntegerField):
     """
     def __init__(self, max_value=9999999999, min_value=0, *args, **kwargs):
         self.max_value, self.min_value = max_value, min_value
-        #kwargs['coerce'] = kwargs.pop('coerce', int)
-        #kwargs['widget'] = forms.NumberInput
+        # kwargs['coerce'] = kwargs.pop('coerce', int)
+        # kwargs['widget'] = forms.NumberInput
 
         super(MoneyField, self).__init__(*args, **kwargs)
 

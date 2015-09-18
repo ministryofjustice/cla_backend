@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
-import model_utils.fields
-import jsonfield.fields
 from django.conf import settings
+from django.db import models, migrations
 import django.utils.timezone
 import core.validators
+import jsonfield.fields
+import model_utils.fields
 import uuidfield.fields
 
 

@@ -7,10 +7,7 @@ import model_utils.fields
 
 
 class Migration(migrations.Migration):
-
-    dependencies = [
-    ]
-
+    dependencies = []
     operations = [
         migrations.CreateModel(
             name='AccessAttempt',

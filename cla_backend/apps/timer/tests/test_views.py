@@ -1,9 +1,7 @@
 from django.core.urlresolvers import reverse
-
 from rest_framework import status
 
 from core.tests.mommy_utils import make_recipe
-
 from timer.models import Timer
 
 

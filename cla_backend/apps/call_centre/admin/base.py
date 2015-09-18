@@ -2,11 +2,9 @@ from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 
 from core.admin.modeladmin import OneToOneUserAdmin
-
-from ..models import Operator, Caseworker
-
 from .forms import OperatorAdminForm, FullOperatorAdminForm, \
     CaseworkerAdminForm
+from ..models import Operator, Caseworker
 
 
 class OperatorAdmin(OneToOneUserAdmin):
@@ -119,8 +117,8 @@ class CaseworkerAdmin(OneToOneUserAdmin):
 
         # anyone else can't do anything.
 
-
         return False
+
 
 admin.site.register(Operator, OperatorAdmin)
 admin.site.register(Caseworker, CaseworkerAdmin)

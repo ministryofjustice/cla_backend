@@ -42,5 +42,5 @@ class TestMarkdownAdminField(unittest.TestCase):
         self.assertTrue(form.is_valid())
 
     def test_no_required(self):
-        form=CustomForm(data={})
+        form = CustomForm(data={})
         self.assertTrue(form.is_valid())

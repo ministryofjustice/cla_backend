@@ -10,5 +10,3 @@ class OperatorManagerPermission(BasePermission):
 
     def has_permission(self, request, view):
         return request.user.operator.is_manager
-
-

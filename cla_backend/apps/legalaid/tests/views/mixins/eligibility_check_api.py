@@ -155,11 +155,11 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         """
         Ensure that we can't POST, PUT or DELETE
         """
-        ### LIST
+        # LIST
         self._test_get_not_allowed(self.list_url)
         self._test_put_not_allowed(self.list_url)
 
-        ### DETAIL
+        # DETAIL
         self._test_post_not_allowed(self.detail_url)
         self._test_delete_not_allowed(self.detail_url)
 
@@ -175,7 +175,8 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
         self.assertResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEligibilityCheckEqual(response.data,
+        self.assertEligibilityCheckEqual(
+            response.data,
             EligibilityCheck(
                 reference=response.data['reference']
             )
@@ -188,7 +189,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         make_recipe('legalaid.category')
 
         category = Category.objects.all()[0]
-        data={
+        data = {
             'category': category.code,
             'your_problem_notes': 'lorem',
             'dependants_young': 2,
@@ -200,7 +201,8 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
         self.assertResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEligibilityCheckEqual(response.data,
+        self.assertEligibilityCheckEqual(
+            response.data,
             EligibilityCheck(
                 reference=response.data['reference'], category=category,
                 your_problem_notes=data['your_problem_notes'],
@@ -219,7 +221,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         make_recipe('legalaid.category')
 
         category = Category.objects.all()[0]
-        data= {
+        data = {
             'category': category.code,
             'your_problem_notes': 'lorem',
             'has_partner': random.choice([None, True, False]),
@@ -233,7 +235,8 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
         self.assertResponseKeys(response)
         self.assertTrue(len(response.data['reference']) > 30)
-        self.assertEligibilityCheckEqual(response.data,
+        self.assertEligibilityCheckEqual(
+            response.data,
             EligibilityCheck(
                 reference=response.data['reference'],
                 category=category,
@@ -255,7 +258,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         category2 = Category.objects.all()[1]
 
         # CREATING FIRST
-        data={
+        data = {
             'category': category.code,
             'your_problem_notes': 'lorem',
             'dependants_young': 2,
@@ -274,7 +277,8 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertEqual(patch_response.status_code, status.HTTP_200_OK)
 
         self.assertResponseKeys(patch_response)
-        self.assertEligibilityCheckEqual(patch_response.data,
+        self.assertEligibilityCheckEqual(
+            patch_response.data,
             EligibilityCheck(
                 reference=response.data['reference'], category=category2,
                 your_problem_notes=data['your_problem_notes'],
@@ -287,7 +291,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         """
         CREATE data with properties
         """
-        data={
+        data = {
             'property_set': [
                 {'value': 111, 'mortgage_left': 222, 'share': 33, 'disputed': True, 'main': True},
                 {'value': 999, 'mortgage_left': 888, 'share': 77, 'disputed': False, 'main': False}
@@ -305,7 +309,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertItemsEqual([p['disputed'] for p in response.data['property_set']], [True, False])
 
     def test_create_with_more_main_properties_fails(self):
-        data={
+        data = {
             'property_set': [
                 {'value': 111, 'mortgage_left': 222, 'share': 33, 'disputed': True, 'main': True},
                 {'value': 999, 'mortgage_left': 888, 'share': 77, 'disputed': False, 'main': True}
@@ -414,7 +418,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         """
         data = {
             'category': -1,
-            'your_problem_notes': 'a'*501,
+            'your_problem_notes': 'a' * 501,
             'property_set': [
                 {'value': 111, 'mortgage_left': 222, 'share': 33, 'disputed': True},  # valid
                 {'value': -1, 'mortgage_left': -1, 'share': -1, 'disputed': True},  # invalid
@@ -457,13 +461,13 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                     "credit_balance": -1,
                 },
                 'income': {
-                   "earnings": {"interval_period": "per_month", "per_interval_value": 0},
+                    "earnings": {"interval_period": "per_month", "per_interval_value": 0},
                     'self_employment_drawings': {"interval_period": "per_month", "per_interval_value": 0},
                     'benefits': {"interval_period": "per_month", "per_interval_value": 0},
                     'tax_credits': {"interval_period": "per_month", "per_interval_value": 0},
                     'maintenance_received': {"interval_period": "per_month", "per_interval_value": 0},
                     'pension': {"interval_period": "per_month", "per_interval_value": 0},
-                   "other_income": {"interval_period": "per_month", "per_interval_value": 0},
+                    "other_income": {"interval_period": "per_month", "per_interval_value": 0},
                 },
                 'deductions': {
                     "income_tax": {"interval_period": "per_month", "per_interval_value": 0},
@@ -478,7 +482,8 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         }
 
         method_callable = getattr(self.client, method)
-        response = method_callable(url, data, format='json',
+        response = method_callable(
+            url, data, format='json',
             HTTP_AUTHORIZATION=self.get_http_authorization()
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -589,35 +594,35 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                         "income": {
                             "earnings": {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'self_employment_drawings': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'child_benefits': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'benefits': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'tax_credits': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'maintenance_received': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'pension': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'other_income': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                         }
                     }
@@ -644,31 +649,31 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                         "income": {
                             "earnings": {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'self_employment_drawings': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'benefits': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'tax_credits': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'maintenance_received': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'pension': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                             'other_income': {
                                 "interval_period": "per_month",
-                                "per_interval_value": 9999999999+1,
+                                "per_interval_value": 9999999999 + 1,
                             },
                         }
                     }
@@ -678,13 +683,22 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
         # MoneyInterval income fields
         for who in ['you', 'partner']:
-            for field_name in ["income_tax", "national_insurance", "maintenance", "childcare",\
+            for field_name in ["income_tax", "national_insurance", "maintenance", "childcare",
                                "mortgage", "rent"]:
                 a = {
-                    'error': { who: [{'deductions': [{field_name: [u'Ensure this value is less than or equal to 9999999999.']}]}]},
-                    'data': { who : { "deductions" : { field_name: {"interval_period": "per_month","per_interval_value": 9999999999+1}
-                                        }}
+                    'error': {
+                        who: [
+                            {
+                                'deductions': [
+                                    {field_name: [u'Ensure this value is less than or equal to 9999999999.']}]
                             }
+                        ]
+                    },
+                    'data': {
+                        who: {"deductions": {
+                            field_name: {"interval_period": "per_month", "per_interval_value": 9999999999 + 1}
+                        }}
+                    }
                 }
                 ERRORS_DATA.append(a)
 
@@ -869,7 +883,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         """
         PATCH should change finances.
         """
-        data={
+        data = {
             'you': {
                 'income': {
                     "earnings": mi_dict_generator(500),
@@ -964,7 +978,6 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                 'other_income': MoneyInterval('per_month', pennies=0),
                 'self_employed': False,
             },
-
         }
 
         self.resource.you.income = Income(id=self.resource.you.income.id, **existing_your_finances_values['income'])
@@ -1013,7 +1026,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         should NOT point to other_property.
         """
         other_property = make_recipe('legalaid.property')
-        data={
+        data = {
             'property_set': [
                 {'value': 0, 'mortgage_left': 0, 'share': 0, 'id': other_property.pk, 'disputed': False}
             ]
@@ -1087,6 +1100,5 @@ class NestedEligibilityCheckAPIMixin(NestedSimpleResourceAPIMixin, EligibilityCh
         """
         Ensure that we can't POST, PUT or DELETE
         """
-        ### DETAIL
+        # DETAIL
         self._test_delete_not_allowed(self.detail_url)
-

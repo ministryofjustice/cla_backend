@@ -1,10 +1,8 @@
 import mock
 
 from cla_eventlog.models import Log
-
-from legalaid.models import Case
-
 from core.tests.mommy_utils import make_recipe, make_user
+from legalaid.models import Case
 
 
 class BaseCaseLogFormTestCaseMixin(object):

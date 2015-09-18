@@ -109,11 +109,12 @@ class ProviderAllocationForm(BaseCaseLogForm):
         return kwargs
 
     def get_context(self):
-        provider =  self.cleaned_data['provider_obj']
+        provider = self.cleaned_data['provider_obj']
         return {
             'provider': provider.name,
             'provider_id': provider.id
         }
+
     def save(self, user):
         data = self.cleaned_data
 
@@ -270,8 +271,7 @@ class StopCallMeBackForm(BaseCaseLogForm):
     def get_kwargs(self):
         action = self.cleaned_data['action']
 
-        kwargs = {}
-        kwargs[action] = True
+        kwargs = {action: True}
         return kwargs
 
     def clean(self):

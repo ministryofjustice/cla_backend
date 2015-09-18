@@ -1,12 +1,13 @@
-from decimal import Decimal
-from cla_provider.models import ProviderAllocation
-from legalaid.models import Case
-import mock
-import datetime
 from collections import defaultdict
+import datetime
+from decimal import Decimal
 
 from django.test import TestCase
 from django.utils import timezone
+import mock
+
+from cla_provider.models import ProviderAllocation
+from legalaid.models import Case
 
 from core.tests.mommy_utils import make_recipe
 
@@ -166,7 +167,6 @@ class ProviderAllocationHelperTestCase(TestCase):
         choosen_provider = helper.get_suggested_provider(category)
         self.assertEqual(choosen_provider, None)
 
-
     def test_get_suggested_provider_best_fit(self):
         # slightly brute force test
 
@@ -198,20 +198,18 @@ class ProviderAllocationHelperTestCase(TestCase):
         # quick sanity check that random allocation is working
         for i in range(100):
             sugg = helper.get_suggested_provider(category)
-            counts[sugg] = counts[sugg] + 1
+            counts[sugg] += 1
         self.assertTrue(counts[provider2] > counts[provider1])
 
         case1 = make_recipe('legalaid.eligible_case', diagnosis__category=category)
         case1.assign_to_provider(provider1)
 
-
         # cases assigned at != today are ignored, so expect same as before
         counts = {provider1: 0, provider2: 0}
         for i in range(100):
             sugg = helper.get_suggested_provider(category)
-            counts[sugg] = counts[sugg] + 1
+            counts[sugg] += 1
         self.assertTrue(counts[provider2] > counts[provider1])
-
 
         case1.provider_assigned_at = as_of
         case1.save()
@@ -219,7 +217,6 @@ class ProviderAllocationHelperTestCase(TestCase):
         for i in range(100):
             self.assertEqual(helper.get_suggested_provider(category), provider2)
             # should always be provider 2
-
 
     def test_get_suggested_provider_rota(self):
         as_of = timezone.make_aware(

@@ -5,15 +5,13 @@ from model_mommy.recipe import Recipe
 from legalaid.admin_support.forms import CategoryModelForm
 from legalaid.models import Category
 
-
 category_recipe = Recipe(Category)
 
 
 class CategoryModelFormTestCase(TestCase):
     def test_save(self):
         category = category_recipe.make()
-
-        data={
+        data = {
             'name': 'Name',
             'order': 0,
             'code': 'code',
@@ -31,8 +29,7 @@ class CategoryModelFormTestCase(TestCase):
             raw_description=u'**strong**',
             description=u'<p><strong>strong</strong></p>'
         )
-
-        data={
+        data = {
             'name': 'Name',
             'order': 0,
             'code': 'code',

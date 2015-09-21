@@ -5,12 +5,14 @@ from django.db import models, migrations
 
 
 def copy_relation(apps, schema_editor):
-    EODDetails = apps.get_model("legalaid", "EODDetails")
+    Case = apps.get_model('legalaid', 'Case')
+    EODDetails = apps.get_model('legalaid', 'EODDetails')
     for eod in EODDetails.objects.all():
-        if eod.old_case:
+        try:
             eod.case = eod.old_case
             eod.save()
-        else:
+        except Case.DoesNotExist:
+            print 'EOD details %s are abandoned, deleting' % eod.reference
             eod.delete()
 
 

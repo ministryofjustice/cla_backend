@@ -5,7 +5,7 @@ from django.db import models, migrations
 
 
 def duplicate_relation(apps, schema_editor):
-    Case = apps.get_model("legalaid", "Case")
+    Case = apps.get_model('legalaid', 'Case')
     for case in Case.objects.all():
         if case.eod_details:
             case.old_eod_details = case.eod_details

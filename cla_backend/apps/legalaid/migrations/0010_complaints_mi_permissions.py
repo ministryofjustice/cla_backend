@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('legalaid', '0008_remove_case_old_eod_details'),
+        ('legalaid', '0009_remove_case_old_eod_details'),
     ]
 
     operations = [

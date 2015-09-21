@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('legalaid', '0008_remove_case_old_eod_details'),
+        ('legalaid', '0010_complaints_mi_permissions'),
     ]
 
     operations = [

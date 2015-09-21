@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('legalaid', '0007_auto_20150818_1509'),
+        ('legalaid', '0008_eod_data_migration'),
     ]
 
     operations = [

@@ -371,13 +371,19 @@ else:
     # because it'll just cause errors
     CELERY_ALWAYS_EAGER = True
 
+CLA_ENV = os.environ.get('CLA_ENV', 'local')
+if os.environ.get('AWS') == 'True':
+    _queue_prefix = 'aws-%(env)s-'
+else:
+    _queue_prefix = 'env-%(env)s-'
+
 BROKER_TRANSPORT_OPTIONS = {
     'polling_interval': 10,
     'region': 'eu-west-1',
     'wait_time_seconds': 20,
-    'queue_name_prefix': 'env-{env}-'.format(
-        env=os.environ.get('CLA_ENV', 'local')
-    )
+    'queue_name_prefix': _queue_prefix % {
+        'env': CLA_ENV,
+    },
 }
 CELERY_ACCEPT_CONTENT = ['yaml'] # because json serializer doesn't support dates
 CELERY_TASK_SERIALIZER = 'yaml' # for consistency

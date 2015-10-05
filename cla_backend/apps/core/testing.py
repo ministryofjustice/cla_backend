@@ -19,8 +19,6 @@ class CLADiscoverRunner(get_runner(settings, base_runner)):
     """
     def setup_databases(self, **kwargs):
         ret = super(CLADiscoverRunner, self).setup_databases(**kwargs)
-        connection = connections[DEFAULT_DB_ALIAS]
-        cursor = connection.cursor()
-        cursor.execute('CREATE EXTENSION IF NOT EXISTS pgcrypto')
+        call_command('install_postgres_extensions')
         call_command('loaddata', 'initial_groups')
         return ret

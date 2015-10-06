@@ -960,6 +960,17 @@
           <data key="d11">n82n33</data>
           <data key="d13"/>
           </node>
+        <node id="n57::n34">
+          <data key="d3">OUTOFSCOPE</data>
+          <data key="d7">OUTOFSCOPE</data>
+          <data key="d9">
+            <context xmlns="">
+<category>immigration</category>
+</context>
+          </data>
+          <data key="d11">n82n34</data>
+          <data key="d13"/>
+          </node>
       </graph>
     </node>
     <node id="n58">
@@ -976,14 +987,14 @@
       <data key="d13"/>
       </node>
     <node id="n60">
-      <data key="d3">{% trans "None of the above" %}</data>
+      <data key="d3">{% trans "Any other immigration problem" %}</data>
       <data key="d11">n85</data>
       <data key="d13"/>
       </node>
     <node id="n61">
-      <data key="d3">{% trans "You’re a victim of domestic violence" %}</data>
+      <data key="d3">{% trans "You’re a victim of domestic abuse" %}</data>
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
-      <data key="d10">3</data>
+      <data key="d10">4</data>
       <data key="d11">n86</data>
       <data key="d13"/>
       </node>
@@ -1111,7 +1122,7 @@
       </node>
     <node id="n79">
       <data key="d3">{% trans "You’re an asylum seeker applying for accommodation" %}</data>
-      <data key="d10">1</data>
+      <data key="d10">2</data>
       <data key="d11">n115</data>
       <data key="d13"/>
       </node>
@@ -1131,7 +1142,7 @@
       </node>
     <node id="n82">
       <data key="d3">{% trans "You’re losing your accommodation because UK Visas and Immigration (UKVI) is refusing to support you or is withdrawing its support from you" %}</data>
-      <data key="d10">2</data>
+      <data key="d10">3</data>
       <data key="d11">n118</data>
       <data key="d13"/>
       </node>
@@ -1153,8 +1164,7 @@
       </node>
     <node id="n86">
       <data key="d3">{% trans "You’re a victim of human trafficking or modern slavery" %}</data>
-      <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
-      <data key="d10">3</data>
+      <data key="d10">2</data>
       <data key="d11">n88</data>
       <data key="d13"/>
       </node>
@@ -1172,14 +1182,42 @@
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n11</data>
-      <data key="d14"/>
       </node>
     <node id="n90">
       <data key="d3">{% trans "A private landlord" %}</data>
       <data key="d6">ineligible</data>
       <data key="d10">2</data>
       <data key="d11">n12</data>
-      <data key="d14"/>
+      </node>
+    <node id="n91">
+      <data key="d3">{% trans "Any other immigration problem" %}</data>
+      <data key="d5">{% trans "Choose the option that best describes your situation" %}</data>
+      <data key="d11">n120</data>
+      <data key="d13"/>
+      </node>
+    <node id="n92">
+      <data key="d3">{% trans "You’re being detained under immigration powers" %}</data>
+      <data key="d10">1</data>
+      <data key="d11">n121</data>
+      <data key="d13"/>
+      </node>
+    <node id="n93">
+      <data key="d3">{% trans "Your travel documents have been retained, and you’re appealing the decision to extend the time this applies for" %}</data>
+      <data key="d10">3</data>
+      <data key="d11">n122</data>
+      <data key="d13"/>
+      </node>
+    <node id="n94">
+      <data key="d3">{% trans "You’re the subject of ongoing proceedings before the Special Immigration Appeal Commission" %}</data>
+      <data key="d10">4</data>
+      <data key="d11">n123</data>
+      <data key="d13"/>
+      </node>
+    <node id="n95">
+      <data key="d3">{% trans "You’ve been placed under, or are being placed under, a Terrorism Prevention and Investigation Measures notice" %}</data>
+      <data key="d10">5</data>
+      <data key="d11">n124</data>
+      <data key="d13"/>
       </node>
     <edge id="e0" source="n2" target="n28::n0">
       </edge>
@@ -1495,171 +1533,183 @@
       </edge>
     <edge id="e153" source="n28::n8" target="n59">
       </edge>
-    <edge id="e154" source="n59" target="n57::n15">
+    <edge id="e154" source="n60" target="n57::n14">
       </edge>
-    <edge id="e155" source="n28::n8" target="n60">
+    <edge id="e155" source="n28::n8" target="n61">
       </edge>
-    <edge id="e156" source="n60" target="n57::n14">
+    <edge id="e156" source="n62" target="n63">
       </edge>
-    <edge id="e157" source="n28::n8" target="n61">
+    <edge id="e157" source="n62" target="n64">
       </edge>
-    <edge id="e158" source="n62" target="n63">
+    <edge id="e158" source="n49" target="n62">
       </edge>
-    <edge id="e159" source="n62" target="n64">
+    <edge id="e159" source="n63" target="n57::n13">
       </edge>
-    <edge id="e160" source="n49" target="n62">
+    <edge id="e160" source="n64" target="n57::n12">
       </edge>
-    <edge id="e161" source="n63" target="n57::n13">
+    <edge id="e161" source="n28::n7" target="n65">
       </edge>
-    <edge id="e162" source="n64" target="n57::n12">
+    <edge id="e162" source="n66" target="n57::n13">
       </edge>
-    <edge id="e163" source="n28::n7" target="n65">
+    <edge id="e163" source="n67" target="n32">
       </edge>
-    <edge id="e164" source="n66" target="n57::n13">
+    <edge id="e164" source="n67" target="n34">
       </edge>
-    <edge id="e165" source="n67" target="n32">
+    <edge id="e165" source="n67" target="n31">
       </edge>
-    <edge id="e166" source="n67" target="n34">
+    <edge id="e166" source="n67" target="n29">
       </edge>
-    <edge id="e167" source="n67" target="n31">
+    <edge id="e167" source="n67" target="n30">
       </edge>
-    <edge id="e168" source="n67" target="n29">
+    <edge id="e168" source="n48" target="n57::n29">
       </edge>
-    <edge id="e169" source="n67" target="n30">
+    <edge id="e169" source="n41" target="n42">
       </edge>
-    <edge id="e170" source="n48" target="n57::n29">
+    <edge id="e170" source="n40" target="n42">
       </edge>
-    <edge id="e171" source="n41" target="n42">
+    <edge id="e171" source="n65" target="n68">
       </edge>
-    <edge id="e172" source="n40" target="n42">
+    <edge id="e172" source="n65" target="n69">
       </edge>
-    <edge id="e173" source="n65" target="n68">
+    <edge id="e173" source="n68" target="n57::n13">
       </edge>
-    <edge id="e174" source="n65" target="n69">
+    <edge id="e174" source="n69" target="n57::n12">
       </edge>
-    <edge id="e175" source="n68" target="n57::n13">
+    <edge id="e175" source="n28::n3" target="n70">
       </edge>
-    <edge id="e176" source="n69" target="n57::n12">
+    <edge id="e176" source="n70" target="n4">
       </edge>
-    <edge id="e177" source="n28::n3" target="n70">
+    <edge id="e177" source="n70" target="n3">
       </edge>
-    <edge id="e178" source="n70" target="n4">
+    <edge id="e178" source="n28::n14" target="n71">
       </edge>
-    <edge id="e179" source="n70" target="n3">
+    <edge id="e179" source="n71" target="n72">
       </edge>
-    <edge id="e180" source="n28::n14" target="n71">
+    <edge id="e180" source="n71" target="n73">
       </edge>
-    <edge id="e181" source="n71" target="n72">
+    <edge id="e181" source="n72" target="n36">
       </edge>
-    <edge id="e182" source="n71" target="n73">
+    <edge id="e182" source="n72" target="n42">
       </edge>
-    <edge id="e183" source="n72" target="n36">
+    <edge id="e183" source="n72" target="n43">
       </edge>
-    <edge id="e184" source="n72" target="n42">
+    <edge id="e184" source="n72" target="n44">
       </edge>
-    <edge id="e185" source="n72" target="n43">
+    <edge id="e185" source="n72" target="n45">
       </edge>
-    <edge id="e186" source="n72" target="n44">
+    <edge id="e186" source="n73" target="n74">
       </edge>
-    <edge id="e187" source="n72" target="n45">
+    <edge id="e187" source="n73" target="n75">
       </edge>
-    <edge id="e188" source="n73" target="n74">
+    <edge id="e188" source="n74" target="n57::n20">
       </edge>
-    <edge id="e189" source="n73" target="n75">
+    <edge id="e189" source="n75" target="n57::n19">
       </edge>
-    <edge id="e190" source="n74" target="n57::n20">
+    <edge id="e190" source="n12" target="n77">
       </edge>
-    <edge id="e191" source="n75" target="n57::n19">
+    <edge id="e191" source="n10" target="n77">
       </edge>
-    <edge id="e192" source="n12" target="n77">
+    <edge id="e192" source="n13" target="n77">
       </edge>
-    <edge id="e193" source="n10" target="n77">
+    <edge id="e193" source="n9" target="n77">
       </edge>
-    <edge id="e194" source="n13" target="n77">
+    <edge id="e194" source="n14" target="n77">
       </edge>
-    <edge id="e195" source="n9" target="n77">
+    <edge id="e195" source="n77" target="n57::n7">
       </edge>
-    <edge id="e196" source="n14" target="n77">
+    <edge id="e196" source="n28::n7" target="n78">
       </edge>
-    <edge id="e197" source="n77" target="n57::n7">
+    <edge id="e197" source="n78" target="n57::n13">
       </edge>
-    <edge id="e198" source="n28::n7" target="n78">
+    <edge id="e198" source="n28::n8" target="n79">
       </edge>
-    <edge id="e199" source="n78" target="n57::n13">
+    <edge id="e199" source="n79" target="n57::n15">
       </edge>
-    <edge id="e200" source="n28::n8" target="n79">
+    <edge id="e200" source="n80" target="n57::n32">
       </edge>
-    <edge id="e201" source="n79" target="n57::n15">
+    <edge id="e201" source="n61" target="n80">
       </edge>
-    <edge id="e202" source="n80" target="n57::n32">
+    <edge id="e202" source="n81" target="n57::n15">
       </edge>
-    <edge id="e203" source="n61" target="n80">
+    <edge id="e203" source="n61" target="n81">
       </edge>
-    <edge id="e204" source="n81" target="n57::n15">
+    <edge id="e204" source="n82" target="n57::n15">
       </edge>
-    <edge id="e205" source="n61" target="n81">
+    <edge id="e205" source="n28::n8" target="n82">
       </edge>
-    <edge id="e206" source="n82" target="n57::n15">
+    <edge id="e206" source="n53" target="n57::n13">
       </edge>
-    <edge id="e207" source="n28::n8" target="n82">
+    <edge id="e207" source="n28::n14" target="n41">
       </edge>
-    <edge id="e208" source="n53" target="n57::n13">
+    <edge id="e208" source="n28::n14" target="n40">
       </edge>
-    <edge id="e209" source="n28::n14" target="n41">
+    <edge id="e209" source="n28::n14" target="n42">
       </edge>
-    <edge id="e210" source="n28::n14" target="n40">
+    <edge id="e210" source="n28::n14" target="n67">
       </edge>
-    <edge id="e211" source="n28::n14" target="n42">
+    <edge id="e211" source="n67" target="n33">
       </edge>
-    <edge id="e212" source="n28::n14" target="n67">
+    <edge id="e212" source="n67" target="n70">
       </edge>
-    <edge id="e213" source="n67" target="n33">
+    <edge id="e213" source="n28::n2" target="n83">
       </edge>
-    <edge id="e214" source="n67" target="n70">
+    <edge id="e214" source="n83" target="n57::n13">
       </edge>
-    <edge id="e215" source="n28::n2" target="n83">
+    <edge id="e215" source="n0" target="n57::n3">
       </edge>
-    <edge id="e216" source="n83" target="n57::n13">
+    <edge id="e216" source="n40" target="n84">
       </edge>
-    <edge id="e217" source="n0" target="n57::n3">
+    <edge id="e217" source="n84" target="n57::n19">
       </edge>
-    <edge id="e218" source="n40" target="n84">
+    <edge id="e218" source="n36" target="n57::n28">
       </edge>
-    <edge id="e219" source="n84" target="n57::n19">
+    <edge id="e219" source="n28::n6" target="n85">
       </edge>
-    <edge id="e220" source="n36" target="n57::n28">
+    <edge id="e220" source="n85" target="n57::n33">
       </edge>
-    <edge id="e221" source="n28::n6" target="n85">
+    <edge id="e221" source="n54" target="n57::n13">
       </edge>
-    <edge id="e222" source="n85" target="n57::n33">
+    <edge id="e222" source="n5" target="n87">
       </edge>
-    <edge id="e223" source="n28::n8" target="n86">
+    <edge id="e223" source="n5" target="n88">
       </edge>
-    <edge id="e224" source="n86" target="n80">
+    <edge id="e224" source="n87" target="n57::n23">
       </edge>
-    <edge id="e225" source="n86" target="n81">
+    <edge id="e225" source="n88" target="n57::n24">
       </edge>
-    <edge id="e226" source="n54" target="n57::n13">
+    <edge id="e226" source="n55" target="n89">
       </edge>
-    <edge id="e227" source="n5" target="n87">
+    <edge id="e227" source="n55" target="n90">
       </edge>
-    <edge id="e228" source="n5" target="n88">
+    <edge id="e228" source="n89" target="n57::n13">
       </edge>
-    <edge id="e229" source="n87" target="n57::n23">
+    <edge id="e229" source="n90" target="n57::n12">
       </edge>
-    <edge id="e230" source="n88" target="n57::n24">
+    <edge id="e230" source="n28::n8" target="n91">
       </edge>
-    <edge id="e231" source="n55" target="n89">
-      <data key="d18"/>
+    <edge id="e231" source="n91" target="n60">
       </edge>
-    <edge id="e232" source="n55" target="n90">
-      <data key="d18"/>
+    <edge id="e232" source="n91" target="n86">
       </edge>
-    <edge id="e233" source="n89" target="n57::n13">
-      <data key="d18"/>
+    <edge id="e233" source="n59" target="n57::n34">
       </edge>
-    <edge id="e234" source="n90" target="n57::n12">
-      <data key="d18"/>
+    <edge id="e234" source="n86" target="n57::n34">
+      </edge>
+    <edge id="e235" source="n91" target="n92">
+      </edge>
+    <edge id="e236" source="n91" target="n93">
+      </edge>
+    <edge id="e237" source="n91" target="n94">
+      </edge>
+    <edge id="e238" source="n91" target="n95">
+      </edge>
+    <edge id="e239" source="n92" target="n57::n34">
+      </edge>
+    <edge id="e240" source="n93" target="n57::n34">
+      </edge>
+    <edge id="e241" source="n94" target="n57::n34">
+      </edge>
+    <edge id="e242" source="n95" target="n57::n34">
       </edge>
   </graph>
   <data key="d16">

@@ -1,37 +1,15 @@
 import datetime
 import sys
 import os
-from os.path import join, abspath, dirname
-import dj_database_url
 
 # PATH vars
 
-here = lambda *x: join(abspath(dirname(__file__)), *x)
-PROJECT_ROOT = here("..")
-root = lambda *x: join(abspath(PROJECT_ROOT), *x)
+here = lambda *x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
+PROJECT_ROOT = here('..')
+root = lambda *x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
 
 sys.path.insert(0, root('apps'))
 sys.path.insert(0, root('libs'))
-
-
-# ENVIRON values
-
-from django.core.exceptions import ImproperlyConfigured
-
-# .env_values.py contains secrets and host config values usually stored
-# in a different place
-try:
-    import env_values
-except ImportError:
-    env_values = None
-
-
-def get_env_value(var_name):
-    """ Get the env value `var_name` or return exception """
-    try:
-        return getattr(env_values, var_name)
-    except AttributeError:
-        raise ImproperlyConfigured("Environment value %s not found" % var_name)
 
 
 DEBUG = True
@@ -53,15 +31,17 @@ DATABASES = {
         'NAME': 'cla_backend',
         'USER': 'postgres',
         'PASSWORD': '',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'HOST': '',  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '',  # Set to empty string for default.
     }
 }
 
 # Support heroku
 DJ_DATABASE_URL = os.environ.get('DATABASE_URL')
 if DJ_DATABASE_URL:
-    DATABASES =  {
+    import dj_database_url
+
+    DATABASES = {
         'default': dj_database_url.parse(DJ_DATABASE_URL)
     }
 
@@ -217,15 +197,6 @@ EXPRESS_SERVER_PORT = os.environ.get('EXPRESS_SERVER_PORT', 8005)
 PERFORMANCE_PLATFORM_TOKEN = os.environ.get('PERFORMANCE_PLATFORM_TOKEN', 'ppt')
 PERFORMANCE_PLATFORM_API = os.environ.get('PERFORMANCE_PLATFORM_API', '')
 
-# DIVERSITY
-
-DIVERSITY_PUBLIC_KEY_PATH = os.environ.get(
-    'DIVERSITY_PUBLIC_KEY_PATH', root('../keys/diversity_dev_public.key')
-)
-DIVERSITY_PRIVATE_KEY_PATH = os.environ.get(
-    'DIVERSITY_PRIVATE_KEY_PATH', root('../keys/diversity_dev_private.key')
-)
-
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -282,7 +253,7 @@ if 'RAVEN_CONFIG_DSN' in os.environ:
 
     MIDDLEWARE_CLASSES = (
         'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
-        #'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
+        # 'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
     ) + MIDDLEWARE_CLASSES
 
 # SECURITY
@@ -355,7 +326,7 @@ OBIEE_EMAIL_TO = os.environ.get('OBIEE_EMAIL_TO', DEFAULT_EMAIL_TO)
 OBIEE_ZIP_PASSWORD = os.environ.get('OBIEE_ZIP_PASSWORD')
 
 
-#celery
+# celery
 if all([
     os.environ.get('SQS_ACCESS_KEY'),
     os.environ.get('SQS_SECRET_KEY')
@@ -371,23 +342,30 @@ else:
     # because it'll just cause errors
     CELERY_ALWAYS_EAGER = True
 
+CLA_ENV = os.environ.get('CLA_ENV', 'local')
+IS_AWS_ENV = os.environ.get('AWS') == 'True'
+if IS_AWS_ENV:
+    _queue_prefix = 'aws-%(env)s-'
+else:
+    _queue_prefix = 'env-%(env)s-'
+
 BROKER_TRANSPORT_OPTIONS = {
     'polling_interval': 10,
     'region': 'eu-west-1',
     'wait_time_seconds': 20,
-    'queue_name_prefix': 'env-{env}-'.format(
-        env=os.environ.get('CLA_ENV', 'local')
-    )
+    'queue_name_prefix': _queue_prefix % {
+        'env': CLA_ENV,
+    },
 }
-CELERY_ACCEPT_CONTENT = ['yaml'] # because json serializer doesn't support dates
-CELERY_TASK_SERIALIZER = 'yaml' # for consistency
-CELERY_RESULT_SERIALIZER = 'yaml' # as above but not actually used
-CELERY_ENABLE_UTC = True # I think this is the default now anyway
-CELERY_RESULT_BACKEND = None # SQS doesn't support it
-CELERY_IGNORE_RESULT = True # SQS doesn't support it
-CELERY_MESSAGE_COMPRESSION = 'gzip' # got to look after the pennies
-CELERY_DISABLE_RATE_LIMITS = True # they don't work with SQS
-CELERY_ENABLE_REMOTE_CONTROL = False # doesn't work well under docker
+CELERY_ACCEPT_CONTENT = ['yaml']  # because json serializer doesn't support dates
+CELERY_TASK_SERIALIZER = 'yaml'  # for consistency
+CELERY_RESULT_SERIALIZER = 'yaml'  # as above but not actually used
+CELERY_ENABLE_UTC = True  # I think this is the default now anyway
+CELERY_RESULT_BACKEND = None  # SQS doesn't support it
+CELERY_IGNORE_RESULT = True  # SQS doesn't support it
+CELERY_MESSAGE_COMPRESSION = 'gzip'  # got to look after the pennies
+CELERY_DISABLE_RATE_LIMITS = True  # they don't work with SQS
+CELERY_ENABLE_REMOTE_CONTROL = False  # doesn't work well under docker
 CELERY_TIMEZONE = 'UTC'
 # apps with celery tasks
 CELERY_IMPORTS = ['reports.tasks', 'notifications.tasks']

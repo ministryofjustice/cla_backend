@@ -10,21 +10,21 @@ migrations() {
     (
     if [ "$BACKEND_ENABLED" == "True" ]; then
 
-    # manage syncdb migrate
-    python manage.py migrate
+        python manage.py install_postgres_extensions
+        python manage.py migrate
 
-    python manage.py loaddata initial_groups.json
-    python manage.py loaddata initial_category.json
-    python manage.py loaddata initial_mattertype.json
-    python manage.py loaddata initial_media_codes.json
-    python manage.py loaddata initial_complaint_categories.json
-    
-    fi 
+        python manage.py loaddata initial_groups.json
+        python manage.py loaddata initial_category.json
+        python manage.py loaddata initial_mattertype.json
+        python manage.py loaddata initial_media_codes.json
+        python manage.py loaddata initial_complaint_categories.json
+
+    fi
     ) >> /var/log/wsgi/db_scripts.log 2>&1
-}  
+}
 
 admin_password() {
-echo "from django.contrib.auth.models import User; User.objects.create_superuser('cla_admin','peter.idah@digital.justice.gov.uk', '$ADMIN_PASSWORD')" | ./manage.py shell || echo "user already exists"
+    echo "from django.contrib.auth.models import User; User.objects.create_superuser('cla_admin', 'jags.parbha@digital.justice.gov.uk', '$ADMIN_PASSWORD')" | ./manage.py shell || echo "user already exists"
 }
 
 cd /home/app/django

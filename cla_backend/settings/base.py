@@ -197,15 +197,6 @@ EXPRESS_SERVER_PORT = os.environ.get('EXPRESS_SERVER_PORT', 8005)
 PERFORMANCE_PLATFORM_TOKEN = os.environ.get('PERFORMANCE_PLATFORM_TOKEN', 'ppt')
 PERFORMANCE_PLATFORM_API = os.environ.get('PERFORMANCE_PLATFORM_API', '')
 
-# DIVERSITY
-
-DIVERSITY_PUBLIC_KEY_PATH = os.environ.get(
-    'DIVERSITY_PUBLIC_KEY_PATH', root('../keys/diversity_dev_public.key')
-)
-DIVERSITY_PRIVATE_KEY_PATH = os.environ.get(
-    'DIVERSITY_PRIVATE_KEY_PATH', root('../keys/diversity_dev_private.key')
-)
-
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -352,7 +343,8 @@ else:
     CELERY_ALWAYS_EAGER = True
 
 CLA_ENV = os.environ.get('CLA_ENV', 'local')
-if os.environ.get('AWS') == 'True':
+IS_AWS_ENV = os.environ.get('AWS') == 'True'
+if IS_AWS_ENV:
     _queue_prefix = 'aws-%(env)s-'
 else:
     _queue_prefix = 'env-%(env)s-'

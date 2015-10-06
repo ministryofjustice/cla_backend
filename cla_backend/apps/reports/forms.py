@@ -439,13 +439,16 @@ class MIOBIEEExportExtract(MonthRangeReportForm):
     )
 
     def clean(self):
-        cleaned_data = super(MIOBIEEExportExtract, self).clean()
         from reports.tasks import obiee_export
-        start = self.month
-        end = self.month + relativedelta(months=1)
-        if not settings.OBIEE_ZIP_PASSWORD:
-            raise ImproperlyConfigured('OBIEE Zip password must be set.')
-        obiee_export.delay(cleaned_data['passphrase'], start, end)
+
+        cleaned_data = super(MIOBIEEExportExtract, self).clean()
+        passphrase = cleaned_data.get('passphrase')
+        if passphrase:
+            start = self.month
+            end = self.month + relativedelta(months=1)
+            if not settings.OBIEE_ZIP_PASSWORD:
+                raise ImproperlyConfigured('OBIEE Zip password must be set.')
+            obiee_export.delay(passphrase, start, end)
         return cleaned_data
 
 

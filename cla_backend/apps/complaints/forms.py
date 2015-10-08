@@ -55,5 +55,9 @@ class ComplaintLogForm(EventSpecificLogForm):
         if self.cleaned_data.get('event_code') == 'COMPLAINT_CLOSED':
             self.complaint.resolved = self.cleaned_data.get('resolved')
             self.complaint.save()
-            self.complaint.eod.case.complaint_flag = False
-            self.complaint.eod.case.save()
+            eod = self.complaint.eod
+            case = eod.case
+            siblings = eod.complaint_set.exclude(id=self.complaint.id)
+            unresolved = siblings.filter(resolved__isnull=True)
+            case.complaint_flag = unresolved.exists()
+            case.save()

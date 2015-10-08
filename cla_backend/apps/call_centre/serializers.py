@@ -185,6 +185,8 @@ class CaseSerializer(CaseSerializerFull):
     billable_time = serializers.IntegerField(read_only=True)
     rejected = serializers.SerializerMethodField('is_rejected')
 
+    complaint_count = serializers.IntegerField(source='complaint_count', read_only=True)
+
     def is_rejected(self, case):
         try:
             return case.rejected == 1
@@ -205,6 +207,7 @@ class CaseSerializer(CaseSerializerFull):
             'ecf_statement', 'case_count',
             'requires_action_at', 'callback_attempt', 'source',
             'complaint_flag', 'eod_details', 'call_started',
+            'complaint_count',
         )
 
 
@@ -241,9 +244,8 @@ class CreateCaseSerializer(CaseSerializer):
     """
     personal_details = UUIDSerializer(slug_field='reference', required=False)
 
-    # class Meta(object):
-    #     model = Case
-    #     fields = ('reference', 'personal_details')
+    class Meta(CaseSerializer.Meta):
+        fields = tuple(set(CaseSerializer.Meta.fields) - {'complaint_count'})
 
 
 class ProviderSerializer(ProviderSerializerBase):

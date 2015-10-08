@@ -188,6 +188,22 @@ class CaseViewSet(
                 source=CASE_SOURCE.PHONE
             )
 
+        if this_operator.is_cla_superuser_or_manager:
+            qs = qs.extra(select={
+                'complaint_count': '''
+                    SELECT COUNT(complaints_complaint.id)
+                    FROM complaints_complaint
+                    JOIN legalaid_eoddetails
+                        ON complaints_complaint.eod_id = legalaid_eoddetails.id
+                    WHERE legalaid_case.id = legalaid_eoddetails.case_id
+                        AND complaints_complaint.resolved IS NULL
+                '''
+            })
+        else:
+            qs = qs.extra(select={
+                'complaint_count': 'SELECT NULL'
+            })
+
         return qs
 
     def get_serializer_class(self):

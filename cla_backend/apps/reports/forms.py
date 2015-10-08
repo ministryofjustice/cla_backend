@@ -48,12 +48,18 @@ class DateRangeReportForm(ReportForm):
 
     def clean(self):
         cleaned_data = super(DateRangeReportForm, self).clean()
-        if self.max_date_range:
+        if self.max_date_range \
+                and 'date_from' in self.cleaned_data \
+                and 'date_to' in self.cleaned_data:
             from_, to = self.date_range
             delta = to - from_
             if delta > timedelta(days=self.max_date_range):
-                raise forms.ValidationError('The date range (%s) should span no more than %s working days' % (delta, str(self.max_date_range)))
-        return cleaned_data # can be removed in django 1.7
+                raise forms.ValidationError(
+                    'The date range (%s) should span '
+                    'no more than %s working days' %
+                    (delta, str(self.max_date_range))
+                )
+        return cleaned_data  # can be removed in django 1.7
 
     @property
     def date_range(self):
@@ -439,13 +445,16 @@ class MIOBIEEExportExtract(MonthRangeReportForm):
     )
 
     def clean(self):
-        cleaned_data = super(MIOBIEEExportExtract, self).clean()
         from reports.tasks import obiee_export
-        start = self.month
-        end = self.month + relativedelta(months=1)
-        if not settings.OBIEE_ZIP_PASSWORD:
-            raise ImproperlyConfigured('OBIEE Zip password must be set.')
-        obiee_export.delay(cleaned_data['passphrase'], start, end)
+
+        cleaned_data = super(MIOBIEEExportExtract, self).clean()
+        passphrase = cleaned_data.get('passphrase')
+        if passphrase:
+            start = self.month
+            end = self.month + relativedelta(months=1)
+            if not settings.OBIEE_ZIP_PASSWORD:
+                raise ImproperlyConfigured('OBIEE Zip password must be set.')
+            obiee_export.delay(passphrase, start, end)
         return cleaned_data
 
 

@@ -254,7 +254,7 @@ class ProviderAllocationHelperTestCase(TestCase):
     def test_even_allocation(self):
         # Test the distribution of cases to {accuracy} accuracy over {total} cases
         total = 8000
-        accuracy = Decimal('0.01')
+        accuracy = Decimal('0.001')
         with mock.patch('cla_common.call_centre_availability.current_datetime', datetime.datetime(2015, 7, 7, 11, 59, 0)):
             helper = ProviderAllocationHelper()
 
@@ -296,8 +296,15 @@ class ProviderAllocationHelperTestCase(TestCase):
             ProviderAllocation.objects.update(modified=as_of-datetime.timedelta(days=1))
 
             ec = make_recipe('legalaid.eligibility_check_yes', category=category, _quantity=total)
+
             for n, e in enumerate(ec):
-                c = make_recipe('legalaid.eligible_case', id=n+1, eligibility_check=e)
+                d = make_recipe('diagnosis.diagnosis_yes',
+                                category=category)
+                c = make_recipe(
+                    'legalaid.eligible_case',
+                    id=n+1,
+                    eligibility_check=e,
+                    diagnosis=d)
                 p = helper.get_suggested_provider(category)
                 c.assign_to_provider(p)
 

@@ -40,7 +40,7 @@ class ProviderDistributionHelper(object):
             .annotate(num_allocations=Count('id'))
         ret = defaultdict(int)
         for item in raw:
-            ret[item['provider']] = item['num_allocations']
+            ret[item['provider']] += item['num_allocations']
 
         if include_pre_allocations:
             preallocs = ProviderPreAllocation.objects.filter(category=category)\

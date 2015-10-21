@@ -250,7 +250,10 @@ class ProviderAllocationHelperTestCase(TestCase):
 
     def assertWithinAllowedAccuracy(self, expected, accuracy, n):
         diff = expected * accuracy
-        return expected - diff <= n <= expected + diff
+        if not expected - diff <= n <= expected + diff:
+            raise self.failureException(
+                'Expected: %s, Got: %s  - not within allowed accuracy: %s' %
+                (expected, n, accuracy))
 
     def test_even_allocation(self):
         # Test the distribution of cases to {accuracy} accuracy over {total} cases

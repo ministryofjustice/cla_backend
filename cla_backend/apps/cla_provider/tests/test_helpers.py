@@ -11,7 +11,8 @@ from legalaid.models import Case
 
 from core.tests.mommy_utils import make_recipe
 
-from cla_provider.helpers import ProviderAllocationHelper
+from cla_provider.helpers import ProviderAllocationHelper, \
+    ProviderDistributionHelper
 
 
 class ProviderAllocationHelperTestCase(TestCase):
@@ -249,7 +250,10 @@ class ProviderAllocationHelperTestCase(TestCase):
 
     def assertWithinAllowedAccuracy(self, expected, accuracy, n):
         diff = expected * accuracy
-        return expected - diff <= n <= expected + diff
+        if not expected - diff <= n <= expected + diff:
+            raise self.failureException(
+                'Expected: %s, Got: %s  - not within allowed accuracy: %s' %
+                (expected, n, accuracy))
 
     def test_even_allocation(self):
         # Test the distribution of cases to {accuracy} accuracy over {total} cases
@@ -314,3 +318,77 @@ class ProviderAllocationHelperTestCase(TestCase):
             self.assertWithinAllowedAccuracy(1000, accuracy, provider2.case_set.count())
             self.assertWithinAllowedAccuracy(1000, accuracy, provider3.case_set.count())
             self.assertWithinAllowedAccuracy(1000, accuracy, provider4.case_set.count())
+
+    def test_get_distribution(self):
+        with mock.patch('cla_common.call_centre_availability.current_datetime', datetime.datetime(2015, 7, 7, 11, 59, 0)):
+            as_of = timezone.make_aware(
+                datetime.datetime(day=7, month=7, year=2015, hour=12, minute=0),
+                timezone.get_current_timezone()
+            )
+            distribution_helper = ProviderDistributionHelper(as_of)
+
+            category = make_recipe('legalaid.category')
+
+            provider1 = make_recipe('cla_provider.provider', active=True)
+            provider2 = make_recipe('cla_provider.provider', active=True)
+            provider3 = make_recipe('cla_provider.provider', active=True)
+            make_recipe(
+                'cla_provider.provider_allocation',
+                weighted_distribution=1,
+                provider=provider1,
+                category=category,
+            )
+            make_recipe(
+                'cla_provider.provider_allocation',
+                weighted_distribution=1,
+                provider=provider2,
+                category=category,
+            )
+            make_recipe(
+                'cla_provider.provider_allocation',
+                weighted_distribution=1,
+                provider=provider3,
+                category=category,
+            )
+
+            ec = make_recipe('legalaid.eligibility_check_yes', category=category, _quantity=12)
+
+            for i in range(1, 6):
+                d = make_recipe('diagnosis.diagnosis_yes',
+                                category=category)
+                c = make_recipe(
+                    'legalaid.eligible_case',
+                    id=i,
+                    eligibility_check=ec[i],
+                    diagnosis=d)
+                c.assign_to_provider(provider1)
+
+            for i in range(7, 9):
+                d = make_recipe('diagnosis.diagnosis_yes',
+                                category=category)
+                c = make_recipe(
+                    'legalaid.eligible_case',
+                    id=i,
+                    eligibility_check=ec[i],
+                    diagnosis=d)
+                c.assign_to_provider(provider2)
+
+            for i in range(9, 10):
+                d = make_recipe('diagnosis.diagnosis_yes',
+                                category=category)
+                c = make_recipe(
+                    'legalaid.eligible_case',
+                    id=i,
+                    eligibility_check=ec[i],
+                    diagnosis=d)
+                c.assign_to_provider(provider3)
+
+            self.assertDictEqual(
+                distribution_helper.get_distribution(category),
+                {
+                    provider1.pk: 5,
+                    provider2.pk: 2,
+                    provider3.pk: 1,
+                })
+
+

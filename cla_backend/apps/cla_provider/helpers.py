@@ -28,7 +28,7 @@ class ProviderDistributionHelper(object):
     def get_distribution(self, category, include_pre_allocations=False):
         last_update = ProviderAllocation.objects.filter(category=category).order_by('-modified').first()
 
-        raw = Case.objects.filter(diagnosis__category=category)\
+        raw = Case.objects.order_by('provider').filter(diagnosis__category=category)\
             .exclude(log__code='MANREF')\
             .exclude(provider=None)\
             .filter(provider_assigned_at__gte=self.date)

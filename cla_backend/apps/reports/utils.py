@@ -152,7 +152,7 @@ class OBIEEExporter(object):
         if os.path.exists(self.full_path):
             os.remove(self.full_path)
         if os.path.exists(self.tmp_export_path):
-            os.removedirs(self.tmp_export_path)
+            shutil.rmtree(self.tmp_export_path)
 
 
 def email_obiee_export(zip_path, dt_from, dt_to):

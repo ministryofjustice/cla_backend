@@ -44,7 +44,8 @@ class ProviderDistributionHelper(object):
                 ret[item['provider']] += item['num_allocations']
 
         if include_pre_allocations:
-            preallocs = ProviderPreAllocation.objects.filter(category=category)\
+            preallocs = ProviderPreAllocation.objects.order_by('provider')\
+                .filter(category=category)\
                 .values('provider')\
                 .annotate(num_allocations=Count('case'))
             for item in preallocs:

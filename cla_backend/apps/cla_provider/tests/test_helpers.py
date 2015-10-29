@@ -391,4 +391,85 @@ class ProviderAllocationHelperTestCase(TestCase):
                     provider3.pk: 1,
                 })
 
+    def test_distribution_with_rota(self):
+        with mock.patch('cla_common.call_centre_availability.current_datetime', datetime.datetime(2015, 7, 7, 11, 59, 0)):
+            as_of = timezone.make_aware(
+                datetime.datetime(day=7, month=7, year=2015, hour=12, minute=0),
+                timezone.get_current_timezone()
+            )
+            distribution_helper = ProviderDistributionHelper(as_of)
+
+            category = make_recipe('legalaid.category')
+
+            provider1 = make_recipe('cla_provider.provider', active=True)
+            provider2 = make_recipe('cla_provider.provider', active=True)
+            aloc1 = make_recipe(
+                'cla_provider.provider_allocation',
+                weighted_distribution=1,
+                provider=provider1,
+                category=category,
+                modified=as_of,
+            )
+            aloc1.modified = as_of
+            aloc1.save()
+
+            aloc2 = make_recipe(
+                'cla_provider.provider_allocation',
+                weighted_distribution=1,
+                provider=provider2,
+                category=category,
+                modified=as_of,
+            )
+            aloc2.modified = as_of
+            aloc2.save()
+
+            d = make_recipe('diagnosis.diagnosis_yes',
+                            id=1,
+                            category=category)
+
+            ec = make_recipe('legalaid.eligibility_check_yes',
+                             id=1,
+                             category=category)
+
+            c = make_recipe(
+                'legalaid.eligible_case',
+                id=1,
+                eligibility_check=ec,
+                diagnosis=d)
+
+            tz = timezone.now().replace(hour=20, minute=59) + datetime.timedelta(days=1)
+
+            with mock.patch('django.utils.timezone.now', lambda: tz):
+                c.assign_to_provider(provider1)
+
+            self.assertDictEqual(
+                distribution_helper.get_distribution(category),
+                {})
+
+            d2 = make_recipe('diagnosis.diagnosis_yes',
+                             id=2,
+                             category=category)
+
+            ec2 = make_recipe('legalaid.eligibility_check_yes',
+                              id=2,
+                              category=category)
+
+            c2 = make_recipe(
+                'legalaid.eligible_case',
+                id=2,
+                eligibility_check=ec2,
+                diagnosis=d2)
+
+            tz2 = timezone.now().replace(hour=11, minute=59) + datetime.timedelta(days=1)
+
+            with mock.patch('django.utils.timezone.now', lambda: tz2):
+                c2.assign_to_provider(provider2)
+
+            self.assertDictEqual(
+                distribution_helper.get_distribution(category),
+                {
+                    provider2.pk: 1,
+                })
+
+
 

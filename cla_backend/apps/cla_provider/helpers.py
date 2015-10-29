@@ -28,7 +28,7 @@ class ProviderDistributionHelper(object):
     def get_distribution(self, category, include_pre_allocations=False):
         last_update = ProviderAllocation.objects.filter(category=category).order_by('-modified').first()
 
-        raw = Case.objects.order_by('provider').filter(diagnosis__category=category)\
+        raw = Case.objects.filter(diagnosis__category=category)\
             .exclude(log__code='MANREF')\
             .exclude(provider=None)\
             .filter(provider_assigned_at__gte=self.date)
@@ -36,11 +36,12 @@ class ProviderDistributionHelper(object):
         if last_update and last_update.modified > self.date:
             raw = raw.filter(provider_assigned_at__gte=last_update.modified)
 
-        raw = raw.values('provider')\
+        raw = raw.values('provider', 'provider_assigned_at')\
             .annotate(num_allocations=Count('id'))
         ret = defaultdict(int)
         for item in raw:
-            ret[item['provider']] += item['num_allocations']
+            if item['provider_assigned_at'] in PROVIDER_HOURS:
+                ret[item['provider']] += item['num_allocations']
 
         if include_pre_allocations:
             preallocs = ProviderPreAllocation.objects.filter(category=category)\

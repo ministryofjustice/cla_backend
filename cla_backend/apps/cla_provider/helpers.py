@@ -11,13 +11,9 @@ from django.utils import timezone
 from django.conf import settings
 from django.db.models import Count
 
-from cla_common.call_centre_availability import OpeningHours
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, \
     ProviderPreAllocation
 from legalaid.models import Case
-
-
-PROVIDER_HOURS = OpeningHours(**settings.PROVIDER_HOURS)
 
 
 class ProviderDistributionHelper(object):
@@ -28,7 +24,9 @@ class ProviderDistributionHelper(object):
     def get_distribution(self, category, include_pre_allocations=False):
         last_update = ProviderAllocation.objects.filter(category=category).order_by('-modified').first()
 
-        raw = Case.objects.filter(diagnosis__category=category)\
+        raw = Case.objects.order_by('provider')\
+            .filter(diagnosis__category=category)\
+            .filter(assigned_out_of_hours=False)\
             .exclude(log__code='MANREF')\
             .exclude(provider=None)\
             .filter(provider_assigned_at__gte=self.date)
@@ -36,12 +34,11 @@ class ProviderDistributionHelper(object):
         if last_update and last_update.modified > self.date:
             raw = raw.filter(provider_assigned_at__gte=last_update.modified)
 
-        raw = raw.values('provider', 'provider_assigned_at')\
+        raw = raw.values('provider')\
             .annotate(num_allocations=Count('id'))
         ret = defaultdict(int)
         for item in raw:
-            if item['provider_assigned_at'] in PROVIDER_HOURS:
-                ret[item['provider']] += item['num_allocations']
+            ret[item['provider']] += item['num_allocations']
 
         if include_pre_allocations:
             preallocs = ProviderPreAllocation.objects.order_by('provider')\
@@ -207,7 +204,7 @@ class ProviderAllocationHelper(object):
         return self._get_random_provider(category)
 
     def get_suggested_provider(self, category):
-        if self.as_of not in PROVIDER_HOURS:
+        if self.as_of not in settings.PROVIDER_OPENING_HOURS:
             return self._get_rota_provider(category)
         if not os.path.isfile('/tmp/DISABLE_BEST_FIT_PROVIDER'):
             return self._get_best_fit_provider(category)

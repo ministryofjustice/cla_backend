@@ -1,6 +1,7 @@
 import datetime
 import sys
 import os
+from cla_common.call_centre_availability import OpeningHours
 
 # PATH vars
 
@@ -311,6 +312,8 @@ CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get('CALL_CENTRE_NOTIFY_EMAIL_ADDR
 PROVIDER_HOURS = {
     'weekday': (datetime.time(9, 0), datetime.time(17, 0))
 }
+
+PROVIDER_OPENING_HOURS = OpeningHours(**PROVIDER_HOURS)
 
 OPERATOR_HOURS = {
     'weekday': (datetime.time(9, 0), datetime.time(20, 0)),

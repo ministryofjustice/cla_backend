@@ -118,6 +118,16 @@ following commands to get the server running again:
 
     ./manage.py runserver 8000
 
+Translaltions
+-------------
+
+When making changes to text (e.g. GraphML files) translations should be updated. To update translations run:
+
+::
+
+     ./manage.py translations update 
+
+
 Troubleshooting
 ---------------
 

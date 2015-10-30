@@ -11,6 +11,7 @@ from django.db.models import SET_NULL
 from django.conf import settings
 from django.utils.timezone import utc
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 
 from model_utils.models import TimeStampedModel
 
@@ -680,6 +681,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     from_case = models.ForeignKey('self', blank=True, null=True, related_name='split_cases')
 
     provider_assigned_at = models.DateTimeField(blank=True, null=True)
+    assigned_out_of_hours = models.NullBooleanField(default=False)
     provider_viewed = models.DateTimeField(blank=True, null=True)
     provider_accepted = models.DateTimeField(blank=True, null=True)
     provider_closed = models.DateTimeField(blank=True, null=True)
@@ -818,9 +820,12 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.provider_viewed = None
         self.provider_accepted = None
         self.provider_closed = None
+        self.assigned_out_of_hours = self.provider_assigned_at not in \
+                                        settings.NON_ROTA_OPENING_HOURS
         self.save(update_fields=[
             'provider', 'provider_viewed', 'provider_accepted',
-            'provider_closed', 'modified', 'provider_assigned_at'
+            'provider_closed', 'modified', 'provider_assigned_at',
+            'assigned_out_of_hours'
         ])
         self.reset_requires_action_at()
 

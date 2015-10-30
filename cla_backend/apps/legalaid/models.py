@@ -821,7 +821,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.provider_accepted = None
         self.provider_closed = None
         self.assigned_out_of_hours = self.provider_assigned_at not in \
-                                        settings.PROVIDER_OPENING_HOURS
+                                        settings.NON_ROTA_OPENING_HOURS
         self.save(update_fields=[
             'provider', 'provider_viewed', 'provider_accepted',
             'provider_closed', 'modified', 'provider_assigned_at',

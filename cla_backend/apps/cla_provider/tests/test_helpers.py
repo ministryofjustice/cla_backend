@@ -437,7 +437,8 @@ class ProviderAllocationHelperTestCase(TestCase):
                 eligibility_check=ec,
                 diagnosis=d)
 
-            tz = timezone.now().replace(hour=20, minute=59) + datetime.timedelta(days=1)
+            tz = timezone.now().replace(hour=20, minute=59)
+            tz = tz + datetime.timedelta(days=7 - tz.weekday())
 
             with mock.patch('django.utils.timezone.now', lambda: tz):
                 c.assign_to_provider(provider1)
@@ -460,7 +461,8 @@ class ProviderAllocationHelperTestCase(TestCase):
                 eligibility_check=ec2,
                 diagnosis=d2)
 
-            tz2 = timezone.now().replace(hour=11, minute=59) + datetime.timedelta(days=1)
+            tz2 = timezone.now().replace(hour=11, minute=59)
+            tz2 = tz2 + datetime.timedelta(days=7 - tz2.weekday())
 
             with mock.patch('django.utils.timezone.now', lambda: tz2):
                 c2.assign_to_provider(provider2)

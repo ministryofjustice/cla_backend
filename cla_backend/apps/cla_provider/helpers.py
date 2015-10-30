@@ -204,7 +204,7 @@ class ProviderAllocationHelper(object):
         return self._get_random_provider(category)
 
     def get_suggested_provider(self, category):
-        if self.as_of not in settings.PROVIDER_OPENING_HOURS:
+        if self.as_of not in settings.NON_ROTA_OPENING_HOURS:
             return self._get_rota_provider(category)
         if not os.path.isfile('/tmp/DISABLE_BEST_FIT_PROVIDER'):
             return self._get_best_fit_provider(category)

@@ -1264,9 +1264,9 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
         ]
 
         if internal:
-            equal_fields += ['provider', 'requires_action_by', 'provider_assigned_at']
+            equal_fields += ['provider', 'requires_action_by', 'provider_assigned_at', 'assigned_out_of_hours']
         else:
-            non_equal_fields += ['provider', 'requires_action_by', 'provider_assigned_at']
+            non_equal_fields += ['provider', 'requires_action_by', 'provider_assigned_at', 'assigned_out_of_hours']
 
         self._check_model_fields(
             Case, case, new_case, non_equal_fields, equal_fields

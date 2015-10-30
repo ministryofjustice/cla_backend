@@ -769,10 +769,12 @@ class Case(TimeStampedModel, ModelDiffMixin):
         if assignment_internal:
             override_values['requires_action_by'] = self.requires_action_by
             override_values['provider_assigned_at'] = self.provider_assigned_at
+            override_values['assigned_out_of_hours'] = self.assigned_out_of_hours
         else:
             override_values['provider'] = None
             override_values['requires_action_by'] = REQUIRES_ACTION_BY.OPERATOR
             override_values['provider_assigned_at'] = None
+            override_values['assigned_out_of_hours'] = None
 
         new_case = clone_model(
             cls=self.__class__,
@@ -783,6 +785,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
                     'callback_attempt', 'search_field', 'provider_assigned_at',
+                    'assigned_out_of_hours'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details',

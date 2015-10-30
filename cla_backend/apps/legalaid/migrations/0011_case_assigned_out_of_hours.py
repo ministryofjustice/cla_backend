@@ -8,7 +8,7 @@ from django.conf import settings
 
 
 def add_assigned_at(apps, schema_editor):
-    Case = apps.get_model("legalaid", "Case")
+    Case = apps.get_model('legalaid', 'Case')
     for case in Case.objects.all():
         if case.provider_assigned_at:
             case.assigned_out_of_hours = case.provider_assigned_at not in \
@@ -21,7 +21,7 @@ def reverse_assigned(*args, **kwargs):
 
 
 def reset_provider_allocation_modified(apps, schema_editor):
-    ProviderAllocation = apps.get_model("cla_provider", "ProviderAllocation")
+    ProviderAllocation = apps.get_model('cla_provider', 'ProviderAllocation')
     for pa in ProviderAllocation.objects.all():
         pa.modified = datetime.datetime.now()
         pa.save()

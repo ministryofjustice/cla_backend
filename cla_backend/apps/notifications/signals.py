@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-import datetime
-import pytz
+from django.utils import timezone
 
 TASK_ID_PREFIX = 'cla_backend.notifications.task.notifications'
 
 
 def get_update_client_times(instance):
     times = []
-    now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    now = timezone.now()
     task_id = '%s-%s' % (TASK_ID_PREFIX, instance.pk)
 
     times.append({})

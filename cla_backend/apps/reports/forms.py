@@ -1,22 +1,22 @@
-from dateutil.relativedelta import relativedelta
-from django.core.exceptions import ImproperlyConfigured
 import os
+from dateutil.relativedelta import relativedelta
 from datetime import timedelta, time, datetime, date
-from cla_eventlog import event_registry
 
 from django import forms
 from django.conf import settings
 from django.db import connection
 from django.utils import timezone
 from django.contrib.admin import widgets
+from django.core.exceptions import ImproperlyConfigured
 
 from legalaid.utils import diversity
 from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
+from cla_eventlog import event_registry
 from complaints.constants import SLA_DAYS
+from reports.widgets import MonthYearWidget
 
 from . import sql
-from reports.widgets import MonthYearWidget
 
 
 class ConvertDateMixin(object):

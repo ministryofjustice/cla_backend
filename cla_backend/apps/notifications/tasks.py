@@ -23,6 +23,7 @@ def send_notifications():
         data=json.dumps(data, cls=DjangoJSONEncoder),
         headers={'content-type': 'application/json'}
     )
+
     try:
         success = response.json()['success']
         assert success is True

@@ -92,9 +92,6 @@ select
   ,COALESCE(adapt.text_relay, false)::bool as "Adjustments_TYP"
   ,COALESCE(adapt.callback_preference, false)::bool as "Adjustments_CallbackPreferred"
   ,COALESCE(adapt.skype_webcam, false)::bool as "Adjustments_Skype"
-  -- diversity fields --
-  ,trim((diversity_view.diversity->'gender')::text, '"') as "Gender"
-  ,trim((diversity_view.diversity->'ethnicity')::text, '"') as "Ethnicity"
   ,CASE
       WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 20 THEN 'A'
       WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 30 THEN 'B'
@@ -105,10 +102,6 @@ select
       WHEN pd.date_of_birth IS NULL THEN 'U'
       ELSE 'G'
       END as "Age(Range)"
-  ,trim((diversity_view.diversity->'religion')::text, '"') as "Religion"
-  ,trim((diversity_view.diversity->'sexual_orientation')::text, '"') as "Sexual_Orientation"
-  ,trim((diversity_view.diversity->'disability')::text, '"') as "Disability"
-  -- / diversity fields --
   ,CASE
     when EXTRACT(DOW from c.created at time zone 'Europe/London') = 5 and EXTRACT(HOUR from c.created at time zone 'Europe/London') >= 20 then 'WKEND' -- after 20:00 on friday
     when EXTRACT(DOW from c.created at time zone 'Europe/London') = 6 and (EXTRACT(HOUR from c.created at time zone 'Europe/London') < 12 OR (EXTRACT(HOUR from c.created at time zone 'Europe/London') = 12 AND EXTRACT(MINUTE from c.created at time zone 'Europe/London') < 30))  then 'WKEND' -- saturday before 12:30
@@ -146,6 +139,8 @@ select
   ,u.username as "Username"
   ,c.thirdparty_details_id::bool as "Has_Third_Party"
   ,ceil(EXTRACT(EPOCH FROM operator_first_action.created-c.created)) as "Time_to_OS_Action"
+  -- diversity fields --
+  ,diversity_view.diversity as diversity_json
 from cla_eventlog_log as log
   JOIN legalaid_case as c on c.id = log.case_id and not (c.eligibility_check_id is null and c.diagnosis_id is null and personal_details_id is null)
   LEFT OUTER JOIN legalaid_personaldetails as pd on c.personal_details_id = pd.id

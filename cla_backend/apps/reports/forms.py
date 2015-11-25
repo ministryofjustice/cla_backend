@@ -1,22 +1,22 @@
-from dateutil.relativedelta import relativedelta
-from django.core.exceptions import ImproperlyConfigured
 import os
+from dateutil.relativedelta import relativedelta
 from datetime import timedelta, time, datetime, date
-from cla_eventlog import event_registry
 
 from django import forms
 from django.conf import settings
 from django.db import connection
 from django.utils import timezone
 from django.contrib.admin import widgets
+from django.core.exceptions import ImproperlyConfigured
 
 from legalaid.utils import diversity
 from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
+from cla_eventlog import event_registry
 from complaints.constants import SLA_DAYS
+from reports.widgets import MonthYearWidget
 
 from . import sql
-from reports.widgets import MonthYearWidget
 
 
 class ConvertDateMixin(object):
@@ -199,6 +199,22 @@ class MICaseExtract(SQLFileDateRangeReport):
             "Welsh", "Language", "Outcome_Created_At",
             "Username", "Has_Third_Party", "Time_to_OS_Action"
         ]
+
+    def get_rows(self):
+        for row in self.get_queryset():
+            l = list(row)
+            diversity_json = l.pop() or {}
+
+            def insert_value(key, val):
+                index = self.get_headers().index(key)
+                l.insert(index, val)
+
+            insert_value('Gender', diversity_json.get('gender'))
+            insert_value('Ethnicity', diversity_json.get('ethnicity'))
+            insert_value('Religion', diversity_json.get('religion'))
+            insert_value('Sexual_Orientation', diversity_json.get('sexual_orientation'))
+            insert_value('Disability', diversity_json.get('disability'))
+            yield l
 
     def get_queryset(self):
         passphrase = self.cleaned_data.get('passphrase')

@@ -8,6 +8,8 @@ from django.utils import timezone
 from django.core.management.base import BaseCommand
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.admin.models import LogEntry
+from django.contrib.contenttypes.models import ContentType
 
 from legalaid.models import Case, Category
 
@@ -45,3 +47,28 @@ class Command(BaseCommand):
                     provider_allocation else 'None'
                 self.stdout.write('%s: %s(%s)' %(provider.name, allocation,
                                                  weighting))
+
+        self.stdout.write('\nDates of edited Allocations')
+
+        ct = ContentType.objects.get(model='providerallocation')
+        log_entries = LogEntry.objects.filter(content_type_id=ct.pk)
+
+        for log_entry in log_entries:
+            try:
+                pa = ProviderAllocation.objects.get(
+                    pk=log_entry.object_id,
+                    category__isnull=False,
+                    provider__isnull=False)
+            except ProviderAllocation.DoesNotExist:
+                continue
+            self.stdout.write(
+                'Date: %s, Category: %s, Provider: %s, (%s)' % (
+                    log_entry.action_time.date(),
+                    pa.category.name,
+                    pa.provider.name,
+                    log_entry.change_message))
+
+        self.stdout.write('\nProviderAllocations')
+
+        for pa in ProviderAllocation.objects.all():
+            self.stdout.write('%s: %s' % (pa.category.name, pa.modified))

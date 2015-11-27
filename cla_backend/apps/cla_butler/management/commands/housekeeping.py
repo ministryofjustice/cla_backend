@@ -12,6 +12,9 @@ class Command(NoArgsCommand):
     help = 'Deletes public diagnosis that are more than a day old'
 
     def handle_noargs(self, *args, **options):
+        self.cleanup_diagnosis()
+
+    def cleanup_diagnosis(self, *args, **options):
         self.stdout.write('Total DiagnosisTraversal objects: {count}'.format(
             count=DiagnosisTraversal.objects.all().count()))
         yesterday = timezone.now() - datetime.timedelta(days=1)
@@ -26,4 +29,3 @@ class Command(NoArgsCommand):
 
         self.stdout.write('Total DiagnosisTraversal objects: {count}'.format(
             count=DiagnosisTraversal.objects.all().count()))
-

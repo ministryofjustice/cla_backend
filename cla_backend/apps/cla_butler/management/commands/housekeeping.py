@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+from django.db.models import Q
 from django.core.management.base import NoArgsCommand
 from django.utils import timezone
 
 from diagnosis.models import DiagnosisTraversal
+from legalaid.models import Case, EligibilityCheck
 
 
 class Command(NoArgsCommand):
@@ -29,3 +31,11 @@ class Command(NoArgsCommand):
 
         self.stdout.write('Total DiagnosisTraversal objects: {count}'.format(
             count=DiagnosisTraversal.objects.all().count()))
+
+    def cleanup_cases(self):
+        for case in Case.objects.all():
+            pass
+
+    def cleanup_eligibility_check(self):
+        for ec in EligibilityCheck.objects.all():
+            pass

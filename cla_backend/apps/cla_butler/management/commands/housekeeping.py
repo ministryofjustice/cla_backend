@@ -10,7 +10,8 @@ from django.utils import timezone
 
 from cla_eventlog.models import Log
 from diagnosis.models import DiagnosisTraversal
-from legalaid.models import Case, EligibilityCheck
+from legalaid.models import Case, EligibilityCheck, CaseNotesHistory, Person,\
+    Income, Savings, Deductions
 
 
 class Command(BaseCommand):
@@ -22,6 +23,8 @@ class Command(BaseCommand):
         self.cleanup_diagnosis()
         self.cleanup_eligibility_check()
         self.cleanup_cases()
+        self.cleanup_case_note_history()
+        self.cleanup_person()
 
     def _setup(self):
         self.now = timezone.now()
@@ -79,3 +82,19 @@ class Command(BaseCommand):
             modified__lte=two_years,
         )
         self._delete_objects(cases)
+
+    def cleanup_case_note_history(self):
+        cnhs = CaseNotesHistory.objects.filter(
+            case__isnull=True
+        )
+        self._delete_objects(cnhs)
+
+    def cleanup_person(self):
+        ps = Person.objects.filter(you__isnull=True, partner__isnull=True)
+        self._delete_objects(ps)
+        incomes = Income.objects.filter(person__isnull=True)
+        self._delete_objects(incomes)
+        savings = Savings.objects.filter(person__isnull=True)
+        self._delete_objects(savings)
+        deductions = Deductions.objects.filter(person__isnull=True)
+        self._delete_objects(deductions)

@@ -86,7 +86,7 @@ class Command(BaseCommand):
         self._delete_objects(cnhs)
 
     def cleanup_diagnosis(self, *args, **options):
-        yesterday = self.now - datetime.timedelta(days=1)
+        yesterday = self.now - datetime.timedelta(days=10)
         diags = DiagnosisTraversal.objects.filter(
             case__isnull=True,
             modified__lte=yesterday,
@@ -94,7 +94,7 @@ class Command(BaseCommand):
         self._delete_objects(diags)
 
     def cleanup_eligibility_check(self):
-        yesterday = self.now - datetime.timedelta(days=1)
+        yesterday = self.now - datetime.timedelta(days=10)
         ecs = EligibilityCheck.objects.filter(
             case__isnull=True,
             modified__lte=yesterday,

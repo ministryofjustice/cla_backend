@@ -11,7 +11,7 @@ from django.utils import timezone
 from cla_eventlog.models import Log
 from diagnosis.models import DiagnosisTraversal
 from legalaid.models import Case, EligibilityCheck, CaseNotesHistory, Person,\
-    Income, Savings, Deductions
+    Income, Savings, Deductions, PersonalDetails, ThirdPartyDetails
 
 
 class Command(BaseCommand):
@@ -20,11 +20,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self._setup()
-        self.cleanup_diagnosis()
-        self.cleanup_eligibility_check()
         self.cleanup_cases()
         self.cleanup_case_note_history()
+        self.cleanup_diagnosis()
+        self.cleanup_eligibility_check()
         self.cleanup_person()
+        self.cleanup_personal_details()
+        self.cleanup_third_party_details()
 
     def _setup(self):
         self.now = timezone.now()
@@ -60,6 +62,19 @@ class Command(BaseCommand):
             count=qs.model.objects.all().count(),
             name=name))
 
+    def cleanup_cases(self):
+        two_years = self.now - relativedelta(years=2)
+        cases = Case.objects.filter(
+            modified__lte=two_years,
+        )
+        self._delete_objects(cases)
+
+    def cleanup_case_note_history(self):
+        cnhs = CaseNotesHistory.objects.filter(
+            case__isnull=True
+        )
+        self._delete_objects(cnhs)
+
     def cleanup_diagnosis(self, *args, **options):
         yesterday = self.now - datetime.timedelta(days=1)
         diags = DiagnosisTraversal.objects.filter(
@@ -76,19 +91,6 @@ class Command(BaseCommand):
         )
         self._delete_objects(ecs)
 
-    def cleanup_cases(self):
-        two_years = self.now - relativedelta(years=2)
-        cases = Case.objects.filter(
-            modified__lte=two_years,
-        )
-        self._delete_objects(cases)
-
-    def cleanup_case_note_history(self):
-        cnhs = CaseNotesHistory.objects.filter(
-            case__isnull=True
-        )
-        self._delete_objects(cnhs)
-
     def cleanup_person(self):
         ps = Person.objects.filter(you__isnull=True, partner__isnull=True)
         self._delete_objects(ps)
@@ -98,3 +100,15 @@ class Command(BaseCommand):
         self._delete_objects(savings)
         deductions = Deductions.objects.filter(person__isnull=True)
         self._delete_objects(deductions)
+
+    def cleanup_personal_details(self):
+        pds = PersonalDetails.objects.filter(
+            case__isnull=True
+        )
+        self._delete_objects(pds)
+
+    def cleanup_third_party_details(self):
+        tps = ThirdPartyDetails.objects.filter(
+            case__isnull=True
+        )
+        self._delete_objects(tps)

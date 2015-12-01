@@ -12,7 +12,8 @@ from django.utils import timezone
 from cla_eventlog.models import Log
 from diagnosis.models import DiagnosisTraversal
 from legalaid.models import Case, EligibilityCheck, CaseNotesHistory, Person,\
-    Income, Savings, Deductions, PersonalDetails, ThirdPartyDetails
+    Income, Savings, Deductions, PersonalDetails, ThirdPartyDetails, \
+    AdaptationDetails
 
 
 class Command(BaseCommand):
@@ -28,6 +29,7 @@ class Command(BaseCommand):
         self.cleanup_person()
         self.cleanup_personal_details()
         self.cleanup_third_party_details()
+        self.cleanup_adaptation_details()
         self.cleanup_sessions()
 
     def _setup(self):
@@ -120,3 +122,9 @@ class Command(BaseCommand):
             case__isnull=True
         )
         self._delete_objects(tps)
+
+    def cleanup_adaptation_details(self):
+        ads = AdaptationDetails.objects.filter(
+            case__isnull=True
+        )
+        self._delete_objects(ads)

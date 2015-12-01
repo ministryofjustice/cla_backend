@@ -2,6 +2,7 @@
 import datetime
 
 from dateutil.relativedelta import relativedelta
+from django.contrib.sessions.models import Session
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
@@ -27,6 +28,7 @@ class Command(BaseCommand):
         self.cleanup_person()
         self.cleanup_personal_details()
         self.cleanup_third_party_details()
+        self.cleanup_sessions()
 
     def _setup(self):
         self.now = timezone.now()
@@ -61,6 +63,12 @@ class Command(BaseCommand):
         self.stdout.write('Total {name} objects: {count}'.format(
             count=qs.model.objects.all().count(),
             name=name))
+
+    def cleanup_sessions(self):
+        sessions = Session.objects.filter(
+            expire_date__lte=self.now,
+        )
+        sessions.delete()
 
     def cleanup_cases(self):
         two_years = self.now - relativedelta(years=2)

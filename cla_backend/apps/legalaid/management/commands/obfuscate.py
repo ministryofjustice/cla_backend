@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
+import json
 from django.core.management.base import NoArgsCommand
-from django.core import settings
+from django.conf import settings
+from django.db import connection
 
+from legalaid.utils import diversity
 from legalaid.models import PersonalDetails, ThirdPartyDetails, \
-    EligibilityCheck, Case, CaseNoteHistory, EODDetails, Complaint
+    EligibilityCheck, Case, CaseNotesHistory, EODDetails
+from complaints.models import Complaint
 
 
 OBFUSCATED_FIELDS = {
@@ -16,7 +20,13 @@ OBFUSCATED_FIELDS = {
         'email': 'cla-test@digital.justice.gov.uk',
         'date_of_birth': '1963-03-16',
         'ni_number': 'SD-156-266',
-        'diversity': {},
+        'diversity': {
+            'gender': '',
+            'ethnicity': '',
+            'religion': '',
+            'sexual_orientation': '',
+            'disability': ''
+        },
         'search_field': '',
     },
 
@@ -38,7 +48,7 @@ OBFUSCATED_FIELDS = {
         'search_field': '',
     },
 
-    CaseNoteHistory: {
+    CaseNotesHistory: {
         'operator_notes': 'Data obfuscated',
         'provider_notes': 'Data obfuscated',
     },
@@ -58,13 +68,26 @@ class Command(NoArgsCommand):
     help = ('Obfuscate all sensitive data in the database')
 
     def handle_noargs(self, *args, **kwargs):
-        for model, field_names in OBFUSCATED_FIELDS.items():
-            for instance in models.objects.all():
-                for field_name in field_names:
-                    self._obfuscate_field(instance, field_name)
+        if settings.CLA_ENV != 'prod':
+            with connection.cursor() as cursor:
+                for model, field_names in OBFUSCATED_FIELDS.items():
+                    for field_name, value in field_names.items():
+                        self._obfuscate_field(cursor, model, field_name, value)
 
-    def _obfuscate_field(self, instance, field_name):
-        pass
+    def _obfuscate_field(self, cursor, model, field_name, value):
+        if field_name == 'diversity':
+            value = "pgp_pub_encrypt('{diversity}', dearmor('{key}'))".format(
+                diversity=json.dumps(value),
+                key=diversity.get_public_key()
+            )
+        else:
+            value = "'%s'" % value
+
+        query = 'UPDATE %s SET %s = %s' % (model._meta.db_table, field_name, value)
+
+        cursor.execute(query)
+        if field_name != 'diversity':
+            self.stdout.write(query)
 
 
 

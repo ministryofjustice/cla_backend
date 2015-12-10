@@ -141,6 +141,7 @@ class ComplaintTestCase(
             'COMPLAINT_NOTE',
             'HOLDING_LETTER_SENT',
             'FULL_RESPONSE_SENT',
+            'TRANSFERRED_TO_SPECIALIST',
         ]
         for code in codes:
             response = self._create({
@@ -158,7 +159,7 @@ class ComplaintTestCase(
         self.assertIsNotNone(self.resource.holding_letter)
         self.assertIsNotNone(self.resource.full_letter)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data), 4)
         self.assertEqual(self.resource.status_label, 'received')
 
     def test_complaint_closing(self):

@@ -220,7 +220,7 @@ class MICaseExtract(SQLFileDateRangeReport):
         passphrase = self.cleaned_data.get('passphrase')
 
         if passphrase:
-            diversity_expression = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".format(
+            diversity_expression = "pgp_pub_decrypt(pd.diversity, dearmor('{key}'), %s)::json".format(
                 key=diversity.get_private_key()
             )
         else:

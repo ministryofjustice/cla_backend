@@ -17,6 +17,7 @@ from complaints.constants import SLA_DAYS
 from reports.widgets import MonthYearWidget
 
 from . import sql
+from .utils import get_replica_cursor
 
 
 class ConvertDateMixin(object):
@@ -96,7 +97,7 @@ class SQLFileReportMixin(object):
         raise NotImplementedError()
 
     def get_queryset(self):
-        cursor = connection.cursor()
+        cursor = get_replica_cursor()
         cursor.execute(self.query, self.get_sql_params())
         self.description = cursor.description
         return cursor.fetchall()
@@ -231,7 +232,7 @@ class MICaseExtract(SQLFileDateRangeReport):
         )
         sql_args = [passphrase] + list(self.date_range)
 
-        cursor = connection.cursor()
+        cursor = get_replica_cursor()
         cursor.execute(sql, sql_args)
         self.description = cursor.description
         return cursor.fetchall()
@@ -306,7 +307,7 @@ class MIContactsPerCaseByCategoryExtract(SQLFileDateRangeReport):
         return self.date_range + (self.get_valid_outcomes(),)
 
     def get_queryset(self):
-        cursor = connection.cursor()
+        cursor = get_replica_cursor()
         cursor.execute(self.query, self.params)
         self.description = cursor.description
         return cursor.fetchall()
@@ -370,6 +371,14 @@ class MICB1Extract(SQLFileDateRangeReport):
             'sla_30',
             'is_over_sla_30',
         ]
+
+    def get_queryset(self):
+        cursor = get_replica_cursor()
+        cursor.execute(self.query, self.get_sql_params())
+        self.description = cursor.description
+        a = cursor.fetchall()
+        print cursor.query
+        return a
 
 
 class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):

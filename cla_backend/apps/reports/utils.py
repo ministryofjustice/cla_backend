@@ -9,9 +9,17 @@ from django.core.exceptions import ImproperlyConfigured as DjangoImproperlyConfi
 import pyminizip
 from django.conf import settings
 from django.core.mail import EmailMessage, send_mail
-from django.db import connection
+from django.db import connections, connection
+from django.db.utils import DEFAULT_DB_ALIAS, ConnectionDoesNotExist
 
 from legalaid.utils import diversity
+
+
+def get_replica_cursor():
+    try:
+        return connections['replica'].cursor()
+    except ConnectionDoesNotExist:
+        return connection.cursor()
 
 
 class OBIEEExporter(object):
@@ -128,7 +136,7 @@ class OBIEEExporter(object):
             kwargs = {}
 
         with open(os.path.join(self.tmp_export_path, filename), 'w') as d:
-            cursor = connection.cursor()
+            cursor = get_replica_cursor()
             q = cursor.mogrify(query, kwargs)
             cursor.copy_expert(q, d)
             cursor.close()

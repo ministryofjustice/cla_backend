@@ -38,6 +38,13 @@ class ComplaintEvent(BaseEvent):
             'description': u'Complaint holding letter sent',
             'stops_timer': False,
         }),
+        ('TRANSFERRED_TO_SPECIALIST', {
+            'type': LOG_TYPES.SYSTEM,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': u'Complaint transferred to specialist',
+            'stops_timer': False,
+        }),
         ('FULL_RESPONSE_SENT', {
             'type': LOG_TYPES.SYSTEM,
             'level': LOG_LEVELS.HIGH,

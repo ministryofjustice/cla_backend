@@ -1,23 +1,17 @@
-import contextlib
-import csvkit as csv
-
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
-from django.db import InternalError
-from django.shortcuts import render, render_to_response
-from django.http import HttpResponse
-from django.utils.six import text_type
+from django.shortcuts import render
 
 from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
     MISurveyExtract, MICB1Extract, MIVoiceReport, MIEODReport, \
     MIOBIEEExportExtract, MetricsReport, MIDuplicateCaseExtract, \
     ComplaintsReport, MIDigitalCaseTypesExtract
-from .tasks import create_export, obiee_export
+from .tasks import ExportTask, OBIEEExportTask
 
 
-def report_view(form_class, title, template='case_report', success_task=create_export, file_name=None):
+def report_view(form_class, title, template='case_report', success_task=ExportTask, file_name=None):
     def wrapper(fn):
         slug = title.lower().replace(' ', '_')
         if not file_name:
@@ -30,7 +24,7 @@ def report_view(form_class, title, template='case_report', success_task=create_e
             form = form_class(request=request)
 
             if valid_submit(request, form):
-                success_task.delay(filename, form)
+                success_task().delay(filename, form)
 
                 messages.info(request, u'Your export is being processed. It '
                                         u'will show up in the downloads tab '
@@ -133,7 +127,7 @@ def mi_complaints():
 @report_view(MIOBIEEExportExtract,
              'MI Export to Email for OBIEE',
              file_name='cla.database.zip',
-             success_task=obiee_export)
+             success_task=OBIEEExportTask)
 def mi_obiee_extract():
     pass
 

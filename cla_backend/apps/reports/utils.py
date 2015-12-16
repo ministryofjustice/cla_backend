@@ -4,13 +4,11 @@ import shutil
 import tempfile
 from datetime import date, datetime, time, timedelta
 
-from celery.exceptions import ImproperlyConfigured
 from django.core.exceptions import ImproperlyConfigured as DjangoImproperlyConfigured
 import pyminizip
 from django.conf import settings
-from django.core.mail import EmailMessage, send_mail
 from django.db import connections, connection
-from django.db.utils import DEFAULT_DB_ALIAS, ConnectionDoesNotExist
+from django.db.utils import ConnectionDoesNotExist
 
 from legalaid.utils import diversity
 
@@ -69,7 +67,10 @@ class OBIEEExporter(object):
     def full_path(self):
         return os.path.join(self.export_path, self.filename)
 
-    def __init__(self, export_path, passphrase, dt_from=None, dt_to=None):
+    def __init__(self, export_path, passphrase, dt_from=None, dt_to=None,
+                 filename=None):
+        if filename:
+            self.filename = filename
         self.export_path = export_path
         self.passphrase = passphrase
         self.dt_from = dt_from or (
@@ -161,32 +162,3 @@ class OBIEEExporter(object):
             os.remove(self.full_path)
         if os.path.exists(self.tmp_export_path):
             shutil.rmtree(self.tmp_export_path)
-
-
-def email_obiee_export(zip_path, dt_from, dt_to):
-    if hasattr(settings, 'OBIEE_EMAIL_TO'):
-        subject = 'CLA CHS Database Export: {from_} - {to}'.format(from_=dt_from, to=dt_to)
-        body = ''
-        to = settings.OBIEE_EMAIL_TO.split(',')
-
-        message = EmailMessage(
-            subject,
-            body,
-            settings.EMAIL_FROM_ADDRESS,
-            to
-        )
-        message.attach_file(zip_path)
-        message.send()
-    else:
-        raise ImproperlyConfigured('OBIEE_EMAIL_TO must be specified in settings')
-
-
-def email_obiee_export_failed_notification():
-    subject = 'CLA OBIEE EXPORT FAILED'
-    to = settings.OBIEE_EMAIL_TO.split(',')
-    message = 'Your export could not be generated due to an error. ' \
-              'Perhaps the diversity passpharse used was incorrect please ' \
-              'try again with the correct passphrase. ' \
-              '' \
-              'If you\'re sure the passphrase is correct then contact CLA support.'
-    send_mail(subject, message, settings.EMAIL_FROM_ADDRESS, to)

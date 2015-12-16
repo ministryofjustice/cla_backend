@@ -1,13 +1,9 @@
 import os
-from dateutil.relativedelta import relativedelta
 from datetime import timedelta, time, datetime, date
 
 from django import forms
-from django.conf import settings
-from django.db import connection
 from django.utils import timezone
 from django.contrib.admin import widgets
-from django.core.exceptions import ImproperlyConfigured
 
 from legalaid.utils import diversity
 from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
@@ -28,6 +24,10 @@ class ConvertDateMixin(object):
 
 
 class ReportForm(ConvertDateMixin, forms.Form):
+    def __init__(self, request=None, *args, **kwargs):
+        self.request = request
+        super(ReportForm, self).__init__(*args, **kwargs)
+
     def get_headers(self):
         raise NotImplementedError
 
@@ -468,19 +468,6 @@ class MIOBIEEExportExtract(MonthRangeReportForm):
                   'to us. If not provided or wrong then the report will fail '
                   'to generate.'
     )
-
-    def clean(self):
-        from reports.tasks import obiee_export
-
-        cleaned_data = super(MIOBIEEExportExtract, self).clean()
-        passphrase = cleaned_data.get('passphrase')
-        if passphrase:
-            start = self.month
-            end = self.month + relativedelta(months=1)
-            if not settings.OBIEE_ZIP_PASSWORD:
-                raise ImproperlyConfigured('OBIEE Zip password must be set.')
-            obiee_export.delay(passphrase, start, end)
-        return cleaned_data
 
 
 class MetricsReport(SQLFileDateRangeReport):

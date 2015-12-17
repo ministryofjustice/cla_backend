@@ -1,9 +1,11 @@
 from django.conf.urls import patterns, url
 
 from . import views
+from . import api
 
 
 urlpatterns = patterns('',
+    url(r'^api/exports/$', api.ExportListView.as_view(), name='exports'),
     url(r'^mi-case-extract/$',
         views.mi_case_extract,
         name='mi_case_extract'),

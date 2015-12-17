@@ -45,6 +45,8 @@ DATABASES = {
     }
 }
 
+TEMP_DIR = root('tmp')
+
 # Support heroku
 DJ_DATABASE_URL = os.environ.get('DATABASE_URL')
 if DJ_DATABASE_URL:

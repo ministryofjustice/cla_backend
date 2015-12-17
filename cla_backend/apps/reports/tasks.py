@@ -1,7 +1,11 @@
 import contextlib
+import os
+import json
 import shutil
 import tempfile
+import time
 from contextlib import closing
+from django.contrib.auth.models import User
 import csvkit as csv
 
 from celery import Task
@@ -13,12 +17,7 @@ from django.conf import settings
 
 from .utils import OBIEEExporter
 from .models import Export
-
-
-def create_export_ref():
-    export = Export.objects.create(
-
-    )
+from .constants import EXPORT_STATUS
 
 
 @contextlib.contextmanager
@@ -26,48 +25,104 @@ def csv_writer(csv_file):
     yield csv.writer(csv_file)
 
 
-class ExportTask(Task):
-    def run(self, filename, form):
-        outfile_path = '%s' %(filename)
+def import_form(class_name):
+    name = 'reports.forms.%s' % class_name
+    components = name.split('.')
+    mod = __import__(components[0])
+    for comp in components[1:]:
+        mod = getattr(mod, comp)
+    return mod
+
+
+class ExportTaskBase(Task):
+    def __init__(self):
+        self.filepath = ''
+        self.message = ''
+        self.export = None
+        self.form = None
+        self.user = None
+
+    def _create_export(self):
+        self.export = Export.objects.create(
+            user=self.user,
+            task_id=self.request.id,
+            status=EXPORT_STATUS.started,
+        )
+
+    def _set_up_form(self, form_class_name, post_data):
+        form_class = import_form(form_class_name)
+        self.form = form_class()
+        self.form.data = json.loads(post_data)
+        self.form.is_bound = True
+        if not self.form.is_valid():
+            self.message = u'The form submitted was not valid'
+            raise Exception(self.message)
+
+    def _filepath(self, filename):
+        file_name, file_ext = os.path.splitext(filename)
+        user_datetime = '%s-%s' % (self.user.pk, time.strftime("%Y-%m-%d-%H%M%S"))
+        filename = '%s-%s%s' % (file_name, user_datetime, file_ext)
+        return os.path.join(settings.TEMP_DIR, filename)
+
+    def on_success(self, retval, task_id, args, kwargs):
+        self.export.status = EXPORT_STATUS.created
+        self.export.path = self.filepath
+        self.export.message = self.message
+        self.export.save()
+
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
+        self.export.status = EXPORT_STATUS.failed
+        self.export.message = self.message
+        self.export.save()
+
+
+class ExportTask(ExportTaskBase):
+
+    def run(self, user_id, filename, form_class_name, post_data, *args, **kwargs):
+        self.user = User.objects.get(pk=user_id)
+        self._create_export()
+        self._set_up_form(form_class_name, post_data)
+
+        self.filepath = self._filepath(filename)
         try:
-            csv_data = list(form)
-            with csv_writer(open(outfile_path, 'w')) as writer:
+            csv_data = list(self.form)
+            with csv_writer(open(self.filepath, 'w')) as writer:
                 map(writer.writerow, csv_data)
         except InternalError as error:
             error_message = text_type(error).strip()
-            if 'wrong key' in error_message.lower() or 'corrupt data' in error_message.lower():
+            if 'wrong key' in error_message.lower() or 'corrupt data' in \
+                    error_message.lower():
                 # e.g. if pgcrypto key is incorrect
-                error_message = 'Check passphrase and try again'
+                self.message = u'Check passphrase and try again'
             else:
-                error_message = u'An error occurred:\n%s' % error_message
-
-    def on_success(self, retval, task_id, args, kwargs):
-        pass
-
-    def on_failure(self, retval, task_id, args, kwargs):
-        pass
+                self.message = u'An error occurred:\n%s' % error_message
 
 
-class OBIEEExportTask(ExportTask):
-    def run(self, filename, form):
+class OBIEEExportTask(ExportTaskBase):
+    def run(self, user_id, filename, form_class_name, post_data, *args, **kwargs):
         """
-        Export a full dump of the db for OBIEE export and make it available for
-        downloads
+        Export a full dump of the db for OBIEE export and make it available
+        for downloads
         """
-        diversity_keyphrase = form.cleaned_data['passphrase']
-        start = form.month
-        end = form.month + relativedelta(months=1)
+        self.user = User.objects.get(pk=user_id)
+        self._create_export()
+        self._set_up_form(form_class_name, post_data)
+
+        diversity_keyphrase = self.form.cleaned_data['passphrase']
+        start = self.form.month
+        end = self.form.month + relativedelta(months=1)
         if not settings.OBIEE_ZIP_PASSWORD:
             raise ImproperlyConfigured('OBIEE Zip password must be set.')
-        filename = 'cla_database.zip'
 
-        temp_path = tempfile.mkdtemp(suffix=self.request.id)
-        with closing(OBIEEExporter(temp_path, diversity_keyphrase,
-                      start, end, filename=filename)) as exporter:
+        self.filepath = self._filepath(filename)
+        with closing(OBIEEExporter(self.filepath, diversity_keyphrase,
+                start, end, filename=filename)) as exporter:
             try:
-                zip_path = exporter.export()
+                self.filepath = exporter.export()
             except Exception:
+                self.message = u'An error occurred creating the zip file'
                 raise
             finally:
-                shutil.rmtree(temp_path, ignore_errors=True)
+                pass
+                # shutil.rmtree(self.filepath, ignore_errors=True)
 

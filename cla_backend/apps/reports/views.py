@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
@@ -11,7 +13,8 @@ from .forms import MICaseExtract, MIFeedbackExtract, \
 from .tasks import ExportTask, OBIEEExportTask
 
 
-def report_view(form_class, title, template='case_report', success_task=ExportTask, file_name=None):
+def report_view(form_class, title, template='case_report',
+                success_task=ExportTask, file_name=None):
     def wrapper(fn):
         slug = title.lower().replace(' ', '_')
         if not file_name:
@@ -21,10 +24,12 @@ def report_view(form_class, title, template='case_report', success_task=ExportTa
         tmpl = 'admin/reports/{0}.html'.format(template)
 
         def view(request):
-            form = form_class(request=request)
+            form = form_class()
 
             if valid_submit(request, form):
-                success_task().delay(filename, form)
+                success_task().delay(request.user.pk, filename,
+                                     form_class.__name__,
+                                     json.dumps(request.POST))
 
                 messages.info(request, u'Your export is being processed. It '
                                         u'will show up in the downloads tab '

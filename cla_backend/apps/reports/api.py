@@ -13,6 +13,7 @@ class ExportListView(generics.ListAPIView):
     model = Export
     permission_classes = (IsAdminUser, )
     authentication_classes = (BasicAuthentication, SessionAuthentication)
+    page_size = 1000
 
     def get_queryset(self):
         return super(ExportListView, self).get_queryset().filter(

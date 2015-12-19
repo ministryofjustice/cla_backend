@@ -8,7 +8,7 @@ from .serializers import ExportSerializer
 from .models import Export
 
 
-class ExportListView(generics.ListAPIView):
+class ExportListView(generics.ListAPIView, generics.DestroyAPIView):
     serializer_class = ExportSerializer
     model = Export
     permission_classes = (IsAdminUser, )

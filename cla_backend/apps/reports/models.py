@@ -15,7 +15,8 @@ class Export(TimeStampedModel):
 
     @property
     def link(self):
-        return '/admin/reports/exports/download/%s' % os.path.basename(self.path)
+        if self.path:
+            return '/admin/reports/exports/download/%s' % os.path.basename(self.path)
 
 
 def delete_export_file(sender, instance=None, **kwargs):

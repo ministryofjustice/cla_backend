@@ -36,10 +36,6 @@
       });
     },
 
-    request: function () {
-
-    },
-
     load: function (data) {
       this.table.empty();
       for (var i = 0; i < data.length; i++) {
@@ -74,7 +70,6 @@
       }, 1000);
       $(window.document).on('click', '.delete-task', function (e) {
         var $target = $(e.currentTarget);
-        console.log($target.data());
         self.deleteExport($target.data('id'));
         $target.parent('tr').remove();
       });

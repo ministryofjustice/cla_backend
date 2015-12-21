@@ -1,4 +1,6 @@
 import json
+import os
+import boto
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -149,7 +151,18 @@ def metrics_report():
 
 @permission_required('legalaid.run_reports')
 def download_file(request, file_name='', *args, **kwargs):
-    response = HttpResponse(content_type='application/force-download')
+    conn = boto.connect_s3(
+            settings.AWS_ACCESS_KEY_ID,
+            settings.AWS_SECRET_ACCESS_KEY)
+    bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
+    k = bucket.get_key(settings.EXPORT_DIR + file_name)
+    k.open_read()
+    headers = dict(k.resp.getheaders())
+    response = HttpResponse(k)
+
+    for key, val in headers.items():
+        response[key] = val
+
     response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
     response['X-Sendfile'] = smart_str('%s%s' % (settings.TEMP_DIR, file_name))
     return response

@@ -1,4 +1,5 @@
 import contextlib
+import boto
 import os
 import json
 import shutil
@@ -71,6 +72,20 @@ class ExportTaskBase(Task):
         self.export.message = self.message
         self.export.save()
 
+    def send_to_s3(self):
+        conn = boto.connect_s3(
+            settings.AWS_ACCESS_KEY_ID,
+            settings.AWS_SECRET_ACCESS_KEY)
+        bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
+        k = bucket.new_key(settings.EXPORT_DIR + os.path.basename(self.filepath))
+        export = open(self.filepath)
+        k.set_contents_from_file(export)
+        k.set_acl('private')
+        try:
+            os.remove(self.filepath)
+        except Exception:
+            pass
+
 
 class ExportTask(ExportTaskBase):
 
@@ -84,6 +99,7 @@ class ExportTask(ExportTaskBase):
             csv_data = list(self.form)
             with csv_writer(open(self.filepath, 'w')) as writer:
                 map(writer.writerow, csv_data)
+            self.send_to_s3()
         except InternalError as error:
             error_message = text_type(error).strip()
             if 'wrong key' in error_message.lower() or 'corrupt data' in \
@@ -115,6 +131,7 @@ class OBIEEExportTask(ExportTaskBase):
                 start, end, filename=filename)) as exporter:
             try:
                 self.filepath = exporter.export()
+                self.send_to_s3()
             except Exception:
                 self.message = u'An error occurred creating the zip file'
                 raise

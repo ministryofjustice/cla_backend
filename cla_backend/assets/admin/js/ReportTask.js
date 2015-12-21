@@ -50,17 +50,19 @@
           col.text(data[i][cols[k]])
           $task.append(col);
         }
+        var linkcol = $('<td></td>');
+        var $link = $('<a></a>').attr('href', data[i]['link'])
+          .text(data[i]['link']);
+        linkcol.append($link);
+        $task.append(linkcol);
+
         var deleteCol = $('<td></td>');
         var $deleteLink = $('<a class="delete-task"></a>')
           .text('DELETE')
           .data('id', data[i]['id']);
         deleteCol.append($deleteLink);
         $task.append(deleteCol);
-        var linkcol = $('<td></td>');
-        var $link = $('<a></a>').attr('href', data[i]['link'])
-          .text(data[i]['link']);
-        linkcol.append($link);
-        $task.append(linkcol);
+
         this.table.append($task)
       }
     },
@@ -69,7 +71,7 @@
       var self = this;
       setInterval(function () {
         self.fetch();
-      }, 10000);
+      }, 1000);
       $(window.document).on('click', '.delete-task', function (e) {
         var $target = $(e.currentTarget);
         console.log($target.data());

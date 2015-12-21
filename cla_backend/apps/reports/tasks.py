@@ -127,8 +127,8 @@ class OBIEEExportTask(ExportTaskBase):
             raise ImproperlyConfigured('OBIEE Zip password must be set.')
 
         self.filepath = self._filepath(filename)
-        with closing(OBIEEExporter(self.filepath, diversity_keyphrase,
-                start, end, filename=filename)) as exporter:
+        with closing(OBIEEExporter(settings.TEMP_DIR, diversity_keyphrase,
+                start, end, filename=os.path.basename(self._filepath(filename)))) as exporter:
             try:
                 self.filepath = exporter.export()
                 self.send_to_s3()

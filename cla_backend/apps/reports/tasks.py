@@ -26,12 +26,8 @@ def csv_writer(csv_file):
 
 
 def import_form(class_name):
-    name = 'reports.forms.%s' % class_name
-    components = name.split('.')
-    mod = __import__(components[0])
-    for comp in components[1:]:
-        mod = getattr(mod, comp)
-    return mod
+    mod = __import__('reports.forms', fromlist=[class_name])
+    return getattr(mod, class_name)
 
 
 class ExportTaskBase(Task):

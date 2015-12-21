@@ -20,7 +20,8 @@ class Export(TimeStampedModel):
 
 
 def delete_export_file(sender, instance=None, **kwargs):
-    os.remove(instance.path)
+    if instance.path:
+        os.remove(instance.path)
 
 
 pre_delete.connect(delete_export_file, sender=Export)

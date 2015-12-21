@@ -3,7 +3,10 @@ import json
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils.encoding import smart_str
+from django.conf import settings
 
 from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
@@ -142,3 +145,11 @@ def mi_obiee_extract():
 @report_view(MetricsReport, 'Metrics Report')
 def metrics_report():
     pass
+
+
+@permission_required('legalaid.run_reports')
+def download_file(request, file_name='', *args, **kwargs):
+    response = HttpResponse(content_type='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
+    response['X-Sendfile'] = smart_str('%s%s' % (settings.TEMP_DIR, file_name))
+    return response

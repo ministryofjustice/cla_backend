@@ -44,18 +44,23 @@
       this.table.empty();
       for (var i = 0; i < data.length; i++) {
         var $task = $('<tr class"report-ask"></tr>');
-        var cols = ['id', 'link', 'path', 'status'];
+        var cols = ['id', 'status'];
         for (var k = 0; k < cols.length; k++) {
           var col = $('<td></td>')
           col.text(data[i][cols[k]])
           $task.append(col);
         }
-        var col = $('<td></td>');
+        var deleteCol = $('<td></td>');
         var $deleteLink = $('<a class="delete-task"></a>')
           .text('DELETE')
           .data('id', data[i]['id']);
-        col.append($deleteLink);
-        $task.append(col);
+        deleteCol.append($deleteLink);
+        $task.append(deleteCol);
+        var linkcol = $('<td></td>');
+        var $link = $('<a></a>').attr('href', data[i]['link'])
+          .text(data[i]['link']);
+        linkcol.append($link);
+        $task.append(linkcol);
         this.table.append($task)
       }
     },

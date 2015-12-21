@@ -37,7 +37,7 @@ DATABASES = {
     },
     'replica': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cla_backend_replica',
+        'NAME': 'cla_backend',
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '',

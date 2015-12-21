@@ -13,6 +13,10 @@ class Export(TimeStampedModel):
     task_id = models.CharField(max_length=100)
     message = models.TextField()
 
+    @property
+    def link(self):
+        return '/admin/reports/exports/download/%s' % os.path.basename(self.path)
+
 
 def delete_export_file(sender, instance=None, **kwargs):
     os.remove(instance.path)

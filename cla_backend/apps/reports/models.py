@@ -1,4 +1,7 @@
+import os
 from django.db import models
+from django.db.models.signals import pre_delete
+
 from model_utils.models import TimeStampedModel
 from reports.constants import EXPORT_STATUS
 
@@ -9,3 +12,10 @@ class Export(TimeStampedModel):
     status = models.CharField(max_length=10, choices=EXPORT_STATUS)
     task_id = models.CharField(max_length=100)
     message = models.TextField()
+
+
+def delete_export_file(sender, instance=None, **kwargs):
+    os.remove(instance.path)
+
+
+pre_delete.connect(delete_export_file, sender=Export)

@@ -7,23 +7,30 @@
     el: null,
 
     init: function () {
-      this.fetch();
-      this.el = $('<div id="reportExports">')
+      this.el = $('<div class="report-exports"></div>');
+      this.table = $('<table class="report-table"></table>');
+      this.el.append(this.table);
+
       $(document.body).append(this.el);
+      this.fetch();
+      this.bindEvents();
     },
 
     fetch: function () {
       var self = this;
       $.get(this.url, function (data) {
         self.load(data);
-      })
+      });
     },
 
     deleteExport: function (id) {
       var self = this;
       $.ajax({
         method: 'DELETE',
-        url: self.url + id + '/'
+        url: self.url  + id + '/',
+        data: {
+          id: id
+        }
       }).done(function (data) {
         self.fetch();
       });
@@ -34,13 +41,40 @@
     },
 
     load: function (data) {
-      this.el.empty();
+      this.table.empty();
       for (var i = 0; i < data.length; i++) {
-        var $task = $('<div class"reportTask">');
-        this.el.append($task)
+        var $task = $('<tr class"report-ask"></tr>');
+        var cols = ['id', 'link', 'path', 'status'];
+        for (var k = 0; k < cols.length; k++) {
+          var col = $('<td></td>')
+          col.text(data[i][cols[k]])
+          $task.append(col);
+        }
+        var col = $('<td></td>');
+        var $deleteLink = $('<a class="delete-task"></a>')
+          .text('DELETE')
+          .data('id', data[i]['id']);
+        col.append($deleteLink);
+        $task.append(col);
+        this.table.append($task)
       }
+    },
+
+    bindEvents: function () {
+      var self = this;
+      setInterval(function () {
+        self.fetch();
+      }, 10000);
+      $(window.document).on('click', '.delete-task', function (e) {
+        var $target = $(e.currentTarget);
+        console.log($target.data());
+        self.deleteExport($target.data('id'));
+        $target.parent('tr').remove();
+      });
     }
   }
 
-  ReportTask.init();
+  $( document ).ready(function() {
+    ReportTask.init();
+  });
 })(django.jQuery);

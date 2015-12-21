@@ -27,7 +27,10 @@ def delete_export_file(sender, instance=None, **kwargs):
             settings.AWS_SECRET_ACCESS_KEY)
     bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
     k = bucket.get_key(settings.EXPORT_DIR + os.path.basename(instance.path))
-    bucket.delete_key(k)
+    try:
+        bucket.delete_key(k)
+    except ValueError:
+        pass
 
 
 pre_delete.connect(delete_export_file, sender=Export)

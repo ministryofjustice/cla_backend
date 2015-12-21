@@ -58,7 +58,6 @@ cla_backend/settings/local.py
 
 # collect static output directory
 cla_backend/static/
-cla_backend/tmp/
 
 .DS_Store
 

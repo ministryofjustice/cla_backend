@@ -8,4 +8,4 @@ class ExportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Export
-        fields = ('id', 'link', 'path', 'status')
+        fields = ('id', 'link', 'path', 'status', 'message')

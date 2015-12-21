@@ -40,7 +40,7 @@
       this.table.empty();
       for (var i = 0; i < data.length; i++) {
         var $task = $('<tr class"report-ask"></tr>');
-        var cols = ['id', 'status'];
+        var cols = ['id', 'status', 'message'];
         for (var k = 0; k < cols.length; k++) {
           var col = $('<td></td>')
           col.text(data[i][cols[k]])

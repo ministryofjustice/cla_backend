@@ -57,14 +57,19 @@
         var $task = $('<tr class"report-ask"></tr>');
         var cols = ['id', 'status', 'message'];
         for (var k = 0; k < cols.length; k++) {
-          var col = $('<td></td>')
-          col.text(data[i][cols[k]])
+          var col = $('<td></td>');
+          col.text(data[i][cols[k]]);
           $task.append(col);
         }
         var linkcol = $('<td></td>');
-        var $link = $('<a></a>').attr('href', data[i]['link'])
-          .text(data[i]['link']);
-        linkcol.append($link);
+        if (data[i]['link']) {
+          var $link = $('<a></a>').attr('href', data[i]['link'])
+            .text(data[i]['link']);
+          linkcol.append($link);
+        } else {
+          linkcol.text('pending...');
+          $task.addClass('task-pending');
+        }
         $task.append(linkcol);
 
         var deleteCol = $('<td></td>');
@@ -74,7 +79,7 @@
         deleteCol.append($deleteLink);
         $task.append(deleteCol);
 
-        this.table.append($task)
+        this.table.append($task);
       }
     },
 

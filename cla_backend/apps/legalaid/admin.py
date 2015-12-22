@@ -20,10 +20,15 @@ class EODDetailsAdmin(admin.ModelAdmin):
     inlines = (EODDetailsCategoryAdmin,)
 
 
+class CaseAdmin(admin.ModelAdmin):
+    raw_id_fields = ('eligibility_check', 'diagnosis', 'personal_details',
+        'thirdparty_details', 'adaptation_details', 'from_case')
+
+
 admin.site.register(Category, CategoryModelAdmin)
 # admin.site.register(Question)
 # admin.site.register(Answer)
-admin.site.register(Case)
+admin.site.register(Case, CaseAdmin)
 admin.site.register(EligibilityCheck)
 admin.site.register(PersonalDetails)
 admin.site.register(Property)

@@ -140,7 +140,7 @@ select
   ,c.thirdparty_details_id::bool as "Has_Third_Party"
   ,ceil(EXTRACT(EPOCH FROM operator_first_action.created-c.created)) as "Time_to_OS_Action"
   -- diversity fields --
-  ,diversity_view.diversity as diversity_json
+  ,{diversity_expression} as diversity_json
 from cla_eventlog_log as log
   JOIN legalaid_case as c on c.id = log.case_id and not (c.eligibility_check_id is null and c.diagnosis_id is null and personal_details_id is null)
   LEFT OUTER JOIN legalaid_personaldetails as pd on c.personal_details_id = pd.id
@@ -163,8 +163,6 @@ from cla_eventlog_log as log
   LEFT OUTER JOIN provider_first_assign on provider_first_assign.case_id = c.id and provider_first_assign.rn = 1
   LEFT OUTER JOIN legalaid_case split_case on c.from_case_id = split_case.id
   LEFT OUTER JOIN cla_provider_provider as assigned_provider on (log.context->>'provider_id')::numeric = assigned_provider.id
-  LEFT OUTER JOIN (select id, {diversity_expression} as diversity
-                   from legalaid_personaldetails) as diversity_view on pd.id = diversity_view.id
 where
   log.type = 'outcome'
   and log.created >= %s

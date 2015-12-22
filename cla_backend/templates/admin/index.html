@@ -20,6 +20,7 @@
             <caption>Reports</caption>
             <tbody>
     {% for report in urls %}
+        {% if report.name != 'Exports' %}
                 <tr>
                     <th scope="row">
                         <a href="{{ report.url }}">{{ report.name }}</a>
@@ -27,6 +28,7 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                 </tr>
+        {% endif %}
     {% endfor %}
             </tbody>
         </table>

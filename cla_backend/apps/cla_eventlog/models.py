@@ -13,9 +13,9 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 class Log(TimeStampedModel):
     case = models.ForeignKey('legalaid.Case')
     timer = models.ForeignKey('timer.Timer', null=True, blank=True)
-    code = models.CharField(max_length=50)
-    type = models.CharField(choices=LOG_TYPES.CHOICES, max_length=20)
-    level = models.PositiveSmallIntegerField(choices=LOG_LEVELS.CHOICES)
+    code = models.CharField(db_index=True, max_length=50)
+    type = models.CharField(db_index=True, choices=LOG_TYPES.CHOICES, max_length=20)
+    level = models.PositiveSmallIntegerField(db_index=True, choices=LOG_LEVELS.CHOICES)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL)
     notes = models.TextField(null=True, blank=True)
 

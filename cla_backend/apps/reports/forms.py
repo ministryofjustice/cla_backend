@@ -1,13 +1,9 @@
 import os
-from dateutil.relativedelta import relativedelta
 from datetime import timedelta, time, datetime, date
 
 from django import forms
-from django.conf import settings
-from django.db import connection
 from django.utils import timezone
 from django.contrib.admin import widgets
-from django.core.exceptions import ImproperlyConfigured
 
 from legalaid.utils import diversity
 from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
@@ -17,6 +13,7 @@ from complaints.constants import SLA_DAYS
 from reports.widgets import MonthYearWidget
 
 from . import sql
+from .utils import get_replica_cursor
 
 
 class ConvertDateMixin(object):
@@ -27,6 +24,10 @@ class ConvertDateMixin(object):
 
 
 class ReportForm(ConvertDateMixin, forms.Form):
+    def __init__(self, request=None, *args, **kwargs):
+        self.request = request
+        super(ReportForm, self).__init__(*args, **kwargs)
+
     def get_headers(self):
         raise NotImplementedError
 
@@ -96,7 +97,7 @@ class SQLFileReportMixin(object):
         raise NotImplementedError()
 
     def get_queryset(self):
-        cursor = connection.cursor()
+        cursor = get_replica_cursor()
         cursor.execute(self.query, self.get_sql_params())
         self.description = cursor.description
         return cursor.fetchall()
@@ -220,7 +221,7 @@ class MICaseExtract(SQLFileDateRangeReport):
         passphrase = self.cleaned_data.get('passphrase')
 
         if passphrase:
-            diversity_expression = "pgp_pub_decrypt(diversity, dearmor('{key}'), %s)::json".format(
+            diversity_expression = "pgp_pub_decrypt(pd.diversity, dearmor('{key}'), %s)::json".format(
                 key=diversity.get_private_key()
             )
         else:
@@ -231,7 +232,7 @@ class MICaseExtract(SQLFileDateRangeReport):
         )
         sql_args = [passphrase] + list(self.date_range)
 
-        cursor = connection.cursor()
+        cursor = get_replica_cursor()
         cursor.execute(sql, sql_args)
         self.description = cursor.description
         return cursor.fetchall()
@@ -306,7 +307,7 @@ class MIContactsPerCaseByCategoryExtract(SQLFileDateRangeReport):
         return self.date_range + (self.get_valid_outcomes(),)
 
     def get_queryset(self):
-        cursor = connection.cursor()
+        cursor = get_replica_cursor()
         cursor.execute(self.query, self.params)
         self.description = cursor.description
         return cursor.fetchall()
@@ -370,6 +371,14 @@ class MICB1Extract(SQLFileDateRangeReport):
             'sla_30',
             'is_over_sla_30',
         ]
+
+    def get_queryset(self):
+        cursor = get_replica_cursor()
+        cursor.execute(self.query, self.get_sql_params())
+        self.description = cursor.description
+        a = cursor.fetchall()
+        print cursor.query
+        return a
 
 
 class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
@@ -459,19 +468,6 @@ class MIOBIEEExportExtract(MonthRangeReportForm):
                   'to us. If not provided or wrong then the report will fail '
                   'to generate.'
     )
-
-    def clean(self):
-        from reports.tasks import obiee_export
-
-        cleaned_data = super(MIOBIEEExportExtract, self).clean()
-        passphrase = cleaned_data.get('passphrase')
-        if passphrase:
-            start = self.month
-            end = self.month + relativedelta(months=1)
-            if not settings.OBIEE_ZIP_PASSWORD:
-                raise ImproperlyConfigured('OBIEE Zip password must be set.')
-            obiee_export.delay(passphrase, start, end)
-        return cleaned_data
 
 
 class MetricsReport(SQLFileDateRangeReport):

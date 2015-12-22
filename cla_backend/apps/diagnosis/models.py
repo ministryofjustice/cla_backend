@@ -24,7 +24,7 @@ class DiagnosisTraversal(TimeStampedModel):
     current_node_id = models.CharField(blank=True, max_length=50)
     graph_version = models.CharField(blank=True, max_length=50)
 
-    state = models.CharField(blank=True, null=True, max_length=50, default=DIAGNOSIS_SCOPE.UNKNOWN)
+    state = models.CharField(db_index=True, blank=True, null=True, max_length=50, default=DIAGNOSIS_SCOPE.UNKNOWN)
     category = models.ForeignKey('legalaid.Category', null=True, blank=True)
     matter_type1 = models.ForeignKey(
         'legalaid.MatterType', blank=True, null=True,

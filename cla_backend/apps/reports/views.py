@@ -1,36 +1,25 @@
-import contextlib
-import csvkit as csv
+import json
+import os
+import boto
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
-from django.db import InternalError
-from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
-from django.utils.six import text_type
+from django.shortcuts import render
+from django.utils.encoding import smart_str
+from django.conf import settings
 
 from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
     MISurveyExtract, MICB1Extract, MIVoiceReport, MIEODReport, \
     MIOBIEEExportExtract, MetricsReport, MIDuplicateCaseExtract, \
-    ComplaintsReport
-from reports.forms import MIDigitalCaseTypesExtract
+    ComplaintsReport, MIDigitalCaseTypesExtract
+from .tasks import ExportTask, OBIEEExportTask
 
 
-def csv_download(filename, form):
-    response = make_csv_download_response(filename)
-    csv_data = list(form)
-    with csv_writer(response) as writer:
-        map(writer.writerow, csv_data)
-    return response
-
-
-def submit_info(filename, form, template='success_info'):
-    tmpl = 'admin/reports/{0}.html'.format(template)
-    return render_to_response(tmpl, {'filename': filename, 'form': form})
-
-
-def report_view(form_class, title, template='case_report', success_action=csv_download, file_name=None):
+def report_view(form_class, title, template='case_report',
+                success_task=ExportTask, file_name=None):
     def wrapper(fn):
         slug = title.lower().replace(' ', '_')
         if not file_name:
@@ -43,16 +32,13 @@ def report_view(form_class, title, template='case_report', success_action=csv_do
             form = form_class()
 
             if valid_submit(request, form):
-                try:
-                    return success_action(filename, form)
-                except InternalError as error:
-                    error_message = text_type(error).strip()
-                    if 'wrong key' in error_message.lower() or 'corrupt data' in error_message.lower():
-                        # e.g. if pgcrypto key is incorrect
-                        error_message = 'Check passphrase and try again'
-                    else:
-                        error_message = u'An error occurred:\n%s' % error_message
-                    messages.error(request, error_message)
+                success_task().delay(request.user.pk, filename,
+                                     form_class.__name__,
+                                     json.dumps(request.POST))
+
+                messages.info(request, u'Your export is being processed. It '
+                                        u'will show up in the downloads tab '
+                                        u'shortly.')
 
             return render(request, tmpl, {'title': title, 'form': form})
 
@@ -67,17 +53,6 @@ def valid_submit(request, form):
         form.is_bound = True
         return form.is_valid()
     return False
-
-
-@contextlib.contextmanager
-def csv_writer(response):
-    yield csv.writer(response)
-
-
-def make_csv_download_response(filename):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
-    return response
 
 
 @staff_member_required
@@ -161,8 +136,8 @@ def mi_complaints():
 @permission_required('legalaid.run_obiee_reports')
 @report_view(MIOBIEEExportExtract,
              'MI Export to Email for OBIEE',
-             success_action=submit_info,
-             file_name='cla.database.zip')
+             file_name='cla.database.zip',
+             success_task=OBIEEExportTask)
 def mi_obiee_extract():
     pass
 
@@ -172,3 +147,22 @@ def mi_obiee_extract():
 @report_view(MetricsReport, 'Metrics Report')
 def metrics_report():
     pass
+
+
+@staff_member_required
+def download_file(request, file_name='', *args, **kwargs):
+    conn = boto.connect_s3(
+            settings.AWS_ACCESS_KEY_ID,
+            settings.AWS_SECRET_ACCESS_KEY)
+    bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
+    k = bucket.get_key(settings.EXPORT_DIR + file_name)
+    k.open_read()
+    headers = dict(k.resp.getheaders())
+    response = HttpResponse(k)
+
+    for key, val in headers.items():
+        response[key] = val
+
+    response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name)
+    response['X-Sendfile'] = smart_str('%s%s' % (settings.TEMP_DIR, file_name))
+    return response

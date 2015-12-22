@@ -149,7 +149,7 @@ def metrics_report():
     pass
 
 
-@permission_required('legalaid.run_reports')
+@staff_member_required
 def download_file(request, file_name='', *args, **kwargs):
     conn = boto.connect_s3(
             settings.AWS_ACCESS_KEY_ID,

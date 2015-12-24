@@ -87,7 +87,7 @@
       var self = this;
       setInterval(function () {
         self.fetch();
-      }, 1000);
+      }, 5000);
       $(window.document).on('click', '.delete-task', function (e) {
         var $target = $(e.currentTarget);
         self.deleteExport($target.data('id'));

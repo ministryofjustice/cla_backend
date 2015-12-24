@@ -372,14 +372,6 @@ class MICB1Extract(SQLFileDateRangeReport):
             'is_over_sla_30',
         ]
 
-    def get_queryset(self):
-        cursor = get_replica_cursor()
-        cursor.execute(self.query, self.get_sql_params())
-        self.description = cursor.description
-        a = cursor.fetchall()
-        print cursor.query
-        return a
-
 
 class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
     QUERY_FILE = 'MIDigitalCaseTypes.sql'

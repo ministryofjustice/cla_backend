@@ -1,6 +1,7 @@
 from collections import defaultdict
 import datetime
 from decimal import Decimal
+from cla_common.call_centre_availability import on_bank_holiday
 
 from django.test import TestCase
 from django.utils import timezone
@@ -439,6 +440,8 @@ class ProviderAllocationHelperTestCase(TestCase):
 
             tz = timezone.now().replace(hour=20, minute=59)
             tz = tz + datetime.timedelta(days=7 - tz.weekday())
+            while on_bank_holiday(tz):
+                tz = tz + datetime.timedelta(days=7 - tz.weekday())
 
             with mock.patch('django.utils.timezone.now', lambda: tz):
                 c.assign_to_provider(provider1)
@@ -463,6 +466,8 @@ class ProviderAllocationHelperTestCase(TestCase):
 
             tz2 = timezone.now().replace(hour=11, minute=59)
             tz2 = tz2 + datetime.timedelta(days=7 - tz2.weekday())
+            while on_bank_holiday(tz2):
+                tz2 = tz2 + datetime.timedelta(days=7 - tz2.weekday())
 
             with mock.patch('django.utils.timezone.now', lambda: tz2):
                 c2.assign_to_provider(provider2)

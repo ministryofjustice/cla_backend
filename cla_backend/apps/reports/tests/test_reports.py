@@ -21,7 +21,12 @@ class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
                 inst = i(data={'date_from': datetime.datetime.now(), 'date_to': datetime.datetime.now()})
                 inst.is_valid()
                 inst.get_queryset()
-                self.assertEqual(len(inst.description), len(inst.get_headers()), 'Number of columns in %s.get_headers() doesn\'t match the number of columns returned by the sql query.' % n)
+                len_desc = len(inst.description)
+                len_headers = len(inst.get_headers())
+                if inst.__class__.__name__ == 'MICaseExtract':
+                    # this is due to getting multiple fields as 1 json field in sql
+                    len_headers = len_headers - 3
+                self.assertEqual(len_desc, len_headers, 'Number of columns in %s.get_headers() doesn\'t match the number of columns returned by the sql query.' % n)
 
             if inspect.isclass(i) and issubclass(i, reports.forms.SQLFileMonthRangeReport) and i != reports.forms.SQLFileMonthRangeReport:
                 inst = i(data={'date': datetime.datetime.now()})

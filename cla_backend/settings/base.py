@@ -29,21 +29,23 @@ SPECIALIST_USER_ALERT_EMAILS = []
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cla_backend',
-        'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': '',  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',  # Set to empty string for default.
-    },
-    'replica': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cla_backend',
-        'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'NAME': os.environ.get('DB_USERNAME', 'cla_backend'),
+        'USER': os.environ.get('DB_USERNAME', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', ''),
+        'PORT': os.environ.get('DB_PORT', ''),
     }
 }
+
+if os.environ.get('REPLICA_DB_HOST', ''):
+    DATABASES['replica'] = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DB_USERNAME', 'cla_backend'),
+        'USER': os.environ.get('DB_USERNAME', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('REPLICA_DB_HOST', ''),
+        'PORT': os.environ.get('DB_PORT', ''),
+    }
 
 TEMP_DIR = root('tmp')
 EXPORT_DIR = '/exports/'

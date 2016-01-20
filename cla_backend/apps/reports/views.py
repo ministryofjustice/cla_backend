@@ -157,6 +157,10 @@ def download_file(request, file_name='', *args, **kwargs):
             settings.AWS_SECRET_ACCESS_KEY)
     bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
     k = bucket.get_key(settings.EXPORT_DIR + file_name)
+
+    if k is None:
+        raise Http404("Export does not exist")
+
     k.open_read()
     headers = dict(k.resp.getheaders())
     response = HttpResponse(k)

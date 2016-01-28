@@ -1,5 +1,5 @@
 import json
-import os
+import re
 import boto
 
 from django.contrib import messages
@@ -22,7 +22,7 @@ from .tasks import ExportTask, OBIEEExportTask
 def report_view(form_class, title, template='case_report',
                 success_task=ExportTask, file_name=None):
     def wrapper(fn):
-        slug = title.lower().replace(' ', '_')
+        slug = re.sub('[^0-9a-zA-Z]+', '_', title.lower()).strip('_')
         if not file_name:
             filename = '{0}.csv'.format(slug)
         else:

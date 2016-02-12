@@ -43,6 +43,7 @@ class BaseComplaintViewSet(
             # NB: ensure these are always sql-safe
             'complaint_ct': ContentType.objects.get_for_model(Complaint).id,
             'closed_code': 'COMPLAINT_CLOSED',
+            'voided_code': 'COMPLAINT_VOID',
             'holding_letter_code': 'HOLDING_LETTER_SENT',
             'full_letter_code': 'FULL_RESPONSE_SENT',
         }
@@ -53,7 +54,16 @@ class BaseComplaintViewSet(
                     WHERE
                         cla_eventlog_log.content_type_id={complaint_ct}
                         AND cla_eventlog_log.object_id=complaints_complaint.id
-                        AND cla_eventlog_log.code='{closed_code}'
+                        AND cla_eventlog_log.code IN ('{closed_code}', '{voided_code}')
+                    ORDER BY cla_eventlog_log.created DESC
+                    LIMIT 1
+                    '''.format(**sql_params),
+                'voided': '''
+                    SELECT cla_eventlog_log.created FROM cla_eventlog_log
+                    WHERE
+                        cla_eventlog_log.content_type_id={complaint_ct}
+                        AND cla_eventlog_log.object_id=complaints_complaint.id
+                        AND cla_eventlog_log.code='{voided_code}'
                     ORDER BY cla_eventlog_log.created DESC
                     LIMIT 1
                     '''.format(**sql_params),
@@ -85,7 +95,7 @@ class BaseComplaintViewSet(
                     WHERE
                         cla_eventlog_log.content_type_id={complaint_ct}
                         AND cla_eventlog_log.object_id=complaints_complaint.id
-                        AND cla_eventlog_log.code='{closed_code}'
+                        AND cla_eventlog_log.code IN ('{closed_code}', '{voided_code}')
                     '''.format(**sql_params)
                 ]
             )
@@ -161,14 +171,15 @@ class BaseComplaintViewSet(
     @action()
     def reopen(self, request, pk):
         obj = self.get_object()
-        closed_logs = obj.logs.filter(code='COMPLAINT_CLOSED')
+        closed_logs = obj.logs.filter(code__in=['COMPLAINT_CLOSED', 'COMPLAINT_VOID'])  # complaint void
         if not closed_logs.exists():
-            return DRFResponse('Cannot reopen a complaint that is not closed',
+            return DRFResponse('Cannot reopen a complaint that is not closed or void',
                                status=status.HTTP_400_BAD_REQUEST)
 
         last_closed = closed_logs.order_by('-created').first()
-        notes = u'Complaint reopened.\nOriginally closed {closed} by {closed_by}.'.format(
-            closed=last_closed.created.strftime("%d/%m/%Y %H:%M"),
+        notes = u'Complaint reopened.\nOriginally {action_name} {closed_date} by {closed_by}.'.format(
+            action_name='voided' if last_closed.code == 'COMPLAINT_VOID' else 'closed',
+            closed_date=last_closed.created.strftime("%d/%m/%Y %H:%M"),
             closed_by=last_closed.created_by.username,
         )
         notes += u'\n\n' + last_closed.notes

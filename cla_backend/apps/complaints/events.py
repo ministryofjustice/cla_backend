@@ -66,6 +66,13 @@ class ComplaintEvent(BaseEvent):
             'description': u'Complaint reopened',
             'stops_timer': False,
         }),
+        ('COMPLAINT_VOID', {
+            'type': LOG_TYPES.SYSTEM,
+            'level': LOG_LEVELS.HIGH,
+            'selectable_by': [LOG_ROLES.OPERATOR],
+            'description': u'Complaint voided',
+            'stops_timer': False,
+        }),
     ])
 
     def __init__(self):

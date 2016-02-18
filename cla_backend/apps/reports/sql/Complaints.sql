@@ -50,5 +50,6 @@ FROM complaints_complaint AS comp
     LEFT OUTER JOIN legalaid_personaldetails AS p ON p.id = c.personal_details_id
     LEFT OUTER JOIN diagnosis_diagnosistraversal AS diagnosis ON c.diagnosis_id = diagnosis.id
     LEFT OUTER JOIN legalaid_category AS category ON diagnosis.category_id = category.id
-WHERE comp.created >= %(from_date)s AND comp.created < %(to_date)s
+WHERE comp.created >= %(from_date)s AND comp.created < %(to_date)s AND
+(SELECT COUNT(id) FROM complaint_logs WHERE complaint_logs.object_id=comp.id AND complaint_logs.code = 'COMPLAINT_VOID') = 0
 ORDER BY comp.created DESC;

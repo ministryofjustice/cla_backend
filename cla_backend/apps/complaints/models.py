@@ -66,6 +66,7 @@ class Complaint(TimeStampedModel):
 
     def __init__(self, *args, **kwargs):
         self._closed = NotImplemented
+        self._voided = NotImplemented
         self._holding_letter = NotImplemented
         self._full_letter = NotImplemented
         super(Complaint, self).__init__(*args, **kwargs)
@@ -81,6 +82,8 @@ class Complaint(TimeStampedModel):
     def status_label(self):
         if self.resolved is not None:
             return 'resolved' if self.resolved else 'unresolved'
+        if self.voided:
+            return 'voided'
         if self.owner_id:
             return 'pending'
         return 'received'
@@ -88,18 +91,34 @@ class Complaint(TimeStampedModel):
     @property
     def closed(self):
         """
-        The date the complaint was closed if it has a closed event log
+        The date the complaint was closed if it has a closed or void event log
         NB: Not loaded here if this model is being serialised in a complaint
             view set
         """
         if self._closed is NotImplemented:
-            last_closed = self.logs.filter(code='COMPLAINT_CLOSED').order_by('-created').first()
+            last_closed = self.logs.filter(code__in=['COMPLAINT_CLOSED', 'COMPLAINT_VOID']).order_by('-created').first()
             self._closed = last_closed.created if last_closed else None
         return self._closed
 
     @closed.setter
     def closed(self, value):
         self._closed = value
+
+    @property
+    def voided(self):
+        """
+        The date the complaint was voided if it has a void event log
+        NB: Not loaded here if this model is being serialised in a complaint
+            view set
+        """
+        if self._voided is NotImplemented:
+            last_voided = self.logs.filter(code='COMPLAINT_VOID').order_by('-created').first()
+            self._voided = last_voided.created if last_voided else None
+        return self._voided
+
+    @voided.setter
+    def voided(self, value):
+        self._voided = value
 
     @property
     def holding_letter(self):
@@ -109,8 +128,8 @@ class Complaint(TimeStampedModel):
             view set
         """
         if self._holding_letter is NotImplemented:
-            last_closed = self.logs.filter(code='HOLDING_LETTER_SENT').order_by('-created').first()
-            self._holding_letter = last_closed.created if last_closed else None
+            last_date = self.logs.filter(code='HOLDING_LETTER_SENT').order_by('-created').first()
+            self._holding_letter = last_date.created if last_date else None
         return self._holding_letter
 
     @holding_letter.setter
@@ -125,8 +144,8 @@ class Complaint(TimeStampedModel):
             view set
         """
         if self._full_letter is NotImplemented:
-            last_closed = self.logs.filter(code='FULL_RESPONSE_SENT').order_by('-created').first()
-            self._full_letter = last_closed.created if last_closed else None
+            last_date = self.logs.filter(code='FULL_RESPONSE_SENT').order_by('-created').first()
+            self._full_letter = last_date.created if last_date else None
         return self._full_letter
 
     @full_letter.setter

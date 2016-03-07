@@ -3,7 +3,6 @@ import boto
 import os
 import json
 import shutil
-import tempfile
 import time
 from contextlib import closing
 from django.contrib.auth.models import User
@@ -78,13 +77,8 @@ class ExportTaskBase(Task):
             settings.AWS_SECRET_ACCESS_KEY)
         bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
         k = bucket.new_key(settings.EXPORT_DIR + os.path.basename(self.filepath))
-        export = open(self.filepath)
-        k.set_contents_from_file(export)
-        k.set_acl('private')
-        try:
-            os.remove(self.filepath)
-        except Exception:
-            pass
+        k.set_contents_from_filename(self.filepath)
+        shutil.rmtree(self.filepath, ignore_errors=True)
 
 
 class ExportTask(ExportTaskBase):
@@ -97,8 +91,10 @@ class ExportTask(ExportTaskBase):
         self.filepath = self._filepath(filename)
         try:
             csv_data = list(self.form)
-            with csv_writer(open(self.filepath, 'w')) as writer:
+            csv_file = open(self.filepath, 'w')
+            with csv_writer(csv_file) as writer:
                 map(writer.writerow, csv_data)
+            csv_file.close()
             self.send_to_s3()
         except InternalError as error:
             error_message = text_type(error).strip()
@@ -131,11 +127,11 @@ class OBIEEExportTask(ExportTaskBase):
                 start, end, filename=os.path.basename(self._filepath(filename)))) as exporter:
             try:
                 self.filepath = exporter.export()
-                self.send_to_s3()
             except Exception:
                 self.message = u'An error occurred creating the zip file'
                 raise
             finally:
                 pass
-                # shutil.rmtree(self.filepath, ignore_errors=True)
+
+        self.send_to_s3()
 

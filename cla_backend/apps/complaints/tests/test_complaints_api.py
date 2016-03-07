@@ -61,6 +61,7 @@ class ComplaintTestCase(
             'status_label',
             'resolved',
             'closed',
+            'voided',
             'holding_letter',
             'full_letter',
             'out_of_sla',
@@ -183,6 +184,24 @@ class ComplaintTestCase(
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
+    def test_complaint_voiding(self):
+        response = self._create({
+            'event_code': 'COMPLAINT_VOID',
+            'notes': 'compaint created in error',
+        }, self.event_url)
+        self.refresh_resource()
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertSingleEventCreated(self.resource, 'COMPLAINT_VOID')
+        self.assertEqual(self.resource.status_label, 'voided')
+        self.assertFalse(self.resource.eod.case.complaint_flag)
+
+        response = self.client.get(
+            self.log_url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
     def test_complaint_reopening(self):
         self._create({
             'event_code': 'COMPLAINT_CLOSED',
@@ -191,6 +210,23 @@ class ComplaintTestCase(
         }, self.event_url)
         self.refresh_resource()
         self.assertSingleEventCreated(self.resource, 'COMPLAINT_CLOSED')
+        self.assertFalse(self.resource.eod.case.complaint_flag)
+
+        response = self._create({}, self.reopen_url)
+        self.refresh_resource()
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertSingleEventCreated(self.resource, 'COMPLAINT_REOPENED')
+        self.assertIsNone(self.resource.resolved)
+        self.assertIsNone(self.resource.closed)
+        self.assertTrue(self.resource.eod.case.complaint_flag)
+
+    def test_voided_complaint_reopening(self):
+        self._create({
+            'event_code': 'COMPLAINT_VOID',
+            'notes': 'some notes',
+        }, self.event_url)
+        self.refresh_resource()
+        self.assertSingleEventCreated(self.resource, 'COMPLAINT_VOID')
         self.assertFalse(self.resource.eod.case.complaint_flag)
 
         response = self._create({}, self.reopen_url)

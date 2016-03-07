@@ -41,6 +41,6 @@ polib==1.0.6
 # Fork PgFulltext - PR added
 git+git://github.com/ministryofjustice/djorm-ext-pgfulltext.git@0.1.0#egg=djorm_pgfulltext==0.1.0
 celery==3.1.17
-boto==2.38.0
+boto==2.39.0
 PyYAML==3.11
 pyminizip==0.2.1

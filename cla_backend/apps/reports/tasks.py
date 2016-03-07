@@ -77,13 +77,8 @@ class ExportTaskBase(Task):
             settings.AWS_SECRET_ACCESS_KEY)
         bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
         k = bucket.new_key(settings.EXPORT_DIR + os.path.basename(self.filepath))
-        export = open(self.filepath)
-        k.set_contents_from_file(export)
-        k.set_acl('private')
-        try:
-            os.remove(self.filepath)
-        except Exception:
-            pass
+        k.set_contents_from_filename(self.filepath)
+        shutil.rmtree(self.filepath, ignore_errors=True)
 
 
 class ExportTask(ExportTaskBase):

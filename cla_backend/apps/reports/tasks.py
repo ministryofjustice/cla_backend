@@ -3,7 +3,6 @@ import boto
 import os
 import json
 import shutil
-import tempfile
 import time
 from contextlib import closing
 from django.contrib.auth.models import User

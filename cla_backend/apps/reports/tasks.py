@@ -132,11 +132,11 @@ class OBIEEExportTask(ExportTaskBase):
                 start, end, filename=os.path.basename(self._filepath(filename)))) as exporter:
             try:
                 self.filepath = exporter.export()
-                self.send_to_s3()
             except Exception:
                 self.message = u'An error occurred creating the zip file'
                 raise
             finally:
                 pass
-                # shutil.rmtree(self.filepath, ignore_errors=True)
+
+        self.send_to_s3()
 

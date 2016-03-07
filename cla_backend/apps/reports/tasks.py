@@ -97,8 +97,10 @@ class ExportTask(ExportTaskBase):
         self.filepath = self._filepath(filename)
         try:
             csv_data = list(self.form)
-            with csv_writer(open(self.filepath, 'w')) as writer:
+            csv_file = open(self.filepath, 'w')
+            with csv_writer(csv_file) as writer:
                 map(writer.writerow, csv_data)
+            csv_file.close()
             self.send_to_s3()
         except InternalError as error:
             error_message = text_type(error).strip()

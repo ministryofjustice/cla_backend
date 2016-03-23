@@ -383,7 +383,11 @@ class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
             'contact_type',
             'case_created_by',
             'means_test_completed_online',
-            'call_me_back_only'
+            'call_me_back_only',
+            'scope_result',
+            'means_test_result',
+            'last_code_used',
+            'date_case_created',
         ]
 
 

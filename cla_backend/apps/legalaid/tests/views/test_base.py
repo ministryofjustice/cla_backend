@@ -1,3 +1,4 @@
+import datetime
 from django.contrib.auth.models import User
 
 from provider.oauth2.models import Client, AccessToken
@@ -68,33 +69,40 @@ class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
         self.operator = Operator.objects.create(user=self.user)
         self.operator_manager = Operator.objects.create(user=self.mgr_user, is_manager=True)
 
+        # Expire token in the future when this codebase will be obsolete
+        self.token_expires = datetime.datetime(2100, 1, 1, 0, 0, 0)
+
         # Create an access token
         self.operator_token = AccessToken.objects.create(
             user=self.user,
             client=self.operator_api_client,
             token='operator_token',
-            scope=0
+            scope=0,
+            expires=self.token_expires
         )
 
         self.operator_manager_token = AccessToken.objects.create(
             user=self.mgr_user,
             client=self.operator_api_client,
             token='operator_manager_token',
-            scope=0
+            scope=0,
+            expires=self.token_expires
         )
         # Create an access token
         self.staff_token = AccessToken.objects.create(
             user=self.user,
             client=self.staff_api_client,
             token='stafF_token',
-            scope=0
+            scope=0,
+            expires=self.token_expires
         )
 
         self.staff_manager_token = AccessToken.objects.create(
             user=self.mgr_user,
             client=self.staff_api_client,
             token='stafF_token_mgr',
-            scope=0
+            scope=0,
+            expires=self.token_expires
         )
 
         # set default token

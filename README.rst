@@ -41,7 +41,7 @@ Install python dependencies:
 
     pip install -r requirements/local.txt
 
-Create the database inside postgres. Type ``psql`` to enter postgres,
+Create the database inside postgres. Type ``psql -d template1`` to enter postgres,
 then enter:
 
 ::

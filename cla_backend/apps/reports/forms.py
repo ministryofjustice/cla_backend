@@ -1,3 +1,4 @@
+import re
 from cla_provider.models import Provider
 import os
 from datetime import timedelta, time, datetime, date
@@ -123,7 +124,8 @@ class MIProviderAllocationExtract(SQLFileDateRangeReport):
         ] + self._get_provider_names()
 
     def _get_provider_names(self):
-        return [p['name'] for p in
+        regex = re.compile(r'[^ 0-9A-Za-z.-]+')
+        return [re.sub(regex, '', p['name']) for p in
                 Provider.objects.all().order_by('id').values('name')]
 
     def get_sql_params(self):

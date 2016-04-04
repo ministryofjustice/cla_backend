@@ -15,6 +15,10 @@ from reports.utils import OBIEEExporter
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
 
+    def setUp(self):
+        super(ReportsSQLColumnsMatchHeadersTestCase, self).setUp()
+        make_recipe('cla_provider.Provider')
+
     def test_headers_count_matches_sql(self):
         for n, i in vars(reports.forms).items():
             if inspect.isclass(i) and issubclass(i, reports.forms.SQLFileDateRangeReport) and i != reports.forms.SQLFileDateRangeReport:

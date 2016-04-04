@@ -18,3 +18,4 @@ class Command(NoArgsCommand):
             return
         cursor = connection.cursor()
         cursor.execute('CREATE EXTENSION IF NOT EXISTS pgcrypto')
+        cursor.execute('CREATE EXTENSION IF NOT EXISTS tablefunc')

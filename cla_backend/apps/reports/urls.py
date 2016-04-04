@@ -8,6 +8,11 @@ urlpatterns = patterns('',
     url(r'^api/exports/$', api.ExportListView.as_view(), name='exports'),
     url(r'^api/exports/(?P<pk>[0-9]+)/$', api.ExportListView.as_view(), name='exports'),
     url(r'^exports/download/(?P<file_name>[A-Za-z0-9-_\.]+)$', views.download_file, name='exports'),
+
+    url(r'^mi-provider-allocation-extract/$',
+        views.mi_provider_allocation_extract,
+        name='mi_provider_allocation_extract'),
+
     url(r'^mi-case-extract/$',
         views.mi_case_extract,
         name='mi_case_extract'),

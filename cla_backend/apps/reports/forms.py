@@ -1,3 +1,5 @@
+import re
+from cla_provider.models import Provider
 import os
 from datetime import timedelta, time, datetime, date
 
@@ -111,6 +113,31 @@ class SQLFileDateRangeReport(SQLFileReportMixin, DateRangeReportForm):
 class SQLFileMonthRangeReport(SQLFileReportMixin, MonthRangeReportForm):
     def get_sql_params(self):
         return self.month.date(),
+
+
+class MIProviderAllocationExtract(SQLFileDateRangeReport):
+    QUERY_FILE = 'MIProviderAllocation.sql'
+
+    def get_headers(self):
+        return [
+            'category',
+        ] + self._get_provider_names()
+
+    def _get_provider_names(self):
+        regex = re.compile(r'[^ 0-9A-Za-z.-]+')
+        return [re.sub(regex, '', p['name']) for p in
+                Provider.objects.all().order_by('id').values('name')]
+
+    def get_sql_params(self):
+        params = super(MIProviderAllocationExtract, self).get_sql_params()
+        cols = '"%s" text' % '" text, "'.join(self.get_headers())
+        return params + (cols, )
+
+    def get_queryset(self):
+        cursor = get_replica_cursor()
+        cursor.execute(self.query % self.get_sql_params())
+        self.description = cursor.description
+        return cursor.fetchall()
 
 
 class MIVoiceReport(SQLFileMonthRangeReport):

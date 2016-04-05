@@ -14,7 +14,7 @@ from .forms import MICaseExtract, MIFeedbackExtract, \
     MIContactsPerCaseByCategoryExtract, MIAlternativeHelpExtract, \
     MISurveyExtract, MICB1Extract, MIVoiceReport, MIEODReport, \
     MIOBIEEExportExtract, MetricsReport, MIDuplicateCaseExtract, \
-    ComplaintsReport, MIDigitalCaseTypesExtract
+    ComplaintsReport, MIDigitalCaseTypesExtract, MIProviderAllocationExtract
 from reports.models import Export
 from .tasks import ExportTask, OBIEEExportTask
 
@@ -54,6 +54,13 @@ def valid_submit(request, form):
         form.is_bound = True
         return form.is_valid()
     return False
+
+
+@staff_member_required
+@permission_required('legalaid.run_reports')
+@report_view(MIProviderAllocationExtract, 'MI Provider Allocation')
+def mi_provider_allocation_extract():
+    pass
 
 
 @staff_member_required

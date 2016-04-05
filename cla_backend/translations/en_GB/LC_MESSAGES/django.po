@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-05 12:33+0100\n"
+"POT-Creation-Date: 2016-04-05 15:49+0100\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -1937,7 +1937,7 @@ msgid "Not a dispute for which mediation is relevant."
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2841
-msgid "Domestic abuse (during the last 5 years, or their abuser has a current criminal conviction"
+msgid "Domestic abuse (during the last 5 years, or their abuser has a current criminal conviction)"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2847

@@ -2838,7 +2838,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d10">n322</data>
       </node>
     <node id="n314">
-      <data key="d3">{% trans "Domestic abuse (during the last 5 years, or their abuser has a current criminal conviction" %}</data>
+      <data key="d3">{% trans "Domestic abuse (during the last 5 years, or their abuser has a current criminal conviction)" %}</data>
       <data key="d4">Client has been subj</data>
       <data key="d7">2</data>
       <data key="d10">n323</data>

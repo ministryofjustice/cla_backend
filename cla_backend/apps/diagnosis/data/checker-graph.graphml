@@ -1063,7 +1063,7 @@
     </node>
     <node id="n29">
       <data key="d3"><![CDATA[Domestic abuse]]></data>
-      <data key="d4"><![CDATA[You want to protect yourself or your children against domestic violence]]></data>
+      <data key="d4"><![CDATA[You want to protect yourself or your children against domestic abuse (including psychological, physical, financial, sexual or emotional abuse)]]></data>
       <data key="d5"><![CDATA[Are you or your children at immediate risk of harm?]]></data>
       <data key="d10">1</data>
       <data key="d11"><![CDATA[n44]]></data>
@@ -1401,7 +1401,7 @@
     </node>
     <node id="n44">
       <data key="d3"><![CDATA[Domestic abuse]]></data>
-      <data key="d4"><![CDATA[You or your children have suffered domestic abuse in the last 2 years, or your abuser has a current criminal conviction]]></data>
+      <data key="d4"><![CDATA[You or your children have suffered domestic abuse in the last 5 years, or your abuser has a current criminal conviction]]></data>
       <data key="d5"><![CDATA[Are you at immediate risk of harm?]]></data>
       <data key="d10">2</data>
       <data key="d11"><![CDATA[n62]]></data>
@@ -2895,7 +2895,7 @@ OUTOFSCOPE<y:LabelModel>
     </node>
     <node id="n67">
       <data key="d3"><![CDATA[Domestic abuse or harassment]]></data>
-      <data key="d4"><![CDATA[Abuse at home, child abuse, harassment]]></data>
+      <data key="d4"><![CDATA[Abuse at home (including psychological, physical, financial, sexual or emotional abuse), child abuse, harassment]]></data>
       <data key="d5"><![CDATA[Select the option that best describes your situation]]></data>
       <data key="d10">5</data>
       <data key="d11"><![CDATA[n97]]></data>

@@ -377,7 +377,7 @@
       </node>
     <node id="n29">
       <data key="d3">{% trans "Domestic abuse" %}</data>
-      <data key="d4">{% trans "You want to protect yourself or your children against domestic violence" %}</data>
+      <data key="d4">{% trans "You want to protect yourself or your children against domestic abuse (including psychological, physical, financial, sexual or emotional abuse)" %}</data>
       <data key="d5">{% trans "Are you or your children at immediate risk of harm?" %}</data>
       <data key="d10">1</data>
       <data key="d11">n44</data>
@@ -490,7 +490,7 @@
       </node>
     <node id="n44">
       <data key="d3">{% trans "Domestic abuse" %}</data>
-      <data key="d4">{% trans "You or your children have suffered domestic abuse in the last 2 years, or your abuser has a current criminal conviction" %}</data>
+      <data key="d4">{% trans "You or your children have suffered domestic abuse in the last 5 years, or your abuser has a current criminal conviction" %}</data>
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n62</data>
@@ -1052,7 +1052,7 @@
       </node>
     <node id="n67">
       <data key="d3">{% trans "Domestic abuse or harassment" %}</data>
-      <data key="d4">{% trans "Abuse at home, child abuse, harassment" %}</data>
+      <data key="d4">{% trans "Abuse at home (including psychological, physical, financial, sexual or emotional abuse), child abuse, harassment" %}</data>
       <data key="d5">{% trans "Select the option that best describes your situation" %}</data>
       <data key="d10">5</data>
       <data key="d11">n97</data>

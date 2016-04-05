@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-12 14:29+0000\n"
+"POT-Creation-Date: 2016-04-05 12:33+0100\n"
 "PO-Revision-Date: 2015-09-18 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -482,7 +482,9 @@ msgid "For example admissions or exclusions"
 msgstr "Er enghraifft addefiad neu gau allan"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:380
-msgid "You want to protect yourself or your children against domestic violence"
+#, fuzzy
+#| msgid "You want to protect yourself or your children against domestic violence"
+msgid "You want to protect yourself or your children against domestic abuse (including psychological, physical, financial, sexual or emotional abuse)"
 msgstr "Rydych chi eisiau diogelu eich hun neu eich plant yn erbyn trais domestig"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:381
@@ -588,7 +590,9 @@ msgid "You are under 18"
 msgstr "Rydych chi dan 18 oed"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:493
-msgid "You or your children have suffered domestic abuse in the last 2 years, or your abuser has a current criminal conviction"
+#, fuzzy
+#| msgid "You or your children have suffered domestic abuse in the last 2 years, or your abuser has a current criminal conviction"
+msgid "You or your children have suffered domestic abuse in the last 5 years, or your abuser has a current criminal conviction"
 msgstr "Rydych chi neu eich plant wedi dioddef cam-drin domestig yn y 2 flynedd diwethaf, neu mae gan y sawl sy'n eich camdrin euogfarn troseddol cyfredol"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:506
@@ -713,8 +717,10 @@ msgid "Domestic abuse or harassment"
 msgstr "Cam-drin domestig neu aflonyddwch"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1055
-msgid "Abuse at home, child abuse, harassment"
-msgstr "Camdriniaeth yn y cartref, cam-drin plentyn, aflonyddu "
+#, fuzzy
+#| msgid "Abuse at home (psychological, physical, financial, sexual or emotional), child abuse, harassment by an ex-partner, forced marriage"
+msgid "Abuse at home (including psychological, physical, financial, sexual or emotional abuse), child abuse, harassment"
+msgstr "Camdriniaeth yn y cartref (naill ai'n seicolegol, corfforol, ariannol, rhywiol neu emosiynol), cam-drin plant, aflonyddwch gan gyn-bartner, priodas dan orfod"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1076
 msgid "Female genital mutilation"
@@ -1251,13 +1257,26 @@ msgid "Other out of scope, rediagnose"
 msgstr "Arall y tu allan i'r cwmpas, ail-wneud diagnosis"
 
 #: apps/diagnosis/data/graph.graphml.tpl:788
+#, fuzzy
+#| msgid ""
+#| "The family category of law includes advice on:\n"
+#| "\n"
+#| "* difficulty in getting contact with children or being denied contact\n"
+#| "* trying to get custody and parental rights\n"
+#| "* Social Services involvement with a child\n"
+#| "* protection from domestic violence or abuse\n"
+#| "* rights and entitlements in divorce or separation\n"
+#| "* appointing a guardian and the rights of a guardian\n"
+#| "* trying to adopt a child who's in care\n"
+#| "* enforcing previous court orders\n"
+#| "* child abduction"
 msgid ""
 "The family category of law includes advice on:\n"
 "\n"
 "* difficulty in getting contact with children or being denied contact\n"
 "* trying to get custody and parental rights\n"
 "* Social Services involvement with a child\n"
-"* protection from domestic violence or abuse\n"
+"* protection from domestic abuse (including psychological, physical, financial, sexual or emotional abuse)\n"
 "* rights and entitlements in divorce or separation\n"
 "* appointing a guardian and the rights of a guardian\n"
 "* trying to adopt a child who's in care\n"
@@ -1277,7 +1296,9 @@ msgstr ""
 "* herwgydio plentyn"
 
 #: apps/diagnosis/data/graph.graphml.tpl:802
-msgid "Domestic violence or abuse (including child abuse) - the client wants to protect themselves or their children"
+#, fuzzy
+#| msgid "Domestic violence or abuse (including child abuse) - the client wants to protect themselves or their children"
+msgid "Domestic abuse (including child abuse) - the client wants to protect themselves or their children"
 msgstr "Trais neu gamdriniaeth domestig (gan gynnwys cam-drin plant) - mae'r cleient eisiau amddiffyn ei hun neu ei blant"
 
 #: apps/diagnosis/data/graph.graphml.tpl:805
@@ -2064,7 +2085,9 @@ msgstr ""
 "* Neu gallaf awgrymu llinell gymorth arall neu wasanaeth cyngor wyneb yn wyneb a allai eich helpu.*"
 
 #: apps/diagnosis/data/graph.graphml.tpl:2691
-msgid "Domestic violence or abuse – including issues arising from forced marriage, child abduction, female genital mutilation and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser."
+#, fuzzy
+#| msgid "Domestic violence or abuse – including issues arising from forced marriage, child abduction, female genital mutilation and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser."
+msgid "Domestic abuse (including psychological, physical, financial, sexual or emotional abuse, forced marriage, child abduction, female genital mutilation and harassment). Also includes defence against a non-molestation or occupation order where the client is the alleged abuser."
 msgstr "Trais neu gamdriniaeth domestig - gan gynnwys problemau sy'n codi o ganlyniad i briodas dan orfod, herwgydio plentyn, anffurfio organau cenhedlu ac aflonyddu. Hefyd yn cynnwys amddiffyn yn erbyn gorchymyn anheddu neu orchymyn rhag molestu os mai'r cleient yw'r camdriniwr honedig."
 
 #: apps/diagnosis/data/graph.graphml.tpl:2694
@@ -2152,7 +2175,9 @@ msgstr ""
 "Dylech gyfeirio'r cleient i'r gwasanaeth cyfryngu teuluol agosaf sydd â sicrhad ansawdd gan ddefnyddio'r cyfeiriadur (arf Dod o hyd i Gynghorwr)"
 
 #: apps/diagnosis/data/graph.graphml.tpl:2789
-msgid "The client has already taken action to stop domestic violence (e.g. via an injunction) but needs to take further action as the order is not being complied with"
+#, fuzzy
+#| msgid "The client has already taken action to stop domestic violence (e.g. via an injunction) but needs to take further action as the order is not being complied with"
+msgid "The client has already taken action to stop domestic abuse (e.g. via an injunction) but needs to take further action as the order is not being complied with"
 msgstr "Mae'r cleient eisoes wedi cymryd camau i atal trais domestig (e.e. drwy waharddeb) ond mae angen cymryd camau pellach gan na chydymffurfir â'r gorchymyn "
 
 #: apps/diagnosis/data/graph.graphml.tpl:2795
@@ -2224,7 +2249,9 @@ msgid "Not a dispute for which mediation is relevant."
 msgstr "Nid yw cyfryngu yn berthnasol i'r anghydfod hwn."
 
 #: apps/diagnosis/data/graph.graphml.tpl:2841
-msgid "Domestic abuse during the last 2 years, or their abuser has a current criminal conviction"
+#, fuzzy
+#| msgid "Domestic abuse during the last 2 years, or their abuser has a current criminal conviction"
+msgid "Domestic abuse (during the last 5 years, or their abuser has a current criminal conviction"
 msgstr "Camdriniaeth domestig yn ystod y 2 flynedd diwethaf, neu mae gan y sawl sy'n eu cam-drin euogfarn troseddol cyfredol"
 
 #: apps/diagnosis/data/graph.graphml.tpl:2847
@@ -2343,51 +2370,54 @@ msgstr "Cyngor Cyfreithiol Sifil"
 msgid "Reset lockout"
 msgstr "Ailosod y clo"
 
-#: templates/admin/index.html:41
+#: templates/admin/index.html:43
 #, python-format
 msgid "Models in the %(name)s application"
 msgstr "Modelau yn y rhaglen %(name)s "
 
-#: templates/admin/index.html:42
+#: templates/admin/index.html:44
 #, python-format
 msgid "%(name)s"
 msgstr "%(name)s"
 
-#: templates/admin/index.html:54
+#: templates/admin/index.html:56
 msgid "Add"
 msgstr "Ychwanegu"
 
-#: templates/admin/index.html:60
+#: templates/admin/index.html:62
 msgid "Change"
 msgstr "Newid"
 
-#: templates/admin/index.html:70
+#: templates/admin/index.html:72
 msgid "You don't have permission to edit anything."
 msgstr "Nid oes gennych hawl i olygu dim byd."
 
-#: templates/admin/index.html:78
+#: templates/admin/index.html:80
 msgid "Recent Actions"
 msgstr "Gweithredoedd Diweddar"
 
-#: templates/admin/index.html:79
+#: templates/admin/index.html:81
 msgid "My Actions"
 msgstr "Fy Ngweithredoedd"
 
-#: templates/admin/index.html:83
+#: templates/admin/index.html:85
 msgid "None available"
 msgstr "Dim ar gael"
 
-#: templates/admin/index.html:97
+#: templates/admin/index.html:99
 msgid "Unknown content"
 msgstr "Cynnwys anhysbys"
 
-#: templates/admin/reports/base.html:30
+#: templates/admin/reports/base.html:35
 msgid "Home"
 msgstr "Hafan"
 
-#: templates/admin/reports/base.html:31
+#: templates/admin/reports/base.html:36
 msgid "Reports"
 msgstr "Adroddiadau"
+
+#~ msgid "Abuse at home, child abuse, harassment"
+#~ msgstr "Camdriniaeth yn y cartref, cam-drin plentyn, aflonyddu "
 
 #~ msgid "You’re a landlord applying for an injunction against a tenant for antisocial behaviour"
 #~ msgstr "Rydych yn landlord sy'n gwneud cais am waharddeb yn erbyn tenant am ymddygiad gwrthgymdeithasol"

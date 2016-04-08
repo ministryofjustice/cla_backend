@@ -5,6 +5,8 @@ from rest_framework.renderers import JSONRenderer
 
 from cla_common.smoketest import smoketest
 
+import os
+
 
 class JSONResponse(HttpResponse):
     def __init__(self, data, **kwargs):
@@ -34,6 +36,40 @@ def status(request):
         finally:
             if c:
                 c.close()
+
+
+@csrf_exempt
+def ping(request):
+
+    res = {
+        'version_number': None,
+        'build_date': None,
+        'commit_id': None,
+        'build_tag': None
+    }
+
+    try:
+        res['version_number'] = os.environ['APPVERSION']
+    except KeyError:
+        pass
+
+    try:
+        res['build_date'] = os.environ['APP_BUILD_DATE']
+    except KeyError:
+        pass
+
+    try:
+        res['commit_id'] = os.environ['APP_GIT_COMMIT']
+    except KeyError:
+        pass
+
+    try:
+        res['build_tag'] = os.environ['APP_BUILD_TAG']
+    except KeyError:
+        pass
+
+    return JSONResponse(res)
+
 
 
 @csrf_exempt

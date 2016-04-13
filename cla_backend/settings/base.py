@@ -12,15 +12,11 @@ root = lambda *x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
 sys.path.insert(0, root('apps'))
 sys.path.insert(0, root('libs'))
 
-
-# Irat healtcheck and ping settings
-
 HEALTHCHECKS = [
     'moj_irat.healthchecks.database_healthcheck',
-    # override default list of healthcheck callables
 ]
 
-AUTODISCOVER_HEALTHCHECKS = True  # whether to autodiscover and load healthcheck.py from all installed apps
+AUTODISCOVER_HEALTHCHECKS = True
 
 PING_JSON_KEYS = {
 

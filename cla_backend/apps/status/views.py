@@ -48,7 +48,6 @@ def ping(request):
     })
 
 
-
 @csrf_exempt
 def smoketests(request):
     """

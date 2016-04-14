@@ -46,4 +46,4 @@ PyYAML==3.11
 pyminizip==0.2.1
 
 #Irat healthcheck and ping package
-git+https://github.com/ministryofjustice/django-moj-irat.git
+git+https://github.com/ministryofjustice/django-moj-irat.git@4d54b86b1cb574fe787ba0fb8a992cf352f8eba6

@@ -1,10 +1,7 @@
 from django.conf.urls import patterns, url
-
 from django.conf import settings
-
-from . import views
-
 from moj_irat.views import PingJsonView, HealthcheckView
+from . import views
 
 
 urlpatterns = patterns(

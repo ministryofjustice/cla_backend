@@ -12,6 +12,20 @@ root = lambda *x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
 sys.path.insert(0, root('apps'))
 sys.path.insert(0, root('libs'))
 
+HEALTHCHECKS = [
+    'moj_irat.healthchecks.database_healthcheck',
+]
+
+AUTODISCOVER_HEALTHCHECKS = True
+
+PING_JSON_KEYS = {
+
+    'build_date_key': 'APP_BUILD_DATE',
+    'commit_id_key': 'APP_GIT_COMMIT',
+    'version_number_key': 'APPVERSION',
+    'build_tag_key': 'APP_BUILD_TAG',
+
+}
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

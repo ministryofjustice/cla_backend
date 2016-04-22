@@ -881,7 +881,7 @@ If client has received a charging order please record this in Operator Notes.]]>
           <y:Geometry height="30.0" width="150.0" x="8004.219410342262" y="470.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="129.0625" x="10.46875" y="5.93359375">Possession proceedin<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="129.0625" x="10.46875" y="5.93359375">Possession proceeding<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -973,7 +973,7 @@ If client has received a charging order please record this in Operator Notes.]]>
           <y:Geometry height="30.0" width="150.0" x="7284.219410342262" y="470.0"/>
           <y:Fill color="#FF9900" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="106.80859375" x="21.595703125" y="5.93359375">Warrant - bailliffs<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="custom" textColor="#000000" visible="true" width="106.80859375" x="21.595703125" y="5.93359375">Warrant - bailiffs<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -1011,7 +1011,7 @@ If client has received a charging order please record this in Operator Notes.]]>
     </node>
     <node id="n40">
       <data key="d3"><![CDATA[There is other evidence that landlord is seeking to recover possession and placing the home at immediate risk]]></data>
-      <data key="d4"><![CDATA[There is other evide]]></data>
+      <data key="d4"><![CDATA[There is other evide]]></data> 
       <data key="d7">7</data>
       <data key="d10"><![CDATA[n40]]></data>
       <data key="d13">
@@ -2129,7 +2129,7 @@ For loss of home please click 'back' and select the first category.]]></data>
 * difficulty in getting contact with children or being denied contact
 * trying to get custody and parental rights
 * Social Services involvement with a child
-* protection from domestic violence or abuse
+* protection from domestic abuse (including psychological, physical, financial, sexual or emotional abuse)
 * rights and entitlements in divorce or separation
 * appointing a guardian and the rights of a guardian
 * trying to adopt a child who's in care
@@ -2153,7 +2153,7 @@ For loss of home please click 'back' and select the first category.]]></data>
       </data>
     </node>
     <node id="n90">
-      <data key="d3"><![CDATA[Domestic violence or abuse (including child abuse) - the client wants to protect themselves or their children]]></data>
+      <data key="d3"><![CDATA[Domestic abuse (including child abuse) - the client wants to protect themselves or their children]]></data>
       <data key="d4"><![CDATA[Client protecting self]]></data>
       <data key="d7">1</data>
       <data key="d8"><![CDATA[DV/CA - Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order (an injunction) that tells a person they're not allowed to do a certain act. There are two main forms of injunction
@@ -7179,7 +7179,7 @@ If the client wants legal advice to support of ongoing or recently completed med
       </data>
     </node>
     <node id="n298">
-      <data key="d3"><![CDATA[Domestic violence or abuse – including issues arising from forced marriage, child abduction, female genital mutilation and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser.]]></data>
+      <data key="d3"><![CDATA[Domestic abuse (including psychological, physical, financial, sexual or emotional abuse, forced marriage, child abduction, female genital mutilation and harassment). Also includes defence against a non-molestation or occupation order where the client is the alleged abuser.]]></data>
       <data key="d4"><![CDATA[Client wants to prev]]></data>
       <data key="d7">1</data>
       <data key="d8"><![CDATA[Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act.
@@ -7427,7 +7427,7 @@ You should now direct the client to their nearest contracted quality assured fam
       </data>
     </node>
     <node id="n308">
-      <data key="d3"><![CDATA[The client has already taken action to stop domestic violence (e.g. via an injunction) but needs to take further action as the order is not being complied with]]></data>
+      <data key="d3"><![CDATA[The client has already taken action to stop domestic abuse (e.g. via an injunction) but needs to take further action as the order is not being complied with]]></data>
       <data key="d4"><![CDATA[Client being harassed by partner or ex-partner]]></data>
       <data key="d7">2</data>
       <data key="d10"><![CDATA[n317]]></data>
@@ -7569,7 +7569,7 @@ eg divorce, contact with children, finances]]></data>
       </data>
     </node>
     <node id="n314">
-      <data key="d3"><![CDATA[Domestic abuse during the last 2 years, or their abuser has a current criminal conviction]]></data>
+      <data key="d3"><![CDATA[Domestic abuse (during the last 5 years, or their abuser has a current criminal conviction)]]></data>
       <data key="d4"><![CDATA[Client has been subj]]></data>
       <data key="d7">2</data>
       <data key="d10"><![CDATA[n323]]></data>

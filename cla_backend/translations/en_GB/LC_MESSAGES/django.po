@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-12 14:29+0000\n"
+"POT-Creation-Date: 2016-04-13 10:53+0100\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -482,7 +482,7 @@ msgid "For example admissions or exclusions"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:380
-msgid "You want to protect yourself or your children against domestic violence"
+msgid "You want to protect yourself or your children against domestic abuse (including psychological, physical, financial, sexual or emotional abuse)"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:381
@@ -588,7 +588,7 @@ msgid "You are under 18"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:493
-msgid "You or your children have suffered domestic abuse in the last 2 years, or your abuser has a current criminal conviction"
+msgid "You or your children have suffered domestic abuse in the last 5 years, or your abuser has a current criminal conviction"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:506
@@ -711,7 +711,7 @@ msgid "Domestic abuse or harassment"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1055
-msgid "Abuse at home, child abuse, harassment"
+msgid "Abuse at home (including psychological, physical, financial, sexual or emotional abuse), child abuse, harassment"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1076
@@ -1179,7 +1179,7 @@ msgid ""
 "* difficulty in getting contact with children or being denied contact\n"
 "* trying to get custody and parental rights\n"
 "* Social Services involvement with a child\n"
-"* protection from domestic violence or abuse\n"
+"* protection from domestic abuse (including psychological, physical, financial, sexual or emotional abuse)\n"
 "* rights and entitlements in divorce or separation\n"
 "* appointing a guardian and the rights of a guardian\n"
 "* trying to adopt a child who's in care\n"
@@ -1188,7 +1188,7 @@ msgid ""
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:802
-msgid "Domestic violence or abuse (including child abuse) - the client wants to protect themselves or their children"
+msgid "Domestic abuse (including child abuse) - the client wants to protect themselves or their children"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:805
@@ -1819,7 +1819,7 @@ msgid ""
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2691
-msgid "Domestic violence or abuse – including issues arising from forced marriage, child abduction, female genital mutilation and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser."
+msgid "Domestic abuse (including psychological, physical, financial, sexual or emotional abuse, forced marriage, child abduction, female genital mutilation and harassment). Also includes defence against a non-molestation or occupation order where the client is the alleged abuser."
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2694
@@ -1881,7 +1881,7 @@ msgid ""
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2789
-msgid "The client has already taken action to stop domestic violence (e.g. via an injunction) but needs to take further action as the order is not being complied with"
+msgid "The client has already taken action to stop domestic abuse (e.g. via an injunction) but needs to take further action as the order is not being complied with"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2795
@@ -1937,7 +1937,7 @@ msgid "Not a dispute for which mediation is relevant."
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2841
-msgid "Domestic abuse during the last 2 years, or their abuser has a current criminal conviction"
+msgid "Domestic abuse (during the last 5 years, or their abuser has a current criminal conviction)"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2847
@@ -2040,48 +2040,48 @@ msgstr ""
 msgid "Reset lockout"
 msgstr ""
 
-#: templates/admin/index.html:41
+#: templates/admin/index.html:43
 #, python-format
 msgid "Models in the %(name)s application"
 msgstr ""
 
-#: templates/admin/index.html:42
+#: templates/admin/index.html:44
 #, python-format
 msgid "%(name)s"
 msgstr ""
 
-#: templates/admin/index.html:54
+#: templates/admin/index.html:56
 msgid "Add"
 msgstr ""
 
-#: templates/admin/index.html:60
+#: templates/admin/index.html:62
 msgid "Change"
 msgstr ""
 
-#: templates/admin/index.html:70
+#: templates/admin/index.html:72
 msgid "You don't have permission to edit anything."
 msgstr ""
 
-#: templates/admin/index.html:78
+#: templates/admin/index.html:80
 msgid "Recent Actions"
 msgstr ""
 
-#: templates/admin/index.html:79
+#: templates/admin/index.html:81
 msgid "My Actions"
 msgstr ""
 
-#: templates/admin/index.html:83
+#: templates/admin/index.html:85
 msgid "None available"
 msgstr ""
 
-#: templates/admin/index.html:97
+#: templates/admin/index.html:99
 msgid "Unknown content"
 msgstr ""
 
-#: templates/admin/reports/base.html:30
+#: templates/admin/reports/base.html:35
 msgid "Home"
 msgstr ""
 
-#: templates/admin/reports/base.html:31
+#: templates/admin/reports/base.html:36
 msgid "Reports"
 msgstr ""

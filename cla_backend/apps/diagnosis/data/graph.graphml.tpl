@@ -409,7 +409,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </node>
     <node id="n40">
       <data key="d3">{% trans "There is other evidence that landlord is seeking to recover possession and placing the home at immediate risk" %}</data>
-      <data key="d4">There is other evide</data>
+      <data key="d4">There is other evide</data> 
       <data key="d7">7</data>
       <data key="d10">n40</data>
       </node>
@@ -790,7 +790,7 @@ For loss of home please click 'back' and select the first category.{% endblocktr
 * difficulty in getting contact with children or being denied contact
 * trying to get custody and parental rights
 * Social Services involvement with a child
-* protection from domestic violence or abuse
+* protection from domestic abuse (including psychological, physical, financial, sexual or emotional abuse)
 * rights and entitlements in divorce or separation
 * appointing a guardian and the rights of a guardian
 * trying to adopt a child who's in care
@@ -799,7 +799,7 @@ For loss of home please click 'back' and select the first category.{% endblocktr
       <data key="d10">n97</data>
       </node>
     <node id="n90">
-      <data key="d3">{% trans "Domestic violence or abuse (including child abuse) - the client wants to protect themselves or their children" %}</data>
+      <data key="d3">{% trans "Domestic abuse (including child abuse) - the client wants to protect themselves or their children" %}</data>
       <data key="d4">Client protecting self</data>
       <data key="d7">1</data>
       <data key="d8">{% blocktrans %}DV/CA - Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order (an injunction) that tells a person they're not allowed to do a certain act. There are two main forms of injunction
@@ -2688,7 +2688,7 @@ If the client wants legal advice to support of ongoing or recently completed med
       <data key="d10">n306</data>
       </node>
     <node id="n298">
-      <data key="d3">{% trans "Domestic violence or abuse – including issues arising from forced marriage, child abduction, female genital mutilation and harassment. Also includes defence against a non-molestation or occupation order where the client is the alleged abuser." %}</data>
+      <data key="d3">{% trans "Domestic abuse (including psychological, physical, financial, sexual or emotional abuse, forced marriage, child abduction, female genital mutilation and harassment). Also includes defence against a non-molestation or occupation order where the client is the alleged abuser." %}</data>
       <data key="d4">Client wants to prev</data>
       <data key="d7">1</data>
       <data key="d8">{% blocktrans %}Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act.
@@ -2786,7 +2786,7 @@ You should now direct the client to their nearest contracted quality assured fam
       <data key="d10">n316</data>
       </node>
     <node id="n308">
-      <data key="d3">{% trans "The client has already taken action to stop domestic violence (e.g. via an injunction) but needs to take further action as the order is not being complied with" %}</data>
+      <data key="d3">{% trans "The client has already taken action to stop domestic abuse (e.g. via an injunction) but needs to take further action as the order is not being complied with" %}</data>
       <data key="d4">Client being harassed by partner or ex-partner</data>
       <data key="d7">2</data>
       <data key="d10">n317</data>
@@ -2838,7 +2838,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d10">n322</data>
       </node>
     <node id="n314">
-      <data key="d3">{% trans "Domestic abuse during the last 2 years, or their abuser has a current criminal conviction" %}</data>
+      <data key="d3">{% trans "Domestic abuse (during the last 5 years, or their abuser has a current criminal conviction)" %}</data>
       <data key="d4">Client has been subj</data>
       <data key="d7">2</data>
       <data key="d10">n323</data>

@@ -25,7 +25,10 @@ class Timer(TimeStampedModel):
     @classmethod
     def start(cls, user):
         statsd.incr('timer.start')
-        return cls.objects.create(created_by=user)
+        timer, created = cls.objects.get_or_create(
+            created_by=user, cancelled=False, stopped__isnull=True,
+            defaults={'created_by': user})
+        return timer
 
     def is_stopped(self):
         return self.stopped

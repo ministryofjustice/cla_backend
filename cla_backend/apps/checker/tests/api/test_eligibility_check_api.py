@@ -1,3 +1,5 @@
+import uuid
+from core.tests.mommy_utils import make_recipe
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -38,3 +40,29 @@ class EligibilityCheckTestCase(
         self.assertEqual(data['dependants_old'], check.dependants_old)
         self.assertPersonEqual(data['you'], check.you)
         self.assertPersonEqual(data['partner'], check.partner, partner=True)
+
+    def test_case_ref_api(self):
+        case = make_recipe('legalaid.case')
+
+        case.eligibility_check = self.resource
+        case.save()
+
+        case_ref_url = u'%s%s' % (self.detail_url, u'case_ref/')
+
+        response = self.client.get(
+            case_ref_url, format='json',
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        case_ref_url = case_ref_url.replace(
+            unicode(self.resource_lookup_value),
+            unicode(uuid.uuid1()))
+
+        response = self.client.get(
+            case_ref_url,
+            HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

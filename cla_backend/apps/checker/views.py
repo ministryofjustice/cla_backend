@@ -1,8 +1,9 @@
 from django.core.exceptions import ImproperlyConfigured
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, mixins
-from rest_framework.decorators import action
+from rest_framework.decorators import action, link
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response as DRFResponse
 
@@ -70,6 +71,15 @@ class EligibilityCheckViewSet(
             'is_eligible': response,
             'reasons': reasons
         })
+
+    @link()
+    def case_ref(self, request, *args, **kwargs):
+        try:
+            return DRFResponse({
+                'reference': self.get_object().case.reference,
+            })
+        except AttributeError:
+            raise Http404
 
 
 class NestedModelMixin(object):

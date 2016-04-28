@@ -1,12 +1,13 @@
 import jsonpatch
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.fields.related import SingleRelatedObjectDescriptor, \
+    ReverseSingleRelatedObjectDescriptor
+from django.http import Http404
 
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.response import Response as DRFResponse
 from rest_framework import status
-from django.db.models.fields.related import SingleRelatedObjectDescriptor, \
-    ReverseSingleRelatedObjectDescriptor
 
 
 class NoParentReferenceException(BaseException):
@@ -47,8 +48,12 @@ class NestedGenericModelMixin(object):
 
     def get_object(self):
         if self.is_one_to_one_nested():
-            return getattr(self.get_parent_object(), self.PARENT_FIELD)
-        return super(NestedGenericModelMixin, self).get_object()
+            obj = getattr(self.get_parent_object(), self.PARENT_FIELD)
+        else:
+            obj = super(NestedGenericModelMixin, self).get_object()
+        if self.request.method != 'POST' and obj is None:
+            raise Http404
+        return obj
 
     def __init__(self, *args, **kwargs):
         if not hasattr(self, 'PARENT_FIELD'):

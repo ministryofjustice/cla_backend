@@ -147,6 +147,11 @@ postgres as necessary):
     export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin/:$PATH"
     export DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/Versions/9.3/lib/:$DYLD_LIBRARY_PATH"
 
+If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" does not exist`, you will need to create the user `postgres` on the database.
+
+
+::
+    createuser -s -e postgres
 
 
 Try it on Heroku

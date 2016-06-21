@@ -358,6 +358,8 @@ class MISurveyExtract(SQLFileDateRangeReport):
             'contact_for_research',
             'safe_to_contact',
             'Third Party Contact',
+            'Case Refs',
+            'Third Party Case Refs',
         ]
 
 

@@ -12,8 +12,8 @@ SELECT
     contact_for_research,
     safe_to_contact,
     (SELECT COUNT(legalaid_thirdpartydetails.id) > 0 FROM legalaid_thirdpartydetails WHERE legalaid_thirdpartydetails.personal_details_id=pd.id) AS "Third Party Contact",
-    (SELECT string_agg(reference, ',') FROM legalaid_case c WHERE c.personal_details_id=pd.id),
-    (SELECT string_agg(c.reference, ',') FROM legalaid_thirdpartydetails t RIGHT JOIN legalaid_case c ON c.thirdparty_details_id=t.id WHERE t.personal_details_id=pd.id)
+    (SELECT string_agg(laa_reference::varchar, ', ') FROM legalaid_case c WHERE c.personal_details_id=pd.id),
+    (SELECT string_agg(c.laa_reference::varchar, ', ') FROM legalaid_thirdpartydetails t RIGHT JOIN legalaid_case c ON c.thirdparty_details_id=t.id WHERE t.personal_details_id=pd.id)
 FROM
     legalaid_personaldetails AS pd
 WHERE pd.contact_for_research = TRUE

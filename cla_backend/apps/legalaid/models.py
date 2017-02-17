@@ -30,7 +30,8 @@ from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS, \
     CONTACT_SAFETY, EXEMPT_USER_REASON, ECF_STATEMENT, REQUIRES_ACTION_BY, \
-    EMAIL_SAFETY, ELIGIBILITY_REASONS, EXPRESSIONS_OF_DISSATISFACTION
+    EMAIL_SAFETY, ELIGIBILITY_REASONS, EXPRESSIONS_OF_DISSATISFACTION, \
+    RESEARCH_CONTACT_VIA
 
 from legalaid.fields import MoneyField
 
@@ -127,6 +128,11 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     date_of_birth = models.DateField(blank=True, null=True)
     ni_number = models.CharField(max_length=10, null=True, blank=True)
     contact_for_research = models.NullBooleanField(blank=True, null=True)
+    contact_for_research_via = models.CharField(
+        max_length=10,
+        default=RESEARCH_CONTACT_VIA.PHONE,
+        choices=RESEARCH_CONTACT_VIA,
+        blank=True, null=True)
     vulnerable_user = models.NullBooleanField(blank=True, null=True)
     safe_to_contact = models.CharField(
         max_length=30,

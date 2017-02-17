@@ -75,7 +75,8 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             'reference', 'title', 'full_name', 'postcode', 'street',
             'mobile_phone', 'home_phone', 'email', 'dob',
             'ni_number',
-            'contact_for_research', 'safe_to_contact', 'vulnerable_user',
+            'contact_for_research', 'contact_for_research_via',
+            'safe_to_contact', 'vulnerable_user',
             'has_diversity'
         )
 

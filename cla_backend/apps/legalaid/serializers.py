@@ -199,6 +199,8 @@ class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
     callback_preference = serializers.BooleanField(
         label="Callback preference", required=False
     )
+    no_adaptations_required = serializers.BooleanField(
+        label="No adaptations required", required=False)
 
     class Meta(object):
         model = AdaptationDetails

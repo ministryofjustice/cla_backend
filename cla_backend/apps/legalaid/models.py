@@ -217,6 +217,7 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     notes = models.TextField(blank=True)
     callback_preference = models.BooleanField(default=False)
     reference = UUIDField(auto=True, unique=True)
+    no_adaptations_required = models.NullBooleanField(blank=True)
 
     cloning_config = {
         'excludes': ['reference', 'created', 'modified']

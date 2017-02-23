@@ -1,5 +1,6 @@
 import logging
 import datetime
+import re
 from django.utils import timezone
 
 from jsonfield import JSONField
@@ -166,8 +167,30 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         return u'%s' % self.full_name
 
     def _set_search_field(self):
+        search_field = u''
+
+        def add_string(s1, s2):
+            return u'%s###%s' % (s1, s2)
+
         if self.postcode:
-            self.search_field =  self.postcode.replace(' ', '')
+            search_field = add_string(
+                search_field, self.postcode.replace(' ', ''))
+
+        if self.date_of_birth:
+            for f in ['%Y-%m-%d', '%d/%m/%Y', '%d/%m/%y', '%d/%-m/%Y',
+                      '%d/%-m/%y', '%-d/%m/%Y', '%-d/%m/%y', '%-d/%-m/%Y',
+                      '%-d/%-m/%y']:
+                search_field = add_string(
+                    search_field,
+                    self.date_of_birth.strftime(f))
+
+        for phone in [self.home_phone, self.mobile_phone]:
+            if phone:
+                search_field = add_string(
+                    search_field,
+                    re.sub('[^0-9a-zA-Z]+', '', phone))
+
+        self.search_field = search_field
 
     def save(self, *args, **kwargs):
         self._set_search_field()

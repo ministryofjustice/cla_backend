@@ -188,7 +188,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
             if phone:
                 search_field = add_string(
                     search_field,
-                    re.sub('[^0-9a-zA-Z]+', '', phone))
+                    re.sub('[^0-9a-zA-Z]+', '', unicode(phone)))
 
         self.search_field = search_field
 
@@ -857,7 +857,6 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.assigned_out_of_hours = self.provider_assigned_at not in \
                                         settings.NON_ROTA_OPENING_HOURS
         self.is_urgent = is_urgent
-        print is_urgent
 
         self.save(update_fields=[
             'provider', 'provider_viewed', 'provider_accepted',

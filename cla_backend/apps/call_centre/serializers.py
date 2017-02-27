@@ -234,6 +234,7 @@ class CaseListSerializer(CaseSerializer):
             'source',
             'requires_action_at',
             'flagged_with_eod',
+            'is_urgent',
         )
 
 

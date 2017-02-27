@@ -209,7 +209,8 @@ class CaseListSerializer(CaseSerializer):
             'case_count',
             'provider_viewed',
             'provider_accepted',
-            'provider_closed'
+            'provider_closed',
+            'is_urgent',
         )
 
 

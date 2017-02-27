@@ -725,6 +725,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     search_field = models.TextField(null=True, blank=True, db_index=True)
 
     complaint_flag = models.BooleanField(default=False)
+    is_urgent = models.BooleanField(default=False)
 
     class Meta(object):
         ordering = ('-created',)
@@ -847,7 +848,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
         if self.personal_details:
             self.personal_details.update_case_count()
 
-    def assign_to_provider(self, provider):
+    def assign_to_provider(self, provider, is_urgent=False):
         self.provider = provider
         self.provider_assigned_at = timezone.now()
         self.provider_viewed = None
@@ -855,10 +856,13 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.provider_closed = None
         self.assigned_out_of_hours = self.provider_assigned_at not in \
                                         settings.NON_ROTA_OPENING_HOURS
+        self.is_urgent = is_urgent
+        print is_urgent
+
         self.save(update_fields=[
             'provider', 'provider_viewed', 'provider_accepted',
             'provider_closed', 'modified', 'provider_assigned_at',
-            'assigned_out_of_hours'
+            'assigned_out_of_hours', 'is_urgent'
         ])
         self.reset_requires_action_at()
 

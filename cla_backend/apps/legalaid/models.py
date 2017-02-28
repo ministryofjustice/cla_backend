@@ -796,6 +796,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
             'provider_viewed': None,
             'provider_accepted': None,
             'provider_closed': None,
+            'is_urgent': False,
         }
         if assignment_internal:
             override_values['requires_action_by'] = self.requires_action_by
@@ -816,7 +817,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
                     'callback_attempt', 'search_field', 'provider_assigned_at',
-                    'assigned_out_of_hours'
+                    'assigned_out_of_hours', 'is_urgent'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details',

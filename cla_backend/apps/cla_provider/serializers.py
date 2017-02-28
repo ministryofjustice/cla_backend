@@ -69,7 +69,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             'mobile_phone', 'home_phone', 'email', 'dob',
             'ni_number',
             'contact_for_research', 'safe_to_contact', 'vulnerable_user',
-            'has_diversity'
+            'has_diversity', 'contact_for_research_via'
         )
 
 
@@ -218,7 +218,8 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
         fields = (
             'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
-            'language', 'notes', 'reference', 'callback_preference'
+            'language', 'notes', 'reference', 'callback_preference',
+            'no_adaptations_required'
         )
 
 

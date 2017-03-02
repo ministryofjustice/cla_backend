@@ -276,7 +276,9 @@ class MIFeedbackExtract(SQLFileDateRangeReport):
             "Feedback_Justified",
             "Feedback_Resolved",
             "Text_Output",
-            "Category"
+            "Category",
+            "Provider name",
+            "User email",
         ]
 
 

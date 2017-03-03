@@ -1,5 +1,6 @@
 import logging
 import datetime
+import re
 from django.utils import timezone
 
 from jsonfield import JSONField
@@ -30,7 +31,8 @@ from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
     THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS, \
     CONTACT_SAFETY, EXEMPT_USER_REASON, ECF_STATEMENT, REQUIRES_ACTION_BY, \
-    EMAIL_SAFETY, ELIGIBILITY_REASONS, EXPRESSIONS_OF_DISSATISFACTION
+    EMAIL_SAFETY, ELIGIBILITY_REASONS, EXPRESSIONS_OF_DISSATISFACTION, \
+    RESEARCH_CONTACT_VIA
 
 from legalaid.fields import MoneyField
 
@@ -127,6 +129,11 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     date_of_birth = models.DateField(blank=True, null=True)
     ni_number = models.CharField(max_length=10, null=True, blank=True)
     contact_for_research = models.NullBooleanField(blank=True, null=True)
+    contact_for_research_via = models.CharField(
+        max_length=10,
+        default=RESEARCH_CONTACT_VIA.PHONE,
+        choices=RESEARCH_CONTACT_VIA,
+        blank=True, null=True)
     vulnerable_user = models.NullBooleanField(blank=True, null=True)
     safe_to_contact = models.CharField(
         max_length=30,
@@ -160,8 +167,30 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         return u'%s' % self.full_name
 
     def _set_search_field(self):
+        search_field = u''
+
+        def add_string(s1, s2):
+            return u'%s###%s' % (s1, s2)
+
         if self.postcode:
-            self.search_field =  self.postcode.replace(' ', '')
+            search_field = add_string(
+                search_field, self.postcode.replace(' ', ''))
+
+        if self.date_of_birth:
+            for f in ['%Y-%m-%d', '%d/%m/%Y', '%d/%m/%y', '%d/%-m/%Y',
+                      '%d/%-m/%y', '%-d/%m/%Y', '%-d/%m/%y', '%-d/%-m/%Y',
+                      '%-d/%-m/%y']:
+                search_field = add_string(
+                    search_field,
+                    self.date_of_birth.strftime(f))
+
+        for phone in [self.home_phone, self.mobile_phone]:
+            if phone:
+                search_field = add_string(
+                    search_field,
+                    re.sub('[^0-9a-zA-Z]+', '', unicode(phone)))
+
+        self.search_field = search_field
 
     def save(self, *args, **kwargs):
         self._set_search_field()
@@ -211,6 +240,7 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     notes = models.TextField(blank=True)
     callback_preference = models.BooleanField(default=False)
     reference = UUIDField(auto=True, unique=True)
+    no_adaptations_required = models.NullBooleanField(blank=True)
 
     cloning_config = {
         'excludes': ['reference', 'created', 'modified']
@@ -695,6 +725,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     search_field = models.TextField(null=True, blank=True, db_index=True)
 
     complaint_flag = models.BooleanField(default=False)
+    is_urgent = models.BooleanField(default=False)
 
     class Meta(object):
         ordering = ('-created',)
@@ -765,6 +796,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
             'provider_viewed': None,
             'provider_accepted': None,
             'provider_closed': None,
+            'is_urgent': False,
         }
         if assignment_internal:
             override_values['requires_action_by'] = self.requires_action_by
@@ -785,7 +817,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     'laa_reference', 'billable_time', 'outcome_code', 'level',
                     'created', 'modified', 'outcome_code_id', 'requires_action_at',
                     'callback_attempt', 'search_field', 'provider_assigned_at',
-                    'assigned_out_of_hours'
+                    'assigned_out_of_hours', 'is_urgent'
                 ],
                 'clone_fks': [
                     'thirdparty_details', 'adaptation_details',
@@ -817,7 +849,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
         if self.personal_details:
             self.personal_details.update_case_count()
 
-    def assign_to_provider(self, provider):
+    def assign_to_provider(self, provider, is_urgent=False):
         self.provider = provider
         self.provider_assigned_at = timezone.now()
         self.provider_viewed = None
@@ -825,10 +857,12 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.provider_closed = None
         self.assigned_out_of_hours = self.provider_assigned_at not in \
                                         settings.NON_ROTA_OPENING_HOURS
+        self.is_urgent = is_urgent
+
         self.save(update_fields=[
             'provider', 'provider_viewed', 'provider_accepted',
             'provider_closed', 'modified', 'provider_assigned_at',
-            'assigned_out_of_hours'
+            'assigned_out_of_hours', 'is_urgent'
         ])
         self.reset_requires_action_at()
 

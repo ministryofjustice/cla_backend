@@ -7,7 +7,6 @@ sentry_config() {
 }
 
 migrations() {
-    (
     if [ "$BACKEND_ENABLED" == "True" ]; then
 
         python manage.py install_postgres_extensions
@@ -20,7 +19,6 @@ migrations() {
         python manage.py loaddata initial_complaint_categories.json
 
     fi
-    ) >> /var/log/wsgi/db_scripts.log 2>&1
 }
 
 admin_password() {

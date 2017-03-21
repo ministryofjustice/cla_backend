@@ -276,7 +276,9 @@ class MIFeedbackExtract(SQLFileDateRangeReport):
             "Feedback_Justified",
             "Feedback_Resolved",
             "Text_Output",
-            "Category"
+            "Category",
+            "Provider name",
+            "User email",
         ]
 
 
@@ -356,6 +358,7 @@ class MISurveyExtract(SQLFileDateRangeReport):
             'date_of_birth',
             'ni_number',
             'contact_for_research',
+            'contact_for_research_via',
             'safe_to_contact',
             'Third Party Contact',
             'Case Refs',

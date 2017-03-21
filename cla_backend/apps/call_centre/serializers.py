@@ -75,7 +75,8 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             'reference', 'title', 'full_name', 'postcode', 'street',
             'mobile_phone', 'home_phone', 'email', 'dob',
             'ni_number',
-            'contact_for_research', 'safe_to_contact', 'vulnerable_user',
+            'contact_for_research', 'contact_for_research_via',
+            'safe_to_contact', 'vulnerable_user',
             'has_diversity'
         )
 
@@ -125,7 +126,8 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
         fields = (
             'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
-            'language', 'notes', 'reference', 'callback_preference'
+            'language', 'notes', 'reference', 'callback_preference',
+            'no_adaptations_required'
         )
 
 
@@ -232,6 +234,7 @@ class CaseListSerializer(CaseSerializer):
             'source',
             'requires_action_at',
             'flagged_with_eod',
+            'is_urgent',
         )
 
 

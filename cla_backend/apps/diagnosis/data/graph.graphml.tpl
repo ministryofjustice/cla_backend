@@ -1,6 +1,6 @@
 {% load i18n %}<?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
-  <!--Created by yEd 3.14.3-->
+  <!--Created by yEd 3.16.2.1-->
   <key for="port" id="d0" yfiles.type="portgraphics"/>
   <key for="port" id="d1" yfiles.type="portgeometry"/>
   <key for="port" id="d2" yfiles.type="portuserdata"/>
@@ -409,7 +409,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       </node>
     <node id="n40">
       <data key="d3">{% trans "There is other evidence that landlord is seeking to recover possession and placing the home at immediate risk" %}</data>
-      <data key="d4">There is other evide</data> 
+      <data key="d4">There is other evide</data>
       <data key="d7">7</data>
       <data key="d10">n40</data>
       </node>
@@ -2292,234 +2292,235 @@ If the client wants legal advice to support of ongoing or recently completed med
     <node id="n268">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n276</data>
       </node>
     <node id="n269">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n278</data>
       </node>
     <node id="n270">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n279</data>
       </node>
     <node id="n271">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n280</data>
       </node>
     <node id="n272">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n281</data>
       </node>
     <node id="n273">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n282</data>
       </node>
     <node id="n274">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n283</data>
       </node>
     <node id="n275">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n284</data>
       </node>
     <node id="n276">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n285</data>
       </node>
     <node id="n277">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n286</data>
       </node>
     <node id="n278">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n287</data>
       </node>
     <node id="n279">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided, I can tell you that legal aid is not usually available for the type of family issue you are calling about.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n288</data>
       </node>
     <node id="n280">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n289</data>
       </node>
     <node id="n281">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n290</data>
       </node>
     <node id="n282">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n291</data>
       </node>
     <node id="n283">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n292</data>
+      <data key="d11"/>
       </node>
     <node id="n284">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n293</data>
       </node>
     <node id="n285">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n294</data>
       </node>
@@ -2733,13 +2734,13 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
     <node id="n303">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n312</data>
       </node>
@@ -2935,13 +2936,13 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n326">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n335</data>
       </node>
@@ -2964,26 +2965,26 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n329">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n338</data>
       </node>
     <node id="n330">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d10">n339</data>
       </node>
@@ -3050,13 +3051,13 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n340">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*From the information you have provided, Legal Aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
+ 
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*
-
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
       <data key="d4">None of the above, a</data>
       <data key="d6"/>
       <data key="d10">n277</data>
@@ -4000,34 +4001,24 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <edge id="e453" source="n334" target="n333">
       </edge>
     <edge id="e454" source="n79" target="n335">
-      <data key="d16"/>
       </edge>
     <edge id="e455" source="n79" target="n336">
-      <data key="d16"/>
       </edge>
     <edge id="e456" source="n335" target="n337">
-      <data key="d16"/>
       </edge>
     <edge id="e457" source="n335" target="n338">
-      <data key="d16"/>
       </edge>
     <edge id="e458" source="n335" target="n339">
-      <data key="d16"/>
       </edge>
     <edge id="e459" source="n336" target="n340">
-      <data key="d16"/>
       </edge>
     <edge id="e460" source="n337" target="n80">
-      <data key="d16"/>
       </edge>
     <edge id="e461" source="n338" target="n341">
-      <data key="d16"/>
       </edge>
     <edge id="e462" source="n339" target="n342">
-      <data key="d16"/>
       </edge>
     <edge id="e463" source="n340" target="n343">
-      <data key="d16"/>
       </edge>
   </graph>
   <data key="d14">

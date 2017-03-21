@@ -33,6 +33,7 @@ class ProviderAllocationForm(BaseCaseLogForm):
     is_manual = forms.BooleanField(required=False)
     is_manual_ref = forms.BooleanField(required=False)
     is_spor = forms.BooleanField(required=False)
+    is_urgent = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         self.providers = kwargs.pop('providers', None)
@@ -101,6 +102,9 @@ class ProviderAllocationForm(BaseCaseLogForm):
     def get_is_spor(self):
         return self.cleaned_data.get('is_spor', False)
 
+    def get_is_urgent(self):
+        return self.cleaned_data.get('is_urgent', False)
+
     def get_kwargs(self):
         kwargs = super(ProviderAllocationForm, self).get_kwargs()
         kwargs['is_manual'] = self.get_is_manual()
@@ -118,7 +122,9 @@ class ProviderAllocationForm(BaseCaseLogForm):
     def save(self, user):
         data = self.cleaned_data
 
-        self.case.assign_to_provider(data['provider_obj'])
+        self.case.assign_to_provider(
+            data['provider_obj'],
+            is_urgent=self.get_is_urgent())
 
         super(ProviderAllocationForm, self).save(user)
         return data['provider_obj']

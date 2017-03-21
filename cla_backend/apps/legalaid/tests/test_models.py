@@ -88,7 +88,8 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         provider_viewed=timezone.now(),
         provider_accepted=timezone.now(),
         provider_closed=timezone.now(),
-        provider_assigned_at=timezone.now()
+        provider_assigned_at=timezone.now(),
+        is_urgent=True,
     )
     make_recipe('legalaid.eod_details', notes='EOD notes', case=case)
     CaseKnowledgebaseAssignment.objects.create(
@@ -1055,6 +1056,7 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
                 date_of_birth=datetime.date(day=1, month=1, year=2000),
                 ni_number='ni number',
                 contact_for_research=True,
+                contact_for_research_via='SMS',
                 vulnerable_user=True,
                 safe_to_contact=CONTACT_SAFETY.SAFE,
                 case_count=2
@@ -1064,7 +1066,8 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
                 'title', 'full_name', 'postcode', 'street', 'mobile_phone',
                 'home_phone', 'email', 'date_of_birth', 'ni_number',
                 'contact_for_research', 'vulnerable_user', 'safe_to_contact',
-                'safe_to_email', 'diversity', 'diversity_modified', 'search_field'
+                'safe_to_email', 'diversity', 'diversity_modified', 'search_field',
+                'contact_for_research_via'
             ]
         )
 
@@ -1104,7 +1107,8 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
             non_equal_fields=['id', 'created', 'modified', 'reference'],
             equal_fields=[
                 'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam',
-                'language', 'notes', 'callback_preference'
+                'language', 'notes', 'callback_preference',
+                'no_adaptations_required'
             ]
         )
 
@@ -1255,7 +1259,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'outcome_code', 'level', 'reference', 'laa_reference', 'from_case',
             'outcome_code_id', 'requires_action_at', 'callback_attempt',
             'provider_viewed', 'provider_accepted', 'provider_closed',
-            'search_field',
+            'search_field', 'is_urgent'
         ]
         equal_fields = [
             'personal_details', 'notes', 'provider_notes', 'media_code',
@@ -1300,6 +1304,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'level': None,
             'requires_action_at': None,
             'callback_attempt': 0,
+            'is_urgent': False,
 
             # it should keep these values from the original case
             'notes': case.notes,
@@ -1310,7 +1315,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'exempt_user_reason': case.exempt_user_reason,
             'ecf_statement': case.ecf_statement,
             'personal_details': case.personal_details,
-            'from_case': case
+            'from_case': case,
         }
 
         if internal:

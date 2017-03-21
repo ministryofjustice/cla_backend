@@ -31,7 +31,8 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
     def response_keys(self):
         return [
             'reference', 'bsl_webcam', 'minicom', 'text_relay',
-            'skype_webcam', 'language', 'notes', 'callback_preference'
+            'skype_webcam', 'language', 'notes', 'callback_preference',
+            'no_adaptations_required',
         ]
 
     def _get_default_post_data(self):
@@ -42,7 +43,7 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             'skype_webcam': True,
             'language': 'ENGLISH',
             'notes': 'my notes',
-            'callback_preference': True
+            'callback_preference': True,
         }
 
     def _test_method_in_error(self, method, url):
@@ -79,7 +80,7 @@ class AdaptationsDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             for prop in [
                 'bsl_webcam', 'minicom', 'text_relay',
                 'skype_webcam', 'language', 'notes',
-                'callback_preference', 'reference'
+                'callback_preference', 'reference',
             ]:
                 val = obj[prop] if isinstance(obj, dict) else getattr(obj, prop)
                 self.assertEqual(unicode(val), unicode(data[prop]))

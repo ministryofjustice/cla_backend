@@ -2527,13 +2527,13 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n286">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Public Law</data>
       <data key="d7">11</data>
       <data key="d10">n295</data>
@@ -2541,13 +2541,13 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n287">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Public Law</data>
       <data key="d7">11</data>
       <data key="d10">n296</data>
@@ -2555,13 +2555,13 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n288">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Public Law</data>
       <data key="d7">11</data>
       <data key="d10">n297</data>
@@ -2569,13 +2569,13 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n289">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Public Law</data>
       <data key="d7">11</data>
       <data key="d10">n298</data>
@@ -2583,13 +2583,13 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n290">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Public Law</data>
       <data key="d7">11</data>
       <data key="d10">n299</data>
@@ -2597,13 +2597,13 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n291">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Public Law</data>
       <data key="d7">11</data>
       <data key="d10">n300</data>
@@ -2611,13 +2611,13 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n292">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Public Law</data>
       <data key="d7">11</data>
       <data key="d10">n301</data>
@@ -2625,13 +2625,13 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n293">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Public Law</data>
       <data key="d7">11</data>
       <data key="d10">n302</data>
@@ -2639,13 +2639,13 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n294">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Public Law</data>
       <data key="d7">11</data>
       <data key="d10">n303</data>
@@ -2653,13 +2653,13 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n295">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Public Law</data>
       <data key="d7">11</data>
       <data key="d10">n304</data>
@@ -2667,13 +2667,13 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n296">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Public Law</data>
       <data key="d7">11</data>
       <data key="d10">n305</data>
@@ -2895,13 +2895,13 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n321">
       <data key="d3">{% blocktrans %}Please read out the following to the client:
 
-*"From the information you have provided, legal aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
 
-*If you have Internet access I can tell you where to find more information and help for yourself online.*
+We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
-*Or I can see if I can suggest another helpline or face to face advice service, which may be able to help you.*
+[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
-*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this."*{% endblocktrans %}</data>
+Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
       <data key="d4">Primary question: Cl</data>
       <data key="d7">1</data>
       <data key="d10">n330</data>

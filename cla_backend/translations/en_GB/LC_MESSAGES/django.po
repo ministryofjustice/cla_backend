@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-27 17:01+0000\n"
+"POT-Creation-Date: 2017-03-23 10:10+0000\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -1786,22 +1786,10 @@ msgstr ""
 #: apps/diagnosis/data/graph.graphml.tpl:2528
 #: apps/diagnosis/data/graph.graphml.tpl:2542
 #: apps/diagnosis/data/graph.graphml.tpl:2556
-#: apps/diagnosis/data/graph.graphml.tpl:2612
-msgid ""
-"Please read the following to the client:\n"
-"\n"
-"*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*\n"
-"\n"
-"*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*\n"
-"\n"
-"*If you have Internet access I can tell you where to find more information and help for yourself online.*\n"
-"\n"
-"*Or I can see if I can suggest another helpline or face to face advice service that may be able to help you.*"
-msgstr ""
-
 #: apps/diagnosis/data/graph.graphml.tpl:2570
 #: apps/diagnosis/data/graph.graphml.tpl:2584
 #: apps/diagnosis/data/graph.graphml.tpl:2598
+#: apps/diagnosis/data/graph.graphml.tpl:2612
 #: apps/diagnosis/data/graph.graphml.tpl:2626
 #: apps/diagnosis/data/graph.graphml.tpl:2640
 #: apps/diagnosis/data/graph.graphml.tpl:2654
@@ -1809,13 +1797,13 @@ msgstr ""
 msgid ""
 "Please read the following to the client:\n"
 "\n"
-"*I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will try to direct you to alternative help.*\n"
+"*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  \n"
 "\n"
-"*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment.   Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*\n"
+"We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?\n"
 "\n"
-"*If you have Internet access I can tell you where to find more information and help for yourself online.*\n"
+"[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.\n"
 "\n"
-"*Or I can see if I can suggest another helpline or face to face advice service may be able to help you.*"
+"Remember to record details of the conversation in your CHS notes.]*"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2692
@@ -1967,13 +1955,13 @@ msgstr ""
 msgid ""
 "Please read out the following to the client:\n"
 "\n"
-"*\"From the information you have provided, legal aid is not available for the issue you are calling about. However our service is not your only option so I can find alternative help for you elsewhere.*\n"
+"*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  \n"
 "\n"
-"*If you have Internet access I can tell you where to find more information and help for yourself online.*\n"
+"We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?\n"
 "\n"
-"*Or I can see if I can suggest another helpline or face to face advice service, which may be able to help you.*\n"
+"[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.\n"
 "\n"
-"*I can’t guarantee that they will be able to help you so please check with them. You may have to pay for their service so check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.\"*"
+"Remember to record details of the conversation in your CHS notes.]*"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2910

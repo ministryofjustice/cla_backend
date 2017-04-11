@@ -46,7 +46,7 @@ class TimerTestCase(TestCase):
         self.assertNotEqual(timer.stopped, None)
         self.assertEqual(timer.linked_case, case)
 
-    @mock.patch('timer.models.timezone.now')
+    @mock.patch('timer.models.postgres_now')
     def test_billable_time_with_2_stopped_timers(self, mocked_now):
         """
             DB:
@@ -125,3 +125,18 @@ class TimerTestCase(TestCase):
 
         self.assertEqual(caseA.billable_time, 7502)
         self.assertEqual(caseB.billable_time, 0)
+
+    def test_billable_time(self):
+        case = make_recipe('legalaid.Case')
+        user = make_user()
+
+        timer = make_recipe(
+            'timer.Timer',
+            linked_case=case, created_by=user
+        )
+
+        make_recipe('cla_eventlog.Log', timer=timer, case=case)
+
+        timer.stop()
+
+        self.assertEqual(case.billable_time, 0)

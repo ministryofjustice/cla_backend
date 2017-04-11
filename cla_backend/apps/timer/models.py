@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.db import connection
 from django_statsd.clients import statsd
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from legalaid.models import Case
@@ -34,11 +35,15 @@ class CurrentTimestampDateTimeField(models.DateTimeField):
     Field class to allow using postgres NOW() function for setting a 
     field to a current timestamp
     """
-
     def get_db_prep_value(self, value, connection, prepared=False):
         return value if value == DB_NOW else \
             super(CurrentTimestampDateTimeField, self).get_db_prep_value(
                 value, connection, prepared=False)
+
+    def value_to_string(self, obj):
+        val = self._get_val_from_obj(obj)
+        return val if val == DB_NOW else \
+            super(CurrentTimestampDateTimeField, self).value_to_string(obj)
 
 
 class Timer(models.Model):
@@ -64,7 +69,7 @@ class Timer(models.Model):
         timer, created = cls.objects.get_or_create(
             created_by=user, cancelled=False, stopped__isnull=True,
             defaults={'created_by': user})
-        return timer
+        return cls.objects.get(pk=timer.pk)
 
     def is_stopped(self):
         return self.stopped
@@ -96,7 +101,6 @@ class Timer(models.Model):
                     a.cancelled = false and
                     a.stopped is not null and a.linked_case_id = %s''', [self.linked_case.id])
             total_billable_time, = cursor.fetchone()
-            print total_billable_time
             if total_billable_time:
                 self.linked_case.billable_time = total_billable_time
                 if total_billable_time:

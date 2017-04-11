@@ -69,6 +69,8 @@ class Timer(models.Model):
         timer, created = cls.objects.get_or_create(
             created_by=user, cancelled=False, stopped__isnull=True,
             defaults={'created_by': user})
+
+        # Need to update the object from the database to get the datetime fields
         return cls.objects.get(pk=timer.pk)
 
     def is_stopped(self):

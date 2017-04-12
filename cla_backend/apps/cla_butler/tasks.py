@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import csv
 import datetime
 import os
 
@@ -6,6 +7,7 @@ from celery import Task
 import logging
 
 from dateutil.relativedelta import relativedelta
+from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
@@ -24,10 +26,10 @@ logger = logging.getLogger(__name__)
 class DeleteOldData(Task):
     """
     Deletes old data that is no longer needed.
-    
+
     Case data more than 2 years old is no longer needed so will be deleted.
-    
-    We also delete empty cases and data thet is not connected to anything in 
+
+    We also delete empty cases and data thet is not connected to anything in
     particular.
     """
 
@@ -45,6 +47,8 @@ class DeleteOldData(Task):
 
     def _setup(self):
         self.now = timezone.now()
+        path = os.path.join(settings.TEMP_DIR, self.now.strftime('%Y%m%d'))
+        self.csvwriter = QuerysetToCsv(path)
 
     def _delete_logs(self, qs):
         ct = ContentType.objects.get_for_model(qs.model)
@@ -52,11 +56,13 @@ class DeleteOldData(Task):
             content_type=ct,
             object_id__in=[i.pk for i in qs]
         )
+        self.csvwriter.dump(logs)
         logs.delete()
         log_entries = LogEntry.objects.filter(
             content_type=ct,
             object_id__in=[i.pk for i in qs]
         )
+        self.csvwriter.dump(log_entries)
         log_entries.delete()
 
     def _delete_objects(self, qs):
@@ -71,6 +77,7 @@ class DeleteOldData(Task):
             count=qs.count(),
             name=name))
 
+        self.csvwriter.dump(qs)
         qs.delete()
 
         logger.info('Total {name} objects: {count}'.format(
@@ -96,7 +103,7 @@ class DeleteOldData(Task):
         )
         self._delete_objects(cnhs)
 
-    def cleanup_diagnosis(self, *args, **options):
+    def cleanup_diagnosis(self):
         yesterday = self.now - datetime.timedelta(days=10)
         diags = DiagnosisTraversal.objects.filter(
             case__isnull=True,
@@ -141,10 +148,34 @@ class DeleteOldData(Task):
         self._delete_objects(ads)
 
 
+WRITE_MODE = 'wb'
+APPEND_MODE = 'a'
+
+
 class QuerysetToCsv(object):
-    def __index__(self, path):
+    def __init__(self, path):
         if not os.path.exists(path):
             os.makedirs(path)
+        self.path = path
 
-    def queryset_to_csv(self, qs):
+    def dump(self, qs):
+        file_path = os.path.join(self.path, '%s.csv' % qs.model.__name__)
+
+        if os.path.isfile(file_path):
+            write_mode = APPEND_MODE
+        else:
+            write_mode = WRITE_MODE
+
+        field_names = [f.name for f in qs.model._meta.fields]
+        with open(file_path, write_mode) as csvfile:
+            writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+            if write_mode == WRITE_MODE:
+                writer.writerow(field_names)
+            for instance in qs:
+                writer.writerow(
+                    [unicode(getattr(instance, f)).encode('utf-8') for f in
+                     field_names])
+            csvfile.close()
+
+    def load(self):
         pass

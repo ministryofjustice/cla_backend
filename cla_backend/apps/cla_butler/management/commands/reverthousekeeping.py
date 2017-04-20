@@ -24,8 +24,8 @@ MODELS = [
     ThirdPartyDetails,
     EligibilityCheck,
     DiagnosisTraversal,
-    CaseNotesHistory,
     Case,
+    CaseNotesHistory,
     Log,
     LogEntry,
 ]

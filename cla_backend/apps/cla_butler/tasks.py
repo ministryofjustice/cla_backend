@@ -35,8 +35,8 @@ class DeleteOldData(Task):
 
     def run(self, *args, **kwargs):
         self._setup()
-        self.cleanup_cases()
         self.cleanup_case_note_history()
+        self.cleanup_cases()
         self.cleanup_diagnosis()
         self.cleanup_eligibility_check()
         self.cleanup_person()

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import csv
 import datetime
 import os
 
@@ -13,6 +12,7 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 
+from .qs_to_csv import QuerysetToCsv
 from cla_eventlog.models import Log
 from diagnosis.models import DiagnosisTraversal
 from legalaid.models import Case, EligibilityCheck, CaseNotesHistory, Person,\
@@ -31,6 +31,10 @@ class DeleteOldData(Task):
 
     We also delete empty cases and data thet is not connected to anything in
     particular.
+    
+    Maybe faster to dump to json using
+    from django.core.serializers.json import DjangoJSONEncoder
+    json.dumps(list(Case.objects.all()[:100].values()), cls=DjangoJSONEncoder)
     """
 
     def run(self, *args, **kwargs):
@@ -147,36 +151,3 @@ class DeleteOldData(Task):
             case__isnull=True
         )
         self._delete_objects(ads)
-
-
-WRITE_MODE = 'wb'
-APPEND_MODE = 'a'
-
-
-class QuerysetToCsv(object):
-    def __init__(self, path):
-        if not os.path.exists(path):
-            os.makedirs(path)
-        self.path = path
-
-    def dump(self, qs):
-        file_path = os.path.join(self.path, '%s.csv' % qs.model.__name__)
-
-        if os.path.isfile(file_path):
-            write_mode = APPEND_MODE
-        else:
-            write_mode = WRITE_MODE
-
-        field_names = [f.name for f in qs.model._meta.fields]
-        with open(file_path, write_mode) as csvfile:
-            writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-            if write_mode == WRITE_MODE:
-                writer.writerow(field_names)
-            for instance in qs:
-                writer.writerow(
-                    [unicode(getattr(instance, f)).encode('utf-8') for f in
-                     field_names])
-            csvfile.close()
-
-    def load(self):
-        pass

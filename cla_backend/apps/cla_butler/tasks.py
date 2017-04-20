@@ -70,20 +70,20 @@ class DeleteOldData(Task):
         self._delete_logs(qs)
 
         name = qs.model.__name__
-        logger.info('Total {name} objects: {count}'.format(
+        print 'Total {name} objects: {count}'.format(
             count=qs.model.objects.all().count(),
-            name=name))
+            name=name)
 
-        logger.info('Deleting {count} {name} objects'.format(
+        print 'Deleting {count} {name} objects'.format(
             count=qs.count(),
-            name=name))
+            name=name)
 
         self.csvwriter.dump(qs)
         qs.delete()
 
-        logger.info('Total {name} objects: {count}'.format(
+        print 'Total {name} objects: {count}'.format(
             count=qs.model.objects.all().count(),
-            name=name))
+            name=name)
 
     def cleanup_sessions(self):
         sessions = Session.objects.filter(

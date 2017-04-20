@@ -39,7 +39,6 @@ class DeleteOldData(Task):
 
     def run(self, *args, **kwargs):
         self._setup()
-        self.cleanup_case_note_history()
         self.cleanup_cases()
         self.cleanup_diagnosis()
         self.cleanup_eligibility_check()
@@ -100,11 +99,12 @@ class DeleteOldData(Task):
         cases = Case.objects.filter(
             modified__lte=two_years,
         )
+        self.cleanup_case_note_history(map(str, cases.values_list('pk', flat=True)))
         self._delete_objects(cases)
 
-    def cleanup_case_note_history(self):
+    def cleanup_case_note_history(self, pks):
         cnhs = CaseNotesHistory.objects.filter(
-            case__isnull=True
+            pk__in=pks
         )
         self._delete_objects(cnhs)
 

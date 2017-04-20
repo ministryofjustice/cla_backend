@@ -55,19 +55,20 @@ class DeleteOldData(Task):
 
     def _delete_logs(self, qs):
         ct = ContentType.objects.get_for_model(qs.model)
-        pks = qs.values_list('pk', flat=True)
-        logs = Log.objects.filter(
-            content_type=ct,
-            object_id__in=pks
-        )
-        self.csvwriter.dump(logs)
-        logs.delete()
-        log_entries = LogEntry.objects.filter(
-            content_type=ct,
-            object_id__in=pks
-        )
-        self.csvwriter.dump(log_entries)
-        log_entries.delete()
+        pks = map(str, qs.values_list('pk', flat=True))
+        if pks:
+            logs = Log.objects.filter(
+                content_type=ct,
+                object_id__in=pks
+            )
+            self.csvwriter.dump(logs)
+            logs.delete()
+            log_entries = LogEntry.objects.filter(
+                content_type=ct,
+                object_id__in=pks
+            )
+            self.csvwriter.dump(log_entries)
+            log_entries.delete()
 
     def _delete_objects(self, qs):
         self._delete_logs(qs)

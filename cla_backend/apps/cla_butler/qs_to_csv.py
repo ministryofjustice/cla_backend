@@ -34,8 +34,8 @@ class QuerysetToCsv(object):
             field_name = '%s_id' % field_name
         return field_name
 
-    def get_value(self, instance, field):
-        val = getattr(instance, field.name)
+    def get_value(self, row, field):
+        val = row[self.get_name(field)]
         if isinstance(val, MoneyInterval):
             val = json.dumps(val.as_dict())
         if hasattr(val, 'pk'):
@@ -61,9 +61,9 @@ class QuerysetToCsv(object):
             writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
             if write_mode == WRITE_MODE:
                 writer.writerow(field_names)
-            for instance in qs:
+            for row in qs.values():
                 writer.writerow(
-                    [self.get_value(instance, f) for f in
+                    [self.get_value(row, f) for f in
                      qs.model._meta.fields])
             csvfile.close()
 

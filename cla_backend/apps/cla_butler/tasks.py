@@ -35,6 +35,13 @@ class DeleteOldData(Task):
     Maybe faster to dump to json using
     from django.core.serializers.json import DjangoJSONEncoder
     json.dumps(list(Case.objects.all()[:100].values()), cls=DjangoJSONEncoder)
+    
+    or
+    
+    https://docs.djangoproject.com/en/1.8/topics/serialization/
+    
+    from django.core import serializers
+    data = serializers.serialize("json", SomeModel.objects.all())
     """
 
     def run(self, *args, **kwargs):

@@ -20,8 +20,8 @@ MODELS = [
     Savings,
     Person,
     AdaptationDetails,
-    ThirdPartyDetails,
     PersonalDetails,
+    ThirdPartyDetails,
     EligibilityCheck,
     DiagnosisTraversal,
     CaseNotesHistory,
@@ -44,4 +44,5 @@ class Command(BaseCommand):
         csvwriter = QuerysetToCsv(path)
 
         for model in MODELS:
+            print model.__name__
             csvwriter.load(model)

@@ -40,8 +40,8 @@ class DeleteOldData(Task):
         self.cleanup_diagnosis()
         self.cleanup_eligibility_check()
         self.cleanup_person()
-        self.cleanup_personal_details()
         self.cleanup_third_party_details()
+        self.cleanup_personal_details()
         self.cleanup_adaptation_details()
         self.cleanup_sessions()
 

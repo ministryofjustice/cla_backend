@@ -11,7 +11,7 @@ from legalaid.models import Case, EligibilityCheck, CaseNotesHistory, Person,\
     Income, Savings, Deductions, PersonalDetails, ThirdPartyDetails, \
     AdaptationDetails
 
-from ...qs_to_csv import QuerysetToCsv
+from ...qs_to_file import QuerysetToFile
 
 
 MODELS = [
@@ -41,8 +41,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         d = args[0]
         path = os.path.join(settings.TEMP_DIR, d)
-        csvwriter = QuerysetToCsv(path)
+        filewriter = QuerysetToFile(path)
 
         for model in MODELS:
             print model.__name__
-            csvwriter.load(model)
+            filewriter.load(model)

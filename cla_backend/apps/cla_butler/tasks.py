@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import os
+import time
 
 from celery import Task
 import logging
@@ -12,7 +13,7 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 
-from .qs_to_csv import QuerysetToCsv
+from .qs_to_file import QuerysetToFile
 from cla_eventlog.models import Log
 from diagnosis.models import DiagnosisTraversal
 from legalaid.models import Case, EligibilityCheck, CaseNotesHistory, Person,\
@@ -31,15 +32,15 @@ class DeleteOldData(Task):
 
     We also delete empty cases and data thet is not connected to anything in
     particular.
-    
+
     Maybe faster to dump to json using
     from django.core.serializers.json import DjangoJSONEncoder
     json.dumps(list(Case.objects.all()[:100].values()), cls=DjangoJSONEncoder)
-    
+
     or
-    
+
     https://docs.djangoproject.com/en/1.8/topics/serialization/
-    
+
     from django.core import serializers
     data = serializers.serialize("json", SomeModel.objects.all())
     """
@@ -58,7 +59,7 @@ class DeleteOldData(Task):
     def _setup(self):
         self.now = timezone.now()
         path = os.path.join(settings.TEMP_DIR, self.now.strftime('%Y%m%d'))
-        self.csvwriter = QuerysetToCsv(path)
+        self.filewriter = QuerysetToFile(path)
 
     def _delete_logs(self, qs):
         ct = ContentType.objects.get_for_model(qs.model)
@@ -68,13 +69,13 @@ class DeleteOldData(Task):
                 content_type=ct,
                 object_id__in=pks
             )
-            self.csvwriter.dump(logs)
+            self.filewriter.dump(logs)
             logs.delete()
             log_entries = LogEntry.objects.filter(
                 content_type=ct,
                 object_id__in=pks
             )
-            self.csvwriter.dump(log_entries)
+            self.filewriter.dump(log_entries)
             log_entries.delete()
 
     def _delete_objects(self, qs):
@@ -88,9 +89,12 @@ class DeleteOldData(Task):
         print 'Deleting {count} {name} objects'.format(
             count=qs.count(),
             name=name)
-
-        self.csvwriter.dump(qs)
+        time
+        self.filewriter.dump(qs)
+        print 'Starting delete of %s' % name
+        start = time.time()
         qs.delete()
+        print 'Time to delete %s: %s' % (name, start - time.time())
 
         print 'Total {name} objects: {count}'.format(
             count=qs.model.objects.all().count(),

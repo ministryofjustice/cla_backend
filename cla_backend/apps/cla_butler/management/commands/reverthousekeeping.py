@@ -6,10 +6,14 @@ from django.contrib.admin.models import LogEntry
 from django.core.management.base import BaseCommand
 
 from cla_eventlog.models import Log
+from cla_provider.models import Feedback
+from complaints.models import Complaint
 from diagnosis.models import DiagnosisTraversal
 from legalaid.models import Case, EligibilityCheck, CaseNotesHistory, Person,\
     Income, Savings, Deductions, PersonalDetails, ThirdPartyDetails, \
-    AdaptationDetails
+    AdaptationDetails, CaseKnowledgebaseAssignment, EODDetails, \
+    EODDetailsCategory, Property
+from timer.models import Timer
 
 from ...qs_to_file import QuerysetToFile
 
@@ -23,8 +27,15 @@ MODELS = [
     PersonalDetails,
     ThirdPartyDetails,
     EligibilityCheck,
+    Property,
     DiagnosisTraversal,
     Case,
+    EODDetails,
+    EODDetailsCategory,
+    Complaint,
+    CaseKnowledgebaseAssignment,
+    Timer,
+    Feedback,
     CaseNotesHistory,
     Log,
     LogEntry,

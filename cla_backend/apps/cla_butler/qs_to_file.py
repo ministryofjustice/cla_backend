@@ -6,6 +6,7 @@ import os
 import re
 import time
 
+from django.db import IntegrityError
 from django.db.models import ForeignKey
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
@@ -123,6 +124,7 @@ class QuerysetToFile(object):
 
         with open(file_path, 'rb') as csvfile:
             reader = csv.DictReader(csvfile, quoting=csv.QUOTE_ALL)
+            failed_objects = []
             for row in reader:
                 obj = model()
                 for f in model._meta.fields:
@@ -147,6 +149,11 @@ class QuerysetToFile(object):
 
                 try:
                     obj.save()
+                except IntegrityError:
+                    print 'Try to save failed object at end'
+                    failed_objects.append(obj)
                 except Exception as e:
                     print e
                     raise
+
+            [o.save() for o in failed_objects]

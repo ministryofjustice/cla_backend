@@ -65,7 +65,7 @@ class QuerysetToFile(object):
             writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
             if write_mode == WRITE_MODE:
                 writer.writerow(field_names)
-            for instance in qs:
+            for instance in qs.iterator():
                 writer.writerow(
                     [self.get_value(instance, f) for f in
                      qs.model._meta.fields])

@@ -87,22 +87,22 @@ class DeleteOldData(Task):
         self._delete_logs(qs)
 
         name = qs.model.__name__
-        print 'Total {name} objects: {count}'.format(
+        logger.info('Total {name} objects: {count}'.format(
             count=qs.model.objects.all().count(),
-            name=name)
+            name=name))
 
-        print 'Deleting {count} {name} objects'.format(
+        logger.info('Deleting {count} {name} objects'.format(
             count=qs.count(),
-            name=name)
+            name=name))
         self.filewriter.dump(qs)
-        print 'Starting delete of %s' % name
+        logger.info('Starting delete of %s' % name)
         start = time.time()
         qs._raw_delete(qs.db)
-        print 'Time to delete %s: %s' % (name, time.time() - start)
+        logger.info('Time to delete %s: %s' % (name, time.time() - start))
 
-        print 'Total {name} objects: {count}'.format(
+        logger.info('Total {name} objects: {count}'.format(
             count=qs.model.objects.all().count(),
-            name=name)
+            name=name))
 
     def cleanup_sessions(self):
         sessions = Session.objects.filter(

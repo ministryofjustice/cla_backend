@@ -6,7 +6,6 @@ import os
 import re
 import time
 
-from django.core.exceptions import ValidationError
 from django.db.models import ForeignKey
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder

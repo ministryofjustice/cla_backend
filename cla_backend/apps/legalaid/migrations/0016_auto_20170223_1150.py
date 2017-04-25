@@ -7,7 +7,7 @@ from django.db import models, migrations
 def update_pd_search_field(apps, schema_editor):
     PersonalDetails = apps.get_model('legalaid', 'PersonalDetails')
 
-    for pd in PersonalDetails.objects.all():
+    for pd in PersonalDetails.objects.all().iterator():
         pd.save()
 
 

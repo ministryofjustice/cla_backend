@@ -127,8 +127,8 @@ class DeleteOldData(Task):
         self.cleanup_model_from_case(pks, Complaint, 'eod__case_id')
         self.cleanup_model_from_case(pks, EODDetailsCategory, 'eod_details__case_id')
         self.cleanup_model_from_case(pks, EODDetails)
-        self._delete_objects(cases)
         self._delete_objects(from_cases)
+        self._delete_objects(cases)
 
     def cleanup_model_from_case(self, pks, model, attr='case_id', case_log_attr=None):
         qs = model.objects.filter(

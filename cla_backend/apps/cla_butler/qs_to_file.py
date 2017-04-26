@@ -2,6 +2,7 @@
 import csv
 from datetime import datetime
 import json
+import logging
 import os
 import re
 import time
@@ -16,6 +17,10 @@ from jsonfield import JSONField
 
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
+
+
+logger = logging.getLogger(__name__)
+
 
 RE_DATE = re.compile(r'(\d{4})-(\d\d?)-(\d\d?)$')
 RE_DATETIME = re.compile(r'(\d{4})-(\d\d?)-(\d\d?) (\d\d?):(\d\d?):(\d\d?)\.(\d{6})\+(\d\d?):(\d\d?)$')
@@ -98,10 +103,10 @@ class QuerysetToFile(object):
             jsonfile.close()
 
     def dump(self, qs):
-        print 'starting dump of %s' % qs.model.__name__
+        logger.info('starting dump of %s' % qs.model.__name__)
         start = time.time()
         self.dump_to_csv(qs)
-        print 'Time to dump %s: %s' % (qs.model.__name__, start - time.time())
+        logger.info('Time to dump %s: %s' % (qs.model.__name__, time.time() - start))
 
     def set_value(self, val, field):
         if val == '' and field.empty_strings_allowed and not field.null:
@@ -132,28 +137,26 @@ class QuerysetToFile(object):
                     try:
                         val = self.set_value(row[n], f)
                     except Exception as sv:
-                        print row[n]
-                        print f.name
-                        print sv
+                        logger.error('Failed to convert %s for %s to python '
+                                     'with error: %s' % (row[n], f.name, sv))
                         raise
 
                     try:
                         setattr(obj, n, val)
                     except Exception as set_e:
-                        print set_e
-                        print val
-                        print val.__class__.__name__
-                        print f.name
-                        print f.__class__.__name__
+                        logger.error('Failed to set attribute %s(%s) to '
+                                     '%s(%s) on object %s with error: %s' %
+                                     (f.name, f.__class__.__name__,  val,
+                                      val.__class__.__name__, obj, set_e))
                         raise
 
                 try:
                     obj.save()
                 except IntegrityError:
-                    print 'Try to save failed object at end'
+                    logger.info('Try to save failed object at end: %s' % obj)
                     failed_objects.append(obj)
                 except Exception as e:
-                    print e
+                    logger.error('Failed to save object: %s' % obj)
                     raise
 
             [o.save() for o in failed_objects]

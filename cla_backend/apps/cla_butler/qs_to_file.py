@@ -9,8 +9,6 @@ import time
 
 from django.db import IntegrityError
 from django.db.models import ForeignKey
-from django.core import serializers
-from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.dateparse import parse_datetime
 
 from jsonfield import JSONField
@@ -75,32 +73,6 @@ class QuerysetToFile(object):
                     [self.get_value(instance, f) for f in
                      qs.model._meta.fields])
             csvfile.close()
-
-    def dump_to_yml(self, qs):
-        """dump queryset to .yaml"""
-        file_path = self.get_file_path(qs.model, 'yaml')
-
-        if os.path.isfile(file_path):
-            write_mode = APPEND_MODE
-        else:
-            write_mode = WRITE_MODE
-
-        with open(file_path, write_mode) as yamlfile:
-            yamlfile.write(serializers.serialize('yaml', qs))
-            yamlfile.close()
-
-    def dump_values(self, qs):
-        """dump queryset to .json"""
-        file_path = self.get_file_path(qs.model, 'json')
-
-        if os.path.isfile(file_path):
-            write_mode = APPEND_MODE
-        else:
-            write_mode = WRITE_MODE
-
-        with open(file_path, write_mode) as jsonfile:
-            jsonfile.write(json.dumps(list(qs.values()), cls=DjangoJSONEncoder))
-            jsonfile.close()
 
     def dump(self, qs):
         logger.info('starting dump of %s' % qs.model.__name__)

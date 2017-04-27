@@ -9,12 +9,12 @@ from cla_eventlog.models import Log
 from cla_provider.models import Feedback
 from complaints.models import Complaint
 from diagnosis.models import DiagnosisTraversal
-from legalaid.models import Case, EligibilityCheck, CaseNotesHistory, Person,\
-    Income, Savings, Deductions, PersonalDetails, ThirdPartyDetails, \
-    AdaptationDetails, CaseKnowledgebaseAssignment, EODDetails, \
-    EODDetailsCategory, Property
+from legalaid.models import (
+    Case, EligibilityCheck, CaseNotesHistory, Person, Income, Savings,
+    Deductions, PersonalDetails, ThirdPartyDetails, AdaptationDetails,
+    CaseKnowledgebaseAssignment, EODDetails, EODDetailsCategory, Property
+)
 from timer.models import Timer
-
 from ...qs_to_file import QuerysetToFile
 
 

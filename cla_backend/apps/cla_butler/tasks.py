@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
 import datetime
+from dateutil.relativedelta import relativedelta
+import logging
 import os
 import time
 
-from celery import Task
-import logging
-
-from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 
-from .qs_to_file import QuerysetToFile
+from celery import Task
+
 from cla_eventlog.models import Log
 from cla_provider.models import Feedback
 from complaints.models import Complaint
 from diagnosis.models import DiagnosisTraversal
-from legalaid.models import Case, EligibilityCheck, CaseNotesHistory, Person,\
-    Income, Savings, Deductions, PersonalDetails, ThirdPartyDetails, \
-    AdaptationDetails, CaseKnowledgebaseAssignment, EODDetails, \
-    EODDetailsCategory, Property
+from legalaid.models import (
+    Case, EligibilityCheck, CaseNotesHistory, Person, Income, Savings,
+    Deductions, PersonalDetails, ThirdPartyDetails, AdaptationDetails,
+    CaseKnowledgebaseAssignment, EODDetails, EODDetailsCategory, Property
+)
 from timer.models import Timer
+from .qs_to_file import QuerysetToFile
 
 
 logger = logging.getLogger(__name__)

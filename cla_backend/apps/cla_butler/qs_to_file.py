@@ -22,8 +22,8 @@ from cla_common.money_interval.models import MoneyInterval
 logger = logging.getLogger(__name__)
 
 
-RE_DATE = re.compile(r'(\d{4})-(\d\d?)-(\d\d?)$')
-RE_DATETIME = re.compile(r'(\d{4})-(\d\d?)-(\d\d?) (\d\d?):(\d\d?):(\d\d?)\.(\d{6})\+(\d\d?):(\d\d?)$')
+RE_DATE = re.compile(r'(\d{4})-(\d{2})-(\d{2})$')
+RE_DATETIME = re.compile(r'(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})\.(\d{6})\+(\d{2}):(\d{2})$')
 WRITE_MODE = 'wb'
 APPEND_MODE = 'a'
 

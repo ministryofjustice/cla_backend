@@ -132,13 +132,14 @@ class DeleteOldData(Task):
         self._delete_objects(cases)
 
     def cleanup_model_from_case(self, pks, model, attr='case_id', case_log_attr=None):
-        qs = model.objects.filter(
-            **{'%s__in' % attr: pks}
-        )
+        attr_in = '{attribute}__in'.format(attribute=attr)
+        criteria = {attr_in: pks}
+        qs = model.objects.filter(**criteria)
         if case_log_attr:
-            logs = Log.objects.filter(
-                **{'%s__in' % case_log_attr: map(str, qs.values_list('pk', flat=True))}
-            )
+            log_pks = map(str, qs.values_list('pk', flat=True))
+            log_attr_in = '{attribute}__in'.format(attribute=case_log_attr)
+            log_criteria = {log_attr_in: log_pks}
+            logs = Log.objects.filter(**log_criteria)
             self._delete_objects(logs)
         self._delete_objects(qs)
 
@@ -161,9 +162,9 @@ class DeleteOldData(Task):
         self._delete_objects(ecs)
 
     def cleanup_model_from_ec(self, pks, model, attr='eligibility_check_id'):
-        qs = model.objects.filter(
-            **{'%s__in' % attr: pks}
-        )
+        attr_in = '{attribute}__in'.format(attribute=attr)
+        criteria = {attr_in: pks}
+        qs = model.objects.filter(**criteria)
         self._delete_objects(qs)
 
     def cleanup_person(self):

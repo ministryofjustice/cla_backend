@@ -55,5 +55,5 @@ class Command(BaseCommand):
         filewriter = QuerysetToFile(path)
 
         for model in MODELS:
-            print model.__name__
+            self.stdout.write(model.__name__)
             filewriter.load(model)

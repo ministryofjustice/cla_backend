@@ -184,6 +184,7 @@ INSTALLED_APPS = (
 PROJECT_APPS = (
     'core',
     'legalaid',
+    'cla_butler',
     'cla_provider',
     'call_centre',
     'cla_eventlog',

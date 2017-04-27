@@ -13,6 +13,7 @@ from django.utils import timezone
 
 from celery import Task
 
+from cla_butler.qs_to_file import QuerysetToFile
 from cla_eventlog.models import Log
 from cla_provider.models import Feedback
 from complaints.models import Complaint
@@ -23,7 +24,6 @@ from legalaid.models import (
     CaseKnowledgebaseAssignment, EODDetails, EODDetailsCategory, Property
 )
 from timer.models import Timer
-from .qs_to_file import QuerysetToFile
 
 
 logger = logging.getLogger(__name__)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand
 
-from ...tasks import DeleteOldData
+from cla_butler.tasks import DeleteOldData
 
 
 class Command(BaseCommand):

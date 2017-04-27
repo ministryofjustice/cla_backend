@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.admin.models import LogEntry
 from django.core.management.base import BaseCommand
 
+from cla_butler.qs_to_file import QuerysetToFile
 from cla_eventlog.models import Log
 from cla_provider.models import Feedback
 from complaints.models import Complaint
@@ -15,7 +16,6 @@ from legalaid.models import (
     CaseKnowledgebaseAssignment, EODDetails, EODDetailsCategory, Property
 )
 from timer.models import Timer
-from ...qs_to_file import QuerysetToFile
 
 
 MODELS = [

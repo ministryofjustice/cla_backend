@@ -96,10 +96,12 @@ class DeleteOldData(Task):
             count=qs.count(),
             name=name))
         self.filewriter.dump(qs)
-        logger.info('Starting delete of %s' % name)
+        logger.info('Starting delete of {name}'.format(name=name))
         start = time.time()
         qs._raw_delete(qs.db)
-        logger.info('Time to delete %s: %s' % (name, time.time() - start))
+        logger.info('Time to delete {name}: {time}'.format(
+            name=name,
+            time=time.time() - start))
 
         logger.info('Total {name} objects: {count}'.format(
             count=qs.model.objects.all().count(),

@@ -29,6 +29,10 @@ from timer.models import Timer
 logger = logging.getLogger(__name__)
 
 
+def get_pks(qs):
+    return [str(pk) for pk in qs.values_list('pk', flat=True)]
+
+
 class DeleteOldData(Task):
     """
     Deletes old data that is no longer needed.
@@ -68,7 +72,7 @@ class DeleteOldData(Task):
 
     def _delete_logs(self, qs):
         ct = ContentType.objects.get_for_model(qs.model)
-        pks = map(str, qs.values_list('pk', flat=True))
+        pks = get_pks(qs)
         if pks:
             logs = Log.objects.filter(
                 content_type_id=ct.pk,
@@ -118,9 +122,9 @@ class DeleteOldData(Task):
         cases = Case.objects.filter(
             modified__lte=two_years,
         )
-        pks = map(str, cases.values_list('pk', flat=True))
+        pks = get_pks(cases)
         from_cases = Case.objects.filter(from_case_id__in=pks)
-        fpks = map(str, from_cases.values_list('pk', flat=True))
+        fpks = get_pks(from_cases)
         pks += fpks
         self.cleanup_model_from_case(pks, CaseNotesHistory)
         self.cleanup_model_from_case(pks, Log)
@@ -138,7 +142,7 @@ class DeleteOldData(Task):
         criteria = {attr_in: pks}
         qs = model.objects.filter(**criteria)
         if case_log_attr:
-            log_pks = map(str, qs.values_list('pk', flat=True))
+            log_pks = get_pks(qs)
             log_attr_in = '{attribute}__in'.format(attribute=case_log_attr)
             log_criteria = {log_attr_in: log_pks}
             logs = Log.objects.filter(**log_criteria)
@@ -159,7 +163,7 @@ class DeleteOldData(Task):
             case__isnull=True,
             modified__lte=yesterday,
         )
-        pks = map(str, ecs.values_list('pk', flat=True))
+        pks = get_pks(ecs)
         self.cleanup_model_from_ec(pks, Property)
         self._delete_objects(ecs)
 

@@ -33,12 +33,16 @@ class QuerysetToFile(object):
         self.path = path
 
     def get_file_path(self, model, ext='csv'):
-        return os.path.join(self.path, '%s.%s' % (model.__name__, ext))
+        return os.path.join(
+            self.path,
+            '{model}.{extension}'.format(
+                model=model.__name__,
+                extension=ext))
 
     def get_name(self, field):
         field_name = field.name
         if isinstance(field, ForeignKey):
-            field_name = '%s_id' % field_name
+            field_name = '{name}_id'.format(name=field_name)
         return field_name
 
     def get_value(self, instance, field):
@@ -75,10 +79,14 @@ class QuerysetToFile(object):
             csvfile.close()
 
     def dump(self, qs):
-        logger.info('starting dump of %s' % qs.model.__name__)
+        logger.info(
+            'starting dump of {model}'.format(model=qs.model.__name__))
         start = time.time()
         self.dump_to_csv(qs)
-        logger.info('Time to dump %s: %s' % (qs.model.__name__, time.time() - start))
+        logger.info(
+            'Time to dump {model}: {time}'.format(
+                model=qs.model.__name__,
+                time=time.time() - start))
 
     def set_value(self, val, field):
         if val == '' and field.empty_strings_allowed and not field.null:
@@ -95,6 +103,55 @@ class QuerysetToFile(object):
             val = parse_datetime(val)
         return val
 
+    def create_object(self, model, row):
+        obj = model()
+        for f in model._meta.fields:
+            n = self.get_name(f)
+            try:
+                val = self.set_value(row[n], f)
+            except Exception as e:
+                logger.error(
+                    'Failed to convert {value} for {field} to python with '
+                    'error: {error}'.format(
+                        value=row[n],
+                        field=f.name,
+                        error=e))
+                raise
+
+            try:
+                setattr(obj, n, val)
+            except Exception as e:
+                logger.error(
+                    'Failed to set attribute {field}}({class_name}) to '
+                    '{value}({value_class}) on object {object} with error: '
+                    '{error}'.format(
+                        field=f.name,
+                        class_name=f.__class__.__name__,
+                        value=val,
+                        value_class=val.__class__.__name__,
+                        object=obj,
+                        error=e))
+                raise
+        return obj
+
+    def populate_and_save(self, model, row):
+        obj = self.create_object(model, row)
+        saved = False
+        try:
+            obj.save()
+            saved = True
+        except IntegrityError:
+            logger.info(
+                'Try to save failed object: {object} at the end'.format(
+                    object=obj))
+        except Exception as e:
+            logger.error(
+                'Failed to save object: {object} with error: {error}'.format(
+                    object=obj,
+                    error=e))
+            raise
+        return obj, saved
+
     def load(self, model):
         """Load .csv file to model"""
         file_path = self.get_file_path(model)
@@ -103,32 +160,10 @@ class QuerysetToFile(object):
             reader = csv.DictReader(csvfile, quoting=csv.QUOTE_ALL)
             failed_objects = []
             for row in reader:
-                obj = model()
-                for f in model._meta.fields:
-                    n = self.get_name(f)
-                    try:
-                        val = self.set_value(row[n], f)
-                    except Exception as sv:
-                        logger.error('Failed to convert %s for %s to python '
-                                     'with error: %s' % (row[n], f.name, sv))
-                        raise
+                obj, saved = self.populate_and_save(model, row)
 
-                    try:
-                        setattr(obj, n, val)
-                    except Exception as set_e:
-                        logger.error('Failed to set attribute %s(%s) to '
-                                     '%s(%s) on object %s with error: %s' %
-                                     (f.name, f.__class__.__name__,  val,
-                                      val.__class__.__name__, obj, set_e))
-                        raise
-
-                try:
-                    obj.save()
-                except IntegrityError:
-                    logger.info('Try to save failed object at end: %s' % obj)
+                if not saved:
                     failed_objects.append(obj)
-                except Exception as e:
-                    logger.error('Failed to save object: %s' % obj)
-                    raise
 
-            [o.save() for o in failed_objects]
+            for failed_obj in failed_objects:
+                failed_obj.save()

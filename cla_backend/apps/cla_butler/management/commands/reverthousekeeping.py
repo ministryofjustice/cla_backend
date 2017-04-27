@@ -47,11 +47,10 @@ class Command(BaseCommand):
     help = 'Attempts to re-load data that was deleted in the housekeeping'
 
     def add_arguments(self, parser):
-        parser.add_argument('directory', nargs=1, type=str)
+        parser.add_argument('directory', nargs=1)
 
     def handle(self, *args, **options):
-        d = args[0]
-        path = os.path.join(settings.TEMP_DIR, d)
+        path = os.path.join(settings.TEMP_DIR, args[0])
         filewriter = QuerysetToFile(path)
 
         for model in MODELS:

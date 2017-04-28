@@ -186,9 +186,13 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
 
         for phone in [self.home_phone, self.mobile_phone]:
             if phone:
+                try:
+                    phone = unicode(phone)
+                except UnicodeDecodeError:
+                    pass
                 search_field = add_string(
                     search_field,
-                    re.sub('[^0-9a-zA-Z]+', '', unicode(phone)))
+                    re.sub('[^0-9a-zA-Z]+', '', phone))
 
         self.search_field = search_field
 

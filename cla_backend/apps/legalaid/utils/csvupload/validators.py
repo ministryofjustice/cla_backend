@@ -267,12 +267,16 @@ class ProviderCSVValidator(object):
     def _validate_open_closed_date(self, cleaned_data):
         opened = cleaned_data.get('Date Opened')
         closed = cleaned_data.get('Date Closed')
+        today = datetime.date.today()
         if closed and not opened:
             raise serializers.ValidationError('If you have Closed date you '
                                               'must also have an Opened date')
         if opened and closed:
             if closed < datetime.datetime(2013, 4, 1):
                 raise serializers.ValidationError('Closed date must be after 01/04/2013')
+            if closed.month == today.month and closed.year == today.year:
+                raise serializers.ValidationError(
+                    'Closed date must not be in the current month')
             if closed < opened:
                 raise serializers.ValidationError(
                     'Closed date (%s) must be after opened date (%s)' % (
@@ -333,6 +337,10 @@ class ProviderCSVValidator(object):
         if time_spent_in_minutes > MAX_TIME_ALLOWED:
             raise serializers.ValidationError('Time spent (%s) must not be greater than %s minutes' %
                                               (time_spent_in_minutes, MAX_TIME_ALLOWED))
+        if time_spent_in_minutes % 6:
+            raise serializers.ValidationError(
+                'Time spent (%s) must be in 6 minute intervals' %
+                time_spent_in_minutes)
 
     @depends_on('Exempted Code Reason', check=TRUTHY)
     @depends_on('Determination', check=FALSEY)
@@ -369,6 +377,14 @@ class ProviderCSVValidator(object):
             validate_not_present(stage_reached_code,
                                  message='Field "Stage Reached" is not allowed because Matter Type 1: %s was specified' % mt1)
 
+    @depends_on('Determination', check=TRUTHY)
+    def _validate_determination_dvca_is_family(self, cleaned_data, category):
+        determination = cleaned_data.get('Determination')
+        if determination == u'DVCA' and category != u'family':
+            raise serializers.ValidationError(
+                'Category (%s) must be Family if Determination is DVCA' %
+                category)
+
     def _validate_data(self, cleaned_data, row_num):
         """
         Like django's clean method, use this to validate across fields
@@ -389,7 +405,8 @@ class ProviderCSVValidator(object):
         validation_methods_depend_on_category = [
             self._validate_time_spent,
             self._validate_exemption,
-            self._validate_telephone_or_online_advice
+            self._validate_telephone_or_online_advice,
+            self._validate_determination_dvca_is_family,
         ]
 
         for m in validation_methods:

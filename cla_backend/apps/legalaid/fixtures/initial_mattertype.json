@@ -1,1312 +1,1730 @@
 [
-  {
-    "pk": 1,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 3,
-      "code": "DMCA",
-      "description": "Court advocacy assistance",
-      "level": 1
-    }
-  },
-  {
-    "pk": 2,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 3,
-      "code": "DMAP",
-      "description": "Mortgage Arrears/Possession",
-      "level": 1
-    }
-  },
-  {
-    "pk": 3,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 3,
-      "code": "DIVB",
-      "description": "Involuntary Bankruptcy (where client’s estate includes their home)",
-      "level": 1
-    }
-  },
-  {
-    "pk": 4,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 3,
-      "code": "DORH",
-      "description": "Order for Sale of the Home",
-      "level": 1
-    }
-  },
-  {
-    "pk": 5,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 3,
-      "code": "DTOT",
-      "description": "Other",
-      "level": 1
-    }
-  },
-  {
-    "pk": 6,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 3,
-      "code": "DSCH",
-      "description": "Client wants to reschedule debts",
-      "level": 2
-    }
-  },
-  {
-    "pk": 7,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QPRO",
-      "description": "Provision of goods and services",
-      "level": 1
-    }
-  },
-  {
-    "pk": 8,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QEMP",
-      "description": "Employment",
-      "level": 1
-    }
-  },
-  {
-    "pk": 9,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QEQP",
-      "description": "Equality of terms/Equal pay",
-      "level": 1
-    }
-  },
-  {
-    "pk": 10,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QPRE",
-      "description": "Premises/Housing",
-      "level": 1
-    }
-  },
-  {
-    "pk": 11,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QFUN",
-      "description": "Exercise of public function",
-      "level": 1
-    }
-  },
-  {
-    "pk": 12,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QEDU",
-      "description": "Education",
-      "level": 1
-    }
-  },
-  {
-    "pk": 13,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QPUB",
-      "description": "Public sector equality duty",
-      "level": 1
-    }
-  },
-  {
-    "pk": 14,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QCON",
-      "description": "Contracts",
-      "level": 1
-    }
-  },
-  {
-    "pk": 15,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QAGE",
-      "description": "Age",
-      "level": 2
-    }
-  },
-  {
-    "pk": 16,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QDIS",
-      "description": "Disability",
-      "level": 2
-    }
-  },
-  {
-    "pk": 17,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QGEN",
-      "description": "Gender reassignment",
-      "level": 2
-    }
-  },
-  {
-    "pk": 18,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QMCP",
-      "description": "Marriage and civil partnership",
-      "level": 2
-    }
-  },
-  {
-    "pk": 19,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QPRM",
-      "description": "Pregnancy and maternity",
-      "level": 2
-    }
-  },
-  {
-    "pk": 20,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QRAC",
-      "description": "Race",
-      "level": 2
-    }
-  },
-  {
-    "pk": 21,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QROB",
-      "description": "Religion or belief",
-      "level": 2
-    }
-  },
-  {
-    "pk": 22,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QSEX",
-      "description": "Sex",
-      "level": 2
-    }
-  },
-  {
-    "pk": 23,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QSOR",
-      "description": "Sexual orientation",
-      "level": 2
-    }
-  },
-  {
-    "pk": 24,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 8,
-      "code": "QMDI",
-      "description": "Multiple discrimination",
-      "level": 2
-    }
-  },
-  {
-    "pk": 25,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "ESEN",
-      "description": "Special educational needs and/or children unable to attend school",
-      "level": 1
-    }
-  },
-  {
-    "pk": 26,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "EDOT",
-      "description": "Other",
-      "level": 1
-    }
-  },
-  {
-    "pk": 27,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "EDDA",
-      "description": "Disability discrimination at nursery, school, college or LEA",
-      "level": 1
-    }
-  },
-  {
-    "pk": 28,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "EEQU",
-      "description": "Contravention of Equality 2010 (non-Disability Discrimination)",
-      "level": 1
-    }
-  },
-  {
-    "pk": 29,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "ENUR",
-      "description": "Nursery",
-      "level": 2
-    }
-  },
-  {
-    "pk": 30,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "EDSC",
-      "description": "School",
-      "level": 2
-    }
-  },
-  {
-    "pk": 31,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "EPRU",
-      "description": "PRU",
-      "level": 2
-    }
-  },
-  {
-    "pk": 32,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "ECOL",
-      "description": "Non-university college",
-      "level": 2
-    }
-  },
-  {
-    "pk": 33,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "EUNI",
-      "description": "University",
-      "level": 2
-    }
-  },
-  {
-    "pk": 34,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "EAAP",
-      "description": "AAP",
-      "level": 2
-    }
-  },
-  {
-    "pk": 35,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "ELOC",
-      "description": "Local Authority",
-      "level": 2
-    }
-  },
-  {
-    "pk": 36,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "EIAP",
-      "description": "IAP",
-      "level": 2
-    }
-  },
-  {
-    "pk": 37,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "ESOS",
-      "description": "SOS / DfES",
-      "level": 2
-    }
-  },
-  {
-    "pk": 38,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "EHEF",
-      "description": "HEFC / LSC",
-      "level": 2
-    }
-  },
-  {
-    "pk": 39,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 7,
-      "code": "EOTH",
-      "description": "Other",
-      "level": 2
-    }
-  },
-  {
-    "pk": 40,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMA",
-      "description": "Divorce/Judicial Separation/Nullity",
-      "level": 1
-    }
-  },
-  {
-    "pk": 41,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMB",
-      "description": "Dissolution of Civil Partnership",
-      "level": 1
-    }
-  },
-  {
-    "pk": 42,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMC",
-      "description": "Domestic Abuse",
-      "level": 1
-    }
-  },
-  {
-    "pk": 43,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMD",
-      "description": "Private Law Children only",
-      "level": 1
-    }
-  },
-  {
-    "pk": 44,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAME",
-      "description": "Private Law Children and Financial Provision",
-      "level": 1
-    }
-  },
-  {
-    "pk": 45,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMF",
-      "description": "Private Law Children and Divorce/Judicial Separation/Nullity",
-      "level": 1
-    }
-  },
-  {
-    "pk": 46,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMG",
-      "description": "Private Law Children and Civil Partnership Dissolution",
-      "level": 1
-    }
-  },
-  {
-    "pk": 47,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMH",
-      "description": "Private Law Children and Domestic Abuse",
-      "level": 1
-    }
-  },
-  {
-    "pk": 48,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMI",
-      "description": "Private Law Children, Domestic Abuse and Divorce/Judicial Separation/Nullity",
-      "level": 1
-    }
-  },
-  {
-    "pk": 49,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMJ",
-      "description": "Private Law Children, Domestic Abuse and Civil Partnership Dissolution",
-      "level": 1
-    }
-  },
-  {
-    "pk": 50,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMK",
-      "description": "Financial Provision Only",
-      "level": 1
-    }
-  },
-  {
-    "pk": 51,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAML",
-      "description": "Financial Provision and Divorce/Judicial Separation/Nullity",
-      "level": 1
-    }
-  },
-  {
-    "pk": 52,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMM",
-      "description": "Financial Provision and Civil Partnership Dissolution",
-      "level": 1
-    }
-  },
-  {
-    "pk": 53,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMN",
-      "description": "Financial Provision and Domestic Abuse",
-      "level": 1
-    }
-  },
-  {
-    "pk": 54,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMO",
-      "description": "Financial Provision, Domestic Abuse and Divorce/Judicial Separation/Nullity",
-      "level": 1
-    }
-  },
-  {
-    "pk": 55,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMP",
-      "description": "Financial Provision, Domestic Abuse and Civil Partnership Dissolution",
-      "level": 1
-    }
-  },
-  {
-    "pk": 56,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMQ",
-      "description": "Financial Provision, Private Law Children and Domestic Abuse ",
-      "level": 1
-    }
-  },
-  {
-    "pk": 57,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMR",
-      "description": "Financial Provision, Private Law Children, Domestic Abuse and Divorce/Judicial Separation/Nullity",
-      "level": 1
-    }
-  },
-  {
-    "pk": 58,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMS",
-      "description": "Financial Provision, Private Law Children, Domestic Abuse and Civil Partnership Dissolution",
-      "level": 1
-    }
-  },
-  {
-    "pk": 59,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMV",
-      "description": "Other",
-      "level": 1
-    }
-  },
-  {
-    "pk": 60,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMW",
-      "description": "Public Law Proceedings – Section 31 Care Proceedings",
-      "level": 1
-    }
-  },
-  {
-    "pk": 61,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMX",
-      "description": "Public Law Proceedings – Other",
-      "level": 1
-    }
-  },
-  {
-    "pk": 62,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMY",
-      "description": "Advice in support of Family Mediation",
-      "level": 1
-    }
-  },
-  {
-    "pk": 63,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAMZ",
-      "description": "Financial Provision, Private Law Children and Divorce / Judicial Separation / Nullity",
-      "level": 1
-    }
-  },
-  {
-    "pk": 64,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAM1",
-      "description": "Child Abduction International",
-      "level": 1
-    }
-  },
-  {
-    "pk": 65,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAM2",
-      "description": "Child Abduction Domestic",
-      "level": 1
-    }
-  },
-  {
-    "pk": 66,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAM3",
-      "description": "EU and International Agreements concerning maintenance",
-      "level": 1
-    }
-  },
-  {
-    "pk": 67,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FADV",
-      "description": "Client is seeking advice only",
-      "level": 2
-    }
-  },
-  {
-    "pk": 68,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FPET",
-      "description": "Client is the petitioner in Divorce/Judicial Separation/Nullity/Dissolution of Civil Partnership",
-      "level": 2
-    }
-  },
-  {
-    "pk": 69,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FRES",
-      "description": "Client is the respondent in Divorce/Judicial Separation/Dissolution of Civil Partnership",
-      "level": 2
-    }
-  },
-  {
-    "pk": 70,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FAPP",
-      "description": "Client is or would be the applicant where proceedings issued",
-      "level": 2
-    }
-  },
-  {
-    "pk": 71,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FREP",
-      "description": "Client is or would be the respondent where proceedings issued",
-      "level": 2
-    }
-  },
-  {
-    "pk": 72,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FCHG",
-      "description": "Client is a child with a guardian",
-      "level": 2
-    }
-  },
-  {
-    "pk": 73,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FCHS",
-      "description": "Client is a child instructing solicitor directly",
-      "level": 2
-    }
-  },
-  {
-    "pk": 74,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FOTH",
-      "description": "Other",
-      "level": 2
-    }
-  },
-  {
-    "pk": 75,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FMEC",
-      "description": "Where the client is seeking advice in connection with mediation – children",
-      "level": 2
-    }
-  },
-  {
-    "pk": 76,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FMEF",
-      "description": "Where the client is seeking advice in connection with mediation – finance",
-      "level": 2
-    }
-  },
-  {
-    "pk": 77,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 4,
-      "code": "FMEA",
-      "description": "Where the client is seeking advice in connection with mediation – all issues",
-      "level": 1
-    }
-  },
-  {
-    "pk": 78,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HRNT",
-      "description": "Possession - rent arrears",
-      "level": 1
-    }
-  },
-  {
-    "pk": 79,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HPOT",
-      "description": "Possession – other (non-ASB)",
-      "level": 1
-    }
-  },
-  {
-    "pk": 80,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HANT",
-      "description": "ASBOs – Magistrates/Crown Court",
-      "level": 1
-    }
-  },
-  {
-    "pk": 81,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HDIS",
-      "description": "Anti-social behaviour and nuisance- all other (including those in County Court)",
-      "level": 1
-    }
-  },
-  {
-    "pk": 82,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HREP",
-      "description": "Disrepair, including public health, environmental and DPA (Defective Premises Act) issues",
-      "level": 1
-    }
-  },
-  {
-    "pk": 84,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HHOM",
-      "description": "Homelessness / threat of homelessness",
-      "level": 1
-    }
-  },
-  {
-    "pk": 85,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HULE",
-      "description": "Harassment/Unlawful eviction",
-      "level": 1
-    }
-  },
-  {
-    "pk": 86,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HOOT",
-      "description": "Other",
-      "level": 1
-    }
-  },
-  {
-    "pk": 87,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HPPO",
-      "description": "The client is subject to possession proceedings",
-      "level": 1
-    }
-  },
-  {
-    "pk": 88,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HPWA",
-      "description": "The client is making an application to stay or suspend a warrant of eviction",
-      "level": 1
-    }
-  },
-  {
-    "pk": 89,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HRAR",
-      "description": "Rent Arrears/repossession",
-      "level": 1
-    }
-  },
-  {
-    "pk": 90,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HPOS",
-      "description": "The client is trying to stop the forced sale of their home",
-      "level": 1
-    }
-  },
-  {
-    "pk": 91,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HPUB",
-      "description": "Client has local authority landlord",
-      "level": 2
-    }
-  },
-  {
-    "pk": 92,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HPRI",
-      "description": "Client has private landlord",
-      "level": 2
-    }
-  },
-  {
-    "pk": 93,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HHAC",
-      "description": "Client has other social landlord",
-      "level": 2
-    }
-  },
-  {
-    "pk": 94,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HNAS",
-      "description": "Client has NASS accommodation/NASS advice",
-      "level": 2
-    }
-  },
-  {
-    "pk": 95,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HOWN",
-      "description": "Client is owner occupier",
-      "level": 2
-    }
-  },
-  {
-    "pk": 96,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HHLS",
-      "description": "Client is homeless",
-      "level": 2
-    }
-  },
-  {
-    "pk": 97,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HLAN",
-      "description": "Client is landlord",
-      "level": 2
-    }
-  },
-   {
-    "pk": 98,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 2,
-      "code": "HOTH",
-      "description": "Other",
-      "level": 2
-    }
-  },
-  {
-    "pk": 99,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WDLA",
-      "description": "Disability living allowance ",
-      "level": 1
-    }
-  },
-  {
-    "pk": 100,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WBAA",
-      "description": "Attendance allowance",
-      "level": 1
-    }
-  },
-  {
-    "pk": 101,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WICB",
-      "description": "Incapacity benefit",
-      "level": 1
-    }
-  },
-  {
-    "pk": 102,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WSFP",
-      "description": "Social fund payments",
-      "level": 1
-    }
-  },
-  {
-    "pk": 103,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WHBT",
-      "description": "Housing benefit",
-      "level": 1
-    }
-  },
-  {
-    "pk": 104,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WIST",
-      "description": "Income support",
-      "level": 1
-    }
-  },
-  {
-    "pk": 105,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WJSA",
-      "description": "Jobseekers allowance ",
-      "level": 1
-    }
-  },
-  {
-    "pk": 106,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WIIB",
-      "description": "Industrial injuries disablement benefits",
-      "level": 1
-    }
-  },
-  {
-    "pk": 107,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WBBT",
-      "description": "Bereavement benefits",
-      "level": 1
-    }
-  },
-  {
-    "pk": 108,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WTAX",
-      "description": "Tax credits – including pension credit",
-      "level": 1
-    }
-  },
-  {
-    "pk": 109,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WMUL",
-      "description": "Multiple benefits",
-      "level": 1
-    }
-  },
-  {
-    "pk": 110,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WOTH",
-      "description": "Other benefits",
-      "level": 1
-    }
-  },
-  {
-    "pk": 111,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WESA",
-      "description": "Employment and Support Allowance",
-      "level": 1
-    }
-  },
-  {
-    "pk": 112,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WBPI",
-      "description": "Personal Independence Payments",
-      "level": 1
-    }
-  },
-  {
-    "pk": 113,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WREA",
-      "description": "Reassessment of benefits",
-      "level": 2
-    }
-  },
-  {
-    "pk": 114,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WREV",
-      "description": "Revision/supersession ",
-      "level": 2
-    }
-  },
-  {
-    "pk": 115,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WSSC",
-      "description": "Appeal to Social Security Commissioners",
-      "level": 2
-    }
-  },
-  {
-    "pk": 116,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WAPL",
-      "description": "Appeal – Other",
-      "level": 2
-    }
-  },
-  {
-    "pk": 117,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WOVE",
-      "description": "Overpayment of benefits",
-      "level": 2
-    }
-  },
-  {
-    "pk": 118,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WBAC",
-      "description": "Backdating of benefits",
-      "level": 2
-    }
-  },
-  {
-    "pk": 119,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WLGO",
-      "description": "Complaint to Local Government/ Parliamentary Ombudsman",
-      "level": 2
-    }
-  },
-  {
-    "pk": 120,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WOTH",
-      "description": "Other",
-      "level": 2
-    }
-  },
-  {
-    "pk": 121,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WNAS",
-      "description": "NASS advice",
-      "level": 2
-    }
-  },
-  {
-    "pk": 122,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WBFT",
-      "description": "Appeals to the First-tier Tibunal (Social Entitlement Chamber)",
-      "level": 2
-    }
-  },
-  {
-    "pk": 123,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WBPA",
-      "description": "Preparing a permission application to appeal to  the Upper Tribunal",
-      "level": 2
-    }
-  },
-  {
-    "pk": 124,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WBUT",
-      "description": "Appeal to the Upper Tribunal",
-      "level": 2
-    }
-  },
-  {
-    "pk": 125,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WBCA",
-      "description": "Appeal to the Court of Appeal",
-      "level": 2
-    }
-  },
-  {
-    "pk": 126,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WBSC",
-      "description": "Appeal to the Supreme Court",
-      "level": 2
-    }
-  },
-  {
-    "pk": 127,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 6,
-      "code": "WBHC",
-      "description": "Onward Council Tax Reduction Scheme Appeals to the High Court",
-      "level": 2
-    }
-  },
-  {
-    "pk": 128,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 3,
-      "code": "DVAL",
-      "description": "Client wants to challenge validity of debts",
-      "level": 2
-    }
-  },
-  {
-    "pk": 129,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 3,
-      "code": "DMIX",
-      "description": "Client wants both to challenge validity of debts and reschedule debts",
-      "level": 2
-    }
-  },
-  {
-    "pk": 130,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 3,
-      "code": "DIBP",
-      "description": "Client is defending involuntary bankruptcy proceedings",
-      "level": 2
-    }
-  },
-  {
-    "pk": 131,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 3,
-      "code": "DORD",
-      "description": "Client is facing an order for sale of the home",
-      "level": 2
-    }
-  },
-  {
-    "pk": 132,
-    "model": "legalaid.mattertype",
-    "fields": {
-      "category": 3,
-      "code": "DOTH",
-      "description": "Other",
-      "level": 2
-    }
-  }
+{
+  "fields": {
+    "category": 3,
+    "code": "DMCA",
+    "description": "Court advocacy assistance",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.166Z",
+    "modified": "2017-07-28T10:11:14.166Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 1
+},
+{
+  "fields": {
+    "category": 3,
+    "code": "DMAP",
+    "description": "Mortgage Arrears/Possession",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.176Z",
+    "modified": "2017-07-28T10:11:14.176Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 2
+},
+{
+  "fields": {
+    "category": 3,
+    "code": "DIVB",
+    "description": "Involuntary Bankruptcy (where client\u2019s estate includes their home)",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.178Z",
+    "modified": "2017-07-28T10:11:14.178Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 3
+},
+{
+  "fields": {
+    "category": 3,
+    "code": "DORH",
+    "description": "Order for Sale of the Home",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.179Z",
+    "modified": "2017-07-28T10:11:14.179Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 4
+},
+{
+  "fields": {
+    "category": 3,
+    "code": "DTOT",
+    "description": "Other",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.181Z",
+    "modified": "2017-07-28T10:11:14.181Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 5
+},
+{
+  "fields": {
+    "category": 3,
+    "code": "DSCH",
+    "description": "Client wants to reschedule debts",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.182Z",
+    "modified": "2017-07-28T10:11:14.182Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 6
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QPRO",
+    "description": "Provision of goods and services",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.183Z",
+    "modified": "2017-07-28T10:11:14.183Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 7
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QEMP",
+    "description": "Employment",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.185Z",
+    "modified": "2017-07-28T10:11:14.185Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 8
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QEQP",
+    "description": "Equality of terms/Equal pay",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.186Z",
+    "modified": "2017-07-28T10:11:14.186Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 9
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QPRE",
+    "description": "Premises/Housing",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.187Z",
+    "modified": "2017-07-28T10:11:14.187Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 10
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QFUN",
+    "description": "Exercise of public function",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.188Z",
+    "modified": "2017-07-28T10:11:14.189Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 11
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QEDU",
+    "description": "Education",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.190Z",
+    "modified": "2017-07-28T10:11:14.190Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 12
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QPUB",
+    "description": "Public sector equality duty",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.191Z",
+    "modified": "2017-07-28T10:11:14.191Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 13
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QCON",
+    "description": "Contracts",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.192Z",
+    "modified": "2017-07-28T10:11:14.192Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 14
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QAGE",
+    "description": "Age",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.194Z",
+    "modified": "2017-07-28T10:11:14.194Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 15
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QDIS",
+    "description": "Disability",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.195Z",
+    "modified": "2017-07-28T10:11:14.195Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 16
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QGEN",
+    "description": "Gender reassignment",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.196Z",
+    "modified": "2017-07-28T10:11:14.196Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 17
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QMCP",
+    "description": "Marriage and civil partnership",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.198Z",
+    "modified": "2017-07-28T10:11:14.198Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 18
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QPRM",
+    "description": "Pregnancy and maternity",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.199Z",
+    "modified": "2017-07-28T10:11:14.199Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 19
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QRAC",
+    "description": "Race",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.200Z",
+    "modified": "2017-07-28T10:11:14.200Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 20
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QROB",
+    "description": "Religion or belief",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.201Z",
+    "modified": "2017-07-28T10:11:14.201Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 21
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QSEX",
+    "description": "Sex",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.202Z",
+    "modified": "2017-07-28T10:11:14.202Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 22
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QSOR",
+    "description": "Sexual orientation",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.203Z",
+    "modified": "2017-07-28T10:11:14.203Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 23
+},
+{
+  "fields": {
+    "category": 8,
+    "code": "QMDI",
+    "description": "Multiple discrimination",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.204Z",
+    "modified": "2017-07-28T10:11:14.204Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 24
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "ESEN",
+    "description": "Special educational needs and/or children unable to attend school",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.205Z",
+    "modified": "2017-07-28T10:11:14.205Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 25
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "EDOT",
+    "description": "Other",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.206Z",
+    "modified": "2017-07-28T10:11:14.206Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 26
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "EDDA",
+    "description": "Disability discrimination at nursery, school, college or LEA",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.208Z",
+    "modified": "2017-07-28T10:11:14.208Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 27
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "EEQU",
+    "description": "Contravention of Equality 2010 (non-Disability Discrimination)",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.209Z",
+    "modified": "2017-07-28T10:11:14.209Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 28
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "ENUR",
+    "description": "Nursery",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.210Z",
+    "modified": "2017-07-28T10:11:14.210Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 29
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "EDSC",
+    "description": "School",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.211Z",
+    "modified": "2017-07-28T10:11:14.211Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 30
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "EPRU",
+    "description": "PRU",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.212Z",
+    "modified": "2017-07-28T10:11:14.212Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 31
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "ECOL",
+    "description": "Non-university college",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.213Z",
+    "modified": "2017-07-28T10:11:14.213Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 32
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "EUNI",
+    "description": "University",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.214Z",
+    "modified": "2017-07-28T10:11:14.214Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 33
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "EAAP",
+    "description": "AAP",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.215Z",
+    "modified": "2017-07-28T10:11:14.215Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 34
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "ELOC",
+    "description": "Local Authority",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.216Z",
+    "modified": "2017-07-28T10:11:14.216Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 35
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "EIAP",
+    "description": "IAP",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.217Z",
+    "modified": "2017-07-28T10:11:14.217Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 36
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "ESOS",
+    "description": "SOS / DfES",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.218Z",
+    "modified": "2017-07-28T10:11:14.218Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 37
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "EHEF",
+    "description": "HEFC / LSC",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.220Z",
+    "modified": "2017-07-28T10:11:14.220Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 38
+},
+{
+  "fields": {
+    "category": 7,
+    "code": "EOTH",
+    "description": "Other",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.221Z",
+    "modified": "2017-07-28T10:11:14.221Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 39
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMA",
+    "description": "Divorce/Judicial Separation/Nullity",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.222Z",
+    "modified": "2017-07-28T10:11:14.222Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 40
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMB",
+    "description": "Dissolution of Civil Partnership",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.223Z",
+    "modified": "2017-07-28T10:11:14.223Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 41
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMC",
+    "description": "Domestic Abuse",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.225Z",
+    "modified": "2017-07-28T10:11:14.225Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 42
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMD",
+    "description": "Private Law Children only",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.226Z",
+    "modified": "2017-07-28T10:11:14.226Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 43
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAME",
+    "description": "Private Law Children and Financial Provision",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.227Z",
+    "modified": "2017-07-28T10:11:14.227Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 44
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMF",
+    "description": "Private Law Children and Divorce/Judicial Separation/Nullity",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.228Z",
+    "modified": "2017-07-28T10:11:14.228Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 45
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMG",
+    "description": "Private Law Children and Civil Partnership Dissolution",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.229Z",
+    "modified": "2017-07-28T10:11:14.229Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 46
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMH",
+    "description": "Private Law Children and Domestic Abuse",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.230Z",
+    "modified": "2017-07-28T10:11:14.230Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 47
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMI",
+    "description": "Private Law Children, Domestic Abuse and Divorce/Judicial Separation/Nullity",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.231Z",
+    "modified": "2017-07-28T10:11:14.231Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 48
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMJ",
+    "description": "Private Law Children, Domestic Abuse and Civil Partnership Dissolution",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.232Z",
+    "modified": "2017-07-28T10:11:14.232Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 49
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMK",
+    "description": "Financial Provision Only",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.233Z",
+    "modified": "2017-07-28T10:11:14.233Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 50
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAML",
+    "description": "Financial Provision and Divorce/Judicial Separation/Nullity",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.234Z",
+    "modified": "2017-07-28T10:11:14.234Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 51
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMM",
+    "description": "Financial Provision and Civil Partnership Dissolution",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.235Z",
+    "modified": "2017-07-28T10:11:14.235Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 52
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMN",
+    "description": "Financial Provision and Domestic Abuse",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.236Z",
+    "modified": "2017-07-28T10:11:14.236Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 53
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMO",
+    "description": "Financial Provision, Domestic Abuse and Divorce/Judicial Separation/Nullity",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.237Z",
+    "modified": "2017-07-28T10:11:14.237Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 54
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMP",
+    "description": "Financial Provision, Domestic Abuse and Civil Partnership Dissolution",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.239Z",
+    "modified": "2017-07-28T10:11:14.239Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 55
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMQ",
+    "description": "Financial Provision, Private Law Children and Domestic Abuse ",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.240Z",
+    "modified": "2017-07-28T10:11:14.240Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 56
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMR",
+    "description": "Financial Provision, Private Law Children, Domestic Abuse and Divorce/Judicial Separation/Nullity",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.241Z",
+    "modified": "2017-07-28T10:11:14.241Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 57
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMS",
+    "description": "Financial Provision, Private Law Children, Domestic Abuse and Civil Partnership Dissolution",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.242Z",
+    "modified": "2017-07-28T10:11:14.242Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 58
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMV",
+    "description": "Other",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.243Z",
+    "modified": "2017-07-28T10:11:14.243Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 59
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMW",
+    "description": "Public Law Proceedings \u2013 Section 31 Care Proceedings",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.244Z",
+    "modified": "2017-07-28T10:11:14.244Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 60
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMX",
+    "description": "Public Law Proceedings \u2013 Other",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.245Z",
+    "modified": "2017-07-28T10:11:14.245Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 61
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMY",
+    "description": "Advice in support of Family Mediation",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.246Z",
+    "modified": "2017-07-28T10:11:14.246Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 62
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAMZ",
+    "description": "Financial Provision, Private Law Children and Divorce / Judicial Separation / Nullity",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.247Z",
+    "modified": "2017-07-28T10:11:14.247Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 63
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAM1",
+    "description": "Child Abduction International",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.248Z",
+    "modified": "2017-07-28T10:11:14.248Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 64
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAM2",
+    "description": "Child Abduction Domestic",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.249Z",
+    "modified": "2017-07-28T10:11:14.249Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 65
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAM3",
+    "description": "EU and International Agreements concerning maintenance",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.250Z",
+    "modified": "2017-07-28T10:11:14.250Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 66
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FADV",
+    "description": "Client is seeking advice only",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.251Z",
+    "modified": "2017-07-28T10:11:14.251Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 67
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FPET",
+    "description": "Client is the petitioner in Divorce/Judicial Separation/Nullity/Dissolution of Civil Partnership",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.253Z",
+    "modified": "2017-07-28T10:11:14.253Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 68
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FRES",
+    "description": "Client is the respondent in Divorce/Judicial Separation/Dissolution of Civil Partnership",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.254Z",
+    "modified": "2017-07-28T10:11:14.254Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 69
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FAPP",
+    "description": "Client is or would be the applicant where proceedings issued",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.255Z",
+    "modified": "2017-07-28T10:11:14.255Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 70
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FREP",
+    "description": "Client is or would be the respondent where proceedings issued",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.256Z",
+    "modified": "2017-07-28T10:11:14.256Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 71
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FCHG",
+    "description": "Client is a child with a guardian",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.257Z",
+    "modified": "2017-07-28T10:11:14.257Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 72
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FCHS",
+    "description": "Client is a child instructing solicitor directly",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.258Z",
+    "modified": "2017-07-28T10:11:14.258Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 73
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FOTH",
+    "description": "Other",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.259Z",
+    "modified": "2017-07-28T10:11:14.259Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 74
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FMEC",
+    "description": "Where the client is seeking advice in connection with mediation \u2013 children",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.261Z",
+    "modified": "2017-07-28T10:11:14.261Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 75
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FMEF",
+    "description": "Where the client is seeking advice in connection with mediation \u2013 finance",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.262Z",
+    "modified": "2017-07-28T10:11:14.262Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 76
+},
+{
+  "fields": {
+    "category": 4,
+    "code": "FMEA",
+    "description": "Where the client is seeking advice in connection with mediation \u2013 all issues",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.263Z",
+    "modified": "2017-07-28T10:11:14.263Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 77
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HRNT",
+    "description": "Possession - rent arrears",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.264Z",
+    "modified": "2017-07-28T10:11:14.264Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 78
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HPOT",
+    "description": "Possession \u2013 other (non-ASB)",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.265Z",
+    "modified": "2017-07-28T10:11:14.265Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 79
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HANT",
+    "description": "ASBOs \u2013 Magistrates/Crown Court",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.266Z",
+    "modified": "2017-07-28T10:11:14.266Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 80
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HDIS",
+    "description": "Anti-social behaviour and nuisance- all other (including those in County Court)",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.267Z",
+    "modified": "2017-07-28T10:11:14.267Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 81
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HREP",
+    "description": "Disrepair, including public health, environmental and DPA (Defective Premises Act) issues",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.268Z",
+    "modified": "2017-07-28T10:11:14.268Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 82
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HHOM",
+    "description": "Homelessness / threat of homelessness",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.269Z",
+    "modified": "2017-07-28T10:11:14.269Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 84
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HULE",
+    "description": "Harassment/Unlawful eviction",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.270Z",
+    "modified": "2017-07-28T10:11:14.270Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 85
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HOOT",
+    "description": "Other",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.272Z",
+    "modified": "2017-07-28T10:11:14.272Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 86
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HPPO",
+    "description": "The client is subject to possession proceedings",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.273Z",
+    "modified": "2017-07-28T10:11:14.273Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 87
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HPWA",
+    "description": "The client is making an application to stay or suspend a warrant of eviction",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.274Z",
+    "modified": "2017-07-28T10:11:14.274Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 88
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HRAR",
+    "description": "Rent Arrears/repossession",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.275Z",
+    "modified": "2017-07-28T10:11:14.275Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 89
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HPOS",
+    "description": "The client is trying to stop the forced sale of their home",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.276Z",
+    "modified": "2017-07-28T10:11:14.276Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 90
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HPUB",
+    "description": "Client has local authority landlord",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.278Z",
+    "modified": "2017-07-28T10:11:14.278Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 91
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HPRI",
+    "description": "Client has private landlord",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.279Z",
+    "modified": "2017-07-28T10:11:14.279Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 92
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HHAC",
+    "description": "Client has other social landlord",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.280Z",
+    "modified": "2017-07-28T10:11:14.280Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 93
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HNAS",
+    "description": "Client has NASS accommodation/NASS advice",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.281Z",
+    "modified": "2017-07-28T10:11:14.281Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 94
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HOWN",
+    "description": "Client is owner occupier",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.283Z",
+    "modified": "2017-07-28T10:11:14.283Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 95
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HHLS",
+    "description": "Client is homeless",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.284Z",
+    "modified": "2017-07-28T10:11:14.284Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 96
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HLAN",
+    "description": "Client is landlord",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.285Z",
+    "modified": "2017-07-28T10:11:14.285Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 97
+},
+{
+  "fields": {
+    "category": 2,
+    "code": "HOTH",
+    "description": "Other",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.286Z",
+    "modified": "2017-07-28T10:11:14.286Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 98
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WDLA",
+    "description": "Disability living allowance ",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.287Z",
+    "modified": "2017-07-28T10:11:14.287Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 99
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WBAA",
+    "description": "Attendance allowance",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.288Z",
+    "modified": "2017-07-28T10:11:14.288Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 100
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WICB",
+    "description": "Incapacity benefit",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.289Z",
+    "modified": "2017-07-28T10:11:14.289Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 101
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WSFP",
+    "description": "Social fund payments",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.291Z",
+    "modified": "2017-07-28T10:11:14.291Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 102
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WHBT",
+    "description": "Housing benefit",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.292Z",
+    "modified": "2017-07-28T10:11:14.292Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 103
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WIST",
+    "description": "Income support",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.293Z",
+    "modified": "2017-07-28T10:11:14.293Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 104
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WJSA",
+    "description": "Jobseekers allowance ",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.294Z",
+    "modified": "2017-07-28T10:11:14.294Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 105
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WIIB",
+    "description": "Industrial injuries disablement benefits",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.295Z",
+    "modified": "2017-07-28T10:11:14.295Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 106
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WBBT",
+    "description": "Bereavement benefits",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.296Z",
+    "modified": "2017-07-28T10:11:14.296Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 107
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WTAX",
+    "description": "Tax credits \u2013 including pension credit",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.297Z",
+    "modified": "2017-07-28T10:11:14.297Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 108
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WMUL",
+    "description": "Multiple benefits",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.298Z",
+    "modified": "2017-07-28T10:11:14.298Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 109
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WOTH",
+    "description": "Other benefits",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.299Z",
+    "modified": "2017-07-28T10:11:14.299Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 110
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WESA",
+    "description": "Employment and Support Allowance",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.300Z",
+    "modified": "2017-07-28T10:11:14.300Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 111
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WBPI",
+    "description": "Personal Independence Payments",
+    "level": 1,
+    "created": "2017-07-28T10:11:14.301Z",
+    "modified": "2017-07-28T10:11:14.301Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 112
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WREA",
+    "description": "Reassessment of benefits",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.302Z",
+    "modified": "2017-07-28T10:11:14.302Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 113
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WREV",
+    "description": "Revision/supersession ",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.303Z",
+    "modified": "2017-07-28T10:11:14.303Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 114
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WSSC",
+    "description": "Appeal to Social Security Commissioners",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.304Z",
+    "modified": "2017-07-28T10:11:14.304Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 115
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WAPL",
+    "description": "Appeal \u2013 Other",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.305Z",
+    "modified": "2017-07-28T10:11:14.305Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 116
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WOVE",
+    "description": "Overpayment of benefits",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.307Z",
+    "modified": "2017-07-28T10:11:14.307Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 117
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WBAC",
+    "description": "Backdating of benefits",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.308Z",
+    "modified": "2017-07-28T10:11:14.308Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 118
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WLGO",
+    "description": "Complaint to Local Government/ Parliamentary Ombudsman",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.309Z",
+    "modified": "2017-07-28T10:11:14.309Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 119
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WOTH",
+    "description": "Other",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.310Z",
+    "modified": "2017-07-28T10:11:14.310Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 120
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WNAS",
+    "description": "NASS advice",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.311Z",
+    "modified": "2017-07-28T10:11:14.311Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 121
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WBFT",
+    "description": "Appeals to the First-tier Tibunal (Social Entitlement Chamber)",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.312Z",
+    "modified": "2017-07-28T10:11:14.312Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 122
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WBPA",
+    "description": "Preparing a permission application to appeal to  the Upper Tribunal",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.313Z",
+    "modified": "2017-07-28T10:11:14.313Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 123
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WBUT",
+    "description": "Appeal to the Upper Tribunal",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.314Z",
+    "modified": "2017-07-28T10:11:14.314Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 124
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WBCA",
+    "description": "Appeal to the Court of Appeal",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.315Z",
+    "modified": "2017-07-28T10:11:14.315Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 125
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WBSC",
+    "description": "Appeal to the Supreme Court",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.316Z",
+    "modified": "2017-07-28T10:11:14.316Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 126
+},
+{
+  "fields": {
+    "category": 6,
+    "code": "WBHC",
+    "description": "Onward Council Tax Reduction Scheme Appeals to the High Court",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.317Z",
+    "modified": "2017-07-28T10:11:14.317Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 127
+},
+{
+  "fields": {
+    "category": 3,
+    "code": "DVAL",
+    "description": "Client wants to challenge validity of debts",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.319Z",
+    "modified": "2017-07-28T10:11:14.319Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 128
+},
+{
+  "fields": {
+    "category": 3,
+    "code": "DMIX",
+    "description": "Client wants both to challenge validity of debts and reschedule debts",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.320Z",
+    "modified": "2017-07-28T10:11:14.320Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 129
+},
+{
+  "fields": {
+    "category": 3,
+    "code": "DIBP",
+    "description": "Client is defending involuntary bankruptcy proceedings",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.321Z",
+    "modified": "2017-07-28T10:11:14.321Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 130
+},
+{
+  "fields": {
+    "category": 3,
+    "code": "DORD",
+    "description": "Client is facing an order for sale of the home",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.322Z",
+    "modified": "2017-07-28T10:11:14.322Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 131
+},
+{
+  "fields": {
+    "category": 3,
+    "code": "DOTH",
+    "description": "Other",
+    "level": 2,
+    "created": "2017-07-28T10:11:14.324Z",
+    "modified": "2017-07-28T10:11:14.324Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 132
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IAXL",
+    "description": "Asylum - LH Work Not Subject to the Standard Fee Scheme",
+    "level": 1,
+    "created": "2017-07-28T10:22:25.251Z",
+    "modified": "2017-07-28T10:22:25.263Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 133
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IMXL",
+    "description": "Immigration - LH Work Not Subject to the Standard Fee Scheme",
+    "level": 1,
+    "created": "2017-07-28T10:22:52.588Z",
+    "modified": "2017-07-28T10:22:52.591Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 134
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IAXC",
+    "description": "Asylum - CLR Work Not Subject to the Standard Fee Scheme",
+    "level": 1,
+    "created": "2017-07-28T10:23:31.716Z",
+    "modified": "2017-07-28T10:23:31.721Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 135
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IMXC",
+    "description": "Immigration - CLR Work Not Subject to the Standard Fee Scheme",
+    "level": 1,
+    "created": "2017-07-28T10:23:53.272Z",
+    "modified": "2017-07-28T10:23:53.276Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 136
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IALB",
+    "description": "Asylum - Stage 1 (LH)",
+    "level": 1,
+    "created": "2017-07-28T10:24:21.669Z",
+    "modified": "2017-07-28T10:24:21.675Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 137
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IACA",
+    "description": "Asylum - Stage 2a (CLR)",
+    "level": 1,
+    "created": "2017-07-28T10:24:56.807Z",
+    "modified": "2017-07-28T10:24:56.811Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 138
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IACB",
+    "description": "Asylum - Stage 2b (CLR)",
+    "level": 1,
+    "created": "2017-07-28T10:25:15.454Z",
+    "modified": "2017-07-28T10:25:15.458Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 139
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IMLB",
+    "description": "Immigration- Stage 1 (LH)",
+    "level": 1,
+    "created": "2017-07-28T10:25:51.169Z",
+    "modified": "2017-07-28T10:25:51.174Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 140
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IMCA",
+    "description": "Immigration- Stage 2a (CLR)",
+    "level": 1,
+    "created": "2017-07-28T10:26:13.632Z",
+    "modified": "2017-07-28T10:26:13.639Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 141
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IMCB",
+    "description": " Immigration- Stage 2b (CLR)",
+    "level": 1,
+    "created": "2017-07-28T10:26:35.845Z",
+    "modified": "2017-07-28T10:26:35.849Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 142
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IFRA",
+    "description": "Fresh Applications",
+    "level": 2,
+    "created": "2017-07-28T10:27:00.980Z",
+    "modified": "2017-07-28T10:27:00.986Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 143
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IRAR",
+    "description": "Appeal before the Upper Tribunal",
+    "level": 2,
+    "created": "2017-07-28T10:27:24.643Z",
+    "modified": "2017-07-28T10:27:24.647Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 144
+},
+{
+  "fields": {
+    "category": 5,
+    "code": "IUAS",
+    "description": "Unaccompanied Asylum Seeking Children",
+    "level": 2,
+    "created": "2017-07-28T10:27:50.457Z",
+    "modified": "2017-07-28T10:27:50.462Z"
+  },
+  "model": "legalaid.mattertype",
+  "pk": 145
+}
 ]

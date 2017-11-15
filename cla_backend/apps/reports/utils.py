@@ -20,6 +20,10 @@ def get_replica_cursor():
         return connection.cursor()
 
 
+def get_set_timezone_sql():
+    return "SET TIME ZONE '{}';".format(settings.TIME_ZONE)
+
+
 class OBIEEExporter(object):
     basic_sql_files = [
         'export_auth_user.sql',
@@ -138,7 +142,7 @@ class OBIEEExporter(object):
 
         with open(os.path.join(self.tmp_export_path, filename), 'w') as d:
             cursor = get_replica_cursor()
-            q = cursor.mogrify(query, kwargs)
+            q = get_set_timezone_sql() + cursor.mogrify(query, kwargs)
             cursor.copy_expert(q, d)
             cursor.close()
 

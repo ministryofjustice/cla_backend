@@ -2321,7 +2321,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2334,7 +2334,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2347,7 +2347,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2360,7 +2360,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2373,7 +2373,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2386,7 +2386,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2399,7 +2399,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2412,7 +2412,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2425,7 +2425,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2438,7 +2438,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2451,7 +2451,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2464,7 +2464,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2477,7 +2477,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2504,7 +2504,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2517,7 +2517,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2527,7 +2527,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <node id="n286">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2541,7 +2541,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <node id="n287">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2555,7 +2555,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <node id="n288">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2569,7 +2569,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <node id="n289">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2583,7 +2583,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <node id="n290">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2597,7 +2597,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <node id="n291">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2611,7 +2611,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <node id="n292">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2625,7 +2625,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <node id="n293">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2639,7 +2639,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <node id="n294">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2653,7 +2653,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <node id="n295">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2667,7 +2667,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
     <node id="n296">
       <data key="d3">{% blocktrans %}Please read the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2737,7 +2737,7 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2839,7 +2839,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d10">n322</data>
       </node>
     <node id="n314">
-      <data key="d3">{% trans "Domestic abuse (during the last 5 years, or their abuser has a current criminal conviction)" %}</data>
+      <data key="d3">{% trans "Domestic abuse (or their abuser has a criminal conviction)" %}</data>
       <data key="d4">Client has been subj</data>
       <data key="d7">2</data>
       <data key="d10">n323</data>
@@ -2895,7 +2895,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
     <node id="n321">
       <data key="d3">{% blocktrans %}Please read out the following to the client:
 
-*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  
+*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
 We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
@@ -2939,7 +2939,7 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2968,7 +2968,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2981,7 +2981,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -3054,7 +3054,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>

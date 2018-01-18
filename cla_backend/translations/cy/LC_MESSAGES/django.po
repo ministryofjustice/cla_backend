@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 10:10+0000\n"
+"POT-Creation-Date: 2018-01-04 20:52+0000\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -588,8 +588,8 @@ msgid "You are under 18"
 msgstr "Rydych chi dan 18 oed"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:493
-msgid "You or your children have suffered domestic abuse in the last 5 years, or your abuser has a current criminal conviction"
-msgstr "Rydych chi neu eich plant wedi dioddef cam-drin domestig yn y 5 mlynedd diwethaf, neu mae gan y sawl sy'n eich cam-drin euogfarn troseddol cyfredol."
+msgid "You or your children have suffered domestic abuse, or your abuser has a criminal conviction"
+msgstr "You or your children have suffered domestic abuse, or your abuser has a criminal conviction"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:506
 msgid "International Family Maintenance"
@@ -1956,6 +1956,7 @@ msgstr ""
 #: apps/diagnosis/data/graph.graphml.tpl:2449
 #: apps/diagnosis/data/graph.graphml.tpl:2462
 #: apps/diagnosis/data/graph.graphml.tpl:2475
+#: apps/diagnosis/data/graph.graphml.tpl:2488
 #: apps/diagnosis/data/graph.graphml.tpl:2502
 #: apps/diagnosis/data/graph.graphml.tpl:2515
 #: apps/diagnosis/data/graph.graphml.tpl:2735
@@ -1963,19 +1964,6 @@ msgstr ""
 #: apps/diagnosis/data/graph.graphml.tpl:2966
 #: apps/diagnosis/data/graph.graphml.tpl:2979
 #: apps/diagnosis/data/graph.graphml.tpl:3052
-msgid ""
-"Please read the following to the client:\n"
-"\n"
-"*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*\n"
-"\n"
-"*We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*\n"
-" \n"
-"[Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.\n"
-"\n"
-"Remember to record details of the conversation in your CHS notes.]"
-msgstr ""
-
-#: apps/diagnosis/data/graph.graphml.tpl:2488
 msgid ""
 "Please read the following to the client:\n"
 "\n"
@@ -2002,7 +1990,7 @@ msgstr ""
 msgid ""
 "Please read the following to the client:\n"
 "\n"
-"*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  \n"
+"*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.\n"
 "\n"
 "We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?\n"
 "\n"
@@ -2172,8 +2160,8 @@ msgid "Not a dispute for which mediation is relevant."
 msgstr "Nid yw cyfryngu yn berthnasol i'r anghydfod hwn."
 
 #: apps/diagnosis/data/graph.graphml.tpl:2842
-msgid "Domestic abuse (during the last 5 years, or their abuser has a current criminal conviction)"
-msgstr "Cam-drin domestig (yn ystod y 5 mlynedd diwethaf, neu mae gan y sawl sy'n eu cam-drin euogfarn troseddol cyfredol)"
+msgid "Domestic abuse (or their abuser has a criminal conviction)"
+msgstr "Domestic abuse (or their abuser has a criminal conviction)"
 
 #: apps/diagnosis/data/graph.graphml.tpl:2848
 msgid ""
@@ -2209,7 +2197,7 @@ msgstr ""
 msgid ""
 "Please read out the following to the client:\n"
 "\n"
-"*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.  \n"
+"*Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.\n"
 "\n"
 "We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?\n"
 "\n"
@@ -2269,6 +2257,14 @@ msgstr "Llys wedi cyflwyno rhybudd o achos ASBO/ASBI"
 #: apps/diagnosis/data/graph.graphml.tpl:3046
 msgid "Client has received a letter from their social landlord (including local authorities) confirming an intention to apply for an ASBO or ASBI"
 msgstr "Mae'r cleient wedi cael llythyr gan eu landlord cymdeithasol (gan gynnwys awdurdodau lleol) yn cadarnhau bwriad i wneud cais am ASBO neu ASBI"
+
+#: apps/timer/models.py:55
+msgid "created"
+msgstr ""
+
+#: apps/timer/models.py:57
+msgid "modified"
+msgstr ""
 
 #: templates/admin/base_site.html:4
 msgid "Django site admin"

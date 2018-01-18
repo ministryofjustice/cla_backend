@@ -490,7 +490,7 @@
       </node>
     <node id="n44">
       <data key="d3">{% trans "Domestic abuse" %}</data>
-      <data key="d4">{% trans "You or your children have suffered domestic abuse in the last 5 years, or your abuser has a current criminal conviction" %}</data>
+      <data key="d4">{% trans "You or your children have suffered domestic abuse, or your abuser has a criminal conviction" %}</data>
       <data key="d5">{% trans "Are you at immediate risk of harm?" %}</data>
       <data key="d10">2</data>
       <data key="d11">n62</data>

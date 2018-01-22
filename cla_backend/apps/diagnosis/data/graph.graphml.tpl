@@ -2295,7 +2295,7 @@ If the client wants legal advice to support of ongoing or recently completed med
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2308,7 +2308,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
 *We can provide helplines, websites or F2F however please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?*
- 
+
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
@@ -2845,8 +2845,7 @@ eg divorce, contact with children, finances{% endblocktrans %}</data>
       <data key="d10">n323</data>
       </node>
     <node id="n315">
-      <data key="d3">{% blocktrans %}The client's child has experienced child abuse within the family within the last two years, or the abuser has a current criminal conviction
-(Remember that if the caller is the abuser, this will not be in scope){% endblocktrans %}</data>
+      <data key="d3">{% trans "The client's child has experienced child abuse within the family, or the abuser has a criminal conviction (remember that if the caller is the abuser, this will not be in scope)" %}</data>
       <data key="d4">Relationship has inv</data>
       <data key="d7">3</data>
       <data key="d10">n324</data>

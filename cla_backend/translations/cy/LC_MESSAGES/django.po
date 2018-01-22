@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-04 20:52+0000\n"
+"POT-Creation-Date: 2018-01-24 13:16+0000\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -1110,7 +1110,7 @@ msgstr "Yn ddigartref neu mewn perygl o ddod yn ddigartref o fewn 28 diwrnod (ne
 
 #: apps/diagnosis/data/graph.graphml.tpl:457
 #: apps/diagnosis/data/graph.graphml.tpl:676
-#: apps/diagnosis/data/graph.graphml.tpl:3023
+#: apps/diagnosis/data/graph.graphml.tpl:3022
 msgid "Select the option that best describes the client’s situation."
 msgstr "Dewiswch opsiwn sy'n disgrifio sefyllfa'r cleient orau."
 
@@ -1960,10 +1960,10 @@ msgstr ""
 #: apps/diagnosis/data/graph.graphml.tpl:2502
 #: apps/diagnosis/data/graph.graphml.tpl:2515
 #: apps/diagnosis/data/graph.graphml.tpl:2735
-#: apps/diagnosis/data/graph.graphml.tpl:2937
-#: apps/diagnosis/data/graph.graphml.tpl:2966
-#: apps/diagnosis/data/graph.graphml.tpl:2979
-#: apps/diagnosis/data/graph.graphml.tpl:3052
+#: apps/diagnosis/data/graph.graphml.tpl:2936
+#: apps/diagnosis/data/graph.graphml.tpl:2965
+#: apps/diagnosis/data/graph.graphml.tpl:2978
+#: apps/diagnosis/data/graph.graphml.tpl:3051
 msgid ""
 "Please read the following to the client:\n"
 "\n"
@@ -2164,22 +2164,24 @@ msgid "Domestic abuse (or their abuser has a criminal conviction)"
 msgstr "Domestic abuse (or their abuser has a criminal conviction)"
 
 #: apps/diagnosis/data/graph.graphml.tpl:2848
-msgid ""
-"The client's child has experienced child abuse within the family within the last two years, or the abuser has a current criminal conviction\n"
-"(Remember that if the caller is the abuser, this will not be in scope)"
+#, fuzzy
+#| msgid ""
+#| "The client's child has experienced child abuse within the family, or the abuser has a criminal conviction\n"
+#| "(remember that if the caller is the abuser, this will not be in  scope)"
+msgid "The client's child has experienced child abuse within the family, or the abuser has a criminal conviction (remember that if the caller is the abuser, this will not be in scope)"
 msgstr ""
-"Mae plentyn y cleient wedi cael profiad o gam-drin plant o fewn y teulu yn y ddwy flynedd diwethaf, neu mae gan y camdriniwr euogfarn troseddol gyfredol\n"
-"(Cofiwch os mai'r camdriniwr yw'r galwr, ni fydd hyn yn y cwmpas)"
+"The client's child has experienced child abuse within the family, or the abuser has a criminal conviction\n"
+"(remember that if the caller is the abuser, this will not be in  scope)"
 
-#: apps/diagnosis/data/graph.graphml.tpl:2855
+#: apps/diagnosis/data/graph.graphml.tpl:2854
 msgid "The client is under 18"
 msgstr "Mae'r cleient o dan 18 oed"
 
-#: apps/diagnosis/data/graph.graphml.tpl:2861
+#: apps/diagnosis/data/graph.graphml.tpl:2860
 msgid "No abuse."
 msgstr "Dim cam-drin."
 
-#: apps/diagnosis/data/graph.graphml.tpl:2877
+#: apps/diagnosis/data/graph.graphml.tpl:2876
 msgid ""
 "Please read the following to the client:\n"
 "\n"
@@ -2193,7 +2195,7 @@ msgstr ""
 "\n"
 "* Sylwch cyn y gall cynghorydd arbenigol eich cynorthwyo, bydd angen i chi ddarparu prawf o'r hyn yr ydych wedi ei ddweud wrthyf heddiw. Byddant yn egluro i chi beth allwch chi ei ddefnyddio fel prawf.\"*"
 
-#: apps/diagnosis/data/graph.graphml.tpl:2896
+#: apps/diagnosis/data/graph.graphml.tpl:2895
 msgid ""
 "Please read out the following to the client:\n"
 "\n"
@@ -2206,55 +2208,55 @@ msgid ""
 "Remember to record details of the conversation in your CHS notes.]*"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2910
+#: apps/diagnosis/data/graph.graphml.tpl:2909
 msgid "The matter relates to a child in care, a care leaver, or the call is made by a foster carer."
 msgstr "Mae'r mater yn ymwneud â phlentyn sydd mewn gofal, plentyn yn gadael gofal, neu mae'r alwad yn cael ei gwneud gan ofalwr maeth."
 
-#: apps/diagnosis/data/graph.graphml.tpl:2926
+#: apps/diagnosis/data/graph.graphml.tpl:2925
 msgid "Please note: if a local authority is trying to take a child into care, no financial assessment is needed for the parent."
 msgstr "Sylwch: os yw'r awdurdod lleol yn ceisio rhoi'r plentyn mewn gofal, nid oes angen asesiad ariannol ar gyfer y rhiant."
 
-#: apps/diagnosis/data/graph.graphml.tpl:2931
+#: apps/diagnosis/data/graph.graphml.tpl:2930
 msgid "The client may have been discriminated against (select this button to proceed to the discrimination category)"
 msgstr "Efallai bod y cleient wedi profi gwahaniaethu (dewiswch y botwm hwn i barhau i'r categori gwahaniaethu)"
 
-#: apps/diagnosis/data/graph.graphml.tpl:2950
+#: apps/diagnosis/data/graph.graphml.tpl:2949
 msgid "Female genital mutilation - the client is worried they may become a victim"
 msgstr "Anffurfio organau cenhedlu benywod - mae'r cleient yn poeni y gallant ddod yn ddioddefwr"
 
-#: apps/diagnosis/data/graph.graphml.tpl:2992
+#: apps/diagnosis/data/graph.graphml.tpl:2991
 msgid "International child abduction – The client lives abroad but their child has been taken to the UK"
 msgstr "Herwgydio plentyn yn rhyngwladol - Mae'r cleient yn byw dramor ond aethpwyd â'u plentyn i'r DU"
 
-#: apps/diagnosis/data/graph.graphml.tpl:2998
+#: apps/diagnosis/data/graph.graphml.tpl:2997
 msgid "Any other child abduction problem"
 msgstr "Unrhyw broblem arall yn ymwneud â herwgydio plentyn"
 
-#: apps/diagnosis/data/graph.graphml.tpl:3001
+#: apps/diagnosis/data/graph.graphml.tpl:3000
 msgid "Seeking protection from the unlawful removal of a child from the UK or the return of a child who has been unlawfully removed from the UK or unlawfully removed within the UK. A child is someone under 18 and the client must be the parent or someone with parental responsibility for that child."
 msgstr "Ceisio am ddiogelwch rhag symud plentyn o'r DU yn anghyfreithlon, neu ddychwelyd plentyn sydd wedi cael ei symud yn anghyfreithlon o'r DU, neu wedi ei symud yn anghyfreithlon o fewn y DU. Plentyn yw rhywun sydd o dan 18 oed a rhaid i'r cleient fod yn rhiant neu rywun sydd â chyfrifoldeb rhiant am y plentyn hwnnw.  "
 
-#: apps/diagnosis/data/graph.graphml.tpl:3015
+#: apps/diagnosis/data/graph.graphml.tpl:3014
 msgid "No financial assessment is needed for this problem."
 msgstr "Nid oes angen asesiad ariannol ar gyfer y broblem hon."
 
-#: apps/diagnosis/data/graph.graphml.tpl:3020
+#: apps/diagnosis/data/graph.graphml.tpl:3019
 msgid "The client’s social landlord intends to get (or has got) an Antisocial Behaviour Order or Antisocial Behaviour Injunction against the client or someone living with them."
 msgstr "Mae landlord cymdeithasol y cleient yn bwriadu cael (neu wedi cael) Gorchymyn Ymddygiad Gwrthgymdeithasol neu Waharddeb Ymddygiad Gwrthgymdeithasol yn erbyn y cleient neu yn erbyn rhywun sy'n byw gyda nhw."
 
-#: apps/diagnosis/data/graph.graphml.tpl:3028
+#: apps/diagnosis/data/graph.graphml.tpl:3027
 msgid "Client has private landlord"
 msgstr "Mae gan y cleient landlord preifat"
 
-#: apps/diagnosis/data/graph.graphml.tpl:3034
+#: apps/diagnosis/data/graph.graphml.tpl:3033
 msgid "Client has received an ASBO/ASBI and wishes to challenge"
 msgstr "Cleient wedi cael ASBO/ASBI ac yn dymuno ei herio"
 
-#: apps/diagnosis/data/graph.graphml.tpl:3040
+#: apps/diagnosis/data/graph.graphml.tpl:3039
 msgid "Court has issued notice of ASBO/ASBI proceedings"
 msgstr "Llys wedi cyflwyno rhybudd o achos ASBO/ASBI"
 
-#: apps/diagnosis/data/graph.graphml.tpl:3046
+#: apps/diagnosis/data/graph.graphml.tpl:3045
 msgid "Client has received a letter from their social landlord (including local authorities) confirming an intention to apply for an ASBO or ASBI"
 msgstr "Mae'r cleient wedi cael llythyr gan eu landlord cymdeithasol (gan gynnwys awdurdodau lleol) yn cadarnhau bwriad i wneud cais am ASBO neu ASBI"
 

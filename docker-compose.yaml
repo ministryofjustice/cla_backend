@@ -1,0 +1,27 @@
+# NB: this is only used for *local development*
+# see Dockerfile for deployed version
+
+db:
+  image: postgres
+  environment:
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    POSTGRES_DB: cla_backend
+
+django:
+  build: .
+  ports:
+    - "8000:80"
+  links:
+    - db
+  environment:
+    ENV: local
+    DEBUG: "True"
+    SECRET_KEY: CHANGE_ME
+    DB_NAME: cla_backend
+    DB_USER: postgres
+    DB_PASSWORD: postgres
+    DB_HOST: db
+    DB_PORT: 5432
+    BACKEND_ENABLED: "True"
+    ADMIN_PASSWORD: cla_admin

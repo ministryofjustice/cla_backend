@@ -24,4 +24,5 @@ django:
     DB_HOST: db
     DB_PORT: 5432
     BACKEND_ENABLED: "True"
+    LOAD_TEST_DATA: "True"
     ADMIN_PASSWORD: cla_admin

@@ -2,9 +2,7 @@
 # CLA_BACKEND Dockerfile all environments
 #
 # Pull base image.
-FROM phusion/baseimage:0.9.11
-
-MAINTAINER Peter Idah <peter.idah@digital.justice.gov.uk>
+FROM phusion/baseimage:0.9.22
 
 # Set correct environment variables.
 ENV HOME /root
@@ -13,14 +11,18 @@ ENV HOME /root
 CMD ["/sbin/my_init"]
 
 # Set timezone
-RUN echo "Europe/London" > /etc/timezone  &&  dpkg-reconfigure -f noninteractive tzdata
+RUN echo $TZ > /etc/timezone && \
+    apt-get update && apt-get install -y tzdata && \
+    rm /etc/localtime && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    apt-get clean
 
 # Remove SSHD
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 
 # Dependencies
 RUN DEBIAN_FRONTEND='noninteractive' \
-  apt-get update && \
   apt-get -y --force-yes install bash apt-utils python-pip python-dev build-essential git software-properties-common python-software-properties libpq-dev g++ make libpcre3 libpcre3-dev \
   libxslt-dev libxml2-dev && \
   apt-get -y build-dep python-psycopg2

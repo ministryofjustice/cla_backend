@@ -10,6 +10,7 @@ from django.conf import settings
 from django.db import connections, connection
 from django.db.utils import ConnectionDoesNotExist
 
+from core.utils import remember_cwd
 from legalaid.utils import diversity
 
 
@@ -149,13 +150,14 @@ class OBIEEExporter(object):
     def generate_zip(self):
         if not settings.OBIEE_ZIP_PASSWORD:
             raise DjangoImproperlyConfigured('OBIEE zip password must be set.')
-        try:
-            os.chdir(self.tmp_export_path)
-            pyminizip.compress_multiple(glob.glob('*.csv'), self.filename, settings.OBIEE_ZIP_PASSWORD, 9)
-            shutil.move('%s/%s' % (self.tmp_export_path, self.filename),
-                        '%s/%s' % (self.export_path, self.filename))
-        finally:
-            shutil.rmtree(self.tmp_export_path)
+        with remember_cwd():
+            try:
+                os.chdir(self.tmp_export_path)
+                pyminizip.compress_multiple(glob.glob('*.csv'), self.filename, settings.OBIEE_ZIP_PASSWORD, 9)
+                shutil.move('%s/%s' % (self.tmp_export_path, self.filename),
+                            '%s/%s' % (self.export_path, self.filename))
+            finally:
+                shutil.rmtree(self.tmp_export_path)
 
     def close(self):
         if os.path.exists(self.full_path):

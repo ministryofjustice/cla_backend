@@ -26,3 +26,4 @@ django:
     BACKEND_ENABLED: "True"
     LOAD_TEST_DATA: "True"
     ADMIN_PASSWORD: cla_admin
+    ALLOWED_HOSTS: "*"

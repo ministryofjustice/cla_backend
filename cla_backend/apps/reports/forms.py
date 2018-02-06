@@ -4,6 +4,7 @@ import os
 from datetime import timedelta, time, datetime, date
 
 from django import forms
+from django.db.transaction import atomic
 from django.utils import timezone
 from django.contrib.admin import widgets
 
@@ -15,7 +16,7 @@ from complaints.constants import SLA_DAYS
 from reports.widgets import MonthYearWidget
 
 from . import sql
-from .utils import get_replica_cursor
+from .utils import get_replica_cursor, set_local_time_for_query
 
 
 class ConvertDateMixin(object):
@@ -99,10 +100,14 @@ class SQLFileReportMixin(object):
         raise NotImplementedError()
 
     def get_queryset(self):
-        cursor = get_replica_cursor()
-        cursor.execute(self.query, self.get_sql_params())
-        self.description = cursor.description
-        return cursor.fetchall()
+        return self.execute_query(self.query, self.get_sql_params())
+
+    def execute_query(self, query, params):
+        with atomic():
+            cursor = get_replica_cursor()
+            cursor.execute(set_local_time_for_query(query), params)
+            self.description = cursor.description
+            return cursor.fetchall()
 
 
 class SQLFileDateRangeReport(SQLFileReportMixin, DateRangeReportForm):
@@ -134,10 +139,7 @@ class MIProviderAllocationExtract(SQLFileDateRangeReport):
         return params + (cols, )
 
     def get_queryset(self):
-        cursor = get_replica_cursor()
-        cursor.execute(self.query % self.get_sql_params())
-        self.description = cursor.description
-        return cursor.fetchall()
+        return self.execute_query(self.query % self.get_sql_params(), [])
 
 
 class MIVoiceReport(SQLFileMonthRangeReport):
@@ -258,11 +260,7 @@ class MICaseExtract(SQLFileDateRangeReport):
             diversity_expression=diversity_expression
         )
         sql_args = [passphrase] + list(self.date_range)
-
-        cursor = get_replica_cursor()
-        cursor.execute(sql, sql_args)
-        self.description = cursor.description
-        return cursor.fetchall()
+        return self.execute_query(sql, sql_args)
 
 
 class MIFeedbackExtract(SQLFileDateRangeReport):
@@ -331,15 +329,8 @@ class MIContactsPerCaseByCategoryExtract(SQLFileDateRangeReport):
         return event_registry.filter(stops_timer=True,
                                      type=LOG_TYPES.OUTCOME).keys()
 
-    @property
-    def params(self):
+    def get_sql_params(self):
         return self.date_range + (self.get_valid_outcomes(),)
-
-    def get_queryset(self):
-        cursor = get_replica_cursor()
-        cursor.execute(self.query, self.params)
-        self.description = cursor.description
-        return cursor.fetchall()
 
 
 class MISurveyExtract(SQLFileDateRangeReport):

@@ -14,6 +14,7 @@ from cla_eventlog import event_registry
 from complaints.constants import SLA_DAYS
 from reports.widgets import MonthYearWidget
 
+from cla_backend.apps.reports.utils import get_set_timezone_sql
 from . import sql
 from .utils import get_replica_cursor
 
@@ -100,7 +101,7 @@ class SQLFileReportMixin(object):
 
     def get_queryset(self):
         cursor = get_replica_cursor()
-        cursor.execute(self.query, self.get_sql_params())
+        cursor.execute(get_set_timezone_sql() + self.query, self.get_sql_params())
         self.description = cursor.description
         return cursor.fetchall()
 
@@ -135,7 +136,7 @@ class MIProviderAllocationExtract(SQLFileDateRangeReport):
 
     def get_queryset(self):
         cursor = get_replica_cursor()
-        cursor.execute(self.query % self.get_sql_params())
+        cursor.execute(get_set_timezone_sql() + self.query % self.get_sql_params())
         self.description = cursor.description
         return cursor.fetchall()
 
@@ -260,7 +261,7 @@ class MICaseExtract(SQLFileDateRangeReport):
         sql_args = [passphrase] + list(self.date_range)
 
         cursor = get_replica_cursor()
-        cursor.execute(sql, sql_args)
+        cursor.execute(get_set_timezone_sql() + sql, sql_args)
         self.description = cursor.description
         return cursor.fetchall()
 
@@ -337,7 +338,7 @@ class MIContactsPerCaseByCategoryExtract(SQLFileDateRangeReport):
 
     def get_queryset(self):
         cursor = get_replica_cursor()
-        cursor.execute(self.query, self.params)
+        cursor.execute(get_set_timezone_sql() + self.query, self.params)
         self.description = cursor.description
         return cursor.fetchall()
 

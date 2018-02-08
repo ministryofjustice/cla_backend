@@ -8,6 +8,7 @@ from django.core.exceptions import ImproperlyConfigured as DjangoImproperlyConfi
 import pyminizip
 from django.conf import settings
 from django.db import connections, connection
+from django.db.transaction import atomic
 from django.db.utils import ConnectionDoesNotExist
 
 from core.utils import remember_cwd
@@ -19,6 +20,13 @@ def get_replica_cursor():
         return connections['replica'].cursor()
     except ConnectionDoesNotExist:
         return connection.cursor()
+
+
+def set_local_time_for_query(query):
+    ''' Sets time zone to local time for the current transaction '''
+    return (
+        "SET LOCAL TIME ZONE '{timezone}'; {query};"
+    ).format(timezone=settings.TIME_ZONE, query=query)
 
 
 class OBIEEExporter(object):
@@ -138,10 +146,11 @@ class OBIEEExporter(object):
             kwargs = {}
 
         with open(os.path.join(self.tmp_export_path, filename), 'w') as d:
-            cursor = get_replica_cursor()
-            q = cursor.mogrify(query, kwargs)
-            cursor.copy_expert(q, d)
-            cursor.close()
+            with atomic():
+                cursor = get_replica_cursor()
+                q = cursor.mogrify(set_local_time_for_query(query), kwargs)
+                cursor.copy_expert(q, d)
+                cursor.close()
 
     def csv_filename_from_sql_path(self, filename):
         filename = filename.split('/')[-1]

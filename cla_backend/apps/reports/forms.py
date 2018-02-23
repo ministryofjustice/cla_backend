@@ -105,9 +105,12 @@ class SQLFileReportMixin(object):
     def execute_query(self, query, params):
         with atomic():
             cursor = get_replica_cursor()
-            cursor.execute(set_local_time_for_query(query), params)
-            self.description = cursor.description
-            return cursor.fetchall()
+            try:
+                cursor.execute(set_local_time_for_query(query), params)
+                self.description = cursor.description
+                return cursor.fetchall()
+            finally:
+                cursor.close()
 
 
 class SQLFileDateRangeReport(SQLFileReportMixin, DateRangeReportForm):

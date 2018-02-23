@@ -148,9 +148,11 @@ class OBIEEExporter(object):
         with open(os.path.join(self.tmp_export_path, filename), 'w') as d:
             with atomic():
                 cursor = get_replica_cursor()
-                q = cursor.mogrify(set_local_time_for_query(query), kwargs)
-                cursor.copy_expert(q, d)
-                cursor.close()
+                try:
+                    q = cursor.mogrify(set_local_time_for_query(query), kwargs)
+                    cursor.copy_expert(q, d)
+                finally:
+                    cursor.close()
 
     def csv_filename_from_sql_path(self, filename):
         filename = filename.split('/')[-1]

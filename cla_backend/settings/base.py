@@ -43,8 +43,8 @@ SPECIALIST_USER_ALERT_EMAILS = []
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_USERNAME', 'cla_backend'),
-        'USER': os.environ.get('DB_USERNAME', 'postgres'),
+        'NAME': os.environ.get('DB_NAME', 'cla_backend'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': os.environ.get('DB_HOST', ''),
         'PORT': os.environ.get('DB_PORT', ''),
@@ -53,11 +53,20 @@ DATABASES = {
 
 if os.environ.get('REPLICA_DB_HOST', ''):
     DATABASES['replica'] = {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_USERNAME', 'cla_backend'),
-        'USER': os.environ.get('DB_USERNAME', 'postgres'),
+        'ENGINE': 'cla_backend.apps.reports.db.backend',
+        'NAME': os.environ.get('DB_NAME', 'cla_backend'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': os.environ.get('REPLICA_DB_HOST', ''),
+        'PORT': os.environ.get('DB_PORT', ''),
+    }
+else:
+    DATABASES['replica'] = {
+        'ENGINE': 'cla_backend.apps.reports.db.backend',
+        'NAME': os.environ.get('DB_NAME', 'cla_backend'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', ''),
         'PORT': os.environ.get('DB_PORT', ''),
     }
 

@@ -15,9 +15,9 @@ from core.utils import remember_cwd
 from legalaid.utils import diversity
 
 
-def get_replica_cursor():
+def get_reports_cursor():
     try:
-        return connections['replica'].cursor()
+        return connections['reports'].cursor()
     except ConnectionDoesNotExist:
         return connection.cursor()
 
@@ -147,7 +147,7 @@ class OBIEEExporter(object):
 
         with open(os.path.join(self.tmp_export_path, filename), 'w') as d:
             with atomic():
-                cursor = get_replica_cursor()
+                cursor = get_reports_cursor()
                 try:
                     q = cursor.mogrify(set_local_time_for_query(query), kwargs)
                     cursor.copy_expert(q, d)

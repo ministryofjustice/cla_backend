@@ -16,7 +16,7 @@ from complaints.constants import SLA_DAYS
 from reports.widgets import MonthYearWidget
 
 from . import sql
-from .utils import get_replica_cursor, set_local_time_for_query
+from .utils import get_reports_cursor, set_local_time_for_query
 
 
 class ConvertDateMixin(object):
@@ -104,7 +104,7 @@ class SQLFileReportMixin(object):
 
     def execute_query(self, query, params):
         with atomic():
-            cursor = get_replica_cursor()
+            cursor = get_reports_cursor()
             try:
                 cursor.execute(set_local_time_for_query(query), params)
                 self.description = cursor.description

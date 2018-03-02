@@ -52,7 +52,7 @@ DATABASES = {
 }
 
 if os.environ.get('REPLICA_DB_HOST', ''):
-    DATABASES['replica'] = {
+    DATABASES['reports'] = {
         'ENGINE': 'cla_backend.apps.reports.db.backend',
         'NAME': os.environ.get('DB_NAME', 'cla_backend'),
         'USER': os.environ.get('DB_USER', 'postgres'),
@@ -61,7 +61,7 @@ if os.environ.get('REPLICA_DB_HOST', ''):
         'PORT': os.environ.get('DB_PORT', ''),
     }
 else:
-    DATABASES['replica'] = {
+    DATABASES['reports'] = {
         'ENGINE': 'cla_backend.apps.reports.db.backend',
         'NAME': os.environ.get('DB_NAME', 'cla_backend'),
         'USER': os.environ.get('DB_USER', 'postgres'),

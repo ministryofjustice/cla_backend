@@ -33,7 +33,7 @@ DATABASES = {
 }
 
 if os.environ.get('REPLICA_DB_HOST', ''):
-    DATABASES['replica'] = {
+    DATABASES['reports'] = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DB_USERNAME', ''),
         'USER': os.environ.get('DB_USERNAME', ''),

@@ -23,23 +23,44 @@ RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 
 # Dependencies
 RUN DEBIAN_FRONTEND='noninteractive' \
-  apt-get -y --force-yes install bash apt-utils python-pip python-dev build-essential git software-properties-common python-software-properties libpq-dev g++ make libpcre3 libpcre3-dev \
-  libxslt-dev libxml2-dev && \
-  apt-get -y build-dep python-psycopg2
+  apt-get update && apt-get install -y \
+    apt-utils \
+    bash \
+    build-essential \
+    g++ \
+    git \
+    libpcre3 \
+    libpcre3-dev \
+    libpq-dev \
+    libxslt-dev \
+    libxml2-dev \
+    make \
+    python-dev \
+    python-pip \
+    python-software-properties \
+    software-properties-common && \
+  apt-get -y build-dep \
+    python-psycopg2 && \
+  rm -rf /var/lib/apt/lists/*
+
 # Install Nginx.
 RUN DEBIAN_FRONTEND='noninteractive' add-apt-repository ppa:nginx/stable && apt-get update
-RUN DEBIAN_FRONTEND='noninteractive' apt-get -y --force-yes install nginx-full && \
+RUN DEBIAN_FRONTEND='noninteractive' apt-get -y install nginx-full && \
   chown -R www-data:www-data /var/lib/nginx
 
 ADD ./docker/nginx.conf /etc/nginx/nginx.conf
 ADD ./docker/htpassword /etc/nginx/conf.d/htpassword
-RUN rm -f /etc/nginx/sites-enabled/default && chown www-data:www-data /etc/nginx/conf.d/htpassword
+RUN rm -f /etc/nginx/sites-enabled/default && \
+    chown www-data:www-data /etc/nginx/conf.d/htpassword
 
 # Pip install Python packages
 RUN pip install -U setuptools pip wheel
 RUN pip install GitPython uwsgi requests
 
-RUN mkdir -p /var/log/wsgi && touch /var/log/wsgi/app.log /var/log/wsgi/debug.log && chown -R www-data:www-data /var/log/wsgi && chmod -R g+s /var/log/wsgi
+RUN mkdir -p /var/log/wsgi && \
+    touch /var/log/wsgi/app.log /var/log/wsgi/debug.log && \
+    chown -R www-data:www-data /var/log/wsgi && \
+    chmod -R g+s /var/log/wsgi
 
 RUN  mkdir -p /var/log/nginx/cla_backend
 ADD ./docker/cla_backend.ini /etc/wsgi/conf.d/cla_backend.ini

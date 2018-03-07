@@ -43,8 +43,8 @@ SPECIALIST_USER_ALERT_EMAILS = []
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_USERNAME', 'cla_backend'),
-        'USER': os.environ.get('DB_USERNAME', 'postgres'),
+        'NAME': os.environ.get('DB_NAME', 'cla_backend'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': os.environ.get('DB_HOST', ''),
         'PORT': os.environ.get('DB_PORT', ''),
@@ -52,12 +52,21 @@ DATABASES = {
 }
 
 if os.environ.get('REPLICA_DB_HOST', ''):
-    DATABASES['replica'] = {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_USERNAME', 'cla_backend'),
-        'USER': os.environ.get('DB_USERNAME', 'postgres'),
+    DATABASES['reports'] = {
+        'ENGINE': 'cla_backend.apps.reports.db.backend',
+        'NAME': os.environ.get('DB_NAME', 'cla_backend'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': os.environ.get('REPLICA_DB_HOST', ''),
+        'PORT': os.environ.get('DB_PORT', ''),
+    }
+else:
+    DATABASES['reports'] = {
+        'ENGINE': 'cla_backend.apps.reports.db.backend',
+        'NAME': os.environ.get('DB_NAME', 'cla_backend'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', ''),
         'PORT': os.environ.get('DB_PORT', ''),
     }
 
@@ -66,15 +75,6 @@ EXPORT_DIR = '/exports/'
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', '')
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', '')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', '')
-
-# Support heroku
-DJ_DATABASE_URL = os.environ.get('DATABASE_URL')
-if DJ_DATABASE_URL:
-    import dj_database_url
-
-    DATABASES = {
-        'default': dj_database_url.parse(DJ_DATABASE_URL)
-    }
 
 SITE_HOSTNAME = os.environ.get('SITE_HOSTNAME', 'cla.local:8000')
 

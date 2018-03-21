@@ -13,6 +13,7 @@ from django.utils import timezone
 
 from celery import Task
 
+from checker.models import ReasonForContactingCategory, ReasonForContacting
 from cla_butler.qs_to_file import QuerysetToFile
 from cla_eventlog.models import Log
 from cla_provider.models import Feedback
@@ -134,6 +135,8 @@ class DeleteOldData(Task):
         self.cleanup_model_from_case(pks, Complaint, 'eod__case_id')
         self.cleanup_model_from_case(pks, EODDetailsCategory, 'eod_details__case_id')
         self.cleanup_model_from_case(pks, EODDetails)
+        self.cleanup_model_from_case(pks, ReasonForContactingCategory, 'reason_for_contacting__case_id')
+        self.cleanup_model_from_case(pks, ReasonForContacting)
         self._delete_objects(from_cases)
         self._delete_objects(cases)
 

@@ -1144,7 +1144,7 @@ If client has received a charging order please record this in Operator Notes.]]>
       </data>
     </node>
     <node id="n46">
-      <data key="d3"><![CDATA[Homeless or at risk of becoming homeless within 28 days (or 56 days if the client lives in Wales)]]></data>
+      <data key="d3"><![CDATA[Homeless or at risk of becoming homeless within 56 days]]></data>
       <data key="d4"><![CDATA[Client becoming homeless]]></data>
       <data key="d7">3</data>
       <data key="d9"><![CDATA[Select the option that best describes the client’s situation.]]></data>

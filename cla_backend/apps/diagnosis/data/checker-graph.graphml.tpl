@@ -545,7 +545,7 @@
       </node>
     <node id="n52">
       <data key="d3">{% trans "Becoming homeless" %}</data>
-      <data key="d4">{% trans "You are at risk of becoming homeless within 28 days (or 56 days if you live in Wales) and you want to make an application to your local council to stop your home being taken away from you" %}</data>
+      <data key="d4">{% trans "You are at risk of becoming homeless within 56 days and you want to make an application to your local council to stop your home being taken away from you" %}</data>
       <data key="d6">means_test</data>
       <data key="d10">1</data>
       <data key="d11">n70</data>

@@ -451,7 +451,7 @@ If client has received a charging order please record this in Operator Notes.{% 
       <data key="d10">n45</data>
       </node>
     <node id="n46">
-      <data key="d3">{% trans "Homeless or at risk of becoming homeless within 28 days (or 56 days if the client lives in Wales)" %}</data>
+      <data key="d3">{% trans "Homeless or at risk of becoming homeless within 56 days" %}</data>
       <data key="d4">Client becoming homeless</data>
       <data key="d7">3</data>
       <data key="d9">{% trans "Select the option that best describes the client’s situation." %}</data>

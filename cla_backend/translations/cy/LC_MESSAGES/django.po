@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-24 13:16+0000\n"
+"POT-Creation-Date: 2018-03-21 07:52+0000\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -620,8 +620,8 @@ msgid "Becoming homeless"
 msgstr "Mynd yn ddigartref"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:548
-msgid "You are at risk of becoming homeless within 28 days (or 56 days if you live in Wales) and you want to make an application to your local council to stop your home being taken away from you"
-msgstr "Rydych chi mewn perygl o fynd yn ddigartref o fewn 28 diwrnod (neu 56 diwrnod os ydych yn byw yng Nghymru) a'ch bod eisiau gwneud cais i'ch cyngor lleol i atal eich cartref rhag cael ei gymryd oddi wrthych chi"
+msgid "You are at risk of becoming homeless within 56 days and you want to make an application to your local council to stop your home being taken away from you"
+msgstr "Rydych chi mewn perygl o fynd yn ddigartref o fewn 56 diwrnod a'ch bod eisiau gwneud cais i'ch cyngor lleol i atal eich cartref rhag cael ei gymryd oddi wrthych chi"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:555
 msgid "Eviction"
@@ -1105,8 +1105,8 @@ msgid "Describe scenario carefully in notes - client's circumstances and why the
 msgstr "Disgrifiwch y senario yn ofalus mewn nodiadau - amgylchiadau'r cleient a pham eu bod yn credu eu bod yn wynebu cael eu troi allan neu wedi cael eu troi allan. * Cliciwch 'nesaf' i barhau*"
 
 #: apps/diagnosis/data/graph.graphml.tpl:454
-msgid "Homeless or at risk of becoming homeless within 28 days (or 56 days if the client lives in Wales)"
-msgstr "Yn ddigartref neu mewn perygl o ddod yn ddigartref o fewn 28 diwrnod (neu 56 diwrnod os yw'r cleient yn byw yng Nghymru)"
+msgid "Homeless or at risk of becoming homeless within 56 days"
+msgstr "Yn ddigartref neu mewn perygl o ddod yn ddigartref o fewn 56 diwrnod"
 
 #: apps/diagnosis/data/graph.graphml.tpl:457
 #: apps/diagnosis/data/graph.graphml.tpl:676

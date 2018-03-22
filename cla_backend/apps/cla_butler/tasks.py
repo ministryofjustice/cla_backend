@@ -5,13 +5,13 @@ import logging
 import os
 import time
 
+from celery import Task
 from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
-
-from celery import Task
+from provider.oauth2.models import AccessToken
 
 from checker.models import ReasonForContactingCategory, ReasonForContacting
 from cla_butler.qs_to_file import QuerysetToFile
@@ -65,6 +65,7 @@ class DeleteOldData(Task):
         self.cleanup_personal_details()
         self.cleanup_adaptation_details()
         self.cleanup_sessions()
+        self.cleanup_access_tokens()
 
     def _setup(self):
         self.now = timezone.now()
@@ -113,10 +114,12 @@ class DeleteOldData(Task):
             name=name))
 
     def cleanup_sessions(self):
-        sessions = Session.objects.filter(
-            expire_date__lte=self.now,
-        )
+        sessions = Session.objects.filter(expire_date__lte=self.now)
         sessions.delete()
+
+    def cleanup_access_tokens(self):
+        tokens = AccessToken.objects.filter(expires__lte=self.now)
+        tokens.delete()
 
     def cleanup_cases(self):
         two_years = self.now - relativedelta(years=2)

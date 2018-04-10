@@ -18,7 +18,7 @@ JENKINS_TASKS = (
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'cla_backend.apps.reports.db.backend',
         'NAME': os.environ.get('DB_USERNAME', ''),
         'TEST_NAME': 'test_cla_backend%s' % os.environ.get('BACKEND_TEST_DB_SUFFIX', ''),
         'USER': os.environ.get('DB_USERNAME', ''),

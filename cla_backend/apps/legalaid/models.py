@@ -170,7 +170,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         search_field = u''
 
         def add_string(s1, s2):
-            return u'%s###%s' % (s1, s2)
+            return u'%s %s' % (s1, s2)
 
         if self.postcode:
             search_field = add_string(

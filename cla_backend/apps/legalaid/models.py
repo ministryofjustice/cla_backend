@@ -120,13 +120,13 @@ class Deductions(CloneModelMixin, TimeStampedModel):
 
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
     title = models.CharField(max_length=20, blank=True, null=True)
-    full_name = models.CharField(max_length=400, blank=True, null=True)
-    postcode = models.CharField(max_length=12, blank=True, null=True)
+    full_name = models.CharField(max_length=400, blank=True, null=True, db_index=True)
+    postcode = models.CharField(max_length=12, blank=True, null=True, db_index=True)
     street = models.CharField(max_length=255, blank=True, null=True)
     mobile_phone = models.CharField(max_length=20, blank=True, null=True)
     home_phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
-    date_of_birth = models.DateField(blank=True, null=True)
+    date_of_birth = models.DateField(blank=True, null=True, db_index=True)
     ni_number = models.CharField(max_length=10, null=True, blank=True)
     contact_for_research = models.NullBooleanField(blank=True, null=True)
     contact_for_research_via = models.CharField(
@@ -170,7 +170,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         search_field = u''
 
         def add_string(s1, s2):
-            return u'%s###%s' % (s1, s2)
+            return u'%s %s' % (s1, s2)
 
         if self.postcode:
             search_field = add_string(
@@ -659,7 +659,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     )
 
     requires_action_at = models.DateTimeField(
-        auto_now=False, blank=True, null=True
+        auto_now=False, blank=True, null=True, db_index=True
     )
     callback_attempt = models.PositiveSmallIntegerField(default=0)
 

@@ -4,27 +4,22 @@ from core.drf.exceptions import ConflictException
 from django import forms
 from django.db import transaction, IntegrityError
 from django.core.paginator import Paginator
-
 from django_statsd.clients import statsd
-
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, SearchFilter, \
-    DjangoFilterBackend
+from rest_framework.filters import OrderingFilter, DjangoFilterBackend
 from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
 from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin, \
     FormActionMixin
 from core.drf.pagination import RelativeUrlPaginationSerializer
-
+from core.filters import SearchVectorFilter
 from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
-
 from cla_auth.models import AccessAttempt
-
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
@@ -388,7 +383,7 @@ class FullCaseViewSet(
 
     filter_backends = (
         AscCaseOrderingFilter,
-        SearchFilter,
+        SearchVectorFilter,
     )
 
     ordering_fields = (
@@ -399,7 +394,7 @@ class FullCaseViewSet(
     )
     ordering = ['-priority']
 
-    search_fields = (
+    search_vector_fields = (
         'personal_details__full_name',
         'personal_details__postcode',
         'personal_details__street',

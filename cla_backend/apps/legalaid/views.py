@@ -1,12 +1,11 @@
+import operator
 import json
+
 from core.drf.exceptions import ConflictException
-
 from django import forms
-from django.db import transaction, IntegrityError
+from django.db import transaction, IntegrityError, models
 from django.core.paginator import Paginator
-
 from django_statsd.clients import statsd
-
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.exceptions import PermissionDenied
@@ -19,12 +18,9 @@ from core.utils import format_patch
 from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin, \
     FormActionMixin
 from core.drf.pagination import RelativeUrlPaginationSerializer
-
 from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
-
 from cla_auth.models import AccessAttempt
-
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
@@ -386,11 +382,6 @@ class FullCaseViewSet(
     serializer_class = CaseSerializerBase
     pagination_serializer_class = RelativeUrlPaginationSerializer
 
-    filter_backends = (
-        AscCaseOrderingFilter,
-        SearchFilter,
-    )
-
     ordering_fields = (
         'modified', 'personal_details__full_name', 'requires_action_at',
         'personal_details__date_of_birth', 'personal_details__postcode',
@@ -399,15 +390,19 @@ class FullCaseViewSet(
     )
     ordering = ['-priority']
 
-    search_fields = (
-        'personal_details__full_name',
-        'personal_details__postcode',
-        'personal_details__street',
-        'personal_details__search_field',
-        'reference',
-        'laa_reference',
-        'search_field'
-    )
+    multi_table_search_fields = {
+        'personal_details': (
+            'full_name',
+            'postcode',
+            'street',
+            'search_field',
+        ),
+        '': (
+            'reference',
+            'laa_reference',
+            'search_field',
+        )
+    }
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
@@ -427,11 +422,48 @@ class FullCaseViewSet(
     )
     '''
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return DRFResponse(serializer.data)
+
+    def get_search_terms(self, request):
+        """
+        Search terms are set by a ?search=... query parameter,
+        and may be comma and/or whitespace delimited.
+        """
+        params = request.QUERY_PARAMS.get('search', '')
+        return params.replace(',', ' ').split()
+
+    def filter_by_table_search_fields(self, queryset):
+        if not self.multi_table_search_fields:
+            return queryset
+
+        table_querysets = []
+        for table in self.multi_table_search_fields:
+            orm_lookups = []
+            for field in self.multi_table_search_fields[table]:
+                orm_lookups.append('__'.join([table, field, 'icontains']))
+
+            for search_term in self.get_search_terms(self.request):
+                or_queries = [models.Q(**{orm_lookup: search_term})
+                              for orm_lookup in orm_lookups]
+                queryset_copy = queryset.all()
+                queryset_copy = queryset_copy.filter(reduce(operator.or_, or_queries))
+                table_querysets.append(queryset_copy)
+
+        return queryset
+
     def get_queryset(self, **kwargs):
         qs = super(FullCaseViewSet, self).get_queryset(**kwargs)
         person_ref_param = self.request.QUERY_PARAMS.get('person_ref', None)
         dashboard_param = self.request.QUERY_PARAMS.get('dashboard', None)
-        ordering = self.request.QUERY_PARAMS.get('ordering', None)
 
         if person_ref_param:
             qs = qs.filter(personal_details__reference=person_ref_param)

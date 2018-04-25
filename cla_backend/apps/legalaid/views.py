@@ -1,9 +1,11 @@
+import contextlib
 import json
 
 from core.drf.exceptions import ConflictException
 from django import forms
-from django.db import transaction, IntegrityError
+from django.db import connection, transaction, IntegrityError
 from django.core.paginator import Paginator
+from django.utils.crypto import get_random_string
 from django_statsd.clients import statsd
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
@@ -417,6 +419,22 @@ class FullCaseViewSet(
         params = self.request.QUERY_PARAMS.get('search', '')
         return params.replace(',', ' ').split()
 
+    def get_temporary_view_name(self):
+        return 'case_search_view_{}'.format(get_random_string())
+
+    def list(self, request, *args, **kwargs):
+        try:
+            return super(FullCaseViewSet, self).list(request, *args, **kwargs)
+        finally:
+            if hasattr(request, 'temp_view_name'):
+                try:
+                    with connection.cursor() as cursor:
+                        cursor.execute('DROP VIEW "{view_name}"'.format(
+                            view_name=self.request.temp_view_name
+                        ))
+                except Exception:
+                    pass  # whatever, it won't survive session end
+
     def filter_queryset(self, queryset):
         queryset = super(FullCaseViewSet, self).filter_queryset(queryset)
         search_terms = self.get_search_terms()
@@ -479,9 +497,18 @@ class FullCaseViewSet(
                 params.append('%{}%'.format(search_term))
 
         subquery = ' INTERSECT '.join(unions)
-        where_clause = 'legalaid_case.id IN ({subquery})'.format(subquery=subquery)
 
-        return queryset.extra(where=[where_clause], params=params)
+        self.request.temp_view_name = self.get_temporary_view_name()
+        create_view_sql = 'CREATE TEMPORARY VIEW "{view_name}" AS {query}'.format(
+            view_name=self.request.temp_view_name, query=subquery
+        )
+
+        with connection.cursor() as cursor:
+            cursor.execute(create_view_sql, params)
+
+        return queryset.extra(tables=[self.request.temp_view_name], where=[
+            '"legalaid_case"."id"="{}"."id"'.format(self.request.temp_view_name)
+        ])
 
     def get_queryset(self, **kwargs):
         qs = super(FullCaseViewSet, self).get_queryset(**kwargs)

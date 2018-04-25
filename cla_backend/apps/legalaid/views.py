@@ -1,30 +1,26 @@
+import contextlib
 import json
+
 from core.drf.exceptions import ConflictException
-
 from django import forms
-from django.db import transaction, IntegrityError
+from django.db import connection, transaction, IntegrityError
 from django.core.paginator import Paginator
-
+from django.utils.crypto import get_random_string
 from django_statsd.clients import statsd
-
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, SearchFilter, \
-    DjangoFilterBackend
+from rest_framework.filters import OrderingFilter, DjangoFilterBackend
 from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
 from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin, \
     FormActionMixin
 from core.drf.pagination import RelativeUrlPaginationSerializer
-
 from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
-
 from cla_auth.models import AccessAttempt
-
 from .serializers import CategorySerializerBase, \
     MatterTypeSerializerBase, MediaCodeSerializerBase, \
     PersonalDetailsSerializerFull, ThirdPartyDetailsSerializerBase, \
@@ -386,10 +382,7 @@ class FullCaseViewSet(
     serializer_class = CaseSerializerBase
     pagination_serializer_class = RelativeUrlPaginationSerializer
 
-    filter_backends = (
-        AscCaseOrderingFilter,
-        SearchFilter,
-    )
+    filter_backends = (AscCaseOrderingFilter,)
 
     ordering_fields = (
         'modified', 'personal_details__full_name', 'requires_action_at',
@@ -399,15 +392,6 @@ class FullCaseViewSet(
     )
     ordering = ['-priority']
 
-    search_fields = (
-        'personal_details__full_name',
-        'personal_details__postcode',
-        'personal_details__street',
-        'personal_details__search_field',
-        'reference',
-        'laa_reference',
-        'search_field'
-    )
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
@@ -427,11 +411,109 @@ class FullCaseViewSet(
     )
     '''
 
+    def get_search_terms(self):
+        """
+        Search terms are set by a ?search=... query parameter,
+        and may be comma and/or whitespace delimited.
+        """
+        params = self.request.QUERY_PARAMS.get('search', '')
+        return params.replace(',', ' ').split()
+
+    def get_temporary_view_name(self):
+        return 'case_search_view_{}'.format(get_random_string())
+
+    def list(self, request, *args, **kwargs):
+        try:
+            return super(FullCaseViewSet, self).list(request, *args, **kwargs)
+        finally:
+            if hasattr(request, 'temp_view_name'):
+                try:
+                    with connection.cursor() as cursor:
+                        cursor.execute('DROP VIEW "{view_name}"'.format(
+                            view_name=self.request.temp_view_name
+                        ))
+                except Exception:
+                    pass  # whatever, it won't survive session end
+
+    def filter_queryset(self, queryset):
+        queryset = super(FullCaseViewSet, self).filter_queryset(queryset)
+        search_terms = self.get_search_terms()
+
+        if not search_terms:
+            return queryset
+
+        select_sql = (
+            """
+            (SELECT c.id FROM legalaid_case c
+                LEFT OUTER JOIN legalaid_personaldetails pd ON
+                c.personal_details_id=pd.id WHERE {where_clause})
+            """
+        )
+
+        case_where_sql = (
+            """
+            (
+                UPPER(c.reference::text) LIKE UPPER(%s)
+                OR UPPER(c.laa_reference::text) LIKE UPPER(%s)
+                OR UPPER(c.search_field::text) LIKE UPPER(%s)
+            )
+            AND NOT (
+                UPPER(pd.full_name::text) LIKE UPPER(%s)
+                OR UPPER(pd.postcode::text) LIKE UPPER(%s)
+                OR UPPER(pd.street::text) LIKE UPPER(%s)
+                OR UPPER(pd.search_field::text) LIKE UPPER(%s)
+            )
+            """
+        )
+
+        personal_details_where_sql = (
+            """
+            (
+                UPPER(pd.full_name::text) LIKE UPPER(%s)
+                OR UPPER(pd.postcode::text) LIKE UPPER(%s)
+                OR UPPER(pd.street::text) LIKE UPPER(%s)
+                OR UPPER(pd.search_field::text) LIKE UPPER(%s)
+            ) AND NOT (
+                UPPER(c.reference::text) LIKE UPPER(%s)
+                OR UPPER(c.laa_reference::text) LIKE UPPER(%s)
+                OR UPPER(c.search_field::text) LIKE UPPER(%s)
+            )
+            """
+        )
+
+        number_of_placeholders = 14
+        unions = []
+        params = []
+        for search_term in search_terms:
+            unions.append(
+                '({})'.format(
+                    ' UNION ALL '.join([
+                        select_sql.format(where_clause=case_where_sql),
+                        select_sql.format(where_clause=personal_details_where_sql)
+                    ])
+                )
+            )
+            for _ in range(number_of_placeholders):
+                params.append('%{}%'.format(search_term))
+
+        subquery = ' INTERSECT '.join(unions)
+
+        self.request.temp_view_name = self.get_temporary_view_name()
+        create_view_sql = 'CREATE TEMPORARY VIEW "{view_name}" AS {query}'.format(
+            view_name=self.request.temp_view_name, query=subquery
+        )
+
+        with connection.cursor() as cursor:
+            cursor.execute(create_view_sql, params)
+
+        return queryset.extra(tables=[self.request.temp_view_name], where=[
+            '"legalaid_case"."id"="{}"."id"'.format(self.request.temp_view_name)
+        ])
+
     def get_queryset(self, **kwargs):
         qs = super(FullCaseViewSet, self).get_queryset(**kwargs)
         person_ref_param = self.request.QUERY_PARAMS.get('person_ref', None)
         dashboard_param = self.request.QUERY_PARAMS.get('dashboard', None)
-        ordering = self.request.QUERY_PARAMS.get('ordering', None)
 
         if person_ref_param:
             qs = qs.filter(personal_details__reference=person_ref_param)

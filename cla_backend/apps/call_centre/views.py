@@ -147,10 +147,7 @@ class CaseViewSet(
         'created_by'
     )
 
-    filter_backends = (
-        AscCaseOrderingFilter,
-        SearchFilter,
-    )
+    filter_backends = (AscCaseOrderingFilter,)
 
     def get_queryset(self, **kwargs):
         """

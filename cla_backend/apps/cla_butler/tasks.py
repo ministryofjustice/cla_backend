@@ -2,11 +2,9 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 import logging
-import os
 import time
 
 from celery import Task
-from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
@@ -14,7 +12,6 @@ from django.utils import timezone
 from provider.oauth2.models import AccessToken
 
 from checker.models import ReasonForContactingCategory, ReasonForContacting
-from cla_butler.qs_to_file import QuerysetToFile
 from cla_eventlog.models import Log
 from cla_provider.models import Feedback
 from complaints.models import Complaint
@@ -69,8 +66,6 @@ class DeleteOldData(Task):
 
     def _setup(self):
         self.now = timezone.now()
-        path = os.path.join(settings.TEMP_DIR, self.now.strftime('%Y%m%d'))
-        self.filewriter = QuerysetToFile(path)
 
     def _delete_logs(self, qs):
         ct = ContentType.objects.get_for_model(qs.model)
@@ -80,13 +75,11 @@ class DeleteOldData(Task):
                 content_type_id=ct.pk,
                 object_id__in=pks
             )
-            self.filewriter.dump(logs)
             logs.delete()
             log_entries = LogEntry.objects.filter(
                 content_type=ct,
                 object_id__in=pks
             )
-            self.filewriter.dump(log_entries)
             log_entries.delete()
 
     def _delete_objects(self, qs):
@@ -101,7 +94,6 @@ class DeleteOldData(Task):
         logger.info('Deleting {count} {name} objects'.format(
             count=qs.count(),
             name=name))
-        self.filewriter.dump(qs)
         logger.info('Starting delete of {name}'.format(name=name))
         start = time.time()
         qs._raw_delete(qs.db)

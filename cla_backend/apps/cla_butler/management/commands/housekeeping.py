@@ -26,7 +26,7 @@ class Command(BaseCommand):
             self.stdout.write('Not doing housekeeping because running on secondary instance')
 
     def should_run_housekeeping(self, **options):
-        if options['force']:
+        if options.get('force', False):
             return True
 
         try:

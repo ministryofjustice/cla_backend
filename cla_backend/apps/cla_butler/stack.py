@@ -1,3 +1,5 @@
+import os
+
 import boto3
 from botocore.exceptions import ClientError
 import requests
@@ -30,6 +32,9 @@ def is_first_instance():
         raise StackInterrogationException(e)
 
     try:
+        # blank out credentials to avoid using s3 account
+        access_key_id = os.environ.pop('AWS_ACCESS_KEY_ID', None)
+        secret_key = os.environ.pop('AWS_SECRET_ACCESS_KEY', None)
         # get instance's autoscaling group
         autoscaling_client = boto3.client('autoscaling', region_name=instance_region)
         response = autoscaling_client.describe_auto_scaling_instances(InstanceIds=[instance_id])
@@ -39,6 +44,11 @@ def is_first_instance():
         raise StackInterrogationException(e)
     except AssertionError:
         raise InstanceNotInAsgException()
+    finally:
+        if access_key_id:
+            os.environ['AWS_ACCESS_KEY_ID'] = access_key_id
+        if secret_key:
+            os.environ['AWS_SECRET_ACCESS_KEY'] = secret_key
 
     try:
         # list in-service instances in autoscaling group

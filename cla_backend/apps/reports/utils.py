@@ -164,7 +164,7 @@ class OBIEEExporter(object):
         with remember_cwd():
             try:
                 os.chdir(self.tmp_export_path)
-                pyminizip.compress_multiple(glob.glob('*.csv'), self.filename, settings.OBIEE_ZIP_PASSWORD, 9)
+                pyminizip.compress_multiple(glob.glob('*.csv'), [], self.filename, settings.OBIEE_ZIP_PASSWORD, 9)
                 shutil.move('%s/%s' % (self.tmp_export_path, self.filename),
                             '%s/%s' % (self.export_path, self.filename))
             finally:

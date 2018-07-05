@@ -32,7 +32,14 @@ jobs:
 
   test:
     docker:
-      - image: python:2.7-alpine3.7
+      - image: circleci/2.7-jessie
+      - image: circleci/postgres:9.4.9-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cla_backend
+    environment:
+      DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
     steps:
       - run:
           name: Setup environment
@@ -61,7 +68,7 @@ jobs:
           name: Run unit tests
           command: |
             source env/bin/activate
-            python manage.py test
+            python manage.py test --verbosity=2
 
 workflows:
   version: 2

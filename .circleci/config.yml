@@ -10,7 +10,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: Login to contrainer registry
+          name: Login to container registry
           command: |
             apk add --no-cache --no-progress --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ aws-cli
             login="$(aws ecr get-login --region eu-west-1 --no-include-email)"
@@ -32,42 +32,45 @@ jobs:
 
   test:
     docker:
-      - image: circleci/2.7-jessie
-      - image: circleci/postgres:9.4.9-alpine
+      - image: circleci/python:2.7
         environment:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: cla_backend
-    environment:
-      DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
+          DB_NAME: circle_test
+          DATABASE_URL: postgresql://root@localhost
+          DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
+      - image: circleci/postgres:9.4.18-alpine
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: circle_test
     steps:
-      - run:
-          name: Setup environment
-          command: apk add --no-cache --no-progress build-base git libffi-dev openssh openssl-dev
       - checkout
+      - run: sudo apt-get install postgresql-client-9.6
+      - run:
+          name: Setup Postgres
+          command: |
+            psql -d $DATABASE_URL/$DB_NAME -c "create extension pgcrypto;"
+            psql -d $DATABASE_URL/template1 -c 'create extension pgcrypto;'
       - run:
           name: Setup Python environment
           command: |
             pip install virtualenv
-            virtualenv env
-
+            virtualenv env-ci
       - restore_cache:
           keys:
-            - pip-v1-{{ checksum "requirements/base.txt" }}-{{ checksum "requirements/testing.txt" }}
+            - pip-v2-{{ checksum "requirements/base.txt" }}-{{ checksum "requirements/testing.txt" }}
       - run:
           name: Install dependencies
           command: |
-            source env/bin/activate
+            source env-ci/bin/activate
             pip install --requirement requirements.txt --requirement requirements/testing.txt
       - save_cache:
-          key: pip-v1-{{ checksum "requirements/base.txt" }}-{{ checksum "requirements/testing.txt" }}
+          key: pip-v2-{{ checksum "requirements/base.txt" }}-{{ checksum "requirements/testing.txt" }}
           paths:
             - "~/.cache/pip"
 
       - run:
           name: Run unit tests
           command: |
-            source env/bin/activate
+            source env-ci/bin/activate
             python manage.py test --verbosity=2
 
 workflows:

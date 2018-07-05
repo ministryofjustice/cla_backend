@@ -12,22 +12,14 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME', 'cla_backend'),
-        'USER': os.environ.get('DB_USER', 'postgres'),
+        'ENGINE': 'cla_backend.apps.reports.db.backend',
+        'NAME': os.environ.get('DB_NAME', 'circle_test'),
+        'USER': os.environ.get('DB_USER', 'root'),
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', ''),
     }
 }
-<<<<<<< HEAD
-
-JENKINS_TEST_RUNNER = 'core.testing.CLADiscoverRunner'
-=======
->>>>>>> e2a346ad... Fix typo in Circle CI directory and filename
-
-#HOST_NAME = ""
-
 
 ALLOWED_HOSTS = [
     '*'

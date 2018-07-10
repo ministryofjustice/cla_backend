@@ -1,6 +1,9 @@
 CLA Backend
 ###########
 
+.. image:: https://circleci.com/gh/ministryofjustice/cla_backend.svg?style=svg
+    :target: https://circleci.com/gh/ministryofjustice/cla_backend
+    
 Backend API for the Civil Legal Aid Tool.
 
 Dependencies

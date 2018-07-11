@@ -35,9 +35,10 @@ jobs:
       - image: circleci/python:2.7
         environment:
           DB_NAME: circle_test
-          DATABASE_URL: postgresql://root@localhost
+          DB_USER: root
+          DB_PORT: 5432
           DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
-      - image: circleci/postgres:9.4.18-alpine
+      - image: circleci/postgres:9.4-alpine
         environment:
           POSTGRES_USER: root
           POSTGRES_DB: circle_test
@@ -47,8 +48,8 @@ jobs:
       - run:
           name: Setup Postgres
           command: |
-            psql -d $DATABASE_URL/$DB_NAME -c "create extension pgcrypto;"
-            psql -d $DATABASE_URL/template1 -c 'create extension pgcrypto;'
+            psql -d postgresql://$DB_USER@localhost:$DB_PORT/$DB_NAME -c "create extension pgcrypto;"
+            psql -d postgresql://$DB_USER@localhost:$DB_PORT/template1 -c 'create extension pgcrypto;'
       - run:
           name: Setup Python environment
           command: |

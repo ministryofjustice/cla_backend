@@ -36,7 +36,7 @@ jobs:
         environment:
           DB_NAME: circle_test
           DB_USER: root
-          DB_PORT: 5432
+          DB_PORT: 5433
           DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
       - image: circleci/postgres:9.4-alpine
         environment:

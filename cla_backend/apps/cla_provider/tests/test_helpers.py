@@ -10,6 +10,7 @@ import mock
 from cla_provider.models import ProviderAllocation
 from legalaid.models import Case
 
+from unittest import skip
 from core.tests.mommy_utils import make_recipe
 
 from cla_provider.helpers import ProviderAllocationHelper, \
@@ -256,6 +257,7 @@ class ProviderAllocationHelperTestCase(TestCase):
                 'Expected: %s, Got: %s  - not within allowed accuracy: %s' %
                 (expected, n, accuracy))
 
+    @skip("because test is flaky... waiting for Python dev to fix")
     def test_even_allocation(self):
         # Test the distribution of cases to {accuracy} accuracy over {total} cases
         total = 8000

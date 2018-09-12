@@ -105,3 +105,30 @@ If you are experiencing errors when creating and syncing the database, make sure
 If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" does not exist`, you will need to create the user `postgres` on the database.
 
     createuser -s -e postgres
+
+## Releasing
+
+### Releasing to non-production
+
+1. Wait for [the Docker build to complete on CircleCI](https://circleci.com/gh/ministryofjustice/cla_backend) for the feature branch.
+1. Copy the `feature_branch.<sha>` reference from the `build` job's "Push Docker image" step. Eg:
+    ```
+    Pushing tag for rev [9a77ce2f0e8a] on {https://registry.service.dsd.io/v1/repositories/cla_backend/tags/dual-docker-registries.902c45d}
+    ```
+1. [Deploy `feature_branch.<sha>`](https://ci.service.dsd.io/job/DEPLOY-cla_backend/build?delay=0sec).
+    * `APP_BUILD_TAG` is the branch that needs to be released plus a specific 7-character prefix of the Git SHA. (dual-docker-registries.902c45d for the above example).
+    * `environment` is the target environment, select depending on your needs, eg. "demo", "staging", etc.
+    * `deploy_repo_branch` is the [deploy repo's](https://github.com/ministryofjustice/cla_backend-deploy) default branch name, usually master.
+
+### Releasing to production
+
+1. Please make sure you tested on a non-production environment before merging.
+1. Merge your feature branch pull request to `master`.
+1. Wait for [the Docker build to complete on CircleCI](https://circleci.com/gh/ministryofjustice/cla_backend/tree/master) for the `master` branch.
+1. Copy the `master.<sha>` reference from the `build` job's "Push Docker image" step. Eg:
+    ```
+    Pushing tag for rev [d96e0157bdac] on {https://registry.service.dsd.io/v1/repositories/cla_backend/tags/master.b24490d}
+    ```
+1. [Deploy `master.<sha>` to **prod**uction](https://ci.service.dsd.io/job/DEPLOY-cla_backend/build?delay=0sec).
+
+:tada: :shipit:

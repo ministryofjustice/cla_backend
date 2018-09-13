@@ -82,7 +82,7 @@ Each time you start a new terminal instance you will need to run the following c
     source env/bin/activate
     ./manage.py runserver 8000
 
-## Translaltions
+## Translations
 
 When making changes to text (e.g. GraphML files) translations should be updated. To update translations run:
 
@@ -93,6 +93,8 @@ When making changes to text (e.g. GraphML files) translations should be updated.
 
 * Edit the .graphml files, e.g. using a tool like [yEd](http://www.yworks.com/en/products/yfiles/yed/), to change the scope diagnosis trees
 * Run Django management command `python manage.py translations update` to update translations and templated graph files
+
+See more detailed instructions in the [how-to guide](https://dsdmoj.atlassian.net/wiki/spaces/laagetaccess/pages/1005060261/Produce+diagram+of+CLA+merits+decision+tree) on Confluence (log-in required).
 
 
 ## Troubleshooting

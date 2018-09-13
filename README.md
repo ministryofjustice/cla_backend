@@ -7,10 +7,10 @@ Backend API for the Civil Legal Aid Tool.
 
 ## Dependencies
 
--  `Virtualenv <http://www.virtualenv.org/en/latest/>`__
--  `Most recent version of pip`
--  `Python 2.7 <http://www.python.org/>`__ (Can be installed using ``brew``)
--  `Postgres 9.3+ <http://www.postgresql.org/>`__
+-  [Virtualenv](http://www.virtualenv.org/en/latest/)
+-  Most recent version of pip
+-  [Python 2.7](http://www.python.org/) Can be installed using `brew`)
+-  [Postgres 9.3+](http://www.postgresql.org/)
 
 ## Installation
 
@@ -116,7 +116,7 @@ If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" 
     Pushing tag for rev [9a77ce2f0e8a] on {https://registry.service.dsd.io/v1/repositories/cla_backend/tags/dual-docker-registries.902c45d}
     ```
 1. [Deploy `feature_branch.<sha>`](https://ci.service.dsd.io/job/DEPLOY-cla_backend/build?delay=0sec).
-    * `APP_BUILD_TAG` is the branch that needs to be released plus a specific 7-character prefix of the Git SHA. (dual-docker-registries.902c45d for the above example).
+    * `APP_BUILD_TAG` is the branch that needs to be released plus a specific 7-character prefix of the Git SHA. (`dual-docker-registries.902c45d` for the above example).
     * `environment` is the target environment, select depending on your needs, eg. "demo", "staging", etc.
     * `deploy_repo_branch` is the [deploy repo's](https://github.com/ministryofjustice/cla_backend-deploy) default branch name, usually master.
 

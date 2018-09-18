@@ -85,7 +85,6 @@ jobs:
           command: |
             source env-ci/bin/activate
             pip install --requirement requirements.txt --requirement requirements/testing.txt
-            pip check
       - save_cache:
           key: pip-v2-{{ checksum "requirements/base.txt" }}-{{ checksum "requirements/testing.txt" }}
           paths:

@@ -124,6 +124,11 @@ If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" 
 
 ### Releasing to production
 
+>:warning: Release to production outside of business hours
+>- **Business hours**: 09:00 to 20:00
+>- **Why?** Any downtime on the frontend and backend between 07:00 and 20:00 - can have serious consequences - leading to shut down of the court legal advice centres, possible press reports and maybe MP questions**
+>- **Is there downtime when a release occurs?** Usually it's just a few seconds. However changes that involve Elastic IPs can take a bit longer.
+
 1. Please make sure you tested on a non-production environment before merging.
 1. Merge your feature branch pull request to `master`.
 1. Wait for [the Docker build to complete on CircleCI](https://circleci.com/gh/ministryofjustice/cla_backend/tree/master) for the `master` branch.

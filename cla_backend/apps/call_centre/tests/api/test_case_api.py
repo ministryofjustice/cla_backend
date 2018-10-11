@@ -535,6 +535,8 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         # obj5.requires_action_at < now => INCLUDED
         # obj6.requires_action_at < now => INCLUDED
         # obj7.requires_action_at < now => INCLUDED
+        # obj8 empty but modified recently => INCLUDED
+        # obj9 empty but modified 24 hours ago => EXCLUDED
         obj1 = make_recipe(
             'legalaid.case',
             reference='ref1', provider=self.provider,
@@ -581,6 +583,21 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             outcome_code='CB2',
             requires_action_at=now - datetime.timedelta(days=2)
         )
+        obj8 = make_recipe(
+            'legalaid.empty_case',
+            reference='ref8',
+            requires_action_at=now,
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR
+        )
+        obj9 = make_recipe(
+            'legalaid.empty_case',
+            reference='ref9',
+            requires_action_at=now,
+            requires_action_by=REQUIRES_ACTION_BY.OPERATOR
+        )
+        Case.objects.filter(id=obj9.id).update(
+            modified=timezone.now() - datetime.timedelta(hours=24)
+        )
 
         # searching via dashboard param => should return obj3, obj4, obj5
         response = self.client.get(
@@ -588,10 +605,10 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(4, len(response.data['results']))
+        self.assertEqual(5, len(response.data['results']))
         self.assertEqual(
             [case['reference'] for case in response.data['results']],
-            ['ref3', 'ref6', 'ref5', 'ref7']
+            ['ref3', 'ref6', 'ref5', 'ref7', 'ref8']
         )
 
         # searching without dashboard param => should return all of them
@@ -600,10 +617,10 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             HTTP_AUTHORIZATION='Bearer %s' % self.token
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(7, len(response.data['results']))
-        self.assertEqual(
+        self.assertEqual(9, len(response.data['results']))
+        self.assertItemsEqual(
             [case['reference'] for case in response.data['results']],
-            ['ref1', 'ref2', 'ref3', 'ref6', 'ref5', 'ref4', 'ref7']
+            ['ref1', 'ref2', 'ref3', 'ref6', 'ref5', 'ref4', 'ref7', 'ref9', 'ref8']
         )
 
     # person_ref PARAM

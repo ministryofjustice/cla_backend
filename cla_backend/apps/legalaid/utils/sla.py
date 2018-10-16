@@ -30,7 +30,7 @@ def get_next_business_day(start_date):
     return filter(lambda x: x.date() > start_date, available_days(365))[0]
 
 
-def get_sla_time(start_time, minutes):
+def get_sla_time(start_time, minutes_delta):
     next_business_day = get_next_business_day(start_time.date())
     start_of_next_business_day = time_slots(next_business_day.date())[0]
     start_of_next_business_day = timezone.make_aware(start_of_next_business_day,
@@ -39,7 +39,7 @@ def get_sla_time(start_time, minutes):
     if not is_in_business_hours(start_time):
         start_time = start_of_next_business_day
 
-    simple_delta = start_time + timedelta(minutes=minutes)
+    simple_delta = start_time + timedelta(minutes=minutes_delta)
     in_business_hours = is_in_business_hours(simple_delta)
     if not in_business_hours:
         remainder_delta = get_remainder_from_end_of_day(start_time.date(), simple_delta)

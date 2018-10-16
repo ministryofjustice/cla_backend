@@ -1,7 +1,7 @@
 # CLA Backend
 
 
-[![CircleCI](https://circleci.com/gh/ministryofjustice/cla_backend/tree/develop.svg?style=svg)](https://circleci.com/gh/ministryofjustice/cla_backend/tree/develop)
+[![CircleCI](https://circleci.com/gh/ministryofjustice/cla_backend/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/cla_backend/tree/master)
     
 Backend API for the Civil Legal Aid Tool.
 

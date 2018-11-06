@@ -10,7 +10,7 @@ Backend API for the Civil Legal Aid Tool.
 -  [Virtualenv](http://www.virtualenv.org/en/latest/)
 -  Most recent version of pip
 -  [Python 2.7](http://www.python.org/) Can be installed using `brew`)
--  [Postgres 9.3+](http://www.postgresql.org/)
+-  [Postgres 9.4+](http://www.postgresql.org/)
 
 ## Installation
 
@@ -57,7 +57,7 @@ Create a `local.py` settings file from the example file:
 
     cp cla_backend/settings/.example.local.py cla_backend/settings/local.py
 
-Sync and migrate the database:
+Sync and migrate the database (n.b. see [Troubleshooting](#troubleshooting) if the `postgres` role is missing):
 
     ./manage.py migrate
 
@@ -101,8 +101,8 @@ See more detailed instructions in the [how-to guide](https://dsdmoj.atlassian.ne
 
 If you are experiencing errors when creating and syncing the database, make sure the following are added to your `PATH` var (amend path to postgres as necessary):
 
-    export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin/:$PATH"
-    export DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/Versions/9.3/lib/:$DYLD_LIBRARY_PATH"
+    export PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin/:$PATH"
+    export DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/Versions/9.4/lib/:$DYLD_LIBRARY_PATH"
 
 If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" does not exist`, you will need to create the user `postgres` on the database.
 

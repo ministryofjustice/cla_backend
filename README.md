@@ -9,7 +9,7 @@ Backend API for the Civil Legal Aid Tool.
 
 -  [Virtualenv](http://www.virtualenv.org/en/latest/)
 -  Most recent version of pip
--  [Python 2.7](http://www.python.org/) Can be installed using `brew`)
+-  [Python 2.7](http://www.python.org/) (Can be installed with `brew install python2`)
 -  [Postgres 9.4+](http://www.postgresql.org/)
 
 ## Installation

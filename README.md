@@ -113,14 +113,14 @@ If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" 
 ### Releasing to non-production
 
 1. Wait for [the Docker build to complete on CircleCI](https://circleci.com/gh/ministryofjustice/cla_backend) for the feature branch.
-1. Copy the `feature_branch.<sha>` reference from the `build` job's "Push Docker image" step. Eg:
+1. From the output of the `Tag and push Docker images` job, note the tag pushed to the DSD docker registry, e.g.
     ```
-    Pushing tag for rev [9a77ce2f0e8a] on {https://registry.service.dsd.io/v1/repositories/cla_backend/tags/dual-docker-registries.902c45d}
+    Pushing tag for rev [9a77ce2f0e8a] on {https://registry.service.dsd.io/v1/repositories/cla_backend/tags/some-feature-branch.latest}
     ```
-1. [Deploy `feature_branch.<sha>`](https://ci.service.dsd.io/job/DEPLOY-cla_backend/build?delay=0sec).
-    * `APP_BUILD_TAG` is the branch that needs to be released plus a specific 7-character prefix of the Git SHA. (`dual-docker-registries.902c45d` for the above example).
-    * `environment` is the target environment, select depending on your needs, eg. "demo", "staging", etc.
-    * `deploy_repo_branch` is the [deploy repo's](https://github.com/ministryofjustice/cla_backend-deploy) default branch name, usually master.
+1. Use Jenkins to [deploy your branch](https://ci.service.dsd.io/job/DEPLOY-cla_backend/build?delay=0sec).
+    * `APP_BUILD_TAG` is the tag name you noted in the previous step: the branch name, a dot separator, and `latest` e.g.`some-feature-branch.latest`
+    * `environment` is the target environment, select depending on your needs, e.g. `demo` or `staging`
+    * `deploy_repo_branch` is the [deploy repo's](https://github.com/ministryofjustice/cla_backend-deploy) default branch name, usually `master`.
 
 ### Releasing to production
 

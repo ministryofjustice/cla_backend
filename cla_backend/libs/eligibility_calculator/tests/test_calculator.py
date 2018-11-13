@@ -1882,7 +1882,8 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
-    @skip("because test is flaky... waiting for Python dev to fix")
+    # renable test for ticket LGA-84 'Re-enable skipped Python test in cla_backend'
+    # @skip("because test is flaky... waiting for Python dev to fix")
     def test_nass_benefit_is_noteligible_if_category_isnt_immagration(self):
         """
         TEST: if citizen is on NASS benefit income and capital are not

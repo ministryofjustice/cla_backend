@@ -699,7 +699,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
                                                        through='CaseKnowledgebaseAssignment',
                                                        null=True, blank=True)
 
-    outcome_code = models.CharField(max_length=50, blank=True, null=True)
+    outcome_code = models.CharField(max_length=50, blank=True)
     outcome_code_id = models.IntegerField(null=True, blank=True)
     level = models.PositiveSmallIntegerField(null=True)
 

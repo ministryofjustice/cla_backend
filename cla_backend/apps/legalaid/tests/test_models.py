@@ -1228,11 +1228,15 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
         for field in [
             'eligibility_check', 'locked_by', 'locked_at', 'provider',
             'thirdparty_details', 'adaptation_details', 'media_code',
-            'outcome_code', 'level', 'exempt_user', 'exempt_user_reason',
+            'level', 'exempt_user', 'exempt_user_reason',
             'ecf_statement', 'provider_viewed', 'provider_accepted',
             'provider_closed',
         ]:
             self.assertEqual(getattr(new_case, field), None)
+        for field in [
+            'outcome_code'
+        ]:
+            self.assertEqual(getattr(new_case, field), '')
 
     def _test_split_full_case(self, internal):
         case = get_full_case(
@@ -1299,7 +1303,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'billable_time': 0,
             'matter_type1': self.cat2_data.matter_type1,
             'matter_type2': self.cat2_data.matter_type2,
-            'outcome_code': None,
+            'outcome_code': '',
             'outcome_code_id': None,
             'level': None,
             'requires_action_at': None,

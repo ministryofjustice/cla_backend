@@ -479,7 +479,7 @@ class FullCaseViewSet(
                 )
             )
             for _ in range(number_of_placeholders):
-                params.append('%{}%'.format(search_term))
+                params.append(u'%{}%'.format(search_term))
 
         subquery = ' INTERSECT '.join(unions)
 

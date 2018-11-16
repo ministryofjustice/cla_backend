@@ -18,9 +18,8 @@ from cla_eventlog.constants import LOG_LEVELS
 
 from core.tests.mommy_utils import make_recipe, make_user
 
-from legalaid.models import Savings, Income, Deductions, PersonalDetails, \
-    ThirdPartyDetails, AdaptationDetails, Person, Case, ValidateModelMixin, \
-    EligibilityCheck, Property, CaseKnowledgebaseAssignment
+from legalaid.models import Savings, Income, Deductions, PersonalDetails, ThirdPartyDetails, AdaptationDetails, \
+    Person, Case, EligibilityCheck, Property, CaseKnowledgebaseAssignment
 
 
 def walk(coll):

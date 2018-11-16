@@ -3,7 +3,7 @@ import datetime
 import random
 
 from django.conf import settings
-from django.test import TestCase
+from django.test import SimpleTestCase, TestCase
 from django.utils import timezone
 
 from eligibility_calculator.models import CaseData, ModelMixin
@@ -14,6 +14,7 @@ from cla_common.constants import ELIGIBILITY_STATES, CONTACT_SAFETY, \
     REQUIRES_ACTION_BY, DIAGNOSIS_SCOPE, EXEMPT_USER_REASON, ECF_STATEMENT, \
     CASE_SOURCE
 from cla_common.money_interval.models import MoneyInterval
+from cla_eventlog.constants import LOG_LEVELS
 
 from core.tests.mommy_utils import make_recipe, make_user
 
@@ -821,6 +822,36 @@ class CaseTestCase(TestCase):
         make_recipe('legalaid.case', personal_details=pd2)
         self.assertEqual(pd.case_count, 2)
         self.assertEqual(pd2.case_count, 1)
+
+
+class CaseDatabaseTestCase(SimpleTestCase):
+    """
+    Explicitly save to database to test reload behavior. Manually clean up.
+    """
+    @classmethod
+    def setUpClass(cls):
+        cls.allow_database_queries = True
+
+    @mock.patch('legalaid.models.logger')
+    def test_log_denormalized_outcome_fields(self, mock_logger):
+        case = make_recipe('legalaid.case')
+        case.log_denormalized_outcome_fields()
+        # Test missing fields logs warning
+        self.assertEquals(mock_logger.warning.call_count, 1)
+        self.assertIn('LGA-275', str(mock_logger.warning.mock_calls))
+        # Test occasional existing erroneous behavior logs warning
+        case.outcome_code_id = 1
+        case.level = LOG_LEVELS.HIGH
+        case.save()
+        case.log_denormalized_outcome_fields()
+        self.assertEquals(mock_logger.warning.call_count, 2)
+        self.assertIn('LGA-275 Outcome code missing', str(mock_logger.warning.mock_calls))
+        # Test correct behaviour logs info
+        case.outcome_code = 'COPE'
+        case.save()
+        case.log_denormalized_outcome_fields()
+        self.assertEquals(mock_logger.info.call_count, 1)
+        case.delete()
 
 
 class MoneyIntervalFieldTestCase(TestCase):

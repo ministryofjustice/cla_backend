@@ -763,6 +763,24 @@ class Case(TimeStampedModel, ModelDiffMixin):
         """
         return self.from_case or self.split_cases.count() > 0
 
+    def log_denormalized_outcome_fields(self):
+        """
+        For LGA-275 log which fields have been denormalized successfully
+        TODO Replace painfully circuitous reload method when refresh_from_db available in Django 1.8
+        """
+        if self.id:
+            case = Case.objects.get(id=self.id)
+            if case.level and case.outcome_code_id:
+                if case.outcome_code:
+                    msg = 'LGA-275 All three denormalized outcome values present for Case (ref:{})'
+                    logger.info(msg.format(case.reference))
+                else:
+                    msg = 'LGA-275 Outcome code missing while level and id present for Case (ref:{})'
+                    logger.warning(msg.format(case.reference))
+            else:
+                msg = 'LGA-275 Denormalized level and id expected but missing for Case (ref:{})'
+                logger.warning(msg.format(case.reference))
+
     def split(self, user, category, matter_type1, matter_type2, assignment_internal):
         # DIAGNOSIS
         diagnosis = DiagnosisTraversal.objects.create_eligible(category)

@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
+import logging
 from django.core.management.base import BaseCommand
 
 from cla_butler.stack import is_first_instance, InstanceNotInAsgException, StackException
@@ -6,6 +7,8 @@ from cla_butler.stack import is_first_instance, InstanceNotInAsgException, Stack
 from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_eventlog.models import Log
 from legalaid.models import Case
+
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -17,7 +20,8 @@ class Command(BaseCommand):
         else:
             self.stdout.write('Not doing housekeeping because running on secondary instance')
 
-    def check_for_missing_outcome_codes(self):
+    @staticmethod
+    def check_for_missing_outcome_codes():
         outcomes_that_should_be_denormed = Log.objects.filter(level=LOG_LEVELS.HIGH, type=LOG_TYPES.OUTCOME)
         outcomes_missing_denormed_code = outcomes_that_should_be_denormed.filter(case__outcome_code='')
         outcomes_missing_denormed_code_pks = outcomes_missing_denormed_code.values_list('id', flat=True)
@@ -27,20 +31,20 @@ class Command(BaseCommand):
         if cases_to_re_denorm.exists():
             case_references = cases_to_re_denorm.value_list('reference', flat=True)
             n = len(case_references)
-            self.stdout.write('Cases missing denormalized outcome codes: {}\n'
-                              'References: {}'.format(n, case_references))
+            logger.warning('Cases found missing denormalized outcome codes: {}\n'
+                           'References: {}'.format(n, case_references))
         else:
-            self.stdout.write('No cases found missing denormalized outcome codes')
+            logger.info('No cases found missing denormalized outcome codes')
 
-    def should_run_housekeeping(self, **options):
+    @staticmethod
+    def should_run_housekeeping(**options):
         if options.get('force', False):
             return True
-
         try:
             return is_first_instance()
         except InstanceNotInAsgException:
-            self.stderr.write('EC2 instance not in an ASG')
+            logger.info('EC2 instance not in an ASG')
             return True
         except StackException:
-            self.stderr.write('Not running on EC2 instance')
+            logger.info('Not running on EC2 instance')
             return True

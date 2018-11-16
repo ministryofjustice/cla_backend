@@ -44,6 +44,6 @@ LOGGING['handlers']['debug_file'] = {
 }
 
 LOGGING['loggers'][''] = {
-    'handlers': ['production_file', 'debug_file'],
+    'handlers': ['production_file', 'debug_file', 'console'],
     'level': "DEBUG",
 }

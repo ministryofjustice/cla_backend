@@ -54,7 +54,7 @@ class Log(TimeStampedModel):
             self.case.level = self.level
             self.case.outcome_code_id = self.pk
             self.case.save(update_fields=["level", "outcome_code_id", "outcome_code", "modified"])
-            self.case.check_and_log_denormalized_outcome_fields()
+            self.case.log_denormalized_outcome_fields()
 
         if self.code == 'CASE_VIEWED' and hasattr(self.created_by, 'staff'):
             self.case.view_by_provider(self.created_by.staff.provider)

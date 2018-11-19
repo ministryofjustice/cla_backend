@@ -24,15 +24,15 @@ class Command(BaseCommand):
     def check_for_missing_outcome_codes():
         outcomes_that_should_be_denormed = Log.objects.filter(level=LOG_LEVELS.HIGH, type=LOG_TYPES.OUTCOME)
         outcomes_missing_denormed_code = outcomes_that_should_be_denormed.filter(case__outcome_code='')
-        outcomes_missing_denormed_code_pks = outcomes_missing_denormed_code.values_list('id', flat=True)
-        cases_to_re_denorm = Case.objects.filter(outcome_code='', outcome_code_id__isnull=False,
-                                                 log_set__id__in=outcomes_missing_denormed_code_pks)
+        cases_missing_denormed_code_pks = outcomes_missing_denormed_code.values_list('case__id', flat=True)
+
+        cases_to_re_denorm = Case.objects.filter(id__in=cases_missing_denormed_code_pks, outcome_code_id__isnull=False,
+                                                 outcome_code='')
 
         if cases_to_re_denorm.exists():
-            case_references = cases_to_re_denorm.value_list('reference', flat=True)
-            n = len(case_references)
+            case_references = cases_to_re_denorm.values_list('reference', flat=True)
             logger.warning('Cases found missing denormalized outcome codes: {}\n'
-                           'References: {}'.format(n, case_references))
+                           'References: {}'.format(len(case_references), case_references))
         else:
             logger.info('No cases found missing denormalized outcome codes')
 

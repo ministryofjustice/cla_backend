@@ -27,8 +27,6 @@ sys.path.insert(0, os.path.abspath('../../cla_docs/docs/source/'))
 from common_conf import *  # cla_docs.source.common_conf
 
 extensions += ['docs.swag']
-# extensions += ['docs.swag', 'm2r']
-# source_suffix = ['.rst', '.md']
 
 # -- General configuration -----------------------------------------------------
 

@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = 'Count and alert when outcome codes denormalized to Case instances are missing'
+    help = 'LGA-275 specific monitoring command. Count and alert when outcome codes expected to be ' \
+           'denormalized to Case instances are missing'
 
     def handle(self, *args, **options):
         if self.should_run_housekeeping(**options):
@@ -31,10 +32,11 @@ class Command(BaseCommand):
 
         if cases_to_re_denorm.exists():
             case_references = cases_to_re_denorm.values_list('reference', flat=True)
-            logger.warning('Cases found missing denormalized outcome codes: {}\n'
-                           'References: {}'.format(len(case_references), case_references))
+            logger.warning('LGA-275 investigation. Cases found with outcome code missing; '
+                           'value expected to be denormalized from log. Number of cases: {}\nReferences: {}'
+                           .format(len(case_references), case_references))
         else:
-            logger.info('No cases found missing denormalized outcome codes')
+            logger.info('LGA-275 No cases found missing denormalized outcome codes')
 
     @staticmethod
     def should_run_housekeeping(**options):

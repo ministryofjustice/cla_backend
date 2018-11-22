@@ -1,3 +1,5 @@
+import logging
+
 from django.db import models
 from jsonfield import JSONField
 from django.conf import settings
@@ -8,6 +10,8 @@ from model_utils.models import TimeStampedModel
 from .constants import LOG_LEVELS, LOG_TYPES
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+
+logger = logging.getLogger(__name__)
 
 
 class Log(TimeStampedModel):
@@ -45,10 +49,12 @@ class Log(TimeStampedModel):
     def save(self, *args, **kwargs):
         super(Log, self).save(*args, **kwargs)
         if self.type == LOG_TYPES.OUTCOME and self.level >= LOG_LEVELS.HIGH:
+            logger.info('LGA-275 Denormalizing outcome event fields to Case (ref:{})'.format(self.case.reference))
             self.case.outcome_code = self.code
             self.case.level = self.level
             self.case.outcome_code_id = self.pk
             self.case.save(update_fields=["level", "outcome_code_id", "outcome_code", "modified"])
+            self.case.log_denormalized_outcome_fields()
 
         if self.code == 'CASE_VIEWED' and hasattr(self.created_by, 'staff'):
             self.case.view_by_provider(self.created_by.staff.provider)

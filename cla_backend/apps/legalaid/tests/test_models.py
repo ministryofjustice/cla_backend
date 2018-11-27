@@ -3,7 +3,7 @@ import datetime
 import random
 
 from django.conf import settings
-from django.test import TestCase
+from django.test import SimpleTestCase, TestCase
 from django.utils import timezone
 
 from eligibility_calculator.models import CaseData, ModelMixin
@@ -14,12 +14,12 @@ from cla_common.constants import ELIGIBILITY_STATES, CONTACT_SAFETY, \
     REQUIRES_ACTION_BY, DIAGNOSIS_SCOPE, EXEMPT_USER_REASON, ECF_STATEMENT, \
     CASE_SOURCE
 from cla_common.money_interval.models import MoneyInterval
+from cla_eventlog.constants import LOG_LEVELS
 
 from core.tests.mommy_utils import make_recipe, make_user
 
-from legalaid.models import Savings, Income, Deductions, PersonalDetails, \
-    ThirdPartyDetails, AdaptationDetails, Person, Case, ValidateModelMixin, \
-    EligibilityCheck, Property, CaseKnowledgebaseAssignment
+from legalaid.models import Savings, Income, Deductions, PersonalDetails, ThirdPartyDetails, AdaptationDetails, \
+    Person, Case, EligibilityCheck, Property, CaseKnowledgebaseAssignment
 
 
 def walk(coll):
@@ -823,6 +823,36 @@ class CaseTestCase(TestCase):
         self.assertEqual(pd2.case_count, 1)
 
 
+class CaseDatabaseTestCase(SimpleTestCase):
+    """
+    Explicitly save to database to test reload behavior. Manually clean up.
+    """
+    @classmethod
+    def setUpClass(cls):
+        cls.allow_database_queries = True
+
+    @mock.patch('legalaid.models.logger')
+    def test_log_denormalized_outcome_fields(self, mock_logger):
+        case = make_recipe('legalaid.case')
+        case.log_denormalized_outcome_fields()
+        # Test missing fields logs warning
+        self.assertEquals(mock_logger.warning.call_count, 1)
+        self.assertIn('LGA-275', str(mock_logger.warning.mock_calls))
+        # Test occasional existing erroneous behavior logs warning
+        case.outcome_code_id = 1
+        case.level = LOG_LEVELS.HIGH
+        case.save()
+        case.log_denormalized_outcome_fields()
+        self.assertEquals(mock_logger.warning.call_count, 2)
+        self.assertIn('LGA-275 Outcome code missing', str(mock_logger.warning.mock_calls))
+        # Test correct behaviour logs info
+        case.outcome_code = 'COPE'
+        case.save()
+        case.log_denormalized_outcome_fields()
+        self.assertEquals(mock_logger.info.call_count, 1)
+        case.delete()
+
+
 class MoneyIntervalFieldTestCase(TestCase):
     def test_create_save_moneyinterval(self):
         ei = MoneyInterval('per_week', pennies=5000)
@@ -1228,11 +1258,15 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
         for field in [
             'eligibility_check', 'locked_by', 'locked_at', 'provider',
             'thirdparty_details', 'adaptation_details', 'media_code',
-            'outcome_code', 'level', 'exempt_user', 'exempt_user_reason',
+            'level', 'exempt_user', 'exempt_user_reason',
             'ecf_statement', 'provider_viewed', 'provider_accepted',
             'provider_closed',
         ]:
             self.assertEqual(getattr(new_case, field), None)
+        for field in [
+            'outcome_code'
+        ]:
+            self.assertEqual(getattr(new_case, field), '')
 
     def _test_split_full_case(self, internal):
         case = get_full_case(
@@ -1299,7 +1333,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             'billable_time': 0,
             'matter_type1': self.cat2_data.matter_type1,
             'matter_type2': self.cat2_data.matter_type2,
-            'outcome_code': None,
+            'outcome_code': '',
             'outcome_code_id': None,
             'level': None,
             'requires_action_at': None,

@@ -266,7 +266,7 @@ LOGGING = {
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'logstash',
+            'formatter': 'simple',
             'stream': sys.stdout
         },
     },

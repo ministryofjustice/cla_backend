@@ -1890,8 +1890,9 @@ class IsEligibleTestCase(unittest.TestCase):
         tested so the citizen should be eligible.
         """
         case_data = mock.MagicMock(
-            # non_disputed_liquid_capital=900000,
+            non_disputed_liquid_capital=900000,
             disputed_liquid_capital=800000,
+            disposable_capital_assets=700000,
             property_capital=(0, 0)
         )
         mocked_on_passported_benefits = mock.PropertyMock()

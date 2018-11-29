@@ -1889,7 +1889,11 @@ class IsEligibleTestCase(unittest.TestCase):
         TEST: if citizen is on NASS benefit income and capital are not
         tested so the citizen should be eligible.
         """
-        case_data = mock.MagicMock()
+        case_data = mock.MagicMock(
+            non_disputed_liquid_capital=900000,
+            disputed_liquid_capital=0,
+            property_capital=(0, 0)
+        )
         mocked_on_passported_benefits = mock.PropertyMock()
         mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits

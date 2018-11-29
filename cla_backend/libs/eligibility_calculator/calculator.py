@@ -298,6 +298,7 @@ class EligibilityChecker(object):
         return self.disposable_income <= constants.disposable_income.LIMIT
 
     def is_disposable_capital_eligible(self):
+        # import pdb; pdb.set_trace()
         limit = constants.disposable_capital.get_limit(self.case_data.category)
         return self.disposable_capital_assets <= limit
 

@@ -1889,20 +1889,32 @@ class IsEligibleTestCase(unittest.TestCase):
         TEST: if citizen is on NASS benefit income and capital are not
         tested so the citizen should be eligible.
         """
-        case_data = mock.MagicMock(
-            non_disputed_liquid_capital=900000,
-            disputed_liquid_capital=800000,
-            disposable_capital_assets=700000,
-            property_capital=(0, 0)
-        )
-        mocked_on_passported_benefits = mock.PropertyMock()
-        mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
-        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
-        type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
-        case_data.category = 'notimmigration'
+        # case_data = mock.MagicMock(
+        #     non_disputed_liquid_capital=900000,
+        #     disputed_liquid_capital=800000,
+        #     disposable_capital_assets=700000,
+        #     property_capital=(0, 0)
+        # )
+        with mock.patch.object(constants.disposable_capital, 'get_limit') as mocked_get_limit:
+            mocked_get_limit.return_value = 700000
+            case_data = mock.MagicMock()
+            type(case_data).category = mock.PropertyMock(return_value=u'blah blah')
+            with mock.patch.object(
+                    EligibilityChecker,
+                    'disposable_capital_assets',
+                    new_callable=mock.PropertyMock) as mocked_disposable_capital_assets:
+                mocked_disposable_capital_assets.return_value = 700001
 
-        ec = EligibilityChecker(case_data)
-        self.assertFalse(ec.is_eligible())
+                mocked_on_passported_benefits = mock.PropertyMock()
+                mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
+                type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
+                type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
+                case_data.category = 'notimmigration'
+                print("CASE DATA Facts", case_data.facts)
+                print("mocked_disposable_capital_assets.return_value", mocked_disposable_capital_assets.return_value)
+                print()
+                ec = EligibilityChecker(case_data)
+                self.assertFalse(ec.is_eligible())
 
-        self.assertFalse(mocked_on_passported_benefits.called)
-        self.assertTrue(mocked_on_nass_benefits.called)
+                self.assertFalse(mocked_on_passported_benefits.called)
+                self.assertTrue(mocked_on_nass_benefits.called)

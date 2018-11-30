@@ -1882,19 +1882,11 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
-    # renable test for ticket LGA-84 'Re-enable skipped Python test in cla_backend'
-    # @skip("because test is flaky... waiting for Python dev to fix")
     def test_nass_benefit_is_noteligible_if_category_isnt_immagration(self):
         """
         TEST: if citizen is on NASS benefit income and capital are not
         tested so the citizen should be eligible.
         """
-        case_data = mock.MagicMock(
-            non_disputed_liquid_capital=900000,
-            disputed_liquid_capital=800000,
-            disposable_capital_assets=700000,
-            property_capital=(0, 0)
-        )
         with mock.patch.object(constants.disposable_capital, 'get_limit') as mocked_get_limit:
             mocked_get_limit.return_value = 700000
             case_data = mock.MagicMock()
@@ -1910,6 +1902,7 @@ class IsEligibleTestCase(unittest.TestCase):
                 type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
                 type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
                 case_data.category = 'notimmigration'
+
                 ec = EligibilityChecker(case_data)
                 self.assertFalse(ec.is_eligible())
 

@@ -306,20 +306,16 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
-        print("Inside is_eligible method")
         if self.case_data.facts.on_nass_benefits and self.should_passport_nass():
             return True
 
         if not self.is_disposable_capital_eligible():
-            print("is_disposable_capital_eligible", self.is_disposable_capital_eligible)
             return False
 
         if not self.is_gross_income_eligible():
-            print("is_gross_income_eligible", self.is_gross_income_eligible())
             return False
 
         if not self.is_disposable_income_eligible():
-            print("is_disposable_income_eligible", self.is_disposable_income_eligible())
             return False
 
         return True

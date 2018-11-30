@@ -75,6 +75,14 @@ Start the server:
 
 See the list of users in `/admin/auth/user/`. Passwords are the same as the usernames.
 
+
+## Coding
+
+This project uses Black for strict code formatting, with a pre-commit hook for enforcement. Black requires Python 3,
+so must be installed outside this project's virtualenv for now. See the 
+[Installation docs](https://black.readthedocs.io/en/stable/installation_and_usage.html)
+
+
 ## Dev
 
 Each time you start a new terminal instance you will need to run the following commands to get the server running again:

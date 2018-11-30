@@ -31,7 +31,7 @@ Update pip to the latest version:
 
 Install python dependencies:
 
-    pip install -r requirements/local.txt
+    pip install -r requirements/dev.txt
 
 Create the database inside postgres. Type `psql -d template1` to enter postgres, then enter:
 

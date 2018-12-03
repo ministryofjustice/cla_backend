@@ -48,6 +48,10 @@ class Log(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         super(Log, self).save(*args, **kwargs)
+        if self.type == LOG_TYPES.OUTCOME:
+            logger.info('LGA-293 Saved outcome code {} (Log id: {}, Case ref:{})'.
+                        format(self.case.outcome_code, self.id, self.case.reference))
+
         if self.type == LOG_TYPES.OUTCOME and self.level >= LOG_LEVELS.HIGH:
             logger.info('LGA-275 Denormalizing outcome event fields to Case (ref:{})'.format(self.case.reference))
             self.case.outcome_code = self.code

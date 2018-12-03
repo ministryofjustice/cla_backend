@@ -266,8 +266,14 @@ LOGGING = {
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'logstash',
+            'formatter': 'simple',
             'stream': sys.stdout
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.handlers.logging.SentryHandler',
+            'formatter': 'simple',
+            'dsn': os.environ.get('RAVEN_CONFIG_DSN'),
         },
     },
     'loggers': {

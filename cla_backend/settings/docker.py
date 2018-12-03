@@ -22,6 +22,6 @@ ADMINS = (
 MANAGERS = ADMINS
 
 LOGGING['loggers'][''] = {
-    'handlers': ['console'],
+    'handlers': ['console', 'sentry'],
     'level': "DEBUG",
 }

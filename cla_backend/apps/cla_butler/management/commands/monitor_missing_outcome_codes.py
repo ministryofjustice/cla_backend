@@ -19,7 +19,7 @@ class Command(BaseCommand):
         if self.should_run_housekeeping(**options):
             self.check_for_missing_outcome_codes()
         else:
-            self.stdout.write('Not doing housekeeping because running on secondary instance')
+            logger.info('Skip check_for_missing_outcome_codes because running on secondary instance')
 
     @staticmethod
     def check_for_missing_outcome_codes():
@@ -29,9 +29,9 @@ class Command(BaseCommand):
 
         if cases_to_re_denorm.exists():
             case_references = cases_to_re_denorm.values_list('reference', flat=True)
-            logger.warning('LGA-275 investigation. Cases found with outcome code missing; '
-                           'value expected to be denormalized from log. Number of cases: {}\nReferences: {}'
-                           .format(len(case_references), case_references))
+            logger.error('LGA-275 investigation. Cases found with outcome code missing; '
+                         'value expected to be denormalized from log. Number of cases: {}\nReferences: {}'
+                         .format(len(case_references), case_references))
         else:
             logger.info('LGA-275 No cases found missing denormalized outcome codes')
 

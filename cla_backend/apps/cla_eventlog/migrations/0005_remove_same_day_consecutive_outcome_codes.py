@@ -55,8 +55,8 @@ def remove_same_day_consecutive_outcome_codes(apps, schema_editor):
             else:
                 logger.info('LGA-125 data migration: {:<7} {:<7} keep:   {}'.format(event.id, event.code, event.created))
 
-    logger.info('LGA-125 data migration: Log object ids to remove: {}'.format(same_day_consecutive_outcome_log_ids))
-    # Log.objects.filter(id__in=same_day_consecutive_outcome_log_ids).delete()
+    Log.objects.filter(id__in=same_day_consecutive_outcome_log_ids).delete()
+    logger.info('LGA-125 data migration: Log objects removed, ids: {}'.format(same_day_consecutive_outcome_log_ids))
     logger.info('LGA-125 data migration: end remove_same_day_consecutive_outcome_codes {}'.format(now()))
 
 

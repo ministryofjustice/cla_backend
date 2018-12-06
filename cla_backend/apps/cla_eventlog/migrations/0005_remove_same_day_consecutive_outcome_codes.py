@@ -6,12 +6,15 @@ from itertools import groupby
 
 from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from django.db import models, migrations
+from django.utils.timezone import now
 from pytz import UTC
 
 logger = logging.getLogger(__name__)
 
 
 def remove_same_day_consecutive_outcome_codes(apps, schema_editor):
+    logger.info('LGA-125 data migration: start remove_same_day_consecutive_outcome_codes {}'.format(now()))
+
     Log = apps.get_model('cla_eventlog', 'Log')
 
     # Older Django sans TruncDate, etc. not available
@@ -45,7 +48,9 @@ def remove_same_day_consecutive_outcome_codes(apps, schema_editor):
             if index < n - 1 and case_outcomes_for_day[index + 1].code == event.code:
                 same_day_consecutive_outcome_log_ids.add(event.id)
 
+    logger.info('LGA-125 data migration: To remove, Log objects with id: {}'.format(same_day_consecutive_outcome_log_ids))
     # Log.objects.filter(id__in=same_day_consecutive_outcome_log_ids).delete()
+    logger.info('LGA-125 data migration: end remove_same_day_consecutive_outcome_codes {}'.format(now()))
 
 
 def noop(apps, schema_editor):

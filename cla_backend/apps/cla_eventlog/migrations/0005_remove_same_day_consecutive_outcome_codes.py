@@ -17,7 +17,7 @@ def remove_same_day_consecutive_outcome_codes(apps, schema_editor):
 
     Log = apps.get_model('cla_eventlog', 'Log')
 
-    # Older Django sans TruncDate, etc. not available
+    # Older Django sans TruncDate, etc.
     outcome_events = Log.objects.filter(type=LOG_TYPES.OUTCOME, level=LOG_LEVELS.HIGH) \
         .extra(select={'day': 'date( cla_eventlog_log.created )'}) \
         .values('case__reference', 'code', 'day')
@@ -45,10 +45,15 @@ def remove_same_day_consecutive_outcome_codes(apps, schema_editor):
 
         n = case_outcomes_for_day.count()
         for index, event in enumerate(case_outcomes_for_day):
+            # If there is an immediately previous outcome event on the same day and the code is the same,
+            #   consider our event a dupe, and note its id for deletion
             if index < n - 1 and case_outcomes_for_day[index + 1].code == event.code:
                 same_day_consecutive_outcome_log_ids.add(event.id)
+            elif index == n - 1:
+                logger.info('LGA-125 data migration: Original Log id to keep: {}'.format(event.id))
 
-    logger.info('LGA-125 data migration: To remove, Log objects with id: {}'.format(same_day_consecutive_outcome_log_ids))
+    logger.info('LGA-125 data migration: To remove, Log objects with id: {}'.
+                format(same_day_consecutive_outcome_log_ids))
     # Log.objects.filter(id__in=same_day_consecutive_outcome_log_ids).delete()
     logger.info('LGA-125 data migration: end remove_same_day_consecutive_outcome_codes {}'.format(now()))
 

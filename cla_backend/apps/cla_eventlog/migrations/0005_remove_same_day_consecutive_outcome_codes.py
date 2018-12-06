@@ -44,13 +44,18 @@ def remove_same_day_consecutive_outcome_codes(apps, schema_editor):
                                                    created__lte=eod_of_day).order_by('-created')
 
         n = case_outcomes_for_day.count()
+        logger.info('LGA-125 data migration: case_outcomes_for_day log ids: {}'.
+                    format(case_outcomes_for_day.values_list('id', flat=True)))
         for index, event in enumerate(case_outcomes_for_day):
             # If there is an immediately previous outcome event on the same day and the code is the same,
             #   consider our event a dupe, and note its id for deletion
             if index < n - 1 and case_outcomes_for_day[index + 1].code == event.code:
                 same_day_consecutive_outcome_log_ids.add(event.id)
+                logger.info('LGA-125 data migration: Dupe {} to remove:  {} {}'.format(event.code, event.id, event.created))
             elif index == n - 1:
-                logger.info('LGA-125 data migration: Original Log id to keep: {}'.format(event.id))
+                logger.info('LGA-125 data migration: Orig {} to keep:     {} {}'.format(event.code, event.id, event.created))
+            else:
+                logger.info('LGA-125 data migration: Diff {} to keep:    {} {}'.format(event.code, event.id, event.created))
 
     logger.info('LGA-125 data migration: To remove, Log objects with id: {}'.
                 format(same_day_consecutive_outcome_log_ids))

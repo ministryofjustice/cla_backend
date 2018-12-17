@@ -31,7 +31,7 @@ Update pip to the latest version:
 
 Install python dependencies:
 
-    pip install -r requirements/local.txt
+    pip install -r requirements/dev.txt
 
 Create the database inside postgres. Type `psql -d template1` to enter postgres, then enter:
 
@@ -74,6 +74,14 @@ Start the server:
     ./manage.py runserver 8000
 
 See the list of users in `/admin/auth/user/`. Passwords are the same as the usernames.
+
+
+## Coding
+
+This project uses Black for strict code formatting, with a pre-commit hook for enforcement. Black requires Python 3,
+so must be installed outside this project's virtualenv for now. See the 
+[Installation docs](https://black.readthedocs.io/en/stable/installation_and_usage.html)
+
 
 ## Dev
 

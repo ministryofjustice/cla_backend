@@ -451,6 +451,19 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                 r'.*must be one of'):
             test_in('q')
 
+    def test_validator_fafa_determination_code_is_valid(self):
+        data = [
+            [u'3333333', u'0001', u'2B222B', u'A N Other', u'Corgi',
+             u'02/01/2014', u'E', u'M', u'1', u'', u'', u'SW1A 1AA',
+             u'X', u'EPRO', u'ESOS', u'EA', u'EB', u'', u'01/01/2014',
+             u'01/01/2015', u'18', u'99.5', u'', u'ILL', u'0', u'0',
+             u'FAFA', u'N', u'', u'', u'NAR', u'', u'DK', u'TA']
+        ]
+        validator = v.ProviderCSVValidator(data)
+        try:
+            validator.validate()
+        except serializers.ValidationError, exception:
+            self.fail(str(exception))
 
 class DependsOnDecoratorTestCase(unittest.TestCase):
 

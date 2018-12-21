@@ -15,7 +15,7 @@ AGE_RANGE = {u'A', u'B', u'C', u'D', u'E', u'F', u'G', u'U'}
 
 ELIGIBILITY_CODES = {u'S', u'T', u'V', u'W', u'X', u'Z'}
 
-DETERMINATION_CODES = {u'OOSC', u'OSPF', u'CHNM', u'FINI', u'DVCA'}
+DETERMINATION_CODES = {u'OOSC', u'OSPF', u'CHNM', u'FINI', u'DVCA', u'FAFA'}
 
 CATEGORY_SPEC = {
     u'debt': {

@@ -465,6 +465,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         except serializers.ValidationError, exception:
             self.fail(str(exception))
 
+
 class DependsOnDecoratorTestCase(unittest.TestCase):
 
     def test_method_called(self):

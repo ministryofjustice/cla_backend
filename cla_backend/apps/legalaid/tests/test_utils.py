@@ -8,7 +8,6 @@ from django.conf import settings
 
 
 class SlaCustomBusinessHoursTestCase(TestCase):
-    operator_hours = OpeningHours(**settings.OPERATOR_HOURS)
 
     xmas_eve = date(year=2018, month=12, day=24)
     xmas_eve_before_hours = datetime.combine(xmas_eve, time(hour=8, minute=59))
@@ -34,10 +33,22 @@ class SlaCustomBusinessHoursTestCase(TestCase):
         self.assertFalse(is_in_business_hours(self.new_years_eve_after_hours))
 
     def test_custom_day_timeslots(self):
-        slots = self.operator_hours.time_slots(self.xmas_eve)
-        self.assertEquals(min(slots), datetime(2018, 12, 24, 9, 0))
-        self.assertEquals(max(slots), datetime(2018, 12, 24, 17, 0))
+        now = datetime.now()
+        xmas_eve = date(now.year, 12, 24)
+        new_years_eve = date(now.year, 12, 31)
 
-        slots = self.operator_hours.time_slots(self.new_years_eve)
-        self.assertEquals(min(slots), datetime(2018, 12, 31, 9, 0))
-        self.assertEquals(max(slots), datetime(2018, 12, 31, 17, 0))
+        custom_slots = {
+            'weekday': (time(9, 0), time(20, 0)),
+            'saturday': (time(9, 0), time(12, 30)),
+            xmas_eve.strftime('%Y-%m-%d'): (time(9, 0), time(17, 30)),
+            new_years_eve.strftime('%Y-%m-%d'): (time(9, 0), time(17, 30)),
+        }
+        operator_hours = OpeningHours(**custom_slots)
+
+        slots = operator_hours.time_slots(xmas_eve)
+        self.assertEquals(min(slots), datetime(now.year, 12, 24, 9, 0))
+        self.assertEquals(max(slots), datetime(now.year, 12, 24, 17, 0))
+
+        slots = operator_hours.time_slots(new_years_eve)
+        self.assertEquals(min(slots), datetime(now.year, 12, 31, 9, 0))
+        self.assertEquals(max(slots), datetime(now.year, 12, 31, 17, 0))

@@ -1864,7 +1864,7 @@ class IsEligibleTestCase(unittest.TestCase):
         ec.is_gross_income_eligible.assert_called_once_with()
         ec.is_disposable_capital_eligible.assert_called_once_with()
 
-    def test_nass_benefit_is_eligible_only_if_category_is_immagration(self):
+    def test_nass_benefit_is_eligible_only_if_category_is_immigration(self):
         """
         TEST: if citizen is on NASS benefit income and capital are not
         tested so the citizen should be eligible.
@@ -1882,29 +1882,44 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
-    def test_nass_benefit_is_noteligible_if_category_isnt_immagration(self):
+    def test_nass_benefit_is_noteligible_if_category_isnt_immigration_and_disposable_capital_is_above_limit(self):
         """
-        TEST: if citizen is on NASS benefit income and capital are not
-        tested so the citizen should be eligible.
+        TEST:  If citizen does not qualify for immigration and their disposable capital is
+        tested and shows that it is greater than the limit then the citizen
+        is not eligible for NASS benefit income.
         """
-        with mock.patch.object(constants.disposable_capital, 'get_limit') as mocked_get_limit:
-            mocked_get_limit.return_value = 700000
-            case_data = mock.MagicMock()
-            type(case_data).category = mock.PropertyMock(return_value=u'blah blah')
-            with mock.patch.object(
-                    EligibilityChecker,
-                    'disposable_capital_assets',
-                    new_callable=mock.PropertyMock) as mocked_disposable_capital_assets:
-                mocked_disposable_capital_assets.return_value = 700001
 
-                mocked_on_passported_benefits = mock.PropertyMock()
-                mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
-                type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
-                type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
-                case_data.category = 'notimmigration'
+        case_data = mock.MagicMock()
+        mocked_on_passported_benefits = mock.PropertyMock()
+        mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
+        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
+        type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
+        case_data.category = 'not_immigration'
 
-                ec = EligibilityChecker(case_data)
-                self.assertFalse(ec.is_eligible())
+        ec = EligibilityChecker(case_data)
+        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=False)
+        self.assertFalse(ec.is_eligible())
 
-                self.assertFalse(mocked_on_passported_benefits.called)
-                self.assertTrue(mocked_on_nass_benefits.called)
+        self.assertFalse(mocked_on_passported_benefits.called)
+        self.assertTrue(mocked_on_nass_benefits.called)
+
+    def test_nass_benefit_is_noteligible_if_category_isnt_immigration_and_disposable_income_is_above_limit(self):
+        """
+        TEST:  If citizen does not qualify for immigration and their disposable income is
+        tested and shows that it is greater than the limit then the citizen
+        is not eligible for NASS benefit income.
+        """
+
+        case_data = mock.MagicMock()
+        mocked_on_passported_benefits = mock.PropertyMock()
+        mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
+        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
+        type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
+        case_data.category = 'not_immigration'
+
+        ec = EligibilityChecker(case_data)
+        ec.is_disposable_income_eligible = mock.MagicMock(return_value=False)
+        self.assertFalse(ec.is_eligible())
+
+        self.assertFalse(mocked_on_passported_benefits.called)
+        self.assertTrue(mocked_on_nass_benefits.called)

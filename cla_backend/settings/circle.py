@@ -7,8 +7,13 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES['default']['NAME'] = os.environ.get('DB_NAME', 'circle_test')
-DATABASES['default']['USER'] = os.environ.get('DB_USER', 'root')
-DATABASES['default']['PASSWORD'] = os.environ.get('DB_PASSWORD', '')
-DATABASES['default']['HOST'] = os.environ.get('DB_HOST', 'localhost')
-DATABASES['default']['PORT'] = os.environ.get('DB_PORT', '')
+DATABASES = {
+    'default': {
+        'ENGINE': 'cla_backend.apps.reports.db.backend',
+        'NAME': os.environ.get('DB_NAME', 'circle_test'),
+        'USER': os.environ.get('DB_USER', 'root'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', ''),
+    }
+}

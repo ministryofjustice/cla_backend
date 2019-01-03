@@ -3,8 +3,6 @@ from datetime import date, datetime, time
 from django.test import TestCase
 from legalaid.utils.sla import is_in_business_hours, operator_hours
 
-# from cla_common.call_centre_availability import OpeningHours
-
 
 class SlaCustomBusinessHoursTestCase(TestCase):
     next_year = date.today().year + 1

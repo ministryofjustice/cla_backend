@@ -1878,7 +1878,7 @@ class IsEligibleTestCase(unittest.TestCase):
 
         ec = EligibilityChecker(case_data)
         self.assertTrue(ec.is_eligible())
-
+        print("Passported benefit value 1", mocked_on_passported_benefits.called)
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
@@ -1899,7 +1899,7 @@ class IsEligibleTestCase(unittest.TestCase):
         ec = EligibilityChecker(case_data)
         ec.is_disposable_capital_eligible = mock.MagicMock(return_value=False)
         self.assertFalse(ec.is_eligible())
-
+        print("Passported benefit value 2", mocked_on_passported_benefits.called)
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
@@ -1911,7 +1911,7 @@ class IsEligibleTestCase(unittest.TestCase):
         """
 
         case_data = mock.MagicMock()
-        mocked_on_passported_benefits = mock.PropertyMock(return_value=False)
+        mocked_on_passported_benefits = mock.PropertyMock()
         mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
         type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
@@ -1920,6 +1920,6 @@ class IsEligibleTestCase(unittest.TestCase):
         ec = EligibilityChecker(case_data)
         ec.is_disposable_income_eligible = mock.MagicMock(return_value=False)
         self.assertFalse(ec.is_eligible())
-
+        print("Passported benefit value 3", mocked_on_passported_benefits.called)
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)

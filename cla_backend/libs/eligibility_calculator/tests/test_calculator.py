@@ -1918,7 +1918,9 @@ class IsEligibleTestCase(unittest.TestCase):
         case_data.category = 'not_immigration'
 
         ec = EligibilityChecker(case_data)
+        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=True)
         ec.is_disposable_income_eligible = mock.MagicMock(return_value=False)
+        print("is_disposable_income_eligible", ec.is_disposable_income_eligible())
         self.assertFalse(ec.is_eligible())
         print("Passported benefit value 3", mocked_on_passported_benefits.called)
         self.assertFalse(mocked_on_passported_benefits.called)

@@ -1,9 +1,6 @@
 import os
 from .testing import *
 
-DEBUG = False
-TEMPLATE_DEBUG = DEBUG
-
 ADMINS = (
     ('CLA', 'cla-alerts@digital.justice.gov.uk'),
 )
@@ -20,7 +17,3 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT', ''),
     }
 }
-
-ALLOWED_HOSTS = [
-    '*'
-]

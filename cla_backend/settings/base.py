@@ -76,6 +76,9 @@ AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', '')
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', '')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', '')
 
+AWS_DELETED_OBJECTS_BUCKET_NAME = os.environ.get('AWS_DELETED_OBJECTS_BUCKET_NAME', '')
+AWS_DELETED_OBJECTS_BUCKET_REGION = 'eu-west-1'
+
 SITE_HOSTNAME = os.environ.get('SITE_HOSTNAME', 'cla.local:8000')
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False

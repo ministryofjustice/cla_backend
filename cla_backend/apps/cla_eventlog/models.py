@@ -10,6 +10,7 @@ from model_utils.models import TimeStampedModel
 from .constants import LOG_LEVELS, LOG_TYPES
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.utils.timezone import now
 
 logger = logging.getLogger(__name__)
 
@@ -46,8 +47,25 @@ class Log(TimeStampedModel):
     def __unicode__(self):
         return u'%s - %s:%s' % (self.case, self.type, self.code)
 
+    def is_consecutive_outcome_today(self):
+        """LGA-125 Debounce consecutive outcome codes since start of today"""
+        case_outcome_codes = Log.objects.filter(case=self.case, level__gte=LOG_LEVELS.HIGH, type=LOG_TYPES.OUTCOME)
+        start_of_today = now().replace(hour=0, minute=0, second=0, microsecond=0)
+        try:
+            latest_outcome_code_today = case_outcome_codes.filter(created__gte=start_of_today).latest('created')
+        except Log.DoesNotExist:
+            logger.debug('LGA-125 No outcome codes exist for case today')
+        else:
+            return latest_outcome_code_today.code == self.code
+        return False
+
     def save(self, *args, **kwargs):
+        if self.is_consecutive_outcome_today():
+            logger.warning('LGA-125 Preventing save of consecutive duplicate outcome code on same day')
+            return
+
         super(Log, self).save(*args, **kwargs)
+
         if self.type == LOG_TYPES.OUTCOME:
             logger.info('LGA-293 Saved outcome code {} (Log id: {}, Case ref:{})'.
                         format(self.case.outcome_code, self.id, self.case.reference))

@@ -6,13 +6,6 @@ from django.db import models, migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('guidance', '0001_initial'),
-    ]
+    dependencies = [("guidance", "0001_initial")]
 
-    operations = [
-        migrations.RemoveField(
-            model_name='note',
-            name='name',
-        ),
-    ]
+    operations = [migrations.RemoveField(model_name="note", name="name")]

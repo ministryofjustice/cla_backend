@@ -8,9 +8,7 @@ class ModelMixin(object):
         for kw, v in kwargs.items():
             if kw not in self.PROPERTY_META:
                 raise exceptions.PropertyExpectedException(
-                    "'{kw}' is not a valid property for '{obj_name}'".format(
-                        kw=kw, obj_name=self.__class__.__name__
-                    )
+                    "'{kw}' is not a valid property for '{obj_name}'".format(kw=kw, obj_name=self.__class__.__name__)
                 )
 
             fk_clazz = self.PROPERTY_META.get(kw)
@@ -23,25 +21,14 @@ class ModelMixin(object):
 
         if kw in self.PROPERTY_META:
             raise exceptions.PropertyExpectedException(
-                "'{obj_name}' requires attribute '{kw}' and was not given at __init__".format(
-                    kw=kw, obj_name=obj_name
-                )
+                "'{obj_name}' requires attribute '{kw}' and was not given at __init__".format(kw=kw, obj_name=obj_name)
             )
 
-        raise AttributeError(
-            "'{obj_name}' object has no attribute '{kw}'".format(
-                obj_name=obj_name, kw=kw
-            )
-        )
+        raise AttributeError("'{obj_name}' object has no attribute '{kw}'".format(obj_name=obj_name, kw=kw))
 
 
 class Savings(ModelMixin, object):
-    PROPERTY_META = {
-        'bank_balance': None,
-        'investment_balance': None,
-        'credit_balance': None,
-        'asset_balance': None
-    }
+    PROPERTY_META = {"bank_balance": None, "investment_balance": None, "credit_balance": None, "asset_balance": None}
 
     @property
     def total(self):
@@ -50,15 +37,15 @@ class Savings(ModelMixin, object):
 
 class Income(ModelMixin, object):
     PROPERTY_META = {
-        'earnings': None,
-        'self_employment_drawings': None,
-        'benefits': None,
-        'tax_credits': None,
-        'child_benefits': None,
-        'maintenance_received': None,
-        'pension': None,
-        'other_income': None,
-        'self_employed': None
+        "earnings": None,
+        "self_employment_drawings": None,
+        "benefits": None,
+        "tax_credits": None,
+        "child_benefits": None,
+        "maintenance_received": None,
+        "pension": None,
+        "other_income": None,
+        "self_employed": None,
     }
 
     @property
@@ -67,45 +54,43 @@ class Income(ModelMixin, object):
 
     @property
     def total(self):
-        return self.earnings + \
-            self.self_employment_drawings + \
-            self.benefits + \
-            self.tax_credits + \
-            self.child_benefits + \
-            self.maintenance_received + \
-            self.pension + \
-            self.other_income
+        return (
+            self.earnings
+            + self.self_employment_drawings
+            + self.benefits
+            + self.tax_credits
+            + self.child_benefits
+            + self.maintenance_received
+            + self.pension
+            + self.other_income
+        )
 
 
 class Deductions(ModelMixin, object):
     PROPERTY_META = {
-        'income_tax': None,
-        'national_insurance': None,
-        'maintenance': None,
-        'childcare': None,
-        'mortgage': None,
-        'rent': None,
-        'criminal_legalaid_contributions': None
+        "income_tax": None,
+        "national_insurance": None,
+        "maintenance": None,
+        "childcare": None,
+        "mortgage": None,
+        "rent": None,
+        "criminal_legalaid_contributions": None,
     }
 
 
 class Person(ModelMixin, object):
-    PROPERTY_META = {
-        'income': Income,
-        'savings': Savings,
-        'deductions': Deductions
-    }
+    PROPERTY_META = {"income": Income, "savings": Savings, "deductions": Deductions}
 
 
 class Facts(ModelMixin, object):
     PROPERTY_META = {
-        'is_you_or_your_partner_over_60': None,
-        'on_passported_benefits': None,
-        'on_nass_benefits': None,
-        'has_partner': None,
-        'is_partner_opponent': None,
-        'dependants_old': None,
-        'dependants_young': None
+        "is_you_or_your_partner_over_60": None,
+        "on_passported_benefits": None,
+        "on_nass_benefits": None,
+        "has_partner": None,
+        "is_partner_opponent": None,
+        "dependants_old": None,
+        "dependants_young": None,
     }
 
     @property
@@ -127,12 +112,12 @@ class Facts(ModelMixin, object):
 class CaseData(ModelMixin, object):
 
     PROPERTY_META = {
-        'category': None,
-        'facts': Facts,
-        'you': Person,
-        'partner': Person,
-        'property_data': None,
-        'disputed_savings': Savings
+        "category": None,
+        "facts": Facts,
+        "you": Person,
+        "partner": Person,
+        "property_data": None,
+        "disputed_savings": Savings,
     }
 
     @property
@@ -148,7 +133,7 @@ class CaseData(ModelMixin, object):
 
     @property
     def disputed_liquid_capital(self):
-        if hasattr(self, 'disputed_savings') and self.disputed_savings:
+        if hasattr(self, "disputed_savings") and self.disputed_savings:
             return self.disputed_savings.total
         return 0
 

@@ -7,10 +7,6 @@ from core.operations import LoadExtension
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('reports', '0001_initial'),
-    ]
+    dependencies = [("reports", "0001_initial")]
 
-    operations = [
-        LoadExtension(name='tablefunc'),
-    ]
+    operations = [LoadExtension(name="tablefunc")]

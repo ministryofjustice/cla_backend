@@ -24,11 +24,11 @@ class BetweenDict(Mapping):
 
         for k, v in d.items():
             if k[0] >= k[1]:
-                raise ValueError(u'Invalid range (%s, %s)' % k[0], k[1])
+                raise ValueError(u"Invalid range (%s, %s)" % k[0], k[1])
 
             for lower, upper in self.store.keys():
                 if not (k[1] <= lower or k[0] >= upper):
-                    raise ValueError(u'Overlapping key spaces')
+                    raise ValueError(u"Overlapping key spaces")
             self.store[k] = v
 
     def __getitem__(self, key):

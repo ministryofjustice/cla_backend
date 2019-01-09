@@ -14,8 +14,10 @@ class Command(BaseCommand):
     ./manage.py test_for_call_bunching [minutes] [mnumber_consecutive]
     """
 
-    help = ('Goes through all calls and detects if any provider has had 3 '
-            'consecutive calls allocated for the same category in a row')
+    help = (
+        "Goes through all calls and detects if any provider has had 3 "
+        "consecutive calls allocated for the same category in a row"
+    )
 
     def handle(self, *args, **kwargs):
         minutes = 5
@@ -28,16 +30,16 @@ class Command(BaseCommand):
 
         delta = datetime.timedelta(minutes=minutes)
 
-        cases = Case.objects.all().order_by(
-            'eligibility_check__category_id',
-            'provider_assigned_at'
-        ).select_related('eligibility_check')
+        cases = (
+            Case.objects.all()
+            .order_by("eligibility_check__category_id", "provider_assigned_at")
+            .select_related("eligibility_check")
+        )
 
         total_cases = 0
         total_bunched = 0
 
-        previous = OrderedDict([(i, None) for i in
-                                range(1, number_consecutive)])
+        previous = OrderedDict([(i, None) for i in range(1, number_consecutive)])
 
         for case in cases:
             if case.provider_assigned_at:
@@ -50,39 +52,39 @@ class Command(BaseCommand):
             same_provider = None
             same_category = None
             if earliest_previous:
-                same_provider = all([c.provider_id == case.provider_id for c
-                                     in previous.values()])
-                same_category = all([c.eligibility_check.category_id ==
-                                     case.eligibility_check.category_id
-                                     for c in previous.values()])
+                same_provider = all([c.provider_id == case.provider_id for c in previous.values()])
+                same_category = all(
+                    [c.eligibility_check.category_id == case.eligibility_check.category_id for c in previous.values()]
+                )
 
-            if same_provider and same_category and \
-                    case.provider_assigned_at - delta <= \
-                    earliest_previous.provider_assigned_at:
+            if (
+                same_provider
+                and same_category
+                and case.provider_assigned_at - delta <= earliest_previous.provider_assigned_at
+            ):
 
-                all_pks = ', '.join([unicode(c.pk) for c in previous.values()])
+                all_pks = ", ".join([unicode(c.pk) for c in previous.values()])
 
-                self.stdout.write('Provider %s has %s cases in %s Minutes: %s'
-                                  ', %s on %s' % (case.provider_id,
-                                                  number_consecutive, minutes,
-                                                  case.pk, all_pks,
-                                                  case.provider_assigned_at))
+                self.stdout.write(
+                    "Provider %s has %s cases in %s Minutes: %s"
+                    ", %s on %s"
+                    % (case.provider_id, number_consecutive, minutes, case.pk, all_pks, case.provider_assigned_at)
+                )
                 total_bunched += 1
                 for n in range(1, number_consecutive):
                     previous[n] = None
                 case = None
 
             for n in reversed(range(2, number_consecutive)):
-                previous[n] = previous[n-1]
+                previous[n] = previous[n - 1]
             previous[1] = case
 
-        self.stdout.write('\n\nTotal bunched: %s/%s\n\n' % (total_bunched,
-                                                            total_cases))
+        self.stdout.write("\n\nTotal bunched: %s/%s\n\n" % (total_bunched, total_cases))
 
-        self.stdout.write('Dates of edited Allocations')
+        self.stdout.write("Dates of edited Allocations")
 
-        ct = ContentType.objects.get(model='providerallocation')
+        ct = ContentType.objects.get(model="providerallocation")
         log_entries = LogEntry.objects.filter(content_type_id=ct.pk)
 
         for log_entry in log_entries:
-            self.stdout.write('Date: %s' % log_entry.action_time)
+            self.stdout.write("Date: %s" % log_entry.action_time)

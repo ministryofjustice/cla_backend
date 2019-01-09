@@ -25,44 +25,35 @@ class ClientIdPasswordGrantForm(PasswordGrantForm):
         # WARNING terrible! But working :-)
         cls = None
         if self.client:
-            if self.client.name == 'operator':
+            if self.client.name == "operator":
                 cls = Operator
-            elif self.client.name == 'staff':
+            elif self.client.name == "staff":
                 cls = Staff
         return cls
 
     def clean_login_attempts(self):
-        username = self.cleaned_data['username']
+        username = self.cleaned_data["username"]
 
-        cooloff_time = timezone.now() - datetime.timedelta(
-            minutes=settings.LOGIN_FAILURE_COOLOFF_TIME
-        )
+        cooloff_time = timezone.now() - datetime.timedelta(minutes=settings.LOGIN_FAILURE_COOLOFF_TIME)
 
-        attempts = AccessAttempt.objects.filter(
-            username=username,
-            created__gt=cooloff_time
-        ).count()
+        attempts = AccessAttempt.objects.filter(username=username, created__gt=cooloff_time).count()
 
         if attempts >= settings.LOGIN_FAILURE_LIMIT:
             self.account_lockedout = True
 
-            statsd.incr('account.lockout.created')
-            logger.info('account locked out', extra={
-                'username': username
-            })
+            statsd.incr("account.lockout.created")
+            logger.info("account locked out", extra={"username": username})
 
-            raise OAuthValidationError({
-                'error': "locked_out"
-            })
+            raise OAuthValidationError({"error": "locked_out"})
 
     def on_form_invalid(self):
         if not self.account_lockedout:
-            username = self.cleaned_data.get('username')
+            username = self.cleaned_data.get("username")
             if username:
                 AccessAttempt.objects.create_for_username(username)
 
     def on_form_valid(self):
-        username = self.cleaned_data.get('username')
+        username = self.cleaned_data.get("username")
         AccessAttempt.objects.delete_for_username(username)
 
     def clean(self):
@@ -71,16 +62,16 @@ class ClientIdPasswordGrantForm(PasswordGrantForm):
         ModelClazz = self.get_user_model()
 
         assert ModelClazz, u"Cannot identify client {name}".format(
-            name=u'None' if not self.client else self.client.name
+            name=u"None" if not self.client else self.client.name
         )
 
         data = self.cleaned_data
         try:
-            model = ModelClazz.objects.get(user__username=data.get('username'))
+            model = ModelClazz.objects.get(user__username=data.get("username"))
         except ModelClazz.DoesNotExist as e:
-            raise OAuthValidationError({'error': 'invalid_grant'})
+            raise OAuthValidationError({"error": "invalid_grant"})
 
         if not model.user.is_active:
-            raise OAuthValidationError({'error': 'account_disabled'})
+            raise OAuthValidationError({"error": "account_disabled"})
 
         return super(ClientIdPasswordGrantForm, self).clean()

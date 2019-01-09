@@ -16,13 +16,22 @@ from rest_framework.filters import SearchFilter
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 
 from legalaid.models import Case
-from legalaid.views import BaseUserViewSet, \
-    BaseNestedEligibilityCheckViewSet, BaseCategoryViewSet, \
-    BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
-    BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
-    BaseFeedbackViewSet, BaseCaseNotesHistoryViewSet, BaseCSVUploadViewSet, \
-    DescCaseOrderingFilter
+from legalaid.views import (
+    BaseUserViewSet,
+    BaseNestedEligibilityCheckViewSet,
+    BaseCategoryViewSet,
+    BaseMatterTypeViewSet,
+    BaseMediaCodeViewSet,
+    FullPersonalDetailsViewSet,
+    BaseThirdPartyDetailsViewSet,
+    BaseAdaptationDetailsViewSet,
+    BaseAdaptationDetailsMetadataViewSet,
+    FullCaseViewSet,
+    BaseFeedbackViewSet,
+    BaseCaseNotesHistoryViewSet,
+    BaseCSVUploadViewSet,
+    DescCaseOrderingFilter,
+)
 
 from diagnosis.views import BaseDiagnosisViewSet
 
@@ -30,14 +39,22 @@ from .models import Staff
 from .permissions import CLAProviderClientIDPermission
 from rest_framework.filters import OrderingFilter
 from rest_framework.views import APIView
-from .serializers import EligibilityCheckSerializer, \
-    CaseSerializer, StaffSerializer, AdaptationDetailsSerializer, \
-    PersonalDetailsSerializer, ThirdPartyDetailsSerializer, \
-    LogSerializer, FeedbackSerializer, ExtendedEligibilityCheckSerializer, \
-    CaseListSerializer, CaseNotesHistorySerializer, CSVUploadSerializer, \
-    CSVUploadDetailSerializer
-from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, \
-    SplitCaseForm, ReopenCaseForm
+from .serializers import (
+    EligibilityCheckSerializer,
+    CaseSerializer,
+    StaffSerializer,
+    AdaptationDetailsSerializer,
+    PersonalDetailsSerializer,
+    ThirdPartyDetailsSerializer,
+    LogSerializer,
+    FeedbackSerializer,
+    ExtendedEligibilityCheckSerializer,
+    CaseListSerializer,
+    CaseNotesHistorySerializer,
+    CSVUploadSerializer,
+    CSVUploadDetailSerializer,
+)
+from .forms import RejectCaseForm, AcceptCaseForm, CloseCaseForm, SplitCaseForm, ReopenCaseForm
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +74,7 @@ class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
-    BaseNestedEligibilityCheckViewSet
+    BaseNestedEligibilityCheckViewSet,
 ):
     serializer_class = EligibilityCheckSerializer
 
@@ -67,40 +84,39 @@ class EligibilityCheckViewSet(
         self.__pre_save__ = self.get_serializer_class()(original_obj).data
 
 
-class MatterTypeViewSet(
-    CLAProviderPermissionViewSetMixin, BaseMatterTypeViewSet
-):
+class MatterTypeViewSet(CLAProviderPermissionViewSetMixin, BaseMatterTypeViewSet):
     pass
 
 
-class MediaCodeViewSet(
-    CLAProviderPermissionViewSetMixin, BaseMediaCodeViewSet
-):
+class MediaCodeViewSet(CLAProviderPermissionViewSetMixin, BaseMediaCodeViewSet):
     pass
 
 
-class CaseViewSet(
-    CLAProviderPermissionViewSetMixin, FullCaseViewSet
-):
+class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
     serializer_class = CaseListSerializer
     serializer_detail_class = CaseSerializer
 
-    queryset = Case.objects.exclude(provider=None).select_related('diagnosis', 'eligibility_check', 'personal_details')
+    queryset = Case.objects.exclude(provider=None).select_related("diagnosis", "eligibility_check", "personal_details")
     queryset_detail = Case.objects.exclude(provider=None).select_related(
-        'eligibility_check', 'personal_details',
-        'adaptation_details', 'matter_type1', 'matter_type2',
-        'diagnosis', 'media_code', 'eligibility_check__category',
-        'created_by'
+        "eligibility_check",
+        "personal_details",
+        "adaptation_details",
+        "matter_type1",
+        "matter_type2",
+        "diagnosis",
+        "media_code",
+        "eligibility_check__category",
+        "created_by",
     )
 
-    filter_backends = (
-        DescCaseOrderingFilter,
-        SearchFilter,
-    )
+    filter_backends = (DescCaseOrderingFilter, SearchFilter)
 
     ordering_fields = (
-        'modified', 'null_priority', 'priority',
-        'personal_details__full_name', 'personal_details__postcode'
+        "modified",
+        "null_priority",
+        "priority",
+        "personal_details__full_name",
+        "personal_details__postcode",
     )
 
     def get_queryset(self, **kwargs):
@@ -117,34 +133,20 @@ class CaseViewSet(
             closed:
                 only == 'closed'
         """
-        this_provider = get_object_or_404(
-            Staff, user=self.request.user).provider
-        qs = super(CaseViewSet, self).get_queryset(**kwargs).filter(
-            provider=this_provider
-        ).exclude(outcome_code='IRCB')
+        this_provider = get_object_or_404(Staff, user=self.request.user).provider
+        qs = (
+            super(CaseViewSet, self).get_queryset(**kwargs).filter(provider=this_provider).exclude(outcome_code="IRCB")
+        )
 
-        only_param = self.request.QUERY_PARAMS.get('only')
-        if only_param == 'new':
-            qs = qs.filter(
-                provider_viewed__isnull=True,
-                provider_accepted__isnull=True,
-                provider_closed__isnull=True
-            )
-        elif only_param == 'opened':
-            qs = qs.filter(
-                provider_viewed__isnull=False,
-                provider_accepted__isnull=True,
-                provider_closed__isnull=True
-            )
-        elif only_param == 'accepted':
-            qs = qs.filter(
-                provider_accepted__isnull=False,
-                provider_closed__isnull=True
-            )
-        elif only_param == 'closed':
-            qs = qs.filter(
-                provider_closed__isnull=False
-            )
+        only_param = self.request.QUERY_PARAMS.get("only")
+        if only_param == "new":
+            qs = qs.filter(provider_viewed__isnull=True, provider_accepted__isnull=True, provider_closed__isnull=True)
+        elif only_param == "opened":
+            qs = qs.filter(provider_viewed__isnull=False, provider_accepted__isnull=True, provider_closed__isnull=True)
+        elif only_param == "accepted":
+            qs = qs.filter(provider_accepted__isnull=False, provider_closed__isnull=True)
+        elif only_param == "closed":
+            qs = qs.filter(provider_closed__isnull=False)
 
         return qs
 
@@ -180,70 +182,64 @@ class CaseViewSet(
     def legal_help_form_extract(self, *args, **kwargs):
         case = self.get_object()
         data = {
-            'case': CaseSerializer(instance=case).data,
-            'personal_details': PersonalDetailsSerializer(
-                instance=case.personal_details
-            ).data,
-            'eligibility_check': ExtendedEligibilityCheckSerializer(
-                instance=case.eligibility_check
-            ).data
+            "case": CaseSerializer(instance=case).data,
+            "personal_details": PersonalDetailsSerializer(instance=case.personal_details).data,
+            "eligibility_check": ExtendedEligibilityCheckSerializer(instance=case.eligibility_check).data,
         }
         return DRFResponse(data)
 
     @action()
     def split(self, request, reference=None, **kwargs):
-        return self._form_action(
-            request, Form=SplitCaseForm, form_kwargs={
-                'request': request
-            }
-        )
+        return self._form_action(request, Form=SplitCaseForm, form_kwargs={"request": request})
 
 
 class ProviderExtract(APIView):
     permission_classes = (IsProviderPermission,)
     authentication_classes = (LegacyCHSAuthentication,)
 
-    http_method_names = [u'post', 'options']
+    http_method_names = [u"post", "options"]
 
     def options(self, request):
         """
         CORS requests begin with an OPTIONS request, which must not require
         authentication and must have CORS headers in the response.
         """
-        return DRFResponse(self.metadata(request),
-                           content_type='application/json',
-                           status=200,
-                           headers={'Access-Control-Allow-Origin': '*'})
+        return DRFResponse(
+            self.metadata(request),
+            content_type="application/json",
+            status=200,
+            headers={"Access-Control-Allow-Origin": "*"},
+        )
 
     def post(self, request):
         # this is to keep backward compatibility with the old system
         data = request.POST.copy()
-        if 'CHSOrganisationID' not in data:
-            data['CHSOrganisationID'] = data.get('CHSOrgansationID')
+        if "CHSOrganisationID" not in data:
+            data["CHSOrganisationID"] = data.get("CHSOrgansationID")
 
         form = ProviderExtractForm(data)
         if form.is_valid():
             data = form.cleaned_data
             try:
-                case = Case.objects.get(reference__iexact=data['CHSCRN'])
+                case = Case.objects.get(reference__iexact=data["CHSCRN"])
             except Case.DoesNotExist:
-                return DRFResponse({'detail': 'Not found'},
-                                   content_type='application/json',
-                                   status=404,
-                                   headers={'Access-Control-Allow-Origin': '*'})
+                return DRFResponse(
+                    {"detail": "Not found"},
+                    content_type="application/json",
+                    status=404,
+                    headers={"Access-Control-Allow-Origin": "*"},
+                )
             self.check_object_permissions(request, case)
-            statsd.incr('provider_extract.exported')
+            statsd.incr("provider_extract.exported")
 
-            logger.info('Provider case exported',
-                        extra={'USERNAME': request.user.username,
-                               'POSTDATA': request.POST})
+            logger.info("Provider case exported", extra={"USERNAME": request.user.username, "POSTDATA": request.POST})
 
             return ProviderExtractFormatter(case).format()
         else:
-            statsd.incr('provider_extract.malformed')
-            return DRFResponse(form.errors, content_type='text/xml',
-                               status=400,
-                               headers={'Access-Control-Allow-Origin': '*'})
+            statsd.incr("provider_extract.malformed")
+            return DRFResponse(
+                form.errors, content_type="text/xml", status=400, headers={"Access-Control-Allow-Origin": "*"}
+            )
 
 
 class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
@@ -253,27 +249,19 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
     permission_classes = (CLAProviderClientIDPermission, IsManagerOrMePermission)
 
     def get_queryset(self):
-        this_provider = get_object_or_404(
-            Staff, user=self.request.user).provider
-        qs = super(UserViewSet, self).get_queryset().filter(
-            provider=this_provider)
+        this_provider = get_object_or_404(Staff, user=self.request.user).provider
+        qs = super(UserViewSet, self).get_queryset().filter(provider=this_provider)
         return qs
 
     def pre_save(self, obj):
         obj.provider = self.get_logged_in_user_model().provider
 
 
-class PersonalDetailsViewSet(
-    CLAProviderPermissionViewSetMixin,
-    FullPersonalDetailsViewSet
-):
+class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin, FullPersonalDetailsViewSet):
     serializer_class = PersonalDetailsSerializer
 
 
-class ThirdPartyDetailsViewSet(
-    CLAProviderPermissionViewSetMixin,
-    BaseThirdPartyDetailsViewSet
-):
+class ThirdPartyDetailsViewSet(CLAProviderPermissionViewSetMixin, BaseThirdPartyDetailsViewSet):
     serializer_class = ThirdPartyDetailsSerializer
 
 
@@ -281,21 +269,15 @@ class EventViewSet(CLAProviderPermissionViewSetMixin, BaseEventViewSet):
     pass
 
 
-class AdaptationDetailsViewSet(
-    CLAProviderPermissionViewSetMixin, BaseAdaptationDetailsViewSet
-):
+class AdaptationDetailsViewSet(CLAProviderPermissionViewSetMixin, BaseAdaptationDetailsViewSet):
     serializer_class = AdaptationDetailsSerializer
 
 
-class AdaptationDetailsMetadataViewSet(
-    CLAProviderPermissionViewSetMixin, BaseAdaptationDetailsMetadataViewSet
-):
+class AdaptationDetailsMetadataViewSet(CLAProviderPermissionViewSetMixin, BaseAdaptationDetailsMetadataViewSet):
     serializer_class = AdaptationDetailsSerializer
 
 
-class DiagnosisViewSet(
-    CLAProviderPermissionViewSetMixin, BaseDiagnosisViewSet
-):
+class DiagnosisViewSet(CLAProviderPermissionViewSetMixin, BaseDiagnosisViewSet):
     pass
 
 
@@ -303,15 +285,11 @@ class LogViewSet(CLAProviderPermissionViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
 
 
-class FeedbackViewSet(CLAProviderPermissionViewSetMixin,
-                      BaseFeedbackViewSet,
-                      mixins.CreateModelMixin):
+class FeedbackViewSet(CLAProviderPermissionViewSetMixin, BaseFeedbackViewSet, mixins.CreateModelMixin):
     serializer_class = FeedbackSerializer
 
-    filter_backends = (
-        OrderingFilter,
-    )
-    ordering = ('-created',)
+    filter_backends = (OrderingFilter,)
+    ordering = ("-created",)
 
     def pre_save(self, obj):
         if not obj.pk:
@@ -320,22 +298,19 @@ class FeedbackViewSet(CLAProviderPermissionViewSetMixin,
         super(FeedbackViewSet, self).pre_save(obj)
 
 
-class CSVUploadViewSet(CLAProviderPermissionViewSetMixin,
-                       BaseCSVUploadViewSet):
+class CSVUploadViewSet(CLAProviderPermissionViewSetMixin, BaseCSVUploadViewSet):
     serializer_class = CSVUploadSerializer
     serializer_detail_class = CSVUploadDetailSerializer
 
-    ordering = ('-month',)
+    ordering = ("-month",)
 
     paginate_by = 20
-    paginate_by_param = 'page_size'
+    paginate_by_param = "page_size"
     max_paginate_by = 100
 
     def get_queryset(self, *args, **kwargs):
-        this_provider = get_object_or_404(
-            Staff, user=self.request.user).provider
-        qs = super(CSVUploadViewSet, self).get_queryset(*args, **kwargs).filter(
-            provider=this_provider)
+        this_provider = get_object_or_404(Staff, user=self.request.user).provider
+        qs = super(CSVUploadViewSet, self).get_queryset(*args, **kwargs).filter(provider=this_provider)
         return qs
 
     def pre_save(self, obj):
@@ -345,7 +320,5 @@ class CSVUploadViewSet(CLAProviderPermissionViewSetMixin,
         super(CSVUploadViewSet, self).pre_save(obj)
 
 
-class CaseNotesHistoryViewSet(
-    CLAProviderPermissionViewSetMixin, BaseCaseNotesHistoryViewSet
-):
+class CaseNotesHistoryViewSet(CLAProviderPermissionViewSetMixin, BaseCaseNotesHistoryViewSet):
     serializer_class = CaseNotesHistorySerializer

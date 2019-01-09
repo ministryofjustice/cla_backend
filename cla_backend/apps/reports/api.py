@@ -10,11 +10,9 @@ from .models import Export
 class ExportListView(generics.ListAPIView, generics.DestroyAPIView):
     serializer_class = ExportSerializer
     model = Export
-    permission_classes = (IsAdminUser, )
-    authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsAdminUser,)
+    authentication_classes = (SessionAuthentication,)
     page_size = 1000
 
     def get_queryset(self):
-        return super(ExportListView, self).get_queryset().filter(
-            user=self.request.user
-        )
+        return super(ExportListView, self).get_queryset().filter(user=self.request.user)

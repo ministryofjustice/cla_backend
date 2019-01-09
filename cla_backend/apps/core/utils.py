@@ -22,16 +22,12 @@ def getattrd(obj, name, default=NoDefaultProvided):
 
 
 def _transform_patch_line(item):
-    lookup = {
-        'replace': 'Changed',
-        'add': 'Added',
-        'remove': 'Removed'
-    }
+    lookup = {"replace": "Changed", "add": "Added", "remove": "Removed"}
 
     return {
-        'action': lookup[item['op']],
-        'thing': item['path'].lstrip('/').replace('/', '.'),
-        'value': item.get('value', 'None')
+        "action": lookup[item["op"]],
+        "thing": item["path"].lstrip("/").replace("/", "."),
+        "value": item.get("value", "None"),
     }
 
 
@@ -40,7 +36,7 @@ def format_patch(patch):
     for change in patch:
         change = _transform_patch_line(change)
         lines.append("{action} {thing} to {value}".format(**change))
-    return '\n'.join(lines)
+    return "\n".join(lines)
 
 
 @contextlib.contextmanager

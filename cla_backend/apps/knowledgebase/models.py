@@ -15,19 +15,15 @@ class Article(TimeStampedModel):
     when_to_use = models.TextField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
 
-    geographic_coverage = models.CharField(
-        max_length=255, null=True, blank=True)
+    geographic_coverage = models.CharField(max_length=255, null=True, blank=True)
     type_of_service = models.TextField(blank=True, null=True)
-    resource_type = models.CharField(max_length=10,
-                                     choices=(('LEGAL', 'Legal'),
-                                              ('OTHER', 'Other')))
+    resource_type = models.CharField(max_length=10, choices=(("LEGAL", "Legal"), ("OTHER", "Other")))
     address = models.TextField(blank=True, null=True)
     opening_hours = models.CharField(max_length=255, null=True, blank=True)
     how_to_use = models.TextField(blank=True, null=True)
     accessibility = models.CharField(max_length=255, null=True, blank=True)
 
-    article_category = models.ManyToManyField('ArticleCategory',
-                                              through='ArticleCategoryMatrix')
+    article_category = models.ManyToManyField("ArticleCategory", through="ArticleCategoryMatrix")
 
     def __unicode__(self):
         return self.service_name
@@ -49,14 +45,13 @@ class ArticleCategoryMatrix(TimeStampedModel):
     preferred_signpost = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u"%s - %s" % (self.article.__unicode__(),
-                             self.article_category.__unicode__())
+        return u"%s - %s" % (self.article.__unicode__(), self.article_category.__unicode__())
 
     class Meta(object):
         verbose_name_plural = "Article category matrices"
 
 
 class TelephoneNumber(TimeStampedModel):
-    article = models.ForeignKey('Article')
+    article = models.ForeignKey("Article")
     name = models.CharField(max_length=100, blank=True, null=True)
     number = models.CharField(max_length=25)

@@ -1,8 +1,7 @@
 import jsonpatch
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.fields.related import SingleRelatedObjectDescriptor, \
-    ReverseSingleRelatedObjectDescriptor
+from django.db.models.fields.related import SingleRelatedObjectDescriptor, ReverseSingleRelatedObjectDescriptor
 from django.http import Http404
 
 from rest_framework.exceptions import MethodNotAllowed
@@ -15,9 +14,8 @@ class NoParentReferenceException(BaseException):
 
 
 class NestedGenericModelMixin(object):
-
     def get_parent_lookup_kwarg(self):
-        return self.parent_prefix + '_' + self.lookup_field
+        return self.parent_prefix + "_" + self.lookup_field
 
     # def get_parent_queryset(self):
     #     return self.parent(requet=self.request).get_queryset()
@@ -25,10 +23,8 @@ class NestedGenericModelMixin(object):
     def get_parent_object(self):
         parent_key = self.kwargs.get(self.get_parent_lookup_kwarg(), None)
         if not parent_key:
-            raise NoParentReferenceException('Trying to do a nested lookup on a non-nested viewset')
-        parent_viewset_instance = self.parent(
-            request=self.request,
-            kwargs= {self.lookup_field: parent_key})
+            raise NoParentReferenceException("Trying to do a nested lookup on a non-nested viewset")
+        parent_viewset_instance = self.parent(request=self.request, kwargs={self.lookup_field: parent_key})
         parent_obj = parent_viewset_instance.get_object(
             queryset=parent_viewset_instance.get_queryset().select_related(None)
         )
@@ -42,22 +38,24 @@ class NestedGenericModelMixin(object):
 
     def is_one_to_one_nested(self):
         descriptor = getattr(self.parent.model, self.PARENT_FIELD)
-        return not hasattr(descriptor, 'related') or \
-               isinstance(descriptor, SingleRelatedObjectDescriptor) or \
-               isinstance(descriptor, ReverseSingleRelatedObjectDescriptor)
+        return (
+            not hasattr(descriptor, "related")
+            or isinstance(descriptor, SingleRelatedObjectDescriptor)
+            or isinstance(descriptor, ReverseSingleRelatedObjectDescriptor)
+        )
 
     def get_object(self):
         if self.is_one_to_one_nested():
             obj = getattr(self.get_parent_object(), self.PARENT_FIELD)
         else:
             obj = super(NestedGenericModelMixin, self).get_object()
-        if self.request.method != 'POST' and obj is None:
+        if self.request.method != "POST" and obj is None:
             raise Http404
         return obj
 
     def __init__(self, *args, **kwargs):
-        if not hasattr(self, 'PARENT_FIELD'):
-            raise Exception('To use this mixin you must specify PARENT_FIELD')
+        if not hasattr(self, "PARENT_FIELD"):
+            raise Exception("To use this mixin you must specify PARENT_FIELD")
         super(NestedGenericModelMixin, self).__init__(*args, **kwargs)
 
     def get_queryset(self):
@@ -81,7 +79,9 @@ class NestedGenericModelMixin(object):
 
             if parent_obj:
                 if getattr(parent_obj, self.PARENT_FIELD):
-                    raise MethodNotAllowed('POST: %s already has a %s associated to it' % (parent_obj, obj.__class__.__name__))
+                    raise MethodNotAllowed(
+                        "POST: %s already has a %s associated to it" % (parent_obj, obj.__class__.__name__)
+                    )
                 else:
                     setattr(parent_obj, self.PARENT_FIELD, obj)
                     parent_obj.save(update_fields=[self.PARENT_FIELD])
@@ -97,9 +97,9 @@ class JsonPatchViewSetMixin(object):
         serializer = self.get_serializer_class()
 
         return {
-            'serializer': '.'.join([serializer.__module__, serializer.__name__]),
-            'backwards': backwards.patch,
-            'forwards': forwards.patch
+            "serializer": ".".join([serializer.__module__, serializer.__name__]),
+            "backwards": backwards.patch,
+            "forwards": forwards.patch,
         }
 
     def pre_save(self, obj):
@@ -114,13 +114,13 @@ class JsonPatchViewSetMixin(object):
 
 
 class FormActionMixin(object):
-    FORM_ACTION_OBJ_PARAM = 'obj'
+    FORM_ACTION_OBJ_PARAM = "obj"
 
     def _form_action(self, request, Form, no_body=True, form_kwargs={}):
         obj = self.get_object()
 
         _form_kwargs = form_kwargs.copy()
-        _form_kwargs['data'] = request.DATA
+        _form_kwargs["data"] = request.DATA
         _form_kwargs[self.FORM_ACTION_OBJ_PARAM] = obj
 
         form = Form(**_form_kwargs)
@@ -133,6 +133,4 @@ class FormActionMixin(object):
                 serializer = self.get_serializer(obj)
                 return DRFResponse(serializer.data, status=status.HTTP_200_OK)
 
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
+        return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)

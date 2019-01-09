@@ -11,9 +11,20 @@ from cla_provider.models import Feedback
 from complaints.models import Complaint
 from diagnosis.models import DiagnosisTraversal
 from legalaid.models import (
-    Case, EligibilityCheck, CaseNotesHistory, Person, Income, Savings,
-    Deductions, PersonalDetails, ThirdPartyDetails, AdaptationDetails,
-    CaseKnowledgebaseAssignment, EODDetails, EODDetailsCategory, Property
+    Case,
+    EligibilityCheck,
+    CaseNotesHistory,
+    Person,
+    Income,
+    Savings,
+    Deductions,
+    PersonalDetails,
+    ThirdPartyDetails,
+    AdaptationDetails,
+    CaseKnowledgebaseAssignment,
+    EODDetails,
+    EODDetailsCategory,
+    Property,
 )
 from timer.models import Timer
 
@@ -44,10 +55,10 @@ MODELS = [
 
 class Command(BaseCommand):
 
-    help = 'Attempts to re-load data that was deleted in the housekeeping'
+    help = "Attempts to re-load data that was deleted in the housekeeping"
 
     def add_arguments(self, parser):
-        parser.add_argument('directory', nargs=1)
+        parser.add_argument("directory", nargs=1)
 
     def handle(self, *args, **options):
         path = os.path.join(settings.TEMP_DIR, args[0])

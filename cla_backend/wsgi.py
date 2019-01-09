@@ -26,4 +26,5 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cla_backend.settings")
 
 
 from django.core.wsgi import get_wsgi_application
+
 application = Sentry(get_wsgi_application())

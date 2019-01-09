@@ -10,16 +10,24 @@ class Migration(migrations.Migration):
     dependencies = []
     operations = [
         migrations.CreateModel(
-            name='AccessAttempt',
+            name="AccessAttempt",
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('username', models.CharField(max_length=255)),
+                ("id", models.AutoField(verbose_name="ID", serialize=False, auto_created=True, primary_key=True)),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now, verbose_name="created", editable=False
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now, verbose_name="modified", editable=False
+                    ),
+                ),
+                ("username", models.CharField(max_length=255)),
             ],
-            options={
-                'abstract': False,
-            },
+            options={"abstract": False},
             bases=(models.Model,),
-        ),
+        )
     ]

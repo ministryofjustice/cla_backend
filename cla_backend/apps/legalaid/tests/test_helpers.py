@@ -9,8 +9,7 @@ from django.test import TestCase
 from unittest import skip
 from core.tests.mommy_utils import make_recipe
 from cla_provider.models import ProviderPreAllocation
-from cla_provider.helpers import ProviderDistributionHelper, \
-    ProviderAllocationHelper
+from cla_provider.helpers import ProviderDistributionHelper, ProviderAllocationHelper
 from legalaid.forms import get_sla_time
 
 
@@ -50,14 +49,14 @@ class SLATimeHelperTestCase(TestCase):
         return timezone.make_aware(offset, self.tz).replace(hour=hour, minute=minute)
 
     def test_get_sla_time_15_minutes_delta_during_working_day_keeps_the_same_day(self):
-        with mock.patch('cla_common.call_centre_availability.bank_holidays', return_value=[]) as bank_hol:
-            base   = self._datetime(iso_day_of_week=self.monday, hour=10, minute=15)
+        with mock.patch("cla_common.call_centre_availability.bank_holidays", return_value=[]) as bank_hol:
+            base = self._datetime(iso_day_of_week=self.monday, hour=10, minute=15)
             target = self._datetime(iso_day_of_week=self.monday, hour=10, minute=30)
             self.assertEqual(get_sla_time(base, 15), target)
             self.assertTrue(bank_hol.called)
 
     def test_get_sla_time_adding_time_past_end_of_weekday_rolls_over_to_next_working_day(self):
-        with mock.patch('cla_common.call_centre_availability.bank_holidays', return_value=[]) as bank_hol:
+        with mock.patch("cla_common.call_centre_availability.bank_holidays", return_value=[]) as bank_hol:
             end_of_weekday = self._datetime(iso_day_of_week=self.monday, hour=19, minute=59)
 
             next_day_15_mins = self._change(end_of_weekday, plus_days=1, hour=9, minute=14)
@@ -71,7 +70,7 @@ class SLATimeHelperTestCase(TestCase):
             self.assertTrue(bank_hol.called)
 
     def test_get_sla_time_adding_time_on_saturday_end_of_day_rolls_over_to_next_working_day(self):
-        with mock.patch('cla_common.call_centre_availability.bank_holidays', return_value=[]) as bank_hol:
+        with mock.patch("cla_common.call_centre_availability.bank_holidays", return_value=[]) as bank_hol:
             saturday_end_of_day = self._datetime(iso_day_of_week=self.saturday, hour=12, minute=29)
             next_monday = self._change(saturday_end_of_day, plus_days=2, hour=9, minute=14)
             self.assertEqual(get_sla_time(saturday_end_of_day, 15), next_monday)
@@ -79,9 +78,13 @@ class SLATimeHelperTestCase(TestCase):
 
     def test_get_sla_time_adding_time_before_bank_holiday_rolls_over_to_working_day_after_holiday(self):
         almost_end_of_day = self._datetime(iso_day_of_week=self.monday, hour=19, minute=44)
-        fake_bank_holiday = timezone.make_naive(self._change(almost_end_of_day, plus_days=1, hour=0, minute=0), self.tz)
+        fake_bank_holiday = timezone.make_naive(
+            self._change(almost_end_of_day, plus_days=1, hour=0, minute=0), self.tz
+        )
 
-        with mock.patch('cla_common.call_centre_availability.bank_holidays', return_value=[fake_bank_holiday]) as bank_hol:
+        with mock.patch(
+            "cla_common.call_centre_availability.bank_holidays", return_value=[fake_bank_holiday]
+        ) as bank_hol:
             end_of_day = self._change(almost_end_of_day, plus_days=0, hour=19, minute=59)
             day_after_bank_holiday = self._change(almost_end_of_day, plus_days=2, hour=10, minute=44)
             self.assertEqual(get_sla_time(almost_end_of_day, 15), end_of_day)
@@ -89,7 +92,7 @@ class SLATimeHelperTestCase(TestCase):
             self.assertTrue(bank_hol.called)
 
     def test_lots_of_dates_dont_break_it(self):
-        with mock.patch('cla_common.call_centre_availability.bank_holidays', return_value=[]) as bank_hol:
+        with mock.patch("cla_common.call_centre_availability.bank_holidays", return_value=[]) as bank_hol:
             start_date = timezone.now().replace(hour=9, minute=0)
 
             dates = [start_date + datetime.timedelta(days=x) for x in range(1, 300)]
@@ -105,42 +108,44 @@ class SLATimeHelperTestCase(TestCase):
 
 class ProviderAllocationHelperTestCase(TestCase):
     def setUp(self):
-        self.category = make_recipe('legalaid.category')
+        self.category = make_recipe("legalaid.category")
         self.helper = ProviderAllocationHelper()
         self.date = timezone.now().replace(hour=0, minute=0, second=0)
-        self.provider_allocations = make_recipe('cla_provider.provider_allocation',
-                                                category=self.category,
-                                                weighted_distribution=1.0,
-                                                provider__active=True,
-                                                _quantity=10)
+        self.provider_allocations = make_recipe(
+            "cla_provider.provider_allocation",
+            category=self.category,
+            weighted_distribution=1.0,
+            provider__active=True,
+            _quantity=10,
+        )
 
-    @mock.patch('cla_provider.helpers.ProviderAllocationHelper._get_random_provider')
-    @mock.patch('cla_provider.helpers.ProviderDistributionHelper.get_distribution')
+    @mock.patch("cla_provider.helpers.ProviderAllocationHelper._get_random_provider")
+    @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution")
     def test_best_fit_provider_shortcut_no_cases_for_today(self, mocked_helper, mocked_random_provider_helper):
         mocked_helper.return_value = {}
-        mocked_random_provider_helper.return_value = 'TEST'
+        mocked_random_provider_helper.return_value = "TEST"
 
         ret = self.helper._get_best_fit_provider(self.category)
         self.assertTrue(mocked_helper.called)
         self.assertTrue(mocked_random_provider_helper.called)
-        self.assertEqual(ret, 'TEST')
+        self.assertEqual(ret, "TEST")
 
-    @mock.patch('cla_provider.helpers.ProviderAllocationHelper._get_random_provider')
-    @mock.patch('cla_provider.helpers.ProviderDistributionHelper.get_distribution')
+    @mock.patch("cla_provider.helpers.ProviderAllocationHelper._get_random_provider")
+    @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution")
     def test_best_fit_provider_shortcut_current_is_ideal(self, mocked_helper, mocked_random_provider_helper):
 
         pd_helper = ProviderDistributionHelper(self.date)
 
         mocked_helper.return_value = pd_helper.make_ideal(10, self.provider_allocations)
-        mocked_random_provider_helper.return_value = 'TEST'
+        mocked_random_provider_helper.return_value = "TEST"
 
         ret = self.helper._get_best_fit_provider(self.category)
         self.assertTrue(mocked_helper.called)
         self.assertTrue(mocked_random_provider_helper.called)
-        self.assertEqual(ret, 'TEST')
+        self.assertEqual(ret, "TEST")
 
-    @mock.patch('cla_provider.helpers.ProviderAllocationHelper._get_random_provider')
-    @mock.patch('cla_provider.helpers.ProviderDistributionHelper.get_distribution')
+    @mock.patch("cla_provider.helpers.ProviderAllocationHelper._get_random_provider")
+    @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution")
     def test_best_fit_provider_current_is_notideal_only1(self, mocked_helper, mocked_random_provider_helper):
 
         pd_helper = ProviderDistributionHelper(self.date)
@@ -149,17 +154,17 @@ class ProviderAllocationHelperTestCase(TestCase):
         ideal[ideal.keys()[0]] = 0.0
 
         mocked_helper.return_value = ideal
-        mocked_random_provider_helper.return_value = 'TEST'
+        mocked_random_provider_helper.return_value = "TEST"
 
         ret = self.helper._get_best_fit_provider(self.category)
         self.assertTrue(mocked_helper.called)
         self.assertFalse(mocked_random_provider_helper.called)
-        self.assertNotEqual(ret, 'TEST')
+        self.assertNotEqual(ret, "TEST")
         self.assertEqual(ret.id, ideal.keys()[0])
 
     @skip("because test is flaky... waiting for Python dev to fix")
-    @mock.patch('cla_provider.helpers.ProviderAllocationHelper._get_random_provider')
-    @mock.patch('cla_provider.helpers.ProviderDistributionHelper.get_distribution')
+    @mock.patch("cla_provider.helpers.ProviderAllocationHelper._get_random_provider")
+    @mock.patch("cla_provider.helpers.ProviderDistributionHelper.get_distribution")
     def test_best_fit_provider_current_is_notideal_2(self, mocked_helper, mocked_random_provider_helper):
 
         pd_helper = ProviderDistributionHelper(self.date)
@@ -169,22 +174,30 @@ class ProviderAllocationHelperTestCase(TestCase):
         ideal[ideal.keys()[1]] = 0.0
 
         mocked_helper.return_value = ideal
-        mocked_random_provider_helper.return_value = 'TEST'
+        mocked_random_provider_helper.return_value = "TEST"
 
         ret = self.helper._get_best_fit_provider(self.category)
         self.assertTrue(mocked_helper.called)
         mocked_random_provider_helper.assert_called_once_with(self.category, limit_choices_to=ideal.keys()[:2])
-        self.assertEqual(ret, 'TEST')
+        self.assertEqual(ret, "TEST")
 
 
 class ProviderDistributionHelperTestCase(TestCase):
     def setUp(self):
-        self.category = make_recipe('legalaid.category')
-        self.category2 = make_recipe('legalaid.category')
-        self.provider_allocations = make_recipe('cla_provider.provider_allocation', category=self.category, weighted_distribution=1.0, _quantity=10)
+        self.category = make_recipe("legalaid.category")
+        self.category2 = make_recipe("legalaid.category")
+        self.provider_allocations = make_recipe(
+            "cla_provider.provider_allocation", category=self.category, weighted_distribution=1.0, _quantity=10
+        )
 
-        self.uneven_provider_allocations = make_recipe('cla_provider.provider_allocation', category=self.category, weighted_distribution=1.0, _quantity=5)
-        self.uneven_provider_allocations.extend(make_recipe('cla_provider.provider_allocation', category=self.category, weighted_distribution=2.0, _quantity=5))
+        self.uneven_provider_allocations = make_recipe(
+            "cla_provider.provider_allocation", category=self.category, weighted_distribution=1.0, _quantity=5
+        )
+        self.uneven_provider_allocations.extend(
+            make_recipe(
+                "cla_provider.provider_allocation", category=self.category, weighted_distribution=2.0, _quantity=5
+            )
+        )
 
         self.date = timezone.now().replace(hour=0, minute=0, second=0)
         self.helper = ProviderDistributionHelper(self.date)
@@ -198,12 +211,14 @@ class ProviderDistributionHelperTestCase(TestCase):
         for pa in allocs:
             pa_grouped_by_weight[pa.weighted_distribution].append(pa.provider_id)
         for group, vals in pa_grouped_by_weight.items():
-            self.assertEqual(len(set([v for k, v in ideal_dist.items() if k in vals])), 1) # if you have the same weight then you should have the same ideal number
+            self.assertEqual(
+                len(set([v for k, v in ideal_dist.items() if k in vals])), 1
+            )  # if you have the same weight then you should have the same ideal number
 
         return ideal_dist
 
     def _assign_new_case_to_provider(self, provider):
-        c1 = make_recipe('legalaid.eligible_case')
+        c1 = make_recipe("legalaid.eligible_case")
         c1.diagnosis.category = self.category
         c1.assign_to_provider(provider)
         c1.diagnosis.save()
@@ -211,7 +226,7 @@ class ProviderDistributionHelperTestCase(TestCase):
         return c1
 
     def _pre_allocate_case_to_provider(self, provider):
-        c1 = make_recipe('legalaid.eligible_case')
+        c1 = make_recipe("legalaid.eligible_case")
         c1.diagnosis.category = self.category
         c1.diagnosis.save()
         c1.save()

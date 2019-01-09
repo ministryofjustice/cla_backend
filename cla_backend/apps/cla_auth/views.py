@@ -41,22 +41,19 @@ class AccessTokenView(Oauth2AccessTokenView):
         try:
             self.check_throttles(request)
         except Throttled as exc:
-            statsd.incr('login.throttled')
-            logger.info('login throttled', extra={
-                'IP': get_ip(request),
-                'HTTP_REFERER': request.META.get('HTTP_REFERER'),
-                'HTTP_USER_AGENT': request.META.get('HTTP_USER_AGENT')
-            })
-            response = self.error_response(
-                {
-                    'error': 'throttled',
-                    'detail': exc.detail
+            statsd.incr("login.throttled")
+            logger.info(
+                "login throttled",
+                extra={
+                    "IP": get_ip(request),
+                    "HTTP_REFERER": request.META.get("HTTP_REFERER"),
+                    "HTTP_USER_AGENT": request.META.get("HTTP_USER_AGENT"),
                 },
-                status=exc.status_code
             )
+            response = self.error_response({"error": "throttled", "detail": exc.detail}, status=exc.status_code)
 
             if exc.wait:
-                response['X-Throttle-Wait-Seconds'] = '%d' % exc.wait
+                response["X-Throttle-Wait-Seconds"] = "%d" % exc.wait
             return response
 
         return super(AccessTokenView, self).dispatch(request, *args, **kwargs)
@@ -64,14 +61,17 @@ class AccessTokenView(Oauth2AccessTokenView):
     def get_password_grant(self, request, data, client):
         form = ClientIdPasswordGrantForm(data, client=client)
         if not form.is_valid():
-            statsd.incr('login.failed')
-            logger.info('login failed', extra={
-                'IP': get_ip(request),
-                'USERNAME': request.POST.get('username'),
-                'CLIENT_SECRET': request.POST.get('client_secret'),
-                'HTTP_REFERER': request.META.get('HTTP_REFERER'),
-                'HTTP_USER_AGENT': request.META.get('HTTP_USER_AGENT')
-            })
+            statsd.incr("login.failed")
+            logger.info(
+                "login failed",
+                extra={
+                    "IP": get_ip(request),
+                    "USERNAME": request.POST.get("username"),
+                    "CLIENT_SECRET": request.POST.get("client_secret"),
+                    "HTTP_REFERER": request.META.get("HTTP_REFERER"),
+                    "HTTP_USER_AGENT": request.META.get("HTTP_USER_AGENT"),
+                },
+            )
 
             form.on_form_invalid()
 
@@ -79,12 +79,15 @@ class AccessTokenView(Oauth2AccessTokenView):
         else:
             form.on_form_valid()
 
-        statsd.incr('login.success')
-        logger.info('login succeeded', extra={
-            'IP': get_ip(request),
-            'USERNAME': request.POST.get('username'),
-            'CLIENT_SECRET': request.POST.get('client_secret'),
-            'HTTP_REFERER': request.META.get('HTTP_REFERER'),
-            'HTTP_USER_AGENT': request.META.get('HTTP_USER_AGENT')
-        })
+        statsd.incr("login.success")
+        logger.info(
+            "login succeeded",
+            extra={
+                "IP": get_ip(request),
+                "USERNAME": request.POST.get("username"),
+                "CLIENT_SECRET": request.POST.get("client_secret"),
+                "HTTP_REFERER": request.META.get("HTTP_REFERER"),
+                "HTTP_USER_AGENT": request.META.get("HTTP_USER_AGENT"),
+            },
+        )
         return form.cleaned_data

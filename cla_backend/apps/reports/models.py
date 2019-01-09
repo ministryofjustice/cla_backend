@@ -9,7 +9,7 @@ from reports.constants import EXPORT_STATUS
 
 
 class Export(TimeStampedModel):
-    user = models.ForeignKey('auth.User')
+    user = models.ForeignKey("auth.User")
     path = models.CharField(max_length=255, null=True)
     status = models.CharField(max_length=10, choices=EXPORT_STATUS)
     task_id = models.CharField(max_length=100)
@@ -18,13 +18,11 @@ class Export(TimeStampedModel):
     @property
     def link(self):
         if self.path:
-            return '/admin/reports/exports/download/%s' % os.path.basename(self.path)
+            return "/admin/reports/exports/download/%s" % os.path.basename(self.path)
 
 
 def delete_export_file(sender, instance=None, **kwargs):
-    conn = boto.connect_s3(
-            settings.AWS_ACCESS_KEY_ID,
-            settings.AWS_SECRET_ACCESS_KEY)
+    conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
     bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
 
     try:

@@ -9,7 +9,7 @@ from legalaid.models import Case
 
 from .managers import RunningTimerManager
 
-DB_NOW = 'NOW()'
+DB_NOW = "NOW()"
 
 
 def postgres_now():
@@ -35,15 +35,17 @@ class CurrentTimestampDateTimeField(models.DateTimeField):
     Field class to allow using postgres NOW() function for setting a 
     field to a current timestamp
     """
+
     def get_db_prep_value(self, value, connection, prepared=False):
-        return value if value == DB_NOW else \
-            super(CurrentTimestampDateTimeField, self).get_db_prep_value(
-                value, connection, prepared=False)
+        return (
+            value
+            if value == DB_NOW
+            else super(CurrentTimestampDateTimeField, self).get_db_prep_value(value, connection, prepared=False)
+        )
 
     def value_to_string(self, obj):
         val = self._get_val_from_obj(obj)
-        return val if val == DB_NOW else \
-            super(CurrentTimestampDateTimeField, self).value_to_string(obj)
+        return val if val == DB_NOW else super(CurrentTimestampDateTimeField, self).value_to_string(obj)
 
 
 class Timer(models.Model):
@@ -52,23 +54,21 @@ class Timer(models.Model):
     linked_case = models.ForeignKey(Case, blank=True, null=True)
     cancelled = models.BooleanField(default=False)
 
-    created = CurrentTimestampDateTimeField(_('created'), default=postgres_now,
-                                            editable=False)
-    modified = models.DateTimeField(_('modified'), auto_now=True,
-                                    editable=False)
+    created = CurrentTimestampDateTimeField(_("created"), default=postgres_now, editable=False)
+    modified = models.DateTimeField(_("modified"), auto_now=True, editable=False)
 
     objects = models.Manager()
     running_objects = RunningTimerManager()
 
     def __unicode__(self):
-        return u'Timer created at %s' % self.created
+        return u"Timer created at %s" % self.created
 
     @classmethod
     def start(cls, user):
-        statsd.incr('timer.start')
+        statsd.incr("timer.start")
         timer, created = cls.objects.get_or_create(
-            created_by=user, cancelled=False, stopped__isnull=True,
-            defaults={'created_by': user})
+            created_by=user, cancelled=False, stopped__isnull=True, defaults={"created_by": user}
+        )
 
         # Need to update the object from the database to get the datetime fields
         return cls.objects.get(pk=timer.pk)
@@ -77,13 +77,13 @@ class Timer(models.Model):
         return self.stopped
 
     def stop(self, cancelled=False):
-        statsd.incr('timer.stopped')
+        statsd.incr("timer.stopped")
         if self.is_stopped():
-            raise ValueError(u'The timer has already been stopped')
+            raise ValueError(u"The timer has already been stopped")
 
-        last_log = self.log_set.order_by('created').last()  # get last log
+        last_log = self.log_set.order_by("created").last()  # get last log
         if not last_log and not cancelled:
-            raise ValueError(u'You can\'t stop a timer without a log')
+            raise ValueError(u"You can't stop a timer without a log")
 
         # stop and update this model
         self.stopped = postgres_now()
@@ -96,15 +96,18 @@ class Timer(models.Model):
         if self.linked_case:
             # update billable time on case
             cursor = connection.cursor()
-            cursor.execute('''
+            cursor.execute(
+                """
                 select sum(ceiling(EXTRACT(epoch FROM a.stopped-a.created)))
                     from timer_timer as a
                     where
                     a.cancelled = false and
-                    a.stopped is not null and a.linked_case_id = %s''', [self.linked_case.id])
+                    a.stopped is not null and a.linked_case_id = %s""",
+                [self.linked_case.id],
+            )
             total_billable_time, = cursor.fetchone()
             if total_billable_time:
                 self.linked_case.billable_time = total_billable_time
                 if total_billable_time:
-                    statsd.timing('timer.total_time', total_billable_time * 1000)
-                self.linked_case.save(update_fields=['billable_time'])
+                    statsd.timing("timer.total_time", total_billable_time * 1000)
+                self.linked_case.save(update_fields=["billable_time"])

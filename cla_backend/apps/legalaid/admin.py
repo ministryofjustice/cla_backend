@@ -1,7 +1,16 @@
 from django.contrib import admin
 
-from .models import Category, Case, EligibilityCheck, PersonalDetails, \
-    Property, Person, EODDetails, EODDetailsCategory, MatterType
+from .models import (
+    Category,
+    Case,
+    EligibilityCheck,
+    PersonalDetails,
+    Property,
+    Person,
+    EODDetails,
+    EODDetailsCategory,
+    MatterType,
+)
 
 from .admin_support.forms import CategoryModelForm
 
@@ -12,7 +21,7 @@ class CategoryModelAdmin(admin.ModelAdmin):
 
 class EODDetailsCategoryAdmin(admin.TabularInline):
     model = EODDetailsCategory
-    readonly_fields = ('category', 'is_major')
+    readonly_fields = ("category", "is_major")
     extra = 0
 
 
@@ -21,8 +30,14 @@ class EODDetailsAdmin(admin.ModelAdmin):
 
 
 class CaseAdmin(admin.ModelAdmin):
-    raw_id_fields = ('eligibility_check', 'diagnosis', 'personal_details',
-        'thirdparty_details', 'adaptation_details', 'from_case')
+    raw_id_fields = (
+        "eligibility_check",
+        "diagnosis",
+        "personal_details",
+        "thirdparty_details",
+        "adaptation_details",
+        "from_case",
+    )
 
 
 admin.site.register(Category, CategoryModelAdmin)

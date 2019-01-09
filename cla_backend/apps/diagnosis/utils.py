@@ -27,11 +27,9 @@ def get_node_scope_value(digraph, g_node_id):
         return None
 
     node = digraph.node[g_node_id]
-    label = striptags(eval_promise(node['label']) + "    ").strip()
+    label = striptags(eval_promise(node["label"]) + "    ").strip()
 
-    return DIAGNOSIS_SCOPE.CHOICES_CONST_DICT.get(
-        label, DIAGNOSIS_SCOPE.UNKNOWN
-    )
+    return DIAGNOSIS_SCOPE.CHOICES_CONST_DICT.get(label, DIAGNOSIS_SCOPE.UNKNOWN)
 
 
 def eval_promise(value):

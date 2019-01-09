@@ -4,7 +4,5 @@ from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 from legalaid.tests.views.mixins.category_api import CategoryAPIMixin
 
 
-class CategoryTestCase(
-    CLAOperatorAuthBaseApiTestMixin, CategoryAPIMixin, APITestCase
-):
+class CategoryTestCase(CLAOperatorAuthBaseApiTestMixin, CategoryAPIMixin, APITestCase):
     pass

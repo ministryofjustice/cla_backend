@@ -5,11 +5,7 @@ from .models import Notification
 from .serializers import NotificationSerializer
 
 
-class BaseNotificationViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
-):
+class BaseNotificationViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = NotificationSerializer
     model = Notification
 

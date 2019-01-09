@@ -11,7 +11,7 @@ class SmokeTests(unittest.TestCase):
         access the database
         """
         cursor = connection.cursor()
-        cursor.execute('SELECT 1')
+        cursor.execute("SELECT 1")
         row = cursor.fetchone()
         self.assertEqual(1, row[0])
 
@@ -19,9 +19,9 @@ class SmokeTests(unittest.TestCase):
         """
         connect to SQS
         """
-        if not getattr(settings, 'CELERY_ALWAYS_EAGER', False):
-            app = Celery('cla_backend')
-            app.config_from_object('django.conf:settings')
+        if not getattr(settings, "CELERY_ALWAYS_EAGER", False):
+            app = Celery("cla_backend")
+            app.config_from_object("django.conf:settings")
             conn = app.connection()
             conn.connect()
             conn.release()

@@ -3,20 +3,20 @@ import pytz
 
 
 def local_tzinfo_factory(offset):
-    '''
+    """
     Create a tzinfo object using the offset of the db connection. This ensures
     that the datetimes returned are timezone aware and will be printed in the
     reports with timezone information.
-    '''
+    """
     return pytz.FixedOffset(offset)
 
 
 class DynamicTimezoneDatabaseWrapper(DatabaseWrapper):
-    '''
+    """
     This exists to allow report generation SQL to set the time zone of the
     connection without interference from Django, which normally tries to
     ensure that all connections are UTC if `USE_TZ` is `True`.
-    '''
+    """
 
     def create_cursor(self):
         cursor = self.connection.cursor()

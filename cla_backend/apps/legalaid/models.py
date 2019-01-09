@@ -28,11 +28,21 @@ from diagnosis.models import DiagnosisTraversal
 from cla_common.db.mixins import ModelDiffMixin
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
-from cla_common.constants import ELIGIBILITY_STATES, THIRDPARTY_REASON, \
-    THIRDPARTY_RELATIONSHIP, ADAPTATION_LANGUAGES, MATTER_TYPE_LEVELS, \
-    CONTACT_SAFETY, EXEMPT_USER_REASON, ECF_STATEMENT, REQUIRES_ACTION_BY, \
-    EMAIL_SAFETY, ELIGIBILITY_REASONS, EXPRESSIONS_OF_DISSATISFACTION, \
-    RESEARCH_CONTACT_VIA
+from cla_common.constants import (
+    ELIGIBILITY_STATES,
+    THIRDPARTY_REASON,
+    THIRDPARTY_RELATIONSHIP,
+    ADAPTATION_LANGUAGES,
+    MATTER_TYPE_LEVELS,
+    CONTACT_SAFETY,
+    EXEMPT_USER_REASON,
+    ECF_STATEMENT,
+    REQUIRES_ACTION_BY,
+    EMAIL_SAFETY,
+    ELIGIBILITY_REASONS,
+    EXPRESSIONS_OF_DISSATISFACTION,
+    RESEARCH_CONTACT_VIA,
+)
 
 from legalaid.fields import MoneyField
 
@@ -45,12 +55,11 @@ logger = logging.getLogger(__name__)
 def _make_reference():
     from django.utils.crypto import get_random_string
 
-    return u'%s-%s-%s' % (
+    return u"%s-%s-%s" % (
         # exclude B8G6I1l0OQDS5Z2
-        get_random_string(length=2,
-                          allowed_chars='ACEFHJKMNPRTUVWXY3479'),
-        get_random_string(length=4, allowed_chars='123456789'),
-        get_random_string(length=4, allowed_chars='123456789')
+        get_random_string(length=2, allowed_chars="ACEFHJKMNPRTUVWXY3479"),
+        get_random_string(length=4, allowed_chars="123456789"),
+        get_random_string(length=4, allowed_chars="123456789"),
     )
 
 
@@ -68,11 +77,11 @@ class Category(TimeStampedModel):
     order = models.PositiveIntegerField(default=0)
 
     class Meta(object):
-        ordering = ['order']
+        ordering = ["order"]
         verbose_name_plural = "categories"
 
     def __unicode__(self):
-        return u'%s' % self.name
+        return u"%s" % self.name
 
 
 class Savings(CloneModelMixin, TimeStampedModel):
@@ -81,9 +90,7 @@ class Savings(CloneModelMixin, TimeStampedModel):
     asset_balance = MoneyField(default=None, null=True, blank=True)
     credit_balance = MoneyField(default=None, null=True, blank=True)
 
-    cloning_config = {
-        'excludes': ['created', 'modified']
-    }
+    cloning_config = {"excludes": ["created", "modified"]}
 
 
 class Income(CloneModelMixin, TimeStampedModel):
@@ -97,25 +104,19 @@ class Income(CloneModelMixin, TimeStampedModel):
     other_income = MoneyIntervalField(default=None, null=True, blank=True)
     self_employed = models.NullBooleanField(default=None)
 
-    cloning_config = {
-        'excludes': ['created', 'modified']
-    }
+    cloning_config = {"excludes": ["created", "modified"]}
 
 
 class Deductions(CloneModelMixin, TimeStampedModel):
     income_tax = MoneyIntervalField(default=None, null=True, blank=True)
-    national_insurance = MoneyIntervalField(default=None, null=True,
-                                            blank=True)
+    national_insurance = MoneyIntervalField(default=None, null=True, blank=True)
     maintenance = MoneyIntervalField(default=None, null=True, blank=True)
     childcare = MoneyIntervalField(default=None, null=True, blank=True)
     mortgage = MoneyIntervalField(default=None, null=True, blank=True)
     rent = MoneyIntervalField(default=None, null=True, blank=True)
-    criminal_legalaid_contributions = MoneyField(default=None, null=True,
-                                                 blank=True)
+    criminal_legalaid_contributions = MoneyField(default=None, null=True, blank=True)
 
-    cloning_config = {
-        'excludes': ['created', 'modified']
-    }
+    cloning_config = {"excludes": ["created", "modified"]}
 
 
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
@@ -130,59 +131,54 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     ni_number = models.CharField(max_length=10, null=True, blank=True)
     contact_for_research = models.NullBooleanField(blank=True, null=True)
     contact_for_research_via = models.CharField(
-        max_length=10,
-        default=RESEARCH_CONTACT_VIA.PHONE,
-        choices=RESEARCH_CONTACT_VIA,
-        blank=True, null=True)
+        max_length=10, default=RESEARCH_CONTACT_VIA.PHONE, choices=RESEARCH_CONTACT_VIA, blank=True, null=True
+    )
     vulnerable_user = models.NullBooleanField(blank=True, null=True)
     safe_to_contact = models.CharField(
-        max_length=30,
-        default=CONTACT_SAFETY.SAFE,
-        choices=CONTACT_SAFETY,
-        blank=True, null=True)
+        max_length=30, default=CONTACT_SAFETY.SAFE, choices=CONTACT_SAFETY, blank=True, null=True
+    )
     safe_to_email = models.CharField(
-        max_length=20,
-        default=EMAIL_SAFETY.SAFE,
-        choices=EMAIL_SAFETY,
-        blank=True, null=True)
+        max_length=20, default=EMAIL_SAFETY.SAFE, choices=EMAIL_SAFETY, blank=True, null=True
+    )
     case_count = models.PositiveSmallIntegerField(default=0)
 
     reference = UUIDField(auto=True, unique=True)
     diversity = models.BinaryField(blank=True, null=True, editable=False)
-    diversity_modified = models.DateTimeField(
-        auto_now=False, blank=True, null=True, editable=False
-    )
+    diversity_modified = models.DateTimeField(auto_now=False, blank=True, null=True, editable=False)
 
     # only normalised version of post code for now
     search_field = models.TextField(null=True, blank=True, db_index=True)
 
-    cloning_config = {
-        'excludes': ['reference', 'created', 'modified', 'case_count', 'search_field']
-    }
+    cloning_config = {"excludes": ["reference", "created", "modified", "case_count", "search_field"]}
 
     class Meta(object):
         verbose_name_plural = "personal details"
 
     def __unicode__(self):
-        return u'%s' % self.full_name
+        return u"%s" % self.full_name
 
     def _set_search_field(self):
-        search_field = u''
+        search_field = u""
 
         def add_string(s1, s2):
-            return u'%s###%s' % (s1, s2)
+            return u"%s###%s" % (s1, s2)
 
         if self.postcode:
-            search_field = add_string(
-                search_field, self.postcode.replace(' ', ''))
+            search_field = add_string(search_field, self.postcode.replace(" ", ""))
 
         if self.date_of_birth:
-            for f in ['%Y-%m-%d', '%d/%m/%Y', '%d/%m/%y', '%d/%-m/%Y',
-                      '%d/%-m/%y', '%-d/%m/%Y', '%-d/%m/%y', '%-d/%-m/%Y',
-                      '%-d/%-m/%y']:
-                search_field = add_string(
-                    search_field,
-                    self.date_of_birth.strftime(f))
+            for f in [
+                "%Y-%m-%d",
+                "%d/%m/%Y",
+                "%d/%m/%y",
+                "%d/%-m/%Y",
+                "%d/%-m/%y",
+                "%-d/%m/%Y",
+                "%-d/%m/%y",
+                "%-d/%-m/%Y",
+                "%-d/%-m/%y",
+            ]:
+                search_field = add_string(search_field, self.date_of_birth.strftime(f))
 
         for phone in [self.home_phone, self.mobile_phone]:
             if phone:
@@ -190,9 +186,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
                     phone = unicode(phone)
                 except UnicodeDecodeError:
                     pass
-                search_field = add_string(
-                    search_field,
-                    re.sub('[^0-9a-zA-Z]+', '', phone))
+                search_field = add_string(search_field, re.sub("[^0-9a-zA-Z]+", "", phone))
 
         self.search_field = search_field
 
@@ -206,15 +200,14 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
         # avoiding an extra save if possible
         if case_count != self.case_count:
             self.case_count = case_count
-            self.save(update_fields=['case_count'])
+            self.save(update_fields=["case_count"])
 
 
 class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
     personal_details = models.ForeignKey(PersonalDetails)
     pass_phrase = models.CharField(max_length=255, blank=True, null=True)
-    reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON, null=True, blank=True, default='')
-    personal_relationship = models.CharField(max_length=30,
-                                             choices=THIRDPARTY_RELATIONSHIP)
+    reason = models.CharField(max_length=30, choices=THIRDPARTY_REASON, null=True, blank=True, default="")
+    personal_relationship = models.CharField(max_length=30, choices=THIRDPARTY_RELATIONSHIP)
     personal_relationship_note = models.CharField(max_length=255, blank=True)
     spoke_to = models.NullBooleanField(blank=True, null=True)
     no_contact_reason = models.TextField(blank=True, null=True)
@@ -222,16 +215,13 @@ class ThirdPartyDetails(CloneModelMixin, TimeStampedModel):
 
     reference = UUIDField(auto=True, unique=True)
 
-    cloning_config = {
-        'excludes': ['reference', 'created', 'modified'],
-        'clone_fks': ['personal_details']
-    }
+    cloning_config = {"excludes": ["reference", "created", "modified"], "clone_fks": ["personal_details"]}
 
     class Meta(object):
         verbose_name_plural = "third party details"
 
     def __unicode__(self):
-        return u'%s' % self.personal_details.full_name
+        return u"%s" % self.personal_details.full_name
 
 
 class AdaptationDetails(CloneModelMixin, TimeStampedModel):
@@ -239,55 +229,46 @@ class AdaptationDetails(CloneModelMixin, TimeStampedModel):
     minicom = models.BooleanField(default=False)
     text_relay = models.BooleanField(default=False)
     skype_webcam = models.BooleanField(default=False)
-    language = models.CharField(max_length=30, choices=ADAPTATION_LANGUAGES,
-                                blank=True, null=True)
+    language = models.CharField(max_length=30, choices=ADAPTATION_LANGUAGES, blank=True, null=True)
     notes = models.TextField(blank=True)
     callback_preference = models.BooleanField(default=False)
     reference = UUIDField(auto=True, unique=True)
     no_adaptations_required = models.NullBooleanField(blank=True)
 
-    cloning_config = {
-        'excludes': ['reference', 'created', 'modified']
-    }
+    cloning_config = {"excludes": ["reference", "created", "modified"]}
 
 
 class EODDetailsManager(models.Manager):
     use_for_related_fields = True
 
     def get_queryset(self):
-        return super(EODDetailsManager, self).get_queryset().select_related(
-            'case'
-        )
+        return super(EODDetailsManager, self).get_queryset().select_related("case")
 
 
 class EODDetails(TimeStampedModel):
-    case = models.OneToOneField('Case', related_name='eod_details')
+    case = models.OneToOneField("Case", related_name="eod_details")
     notes = models.TextField(blank=True)
     reference = UUIDField(auto=True, unique=True)
 
     objects = EODDetailsManager()
 
     class Meta(object):
-        ordering = ('-created',)
-        verbose_name = 'EOD details'
-        verbose_name_plural = 'EOD details'
+        ordering = ("-created",)
+        verbose_name = "EOD details"
+        verbose_name_plural = "EOD details"
 
     def __unicode__(self):
-        return u'EOD on case %s' % self.case
+        return u"EOD on case %s" % self.case
 
     @classmethod
     def get_eod_stats(cls):
-        data = dict(EODDetailsCategory.objects.values_list('category').
-                    annotate(count=models.Count('category')))
+        data = dict(EODDetailsCategory.objects.values_list("category").annotate(count=models.Count("category")))
         return {
-            'total_count': sum(data.values()),
-            'categories': [
-                {
-                    'description': description,
-                    'count': data.get(category, 0),
-                }
+            "total_count": sum(data.values()),
+            "categories": [
+                {"description": description, "count": data.get(category, 0)}
                 for category, description in EXPRESSIONS_OF_DISSATISFACTION.CHOICES
-            ]
+            ],
         }
 
     @property
@@ -295,19 +276,22 @@ class EODDetails(TimeStampedModel):
         return self.categories.filter(is_major=True).exists()
 
     def get_category_descriptions(self, include_severity=False):
-        mapper = (lambda cat: unicode(cat) + (u' (Major)' if cat.is_major else u' (Minor)')) if include_severity else unicode
+        mapper = (
+            (lambda cat: unicode(cat) + (u" (Major)" if cat.is_major else u" (Minor)"))
+            if include_severity
+            else unicode
+        )
         return list(map(mapper, self.categories.all()))
 
 
 class EODDetailsCategory(models.Model):
-    eod_details = models.ForeignKey(EODDetails, related_name='categories')
-    category = models.CharField(max_length=30, choices=EXPRESSIONS_OF_DISSATISFACTION,
-                                blank=True, null=True)
+    eod_details = models.ForeignKey(EODDetails, related_name="categories")
+    category = models.CharField(max_length=30, choices=EXPRESSIONS_OF_DISSATISFACTION, blank=True, null=True)
     is_major = models.BooleanField(default=False)
 
     class Meta(object):
-        verbose_name = 'EOD category'
-        verbose_name_plural = 'EOD categories'
+        verbose_name = "EOD category"
+        verbose_name_plural = "EOD categories"
 
     def __unicode__(self):
         return EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT.get(self.category)
@@ -318,14 +302,11 @@ class Person(CloneModelMixin, TimeStampedModel):
     savings = models.ForeignKey(Savings, blank=True, null=True)
     deductions = models.ForeignKey(Deductions, blank=True, null=True)
 
-    cloning_config = {
-        'excludes': ['created', 'modified'],
-        'clone_fks': ['income', 'savings', 'deductions']
-    }
+    cloning_config = {"excludes": ["created", "modified"], "clone_fks": ["income", "savings", "deductions"]}
 
     class Meta(object):
-        ordering = ('-created',)
-        verbose_name_plural = 'people'
+        ordering = ("-created",)
+        verbose_name_plural = "people"
 
     @classmethod
     def from_dict(cls, d):
@@ -333,9 +314,9 @@ class Person(CloneModelMixin, TimeStampedModel):
         savings = None
         deductions = None
         if d:
-            income_dict = d.get('income')
-            savings_dict = d.get('savings')
-            deductions_dict = d.get('deductions')
+            income_dict = d.get("income")
+            savings_dict = d.get("savings")
+            deductions_dict = d.get("deductions")
             if income_dict:
                 income = Income(**income_dict)
             if savings_dict:
@@ -343,10 +324,7 @@ class Person(CloneModelMixin, TimeStampedModel):
             if deductions_dict:
                 deductions = Deductions(**deductions_dict)
 
-        return Person(
-            income=income,
-            savings=savings,
-            deductions=deductions)
+        return Person(income=income, savings=savings, deductions=deductions)
 
 
 class ValidateModelMixin(models.Model):
@@ -368,8 +346,8 @@ class ValidateModelMixin(models.Model):
         warnings = {}
         for dep in dependencies:
             if not getattrd(self, dep, None):
-                if '__' in dep:
-                    levels = dep.split('__')
+                if "__" in dep:
+                    levels = dep.split("__")
                     current = warnings
                     for level in levels:
                         if not level == levels[-1]:
@@ -386,23 +364,17 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
     reference = UUIDField(auto=True, unique=True)
 
     category = models.ForeignKey(Category, blank=True, null=True)
-    you = models.ForeignKey(Person, blank=True, null=True, related_name='you')
-    partner = models.ForeignKey(Person, blank=True, null=True,
-                                related_name='partner')
+    you = models.ForeignKey(Person, blank=True, null=True, related_name="you")
+    partner = models.ForeignKey(Person, blank=True, null=True, related_name="partner")
     disputed_savings = models.ForeignKey(Savings, blank=True, null=True)
     your_problem_notes = models.TextField(blank=True)
     notes = models.TextField(blank=True)
-    state = models.CharField(
-        max_length=50, default=ELIGIBILITY_STATES.UNKNOWN,
-        choices=ELIGIBILITY_STATES.CHOICES
+    state = models.CharField(max_length=50, default=ELIGIBILITY_STATES.UNKNOWN, choices=ELIGIBILITY_STATES.CHOICES)
+    dependants_young = models.PositiveIntegerField(
+        null=True, blank=True, default=None, validators=[MaxValueValidator(50)]
     )
-    dependants_young = models.PositiveIntegerField(null=True, blank=True,
-                                                   default=None, validators=[
-            MaxValueValidator(50)]
-    )
-    dependants_old = models.PositiveIntegerField(null=True, blank=True,
-                                                 default=None, validators=[
-            MaxValueValidator(50)]
+    dependants_old = models.PositiveIntegerField(
+        null=True, blank=True, default=None, validators=[MaxValueValidator(50)]
     )
     on_passported_benefits = models.NullBooleanField(default=None)
     on_nass_benefits = models.NullBooleanField(default=None)
@@ -415,23 +387,16 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
     calculations = JSONField(null=True, blank=True)
 
     class Meta(object):
-        ordering = ('-created',)
+        ordering = ("-created",)
 
     def __unicode__(self):
-        return u'EligibilityCheck(%s)' % self.reference
+        return u"EligibilityCheck(%s)" % self.reference
 
     def get_dependencies(self):
-        deps = {'category',
-                'you__income',
-                'you__savings',
-                'you__deductions'}
+        deps = {"category", "you__income", "you__savings", "you__deductions"}
 
         if self.has_partner:
-            deps.update({
-                'partner__income',
-                'partner__savings',
-                'partner__deductions'
-            })
+            deps.update({"partner__income", "partner__savings", "partner__deductions"})
 
         return deps
 
@@ -463,12 +428,9 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
             except PropertyExpectedException:
                 pass
 
-        add_reason(ec.is_disposable_capital_eligible,
-                   ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
-        add_reason(ec.is_gross_income_eligible,
-                   ELIGIBILITY_REASONS.GROSS_INCOME)
-        add_reason(ec.is_disposable_income_eligible,
-                   ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
+        add_reason(ec.is_disposable_capital_eligible, ELIGIBILITY_REASONS.DISPOSABLE_CAPITAL)
+        add_reason(ec.is_gross_income_eligible, ELIGIBILITY_REASONS.GROSS_INCOME)
+        add_reason(ec.is_disposable_income_eligible, ELIGIBILITY_REASONS.DISPOSABLE_INCOME)
 
         return reasons
 
@@ -506,79 +468,102 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
         d = {}
 
         if self.category:
-            d['category'] = self.category.code
+            d["category"] = self.category.code
 
-        d['property_data'] = self.property_set.values(
-            'value', 'mortgage_left', 'share', 'disputed', 'main'
+        d["property_data"] = self.property_set.values("value", "mortgage_left", "share", "disputed", "main")
+
+        d["facts"] = compose_dict(
+            props=["dependants_old", "dependants_young", "has_partner", "is_you_or_your_partner_over_60"]
         )
 
-        d['facts'] = compose_dict(props=[
-            'dependants_old', 'dependants_young', 'has_partner',
-            'is_you_or_your_partner_over_60',
-        ])
-
-        d['facts']['on_passported_benefits'] = self.on_passported_benefits
-        d['facts']['on_nass_benefits'] = self.on_nass_benefits
+        d["facts"]["on_passported_benefits"] = self.on_passported_benefits
+        d["facts"]["on_nass_benefits"] = self.on_nass_benefits
 
         if self.you:
             you_props = {
-                'savings': compose_dict(self.you.savings, [
-                    'bank_balance', 'investment_balance', 'credit_balance',
-                    'asset_balance'
-                ]),
-                'income': compose_dict(self.you.income, [
-                    'earnings', 'self_employment_drawings', 'benefits',
-                    'tax_credits', 'child_benefits', 'maintenance_received',
-                    'pension', 'other_income', 'self_employed'
-                ]),
-                'deductions': compose_dict(self.you.deductions, [
-                    'income_tax', 'national_insurance', 'maintenance',
-                    'childcare', 'mortgage', 'rent',
-                    'criminal_legalaid_contributions'
-                ])
+                "savings": compose_dict(
+                    self.you.savings, ["bank_balance", "investment_balance", "credit_balance", "asset_balance"]
+                ),
+                "income": compose_dict(
+                    self.you.income,
+                    [
+                        "earnings",
+                        "self_employment_drawings",
+                        "benefits",
+                        "tax_credits",
+                        "child_benefits",
+                        "maintenance_received",
+                        "pension",
+                        "other_income",
+                        "self_employed",
+                    ],
+                ),
+                "deductions": compose_dict(
+                    self.you.deductions,
+                    [
+                        "income_tax",
+                        "national_insurance",
+                        "maintenance",
+                        "childcare",
+                        "mortgage",
+                        "rent",
+                        "criminal_legalaid_contributions",
+                    ],
+                ),
             }
-            d['you'] = {prop: value for prop, value in you_props.items() if
-                        value}
+            d["you"] = {prop: value for prop, value in you_props.items() if value}
 
         if self.has_partner and self.partner:
-            partner_income = compose_dict(self.partner.income, [
-                'earnings', 'self_employment_drawings', 'benefits',
-                'tax_credits', 'maintenance_received', 'child_benefits',
-                'pension', 'other_income', 'self_employed'
-            ])
+            partner_income = compose_dict(
+                self.partner.income,
+                [
+                    "earnings",
+                    "self_employment_drawings",
+                    "benefits",
+                    "tax_credits",
+                    "maintenance_received",
+                    "child_benefits",
+                    "pension",
+                    "other_income",
+                    "self_employed",
+                ],
+            )
 
             # If partner.income.child_benefits is None, this method will use a
             # default value (0). This is because that field is not exposed yet
             # (partner's child benefits can't be provided with).
             # Used this because in the future I reckon this might change so
             # it would be easier to support.
-            if partner_income and 'child_benefits' not in partner_income:
-                partner_income['child_benefits'] = 0
+            if partner_income and "child_benefits" not in partner_income:
+                partner_income["child_benefits"] = 0
 
             partner_props = {
-                'savings': compose_dict(self.partner.savings, [
-                    'bank_balance', 'investment_balance', 'credit_balance',
-                    'asset_balance'
-                ]),
-                'income': partner_income,
-                'deductions': compose_dict(self.partner.deductions, [
-                    'income_tax', 'national_insurance', 'maintenance',
-                    'childcare', 'mortgage', 'rent',
-                    'criminal_legalaid_contributions'
-                ])
+                "savings": compose_dict(
+                    self.partner.savings, ["bank_balance", "investment_balance", "credit_balance", "asset_balance"]
+                ),
+                "income": partner_income,
+                "deductions": compose_dict(
+                    self.partner.deductions,
+                    [
+                        "income_tax",
+                        "national_insurance",
+                        "maintenance",
+                        "childcare",
+                        "mortgage",
+                        "rent",
+                        "criminal_legalaid_contributions",
+                    ],
+                ),
             }
-            d['partner'] = {prop: value for prop, value in
-                            partner_props.items() if value}
+            d["partner"] = {prop: value for prop, value in partner_props.items() if value}
 
         if self.disputed_savings:
-            d['disputed_savings'] = compose_dict(
-                self.disputed_savings, [
-                    'bank_balance', 'investment_balance', 'credit_balance',
-                    'asset_balance'
-                ])
+            d["disputed_savings"] = compose_dict(
+                self.disputed_savings, ["bank_balance", "investment_balance", "credit_balance", "asset_balance"]
+            )
 
         # Fake
-        d['facts']['is_partner_opponent'] = False
+        d["facts"]["is_partner_opponent"] = False
 
         return CaseData(**d)
 
@@ -599,29 +584,26 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
 class Property(TimeStampedModel):
     value = MoneyField(default=None, null=True, blank=True)
     mortgage_left = MoneyField(default=None, null=True, blank=True)
-    share = models.PositiveIntegerField(default=None,
-                                        validators=[MaxValueValidator(100)],
-                                        null=True, blank=True)
-    eligibility_check = models.ForeignKey(EligibilityCheck, related_query_name='property_set')
+    share = models.PositiveIntegerField(default=None, validators=[MaxValueValidator(100)], null=True, blank=True)
+    eligibility_check = models.ForeignKey(EligibilityCheck, related_query_name="property_set")
     disputed = models.NullBooleanField(default=None)
     main = models.NullBooleanField(default=None)
 
     class Meta(object):
-        verbose_name_plural = 'properties'
-        ordering = ('-created',)
+        verbose_name_plural = "properties"
+        ordering = ("-created",)
 
 
 class MatterType(TimeStampedModel):
     category = models.ForeignKey(Category)
     code = models.CharField(max_length=4)
     description = models.CharField(max_length=255)
-    level = models.PositiveSmallIntegerField(
-        choices=MATTER_TYPE_LEVELS.CHOICES,
-        validators=[MaxValueValidator(2)])
+    level = models.PositiveSmallIntegerField(choices=MATTER_TYPE_LEVELS.CHOICES, validators=[MaxValueValidator(2)])
 
     def __unicode__(self):
-        return u'MatterType{} ({}): {} - {}'.format(
-            self.get_level_display(), self.category.code, self.code, self.description)
+        return u"MatterType{} ({}): {} - {}".format(
+            self.get_level_display(), self.category.code, self.code, self.description
+        )
 
     class Meta(object):
         unique_together = (("code", "level"),)
@@ -642,62 +624,47 @@ class MediaCode(TimeStampedModel):
 
 class Case(TimeStampedModel, ModelDiffMixin):
     reference = models.CharField(max_length=128, unique=True, editable=False)
-    eligibility_check = models.OneToOneField(EligibilityCheck, null=True,
-                                             blank=True)
-    diagnosis = models.OneToOneField('diagnosis.DiagnosisTraversal', null=True,
-                                     blank=True, on_delete=SET_NULL)
-    personal_details = models.ForeignKey(PersonalDetails, blank=True,
-                                         null=True)
+    eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
+    diagnosis = models.OneToOneField("diagnosis.DiagnosisTraversal", null=True, blank=True, on_delete=SET_NULL)
+    personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
 
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True,
-                                   null=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
 
     requires_action_by = models.CharField(
-        max_length=50, choices=REQUIRES_ACTION_BY.CHOICES,
+        max_length=50,
+        choices=REQUIRES_ACTION_BY.CHOICES,
         default=REQUIRES_ACTION_BY.OPERATOR,
-        blank=True, null=True, editable=False
+        blank=True,
+        null=True,
+        editable=False,
     )
 
-    requires_action_at = models.DateTimeField(
-        auto_now=False, blank=True, null=True
-    )
+    requires_action_at = models.DateTimeField(auto_now=False, blank=True, null=True)
     callback_attempt = models.PositiveSmallIntegerField(default=0)
 
-    locked_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, blank=True, null=True,
-        related_name='case_locked'
-    )
+    locked_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="case_locked")
     locked_at = models.DateTimeField(auto_now=False, blank=True, null=True)
-    provider = models.ForeignKey('cla_provider.Provider', blank=True,
-                                 null=True)
+    provider = models.ForeignKey("cla_provider.Provider", blank=True, null=True)
     notes = models.TextField(blank=True)
     provider_notes = models.TextField(blank=True)
-    laa_reference = models.BigIntegerField(
-        null=True, blank=True, unique=True, editable=False
-    )
-    thirdparty_details = models.ForeignKey('ThirdPartyDetails', blank=True,
-                                           null=True)
-    adaptation_details = models.ForeignKey('AdaptationDetails', blank=True,
-                                           null=True)
+    laa_reference = models.BigIntegerField(null=True, blank=True, unique=True, editable=False)
+    thirdparty_details = models.ForeignKey("ThirdPartyDetails", blank=True, null=True)
+    adaptation_details = models.ForeignKey("AdaptationDetails", blank=True, null=True)
     billable_time = models.PositiveIntegerField(default=0)
 
-    matter_type1 = models.ForeignKey(MatterType,
-                                     limit_choices_to=
-                                     {'level': MATTER_TYPE_LEVELS.ONE},
-                                     blank=True, null=True,
-                                     related_name='+')
+    matter_type1 = models.ForeignKey(
+        MatterType, limit_choices_to={"level": MATTER_TYPE_LEVELS.ONE}, blank=True, null=True, related_name="+"
+    )
 
-    matter_type2 = models.ForeignKey(MatterType,
-                                     limit_choices_to=
-                                     {'level': MATTER_TYPE_LEVELS.TWO},
-                                     blank=True, null=True,
-                                     related_name='+')
+    matter_type2 = models.ForeignKey(
+        MatterType, limit_choices_to={"level": MATTER_TYPE_LEVELS.TWO}, blank=True, null=True, related_name="+"
+    )
 
     media_code = models.ForeignKey(MediaCode, blank=True, null=True)
 
-    alternative_help_articles = models.ManyToManyField('knowledgebase.Article',
-                                                       through='CaseKnowledgebaseAssignment',
-                                                       null=True, blank=True)
+    alternative_help_articles = models.ManyToManyField(
+        "knowledgebase.Article", through="CaseKnowledgebaseAssignment", null=True, blank=True
+    )
 
     outcome_code = models.CharField(max_length=50, blank=True)
     outcome_code_id = models.IntegerField(null=True, blank=True)
@@ -712,16 +679,14 @@ class Case(TimeStampedModel, ModelDiffMixin):
 
     # if not None, indicates the case from which this was created
     #   that is, the original case being split
-    from_case = models.ForeignKey('self', blank=True, null=True, related_name='split_cases')
+    from_case = models.ForeignKey("self", blank=True, null=True, related_name="split_cases")
 
     provider_assigned_at = models.DateTimeField(blank=True, null=True)
     assigned_out_of_hours = models.NullBooleanField(default=False)
     provider_viewed = models.DateTimeField(blank=True, null=True)
     provider_accepted = models.DateTimeField(blank=True, null=True)
     provider_closed = models.DateTimeField(blank=True, null=True)
-    source = models.CharField(
-        max_length=20, choices=CASE_SOURCE, default=CASE_SOURCE.PHONE
-    )
+    source = models.CharField(max_length=20, choices=CASE_SOURCE, default=CASE_SOURCE.PHONE)
 
     # for now it's a '-' stripped version of the reference only
     # we could start getting smart and putting in all permutations of
@@ -732,11 +697,11 @@ class Case(TimeStampedModel, ModelDiffMixin):
     is_urgent = models.BooleanField(default=False)
 
     class Meta(object):
-        ordering = ('-created',)
+        ordering = ("-created",)
         permissions = (
-            ('run_reports', u'Can run reports'),
-            ('run_obiee_reports', u'Can run OBIEE reports'),
-            ('run_complaints_report', u'Can run complaints report'),
+            ("run_reports", u"Can run reports"),
+            ("run_obiee_reports", u"Can run OBIEE reports"),
+            ("run_complaints_report", u"Can run complaints report"),
         )
 
     def __unicode__(self):
@@ -747,7 +712,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
         tries = 0
         if not self.reference:
             reference = _make_reference()
-            while (not _check_reference_unique(reference) and tries < max_retries):
+            while not _check_reference_unique(reference) and tries < max_retries:
                 reference = _make_reference()
                 tries += 1
 
@@ -755,7 +720,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
 
     def _set_search_field(self):
         if self.reference:
-            self.search_field = self.reference.replace('-', '')
+            self.search_field = self.reference.replace("-", "")
 
     def is_part_of_split(self):
         """
@@ -772,13 +737,13 @@ class Case(TimeStampedModel, ModelDiffMixin):
             case = Case.objects.get(id=self.id)
             if case.level and case.outcome_code_id:
                 if case.outcome_code:
-                    msg = 'LGA-275 All three denormalized outcome values present for Case (ref:{})'
+                    msg = "LGA-275 All three denormalized outcome values present for Case (ref:{})"
                     logger.info(msg.format(case.reference))
                 else:
-                    msg = 'LGA-275 Outcome code missing while level and id present for Case (ref:{})'
+                    msg = "LGA-275 Outcome code missing while level and id present for Case (ref:{})"
                     logger.warning(msg.format(case.reference))
             else:
-                msg = 'LGA-275 Denormalized level and id expected but missing for Case (ref:{})'
+                msg = "LGA-275 Denormalized level and id expected but missing for Case (ref:{})"
                 logger.warning(msg.format(case.reference))
 
     def split(self, user, category, matter_type1, matter_type2, assignment_internal):
@@ -790,69 +755,74 @@ class Case(TimeStampedModel, ModelDiffMixin):
             cls=EligibilityCheck,
             pk=self.eligibility_check_id,
             config={
-                'excludes': ['reference', 'created', 'modified'],
-                'clone_fks': ['you', 'partner', 'disputed_savings'],
-                'override_values': {
-                    'category': category
-                }
-            }
+                "excludes": ["reference", "created", "modified"],
+                "clone_fks": ["you", "partner", "disputed_savings"],
+                "override_values": {"category": category},
+            },
         )
         if self.eligibility_check:
-            prop_ids = self.eligibility_check.property_set.values_list('pk', flat=True)
+            prop_ids = self.eligibility_check.property_set.values_list("pk", flat=True)
             for prop_id in prop_ids:
-                clone_model(cls=Property, pk=prop_id, config={
-                    'excludes': ['created', 'modified'],
-                    'override_values': {
-                        'eligibility_check': eligibility_check
-                    }
-                })
+                clone_model(
+                    cls=Property,
+                    pk=prop_id,
+                    config={
+                        "excludes": ["created", "modified"],
+                        "override_values": {"eligibility_check": eligibility_check},
+                    },
+                )
 
         # CASE
         override_values = {
-            'eligibility_check': eligibility_check,
-            'diagnosis': diagnosis,
-            'created_by': user,
-            'matter_type1': matter_type1,
-            'matter_type2': matter_type2,
-            'from_case': self,
-            'provider_viewed': None,
-            'provider_accepted': None,
-            'provider_closed': None,
-            'is_urgent': False,
+            "eligibility_check": eligibility_check,
+            "diagnosis": diagnosis,
+            "created_by": user,
+            "matter_type1": matter_type1,
+            "matter_type2": matter_type2,
+            "from_case": self,
+            "provider_viewed": None,
+            "provider_accepted": None,
+            "provider_closed": None,
+            "is_urgent": False,
         }
         if assignment_internal:
-            override_values['requires_action_by'] = self.requires_action_by
-            override_values['provider_assigned_at'] = self.provider_assigned_at
-            override_values['assigned_out_of_hours'] = self.assigned_out_of_hours
+            override_values["requires_action_by"] = self.requires_action_by
+            override_values["provider_assigned_at"] = self.provider_assigned_at
+            override_values["assigned_out_of_hours"] = self.assigned_out_of_hours
         else:
-            override_values['provider'] = None
-            override_values['requires_action_by'] = REQUIRES_ACTION_BY.OPERATOR
-            override_values['provider_assigned_at'] = None
-            override_values['assigned_out_of_hours'] = None
+            override_values["provider"] = None
+            override_values["requires_action_by"] = REQUIRES_ACTION_BY.OPERATOR
+            override_values["provider_assigned_at"] = None
+            override_values["assigned_out_of_hours"] = None
 
         new_case = clone_model(
             cls=self.__class__,
             pk=self.pk,
             config={
-                'excludes': [
-                    'reference', 'locked_by', 'locked_at',
-                    'laa_reference', 'billable_time', 'outcome_code', 'level',
-                    'created', 'modified', 'outcome_code_id', 'requires_action_at',
-                    'callback_attempt', 'search_field', 'provider_assigned_at',
-                    'assigned_out_of_hours', 'is_urgent'
+                "excludes": [
+                    "reference",
+                    "locked_by",
+                    "locked_at",
+                    "laa_reference",
+                    "billable_time",
+                    "outcome_code",
+                    "level",
+                    "created",
+                    "modified",
+                    "outcome_code_id",
+                    "requires_action_at",
+                    "callback_attempt",
+                    "search_field",
+                    "provider_assigned_at",
+                    "assigned_out_of_hours",
+                    "is_urgent",
                 ],
-                'clone_fks': [
-                    'thirdparty_details', 'adaptation_details',
-                ],
-                'override_values': override_values
-            }
+                "clone_fks": ["thirdparty_details", "adaptation_details"],
+                "override_values": override_values,
+            },
         )
-        for cka_id in self.caseknowledgebaseassignment_set.values_list('pk', flat=True):
-            clone_model(cls=CaseKnowledgebaseAssignment, pk=cka_id, config={
-                'override_values': {
-                    'case': new_case
-                }
-            })
+        for cka_id in self.caseknowledgebaseassignment_set.values_list("pk", flat=True):
+            clone_model(cls=CaseKnowledgebaseAssignment, pk=cka_id, config={"override_values": {"case": new_case}})
         return new_case
 
     def save(self, *args, **kwargs):
@@ -862,7 +832,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
         if not self.pk:
             super(Case, self).save(*args, **kwargs)
             self.laa_reference = self.pk + settings.LAA_REFERENCE_SEED
-            kwargs['force_insert'] = False
+            kwargs["force_insert"] = False
             self.save(*args, **kwargs)
         else:
             super(Case, self).save(*args, **kwargs)
@@ -877,40 +847,44 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.provider_viewed = None
         self.provider_accepted = None
         self.provider_closed = None
-        self.assigned_out_of_hours = self.provider_assigned_at not in \
-                                        settings.NON_ROTA_OPENING_HOURS
+        self.assigned_out_of_hours = self.provider_assigned_at not in settings.NON_ROTA_OPENING_HOURS
         self.is_urgent = is_urgent
 
-        self.save(update_fields=[
-            'provider', 'provider_viewed', 'provider_accepted',
-            'provider_closed', 'modified', 'provider_assigned_at',
-            'assigned_out_of_hours', 'is_urgent'
-        ])
+        self.save(
+            update_fields=[
+                "provider",
+                "provider_viewed",
+                "provider_accepted",
+                "provider_closed",
+                "modified",
+                "provider_assigned_at",
+                "assigned_out_of_hours",
+                "is_urgent",
+            ]
+        )
         self.reset_requires_action_at()
 
     def view_by_provider(self, provider):
         if provider == self.provider:
             self.provider_viewed = datetime.datetime.utcnow().replace(tzinfo=utc)
-            self.save(update_fields=['provider_viewed'])
+            self.save(update_fields=["provider_viewed"])
 
     def accept_by_provider(self):
         self.provider_accepted = datetime.datetime.utcnow().replace(tzinfo=utc)
-        self.save(update_fields=['provider_accepted'])
+        self.save(update_fields=["provider_accepted"])
 
     def close_by_provider(self):
         self.provider_closed = datetime.datetime.utcnow().replace(tzinfo=utc)
-        self.save(update_fields=['provider_closed'])
+        self.save(update_fields=["provider_closed"])
 
     def reopen_by_provider(self):
         self.provider_closed = None
-        self.save(update_fields=['provider_closed'])
+        self.save(update_fields=["provider_closed"])
 
     def assign_alternative_help(self, user, articles):
         self.alternative_help_articles.clear()
         for article in articles:
-            CaseKnowledgebaseAssignment.objects.create(case=self,
-                                                       alternative_help_article=article,
-                                                       assigned_by=user)
+            CaseKnowledgebaseAssignment.objects.create(case=self, alternative_help_article=article, assigned_by=user)
         self.reset_requires_action_at()
 
     def lock(self, user, save=True):
@@ -918,31 +892,30 @@ class Case(TimeStampedModel, ModelDiffMixin):
             self.locked_by = user
             self.locked_at = datetime.datetime.utcnow().replace(tzinfo=utc)
             if save:
-                self.save(update_fields=['locked_by', 'locked_at'])
+                self.save(update_fields=["locked_by", "locked_at"])
             return True
         else:
             if self.locked_by != user:
                 logger.warning(
-                    u'User %s tried to lock case %s locked already by %s' % (
-                        user, self.reference, self.locked_by
-                    ))
+                    u"User %s tried to lock case %s locked already by %s" % (user, self.reference, self.locked_by)
+                )
 
         return False
 
     def set_requires_action_by(self, requires_action_by):
         self.requires_action_by = requires_action_by
-        self.save(update_fields=['requires_action_by', 'modified'])
+        self.save(update_fields=["requires_action_by", "modified"])
 
     def set_requires_action_at(self, requires_action_at):
         self.requires_action_at = requires_action_at
         self.callback_attempt += 1
-        self.save(update_fields=['requires_action_at', 'callback_attempt', 'modified'])
+        self.save(update_fields=["requires_action_at", "callback_attempt", "modified"])
 
     def reset_requires_action_at(self):
         if self.requires_action_at != None or self.callback_attempt != 0:
             self.requires_action_at = None
             self.callback_attempt = 0
-            self.save(update_fields=['requires_action_at', 'callback_attempt', 'modified'])
+            self.save(update_fields=["requires_action_at", "callback_attempt", "modified"])
 
     @property
     def doesnt_requires_action(self):
@@ -965,21 +938,19 @@ class CaseNotesHistory(TimeStampedModel):
     include_in_summary = models.BooleanField(default=True)
 
     class Meta(object):
-        ordering = ('-created',)
+        ordering = ("-created",)
 
     def save(self, *args, **kwargs):
         self.include_in_summary = True
         super(CaseNotesHistory, self).save(*args, **kwargs)
 
         qs = CaseNotesHistory.objects.filter(
-            case=self.case,
-            created__gte=timezone.now() - datetime.timedelta(minutes=30),
-            created_by=self.created_by
+            case=self.case, created__gte=timezone.now() - datetime.timedelta(minutes=30), created_by=self.created_by
         ).exclude(pk=self.pk)
         qs.update(include_in_summary=False)
 
 
 class CaseKnowledgebaseAssignment(TimeStampedModel):
     case = models.ForeignKey(Case)
-    alternative_help_article = models.ForeignKey('knowledgebase.Article')
-    assigned_by = models.ForeignKey('auth.User', blank=True, null=True)
+    alternative_help_article = models.ForeignKey("knowledgebase.Article")
+    assigned_by = models.ForeignKey("auth.User", blank=True, null=True)

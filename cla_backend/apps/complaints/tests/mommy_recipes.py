@@ -7,8 +7,4 @@ from ..models import Complaint, Category
 
 category = Recipe(Category)
 
-complaint = Recipe(
-    Complaint,
-    eod=foreign_key(eod_details),
-    category=foreign_key(category)
-)
+complaint = Recipe(Complaint, eod=foreign_key(eod_details), category=foreign_key(category))

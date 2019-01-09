@@ -7,13 +7,13 @@ from model_utils.models import TimeStampedModel
 from .signals import log_operator_created, log_operator_modified
 
 
-OP_MANAGER_GROUP_NAME = 'Operator Managers'
-LAA_CASEWORKER_GROUP_NAME = 'LAA Caseworker'
-CLA_SUPERUSER_GROUP_NAME = 'CLA Superusers'
+OP_MANAGER_GROUP_NAME = "Operator Managers"
+LAA_CASEWORKER_GROUP_NAME = "LAA Caseworker"
+CLA_SUPERUSER_GROUP_NAME = "CLA Superusers"
 
 
 class Caseworker(TimeStampedModel):
-    user = models.OneToOneField('auth.User')
+    user = models.OneToOneField("auth.User")
 
     def __unicode__(self):
         return self.user.username
@@ -26,7 +26,7 @@ class Caseworker(TimeStampedModel):
 
 
 class Operator(TimeStampedModel):
-    user = models.OneToOneField('auth.User')
+    user = models.OneToOneField("auth.User")
     is_manager = models.BooleanField(default=False)
     is_cla_superuser = models.BooleanField(default=False)
 
@@ -56,18 +56,12 @@ class Operator(TimeStampedModel):
         is_special_user = self.is_cla_superuser_or_manager
         if self.user.is_staff != is_special_user:
             self.user.is_staff = is_special_user
-            self.user.save(update_fields=['is_staff'])
+            self.user.save(update_fields=["is_staff"])
 
         # update the permissions
-        self._add_remove_from_group(
-            Group.objects.get(name=OP_MANAGER_GROUP_NAME),
-            add=self.is_manager
-        )
+        self._add_remove_from_group(Group.objects.get(name=OP_MANAGER_GROUP_NAME), add=self.is_manager)
 
-        self._add_remove_from_group(
-            Group.objects.get(name=CLA_SUPERUSER_GROUP_NAME),
-            add=self.is_cla_superuser
-        )
+        self._add_remove_from_group(Group.objects.get(name=CLA_SUPERUSER_GROUP_NAME), add=self.is_cla_superuser)
 
 
 post_save.connect(log_operator_created, sender=Operator)

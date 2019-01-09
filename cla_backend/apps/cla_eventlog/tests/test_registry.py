@@ -10,13 +10,7 @@ class RegistryStartupChecksTestCase(TestCase):
         registry = EventRegistry()
 
         class MyEvent(BaseEvent):
-            codes = {
-                'MY_CODE': {
-                    'type': LOG_TYPES.SYSTEM,
-                    'selectable_by': [],
-                    'description': "my code"
-                },
-            }
+            codes = {"MY_CODE": {"type": LOG_TYPES.SYSTEM, "selectable_by": [], "description": "my code"}}
 
         self.assertRaises(ValueError, registry.register, MyEvent)
 
@@ -24,26 +18,26 @@ class RegistryStartupChecksTestCase(TestCase):
         registry = EventRegistry()
 
         class MyEvent(BaseEvent):
-            key = 'case'
+            key = "case"
 
         self.assertRaises(ValueError, registry.register, MyEvent)
 
     def test_event_with_missing_code_key_fails(self):
         registry = EventRegistry()
 
-        for missing_key in ['type', 'selectable_by', 'description']:
+        for missing_key in ["type", "selectable_by", "description"]:
             _codes = {
-                'MY_CODE': {
-                    'type': LOG_TYPES.SYSTEM,
-                    'level': LOG_LEVELS.HIGH,
-                    'selectable_by': [],
-                    'description': "my code"
-                },
+                "MY_CODE": {
+                    "type": LOG_TYPES.SYSTEM,
+                    "level": LOG_LEVELS.HIGH,
+                    "selectable_by": [],
+                    "description": "my code",
+                }
             }
-            del _codes['MY_CODE'][missing_key]
+            del _codes["MY_CODE"][missing_key]
 
             class MyEvent(BaseEvent):
-                key = 'my_key'
+                key = "my_key"
                 codes = _codes
 
             self.assertRaises(ValueError, registry.register, MyEvent)
@@ -51,19 +45,19 @@ class RegistryStartupChecksTestCase(TestCase):
     def test_event_with_wrong_type_code_key_fails(self):
         registry = EventRegistry()
 
-        for wrong_type_key in ['type', 'selectable_by', 'description']:
+        for wrong_type_key in ["type", "selectable_by", "description"]:
             _codes = {
-                'MY_CODE': {
-                    'type': LOG_TYPES.SYSTEM,
-                    'level': LOG_LEVELS.HIGH,
-                    'selectable_by': [],
-                    'description': "my code"
-                },
+                "MY_CODE": {
+                    "type": LOG_TYPES.SYSTEM,
+                    "level": LOG_LEVELS.HIGH,
+                    "selectable_by": [],
+                    "description": "my code",
+                }
             }
-            _codes['MY_CODE'][wrong_type_key] = float(1)  # not really great but hey...
+            _codes["MY_CODE"][wrong_type_key] = float(1)  # not really great but hey...
 
             class MyEvent(BaseEvent):
-                key = 'my_key'
+                key = "my_key"
                 codes = _codes
 
             self.assertRaises(ValueError, registry.register, MyEvent)
@@ -72,16 +66,11 @@ class RegistryStartupChecksTestCase(TestCase):
         registry = EventRegistry()
 
         _codes = {
-            'MY_CODE': {
-                'type': 'wrong-type',
-                'level': LOG_LEVELS.HIGH,
-                'selectable_by': [],
-                'description': "my code"
-            },
+            "MY_CODE": {"type": "wrong-type", "level": LOG_LEVELS.HIGH, "selectable_by": [], "description": "my code"}
         }
 
         class MyEvent(BaseEvent):
-            key = 'my_key'
+            key = "my_key"
             codes = _codes
 
         self.assertRaises(ValueError, registry.register, MyEvent)
@@ -89,17 +78,10 @@ class RegistryStartupChecksTestCase(TestCase):
     def test_event_with_wrong_level_value_fails(self):
         registry = EventRegistry()
 
-        _codes = {
-            'MY_CODE': {
-                'type': LOG_TYPES.SYSTEM,
-                'level': -1,
-                'selectable_by': [],
-                'description': "my code"
-            },
-        }
+        _codes = {"MY_CODE": {"type": LOG_TYPES.SYSTEM, "level": -1, "selectable_by": [], "description": "my code"}}
 
         class MyEvent(BaseEvent):
-            key = 'my_key'
+            key = "my_key"
             codes = _codes
 
         self.assertRaises(ValueError, registry.register, MyEvent)
@@ -108,16 +90,16 @@ class RegistryStartupChecksTestCase(TestCase):
         registry = EventRegistry()
 
         _codes = {
-            'MY_CODE': {
-                'type': LOG_TYPES.SYSTEM,
-                'level': LOG_LEVELS.HIGH,
-                'selectable_by': ['foo'],
-                'description': "my code"
-            },
+            "MY_CODE": {
+                "type": LOG_TYPES.SYSTEM,
+                "level": LOG_LEVELS.HIGH,
+                "selectable_by": ["foo"],
+                "description": "my code",
+            }
         }
 
         class MyEvent(BaseEvent):
-            key = 'my_key'
+            key = "my_key"
             codes = _codes
 
         self.assertRaises(ValueError, registry.register, MyEvent)
@@ -126,47 +108,47 @@ class RegistryStartupChecksTestCase(TestCase):
         registry = EventRegistry()
 
         _codes = {
-            'MY_CODE': {
-                'type': LOG_TYPES.SYSTEM,
-                'level': LOG_LEVELS.HIGH,
-                'selectable_by': [],
-                'description': "my code",
-                'stops_timer': True
-            },
+            "MY_CODE": {
+                "type": LOG_TYPES.SYSTEM,
+                "level": LOG_LEVELS.HIGH,
+                "selectable_by": [],
+                "description": "my code",
+                "stops_timer": True,
+            }
         }
 
         class MyEvent(BaseEvent):
-            key = 'my_key'
+            key = "my_key"
             codes = _codes
 
         registry.register(MyEvent)
 
         res = registry.all()
         self.assertEqual(len(res), 1)
-        self.assertTrue('MY_CODE' in res, res)
+        self.assertTrue("MY_CODE" in res, res)
 
     def test_event_registry_filter(self):
         registry = EventRegistry()
 
         _codes = {
-            'MY_CODE': {
-                'type': LOG_TYPES.SYSTEM,
-                'level': LOG_LEVELS.HIGH,
-                'selectable_by': [],
-                'description': "my code",
-                'stops_timer': True
-            },
+            "MY_CODE": {
+                "type": LOG_TYPES.SYSTEM,
+                "level": LOG_LEVELS.HIGH,
+                "selectable_by": [],
+                "description": "my code",
+                "stops_timer": True,
+            }
         }
 
         class MyEvent(BaseEvent):
-            key = 'my_key'
+            key = "my_key"
             codes = _codes
 
         registry.register(MyEvent)
 
         res = registry.all()
         self.assertEqual(len(res), 1)
-        self.assertTrue('MY_CODE' in res, res)
+        self.assertTrue("MY_CODE" in res, res)
         filt = registry.filter(stops_timer=False)
         self.assertEqual(len(filt), 0)
-        self.assertFalse('MY_CODE' in filt, filt)
+        self.assertFalse("MY_CODE" in filt, filt)

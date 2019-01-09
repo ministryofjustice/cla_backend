@@ -9,9 +9,9 @@ def clone_model(cls, pk, config={}):
 
     cloned = cls.objects.get(pk=pk)
 
-    excludes = config.get('excludes', [])
-    clone_fks = config.get('clone_fks', [])
-    override_values = config.get('override_values', {})
+    excludes = config.get("excludes", [])
+    clone_fks = config.get("clone_fks", [])
+    override_values = config.get("override_values", {})
 
     cloned.pk = None
 
@@ -26,7 +26,7 @@ def clone_model(cls, pk, config={}):
             continue
 
         fk_field = cls._meta.get_field(field)
-        fk_id = getattr(cloned, '%s_id' % fk_field.name)
+        fk_id = getattr(cloned, "%s_id" % fk_field.name)
         fk_clazz = fk_field.rel.to
         cloned_fk = fk_clazz.clone_from_obj(fk_id)
         setattr(cloned, fk_field.name, cloned_fk)
@@ -42,9 +42,9 @@ def clone_model(cls, pk, config={}):
 
 class CloneModelMixin(object):
     cloning_config = {
-        'excludes': [],  # these will be set to default vals
-        'clone_fks': [],  # fk to be cloned (new obj, new id), other fks will be referenced instead
-        'override_values': {}  # dict of val to override during the cloning op
+        "excludes": [],  # these will be set to default vals
+        "clone_fks": [],  # fk to be cloned (new obj, new id), other fks will be referenced instead
+        "override_values": {},  # dict of val to override during the cloning op
     }
 
     @classmethod

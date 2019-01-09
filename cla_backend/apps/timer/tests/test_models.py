@@ -22,19 +22,19 @@ class TimerTestCase(TestCase):
         self.assertEqual(Timer.objects.first(), timer)
 
     def test_stop_fails_if_already_stopped(self):
-        timer = make_recipe('timer.Timer', stopped=timezone.now())
+        timer = make_recipe("timer.Timer", stopped=timezone.now())
 
         self.assertRaises(ValueError, timer.stop)
 
     def test_stop_fails_if_no_log_exists(self):
-        timer = make_recipe('timer.Timer', stopped=None)
+        timer = make_recipe("timer.Timer", stopped=None)
 
         self.assertRaises(ValueError, timer.stop)
 
     def test_stop_success(self):
-        timer = make_recipe('timer.Timer', stopped=None)
-        case = make_recipe('legalaid.Case')
-        make_recipe('cla_eventlog.Log', timer=timer, case=case)
+        timer = make_recipe("timer.Timer", stopped=None)
+        case = make_recipe("legalaid.Case")
+        make_recipe("cla_eventlog.Log", timer=timer, case=case)
 
         self.assertEqual(timer.stopped, None)
         self.assertEqual(timer.linked_case, None)
@@ -46,7 +46,7 @@ class TimerTestCase(TestCase):
         self.assertNotEqual(timer.stopped, None)
         self.assertEqual(timer.linked_case, case)
 
-    @mock.patch('timer.models.postgres_now')
+    @mock.patch("timer.models.postgres_now")
     def test_billable_time_with_2_stopped_timers(self, mocked_now):
         """
             DB:
@@ -60,6 +60,7 @@ class TimerTestCase(TestCase):
             Expected:
                 case A.billable_time == timer1 + timer2 + timer3
         """
+
         def build_datetime(date_str):
             dt = datetime.datetime.strptime(date_str, "%d/%m/%Y %H:%M:%S")
 
@@ -67,54 +68,54 @@ class TimerTestCase(TestCase):
 
         # DATABASE SETUP
 
-        caseA = make_recipe('legalaid.Case')
-        caseB = make_recipe('legalaid.Case')
+        caseA = make_recipe("legalaid.Case")
+        caseB = make_recipe("legalaid.Case")
 
         userA = make_user()
         userB = make_user()
 
         timer1 = make_recipe(
-            'timer.Timer',
-            created=build_datetime('01/01/2014 10:00:00'),
-            stopped=build_datetime('01/01/2014 10:00:01'),
-            linked_case=caseA, created_by=userA
+            "timer.Timer",
+            created=build_datetime("01/01/2014 10:00:00"),
+            stopped=build_datetime("01/01/2014 10:00:01"),
+            linked_case=caseA,
+            created_by=userA,
         )
         timer2 = make_recipe(
-            'timer.Timer',
-            created=build_datetime('01/04/2014 11:00:00'),
+            "timer.Timer",
+            created=build_datetime("01/04/2014 11:00:00"),
             stopped=None,
-            linked_case=caseA, created_by=userA
+            linked_case=caseA,
+            created_by=userA,
         )
         timer3 = make_recipe(
-            'timer.Timer',
-            created=build_datetime('01/02/2014 23:00:00'),
-            stopped=build_datetime('02/02/2014 01:00:01'),
-            linked_case=caseA, created_by=userB
+            "timer.Timer",
+            created=build_datetime("01/02/2014 23:00:00"),
+            stopped=build_datetime("02/02/2014 01:00:01"),
+            linked_case=caseA,
+            created_by=userB,
         )
-        timer4 = make_recipe(
-            'timer.Timer', stopped=None,
-            linked_case=caseA, created_by=userB
-        )
+        timer4 = make_recipe("timer.Timer", stopped=None, linked_case=caseA, created_by=userB)
         timer5 = make_recipe(
-            'timer.Timer',
-            stopped=build_datetime('02/02/2014 01:00:01'),
-            linked_case=caseB, created_by=userA
+            "timer.Timer", stopped=build_datetime("02/02/2014 01:00:01"), linked_case=caseB, created_by=userA
         )
         timer6 = make_recipe(
-            'timer.Timer',
-            stopped=build_datetime('02/02/2014 01:00:01'),
-            linked_case=caseB, created_by=userA, cancelled=True
+            "timer.Timer",
+            stopped=build_datetime("02/02/2014 01:00:01"),
+            linked_case=caseB,
+            created_by=userA,
+            cancelled=True,
         )
 
-        make_recipe('cla_eventlog.Log', timer=timer2, case=caseA)
-        make_recipe('cla_eventlog.Log', timer=timer4, case=caseA)
+        make_recipe("cla_eventlog.Log", timer=timer2, case=caseA)
+        make_recipe("cla_eventlog.Log", timer=timer4, case=caseA)
 
         # CHECKS BEFORE STOPPING THE TIMER
 
         self.assertEqual(caseA.billable_time, 0)
         self.assertEqual(caseB.billable_time, 0)
 
-        mocked_now.return_value = build_datetime('01/04/2014 11:05:00')
+        mocked_now.return_value = build_datetime("01/04/2014 11:05:00")
         timer2.stop()
 
         # reloading objects
@@ -127,15 +128,12 @@ class TimerTestCase(TestCase):
         self.assertEqual(caseB.billable_time, 0)
 
     def test_billable_time(self):
-        case = make_recipe('legalaid.Case')
+        case = make_recipe("legalaid.Case")
         user = make_user()
 
-        timer = make_recipe(
-            'timer.Timer',
-            linked_case=case, created_by=user
-        )
+        timer = make_recipe("timer.Timer", linked_case=case, created_by=user)
 
-        make_recipe('cla_eventlog.Log', timer=timer, case=case)
+        make_recipe("cla_eventlog.Log", timer=timer, case=case)
 
         timer.stop()
 

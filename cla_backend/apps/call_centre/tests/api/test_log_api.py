@@ -4,7 +4,5 @@ from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 from cla_eventlog.tests.test_views import LogAPIMixin
 
 
-class LogViewSetTestCase(
-    CLAOperatorAuthBaseApiTestMixin, LogAPIMixin, APITestCase
-):
+class LogViewSetTestCase(CLAOperatorAuthBaseApiTestMixin, LogAPIMixin, APITestCase):
     pass

@@ -14,10 +14,11 @@ class Command(DocOptCommand):
         --datetime-to=<datetime>    ISO 8601 datetime (default midnight today)
     """
 
-    filename = 'cla_database.zip'
+    filename = "cla_database.zip"
 
     def handle_docopt(self, args):
-        fp = OBIEEExporter(args['<export_path>'], args['<diversity_keyphrase>'],
-                           args['--datetime-from'], args['--datetime-to']).export()
+        fp = OBIEEExporter(
+            args["<export_path>"], args["<diversity_keyphrase>"], args["--datetime-from"], args["--datetime-to"]
+        ).export()
 
-        self.stdout.write(u'Export created at: %s' % fp)
+        self.stdout.write(u"Export created at: %s" % fp)

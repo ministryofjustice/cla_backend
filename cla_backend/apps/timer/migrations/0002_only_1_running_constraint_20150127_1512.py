@@ -13,10 +13,6 @@ CREATE UNIQUE INDEX timer_single_running
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('timer', '0001_initial'),
-    ]
+    dependencies = [("timer", "0001_initial")]
 
-    operations = [
-        migrations.RunSQL(sql)
-    ]
+    operations = [migrations.RunSQL(sql)]

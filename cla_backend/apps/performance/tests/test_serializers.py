@@ -11,4 +11,4 @@ class SerializerTestCase(TestCase):
 
         self.assertEqual(serializer.from_time, datetime.datetime(2015, 7, 6, 0, 0, 0))
         self.assertEqual(serializer.to_time, datetime.datetime(2015, 7, 13, 0, 0, 0))
-        self.assertEqual(serializer.time_string, '2015-07-06T00:00:00+00:00')
+        self.assertEqual(serializer.time_string, "2015-07-06T00:00:00+00:00")

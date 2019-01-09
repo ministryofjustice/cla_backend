@@ -28,7 +28,7 @@ class CapitalCalculator(object):
         self.calcs = calcs
 
     def _parse_props(self, props):
-        l = []
+        result = []
         for p in props or []:
             # check property
             invalid_props, is_empty = self._is_property_invalid(p)
@@ -41,8 +41,8 @@ class CapitalCalculator(object):
 
             parsed_prop = p.copy()
             parsed_prop["equity"] = 0
-            l.append(parsed_prop)
-        return l
+            result.append(parsed_prop)
+        return result
 
     @property
     def main_property(self):
@@ -72,8 +72,8 @@ class CapitalCalculator(object):
         if not prop:
             return (True, True)
 
-        none_values = [k for k, v in prop.items() if v == None]
-        return (none_values, len(none_values) == len(prop))
+        none_values = [k for k, v in prop.items() if v is None]
+        return none_values, len(none_values) == len(prop)
 
     # for each other property
     def _calculate_property_equity(self, prop):

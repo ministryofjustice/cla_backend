@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from reports.models import Export
 from rest_framework import serializers
 

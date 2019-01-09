@@ -109,7 +109,7 @@ def is_yes(value):
 
 def properties(scenario):
     def property_data(i):
-        prop = lambda s: scenario["prop{0}-{1}".format(i, s)]
+        prop = lambda s: scenario["prop{0}-{1}".format(i, s)]  # noqa: E731
         if prop("value"):
             return {
                 "value": money(prop("value")),

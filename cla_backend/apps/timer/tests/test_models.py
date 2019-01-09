@@ -74,7 +74,7 @@ class TimerTestCase(TestCase):
         userA = make_user()
         userB = make_user()
 
-        timer1 = make_recipe(
+        make_recipe(
             "timer.Timer",
             created=build_datetime("01/01/2014 10:00:00"),
             stopped=build_datetime("01/01/2014 10:00:01"),
@@ -88,7 +88,7 @@ class TimerTestCase(TestCase):
             linked_case=caseA,
             created_by=userA,
         )
-        timer3 = make_recipe(
+        make_recipe(
             "timer.Timer",
             created=build_datetime("01/02/2014 23:00:00"),
             stopped=build_datetime("02/02/2014 01:00:01"),
@@ -96,10 +96,8 @@ class TimerTestCase(TestCase):
             created_by=userB,
         )
         timer4 = make_recipe("timer.Timer", stopped=None, linked_case=caseA, created_by=userB)
-        timer5 = make_recipe(
-            "timer.Timer", stopped=build_datetime("02/02/2014 01:00:01"), linked_case=caseB, created_by=userA
-        )
-        timer6 = make_recipe(
+        make_recipe("timer.Timer", stopped=build_datetime("02/02/2014 01:00:01"), linked_case=caseB, created_by=userA)
+        make_recipe(
             "timer.Timer",
             stopped=build_datetime("02/02/2014 01:00:01"),
             linked_case=caseB,

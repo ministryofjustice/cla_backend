@@ -18,7 +18,7 @@ def autodiscover():
         try:
             before_import_registry = copy.copy(event_registry._registry)
             import_module("%s.events" % app)
-        except:
+        except Exception:
             # Reset the model registry to the state before the last import as
             # this import will have to reoccur on the next request and this
             # could raise NotRegistered and AlreadyRegistered exceptions

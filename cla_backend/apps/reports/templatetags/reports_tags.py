@@ -13,8 +13,8 @@ register = template.Library()
 def report_links():
     abbrevs = re.compile(r"(mi|eod|cb1|obiee)", flags=re.IGNORECASE)
 
-    def replace_abbrev(name):
-        names = name.split()
+    def replace_abbrev(full_name):
+        names = full_name.split()
         names = [abbrevs.sub(lambda n: n.group(1).upper(), name) for name in names]
         return u" ".join(names)
 

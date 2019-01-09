@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from contextlib import contextmanager
 import datetime
 from django.test import TestCase
@@ -21,7 +21,7 @@ def _make_datetime(year, month, day, hour=0, minute=0, second=0):
 @contextmanager
 def patch_field(cls, field_name, dt):
     field = cls._meta.get_field(field_name)
-    mock_now = lambda: dt
+    mock_now = lambda: dt  # noqa: E731
     with mock.patch.object(field, "default", new=mock_now):
         yield
 

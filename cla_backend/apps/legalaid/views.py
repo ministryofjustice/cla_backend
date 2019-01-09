@@ -112,7 +112,7 @@ class BaseUserViewSet(
         # for now, you can only access to the user/me/ object, for security
         # reasons. We'll probably change this in the future to allow service
         # managers to add/update/delete users from their area.
-        logged_in_user_model = self.get_logged_in_user_model()
+        # logged_in_user_model = self.get_logged_in_user_model()
 
         if lookup == self.me_lookup_url_kwargs:
             self.kwargs[lookup_url_kwarg] = self.request.user.username
@@ -611,7 +611,7 @@ class BaseCSVUploadViewSet(
     def create(self, request, *args, **kwargs):
         try:
             return super(BaseCSVUploadViewSet, self).create(request, *args, **kwargs)
-        except IntegrityError as ie:
+        except IntegrityError:
             raise ConflictException("Upload already exists for given month. Try overwriting.")
 
     def update(self, request, *args, **kwargs):

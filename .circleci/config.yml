@@ -66,7 +66,7 @@ jobs:
           paths:
             - "~/.cache/pip"
       - run:
-          name: Lint with flake8
+          name: Lint with flake8 (warnings only)
           command: |
             source lint-env/bin/activate
             flake8 --exit-zero cla_backend

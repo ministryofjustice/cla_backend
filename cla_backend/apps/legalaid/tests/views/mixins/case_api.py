@@ -174,7 +174,7 @@ class BaseSearchCaseAPIMixin(BaseFullCaseAPIMixin):
         """
         GET search by name should work
         """
-        obj = make_recipe(
+        make_recipe(
             "legalaid.case",
             reference="ref1",
             personal_details__full_name="xyz",
@@ -199,7 +199,7 @@ class BaseSearchCaseAPIMixin(BaseFullCaseAPIMixin):
         """
         GET search by name should work
         """
-        obj = make_recipe(
+        make_recipe(
             "legalaid.case",
             personal_details__full_name="abc",
             personal_details__postcode="123",
@@ -217,7 +217,7 @@ class BaseSearchCaseAPIMixin(BaseFullCaseAPIMixin):
         """
         GET search by name should work
         """
-        obj = make_recipe(
+        make_recipe(
             "legalaid.case",
             personal_details__postcode="123",
             personal__details__full_name="abc",

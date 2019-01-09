@@ -248,16 +248,16 @@ class ProviderAllocationHelperTestCase(TestCase):
             provider2 = make_recipe("cla_provider.provider", active=True)
             provider3 = make_recipe("cla_provider.provider", active=True)
             provider4 = make_recipe("cla_provider.provider", active=True)
-            a1 = make_recipe(
+            make_recipe(
                 "cla_provider.provider_allocation", weighted_distribution=5, provider=provider1, category=category
             )
-            a2 = make_recipe(
+            make_recipe(
                 "cla_provider.provider_allocation", weighted_distribution=1, provider=provider2, category=category
             )
-            a3 = make_recipe(
+            make_recipe(
                 "cla_provider.provider_allocation", weighted_distribution=1, provider=provider3, category=category
             )
-            a4 = make_recipe(
+            make_recipe(
                 "cla_provider.provider_allocation", weighted_distribution=1, provider=provider4, category=category
             )
             ProviderAllocation.objects.update(modified=as_of - datetime.timedelta(days=1))

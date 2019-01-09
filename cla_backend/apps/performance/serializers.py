@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from __future__ import unicode_literals
 import base64
 import json
@@ -163,13 +163,9 @@ class TransactionsByChannelTypeSerializer(PPSerializer):
     def _digital(self):
         if self.channel != "WEB":
             return 0
-        cases = self._get_cases().filter(
-            ~Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
-            | Q(
-                Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
-                & Q(eligibility_check__property_set__share__isnull=True)
-            )
-        )
+        unknown = Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
+        unknown_and_property_share_null = Q(unknown & Q(eligibility_check__property_set__share__isnull=True))
+        cases = self._get_cases().filter(~unknown | unknown_and_property_share_null)
         ecs = self._get_eligibility_checks().filter(~Q(state=ELIGIBILITY_STATES.UNKNOWN) & Q(case__isnull=True))
         diags = self._get_diagnosis_traversals().filter(Q(case__isnull=True) & ~Q(state=DIAGNOSIS_SCOPE.UNKNOWN))
         return cases.count() + ecs.count() + diags.count()
@@ -177,14 +173,11 @@ class TransactionsByChannelTypeSerializer(PPSerializer):
     def _assisted_digital(self):
         if self.channel != "WEB":
             return 0
-        cases = self._get_cases().filter(
-            Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
-            | Q(eligibility_check__isnull=True)
-            & ~Q(
-                Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
-                & Q(eligibility_check__property_set__share__isnull=True)
-            )
-        )
+        unknown = Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
+        no_check = Q(eligibility_check__isnull=True)
+        property_share_null = Q(eligibility_check__property_set__share__isnull=True)
+        unknown_and_property_share_null = unknown & property_share_null
+        cases = self._get_cases().filter(unknown | no_check & ~Q(unknown_and_property_share_null))
         return cases.count()
 
     def _count(self):

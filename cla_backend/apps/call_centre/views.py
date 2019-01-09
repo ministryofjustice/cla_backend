@@ -226,10 +226,9 @@ class CaseViewSet(CallCentrePermissionsViewSetMixin, mixins.CreateModelMixin, Ba
 
     def get_dashboard_qs(self, qs):
         if self.request.user.operator.is_manager:
-            qs = qs.filter(
-                Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
-                | Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR_MANAGER)
-            )
+            action_by_operator = Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
+            action_by_operator_manager = Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR_MANAGER)
+            qs = qs.filter(action_by_operator | action_by_operator_manager)
         else:
             qs = qs.filter(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
 
@@ -278,7 +277,7 @@ class CaseViewSet(CallCentrePermissionsViewSetMixin, mixins.CreateModelMixin, Ba
         obj = self.get_object()
         helper = ProviderAllocationHelper(as_of=as_of)
 
-        if hasattr(obj, "eligibility_check") and obj.eligibility_check != None and obj.eligibility_check.category:
+        if hasattr(obj, "eligibility_check") and obj.eligibility_check is not None and obj.eligibility_check.category:
             category = obj.eligibility_check.category
             ProviderPreAllocation.objects.clear(case=obj)
             suggested = helper.get_suggested_provider(category)

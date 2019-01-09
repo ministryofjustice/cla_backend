@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from django import forms
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_ROLES

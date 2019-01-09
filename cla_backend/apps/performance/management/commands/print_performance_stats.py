@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 import datetime
 import warnings
 from django.core.management.base import BaseCommand
@@ -100,27 +100,17 @@ class Command(BaseCommand):
         self.stdout.write("Inligible cases: %s" % cases.count())
 
         # People with a valid outcome
-        cases = self._get_cases(source="WEB").filter(
-            ~Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
-            | Q(
-                Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
-                & Q(eligibility_check__property_set__share__isnull=True)
-            )
-        )
+        unknown = Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
+        unknown_and_property_share_null = Q(unknown & Q(eligibility_check__property_set__share__isnull=True))
+        cases = self._get_cases(source="WEB").filter(~unknown | unknown_and_property_share_null)
 
         ecs = self._get_eligibility_checks().filter(Q(state=ELIGIBILITY_STATES.NO) & Q(case__isnull=True))
         diags = self._get_diagnosis_traversals().filter(Q(case__isnull=True) & Q(state=DIAGNOSIS_SCOPE.OUTOFSCOPE))
         self.stdout.write("Complete Transactions: %s" % (cases.count() + ecs.count() + diags.count()))
 
         # Assisted digital - click contact me
-        cases = self._get_cases("WEB").filter(
-            Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
-            | Q(eligibility_check__isnull=True)
-            & ~Q(
-                Q(eligibility_check__state=ELIGIBILITY_STATES.UNKNOWN)
-                & Q(eligibility_check__property_set__share__isnull=True)
-            )
-        )
+        eligibility_check = Q(eligibility_check__isnull=True)
+        cases = self._get_cases("WEB").filter(unknown | eligibility_check & ~unknown_and_property_share_null)
         self.stdout.write("Assisted digital: %s" % cases.count())
 
         self.stdout.write("\n\nEND\n\n")

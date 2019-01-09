@@ -66,7 +66,7 @@ class CaseNotesHistoryAPIMixin(NestedSimpleResourceAPIMixin):
         self.assertEqual(len(response.data["results"]), 5)
 
         for obj in response.data["results"]:
-            if obj["provider_notes"] != None:
+            if obj["provider_notes"] is not None:
                 self.assertEqual(obj["provider_notes"], "Provider notes")
                 self.assertEqual(obj["type_notes"], "Provider notes")
             else:

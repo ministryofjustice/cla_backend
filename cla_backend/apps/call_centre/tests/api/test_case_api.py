@@ -486,31 +486,29 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         Case.objects.all().delete()
 
         now = timezone.now()
-        # obj1 is assigned => EXCLUDED
-        # obj2.requires_action_by == None (meaning doesn't require action) => EXCLUDED
-        # obj3.requires_action_by == OPERATOR => INCLUDED
-        # obj4.requires_action_at > now => EXCLUDED
-        # obj5.requires_action_at < now => INCLUDED
-        # obj6.requires_action_at < now => INCLUDED
-        # obj7.requires_action_at < now => INCLUDED
-        obj1 = make_recipe(
+        # ref1 is assigned => EXCLUDED
+        # ref2.requires_action_by == None (meaning doesn't require action) => EXCLUDED
+        # ref3.requires_action_by == OPERATOR => INCLUDED
+        # ref4.requires_action_at > now => EXCLUDED
+        # ref5.requires_action_at < now => INCLUDED
+        # ref6.requires_action_at < now => INCLUDED
+        # ref7.requires_action_at < now => INCLUDED
+        make_recipe(
             "legalaid.case",
             reference="ref1",
             provider=self.provider,
             outcome_code="REF-EXT",
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
         )
-        obj2 = make_recipe(
-            "legalaid.case", reference="ref2", provider=None, outcome_code="MIS", requires_action_by=None
-        )
-        obj3 = make_recipe(
+        make_recipe("legalaid.case", reference="ref2", provider=None, outcome_code="MIS", requires_action_by=None)
+        make_recipe(
             "legalaid.case",
             reference="ref3",
             provider=None,
             outcome_code="COI",
             requires_action_by=REQUIRES_ACTION_BY.OPERATOR,
         )
-        obj4 = make_recipe(
+        make_recipe(
             "legalaid.case",
             reference="ref4",
             provider=None,
@@ -518,7 +516,7 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             outcome_code="CB1",
             requires_action_at=now + datetime.timedelta(seconds=2),
         )
-        obj5 = make_recipe(
+        make_recipe(
             "legalaid.case",
             reference="ref5",
             provider=None,
@@ -526,7 +524,7 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             outcome_code="CB1",
             requires_action_at=now - datetime.timedelta(seconds=1),
         )
-        obj6 = make_recipe(
+        make_recipe(
             "legalaid.case",
             reference="ref6",
             provider=None,
@@ -534,7 +532,7 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             outcome_code="CB1",
             requires_action_at=now - datetime.timedelta(days=1),
         )
-        obj7 = make_recipe(
+        make_recipe(
             "legalaid.case",
             reference="ref7",
             provider=None,
@@ -543,7 +541,7 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
             requires_action_at=now - datetime.timedelta(days=2),
         )
 
-        # searching via dashboard param => should return obj3, obj4, obj5
+        # searching via dashboard param => should return ref3, ref4, ref5
         response = self.client.get(self.list_dashboard_url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(4, len(response.data["results"]))
@@ -570,9 +568,9 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         pd1 = make_recipe("legalaid.personal_details")
         pd2 = make_recipe("legalaid.personal_details")
 
-        obj1 = make_recipe("legalaid.case", reference="ref1", personal_details=pd1)
-        obj2 = make_recipe("legalaid.case", reference="ref2", personal_details=pd2)
-        obj3 = make_recipe("legalaid.case", reference="ref3", personal_details=pd1)
+        make_recipe("legalaid.case", reference="ref1", personal_details=pd1)
+        make_recipe("legalaid.case", reference="ref2", personal_details=pd2)
+        make_recipe("legalaid.case", reference="ref3", personal_details=pd1)
 
         # searching for pd1
         response = self.client.get(
@@ -654,24 +652,20 @@ class FutureCallbacksCaseTestCase(BaseCaseTestCase):
 
         now = timezone.now()
         start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        # obj1.requires_action_at == past => EXCLUDED
-        # obj2.requires_action_at == None => EXCLUDED
-        # obj3.requires_action_at == start_of_day+7 => INCLUDED
-        # obj4.requires_action_at > start_of_day+7 => EXCLUDED
-        # obj5.requires_action_at == start_of_day => INCLUDED
-        obj1 = make_recipe(
-            "legalaid.case", reference="ref1", requires_action_at=start_of_day - datetime.timedelta(seconds=1)
-        )
-        obj2 = make_recipe("legalaid.case", reference="ref2", requires_action_at=None)
-        obj3 = make_recipe(
+        # ref1.requires_action_at == past => EXCLUDED
+        # ref2.requires_action_at == None => EXCLUDED
+        # ref3.requires_action_at == start_of_day+7 => INCLUDED
+        # ref4.requires_action_at > start_of_day+7 => EXCLUDED
+        # ref5.requires_action_at == start_of_day => INCLUDED
+        make_recipe("legalaid.case", reference="ref1", requires_action_at=start_of_day - datetime.timedelta(seconds=1))
+        make_recipe("legalaid.case", reference="ref2", requires_action_at=None)
+        make_recipe(
             "legalaid.case",
             reference="ref3",
             requires_action_at=start_of_day + datetime.timedelta(days=7) - datetime.timedelta(seconds=1),
         )
-        obj4 = make_recipe(
-            "legalaid.case", reference="ref4", requires_action_at=start_of_day + datetime.timedelta(days=7)
-        )
-        obj5 = make_recipe("legalaid.case", reference="ref5", requires_action_at=start_of_day)
+        make_recipe("legalaid.case", reference="ref4", requires_action_at=start_of_day + datetime.timedelta(days=7))
+        make_recipe("legalaid.case", reference="ref5", requires_action_at=start_of_day)
 
         # searching
         url = reverse("call_centre:case-future-callbacks")

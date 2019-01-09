@@ -134,7 +134,7 @@ class GraphImporter(object):
                 }
             )
 
-    def process_nodes(self, is_templated=settings.DIAGNOSES_USE_TEMPLATES):
+    def process_nodes(self, is_templated=settings.DIAGNOSES_USE_TEMPLATES):  # noqa: C901
         node_id_map = dict()
         context_key = self.prop_mapping[self.KEY_CONTEXT]["id"]
 
@@ -174,7 +174,7 @@ class GraphImporter(object):
                 return as_type(value)
             return value
 
-        str_to_bool = lambda s: s.lower() == "true"
+        str_to_bool = lambda s: s.lower() == "true"  # noqa: E731
 
         # looping through the nodes
         nodes = self.xpath_ns(self.doc, "//ns:node")

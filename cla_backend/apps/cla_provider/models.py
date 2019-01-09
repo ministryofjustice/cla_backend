@@ -18,7 +18,7 @@ from cla_common.constants import FEEDBACK_ISSUE
 from .signals import log_staff_created, log_staff_modified
 
 
-random_uuid_str = lambda: str(uuid.uuid4())
+random_uuid_str = lambda: str(uuid.uuid4())  # noqa: E731
 
 
 class ProviderManager(models.Manager):
@@ -168,11 +168,9 @@ class OutOfHoursRota(TimeStampedModel):
                 )
             )
 
-        overlapping = self.__class__._default_manager.filter(
-            Q(start_date__range=[self.start_date, self.end_date])
-            | Q(end_date__range=[self.start_date, self.end_date]),
-            category=self.category,
-        )
+        start_range = Q(start_date__range=[self.start_date, self.end_date])
+        end_range = Q(end_date__range=[self.start_date, self.end_date])
+        overlapping = self.__class__._default_manager.filter(start_range | end_range, category=self.category)
         if self.pk:
             overlapping = overlapping.exclude(pk=self.pk)
 

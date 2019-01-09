@@ -11,7 +11,7 @@ def local_tzinfo_factory(offset):
     return pytz.FixedOffset(offset)
 
 
-class DynamicTimezoneDatabaseWrapper(DatabaseWrapper):
+class DynamicTimezoneDatabaseWrapper(DatabaseWrapper):  # noqa: F405
     """
     This exists to allow report generation SQL to set the time zone of the
     connection without interference from Django, which normally tries to

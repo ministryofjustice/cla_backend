@@ -17,7 +17,7 @@ from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import SPECIFIC_BENEFITS
 
 
-mi_dict_generator = lambda x: {"interval_period": "per_month", "per_interval_value": x}
+mi_dict_generator = lambda x: {"interval_period": "per_month", "per_interval_value": x}  # noqa: E731
 
 
 class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):

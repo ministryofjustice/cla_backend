@@ -230,7 +230,7 @@ class CaseSerializer(CaseSerializerFull):
     def is_rejected(self, case):
         try:
             return case.rejected == 1
-        except:
+        except Exception:
             return False
 
     class Meta(CaseSerializerFull.Meta):

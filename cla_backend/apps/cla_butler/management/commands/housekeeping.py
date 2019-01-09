@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from django.core.management.base import BaseCommand
 
 from cla_butler.stack import is_first_instance, InstanceNotInAsgException, StackException

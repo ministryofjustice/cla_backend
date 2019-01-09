@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from __future__ import unicode_literals
 from collections import OrderedDict
 import datetime
@@ -57,11 +57,8 @@ class Command(BaseCommand):
                     [c.eligibility_check.category_id == case.eligibility_check.category_id for c in previous.values()]
                 )
 
-            if (
-                same_provider
-                and same_category
-                and case.provider_assigned_at - delta <= earliest_previous.provider_assigned_at
-            ):
+            assigned_early = case.provider_assigned_at - delta <= earliest_previous.provider_assigned_at
+            if same_provider and same_category and assigned_early:
 
                 all_pks = ", ".join([unicode(c.pk) for c in previous.values()])
 

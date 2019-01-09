@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-import sys
+# coding=utf-8
 from django.core.management.base import NoArgsCommand
 
 from ...tasks import send_all_performance_data

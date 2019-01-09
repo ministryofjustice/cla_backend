@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 import datetime
 import pytz
 from model_mommy.recipe import Recipe, seq

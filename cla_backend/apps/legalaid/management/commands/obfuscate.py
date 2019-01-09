@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 import json
 from django.core.management.base import NoArgsCommand
 from django.conf import settings

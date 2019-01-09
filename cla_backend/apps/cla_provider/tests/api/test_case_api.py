@@ -105,31 +105,31 @@ class SearchCaseTestCase(BaseSearchCaseAPIMixin, BaseCaseTestCase):
         pd2 = make_recipe("legalaid.personal_details")
         other_provider = make_recipe("cla_provider.provider")
 
-        obj1 = make_recipe(
+        make_recipe(
             "legalaid.case",
             reference="ref1",
             personal_details=pd1,
             provider=self.provider,
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
         )
-        obj2 = make_recipe(
+        make_recipe(
             "legalaid.case",
             reference="ref2",
             personal_details=pd2,
             provider=self.provider,
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
         )
-        obj3 = make_recipe(  # should be ignore because different provider
+        make_recipe(  # should be ignore because different provider
             "legalaid.case",
             reference="ref3",
             personal_details=pd1,
             provider=other_provider,
             requires_action_by=REQUIRES_ACTION_BY.PROVIDER,
         )
-        obj4 = make_recipe(  # should be ignored because of outcome_code 'IRCB'
+        make_recipe(  # should be ignored because of outcome_code 'IRCB'
             "legalaid.case", reference="ref4", personal_details=pd1, provider=self.provider, outcome_code="IRCB"
         )
-        obj5 = make_recipe(  # should be ignored because not assigned to any provider
+        make_recipe(  # should be ignored because not assigned to any provider
             "legalaid.case", reference="ref5", personal_details=pd1, provider=None
         )
 

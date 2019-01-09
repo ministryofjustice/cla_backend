@@ -24,7 +24,7 @@ class BaseCaseLogFormTestCaseMixin(object):
             case = make_recipe("legalaid.case")
         self.assertEqual(Log.objects.count(), 0)
 
-        if data == None:
+        if data is None:
             data = self.get_default_data()
         form = self.FORM(case=case, data=data)
 

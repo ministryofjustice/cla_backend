@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 import datetime
 import mock
 import pytz
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import NoReverseMatch
-from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 

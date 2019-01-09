@@ -1,4 +1,4 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import BasePermission
 from django.core.cache import cache
 
 
@@ -34,7 +34,6 @@ class ClientIDPermission(BasePermission):
 
     def has_permission(self, request, view):
         token = request.auth
-        read_only = request.method in SAFE_METHODS
 
         if not token:
             return False

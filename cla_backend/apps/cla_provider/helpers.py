@@ -1,5 +1,7 @@
 from collections import defaultdict, OrderedDict
-import datetime, random, os
+import datetime
+import os
+import random
 from itertools import groupby
 from operator import itemgetter
 

@@ -6,13 +6,12 @@ from django.utils import timezone
 from jsonfield import JSONField
 
 from uuidfield import UUIDField
+from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import SET_NULL
-from django.conf import settings
 from django.utils.timezone import utc
 from django.core.exceptions import ObjectDoesNotExist
-from django.conf import settings
 
 from model_utils.models import TimeStampedModel
 
@@ -449,7 +448,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
             return False
         return any(self.specific_benefits.values())
 
-    def to_case_data(self):
+    def to_case_data(self):  # noqa: C901
         def compose_dict(model=self, props=None):
             if not props:
                 props = []
@@ -912,7 +911,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.save(update_fields=["requires_action_at", "callback_attempt", "modified"])
 
     def reset_requires_action_at(self):
-        if self.requires_action_at != None or self.callback_attempt != 0:
+        if self.requires_action_at is not None or self.callback_attempt != 0:
             self.requires_action_at = None
             self.callback_attempt = 0
             self.save(update_fields=["requires_action_at", "callback_attempt", "modified"])

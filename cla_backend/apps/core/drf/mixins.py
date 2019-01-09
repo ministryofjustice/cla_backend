@@ -38,11 +38,9 @@ class NestedGenericModelMixin(object):
 
     def is_one_to_one_nested(self):
         descriptor = getattr(self.parent.model, self.PARENT_FIELD)
-        return (
-            not hasattr(descriptor, "related")
-            or isinstance(descriptor, SingleRelatedObjectDescriptor)
-            or isinstance(descriptor, ReverseSingleRelatedObjectDescriptor)
-        )
+        is_single_related = isinstance(descriptor, SingleRelatedObjectDescriptor)
+        is_single_reverse_related = isinstance(descriptor, ReverseSingleRelatedObjectDescriptor)
+        return not hasattr(descriptor, "related") or is_single_related or is_single_reverse_related
 
     def get_object(self):
         if self.is_one_to_one_nested():

@@ -121,7 +121,7 @@ class TotalsModelSerializer(ClaModelSerializer):
             else:
                 subtotal = getattr(obj, f, 0)
 
-            if subtotal != None:
+            if subtotal is not None:
                 total += subtotal
         return total
 
@@ -430,7 +430,7 @@ class CaseNotesHistorySerializerBase(ClaModelSerializer):
     type_notes = serializers.SerializerMethodField("get_type_notes")
 
     def get_type_notes(self, obj):
-        if obj.provider_notes != None:
+        if obj.provider_notes is not None:
             return obj.provider_notes
         return obj.operator_notes
 

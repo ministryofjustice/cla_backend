@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from collections import OrderedDict
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS, LOG_ROLES

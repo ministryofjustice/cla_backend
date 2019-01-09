@@ -1,8 +1,6 @@
 from django.core.management import call_command
 from django.test.utils import get_runner
 from django.conf import settings
-from django.db import connections, DEFAULT_DB_ALIAS
-
 
 # use jenkins runner if present otherwise the default django one
 if "django_jenkins" in settings.INSTALLED_APPS:

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from django.utils.unittest import TestCase
 
 from ..tasks import BasePerformanceTask

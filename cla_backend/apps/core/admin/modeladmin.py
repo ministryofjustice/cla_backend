@@ -11,11 +11,9 @@ from django.http import HttpResponseRedirect
 from django.utils.html import escape
 from django.contrib import messages
 from django.contrib.auth.forms import AdminPasswordChangeForm
-
 from django_statsd.clients import statsd
 
 from cla_auth.models import AccessAttempt
-
 
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 require_POST_m = method_decorator(require_POST)
@@ -66,14 +64,12 @@ class OneToOneUserAdmin(admin.ModelAdmin):
     def get_urls(self):
         from django.conf.urls import patterns
 
-        return (
-            patterns(
-                "",
-                (r"^(\d+)/password/$", self.admin_site.admin_view(self.user_change_password)),
-                (r"^(\d+)/reset-lockout/$", self.admin_site.admin_view(self.reset_lockout)),
-            )
-            + super(OneToOneUserAdmin, self).get_urls()
+        urls = patterns(
+            "",
+            (r"^(\d+)/password/$", self.admin_site.admin_view(self.user_change_password)),
+            (r"^(\d+)/reset-lockout/$", self.admin_site.admin_view(self.reset_lockout)),
         )
+        return urls + super(OneToOneUserAdmin, self).get_urls()
 
     @require_POST_m
     def reset_lockout(self, request, id):

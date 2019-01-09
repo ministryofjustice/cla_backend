@@ -117,7 +117,7 @@ class KnowledgebaseCsvParse(object):
             article_category_lookup[ac_field] = position
         return fixture, article_category_lookup
 
-    def fixture_as_json(self):
+    def fixture_as_json(self):  # noqa: C901
         """
         @return: String of complete JSON doc. with all three record types.
         """

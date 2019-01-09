@@ -253,19 +253,19 @@ class MICaseExtract(SQLFileDateRangeReport):
 
     def get_rows(self):
         for row in self.get_queryset():
-            l = list(row)
-            diversity_json = l.pop() or {}
+            full_row = list(row)
+            diversity_json = full_row.pop() or {}
 
             def insert_value(key, val):
                 index = self.get_headers().index(key)
-                l.insert(index, val)
+                full_row.insert(index, val)
 
             insert_value("Gender", diversity_json.get("gender"))
             insert_value("Ethnicity", diversity_json.get("ethnicity"))
             insert_value("Religion", diversity_json.get("religion"))
             insert_value("Sexual_Orientation", diversity_json.get("sexual_orientation"))
             insert_value("Disability", diversity_json.get("disability"))
-            yield l
+            yield full_row
 
     def get_queryset(self):
         passphrase = self.cleaned_data.get("passphrase")

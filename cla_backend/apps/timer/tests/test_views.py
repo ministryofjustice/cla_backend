@@ -1,14 +1,12 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 
-from core.tests.mommy_utils import make_recipe
 from timer.models import Timer
 
 
 class TimerAPIMixin(object):
     def setUp(self):
         super(TimerAPIMixin, self).setUp()
-
         self.detail_url = reverse("%s:timer-detail" % self.API_URL_NAMESPACE)
 
     def test_methods_not_allowed(self):

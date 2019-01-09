@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import capfirst, force_text
 from rest_framework import viewsets, mixins, status, views as rest_views
 from rest_framework.decorators import action
-from rest_framework.filters import SearchFilter
 from rest_framework.response import Response as DRFResponse
 
 from cla_eventlog import event_registry

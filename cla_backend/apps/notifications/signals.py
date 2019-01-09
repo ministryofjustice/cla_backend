@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from django.utils import timezone
 
 TASK_ID_PREFIX = "cla_backend.notifications.task.notifications"

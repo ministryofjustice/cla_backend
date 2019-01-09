@@ -72,7 +72,7 @@ def validate_date(val):
             assert date_pattern.match(val)
             day, month, year = val.split("/")
             return datetime.datetime(int(year), int(month), int(day))
-        except (ValueError, TypeError, AssertionError) as ve:
+        except (ValueError, TypeError, AssertionError):
             raise serializers.ValidationError("%s is not a valid date (DD/MM/YYYY)" % val)
 
 
@@ -119,10 +119,10 @@ def inverted_reduce(x, f):
     return f(x)
 
 
-TRUTHY = lambda x: bool(x)
-FALSEY = lambda x: not bool(x)
-NOT_EQUAL = lambda y: lambda x: x != y
-AFTER_APR_2013 = lambda x: x and x > datetime.datetime(2013, 4, 1)
+TRUTHY = lambda x: bool(x)  # noqa: E731
+FALSEY = lambda x: not bool(x)  # noqa: E731
+NOT_EQUAL = lambda y: lambda x: x != y  # noqa: E731
+AFTER_APR_2013 = lambda x: x and x > datetime.datetime(2013, 4, 1)  # noqa: E731
 
 
 class depends_on(object):
@@ -400,7 +400,7 @@ class ProviderCSVValidator(object):
         if determination == u"DVCA" and category != u"family":
             raise serializers.ValidationError("Category (%s) must be Family if Determination is DVCA" % category)
 
-    def _validate_data(self, cleaned_data, row_num):
+    def _validate_data(self, cleaned_data, row_num):  # noqa: C901
         """
         Like django's clean method, use this to validate across fields
         """

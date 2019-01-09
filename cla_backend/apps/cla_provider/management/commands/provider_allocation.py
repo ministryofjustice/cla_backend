@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from __future__ import unicode_literals
-from collections import OrderedDict
 import datetime
 import pytz
 
-from django.utils import timezone
 from django.core.management.base import BaseCommand
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.admin.models import LogEntry
-from django.contrib.contenttypes.models import ContentType
 
-from legalaid.models import Case, Category
+from legalaid.models import Category
 
 from ...helpers import ProviderDistributionHelper
 from ...models import Provider, ProviderAllocation

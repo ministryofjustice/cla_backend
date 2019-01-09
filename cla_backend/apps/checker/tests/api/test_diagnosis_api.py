@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from django.core.management import call_command
 from core.tests.test_base import SimpleResourceAPIMixin
 from rest_framework.test import APITestCase

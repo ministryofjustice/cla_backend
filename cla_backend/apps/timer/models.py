@@ -2,11 +2,9 @@ from django.db import models
 from django.conf import settings
 from django.db import connection
 from django_statsd.clients import statsd
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from legalaid.models import Case
-
 from .managers import RunningTimerManager
 
 DB_NOW = "NOW()"
@@ -15,24 +13,24 @@ DB_NOW = "NOW()"
 def postgres_now():
     """
     Uses postgres NOW() function for setting value in the database
-    This is because on distributed system you can't guarantee that the 
-    times across systems are the same. Because creates uses the 
-    database time, so should the stoppet field to keep timings 
+    This is because on distributed system you can't guarantee that the
+    times across systems are the same. Because creates uses the
+    database time, so should the stoppet field to keep timings
     consistent.
 
-    Previously there have been time missmatches where stopped was less 
+    Previously there have been time missmatches where stopped was less
     than created which resulted in negative time spent on case.
 
     Function has been separated out for mocking in some of the tests.
 
-    :return str: NOW(): 
+    :return str: NOW():
     """
     return DB_NOW
 
 
 class CurrentTimestampDateTimeField(models.DateTimeField):
     """
-    Field class to allow using postgres NOW() function for setting a 
+    Field class to allow using postgres NOW() function for setting a
     field to a current timestamp
     """
 

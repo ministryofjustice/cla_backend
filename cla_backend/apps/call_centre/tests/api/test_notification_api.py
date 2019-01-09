@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from rest_framework.test import APITestCase
 
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin

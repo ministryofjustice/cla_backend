@@ -1774,20 +1774,49 @@ class DisposableCapitalTestCase(unittest.TestCase):
 
 class IsEligibleTestCase(unittest.TestCase):
 
+    def create_a_dummy_citizen(
+        self,
+        category=False,
+        passported=None,
+        nass_benefits=None,
+        gross_income=None,
+        disposable_income=None,
+        disposable_capital=None
+    ):
+        # gross_income, disposable_income, disposable_capital
+        """
+        This method creates a dummy citizen to use in the eligibility tests for legal aid.
+        Set the category to either immigration, any other category or let it default to False.
+        Set their passported benefits to either True, False or default to None.
+        Set their NASS benefits to either True, False or default to None.
+        Set their gross income to True (they are eligible), False (they are not eligible), or default to None.
+        Set their disposable income to True (they are eligible), False (they are not eligible), or default to None.
+        Set their disposable capital to True (they are eligible), False (they are not eligible), or default to None.
+        """
+        case_data = mock.MagicMock()
+        case_data.category = category
+        mocked_on_passported_benefits = mock.PropertyMock(return_value=passported)
+        mocked_on_nass_benefits = mock.PropertyMock(return_value=nass_benefits)
+        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
+        type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
+        ec = EligibilityChecker(case_data)
+        ec.is_gross_income_eligible = mock.MagicMock(return_value=gross_income)
+        ec.is_disposable_income_eligible = mock.MagicMock(return_value=disposable_income)
+        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=disposable_capital)
+        return ec, mocked_on_passported_benefits, mocked_on_nass_benefits
+
     def test_is_disposable_capital_not_eligible(self):
         """
         TEST: with mocked is_disposable_capital_eligible = False
         is_gross_income_eligible, is_disposable_income are not called
         asserts is_eligible = False
         """
-        case_data = mock.MagicMock()
-        mocked_on_passported_benefits = mock.PropertyMock()
-        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
-        case_data.facts.on_nass_benefits = False
-        ec = EligibilityChecker(case_data)
-        ec.is_gross_income_eligible = mock.MagicMock()
-        ec.is_disposable_income_eligible = mock.MagicMock()
-        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=False)
+        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
+            passported=False,
+            nass_benefits=False,
+            disposable_capital=False
+        )
+        mocked_on_nass_benefits()
         self.assertFalse(ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
         self.assertFalse(ec.is_gross_income_eligible.called)
@@ -1802,16 +1831,15 @@ class IsEligibleTestCase(unittest.TestCase):
         is_disposable_income is not called
         asserts is_eligible = False
         """
-        case_data = mock.MagicMock()
-        mocked_on_passported_benefits = mock.PropertyMock()
-        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
-        case_data.facts.on_nass_benefits = False
-        self.assertFalse(mocked_on_passported_benefits.called)
-        ec = EligibilityChecker(case_data)
-        ec.is_disposable_income_eligible = mock.MagicMock()
-        ec.is_gross_income_eligible = mock.MagicMock(return_value=False)
-        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=True)
 
+        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
+            passported=False,
+            nass_benefits=False,
+            gross_income=False,
+            disposable_capital=True
+        )
+        mocked_on_nass_benefits()
+        self.assertFalse(mocked_on_passported_benefits.called)
         self.assertFalse(ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
         ec.is_gross_income_eligible.assert_called_once_with()
@@ -1825,17 +1853,16 @@ class IsEligibleTestCase(unittest.TestCase):
             is_disposable_income = False
         asserts is_eligible = False
         """
-        case_data = mock.MagicMock()
-        mocked_on_passported_benefits = mock.PropertyMock()
-        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
-        case_data.facts.on_nass_benefits = False
-        self.assertFalse(mocked_on_passported_benefits.called)
-        self.assertFalse(mocked_on_passported_benefits.called)
-        ec = EligibilityChecker(case_data)
-        ec.is_disposable_income_eligible = mock.MagicMock(return_value=False)
-        ec.is_gross_income_eligible = mock.MagicMock(return_value=True)
-        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=True)
+        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
+            passported=False,
+            nass_benefits=False,
+            disposable_income=False,
+            gross_income=True,
+            disposable_capital=True
+        )
 
+        mocked_on_nass_benefits()
+        self.assertFalse(mocked_on_passported_benefits.called)
         self.assertFalse(ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
         ec.is_gross_income_eligible.assert_called_once_with()
@@ -1849,16 +1876,16 @@ class IsEligibleTestCase(unittest.TestCase):
             is_disposable_income = True
         asserts is_eligible = True
         """
-        case_data = mock.MagicMock()
-        mocked_on_passported_benefits = mock.PropertyMock()
-        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
-        case_data.facts.on_nass_benefits = False
-        self.assertFalse(mocked_on_passported_benefits.called)
-        ec = EligibilityChecker(case_data)
-        ec.is_disposable_income_eligible = mock.MagicMock(return_value=True)
-        ec.is_gross_income_eligible = mock.MagicMock(return_value=True)
-        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=True)
+        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
+            passported=False,
+            nass_benefits=False,
+            disposable_income=True,
+            gross_income=True,
+            disposable_capital=True
+        )
 
+        mocked_on_nass_benefits()
+        self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
         ec.is_gross_income_eligible.assert_called_once_with()
@@ -1869,14 +1896,12 @@ class IsEligibleTestCase(unittest.TestCase):
         TEST: if citizen is on NASS benefit income and capital are not
         tested so the citizen should be eligible.
         """
-        case_data = mock.MagicMock()
-        mocked_on_passported_benefits = mock.PropertyMock()
-        mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
-        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
-        type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
-        case_data.category = 'immigration'
+        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
+            category='immigration',
+            passported=False,
+            nass_benefits=True
+        )
 
-        ec = EligibilityChecker(case_data)
         self.assertTrue(ec.is_eligible())
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
@@ -1887,15 +1912,12 @@ class IsEligibleTestCase(unittest.TestCase):
         if they have not qualified for NASS benefits and their disposable capital is above the set limit then they will
         not qualify for legal aid.
         """
-        case_data = mock.MagicMock()
-        mocked_on_passported_benefits = mock.PropertyMock()
-        mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
+        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
+            category='not_immigration',
+            passported=False,
+            nass_benefits=False
+        )
 
-        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
-        type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
-        case_data.category = 'not_immigration'
-
-        ec = EligibilityChecker(case_data)
         ec.is_disposable_capital_eligible = mock.MagicMock(return_value=False)
         self.assertFalse(ec.is_eligible())
         self.assertFalse(mocked_on_passported_benefits.called)
@@ -1907,17 +1929,14 @@ class IsEligibleTestCase(unittest.TestCase):
         if they have not qualified for NASS benefits and their disposable income is above the set limit then they will
         not qualify for legal aid.
         """
-        case_data = mock.MagicMock()
-        mocked_on_passported_benefits = mock.PropertyMock()
-        mocked_on_nass_benefits = mock.PropertyMock(return_value=True)
-        type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits
-        type(case_data.facts).on_nass_benefits = mocked_on_nass_benefits
-        case_data.category = 'not_immigration'
-
-        ec = EligibilityChecker(case_data)
-        ec.is_disposable_capital_eligible = mock.MagicMock(return_value=True)
-        ec.is_gross_income_eligible = mock.MagicMock(return_value=True)
-        ec.is_disposable_income_eligible = mock.MagicMock(return_value=False)
+        ec, mocked_on_passported_benefits, mocked_on_nass_benefits = self.create_a_dummy_citizen(
+            category='not_immigration',
+            passported=False,
+            nass_benefits=False,
+            disposable_capital=True,
+            gross_income=True,
+            disposable_income=False
+        )
 
         self.assertFalse(ec.is_eligible())
         self.assertTrue(ec.is_gross_income_eligible.called)

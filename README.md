@@ -9,8 +9,8 @@ Backend API for the Civil Legal Aid Tool.
 
 -  [Virtualenv](http://www.virtualenv.org/en/latest/)
 -  Most recent version of pip
--  [Python 2.7](http://www.python.org/) Can be installed using `brew`)
--  [Postgres 9.3+](http://www.postgresql.org/)
+-  [Python 2.7](http://www.python.org/) (Can be installed with `brew install python2`)
+-  [Postgres 9.4+](http://www.postgresql.org/)
 
 ## Installation
 
@@ -31,7 +31,7 @@ Update pip to the latest version:
 
 Install python dependencies:
 
-    pip install -r requirements/local.txt
+    pip install -r requirements/dev.txt
 
 Create the database inside postgres. Type `psql -d template1` to enter postgres, then enter:
 
@@ -57,7 +57,7 @@ Create a `local.py` settings file from the example file:
 
     cp cla_backend/settings/.example.local.py cla_backend/settings/local.py
 
-Sync and migrate the database:
+Sync and migrate the database (n.b. see [Troubleshooting](#troubleshooting) if the `postgres` role is missing):
 
     ./manage.py migrate
 
@@ -74,6 +74,14 @@ Start the server:
     ./manage.py runserver 8000
 
 See the list of users in `/admin/auth/user/`. Passwords are the same as the usernames.
+
+
+## Coding
+
+This project uses Black for strict code formatting, with a pre-commit hook for enforcement. Black requires Python 3,
+so must be installed outside this project's virtualenv for now. See the 
+[Installation docs](https://black.readthedocs.io/en/stable/installation_and_usage.html)
+
 
 ## Dev
 
@@ -101,8 +109,8 @@ See more detailed instructions in the [how-to guide](https://dsdmoj.atlassian.ne
 
 If you are experiencing errors when creating and syncing the database, make sure the following are added to your `PATH` var (amend path to postgres as necessary):
 
-    export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin/:$PATH"
-    export DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/Versions/9.3/lib/:$DYLD_LIBRARY_PATH"
+    export PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin/:$PATH"
+    export DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/Versions/9.4/lib/:$DYLD_LIBRARY_PATH"
 
 If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" does not exist`, you will need to create the user `postgres` on the database.
 
@@ -113,14 +121,14 @@ If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" 
 ### Releasing to non-production
 
 1. Wait for [the Docker build to complete on CircleCI](https://circleci.com/gh/ministryofjustice/cla_backend) for the feature branch.
-1. Copy the `feature_branch.<sha>` reference from the `build` job's "Push Docker image" step. Eg:
+1. From the output of the `Tag and push Docker images` job, note the tag pushed to the DSD docker registry, e.g.
     ```
-    Pushing tag for rev [9a77ce2f0e8a] on {https://registry.service.dsd.io/v1/repositories/cla_backend/tags/dual-docker-registries.902c45d}
+    Pushing tag for rev [9a77ce2f0e8a] on {https://registry.service.dsd.io/v1/repositories/cla_backend/tags/some-feature-branch.latest}
     ```
-1. [Deploy `feature_branch.<sha>`](https://ci.service.dsd.io/job/DEPLOY-cla_backend/build?delay=0sec).
-    * `APP_BUILD_TAG` is the branch that needs to be released plus a specific 7-character prefix of the Git SHA. (`dual-docker-registries.902c45d` for the above example).
-    * `environment` is the target environment, select depending on your needs, eg. "demo", "staging", etc.
-    * `deploy_repo_branch` is the [deploy repo's](https://github.com/ministryofjustice/cla_backend-deploy) default branch name, usually master.
+1. Use Jenkins to [deploy your branch](https://ci.service.dsd.io/job/DEPLOY-cla_backend/build?delay=0sec).
+    * `APP_BUILD_TAG` is the tag name you noted in the previous step: the branch name, a dot separator, and `latest` e.g.`some-feature-branch.latest`
+    * `environment` is the target environment, select depending on your needs, e.g. `demo` or `staging`
+    * `deploy_repo_branch` is the [deploy repo's](https://github.com/ministryofjustice/cla_backend-deploy) default branch name, usually `master`.
 
 ### Releasing to production
 

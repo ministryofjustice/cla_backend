@@ -3,20 +3,21 @@ from datetime import timedelta
 from django.utils import timezone
 from django.conf import settings
 
-from cla_common.call_centre_availability import SLOT_INTERVAL_MINS, \
-    OpeningHours, available_days, time_slots, on_sunday, on_bank_holiday
+from cla_common.call_centre_availability import SLOT_INTERVAL_MINS, OpeningHours, \
+    available_days, on_sunday, on_bank_holiday
+
+
+operator_hours = OpeningHours(**settings.OPERATOR_HOURS)
 
 
 def is_in_business_hours(dt):
     if not dt.tzinfo:
         dt = timezone.make_aware(dt, timezone.get_default_timezone())
-
-    OPERATOR_HOURS = OpeningHours(**settings.OPERATOR_HOURS)
-    return dt in OPERATOR_HOURS
+    return dt in operator_hours
 
 
 def get_remainder_from_end_of_day(day, dt_until):
-    available_slots = time_slots(day)
+    available_slots = operator_hours.time_slots(day)
     remainder = timedelta(minutes=SLOT_INTERVAL_MINS)
     if available_slots:
         end_of_day = available_slots[-1] + timedelta(minutes=SLOT_INTERVAL_MINS)
@@ -32,7 +33,7 @@ def get_next_business_day(start_date):
 
 def get_sla_time(start_time, minutes_delta):
     next_business_day = get_next_business_day(start_time.date())
-    start_of_next_business_day = time_slots(next_business_day.date())[0]
+    start_of_next_business_day = operator_hours.time_slots(next_business_day.date())[0]
     start_of_next_business_day = timezone.make_aware(start_of_next_business_day,
         timezone.get_default_timezone())
 

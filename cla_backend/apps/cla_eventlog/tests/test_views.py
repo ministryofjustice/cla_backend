@@ -4,7 +4,7 @@ from rest_framework import status
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import NestedSimpleResourceAPIMixin
 
-from cla_eventlog.constants import LOG_LEVELS
+from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_eventlog.models import Log
 from cla_eventlog import event_registry
 
@@ -175,14 +175,24 @@ class LogAPIMixin(NestedSimpleResourceAPIMixin):
 
     def setup_resources(self):
         super(LogAPIMixin, self).setup_resources()
-        self.high_logs = make_recipe(
-            'cla_eventlog.log', case=self.parent_resource, level=LOG_LEVELS.HIGH,
-            code="HIGH_", _quantity=4
-        )
         self.minor_logs = make_recipe(
-            'cla_eventlog.log', case=self.parent_resource, level=LOG_LEVELS.MINOR,
-            code="MINIOR_", _quantity=4
+            "cla_eventlog.log", case=self.parent_resource, level=LOG_LEVELS.MINOR, code="MINOR_", _quantity=4
         )
+        self.event_logs = make_recipe(
+            "cla_eventlog.log",
+            case=self.parent_resource,
+            level=LOG_LEVELS.HIGH,
+            type=LOG_TYPES.EVENT,
+            code="HIGH_",
+            _quantity=4,
+        )
+        self.outcome_recipe_kwargs = {
+            "case": self.parent_resource,
+            "level": LOG_LEVELS.HIGH,
+            "type": LOG_TYPES.OUTCOME,
+            "code": "HIGH_",
+        }
+        self.same_day_outcome_logs = make_recipe("cla_eventlog.log", _quantity=2, **self.outcome_recipe_kwargs)
 
     def make_resource(self, **kwargs):
         return None
@@ -199,11 +209,17 @@ class LogAPIMixin(NestedSimpleResourceAPIMixin):
         self._test_get_not_authorized(self.list_url, self.invalid_token)
 
     def test_get(self):
-        response = self.client.get(
-            self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self.client.get(self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertItemsEqual(
-            [log.code for log in self.high_logs],
-            [log['code'] for log in response.data]
-        )
+        event_log_codes = [log.code for log in self.event_logs]
+        same_day_outcome_log_codes = [log.code for log in self.same_day_outcome_logs]
+        # We expect all four event logs and only one outcome code for today
+        expected_log_codes = event_log_codes + same_day_outcome_log_codes[:1]
+        self.assertItemsEqual(expected_log_codes, [log["code"] for log in response.data])
+
+    def test_two_created_only_one_saved(self):
+        """Two outcome log objects created, but only one saved"""
+        # Two objects created, but only one saved
+        self.assertEqual(len(self.same_day_outcome_logs), 2)
+        refetched_same_day_outcome_logs = Log.objects.filter(**self.outcome_recipe_kwargs)
+        self.assertEqual(refetched_same_day_outcome_logs.count(), 1)

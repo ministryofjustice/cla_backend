@@ -76,6 +76,9 @@ AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', '')
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', '')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', '')
 
+AWS_DELETED_OBJECTS_BUCKET_NAME = os.environ.get('AWS_DELETED_OBJECTS_BUCKET_NAME', '')
+AWS_DELETED_OBJECTS_BUCKET_REGION = 'eu-west-1'
+
 SITE_HOSTNAME = os.environ.get('SITE_HOSTNAME', 'cla.local:8000')
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -262,7 +265,19 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+            'stream': sys.stdout
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.handlers.logging.SentryHandler',
+            'formatter': 'simple',
+            'dsn': os.environ.get('RAVEN_CONFIG_DSN'),
+        },
     },
     'loggers': {
         'django.request': {
@@ -348,7 +363,9 @@ NON_ROTA_OPENING_HOURS = OpeningHours(**NON_ROTA_HOURS)
 
 OPERATOR_HOURS = {
     'weekday': (datetime.time(9, 0), datetime.time(20, 0)),
-    'saturday': (datetime.time(9, 0), datetime.time(12, 30))
+    'saturday': (datetime.time(9, 0), datetime.time(12, 30)),
+    '2018-12-24': (datetime.time(9, 0), datetime.time(17, 30)),
+    '2018-12-31': (datetime.time(9, 0), datetime.time(17, 30)),
 }
 
 OBIEE_IP_PERMISSIONS = (

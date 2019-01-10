@@ -1816,7 +1816,7 @@ class IsEligibleTestCase(unittest.TestCase):
             nass_benefits=False,
             disposable_capital=False
         )
-        mocked_on_nass_benefits()
+
         self.assertFalse(ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
         self.assertFalse(ec.is_gross_income_eligible.called)
@@ -1838,7 +1838,7 @@ class IsEligibleTestCase(unittest.TestCase):
             gross_income=False,
             disposable_capital=True
         )
-        mocked_on_nass_benefits()
+
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertFalse(ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
@@ -1861,7 +1861,6 @@ class IsEligibleTestCase(unittest.TestCase):
             disposable_capital=True
         )
 
-        mocked_on_nass_benefits()
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertFalse(ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
@@ -1884,7 +1883,6 @@ class IsEligibleTestCase(unittest.TestCase):
             disposable_capital=True
         )
 
-        mocked_on_nass_benefits()
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()

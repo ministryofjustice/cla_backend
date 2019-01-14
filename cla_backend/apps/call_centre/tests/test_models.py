@@ -6,9 +6,7 @@ from call_centre.models import OP_MANAGER_GROUP_NAME, CLA_SUPERUSER_GROUP_NAME
 
 class OperatorTestCase(TestCase):
     def test_save_sets_is_manager_True_if_is_cla_superuser_True(self):
-        operator = make_recipe(
-            'call_centre.operator', is_cla_superuser=True, is_manager=False
-        )
+        operator = make_recipe("call_centre.operator", is_cla_superuser=True, is_manager=False)
 
         self.assertTrue(operator.is_cla_superuser)
         self.assertTrue(operator.is_manager)
@@ -23,9 +21,7 @@ class OperatorTestCase(TestCase):
 
     def test_save_sets_is_staff_True_if_is_manager_or_is_cla_superuser_True(self):
         # is_manager = True
-        operator = make_recipe(
-            'call_centre.operator', is_manager=True, user__is_staff=False
-        )
+        operator = make_recipe("call_centre.operator", is_manager=True, user__is_staff=False)
 
         self.assertTrue(operator.is_manager)
         self.assertTrue(operator.user.is_staff)
@@ -40,9 +36,7 @@ class OperatorTestCase(TestCase):
         self.assertTrue(operator.user.is_staff)
 
         # is_cla_superuser = True
-        operator = make_recipe(
-            'call_centre.operator', is_cla_superuser=True, user__is_staff=False
-        )
+        operator = make_recipe("call_centre.operator", is_cla_superuser=True, user__is_staff=False)
 
         self.assertTrue(operator.is_cla_superuser)
         self.assertTrue(operator.user.is_staff)
@@ -59,10 +53,7 @@ class OperatorTestCase(TestCase):
     def test_save_sets_is_staff_False_if_is_manager_and_is_cla_superuser_False(self):
         # is_manager = False , is_cla_superuser = False, is_staff = True
         #   => is_staff becomes False
-        operator = make_recipe(
-            'call_centre.operator', is_cla_superuser=False, is_manager=False,
-            user__is_staff=True
-        )
+        operator = make_recipe("call_centre.operator", is_cla_superuser=False, is_manager=False, user__is_staff=True)
 
         self.assertFalse(operator.is_cla_superuser)
         self.assertFalse(operator.is_manager)
@@ -82,9 +73,7 @@ class OperatorTestCase(TestCase):
         # is_manager = False
         # is_cla_superuser = False
         #       => No groups
-        operator = make_recipe(
-            'call_centre.operator', is_cla_superuser=False, is_manager=False
-        )
+        operator = make_recipe("call_centre.operator", is_cla_superuser=False, is_manager=False)
 
         operator.save()
         self.assertEqual(operator.user.groups.count(), 0)

@@ -9,38 +9,33 @@ from diagnosis.utils import get_node_scope_value
 
 
 class GraphTestCase(TestCase):
-
     def setUp(self):
-        self.graph = get_graph(
-            file_name=settings.DIAGNOSIS_FILE_NAME
-        )
-        self.checker_graph = get_graph(
-            file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME
-        )
-        call_command('loaddata', 'initial_category')
-        call_command('loaddata', 'initial_mattertype')
+        self.graph = get_graph(file_name=settings.DIAGNOSIS_FILE_NAME)
+        self.checker_graph = get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME)
+        call_command("loaddata", "initial_category")
+        call_command("loaddata", "initial_mattertype")
 
     def assertCategoryInContext(self, context, nodes):
         # checking that the category is set and is valid
-        category_name = context.get('category')
+        category_name = context.get("category")
         try:
             return Category.objects.get(code=category_name)
             # GOOD
         except Category.DoesNotExist:
-            self.assertTrue(False,
-                'None of the nodes in this path (%s) have category set! Or the category doesn\'t match any record in the database (category: %s)' % (
-                '\n'.join([node['label']+' '+node['id'] for node in nodes]), category_name
-            ))
+            self.assertTrue(
+                False,
+                "None of the nodes in this path (%s) have category set! Or the category doesn't match any record in the database (category: %s)"
+                % ("\n".join([node["label"] + " " + node["id"] for node in nodes]), category_name),
+            )
 
     def assertMatterTypesInContext(self, context, category, nodes):
-        matter_type1_code = context.get('matter-type-1')
-        matter_type2_code = context.get('matter-type-2')
+        matter_type1_code = context.get("matter-type-1")
+        matter_type2_code = context.get("matter-type-2")
         if matter_type2_code and not matter_type1_code:
-            self.assertTrue(False,
-                'MatterType2 (%s) set but MatterType1 == None for nodes in this path (%s)' % (
-                    matter_type2_code,
-                    '\n'.join([node['label'] + ' ' + node['id'] for node in nodes])
-                )
+            self.assertTrue(
+                False,
+                "MatterType2 (%s) set but MatterType1 == None for nodes in this path (%s)"
+                % (matter_type2_code, "\n".join([node["label"] + " " + node["id"] for node in nodes])),
             )
 
         self.assertMatterType(matter_type1_code, MATTER_TYPE_LEVELS.ONE, category, nodes)
@@ -52,23 +47,27 @@ class GraphTestCase(TestCase):
             try:
                 return MatterType.objects.get(code=matter_type_code, level=level, category=category)
             except MatterType.DoesNotExist:
-                self.assertTrue(False,
-                    'MatterType (%s) for nodes in this path (%s) doesn\'t match any record in the database (level %s, category %s)' % (
+                self.assertTrue(
+                    False,
+                    "MatterType (%s) for nodes in this path (%s) doesn't match any record in the database (level %s, category %s)"
+                    % (
                         matter_type_code,
-                        '\n'.join([node['label'] + ' ' + node['id'] for node in nodes]),
-                        level, category.code
-                ))
+                        "\n".join([node["label"] + " " + node["id"] for node in nodes]),
+                        level,
+                        category.code,
+                    ),
+                )
 
     def test_end_nodes_have_category(self):
         def move_down(node_id, context, nodes):
             node = self.graph.node[node_id]
-            node['id'] = node_id
+            node["id"] = node_id
 
             nodes = list(nodes)
             nodes.append(node)
 
             context = dict(context)
-            context.update(node['context'] or {})
+            context.update(node["context"] or {})
 
             scope_value = get_node_scope_value(self.graph, node_id)
             if scope_value in [DIAGNOSIS_SCOPE.INSCOPE, DIAGNOSIS_SCOPE.OUTOFSCOPE]:
@@ -78,12 +77,10 @@ class GraphTestCase(TestCase):
             for child_id in self.graph.successors(node_id):
                 move_down(child_id, context, nodes)
 
-        move_down('start', {}, [])
-        move_down('start', {}, [])
+        move_down("start", {}, [])
+        move_down("start", {}, [])
 
     def test_nodes_have_heading(self):
-        checker_graph = get_graph(
-            file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME
-        )
-        node = checker_graph.node['n43n2']
-        self.assertEqual(node['heading'], u'Choose the option that best describes your debt problem')
+        checker_graph = get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME)
+        node = checker_graph.node["n43n2"]
+        self.assertEqual(node["heading"], u"Choose the option that best describes your debt problem")

@@ -1,5 +1,7 @@
 from collections import defaultdict, OrderedDict
-import datetime, random, os
+import datetime
+import os
+import random
 from itertools import groupby
 from operator import itemgetter
 
@@ -11,42 +13,43 @@ from django.utils import timezone
 from django.conf import settings
 from django.db.models import Count
 
-from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, \
-    ProviderPreAllocation
+from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, ProviderPreAllocation
 from legalaid.models import Case
 
 
 class ProviderDistributionHelper(object):
-
     def __init__(self, dt):
         self.date = dt.replace(hour=0, minute=0, second=0)
 
     def get_distribution(self, category, include_pre_allocations=False):
-        last_update = ProviderAllocation.objects.filter(category=category).order_by('-modified').first()
+        last_update = ProviderAllocation.objects.filter(category=category).order_by("-modified").first()
 
-        raw = Case.objects.order_by('provider')\
-            .filter(diagnosis__category=category)\
-            .filter(assigned_out_of_hours=False)\
-            .exclude(log__code='MANREF')\
-            .exclude(provider=None)\
+        raw = (
+            Case.objects.order_by("provider")
+            .filter(diagnosis__category=category)
+            .filter(assigned_out_of_hours=False)
+            .exclude(log__code="MANREF")
+            .exclude(provider=None)
             .filter(provider_assigned_at__gte=self.date)
+        )
 
         if last_update and last_update.modified > self.date:
             raw = raw.filter(provider_assigned_at__gte=last_update.modified)
 
-        raw = raw.values('provider')\
-            .annotate(num_allocations=Count('id'))
+        raw = raw.values("provider").annotate(num_allocations=Count("id"))
         ret = defaultdict(int)
         for item in raw:
-            ret[item['provider']] += item['num_allocations']
+            ret[item["provider"]] += item["num_allocations"]
 
         if include_pre_allocations:
-            preallocs = ProviderPreAllocation.objects.order_by('provider')\
-                .filter(category=category)\
-                .values('provider')\
-                .annotate(num_allocations=Count('case'))
+            preallocs = (
+                ProviderPreAllocation.objects.order_by("provider")
+                .filter(category=category)
+                .values("provider")
+                .annotate(num_allocations=Count("case"))
+            )
             for item in preallocs:
-                ret[item['provider']] += item['num_allocations']
+                ret[item["provider"]] += item["num_allocations"]
 
         return ret
 
@@ -81,8 +84,7 @@ class ProviderAllocationHelper(object):
         @return: list
         """
         if not self._providers_in_category:
-            self._providers_in_category = ProviderAllocation.objects.filter(
-                category=category, provider__active=True)
+            self._providers_in_category = ProviderAllocation.objects.filter(category=category, provider__active=True)
 
         return self._providers_in_category
 
@@ -91,8 +93,7 @@ class ProviderAllocationHelper(object):
         @return: list
         """
         if category:
-            return [pa.provider for pa in
-                    self.get_qualifying_providers_allocation(category)]
+            return [pa.provider for pa in self.get_qualifying_providers_allocation(category)]
 
         return Provider.objects.active()
 
@@ -117,6 +118,7 @@ class ProviderAllocationHelper(object):
                 In this way, we would ignore the state before the allocation
                 changed.
         """
+
         def calculate_winner():
             allocations = self.get_qualifying_providers_allocation(category)
             if limit_choices_to:
@@ -133,12 +135,12 @@ class ProviderAllocationHelper(object):
                     return pa.provider
                 upto += pa.weighted_distribution
             assert False, "Shouldn't get here"
+
         return calculate_winner()
 
     def _get_rota_provider(self, category):
         try:
-            rota = OutOfHoursRota.objects.get_current(category,
-                                                      as_of=self.as_of)
+            rota = OutOfHoursRota.objects.get_current(category, as_of=self.as_of)
             return rota.provider if rota and rota.provider.active else None
         except OutOfHoursRota.MultipleObjectsReturned:
             # this should be prevented by OutOfHoursRota.clean but what
@@ -150,12 +152,10 @@ class ProviderAllocationHelper(object):
             # (e.g. being able to manually allocate)
             return None
 
-    def _diff_distributions(self, current_distribution,
-                            current_ideal_distribution):
+    def _diff_distributions(self, current_distribution, current_ideal_distribution):
         provider_alloc_diff = {}
         for provider_id, ideal_num_cases in current_ideal_distribution.items():
-            provider_alloc_diff[provider_id] = current_distribution[provider_id] \
-                - ideal_num_cases
+            provider_alloc_diff[provider_id] = current_distribution[provider_id] - ideal_num_cases
         return provider_alloc_diff
 
     def _group_dict_by_value(self, provider_alloc_diff):
@@ -182,8 +182,7 @@ class ProviderAllocationHelper(object):
         if current_distribution == current_ideal_distribution:
             return self._get_random_provider(category)
 
-        provider_alloc_diff = self._diff_distributions(current_distribution,
-                                                       current_ideal_distribution)
+        provider_alloc_diff = self._diff_distributions(current_distribution, current_ideal_distribution)
 
         groups = self._group_dict_by_value(provider_alloc_diff)
 
@@ -206,46 +205,40 @@ class ProviderAllocationHelper(object):
     def get_suggested_provider(self, category):
         if self.as_of not in settings.NON_ROTA_OPENING_HOURS:
             return self._get_rota_provider(category)
-        if not os.path.isfile('/tmp/DISABLE_BEST_FIT_PROVIDER'):
+        if not os.path.isfile("/tmp/DISABLE_BEST_FIT_PROVIDER"):
             return self._get_best_fit_provider(category)
         return self._get_random_provider(category)
 
 
 def notify_case_assigned(provider, case):
     _notify_case_sent_to_provider(
-        provider, case,
-        subject='CLA Case {ref} has been assigned to {provider}',
-        template_name='assigned'
+        provider, case, subject="CLA Case {ref} has been assigned to {provider}", template_name="assigned"
     )
 
 
 def notify_case_RDSPed(provider, case):
     _notify_case_sent_to_provider(
-        provider, case,
-        subject='CLA Case {ref} needs actioning - RDSP',
-        template_name='RDSPed'
+        provider, case, subject="CLA Case {ref} needs actioning - RDSP", template_name="RDSPed"
     )
 
 
 def _notify_case_sent_to_provider(provider, case, subject, template_name):
     if not provider.email_address:
         return
-    from_address = 'no-reply@digital.justice.gov.uk'
-    subject = subject.format(**{
-        'ref': case.reference,
-        'provider': provider.name})
-    case_url = 'https://{0}/provider/{1}/'
+    from_address = "no-reply@digital.justice.gov.uk"
+    subject = subject.format(**{"ref": case.reference, "provider": provider.name})
+    case_url = "https://{0}/provider/{1}/"
     template_params = {
-        'provider': provider,
-        'now': datetime.datetime.now(),
-        'case_url': case_url.format(settings.SITE_HOSTNAME, case.reference),
-        'case': case}
-    template = 'cla_provider/email/{0}.{1}'
-    text = render_to_string(template.format(template_name, 'txt'), template_params)
-    html = render_to_string(template.format(template_name, 'html'), template_params)
-    email = EmailMultiAlternatives(
-        subject, text, from_address, [provider.email_address])
-    email.attach_alternative(html, 'text/html')
+        "provider": provider,
+        "now": datetime.datetime.now(),
+        "case_url": case_url.format(settings.SITE_HOSTNAME, case.reference),
+        "case": case,
+    }
+    template = "cla_provider/email/{0}.{1}"
+    text = render_to_string(template.format(template_name, "txt"), template_params)
+    html = render_to_string(template.format(template_name, "html"), template_params)
+    email = EmailMultiAlternatives(subject, text, from_address, [provider.email_address])
+    email.attach_alternative(html, "text/html")
     email.send()
 
 
@@ -254,9 +247,8 @@ class ProviderExtractFormatter(object):
         self.case = case
 
     def format(self):
-        ctx = {'case': self.case}
-        template = get_template('provider/case.xml')
-        resp = HttpResponse(template.render(Context(ctx)),
-                            content_type='text/xml')
-        resp['Access-Control-Allow-Origin'] = '*'
+        ctx = {"case": self.case}
+        template = get_template("provider/case.xml")
+        resp = HttpResponse(template.render(Context(ctx)), content_type="text/xml")
+        resp["Access-Control-Allow-Origin"] = "*"
         return resp

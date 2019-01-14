@@ -57,26 +57,12 @@ def fixture(rows):
 
 
 def group_fixture(index, name):
-    return {
-        'model': 'legalaid.MediaCodeGroup',
-        'pk': index,
-        'fields': {
-            'name': name
-        }
-    }
+    return {"model": "legalaid.MediaCodeGroup", "pk": index, "fields": {"name": name}}
 
 
 def code_fixture(index, row):
     group, name, code = row
-    return {
-        'model': 'legalaid.MediaCode',
-        'pk': index,
-        'fields': {
-            'group': group,
-            'name': name,
-            'code': code
-        }
-    }
+    return {"model": "legalaid.MediaCode", "pk": index, "fields": {"group": group, "name": name, "code": code}}
 
 
 class MediaCodeList(object):

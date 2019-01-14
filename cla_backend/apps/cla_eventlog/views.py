@@ -21,12 +21,12 @@ class BaseEventViewSet(viewsets.ViewSetMixin, views.APIView):
     events using ViewSets.
     """
 
-    lookup_field = 'action'
+    lookup_field = "action"
 
     def retrieve(self, request, *args, **kwargs):
         action = kwargs.pop(self.lookup_field)
 
-        if action == 'selectable':
+        if action == "selectable":
             return self.selectable(request, *args, **kwargs)
 
         return self.list_by_event_key(request, action, *args, **kwargs)
@@ -39,25 +39,18 @@ class BaseEventViewSet(viewsets.ViewSetMixin, views.APIView):
         try:
             event = event_registry.get_event(event_key)
         except ValueError:
-            return DRFResponse(
-                {'detail': 'Not found'},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return DRFResponse({"detail": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
         response_data = self.format_codes(event.get_ordered_codes())
         return DRFResponse(response_data, status=status.HTTP_200_OK)
 
     def format_codes(self, codes):
-        return [{'code': code, 'description': code_data['description']} for code, code_data in codes.items()]
+        return [{"code": code, "description": code_data["description"]} for code, code_data in codes.items()]
 
 
-class BaseLogViewSet(
-    NestedGenericModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
-):
-    PARENT_FIELD = 'log_set'
-    lookup_field = 'reference'
+class BaseLogViewSet(NestedGenericModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+    PARENT_FIELD = "log_set"
+    lookup_field = "reference"
     serializer_class = LogSerializerBase
     model = Log
 

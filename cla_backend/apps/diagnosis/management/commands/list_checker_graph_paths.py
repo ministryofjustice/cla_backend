@@ -11,7 +11,8 @@ class Command(NoArgsCommand):
     Prints a map of possible paths that can be taken through the scope checker graph,
     useful for determining meaning of URL paths in Public e.g. from Google Analytics
     """
-    help = 'Prints a map of possible paths that can be taken through the scope checker graph'
+
+    help = "Prints a map of possible paths that can be taken through the scope checker graph"
 
     def handle_noargs(self, *args, **options):
         graph = get_graph(settings.CHECKER_DIAGNOSIS_FILE_NAME)
@@ -24,15 +25,15 @@ class Command(NoArgsCommand):
                 find_paths(nodes + [child])
             if not children:
                 path = nodes[1:]
-                text = ''
+                text = ""
                 for node in path:
-                    label = text_type(graph.node[node]['label'])
-                    text += ' - %s\n' % strip_tags(label)
-                paths['/'.join(path)] = text
+                    label = text_type(graph.node[node]["label"])
+                    text += " - %s\n" % strip_tags(label)
+                paths["/".join(path)] = text
 
-        find_paths(['start'])
+        find_paths(["start"])
 
-        print "%d paths in %s\n" % (len(paths), settings.CHECKER_DIAGNOSIS_FILE_NAME)
+        print("%d paths in %s\n" % (len(paths), settings.CHECKER_DIAGNOSIS_FILE_NAME))
         for key in sorted(paths):
-            print key
-            print paths[key]
+            print(key)
+            print(paths[key])

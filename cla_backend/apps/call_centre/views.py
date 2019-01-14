@@ -16,11 +16,9 @@ from legalaid.permissions import IsManagerOrMePermission
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.response import Response as DRFResponse
-from rest_framework.filters import OrderingFilter, DjangoFilterBackend, \
-    SearchFilter, BaseFilterBackend
+from rest_framework.filters import OrderingFilter, DjangoFilterBackend, SearchFilter, BaseFilterBackend
 
-from cla_provider.models import Provider, OutOfHoursRota, Feedback, \
-    ProviderPreAllocation
+from cla_provider.models import Provider, OutOfHoursRota, Feedback, ProviderPreAllocation
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
@@ -29,42 +27,71 @@ from core.drf.decorators import list_route
 from core.drf.mixins import FormActionMixin
 from notifications.views import BaseNotificationViewSet
 
-from complaints.views import BaseComplaintViewSet, \
-    BaseComplaintConstantsView, BaseComplaintCategoryViewSet,\
-    BaseComplaintLogViewset
+from complaints.views import (
+    BaseComplaintViewSet,
+    BaseComplaintConstantsView,
+    BaseComplaintCategoryViewSet,
+    BaseComplaintLogViewset,
+)
 
 from timer.views import BaseTimerViewSet
 
 from legalaid.models import PersonalDetails, Case
-from legalaid.views import BaseUserViewSet, \
-    BaseCategoryViewSet, BaseNestedEligibilityCheckViewSet, \
-    BaseMatterTypeViewSet, BaseMediaCodeViewSet, FullPersonalDetailsViewSet, \
-    BaseThirdPartyDetailsViewSet, BaseAdaptationDetailsViewSet, \
-    BaseAdaptationDetailsMetadataViewSet, FullCaseViewSet, \
-    BaseCaseNotesHistoryViewSet, AscCaseOrderingFilter, \
-    BaseCSVUploadReadOnlyViewSet, BaseCaseLogMixin, \
-    BaseEODDetailsViewSet
+from legalaid.views import (
+    BaseUserViewSet,
+    BaseCategoryViewSet,
+    BaseNestedEligibilityCheckViewSet,
+    BaseMatterTypeViewSet,
+    BaseMediaCodeViewSet,
+    FullPersonalDetailsViewSet,
+    BaseThirdPartyDetailsViewSet,
+    BaseAdaptationDetailsViewSet,
+    BaseAdaptationDetailsMetadataViewSet,
+    FullCaseViewSet,
+    BaseCaseNotesHistoryViewSet,
+    AscCaseOrderingFilter,
+    BaseCSVUploadReadOnlyViewSet,
+    BaseCaseLogMixin,
+    BaseEODDetailsViewSet,
+)
 
 from cla_common.constants import REQUIRES_ACTION_BY, CASE_SOURCE
 from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 from diagnosis.views import BaseDiagnosisViewSet
 from guidance.views import BaseGuidanceNoteViewSet
 
-from .permissions import CallCentreClientIDPermission, \
-    OperatorManagerPermission
-from .serializers import EligibilityCheckSerializer, \
-    CaseSerializer, ProviderSerializer,  \
-    OutOfHoursRotaSerializer, OperatorSerializer, \
-    AdaptationDetailsSerializer, PersonalDetailsSerializer, \
-    BarePersonalDetailsSerializer, \
-    ThirdPartyDetailsSerializer, LogSerializer, FeedbackSerializer, \
-    CreateCaseSerializer, CaseListSerializer, CaseArchivedSerializer, \
-    CaseNotesHistorySerializer, CSVUploadSerializer, CSVUploadDetailSerializer, \
-    EODDetailsSerializer
+from .permissions import CallCentreClientIDPermission, OperatorManagerPermission
+from .serializers import (
+    EligibilityCheckSerializer,
+    CaseSerializer,
+    ProviderSerializer,
+    OutOfHoursRotaSerializer,
+    OperatorSerializer,
+    AdaptationDetailsSerializer,
+    PersonalDetailsSerializer,
+    BarePersonalDetailsSerializer,
+    ThirdPartyDetailsSerializer,
+    LogSerializer,
+    FeedbackSerializer,
+    CreateCaseSerializer,
+    CaseListSerializer,
+    CaseArchivedSerializer,
+    CaseNotesHistorySerializer,
+    CSVUploadSerializer,
+    CSVUploadDetailSerializer,
+    EODDetailsSerializer,
+)
 
-from .forms import ProviderAllocationForm,  DeclineHelpCaseForm,\
-    DeferAssignmentCaseForm, SuspendCaseForm, AlternativeHelpForm, \
-    CallMeBackForm, StopCallMeBackForm, DiversityForm
+from .forms import (
+    ProviderAllocationForm,
+    DeclineHelpCaseForm,
+    DeferAssignmentCaseForm,
+    SuspendCaseForm,
+    AlternativeHelpForm,
+    CallMeBackForm,
+    StopCallMeBackForm,
+    DiversityForm,
+)
 
 from .models import Operator
 
@@ -74,8 +101,7 @@ class CallCentrePermissionsViewSetMixin(object):
 
 
 class CallCentreManagerPermissionsViewSetMixin(object):
-    permission_classes = (
-        CallCentreClientIDPermission, OperatorManagerPermission)
+    permission_classes = (CallCentreClientIDPermission, OperatorManagerPermission)
 
 
 class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
@@ -97,54 +123,51 @@ class EligibilityCheckViewSet(
         self.__pre_save__ = self.get_serializer_class()(original_obj).data
 
 
-class MatterTypeViewSet(
-    CallCentrePermissionsViewSetMixin, BaseMatterTypeViewSet
-):
+class MatterTypeViewSet(CallCentrePermissionsViewSetMixin, BaseMatterTypeViewSet):
     pass
 
 
-class MediaCodeViewSet(
-    CallCentrePermissionsViewSetMixin, BaseMediaCodeViewSet
-):
+class MediaCodeViewSet(CallCentrePermissionsViewSetMixin, BaseMediaCodeViewSet):
     pass
 
 
 class DateRangeFilter(BaseFilterBackend):
-
     def filter_queryset(self, request, qs, view):
 
         filter = {}
-        start_date = request.QUERY_PARAMS.get('start', None)
-        end_date = request.QUERY_PARAMS.get('end', None)
+        start_date = request.QUERY_PARAMS.get("start", None)
+        end_date = request.QUERY_PARAMS.get("end", None)
 
         if start_date is not None:
-            filter['{field}__gte'.format(field=view.date_range_field)] = parser.parse(
-                start_date).replace(tzinfo=timezone.get_current_timezone())
+            filter["{field}__gte".format(field=view.date_range_field)] = parser.parse(start_date).replace(
+                tzinfo=timezone.get_current_timezone()
+            )
         if end_date is not None:
-            filter['{field}__lte'.format(field=view.date_range_field)] = parser.parse(
-                end_date).replace(tzinfo=timezone.get_current_timezone())
+            filter["{field}__lte".format(field=view.date_range_field)] = parser.parse(end_date).replace(
+                tzinfo=timezone.get_current_timezone()
+            )
 
         qs = qs.filter(**filter)
         return qs
 
 
-class CaseViewSet(
-    CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin, BaseCaseLogMixin,
-    FullCaseViewSet
-):
+class CaseViewSet(CallCentrePermissionsViewSetMixin, mixins.CreateModelMixin, BaseCaseLogMixin, FullCaseViewSet):
     serializer_class = CaseListSerializer
     # using CreateCaseSerializer during creation
     serializer_detail_class = CaseSerializer
 
-    queryset = Case.objects.all().select_related(
-        'eligibility_check', 'personal_details')
+    queryset = Case.objects.all().select_related("eligibility_check", "personal_details")
     queryset_detail = Case.objects.all().select_related(
-        'eligibility_check', 'personal_details',
-        'adaptation_details', 'matter_type1', 'matter_type2',
-        'eod_details',
-        'diagnosis', 'media_code', 'eligibility_check__category',
-        'created_by'
+        "eligibility_check",
+        "personal_details",
+        "adaptation_details",
+        "matter_type1",
+        "matter_type2",
+        "eod_details",
+        "diagnosis",
+        "media_code",
+        "eligibility_check__category",
+        "created_by",
     )
 
     filter_backends = (AscCaseOrderingFilter,)
@@ -163,65 +186,53 @@ class CaseViewSet(
             phone:
                 only == 'phone'
         """
-        this_operator = get_object_or_404(
-            Operator, user=self.request.user)
+        this_operator = get_object_or_404(Operator, user=self.request.user)
         qs = super(CaseViewSet, self).get_queryset(**kwargs)
 
-        only_param = self.request.QUERY_PARAMS.get('only')
-        if only_param == 'my':
-            qs = qs.filter(
-                created_by=this_operator.user
-            )
-        elif only_param == 'eod':
-            qs = qs.extra(
-                where=[self.FLAGGED_WITH_EOD_SQL]
-            )
-        elif only_param == 'web':
-            qs = qs.filter(
-                source=CASE_SOURCE.WEB
-            )
-        elif only_param == 'phone':
-            qs = qs.filter(
-                source=CASE_SOURCE.PHONE
-            )
+        only_param = self.request.QUERY_PARAMS.get("only")
+        if only_param == "my":
+            qs = qs.filter(created_by=this_operator.user)
+        elif only_param == "eod":
+            qs = qs.extra(where=[self.FLAGGED_WITH_EOD_SQL])
+        elif only_param == "web":
+            qs = qs.filter(source=CASE_SOURCE.WEB)
+        elif only_param == "phone":
+            qs = qs.filter(source=CASE_SOURCE.PHONE)
 
         if this_operator.is_cla_superuser_or_manager:
-            qs = qs.extra(select={
-                'complaint_count': '''
+            qs = qs.extra(
+                select={
+                    "complaint_count": """
                     SELECT COUNT(complaints_complaint.id)
                     FROM complaints_complaint
                     JOIN legalaid_eoddetails
                         ON complaints_complaint.eod_id = legalaid_eoddetails.id
                     WHERE legalaid_case.id = legalaid_eoddetails.case_id
                         AND complaints_complaint.resolved IS NULL
-                '''
-            })
+                """
+                }
+            )
         else:
-            qs = qs.extra(select={
-                'complaint_count': 'SELECT NULL'
-            })
+            qs = qs.extra(select={"complaint_count": "SELECT NULL"})
 
         return qs
 
     def get_serializer_class(self):
         # if POST create request => use special Serializer
         #   otherwise use standard one
-        if self.request.method == 'POST' and not self.kwargs.get('reference'):
+        if self.request.method == "POST" and not self.kwargs.get("reference"):
             return CreateCaseSerializer
         return super(CaseViewSet, self).get_serializer_class()
 
     def get_dashboard_qs(self, qs):
         if self.request.user.operator.is_manager:
-            qs = qs.filter(
-                Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR) |
-                Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR_MANAGER))
+            action_by_operator = Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
+            action_by_operator_manager = Q(requires_action_by=REQUIRES_ACTION_BY.OPERATOR_MANAGER)
+            qs = qs.filter(action_by_operator | action_by_operator_manager)
         else:
             qs = qs.filter(requires_action_by=REQUIRES_ACTION_BY.OPERATOR)
 
-        qs = qs.filter(
-            Q(requires_action_at__isnull=True) | Q(
-                requires_action_at__lte=timezone.now())
-        )
+        qs = qs.filter(Q(requires_action_at__isnull=True) | Q(requires_action_at__lte=timezone.now()))
 
         return qs
 
@@ -240,10 +251,11 @@ class CaseViewSet(
         """
         now = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
         in_7_days = now + datetime.timedelta(days=7)
-        qs = self.get_queryset().filter(
-            requires_action_at__gte=now,
-            requires_action_at__lt=in_7_days
-        ).order_by('requires_action_at')
+        qs = (
+            self.get_queryset()
+            .filter(requires_action_at__gte=now, requires_action_at__lt=in_7_days)
+            .order_by("requires_action_at")
+        )
         self.object_list = self.filter_queryset(qs)
 
         serializer = self.get_serializer(self.object_list, many=True)
@@ -258,34 +270,33 @@ class CaseViewSet(
         """
 
         as_of = None
-        if 'as_of' in request.GET and (settings.DEBUG or settings.TEST_MODE):
-            as_of = parser.parse(request.GET.get('as_of'))
+        if "as_of" in request.GET and (settings.DEBUG or settings.TEST_MODE):
+            as_of = parser.parse(request.GET.get("as_of"))
             as_of = as_of.replace(tzinfo=timezone.get_current_timezone())
 
         obj = self.get_object()
         helper = ProviderAllocationHelper(as_of=as_of)
 
-        if hasattr(obj, 'eligibility_check') and obj.eligibility_check != None and obj.eligibility_check.category:
+        if hasattr(obj, "eligibility_check") and obj.eligibility_check is not None and obj.eligibility_check.category:
             category = obj.eligibility_check.category
             ProviderPreAllocation.objects.clear(case=obj)
             suggested = helper.get_suggested_provider(category)
 
             if suggested:
                 suggested_provider = ProviderSerializer(suggested).data
-                ProviderPreAllocation.objects.pre_allocate(
-                    category, suggested, obj)
+                ProviderPreAllocation.objects.pre_allocate(category, suggested, obj)
             else:
                 suggested_provider = None
         else:
             category = None
             suggested_provider = None
 
-        suitable_providers = [
-            ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
-        suggestions = {'suggested_provider': suggested_provider,
-                       'suitable_providers': suitable_providers,
-                       'as_of': helper.as_of
-                       }
+        suitable_providers = [ProviderSerializer(p).data for p in helper.get_qualifying_providers(category)]
+        suggestions = {
+            "suggested_provider": suggested_provider,
+            "suitable_providers": suitable_providers,
+            "as_of": helper.as_of,
+        }
 
         return DRFResponse(suggestions)
 
@@ -303,7 +314,7 @@ class CaseViewSet(
         # find given provider in suitable - avoid extra lookup and ensures
         # valid provider
         for sp in suitable_providers:
-            if sp.id == int(request.DATA['provider_id']):
+            if sp.id == int(request.DATA["provider_id"]):
                 p = sp
                 break
         else:
@@ -313,10 +324,8 @@ class CaseViewSet(
         # Randomly assign to provider who offers this category of service
         # else it should be the on duty provider
         data = request.DATA.copy()
-        data['provider'] = p.pk
-        form = ProviderAllocationForm(case=obj,
-                                      data=data,
-                                      providers=suitable_providers)
+        data["provider"] = p.pk
+        form = ProviderAllocationForm(case=obj, data=data, providers=suitable_providers)
 
         if form.is_valid():
             provider = form.save(request.user)
@@ -327,9 +336,7 @@ class CaseViewSet(
             provider_serialised = ProviderSerializer(provider)
             return DRFResponse(data=provider_serialised.data)
 
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
+        return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)
 
     @action()
     def defer_assignment(self, request, **kwargs):
@@ -339,9 +346,7 @@ class CaseViewSet(
             form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
-        return DRFResponse(
-            dict(form.errors), status=status.HTTP_400_BAD_REQUEST
-        )
+        return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)
 
     @action()
     def decline_help(self, request, reference=None, **kwargs):
@@ -376,15 +381,12 @@ class CaseViewSet(
         obj = self.get_object()
         if obj.personal_details:
             return DRFResponse(
-                {'error': 'This case is already linked to a Person'},
-                status=status.HTTP_400_BAD_REQUEST
+                {"error": "This case is already linked to a Person"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        person_q = request.QUERY_PARAMS.get('person_q', '') or ''
+        person_q = request.QUERY_PARAMS.get("person_q", "") or ""
         if len(person_q) >= 3:
-            users = PersonalDetails.objects.filter(
-                full_name__icontains=person_q
-            ).exclude(vulnerable_user=True)
+            users = PersonalDetails.objects.filter(full_name__icontains=person_q).exclude(vulnerable_user=True)
         else:
             users = []
         data = [BarePersonalDetailsSerializer(user).data for user in users]
@@ -399,33 +401,32 @@ class CaseViewSet(
         * if personal_details does not exist => return 400
         * else link personal details
         """
+
         def error_response(msg):
-            return DRFResponse(
-                {'error': msg}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return DRFResponse({"error": msg}, status=status.HTTP_400_BAD_REQUEST)
 
         obj = self.get_object()
 
         # check PARAM exists
-        pd_ref = request.DATA.get('personal_details', None)
+        pd_ref = request.DATA.get("personal_details", None)
         if not pd_ref:
             return error_response('Param "personal_details" required')
 
         # check that case doesn't have personal_details
         if obj.personal_details:
-            return error_response('A person is already linked to this case')
+            return error_response("A person is already linked to this case")
 
         # check that personal details exists
         try:
             pd_ref = UUID(pd_ref, version=4)
 
             personal_details = PersonalDetails.objects.get(reference=pd_ref)
-        except ValueError, PersonalDetails.DoesNotExist:
+        except (ValueError, PersonalDetails.DoesNotExist):
             return error_response('Person with reference "%s" not found' % pd_ref)
 
         # link personal details to case
         obj.personal_details = personal_details
-        obj.save(update_fields=['personal_details', 'modified'])
+        obj.save(update_fields=["personal_details", "modified"])
 
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
@@ -440,11 +441,8 @@ class CaseViewSet(
     @action()
     def start_call(self, request, reference=None, **kwargs):
         obj = self.get_object()
-        event = event_registry.get_event('case')()
-        event.process(
-            obj, status='call_started', created_by=request.user,
-            notes='Call started'
-        )
+        event = event_registry.get_event("case")()
+        event.process(obj, status="call_started", created_by=request.user, notes="Call started")
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -455,7 +453,7 @@ class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
     queryset = Provider.objects.active()
 
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('law_category__code',)
+    filter_fields = ("law_category__code",)
 
 
 class OutOfHoursRotaViewSet(
@@ -465,7 +463,7 @@ class OutOfHoursRotaViewSet(
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
-    viewsets.GenericViewSet
+    viewsets.GenericViewSet,
 ):
 
     serializer_class = OutOfHoursRotaSerializer
@@ -475,20 +473,17 @@ class OutOfHoursRotaViewSet(
 class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     model = Operator
 
-    permission_classes = (
-        CallCentreClientIDPermission, IsManagerOrMePermission)
+    permission_classes = (CallCentreClientIDPermission, IsManagerOrMePermission)
     serializer_class = OperatorSerializer
 
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('is_manager',)
+    filter_fields = ("is_manager",)
 
     def get_logged_in_user_model(self):
         return self.request.user.operator
 
 
-class PersonalDetailsViewSet(
-    CallCentrePermissionsViewSetMixin, FormActionMixin, FullPersonalDetailsViewSet
-):
+class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin, FormActionMixin, FullPersonalDetailsViewSet):
     serializer_class = PersonalDetailsSerializer
 
     @action()
@@ -496,27 +491,19 @@ class PersonalDetailsViewSet(
         return self._form_action(request, DiversityForm)
 
 
-class ThirdPartyDetailsViewSet(
-    CallCentrePermissionsViewSetMixin, BaseThirdPartyDetailsViewSet
-):
+class ThirdPartyDetailsViewSet(CallCentrePermissionsViewSetMixin, BaseThirdPartyDetailsViewSet):
     serializer_class = ThirdPartyDetailsSerializer
 
 
-class AdaptationDetailsViewSet(
-    CallCentrePermissionsViewSetMixin, BaseAdaptationDetailsViewSet
-):
+class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin, BaseAdaptationDetailsViewSet):
     serializer_class = AdaptationDetailsSerializer
 
 
-class AdaptationDetailsMetadataViewSet(
-    CallCentrePermissionsViewSetMixin,
-    BaseAdaptationDetailsMetadataViewSet
-):
+class AdaptationDetailsMetadataViewSet(CallCentrePermissionsViewSetMixin, BaseAdaptationDetailsMetadataViewSet):
     serializer_class = AdaptationDetailsSerializer
 
 
-class EODDetailsViewSet(CallCentrePermissionsViewSetMixin,
-                        BaseEODDetailsViewSet):
+class EODDetailsViewSet(CallCentrePermissionsViewSetMixin, BaseEODDetailsViewSet):
     serializer_class = EODDetailsSerializer
 
 
@@ -528,8 +515,7 @@ class ArticleViewSet(CallCentrePermissionsViewSetMixin, BaseArticleViewSet):
     pass
 
 
-class ArticleCategoryViewSet(CallCentrePermissionsViewSetMixin,
-                             BaseArticleCategoryViewSet):
+class ArticleCategoryViewSet(CallCentrePermissionsViewSetMixin, BaseArticleCategoryViewSet):
     pass
 
 
@@ -545,36 +531,31 @@ class LogViewSet(CallCentrePermissionsViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
 
 
-class FeedbackViewSet(CallCentreManagerPermissionsViewSetMixin,
-                      mixins.ListModelMixin,
-                      mixins.UpdateModelMixin,
-                      mixins.RetrieveModelMixin,
-                      viewsets.GenericViewSet):
+class FeedbackViewSet(
+    CallCentreManagerPermissionsViewSetMixin,
+    mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
     model = Feedback
-    lookup_field = 'reference'
+    lookup_field = "reference"
     serializer_class = FeedbackSerializer
 
-    filter_backends = (
-        DjangoFilterBackend,
-        OrderingFilter,
-        DateRangeFilter,
-    )
-    ordering = ('resolved', '-created',)
-    date_range_field = 'created'
-    filter_fields = ('resolved',)
+    filter_backends = (DjangoFilterBackend, OrderingFilter, DateRangeFilter)
+    ordering = ("resolved", "-created")
+    date_range_field = "created"
+    filter_fields = ("resolved",)
 
-    queryset = Feedback.objects.all().select_related(
-        'case', 'created_by', 'created_by__provider'
-    )
+    queryset = Feedback.objects.all().select_related("case", "created_by", "created_by__provider")
 
     pagination_serializer_class = RelativeUrlPaginationSerializer
     paginate_by = 20
-    paginate_by_param = 'page_size'
+    paginate_by_param = "page_size"
     max_paginate_by = 100
 
 
 class CaseArchivedSearchFilter(SearchFilter):
-
     def get_search_terms(self, request):
         terms = super(CaseArchivedSearchFilter, self).get_search_terms(request)
         return [term.upper() for term in terms]
@@ -583,126 +564,99 @@ class CaseArchivedSearchFilter(SearchFilter):
         return "%s__contains" % field_name
 
 
-class CaseArchivedViewSet(CallCentrePermissionsViewSetMixin,
-                          mixins.ListModelMixin,
-                          mixins.RetrieveModelMixin,
-                          viewsets.GenericViewSet):
+class CaseArchivedViewSet(
+    CallCentrePermissionsViewSetMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
 
-    lookup_field = 'laa_reference'
+    lookup_field = "laa_reference"
     model = CaseArchived
     serializer_class = CaseArchivedSerializer
 
-    search_fields = ['search_field']
+    search_fields = ["search_field"]
 
-    filter_backends = (
-        CaseArchivedSearchFilter,
-    )
+    filter_backends = (CaseArchivedSearchFilter,)
     paginate_by = 20
-    paginate_by_param = 'page_size'
+    paginate_by_param = "page_size"
     max_paginate_by = 100
     pagination_serializer_class = RelativeUrlPaginationSerializer
 
 
-class CaseNotesHistoryViewSet(
-    CallCentrePermissionsViewSetMixin, BaseCaseNotesHistoryViewSet
-):
+class CaseNotesHistoryViewSet(CallCentrePermissionsViewSetMixin, BaseCaseNotesHistoryViewSet):
     serializer_class = CaseNotesHistorySerializer
 
 
-class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin,
-                       BaseCSVUploadReadOnlyViewSet):
+class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin, BaseCSVUploadReadOnlyViewSet):
 
     serializer_class = CSVUploadSerializer
     serializer_detail_class = CSVUploadDetailSerializer
 
-    filter_backends = (
-        DjangoFilterBackend,
-        OrderingFilter,
-    )
-    ordering = ('-month',)
-    filter_fields = ('month', 'provider_id')
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    ordering = ("-month",)
+    filter_fields = ("month", "provider_id")
 
     paginate_by = 20
-    paginate_by_param = 'page_size'
+    paginate_by_param = "page_size"
     max_paginate_by = 100
 
     def get_queryset(self, *args, **kwargs):
         # only return last 18 months worth
-        after = (
-            timezone.now() - relativedelta(months=18)).date().replace(day=1)
+        after = (timezone.now() - relativedelta(months=18)).date().replace(day=1)
 
-        qs = super(CSVUploadViewSet, self).get_queryset(*args, **kwargs).filter(
-            month__gte=after)
+        qs = super(CSVUploadViewSet, self).get_queryset(*args, **kwargs).filter(month__gte=after)
         return qs
 
 
-class GuidanceNoteViewSet(
-    CallCentrePermissionsViewSetMixin,
-    BaseGuidanceNoteViewSet
-):
+class GuidanceNoteViewSet(CallCentrePermissionsViewSetMixin, BaseGuidanceNoteViewSet):
     pass
 
 
-class NotificationViewSet(
-    CallCentrePermissionsViewSetMixin,
-    BaseNotificationViewSet
-):
+class NotificationViewSet(CallCentrePermissionsViewSetMixin, BaseNotificationViewSet):
     pass
 
 
-class ComplaintViewSet(
-    CallCentrePermissionsViewSetMixin,
-    BaseComplaintViewSet
-):
-    filter_backends = (
-        DjangoFilterBackend,
-        OrderingFilter,
-        SearchFilter,
-    )
-    filter_fields = ('justified', 'level', 'category', 'owner', 'created_by')
+class ComplaintViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintViewSet):
+    filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
+    filter_fields = ("justified", "level", "category", "owner", "created_by")
 
     search_fields = (
-        'eod__case__personal_details__full_name',
-        'eod__case__personal_details__postcode',
-        'eod__case__personal_details__street',
-        'eod__case__personal_details__search_field',
-        'eod__case__reference',
-        'eod__case__laa_reference',
+        "eod__case__personal_details__full_name",
+        "eod__case__personal_details__postcode",
+        "eod__case__personal_details__street",
+        "eod__case__personal_details__search_field",
+        "eod__case__reference",
+        "eod__case__laa_reference",
     )
 
-    ordering_fields = ('created', 'level', 'justified',
-                       'closed', 'holding_letter', 'full_letter',
-                       'category__name', 'eod__case__reference',
-                       'eod__case__personal_details__full_name')
-    ordering = ('-created',)
+    ordering_fields = (
+        "created",
+        "level",
+        "justified",
+        "closed",
+        "holding_letter",
+        "full_letter",
+        "category__name",
+        "eod__case__reference",
+        "eod__case__personal_details__full_name",
+    )
+    ordering = ("-created",)
 
     paginate_by = 20
-    paginate_by_param = 'page_size'
+    paginate_by_param = "page_size"
     max_paginate_by = 100
 
     def get_queryset(self, **kwargs):
-        dashboard = self.request.QUERY_PARAMS.get('dashboard') == 'True'
-        show_closed = self.request.QUERY_PARAMS.get('show_closed') == 'True'
-        return super(ComplaintViewSet, self).get_queryset(dashboard=dashboard,
-                                                          show_closed=show_closed)
+        dashboard = self.request.QUERY_PARAMS.get("dashboard") == "True"
+        show_closed = self.request.QUERY_PARAMS.get("show_closed") == "True"
+        return super(ComplaintViewSet, self).get_queryset(dashboard=dashboard, show_closed=show_closed)
 
 
-class ComplaintCategoryViewSet(
-    CallCentrePermissionsViewSetMixin,
-    BaseComplaintCategoryViewSet
-):
+class ComplaintCategoryViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintCategoryViewSet):
     pass
 
 
-class ComplaintConstantsView(
-    CallCentrePermissionsViewSetMixin,
-    BaseComplaintConstantsView,
-):
+class ComplaintConstantsView(CallCentrePermissionsViewSetMixin, BaseComplaintConstantsView):
     pass
 
 
-class ComplaintLogViewset(
-    CallCentrePermissionsViewSetMixin,
-    BaseComplaintLogViewset
-):
+class ComplaintLogViewset(CallCentrePermissionsViewSetMixin, BaseComplaintLogViewset):
     pass

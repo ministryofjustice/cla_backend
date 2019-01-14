@@ -4,35 +4,29 @@ from .testing import *
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = (
-    ('CLA', 'cla-alerts@digital.justice.gov.uk'),
-)
+ADMINS = (("CLA", "cla-alerts@digital.justice.gov.uk"),)
 
 MANAGERS = ADMINS
 
-INSTALLED_APPS += ('django_jenkins',)
+INSTALLED_APPS += ("django_jenkins",)
 
-JENKINS_TASKS = (
-    'django_jenkins.tasks.with_coverage',
-)
+JENKINS_TASKS = ("django_jenkins.tasks.with_coverage",)
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'cla_backend.apps.reports.db.backend',
-        'NAME': os.environ.get('DB_USERNAME', ''),
-        'TEST_NAME': 'test_cla_backend%s' % os.environ.get('BACKEND_TEST_DB_SUFFIX', ''),
-        'USER': os.environ.get('DB_USERNAME', ''),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', ''),
-        'PORT': os.environ.get('DB_PORT', ''),
+    "default": {
+        "ENGINE": "cla_backend.apps.reports.db.backend",
+        "NAME": os.environ.get("DB_USERNAME", ""),
+        "TEST_NAME": "test_cla_backend%s" % os.environ.get("BACKEND_TEST_DB_SUFFIX", ""),
+        "USER": os.environ.get("DB_USERNAME", ""),
+        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
+        "HOST": os.environ.get("DB_HOST", ""),
+        "PORT": os.environ.get("DB_PORT", ""),
     }
 }
 
-JENKINS_TEST_RUNNER = 'core.testing.CLADiscoverRunner'
+JENKINS_TEST_RUNNER = "core.testing.CLADiscoverRunner"
 
-#HOST_NAME = ""
+# HOST_NAME = ""
 
 
-ALLOWED_HOSTS = [
-    '*'
-]
+ALLOWED_HOSTS = ["*"]

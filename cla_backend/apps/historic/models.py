@@ -6,9 +6,7 @@ class CaseArchived(TimeStampedModel):
     full_name = models.TextField(null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     postcode = models.CharField(max_length=12, blank=True, null=True)
-    laa_reference = models.BigIntegerField(
-        null=True, blank=True, unique=True, editable=False
-    )
+    laa_reference = models.BigIntegerField(null=True, blank=True, unique=True, editable=False)
 
     specialist_referred_to = models.TextField(null=True, blank=True)
     date_specialist_referred = models.DateTimeField(null=True, blank=True)

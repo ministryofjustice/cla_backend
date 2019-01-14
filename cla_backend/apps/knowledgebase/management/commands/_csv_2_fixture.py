@@ -15,44 +15,42 @@ class KnowledgebaseCsvParse(object):
 
         #                        csv_field -> django_field_name
         #                        only include fields which are used
-        self.field_mapping = {'Organisation/Umbrella': 'organisation',
-                              'Service (name resource will be given on KB)': 'service_name',
-
-                              'When to use (N.B. for in scope categories, signpost using directory in first instance).': 'when_to_use',
-                              'Entry type': 'resource_type',
-                              'Description': 'description',
-                              'Type of service/client group': 'type_of_service',
-                              'Guidance': 'how_to_use',
-
-                              # <ArticleCategory>
-                              'Debt': 'Debt',
-                              'Education': 'Education',
-                              'Discrimination': 'Discrimination',
-                              'Housing': 'Housing',
-                              'Family': 'Family',
-                              'Welfare Benefits': 'Welfare benefits',
-                              'AAP': 'Action against police',
-                              'Clin Neg': 'Clinical negligence',
-                              'Comm Care': 'Community care',
-                              'Consumer': 'Consumer',
-                              'Crime': 'Crime',
-                              'Employment': 'Employment',
-                              'Immig & Ass': 'Immigration and asylum',
-                              'MH': 'Mental health',
-                              'Misc': 'Miscellaneous',
-                              'PI': 'Personal injury',
-                              'Public': 'Public',
-                              'Generic': 'Generic',
-                              # </ArticleCategory>
-
-                              'Helpline': 'helpline',
-                              'Website': 'website',
-                              'Address': 'address',
-                              'Opening Hours': 'opening_hours',
-                              'Coverage': 'geographic_coverage',
-                              'Accessibility': 'accessibility',
-                              'Current keywords': 'keywords'
-                              }
+        self.field_mapping = {
+            "Organisation/Umbrella": "organisation",
+            "Service (name resource will be given on KB)": "service_name",
+            "When to use (N.B. for in scope categories, signpost using directory in first instance).": "when_to_use",
+            "Entry type": "resource_type",
+            "Description": "description",
+            "Type of service/client group": "type_of_service",
+            "Guidance": "how_to_use",
+            # <ArticleCategory>
+            "Debt": "Debt",
+            "Education": "Education",
+            "Discrimination": "Discrimination",
+            "Housing": "Housing",
+            "Family": "Family",
+            "Welfare Benefits": "Welfare benefits",
+            "AAP": "Action against police",
+            "Clin Neg": "Clinical negligence",
+            "Comm Care": "Community care",
+            "Consumer": "Consumer",
+            "Crime": "Crime",
+            "Employment": "Employment",
+            "Immig & Ass": "Immigration and asylum",
+            "MH": "Mental health",
+            "Misc": "Miscellaneous",
+            "PI": "Personal injury",
+            "Public": "Public",
+            "Generic": "Generic",
+            # </ArticleCategory>
+            "Helpline": "helpline",
+            "Website": "website",
+            "Address": "address",
+            "Opening Hours": "opening_hours",
+            "Coverage": "geographic_coverage",
+            "Accessibility": "accessibility",
+            "Current keywords": "keywords",
+        }
 
         dialect = csv.Sniffer().sniff(csv_file_handle.read(1024))
         csv_file_handle.seek(0)
@@ -60,13 +58,26 @@ class KnowledgebaseCsvParse(object):
         self.csv_reader = csv.DictReader(csv_file_handle, dialect=dialect)
         self.fields = [f for f in self.csv_reader.fieldnames]
 
-
-        self.csv_article_category_fields = ['Debt', 'Education', 'Discrimination',
-                                            'Housing', 'Family', 'Welfare Benefits',
-                                            'AAP', 'Clin Neg', 'Comm Care', 'Consumer',
-                                            'Crime', 'Employment', 'Immig & Ass', 'MH',
-                                            'Misc', 'PI', 'Public', 'Generic'
-                                            ]
+        self.csv_article_category_fields = [
+            "Debt",
+            "Education",
+            "Discrimination",
+            "Housing",
+            "Family",
+            "Welfare Benefits",
+            "AAP",
+            "Clin Neg",
+            "Comm Care",
+            "Consumer",
+            "Crime",
+            "Employment",
+            "Immig & Ass",
+            "MH",
+            "Misc",
+            "PI",
+            "Public",
+            "Generic",
+        ]
         self._check_csv_fields()
 
     def _check_csv_fields(self):
@@ -99,14 +110,14 @@ class KnowledgebaseCsvParse(object):
                 "fields": {
                     "name": self.field_mapping[ac_field],
                     "created": self.datetime_now,
-                    "modified": self.datetime_now
-                }
+                    "modified": self.datetime_now,
+                },
             }
             fixture.append(d)
             article_category_lookup[ac_field] = position
         return fixture, article_category_lookup
 
-    def fixture_as_json(self):
+    def fixture_as_json(self):  # noqa: C901
         """
         @return: String of complete JSON doc. with all three record types.
         """
@@ -115,55 +126,51 @@ class KnowledgebaseCsvParse(object):
         ac_fixture, article_category_lookup = self._article_category_fixture()
         fixture.extend(ac_fixture)
 
-        stats = {'skipped' : 0, 'loaded' : 0}
+        stats = {"skipped": 0, "loaded": 0}
         position = 0
         article_cat_position = 0
         for r in self.csv_reader:
-            if r['Entry type'] != 'Other resource for clients' and \
-               r['Entry type'] != 'Legal resource for clients':
-                stats['skipped'] += 1
+            if r["Entry type"] != "Other resource for clients" and r["Entry type"] != "Legal resource for clients":
+                stats["skipped"] += 1
                 continue
 
-            stats['loaded'] += 1
+            stats["loaded"] += 1
             record_categories = {}
             position += 1
             d = {
                 "pk": position,
                 "model": "knowledgebase.article",
-                "fields": {
-                    "created": self.datetime_now,
-                    "modified": self.datetime_now
-                    }
-                 }
+                "fields": {"created": self.datetime_now, "modified": self.datetime_now},
+            }
             for csv_field, django_field_name in self.field_mapping.iteritems():
                 if csv_field in self.csv_article_category_fields:
                     # these are the ArticleCategory related fields
                     record_categories[csv_field] = r[csv_field]
 
-                elif django_field_name == 'resource_type':
+                elif django_field_name == "resource_type":
                     if r[csv_field] == "Legal resource for clients":
-                        d["fields"][django_field_name] = 'LEGAL'
+                        d["fields"][django_field_name] = "LEGAL"
                     else:
-                        d["fields"][django_field_name] = 'OTHER'
+                        d["fields"][django_field_name] = "OTHER"
 
-                elif django_field_name == 'website':
+                elif django_field_name == "website":
 
-                    website = r[csv_field].decode('ascii', 'ignore')
-                    if not website.startswith('http'):
-                        website = 'http://' + website
+                    website = r[csv_field].decode("ascii", "ignore")
+                    if not website.startswith("http"):
+                        website = "http://" + website
 
                     d["fields"][django_field_name] = website
 
                 else:
                     # normal field
-                    d["fields"][django_field_name] = r[csv_field].decode('ascii', 'ignore')
+                    d["fields"][django_field_name] = r[csv_field].decode("ascii", "ignore")
 
             fixture.append(d)
 
             # map ArticleCategory records via ArticleCategoryMatrix
             for csv_field, spreadsheet_value in record_categories.iteritems():
                 if len(spreadsheet_value) > 0:
-                    if spreadsheet_value != 'x' and not spreadsheet_value.startswith('Preferred'):
+                    if spreadsheet_value != "x" and not spreadsheet_value.startswith("Preferred"):
                         self.log("Odd value %s in %s" % (spreadsheet_value, csv_field))
                         continue
                     article_cat_position += 1
@@ -175,8 +182,8 @@ class KnowledgebaseCsvParse(object):
                             "modified": self.datetime_now,
                             "article": position,
                             "article_category": article_category_lookup[csv_field],
-                            "preferred_signpost": spreadsheet_value.startswith('Preferred')
-                        }
+                            "preferred_signpost": spreadsheet_value.startswith("Preferred"),
+                        },
                     }
                     fixture.append(d)
 

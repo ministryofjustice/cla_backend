@@ -9,6 +9,7 @@ from .serializers import TimerSerializer
 class BaseTimerViewSet(viewsets.ViewSetMixin, views.APIView):
     """
     """
+
     serializer_class = TimerSerializer
 
     def get_serializer(self, obj):
@@ -21,10 +22,7 @@ class BaseTimerViewSet(viewsets.ViewSetMixin, views.APIView):
         try:
             timer, created = get_or_create_timer(request.user)
         except ValueError as e:
-            return DRFResponse(
-                {'detail': str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return DRFResponse({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         data = self.get_serializer(timer)
         resp_status = status.HTTP_201_CREATED if created else status.HTTP_200_OK
@@ -34,24 +32,18 @@ class BaseTimerViewSet(viewsets.ViewSetMixin, views.APIView):
         timer = get_timer(request.user)
 
         if not timer:
-            return DRFResponse(
-                {'detail': 'Not found'},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return DRFResponse({"detail": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
         data = self.get_serializer(timer)
         return DRFResponse(data)
 
     def delete(self, request, *args, **kwargs):
         timer = get_timer(request.user)
-        statsd.incr('timer.cancel')
-        statsd.incr('timer.cancel.user.%s' % request.user.pk)
+        statsd.incr("timer.cancel")
+        statsd.incr("timer.cancel.user.%s" % request.user.pk)
 
         if not timer:
-            return DRFResponse(
-                {'detail': 'Not found'},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return DRFResponse({"detail": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
         timer.stop(cancelled=True)
 

@@ -7,4 +7,5 @@ class LoginRateThrottle(AnonRateThrottle):
 
     The IP address of the request will be used as the unique cache key.
     """
-    scope = 'login'
+
+    scope = "login"

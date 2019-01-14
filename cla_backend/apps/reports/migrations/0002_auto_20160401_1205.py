@@ -1,16 +1,12 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations
 from core.operations import LoadExtension
 
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('reports', '0001_initial'),
-    ]
+    dependencies = [("reports", "0001_initial")]
 
-    operations = [
-        LoadExtension(name='tablefunc'),
-    ]
+    operations = [LoadExtension(name="tablefunc")]

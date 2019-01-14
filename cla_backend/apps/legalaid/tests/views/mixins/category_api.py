@@ -5,14 +5,14 @@ from core.tests.test_base import SimpleResourceAPIMixin
 
 
 class CategoryAPIMixin(SimpleResourceAPIMixin):
-    LOOKUP_KEY = 'code'
-    API_URL_BASE_NAME = 'category'
-    RESOURCE_RECIPE = 'legalaid.category'
+    LOOKUP_KEY = "code"
+    API_URL_BASE_NAME = "category"
+    RESOURCE_RECIPE = "legalaid.category"
 
     def setUp(self):
         super(CategoryAPIMixin, self).setUp()
 
-        self.categories = make_recipe('legalaid.category', _quantity=2)
+        self.categories = make_recipe("legalaid.category", _quantity=2)
 
     def test_get_allowed(self):
         """
@@ -20,19 +20,15 @@ class CategoryAPIMixin(SimpleResourceAPIMixin):
         """
 
         # LIST
-        response = self.client.get(
-            self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization(),
-        )
+        response = self.client.get(self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization())
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual([d['name'] for d in response.data], ['Name1', 'Name2', 'Name3'])
+        self.assertEqual([d["name"] for d in response.data], ["Name1", "Name2", "Name3"])
 
         # DETAIL
-        response = self.client.get(
-            self.detail_url, HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self.client.get(self.detail_url, HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], 'Name1')
+        self.assertEqual(response.data["name"], "Name1")
 
     def test_methods_not_allowed(self):
         """

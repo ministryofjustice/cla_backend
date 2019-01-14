@@ -14,9 +14,9 @@ class cached_calcs_property(object):
 
     def __get__(self, instance, type=None):
         res = self._do_get(instance, type)
-        if 'calcs' not in instance.__dict__:
-            instance.__dict__['calcs'] = {}
-        instance.__dict__['calcs'][self.func.__name__] = res
+        if "calcs" not in instance.__dict__:
+            instance.__dict__["calcs"] = {}
+        instance.__dict__["calcs"][self.func.__name__] = res
         return res
 
 
@@ -28,41 +28,39 @@ class CapitalCalculator(object):
         self.calcs = calcs
 
     def _parse_props(self, props):
-        l = []
-        for p in (props or []):
+        result = []
+        for p in props or []:
             # check property
             invalid_props, is_empty = self._is_property_invalid(p)
             if invalid_props:
                 if not is_empty:
                     raise exceptions.PropertyExpectedException(
-                        "'Property' requires attribute '{kw}' and was not given at __init__".format(
-                            kw=invalid_props
-                        )
+                        "'Property' requires attribute '{kw}' and was not given at __init__".format(kw=invalid_props)
                     )
                 continue
 
             parsed_prop = p.copy()
-            parsed_prop['equity'] = 0
-            l.append(parsed_prop)
-        return l
+            parsed_prop["equity"] = 0
+            result.append(parsed_prop)
+        return result
 
     @property
     def main_property(self):
-        if not hasattr(self, '_main_property'):
+        if not hasattr(self, "_main_property"):
             self._main_property = None
             if self.properties:
                 for prop in self.properties:
-                    if prop['main']:
+                    if prop["main"]:
                         self._main_property = prop
                         break
         return self._main_property
 
     @property
     def other_properties(self):
-        if not hasattr(self, '_other_properties'):
+        if not hasattr(self, "_other_properties"):
             self._other_properties = []
             if self.properties:
-                self._other_properties = [prop for prop in self.properties if not prop['main']]
+                self._other_properties = [prop for prop in self.properties if not prop["main"]]
         return self._other_properties
 
     def _is_property_invalid(self, prop):
@@ -74,32 +72,34 @@ class CapitalCalculator(object):
         if not prop:
             return (True, True)
 
-        none_values = [k for k, v in prop.items() if v == None]
-        return (none_values, len(none_values) == len(prop))
+        none_values = [k for k, v in prop.items() if v is None]
+        return none_values, len(none_values) == len(prop)
 
     # for each other property
     def _calculate_property_equity(self, prop):
         if not prop:
             return
 
-        mortgage_disregard = min(prop['mortgage_left'], self.mortgage_disregard_available)
+        mortgage_disregard = min(prop["mortgage_left"], self.mortgage_disregard_available)
 
-        property_equity = prop['value'] - mortgage_disregard
+        property_equity = prop["value"] - mortgage_disregard
         # if prop.in_joint_names:
-        property_equity = property_equity * prop['share'] / 100   # assuming that you filled in share with the right figure (that is, in_joint_names not required)
+        property_equity = (
+            property_equity * prop["share"] / 100
+        )  # assuming that you filled in share with the right figure (that is, in_joint_names not required)
 
         remaining_mortgage_disregard = self.mortgage_disregard_available - mortgage_disregard
 
-        prop['equity'] = max(property_equity, 0)
+        prop["equity"] = max(property_equity, 0)
         self.mortgage_disregard_available = remaining_mortgage_disregard
 
     def _apply_SMOD_disregard(self, prop):
-        if not prop or not prop['disputed']:
+        if not prop or not prop["disputed"]:
             return
 
-        SMOD_disregard = min(prop['equity'], self.SMOD_disregard_available)
+        SMOD_disregard = min(prop["equity"], self.SMOD_disregard_available)
 
-        prop['equity'] = max(prop['equity'] - SMOD_disregard, 0)
+        prop["equity"] = max(prop["equity"] - SMOD_disregard, 0)
         remaining_SMOD_disregard = self.SMOD_disregard_available - SMOD_disregard
 
         self.SMOD_disregard_available = remaining_SMOD_disregard
@@ -110,7 +110,7 @@ class CapitalCalculator(object):
         # if not prop.disputed:
         #     return
 
-        prop['equity'] = max(prop['equity'] - self.equity_disregard_available, 0)
+        prop["equity"] = max(prop["equity"] - self.equity_disregard_available, 0)
 
     def _reset_state(self):
         self.mortgage_disregard_available = constants.disposable_capital.MORTGAGE_DISREGARD
@@ -118,7 +118,7 @@ class CapitalCalculator(object):
         self.equity_disregard_available = constants.disposable_capital.EQUITY_DISREGARD
 
         for prop in self.properties:
-            prop['equity'] = 0
+            prop["equity"] = 0
 
     @cached_calcs_property
     def property_capital(self):
@@ -142,14 +142,12 @@ class CapitalCalculator(object):
 
         property_capital = 0
         for prop in self.properties:
-            property_capital += prop['equity']
+            property_capital += prop["equity"]
         return property_capital
 
     @cached_calcs_property
     def liquid_capital(self):
-        SMOD_disregard = min(
-            self.disputed_liquid_capital, self.SMOD_disregard_available
-        )
+        SMOD_disregard = min(self.disputed_liquid_capital, self.SMOD_disregard_available)
 
         capital = max(self.disputed_liquid_capital - SMOD_disregard, 0)
 
@@ -162,9 +160,7 @@ class CapitalCalculator(object):
 
         res = self.property_capital + self.liquid_capital
 
-        self.calcs['property_equities'] = [
-            prop.get('equity', 0) for prop in self.properties
-        ]
+        self.calcs["property_equities"] = [prop.get("equity", 0) for prop in self.properties]
 
         return res
 
@@ -194,7 +190,10 @@ class EligibilityChecker(object):
     @cached_calcs_property
     def partner_employment_allowance(self):
         if self.case_data.facts.has_partner and self.case_data.facts.should_aggregate_partner:
-            if self.case_data.partner.income.has_employment_earnings and not self.case_data.partner.income.self_employed:
+            if (
+                self.case_data.partner.income.has_employment_earnings
+                and not self.case_data.partner.income.self_employed
+            ):
                 return constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
             return 0
         return 0
@@ -211,7 +210,7 @@ class EligibilityChecker(object):
 
     @cached_calcs_property
     def disposable_income(self):
-        if not hasattr(self, '_disposable_income'):
+        if not hasattr(self, "_disposable_income"):
             gross_income = self.gross_income
 
             gross_income -= self.partner_allowance
@@ -220,12 +219,14 @@ class EligibilityChecker(object):
             gross_income -= self.dependants_allowance
 
             # Tax + NI
-            income_tax_and_ni = self.case_data.you.deductions.income_tax \
-                              + self.case_data.you.deductions.national_insurance
+            income_tax_and_ni = (
+                self.case_data.you.deductions.income_tax + self.case_data.you.deductions.national_insurance
+            )
             gross_income -= income_tax_and_ni
             if self.case_data.facts.should_aggregate_partner:
-                income_tax_and_ni = self.case_data.partner.deductions.income_tax \
-                                  + self.case_data.partner.deductions.national_insurance
+                income_tax_and_ni = (
+                    self.case_data.partner.deductions.income_tax + self.case_data.partner.deductions.national_insurance
+                )
                 gross_income -= income_tax_and_ni
 
             # maintenance 6.3
@@ -264,15 +265,14 @@ class EligibilityChecker(object):
 
     @cached_calcs_property
     def disposable_capital_assets(self):
-        if not hasattr(self, '_disposable_capital_assets'):
+        if not hasattr(self, "_disposable_capital_assets"):
             # NOTE: problem in case of disputed partner (and joined savings/assets)
 
             capital_calc = CapitalCalculator(
                 properties=self.case_data.property_data,
                 non_disputed_liquid_capital=self.case_data.non_disputed_liquid_capital,
                 disputed_liquid_capital=self.case_data.disputed_liquid_capital,
-                calcs=self.calcs
-
+                calcs=self.calcs,
             )
             disposable_capital = capital_calc.calculate_capital()
 
@@ -317,4 +317,4 @@ class EligibilityChecker(object):
         return True
 
     def should_passport_nass(self):
-        return self.case_data.category and self.case_data.category == 'immigration'
+        return self.case_data.category and self.case_data.category == "immigration"

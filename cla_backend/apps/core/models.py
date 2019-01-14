@@ -5,7 +5,7 @@ from .signals import log_user_created, log_user_modified
 
 
 def get_web_user():
-    web_user, created = User.objects.get_or_create(username='web')
+    web_user, created = User.objects.get_or_create(username="web")
     if created:
         web_user.set_unusable_password()
         web_user.save()

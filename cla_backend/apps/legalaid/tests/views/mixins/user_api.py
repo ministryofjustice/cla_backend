@@ -10,26 +10,18 @@ class UserAPIMixin(object):
 
         self.other_users = self.get_other_users()
 
-        self.detail_url = self.get_user_detail_url('me')
+        self.detail_url = self.get_user_detail_url("me")
 
-        self.list_url = reverse('%s:user-list' % self.API_URL_NAMESPACE)
+        self.list_url = reverse("%s:user-list" % self.API_URL_NAMESPACE)
 
     def get_user_password_reset_url(self, username):
-        return reverse('%s:user-password-reset' % self.API_URL_NAMESPACE, args=(),
-                       kwargs={'user__username': username})
+        return reverse("%s:user-password-reset" % self.API_URL_NAMESPACE, args=(), kwargs={"user__username": username})
 
     def get_user_reset_lockout_url(self, username):
-        return reverse(
-            '%s:user-reset-lockout' % self.API_URL_NAMESPACE,
-            args=(),
-            kwargs={'user__username': username}
-        )
+        return reverse("%s:user-reset-lockout" % self.API_URL_NAMESPACE, args=(), kwargs={"user__username": username})
 
     def get_user_detail_url(self, username):
-        return reverse(
-            '%s:user-detail' % self.API_URL_NAMESPACE, args=(),
-            kwargs={'user__username': username}
-        )
+        return reverse("%s:user-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"user__username": username})
 
     def test_methods_not_allowed(self):
         """
@@ -69,19 +61,13 @@ class UserAPIMixin(object):
     # get/me - get/<user>
 
     def test_get_me_allowed(self):
-        response = self.client.get(
-            self.detail_url,
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self.client.get(self.detail_url, HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertUserEqual(response.data)
 
     def test_get_different_user_not_allowed(self):
         detail_url = self.get_user_detail_url(self.other_users[0].user.username)
-        response = self.client.get(
-            detail_url,
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self.client.get(detail_url, HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, self.OTHER_USER_ACCESS_STATUS_CODE)
 
     def test_get_different_user_of_own_organisation_allowed_as_manager(self):
@@ -91,8 +77,7 @@ class UserAPIMixin(object):
 
         detail_url = self.get_user_detail_url(other_user.user.username)
         response = self.client.get(
-            detail_url,
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
+            detail_url, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )
         self.assertEqual(self.provider, other_user.provider)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -101,8 +86,7 @@ class UserAPIMixin(object):
 
     def test_manager_can_list_organisation_users(self):
         response = self.client.get(
-            self.list_url,
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
+            self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         return response
@@ -111,123 +95,101 @@ class UserAPIMixin(object):
 
     def test_manager_can_create_organisation_users(self):
         response = self.client.get(
-            self.list_url,
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
+            self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )
         initial_user_count = len(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         data = {
-            'password': 'foobarbaz1234567890',
-            'username': 'cooldude',
-            'first_name': 'elton',
-            'last_name': 'john',
-            'email': 'example@example.com'
-
+            "password": "foobarbaz1234567890",
+            "username": "cooldude",
+            "first_name": "elton",
+            "last_name": "john",
+            "email": "example@example.com",
         }
 
         response2 = self.client.post(
-            self.list_url,
-            data,
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
+            self.list_url, data, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )
         self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
 
         response3 = self.client.get(
-            self.list_url,
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
+            self.list_url, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )
 
         self.assertEqual(response3.status_code, status.HTTP_200_OK)
-        self.assertEqual(initial_user_count+1, len(response3.data))
+        self.assertEqual(initial_user_count + 1, len(response3.data))
 
     def test_password_length_validation_on_create(self):
 
         data = {
-            'password': 'pw',
-            'username': 'cooldude',
-            'first_name': 'elton',
-            'last_name': 'john',
-            'email': 'example@example.com'
-
+            "password": "pw",
+            "username": "cooldude",
+            "first_name": "elton",
+            "last_name": "john",
+            "email": "example@example.com",
         }
 
         response = self.client.post(
-            self.list_url,
-            data,
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
+            self.list_url, data, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response)
-        self.assertEqual(response.data['password'], [u"Password must be at least 10 characters long."])
+        self.assertEqual(response.data["password"], [u"Password must be at least 10 characters long."])
 
     def test_duplicate_username_validation(self):
         data = {
-            'password': 'pw'*10,
-            'username': 'cooldude',
-            'first_name': 'elton',
-            'last_name': 'john',
-            'email': 'example@example.com'
-
+            "password": "pw" * 10,
+            "username": "cooldude",
+            "first_name": "elton",
+            "last_name": "john",
+            "email": "example@example.com",
         }
 
         response = self.client.post(
-            self.list_url,
-            data,
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
+            self.list_url, data, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response)
 
         response2 = self.client.post(
-            self.list_url,
-            data,
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
+            self.list_url, data, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )
-        self.assertEqual(response2.data['non_field_errors'], ["An account with this username already exists."])
+        self.assertEqual(response2.data["non_field_errors"], ["An account with this username already exists."])
 
     # reset password
 
     def test_reset_password_me(self):
-        reset_url = self.get_user_password_reset_url('me')
+        reset_url = self.get_user_password_reset_url("me")
         me = self.token.user
-        me.set_password('a'*10)
+        me.set_password("a" * 10)
         me.save()
         response = self.client.post(
             reset_url,
-            {
-                'old_password': 'a'*10,
-                'new_password': 'b'*10
-            },
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.token)
+            {"old_password": "a" * 10, "new_password": "b" * 10},
+            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.token),
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_reset_password_me_correct_old_password(self):
-        reset_url = self.get_user_password_reset_url('me')
+        reset_url = self.get_user_password_reset_url("me")
         me = self.token.user
-        me.set_password('a'*10)
+        me.set_password("a" * 10)
         me.save()
         response = self.client.post(
             reset_url,
-            {
-                'old_password': 'a'*10,
-                'new_password': 'b'*10
-            },
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.token)
+            {"old_password": "a" * 10, "new_password": "b" * 10},
+            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.token),
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_reset_password_me_wrong_old_password_not_allowed(self):
-        reset_url = self.get_user_password_reset_url('me')
+        reset_url = self.get_user_password_reset_url("me")
         me = self.token.user
-        me.set_password('a'*10)
+        me.set_password("a" * 10)
         me.save()
         response = self.client.post(
             reset_url,
-            {
-                'old_password': 'z'*10,
-                'new_password': 'b'*10
-            },
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.token)
+            {"old_password": "z" * 10, "new_password": "b" * 10},
+            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.token),
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -241,10 +203,7 @@ class UserAPIMixin(object):
         other_username = other_user.user.username
 
         reset_lockout = self.get_user_reset_lockout_url(other_username)
-        response = self.client.post(
-            reset_lockout,
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.token)
-        )
+        response = self.client.post(reset_lockout, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.token))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_reset_lockout_if_manager(self):
@@ -256,24 +215,19 @@ class UserAPIMixin(object):
 
         # creating AccessAttempts
 
-        AccessAttempt.objects.create_for_username('different_username')
+        AccessAttempt.objects.create_for_username("different_username")
         for index in range(5):
             AccessAttempt.objects.create_for_username(other_username)
 
-        self.assertEqual(
-            AccessAttempt.objects.filter(username=other_username).count(), 5
-        )
+        self.assertEqual(AccessAttempt.objects.filter(username=other_username).count(), 5)
 
         # make request
         reset_lockout = self.get_user_reset_lockout_url(other_username)
         response = self.client.post(
-            reset_lockout,
-            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
+            reset_lockout, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )
 
         # asserts
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-        self.assertEqual(
-            AccessAttempt.objects.filter(username=other_username).count(), 0
-        )
+        self.assertEqual(AccessAttempt.objects.filter(username=other_username).count(), 0)

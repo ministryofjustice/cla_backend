@@ -20,17 +20,14 @@ class EventAPIMixin(object):
         self.detail_url = self.get_detail_url(self.get_event_key())
 
     def get_detail_url(self, action):
-        return reverse(
-            '%s:event-detail' % self.API_URL_NAMESPACE, args=(),
-            kwargs={'action': action}
-        )
+        return reverse("%s:event-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"action": action})
 
     def test_methods_not_allowed(self):
         """
         Ensure that we can't POST, PUT or DELETE
         """
 
-        self.assertRaises(NoReverseMatch, reverse, '%s:event-list' % self.API_URL_NAMESPACE)
+        self.assertRaises(NoReverseMatch, reverse, "%s:event-list" % self.API_URL_NAMESPACE)
 
         # DETAIL
         self._test_post_not_allowed(self.detail_url)
@@ -38,11 +35,7 @@ class EventAPIMixin(object):
         self._test_delete_not_allowed(self.detail_url)
 
     def test_get_using_event_key(self):
-        response = self.client.get(
-            self.detail_url,
-            HTTP_AUTHORIZATION='Bearer %s' % self.token,
-            format='json'
-        )
+        response = self.client.get(self.detail_url, HTTP_AUTHORIZATION="Bearer %s" % self.token, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         action = event_registry.get_event(self.get_event_key())
@@ -50,19 +43,12 @@ class EventAPIMixin(object):
         # building expected response data
         codes = []
         for code, code_data in action.codes.items():
-            codes.append({
-                'code': code,
-                'description': code_data['description']
-            })
+            codes.append({"code": code, "description": code_data["description"]})
         self.assertItemsEqual(response.data, codes)
 
     def test_get_using_wrong_event_key_404(self):
-        detail_url = self.get_detail_url('__wrong__')
-        response = self.client.get(
-            detail_url,
-            HTTP_AUTHORIZATION='Bearer %s' % self.token,
-            format='json'
-        )
+        detail_url = self.get_detail_url("__wrong__")
+        response = self.client.get(detail_url, HTTP_AUTHORIZATION="Bearer %s" % self.token, format="json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_methods_not_authorized(self):
@@ -79,6 +65,7 @@ class ImplicitEventCodeViewTestCaseMixin(object):
 
     The user is not given the possibility to specify an outcome code.
     """
+
     NO_BODY_RESPONSE = True
 
     def setUp(self):
@@ -94,12 +81,9 @@ class ImplicitEventCodeViewTestCaseMixin(object):
         self._test_delete_not_allowed(self.url)
 
     def test_invalid_reference(self):
-        url = self.get_url(reference='invalid')
+        url = self.get_url(reference="invalid")
 
-        response = self.client.post(
-            url, data={}, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
+        response = self.client.post(url, data={}, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_401_if_not_logged_in(self):
@@ -107,12 +91,10 @@ class ImplicitEventCodeViewTestCaseMixin(object):
         self.assertTrue(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def get_default_post_data(self):
-        return {
-            'notes': 'lorem ipsum'
-        }
+        return {"notes": "lorem ipsum"}
 
     def get_expected_notes(self, data):
-        return data['notes']
+        return data["notes"]
 
     def test_successful(self):
         self._test_successful()
@@ -124,10 +106,7 @@ class ImplicitEventCodeViewTestCaseMixin(object):
         if data is None:
             data = self.get_default_post_data()
 
-        response = self.client.post(
-            self.url, data=data, format='json',
-            HTTP_AUTHORIZATION='Bearer %s' % self.token
-        )
+        response = self.client.post(self.url, data=data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
 
         if self.NO_BODY_RESPONSE:
             self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -151,6 +130,7 @@ class ExplicitEventCodeViewTestCaseMixin(ImplicitEventCodeViewTestCaseMixin):
     The user is given the possibility to specify an outcome code from a list of
     valid ones.
     """
+
     def get_event_code(self):
         """
         Should return a __valid__ code for this endpoints.
@@ -159,18 +139,18 @@ class ExplicitEventCodeViewTestCaseMixin(ImplicitEventCodeViewTestCaseMixin):
 
     def get_default_post_data(self):
         data = super(ExplicitEventCodeViewTestCaseMixin, self).get_default_post_data()
-        data['event_code'] = self.get_event_code()
+        data["event_code"] = self.get_event_code()
         return data
 
 
 class LogAPIMixin(NestedSimpleResourceAPIMixin):
-    LOOKUP_KEY = 'reference'
-    API_URL_BASE_NAME = 'log'
-    RESOURCE_RECIPE = 'cla_eventlog.log'
-    LOOKUP_KEY = 'case_reference'
-    PARENT_LOOKUP_KEY = 'reference'
-    PARENT_RESOURCE_RECIPE = 'legalaid.case'
-    PK_FIELD = 'case'
+    LOOKUP_KEY = "reference"
+    API_URL_BASE_NAME = "log"
+    RESOURCE_RECIPE = "cla_eventlog.log"
+    LOOKUP_KEY = "case_reference"
+    PARENT_LOOKUP_KEY = "reference"
+    PARENT_RESOURCE_RECIPE = "legalaid.case"
+    PK_FIELD = "case"
     ONE_TO_ONE_RESOURCE = False
 
     def setup_resources(self):

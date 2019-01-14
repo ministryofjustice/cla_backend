@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 import datetime
 from dateutil.relativedelta import relativedelta
 import logging
@@ -17,9 +17,20 @@ from cla_provider.models import Feedback
 from complaints.models import Complaint
 from diagnosis.models import DiagnosisTraversal
 from legalaid.models import (
-    Case, EligibilityCheck, CaseNotesHistory, Person, Income, Savings,
-    Deductions, PersonalDetails, ThirdPartyDetails, AdaptationDetails,
-    CaseKnowledgebaseAssignment, EODDetails, EODDetailsCategory, Property
+    Case,
+    EligibilityCheck,
+    CaseNotesHistory,
+    Person,
+    Income,
+    Savings,
+    Deductions,
+    PersonalDetails,
+    ThirdPartyDetails,
+    AdaptationDetails,
+    CaseKnowledgebaseAssignment,
+    EODDetails,
+    EODDetailsCategory,
+    Property,
 )
 from timer.models import Timer
 
@@ -28,7 +39,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_pks(qs):
-    return [str(pk) for pk in qs.values_list('pk', flat=True)]
+    return [str(pk) for pk in qs.values_list("pk", flat=True)]
 
 
 class DeleteOldData(Task):
@@ -71,39 +82,25 @@ class DeleteOldData(Task):
         ct = ContentType.objects.get_for_model(qs.model)
         pks = get_pks(qs)
         if pks:
-            logs = Log.objects.filter(
-                content_type_id=ct.pk,
-                object_id__in=pks
-            )
+            logs = Log.objects.filter(content_type_id=ct.pk, object_id__in=pks)
             logs.delete()
-            log_entries = LogEntry.objects.filter(
-                content_type=ct,
-                object_id__in=pks
-            )
+            log_entries = LogEntry.objects.filter(content_type=ct, object_id__in=pks)
             log_entries.delete()
 
     def _delete_objects(self, qs):
-        qs = qs.order_by('pk')
+        qs = qs.order_by("pk")
         self._delete_logs(qs)
 
         name = qs.model.__name__
-        logger.info('Total {name} objects: {count}'.format(
-            count=qs.model.objects.all().count(),
-            name=name))
+        logger.info("Total {name} objects: {count}".format(count=qs.model.objects.all().count(), name=name))
 
-        logger.info('Deleting {count} {name} objects'.format(
-            count=qs.count(),
-            name=name))
-        logger.info('Starting delete of {name}'.format(name=name))
+        logger.info("Deleting {count} {name} objects".format(count=qs.count(), name=name))
+        logger.info("Starting delete of {name}".format(name=name))
         start = time.time()
         qs._raw_delete(qs.db)
-        logger.info('Time to delete {name}: {time}'.format(
-            name=name,
-            time=time.time() - start))
+        logger.info("Time to delete {name}: {time}".format(name=name, time=time.time() - start))
 
-        logger.info('Total {name} objects: {count}'.format(
-            count=qs.model.objects.all().count(),
-            name=name))
+        logger.info("Total {name} objects: {count}".format(count=qs.model.objects.all().count(), name=name))
 
     def cleanup_sessions(self):
         sessions = Session.objects.filter(expire_date__lte=self.now)
@@ -115,9 +112,7 @@ class DeleteOldData(Task):
 
     def cleanup_cases(self):
         two_years = self.now - relativedelta(years=2)
-        cases = Case.objects.filter(
-            modified__lte=two_years,
-        )
+        cases = Case.objects.filter(modified__lte=two_years)
         pks = get_pks(cases)
         from_cases = Case.objects.filter(from_case_id__in=pks)
         fpks = get_pks(from_cases)
@@ -125,23 +120,23 @@ class DeleteOldData(Task):
         self.cleanup_model_from_case(pks, CaseNotesHistory)
         self.cleanup_model_from_case(pks, Log)
         self.cleanup_model_from_case(pks, Feedback)
-        self.cleanup_model_from_case(pks, Timer, 'linked_case', 'timer')
+        self.cleanup_model_from_case(pks, Timer, "linked_case", "timer")
         self.cleanup_model_from_case(pks, CaseKnowledgebaseAssignment)
-        self.cleanup_model_from_case(pks, Complaint, 'eod__case_id')
-        self.cleanup_model_from_case(pks, EODDetailsCategory, 'eod_details__case_id')
+        self.cleanup_model_from_case(pks, Complaint, "eod__case_id")
+        self.cleanup_model_from_case(pks, EODDetailsCategory, "eod_details__case_id")
         self.cleanup_model_from_case(pks, EODDetails)
-        self.cleanup_model_from_case(pks, ReasonForContactingCategory, 'reason_for_contacting__case_id')
+        self.cleanup_model_from_case(pks, ReasonForContactingCategory, "reason_for_contacting__case_id")
         self.cleanup_model_from_case(pks, ReasonForContacting)
         self._delete_objects(from_cases)
         self._delete_objects(cases)
 
-    def cleanup_model_from_case(self, pks, model, attr='case_id', case_log_attr=None):
-        attr_in = '{attribute}__in'.format(attribute=attr)
+    def cleanup_model_from_case(self, pks, model, attr="case_id", case_log_attr=None):
+        attr_in = "{attribute}__in".format(attribute=attr)
         criteria = {attr_in: pks}
         qs = model.objects.filter(**criteria)
         if case_log_attr:
             log_pks = get_pks(qs)
-            log_attr_in = '{attribute}__in'.format(attribute=case_log_attr)
+            log_attr_in = "{attribute}__in".format(attribute=case_log_attr)
             log_criteria = {log_attr_in: log_pks}
             logs = Log.objects.filter(**log_criteria)
             self._delete_objects(logs)
@@ -149,24 +144,18 @@ class DeleteOldData(Task):
 
     def cleanup_diagnosis(self):
         yesterday = self.now - datetime.timedelta(days=10)
-        diags = DiagnosisTraversal.objects.filter(
-            case__isnull=True,
-            modified__lte=yesterday,
-        )
+        diags = DiagnosisTraversal.objects.filter(case__isnull=True, modified__lte=yesterday)
         self._delete_objects(diags)
 
     def cleanup_eligibility_check(self):
         yesterday = self.now - datetime.timedelta(days=10)
-        ecs = EligibilityCheck.objects.filter(
-            case__isnull=True,
-            modified__lte=yesterday,
-        )
+        ecs = EligibilityCheck.objects.filter(case__isnull=True, modified__lte=yesterday)
         pks = get_pks(ecs)
         self.cleanup_model_from_ec(pks, Property)
         self._delete_objects(ecs)
 
-    def cleanup_model_from_ec(self, pks, model, attr='eligibility_check_id'):
-        attr_in = '{attribute}__in'.format(attribute=attr)
+    def cleanup_model_from_ec(self, pks, model, attr="eligibility_check_id"):
+        attr_in = "{attribute}__in".format(attribute=attr)
         criteria = {attr_in: pks}
         qs = model.objects.filter(**criteria)
         self._delete_objects(qs)
@@ -176,28 +165,19 @@ class DeleteOldData(Task):
         self._delete_objects(ps)
         incomes = Income.objects.filter(person__isnull=True)
         self._delete_objects(incomes)
-        savings = Savings.objects.filter(
-            person__isnull=True,
-            eligibilitycheck__isnull=True)
+        savings = Savings.objects.filter(person__isnull=True, eligibilitycheck__isnull=True)
         self._delete_objects(savings)
         deductions = Deductions.objects.filter(person__isnull=True)
         self._delete_objects(deductions)
 
     def cleanup_third_party_details(self):
-        tps = ThirdPartyDetails.objects.filter(
-            case__isnull=True
-        )
+        tps = ThirdPartyDetails.objects.filter(case__isnull=True)
         self._delete_objects(tps)
 
     def cleanup_personal_details(self):
-        pds = PersonalDetails.objects.filter(
-            case__isnull=True,
-            thirdpartydetails__isnull=True
-        )
+        pds = PersonalDetails.objects.filter(case__isnull=True, thirdpartydetails__isnull=True)
         self._delete_objects(pds)
 
     def cleanup_adaptation_details(self):
-        ads = AdaptationDetails.objects.filter(
-            case__isnull=True
-        )
+        ads = AdaptationDetails.objects.filter(case__isnull=True)
         self._delete_objects(ads)

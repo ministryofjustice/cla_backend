@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from __future__ import unicode_literals
 
 from django.db import migrations
@@ -15,10 +15,6 @@ ALTER table cla_eventlog_log SET (
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('cla_eventlog', '0001_initial'),
-    ]
+    dependencies = [("cla_eventlog", "0001_initial")]
 
-    operations = [
-        migrations.RunSQL(sql)
-    ]
+    operations = [migrations.RunSQL(sql)]

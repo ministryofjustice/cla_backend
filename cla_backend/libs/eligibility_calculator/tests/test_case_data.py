@@ -6,7 +6,6 @@ from .fixtures import get_default_case_data
 
 
 class TestCaseData(unittest.TestCase):
-
     def test_total_income_calculation(self):
         default_data = get_default_case_data(
             you__income__earnings=0,
@@ -16,7 +15,7 @@ class TestCaseData(unittest.TestCase):
             you__income__child_benefits=0,
             you__income__maintenance_received=0,
             you__income__pension=60,
-            you__income__other_income=0
+            you__income__other_income=0,
         )
 
         cd = CaseData(**default_data)
@@ -48,33 +47,37 @@ class TestCaseData(unittest.TestCase):
             partner__income__maintenance_received=400,
             partner__income__pension=500,
             partner__income__other_income=6000,
-            facts__has_partner=True
+            facts__has_partner=True,
         )
 
         cd = CaseData(**default_data)
         ti = cd.total_income
         income = cd.you.income
-        gross_income_orig = income.earnings +  \
-            income.self_employment_drawings + \
-            income.benefits + \
-            income.tax_credits + \
-            income.child_benefits + \
-            income.maintenance_received + \
-            income.pension + \
-            income.other_income
-        gross_income_orig += cd.partner.income.earnings + \
-            cd.partner.income.self_employment_drawings + \
-            cd.partner.income.benefits + \
-            cd.partner.income.tax_credits + \
-            cd.partner.income.child_benefits + \
-            cd.partner.income.maintenance_received + \
-            cd.partner.income.pension + \
-            cd.partner.income.other_income
+        gross_income_orig = (
+            income.earnings
+            + income.self_employment_drawings
+            + income.benefits
+            + income.tax_credits
+            + income.child_benefits
+            + income.maintenance_received
+            + income.pension
+            + income.other_income
+        )
+        gross_income_orig += (
+            cd.partner.income.earnings
+            + cd.partner.income.self_employment_drawings
+            + cd.partner.income.benefits
+            + cd.partner.income.tax_credits
+            + cd.partner.income.child_benefits
+            + cd.partner.income.maintenance_received
+            + cd.partner.income.pension
+            + cd.partner.income.other_income
+        )
         self.assertEqual(gross_income_orig, ti)
         self.assertEqual(combined_income, ti)
 
     def test_bad_property_set_exception(self):
-        cdd = get_default_case_data(foo='bar', bar__baz=24)
+        cdd = get_default_case_data(foo="bar", bar__baz=24)
         with self.assertRaises(PropertyExpectedException):
             CaseData(**cdd)
 
@@ -128,32 +131,28 @@ class TestCaseData(unittest.TestCase):
             partner__income__maintenance_received=400,
             partner__income__pension=500,
             partner__income__other_income=2,
-            facts__has_partner=True
+            facts__has_partner=True,
         )
         cd = CaseData(**cdd)
         self.assertEqual(267512, cd.total_income)
 
     def test_is_partner_disputed_true(self):
-        cdd = get_default_case_data(facts__has_partner=True,
-                                    facts__is_partner_opponent=True)
+        cdd = get_default_case_data(facts__has_partner=True, facts__is_partner_opponent=True)
         cd = CaseData(**cdd)
         self.assertTrue(cd.facts.has_disputed_partner)
 
     def test_is_partner_disputed_false(self):
-        cdd = get_default_case_data(facts__has_partner=False,
-                                    facts__is_partner_opponent=True)
+        cdd = get_default_case_data(facts__has_partner=False, facts__is_partner_opponent=True)
         cd = CaseData(**cdd)
         self.assertFalse(cd.facts.has_disputed_partner)
 
     def test_is_partner_disputed_not_opponent(self):
-        cdd = get_default_case_data(facts__has_partner=True,
-                                    facts__is_partner_opponent=False)
+        cdd = get_default_case_data(facts__has_partner=True, facts__is_partner_opponent=False)
         cd = CaseData(**cdd)
         self.assertFalse(cd.facts.has_disputed_partner)
 
     def test_is_partner_disputed_no_partner_not_opponent(self):
-        cdd = get_default_case_data(facts__has_partner=False,
-                                    facts__is_partner_opponent=False)
+        cdd = get_default_case_data(facts__has_partner=False, facts__is_partner_opponent=False)
         cd = CaseData(**cdd)
         self.assertFalse(cd.facts.has_disputed_partner)
 
@@ -166,7 +165,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__bank_balance=0,
             partner__savings__credit_balance=0,
             partner__savings__asset_balance=0,
-            partner__savings__investment_balance=0
+            partner__savings__investment_balance=0,
         )
         cd = CaseData(**cdd)
         self.assertEqual(0, cd.non_disputed_liquid_capital)
@@ -180,7 +179,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__bank_balance=0,
             partner__savings__credit_balance=0,
             partner__savings__asset_balance=0,
-            partner__savings__investment_balance=0
+            partner__savings__investment_balance=0,
         )
         cd = CaseData(**cdd)
         self.assertEqual(10000, cd.non_disputed_liquid_capital)
@@ -194,7 +193,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__bank_balance=0,
             partner__savings__credit_balance=0,
             partner__savings__asset_balance=0,
-            partner__savings__investment_balance=0
+            partner__savings__investment_balance=0,
         )
         cd = CaseData(**cdd)
         self.assertEqual(10010, cd.non_disputed_liquid_capital)
@@ -208,7 +207,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__bank_balance=0,
             partner__savings__credit_balance=0,
             partner__savings__asset_balance=0,
-            partner__savings__investment_balance=0
+            partner__savings__investment_balance=0,
         )
         cd = CaseData(**cdd)
         self.assertEqual(11000, cd.non_disputed_liquid_capital)
@@ -222,7 +221,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__bank_balance=0,
             partner__savings__credit_balance=0,
             partner__savings__asset_balance=0,
-            partner__savings__investment_balance=0
+            partner__savings__investment_balance=0,
         )
         cd = CaseData(**cdd)
         self.assertEqual(15000, cd.non_disputed_liquid_capital)
@@ -253,7 +252,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__credit_balance=0,
             partner__savings__asset_balance=0,
             partner__savings__investment_balance=0,
-            facts__has_partner=True
+            facts__has_partner=True,
         )
         cd = CaseData(**cdd)
         self.assertEqual(10001, cd.non_disputed_liquid_capital)
@@ -268,7 +267,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__credit_balance=20,
             partner__savings__asset_balance=0,
             partner__savings__investment_balance=0,
-            facts__has_partner=True
+            facts__has_partner=True,
         )
         cd = CaseData(**cdd)
         self.assertEqual(10020, cd.non_disputed_liquid_capital)
@@ -283,7 +282,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__credit_balance=0,
             partner__savings__asset_balance=0,
             partner__savings__investment_balance=0,
-            facts__has_partner=True
+            facts__has_partner=True,
         )
         cd = CaseData(**cdd)
         self.assertEqual(10010, cd.non_disputed_liquid_capital)
@@ -298,7 +297,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__credit_balance=0,
             partner__savings__asset_balance=0,
             partner__savings__investment_balance=0,
-            facts__has_partner=True
+            facts__has_partner=True,
         )
         cd = CaseData(**cdd)
         self.assertEqual(15000, cd.non_disputed_liquid_capital)
@@ -313,7 +312,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__credit_balance=0,
             partner__savings__asset_balance=0,
             partner__savings__investment_balance=100,
-            facts__has_partner=True
+            facts__has_partner=True,
         )
         cd = CaseData(**cdd)
         self.assertEqual(10100, cd.non_disputed_liquid_capital)
@@ -328,7 +327,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__credit_balance=0,
             partner__savings__asset_balance=0,
             partner__savings__investment_balance=100,
-            facts__has_partner=True
+            facts__has_partner=True,
         )
         cd = CaseData(**cdd)
         self.assertEqual(100, cd.non_disputed_liquid_capital)
@@ -343,7 +342,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__credit_balance=0,
             partner__savings__asset_balance=0,
             partner__savings__investment_balance=0,
-            facts__has_partner=True
+            facts__has_partner=True,
         )
         cd = CaseData(**cdd)
         self.assertEqual(200, cd.non_disputed_liquid_capital)
@@ -382,8 +381,8 @@ class TestCaseData(unittest.TestCase):
                 partner__savings__credit_balance=steps[5],
                 partner__savings__asset_balance=steps[6],
                 partner__savings__investment_balance=steps[7],
-                facts__has_partner=True
-                )
+                facts__has_partner=True,
+            )
             cd = CaseData(**cdd)
             self.assertEqual(sum(steps), cd.non_disputed_liquid_capital)
 
@@ -404,7 +403,7 @@ class TestCaseData(unittest.TestCase):
                 partner__savings__credit_balance=steps[1],
                 partner__savings__asset_balance=steps[2],
                 partner__savings__investment_balance=steps[3],
-                facts__has_partner=True
+                facts__has_partner=True,
             )
             cd = CaseData(**cdd)
             self.assertEqual(sum(steps), cd.non_disputed_liquid_capital)

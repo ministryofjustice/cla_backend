@@ -9,10 +9,8 @@ class DiagnosisTraversalManagerTestCase(TestCase):
     def test_create_eligible(self):
         self.assertEqual(DiagnosisTraversal.objects.count(), 0)
 
-        category = make_recipe('legalaid.category')
-        diagnosis = DiagnosisTraversal.objects.create_eligible(
-            category=category
-        )
+        category = make_recipe("legalaid.category")
+        diagnosis = DiagnosisTraversal.objects.create_eligible(category=category)
 
         self.assertEqual(DiagnosisTraversal.objects.count(), 1)
 

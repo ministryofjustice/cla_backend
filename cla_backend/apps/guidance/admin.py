@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from django.contrib import admin
 
 from .admin_support.forms import NoteModelForm
@@ -10,11 +10,11 @@ class TagInline(admin.TabularInline):
 
 
 class NoteAdmin(admin.ModelAdmin):
-    ordering = ['title']
+    ordering = ["title"]
 
-    exclude = ('created', 'modified', 'body')
-    list_display = ('name', 'title', 'modified', 'created')
-    search_fields = ['title']
+    exclude = ("created", "modified", "body")
+    list_display = ("name", "title", "modified", "created")
+    search_fields = ["title"]
     prepopulated_fields = {"name": ("title",)}
     inlines = [TagInline]
     form = NoteModelForm

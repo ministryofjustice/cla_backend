@@ -18,13 +18,13 @@ logger = logging.getLogger(__name__)
 
 
 class DiagnosisSerializer(ClaModelSerializer):
-    choices = SerializerMethodField('get_choices')
-    nodes = SerializerMethodField('get_nodes')
+    choices = SerializerMethodField("get_choices")
+    nodes = SerializerMethodField("get_nodes")
     current_node_id = ChoiceField(choices=[])
-    category = SlugRelatedField('category', slug_field='code', required=False)
-    matter_type1 = SlugRelatedField('matter_type1', slug_field='code', required=False)
-    matter_type2 = SlugRelatedField('matter_type2', slug_field='code', required=False)
-    version_in_conflict = SerializerMethodField('is_version_in_conflict')
+    category = SlugRelatedField("category", slug_field="code", required=False)
+    matter_type1 = SlugRelatedField("matter_type1", slug_field="code", required=False)
+    matter_type2 = SlugRelatedField("matter_type2", slug_field="code", required=False)
+    version_in_conflict = SerializerMethodField("is_version_in_conflict")
 
     def __init__(self, *args, **kwargs):
         # self.full_nodes_dump = kwargs.pop('full', False)
@@ -32,10 +32,8 @@ class DiagnosisSerializer(ClaModelSerializer):
         self.graph = self._get_graph()
 
         nodes_choices = self._get_nodes()
-        self.fields['current_node_id'].choices = [
-            (node['id'], node['label']) for node in nodes_choices
-        ]
-        self.fields['current_node_id'].required = bool(nodes_choices)
+        self.fields["current_node_id"].choices = [(node["id"], node["label"]) for node in nodes_choices]
+        self.fields["current_node_id"].required = bool(nodes_choices)
 
     def _get_graph(self):
         return graph
@@ -47,7 +45,7 @@ class DiagnosisSerializer(ClaModelSerializer):
         if not self.object.is_state_unknown():
             return False
 
-        return self.object.graph_version != self.graph.graph['version']
+        return self.object.graph_version != self.graph.graph["version"]
 
     def get_choices(self, request):
         return self._get_nodes()
@@ -72,25 +70,25 @@ class DiagnosisSerializer(ClaModelSerializer):
         if not self.object or not self.object.is_state_unknown():
             return []
 
-        current_node_id = self.object.current_node_id or 'start'
+        current_node_id = self.object.current_node_id or "start"
 
         # populating choices
         children = self.graph.successors(current_node_id)
         nodes = []
         for child_id in children:
             node = self.graph.node[child_id].copy()
-            node['id'] = child_id
+            node["id"] = child_id
             nodes.append(node)
         # nodes = [(node_id, self.graph.node[node_id])
         #          for node_id in children]
-        nodes = sorted(nodes, key=lambda x: x['order'])
+        nodes = sorted(nodes, key=lambda x: x["order"])
         return nodes
 
     def get_context(self, obj):
         context = {}
         if obj.nodes:
             for node in obj.nodes:
-                context.update(node['context'] or {})
+                context.update(node["context"] or {})
         return context
 
     def _get_from_context(self, context, node_id):
@@ -101,9 +99,7 @@ class DiagnosisSerializer(ClaModelSerializer):
                 except Category.DoesNotExist:
                     # this should never happen as we unit test the diagnosis graph
                     logger.warning(
-                        u'Category %s for diagnosis node id=%s not a valid option' % (
-                            category_code, node_id
-                        )
+                        u"Category %s for diagnosis node id=%s not a valid option" % (category_code, node_id)
                     )
             return None
 
@@ -114,32 +110,28 @@ class DiagnosisSerializer(ClaModelSerializer):
                 except MatterType.DoesNotExist:
                     # this should never happen as we unit test the diagnosis graph
                     logger.warning(
-                        u'MatterType %s for diagnosis node id=%s not a valid option' % (
-                            matter_type_code, node_id
-                        )
+                        u"MatterType %s for diagnosis node id=%s not a valid option" % (matter_type_code, node_id)
                     )
             return None
 
-        category_code = context.get('category')
-        matter_type1_code = context.get('matter-type-1')
-        matter_type2_code = context.get('matter-type-2')
+        category_code = context.get("category")
+        matter_type1_code = context.get("matter-type-1")
+        matter_type2_code = context.get("matter-type-2")
 
         return {
-            'category': get_category(category_code, node_id),
-            'matter_type1': get_matter_type(matter_type1_code, node_id),
-            'matter_type2': get_matter_type(matter_type2_code, node_id),
+            "category": get_category(category_code, node_id),
+            "matter_type1": get_matter_type(matter_type1_code, node_id),
+            "matter_type2": get_matter_type(matter_type2_code, node_id),
         }
 
     def _set_state(self, obj):
         if is_terminal(self.graph, obj.current_node_id):
             obj.state = get_node_scope_value(self.graph, obj.current_node_id)
 
-            context_data = self._get_from_context(
-                self.get_context(obj), obj.current_node_id
-            )
-            obj.category = context_data['category']
-            obj.matter_type1 = context_data['matter_type1']
-            obj.matter_type2 = context_data['matter_type2']
+            context_data = self._get_from_context(self.get_context(obj), obj.current_node_id)
+            obj.category = context_data["category"]
+            obj.matter_type1 = context_data["matter_type1"]
+            obj.matter_type2 = context_data["matter_type2"]
         else:
             obj.state = DIAGNOSIS_SCOPE.UNKNOWN
             obj.category = None
@@ -149,17 +141,14 @@ class DiagnosisSerializer(ClaModelSerializer):
     def process_obj(self, obj):
         if obj.current_node_id:
             current_node = self.graph.node[obj.current_node_id]
-            current_node['id'] = obj.current_node_id
+            current_node["id"] = obj.current_node_id
 
-            current_node = dict(map(
-                lambda (key, value): (key, eval_promise(value)),
-                current_node.items()
-            ))
+            current_node = dict(map(lambda item: (item[0], eval_promise(item[1])), current_node.items()))
 
             # delete all nodes after current_node_id and add current not
             nodes = []
-            for node in (obj.nodes or []):
-                if node['id'] == obj.current_node_id:
+            for node in obj.nodes or []:
+                if node["id"] == obj.current_node_id:
                     break
                 nodes.append(node)
 
@@ -175,7 +164,7 @@ class DiagnosisSerializer(ClaModelSerializer):
 
     def save_object(self, obj, **kwargs):
         if not obj.graph_version:
-            obj.graph_version = self.graph.graph['version']
+            obj.graph_version = self.graph.graph["version"]
 
         # if obj.current_node_id:
         self.process_obj(obj)
@@ -197,13 +186,13 @@ class DiagnosisSerializer(ClaModelSerializer):
             raise ParseError("Cannot move up, no nodes found")
 
         if nodes_count == 1:  # root node => 'reset' the traversal
-            self.object.current_node_id = ''  # :-/
+            self.object.current_node_id = ""  # :-/
         else:
-            pre_node_id = nodes[-2]['id']
+            pre_node_id = nodes[-2]["id"]
 
             # if current node is end node => move up 2 nodes
             if is_pre_end_node(self.graph, pre_node_id) and nodes_count > 2:
-                pre_node_id = nodes[-3]['id']
+                pre_node_id = nodes[-3]["id"]
 
             self.object.current_node_id = pre_node_id
 
@@ -213,12 +202,14 @@ class DiagnosisSerializer(ClaModelSerializer):
 
     class Meta(object):
         model = DiagnosisTraversal
-        fields = ('reference',
-                  'nodes',
-                  'choices',
-                  'current_node_id',
-                  'state',
-                  'category',
-                  'matter_type1',
-                  'matter_type2',
-                  'version_in_conflict')
+        fields = (
+            "reference",
+            "nodes",
+            "choices",
+            "current_node_id",
+            "state",
+            "category",
+            "matter_type1",
+            "matter_type2",
+            "version_in_conflict",
+        )

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 import datetime
 import pytz
 from model_mommy.recipe import Recipe, seq
@@ -22,17 +22,9 @@ def hours_in_future():
     return now() + datetime.timedelta(hours=2)
 
 
-notification = Recipe(
-    Notification,
-    notification=seq('Notification'),
-    start_time=hour_in_past,
-    end_time=hour_in_future
-)
+notification = Recipe(Notification, notification=seq("Notification"), start_time=hour_in_past, end_time=hour_in_future)
 
 
 notification_out_of_time = Recipe(
-    Notification,
-    notification=seq('Notification'),
-    start_time=hour_in_future,
-    end_time=hours_in_future
+    Notification, notification=seq("Notification"), start_time=hour_in_future, end_time=hours_in_future
 )

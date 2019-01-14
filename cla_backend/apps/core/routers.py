@@ -18,28 +18,27 @@ class SingletonRouter(DefaultRouter):
      * prefix/<method>/
         used for @action and @link methods (NOTE: not tested yet)
     """
+
     routes = [
         # List route.
         Route(
-            url=r'^{prefix}{trailing_slash}$',
+            url=r"^{prefix}{trailing_slash}$",
             mapping={
-                'get': 'retrieve',
-                'post': 'create',
-                'put': 'update',
-                'patch': 'partial_update',
-                'delete': 'destroy'
+                "get": "retrieve",
+                "post": "create",
+                "put": "update",
+                "patch": "partial_update",
+                "delete": "destroy",
             },
-            name='{basename}-detail',
-            initkwargs={'suffix': 'Instance'}
+            name="{basename}-detail",
+            initkwargs={"suffix": "Instance"},
         ),
         # Dynamically generated routes.
         # Generated using @action or @link decorators on methods of the viewset
         Route(
-            url=r'^{prefix}/{methodname}{trailing_slash}$',
-            mapping={
-                '{httpmethod}': '{methodname}',
-            },
-            name='{basename}-{methodnamehyphen}',
-            initkwargs={}
+            url=r"^{prefix}/{methodname}{trailing_slash}$",
+            mapping={"{httpmethod}": "{methodname}"},
+            name="{basename}-{methodnamehyphen}",
+            initkwargs={},
         ),
     ]

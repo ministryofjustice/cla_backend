@@ -18,7 +18,7 @@ from cla_common.constants import FEEDBACK_ISSUE
 from .signals import log_staff_created, log_staff_modified
 
 
-random_uuid_str = lambda: str(uuid.uuid4())
+random_uuid_str = lambda: str(uuid.uuid4())  # noqa: E731
 
 
 class ProviderManager(models.Manager):
@@ -29,8 +29,7 @@ class ProviderManager(models.Manager):
 class Provider(TimeStampedModel):
     name = models.CharField(max_length=255)
     opening_hours = models.CharField(max_length=100, blank=True)
-    law_category = models.ManyToManyField('legalaid.Category',
-                                          through='ProviderAllocation')
+    law_category = models.ManyToManyField("legalaid.Category", through="ProviderAllocation")
     active = models.BooleanField(default=False)
     short_code = models.CharField(max_length=100, blank=True)
     telephone_frontdoor = models.CharField(max_length=100, blank=True)
@@ -41,7 +40,7 @@ class Provider(TimeStampedModel):
     objects = ProviderManager()
 
     def __unicode__(self):
-        return u'%s' % self.name
+        return u"%s" % self.name
 
 
 class ProviderAllocationManager(models.Manager):
@@ -54,17 +53,16 @@ class ProviderAllocationManager(models.Manager):
 
 class ProviderAllocation(TimeStampedModel):
     provider = models.ForeignKey(Provider)
-    category = models.ForeignKey('legalaid.Category')
+    category = models.ForeignKey("legalaid.Category")
     weighted_distribution = models.FloatField()  # see XXXXXXXXXXXX
 
     objects = ProviderAllocationManager()
 
     def __unicode__(self):
-        return u'%s provides %s' % (self.provider, self.category)
+        return u"%s provides %s" % (self.provider, self.category)
 
 
 class ProviderPreAllocationManager(models.Manager):
-
     def get_queryset(self):
         super(ProviderPreAllocationManager, self).get_queryset().filter(
             created__lte=timezone.now() - timedelta(seconds=60)
@@ -86,27 +84,42 @@ class ProviderPreAllocationManager(models.Manager):
 
 class ProviderPreAllocation(TimeStampedModel):
     provider = models.ForeignKey(Provider)
-    category = models.ForeignKey('legalaid.Category')
-    case = models.ForeignKey('legalaid.Case')
+    category = models.ForeignKey("legalaid.Category")
+    case = models.ForeignKey("legalaid.Case")
 
     objects = ProviderPreAllocationManager()
 
 
 class Staff(TimeStampedModel):
-    user = models.OneToOneField('auth.User')
+    user = models.OneToOneField("auth.User")
     provider = models.ForeignKey(Provider)
     is_manager = models.BooleanField(default=False)
 
-    chs_organisation = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
-    chs_user = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
-    chs_password = models.CharField(max_length=500, help_text='Fake field to mirror old CHS extract, user can set this to whatever they like', blank=True, null=True)
+    chs_organisation = models.CharField(
+        max_length=500,
+        help_text="Fake field to mirror old CHS extract, user can set this to whatever they like",
+        blank=True,
+        null=True,
+    )
+    chs_user = models.CharField(
+        max_length=500,
+        help_text="Fake field to mirror old CHS extract, user can set this to whatever they like",
+        blank=True,
+        null=True,
+    )
+    chs_password = models.CharField(
+        max_length=500,
+        help_text="Fake field to mirror old CHS extract, user can set this to whatever they like",
+        blank=True,
+        null=True,
+    )
 
     def set_chs_password(self, raw_password):
         self.chs_password = make_password(raw_password)
 
     class Meta(object):
         unique_together = (("chs_organisation", "chs_user"),)
-        verbose_name_plural = 'staff'
+        verbose_name_plural = "staff"
 
     def __unicode__(self):
         return self.user.username
@@ -120,29 +133,27 @@ class Staff(TimeStampedModel):
 
 class OutOfHoursRotaManager(models.Manager):
     def get_current(self, category, as_of=None):
-        if not as_of: as_of = timezone.localtime(timezone.now())
+        if not as_of:
+            as_of = timezone.localtime(timezone.now())
 
-        return self.get_queryset().get(category=category,
-                                       start_date__lte=as_of,
-                                       end_date__gte=as_of)
+        return self.get_queryset().get(category=category, start_date__lte=as_of, end_date__gte=as_of)
 
 
 class OutOfHoursRota(TimeStampedModel):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    category = models.ForeignKey('legalaid.Category')
+    category = models.ForeignKey("legalaid.Category")
     provider = models.ForeignKey(Provider)
 
     objects = OutOfHoursRotaManager()
 
     def __unicode__(self):
-        return u'%s provides out of hours service for %s between %s - %s' \
-               % (
-                   self.provider,
-                   self.category.code,
-                   self.start_date,
-                   self.end_date
-               )
+        return u"%s provides out of hours service for %s between %s - %s" % (
+            self.provider,
+            self.category.code,
+            self.start_date,
+            self.end_date,
+        )
 
     def clean(self):
         if not self.end_date > self.start_date:
@@ -152,25 +163,24 @@ class OutOfHoursRota(TimeStampedModel):
         # is not able to provide.
         if self.category not in self.provider.law_category.all():
             raise ValidationError(
-                _(u"Provider {provider} doesn't offer help for {category}")
-                .format(provider=self.provider, category=self.category))
+                _(u"Provider {provider} doesn't offer help for {category}").format(
+                    provider=self.provider, category=self.category
+                )
+            )
 
-        overlapping = self.__class__._default_manager.filter(
-            Q(start_date__range=[self.start_date, self.end_date]) |
-            Q(end_date__range=[self.start_date, self.end_date]),
-            category=self.category,
-        )
+        start_range = Q(start_date__range=[self.start_date, self.end_date])
+        end_range = Q(end_date__range=[self.start_date, self.end_date])
+        overlapping = self.__class__._default_manager.filter(start_range | end_range, category=self.category)
         if self.pk:
             overlapping = overlapping.exclude(pk=self.pk)
 
         if overlapping:
-            raise ValidationError(
-                _(u"Overlapping rota allocation not allowed"))
+            raise ValidationError(_(u"Overlapping rota allocation not allowed"))
 
 
 class Feedback(TimeStampedModel):
     reference = UUIDField(auto=True, unique=True)
-    case = models.ForeignKey('legalaid.Case', related_name='provider_feedback')
+    case = models.ForeignKey("legalaid.Case", related_name="provider_feedback")
 
     created_by = models.ForeignKey(Staff)
     comment = models.TextField()
@@ -190,9 +200,7 @@ class CSVUpload(TimeStampedModel):
     month = models.DateField(validators=[validate_first_of_month])
 
     class Meta(object):
-        unique_together = [
-            ['provider', 'month']
-        ]
+        unique_together = [["provider", "month"]]
 
 
 post_save.connect(log_staff_created, sender=Staff)

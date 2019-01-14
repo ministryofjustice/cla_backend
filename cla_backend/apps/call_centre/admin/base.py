@@ -2,8 +2,7 @@ from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 
 from core.admin.modeladmin import OneToOneUserAdmin
-from .forms import OperatorAdminForm, FullOperatorAdminForm, \
-    CaseworkerAdminForm
+from .forms import OperatorAdminForm, FullOperatorAdminForm, CaseworkerAdminForm
 from ..models import Operator, Caseworker
 
 
@@ -12,14 +11,15 @@ class OperatorAdmin(OneToOneUserAdmin):
     simple_op_form = OperatorAdminForm
     full_op_form = FullOperatorAdminForm
     list_display = (
-        'username_display', 'email_display',
-        'first_name_display', 'last_name_display',
-        'is_active_display', 'is_manager', 'is_cla_superuser'
+        "username_display",
+        "email_display",
+        "first_name_display",
+        "last_name_display",
+        "is_active_display",
+        "is_manager",
+        "is_cla_superuser",
     )
-    search_fields = [
-        'user__username',
-        'user__first_name', 'user__last_name', 'user__email'
-    ]
+    search_fields = ["user__username", "user__first_name", "user__last_name", "user__email"]
 
     def _is_loggedin_superuser(self, request):
         user = request.user
@@ -72,14 +72,13 @@ class CaseworkerAdmin(OneToOneUserAdmin):
     actions = None
     form = CaseworkerAdminForm
     list_display = (
-        'username_display', 'email_display',
-        'first_name_display', 'last_name_display',
-        'is_active_display',
+        "username_display",
+        "email_display",
+        "first_name_display",
+        "last_name_display",
+        "is_active_display",
     )
-    search_fields = [
-        'user__username',
-        'user__first_name', 'user__last_name', 'user__email'
-    ]
+    search_fields = ["user__username", "user__first_name", "user__last_name", "user__email"]
 
     def _is_loggedin_superuser(self, request):
         user = request.user
@@ -110,7 +109,6 @@ class CaseworkerAdmin(OneToOneUserAdmin):
         # if logged-in user is django superuser or cla superuser do what you want
         if self._is_loggedin_superuser(request):
             return True
-
 
         if obj and request.user == obj.user:
             return True

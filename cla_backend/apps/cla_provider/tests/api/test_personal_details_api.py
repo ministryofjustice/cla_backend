@@ -6,22 +6,13 @@ from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 
 from cla_common.constants import REQUIRES_ACTION_BY
 
-from legalaid.tests.views.mixins.personal_details_api import \
-    PersonalDetailsAPIMixin
+from legalaid.tests.views.mixins.personal_details_api import PersonalDetailsAPIMixin
 
 
-class PersonalDetailsTestCase(
-    CLAProviderAuthBaseApiTestMixin, PersonalDetailsAPIMixin, APITestCase
-):
-
+class PersonalDetailsTestCase(CLAProviderAuthBaseApiTestMixin, PersonalDetailsAPIMixin, APITestCase):
     def make_parent_resource(self, **kwargs):
-        kwargs.update({
-            'provider': self.provider,
-            'requires_action_by': REQUIRES_ACTION_BY.PROVIDER
-        })
-        return super(PersonalDetailsTestCase, self).make_parent_resource(
-            **kwargs
-        )
+        kwargs.update({"provider": self.provider, "requires_action_by": REQUIRES_ACTION_BY.PROVIDER})
+        return super(PersonalDetailsTestCase, self).make_parent_resource(**kwargs)
 
     # SECURITY
 
@@ -30,20 +21,14 @@ class PersonalDetailsTestCase(
         self.parent_resource.requires_action_by = REQUIRES_ACTION_BY.OPERATOR
         self.parent_resource.save()
 
-        response = self.client.get(
-            self.detail_url, format='json',
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self.client.get(self.detail_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_not_found_if_belonging_to_different_provider(self):
-        other_provider = make_recipe('cla_provider.provider')
+        other_provider = make_recipe("cla_provider.provider")
 
         self.parent_resource.provider = other_provider
         self.parent_resource.save()
 
-        response = self.client.get(
-            self.detail_url, format='json',
-            HTTP_AUTHORIZATION=self.get_http_authorization()
-        )
+        response = self.client.get(self.detail_url, format="json", HTTP_AUTHORIZATION=self.get_http_authorization())
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

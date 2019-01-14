@@ -18,16 +18,16 @@ class ThreePartDateField(serializers.WritableField):
         }
     """
 
-    type_name = 'ThreePartDateField'
-    type_label = 'date'
+    type_name = "ThreePartDateField"
+    type_label = "date"
 
     default_error_messages = {
-        'invalid':
-            # Translators: '{ "day": 25, "month": 12, "year": 2012 }' should be left in as-is
-            _('Date field has wrong format. Use { "day": 25, "month": 12, "year": 2012 }'),
+        "invalid":
+        # Translators: '{ "day": 25, "month": 12, "year": 2012 }' should be left in as-is
+        _('Date field has wrong format. Use { "day": 25, "month": 12, "year": 2012 }')
     }
 
-    def from_native(self, value):
+    def from_native(self, value):  # noqa: C901
         """c
         Parse json data and return a date object
         """
@@ -40,7 +40,7 @@ class ThreePartDateField(serializers.WritableField):
                 value = value.replace("'", '"')
                 value = json.loads(value)
             except ValueError:
-                msg = self.error_messages['invalid']
+                msg = self.error_messages["invalid"]
                 raise serializers.ValidationError(msg)
 
         if value:
@@ -55,11 +55,11 @@ class ThreePartDateField(serializers.WritableField):
                     raise serializers.ValidationError(ve)
 
                 if int(year) < 1900:
-                    raise serializers.ValidationError('year must be >= 1900')
+                    raise serializers.ValidationError("year must be >= 1900")
                 return dt_object
             elif not all([day, month, year]):
                 return None
-            msg = self.error_messages['invalid']
+            msg = self.error_messages["invalid"]
             raise serializers.ValidationError(msg)
 
     def to_native(self, value):
@@ -70,9 +70,5 @@ class ThreePartDateField(serializers.WritableField):
             return value
 
         if isinstance(value, datetime.date):
-            value = {
-                "year": str(value.year),
-                "month": str(value.month),
-                "day": str(value.day)
-            }
+            value = {"year": str(value.year), "month": str(value.month), "day": str(value.day)}
         return value

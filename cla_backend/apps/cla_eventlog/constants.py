@@ -6,21 +6,21 @@ LOG_LEVELS = Choices(
     # Events with level >= HIGH are denormalised on the
     # case as well and 'mark' the progress of a case
     # indirectly
-    ('HIGH', 29, 'HIGH'),
-    ('MODERATE', 21, 'MODERATE'),
-    ('MINOR', 11, 'MINOR'),
+    ("HIGH", 29, "HIGH"),
+    ("MODERATE", 21, "MODERATE"),
+    ("MINOR", 11, "MINOR"),
 )
 
 LOG_TYPES = Choices(
     # constant, db_id, friendly string
-    ('OUTCOME', 'outcome', 'outcome'),  # codes that CLA understands and uses. E.g. CLSP
-    ('SYSTEM', 'system', 'system'),  # system codes, somethimes shown to users as well. E.g. CASE_CREATED
-    ('EVENT', 'event', 'event')
+    ("OUTCOME", "outcome", "outcome"),  # codes that CLA understands and uses. E.g. CLSP
+    ("SYSTEM", "system", "system"),  # system codes, somethimes shown to users as well. E.g. CASE_CREATED
+    ("EVENT", "event", "event"),
 )
 
 LOG_ROLES = Choices(
     # constant, db_id, friendly string
     # Not currently used.
-    ('OPERATOR', 'operator', 'operator'),
-    ('SPECIALIST', 'specialist', 'special')
+    ("OPERATOR", "operator", "operator"),
+    ("SPECIALIST", "specialist", "special"),
 )

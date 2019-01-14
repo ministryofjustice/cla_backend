@@ -11,7 +11,7 @@ class ArticleCategoryFilter(django_filters.FilterSet):
 
     class Meta(object):
         model = Article
-        fields = ('article_category',)
+        fields = ("article_category",)
 
 
 class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
@@ -19,22 +19,25 @@ class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ArticleSerializer
 
     paginate_by = 20
-    paginate_by_param = 'page_size'
+    paginate_by_param = "page_size"
     max_paginate_by = 100
 
-    filter_backends = (
-        filters.SearchFilter,
-        filters.DjangoFilterBackend,
-        filters.OrderingFilter
-    )
+    filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
 
     filter_class = ArticleCategoryFilter
 
-    ordering = ('-articlecategorymatrix__preferred_signpost',)
+    ordering = ("-articlecategorymatrix__preferred_signpost",)
 
-    search_fields = ('organisation', 'service_name', 'description',
-                     'keywords', 'when_to_use', 'type_of_service',
-                     'address', 'article_category__name')
+    search_fields = (
+        "organisation",
+        "service_name",
+        "description",
+        "keywords",
+        "when_to_use",
+        "type_of_service",
+        "address",
+        "article_category__name",
+    )
 
 
 class BaseArticleCategoryViewSet(viewsets.ReadOnlyModelViewSet):

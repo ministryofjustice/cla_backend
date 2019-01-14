@@ -1,10 +1,15 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from datetime import timedelta
 from django.utils import timezone
 from django.conf import settings
 
-from cla_common.call_centre_availability import SLOT_INTERVAL_MINS, OpeningHours, \
-    available_days, on_sunday, on_bank_holiday
+from cla_common.call_centre_availability import (
+    SLOT_INTERVAL_MINS,
+    OpeningHours,
+    available_days,
+    on_sunday,
+    on_bank_holiday,
+)
 
 
 operator_hours = OpeningHours(**settings.OPERATOR_HOURS)
@@ -34,8 +39,7 @@ def get_next_business_day(start_date):
 def get_sla_time(start_time, minutes_delta):
     next_business_day = get_next_business_day(start_time.date())
     start_of_next_business_day = operator_hours.time_slots(next_business_day.date())[0]
-    start_of_next_business_day = timezone.make_aware(start_of_next_business_day,
-        timezone.get_default_timezone())
+    start_of_next_business_day = timezone.make_aware(start_of_next_business_day, timezone.get_default_timezone())
 
     if not is_in_business_hours(start_time):
         start_time = start_of_next_business_day
@@ -44,7 +48,7 @@ def get_sla_time(start_time, minutes_delta):
     in_business_hours = is_in_business_hours(simple_delta)
     if not in_business_hours:
         remainder_delta = get_remainder_from_end_of_day(start_time.date(), simple_delta)
-        return get_sla_time(start_of_next_business_day, remainder_delta.total_seconds() // 60 )
+        return get_sla_time(start_of_next_business_day, remainder_delta.total_seconds() // 60)
     return simple_delta
 
 

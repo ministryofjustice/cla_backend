@@ -119,18 +119,14 @@ class BaseEvent(object):
         - register the event
         - use one of the cla_eventlog.forms depending on the type of Event
     """
-    key = ''
+
+    key = ""
     codes = {}
 
     @classmethod
     def get_ordered_codes(cls):
-        if not hasattr(cls, '_ordered_codes'):
-            cls._ordered_codes = OrderedDict(
-                sorted(
-                    cls.codes.items(),
-                    key=lambda code: code[1].get('order', 10000)
-                )
-            )
+        if not hasattr(cls, "_ordered_codes"):
+            cls._ordered_codes = OrderedDict(sorted(cls.codes.items(), key=lambda code: code[1].get("order", 10000)))
         return cls._ordered_codes
 
     def get_log_code(self, **kwargs):
@@ -164,23 +160,23 @@ class BaseEvent(object):
             case=case,
             code=code,
             timer=timer,
-            type=code_data['type'],
-            level=code_data['level'],
+            type=code_data["type"],
+            level=code_data["level"],
             notes=notes,
             patch=patch,
             created_by=created_by,
-            context=context
+            context=context,
         )
 
         self.save_log(log)
 
         # stop timer if the code wants
-        if timer and code_data.get('stops_timer', False):
+        if timer and code_data.get("stops_timer", False):
             timer.stop()
 
         # update set_requires_action_by if the code wantes
-        if 'set_requires_action_by' in code_data:
-            set_requires_action_by = code_data['set_requires_action_by']
+        if "set_requires_action_by" in code_data:
+            set_requires_action_by = code_data["set_requires_action_by"]
             if callable(set_requires_action_by):
                 set_requires_action_by = set_requires_action_by(case)
             case.set_requires_action_by(set_requires_action_by)
@@ -195,6 +191,6 @@ class BaseEvent(object):
         selectable_codes = []
 
         for code, code_data in cls.codes.items():
-            if code_data['type'] == LOG_TYPES.OUTCOME and role in code_data['selectable_by']:
+            if code_data["type"] == LOG_TYPES.OUTCOME and role in code_data["selectable_by"]:
                 selectable_codes.append(code)
         return selectable_codes

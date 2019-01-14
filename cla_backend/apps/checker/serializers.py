@@ -5,17 +5,23 @@ from rest_framework import serializers
 from diagnosis.graph import get_graph
 from diagnosis.serializers import DiagnosisSerializer
 
-from legalaid.serializers import UUIDSerializer, \
-    EligibilityCheckSerializerBase, PropertySerializerBase, \
-    PersonalDetailsSerializerBase, CaseSerializerBase, \
-    IncomeSerializerBase, SavingsSerializerBase, \
-    DeductionsSerializerBase, PersonSerializerBase, \
-    AdaptationDetailsSerializerBase, ThirdPartyDetailsSerializerBase
+from legalaid.serializers import (
+    UUIDSerializer,
+    EligibilityCheckSerializerBase,
+    PropertySerializerBase,
+    PersonalDetailsSerializerBase,
+    CaseSerializerBase,
+    IncomeSerializerBase,
+    SavingsSerializerBase,
+    DeductionsSerializerBase,
+    PersonSerializerBase,
+    AdaptationDetailsSerializerBase,
+    ThirdPartyDetailsSerializerBase,
+)
 
 from checker.models import ReasonForContacting, ReasonForContactingCategory
 
-checker_graph = SimpleLazyObject(lambda: get_graph(
-    file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME))
+checker_graph = SimpleLazyObject(lambda: get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME))
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -24,15 +30,22 @@ class PropertySerializer(PropertySerializerBase):
         return super(PropertySerializer, self).errors
 
     class Meta(PropertySerializerBase.Meta):
-        fields = ('value', 'mortgage_left', 'share', 'id', 'disputed', 'main')
+        fields = ("value", "mortgage_left", "share", "id", "disputed", "main")
 
 
 class IncomeSerializer(IncomeSerializerBase):
     class Meta(IncomeSerializerBase.Meta):
         fields = (
-            'earnings', 'self_employment_drawings', 'benefits', 'tax_credits',
-            'child_benefits', 'maintenance_received', 'pension',
-            'other_income', 'self_employed', 'total'
+            "earnings",
+            "self_employment_drawings",
+            "benefits",
+            "tax_credits",
+            "child_benefits",
+            "maintenance_received",
+            "pension",
+            "other_income",
+            "self_employed",
+            "total",
         )
 
 
@@ -40,28 +53,37 @@ class PartnerIncomeSerializer(IncomeSerializerBase):
     """
     Like IncomeSerializer but without 'child_benefits'
     """
+
     class Meta(IncomeSerializerBase.Meta):
         fields = (
-            'earnings', 'self_employment_drawings', 'benefits', 'tax_credits',
-            'maintenance_received', 'pension',
-            'other_income', 'self_employed', 'total'
+            "earnings",
+            "self_employment_drawings",
+            "benefits",
+            "tax_credits",
+            "maintenance_received",
+            "pension",
+            "other_income",
+            "self_employed",
+            "total",
         )
 
 
 class SavingsSerializer(SavingsSerializerBase):
     class Meta(SavingsSerializerBase.Meta):
-        fields = (
-            'bank_balance', 'investment_balance',
-            'asset_balance', 'credit_balance', 'total',
-        )
+        fields = ("bank_balance", "investment_balance", "asset_balance", "credit_balance", "total")
 
 
 class DeductionsSerializer(DeductionsSerializerBase):
     class Meta(DeductionsSerializerBase.Meta):
         fields = (
-            'income_tax', 'national_insurance', 'maintenance',
-            'childcare', 'mortgage', 'rent',
-            'criminal_legalaid_contributions', 'total'
+            "income_tax",
+            "national_insurance",
+            "maintenance",
+            "childcare",
+            "mortgage",
+            "rent",
+            "criminal_legalaid_contributions",
+            "total",
         )
 
 
@@ -71,15 +93,14 @@ class PersonSerializer(PersonSerializerBase):
     deductions = DeductionsSerializer(required=False)
 
     class Meta(PersonSerializerBase.Meta):
-        fields = (
-            'income', 'savings', 'deductions',
-        )
+        fields = ("income", "savings", "deductions")
 
 
 class PartnerPersonSerializer(PersonSerializer):
     """
         Like PersonSerializer but without child_benefits
     """
+
     income = PartnerIncomeSerializer(required=False)
 
     class Meta(PersonSerializer.Meta):
@@ -95,50 +116,50 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
 
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
-            'reference',
-            'category',
-            'your_problem_notes',
-            'notes',
-            'property_set',
-            'you',
-            'partner',
-            'dependants_young',
-            'dependants_old',
-            'is_you_or_your_partner_over_60',
-            'has_partner',
-            'on_passported_benefits',
-            'on_nass_benefits',
-            'specific_benefits'
+            "reference",
+            "category",
+            "your_problem_notes",
+            "notes",
+            "property_set",
+            "you",
+            "partner",
+            "dependants_young",
+            "dependants_old",
+            "is_you_or_your_partner_over_60",
+            "has_partner",
+            "on_passported_benefits",
+            "on_nass_benefits",
+            "specific_benefits",
         )
 
 
 class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
     class Meta(PersonalDetailsSerializerBase.Meta):
         fields = (
-            'title', 'full_name', 'postcode', 'street',
-            'mobile_phone', 'home_phone', 'email', 'safe_to_contact',
-            'safe_to_email'
+            "title",
+            "full_name",
+            "postcode",
+            "street",
+            "mobile_phone",
+            "home_phone",
+            "email",
+            "safe_to_contact",
+            "safe_to_email",
         )
 
 
 class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
     class Meta(ThirdPartyDetailsSerializerBase.Meta):
-        fields = (
-            'reference', 'personal_details', 'pass_phrase',
-            'personal_relationship',
-
-        )
+        fields = ("reference", "personal_details", "pass_phrase", "personal_relationship")
 
 
 class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
     class Meta(AdaptationDetailsSerializerBase.Meta):
-        fields = (
-            'bsl_webcam', 'minicom', 'text_relay', 'skype_webcam', 'language', 'notes'
-        )
+        fields = ("bsl_webcam", "minicom", "text_relay", "skype_webcam", "language", "notes")
 
 
 class CaseSerializer(CaseSerializerBase):
-    eligibility_check = UUIDSerializer(slug_field='reference', required=False)
+    eligibility_check = UUIDSerializer(slug_field="reference", required=False)
     adaptation_details = AdaptationDetailsSerializer(required=False)
     personal_details = PersonalDetailsSerializer()
     thirdparty_details = ThirdPartyDetailsSerializer(required=False)
@@ -146,8 +167,12 @@ class CaseSerializer(CaseSerializerBase):
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
-            'eligibility_check', 'personal_details', 'reference',
-            'requires_action_at', 'adaptation_details', 'thirdparty_details'
+            "eligibility_check",
+            "personal_details",
+            "reference",
+            "requires_action_at",
+            "adaptation_details",
+            "thirdparty_details",
         )
 
 
@@ -159,17 +184,13 @@ class CheckerDiagnosisSerializer(DiagnosisSerializer):
 class ReasonForContactingCategorySerializer(serializers.ModelSerializer):
     class Meta(object):
         model = ReasonForContactingCategory
-        fields = ('category',)
+        fields = ("category",)
 
 
 class ReasonForContactingSerializer(serializers.ModelSerializer):
-    reasons = ReasonForContactingCategorySerializer(
-        many=True, allow_add_remove=True, required=False
-    )
-    case = serializers.SlugRelatedField(slug_field='reference', read_only=False,
-                                        required=False)
+    reasons = ReasonForContactingCategorySerializer(many=True, allow_add_remove=True, required=False)
+    case = serializers.SlugRelatedField(slug_field="reference", read_only=False, required=False)
 
     class Meta(object):
         model = ReasonForContacting
-        fields = ('reference', 'reasons', 'other_reasons', 'case',
-                  'referrer', 'user_agent',)
+        fields = ("reference", "reasons", "other_reasons", "case", "referrer", "user_agent")

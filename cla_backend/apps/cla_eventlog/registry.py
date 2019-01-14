@@ -5,33 +5,38 @@ from .constants import LOG_LEVELS, LOG_TYPES, LOG_ROLES
 
 def is_code_valid(code):
     required_keys = {
-        'type': basestring,
-        'level': int,
-        'selectable_by': list,
-        'description': basestring,
-        'stops_timer': bool
+        "type": basestring,
+        "level": int,
+        "selectable_by": list,
+        "description": basestring,
+        "stops_timer": bool,
     }
-    all_keys = required_keys.keys() + ['set_requires_action_by', 'order']
+    all_keys = required_keys.keys() + ["set_requires_action_by", "order"]
 
     for key, type_ in required_keys.items():
         if key not in code:
-            raise ValueError('%s is missing from code definition' % key)
+            raise ValueError("%s is missing from code definition" % key)
         if not isinstance(code[key], type_):
-            raise ValueError('%s is not of expected type: %s' % (key, type_))
+            raise ValueError("%s is not of expected type: %s" % (key, type_))
 
-    if code['type'] not in LOG_TYPES.CHOICES_DICT:
-        raise ValueError('Unknown type %s (must be one of %s)' % (code['type'], ', '.join(LOG_TYPES.CHOICES_DICT)))
+    if code["type"] not in LOG_TYPES.CHOICES_DICT:
+        raise ValueError("Unknown type %s (must be one of %s)" % (code["type"], ", ".join(LOG_TYPES.CHOICES_DICT)))
 
-    if code['level'] not in LOG_LEVELS.CHOICES_DICT:
-        raise ValueError('Unknown level %s (must be one of %s)' % (code['level'], ', '.join([str(level) for level in LOG_LEVELS.CHOICES_DICT])))
+    if code["level"] not in LOG_LEVELS.CHOICES_DICT:
+        raise ValueError(
+            "Unknown level %s (must be one of %s)"
+            % (code["level"], ", ".join([str(level) for level in LOG_LEVELS.CHOICES_DICT]))
+        )
 
-    for selectable_by in code['selectable_by']:
+    for selectable_by in code["selectable_by"]:
         if selectable_by not in LOG_ROLES.CHOICES_DICT:
-            raise ValueError('Unknown role %s (must be one of %s)' % (selectable_by, ', '.join(map(str, LOG_ROLES.CHOICES_DICT))))
+            raise ValueError(
+                "Unknown role %s (must be one of %s)" % (selectable_by, ", ".join(map(str, LOG_ROLES.CHOICES_DICT)))
+            )
 
     diff = set(code.keys()) - set(all_keys)
     if len(diff) > 0:
-        raise ValueError('Unknown key(s) %s (must be one of %s)' % (diff, all_keys))
+        raise ValueError("Unknown key(s) %s (must be one of %s)" % (diff, all_keys))
 
     return True
 
@@ -43,10 +48,12 @@ class EventRegistry(object):
     def register(self, event_cls):
         # checking that codes is not empty
         if not event_cls.codes:
-            raise ValueError('%s does not define any codes. Please add codes={} to the class' % event_cls.__name__)
+            raise ValueError("%s does not define any codes. Please add codes={} to the class" % event_cls.__name__)
 
         if not event_cls.key:
-            raise ValueError('%s does not define any key. Please add key=\'<action-key>\' to the class' % event_cls.__name__)
+            raise ValueError(
+                "%s does not define any key. Please add key='<action-key>' to the class" % event_cls.__name__
+            )
 
         # checking that each code in codes has the right format
         for code in event_cls.codes.values():
@@ -56,7 +63,7 @@ class EventRegistry(object):
 
     def get_event(self, key):
         if key not in self._registry:
-            raise ValueError(u'%s not registered' % key)
+            raise ValueError(u"%s not registered" % key)
         return self._registry[key]
 
     def get_selectable_events(self, role):
@@ -93,8 +100,7 @@ class EventRegistry(object):
         :return: returns a unified dictionary of filtered outcome codes
         registered in this registry.
         """
-        return {k: v for k, v in self.all().items() if
-                all([v[kk]==vv for kk,vv in kwargs.items()])}
+        return {k: v for k, v in self.all().items() if all([v[kk] == vv for kk, vv in kwargs.items()])}
 
 
 event_registry = EventRegistry()

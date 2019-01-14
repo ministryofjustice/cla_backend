@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from django.contrib import admin
 
 from .models import Category, Complaint
 
 
 class ComplaintAdmin(admin.ModelAdmin):
-    raw_id_fields = ['eod']
+    raw_id_fields = ["eod"]
 
     def save_model(self, request, obj, form, change):
         if not obj.pk:

@@ -16,14 +16,13 @@ framework.
 import os
 from os.path import abspath, dirname
 from sys import path
+
+from django.core.wsgi import get_wsgi_application
 from raven.contrib.django.raven_compat.middleware.wsgi import Sentry
 
 SITE_ROOT = dirname(dirname(abspath(__file__)))
 path.append(SITE_ROOT)
 
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cla_backend.settings")
 
-
-from django.core.wsgi import get_wsgi_application
 application = Sentry(get_wsgi_application())

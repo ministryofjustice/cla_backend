@@ -17,8 +17,8 @@ def autodiscover():
         # Attempt to import the app's admin module.
         try:
             before_import_registry = copy.copy(event_registry._registry)
-            import_module('%s.events' % app)
-        except:
+            import_module("%s.events" % app)
+        except Exception:
             # Reset the model registry to the state before the last import as
             # this import will have to reoccur on the next request and this
             # could raise NotRegistered and AlreadyRegistered exceptions
@@ -28,7 +28,7 @@ def autodiscover():
             # Decide whether to bubble up this error. If the app just
             # doesn't have an admin module, we can ignore the error
             # attempting to import it, otherwise we want it to bubble up.
-            if module_has_submodule(mod, 'events'):
+            if module_has_submodule(mod, "events"):
                 raise
 
 

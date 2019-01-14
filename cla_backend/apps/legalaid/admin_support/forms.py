@@ -9,7 +9,8 @@ class CategoryModelForm(forms.ModelForm):
     """
     Saves the field description as html version of the raw_description field.
     """
-    raw_description = MarkdownAdminField(label=u'Description', required=False)
+
+    raw_description = MarkdownAdminField(label=u"Description", required=False)
 
     class Meta(object):
         model = Category

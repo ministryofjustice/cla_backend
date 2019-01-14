@@ -7,8 +7,7 @@ from rest_framework_extensions.serializers import PartialUpdateSerializerMixin
 
 from core import fields
 
-from cla_common.money_interval.serializers import \
-    MoneyIntervalModelSerializerMixin
+from cla_common.money_interval.serializers import MoneyIntervalModelSerializerMixin
 
 
 class UUIDSerializer(serializers.SlugRelatedField):
@@ -25,13 +24,11 @@ class NullBooleanModelSerializerMixin(object):
 
 
 class JSONField(serializers.WritableField):
-
     def to_native(self, obj):
         return obj
 
 
-class ClaModelSerializer(MoneyIntervalModelSerializerMixin,
-                         NullBooleanModelSerializerMixin, ModelSerializer):
+class ClaModelSerializer(MoneyIntervalModelSerializerMixin, NullBooleanModelSerializerMixin, ModelSerializer):
     pass
 
 

@@ -6,7 +6,4 @@ from diagnosis.models import DiagnosisTraversal
 
 diagnosis = Recipe(DiagnosisTraversal)
 
-diagnosis_yes = Recipe(
-    DiagnosisTraversal,
-    state=DIAGNOSIS_SCOPE.INSCOPE
-)
+diagnosis_yes = Recipe(DiagnosisTraversal, state=DIAGNOSIS_SCOPE.INSCOPE)

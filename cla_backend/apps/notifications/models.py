@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding=utf-8
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -12,15 +12,11 @@ from .signals import send_notifications_to_users
 class NotificationManager(models.Manager):
     def live(self):
         now = timezone.now()
-        return self.get_queryset().filter(
-            start_time__lt=now,
-            end_time__gt=now
-        )
+        return self.get_queryset().filter(start_time__lt=now, end_time__gt=now)
 
 
 class Notification(TimeStampedModel):
-    type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES,
-                            default='notification')
+    type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES, default="notification")
     notification = models.CharField(max_length=100)
     description = models.CharField(max_length=600, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)

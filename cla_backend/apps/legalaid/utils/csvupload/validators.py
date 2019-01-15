@@ -14,11 +14,11 @@ from legalaid.utils.csvupload.constants import (
     EXEMPTION_CODES,
     SERVICE_ADAPTATIONS,
     ADVICE_TYPES,
-    VALID_OUTCOMES,
-    VALID_STAGE_REACHED,
-    VALID_MATTER_TYPE1,
-    VALID_MATTER_TYPE2,
-    DETERMINATION_CODES,
+    get_determination_codes,
+    get_valid_outcomes,
+    get_valid_matter_type1,
+    get_valid_matter_type2,
+    get_valid_stage_reached,
     PREFIX_CATEGORY_LOOKUP,
     STAGE_REACHED_NOT_ALLOWED_MT1S,
     STAGE_REACHED_REQUIRED_MT1S,
@@ -191,12 +191,12 @@ class ProviderCSVValidator(object):
         ("Postcode", [validate_present, validate_postcode]),
         # 12
         ("Eligibility Code", [validate_in(ELIGIBILITY_CODES)]),  # 13
-        ("Matter Type 1", [validate_present, validate_in(VALID_MATTER_TYPE1)]),
+        ("Matter Type 1", [validate_present, validate_in(get_valid_matter_type1())]),
         # 14
-        ("Matter Type 2", [validate_present, validate_in(VALID_MATTER_TYPE2)]),
+        ("Matter Type 2", [validate_present, validate_in(get_valid_matter_type2())]),
         # 15
-        ("Stage Reached", [validate_in(VALID_STAGE_REACHED)]),  # 16
-        ("Outcome Code", [validate_in(VALID_OUTCOMES)]),  # 17
+        ("Stage Reached", [validate_in(get_valid_stage_reached())]),  # 16
+        ("Outcome Code", [validate_in(get_valid_outcomes())]),  # 17
         ("Unused3", [validate_not_present]),  # 18
         ("Date Opened", [validate_date]),  # 19
         ("Date Closed", [validate_date, validate_not_current_month]),  # 20
@@ -206,7 +206,7 @@ class ProviderCSVValidator(object):
         ("Disability Code", [validate_present, validate_in(DISABILITY_INDICATOR)]),  # 24
         ("Disbursements", [validate_decimal]),  # 25
         ("Travel Costs", [validate_decimal]),  # 26
-        ("Determination", [validate_in(DETERMINATION_CODES)]),  # 27
+        ("Determination", [validate_in(get_determination_codes())]),  # 27
         ("Suitable for Telephone Advice", [validate_in({u"Y", u"N"})]),  # 28
         ("Exceptional Cases (ref)", [validate_regex(r"\d{7}[a-z]{2}", re.I)]),
         # 29

@@ -24,9 +24,6 @@ def import_urls():
     return module
 
 
-
-
-
 class AutoAPIDoc(sphinx.util.compat.Directive):
     required_arguments = 1
     optional_arguments = 0
@@ -38,19 +35,18 @@ class AutoAPIDoc(sphinx.util.compat.Directive):
         ret += addnodes.desc_returns(text=response_class_name)
         model = self.models.get(response_class_name)
         props = addnodes.desc_parameterlist()
-        for key, property in model['properties'].items():
+        for key, property in model["properties"].items():
             pc = n.container()
-            if property['required']:
+            if property["required"]:
                 pc += addnodes.desc_parameter(key, key)
             else:
                 pc += addnodes.desc_optional(key, key)
 
-
-            pc += n.strong(text=' type: %s ' % property['type'])
-            allowableValues = property.get('allowableValues')
+            pc += n.strong(text=" type: %s " % property["type"])
+            allowableValues = property.get("allowableValues")
             if allowableValues:
-                allowableValues.pop('valueType', None)
-                pc += n.subscript(text=' %s' % allowableValues)
+                allowableValues.pop("valueType", None)
+                pc += n.subscript(text=" %s" % allowableValues)
 
             props += pc
         ret += props
@@ -60,16 +56,16 @@ class AutoAPIDoc(sphinx.util.compat.Directive):
         params = addnodes.desc_parameterlist()
         for param in parameters:
             node = n.container()
-            if param['required']:
-                node += addnodes.desc_parameter(param['name'], param['name'])
+            if param["required"]:
+                node += addnodes.desc_parameter(param["name"], param["name"])
             else:
-                node += addnodes.desc_optional(param['name'], param['name'])
+                node += addnodes.desc_optional(param["name"], param["name"])
 
-            node += n.strong(text=' type: %s ' % param['dataType'])
-            allowableValues = param.get('allowableValues')
+            node += n.strong(text=" type: %s " % param["dataType"])
+            allowableValues = param.get("allowableValues")
             if allowableValues:
-                allowableValues.pop('valueType', None)
-                node += n.emphasis(text=' %s' % allowableValues)
+                allowableValues.pop("valueType", None)
+                node += n.emphasis(text=" %s" % allowableValues)
             params += node
         return params
 
@@ -77,26 +73,26 @@ class AutoAPIDoc(sphinx.util.compat.Directive):
         c = n.container()
         for op in operations:
 
-            p = addnodes.desc(objtype='endpoint')
-            p += addnodes.desc_signature('nickname', op['nickname'])
-            p += addnodes.desc_addname('method', op['httpMethod'])
-            p += addnodes.desc_content(text=op['summary'])
-            if 'parameters' in op.keys():
-                p += addnodes.desc_annotation(text='Parameters: ')
-                params = self.format_parameters(op['parameters'])
+            p = addnodes.desc(objtype="endpoint")
+            p += addnodes.desc_signature("nickname", op["nickname"])
+            p += addnodes.desc_addname("method", op["httpMethod"])
+            p += addnodes.desc_content(text=op["summary"])
+            if "parameters" in op.keys():
+                p += addnodes.desc_annotation(text="Parameters: ")
+                params = self.format_parameters(op["parameters"])
                 p += params
-            if op.get('responseClass'):
-                response = self.format_response_class(op['responseClass'])
+            if op.get("responseClass"):
+                response = self.format_response_class(op["responseClass"])
                 p += response
             c += p
 
         return c
 
     def format_path(self, path_doc):
-        container = n.section(ids=[n.make_id(path_doc['path'])], names=[])
-        container += n.title(text=path_doc['path'])
-        container.append(n.paragraph(text=path_doc['description']))
-        container.append(self.format_operation(path_doc['operations']))
+        container = n.section(ids=[n.make_id(path_doc["path"])], names=[])
+        container += n.title(text=path_doc["path"])
+        container.append(n.paragraph(text=path_doc["description"]))
+        container.append(self.format_operation(path_doc["operations"]))
         return container
 
     def run(self):
@@ -109,6 +105,6 @@ class AutoAPIDoc(sphinx.util.compat.Directive):
         self.models = dg.get_models(apis)
         return [self.format_path(item) for item in doc]
 
-def setup(Sphinx):
-    Sphinx.add_directive('autoapidoc', AutoAPIDoc)
 
+def setup(Sphinx):
+    Sphinx.add_directive("autoapidoc", AutoAPIDoc)

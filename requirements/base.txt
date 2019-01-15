@@ -36,7 +36,7 @@ requests==2.6.0
 pytz==2014.10
 dj-database-url==0.3.0
 django-docopt-command==0.2.0
-transifex-client==0.11b3
+transifex-client==0.13.5
 polib==1.0.6
 
 # Fork PgFulltext - PR added

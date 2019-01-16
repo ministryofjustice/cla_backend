@@ -1,5 +1,7 @@
 import itertools
 
+from django.conf import settings
+
 SERVICE_ADAPTATIONS = {
     u"CBI",
     u"LLI",
@@ -147,6 +149,8 @@ POSTCODE_RE = r"""(?: # UK POSTCODE
 
 def get_determination_codes():
     determination_codes = {u"OOSC", u"OSPF", u"CHNM", u"FINI", u"DVCA"}
+    if settings.CONTRACT_2018_ENABLED:
+        determination_codes |= {"FAFA"}
     return determination_codes
 
 

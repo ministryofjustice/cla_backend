@@ -22,7 +22,7 @@ git+https://github.com/ministryofjustice/django-oauth2-provider.git@b75571be3e19
 
 git+https://github.com/ministryofjustice/cla_common.git@0.3.0#egg=cla_common==0.3.0
 django-extended-choices==0.3.0
-django-filter==0.9.2
+django-filter==2.0.0
 jsonpatch==1.9
 networkx==1.9.1
 lxml==3.4.1

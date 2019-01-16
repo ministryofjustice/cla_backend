@@ -1,6 +1,7 @@
 import datetime
 import sys
 import os
+
 from cla_common.call_centre_availability import OpeningHours
 
 # PATH vars
@@ -194,7 +195,6 @@ PROJECT_APPS = (
     "complaints",
 )
 
-
 if BACKEND_ENABLED:
     INSTALLED_APPS += ("rest_framework", "provider.oauth2")
 if ADMIN_ENABLED:
@@ -213,7 +213,6 @@ EXPRESS_SERVER_PORT = os.environ.get("EXPRESS_SERVER_PORT", 8005)
 
 PERFORMANCE_PLATFORM_TOKEN = os.environ.get("PERFORMANCE_PLATFORM_TOKEN", "ppt")
 PERFORMANCE_PLATFORM_API = os.environ.get("PERFORMANCE_PLATFORM_API", "")
-
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -316,7 +315,6 @@ OBIEE_ENABLED = os.environ.get("OBIEE_ENABLED", "True") == "True"
 OBIEE_EMAIL_TO = os.environ.get("OBIEE_EMAIL_TO", DEFAULT_EMAIL_TO)
 OBIEE_ZIP_PASSWORD = os.environ.get("OBIEE_ZIP_PASSWORD")
 
-
 # celery
 if all([os.environ.get("SQS_ACCESS_KEY"), os.environ.get("SQS_SECRET_KEY")]):
     import urllib
@@ -356,13 +354,13 @@ CELERY_TIMEZONE = "UTC"
 # apps with celery tasks
 CELERY_IMPORTS = ["reports.tasks", "notifications.tasks"]
 
+CONTRACT_2018_ENABLED = False
 
 # .local.py overrides all the common settings.
 try:
     from .local import *
 except ImportError:
     pass
-
 
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and "test" == sys.argv[1]:

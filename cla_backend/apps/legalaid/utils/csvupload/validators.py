@@ -24,7 +24,6 @@ from legalaid.utils.csvupload.constants import (
     STAGE_REACHED_REQUIRED_MT1S,
 )
 
-
 date_pattern = re.compile("^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$")
 
 
@@ -171,57 +170,56 @@ def excel_col_name(col):  # col is 1 based
 
 
 class ProviderCSVValidator(object):
-    # the index is the offset in the csv
-    fields = (
-        # 'name', iterable of validators to apply
-        ("CLA Reference Number", [validate_present, validate_integer]),  # 1
-        ("Client Ref", [validate_present]),  # 2
-        (
-            "Account Number",
-            [validate_present, validate_regex(r"\d{1}[a-z]{1}\d{3}[a-z]{1}", flags=re.IGNORECASE)],
-        ),  # 3
-        ("First Name", [validate_present]),  # 4
-        ("Surname", [validate_present]),  # 5
-        ("DOB", [validate_date]),  # 6
-        ("Age Range", [validate_present, validate_in(AGE_RANGE)]),  # 7
-        ("Gender", [validate_present]),  # 8
-        ("Ethnicity", [validate_present]),  # 9
-        ("Unused1", [validate_not_present]),  # 10
-        ("Unused2", [validate_not_present]),  # 11
-        ("Postcode", [validate_present, validate_postcode]),
-        # 12
-        ("Eligibility Code", [validate_in(ELIGIBILITY_CODES)]),  # 13
-        ("Matter Type 1", [validate_present, validate_in(get_valid_matter_type1())]),
-        # 14
-        ("Matter Type 2", [validate_present, validate_in(get_valid_matter_type2())]),
-        # 15
-        ("Stage Reached", [validate_in(get_valid_stage_reached())]),  # 16
-        ("Outcome Code", [validate_in(get_valid_outcomes())]),  # 17
-        ("Unused3", [validate_not_present]),  # 18
-        ("Date Opened", [validate_date]),  # 19
-        ("Date Closed", [validate_date, validate_not_current_month]),  # 20
-        ("Time Spent", [validate_present, validate_integer, validate_gte(0)]),  # 21
-        ("Case Costs", [validate_present, validate_decimal]),  # 22
-        ("Unused4", [validate_not_present]),  # 23
-        ("Disability Code", [validate_present, validate_in(DISABILITY_INDICATOR)]),  # 24
-        ("Disbursements", [validate_decimal]),  # 25
-        ("Travel Costs", [validate_decimal]),  # 26
-        ("Determination", [validate_in(get_determination_codes())]),  # 27
-        ("Suitable for Telephone Advice", [validate_in({u"Y", u"N"})]),  # 28
-        ("Exceptional Cases (ref)", [validate_regex(r"\d{7}[a-z]{2}", re.I)]),
-        # 29
-        ("Exempted Reason Code", [validate_in(EXEMPTION_CODES)]),  # 30
-        ("Adjustments / Adaptations", [validate_in(SERVICE_ADAPTATIONS)]),  # 31
-        ("Signposting / Referral", []),  # 32
-        ("Media Code", []),
-        # 33 TODO: Maybe put [validate_present]) back depending on reply from Alex A.
-        ("Telephone / Online", [validate_present, validate_in(ADVICE_TYPES)]),
-        # 34
-    )
-
     def __init__(self, rows):
         self.rows = rows
         self.cleaned_data = []
+        # the index is the offset in the csv
+        self.fields = (
+            # 'name', iterable of validators to apply
+            ("CLA Reference Number", [validate_present, validate_integer]),  # 1
+            ("Client Ref", [validate_present]),  # 2
+            (
+                "Account Number",
+                [validate_present, validate_regex(r"\d{1}[a-z]{1}\d{3}[a-z]{1}", flags=re.IGNORECASE)],
+            ),  # 3
+            ("First Name", [validate_present]),  # 4
+            ("Surname", [validate_present]),  # 5
+            ("DOB", [validate_date]),  # 6
+            ("Age Range", [validate_present, validate_in(AGE_RANGE)]),  # 7
+            ("Gender", [validate_present]),  # 8
+            ("Ethnicity", [validate_present]),  # 9
+            ("Unused1", [validate_not_present]),  # 10
+            ("Unused2", [validate_not_present]),  # 11
+            ("Postcode", [validate_present, validate_postcode]),
+            # 12
+            ("Eligibility Code", [validate_in(ELIGIBILITY_CODES)]),  # 13
+            ("Matter Type 1", [validate_present, validate_in(get_valid_matter_type1())]),
+            # 14
+            ("Matter Type 2", [validate_present, validate_in(get_valid_matter_type2())]),
+            # 15
+            ("Stage Reached", [validate_in(get_valid_stage_reached())]),  # 16
+            ("Outcome Code", [validate_in(get_valid_outcomes())]),  # 17
+            ("Unused3", [validate_not_present]),  # 18
+            ("Date Opened", [validate_date]),  # 19
+            ("Date Closed", [validate_date, validate_not_current_month]),  # 20
+            ("Time Spent", [validate_present, validate_integer, validate_gte(0)]),  # 21
+            ("Case Costs", [validate_present, validate_decimal]),  # 22
+            ("Unused4", [validate_not_present]),  # 23
+            ("Disability Code", [validate_present, validate_in(DISABILITY_INDICATOR)]),  # 24
+            ("Disbursements", [validate_decimal]),  # 25
+            ("Travel Costs", [validate_decimal]),  # 26
+            ("Determination", [validate_in(get_determination_codes())]),  # 27
+            ("Suitable for Telephone Advice", [validate_in({u"Y", u"N"})]),  # 28
+            ("Exceptional Cases (ref)", [validate_regex(r"\d{7}[a-z]{2}", re.I)]),
+            # 29
+            ("Exempted Reason Code", [validate_in(EXEMPTION_CODES)]),  # 30
+            ("Adjustments / Adaptations", [validate_in(SERVICE_ADAPTATIONS)]),  # 31
+            ("Signposting / Referral", []),  # 32
+            ("Media Code", []),
+            # 33 TODO: Maybe put [validate_present]) back depending on reply from Alex A.
+            ("Telephone / Online", [validate_present, validate_in(ADVICE_TYPES)]),
+            # 34
+        )
 
     def _validate_field(self, field_name, field_value, idx, row_num, validators):
         # Field Validation

@@ -18,10 +18,13 @@ def _make_datetime(year, month, day, hour=0, minute=0, second=0):
     return timezone.make_aware(dt, tz)
 
 
+def mock_now(dt):
+    return dt
+
+
 @contextmanager
 def patch_field(cls, field_name, dt):
     field = cls._meta.get_field(field_name)
-    mock_now = lambda: dt  # noqa: E731
     with mock.patch.object(field, "default", new=mock_now):
         yield
 

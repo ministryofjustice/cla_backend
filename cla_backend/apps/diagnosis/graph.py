@@ -174,7 +174,8 @@ class GraphImporter(object):
                 return as_type(value)
             return value
 
-        str_to_bool = lambda s: s.lower() == "true"  # noqa: E731
+        def str_to_bool(s):
+            return s.lower() == "true"
 
         # looping through the nodes
         nodes = self.xpath_ns(self.doc, "//ns:node")

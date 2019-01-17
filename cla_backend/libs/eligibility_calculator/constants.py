@@ -1,6 +1,7 @@
-from ..util import BetweenDict
+from .util import BetweenDict
 
 
+# Disposable capital
 MORTGAGE_DISREGARD = 10000000
 SMOD_DISREGARD = 10000000
 EQUITY_DISREGARD = 10000000
@@ -9,7 +10,7 @@ LIMIT_IMMIGRATION = 300000
 LIMIT_DEFAULT = 800000
 
 
-def get_limit(category):
+def get_disposable_capital_limit(category):
     # TODO category:
     #   * final codes
     #   * no 800000 by default, return None in case of invalid codes
@@ -33,3 +34,23 @@ PENSIONER_DISREGARD_LIMIT_LEVELS = BetweenDict(
         (22501, 31501): 1000000,
     }
 )
+
+
+# Disposable income
+LIMIT = 73300
+PARTNER_ALLOWANCE = 18141
+CHILD_ALLOWANCE = 29070
+CHILDLESS_HOUSING_CAP = 54500
+EMPLOYMENT_COSTS_ALLOWANCE = 4500
+
+
+# Gross income
+BASE_LIMIT = 265700
+INCLUSIVE_CHILDREN_BASE = 4
+EXTRA_CHILD_MODIFIER = 22200
+
+
+def get_gross_income_limit(dependant_children=0):
+    limit = BASE_LIMIT
+    limit += max(0, dependant_children - INCLUSIVE_CHILDREN_BASE) * EXTRA_CHILD_MODIFIER
+    return limit

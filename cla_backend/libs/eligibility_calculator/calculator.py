@@ -113,9 +113,9 @@ class CapitalCalculator(object):
         prop["equity"] = max(prop["equity"] - self.equity_disregard_available, 0)
 
     def _reset_state(self):
-        self.mortgage_disregard_available = constants.disposable_capital.MORTGAGE_DISREGARD
-        self.SMOD_disregard_available = constants.disposable_capital.SMOD_DISREGARD
-        self.equity_disregard_available = constants.disposable_capital.EQUITY_DISREGARD
+        self.mortgage_disregard_available = constants.MORTGAGE_DISREGARD
+        self.SMOD_disregard_available = constants.SMOD_DISREGARD
+        self.equity_disregard_available = constants.EQUITY_DISREGARD
 
         for prop in self.properties:
             prop["equity"] = 0
@@ -178,13 +178,13 @@ class EligibilityChecker(object):
     @cached_calcs_property
     def partner_allowance(self):
         if self.case_data.facts.has_partner:
-            return constants.disposable_income.PARTNER_ALLOWANCE
+            return constants.PARTNER_ALLOWANCE
         return 0
 
     @cached_calcs_property
     def employment_allowance(self):
         if self.case_data.you.income.has_employment_earnings and not self.case_data.you.income.self_employed:
-            return constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
+            return constants.EMPLOYMENT_COSTS_ALLOWANCE
         return 0
 
     @cached_calcs_property
@@ -194,18 +194,18 @@ class EligibilityChecker(object):
                 self.case_data.partner.income.has_employment_earnings
                 and not self.case_data.partner.income.self_employed
             ):
-                return constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
+                return constants.EMPLOYMENT_COSTS_ALLOWANCE
             return 0
         return 0
 
     @cached_calcs_property
     def dependants_allowance(self):
-        return self.case_data.facts.dependant_children * constants.disposable_income.CHILD_ALLOWANCE
+        return self.case_data.facts.dependant_children * constants.CHILD_ALLOWANCE
 
     @cached_calcs_property
     def pensioner_disregard(self):
         if self.case_data.facts.is_you_or_your_partner_over_60:
-            return constants.disposable_capital.PENSIONER_DISREGARD_LIMIT_LEVELS.get(max(self.disposable_income, 0), 0)
+            return constants.PENSIONER_DISREGARD_LIMIT_LEVELS.get(max(self.disposable_income, 0), 0)
         return 0
 
     @cached_calcs_property
@@ -242,7 +242,7 @@ class EligibilityChecker(object):
                 mortgage_or_rent += self.case_data.partner.deductions.rent
 
             if not self.case_data.facts.dependant_children and not self.case_data.facts.has_partner:
-                mortgage_or_rent = min(mortgage_or_rent, constants.disposable_income.CHILDLESS_HOUSING_CAP)
+                mortgage_or_rent = min(mortgage_or_rent, constants.CHILDLESS_HOUSING_CAP)
             gross_income -= mortgage_or_rent
 
             # employment allowance
@@ -288,17 +288,17 @@ class EligibilityChecker(object):
         if self.case_data.facts.on_passported_benefits:
             return True
 
-        limit = constants.gross_income.get_limit(self.case_data.facts.dependant_children)
+        limit = constants.get_gross_income_limit(self.case_data.facts.dependant_children)
         return self.gross_income <= limit
 
     def is_disposable_income_eligible(self):
         if self.case_data.facts.on_passported_benefits:
             return True
 
-        return self.disposable_income <= constants.disposable_income.LIMIT
+        return self.disposable_income <= constants.LIMIT
 
     def is_disposable_capital_eligible(self):
-        limit = constants.disposable_capital.get_limit(self.case_data.category)
+        limit = constants.get_disposable_capital_limit(self.case_data.category)
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):

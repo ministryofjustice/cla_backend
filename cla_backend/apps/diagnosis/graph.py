@@ -135,6 +135,7 @@ class GraphImporter(object):
             )
 
     def process_nodes(self, is_templated=settings.DIAGNOSES_USE_TEMPLATES):  # noqa: C901
+        # C901 cc=19 cocumented in LGA-416
         node_id_map = dict()
         context_key = self.prop_mapping[self.KEY_CONTEXT]["id"]
 

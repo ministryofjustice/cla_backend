@@ -1,4 +1,4 @@
-from django.db.backends.postgresql_psycopg2.base import *  # noqa
+from django.db.backends.postgresql_psycopg2.base import *  # noqa: F403
 import pytz
 
 

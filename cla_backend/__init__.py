@@ -1,5 +1,4 @@
 from __future__ import absolute_import
 
-# This will make sure the app is always imported when
-# Django starts so that shared_task will use this app.
+# Ensure app is imported for Celery's `shared_task` when Django starts
 from .celery import app as celery_app  # noqa: F401

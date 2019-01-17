@@ -25,7 +25,7 @@ def mock_now(dt):
 @contextmanager
 def patch_field(cls, field_name, dt):
     field = cls._meta.get_field(field_name)
-    with mock.patch.object(field, "default", new=mock_now):
+    with mock.patch.object(field, "default", new=mock_now(dt)):
         yield
 
 

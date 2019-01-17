@@ -398,13 +398,14 @@ class ProviderCSVValidator(object):
         if determination == u"DVCA" and category != u"family":
             raise serializers.ValidationError("Category (%s) must be Family if Determination is DVCA" % category)
 
-    def _validate_data(self, cleaned_data, row_num):  # noqa: C901
+    @staticmethod
+    def format_message(s, row_num):
+        return "Row: %s - %s" % (row_num + 1, s)
+
+    def _validate_data(self, cleaned_data, row_num):
         """
         Like django's clean method, use this to validate across fields
         """
-
-        def _format_message(s):
-            return "Row: %s - %s" % (row_num + 1, s)
 
         errors = ErrorList()
 
@@ -427,19 +428,19 @@ class ProviderCSVValidator(object):
             try:
                 m(cleaned_data)
             except serializers.ValidationError as ve:
-                errors.append(_format_message(ve.message))
+                errors.append(self.format_message(ve.message, row_num))
 
         try:
             category = self._validate_category_consistency(cleaned_data)
         except serializers.ValidationError as ve:
-            errors.append(_format_message(ve.message))
+            errors.append(self.format_message(ve.message, row_num))
             raise serializers.ValidationError(errors)
 
         for m in validation_methods_depend_on_category:
             try:
                 m(cleaned_data, category)
             except serializers.ValidationError as ve:
-                errors.append(_format_message(ve.message))
+                errors.append(self.format_message(ve.message, row_num))
 
         if len(errors):
             raise serializers.ValidationError(errors)

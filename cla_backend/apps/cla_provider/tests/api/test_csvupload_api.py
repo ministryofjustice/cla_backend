@@ -4,15 +4,14 @@ import re
 import unittest
 
 from django.contrib.auth.models import User
+from django.test import override_settings
 from rest_framework import serializers
 from rest_framework.test import APITestCase
-
-import legalaid.utils.csvupload.validators as v
 from provider.oauth2.models import AccessToken
 
+import legalaid.utils.csvupload.validators as v
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
-
 from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
 from cla_provider.models import Staff
 
@@ -604,6 +603,52 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
         with self.assertRaisesRegexp(serializers.ValidationError, r".*must be one of"):
             test_in("q")
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_fafa_determination_code_is_valid(self):
+        data = [
+            [
+                u"3333333",
+                u"0001",
+                u"2B222B",
+                u"A N Other",
+                u"Corgi",
+                u"02/01/2014",
+                u"E",
+                u"M",
+                u"1",
+                u"",
+                u"",
+                u"SW1A 1AA",
+                u"X",
+                u"EPRO",
+                u"ESOS",
+                u"EA",
+                u"EB",
+                u"",
+                u"01/01/2014",
+                u"01/01/2015",
+                u"18",
+                u"99.5",
+                u"",
+                u"ILL",
+                u"0",
+                u"0",
+                u"FAFA",
+                u"N",
+                u"",
+                u"",
+                u"NAR",
+                u"",
+                u"DK",
+                u"TA",
+            ]
+        ]
+        validator = v.ProviderCSVValidator(data)
+        try:
+            validator.validate()
+        except (serializers.ValidationError, Exception) as e:
+            self.fail("{}".format(e))
 
 
 class DependsOnDecoratorTestCase(unittest.TestCase):

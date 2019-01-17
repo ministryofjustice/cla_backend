@@ -10,7 +10,6 @@ CONTRACT_EIGHTEEN_DISCRIMINATION = "2018-discrimination"
 CONTRACT_THIRTEEN_START_DATE = datetime(year=2013, month=4, day=1)
 CONTRACT_THIRTEEN_END_DATE = datetime(year=2018, month=9, day=1)
 CONTRACT_EIGHTEEN_START_DATE = CONTRACT_THIRTEEN_END_DATE
-CONTRACT_EIGHTEEN_DISCRIMINATION_MATTER_TYPES = ["QPRO", " QEMP", " QEQP", " QPRE", " QPRE", " QEDU", " QPUB", " QCON"]
 
 contract_2013_determination_codes = {u"OOSC", u"OSPF", u"CHNM", u"FINI", u"DVCA"}
 contract_2018_determination_codes = copy(contract_2013_determination_codes) | {"FAFA"}
@@ -282,6 +281,6 @@ def get_applicable_contract(case_date_opened, case_matter_type_1=None):
     if CONTRACT_THIRTEEN_START_DATE <= case_date_opened < CONTRACT_THIRTEEN_END_DATE:
         return CONTRACT_THIRTEEN
     elif case_date_opened >= CONTRACT_EIGHTEEN_START_DATE:
-        if case_matter_type_1 in CONTRACT_EIGHTEEN_DISCRIMINATION_MATTER_TYPES:
+        if case_matter_type_1 in contract_2018_category_spec["discrimination"]["MATTER_TYPE1"]:
             return CONTRACT_EIGHTEEN_DISCRIMINATION
         return CONTRACT_EIGHTEEN

@@ -1,7 +1,10 @@
 import datetime
-from decimal import Decimal, InvalidOperation
-import types
+import logging
 import re
+import types
+from collections import OrderedDict
+from copy import deepcopy
+from decimal import Decimal, InvalidOperation
 
 from django.forms.util import ErrorList
 from rest_framework import serializers
@@ -14,16 +17,23 @@ from legalaid.utils.csvupload.constants import (
     EXEMPTION_CODES,
     SERVICE_ADAPTATIONS,
     ADVICE_TYPES,
-    get_determination_codes,
-    get_valid_outcomes,
-    get_valid_matter_type1,
-    get_valid_matter_type2,
-    get_valid_stage_reached,
     PREFIX_CATEGORY_LOOKUP,
     STAGE_REACHED_NOT_ALLOWED_MT1S,
     STAGE_REACHED_REQUIRED_MT1S,
 )
 
+from legalaid.utils.csvupload.contracts import (
+    get_applicable_contract,
+    get_determination_codes,
+    get_valid_outcomes,
+    get_valid_matter_type1,
+    get_valid_matter_type2,
+    get_valid_stage_reached,
+    CONTRACT_THIRTEEN,
+    CONTRACT_EIGHTEEN,
+)
+
+logger = logging.getLogger(__name__)
 date_pattern = re.compile("^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$")
 
 
@@ -179,57 +189,59 @@ def excel_col_name(col):  # col is 1 based
     return excel_col
 
 
+account_number_regex_validator = validate_regex(r"\d{1}[a-z]{1}\d{3}[a-z]{1}", flags=re.IGNORECASE)
+
+validators = OrderedDict()  # Defined in expected column order of CSV
+validators["CLA Reference Number"] = [validate_present, validate_integer]
+validators["Client Ref"] = [validate_present]
+validators["Account Number"] = [validate_present, account_number_regex_validator]
+validators["First Name"] = [validate_present]
+validators["Surname"] = [validate_present]
+validators["DOB"] = [validate_date]
+validators["Age Range"] = [validate_present, validate_in(AGE_RANGE)]
+validators["Gender"] = [validate_present]
+validators["Ethnicity"] = [validate_present]
+validators["Unused1"] = [validate_not_present]
+validators["Unused2"] = [validate_not_present]
+validators["Postcode"] = [validate_present, validate_postcode]
+validators["Eligibility Code"] = [validate_in(ELIGIBILITY_CODES)]
+validators["Matter Type 1"] = [validate_present, validate_in(get_valid_matter_type1(CONTRACT_THIRTEEN))]
+validators["Matter Type 2"] = [validate_present, validate_in(get_valid_matter_type2(CONTRACT_THIRTEEN))]
+validators["Stage Reached"] = [validate_in(get_valid_stage_reached(CONTRACT_THIRTEEN))]
+validators["Outcome Code"] = [validate_in(get_valid_outcomes(CONTRACT_THIRTEEN))]
+validators["Unused3"] = [validate_not_present]
+validators["Date Opened"] = [validate_date]
+validators["Date Closed"] = [validate_date, validate_not_current_month]
+validators["Time Spent"] = [validate_present, validate_integer, validate_gte(0)]
+validators["Case Costs"] = [validate_present, validate_decimal]
+validators["Unused4"] = [validate_not_present]
+validators["Disability Code"] = [validate_present, validate_in(DISABILITY_INDICATOR)]
+validators["Disbursements"] = [validate_decimal]
+validators["Travel Costs"] = [validate_decimal]
+validators["Determination"] = [validate_in(get_determination_codes(CONTRACT_THIRTEEN))]
+validators["Suitable for Telephone Advice"] = [validate_in({u"Y", u"N"})]
+validators["Exceptional Cases (ref)"] = [validate_regex(r"\d{7}[a-z]{2}", re.I)]
+validators["Exempted Reason Code"] = [validate_in(EXEMPTION_CODES)]
+validators["Adjustments / Adaptations"] = [validate_in(SERVICE_ADAPTATIONS)]
+validators["Signposting / Referral"] = []
+validators["Media Code"] = []  # TODO: Maybe put [validate_present]) back depending on reply from Alex A.
+validators["Telephone / Online"] = [validate_present, validate_in(ADVICE_TYPES)]
+contract_2013_validators = deepcopy(validators)
+
+validators["Matter Type 1"] = [validate_present, validate_in(get_valid_matter_type1(CONTRACT_EIGHTEEN))]
+validators["Matter Type 2"] = [validate_present, validate_in(get_valid_matter_type2(CONTRACT_EIGHTEEN))]
+validators["Stage Reached"] = [validate_in(get_valid_stage_reached(CONTRACT_EIGHTEEN))]
+validators["Outcome Code"] = [validate_in(get_valid_outcomes(CONTRACT_EIGHTEEN))]
+validators["Determination"] = [validate_in(get_determination_codes(CONTRACT_EIGHTEEN))]
+contract_2018_validators = deepcopy(validators)
+
+date_opened_index = [i for i, key in enumerate(contract_2013_validators) if key == "Date Opened"][0]
+
+
 class ProviderCSVValidator(object):
     def __init__(self, rows):
         self.rows = rows
         self.cleaned_data = []
-        # the index is the offset in the csv
-        self.fields = (
-            # 'name', iterable of validators to apply
-            ("CLA Reference Number", [validate_present, validate_integer]),  # 1
-            ("Client Ref", [validate_present]),  # 2
-            (
-                "Account Number",
-                [validate_present, validate_regex(r"\d{1}[a-z]{1}\d{3}[a-z]{1}", flags=re.IGNORECASE)],
-            ),  # 3
-            ("First Name", [validate_present]),  # 4
-            ("Surname", [validate_present]),  # 5
-            ("DOB", [validate_date]),  # 6
-            ("Age Range", [validate_present, validate_in(AGE_RANGE)]),  # 7
-            ("Gender", [validate_present]),  # 8
-            ("Ethnicity", [validate_present]),  # 9
-            ("Unused1", [validate_not_present]),  # 10
-            ("Unused2", [validate_not_present]),  # 11
-            ("Postcode", [validate_present, validate_postcode]),
-            # 12
-            ("Eligibility Code", [validate_in(ELIGIBILITY_CODES)]),  # 13
-            ("Matter Type 1", [validate_present, validate_in(get_valid_matter_type1())]),
-            # 14
-            ("Matter Type 2", [validate_present, validate_in(get_valid_matter_type2())]),
-            # 15
-            ("Stage Reached", [validate_in(get_valid_stage_reached())]),  # 16
-            ("Outcome Code", [validate_in(get_valid_outcomes())]),  # 17
-            ("Unused3", [validate_not_present]),  # 18
-            ("Date Opened", [validate_date]),  # 19
-            ("Date Closed", [validate_date, validate_not_current_month]),  # 20
-            ("Time Spent", [validate_present, validate_integer, validate_gte(0)]),  # 21
-            ("Case Costs", [validate_present, validate_decimal]),  # 22
-            ("Unused4", [validate_not_present]),  # 23
-            ("Disability Code", [validate_present, validate_in(DISABILITY_INDICATOR)]),  # 24
-            ("Disbursements", [validate_decimal]),  # 25
-            ("Travel Costs", [validate_decimal]),  # 26
-            ("Determination", [validate_in(get_determination_codes())]),  # 27
-            ("Suitable for Telephone Advice", [validate_in({u"Y", u"N"})]),  # 28
-            ("Exceptional Cases (ref)", [validate_regex(r"\d{7}[a-z]{2}", re.I)]),
-            # 29
-            ("Exempted Reason Code", [validate_in(EXEMPTION_CODES)]),  # 30
-            ("Adjustments / Adaptations", [validate_in(SERVICE_ADAPTATIONS)]),  # 31
-            ("Signposting / Referral", []),  # 32
-            ("Media Code", []),
-            # 33 TODO: Maybe put [validate_present]) back depending on reply from Alex A.
-            ("Telephone / Online", [validate_present, validate_in(ADVICE_TYPES)]),
-            # 34
-        )
 
     def _validate_field(self, field_name, field_value, idx, row_num, validators):
         # Field Validation
@@ -250,31 +262,50 @@ class ProviderCSVValidator(object):
             )
             raise ve
 
+    @staticmethod
+    def _get_validators_for_row(row):
+        try:
+            case_date_opened_string = row[date_opened_index]
+            case_date_opened = validate_date(case_date_opened_string)
+            applicable_contract = get_applicable_contract(case_date_opened=case_date_opened)
+        except IndexError:
+            logger.warning("Could not get applicable contract for row, defaulting to 2013. \nRow: {}".format(row))
+            return contract_2013_validators
+        else:
+            if applicable_contract == CONTRACT_THIRTEEN:
+                return contract_2013_validators
+            elif applicable_contract == CONTRACT_EIGHTEEN:
+                return contract_2018_validators
+
     def _validate_fields(self):
         """
         Validate individual field values, like django's clean_<fieldname> with
         less magic ( no setattr('clean_'+field_name) junk) just loop over
         the fields and apply the validators specified in the
-        field spec (self.fields)
+        field spec (self._get_expected_fields_for_row(row))
         """
         cleaned_data = {}
         errors = ErrorList()
 
         for row_num, row in enumerate(self.rows):
-            if len(row) != len(self.fields):
+            expected_fields = self._get_validators_for_row(row)
+            if len(row) != len(expected_fields):
                 raise serializers.ValidationError(
                     "Row: %s - Incorrect number of columns should be %s "
-                    "actually %s" % (row_num + 1, len(self.fields), len(row))
+                    "actually %s" % (row_num + 1, len(expected_fields), len(row))
                 )
 
-            for idx, field_value in enumerate(row):
-                field_name, validators = self.fields[idx]
+            for idx, field_name in enumerate(expected_fields):
+                field_value = row[idx]
+                validators = expected_fields[field_name]
                 try:
                     cleaned_data[field_name] = self._validate_field(
                         field_name, field_value.strip(), idx, row_num, validators
                     )
                 except serializers.ValidationError as ve:
                     errors.append(ve)
+                except (AssertionError, TypeError) as e:
+                    errors.append(e)
             try:
                 # Global Validation
                 self.cleaned_data.append(self._validate_data(cleaned_data, row_num))
@@ -284,7 +315,8 @@ class ProviderCSVValidator(object):
         if len(errors):
             raise serializers.ValidationError(errors)
 
-    def _validate_open_closed_date(self, cleaned_data):
+    @staticmethod
+    def _validate_open_closed_date(cleaned_data):
         opened = cleaned_data.get("Date Opened")
         closed = cleaned_data.get("Date Closed")
         today = datetime.date.today()
@@ -327,7 +359,8 @@ class ProviderCSVValidator(object):
                 u"eligibility code." % (code, time_spent)
             )
 
-    def _validate_category_consistency(self, cleaned_data):
+    @staticmethod
+    def _validate_category_consistency(cleaned_data):
         mt1, mt2, outcome, stage = (
             cleaned_data.get("Matter Type 1"),
             cleaned_data.get("Matter Type 2"),

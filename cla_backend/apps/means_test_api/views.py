@@ -108,9 +108,11 @@ def is_yes(value):
 
 
 def properties(scenario):
+    def prop(s, i):
+        return scenario["prop{0}-{1}".format(i, s)]
+
     def property_data(i):
-        prop = lambda s: scenario["prop{0}-{1}".format(i, s)]  # noqa: E731
-        if prop("value"):
+        if prop("value", i):
             return {
                 "value": money(prop("value")),
                 "mortgage_left": money(prop("mortgage")),

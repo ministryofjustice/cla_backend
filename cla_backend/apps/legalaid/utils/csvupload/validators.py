@@ -128,10 +128,20 @@ def inverted_reduce(x, f):
     return f(x)
 
 
-TRUTHY = lambda x: bool(x)  # noqa: E731
-FALSEY = lambda x: not bool(x)  # noqa: E731
-NOT_EQUAL = lambda y: lambda x: x != y  # noqa: E731
-AFTER_APR_2013 = lambda x: x and x > datetime.datetime(2013, 4, 1)  # noqa: E731
+def value_is_truthy(x):
+    return bool(x)
+
+
+def value_is_falsey(x):
+    return not bool(x)
+
+
+def value_not_equal(x):
+    return lambda y: x != y
+
+
+def value_is_date_after_apr_2013(x):
+    return x and x > datetime.datetime(2013, 4, 1)
 
 
 class depends_on(object):
@@ -142,7 +152,7 @@ class depends_on(object):
 
     >>> d = {'a': True}
     >>> class A(object):
-    >>>     @depends_on('a', check=TRUTHY)
+    >>>     @depends_on('a', check=value_is_truthy)
     >>>     def do_something(self, d):
     >>>         return 1
 
@@ -157,7 +167,7 @@ class depends_on(object):
     def __init__(self, depends_field, check=None):
         self.depends_field = depends_field
         if not check:
-            self.check = TRUTHY
+            self.check = value_is_truthy
         else:
             self.check = check
 
@@ -323,20 +333,20 @@ class ProviderCSVValidator(object):
                     % (closed.date().isoformat(), opened.date().isoformat())
                 )
 
-    @depends_on("Determination", check=FALSEY)
-    @depends_on("Date Opened", check=AFTER_APR_2013)
+    @depends_on("Determination", check=value_is_falsey)
+    @depends_on("Date Opened", check=value_is_date_after_apr_2013)
     def _validate_service_adaptation(self, cleaned_data):
         validate_present(
             cleaned_data.get("Adjustments / Adaptations"), message="Adjustments / Adaptations field is required"
         )
 
-    @depends_on("Determination", check=FALSEY)
+    @depends_on("Determination", check=value_is_falsey)
     def _validate_media_code(self, cleaned_data):
         validate_present(
             cleaned_data.get("Media Code"), message="Media Code is required because no determination was specified"
         )
 
-    @depends_on("Determination", check=FALSEY)
+    @depends_on("Determination", check=value_is_falsey)
     def _validate_eligibility_code(self, cleaned_data):
         code = cleaned_data.get("Eligibility Code")
         time_spent = cleaned_data.get("Time Spent", 0)
@@ -368,11 +378,11 @@ class ProviderCSVValidator(object):
 
         return PREFIX_CATEGORY_LOOKUP[list(prefixes)[0]]
 
-    @depends_on("Age Range", check=NOT_EQUAL(u"U"))
+    @depends_on("Age Range", check=value_not_equal(u"U"))
     def _validate_dob_present(self, cleaned_data):
         validate_present(cleaned_data.get("DOB"), "A date of birth is required unless" " Age range is set to 'U'")
 
-    @depends_on("Determination", check=TRUTHY)
+    @depends_on("Determination", check=value_is_truthy)
     def _validate_time_spent(self, cleaned_data, category):
         MAX_TIME_ALLOWED = 18
         if category == u"discrimination":
@@ -386,8 +396,8 @@ class ProviderCSVValidator(object):
         if time_spent_in_minutes % 6:
             raise serializers.ValidationError("Time spent (%s) must be in 6 minute intervals" % time_spent_in_minutes)
 
-    @depends_on("Exempted Code Reason", check=TRUTHY)
-    @depends_on("Determination", check=FALSEY)
+    @depends_on("Exempted Code Reason", check=value_is_truthy)
+    @depends_on("Determination", check=value_is_falsey)
     def _validate_exemption(self, cleaned_data, category):
         exempt_categories = {u"debt", u"discrimination", u"education"}
         if cleaned_data.get("Date Opened") > datetime.datetime(2013, 4, 1) and category in exempt_categories:
@@ -409,7 +419,7 @@ class ProviderCSVValidator(object):
                 "category is Education or Discrimination"
             )
 
-    @depends_on("Determination", check=FALSEY)
+    @depends_on("Determination", check=value_is_falsey)
     def _validate_stage_reached(self, cleaned_data):
         mt1 = cleaned_data.get("Matter Type 1")
         stage_reached_code = cleaned_data.get("Stage Reached")
@@ -425,19 +435,20 @@ class ProviderCSVValidator(object):
                 message='Field "Stage Reached" is not allowed because Matter Type 1: %s was specified' % mt1,
             )
 
-    @depends_on("Determination", check=TRUTHY)
+    @depends_on("Determination", check=value_is_truthy)
     def _validate_determination_dvca_is_family(self, cleaned_data, category):
         determination = cleaned_data.get("Determination")
         if determination == u"DVCA" and category != u"family":
             raise serializers.ValidationError("Category (%s) must be Family if Determination is DVCA" % category)
 
-    def _validate_data(self, cleaned_data, row_num):  # noqa: C901
+    @staticmethod
+    def format_message(s, row_num):
+        return "Row: %s - %s" % (row_num + 1, s)
+
+    def _validate_data(self, cleaned_data, row_num):
         """
         Like django's clean method, use this to validate across fields
         """
-
-        def _format_message(s):
-            return "Row: %s - %s" % (row_num + 1, s)
 
         errors = ErrorList()
 
@@ -460,19 +471,19 @@ class ProviderCSVValidator(object):
             try:
                 m(cleaned_data)
             except serializers.ValidationError as ve:
-                errors.append(_format_message(ve.message))
+                errors.append(self.format_message(ve.message, row_num))
 
         try:
             category = self._validate_category_consistency(cleaned_data)
         except serializers.ValidationError as ve:
-            errors.append(_format_message(ve.message))
+            errors.append(self.format_message(ve.message, row_num))
             raise serializers.ValidationError(errors)
 
         for m in validation_methods_depend_on_category:
             try:
                 m(cleaned_data, category)
             except serializers.ValidationError as ve:
-                errors.append(_format_message(ve.message))
+                errors.append(self.format_message(ve.message, row_num))
 
         if len(errors):
             raise serializers.ValidationError(errors)

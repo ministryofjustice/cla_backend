@@ -1,14 +1,13 @@
 # coding=utf-8
-import unittest
 import random
+import unittest
 
 import mock
-
-from ..calculator import EligibilityChecker, CapitalCalculator
-from ..models import CaseData, Facts
-from .. import constants
-from ..exceptions import PropertyExpectedException
 from . import fixtures
+from .. import constants
+from ..calculator import EligibilityChecker, CapitalCalculator
+from ..exceptions import PropertyExpectedException
+from ..models import CaseData, Facts
 
 
 class TestCapitalCalculator(unittest.TestCase):
@@ -643,26 +642,26 @@ class TestCalculator(CalculatorTestBase):
         self.default_calculator = EligibilityChecker(self.get_default_case_data())
 
     def test_gross_income_is_eligible(self):
-        too_little_money = constants.gross_income.BASE_LIMIT - 1
+        too_little_money = constants.BASE_LIMIT - 1
         case_data = self.get_default_case_data(you__income__earnings=too_little_money)
         checker = EligibilityChecker(case_data)
         self.assertTrue(checker.is_gross_income_eligible())
-        self.assertDictEqual(checker.calcs, {"gross_income": constants.gross_income.BASE_LIMIT - 1})
+        self.assertDictEqual(checker.calcs, {"gross_income": constants.BASE_LIMIT - 1})
 
     def test_gross_income_is_ineligible(self):
-        too_much_money = constants.gross_income.BASE_LIMIT + 1
+        too_much_money = constants.BASE_LIMIT + 1
         case_data = self.get_default_case_data(you__income__earnings=too_much_money)
         checker = EligibilityChecker(case_data)
         self.assertFalse(checker.is_gross_income_eligible())
-        self.assertDictEqual(checker.calcs, {"gross_income": constants.gross_income.BASE_LIMIT + 1})
+        self.assertDictEqual(checker.calcs, {"gross_income": constants.BASE_LIMIT + 1})
 
     def test_base_limit_gross_income_is_ineligible(self):
         """
         TEST: gross_income limit doesn't rise for 1-4 children.
         Should reject someone for having income more than 2657
         """
-        too_much_money = constants.gross_income.BASE_LIMIT + 1
-        for dep_children in range(1, constants.gross_income.INCLUSIVE_CHILDREN_BASE + 1):
+        too_much_money = constants.BASE_LIMIT + 1
+        for dep_children in range(1, constants.INCLUSIVE_CHILDREN_BASE + 1):
             case_data = self.get_default_case_data(
                 you__income__earnings=too_much_money, facts__dependants_young=dep_children, facts__dependants_old=0
             )
@@ -675,7 +674,7 @@ class TestCalculator(CalculatorTestBase):
         if you have > 4 children then earning 1 more than base limit
         should be fine.
         """
-        too_much_money = constants.gross_income.BASE_LIMIT + 1
+        too_much_money = constants.BASE_LIMIT + 1
         case_data = self.get_default_case_data(
             you__income__earnings=too_much_money, facts__dependants_young=5, facts__dependants_old=0
         )
@@ -931,8 +930,8 @@ class GrossIncomeTestCase(CalculatorTestBase):
         """
         TEST: eligibility depends on mocked limit
         """
-        with mock.patch.object(constants, "gross_income") as mocked_constant_gross_income:
-            mocked_constant_gross_income.get_limit.return_value = 500
+        with mock.patch.object(constants, "get_gross_income_limit") as mocked_get_gross_income_limit:
+            mocked_get_gross_income_limit.return_value = 500
             case_data = mock.MagicMock()
             type(case_data.facts).on_passported_benefits = mock.PropertyMock(return_value=False)
             type(case_data.facts).dependant_children = mock.PropertyMock(return_value=0)
@@ -942,15 +941,15 @@ class GrossIncomeTestCase(CalculatorTestBase):
                 mocked_gross_income.return_value = 500
                 ec = EligibilityChecker(case_data)
                 self.assertTrue(ec.is_gross_income_eligible())
-                mocked_constant_gross_income.get_limit.assert_called_with(0)
+                mocked_get_gross_income_limit.assert_called_with(0)
                 mocked_gross_income.assert_called_once_with()
 
     def test_is_gross_income_eligible_under_limit(self):
         """
         TEST: eligibility depends on mocked limit
         """
-        with mock.patch.object(constants, "gross_income") as mocked_constant_gross_income:
-            mocked_constant_gross_income.get_limit.return_value = 500
+        with mock.patch.object(constants, "get_gross_income_limit") as mocked_get_gross_income_limit:
+            mocked_get_gross_income_limit.return_value = 500
             case_data = mock.MagicMock()
             type(case_data.facts).on_passported_benefits = mock.PropertyMock(return_value=False)
             type(case_data.facts).dependant_children = mock.PropertyMock(return_value=0)
@@ -960,15 +959,15 @@ class GrossIncomeTestCase(CalculatorTestBase):
                 mocked_gross_income.return_value = 499
                 ec = EligibilityChecker(case_data)
                 self.assertTrue(ec.is_gross_income_eligible())
-                mocked_constant_gross_income.get_limit.assert_called_with(0)
+                mocked_get_gross_income_limit.assert_called_with(0)
                 mocked_gross_income.assert_called_once_with()
 
     def test_is_gross_income_not_eligible(self):
         """
         TEST: eligibility depends on mocked limit
         """
-        with mock.patch.object(constants, "gross_income") as mocked_constant_gross_income:
-            mocked_constant_gross_income.get_limit.return_value = 500
+        with mock.patch.object(constants, "get_gross_income_limit") as mocked_get_gross_income_limit:
+            mocked_get_gross_income_limit.return_value = 500
             case_data = mock.MagicMock()
             type(case_data.facts).on_passported_benefits = mock.PropertyMock(return_value=False)
             type(case_data.facts).dependant_children = mock.PropertyMock(return_value=0)
@@ -978,7 +977,7 @@ class GrossIncomeTestCase(CalculatorTestBase):
                 mocked_gross_income.return_value = 501
                 ec = EligibilityChecker(case_data)
                 self.assertFalse(ec.is_gross_income_eligible())
-                mocked_constant_gross_income.get_limit.assert_called_with(0)
+                mocked_get_gross_income_limit.assert_called_with(0)
                 mocked_gross_income.assert_called_once_with()
 
 
@@ -1049,8 +1048,8 @@ class DisposableIncomeTestCase(unittest.TestCase):
 
             expected_value = (
                 ec.gross_income
-                - constants.disposable_income.PARTNER_ALLOWANCE
-                - (facts.dependants_young + facts.dependants_old) * constants.disposable_income.CHILD_ALLOWANCE
+                - constants.PARTNER_ALLOWANCE
+                - (facts.dependants_young + facts.dependants_old) * constants.CHILD_ALLOWANCE
                 - you.deductions.income_tax
                 - you.deductions.national_insurance
                 - you.deductions.maintenance
@@ -1065,8 +1064,8 @@ class DisposableIncomeTestCase(unittest.TestCase):
                 - partner.deductions.rent
                 - partner.deductions.childcare
                 - partner.deductions.criminal_legalaid_contributions
-                - constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
-                - constants.disposable_income.EMPLOYMENT_COSTS_ALLOWANCE
+                - constants.EMPLOYMENT_COSTS_ALLOWANCE
+                - constants.EMPLOYMENT_COSTS_ALLOWANCE
             )
 
             self.assertEqual(expected_value, ec.disposable_income)
@@ -1097,7 +1096,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
                 income_tax=random.randint(50, 1000),
                 national_insurance=random.randint(50, 1000),
                 maintenance=random.randint(50, 1000),
-                mortgage=constants.disposable_income.CHILDLESS_HOUSING_CAP - 1000,
+                mortgage=constants.CHILDLESS_HOUSING_CAP - 1000,
                 rent=0,
                 childcare=random.randint(50, 1000),
                 criminal_legalaid_contributions=random.randint(50, 1000),
@@ -1155,7 +1154,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
                 income_tax=random.randint(50, 1000),
                 national_insurance=random.randint(50, 1000),
                 maintenance=random.randint(50, 1000),
-                mortgage=constants.disposable_income.CHILDLESS_HOUSING_CAP + 1000,
+                mortgage=constants.CHILDLESS_HOUSING_CAP + 1000,
                 rent=0,
                 childcare=random.randint(50, 1000),
                 criminal_legalaid_contributions=random.randint(50, 1000),
@@ -1176,7 +1175,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
                 - you.deductions.income_tax
                 - you.deductions.national_insurance
                 - you.deductions.maintenance
-                - constants.disposable_income.CHILDLESS_HOUSING_CAP
+                - constants.CHILDLESS_HOUSING_CAP
                 - you.deductions.childcare
                 - you.deductions.criminal_legalaid_contributions
             )
@@ -1250,8 +1249,8 @@ class DisposableIncomeTestCase(unittest.TestCase):
             facts_dependants = facts.dependants_young + facts.dependants_old
             expected_value = (
                 ec.gross_income
-                - constants.disposable_income.PARTNER_ALLOWANCE
-                - facts_dependants * constants.disposable_income.CHILD_ALLOWANCE
+                - constants.PARTNER_ALLOWANCE
+                - facts_dependants * constants.CHILD_ALLOWANCE
                 - you.deductions.income_tax
                 - you.deductions.national_insurance
                 - you.deductions.maintenance
@@ -1295,7 +1294,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
         with mock.patch.object(
             EligibilityChecker, "disposable_income", new_callable=mock.PropertyMock
         ) as mocked_disposable_income:
-            mocked_disposable_income.return_value = constants.disposable_income.LIMIT
+            mocked_disposable_income.return_value = constants.LIMIT
             ec = EligibilityChecker(case_data)
 
             self.assertTrue(ec.is_disposable_income_eligible())
@@ -1311,7 +1310,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
         with mock.patch.object(
             EligibilityChecker, "disposable_income", new_callable=mock.PropertyMock
         ) as mocked_disposable_income:
-            mocked_disposable_income.return_value = constants.disposable_income.LIMIT - 1000
+            mocked_disposable_income.return_value = constants.LIMIT - 1000
             ec = EligibilityChecker(case_data)
 
             self.assertTrue(ec.is_disposable_income_eligible())
@@ -1327,7 +1326,7 @@ class DisposableIncomeTestCase(unittest.TestCase):
         with mock.patch.object(
             EligibilityChecker, "disposable_income", new_callable=mock.PropertyMock
         ) as mocked_disposable_income:
-            mocked_disposable_income.return_value = constants.disposable_income.LIMIT + 1
+            mocked_disposable_income.return_value = constants.LIMIT + 1
             ec = EligibilityChecker(case_data)
 
             self.assertFalse(ec.is_disposable_income_eligible())
@@ -1358,9 +1357,7 @@ class DisposableCapitalTestCase(unittest.TestCase):
         )
 
         pensioner_disregard_limit = 5000000
-        with mock.patch.object(
-            constants.disposable_capital, "PENSIONER_DISREGARD_LIMIT_LEVELS"
-        ) as mocked_pensioner_disregard:
+        with mock.patch.object(constants, "PENSIONER_DISREGARD_LIMIT_LEVELS") as mocked_pensioner_disregard:
             mocked_pensioner_disregard.get.return_value = pensioner_disregard_limit
             ec = EligibilityChecker(case_data)
 
@@ -1392,9 +1389,7 @@ class DisposableCapitalTestCase(unittest.TestCase):
         )
 
         pensioner_disregard_limit = 5000000
-        with mock.patch.object(
-            constants.disposable_capital, "PENSIONER_DISREGARD_LIMIT_LEVELS"
-        ) as mocked_pensioner_disregard:
+        with mock.patch.object(constants, "PENSIONER_DISREGARD_LIMIT_LEVELS") as mocked_pensioner_disregard:
             mocked_pensioner_disregard.get.return_value = pensioner_disregard_limit
             ec = EligibilityChecker(case_data)
 
@@ -1407,9 +1402,9 @@ class DisposableCapitalTestCase(unittest.TestCase):
 
     def test_is_disposable_capital_eligible_under_limit(self):
         """
-        TEST: with mocked disposable_capital_assets and get_limit
+        TEST: with mocked disposable_capital_assets and get_disposable_capital_limit
         """
-        with mock.patch.object(constants.disposable_capital, "get_limit") as mocked_get_limit:
+        with mock.patch.object(constants, "get_disposable_capital_limit") as mocked_get_limit:
             mocked_get_limit.return_value = 700000
             case_data = mock.MagicMock()
             type(case_data).category = mock.PropertyMock(return_value=u"blah blah")
@@ -1424,9 +1419,9 @@ class DisposableCapitalTestCase(unittest.TestCase):
 
     def test_is_disposable_capital_eligible_on_limit(self):
         """
-        TEST: with mocked disposable_capital_assets and get_limit
+        TEST: with mocked disposable_capital_assets and get_disposable_capital_limit
         """
-        with mock.patch.object(constants.disposable_capital, "get_limit") as mocked_get_limit:
+        with mock.patch.object(constants, "get_disposable_capital_limit") as mocked_get_limit:
             mocked_get_limit.return_value = 700000
             case_data = mock.MagicMock()
             type(case_data).category = mock.PropertyMock(return_value=u"blah blah")
@@ -1441,9 +1436,9 @@ class DisposableCapitalTestCase(unittest.TestCase):
 
     def test_is_disposable_capital_not_eligible(self):
         """
-        TEST: with mocked disposable_capital_assets and get_limit
+        TEST: with mocked disposable_capital_assets and get_disposable_capital_limit
         """
-        with mock.patch.object(constants.disposable_capital, "get_limit") as mocked_get_limit:
+        with mock.patch.object(constants, "get_disposable_capital_limit") as mocked_get_limit:
             mocked_get_limit.return_value = 700000
             case_data = mock.MagicMock()
             type(case_data).category = mock.PropertyMock(return_value=u"blah blah")

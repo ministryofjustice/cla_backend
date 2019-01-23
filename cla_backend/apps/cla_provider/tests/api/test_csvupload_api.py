@@ -654,7 +654,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 class DependsOnDecoratorTestCase(unittest.TestCase):
     def test_method_called(self):
         class Test1(object):
-            @v.depends_on("a", check=v.TRUTHY)
+            @v.depends_on("a", check=v.value_is_truthy)
             def do_something(self, d):
                 return 1
 
@@ -672,7 +672,7 @@ class DependsOnDecoratorTestCase(unittest.TestCase):
 
     def test_method_not_called(self):
         class Test1(object):
-            @v.depends_on("a", check=v.FALSEY)
+            @v.depends_on("a", check=v.value_is_falsey)
             def do_something(self, d):
                 return 1
 

@@ -448,22 +448,23 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
             return False
         return any(self.specific_benefits.values())
 
-    def to_case_data(self):  # noqa: C901
-        def compose_dict(model=self, props=None):
-            if not props:
-                props = []
-            if not model:
-                return None
+    @staticmethod
+    def compose_dict(model, props=None):
+        if not props:
+            props = []
+        if not model:
+            return None
 
-            obj = {}
-            for prop in props:
-                value = getattr(model, prop)
-                if value is not None:
-                    if isinstance(value, MoneyInterval):
-                        value = value.as_monthly()
-                    obj[prop] = value
-            return obj
+        obj = {}
+        for prop in props:
+            value = getattr(model, prop)
+            if value is not None:
+                if isinstance(value, MoneyInterval):
+                    value = value.as_monthly()
+                obj[prop] = value
+        return obj
 
+    def to_case_data(self):
         d = {}
 
         if self.category:
@@ -471,8 +472,8 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
 
         d["property_data"] = self.property_set.values("value", "mortgage_left", "share", "disputed", "main")
 
-        d["facts"] = compose_dict(
-            props=["dependants_old", "dependants_young", "has_partner", "is_you_or_your_partner_over_60"]
+        d["facts"] = self.compose_dict(
+            model=self, props=["dependants_old", "dependants_young", "has_partner", "is_you_or_your_partner_over_60"]
         )
 
         d["facts"]["on_passported_benefits"] = self.on_passported_benefits
@@ -480,10 +481,10 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
 
         if self.you:
             you_props = {
-                "savings": compose_dict(
+                "savings": self.compose_dict(
                     self.you.savings, ["bank_balance", "investment_balance", "credit_balance", "asset_balance"]
                 ),
-                "income": compose_dict(
+                "income": self.compose_dict(
                     self.you.income,
                     [
                         "earnings",
@@ -497,7 +498,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
                         "self_employed",
                     ],
                 ),
-                "deductions": compose_dict(
+                "deductions": self.compose_dict(
                     self.you.deductions,
                     [
                         "income_tax",
@@ -513,7 +514,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
             d["you"] = {prop: value for prop, value in you_props.items() if value}
 
         if self.has_partner and self.partner:
-            partner_income = compose_dict(
+            partner_income = self.compose_dict(
                 self.partner.income,
                 [
                     "earnings",
@@ -537,11 +538,11 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
                 partner_income["child_benefits"] = 0
 
             partner_props = {
-                "savings": compose_dict(
+                "savings": self.compose_dict(
                     self.partner.savings, ["bank_balance", "investment_balance", "credit_balance", "asset_balance"]
                 ),
                 "income": partner_income,
-                "deductions": compose_dict(
+                "deductions": self.compose_dict(
                     self.partner.deductions,
                     [
                         "income_tax",
@@ -557,7 +558,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
             d["partner"] = {prop: value for prop, value in partner_props.items() if value}
 
         if self.disputed_savings:
-            d["disputed_savings"] = compose_dict(
+            d["disputed_savings"] = self.compose_dict(
                 self.disputed_savings, ["bank_balance", "investment_balance", "credit_balance", "asset_balance"]
             )
 

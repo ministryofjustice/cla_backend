@@ -18,7 +18,8 @@ from cla_common.constants import FEEDBACK_ISSUE
 from .signals import log_staff_created, log_staff_modified
 
 
-random_uuid_str = lambda: str(uuid.uuid4())  # noqa: E731
+def random_uuid_str():
+    return str(uuid.uuid4())
 
 
 class ProviderManager(models.Manager):

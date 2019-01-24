@@ -54,7 +54,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
     chown www-data:www-data /etc/nginx/conf.d/htpassword
 
 # Pip install Python packages
-RUN pip install -U setuptools pip wheel
+RUN pip install -U setuptools pip==18.1 wheel
 RUN pip install GitPython uwsgi requests
 
 RUN mkdir -p /var/log/wsgi && \

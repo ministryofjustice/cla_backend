@@ -650,6 +650,52 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         except (serializers.ValidationError, Exception) as e:
             self.fail("{}".format(e))
 
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_for_debt_outcome_code_D_PLACE_HOLDER_is_valid(self):
+        data = [
+            [
+                u"3333333",
+                u"0001",
+                u"2B222B",
+                u"A N Other",
+                u"Corgi",
+                u"02/01/2014",
+                u"E",
+                u"M",
+                u"1",
+                u"",
+                u"",
+                u"SW1A 1AA",
+                u"X",
+                u"DPDE",
+                u"DVAL",
+                u"DA",
+                u"D_PLACE_HOLDER",
+                u"",
+                u"01/09/2018",
+                u"01/10/2018",
+                u"18",
+                u"99.5",
+                u"",
+                u"ILL",
+                u"0",
+                u"0",
+                u"FAFA",
+                u"N",
+                u"",
+                u"",
+                u"NAR",
+                u"",
+                u"DK",
+                u"TA",
+            ]
+        ]
+        validator = v.ProviderCSVValidator(data)
+        try:
+            validator.validate()
+        except (serializers.ValidationError, Exception) as e:
+            self.fail("{}".format(e))
+
 
 class DependsOnDecoratorTestCase(unittest.TestCase):
     def test_method_called(self):

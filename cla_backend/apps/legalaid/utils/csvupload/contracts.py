@@ -169,6 +169,7 @@ housing_category_spec = {
         u"HX",
         u"HY",
         u"HZ",
+        u"HA_XX",
     },
     "MATTER_TYPE1": {
         u"HRNT",

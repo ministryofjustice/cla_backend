@@ -651,7 +651,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             self.fail("{}".format(e))
 
     @override_settings(CONTRACT_2018_ENABLED=True)
-    def test_validator_for_family_outcome_code_F_PLACE_HOLDER_2_is_valid(self):
+    def test_validator_for_family_outcome_code_F_PLACE_HOLDER_3_is_valid(self):
         data = [
             [
                 u"3333333",
@@ -670,7 +670,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                 u"FAMA",
                 u"FADV",
                 u"FA",
-                u"F_PLACE_HOLDER_2",
+                u"F_PLACE_HOLDER_3",
                 u"",
                 u"01/09/2018",
                 u"01/10/2018",

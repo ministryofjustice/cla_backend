@@ -103,6 +103,7 @@ family_category_spec = {
         u"FY",
         u"FZ",
         u"FS",
+        u"F_PLACE_HOLDER_2",
     },
     "MATTER_TYPE1": {
         u"FAMA",

@@ -664,7 +664,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             self.fail("{}".format(e))
 
     @override_settings(CONTRACT_2018_ENABLED=True)
-    def test_validator_outcome_code_ha_xx_is_valid(self):
+    def test_validator_housing_outcome_code_haa_is_valid(self):
         data = [
             [
                 u"3333333",
@@ -683,7 +683,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                 u"HRNT",
                 u"HPRI",
                 u"HA",
-                u"HA_XX",
+                u"HAA",
                 u"",
                 u"01/09/2018",
                 u"01/10/2018",

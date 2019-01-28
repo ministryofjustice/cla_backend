@@ -169,7 +169,6 @@ housing_category_spec = {
         u"HX",
         u"HY",
         u"HZ",
-        u"HA_XX",
     },
     "MATTER_TYPE1": {
         u"HRNT",
@@ -245,6 +244,7 @@ contract_2018_category_spec = {
     u"housing": deepcopy(housing_category_spec),
     u"welfare": deepcopy(welfare_category_spec),
 }
+contract_2018_category_spec["housing"]["OUTCOME_CODES"].update({u"HAA"})
 
 
 def get_all_values_across_categories(key, applicable_contract):

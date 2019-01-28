@@ -103,7 +103,6 @@ family_category_spec = {
         u"FY",
         u"FZ",
         u"FS",
-        u"F_PLACE_HOLDER_2",
     },
     "MATTER_TYPE1": {
         u"FAMA",
@@ -245,6 +244,8 @@ contract_2018_category_spec = {
     u"housing": deepcopy(housing_category_spec),
     u"welfare": deepcopy(welfare_category_spec),
 }
+
+contract_2018_category_spec["family"]["OUTCOME_CODES"].update({u"FAB"})
 
 
 def get_all_values_across_categories(key, applicable_contract):

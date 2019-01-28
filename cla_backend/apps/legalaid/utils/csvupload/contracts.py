@@ -42,7 +42,6 @@ discrimination_category_spec = {
         u"QX",
         u"QY",
         u"QZ",
-        u"QAA",
     },
     "MATTER_TYPE1": {u"QPRO", u"QEMP", u"QEQP", u"QPRE", u"QFUN", u"QEDU", u"QPUB", u"QCON"},
     "MATTER_TYPE2": {u"QAGE", u"QDIS", u"QGEN", u"QMCP", u"QPRM", u"QRAC", u"QROB", u"QSEX", u"QSOR", u"QMDI"},
@@ -245,6 +244,8 @@ contract_2018_category_spec = {
     u"housing": deepcopy(housing_category_spec),
     u"welfare": deepcopy(welfare_category_spec),
 }
+
+contract_2018_category_spec["discrimination"]["OUTCOME_CODES"].update({u"QAA"})
 
 
 def get_all_values_across_categories(key, applicable_contract):

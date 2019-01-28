@@ -651,7 +651,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             self.fail("{}".format(e))
 
     @override_settings(CONTRACT_2018_ENABLED=True)
-    def test_validator_for_debt_outcome_code_D_PLACE_HOLDER_is_valid(self):
+    def test_validator_for_debt_outcome_code_DAA_is_valid(self):
         data = [
             [
                 u"3333333",
@@ -670,7 +670,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                 u"DPDE",
                 u"DVAL",
                 u"DA",
-                u"D_PLACE_HOLDER",
+                u"DAA",
                 u"",
                 u"01/09/2018",
                 u"01/10/2018",

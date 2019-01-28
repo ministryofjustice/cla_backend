@@ -15,7 +15,7 @@ contract_2013_determination_codes = {u"OOSC", u"OSPF", u"CHNM", u"FINI", u"DVCA"
 contract_2018_determination_codes = copy(contract_2013_determination_codes) | {"FAFA"}
 
 debt_category_spec = {
-    "OUTCOME_CODES": {u"DA", u"DC", u"DD", u"DG", u"DH", u"DI", u"DU", u"DV", u"DW", u"DX", u"DY", u"DZ", u"DAA"},
+    "OUTCOME_CODES": {u"DA", u"DC", u"DD", u"DG", u"DH", u"DI", u"DU", u"DV", u"DW", u"DX", u"DY", u"DZ"},
     "MATTER_TYPE1": {u"DPDE", u"DNPD", u"DMDE", u"DMCA", u"DMAP", u"DIVB", u"DORH", u"DTOT"},
     "MATTER_TYPE2": {u"DVAL", u"DMIX", u"DCRE", u"DIBP", u"DORD", u"DOTH", u"DSCH"},
     "STAGE_REACHED": {u"DA", u"DB", u"DC", u"DD"},
@@ -244,6 +244,8 @@ contract_2018_category_spec = {
     u"housing": deepcopy(housing_category_spec),
     u"welfare": deepcopy(welfare_category_spec),
 }
+
+contract_2018_category_spec["family"]["OUTCOME_CODES"].update({u"DAA"})
 
 
 def get_all_values_across_categories(key, applicable_contract):

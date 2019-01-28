@@ -651,7 +651,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             self.fail("{}".format(e))
 
     @override_settings(CONTRACT_2018_ENABLED=True)
-    def test_validator_discrimination_outcome_code_is_valid(self):
+    def test_validator_discrimination_outcome_code_QAA_is_valid(self):
         data = [
             [
                 u"3333333",
@@ -670,7 +670,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                 u"QPRO",
                 u"QAGE",
                 u"QA",
-                u"Q_PLACE_HOLDER",
+                u"QAA",
                 u"",
                 u"01/09/2018",
                 u"01/10/2018",

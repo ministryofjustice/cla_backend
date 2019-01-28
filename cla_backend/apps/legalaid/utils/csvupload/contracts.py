@@ -42,7 +42,7 @@ discrimination_category_spec = {
         u"QX",
         u"QY",
         u"QZ",
-        u"Q_PLACE_HOLDER",
+        u"QAA",
     },
     "MATTER_TYPE1": {u"QPRO", u"QEMP", u"QEQP", u"QPRE", u"QFUN", u"QEDU", u"QPUB", u"QCON"},
     "MATTER_TYPE2": {u"QAGE", u"QDIS", u"QGEN", u"QMCP", u"QPRM", u"QRAC", u"QROB", u"QSEX", u"QSOR", u"QMDI"},

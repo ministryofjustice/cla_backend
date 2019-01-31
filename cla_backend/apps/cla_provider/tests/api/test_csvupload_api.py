@@ -1,19 +1,19 @@
 import datetime
-from decimal import Decimal
 import re
 import unittest
+from decimal import Decimal
 
 from django.contrib.auth.models import User
 from django.test import override_settings
+from provider.oauth2.models import AccessToken
 from rest_framework import serializers
 from rest_framework.test import APITestCase
-from provider.oauth2.models import AccessToken
 
 import legalaid.utils.csvupload.validators as v
+from cla_provider.models import Staff
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
 from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
-from cla_provider.models import Staff
 
 
 class CSVUploadAPIMixin(SimpleResourceAPIMixin):
@@ -192,6 +192,43 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Postcode": u"SW1A 1AA",
             "Ethnicity": u"1",
         }
+
+        contract_2018_data = v.contract_2018_validators.copy()
+        contract_2018_data["CLA Reference Number"] = u"3333333"
+        contract_2018_data["Client Ref"] = u"0001"
+        contract_2018_data["Account Number"] = u"2B222B"
+        contract_2018_data["First Name"] = u"A N Other"
+        contract_2018_data["Surname"] = u"Corgi"
+        contract_2018_data["DOB"] = u"02/01/2014"
+        contract_2018_data["Age Range"] = u"E"
+        contract_2018_data["Gender"] = u"M"
+        contract_2018_data["Ethnicity"] = u"1"
+        contract_2018_data["Unused1"] = u""
+        contract_2018_data["Unused2"] = u""
+        contract_2018_data["Postcode"] = u"SW1A 1AA"
+        contract_2018_data["Eligibility Code"] = u"X"
+        contract_2018_data["Matter Type 1"] = u""
+        contract_2018_data["Matter Type 2"] = u""
+        contract_2018_data["Stage Reached"] = u""
+        contract_2018_data["Outcome Code"] = u""
+        contract_2018_data["Unused3"] = u""
+        contract_2018_data["Date Opened"] = u"01/09/2018"
+        contract_2018_data["Date Closed"] = u"01/10/2018"
+        contract_2018_data["Time Spent"] = u"18"
+        contract_2018_data["Case Costs"] = u"99.5"
+        contract_2018_data["Unused4"] = u""
+        contract_2018_data["Disability Code"] = u"ILL"
+        contract_2018_data["Disbursements"] = u"0"
+        contract_2018_data["Travel Costs"] = u"0"
+        contract_2018_data["Determination"] = u""
+        contract_2018_data["Suitable for Telephone Advice"] = u"N"
+        contract_2018_data["Exceptional Cases (ref)"] = u""
+        contract_2018_data["Exempted Reason Code"] = u""
+        contract_2018_data["Adjustments / Adaptations"] = u"NAR"
+        contract_2018_data["Signposting / Referral"] = u""
+        contract_2018_data["Media Code"] = u"DK"
+        contract_2018_data["Telephone / Online"] = u"TA"
+        self.contract_2018_data = contract_2018_data
 
     def test_validator_valid(self):
         validator = v.ProviderCSVValidator(self.data)
@@ -604,46 +641,22 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         with self.assertRaisesRegexp(serializers.ValidationError, r".*must be one of"):
             test_in("q")
 
+    def get_contract_2018_data_row(self, override=None):
+        row = self.contract_2018_data.copy()
+        if override:
+            row.update(override)
+        return [val for key, val in row.items()]
+
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fafa_determination_code_is_valid(self):
-        data = [
-            [
-                u"3333333",
-                u"0001",
-                u"2B222B",
-                u"A N Other",
-                u"Corgi",
-                u"02/01/2014",
-                u"E",
-                u"M",
-                u"1",
-                u"",
-                u"",
-                u"SW1A 1AA",
-                u"X",
-                u"EPRO",
-                u"ESOS",
-                u"EA",
-                u"EB",
-                u"",
-                u"01/09/2018",
-                u"01/10/2018",
-                u"18",
-                u"99.5",
-                u"",
-                u"ILL",
-                u"0",
-                u"0",
-                u"FAFA",
-                u"N",
-                u"",
-                u"",
-                u"NAR",
-                u"",
-                u"DK",
-                u"TA",
-            ]
-        ]
+        test_values = {
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Stage Reached": u"EA",
+            "Outcome Code": u"EB",
+            "Determination": u"FAFA",
+        }
+        data = [self.get_contract_2018_data_row(override=test_values)]
         validator = v.ProviderCSVValidator(data)
         try:
             validator.validate()

@@ -665,44 +665,13 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_housing_outcome_code_haa_is_valid(self):
-        data = [
-            [
-                u"3333333",
-                u"0001",
-                u"2B222B",
-                u"A N Other",
-                u"Corgi",
-                u"02/01/2014",
-                u"E",
-                u"M",
-                u"1",
-                u"",
-                u"",
-                u"SW1A 1AA",
-                u"X",
-                u"HRNT",
-                u"HPRI",
-                u"HA",
-                u"HAA",
-                u"",
-                u"01/09/2018",
-                u"01/10/2018",
-                u"18",
-                u"99.5",
-                u"",
-                u"ILL",
-                u"0",
-                u"0",
-                u"FAFA",
-                u"N",
-                u"",
-                u"",
-                u"NAR",
-                u"",
-                u"DK",
-                u"TA",
-            ]
-        ]
+        test_values = {
+            "Matter Type 1": u"HRNT",
+            "Matter Type 2": u"HPRI",
+            "Stage Reached": u"HA",
+            "Outcome Code": u"HAA",
+        }
+        data = [self.get_contract_2018_data_row(override=test_values)]
         validator = v.ProviderCSVValidator(data)
         try:
             validator.validate()

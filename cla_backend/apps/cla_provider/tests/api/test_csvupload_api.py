@@ -1,19 +1,19 @@
 import datetime
-from decimal import Decimal
 import re
 import unittest
+from decimal import Decimal
 
 from django.contrib.auth.models import User
 from django.test import override_settings
+from provider.oauth2.models import AccessToken
 from rest_framework import serializers
 from rest_framework.test import APITestCase
-from provider.oauth2.models import AccessToken
 
 import legalaid.utils.csvupload.validators as v
+from cla_provider.models import Staff
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
 from legalaid.tests.views.test_base import CLAProviderAuthBaseApiTestMixin
-from cla_provider.models import Staff
 
 
 class CSVUploadAPIMixin(SimpleResourceAPIMixin):
@@ -642,7 +642,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             test_in("q")
 
     def get_contract_2018_data_row(self, override=None):
-        row = copy(self.contract_2018_data)
+        row = self.contract_2018_data.copy()
         if override:
             row.update(override)
         return [val for key, val in row.items()]

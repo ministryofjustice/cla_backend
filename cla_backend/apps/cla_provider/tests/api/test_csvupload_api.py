@@ -193,6 +193,43 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Ethnicity": u"1",
         }
 
+        contract_2018_data = v.contract_2018_validators.copy()
+        contract_2018_data["CLA Reference Number"] = u"3333333"
+        contract_2018_data["Client Ref"] = u"0001"
+        contract_2018_data["Account Number"] = u"2B222B"
+        contract_2018_data["First Name"] = u"A N Other"
+        contract_2018_data["Surname"] = u"Corgi"
+        contract_2018_data["DOB"] = u"02/01/2014"
+        contract_2018_data["Age Range"] = u"E"
+        contract_2018_data["Gender"] = u"M"
+        contract_2018_data["Ethnicity"] = u"1"
+        contract_2018_data["Unused1"] = u""
+        contract_2018_data["Unused2"] = u""
+        contract_2018_data["Postcode"] = u"SW1A 1AA"
+        contract_2018_data["Eligibility Code"] = u"X"
+        contract_2018_data["Matter Type 1"] = u""
+        contract_2018_data["Matter Type 2"] = u""
+        contract_2018_data["Stage Reached"] = u""
+        contract_2018_data["Outcome Code"] = u""
+        contract_2018_data["Unused3"] = u""
+        contract_2018_data["Date Opened"] = u"01/09/2018"
+        contract_2018_data["Date Closed"] = u"01/10/2018"
+        contract_2018_data["Time Spent"] = u"18"
+        contract_2018_data["Case Costs"] = u"99.5"
+        contract_2018_data["Unused4"] = u""
+        contract_2018_data["Disability Code"] = u"ILL"
+        contract_2018_data["Disbursements"] = u"0"
+        contract_2018_data["Travel Costs"] = u"0"
+        contract_2018_data["Determination"] = u""
+        contract_2018_data["Suitable for Telephone Advice"] = u"N"
+        contract_2018_data["Exceptional Cases (ref)"] = u""
+        contract_2018_data["Exempted Reason Code"] = u""
+        contract_2018_data["Adjustments / Adaptations"] = u"NAR"
+        contract_2018_data["Signposting / Referral"] = u""
+        contract_2018_data["Media Code"] = u"DK"
+        contract_2018_data["Telephone / Online"] = u"TA"
+        self.contract_2018_data = contract_2018_data
+
     def test_validator_valid(self):
         validator = v.ProviderCSVValidator(self.data)
         self.assertEqual(len(validator.validate()), 2)
@@ -603,6 +640,12 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
         with self.assertRaisesRegexp(serializers.ValidationError, r".*must be one of"):
             test_in("q")
+
+    def get_contract_2018_data_row(self, override=None):
+        row = copy(self.contract_2018_data)
+        if override:
+            row.update(override)
+        return [val for key, val in row.items()]
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fafa_determination_code_is_valid(self):

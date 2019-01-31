@@ -663,6 +663,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         except (serializers.ValidationError, Exception) as e:
             self.fail("{}".format(e))
 
+
 class DependsOnDecoratorTestCase(unittest.TestCase):
     def test_method_called(self):
         class Test1(object):

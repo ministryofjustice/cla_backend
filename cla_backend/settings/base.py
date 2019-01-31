@@ -13,7 +13,7 @@ root = lambda *x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
 sys.path.insert(0, root("apps"))
 sys.path.insert(0, root("libs"))
 
-HEALTHCHECKS = ["moj_irat.healthchecks.database_healthcheck"]
+HEALTHCHECKS = ["moj_irat.healthchecks.database_healthcheck", "status.healthchecks.check_disk"]
 
 AUTODISCOVER_HEALTHCHECKS = True
 

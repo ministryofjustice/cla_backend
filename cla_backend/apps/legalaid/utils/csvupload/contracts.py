@@ -245,8 +245,8 @@ contract_2018_category_spec = {
     u"welfare": deepcopy(welfare_category_spec),
 }
 contract_2018_category_spec["housing"]["OUTCOME_CODES"].update({u"HAA"})
-
 contract_2018_category_spec["family"]["OUTCOME_CODES"].update({u"FAA"})
+contract_2018_category_spec["family"]["OUTCOME_CODES"].update({u"FAB"})
 
 
 def get_all_values_across_categories(key, applicable_contract):

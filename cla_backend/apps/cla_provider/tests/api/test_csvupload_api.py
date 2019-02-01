@@ -641,11 +641,19 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         with self.assertRaisesRegexp(serializers.ValidationError, r".*must be one of"):
             test_in("q")
 
-    def get_contract_2018_data_row(self, override=None):
+    def _generate_contract_2018_data_row(self, override=None):
         row = self.contract_2018_data.copy()
         if override:
             row.update(override)
         return [val for key, val in row.items()]
+
+    def _test_generated_2018_contract_row_validates(self, override):
+        data = [self._generate_contract_2018_data_row(override)]
+        validator = v.ProviderCSVValidator(data)
+        try:
+            validator.validate()
+        except (serializers.ValidationError, Exception) as e:
+            self.fail("{}".format(e))
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fafa_determination_code_is_valid(self):
@@ -656,12 +664,17 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Outcome Code": u"EB",
             "Determination": u"FAFA",
         }
-        data = [self.get_contract_2018_data_row(override=test_values)]
-        validator = v.ProviderCSVValidator(data)
-        try:
-            validator.validate()
-        except (serializers.ValidationError, Exception) as e:
-            self.fail("{}".format(e))
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_housing_outcome_code_haa_is_valid(self):
+        test_values = {
+            "Matter Type 1": u"HRNT",
+            "Matter Type 2": u"HPRI",
+            "Stage Reached": u"HA",
+            "Outcome Code": u"HAA",
+        }
+        self._test_generated_2018_contract_row_validates(override=test_values)
 
 
 class DependsOnDecoratorTestCase(unittest.TestCase):

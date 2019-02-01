@@ -235,8 +235,8 @@ contract_2013_category_spec = {
 }
 
 # TODO Implement contract 2018 changes here
-housing_category_spec.update({u"HAA"})
-discrimination_category_spec.update({u"QAA"})
+housing_category_spec["OUTCOME_CODES"].update({u"HAA"})
+discrimination_category_spec["OUTCOME_CODES"].update({u"QAA"})
 
 contract_2018_category_spec = {
     u"debt": deepcopy(debt_category_spec),

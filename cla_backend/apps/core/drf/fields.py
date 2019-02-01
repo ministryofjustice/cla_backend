@@ -27,7 +27,7 @@ class ThreePartDateField(serializers.WritableField):
         _('Date field has wrong format. Use { "day": 25, "month": 12, "year": 2012 }')
     }
 
-    def from_native(self, value):
+    def from_native(self, value):  # noqa: C901
         """
         Parse json data and return a date object
         """
@@ -41,25 +41,25 @@ class ThreePartDateField(serializers.WritableField):
             except ValueError:
                 msg = self.error_messages["invalid"]
                 raise serializers.ValidationError(msg)
-            else:
-                day = value.get("day")
-                month = value.get("month")
-                year = value.get("year")
+        if value:
+            day = value.get("day")
+            month = value.get("month")
+            year = value.get("year")
 
-                date_components = all([day, month, year])
-                if date_components:
-                    try:
-                        dt_object = datetime.date(int(year), int(month), int(day))
-                    except ValueError as ve:
-                        raise serializers.ValidationError(ve)
+            date_components = all([day, month, year])
+            if date_components:
+                try:
+                    dt_object = datetime.date(int(year), int(month), int(day))
+                except ValueError as ve:
+                    raise serializers.ValidationError(ve)
 
-                    if int(year) < 1900:
-                        raise serializers.ValidationError("year must be >= 1900")
-                    return dt_object
-                elif not date_components:
-                    return None
-                msg = self.error_messages["invalid"]
-                raise serializers.ValidationError(msg)
+                if int(year) < 1900:
+                    raise serializers.ValidationError("year must be >= 1900")
+                return dt_object
+            elif not date_components:
+                return None
+            msg = self.error_messages["invalid"]
+            raise serializers.ValidationError(msg)
 
     def to_native(self, value):
         """

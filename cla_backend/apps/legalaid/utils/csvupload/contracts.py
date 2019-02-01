@@ -245,6 +245,7 @@ contract_2018_category_spec = {
     u"housing": deepcopy(housing_category_spec),
     u"welfare": deepcopy(welfare_category_spec),
 }
+contract_2018_category_spec["housing"]["OUTCOME_CODES"].update({u"HAA"})
 
 contract_2018_category_spec["housing"]["OUTCOME_CODES"].update({u"FAC"})
 

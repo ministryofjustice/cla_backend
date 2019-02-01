@@ -110,7 +110,23 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         data = self._get_default_post_data()
         check = make_recipe("legalaid.personal_details", **data)
 
+        data["dob"] = {"year": 1988, "month": 10, "day": 10}
         response = self._create(data=data)
+        try:
+            year, month, day = (
+                int(response.data["dob"]["year"]),
+                int(response.data["dob"]["month"]),
+                int(response.data["dob"]["day"]),
+            )
+        except TypeError:
+            self.fail("Date of birth doesn't have year, month or day")
+        except ValueError:
+            self.fail("Date of birth year, month and day need to be integers")
+
+        self.assertEquals(year, data["dob"]["year"])
+        self.assertEquals(month, data["dob"]["month"])
+        self.assertEquals(day, data["dob"]["day"])
+
         # check initial state is correct
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

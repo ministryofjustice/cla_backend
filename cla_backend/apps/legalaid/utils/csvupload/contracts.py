@@ -280,9 +280,12 @@ def get_determination_codes(applicable_contract):
 def get_applicable_contract(case_date_opened, case_matter_type_1=None):
     if not settings.CONTRACT_2018_ENABLED:
         return CONTRACT_THIRTEEN
-    if CONTRACT_THIRTEEN_START_DATE <= case_date_opened < CONTRACT_THIRTEEN_END_DATE:
+    try:
+        if CONTRACT_THIRTEEN_START_DATE <= case_date_opened < CONTRACT_THIRTEEN_END_DATE:
+            return CONTRACT_THIRTEEN
+        elif case_date_opened >= CONTRACT_EIGHTEEN_START_DATE:
+            if case_matter_type_1 in contract_2018_category_spec["discrimination"]["MATTER_TYPE1"]:
+                return CONTRACT_EIGHTEEN_DISCRIMINATION
+            return CONTRACT_EIGHTEEN
+    except TypeError:
         return CONTRACT_THIRTEEN
-    elif case_date_opened >= CONTRACT_EIGHTEEN_START_DATE:
-        if case_matter_type_1 in contract_2018_category_spec["discrimination"]["MATTER_TYPE1"]:
-            return CONTRACT_EIGHTEEN_DISCRIMINATION
-        return CONTRACT_EIGHTEEN

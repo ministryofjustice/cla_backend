@@ -657,35 +657,17 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_family_outcome_code_FAA_is_valid(self):
-        test_values = {
-            "Matter Type 1": u"FAMA",
-            "Matter Type 2": u"FADV",
-            "Stage Reached": u"FA",
-            "Outcome Code": u"FAA",
-            "Determination": u"FAFA",
-        }
+        test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAA"}
         self._test_generated_2018_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_family_outcome_code_FAB_is_valid(self):
-        test_values = {
-            "Matter Type 1": u"FAMA",
-            "Matter Type 2": u"FADV",
-            "Stage Reached": u"FA",
-            "Outcome Code": u"FAB",
-            "Determination": u"FAFA",
-        }
+        test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAB"}
         self._test_generated_2018_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_family_outcome_code_FAC_is_valid(self):
-        test_values = {
-            "Matter Type 1": u"FAMA",
-            "Matter Type 2": u"FADV",
-            "Stage Reached": u"FA",
-            "Outcome Code": u"FAC",
-            "Determination": u"FAFA",
-        }
+        test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAC"}
         self._test_generated_2018_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
@@ -704,7 +686,6 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 1": u"EPRO",
             "Matter Type 2": u"ESOS",
             "Stage Reached": u"EA",
-            "Outcome Code": u"EB",
             "Determination": u"FAFA",
         }
         self._test_generated_2018_contract_row_validates(override=test_values)

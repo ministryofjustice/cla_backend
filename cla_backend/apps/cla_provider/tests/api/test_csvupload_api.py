@@ -656,12 +656,36 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             self.fail("{}".format(e))
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_for_family_outcome_code_FAA_is_valid(self):
+        test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAA"}
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_for_family_outcome_code_FAB_is_valid(self):
+        test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAB"}
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_for_family_outcome_code_FAC_is_valid(self):
+        test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAC"}
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_discrimination_outcome_code_QAA_is_valid(self):
+        test_values = {
+            "Matter Type 1": u"QPRO",
+            "Matter Type 2": u"QAGE",
+            "Stage Reached": u"QA",
+            "Outcome Code": u"QAA",
+        }
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fafa_determination_code_is_valid(self):
         test_values = {
             "Matter Type 1": u"EPRO",
             "Matter Type 2": u"ESOS",
             "Stage Reached": u"EA",
-            "Outcome Code": u"EB",
             "Determination": u"FAFA",
         }
         self._test_generated_2018_contract_row_validates(override=test_values)
@@ -673,6 +697,16 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 2": u"HPRI",
             "Stage Reached": u"HA",
             "Outcome Code": u"HAA",
+        }
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_housing_outcome_code_hac_is_valid(self):
+        test_values = {
+            "Matter Type 1": u"HRNT",
+            "Matter Type 2": u"HPRI",
+            "Stage Reached": u"HA",
+            "Outcome Code": u"HAC",
         }
         self._test_generated_2018_contract_row_validates(override=test_values)
 

@@ -680,10 +680,11 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_family_outcome_code_FAC_is_valid(self):
         test_values = {
-            "Matter Type 1": u"EPRO",
-            "Matter Type 2": u"ESOS",
-            "Stage Reached": u"EA",
-            "Outcome Code": u"EB",
+            "Matter Type 1": u"FAMA",
+            "Matter Type 2": u"FADV",
+            "Stage Reached": u"FA",
+            "Outcome Code": u"FAC",
+            "Determination": u"FAFA",
         }
         self._test_generated_2018_contract_row_validates(override=test_values)
 

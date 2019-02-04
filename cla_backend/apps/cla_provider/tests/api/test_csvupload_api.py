@@ -676,6 +676,16 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         }
         self._test_generated_2018_contract_row_validates(override=test_values)
 
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_housing_outcome_code_hab_is_valid(self):
+        test_values = {
+            "Matter Type 1": u"HRNT",
+            "Matter Type 2": u"HPRI",
+            "Stage Reached": u"HA",
+            "Outcome Code": u"HAB",
+        }
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
 
 class DependsOnDecoratorTestCase(unittest.TestCase):
     def test_method_called(self):

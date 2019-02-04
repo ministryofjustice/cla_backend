@@ -662,6 +662,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 2": u"FADV",
             "Stage Reached": u"FA",
             "Outcome Code": u"FAA",
+            "Determination": u"FAFA",
         }
         self._test_generated_2018_contract_row_validates(override=test_values)
 
@@ -672,6 +673,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 2": u"FADV",
             "Stage Reached": u"FA",
             "Outcome Code": u"FAB",
+            "Determination": u"FAFA",
         }
         self._test_generated_2018_contract_row_validates(override=test_values)
 

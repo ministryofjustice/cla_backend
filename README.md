@@ -98,6 +98,16 @@ Each time you start a new terminal instance you will need to run the following c
     source env/bin/activate
     ./manage.py runserver 8000
 
+
+### Pull requests from public forks
+
+We accept pull requests from public forks, but have to vet and review them:
+
+ - Foo
+ - Bar
+ - Baz
+ 
+
 ## Translations
 
 When making changes to text (e.g. GraphML files) translations should be updated. To update translations run:

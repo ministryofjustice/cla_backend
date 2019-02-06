@@ -1482,11 +1482,11 @@ msgid "Discrimination does not apply"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:1501
-msgid "Actions against the police"
+msgid "Claims Against Public Authorities"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:1504
-msgid "The key thing to determine in actions against the police is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow."
+msgid "The key thing to determine in claims against public authorities is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow."
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:1508

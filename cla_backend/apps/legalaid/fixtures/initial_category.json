@@ -181,10 +181,10 @@
     "model": "legalaid.category",
     "fields": {
       "code": "aap",
-      "description": "Actions Against Police",
+      "description": "Claims Against Public Authorities",
       "order": 15,
       "modified": "2014-02-24T15:36:50.027Z",
-      "name": "Actions Against the Police",
+      "name": "Claims Against Public Authorities",
       "created": "2014-02-24T15:36:50.026Z"
     }
   },

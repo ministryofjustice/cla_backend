@@ -1643,11 +1643,11 @@ msgid "Discrimination does not apply"
 msgstr "Nid yw gwahaniaethu yn berhtnasol"
 
 #: apps/diagnosis/data/graph.graphml.tpl:1501
-msgid "Actions against the police"
+msgid "Claims Against Public Authorities"
 msgstr "Camau yn erbyn yr heddlu"
 
 #: apps/diagnosis/data/graph.graphml.tpl:1504
-msgid "The key thing to determine in actions against the police is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow."
+msgid "The key thing to determine in claims against public authorities is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow."
 msgstr "Y peth allweddol i benderfynu yn ei gylch o ran camau yn erbyn yr heddlu yw pa un ai a brofodd y cleient wahaniaethu. Os yw'r cleient yn dweud ei fod wedi profi gwahaniaethu, neu eich bod yn sylweddoli eu bod wedi profi gwahaniaethu o'r hyn y maent yn ei ddweud, dewiswch 'Mae'r cleient wedi profi gwahaniaethu' ar y sgrin nesaf i barhau i'r llif gwahaniaethu."
 
 #: apps/diagnosis/data/graph.graphml.tpl:1508

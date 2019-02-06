@@ -12,7 +12,7 @@ CONTRACT_THIRTEEN_END_DATE = datetime(year=2018, month=9, day=1)
 CONTRACT_EIGHTEEN_START_DATE = CONTRACT_THIRTEEN_END_DATE
 
 contract_2013_determination_codes = {u"OOSC", u"OSPF", u"CHNM", u"FINI", u"DVCA"}
-contract_2018_determination_codes = copy(contract_2013_determination_codes) | {"FAFA"}
+contract_2018_determination_codes = copy(contract_2013_determination_codes) | {"FAFA", "EXEM"}
 
 debt_category_spec = {
     "OUTCOME_CODES": {u"DA", u"DC", u"DD", u"DG", u"DH", u"DI", u"DU", u"DV", u"DW", u"DX", u"DY", u"DZ"},

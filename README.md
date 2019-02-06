@@ -104,6 +104,17 @@ When making changes to text (e.g. GraphML files) translations should be updated.
 
      ./manage.py translations update
 
+Or on macOS ~10.14
+
+    brew install gettext
+    PATH="/usr/local/opt/gettext/bin:$PATH" ./manage.py translations update
+
+Using the team's Transifex credentials, fetch an API token from https://www.transifex.com/user/settings/api/
+
+Add the credentials to `~/.transifexrc`
+
+Then `./manage.py translations push` to Transifex and `./manage.py translations pull` when complete.
+
 
 ## Scope Graphs
 

@@ -1643,7 +1643,7 @@ msgid "Discrimination does not apply"
 msgstr "Nid yw gwahaniaethu yn berhtnasol"
 
 #: apps/diagnosis/data/graph.graphml.tpl:1501
-msgid "Claims Against Public Authorities"
+msgid "Claims against public authorities"
 msgstr "Camau yn erbyn yr heddlu"
 
 #: apps/diagnosis/data/graph.graphml.tpl:1504

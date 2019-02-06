@@ -656,6 +656,16 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             self.fail("{}".format(e))
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_for_debt_outcome_code_DAA_is_valid(self):
+        test_values = {
+            "Matter Type 1": u"DPDE",
+            "Matter Type 2": u"DVAL",
+            "Stage Reached": u"DA",
+            "Outcome Code": u"DAA",
+        }
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_family_outcome_code_FAA_is_valid(self):
         test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAA"}
         self._test_generated_2018_contract_row_validates(override=test_values)

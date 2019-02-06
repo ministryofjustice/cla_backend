@@ -701,6 +701,16 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self._test_generated_2018_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_exem_determination_code_is_valid(self):
+        test_values = {
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Stage Reached": u"EA",
+            "Determination": u"EXEM",
+        }
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_housing_outcome_code_haa_is_valid(self):
         test_values = {
             "Matter Type 1": u"HRNT",

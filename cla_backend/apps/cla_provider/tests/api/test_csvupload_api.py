@@ -106,6 +106,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                 u"99",
                 u"99.5",
                 u"",
+                u"DF",
                 u"ILL",
                 u"0",
                 u"0",
@@ -142,6 +143,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                 u"18",
                 u"99.5",
                 u"",
+                u"DF",
                 u"MOB",
                 u"",
                 u"",
@@ -191,6 +193,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Unused4": u"",
             "Postcode": u"SW1A 1AA",
             "Ethnicity": u"1",
+            "Fixed Fee Code": u"DF",
         }
 
         contract_2018_data = v.contract_2018_validators.copy()
@@ -217,6 +220,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         contract_2018_data["Time Spent"] = u"18"
         contract_2018_data["Case Costs"] = u"99.5"
         contract_2018_data["Unused4"] = u""
+        contract_2018_data["Fixed Fee Code"] = u"DF"
         contract_2018_data["Disability Code"] = u"ILL"
         contract_2018_data["Disbursements"] = u"0"
         contract_2018_data["Travel Costs"] = u"0"
@@ -266,6 +270,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                     u"99",
                     u"99.5",
                     u"",
+                    u"DF",
                     u"ILL",
                     u"0",
                     u"0",
@@ -354,6 +359,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                     u"99",
                     u"99.5",
                     u"",
+                    u"DF",
                     u"ILL",
                     u"0",
                     u"0",
@@ -397,6 +403,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                     u"",
                     u"18",
                     u"99.5",
+                    u"",
                     u"",
                     u"ILL",
                     u"0",
@@ -737,6 +744,16 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 2": u"HPRI",
             "Stage Reached": u"HA",
             "Outcome Code": u"HAB",
+        }
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_for_fixed_fee_code_DF_is_valid(self):
+        test_values = {
+            "Matter Type 1": u"HRNT",
+            "Matter Type 2": u"HPRI",
+            "Stage Reached": u"HA",
+            "Fixed Fee Code": u"DF",
         }
         self._test_generated_2018_contract_row_validates(override=test_values)
 

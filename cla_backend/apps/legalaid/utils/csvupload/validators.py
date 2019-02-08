@@ -29,6 +29,7 @@ from legalaid.utils.csvupload.contracts import (
     get_valid_matter_type1,
     get_valid_matter_type2,
     get_valid_stage_reached,
+    get_fixed_fee_code,
     CONTRACT_THIRTEEN,
     CONTRACT_EIGHTEEN,
 )
@@ -215,6 +216,8 @@ validators["Date Closed"] = [validate_date, validate_not_current_month]
 validators["Time Spent"] = [validate_present, validate_integer, validate_gte(0)]
 validators["Case Costs"] = [validate_present, validate_decimal]
 validators["Unused4"] = [validate_not_present]
+validators["Fixed Fee Code"] = [validate_not_present]
+
 validators["Disability Code"] = [validate_present, validate_in(DISABILITY_INDICATOR)]
 validators["Disbursements"] = [validate_decimal]
 validators["Travel Costs"] = [validate_decimal]
@@ -233,6 +236,7 @@ validators["Matter Type 2"] = [validate_present, validate_in(get_valid_matter_ty
 validators["Stage Reached"] = [validate_in(get_valid_stage_reached(CONTRACT_EIGHTEEN))]
 validators["Outcome Code"] = [validate_in(get_valid_outcomes(CONTRACT_EIGHTEEN))]
 validators["Determination"] = [validate_in(get_determination_codes(CONTRACT_EIGHTEEN))]
+validators["Fixed Fee Code"] = [validate_in(get_fixed_fee_code(CONTRACT_EIGHTEEN))]
 contract_2018_validators = deepcopy(validators)
 
 date_opened_index = [i for i, key in enumerate(contract_2013_validators) if key == "Date Opened"][0]
@@ -284,6 +288,7 @@ class ProviderCSVValidator(object):
         the fields and apply the validators specified in the
         field spec (self._get_expected_fields_for_row(row))
         """
+
         cleaned_data = {}
         errors = ErrorList()
 

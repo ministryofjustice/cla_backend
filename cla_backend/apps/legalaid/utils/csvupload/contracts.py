@@ -13,6 +13,7 @@ CONTRACT_EIGHTEEN_START_DATE = CONTRACT_THIRTEEN_END_DATE
 
 contract_2013_determination_codes = {u"OOSC", u"OSPF", u"CHNM", u"FINI", u"DVCA"}
 contract_2018_determination_codes = copy(contract_2013_determination_codes) | {"FAFA", "EXEM"}
+contract_2018_fixed_fee_code = {u"DF"}
 
 debt_category_spec = {
     "OUTCOME_CODES": {u"DA", u"DC", u"DD", u"DG", u"DH", u"DI", u"DU", u"DV", u"DW", u"DX", u"DY", u"DZ"},
@@ -278,6 +279,12 @@ def get_determination_codes(applicable_contract):
     if applicable_contract == CONTRACT_EIGHTEEN:
         return contract_2018_determination_codes
     return contract_2013_determination_codes
+
+
+def get_fixed_fee_code(applicable_contract):
+    if applicable_contract == CONTRACT_EIGHTEEN:
+        return contract_2018_fixed_fee_code
+    return {}
 
 
 def get_applicable_contract(case_date_opened, case_matter_type_1=None):

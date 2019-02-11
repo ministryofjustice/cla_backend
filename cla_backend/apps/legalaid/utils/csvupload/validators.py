@@ -549,6 +549,19 @@ class ProviderCSVValidator(object):
                 "Time spent must be less than {} minutes for LF fixed fee code".format(MAX_TIME_ALLOWED)
             )
 
+    def _validate_higher_fixed_fee_time_spent(self, cleaned_data):
+        MIN_TIME_ALLOWED = 133
+        MAX_TIME_ALLOWED = 900
+        time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
+        fixed_fee_code = cleaned_data.get("Fixed Fee Code")
+        time_spent_in_bounds = MIN_TIME_ALLOWED <= time_spent_in_minutes < MAX_TIME_ALLOWED
+        if fixed_fee_code == "HF" and not time_spent_in_bounds:
+            raise serializers.ValidationError(
+                "Time spent must be >={} and <{} minutes for HF fixed fee code".format(
+                    MIN_TIME_ALLOWED, MAX_TIME_ALLOWED
+                )
+            )
+
     @staticmethod
     def format_message(s, row_num):
         return "Row: %s - %s" % (row_num + 1, s)
@@ -570,7 +583,11 @@ class ProviderCSVValidator(object):
         ]
         if applicable_contract == CONTRACT_EIGHTEEN:
             validation_methods.extend(
-                [self._validate_fixed_fee_amount_present, self._validate_lower_fixed_fee_time_spent]
+                [
+                    self._validate_fixed_fee_amount_present,
+                    self._validate_lower_fixed_fee_time_spent,
+                    self._validate_higher_fixed_fee_time_spent,
+                ]
             )
 
         validation_methods_depend_on_category = [

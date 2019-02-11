@@ -233,7 +233,7 @@ validators["Stage Reached"] = [validate_in(get_valid_stage_reached(CONTRACT_EIGH
 validators["Outcome Code"] = [validate_in(get_valid_outcomes(CONTRACT_EIGHTEEN))]
 validators["Determination"] = [validate_in(get_determination_codes(CONTRACT_EIGHTEEN))]
 validators["Fixed Fee Amount"] = []
-validators["Fixed Fee Code"] = []
+validators["Fixed Fee Code"] = [validate_in(['DF', 'HF', 'LF'])]
 
 contract_2018_validators = OrderedDict()
 for field in [

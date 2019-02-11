@@ -773,6 +773,31 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         expected_error = u"Row: 1 - Fixed Fee Amount must be entered for Fixed Fee Code (HF)"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_lower_fixed_fee_time_spent(self):
+        test_values = {
+            "Matter Type 1": u"DTOT",
+            "Matter Type 2": u"DOTH",
+            "Stage Reached": u"DB",
+            "Fixed Fee Amount": u"65",
+            "Fixed Fee Code": u"LF",
+            "Time Spent": u"66",
+        }
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_lower_fixed_fee_excess_time_spent(self):
+        test_values = {
+            "Matter Type 1": u"DTOT",
+            "Matter Type 2": u"DOTH",
+            "Stage Reached": u"DB",
+            "Fixed Fee Amount": u"65",
+            "Fixed Fee Code": u"LF",
+            "Time Spent": u"133",
+        }
+        expected_error = u"Row: 1 - Time spent must be less than 133 minutes for LF fixed fee code"
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
 
 class DependsOnDecoratorTestCase(unittest.TestCase):
     def test_method_called(self):

@@ -351,19 +351,21 @@ class ProviderCSVValidator(object):
             raise ve
 
     @staticmethod
-    def _get_validators_for_row(row):
+    def _get_applicable_contract_for_row(row):
         try:
             case_date_opened_string = row[date_opened_index]
             case_date_opened = validate_date(case_date_opened_string)
-            applicable_contract = get_applicable_contract(case_date_opened=case_date_opened)  # TODO pass Matter Type 1
+            return get_applicable_contract(case_date_opened=case_date_opened)  # TODO pass Matter Type 1
         except IndexError:
             logger.warning("Could not get applicable contract for row, defaulting to 2013. \nRow: {}".format(row))
+            return CONTRACT_THIRTEEN
+
+    def _get_validators_for_row(self, row):
+        applicable_contract = self._get_applicable_contract_for_row(row)
+        if applicable_contract == CONTRACT_THIRTEEN:
             return contract_2013_validators
-        else:
-            if applicable_contract == CONTRACT_THIRTEEN:
-                return contract_2013_validators
-            elif applicable_contract == CONTRACT_EIGHTEEN:
-                return contract_2018_validators
+        elif applicable_contract == CONTRACT_EIGHTEEN:
+            return contract_2018_validators
 
     def _validate_fields(self):
         """
@@ -396,7 +398,8 @@ class ProviderCSVValidator(object):
                     errors.append(e)
             try:
                 # Global Validation
-                self.cleaned_data.append(self._validate_data(cleaned_data, row_num))
+                applicable_contract = self._get_applicable_contract_for_row(row)
+                self.cleaned_data.append(self._validate_data(cleaned_data, row_num, applicable_contract))
             except serializers.ValidationError as ve:
                 errors.extend(ve.error_list)
 
@@ -537,11 +540,20 @@ class ProviderCSVValidator(object):
                     "Fixed Fee Amount must be entered for Fixed Fee Code ({})".format(fixed_fee_code)
                 )
 
+    def _validate_lower_fixed_fee_time_spent(self, cleaned_data):
+        MAX_TIME_ALLOWED = 133
+        time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
+        fixed_fee_code = cleaned_data.get("Fixed Fee Code")
+        if fixed_fee_code == "LF" and time_spent_in_minutes >= MAX_TIME_ALLOWED:
+            raise serializers.ValidationError(
+                "Time spent must be less than {} minutes for LF fixed fee code".format(MAX_TIME_ALLOWED)
+            )
+
     @staticmethod
     def format_message(s, row_num):
         return "Row: %s - %s" % (row_num + 1, s)
 
-    def _validate_data(self, cleaned_data, row_num):
+    def _validate_data(self, cleaned_data, row_num, applicable_contract):
         """
         Like django's clean method, use this to validate across fields
         """
@@ -555,8 +567,12 @@ class ProviderCSVValidator(object):
             self._validate_eligibility_code,
             self._validate_stage_reached,
             self._validate_dob_present,
-            self._validate_fixed_fee_amount_present,
         ]
+        if applicable_contract == CONTRACT_EIGHTEEN:
+            validation_methods.extend(
+                [self._validate_fixed_fee_amount_present, self._validate_lower_fixed_fee_time_spent]
+            )
+
         validation_methods_depend_on_category = [
             self._validate_time_spent,
             self._validate_exemption,
@@ -569,7 +585,6 @@ class ProviderCSVValidator(object):
                 m(cleaned_data)
             except serializers.ValidationError as ve:
                 errors.append(self.format_message(ve.message, row_num))
-
         try:
             category = self._validate_category_consistency(cleaned_data)
         except serializers.ValidationError as ve:

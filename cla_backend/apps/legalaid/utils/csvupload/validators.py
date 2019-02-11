@@ -28,6 +28,7 @@ from legalaid.utils.csvupload.contracts import (
     get_valid_matter_type1,
     get_valid_matter_type2,
     get_valid_stage_reached,
+    contract_2018_fixed_fee_codes,
     CONTRACT_THIRTEEN,
     CONTRACT_EIGHTEEN,
 )
@@ -190,53 +191,85 @@ def excel_col_name(col):  # col is 1 based
 
 account_number_regex_validator = validate_regex(r"\d{1}[a-z]{1}\d{3}[a-z]{1}", flags=re.IGNORECASE)
 
-validators = OrderedDict()  # Defined in expected column order of CSV
-validators["CLA Reference Number"] = [validate_present, validate_integer]
-validators["Client Ref"] = [validate_present]
-validators["Account Number"] = [validate_present, account_number_regex_validator]
-validators["First Name"] = [validate_present]
-validators["Surname"] = [validate_present]
-validators["DOB"] = [validate_date]
-validators["Age Range"] = [validate_present, validate_in(AGE_RANGE)]
-validators["Gender"] = [validate_present]
-validators["Ethnicity"] = [validate_present]
-validators["Unused1"] = [validate_not_present]
-validators["Unused2"] = [validate_not_present]
-validators["Postcode"] = [validate_present, validate_postcode]
-validators["Eligibility Code"] = [validate_in(ELIGIBILITY_CODES)]
-validators["Matter Type 1"] = [validate_present, validate_in(get_valid_matter_type1(CONTRACT_THIRTEEN))]
-validators["Matter Type 2"] = [validate_present, validate_in(get_valid_matter_type2(CONTRACT_THIRTEEN))]
-validators["Stage Reached"] = [validate_in(get_valid_stage_reached(CONTRACT_THIRTEEN))]
-validators["Outcome Code"] = [validate_in(get_valid_outcomes(CONTRACT_THIRTEEN))]
-validators["Unused3"] = [validate_not_present]
-validators["Date Opened"] = [validate_date]
-validators["Date Closed"] = [validate_date, validate_not_current_month]
-validators["Time Spent"] = [validate_present, validate_integer, validate_gte(0)]
-validators["Case Costs"] = [validate_present, validate_decimal]
-validators["Unused4"] = [validate_not_present]
-validators["Disability Code"] = [validate_present, validate_in(DISABILITY_INDICATOR)]
-validators["Disbursements"] = [validate_decimal]
-validators["Travel Costs"] = [validate_decimal]
-validators["Determination"] = [validate_in(get_determination_codes(CONTRACT_THIRTEEN))]
-validators["Suitable for Telephone Advice"] = [validate_in({u"Y", u"N"})]
-validators["Exceptional Cases (ref)"] = [validate_regex(r"\d{7}[a-z]{2}", re.I)]
-validators["Exempted Reason Code"] = [validate_in(EXEMPTION_CODES)]
-validators["Adjustments / Adaptations"] = [validate_in(SERVICE_ADAPTATIONS)]
-validators["Signposting / Referral"] = []
-validators["Media Code"] = []  # TODO: Maybe put [validate_present]) back depending on reply from Alex A.
-validators["Telephone / Online"] = [validate_present, validate_in(ADVICE_TYPES)]
-contract_2013_validators = deepcopy(validators)
+contract_2013_field_order = [
+    "CLA Reference Number",
+    "Client Ref",
+    "Account Number",
+    "First Name",
+    "Surname",
+    "DOB",
+    "Age Range",
+    "Gender",
+    "Ethnicity",
+    "Unused1",
+    "Unused2",
+    "Postcode",
+    "Eligibility Code",
+    "Matter Type 1",
+    "Matter Type 2",
+    "Stage Reached",
+    "Outcome Code",
+    "Unused3",
+    "Date Opened",
+    "Date Closed",
+    "Time Spent",
+    "Case Costs",
+    "Unused4",
+    "Disability Code",
+    "Disbursements",
+    "Travel Costs",
+    "Determination",
+    "Suitable for Telephone Advice",
+    "Exceptional Cases (ref)",
+    "Exempted Reason Code",
+    "Adjustments / Adaptations",
+    "Signposting / Referral",
+    "Media Code",
+    "Telephone / Online",
+]
 
-validators["Matter Type 1"] = [validate_present, validate_in(get_valid_matter_type1(CONTRACT_EIGHTEEN))]
-validators["Matter Type 2"] = [validate_present, validate_in(get_valid_matter_type2(CONTRACT_EIGHTEEN))]
-validators["Stage Reached"] = [validate_in(get_valid_stage_reached(CONTRACT_EIGHTEEN))]
-validators["Outcome Code"] = [validate_in(get_valid_outcomes(CONTRACT_EIGHTEEN))]
-validators["Determination"] = [validate_in(get_determination_codes(CONTRACT_EIGHTEEN))]
-validators["Fixed Fee Amount"] = []
-validators["Fixed Fee Code"] = [validate_in(['DF', 'HF', 'LF'])]
+validators = {
+    "CLA Reference Number": [validate_present, validate_integer],
+    "Client Ref": [validate_present],
+    "Account Number": [validate_present, account_number_regex_validator],
+    "First Name": [validate_present],
+    "Surname": [validate_present],
+    "DOB": [validate_date],
+    "Age Range": [validate_present, validate_in(AGE_RANGE)],
+    "Gender": [validate_present],
+    "Ethnicity": [validate_present],
+    "Unused1": [validate_not_present],
+    "Unused2": [validate_not_present],
+    "Postcode": [validate_present, validate_postcode],
+    "Eligibility Code": [validate_in(ELIGIBILITY_CODES)],
+    "Matter Type 1": [validate_present, validate_in(get_valid_matter_type1(CONTRACT_THIRTEEN))],
+    "Matter Type 2": [validate_present, validate_in(get_valid_matter_type2(CONTRACT_THIRTEEN))],
+    "Stage Reached": [validate_in(get_valid_stage_reached(CONTRACT_THIRTEEN))],
+    "Outcome Code": [validate_in(get_valid_outcomes(CONTRACT_THIRTEEN))],
+    "Unused3": [validate_not_present],
+    "Date Opened": [validate_date],
+    "Date Closed": [validate_date, validate_not_current_month],
+    "Time Spent": [validate_present, validate_integer, validate_gte(0)],
+    "Case Costs": [validate_present, validate_decimal],
+    "Unused4": [validate_not_present],
+    "Disability Code": [validate_present, validate_in(DISABILITY_INDICATOR)],
+    "Disbursements": [validate_decimal],
+    "Travel Costs": [validate_decimal],
+    "Determination": [validate_in(get_determination_codes(CONTRACT_THIRTEEN))],
+    "Suitable for Telephone Advice": [validate_in({u"Y", u"N"})],
+    "Exceptional Cases (ref)": [validate_regex(r"\d{7}[a-z]{2}", re.I)],
+    "Exempted Reason Code": [validate_in(EXEMPTION_CODES)],
+    "Adjustments / Adaptations": [validate_in(SERVICE_ADAPTATIONS)],
+    "Signposting / Referral": [],
+    "Media Code": [],
+    "Telephone / Online": [validate_present, validate_in(ADVICE_TYPES)],
+}
 
-contract_2018_validators = OrderedDict()
-for field in [
+contract_2013_validators = OrderedDict()
+for field in contract_2013_field_order:
+    contract_2013_validators[field] = deepcopy(validators[field])
+
+contract_2018_field_order = [
     "CLA Reference Number",
     "Client Ref",
     "Account Number",
@@ -272,7 +305,22 @@ for field in [
     "Signposting / Referral",
     "Media Code",
     "Telephone / Online",
-]:
+]
+
+validators.update(
+    {
+        "Matter Type 1": [validate_present, validate_in(get_valid_matter_type1(CONTRACT_EIGHTEEN))],
+        "Matter Type 2": [validate_present, validate_in(get_valid_matter_type2(CONTRACT_EIGHTEEN))],
+        "Stage Reached": [validate_in(get_valid_stage_reached(CONTRACT_EIGHTEEN))],
+        "Outcome Code": [validate_in(get_valid_outcomes(CONTRACT_EIGHTEEN))],
+        "Determination": [validate_in(get_determination_codes(CONTRACT_EIGHTEEN))],
+        "Fixed Fee Amount": [],
+        "Fixed Fee Code": [validate_in(contract_2018_fixed_fee_codes)],
+    }
+)
+
+contract_2018_validators = OrderedDict()
+for field in contract_2018_field_order:
     contract_2018_validators[field] = deepcopy(validators[field])
 
 date_opened_index = [i for i, key in enumerate(contract_2013_validators) if key == "Date Opened"][0]

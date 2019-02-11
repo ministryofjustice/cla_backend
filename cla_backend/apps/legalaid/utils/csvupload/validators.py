@@ -21,7 +21,6 @@ from legalaid.utils.csvupload.constants import (
     STAGE_REACHED_NOT_ALLOWED_MT1S,
     STAGE_REACHED_REQUIRED_MT1S,
 )
-
 from legalaid.utils.csvupload.contracts import (
     get_applicable_contract,
     get_determination_codes,
@@ -233,7 +232,48 @@ validators["Matter Type 2"] = [validate_present, validate_in(get_valid_matter_ty
 validators["Stage Reached"] = [validate_in(get_valid_stage_reached(CONTRACT_EIGHTEEN))]
 validators["Outcome Code"] = [validate_in(get_valid_outcomes(CONTRACT_EIGHTEEN))]
 validators["Determination"] = [validate_in(get_determination_codes(CONTRACT_EIGHTEEN))]
-contract_2018_validators = deepcopy(validators)
+validators["Fixed Fee Amount"] = []
+validators["Fixed Fee Code"] = []
+
+contract_2018_validators = OrderedDict()
+for field in [
+    "CLA Reference Number",
+    "Client Ref",
+    "Account Number",
+    "First Name",
+    "Surname",
+    "DOB",
+    "Age Range",
+    "Gender",
+    "Ethnicity",
+    "Unused1",
+    "Unused2",
+    "Postcode",
+    "Eligibility Code",
+    "Matter Type 1",
+    "Matter Type 2",
+    "Stage Reached",
+    "Outcome Code",
+    "Unused3",
+    "Date Opened",
+    "Date Closed",
+    "Time Spent",
+    "Case Costs",
+    "Fixed Fee Amount",
+    "Fixed Fee Code",
+    "Disability Code",
+    "Disbursements",
+    "Travel Costs",
+    "Determination",
+    "Suitable for Telephone Advice",
+    "Exceptional Cases (ref)",
+    "Exempted Reason Code",
+    "Adjustments / Adaptations",
+    "Signposting / Referral",
+    "Media Code",
+    "Telephone / Online",
+]:
+    contract_2018_validators[field] = deepcopy(validators[field])
 
 date_opened_index = [i for i, key in enumerate(contract_2013_validators) if key == "Date Opened"][0]
 
@@ -267,7 +307,7 @@ class ProviderCSVValidator(object):
         try:
             case_date_opened_string = row[date_opened_index]
             case_date_opened = validate_date(case_date_opened_string)
-            applicable_contract = get_applicable_contract(case_date_opened=case_date_opened)
+            applicable_contract = get_applicable_contract(case_date_opened=case_date_opened)  # TODO pass Matter Type 1
         except IndexError:
             logger.warning("Could not get applicable contract for row, defaulting to 2013. \nRow: {}".format(row))
             return contract_2013_validators
@@ -441,6 +481,14 @@ class ProviderCSVValidator(object):
         if determination == u"DVCA" and category != u"family":
             raise serializers.ValidationError("Category (%s) must be Family if Determination is DVCA" % category)
 
+    def _validate_fixed_fee_amount_present(self, cleaned_data):
+        fixed_fee_code = cleaned_data.get("Fixed Fee Code")
+        if fixed_fee_code in ["DF", "LF", "HF"]:
+            if not cleaned_data.get("Fixed Fee Amount"):
+                raise serializers.ValidationError(
+                    "Fixed Fee Amount must be entered for Fixed Fee Code ({})".format(fixed_fee_code)
+                )
+
     @staticmethod
     def format_message(s, row_num):
         return "Row: %s - %s" % (row_num + 1, s)
@@ -459,6 +507,7 @@ class ProviderCSVValidator(object):
             self._validate_eligibility_code,
             self._validate_stage_reached,
             self._validate_dob_present,
+            self._validate_fixed_fee_amount_present,
         ]
         validation_methods_depend_on_category = [
             self._validate_time_spent,

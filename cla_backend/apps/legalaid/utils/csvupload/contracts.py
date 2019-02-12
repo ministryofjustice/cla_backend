@@ -13,7 +13,7 @@ CONTRACT_EIGHTEEN_START_DATE = CONTRACT_THIRTEEN_END_DATE
 
 contract_2013_determination_codes = {u"OOSC", u"OSPF", u"CHNM", u"FINI", u"DVCA"}
 contract_2018_determination_codes = copy(contract_2013_determination_codes) | {"FAFA", "EXEM"}
-contract_2018_fixed_fee_codes = {u"DF", u"HF", u"LF", u"MR", u"HM"}
+contract_2018_fixed_fee_codes = {u"DF", u"HF", u"LF", u"MR", u"HM", u"NA"}
 
 debt_category_spec = {
     "OUTCOME_CODES": {u"DA", u"DC", u"DD", u"DG", u"DH", u"DI", u"DU", u"DV", u"DW", u"DX", u"DY", u"DZ"},

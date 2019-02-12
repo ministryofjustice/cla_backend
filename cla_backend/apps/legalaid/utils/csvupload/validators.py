@@ -32,6 +32,7 @@ from legalaid.utils.csvupload.contracts import (
     contract_2018_fixed_fee_codes,
     CONTRACT_THIRTEEN,
     CONTRACT_EIGHTEEN,
+    CONTRACT_EIGHTEEN_DISCRIMINATION,
 )
 
 logger = logging.getLogger(__name__)
@@ -539,6 +540,18 @@ class ProviderCSVValidator(object):
         if determination == u"DVCA" and category != u"family":
             raise serializers.ValidationError("Category (%s) must be Family if Determination is DVCA" % category)
 
+    def _validate_fee_code_is_na(self, cleaned_data):
+        if cleaned_data.get("Fixed Fee Code") != "NA":
+            raise serializers.ValidationError(
+                "Fixed Fee Code NA must be entered for 2013 or 2018 Discrimination cases"
+            )
+
+    def _validate_fee_code_is_not_na(self, cleaned_data):
+        if cleaned_data.get("Fixed Fee Code") == "NA":
+            raise serializers.ValidationError(
+                "The Fixed Fee code you have entered is not valid for this case"
+            )
+
     def _validate_fixed_fee_amount_present(self, cleaned_data):
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
         if fixed_fee_code in contract_2018_fixed_fee_codes:
@@ -578,7 +591,7 @@ class ProviderCSVValidator(object):
 
         if expected_fee_code and fixed_fee_code != expected_fee_code:
             raise serializers.ValidationError(
-                "The {} fee code should be used where Matter Type 1 Code - {} is used.".format(expected_fee_code, mt1)
+                "The {} fee code should be used where Matter Type 1 Code - {} is used".format(expected_fee_code, mt1)
             )
 
     @staticmethod
@@ -607,8 +620,11 @@ class ProviderCSVValidator(object):
                     self._validate_lower_fixed_fee_time_spent,
                     self._validate_higher_fixed_fee_time_spent,
                     self._validate_mt1_fee_codes,
+                    self._validate_fee_code_is_not_na,
                 ]
             )
+        elif applicable_contract in [CONTRACT_THIRTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION]:
+            validation_methods.extend([self._validate_fee_code_is_na])
 
         validation_methods_depend_on_category = [
             self._validate_time_spent,

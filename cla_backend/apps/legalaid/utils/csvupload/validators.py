@@ -544,7 +544,7 @@ class ProviderCSVValidator(object):
         MAX_TIME_ALLOWED = 133
         time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
-        if fixed_fee_code == "LF" and time_spent_in_minutes >= MAX_TIME_ALLOWED:
+        if fixed_fee_code == u"LF" and time_spent_in_minutes >= MAX_TIME_ALLOWED:
             raise serializers.ValidationError(
                 "Time spent must be less than {} minutes for LF fixed fee code".format(MAX_TIME_ALLOWED)
             )
@@ -555,7 +555,7 @@ class ProviderCSVValidator(object):
         time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
         time_spent_in_bounds = MIN_TIME_ALLOWED <= time_spent_in_minutes < MAX_TIME_ALLOWED
-        if fixed_fee_code == "HF" and not time_spent_in_bounds:
+        if fixed_fee_code == u"HF" and not time_spent_in_bounds:
             raise serializers.ValidationError(
                 "Time spent must be >={} and <{} minutes for HF fixed fee code".format(
                     MIN_TIME_ALLOWED, MAX_TIME_ALLOWED

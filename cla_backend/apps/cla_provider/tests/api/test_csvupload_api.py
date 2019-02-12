@@ -106,7 +106,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                 u"99",
                 u"99.5",
                 u"",
-                u"DF",
+                u"",
                 u"ILL",
                 u"0",
                 u"0",
@@ -143,7 +143,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                 u"18",
                 u"99.5",
                 u"",
-                u"DF",
+                u"",
                 u"MOB",
                 u"",
                 u"",
@@ -193,7 +193,6 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Unused4": u"",
             "Postcode": u"SW1A 1AA",
             "Ethnicity": u"1",
-            "Fixed Fee Code": u"DF",
         }
 
         contract_2018_data = v.contract_2018_validators.copy()

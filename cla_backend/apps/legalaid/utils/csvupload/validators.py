@@ -562,6 +562,12 @@ class ProviderCSVValidator(object):
                 )
             )
 
+    def _validate_misc_fixed_fee(self, cleaned_data):
+        fixed_fee_code = cleaned_data.get("Fixed Fee Code")
+        mt1 = cleaned_data.get("Matter Type 1")
+        if fixed_fee_code == u"MR" and mt1 != u"MSCB":  # TODO ensure MSCB Matter Type 1 added
+            raise serializers.ValidationError("Matter Type 1 must be MSCB if Misc Rate (MR) Fixed Fee code is used")
+
     @staticmethod
     def format_message(s, row_num):
         return "Row: %s - %s" % (row_num + 1, s)
@@ -587,6 +593,7 @@ class ProviderCSVValidator(object):
                     self._validate_fixed_fee_amount_present,
                     self._validate_lower_fixed_fee_time_spent,
                     self._validate_higher_fixed_fee_time_spent,
+                    self._validate_misc_fixed_fee,
                 ]
             )
 

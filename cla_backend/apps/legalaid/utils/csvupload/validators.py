@@ -6,6 +6,7 @@ from collections import OrderedDict
 from copy import deepcopy
 from decimal import Decimal, InvalidOperation
 
+from django.conf import settings
 from django.forms.util import ErrorList
 from rest_framework import serializers
 
@@ -191,7 +192,46 @@ def excel_col_name(col):  # col is 1 based
 
 account_number_regex_validator = validate_regex(r"\d{1}[a-z]{1}\d{3}[a-z]{1}", flags=re.IGNORECASE)
 
-contract_2013_field_order = [
+validators = {
+    "CLA Reference Number": [validate_present, validate_integer],
+    "Client Ref": [validate_present],
+    "Account Number": [validate_present, account_number_regex_validator],
+    "First Name": [validate_present],
+    "Surname": [validate_present],
+    "DOB": [validate_date],
+    "Age Range": [validate_present, validate_in(AGE_RANGE)],
+    "Gender": [validate_present],
+    "Ethnicity": [validate_present],
+    "Unused1": [validate_not_present],
+    "Unused2": [validate_not_present],
+    "Postcode": [validate_present, validate_postcode],
+    "Eligibility Code": [validate_in(ELIGIBILITY_CODES)],
+    "Matter Type 1": [validate_present, validate_in(get_valid_matter_type1(CONTRACT_THIRTEEN))],
+    "Matter Type 2": [validate_present, validate_in(get_valid_matter_type2(CONTRACT_THIRTEEN))],
+    "Stage Reached": [validate_in(get_valid_stage_reached(CONTRACT_THIRTEEN))],
+    "Outcome Code": [validate_in(get_valid_outcomes(CONTRACT_THIRTEEN))],
+    "Unused3": [validate_not_present],
+    "Date Opened": [validate_date],
+    "Date Closed": [validate_date, validate_not_current_month],
+    "Time Spent": [validate_present, validate_integer, validate_gte(0)],
+    "Case Costs": [validate_present, validate_decimal],
+    "Unused4": [validate_not_present],
+    "Fixed Fee Amount": [],
+    "Fixed Fee Code": [],
+    "Disability Code": [validate_present, validate_in(DISABILITY_INDICATOR)],
+    "Disbursements": [validate_decimal],
+    "Travel Costs": [validate_decimal],
+    "Determination": [validate_in(get_determination_codes(CONTRACT_THIRTEEN))],
+    "Suitable for Telephone Advice": [validate_in({u"Y", u"N"})],
+    "Exceptional Cases (ref)": [validate_regex(r"\d{7}[a-z]{2}", re.I)],
+    "Exempted Reason Code": [validate_in(EXEMPTION_CODES)],
+    "Adjustments / Adaptations": [validate_in(SERVICE_ADAPTATIONS)],
+    "Signposting / Referral": [],
+    "Media Code": [],
+    "Telephone / Online": [validate_present, validate_in(ADVICE_TYPES)],
+}
+
+original_field_order = [
     "CLA Reference Number",
     "Client Ref",
     "Account Number",
@@ -228,48 +268,7 @@ contract_2013_field_order = [
     "Telephone / Online",
 ]
 
-validators = {
-    "CLA Reference Number": [validate_present, validate_integer],
-    "Client Ref": [validate_present],
-    "Account Number": [validate_present, account_number_regex_validator],
-    "First Name": [validate_present],
-    "Surname": [validate_present],
-    "DOB": [validate_date],
-    "Age Range": [validate_present, validate_in(AGE_RANGE)],
-    "Gender": [validate_present],
-    "Ethnicity": [validate_present],
-    "Unused1": [validate_not_present],
-    "Unused2": [validate_not_present],
-    "Postcode": [validate_present, validate_postcode],
-    "Eligibility Code": [validate_in(ELIGIBILITY_CODES)],
-    "Matter Type 1": [validate_present, validate_in(get_valid_matter_type1(CONTRACT_THIRTEEN))],
-    "Matter Type 2": [validate_present, validate_in(get_valid_matter_type2(CONTRACT_THIRTEEN))],
-    "Stage Reached": [validate_in(get_valid_stage_reached(CONTRACT_THIRTEEN))],
-    "Outcome Code": [validate_in(get_valid_outcomes(CONTRACT_THIRTEEN))],
-    "Unused3": [validate_not_present],
-    "Date Opened": [validate_date],
-    "Date Closed": [validate_date, validate_not_current_month],
-    "Time Spent": [validate_present, validate_integer, validate_gte(0)],
-    "Case Costs": [validate_present, validate_decimal],
-    "Unused4": [validate_not_present],
-    "Disability Code": [validate_present, validate_in(DISABILITY_INDICATOR)],
-    "Disbursements": [validate_decimal],
-    "Travel Costs": [validate_decimal],
-    "Determination": [validate_in(get_determination_codes(CONTRACT_THIRTEEN))],
-    "Suitable for Telephone Advice": [validate_in({u"Y", u"N"})],
-    "Exceptional Cases (ref)": [validate_regex(r"\d{7}[a-z]{2}", re.I)],
-    "Exempted Reason Code": [validate_in(EXEMPTION_CODES)],
-    "Adjustments / Adaptations": [validate_in(SERVICE_ADAPTATIONS)],
-    "Signposting / Referral": [],
-    "Media Code": [],
-    "Telephone / Online": [validate_present, validate_in(ADVICE_TYPES)],
-}
-
-contract_2013_validators = OrderedDict()
-for field in contract_2013_field_order:
-    contract_2013_validators[field] = deepcopy(validators[field])
-
-contract_2018_field_order = [
+contract_2018_enabled_field_order = [
     "CLA Reference Number",
     "Client Ref",
     "Account Number",
@@ -307,6 +306,14 @@ contract_2018_field_order = [
     "Telephone / Online",
 ]
 
+field_order = original_field_order
+if settings.CONTRACT_2018_ENABLED:
+    field_order = contract_2018_enabled_field_order
+
+contract_2013_validators = OrderedDict()
+for field in field_order:
+    contract_2013_validators[field] = deepcopy(validators[field])
+
 validators.update(
     {
         "Matter Type 1": [validate_present, validate_in(get_valid_matter_type1(CONTRACT_EIGHTEEN))],
@@ -320,7 +327,7 @@ validators.update(
 )
 
 contract_2018_validators = OrderedDict()
-for field in contract_2018_field_order:
+for field in contract_2018_enabled_field_order:
     contract_2018_validators[field] = deepcopy(validators[field])
 
 date_opened_index = [i for i, key in enumerate(contract_2013_validators) if key == "Date Opened"][0]
@@ -571,7 +578,8 @@ class ProviderCSVValidator(object):
 
         if expected_fee_code and fixed_fee_code != expected_fee_code:
             raise serializers.ValidationError(
-                "The {} fee code should be used where Matter Type 1 Code - {} is used.".format(expected_fee_code, mt1))
+                "The {} fee code should be used where Matter Type 1 Code - {} is used.".format(expected_fee_code, mt1)
+            )
 
     @staticmethod
     def format_message(s, row_num):

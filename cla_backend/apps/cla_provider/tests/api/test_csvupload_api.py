@@ -840,6 +840,17 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         expected_error = u"Row: 1 - Time spent must be >=133 and <900 minutes for HF fixed fee code"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_fixed_fee_code_df_is_valid(self):
+        test_values = {
+            "Matter Type 1": u"HRNT",
+            "Matter Type 2": u"HPRI",
+            "Stage Reached": u"HA",
+            "Fixed Fee Code": u"DF",
+            "Fixed Fee Amount": u"130",
+        }
+        self._test_generated_2018_contract_row_validates(override=test_values)
+
 
 class DependsOnDecoratorTestCase(unittest.TestCase):
     def test_method_called(self):

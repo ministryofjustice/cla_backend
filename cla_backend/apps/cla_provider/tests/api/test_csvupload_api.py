@@ -3,6 +3,7 @@ import re
 import unittest
 from decimal import Decimal
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import override_settings
 from provider.oauth2.models import AccessToken
@@ -81,7 +82,81 @@ class CSVUploadTestCase(CSVUploadAPIMixin, CLAProviderAuthBaseApiTestMixin, APIT
 
 class ProviderCSVValidatorTestCase(unittest.TestCase):
     def setUp(self):
-        self.data = [
+        contract_2013_format_data = v.contract_2013_validators.copy()
+        contract_2013_format_data["CLA Reference Number"] = u"3333333"
+        contract_2013_format_data["Client Ref"] = u"0001"
+        contract_2013_format_data["Account Number"] = u"2B222B"
+        contract_2013_format_data["First Name"] = u"A N Other"
+        contract_2013_format_data["Surname"] = u"Corgi"
+        contract_2013_format_data["DOB"] = u"02/01/2014"
+        contract_2013_format_data["Age Range"] = u"E"
+        contract_2013_format_data["Gender"] = u"M"
+        contract_2013_format_data["Ethnicity"] = u"1"
+        contract_2013_format_data["Unused1"] = u""
+        contract_2013_format_data["Unused2"] = u""
+        contract_2013_format_data["Postcode"] = u"SW1A 1AA"
+        contract_2013_format_data["Eligibility Code"] = u"X"
+        contract_2013_format_data["Matter Type 1"] = u""
+        contract_2013_format_data["Matter Type 2"] = u""
+        contract_2013_format_data["Stage Reached"] = u""
+        contract_2013_format_data["Outcome Code"] = u""
+        contract_2013_format_data["Unused3"] = u""
+        contract_2013_format_data["Date Opened"] = u"01/01/2014"
+        contract_2013_format_data["Date Closed"] = u"01/01/2015"
+        contract_2013_format_data["Time Spent"] = u"99"
+        contract_2013_format_data["Case Costs"] = u"99.5"
+        contract_2013_format_data["Unused4"] = u""
+        contract_2013_format_data["Disability Code"] = u"ILL"
+        contract_2013_format_data["Disbursements"] = u"0"
+        contract_2013_format_data["Travel Costs"] = u"0"
+        contract_2013_format_data["Determination"] = u""
+        contract_2013_format_data["Suitable for Telephone Advice"] = u"N"
+        contract_2013_format_data["Exceptional Cases (ref)"] = u""
+        contract_2013_format_data["Exempted Reason Code"] = u""
+        contract_2013_format_data["Adjustments / Adaptations"] = u"NAR"
+        contract_2013_format_data["Signposting / Referral"] = u""
+        contract_2013_format_data["Media Code"] = u"DK"
+        contract_2013_format_data["Telephone / Online"] = u"TA"
+        self.contract_2013_data = contract_2013_format_data
+
+        contract_2018_format_data = v.contract_2018_validators.copy()
+        contract_2018_format_data["CLA Reference Number"] = u"3333333"
+        contract_2018_format_data["Client Ref"] = u"0001"
+        contract_2018_format_data["Account Number"] = u"2B222B"
+        contract_2018_format_data["First Name"] = u"A N Other"
+        contract_2018_format_data["Surname"] = u"Corgi"
+        contract_2018_format_data["DOB"] = u"02/01/2014"
+        contract_2018_format_data["Age Range"] = u"E"
+        contract_2018_format_data["Gender"] = u"M"
+        contract_2018_format_data["Ethnicity"] = u"1"
+        contract_2018_format_data["Postcode"] = u"SW1A 1AA"
+        contract_2018_format_data["Eligibility Code"] = u"X"
+        contract_2018_format_data["Matter Type 1"] = u""
+        contract_2018_format_data["Matter Type 2"] = u""
+        contract_2018_format_data["Stage Reached"] = u""
+        contract_2018_format_data["Outcome Code"] = u""
+        contract_2018_format_data["Date Opened"] = u"01/09/2018"
+        contract_2018_format_data["Date Closed"] = u"01/10/2018"
+        contract_2018_format_data["Time Spent"] = u"18"
+        contract_2018_format_data["Case Costs"] = u"99.5"
+        contract_2018_format_data["Fixed Fee Amount"] = u"65"
+        contract_2018_format_data["Fixed Fee Code"] = u"LF"
+        contract_2018_format_data["Disability Code"] = u"ILL"
+        contract_2018_format_data["Disbursements"] = u"0"
+        contract_2018_format_data["Travel Costs"] = u"0"
+        contract_2018_format_data["Determination"] = u""
+        contract_2018_format_data["Suitable for Telephone Advice"] = u"N"
+        contract_2018_format_data["Exceptional Cases (ref)"] = u""
+        contract_2018_format_data["Exempted Reason Code"] = u""
+        contract_2018_format_data["Adjustments / Adaptations"] = u"NAR"
+        contract_2018_format_data["Signposting / Referral"] = u""
+        contract_2018_format_data["Media Code"] = u"DK"
+        contract_2018_format_data["Telephone / Online"] = u"TA"
+        self.contract_2018_data = contract_2018_format_data
+
+    @staticmethod
+    def get_provider_csv_validator(data=None):
+        data_in_2013_format = [
             [
                 u"3333333",
                 u"0001",
@@ -155,8 +230,83 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
                 u"TA",
             ],
         ]
+        data_in_2018_format = [
+            [
+                u"3333333",
+                u"0001",
+                u"2B222B",
+                u"A N Other",
+                u"Corgi",
+                u"02/01/2014",
+                u"E",
+                u"M",
+                u"1",
+                u"SW1A 1AA",
+                u"X",
+                u"EPRO",
+                u"ESOS",
+                u"EA",
+                u"EB",
+                u"01/01/2014",
+                u"01/01/2015",
+                u"99",
+                u"99.5",
+                u"",
+                u"NA",
+                u"ILL",
+                u"0",
+                u"0",
+                u"",
+                u"N",
+                u"",
+                u"",
+                u"NAR",
+                u"",
+                u"DK",
+                u"TA",
+            ],
+            [
+                u"2222222",
+                u"0000",
+                u"1A111A",
+                u"A",
+                u"Corgi",
+                u"01/01/2014",
+                u"D",
+                u"F",
+                u"1",
+                u"SW1A 1AA",
+                u"",
+                u"EPRO",
+                u"ESOS",
+                u"",
+                u"",
+                u"",
+                u"",
+                u"18",
+                u"99.5",
+                u"",
+                u"NA",
+                u"MOB",
+                u"",
+                u"",
+                u"FINI",
+                u"",
+                u"",
+                u"",
+                u"NAR",
+                u"",
+                u"",
+                u"TA",
+            ],
+        ]
+        if data is None:
+            data = data_in_2018_format if settings.CONTRACT_2018_ENABLED else data_in_2013_format
+        return v.ProviderCSVValidator(data)
 
-        self.dummy_cleaned_data = {
+    @staticmethod
+    def get_dummy_cleaned_data_copy():
+        data_in_2013_format = {
             "DOB": datetime.datetime(2014, 1, 2, 0, 0),
             "Media Code": u"DK",
             "Exempted Reason Code": u"",
@@ -192,227 +342,93 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Postcode": u"SW1A 1AA",
             "Ethnicity": u"1",
         }
+        data_in_2018_format = {
+            "DOB": datetime.datetime(2014, 1, 2, 0, 0),
+            "Media Code": u"DK",
+            "Exempted Reason Code": u"",
+            "Telephone / Online": u"TA",
+            "First Name": u"A N Other",
+            "Stage Reached": u"EB",
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Exceptional Cases (ref)": u"",
+            "Time Spent": 99,
+            "CLA Reference Number": 3333333,
+            "Client Ref": u"0001",
+            "Determination": u"",
+            "Travel Costs": Decimal("0"),
+            "Outcome Code": u"EB",
+            "Date Opened": datetime.datetime(2014, 1, 1, 0, 0),
+            "Signposting / Referral": u"",
+            "Eligibility Code": u"X",
+            "Gender": u"M",
+            "Case Costs": Decimal("99.5"),
+            "Disbursements": Decimal("0"),
+            "Disability Code": u"ILL",
+            "Suitable for Telephone Advice": u"N",
+            "Adjustments / Adaptations": u"",
+            "Date Closed": datetime.datetime(2014, 1, 2, 0, 0),
+            "Age Range": u"E",
+            "Surname": u"Corgi",
+            "Account Number": u"2B222B",
+            "Postcode": u"SW1A 1AA",
+            "Ethnicity": u"1",
+            "Fixed Fee Amount": u"LF",
+            "Fixed Fee Code": u"65",
+        }
+        data = data_in_2018_format if settings.CONTRACT_2018_ENABLED else data_in_2013_format
+        return data.copy()
 
-        contract_2018_data = v.contract_2018_validators.copy()
-        contract_2018_data["CLA Reference Number"] = u"3333333"
-        contract_2018_data["Client Ref"] = u"0001"
-        contract_2018_data["Account Number"] = u"2B222B"
-        contract_2018_data["First Name"] = u"A N Other"
-        contract_2018_data["Surname"] = u"Corgi"
-        contract_2018_data["DOB"] = u"02/01/2014"
-        contract_2018_data["Age Range"] = u"E"
-        contract_2018_data["Gender"] = u"M"
-        contract_2018_data["Ethnicity"] = u"1"
-        contract_2018_data["Unused1"] = u""
-        contract_2018_data["Unused2"] = u""
-        contract_2018_data["Postcode"] = u"SW1A 1AA"
-        contract_2018_data["Eligibility Code"] = u"X"
-        contract_2018_data["Matter Type 1"] = u""
-        contract_2018_data["Matter Type 2"] = u""
-        contract_2018_data["Stage Reached"] = u""
-        contract_2018_data["Outcome Code"] = u""
-        contract_2018_data["Unused3"] = u""
-        contract_2018_data["Date Opened"] = u"01/09/2018"
-        contract_2018_data["Date Closed"] = u"01/10/2018"
-        contract_2018_data["Time Spent"] = u"18"
-        contract_2018_data["Case Costs"] = u"99.5"
-        contract_2018_data["Fixed Fee Amount"] = u""
-        contract_2018_data["Fixed Fee Code"] = u""
-        contract_2018_data["Disability Code"] = u"ILL"
-        contract_2018_data["Disbursements"] = u"0"
-        contract_2018_data["Travel Costs"] = u"0"
-        contract_2018_data["Determination"] = u""
-        contract_2018_data["Suitable for Telephone Advice"] = u"N"
-        contract_2018_data["Exceptional Cases (ref)"] = u""
-        contract_2018_data["Exempted Reason Code"] = u""
-        contract_2018_data["Adjustments / Adaptations"] = u"NAR"
-        contract_2018_data["Signposting / Referral"] = u""
-        contract_2018_data["Media Code"] = u"DK"
-        contract_2018_data["Telephone / Online"] = u"TA"
-        self.contract_2018_data = contract_2018_data
 
     def test_validator_valid(self):
         validator = v.ProviderCSVValidator(self.data)
         self.assertEqual(len(validator.validate()), 2)
 
     def test_invalid_field_count(self):
-        validator = v.ProviderCSVValidator([[], []])
+        validator = self.get_provider_csv_validator([[], []])
         with self.assertRaisesRegexp(serializers.ValidationError, r"Row: 1 - Incorrect number of columns"):
             validator.validate()
 
     def test_closed_date_after_opened_date_invariant(self):
-        validator = v.ProviderCSVValidator(
-            [
-                [
-                    u"3333333",
-                    u"0001",
-                    u"2B222B",
-                    u"A N Other",
-                    u"Corgi",
-                    u"02/01/2014",
-                    u"E",
-                    u"M",
-                    u"1",
-                    u"",
-                    u"",
-                    u"SW1A 1AA",
-                    u"X",
-                    u"EADM",
-                    u"ESOS",
-                    u"EB",
-                    u"EB",
-                    u"",
-                    u"02/01/2014",
-                    u"01/01/2014",
-                    u"99",
-                    u"99.5",
-                    u"",
-                    u"ILL",
-                    u"0",
-                    u"0",
-                    u"",
-                    u"N",
-                    u"",
-                    u"",
-                    u"NAR",
-                    u"",
-                    u"DK",
-                    u"TA",
-                ]
-            ]
-        )
+        test_values = {
+            "Matter Type 1": u"EADM",
+            "Matter Type 2": u"ESOS",
+            "Stage Reached": u"EB",
+            "Outcome Code": u"EB",
+            "Date Opened": u"02/01/2014",
+            "Date Closed": u"01/01/2014",
+        }
+        data = [self._generate_contract_data_row(override=test_values)]
+        validator = self.get_provider_csv_validator(data)
         with self.assertRaisesRegexp(serializers.ValidationError, "Row: 1 - .*must be after"):
             validator.validate()
 
     def test_invalid_account_number(self):
-        validator = v.ProviderCSVValidator(
-            [
-                [
-                    u"3333333",
-                    u"0001",
-                    u"22222B",
-                    u"A N Other",
-                    u"Corgi",
-                    u"02/01/2014",
-                    u"E",
-                    u"M",
-                    u"1",
-                    u"",
-                    u"",
-                    u"SW1A 1AA",
-                    u"X",
-                    u"EPRO",
-                    u"ESOS",
-                    u"EB",
-                    u"EB",
-                    u"",
-                    u"01/01/2014",
-                    u"01/01/2015",
-                    u"99",
-                    u"99.5",
-                    u"",
-                    u"ILL",
-                    u"0",
-                    u"0",
-                    u"",
-                    u"N",
-                    u"",
-                    u"",
-                    u"NAR",
-                    u"",
-                    u"DK",
-                    u"TA",
-                ]
-            ]
-        )
+        test_values = {
+            "Account Number": u"22222B",
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Stage Reached": u"EB",
+            "Outcome Code": u"EB",
+        }
+        data = [self._generate_contract_data_row(override=test_values)]
+        validator = self.get_provider_csv_validator(data)
         with self.assertRaises(serializers.ValidationError):
             validator.validate()
 
     def test_service_adapation_validation_valid(self):
-        validator = v.ProviderCSVValidator(
-            [
-                [
-                    u"3333333",
-                    u"0001",
-                    u"2B222B",
-                    u"A N Other",
-                    u"Corgi",
-                    u"02/01/2014",
-                    u"E",
-                    u"M",
-                    u"1",
-                    u"",
-                    u"",
-                    u"SW1A 1AA",
-                    u"X",
-                    u"EPRO",
-                    u"ESOS",
-                    u"EB",
-                    u"EB",
-                    u"",
-                    u"01/01/2014",
-                    u"02/01/2014",
-                    u"99",
-                    u"99.5",
-                    u"",
-                    u"ILL",
-                    u"0",
-                    u"0",
-                    u"",
-                    u"N",
-                    u"",
-                    u"",
-                    u"LOL",
-                    u"",
-                    u"DK",
-                    u"TA",
-                ]
-            ]
-        )
+        test_values = {
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Stage Reached": u"EB",
+            "Outcome Code": u"EB",
+            "Adjustments / Adaptations": u"LOL",
+        }
+        data = [self._generate_contract_data_row(override=test_values)]
+        validator = self.get_provider_csv_validator(data)
         with self.assertRaisesRegexp(serializers.ValidationError, r"Adjustments / Adaptations - LOL must be one of"):
             validator.validate()
 
-    def test_allowed_no_outcome_code_and_dates_if_determination_code(self):
-        validator = v.ProviderCSVValidator(
-            [
-                [
-                    u"3333333",
-                    u"0001",
-                    u"2B222B",
-                    u"A N Other",
-                    u"Corgi",
-                    u"02/01/2014",
-                    u"E",
-                    u"M",
-                    u"1",
-                    u"",
-                    u"",
-                    u"SW1A 1AA",
-                    u"X",
-                    u"EPRO",
-                    u"ESOS",
-                    u"",
-                    u"",
-                    u"",
-                    u"",
-                    u"",
-                    u"18",
-                    u"99.5",
-                    u"",
-                    u"ILL",
-                    u"0",
-                    u"0",
-                    u"FINI",
-                    u"N",
-                    u"",
-                    u"",
-                    u"",
-                    u"",
-                    u"DK",
-                    u"TA",
-                ]
-            ]
-        )
 
         try:
             validator.validate()
@@ -420,81 +436,56 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             self.fail("Should not need outcome code or closed and opened dated if determination code present")
 
     def test_service_adapation_validation_required(self):
-
-        validator = v.ProviderCSVValidator(self.data)
-
-        cleaned_data = self.dummy_cleaned_data.copy()
-
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Adjustments / Adaptations "] = u""
-
         with self.assertRaisesRegexp(serializers.ValidationError, r"Adjustments / Adaptations field is required"):
             validator._validate_service_adaptation(cleaned_data)
 
     def test_eligibility_code_validation_required(self):
-
-        validator = v.ProviderCSVValidator(self.data)
-
-        cleaned_data = self.dummy_cleaned_data.copy()
-
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
         validator._validate_eligibility_code(cleaned_data)
-
         cleaned_data["Eligibility Code"] = u""
-
         with self.assertRaisesRegexp(serializers.ValidationError, r"Eligibility Code field is required"):
             validator._validate_eligibility_code(cleaned_data)
 
     def test_validate_ta_oa_ff_not_valid_for_edu_and_dis(self):
-
-        validator = v.ProviderCSVValidator(self.data)
-        cleaned_data = self.dummy_cleaned_data.copy()
-
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
         validator._validate_eligibility_code(cleaned_data)
-
         cleaned_data["Telephone / Online"] = u"FF"
-
         validator._validate_telephone_or_online_advice(cleaned_data, u"education")
         validator._validate_telephone_or_online_advice(cleaned_data, u"discrimination")
-
         with self.assertRaisesRegexp(serializers.ValidationError, r".*code FF only valid for.*"):
             validator._validate_telephone_or_online_advice(cleaned_data, u"ssss")
 
     def test_eligibility_code_validation_time_spent_less_than_132(self):
-
-        validator = v.ProviderCSVValidator(self.data)
-
-        cleaned_data = self.dummy_cleaned_data.copy()
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Eligibility Code"] = u"S"
-
         validator._validate_eligibility_code(cleaned_data)
-
         cleaned_data["Time Spent"] = 999
-
         with self.assertRaisesRegexp(
             serializers.ValidationError, r"The eligibility code .* you have entered is not valid"
         ):
             validator._validate_eligibility_code(cleaned_data)
 
     def test_validation_time_spent_less_than_18(self):
-
-        validator = v.ProviderCSVValidator(self.data)
-
-        cleaned_data = self.dummy_cleaned_data.copy()
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Eligibility Code"] = u"S"
         cleaned_data["Determination"] = False
-
         validator._validate_eligibility_code(cleaned_data)
         cleaned_data["Time Spent"] = 999
-
         with self.assertRaisesRegexp(
             serializers.ValidationError, r"The eligibility code .* you have entered is not valid with"
         ):
             validator._validate_eligibility_code(cleaned_data)
 
     def test_validation_time_spent_more_than_18_with_determination_not_valid(self):
-
-        validator = v.ProviderCSVValidator(self.data)
-
-        cleaned_data = self.dummy_cleaned_data.copy()
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Eligibility Code"] = u"S"
         cleaned_data["Determination"] = True
 
@@ -517,16 +508,12 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             validator._validate_time_spent(cleaned_data, u"welfare")
 
     def test_validation_exemption_code_or_cla_ref_required(self):
-
-        validator = v.ProviderCSVValidator(self.data)
-
-        cleaned_data = self.dummy_cleaned_data.copy()
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Date Opened"] = datetime.datetime(2014, 1, 1)
         cleaned_data["Exempted Code Reason"] = u"aa"
         cleaned_data["Determination"] = False
-
         validator._validate_exemption(cleaned_data, u"debt")
-
         cleaned_data["Date Opened"] = datetime.datetime(2014, 1, 2)
 
         with self.assertRaisesRegexp(
@@ -550,32 +537,26 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             validator._validate_exemption(cleaned_data, u"welfare")
 
     def test_category_consistency_validation(self):
-
-        validator = v.ProviderCSVValidator(self.data)
-
-        cleaned_data = self.dummy_cleaned_data.copy()
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Matter Type 1"] = u"S"
         cleaned_data["Matter Type 2"] = u"P"
-
         with self.assertRaisesRegexp(serializers.ValidationError, r"fields must be of the same category"):
             validator._validate_category_consistency(cleaned_data)
 
     def test_staged_reached_validate_required_mt1s(self):
-        validator = v.ProviderCSVValidator(self.data)
-
-        cleaned_data = self.dummy_cleaned_data.copy()
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Matter Type 1"] = u"DMCA"
         cleaned_data["Stage Reached"] = u""
-
         with self.assertRaisesRegexp(
             serializers.ValidationError, r".*is required because Matter Type 1: DMCA was specified.*"
         ):
             validator._validate_stage_reached(cleaned_data)
 
     def test_staged_reached_validate_not_allowed_mt1s(self):
-        validator = v.ProviderCSVValidator(self.data)
-
-        cleaned_data = self.dummy_cleaned_data.copy()
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Matter Type 1"] = u"WBAA"
 
         with self.assertRaisesRegexp(
@@ -642,14 +623,14 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         with self.assertRaisesRegexp(serializers.ValidationError, r".*must be one of"):
             test_in("q")
 
-    def _generate_contract_2018_data_row(self, override=None):
-        row = self.contract_2018_data.copy()
+    def _generate_contract_data_row(self, override=None):
+        row = self.contract_2018_data.copy() if settings.CONTRACT_2018_ENABLED else self.contract_2013_data.copy()
         if override:
             row.update(override)
         return [val for key, val in row.items()]
 
-    def _test_generated_2018_contract_row_validates(self, override):
-        data = [self._generate_contract_2018_data_row(override)]
+    def _test_generated_contract_row_validates(self, override):
+        data = [self._generate_contract_data_row(override)]
         validator = v.ProviderCSVValidator(data)
         try:
             validator.validate()
@@ -657,7 +638,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             self.fail("{}".format(e))
 
     def _test_generated_2018_contract_row_validate_fails(self, override, expected_error):
-        data = [self._generate_contract_2018_data_row(override)]
+        data = [self._generate_contract_data_row(override)]
         validator = v.ProviderCSVValidator(data)
         try:
             validator.validate()
@@ -673,22 +654,22 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"DA",
             "Outcome Code": u"DAA",
         }
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_family_outcome_code_FAA_is_valid(self):
         test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAA"}
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_family_outcome_code_FAB_is_valid(self):
         test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAB"}
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_family_outcome_code_FAC_is_valid(self):
         test_values = {"Matter Type 1": u"FAMA", "Matter Type 2": u"FADV", "Outcome Code": u"FAC"}
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_discrimination_outcome_code_QAA_is_valid(self):
@@ -698,7 +679,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"QA",
             "Outcome Code": u"QAA",
         }
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fafa_determination_code_is_valid(self):
@@ -708,7 +689,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"EA",
             "Determination": u"FAFA",
         }
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_exem_determination_code_is_valid(self):
@@ -718,7 +699,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"EA",
             "Determination": u"EXEM",
         }
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_housing_outcome_code_haa_is_valid(self):
@@ -728,7 +709,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"HA",
             "Outcome Code": u"HAA",
         }
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_housing_outcome_code_hac_is_valid(self):
@@ -738,7 +719,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"HA",
             "Outcome Code": u"HAC",
         }
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_housing_outcome_code_hab_is_valid(self):
@@ -748,7 +729,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"HA",
             "Outcome Code": u"HAB",
         }
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fixed_fee_amount_present(self):
@@ -759,7 +740,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Fixed Fee Amount": u"130",
             "Fixed Fee Code": u"LF",
         }
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fixed_fee_amount_missing(self):
@@ -783,7 +764,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Fixed Fee Code": u"LF",
             "Time Spent": u"66",
         }
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_lower_fixed_fee_excess_time_spent(self):
@@ -809,7 +790,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Fixed Fee Code": u"HF",
             "Time Spent": u"144",
         }
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_higher_fixed_fee_excess_time_spent(self):
@@ -858,7 +839,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Fixed Fee Amount": u"119.6",
             "Fixed Fee Code": u"HM",
         }
-        self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_mt1_fixed_fee_code_mismatch(self):

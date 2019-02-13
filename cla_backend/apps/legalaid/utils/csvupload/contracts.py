@@ -12,7 +12,8 @@ CONTRACT_THIRTEEN_END_DATE = datetime(year=2018, month=9, day=1)
 CONTRACT_EIGHTEEN_START_DATE = CONTRACT_THIRTEEN_END_DATE
 
 contract_2013_determination_codes = {u"OOSC", u"OSPF", u"CHNM", u"FINI", u"DVCA"}
-contract_2018_determination_codes = copy(contract_2013_determination_codes) | {"FAFA"}
+contract_2018_determination_codes = copy(contract_2013_determination_codes) | {"FAFA", "EXEM"}
+contract_2018_fixed_fee_codes = ["DF", "HF", "LF"]
 
 debt_category_spec = {
     "OUTCOME_CODES": {u"DA", u"DC", u"DD", u"DG", u"DH", u"DI", u"DU", u"DV", u"DW", u"DX", u"DY", u"DZ"},
@@ -237,7 +238,7 @@ contract_2013_category_spec = {
 # TODO Implement contract 2018 changes here
 discrimination_category_spec["OUTCOME_CODES"].update({u"QAA"})
 family_category_spec["OUTCOME_CODES"].update({u"FAA", u"FAB", u"FAC"})
-housing_category_spec["OUTCOME_CODES"].update({u"HAA", u"HAC"})
+housing_category_spec["OUTCOME_CODES"].update({u"HAA", u"HAC", "HAB"})
 
 contract_2018_category_spec = {
     u"debt": deepcopy(debt_category_spec),
@@ -247,6 +248,8 @@ contract_2018_category_spec = {
     u"housing": deepcopy(housing_category_spec),
     u"welfare": deepcopy(welfare_category_spec),
 }
+
+contract_2018_category_spec["family"]["OUTCOME_CODES"].update({u"DAA"})
 
 
 def get_all_values_across_categories(key, applicable_contract):
@@ -281,9 +284,12 @@ def get_determination_codes(applicable_contract):
 def get_applicable_contract(case_date_opened, case_matter_type_1=None):
     if not settings.CONTRACT_2018_ENABLED:
         return CONTRACT_THIRTEEN
-    if CONTRACT_THIRTEEN_START_DATE <= case_date_opened < CONTRACT_THIRTEEN_END_DATE:
+    try:
+        if CONTRACT_THIRTEEN_START_DATE <= case_date_opened < CONTRACT_THIRTEEN_END_DATE:
+            return CONTRACT_THIRTEEN
+        elif case_date_opened >= CONTRACT_EIGHTEEN_START_DATE:
+            if case_matter_type_1 in contract_2018_category_spec["discrimination"]["MATTER_TYPE1"]:
+                return CONTRACT_EIGHTEEN_DISCRIMINATION
+            return CONTRACT_EIGHTEEN
+    except TypeError:
         return CONTRACT_THIRTEEN
-    elif case_date_opened >= CONTRACT_EIGHTEEN_START_DATE:
-        if case_matter_type_1 in contract_2018_category_spec["discrimination"]["MATTER_TYPE1"]:
-            return CONTRACT_EIGHTEEN_DISCRIMINATION
-        return CONTRACT_EIGHTEEN

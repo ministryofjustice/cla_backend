@@ -379,9 +379,14 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         data = data_in_2018_format if settings.CONTRACT_2018_ENABLED else data_in_2013_format
         return data.copy()
 
+    @override_settings(CONTRACT_2018_ENABLED=False)
+    def test_validator_valid_2013(self):
+        validator = self.get_provider_csv_validator()
+        self.assertEqual(len(validator.validate()), 2)
 
-    def test_validator_valid(self):
-        validator = v.ProviderCSVValidator(self.data)
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_valid_2018(self):
+        validator = self.get_provider_csv_validator()
         self.assertEqual(len(validator.validate()), 2)
 
     def test_invalid_field_count(self):
@@ -429,7 +434,36 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         with self.assertRaisesRegexp(serializers.ValidationError, r"Adjustments / Adaptations - LOL must be one of"):
             validator.validate()
 
+    @override_settings(CONTRACT_2018_ENABLED=False)
+    def test_allowed_no_outcome_code_and_dates_if_determination_code_2013(self):
+        test_values = {
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Date Opened": u"",
+            "Date Closed": u"",
+            "Time Spent": u"18",
+            "Determination": u"FINI",
+        }
+        data = [self._generate_contract_data_row(override=test_values)]
+        validator = self.get_provider_csv_validator(data)
+        try:
+            validator.validate()
+        except serializers.ValidationError:
+            self.fail("Should not need outcome code or closed and opened dated if determination code present")
 
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_allowed_no_outcome_code_and_dates_if_determination_code_2018(self):
+        test_values = {
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Date Opened": u"",
+            "Date Closed": u"",
+            "Fixed Fee Code": u"NA",
+            "Time Spent": u"18",
+            "Determination": u"FINI",
+        }
+        data = [self._generate_contract_data_row(override=test_values)]
+        validator = self.get_provider_csv_validator(data)
         try:
             validator.validate()
         except serializers.ValidationError:

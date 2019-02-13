@@ -522,11 +522,9 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Eligibility Code"] = u"S"
         cleaned_data["Determination"] = True
-
         cleaned_data["Time Spent"] = 12
         validator._validate_time_spent(cleaned_data, u"welfare")
         cleaned_data["Time Spent"] = 999
-
         with self.assertRaisesRegexp(
             serializers.ValidationError, "[u'Time spent (999) must not be greater than 42 minutes']"
         ):
@@ -558,7 +556,6 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
         cleaned_data["Exempted Code Reason"] = u""
         cleaned_data["CLA Reference Number"] = u""
-
         cleaned_data["Date Opened"] = datetime.datetime(2011, 1, 1)
         cleaned_data["Exceptional Cases (ref)"] = u"foo"
 
@@ -592,7 +589,6 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Matter Type 1"] = u"WBAA"
-
         with self.assertRaisesRegexp(
             serializers.ValidationError, r".*is not allowed because Matter Type 1: WBAA was specified.*"
         ):
@@ -857,11 +853,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_misc_rate_fixed_fee(self):
-        test_values = {
-            "Matter Type 1": u"MSCB",
-            "Fixed Fee Amount": u"",
-            "Fixed Fee Code": u"MR",
-        }
+        test_values = {"Matter Type 1": u"MSCB", "Fixed Fee Amount": u"", "Fixed Fee Code": u"MR"}
         # TODO complete then Matter Type 1 MSCB added
         # self._test_generated_2018_contract_row_validates(override=test_values)
 
@@ -883,7 +875,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Fixed Fee Amount": u"119.6",
             "Fixed Fee Code": u"LF",
         }
-        expected_error = u"Row: 1 - The HM fee code should be used where Matter Type 1 Code - FAMY is used."
+        expected_error = u"Row: 1 - The HM fee code should be used where Matter Type 1 Code - FAMY is used"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
 

@@ -237,8 +237,8 @@ contract_2013_category_spec = {
 
 # TODO Implement contract 2018 changes here
 discrimination_category_spec["OUTCOME_CODES"].update({u"QAA"})
-family_category_spec["OUTCOME_CODES"].update({u"FAA", u"FAB", u"FAC"})
-housing_category_spec["OUTCOME_CODES"].update({u"HAA", u"HAC", "HAB"})
+family_category_spec["OUTCOME_CODES"].update({u"FAA", u"FAB", u"FAC", u"DAA"})
+housing_category_spec["OUTCOME_CODES"].update({u"HAA", u"HAC", u"HAB"})
 
 contract_2018_category_spec = {
     u"debt": deepcopy(debt_category_spec),
@@ -248,8 +248,6 @@ contract_2018_category_spec = {
     u"housing": deepcopy(housing_category_spec),
     u"welfare": deepcopy(welfare_category_spec),
 }
-
-contract_2018_category_spec["family"]["OUTCOME_CODES"].update({u"DAA"})
 
 
 def get_all_values_across_categories(key, applicable_contract):

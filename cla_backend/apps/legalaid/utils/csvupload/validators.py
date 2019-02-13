@@ -555,11 +555,10 @@ class ProviderCSVValidator(object):
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
         fixed_fee_codes = contract_2018_fixed_fee_codes.copy()
         fixed_fee_codes.remove("NA")
-        if fixed_fee_code in fixed_fee_codes:
-            if not cleaned_data.get("Fixed Fee Amount"):
-                raise serializers.ValidationError(
-                    "Fixed Fee Amount must be entered for Fixed Fee Code ({})".format(fixed_fee_code)
-                )
+        if fixed_fee_code in fixed_fee_codes and not cleaned_data.get("Fixed Fee Amount"):
+            raise serializers.ValidationError(
+                "Fixed Fee Amount must be entered for Fixed Fee Code ({})".format(fixed_fee_code)
+            )
 
     def _validate_lower_fixed_fee_time_spent(self, cleaned_data):
         MAX_TIME_ALLOWED = 133

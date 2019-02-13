@@ -855,7 +855,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     def test_validator_misc_rate_fixed_fee(self):
         test_values = {"Matter Type 1": u"MSCB", "Fixed Fee Amount": u"", "Fixed Fee Code": u"MR"}
         # TODO complete then Matter Type 1 MSCB added
-        # self._test_generated_2018_contract_row_validates(override=test_values)
+        self._test_generated_2018_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_hwfm_rate_fixed_fee(self):
@@ -877,6 +877,17 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         }
         expected_error = u"Row: 1 - The HM fee code should be used where Matter Type 1 Code - FAMY is used"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_hourly_rate_hr_fixed_fee_code(self):
+        test_values = {
+            "Matter Type 1": u"DMAP",
+            "Matter Type 2": u"DOTH",
+            "Stage Reached": u"DB",
+            "Fixed Fee Amount": u"119.6",
+            "Fixed Fee Code": u"HR",
+        }
+        self._test_generated_contract_row_validates(override=test_values)
 
 
 class DependsOnDecoratorTestCase(unittest.TestCase):

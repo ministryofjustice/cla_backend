@@ -269,7 +269,7 @@ original_field_order = [
     "Telephone / Online",
 ]
 
-contract_2018_enabled_field_order = [
+new_field_order_when_contract_2018_enabled = [
     "CLA Reference Number",
     "Client Ref",
     "Account Number",
@@ -304,16 +304,19 @@ contract_2018_enabled_field_order = [
     "Telephone / Online",
 ]
 
-contract_2013_validators = OrderedDict()
+# Take a copy of our validators in the original field order i.e before CONTRACT_2018_ENABLED setting is True.
+contract_2013_validators_for_original_field_order = OrderedDict()
 for field in original_field_order:
-    contract_2013_validators[field] = deepcopy(validators[field])
+    contract_2013_validators_for_original_field_order[field] = deepcopy(validators[field])
 
-contract_2013_when_2018_contract_enabled_validators = OrderedDict()
+# Slightly amend our validators for 2013 contracts when the new CONTRACT_2018_ENABLED field order applies and take copy.
+contract_2013_validators_for_new_field_order = OrderedDict()
 validators.update({"Fixed Fee Amount": [], "Fixed Fee Code": [validate_in([u"NA"])]})
-for field in contract_2018_enabled_field_order:
-    contract_2013_when_2018_contract_enabled_validators[field] = deepcopy(validators[field])
+for field in new_field_order_when_contract_2018_enabled:
+    contract_2013_validators_for_new_field_order[field] = deepcopy(validators[field])
 
-contract_2018_validators = OrderedDict()
+# Amend validators for 2018 contract cases and take copy. Only used when CONTRACT_2018_ENABLED setting is True.
+contract_2018_validators_for_new_field_order = OrderedDict()
 validators.update(
     {
         "Matter Type 1": [validate_present, validate_in(get_valid_matter_type1(CONTRACT_EIGHTEEN))],
@@ -325,8 +328,8 @@ validators.update(
         "Fixed Fee Code": [validate_in(contract_2018_fixed_fee_codes)],
     }
 )
-for field in contract_2018_enabled_field_order:
-    contract_2018_validators[field] = deepcopy(validators[field])
+for field in new_field_order_when_contract_2018_enabled:
+    contract_2018_validators_for_new_field_order[field] = deepcopy(validators[field])
 
 
 class ProviderCSVValidator(object):
@@ -355,7 +358,7 @@ class ProviderCSVValidator(object):
 
     @staticmethod
     def get_date_opened_index():
-        field_order = contract_2018_enabled_field_order if settings.CONTRACT_2018_ENABLED else original_field_order
+        field_order = new_field_order_when_contract_2018_enabled if settings.CONTRACT_2018_ENABLED else original_field_order
         return field_order.index("Date Opened")
 
     def _get_applicable_contract_for_row(self, row):
@@ -371,10 +374,10 @@ class ProviderCSVValidator(object):
         applicable_contract = self._get_applicable_contract_for_row(row)
         if applicable_contract == CONTRACT_THIRTEEN:
             if settings.CONTRACT_2018_ENABLED:
-                return contract_2013_when_2018_contract_enabled_validators
-            return contract_2013_validators
+                return contract_2013_validators_for_new_field_order
+            return contract_2013_validators_for_original_field_order
         elif applicable_contract == CONTRACT_EIGHTEEN:
-            return contract_2018_validators
+            return contract_2018_validators_for_new_field_order
 
     def _validate_fields(self):
         """

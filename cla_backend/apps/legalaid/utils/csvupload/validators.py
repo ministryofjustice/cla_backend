@@ -601,6 +601,20 @@ class ProviderCSVValidator(object):
     def format_message(s, row_num):
         return "Row: %s - %s" % (row_num + 1, s)
 
+    def get_extra_validators_for_applicable_contract(self, applicable_contract):
+        if settings.CONTRACT_2018_ENABLED:
+            if applicable_contract == CONTRACT_EIGHTEEN:
+                return [
+                    self._validate_fixed_fee_amount_present,
+                    self._validate_lower_fixed_fee_time_spent,
+                    self._validate_higher_fixed_fee_time_spent,
+                    self._validate_mt1_fee_codes,
+                    self._validate_fee_code_is_not_na,
+                ]
+            elif applicable_contract in [CONTRACT_THIRTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION]:
+                return [self._validate_fee_code_is_na]
+        return []
+
     def _validate_data(self, cleaned_data, row_num, applicable_contract):
         """
         Like django's clean method, use this to validate across fields
@@ -616,19 +630,8 @@ class ProviderCSVValidator(object):
             self._validate_stage_reached,
             self._validate_dob_present,
         ]
-        if settings.CONTRACT_2018_ENABLED:
-            if applicable_contract == CONTRACT_EIGHTEEN:
-                validation_methods.extend(
-                    [
-                        self._validate_fixed_fee_amount_present,
-                        self._validate_lower_fixed_fee_time_spent,
-                        self._validate_higher_fixed_fee_time_spent,
-                        self._validate_mt1_fee_codes,
-                        self._validate_fee_code_is_not_na,
-                    ]
-                )
-            elif applicable_contract in [CONTRACT_THIRTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION]:
-                validation_methods.extend([self._validate_fee_code_is_na])
+
+        validation_methods.extend(self.get_extra_validators_for_applicable_contract(applicable_contract))
 
         validation_methods_depend_on_category = [
             self._validate_time_spent,

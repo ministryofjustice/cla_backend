@@ -6,6 +6,7 @@ from collections import OrderedDict
 from copy import deepcopy
 from decimal import Decimal, InvalidOperation
 
+from django.conf import settings
 from django.forms.util import ErrorList
 from rest_framework import serializers
 
@@ -31,6 +32,7 @@ from legalaid.utils.csvupload.contracts import (
     contract_2018_fixed_fee_codes,
     CONTRACT_THIRTEEN,
     CONTRACT_EIGHTEEN,
+    CONTRACT_EIGHTEEN_DISCRIMINATION,
 )
 
 logger = logging.getLogger(__name__)
@@ -191,7 +193,46 @@ def excel_col_name(col):  # col is 1 based
 
 account_number_regex_validator = validate_regex(r"\d{1}[a-z]{1}\d{3}[a-z]{1}", flags=re.IGNORECASE)
 
-contract_2013_field_order = [
+validators = {
+    "CLA Reference Number": [validate_present, validate_integer],
+    "Client Ref": [validate_present],
+    "Account Number": [validate_present, account_number_regex_validator],
+    "First Name": [validate_present],
+    "Surname": [validate_present],
+    "DOB": [validate_date],
+    "Age Range": [validate_present, validate_in(AGE_RANGE)],
+    "Gender": [validate_present],
+    "Ethnicity": [validate_present],
+    "Unused1": [validate_not_present],
+    "Unused2": [validate_not_present],
+    "Postcode": [validate_present, validate_postcode],
+    "Eligibility Code": [validate_in(ELIGIBILITY_CODES)],
+    "Matter Type 1": [validate_present, validate_in(get_valid_matter_type1(CONTRACT_THIRTEEN))],
+    "Matter Type 2": [validate_present, validate_in(get_valid_matter_type2(CONTRACT_THIRTEEN))],
+    "Stage Reached": [validate_in(get_valid_stage_reached(CONTRACT_THIRTEEN))],
+    "Outcome Code": [validate_in(get_valid_outcomes(CONTRACT_THIRTEEN))],
+    "Unused3": [validate_not_present],
+    "Date Opened": [validate_date],
+    "Date Closed": [validate_date, validate_not_current_month],
+    "Time Spent": [validate_present, validate_integer, validate_gte(0)],
+    "Case Costs": [validate_present, validate_decimal],
+    "Unused4": [validate_not_present],
+    "Fixed Fee Amount": [],
+    "Fixed Fee Code": [],
+    "Disability Code": [validate_present, validate_in(DISABILITY_INDICATOR)],
+    "Disbursements": [validate_decimal],
+    "Travel Costs": [validate_decimal],
+    "Determination": [validate_in(get_determination_codes(CONTRACT_THIRTEEN))],
+    "Suitable for Telephone Advice": [validate_in({u"Y", u"N"})],
+    "Exceptional Cases (ref)": [validate_regex(r"\d{7}[a-z]{2}", re.I)],
+    "Exempted Reason Code": [validate_in(EXEMPTION_CODES)],
+    "Adjustments / Adaptations": [validate_in(SERVICE_ADAPTATIONS)],
+    "Signposting / Referral": [],
+    "Media Code": [],
+    "Telephone / Online": [validate_present, validate_in(ADVICE_TYPES)],
+}
+
+original_field_order = [
     "CLA Reference Number",
     "Client Ref",
     "Account Number",
@@ -228,48 +269,7 @@ contract_2013_field_order = [
     "Telephone / Online",
 ]
 
-validators = {
-    "CLA Reference Number": [validate_present, validate_integer],
-    "Client Ref": [validate_present],
-    "Account Number": [validate_present, account_number_regex_validator],
-    "First Name": [validate_present],
-    "Surname": [validate_present],
-    "DOB": [validate_date],
-    "Age Range": [validate_present, validate_in(AGE_RANGE)],
-    "Gender": [validate_present],
-    "Ethnicity": [validate_present],
-    "Unused1": [validate_not_present],
-    "Unused2": [validate_not_present],
-    "Postcode": [validate_present, validate_postcode],
-    "Eligibility Code": [validate_in(ELIGIBILITY_CODES)],
-    "Matter Type 1": [validate_present, validate_in(get_valid_matter_type1(CONTRACT_THIRTEEN))],
-    "Matter Type 2": [validate_present, validate_in(get_valid_matter_type2(CONTRACT_THIRTEEN))],
-    "Stage Reached": [validate_in(get_valid_stage_reached(CONTRACT_THIRTEEN))],
-    "Outcome Code": [validate_in(get_valid_outcomes(CONTRACT_THIRTEEN))],
-    "Unused3": [validate_not_present],
-    "Date Opened": [validate_date],
-    "Date Closed": [validate_date, validate_not_current_month],
-    "Time Spent": [validate_present, validate_integer, validate_gte(0)],
-    "Case Costs": [validate_present, validate_decimal],
-    "Unused4": [validate_not_present],
-    "Disability Code": [validate_present, validate_in(DISABILITY_INDICATOR)],
-    "Disbursements": [validate_decimal],
-    "Travel Costs": [validate_decimal],
-    "Determination": [validate_in(get_determination_codes(CONTRACT_THIRTEEN))],
-    "Suitable for Telephone Advice": [validate_in({u"Y", u"N"})],
-    "Exceptional Cases (ref)": [validate_regex(r"\d{7}[a-z]{2}", re.I)],
-    "Exempted Reason Code": [validate_in(EXEMPTION_CODES)],
-    "Adjustments / Adaptations": [validate_in(SERVICE_ADAPTATIONS)],
-    "Signposting / Referral": [],
-    "Media Code": [],
-    "Telephone / Online": [validate_present, validate_in(ADVICE_TYPES)],
-}
-
-contract_2013_validators = OrderedDict()
-for field in contract_2013_field_order:
-    contract_2013_validators[field] = deepcopy(validators[field])
-
-contract_2018_field_order = [
+new_field_order_when_contract_2018_enabled = [
     "CLA Reference Number",
     "Client Ref",
     "Account Number",
@@ -279,15 +279,12 @@ contract_2018_field_order = [
     "Age Range",
     "Gender",
     "Ethnicity",
-    "Unused1",
-    "Unused2",
     "Postcode",
     "Eligibility Code",
     "Matter Type 1",
     "Matter Type 2",
     "Stage Reached",
     "Outcome Code",
-    "Unused3",
     "Date Opened",
     "Date Closed",
     "Time Spent",
@@ -307,6 +304,19 @@ contract_2018_field_order = [
     "Telephone / Online",
 ]
 
+# Take a copy of our validators in the original field order i.e before CONTRACT_2018_ENABLED setting is True.
+contract_2013_validators_for_original_field_order = OrderedDict()
+for field in original_field_order:
+    contract_2013_validators_for_original_field_order[field] = deepcopy(validators[field])
+
+# Slightly amend our validators for 2013 contracts when the new CONTRACT_2018_ENABLED field order applies and take copy.
+contract_2013_validators_for_new_field_order = OrderedDict()
+validators.update({"Fixed Fee Amount": [], "Fixed Fee Code": [validate_in([u"NA"])]})
+for field in new_field_order_when_contract_2018_enabled:
+    contract_2013_validators_for_new_field_order[field] = deepcopy(validators[field])
+
+# Amend validators for 2018 contract cases and take copy. Only used when CONTRACT_2018_ENABLED setting is True.
+contract_2018_validators_for_new_field_order = OrderedDict()
 validators.update(
     {
         "Matter Type 1": [validate_present, validate_in(get_valid_matter_type1(CONTRACT_EIGHTEEN))],
@@ -318,12 +328,8 @@ validators.update(
         "Fixed Fee Code": [validate_in(contract_2018_fixed_fee_codes)],
     }
 )
-
-contract_2018_validators = OrderedDict()
-for field in contract_2018_field_order:
-    contract_2018_validators[field] = deepcopy(validators[field])
-
-date_opened_index = [i for i, key in enumerate(contract_2013_validators) if key == "Date Opened"][0]
+for field in new_field_order_when_contract_2018_enabled:
+    contract_2018_validators_for_new_field_order[field] = deepcopy(validators[field])
 
 
 class ProviderCSVValidator(object):
@@ -351,9 +357,15 @@ class ProviderCSVValidator(object):
             raise ve
 
     @staticmethod
-    def _get_applicable_contract_for_row(row):
+    def get_date_opened_index():
+        field_order = (
+            new_field_order_when_contract_2018_enabled if settings.CONTRACT_2018_ENABLED else original_field_order
+        )
+        return field_order.index("Date Opened")
+
+    def _get_applicable_contract_for_row(self, row):
         try:
-            case_date_opened_string = row[date_opened_index]
+            case_date_opened_string = row[self.get_date_opened_index()]
             case_date_opened = validate_date(case_date_opened_string)
             return get_applicable_contract(case_date_opened=case_date_opened)  # TODO pass Matter Type 1
         except IndexError:
@@ -363,9 +375,11 @@ class ProviderCSVValidator(object):
     def _get_validators_for_row(self, row):
         applicable_contract = self._get_applicable_contract_for_row(row)
         if applicable_contract == CONTRACT_THIRTEEN:
-            return contract_2013_validators
+            if settings.CONTRACT_2018_ENABLED:
+                return contract_2013_validators_for_new_field_order
+            return contract_2013_validators_for_original_field_order
         elif applicable_contract == CONTRACT_EIGHTEEN:
-            return contract_2018_validators
+            return contract_2018_validators_for_new_field_order
 
     def _validate_fields(self):
         """
@@ -532,19 +546,30 @@ class ProviderCSVValidator(object):
         if determination == u"DVCA" and category != u"family":
             raise serializers.ValidationError("Category (%s) must be Family if Determination is DVCA" % category)
 
+    def _validate_fee_code_is_na(self, cleaned_data):
+        if cleaned_data.get("Fixed Fee Code") != "NA":
+            raise serializers.ValidationError(
+                "Fixed Fee Code NA must be entered for 2013 or 2018 Discrimination cases"
+            )
+
+    def _validate_fee_code_is_not_na(self, cleaned_data):
+        if cleaned_data.get("Fixed Fee Code") == "NA":
+            raise serializers.ValidationError("The Fixed Fee code you have entered is not valid for this case")
+
     def _validate_fixed_fee_amount_present(self, cleaned_data):
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
-        if fixed_fee_code in contract_2018_fixed_fee_codes:
-            if not cleaned_data.get("Fixed Fee Amount"):
-                raise serializers.ValidationError(
-                    "Fixed Fee Amount must be entered for Fixed Fee Code ({})".format(fixed_fee_code)
-                )
+        fixed_fee_codes = contract_2018_fixed_fee_codes.copy()
+        fixed_fee_codes.remove("NA")
+        if fixed_fee_code in fixed_fee_codes and not cleaned_data.get("Fixed Fee Amount"):
+            raise serializers.ValidationError(
+                "Fixed Fee Amount must be entered for Fixed Fee Code ({})".format(fixed_fee_code)
+            )
 
     def _validate_lower_fixed_fee_time_spent(self, cleaned_data):
         MAX_TIME_ALLOWED = 133
         time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
-        if fixed_fee_code == "LF" and time_spent_in_minutes >= MAX_TIME_ALLOWED:
+        if fixed_fee_code == u"LF" and time_spent_in_minutes >= MAX_TIME_ALLOWED:
             raise serializers.ValidationError(
                 "Time spent must be less than {} minutes for LF fixed fee code".format(MAX_TIME_ALLOWED)
             )
@@ -555,7 +580,7 @@ class ProviderCSVValidator(object):
         time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
         time_spent_in_bounds = MIN_TIME_ALLOWED <= time_spent_in_minutes < MAX_TIME_ALLOWED
-        if fixed_fee_code == "HF" and not time_spent_in_bounds:
+        if fixed_fee_code == u"HF" and not time_spent_in_bounds:
             raise serializers.ValidationError(
                 "Time spent must be >={} and <{} minutes for HF fixed fee code".format(
                     MIN_TIME_ALLOWED, MAX_TIME_ALLOWED
@@ -563,8 +588,34 @@ class ProviderCSVValidator(object):
             )
 
     @staticmethod
+    def _validate_mt1_fee_codes(cleaned_data):
+        mt1_fee_code_mapping = {u"MSCB": u"MR", u"FAMY": u"HM"}
+        mt1 = cleaned_data.get("Matter Type 1")
+        expected_fee_code = mt1_fee_code_mapping.get(mt1)
+        fixed_fee_code = cleaned_data.get("Fixed Fee Code")
+
+        if expected_fee_code and fixed_fee_code != expected_fee_code:
+            raise serializers.ValidationError(
+                "The {} fee code should be used where Matter Type 1 Code - {} is used".format(expected_fee_code, mt1)
+            )
+
+    @staticmethod
     def format_message(s, row_num):
         return "Row: %s - %s" % (row_num + 1, s)
+
+    def get_extra_validators_for_applicable_contract(self, applicable_contract):
+        if settings.CONTRACT_2018_ENABLED:
+            if applicable_contract == CONTRACT_EIGHTEEN:
+                return [
+                    self._validate_fixed_fee_amount_present,
+                    self._validate_lower_fixed_fee_time_spent,
+                    self._validate_higher_fixed_fee_time_spent,
+                    self._validate_mt1_fee_codes,
+                    self._validate_fee_code_is_not_na,
+                ]
+            elif applicable_contract in [CONTRACT_THIRTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION]:
+                return [self._validate_fee_code_is_na]
+        return []
 
     def _validate_data(self, cleaned_data, row_num, applicable_contract):
         """
@@ -581,14 +632,8 @@ class ProviderCSVValidator(object):
             self._validate_stage_reached,
             self._validate_dob_present,
         ]
-        if applicable_contract == CONTRACT_EIGHTEEN:
-            validation_methods.extend(
-                [
-                    self._validate_fixed_fee_amount_present,
-                    self._validate_lower_fixed_fee_time_spent,
-                    self._validate_higher_fixed_fee_time_spent,
-                ]
-            )
+
+        validation_methods.extend(self.get_extra_validators_for_applicable_contract(applicable_contract))
 
         validation_methods_depend_on_category = [
             self._validate_time_spent,

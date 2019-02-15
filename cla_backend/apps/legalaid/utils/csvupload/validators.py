@@ -358,7 +358,9 @@ class ProviderCSVValidator(object):
 
     @staticmethod
     def get_date_opened_index():
-        field_order = new_field_order_when_contract_2018_enabled if settings.CONTRACT_2018_ENABLED else original_field_order
+        field_order = (
+            new_field_order_when_contract_2018_enabled if settings.CONTRACT_2018_ENABLED else original_field_order
+        )
         return field_order.index("Date Opened")
 
     def _get_applicable_contract_for_row(self, row):

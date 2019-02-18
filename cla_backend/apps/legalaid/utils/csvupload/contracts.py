@@ -239,6 +239,7 @@ contract_2013_category_spec = {
 discrimination_category_spec["OUTCOME_CODES"].update({u"QAA"})
 family_category_spec["OUTCOME_CODES"].update({u"FAA", u"FAB", u"FAC", u"DAA"})
 housing_category_spec["OUTCOME_CODES"].update({u"HAA", u"HAC", u"HAB"})
+education_category_spec["OUTCOME_CODES"].update({u"EAA"})
 
 contract_2018_category_spec = {
     u"debt": deepcopy(debt_category_spec),

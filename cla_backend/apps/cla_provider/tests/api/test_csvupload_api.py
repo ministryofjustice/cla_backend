@@ -82,7 +82,7 @@ class CSVUploadTestCase(CSVUploadAPIMixin, CLAProviderAuthBaseApiTestMixin, APIT
 
 class ProviderCSVValidatorTestCase(unittest.TestCase):
     def setUp(self):
-        contract_2013_format_data = v.contract_2013_validators.copy()
+        contract_2013_format_data = v.contract_2013_validators_for_original_field_order.copy()
         contract_2013_format_data["CLA Reference Number"] = u"3333333"
         contract_2013_format_data["Client Ref"] = u"0001"
         contract_2013_format_data["Account Number"] = u"2B222B"
@@ -119,7 +119,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         contract_2013_format_data["Telephone / Online"] = u"TA"
         self.contract_2013_data = contract_2013_format_data
 
-        contract_2018_format_data = v.contract_2018_validators.copy()
+        contract_2018_format_data = v.contract_2018_validators_for_new_field_order.copy()
         contract_2018_format_data["CLA Reference Number"] = u"3333333"
         contract_2018_format_data["Client Ref"] = u"0001"
         contract_2018_format_data["Account Number"] = u"2B222B"
@@ -851,12 +851,21 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         expected_error = u"Row: 1 - Time spent must be >=133 and <900 minutes for HF fixed fee code"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
-    @unittest.skip("Needs Matter Type 1 MSCB to be added")
-    @override_settings(CONTRACT_2018_ENABLED=True)
-    def test_validator_misc_rate_fixed_fee(self):
-        test_values = {"Matter Type 1": u"MSCB", "Fixed Fee Amount": u"", "Fixed Fee Code": u"MR"}
-        # TODO complete then Matter Type 1 MSCB added
-        self._test_generated_2018_contract_row_validates(override=test_values)
+    def test_fixed_fee_code_df_is_valid(self):
+        test_values = {
+            "Matter Type 1": u"HRNT",
+            "Matter Type 2": u"HPRI",
+            "Stage Reached": u"HA",
+            "Fixed Fee Code": u"DF",
+            "Fixed Fee Amount": u"130",
+        }
+        self._test_generated_contract_row_validates(override=test_values)
+
+    # TODO enable when Matter Type 1 MSCB added
+    # @override_settings(CONTRACT_2018_ENABLED=True)
+    # def test_validator_misc_rate_fixed_fee(self):
+    #     test_values = {"Matter Type 1": u"MSCB", "Fixed Fee Amount": u"", "Fixed Fee Code": u"MR"}
+    #     self._test_generated_2018_contract_row_validates(override=test_values)q
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_hwfm_rate_fixed_fee(self):

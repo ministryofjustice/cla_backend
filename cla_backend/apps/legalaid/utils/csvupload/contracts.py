@@ -237,8 +237,9 @@ contract_2013_category_spec = {
 
 # TODO Implement contract 2018 changes here
 discrimination_category_spec["OUTCOME_CODES"].update({u"QAA"})
-family_category_spec["OUTCOME_CODES"].update({u"FAA", u"FAB", u"FAC", u"DAA"})
+family_category_spec["OUTCOME_CODES"].update({u"FAA", u"FAB", u"FAC"})
 housing_category_spec["OUTCOME_CODES"].update({u"HAA", u"HAC", u"HAB"})
+debt_category_spec["OUTCOME_CODES"].update({u"DAA"})
 education_category_spec["OUTCOME_CODES"].update({u"EAA"})
 
 contract_2018_category_spec = {

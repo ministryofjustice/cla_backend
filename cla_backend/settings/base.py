@@ -354,7 +354,7 @@ CELERY_TIMEZONE = "UTC"
 # apps with celery tasks
 CELERY_IMPORTS = ["reports.tasks", "notifications.tasks"]
 
-CONTRACT_2018_ENABLED = False
+CONTRACT_2018_ENABLED = os.environ.get("CONTRACT_2018_ENABLED", "False") == "True"
 
 # .local.py overrides all the common settings.
 try:

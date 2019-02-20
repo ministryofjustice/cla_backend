@@ -1498,10 +1498,10 @@ All other benefit problems are out of scope.{% endblocktrans %}</data>
       <data key="d10">n177</data>
       </node>
     <node id="n170">
-      <data key="d3">{% trans "Actions against the police" %}</data>
+      <data key="d3">{% trans "Claims against public authorities" %}</data>
       <data key="d4">Actions against the </data>
       <data key="d7">9</data>
-      <data key="d8">{% trans "The key thing to determine in actions against the police is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow." %}</data>
+      <data key="d8">{% trans "The key thing to determine in claims against public authorities is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow." %}</data>
       <data key="d10">n178</data>
       </node>
     <node id="n171">

@@ -865,7 +865,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     # @override_settings(CONTRACT_2018_ENABLED=True)
     # def test_validator_misc_rate_fixed_fee(self):
     #     test_values = {"Matter Type 1": u"MSCB", "Fixed Fee Amount": u"", "Fixed Fee Code": u"MR"}
-    #     self._test_generated_2018_contract_row_validates(override=test_values)q
+    #     self._test_generated_2018_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_hwfm_rate_fixed_fee(self):

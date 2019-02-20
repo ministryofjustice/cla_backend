@@ -762,6 +762,16 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_education_outcome_code_eaa_is_valid(self):
+        test_values = {
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Stage Reached": u"EA",
+            "Outcome Code": u"EAA",
+        }
+        self._test_generated_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fixed_fee_amount_present(self):
         test_values = {
             "Matter Type 1": u"DMAP",

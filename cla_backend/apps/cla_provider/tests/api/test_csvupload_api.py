@@ -913,6 +913,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_fixed_fee_code_df_is_valid(self):
         test_values = {
+            "Eligibility Code": u"V",
             "Matter Type 1": u"HRNT",
             "Matter Type 2": u"HPRI",
             "Stage Reached": u"HA",
@@ -930,6 +931,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_hwfm_rate_fixed_fee(self):
         test_values = {
+            "Eligibility Code": u"V",
             "Matter Type 1": u"FAMY",
             "Matter Type 2": u"FMEC",
             "Fixed Fee Amount": u"119.6",
@@ -951,6 +953,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_hourly_rate_hr_fixed_fee_code(self):
         test_values = {
+            "Eligibility Code": u"V",
             "Matter Type 1": u"DMAP",
             "Matter Type 2": u"DOTH",
             "Stage Reached": u"DB",

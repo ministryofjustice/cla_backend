@@ -452,7 +452,7 @@ class ProviderCSVValidator(object):
         )
 
     @depends_on("Determination", check=value_is_falsey)
-    def _validate_eligibility_code(self, cleaned_data):
+    def _validate_eligibility_code_2013(self, cleaned_data):
         code = cleaned_data.get("Eligibility Code")
         time_spent = cleaned_data.get("Time Spent", 0)
         validate_present(code, message="Eligibility Code field is required because no determination was specified")
@@ -599,6 +599,18 @@ class ProviderCSVValidator(object):
                 "The {} fee code should be used where Matter Type 1 Code - {} is used".format(expected_fee_code, mt1)
             )
 
+    @depends_on("Determination", check=value_is_falsey)
+    def _validate_eligibility_code_2018(self, cleaned_data):
+        code = cleaned_data.get("Eligibility Code")
+        fixed_fee_code = cleaned_data.get("Fixed Fee Code")
+        validate_present(code, message="Eligibility Code field is required because no determination was specified")
+        if code in {u"S", u"W", u"X", u"Z"} and fixed_fee_code != u"LF":
+            raise serializers.ValidationError(
+                u"The eligibility code {} you have entered is not valid with "
+                u"the Fixed Fee {}, please review the "
+                u"eligibility code.".format(code, fixed_fee_code)
+            )
+
     @staticmethod
     def format_message(s, row_num):
         return "Row: %s - %s" % (row_num + 1, s)
@@ -612,9 +624,10 @@ class ProviderCSVValidator(object):
                     self._validate_higher_fixed_fee_time_spent,
                     self._validate_mt1_fee_codes,
                     self._validate_fee_code_is_not_na,
+                    self._validate_eligibility_code_2018,
                 ]
             elif applicable_contract in [CONTRACT_THIRTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION]:
-                return [self._validate_fee_code_is_na]
+                return [self._validate_fee_code_is_na, self._validate_eligibility_code_2013]
         return []
 
     def _validate_data(self, cleaned_data, row_num, applicable_contract):
@@ -628,7 +641,6 @@ class ProviderCSVValidator(object):
             self._validate_open_closed_date,
             self._validate_service_adaptation,
             self._validate_media_code,
-            self._validate_eligibility_code,
             self._validate_stage_reached,
             self._validate_dob_present,
         ]

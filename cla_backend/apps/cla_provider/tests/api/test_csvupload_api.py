@@ -724,6 +724,8 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         except (serializers.ValidationError, Exception) as e:
             if expected_error not in e.messages:
                 self.fail("{}".format(e))
+        else:
+            self.fail("Expected error missing: {}".format(expected_error))
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_debt_outcome_code_DAA_is_valid(self):

@@ -996,6 +996,32 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             )
             self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_referral_signposting_code(self):
+        test_values = {
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Stage Reached": u"EA",
+            # "Outcome Code": u"EAA",
+            "Signposting / Referral": u"OOSC",
+            # "Stage Reached": u"DB",
+            # "Fixed Fee Code": u"LF",
+        }
+        self._test_generated_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_referral_signposting_code_invalid(self):
+        test_values = {
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Stage Reached": u"EA",
+            "Signposting / Referral": u"FOO",
+        }
+        expected_error = (
+            u"Row: 1 - The Signposting / Referral code you have entered is invalid. Please enter a valid code."
+        )
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
 
 class DependsOnDecoratorTestCase(unittest.TestCase):
     def test_method_called(self):

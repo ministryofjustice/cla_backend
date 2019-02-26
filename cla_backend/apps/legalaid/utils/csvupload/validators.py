@@ -30,7 +30,8 @@ from legalaid.utils.csvupload.contracts import (
     get_valid_matter_type2,
     get_valid_stage_reached,
     contract_2018_fixed_fee_codes,
-    contract_2018_signposting_or_referral_codes,
+    contract_2018_signposting_codes,
+    contact_2018_outcome_codes_requiring_signposting_code,
     CONTRACT_THIRTEEN,
     CONTRACT_EIGHTEEN,
     CONTRACT_EIGHTEEN_DISCRIMINATION,
@@ -613,12 +614,23 @@ class ProviderCSVValidator(object):
             )
 
     @staticmethod
-    def _validate_referral_signposting_code(cleaned_data):
+    def _validate_signposting_code(cleaned_data):
         signposting_or_referral = cleaned_data.get("Signposting / Referral")
-        signposting_or_referral_codes = contract_2018_signposting_or_referral_codes
-        if signposting_or_referral and signposting_or_referral not in signposting_or_referral_codes:
+        if signposting_or_referral and signposting_or_referral not in contract_2018_signposting_codes:
             raise serializers.ValidationError(
                 u"The Signposting / Referral code you have entered is invalid. Please enter a valid code."
+            )
+
+    @staticmethod
+    def _validate_signposting_code_present_for_outcome_code(cleaned_data):
+        outcome_code = cleaned_data.get("Outcome Code")
+        signposting_code_required = outcome_code in contact_2018_outcome_codes_requiring_signposting_code
+        signposting_code = cleaned_data.get("Signposting / Referral")
+        if signposting_code_required and not signposting_code:
+            raise serializers.ValidationError(
+                u"A Signposting / Referral reason code must be entered for matters with outcome code {}.".format(
+                    outcome_code
+                )
             )
 
     @staticmethod
@@ -635,7 +647,8 @@ class ProviderCSVValidator(object):
                     self._validate_mt1_fee_codes,
                     self._validate_fee_code_is_not_na,
                     self._validate_eligibility_code_2018,
-                    self._validate_referral_signposting_code,
+                    self._validate_signposting_code,
+                    self._validate_signposting_code_present_for_outcome_code,
                 ]
             elif applicable_contract in [CONTRACT_THIRTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION]:
                 return [self._validate_fee_code_is_na, self._validate_eligibility_code_2013]

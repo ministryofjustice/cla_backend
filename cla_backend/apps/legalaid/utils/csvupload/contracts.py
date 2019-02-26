@@ -13,8 +13,31 @@ CONTRACT_EIGHTEEN_START_DATE = CONTRACT_THIRTEEN_END_DATE
 
 contract_2013_determination_codes = {u"OOSC", u"OSPF", u"CHNM", u"FINI", u"DVCA"}
 contract_2018_determination_codes = copy(contract_2013_determination_codes) | {"FAFA", "EXEM"}
-contract_2018_signposting_or_referral_codes = {u"OOSC", u"TANA", u"OSPF", u"CHNM", u"FINI", u"FREP"}
+contract_2018_signposting_codes = {u"OOSC", u"TANA", u"OSPF", u"CHNM", u"FINI", u"FREP"}
 contract_2018_fixed_fee_codes = {u"DF", u"HF", u"LF", u"MR", u"HM", u"NA", u"HR"}
+
+contact_2018_outcome_codes_requiring_signposting_code = {
+    u"DU",
+    u"DV",
+    u"DW",
+    u"QU",
+    u"QV",
+    u"QW",
+    u"EU",
+    u"EV",
+    u"EW",
+    u"FU",
+    u"FV",
+    u"FW",
+    u"FX",
+    u"FY",
+    u"FZ",
+    u"HU",
+    u"HV",
+    u"HW",
+    u"WU",
+    u"WV",
+}
 
 debt_category_spec = {
     "OUTCOME_CODES": {u"DA", u"DC", u"DD", u"DG", u"DH", u"DI", u"DU", u"DV", u"DW", u"DX", u"DY", u"DZ"},

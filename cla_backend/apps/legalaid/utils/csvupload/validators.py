@@ -628,6 +628,8 @@ class ProviderCSVValidator(object):
                 ]
             elif applicable_contract in [CONTRACT_THIRTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION]:
                 return [self._validate_fee_code_is_na, self._validate_eligibility_code_2013]
+        else:
+            return [self._validate_eligibility_code_2013]
         return []
 
     def _validate_data(self, cleaned_data, row_num, applicable_contract):

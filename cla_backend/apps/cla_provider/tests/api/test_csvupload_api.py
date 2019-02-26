@@ -476,46 +476,95 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         with self.assertRaisesRegexp(serializers.ValidationError, r"Adjustments / Adaptations field is required"):
             validator._validate_service_adaptation(cleaned_data)
 
+    @override_settings(CONTRACT_2018_ENABLED=False)
     def test_eligibility_code_validation_required(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
-        validator._validate_eligibility_code(cleaned_data)
+        validator._validate_eligibility_code_2013(cleaned_data)
         cleaned_data["Eligibility Code"] = u""
         with self.assertRaisesRegexp(serializers.ValidationError, r"Eligibility Code field is required"):
-            validator._validate_eligibility_code(cleaned_data)
+            validator._validate_eligibility_code_2013(cleaned_data)
 
+    @override_settings(CONTRACT_2018_ENABLED=False)
     def test_validate_ta_oa_ff_not_valid_for_edu_and_dis(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
-        validator._validate_eligibility_code(cleaned_data)
+        validator._validate_eligibility_code_2013(cleaned_data)
         cleaned_data["Telephone / Online"] = u"FF"
         validator._validate_telephone_or_online_advice(cleaned_data, u"education")
         validator._validate_telephone_or_online_advice(cleaned_data, u"discrimination")
         with self.assertRaisesRegexp(serializers.ValidationError, r".*code FF only valid for.*"):
             validator._validate_telephone_or_online_advice(cleaned_data, u"ssss")
 
+    @override_settings(CONTRACT_2018_ENABLED=False)
     def test_eligibility_code_validation_time_spent_less_than_132(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Eligibility Code"] = u"S"
-        validator._validate_eligibility_code(cleaned_data)
+        validator._validate_eligibility_code_2013(cleaned_data)
         cleaned_data["Time Spent"] = 999
         with self.assertRaisesRegexp(
             serializers.ValidationError, r"The eligibility code .* you have entered is not valid"
         ):
-            validator._validate_eligibility_code(cleaned_data)
+            validator._validate_eligibility_code_2013(cleaned_data)
 
+    @override_settings(CONTRACT_2018_ENABLED=False)
     def test_validation_time_spent_less_than_18(self):
         validator = self.get_provider_csv_validator()
         cleaned_data = self.get_dummy_cleaned_data_copy()
         cleaned_data["Eligibility Code"] = u"S"
         cleaned_data["Determination"] = False
-        validator._validate_eligibility_code(cleaned_data)
+        validator._validate_eligibility_code_2013(cleaned_data)
         cleaned_data["Time Spent"] = 999
         with self.assertRaisesRegexp(
             serializers.ValidationError, r"The eligibility code .* you have entered is not valid with"
         ):
-            validator._validate_eligibility_code(cleaned_data)
+            validator._validate_eligibility_code_2013(cleaned_data)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_eligibility_code_validation_required_2018(self):
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
+        validator._validate_eligibility_code_2013(cleaned_data)
+        cleaned_data["Eligibility Code"] = u""
+        with self.assertRaisesRegexp(serializers.ValidationError, r"Eligibility Code field is required"):
+            validator._validate_eligibility_code_2013(cleaned_data)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validate_ta_oa_ff_not_valid_for_edu_and_dis_2018(self):
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
+        validator._validate_eligibility_code_2013(cleaned_data)
+        cleaned_data["Telephone / Online"] = u"FF"
+        validator._validate_telephone_or_online_advice(cleaned_data, u"education")
+        validator._validate_telephone_or_online_advice(cleaned_data, u"discrimination")
+        with self.assertRaisesRegexp(serializers.ValidationError, r".*code FF only valid for.*"):
+            validator._validate_telephone_or_online_advice(cleaned_data, u"ssss")
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_eligibility_code_validation_time_spent_less_than_132_2018(self):
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
+        cleaned_data["Eligibility Code"] = u"S"
+        validator._validate_eligibility_code_2013(cleaned_data)
+        cleaned_data["Time Spent"] = 999
+        with self.assertRaisesRegexp(
+            serializers.ValidationError, r"The eligibility code .* you have entered is not valid"
+        ):
+            validator._validate_eligibility_code_2013(cleaned_data)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validation_time_spent_less_than_18_2018(self):
+        validator = self.get_provider_csv_validator()
+        cleaned_data = self.get_dummy_cleaned_data_copy()
+        cleaned_data["Eligibility Code"] = u"S"
+        cleaned_data["Determination"] = False
+        validator._validate_eligibility_code_2013(cleaned_data)
+        cleaned_data["Time Spent"] = 999
+        with self.assertRaisesRegexp(
+            serializers.ValidationError, r"The eligibility code .* you have entered is not valid with"
+        ):
+            validator._validate_eligibility_code_2013(cleaned_data)
 
     def test_validation_time_spent_more_than_18_with_determination_not_valid(self):
         validator = self.get_provider_csv_validator()
@@ -675,6 +724,8 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         except (serializers.ValidationError, Exception) as e:
             if expected_error not in e.messages:
                 self.fail("{}".format(e))
+        else:
+            self.fail("Expected error missing: {}".format(expected_error))
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_for_debt_outcome_code_DAA_is_valid(self):
@@ -864,6 +915,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_fixed_fee_code_df_is_valid(self):
         test_values = {
+            "Eligibility Code": u"V",
             "Matter Type 1": u"HRNT",
             "Matter Type 2": u"HPRI",
             "Stage Reached": u"HA",
@@ -881,6 +933,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_hwfm_rate_fixed_fee(self):
         test_values = {
+            "Eligibility Code": u"V",
             "Matter Type 1": u"FAMY",
             "Matter Type 2": u"FMEC",
             "Fixed Fee Amount": u"119.6",
@@ -902,6 +955,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_hourly_rate_hr_fixed_fee_code(self):
         test_values = {
+            "Eligibility Code": u"V",
             "Matter Type 1": u"DMAP",
             "Matter Type 2": u"DOTH",
             "Stage Reached": u"DB",
@@ -909,6 +963,38 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Fixed Fee Code": u"HR",
         }
         self._test_generated_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_eligibility_codes_with_lf_fixed_fee(self):
+        lf_eligibility_codes = {u"S", u"W", u"X", u"Z"}
+        test_values = {
+            "Matter Type 1": u"DTOT",
+            "Matter Type 2": u"DOTH",
+            "Stage Reached": u"DB",
+            "Fixed Fee Code": u"LF",
+        }
+        for eligibility_code in lf_eligibility_codes:
+            test_values["Eligibility Code"] = eligibility_code
+            self._test_generated_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_eligibility_codes_missing_lf_fixed_fee(self):
+        lf_eligibility_codes = {u"S", u"W", u"X", u"Z"}
+        test_values = {
+            "Matter Type 1": u"DTOT",
+            "Matter Type 2": u"DOTH",
+            "Stage Reached": u"DB",
+            "Fixed Fee Amount": u"65",
+            "Fixed Fee Code": u"HF",
+            "Time Spent": u"133",
+        }
+        for eligibility_code in lf_eligibility_codes:
+            test_values["Eligibility Code"] = eligibility_code
+            expected_error = (
+                u"Row: 1 - The eligibility code {} you have entered is not valid with the Fixed Fee HF, "
+                u"please review the eligibility code.".format(eligibility_code)
+            )
+            self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
 
 class DependsOnDecoratorTestCase(unittest.TestCase):

@@ -921,6 +921,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"HA",
             "Fixed Fee Code": u"DF",
             "Fixed Fee Amount": u"130",
+            "Determination": u"FINI",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
@@ -1042,6 +1043,29 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         expected_error = (
             u"Row: 1 - A Signposting / Referral reason code must be entered for matters with outcome code EV."
         )
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_df_fixed_fee_has_determination_code(self):
+        test_values = {
+            "Eligibility Code": u"V",
+            "Matter Type 1": u"DTOT",
+            "Matter Type 2": u"DOTH",
+            "Fixed Fee Code": u"DF",
+            "Determination": u"FINI",
+        }
+        self._test_generated_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_df_fixed_fee_missing_determination_code(self):
+        test_values = {
+            "Eligibility Code": u"V",
+            "Matter Type 1": u"DTOT",
+            "Matter Type 2": u"DOTH",
+            "Stage Reached": u"DB",
+            "Fixed Fee Code": u"DF",
+        }
+        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid with Determination Code entered"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
 

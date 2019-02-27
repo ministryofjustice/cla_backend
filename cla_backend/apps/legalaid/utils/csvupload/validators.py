@@ -548,6 +548,14 @@ class ProviderCSVValidator(object):
         if determination == u"DVCA" and category != u"family":
             raise serializers.ValidationError("Category (%s) must be Family if Determination is DVCA" % category)
 
+    def _validate_determination_fixed_fee_has_determination_code(self, cleaned_data):
+        fixed_fee_code_is_df = cleaned_data.get("Fixed Fee Code") == "DF"
+        determination_code_unspecified = not cleaned_data.get("Determination")
+        if fixed_fee_code_is_df and determination_code_unspecified:
+            raise serializers.ValidationError(
+                "The Fixed Fee code you have entered is not valid with Determination Code entered"
+            )
+
     def _validate_fee_code_is_na(self, cleaned_data):
         if cleaned_data.get("Fixed Fee Code") != "NA":
             raise serializers.ValidationError(
@@ -649,6 +657,7 @@ class ProviderCSVValidator(object):
                     self._validate_eligibility_code_2018,
                     self._validate_signposting_code,
                     self._validate_signposting_code_present_for_outcome_code,
+                    self._validate_determination_fixed_fee_has_determination_code,
                 ]
             elif applicable_contract in [CONTRACT_THIRTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION]:
                 return [self._validate_fee_code_is_na, self._validate_eligibility_code_2013]

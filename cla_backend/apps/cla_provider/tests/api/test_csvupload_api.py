@@ -968,6 +968,20 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_hwfm_rate_fixed_fee_mt1_incorrect(self):
+        test_values = {
+            "Eligibility Code": u"V",
+            "Matter Type 1": u"FAMZ",
+            "Matter Type 2": u"FMEC",
+            "Fixed Fee Amount": u"119.6",
+            "Fixed Fee Code": u"HM",
+        }
+        expected_error = (
+            u"Row: 1 - The Fixed Fee code you have entered is not valid with the Matter Type 1 Code entered"
+        )
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_mt1_fixed_fee_code_mismatch(self):
         test_values = {
             "Matter Type 1": u"FAMY",

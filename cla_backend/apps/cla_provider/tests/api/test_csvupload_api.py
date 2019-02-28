@@ -915,6 +915,29 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_hourly_rate_fixed_fee_time_spent(self):
+        test_values = {
+            "Matter Type 1": u"DTOT",
+            "Matter Type 2": u"DOTH",
+            "Stage Reached": u"DB",
+            "Fixed Fee Code": u"HR",
+            "Time Spent": u"900",
+        }
+        self._test_generated_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_hourly_rate_fixed_fee_insufficient_time_spent(self):
+        test_values = {
+            "Matter Type 1": u"DTOT",
+            "Matter Type 2": u"DOTH",
+            "Stage Reached": u"DB",
+            "Fixed Fee Code": u"HR",
+            "Time Spent": u"899",
+        }
+        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_fixed_fee_code_df_is_valid(self):
         test_values = {
             "Eligibility Code": u"V",
@@ -964,6 +987,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"DB",
             "Fixed Fee Amount": u"119.6",
             "Fixed Fee Code": u"HR",
+            "Time Spent": u"900",
         }
         self._test_generated_contract_row_validates(override=test_values)
 

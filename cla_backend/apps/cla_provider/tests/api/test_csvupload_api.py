@@ -853,7 +853,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"DB",
             "Fixed Fee Amount": u"65",
             "Fixed Fee Code": u"LF",
-            "Time Spent": u"66",
+            "Time Spent": u"132",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
@@ -867,11 +867,11 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Fixed Fee Code": u"LF",
             "Time Spent": u"133",
         }
-        expected_error = u"Row: 1 - Time spent must be less than 133 minutes for LF fixed fee code"
+        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
-    def test_validator_higher_fixed_fee_time_spent(self):
+    def test_validator_higher_fixed_fee_time_spent_bounds(self):
         test_values = {
             "Eligibility Code": u"V",
             "Matter Type 1": u"DMAP",
@@ -879,9 +879,12 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"DB",
             "Fixed Fee Amount": u"130",
             "Fixed Fee Code": u"HF",
-            "Time Spent": u"144",
         }
-        self._test_generated_contract_row_validates(override=test_values)
+        lower_bound = "133"
+        upper_bound = "899"
+        for time_spent in [lower_bound, upper_bound]:
+            test_values["Time Spent"] = time_spent
+            self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_higher_fixed_fee_excess_time_spent(self):
@@ -894,8 +897,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Fixed Fee Code": u"HF",
             "Time Spent": u"900",
         }
-        # TODO Clarify spec: are LF and HF both inclusive of 133?
-        expected_error = u"Row: 1 - Time spent must be >=133 and <900 minutes for HF fixed fee code"
+        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
@@ -909,7 +911,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Fixed Fee Code": u"HF",
             "Time Spent": u"132",
         }
-        expected_error = u"Row: 1 - Time spent must be >=133 and <900 minutes for HF fixed fee code"
+        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid with time spent on the case"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)

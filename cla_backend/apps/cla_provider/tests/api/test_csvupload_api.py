@@ -994,8 +994,39 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         for eligibility_code in lf_eligibility_codes:
             test_values["Eligibility Code"] = eligibility_code
             expected_error = (
-                u"Row: 1 - The eligibility code {} you have entered is not valid with the Fixed Fee HF, "
-                u"please review the eligibility code.".format(eligibility_code)
+                u"Row: 1 - The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
+            )
+            self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_eligibility_codes_with_hf_fixed_fee(self):
+        hf_eligibility_codes = {u"T", u"V"}
+        test_values = {
+            "Matter Type 1": u"DTOT",
+            "Matter Type 2": u"DOTH",
+            "Stage Reached": u"DB",
+            "Fixed Fee Code": u"HF",
+            "Time Spent": u"133",
+        }
+        for eligibility_code in hf_eligibility_codes:
+            test_values["Eligibility Code"] = eligibility_code
+            self._test_generated_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_eligibility_codes_missing_hf_fixed_fee(self):
+        lf_eligibility_codes = {u"S", u"W", u"X", u"Z"}
+        test_values = {
+            "Matter Type 1": u"DTOT",
+            "Matter Type 2": u"DOTH",
+            "Stage Reached": u"DB",
+            "Fixed Fee Amount": u"65",
+            "Fixed Fee Code": u"HF",
+            "Time Spent": u"133",
+        }
+        for eligibility_code in lf_eligibility_codes:
+            test_values["Eligibility Code"] = eligibility_code
+            expected_error = (
+                u"Row: 1 - The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
             )
             self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 

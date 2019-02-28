@@ -612,11 +612,13 @@ class ProviderCSVValidator(object):
         code = cleaned_data.get("Eligibility Code")
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
         validate_present(code, message="Eligibility Code field is required because no determination was specified")
-        if code in {u"S", u"W", u"X", u"Z"} and fixed_fee_code != u"LF":
+        if fixed_fee_code == u"LF" and code not in {u"S", u"W", u"X", u"Z"}:
             raise serializers.ValidationError(
-                u"The eligibility code {} you have entered is not valid with "
-                u"the Fixed Fee {}, please review the "
-                u"eligibility code.".format(code, fixed_fee_code)
+                u"The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
+            )
+        if fixed_fee_code == u"HF" and code not in {u"T", u"V"}:
+            raise serializers.ValidationError(
+                u"The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
             )
 
     @staticmethod

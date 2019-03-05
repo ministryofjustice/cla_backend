@@ -326,7 +326,7 @@ validators.update(
         "Stage Reached": [validate_in(get_valid_stage_reached(CONTRACT_EIGHTEEN))],
         "Outcome Code": [validate_in(get_valid_outcomes(CONTRACT_EIGHTEEN))],
         "Determination": [validate_in(get_determination_codes(CONTRACT_EIGHTEEN))],
-        "Fixed Fee Amount": [],
+        "Fixed Fee Amount": [validate_decimal, validate_gte(0)],
         "Fixed Fee Code": [validate_in(contract_2018_fixed_fee_codes)],
     }
 )
@@ -575,6 +575,14 @@ class ProviderCSVValidator(object):
                 "Fixed Fee Amount must be entered for Fixed Fee Code ({})".format(fixed_fee_code)
             )
 
+    @staticmethod
+    def _validate_df_fixed_fee_amount(cleaned_data):
+        fixed_fee_code_is_df = cleaned_data.get("Fixed Fee Code") == u"DF"
+        fixed_fee_amount = cleaned_data.get("Fixed Fee Amount")
+
+        if fixed_fee_code_is_df and fixed_fee_amount > 40:
+            raise serializers.ValidationError("The value you have entered exceeds the Fixed Fee")
+
     def _validate_lower_fixed_fee_time_spent(self, cleaned_data):
         MAX_TIME_ALLOWED = 132
         time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
@@ -671,6 +679,7 @@ class ProviderCSVValidator(object):
                     self._validate_higher_fixed_fee_time_spent,
                     self._validate_hourly_rate_fixed_fee_time_spent,
                     self._validate_hwfm_fixed_fee_mt1_code,
+                    self._validate_df_fixed_fee_amount,
                     self._validate_mt1_fee_codes,
                     self._validate_fee_code_is_not_na,
                     self._validate_eligibility_code_2018,

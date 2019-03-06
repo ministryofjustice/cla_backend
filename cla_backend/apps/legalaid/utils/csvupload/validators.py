@@ -576,25 +576,23 @@ class ProviderCSVValidator(object):
             )
 
     def _validate_lower_fixed_fee_time_spent(self, cleaned_data):
-        MAX_TIME_ALLOWED = 133
+        MAX_TIME_ALLOWED = 132
         time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
-        if fixed_fee_code == u"LF" and time_spent_in_minutes >= MAX_TIME_ALLOWED:
+        if fixed_fee_code == u"LF" and time_spent_in_minutes > MAX_TIME_ALLOWED:
             raise serializers.ValidationError(
-                "Time spent must be less than {} minutes for LF fixed fee code".format(MAX_TIME_ALLOWED)
+                "The Fixed Fee code you have entered is not valid with time spent on the case"
             )
 
     def _validate_higher_fixed_fee_time_spent(self, cleaned_data):
         MIN_TIME_ALLOWED = 133
-        MAX_TIME_ALLOWED = 900
+        MAX_TIME_ALLOWED = 899
         time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
-        time_spent_in_bounds = MIN_TIME_ALLOWED <= time_spent_in_minutes < MAX_TIME_ALLOWED
+        time_spent_in_bounds = MIN_TIME_ALLOWED <= time_spent_in_minutes <= MAX_TIME_ALLOWED
         if fixed_fee_code == u"HF" and not time_spent_in_bounds:
             raise serializers.ValidationError(
-                "Time spent must be >={} and <{} minutes for HF fixed fee code".format(
-                    MIN_TIME_ALLOWED, MAX_TIME_ALLOWED
-                )
+                "The Fixed Fee code you have entered is not valid with time spent on the case"
             )
 
     @staticmethod

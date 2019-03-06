@@ -595,6 +595,23 @@ class ProviderCSVValidator(object):
                 "The Fixed Fee code you have entered is not valid with time spent on the case"
             )
 
+    def _validate_hourly_rate_fixed_fee_time_spent(self, cleaned_data):
+        MIN_TIME_ALLOWED = 900
+        time_spent_in_minutes = cleaned_data.get("Time Spent", 0)
+        fixed_fee_code = cleaned_data.get("Fixed Fee Code")
+        if fixed_fee_code == u"HR" and time_spent_in_minutes < MIN_TIME_ALLOWED:
+            raise serializers.ValidationError(
+                "The Fixed Fee code you have entered is not valid with time spent on the case"
+            )
+
+    def _validate_hwfm_fixed_fee_mt1_code(self, cleaned_data):
+        fixed_fee_code_is_hm = cleaned_data.get("Fixed Fee Code") == u"HM"
+        mt1_is_famy = cleaned_data.get("Matter Type 1") == u"FAMY"
+        if fixed_fee_code_is_hm and not mt1_is_famy:
+            raise serializers.ValidationError(
+                "The Fixed Fee code you have entered is not valid with the Matter Type 1 Code entered"
+            )
+
     @staticmethod
     def _validate_mt1_fee_codes(cleaned_data):
         mt1_fee_code_mapping = {u"MSCB": u"MR", u"FAMY": u"HM"}
@@ -612,11 +629,13 @@ class ProviderCSVValidator(object):
         code = cleaned_data.get("Eligibility Code")
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
         validate_present(code, message="Eligibility Code field is required because no determination was specified")
-        if code in {u"S", u"W", u"X", u"Z"} and fixed_fee_code != u"LF":
+        if fixed_fee_code == u"LF" and code not in {u"S", u"W", u"X", u"Z"}:
             raise serializers.ValidationError(
-                u"The eligibility code {} you have entered is not valid with "
-                u"the Fixed Fee {}, please review the "
-                u"eligibility code.".format(code, fixed_fee_code)
+                u"The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
+            )
+        if fixed_fee_code == u"HF" and code not in {u"T", u"V"}:
+            raise serializers.ValidationError(
+                u"The Fixed Fee code you have entered is not valid with the Eligibility Code entered"
             )
 
     @staticmethod
@@ -650,6 +669,8 @@ class ProviderCSVValidator(object):
                     self._validate_fixed_fee_amount_present,
                     self._validate_lower_fixed_fee_time_spent,
                     self._validate_higher_fixed_fee_time_spent,
+                    self._validate_hourly_rate_fixed_fee_time_spent,
+                    self._validate_hwfm_fixed_fee_mt1_code,
                     self._validate_mt1_fee_codes,
                     self._validate_fee_code_is_not_na,
                     self._validate_eligibility_code_2018,

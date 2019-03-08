@@ -324,7 +324,7 @@ validators.update(
         "Matter Type 1": [validate_present, validate_in(get_valid_matter_type1(CONTRACT_EIGHTEEN))],
         "Matter Type 2": [validate_present, validate_in(get_valid_matter_type2(CONTRACT_EIGHTEEN))],
         "Stage Reached": [validate_in(get_valid_stage_reached(CONTRACT_EIGHTEEN))],
-        "Outcome Code": [validate_in(get_valid_outcomes(CONTRACT_EIGHTEEN))],
+        "Outcome Code": [],
         "Determination": [validate_in(get_determination_codes(CONTRACT_EIGHTEEN))],
         "Fixed Fee Amount": [],
         "Fixed Fee Code": [validate_in(contract_2018_fixed_fee_codes)],
@@ -465,6 +465,12 @@ class ProviderCSVValidator(object):
                 u"the time spent (%s) on this case, please review the "
                 u"eligibility code." % (code, time_spent)
             )
+
+    @staticmethod
+    def _validate_outcome_code(cleaned_data):
+        outcome_code = cleaned_data.get("Outcome Code")
+        if outcome_code and outcome_code not in get_valid_outcomes(CONTRACT_EIGHTEEN):
+            raise serializers.ValidationError("You have not selected a valid Outcome Code.")
 
     @staticmethod
     def _validate_category_consistency(cleaned_data):
@@ -666,6 +672,7 @@ class ProviderCSVValidator(object):
         if settings.CONTRACT_2018_ENABLED:
             if applicable_contract == CONTRACT_EIGHTEEN:
                 return [
+                    self._validate_outcome_code,
                     self._validate_fixed_fee_amount_present,
                     self._validate_lower_fixed_fee_time_spent,
                     self._validate_higher_fixed_fee_time_spent,

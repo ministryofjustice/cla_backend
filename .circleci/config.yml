@@ -69,7 +69,7 @@ jobs:
           name: Lint with flake8 (warnings only)
           command: |
             source lint-env/bin/activate
-            flake8 --exit-zero cla_backend
+            flake8 cla_backend
       - run:
           name: Check formatting with Black
           command: |

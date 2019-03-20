@@ -823,6 +823,17 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_invalid_outcome_code(self):
+        test_values = {
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Stage Reached": u"EA",
+            "Outcome Code": u"INVALID",
+        }
+        expected_error = u"Row: 1 - You have not selected a valid Outcome Code."
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_validator_fixed_fee_amount_present(self):
         test_values = {
             "Matter Type 1": u"DMAP",

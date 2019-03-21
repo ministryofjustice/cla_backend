@@ -647,7 +647,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         gte_0 = v.validate_gte(0)
 
         self.assertEqual(1, gte_0(1))
-        with self.assertRaisesRegexp(serializers.ValidationError, ".*must be > 0"):
+        with self.assertRaisesRegexp(serializers.ValidationError, ".*must be >= 0"):
             gte_0(-1)
 
     def test_validate_not_current_month(self):
@@ -1003,7 +1003,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Fixed Fee Amount": u"-1",
             "Determination": u"FINI",
         }
-        expected_error = u"Row: 1 Field (20 / T): Fixed Fee Amount - Field must be > 0"
+        expected_error = u"Row: 1 Field (20 / T): Fixed Fee Amount - Field must be >= 0"
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     # TODO enable when Matter Type 1 MSCB added

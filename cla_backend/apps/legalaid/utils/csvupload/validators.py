@@ -65,7 +65,7 @@ def validate_gte(minimum):
 
     def _validate_gte(val):
         if val and (val < minimum):
-            raise serializers.ValidationError("Field must be > %s" % minimum)
+            raise serializers.ValidationError("Field must be >= %s" % minimum)
         return val
 
     return _validate_gte

@@ -971,7 +971,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Fixed Fee Code": u"DF",
             "Determination": u"FINI",
         }
-        valid_amounts = [0.50, 10, 20.50, 40]
+        valid_amounts = [0, 0.50, 10, 20.50, 40]
         for amount in valid_amounts:
             test_values["Fixed Fee Amount"] = u"{}".format(amount)
             self._test_generated_contract_row_validates(override=test_values)
@@ -991,20 +991,6 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             test_values["Fixed Fee Amount"] = u"{}".format(amount)
             expected_error = u"Row: 1 - The value you have entered exceeds the Fixed Fee"
             self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
-
-    @override_settings(CONTRACT_2018_ENABLED=True)
-    def test_df_fixed_fee_zero_amount_as_missing(self):
-        test_values = {
-            "Eligibility Code": u"V",
-            "Matter Type 1": u"HRNT",
-            "Matter Type 2": u"HPRI",
-            "Stage Reached": u"HA",
-            "Fixed Fee Code": u"DF",
-            "Fixed Fee Amount": u"0",
-            "Determination": u"FINI",
-        }
-        expected_error = u"Row: 1 - Fixed Fee Amount must be entered for Fixed Fee Code (DF)"
-        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_df_fixed_fee_negative_amount_fails(self):

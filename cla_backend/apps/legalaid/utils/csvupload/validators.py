@@ -576,7 +576,9 @@ class ProviderCSVValidator(object):
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
         fixed_fee_codes = contract_2018_fixed_fee_codes.copy()
         fixed_fee_codes.remove("NA")
-        if fixed_fee_code in fixed_fee_codes and not cleaned_data.get("Fixed Fee Amount"):
+        fixed_fee_amount = cleaned_data.get("Fixed Fee Amount")
+        fixed_fee_amount_present_or_zero = fixed_fee_amount or fixed_fee_amount == 0
+        if fixed_fee_code in fixed_fee_codes and not fixed_fee_amount_present_or_zero:
             raise serializers.ValidationError(
                 "Fixed Fee Amount must be entered for Fixed Fee Code ({})".format(fixed_fee_code)
             )

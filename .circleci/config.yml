@@ -45,7 +45,7 @@ jobs:
           command: .circleci/tag_and_push_docker_image application:$CIRCLE_SHA1
   lint:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:2.7
     steps:
       - checkout
       - run:
@@ -69,7 +69,29 @@ jobs:
           name: Lint with flake8 (warnings only)
           command: |
             source lint-env/bin/activate
-            flake8 --exit-zero cla_backend
+            flake8 cla_backend
+  formatting:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - run:
+          name: Setup Python environment
+          command: |
+            pip install virtualenv
+            virtualenv formatting-env
+      - restore_cache:
+          keys:
+            - pip-v1-black-18.9b0
+      - run:
+          name: Install dependencies
+          command: |
+            source formatting-env/bin/activate
+            pip install black>=18.9b0
+      - save_cache:
+          key: pip-v1-black-18.9b0
+          paths:
+            - "~/.cache/pip"
       - run:
           name: Check formatting with Black
           command: |

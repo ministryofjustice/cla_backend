@@ -65,7 +65,7 @@ def validate_gte(minimum):
 
     def _validate_gte(val):
         if val and (val < minimum):
-            raise serializers.ValidationError("Field must be > %s" % minimum)
+            raise serializers.ValidationError("Field must be >= %s" % minimum)
         return val
 
     return _validate_gte
@@ -326,7 +326,7 @@ validators.update(
         "Stage Reached": [validate_in(get_valid_stage_reached(CONTRACT_EIGHTEEN))],
         "Outcome Code": [],
         "Determination": [validate_in(get_determination_codes(CONTRACT_EIGHTEEN))],
-        "Fixed Fee Amount": [],
+        "Fixed Fee Amount": [validate_decimal, validate_gte(0)],
         "Fixed Fee Code": [validate_in(contract_2018_fixed_fee_codes)],
     }
 )
@@ -576,10 +576,20 @@ class ProviderCSVValidator(object):
         fixed_fee_code = cleaned_data.get("Fixed Fee Code")
         fixed_fee_codes = contract_2018_fixed_fee_codes.copy()
         fixed_fee_codes.remove("NA")
-        if fixed_fee_code in fixed_fee_codes and not cleaned_data.get("Fixed Fee Amount"):
+        fixed_fee_amount = cleaned_data.get("Fixed Fee Amount")
+        fixed_fee_amount_present_or_zero = fixed_fee_amount or fixed_fee_amount == 0
+        if fixed_fee_code in fixed_fee_codes and not fixed_fee_amount_present_or_zero:
             raise serializers.ValidationError(
                 "Fixed Fee Amount must be entered for Fixed Fee Code ({})".format(fixed_fee_code)
             )
+
+    @staticmethod
+    def _validate_df_fixed_fee_amount(cleaned_data):
+        fixed_fee_code_is_df = cleaned_data.get("Fixed Fee Code") == u"DF"
+        fixed_fee_amount = cleaned_data.get("Fixed Fee Amount")
+
+        if fixed_fee_code_is_df and fixed_fee_amount > 40:
+            raise serializers.ValidationError("The value you have entered exceeds the Fixed Fee")
 
     def _validate_lower_fixed_fee_time_spent(self, cleaned_data):
         MAX_TIME_ALLOWED = 132
@@ -678,6 +688,7 @@ class ProviderCSVValidator(object):
                     self._validate_higher_fixed_fee_time_spent,
                     self._validate_hourly_rate_fixed_fee_time_spent,
                     self._validate_hwfm_fixed_fee_mt1_code,
+                    self._validate_df_fixed_fee_amount,
                     self._validate_mt1_fee_codes,
                     self._validate_fee_code_is_not_na,
                     self._validate_eligibility_code_2018,

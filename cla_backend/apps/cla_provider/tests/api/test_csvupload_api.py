@@ -647,7 +647,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         gte_0 = v.validate_gte(0)
 
         self.assertEqual(1, gte_0(1))
-        with self.assertRaisesRegexp(serializers.ValidationError, ".*must be > 0"):
+        with self.assertRaisesRegexp(serializers.ValidationError, ".*must be >= 0"):
             gte_0(-1)
 
     def test_validate_not_current_month(self):
@@ -956,10 +956,55 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 2": u"HPRI",
             "Stage Reached": u"HA",
             "Fixed Fee Code": u"DF",
-            "Fixed Fee Amount": u"130",
+            "Fixed Fee Amount": u"40.0",
             "Determination": u"FINI",
         }
         self._test_generated_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_df_fixed_fee_amount_is_valid(self):
+        test_values = {
+            "Eligibility Code": u"V",
+            "Matter Type 1": u"HRNT",
+            "Matter Type 2": u"HPRI",
+            "Stage Reached": u"HA",
+            "Fixed Fee Code": u"DF",
+            "Determination": u"FINI",
+        }
+        valid_amounts = [0, 0.50, 10, 20.50, 40]
+        for amount in valid_amounts:
+            test_values["Fixed Fee Amount"] = u"{}".format(amount)
+            self._test_generated_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_df_fixed_fee_amount_invalid(self):
+        test_values = {
+            "Eligibility Code": u"V",
+            "Matter Type 1": u"HRNT",
+            "Matter Type 2": u"HPRI",
+            "Stage Reached": u"HA",
+            "Fixed Fee Code": u"DF",
+            "Determination": u"FINI",
+        }
+        invalid_amounts = [40.01, 100]
+        for amount in invalid_amounts:
+            test_values["Fixed Fee Amount"] = u"{}".format(amount)
+            expected_error = u"Row: 1 - The value you have entered exceeds the Fixed Fee"
+            self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_df_fixed_fee_negative_amount_fails(self):
+        test_values = {
+            "Eligibility Code": u"V",
+            "Matter Type 1": u"HRNT",
+            "Matter Type 2": u"HPRI",
+            "Stage Reached": u"HA",
+            "Fixed Fee Code": u"DF",
+            "Fixed Fee Amount": u"-1",
+            "Determination": u"FINI",
+        }
+        expected_error = u"Row: 1 Field (20 / T): Fixed Fee Amount - Field must be >= 0"
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     # TODO enable when Matter Type 1 MSCB added
     # @override_settings(CONTRACT_2018_ENABLED=True)
@@ -1134,6 +1179,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 1": u"DTOT",
             "Matter Type 2": u"DOTH",
             "Fixed Fee Code": u"DF",
+            "Fixed Fee Amount": u"40.0",
             "Determination": u"FINI",
         }
         self._test_generated_contract_row_validates(override=test_values)

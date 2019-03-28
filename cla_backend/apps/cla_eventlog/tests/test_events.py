@@ -241,6 +241,14 @@ class ConsecutiveOutcomeCodesTestCase(TestCase):
         l2.save()
         self.assertIsNone(l2.pk)
 
+    def test_same_day_consecutive_outcome_code_with_matching_notes_not_allowed(self):
+        l1 = Log(notes="foo", **self.log_attributes)
+        l1.save()
+        self.assertIsNotNone(l1.pk)
+        l2 = Log(notes="foo", **self.log_attributes)
+        l2.save()
+        self.assertIsNone(l2.pk)
+
     def test_next_day_consecutive_outcome_code_allowed(self):
         yesterday = now() - timedelta(days=1)
         l1 = Log(**self.log_attributes)

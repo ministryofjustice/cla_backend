@@ -1,18 +1,17 @@
-from django.test import TestCase
+from datetime import timedelta
 
-from core.tests.mommy_utils import make_recipe, make_user
-
-from timer.models import Timer
-
-from legalaid.models import Case
 from cla_common.constants import REQUIRES_ACTION_BY
+from django.test import TestCase
+from django.utils.timezone import now
 
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_ROLES, LOG_LEVELS
-from cla_eventlog.models import Log
 from cla_eventlog.events import BaseEvent
-
+from cla_eventlog.models import Log
 from cla_eventlog.tests.base import EventTestCaseMixin
+from core.tests.mommy_utils import make_recipe, make_user
+from legalaid.models import Case
+from timer.models import Timer
 
 
 class TestEvent(BaseEvent):
@@ -223,6 +222,57 @@ class BaseEventTestCase(TestCase):
         case = Case.objects.get(pk=self.dummy_case.pk)
 
         self.assertEqual(case.requires_action_by, None)
+
+
+class ConsecutiveOutcomeCodesTestCase(TestCase):
+    def setUp(self):
+        super(ConsecutiveOutcomeCodesTestCase, self).setUp()
+        self.dummy_case = make_recipe("legalaid.case")
+        self.dummy_user = make_user()
+        self.log_attributes = dict(
+            case=self.dummy_case, code="FOO", type=LOG_TYPES.OUTCOME, level=LOG_LEVELS.HIGH, created_by=self.dummy_user
+        )
+
+    def test_same_day_consecutive_outcome_code_not_allowed(self):
+        l1 = Log(**self.log_attributes)
+        l1.save()
+        self.assertIsNotNone(l1.pk)
+        l2 = Log(**self.log_attributes)
+        l2.save()
+        self.assertIsNone(l2.pk)
+
+    def test_same_day_consecutive_outcome_code_with_matching_notes_not_allowed(self):
+        l1 = Log(notes="foo", **self.log_attributes)
+        l1.save()
+        self.assertIsNotNone(l1.pk)
+        l2 = Log(notes="foo", **self.log_attributes)
+        l2.save()
+        self.assertIsNone(l2.pk)
+
+    def test_next_day_consecutive_outcome_code_allowed(self):
+        yesterday = now() - timedelta(days=1)
+        l1 = Log(**self.log_attributes)
+        l1.save()
+        self.assertIsNotNone(l1.pk)
+        Log.objects.filter(pk=l1.pk).update(created=yesterday)
+        l2 = Log(**self.log_attributes)
+        l2.save()
+        self.assertIsNotNone(l2.pk)
+
+    def test_same_day_consecutive_outcome_code_allowed_with_notes(self):
+        l1 = Log(**self.log_attributes)
+        l1.save()
+        self.assertIsNotNone(l1.pk)
+        l2 = Log(notes="foo", **self.log_attributes)
+        l2.save()
+        self.assertIsNotNone(l2.pk)
+
+    def test_same_day_non_consecutive_outcome_codes_allowed(self):
+        for code in ["FOO", "BAR", "FOO"]:
+            self.log_attributes["code"] = code
+            log = Log(**self.log_attributes)
+            log.save()
+            self.assertIsNotNone(log.pk)
 
 
 class SelectableEventsTestCase(EventTestCaseMixin, TestCase):

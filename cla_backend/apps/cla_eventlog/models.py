@@ -56,7 +56,9 @@ class Log(TimeStampedModel):
         except Log.DoesNotExist:
             logger.debug("LGA-125 No outcome codes exist for case today")
         else:
-            return latest_outcome_code_today.code == self.code
+            codes_match = latest_outcome_code_today.code == self.code
+            notes_match = latest_outcome_code_today.notes == self.notes
+            return codes_match and notes_match
         return False
 
     def save(self, *args, **kwargs):

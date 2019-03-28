@@ -267,6 +267,13 @@ class ConsecutiveOutcomeCodesTestCase(TestCase):
         l2.save()
         self.assertIsNotNone(l2.pk)
 
+    def test_same_day_non_consecutive_outcome_codes_allowed(self):
+        for code in ["FOO", "BAR", "FOO"]:
+            self.log_attributes["code"] = code
+            log = Log(**self.log_attributes)
+            log.save()
+            self.assertIsNotNone(log.pk)
+
 
 class SelectableEventsTestCase(EventTestCaseMixin, TestCase):
     def test_select_selectable_code(self):

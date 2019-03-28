@@ -1,20 +1,17 @@
-from django.test import TestCase
-
-from core.tests.mommy_utils import make_recipe, make_user
-
-from timer.models import Timer
 from datetime import timedelta
 
-from legalaid.models import Case
 from cla_common.constants import REQUIRES_ACTION_BY
+from django.test import TestCase
 from django.utils.timezone import now
 
 from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_TYPES, LOG_ROLES, LOG_LEVELS
-from cla_eventlog.models import Log
 from cla_eventlog.events import BaseEvent
-
+from cla_eventlog.models import Log
 from cla_eventlog.tests.base import EventTestCaseMixin
+from core.tests.mommy_utils import make_recipe, make_user
+from legalaid.models import Case
+from timer.models import Timer
 
 
 class TestEvent(BaseEvent):

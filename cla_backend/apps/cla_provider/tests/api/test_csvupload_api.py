@@ -1125,6 +1125,21 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_fixed_fee_invalid_error_message(self):
+        test_values = {
+            "Matter Type 1": u"HHOM",
+            "Matter Type 2": u"HHLS",
+            "Stage Reached": u"HB",
+            "Fixed Fee Amount": u"130",
+            "Fixed Fee Code": u"HF",
+            "Time Spent": u"90",
+            "Date Opened": u"24/07/2018",
+            "Date Closed": u"17/01/2019",
+        }
+        expected_error = u"Row: 1 - Fixed Fee Code NA must be entered for 2013 cases (pre-01/09/18), 2018 Discrimination cases or 2018 Education cases"
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_signposting_code(self):
         test_values = {
             "Matter Type 1": u"EPRO",

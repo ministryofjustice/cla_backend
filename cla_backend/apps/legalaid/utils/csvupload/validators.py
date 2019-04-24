@@ -365,11 +365,19 @@ class ProviderCSVValidator(object):
         )
         return field_order.index("Date Opened")
 
+    @staticmethod
+    def get_matter_type1_index():
+        field_order = (
+            new_field_order_when_contract_2018_enabled if settings.CONTRACT_2018_ENABLED else original_field_order
+        )
+        return field_order.index("Matter Type 1")
+
     def _get_applicable_contract_for_row(self, row):
         try:
             case_date_opened_string = row[self.get_date_opened_index()]
             case_date_opened = validate_date(case_date_opened_string)
-            return get_applicable_contract(case_date_opened=case_date_opened)  # TODO pass Matter Type 1
+            matter_type1 = row[self.get_matter_type1_index()]
+            return get_applicable_contract(case_date_opened=case_date_opened, case_matter_type_1=matter_type1)
         except IndexError:
             logger.warning("Could not get applicable contract for row, defaulting to 2013. \nRow: {}".format(row))
             return CONTRACT_THIRTEEN
@@ -380,7 +388,7 @@ class ProviderCSVValidator(object):
             if settings.CONTRACT_2018_ENABLED:
                 return contract_2013_validators_for_new_field_order
             return contract_2013_validators_for_original_field_order
-        elif applicable_contract == CONTRACT_EIGHTEEN:
+        elif applicable_contract in [CONTRACT_EIGHTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION]:
             return contract_2018_validators_for_new_field_order
 
     def _validate_fields(self):

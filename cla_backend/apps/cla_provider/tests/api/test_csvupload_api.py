@@ -11,6 +11,11 @@ from rest_framework import serializers
 from rest_framework.test import APITestCase
 
 import legalaid.utils.csvupload.validators as v
+from legalaid.utils.csvupload.contracts import (
+    CONTRACT_EIGHTEEN_DISCRIMINATION,
+    contract_2018_category_spec,
+    get_applicable_contract,
+)
 from cla_provider.models import Staff
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
@@ -389,6 +394,12 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         validator = self.get_provider_csv_validator()
         self.assertEqual(len(validator.validate()), 2)
 
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_is_2018_discrimination(self):
+        for matter_type in contract_2018_category_spec["discrimination"]["MATTER_TYPE1"]:
+            if get_applicable_contract(datetime.datetime(2019, 9, 1), matter_type) != CONTRACT_EIGHTEEN_DISCRIMINATION:
+                self.fail("Applicable contract is not 2018 discrimination contract")
+
     def test_invalid_field_count(self):
         validator = self.get_provider_csv_validator([[], []])
         with self.assertRaisesRegexp(serializers.ValidationError, r"Row: 1 - Incorrect number of columns"):
@@ -759,6 +770,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 2": u"QAGE",
             "Stage Reached": u"QA",
             "Outcome Code": u"QAA",
+            "Fixed Fee Code": u"NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 

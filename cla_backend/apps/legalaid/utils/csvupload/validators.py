@@ -573,7 +573,7 @@ class ProviderCSVValidator(object):
     def _validate_fee_code_is_na(self, cleaned_data):
         if cleaned_data.get("Fixed Fee Code") != "NA":
             raise serializers.ValidationError(
-                "Fixed Fee Code NA must be entered for 2013 or 2018 Discrimination cases"
+                "Fixed Fee Code NA must be entered for 2013 cases (pre-01/09/18), 2018 Discrimination cases or 2018 Education cases"
             )
 
     def _validate_fee_code_is_not_na(self, cleaned_data):

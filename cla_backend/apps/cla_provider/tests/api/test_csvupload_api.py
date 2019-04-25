@@ -13,6 +13,7 @@ from rest_framework.test import APITestCase
 import legalaid.utils.csvupload.validators as v
 from legalaid.utils.csvupload.contracts import (
     CONTRACT_EIGHTEEN_DISCRIMINATION,
+    CONTRACT_EIGHTEEN_EDUCATION,
     contract_2018_category_spec,
     get_applicable_contract,
 )
@@ -400,6 +401,12 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             if get_applicable_contract(datetime.datetime(2019, 9, 1), matter_type) != CONTRACT_EIGHTEEN_DISCRIMINATION:
                 self.fail("Applicable contract is not 2018 discrimination contract")
 
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_is_2018_education(self):
+        for matter_type in contract_2018_category_spec["education"]["MATTER_TYPE1"]:
+            if get_applicable_contract(datetime.datetime(2019, 9, 1), matter_type) != CONTRACT_EIGHTEEN_EDUCATION:
+                self.fail("Applicable contract is not 2018 education contract")
+
     def test_invalid_field_count(self):
         validator = self.get_provider_csv_validator([[], []])
         with self.assertRaisesRegexp(serializers.ValidationError, r"Row: 1 - Incorrect number of columns"):
@@ -781,6 +788,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 2": u"ESOS",
             "Stage Reached": u"EA",
             "Determination": u"FAFA",
+            "Fixed Fee Code": u"NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
@@ -791,6 +799,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 2": u"ESOS",
             "Stage Reached": u"EA",
             "Determination": u"EXEM",
+            "Fixed Fee Code": u"NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
@@ -831,6 +840,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 2": u"ESOS",
             "Stage Reached": u"EA",
             "Outcome Code": u"EAA",
+            "Fixed Fee Code": u"NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
@@ -841,6 +851,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 2": u"ESOS",
             "Stage Reached": u"EA",
             "Outcome Code": u"INVALID",
+            "Fixed Fee Code": u"NA",
         }
         expected_error = u"Row: 1 - You have not selected a valid Outcome Code."
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
@@ -1137,7 +1148,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
-    def test_fixed_fee_invalid_error_message(self):
+    def test_discrimination_fixed_fee_invalid_error_message(self):
         test_values = {
             "Matter Type 1": u"HHOM",
             "Matter Type 2": u"HHLS",
@@ -1152,12 +1163,28 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_education_fixed_fee_invalid_error_message(self):
+        test_values = {
+            "Matter Type 1": u"ESEN",
+            "Matter Type 2": u"ENUR",
+            "Stage Reached": u"EA",
+            "Fixed Fee Amount": u"130",
+            "Fixed Fee Code": u"HF",
+            "Time Spent": u"90",
+            "Date Opened": u"24/09/2018",
+            "Date Closed": u"17/01/2019",
+        }
+        expected_error = u"Row: 1 - Fixed Fee Code NA must be entered for 2013 cases (pre-01/09/18), 2018 Discrimination cases or 2018 Education cases"
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_signposting_code(self):
         test_values = {
             "Matter Type 1": u"EPRO",
             "Matter Type 2": u"ESOS",
             "Stage Reached": u"EA",
             "Signposting / Referral": u"OOSC",
+            "Fixed Fee Code": u"NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 
@@ -1168,6 +1195,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Matter Type 2": u"ESOS",
             "Stage Reached": u"EA",
             "Signposting / Referral": u"FOO",
+            "Fixed Fee Code": u"NA",
         }
         expected_error = (
             u"Row: 1 - The Signposting / Referral code you have entered is invalid. Please enter a valid code."
@@ -1182,6 +1210,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             "Stage Reached": u"EB",
             "Outcome Code": u"EU",
             "Signposting / Referral": u"OOSC",
+            "Fixed Fee Code": u"NA",
         }
         self._test_generated_contract_row_validates(override=test_values)
 

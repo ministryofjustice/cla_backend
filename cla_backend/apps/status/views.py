@@ -4,9 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 
 from cla_common.smoketest import smoketest
-from moj_irat.views import JsonResponse, PingJsonView as BasePingJsonView
-from django.conf import settings
-import os
+from moj_irat.views import PingJsonView as BasePingJsonView
 
 
 class JSONResponse(HttpResponse):
@@ -45,14 +43,4 @@ def smoketests(request):
 
 
 class PingJsonView(BasePingJsonView):
-    def get(self, request):
-        response_data = {
-            attr[:-4]: os.environ.get(getattr(self, attr))
-            for attr in dir(self)
-            if attr.endswith("_key") and getattr(self, attr)
-        }
-        response_data["2018_contracts_enabled"] = settings.CONTRACT_2018_ENABLED
-        response = JsonResponse(response_data)
-        if not response_data["build_date"] or not response_data["commit_id"]:
-            response.status_code = 501
-        return response
+    CONTRACT_2018_ENABLED_key = None

@@ -355,6 +355,7 @@ CELERY_TIMEZONE = "UTC"
 CELERY_IMPORTS = ["reports.tasks", "notifications.tasks"]
 
 CONTRACT_2018_ENABLED = os.environ.get("CONTRACT_2018_ENABLED", "False") == "True"
+PING_JSON_KEYS["CONTRACT_2018_ENABLED_key"] = "CONTRACT_2018_ENABLED"
 
 # .local.py overrides all the common settings.
 try:

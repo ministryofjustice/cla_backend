@@ -1148,6 +1148,18 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
             self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_fixed_fee_invalid_error_message(self):
+        test_values = {
+            "Matter Type 1": u"DTOT",
+            "Matter Type 2": u"DOTH",
+            "Stage Reached": u"DB",
+            "Fixed Fee Code": u"NA",
+            "Time Spent": u"133",
+        }
+        expected_error = u"Row: 1 - The Fixed Fee code you have entered is not valid for this case"
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_discrimination_fixed_fee_invalid_error_message(self):
         test_values = {
             "Matter Type 1": u"HHOM",

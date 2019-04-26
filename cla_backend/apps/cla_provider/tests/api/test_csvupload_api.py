@@ -1160,6 +1160,40 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_discrimination_eligibility_codes(self):
+        code = u"S"
+        time = u"135"
+        test_values = {
+            "Matter Type 1": u"QPRO",
+            "Matter Type 2": u"QAGE",
+            "Stage Reached": u"QA",
+            "Fixed Fee Code": u"NA",
+            "Eligibility Code": code,
+            "Time Spent": time,
+        }
+        expected_error = u"Row: 1 - The eligibility code ({code}) you have entered is not valid with the time spent ({time}) on this case, please review the eligibility code.".format(
+            code=code, time=time
+        )
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_education_eligibility_codes(self):
+        code = u"Z"
+        time = u"135"
+        test_values = {
+            "Matter Type 1": u"ESEN",
+            "Matter Type 2": u"ECOL",
+            "Stage Reached": u"ED",
+            "Fixed Fee Code": u"NA",
+            "Eligibility Code": code,
+            "Time Spent": time,
+        }
+        expected_error = u"Row: 1 - The eligibility code ({code}) you have entered is not valid with the time spent ({time}) on this case, please review the eligibility code.".format(
+            code=code, time=time
+        )
+        self._test_generated_2018_contract_row_validate_fails(override=test_values, expected_error=expected_error)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_discrimination_fixed_fee_invalid_error_message(self):
         test_values = {
             "Matter Type 1": u"HHOM",

@@ -693,9 +693,9 @@ class ProviderCSVValidator(object):
                 return [
                     self._validate_outcome_code,
                     self._validate_fee_code_is_na,
-                    self._validate_eligibility_code_2018,
                     self._validate_signposting_code,
                     self._validate_signposting_code_present_for_outcome_code,
+                    self._validate_eligibility_code_2013,
                 ]
             elif applicable_contract == CONTRACT_EIGHTEEN:
                 return [

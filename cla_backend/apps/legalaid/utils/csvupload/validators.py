@@ -463,7 +463,7 @@ class ProviderCSVValidator(object):
         )
 
     @depends_on("Determination", check=value_is_falsey)
-    def _validate_eligibility_code_2013(self, cleaned_data):
+    def _validate_eligibility_code_against_time_spent(self, cleaned_data):
         code = cleaned_data.get("Eligibility Code")
         time_spent = cleaned_data.get("Time Spent", 0)
         validate_present(code, message="Eligibility Code field is required because no determination was specified")
@@ -693,9 +693,9 @@ class ProviderCSVValidator(object):
                 return [
                     self._validate_outcome_code,
                     self._validate_fee_code_is_na,
-                    self._validate_eligibility_code_2018,
                     self._validate_signposting_code,
                     self._validate_signposting_code_present_for_outcome_code,
+                    self._validate_eligibility_code_against_time_spent,
                 ]
             elif applicable_contract == CONTRACT_EIGHTEEN:
                 return [
@@ -714,9 +714,9 @@ class ProviderCSVValidator(object):
                     self._validate_determination_fixed_fee_has_determination_code,
                 ]
             elif applicable_contract in [CONTRACT_THIRTEEN]:
-                return [self._validate_fee_code_is_na, self._validate_eligibility_code_2013]
+                return [self._validate_fee_code_is_na, self._validate_eligibility_code_against_time_spent]
         else:
-            return [self._validate_eligibility_code_2013]
+            return [self._validate_eligibility_code_against_time_spent]
         return []
 
     def _validate_data(self, cleaned_data, row_num, applicable_contract):

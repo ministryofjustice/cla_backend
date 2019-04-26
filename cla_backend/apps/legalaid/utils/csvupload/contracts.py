@@ -7,6 +7,7 @@ from django.conf import settings
 CONTRACT_THIRTEEN = "2013"
 CONTRACT_EIGHTEEN = "2018"
 CONTRACT_EIGHTEEN_DISCRIMINATION = "2018-discrimination"
+CONTRACT_EIGHTEEN_EDUCATION = "2018-education"
 CONTRACT_THIRTEEN_START_DATE = datetime(year=2013, month=4, day=1)
 CONTRACT_THIRTEEN_END_DATE = datetime(year=2018, month=9, day=1)
 CONTRACT_EIGHTEEN_START_DATE = CONTRACT_THIRTEEN_END_DATE
@@ -313,6 +314,8 @@ def get_applicable_contract(case_date_opened, case_matter_type_1=None):
         elif case_date_opened >= CONTRACT_EIGHTEEN_START_DATE:
             if case_matter_type_1 in contract_2018_category_spec["discrimination"]["MATTER_TYPE1"]:
                 return CONTRACT_EIGHTEEN_DISCRIMINATION
+            elif case_matter_type_1 in contract_2018_category_spec[u"education"]["MATTER_TYPE1"]:
+                return CONTRACT_EIGHTEEN_EDUCATION
             return CONTRACT_EIGHTEEN
     except TypeError:
         return CONTRACT_THIRTEEN

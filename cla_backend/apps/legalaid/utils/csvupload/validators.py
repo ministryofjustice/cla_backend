@@ -35,6 +35,7 @@ from legalaid.utils.csvupload.contracts import (
     CONTRACT_THIRTEEN,
     CONTRACT_EIGHTEEN,
     CONTRACT_EIGHTEEN_DISCRIMINATION,
+    CONTRACT_EIGHTEEN_EDUCATION,
 )
 
 logger = logging.getLogger(__name__)
@@ -388,7 +389,7 @@ class ProviderCSVValidator(object):
             if settings.CONTRACT_2018_ENABLED:
                 return contract_2013_validators_for_new_field_order
             return contract_2013_validators_for_original_field_order
-        elif applicable_contract in [CONTRACT_EIGHTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION]:
+        elif applicable_contract in [CONTRACT_EIGHTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION, CONTRACT_EIGHTEEN_EDUCATION]:
             return contract_2018_validators_for_new_field_order
 
     def _validate_fields(self):
@@ -688,7 +689,15 @@ class ProviderCSVValidator(object):
 
     def get_extra_validators_for_applicable_contract(self, applicable_contract):
         if settings.CONTRACT_2018_ENABLED:
-            if applicable_contract == CONTRACT_EIGHTEEN:
+            if applicable_contract in [CONTRACT_EIGHTEEN_DISCRIMINATION, CONTRACT_EIGHTEEN_EDUCATION]:
+                return [
+                    self._validate_outcome_code,
+                    self._validate_fee_code_is_na,
+                    self._validate_eligibility_code_2018,
+                    self._validate_signposting_code,
+                    self._validate_signposting_code_present_for_outcome_code,
+                ]
+            elif applicable_contract == CONTRACT_EIGHTEEN:
                 return [
                     self._validate_outcome_code,
                     self._validate_fixed_fee_amount_present,
@@ -704,7 +713,7 @@ class ProviderCSVValidator(object):
                     self._validate_signposting_code_present_for_outcome_code,
                     self._validate_determination_fixed_fee_has_determination_code,
                 ]
-            elif applicable_contract in [CONTRACT_THIRTEEN, CONTRACT_EIGHTEEN_DISCRIMINATION]:
+            elif applicable_contract in [CONTRACT_THIRTEEN]:
                 return [self._validate_fee_code_is_na, self._validate_eligibility_code_2013]
         else:
             return [self._validate_eligibility_code_2013]

@@ -1086,7 +1086,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
 
     @override_settings(CONTRACT_2018_ENABLED=True)
     def test_eligibility_codes_with_lf_fixed_fee(self):
-        lf_eligibility_codes = {u"S", u"W", u"X", u"Z"}
+        lf_eligibility_codes = {u"S", u"T", u"V", u"W", u"X", u"Z"}
         test_values = {
             "Matter Type 1": u"DTOT",
             "Matter Type 2": u"DOTH",

@@ -92,7 +92,7 @@ def validate_date(val):
 
 def validate_not_present(val, message=None):
     message = message or "Field should not be present"
-    if val.strip():
+    if val and val.strip():
         raise serializers.ValidationError(message)
     return val
 

@@ -42,3 +42,5 @@ sentry_config
 migrations
 admin_password
 load_test_data
+
+exec "$@"

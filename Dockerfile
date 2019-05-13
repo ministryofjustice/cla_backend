@@ -33,6 +33,10 @@ RUN mkdir -p /var/log/nginx/cla_backend /var/log/wsgi /var/run/celery /var/log/c
     touch /var/log/wsgi/app.log /var/log/wsgi/debug.log && \
     chmod -R g+s /var/log/wsgi
 
+RUN adduser -D www-data -G www-data && \
+    chown -R www-data:www-data /var/log/uwsgi /var/log/nginx/cla_backend && \
+    chmod -R g+s /var/log/wsgi
+
 WORKDIR /home/app/django
 COPY . .
 

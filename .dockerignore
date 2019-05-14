@@ -4,3 +4,5 @@ docker-compose.yml
 cla_backend/settings/local.py
 static/
 venv/
+*.pyc
+.git/

@@ -118,6 +118,16 @@ class Deductions(CloneModelMixin, TimeStampedModel):
     cloning_config = {"excludes": ["created", "modified"]}
 
 
+class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
+    method = models.CharField(
+        max_length=10, default=RESEARCH_CONTACT_VIA.PHONE, choices=RESEARCH_CONTACT_VIA, blank=True, null=True
+    )
+    reference = UUIDField(auto=True, unique=True)
+
+    def __unicode__(self):
+        return u"%s" % self.method
+
+
 class PersonalDetails(CloneModelMixin, TimeStampedModel):
     title = models.CharField(max_length=20, blank=True, null=True)
     full_name = models.CharField(max_length=400, blank=True, null=True)
@@ -132,6 +142,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     contact_for_research_via = models.CharField(
         max_length=10, default=RESEARCH_CONTACT_VIA.PHONE, choices=RESEARCH_CONTACT_VIA, blank=True, null=True
     )
+    contact_for_research_methods = models.ManyToManyField(ContactResearchMethod, null=True)
     vulnerable_user = models.NullBooleanField(blank=True, null=True)
     safe_to_contact = models.CharField(
         max_length=30, default=CONTACT_SAFETY.SAFE, choices=CONTACT_SAFETY, blank=True, null=True

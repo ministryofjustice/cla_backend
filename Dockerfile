@@ -7,7 +7,8 @@ RUN apk add --no-cache \
       py2-pip \
       supervisor \
       tzdata \
-      uwsgi-python
+      uwsgi-python && \
+    rm /etc/nginx/conf.d/default.conf
 
 # To install pip dependencies
 RUN apk add --no-cache \

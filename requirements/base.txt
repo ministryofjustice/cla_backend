@@ -7,7 +7,7 @@ Django==1.7.9
 django-model-utils==2.2
 
 psycopg2==2.7.5
-raven==5.1.1
+raven==6.10.0
 
 djangorestframework==2.3.14
 jsonfield==0.9.22

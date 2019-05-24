@@ -8,7 +8,15 @@ RUN apk add --no-cache \
       supervisor \
       tzdata \
       uwsgi-python && \
-    rm /etc/nginx/conf.d/default.conf
+    rm /etc/nginx/conf.d/default.conf && \
+    # Create new user and assign permissions in this layer to allow it to work with aufs
+    # `chown` in a separate layer would cause symptoms described in https://github.com/moby/moby/issues/24660
+    # (We use aufs on template-deploy)
+    adduser -D www-data -G www-data && \
+    mkdir -p /var/log/nginx/cla_backend /var/log/wsgi /var/run/celery /var/log/celery && \
+    touch /var/log/wsgi/app.log /var/log/wsgi/debug.log && \
+    chown -R www-data:www-data /var/log/wsgi && chmod -R g+s /var/log/wsgi && \
+    chown -R www-data:www-data /var/tmp/nginx /var/log/nginx
 
 # To install pip dependencies
 RUN apk add --no-cache \
@@ -29,14 +37,6 @@ RUN cd /tmp/requirements && pip install -r production.txt
 COPY ./docker/nginx.conf /etc/nginx/nginx.conf
 COPY ./docker/htpassword /etc/nginx/conf.d/htpassword
 COPY ./docker/supervisord-services.ini /etc/supervisor.d/
-
-RUN mkdir -p /var/log/nginx/cla_backend /var/log/wsgi /var/run/celery /var/log/celery && \
-    touch /var/log/wsgi/app.log /var/log/wsgi/debug.log && \
-    chmod -R g+s /var/log/wsgi
-
-RUN adduser -D www-data -G www-data && \
-    chown -R www-data:www-data /var/log/uwsgi && chmod -R g+s /var/log/wsgi && \
-    chown -R www-data:www-data /var/tmp/nginx /var/log/nginx /etc/nginx/conf.d/htpassword
 
 WORKDIR /home/app/django
 COPY . .

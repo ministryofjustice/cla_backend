@@ -31,6 +31,7 @@ from .serializers import (
     CaseNotesHistorySerializerBase,
     CSVUploadSerializerBase,
     EODDetailsSerializerBase,
+    ContactResearchMethodSerializerBase,
 )
 from cla_provider.models import Feedback, CSVUpload
 from .models import (
@@ -44,6 +45,7 @@ from .models import (
     AdaptationDetails,
     CaseNotesHistory,
     EODDetails,
+    ContactResearchMethod,
 )
 
 
@@ -230,6 +232,14 @@ class BaseMediaCodeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, vie
 
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ("name", "group__name")
+
+
+class BaseContactResearchMethodViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+    model = ContactResearchMethod
+    serializer_class = ContactResearchMethodSerializerBase
+
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ("method",)
 
 
 class FullPersonalDetailsViewSet(

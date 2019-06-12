@@ -53,6 +53,7 @@ from legalaid.views import (
     BaseCSVUploadReadOnlyViewSet,
     BaseCaseLogMixin,
     BaseEODDetailsViewSet,
+    BaseContactResearchMethodViewSet,
 )
 
 from cla_common.constants import REQUIRES_ACTION_BY, CASE_SOURCE
@@ -128,6 +129,10 @@ class MatterTypeViewSet(CallCentrePermissionsViewSetMixin, BaseMatterTypeViewSet
 
 
 class MediaCodeViewSet(CallCentrePermissionsViewSetMixin, BaseMediaCodeViewSet):
+    pass
+
+
+class ContactResearchMethodViewSet(CallCentrePermissionsViewSetMixin, BaseContactResearchMethodViewSet):
     pass
 
 

@@ -316,15 +316,14 @@ OBIEE_EMAIL_TO = os.environ.get("OBIEE_EMAIL_TO", DEFAULT_EMAIL_TO)
 OBIEE_ZIP_PASSWORD = os.environ.get("OBIEE_ZIP_PASSWORD")
 
 # celery
-BROKER_URL = os.environ.get("AMQP_BROKER_URL")
-if not BROKER_URL and all([os.environ.get("SQS_ACCESS_KEY"), os.environ.get("SQS_SECRET_KEY")]):
+if all([os.environ.get("SQS_ACCESS_KEY"), os.environ.get("SQS_SECRET_KEY")]):
     import urllib
 
     BROKER_URL = "sqs://{access_key}:{secret_key}@".format(
         access_key=urllib.quote(os.environ.get("SQS_ACCESS_KEY"), safe=""),
         secret_key=urllib.quote(os.environ.get("SQS_SECRET_KEY"), safe=""),
     )
-elif not BROKER_URL:
+else:
     # if no BROKER_URL specified then don't try to use celery
     # because it'll just cause errors
     CELERY_ALWAYS_EAGER = True

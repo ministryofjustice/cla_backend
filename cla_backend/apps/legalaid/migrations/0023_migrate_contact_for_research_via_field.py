@@ -11,7 +11,7 @@ def migrate_contact_for_research_via_field_data(apps, schema_editor):
     PersonalDetails = apps.get_model("legalaid", "PersonalDetails")
     models = PersonalDetails.objects.exclude(Q(contact_for_research_via="") | Q(contact_for_research_via=None))
     for model in models:
-        if not model.contact_for_research_methods:
+        if not list(model.contact_for_research_methods.all()):
             model.contact_for_research_methods = [research_methods.get(model.contact_for_research_via)]
             model.save()
 

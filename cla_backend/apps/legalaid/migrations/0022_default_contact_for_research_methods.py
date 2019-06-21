@@ -9,7 +9,7 @@ from cla_common.constants import RESEARCH_CONTACT_VIA
 def create_default_contact_for_research_methods(apps, schema_editor):
     ContactResearchMethods = apps.get_model("legalaid", "ContactResearchMethod")
     for value, name in RESEARCH_CONTACT_VIA:
-        ContactResearchMethods.objects.create(method=value, reference=uuid.uuid4()).save()
+        ContactResearchMethods.objects.get_or_create(method=value, defaults={"reference": uuid.uuid4()})
 
 
 def rollback_default_contact_for_research_methods(apps, schema_editor):

@@ -2,18 +2,18 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from django.db.models import Q
 
 
 def migrate_contact_for_research_via_field_data(apps, schema_editor):
     ContactResearchMethod = apps.get_model("legalaid", "ContactResearchMethod")
-    research_methods = {method.method: method.id for method in ContactResearchMethod.objects.all()}
     PersonalDetails = apps.get_model("legalaid", "PersonalDetails")
-    models = PersonalDetails.objects.exclude(Q(contact_for_research_via="") | Q(contact_for_research_via=None))
-    for model in models:
-        if not list(model.contact_for_research_methods.all()):
-            model.contact_for_research_methods = [research_methods.get(model.contact_for_research_via)]
-            model.save()
+
+    for method in ContactResearchMethod.objects.all():
+        details_qs = PersonalDetails.objects.filter(
+            contact_for_research_via=method.method, contact_for_research_methods__isnull=True
+        )
+        for details in details_qs:
+            details.contact_for_research_methods.add(method)
 
 
 def rollback_migrate_contact_for_research_via_field_data(apps, schema_editor):

@@ -119,9 +119,7 @@ class Deductions(CloneModelMixin, TimeStampedModel):
 
 
 class ContactResearchMethod(CloneModelMixin, TimeStampedModel):
-    method = models.CharField(
-        max_length=10, default=RESEARCH_CONTACT_VIA.PHONE, choices=RESEARCH_CONTACT_VIA, blank=True, null=True
-    )
+    method = models.CharField(max_length=10, default=RESEARCH_CONTACT_VIA.PHONE, blank=True, null=True)
     reference = UUIDField(auto=True, unique=True)
 
     def __unicode__(self):

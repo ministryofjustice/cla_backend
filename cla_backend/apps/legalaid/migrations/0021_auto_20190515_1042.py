@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                         default=django.utils.timezone.now, verbose_name="modified", editable=False
                     ),
                 ),
-                ("method", models.CharField(default=b"PHONE", max_length=10, null=True, blank=True)),
+                ("method", models.CharField(max_length=10)),
                 ("reference", uuidfield.fields.UUIDField(unique=True, max_length=32, editable=False, blank=True)),
             ],
             options={"abstract": False},

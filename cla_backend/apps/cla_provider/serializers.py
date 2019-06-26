@@ -12,7 +12,6 @@ from legalaid.serializers import (
     ProviderSerializerBase,
     ExtendedUserSerializerBase,
     AdaptationDetailsSerializerBase,
-    ContactResearchMethodSerializerBase,
     IncomeSerializerBase,
     DeductionsSerializerBase,
     PersonalDetailsSerializerFull,
@@ -282,10 +281,6 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
             "callback_preference",
             "no_adaptations_required",
         )
-
-
-class ContactResearchMethodSerializer(ContactResearchMethodSerializerBase):
-    pass
 
 
 class ProviderSerializer(ProviderSerializerBase):

@@ -10,7 +10,7 @@ migrations() {
     if [ "$BACKEND_ENABLED" == "True" ]; then
 
         python manage.py install_postgres_extensions
-        python manage.py migrate
+        python manage.py migrate --noinput
 
         python manage.py loaddata initial_groups.json
         python manage.py loaddata initial_category.json

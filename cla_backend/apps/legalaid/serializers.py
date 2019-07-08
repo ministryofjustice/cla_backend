@@ -33,6 +33,7 @@ from .models import (
     CaseNotesHistory,
     EODDetails,
     EODDetailsCategory,
+    ContactResearchMethod,
 )
 
 
@@ -298,6 +299,14 @@ class MediaCodeSerializerBase(ClaModelSerializer):
     class Meta(object):
         model = MediaCode
         fields = ("group", "name", "code")
+
+
+class ContactResearchMethodSerializerBase(ClaModelSerializer):
+    group = serializers.SlugRelatedField(slug_field="method", read_only=True)
+
+    class Meta(object):
+        model = ContactResearchMethod
+        fields = ("method", "id")
 
 
 class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSerializer):

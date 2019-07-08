@@ -10,6 +10,7 @@ from .models import (
     EODDetails,
     EODDetailsCategory,
     MatterType,
+    ContactResearchMethod,
 )
 
 from .admin_support.forms import CategoryModelForm
@@ -50,3 +51,4 @@ admin.site.register(Property)
 admin.site.register(Person)
 admin.site.register(EODDetails, EODDetailsAdmin)
 admin.site.register(MatterType)
+admin.site.register(ContactResearchMethod)

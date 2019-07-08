@@ -28,7 +28,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             "dob",
             "ni_number",
             "contact_for_research",
-            "contact_for_research_via",
+            "contact_for_research_methods",
             "safe_to_contact",
             "vulnerable_user",
             "has_diversity",

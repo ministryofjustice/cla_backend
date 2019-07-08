@@ -22,6 +22,7 @@ router.register(r"notifications/notification", views.NotificationViewSet, base_n
 router.register(r"adaptations", views.AdaptationDetailsMetadataViewSet, base_name="adaptations-metadata")
 router.register(r"mattertype", views.MatterTypeViewSet)
 router.register(r"mediacode", views.MediaCodeViewSet)
+router.register(r"contact_research_methods", views.ContactResearchMethodViewSet)
 router.register(r"feedback", views.FeedbackViewSet)
 router.register(r"case_archive", views.CaseArchivedViewSet)
 router.register(r"csvupload", views.CSVUploadViewSet)

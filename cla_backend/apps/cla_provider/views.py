@@ -26,12 +26,14 @@ from legalaid.views import (
     BaseThirdPartyDetailsViewSet,
     BaseAdaptationDetailsViewSet,
     BaseAdaptationDetailsMetadataViewSet,
+    BaseContactResearchMethodViewSet,
     FullCaseViewSet,
     BaseFeedbackViewSet,
     BaseCaseNotesHistoryViewSet,
     BaseCSVUploadViewSet,
     DescCaseOrderingFilter,
 )
+from legalaid.serializers import ContactResearchMethodSerializerBase
 
 from diagnosis.views import BaseDiagnosisViewSet
 
@@ -275,6 +277,10 @@ class AdaptationDetailsViewSet(CLAProviderPermissionViewSetMixin, BaseAdaptation
 
 class AdaptationDetailsMetadataViewSet(CLAProviderPermissionViewSetMixin, BaseAdaptationDetailsMetadataViewSet):
     serializer_class = AdaptationDetailsSerializer
+
+
+class ContactResearchMethodViewSet(CLAProviderPermissionViewSetMixin, BaseContactResearchMethodViewSet):
+    serializer_class = ContactResearchMethodSerializerBase
 
 
 class DiagnosisViewSet(CLAProviderPermissionViewSetMixin, BaseDiagnosisViewSet):

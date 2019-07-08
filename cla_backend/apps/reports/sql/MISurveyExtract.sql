@@ -10,7 +10,7 @@ SELECT
     date_of_birth,
     ni_number,
     contact_for_research,
-    contact_for_research_via,
+    (SELECT string_agg(method::varchar, ', ') FROM legalaid_contactresearchmethod AS contactresearchmethod INNER JOIN legalaid_personaldetails_contact_for_research_methods AS pd_contactresearchmethod ON pd_contactresearchmethod.contactresearchmethod_id = contactresearchmethod.id AND personaldetails_id = pd.id) AS "contact_for_research_via",
     safe_to_contact,
     (SELECT COUNT(legalaid_thirdpartydetails.id) > 0 FROM legalaid_thirdpartydetails WHERE legalaid_thirdpartydetails.personal_details_id=pd.id) AS "Third Party Contact",
     (SELECT string_agg(laa_reference::varchar, ', ') FROM legalaid_case c WHERE c.personal_details_id=pd.id),

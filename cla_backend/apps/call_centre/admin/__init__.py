@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from core.admin.modeladmin import OneToOneUserAdmin
 from .forms import OperatorAdminForm, FullOperatorAdminForm, CaseworkerAdminForm
-from ..models import Operator, Caseworker
+from ..models import Operator, Caseworker, Organisation
 
 
 class OperatorAdmin(OneToOneUserAdmin):
@@ -120,3 +120,4 @@ class CaseworkerAdmin(OneToOneUserAdmin):
 
 admin.site.register(Operator, OperatorAdmin)
 admin.site.register(Caseworker, CaseworkerAdmin)
+admin.site.register(Organisation)

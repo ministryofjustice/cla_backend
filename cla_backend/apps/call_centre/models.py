@@ -25,8 +25,16 @@ class Caseworker(TimeStampedModel):
         return obj
 
 
+class Organisation(TimeStampedModel):
+    name = models.CharField(max_length=255, blank=False, null=False, unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+
 class Operator(TimeStampedModel):
     user = models.OneToOneField("auth.User")
+    organisation = models.ForeignKey(Organisation, null=True)
     is_manager = models.BooleanField(default=False)
     is_cla_superuser = models.BooleanField(default=False)
 

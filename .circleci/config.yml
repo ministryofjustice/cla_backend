@@ -110,13 +110,10 @@ jobs:
           POSTGRES_DB: circle_test
     steps:
       - checkout
-      - run: sudo apt-get install postgresql-client-9.6
       - run:
           name: Setup Postgres
           command: |
             dockerize -wait tcp://localhost:5432 -timeout 1m
-            psql -d postgresql://$DB_USER@localhost/$DB_NAME -c "create extension pgcrypto;"
-            psql -d postgresql://$DB_USER@localhost/template1 -c 'create extension pgcrypto;'
       - run:
           name: Setup Python environment
           command: |

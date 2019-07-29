@@ -342,6 +342,7 @@ class OperatorSerializer(ExtendedUserSerializerBase):
             "created",
             "last_login",
             "is_cla_superuser",
+            "organisation",
         )
 
 

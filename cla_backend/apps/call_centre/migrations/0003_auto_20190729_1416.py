@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                         default=django.utils.timezone.now, verbose_name="modified", editable=False
                     ),
                 ),
-                ("name", models.CharField(max_length=255, unique=True, null=True)),
+                ("name", models.CharField(unique=True, max_length=255)),
             ],
             options={"abstract": False},
             bases=(models.Model,),
@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="operator",
             name="organisation",
-            field=models.ForeignKey(to="call_centre.Organisation", null=True),
+            field=models.ForeignKey(blank=True, to="call_centre.Organisation", null=True),
             preserve_default=True,
         ),
     ]

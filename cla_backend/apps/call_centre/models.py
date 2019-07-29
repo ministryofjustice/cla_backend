@@ -34,7 +34,7 @@ class Organisation(TimeStampedModel):
 
 class Operator(TimeStampedModel):
     user = models.OneToOneField("auth.User")
-    organisation = models.ForeignKey(Organisation, null=True)
+    organisation = models.ForeignKey(Organisation, null=True, blank=True)
     is_manager = models.BooleanField(default=False)
     is_cla_superuser = models.BooleanField(default=False)
 

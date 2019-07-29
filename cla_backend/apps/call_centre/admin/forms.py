@@ -40,4 +40,5 @@ class FullOperatorAdminForm(OneToOneUserAdminForm):
             "is_active",
             "is_manager",
             "is_cla_superuser",
+            "organisation",
         ]

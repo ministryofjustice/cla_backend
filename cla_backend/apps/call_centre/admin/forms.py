@@ -1,5 +1,4 @@
 from django import forms
-
 from core.admin.forms import OneToOneUserAdminForm
 from ..models import Operator, Caseworker
 
@@ -7,7 +6,17 @@ from ..models import Operator, Caseworker
 class OperatorAdminForm(OneToOneUserAdminForm):
     class Meta(object):
         model = Operator
-        fields = ["username", "password", "password2", "first_name", "last_name", "email", "is_active", "is_manager"]
+        fields = [
+            "username",
+            "password",
+            "password2",
+            "first_name",
+            "last_name",
+            "email",
+            "is_active",
+            "is_manager",
+            "organisation",
+        ]
 
 
 class CaseworkerAdminForm(OneToOneUserAdminForm):

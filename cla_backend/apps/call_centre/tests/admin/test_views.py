@@ -10,17 +10,26 @@ class OperatorAdminViewTestCase(TestCase):
     def setUp(self):
         super(OperatorAdminViewTestCase, self).setUp()
 
-        def make_op(username, is_manager=False, is_cla_superuser=False):
+        def make_op(username, is_manager=False, is_cla_superuser=False, **kwargs):
             return make_recipe(
                 "call_centre.operator",
                 user__username=username,
                 is_manager=is_manager,
                 is_cla_superuser=is_cla_superuser,
+                **kwargs
             )
 
         self.django_admin = make_user(is_staff=True, is_superuser=True)
+        self.foo_organisation = make_recipe("call_centre.organisation", name="Foo org")
+        self.foo_organisation.save()
+        self.bar_organisation = make_recipe("call_centre.organisation", name="Bar org")
+        self.bar_organisation.save()
         self.operators = {
             "op": make_op("op"),
+            "foo_org_op": make_op("foo_org_op", organisation=self.foo_organisation),
+            "foo_org_manager": make_op("foo_org_manager", is_manager=True, organisation=self.foo_organisation),
+            "bar_org_op": make_op("bar_org_op", organisation=self.bar_organisation),
+            "bar_org_manager": make_op("bar_org_manager", is_manager=True, organisation=self.bar_organisation),
             "op_manager1": make_op("op_manager1", is_manager=True),
             "op_manager2": make_op("op_manager2", is_manager=True),
             "op_superuser1": make_op("op_superuser1", is_manager=True, is_cla_superuser=True),
@@ -31,6 +40,18 @@ class OperatorAdminViewTestCase(TestCase):
         for user in [op.user for op in self.operators.values()] + [self.django_admin]:
             user.set_password(user.username)
             user.save()
+
+    def _get_operator_post_data(self):
+        return {
+            "username": get_random_string(),
+            "password": "123456789",
+            "password2": "123456789",
+            "first_name": "New Name",
+            "last_name": "New Last Name",
+            "email": "new_email@example.com",
+            "is_manager": False,
+            "_save": "Save",
+        }
 
     def _reload_obj(self, obj):
         return obj.__class__.objects.get(pk=obj.pk)
@@ -91,6 +112,7 @@ class OperatorAdminViewTestCase(TestCase):
             new_operator.is_cla_superuser, post_data.get("is_cla_superuser", new_operator.is_cla_superuser)
         )
         self.assertEqual(new_operator.user.is_staff, new_operator.is_manager or new_operator.is_cla_superuser)
+        return new_operator
 
     def _test_change_password(self, loggedin_op_user, changing_op):
         logged_in = self.client.login(username=loggedin_op_user.username, password=loggedin_op_user.username)
@@ -329,6 +351,75 @@ class OperatorAdminViewTestCase(TestCase):
         changing_op = self.operators["op_superuser2"]
 
         self._test_reset_lockout(loggedin_op_user, changing_op)
+
+    # OPERATOR ORGANISATION
+
+    def test_operator_manager_can_list_operators_of_same_organisation(self):
+        loggedin_op = self.operators["foo_org_manager"]
+        loggedin_op_user = loggedin_op.user
+        self.client.login(username=loggedin_op_user.username, password=loggedin_op_user.username)
+
+        bar_org_operators = ["bar_org_manager", "bar_org_op"]
+        foo_org_operators = ["foo_org_manager", "foo_org_op"]
+        operators_without_organisation = ["op", "op_manager1", "op_manager2", "op_superuser1", "op_superuser2"]
+        url = reverse("admin:call_centre_operator_changelist")
+        response = self.client.get(url, follow=True)
+        for result in response.context_data["cl"].result_list:
+            self.assertNotIn(result.user.username, bar_org_operators)
+            self.assertIn(result.user.username, foo_org_operators + operators_without_organisation)
+
+    def test_cla_superuser_can_list_all_operators_of_all_organisations(self):
+        loggedin_op = self.operators["op_superuser1"]
+        loggedin_op_user = loggedin_op.user
+        self.client.login(username=loggedin_op_user.username, password=loggedin_op_user.username)
+
+        url = reverse("admin:call_centre_operator_changelist")
+        response = self.client.get(url, follow=True)
+        for result in response.context_data["cl"].result_list:
+            self.assertIn(result.user.username, self.operators.keys())
+
+    def test_operator_manager_can_create_operators_of_same_organisation(self):
+        loggedin_op = self.operators["foo_org_manager"]
+        loggedin_op_user = loggedin_op.user
+        self.client.login(username=loggedin_op_user.username, password=loggedin_op_user.username)
+
+        post_data = self._get_operator_post_data()
+        post_data["organisation"] = self.foo_organisation.id
+        new_operator = self._test_add_form(loggedin_op.user, should_see_is_cla_superuser=False, post_data=post_data)
+        self.assertEqual(self.foo_organisation.id, new_operator.organisation.id)
+
+    def test_operator_manager_cannot_create_operators_of_another_organisation(self):
+        loggedin_op = self.operators["foo_org_manager"]
+        loggedin_op_user = loggedin_op.user
+        self.client.login(username=loggedin_op_user.username, password=loggedin_op_user.username)
+
+        post_data = self._get_operator_post_data()
+        post_data["organisation"] = self.bar_organisation.id
+        with self.assertRaises(AssertionError):
+            self._test_add_form(loggedin_op.user, should_see_is_cla_superuser=False, post_data=post_data)
+
+    def test_operator_manager_cannot_create_operators_without_organisation(self):
+        loggedin_op = self.operators["foo_org_manager"]
+        loggedin_op_user = loggedin_op.user
+        self.client.login(username=loggedin_op_user.username, password=loggedin_op_user.username)
+
+        post_data = self._get_operator_post_data()
+        with self.assertRaises(AssertionError):
+            self._test_add_form(loggedin_op.user, should_see_is_cla_superuser=False, post_data=post_data)
+
+    def test_operator_manager_can_change_operators_of_same_organisation(self):
+        loggedin_op = self.operators["foo_org_manager"]
+        changing_op = self.operators["foo_org_op"]
+
+        # go to cla op manager2 change form
+        # change changing_op.first_name to something random and save
+        # check everything is OK
+        post_data = self._get_operator_post_data()
+        post_data["username"] = changing_op.user.username
+        post_data["first_name"] = get_random_string()
+        post_data["organisation"] = changing_op.organisation.id
+
+        self._test_change_form(loggedin_op.user, changing_op, should_see_is_cla_superuser=False, post_data=post_data)
 
 
 class CaseworkerAdminViewTestCase(TestCase):

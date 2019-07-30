@@ -10,6 +10,10 @@ class OperatorAdmin(OneToOneUserAdmin):
     actions = None
     simple_op_form = OperatorAdminForm
     full_op_form = FullOperatorAdminForm
+
+    def operator_organisation(obj):
+        return obj.organisation if obj.organisation else ""
+
     list_display = (
         "username_display",
         "email_display",
@@ -18,8 +22,10 @@ class OperatorAdmin(OneToOneUserAdmin):
         "is_active_display",
         "is_manager",
         "is_cla_superuser",
+        operator_organisation,
     )
     search_fields = ["user__username", "user__first_name", "user__last_name", "user__email"]
+    list_filter = ["organisation__name"]
 
     def _is_loggedin_superuser(self, request):
         user = request.user

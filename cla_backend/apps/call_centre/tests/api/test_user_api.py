@@ -96,3 +96,24 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
 
         actual_usernames = [operator["username"] for operator in response.data]
         self.assertItemsEqual(expected_usernames, actual_usernames)
+
+    def test_cannot_reset_operator_password_of_another_organisation(self):
+        foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
+        foo_org.save()
+        bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
+        bar_org.save()
+
+        self.manager_token.user.operator.organisation = foo_org
+        self.manager_token.user.operator.save()
+
+        other_user = self.other_users[0].user
+        other_user.operator.organisation = bar_org
+        other_user.operator.save()
+
+        reset_url = self.get_user_password_reset_url(other_user.username)
+        response = self.client.post(
+            reset_url,
+            {"new_password": "b" * 10},
+            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token),
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

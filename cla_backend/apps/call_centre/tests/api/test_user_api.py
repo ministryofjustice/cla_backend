@@ -36,40 +36,63 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_operator_listing(self):
-        organisation_foo = make_recipe("call_centre.organisation", name="Organisation Foo")
-        organisation_foo.save()
-        organisation_bar = make_recipe("call_centre.organisation", name="Organisation Bar")
-        organisation_bar.save()
+    def _assign_operators_to_organisation(self, foo_org, bar_org):
 
-        foo_operators = []
-        bar_operators = []
+        operators = {"foo_org": [], "bar_org": [], "no_org": []}
         for index, operator in enumerate(self.other_users):
             if index % 2 == 0:
-                operator.organisation = organisation_foo
-                foo_operators.append(operator.user.username)
+                operator.organisation = foo_org
+                operators["foo_org"].append(operator.user.username)
             else:
-                operator.organisation = organisation_bar
-                bar_operators.append(operator.user.username)
+                operator.organisation = bar_org
+                operators["bar_org"].append(operator.user.username)
             operator.save()
 
-        self.operator_manager.organisation = organisation_bar
+        no_org_operators = make_recipe("call_centre.operator", _quantity=3)
+        for operator in no_org_operators:
+            operator.save()
+            operators["no_org"].append(operator.user.username)
+
+        return operators
+
+    def test_operator_listing(self):
+        foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
+        foo_org.save()
+        bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
+        bar_org.save()
+        operators = self._assign_operators_to_organisation(foo_org, bar_org)
+
+        self.operator_manager.organisation = bar_org
         self.operator_manager.save()
-        bar_operators.append(self.operator_manager.user.username)
+        operators["bar_org"].append(self.operator_manager.user.username)
 
-        self.operator.organisation = organisation_bar
+        self.operator.organisation = bar_org
         self.operator.save()
-        bar_operators.append(self.operator.user.username)
-
-        operators = make_recipe("call_centre.operator", _quantity=3)
-        operators_without_organisation = []
-        for operator in operators:
-            operator.save()
-            operators_without_organisation.append(operator.user.username)
+        operators["bar_org"].append(self.operator.user.username)
 
         url = reverse("%s:user-list" % self.API_URL_NAMESPACE)
         response = self.client.get(url, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token))
 
         for operator in response.data:
-            self.assertNotIn(operator["username"], foo_operators)
-            self.assertIn(operator["username"], bar_operators + operators_without_organisation)
+            self.assertNotIn(operator["username"], operators["foo_org"])
+            self.assertIn(operator["username"], operators["bar_org"] + operators["no_org"])
+
+    def test_cla_superuser_operator_listing(self):
+        foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
+        foo_org.save()
+        bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
+        bar_org.save()
+        operators = self._assign_operators_to_organisation(foo_org, bar_org)
+        # flatten dict of lists
+        expected_usernames = list({x for v in operators.itervalues() for x in v})
+
+        self.operator_manager.is_cla_superuser = True
+        self.operator_manager.save()
+        expected_usernames.append(self.operator_manager.user.username)
+        expected_usernames.append(self.operator.user.username)
+
+        url = reverse("%s:user-list" % self.API_URL_NAMESPACE)
+        response = self.client.get(url, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token))
+
+        actual_usernames = [operator["username"] for operator in response.data]
+        self.assertItemsEqual(expected_usernames, actual_usernames)

@@ -488,10 +488,11 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     def get_queryset(self):
         qs = super(BaseUserViewSet, self).get_queryset()
         operator = self.get_logged_in_user_model()
-        query = Q(organisation__isnull=True)
         if operator.organisation:
+            query = Q(organisation__isnull=True)
             query.add(Q(organisation=operator.organisation.id), Q.OR)
-        return qs.filter(query)
+            qs = qs.filter(query)
+        return qs
 
     def get_logged_in_user_model(self):
         return self.request.user.operator

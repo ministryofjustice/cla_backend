@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.core.urlresolvers import reverse
+from django.utils.crypto import get_random_string
 
 from core.tests.mommy_utils import make_recipe
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
@@ -53,6 +54,33 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
             operators["no_org"].append(operator.user.username)
 
         return operators
+
+    def test_operator_manager_with_organisation_create_operator(self):
+        foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
+
+        self.manager_token.user.operator.organisation = foo_org
+        self.manager_token.user.operator.save()
+
+        data = {
+            "password": "foobarbaz1234567890",
+            "username": get_random_string(),
+            "first_name": "elton",
+            "last_name": "john",
+            "email": "example@example.com",
+        }
+
+        response = self.client.post(
+            self.list_url, data, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.get(
+            self.get_user_detail_url(data["username"]),
+            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token),
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["username"], data["username"])
+        self.assertEqual(response.data["organisation"], foo_org.id)
 
     def test_operator_listing(self):
         foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")

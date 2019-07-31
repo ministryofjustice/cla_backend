@@ -411,7 +411,7 @@ class OperatorAdminViewTestCase(TestCase):
         loggedin_op = self.operators["foo_org_manager"]
         changing_op = self.operators["foo_org_op"]
 
-        # go to cla op manager2 change form
+        # go to cla op foo_org_op change form
         # change changing_op.first_name to something random and save
         # check everything is OK
         post_data = self._get_operator_post_data()
@@ -420,6 +420,39 @@ class OperatorAdminViewTestCase(TestCase):
         post_data["organisation"] = changing_op.organisation.id
 
         self._test_change_form(loggedin_op.user, changing_op, should_see_is_cla_superuser=False, post_data=post_data)
+
+    def test_operator_manager_cannot_change_operator_organisation_to_another_organisation(self):
+        loggedin_op = self.operators["foo_org_manager"]
+        changing_op = self.operators["foo_org_op"]
+
+        # go to cla op foo_org_op change form
+        # change changing_op.first_name to something random
+        # change changing_op.organisation to another organisation and save
+        # AssertionError should be raise by self._test_change_form
+        post_data = self._get_operator_post_data()
+        post_data["username"] = changing_op.user.username
+        post_data["first_name"] = get_random_string()
+        post_data["organisation"] = self.bar_organisation.id
+
+        with self.assertRaises(AssertionError):
+            self._test_change_form(
+                loggedin_op.user, changing_op, should_see_is_cla_superuser=False, post_data=post_data
+            )
+
+    def test_cla_superadmin_can_change_operator_organisation(self):
+        loggedin_op = self.operators["op_superuser1"]
+        changing_op = self.operators["foo_org_op"]
+
+        # go to cla op foo_org_op change form
+        # change changing_op.first_name to something random
+        # change changing_op.organisation to another organisation and save
+        # check everything is OK
+        post_data = self._get_operator_post_data()
+        post_data["username"] = changing_op.user.username
+        post_data["first_name"] = get_random_string()
+        post_data["organisation"] = self.bar_organisation.id
+
+        self._test_change_form(loggedin_op.user, changing_op, should_see_is_cla_superuser=True, post_data=post_data)
 
 
 class CaseworkerAdminViewTestCase(TestCase):

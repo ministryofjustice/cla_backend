@@ -55,7 +55,47 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
 
         return operators
 
-    def test_operator_manager_with_organisation_create_operator(self):
+    def test_operator_manager_can_get_operator_without_organisation_details(self):
+        foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
+        self.manager_token.user.operator.organisation = foo_org
+        self.manager_token.user.operator.save()
+
+        operator = make_recipe("call_centre.operator")
+        response = self.client.get(
+            self.get_user_detail_url(operator.user.username),
+            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token),
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        return response
+
+    def test_operator_manager_can_get_operator_of_same_organisation_details(self):
+        foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
+        self.manager_token.user.operator.organisation = foo_org
+        self.manager_token.user.operator.save()
+
+        operator = make_recipe("call_centre.operator", organisation=foo_org)
+        response = self.client.get(
+            self.get_user_detail_url(operator.user.username),
+            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token),
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        return response
+
+    def test_operator_manager_cannot_get_operator_of_different_organisation_details(self):
+        foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
+        bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
+        self.manager_token.user.operator.organisation = foo_org
+        self.manager_token.user.operator.save()
+
+        operator = make_recipe("call_centre.operator", organisation=bar_org)
+        response = self.client.get(
+            self.get_user_detail_url(operator.user.username),
+            HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token),
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        return response
+
+    def test_operator_manager_can_create_operator_of_same_organisation(self):
         foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
 
         self.manager_token.user.operator.organisation = foo_org

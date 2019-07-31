@@ -26,7 +26,7 @@ class Caseworker(TimeStampedModel):
 
 
 class Organisation(TimeStampedModel):
-    name = models.CharField(max_length=255, blank=False, null=False, unique=True)
+    name = models.CharField(max_length=255, unique=True)
 
     def __unicode__(self):
         return self.name

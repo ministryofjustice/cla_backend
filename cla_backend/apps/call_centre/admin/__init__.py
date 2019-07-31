@@ -13,7 +13,7 @@ class OperatorAdmin(OneToOneUserAdmin):
     full_op_form = FullOperatorAdminForm
 
     def operator_organisation(obj):
-        return obj.organisation if obj.organisation else ""
+        return obj.organisation or ""
 
     list_display = (
         "username_display",

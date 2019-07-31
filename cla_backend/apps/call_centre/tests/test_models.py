@@ -120,11 +120,9 @@ class OperatorTestCase(TestCase):
 
     def test_operator_with_organisation(self):
         organisation = make_recipe("call_centre.organisation", name="Test organisation")
-        organisation.save()
         operator = make_recipe(
             "call_centre.operator", is_cla_superuser=False, is_manager=False, organisation=organisation
         )
-        operator.save()
 
         self.assertEqual(operator.organisation.name, "Test organisation")
         self.assertEqual(operator.organisation.id, organisation.id)

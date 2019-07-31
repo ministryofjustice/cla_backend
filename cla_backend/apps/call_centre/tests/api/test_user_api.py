@@ -50,16 +50,13 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
 
         no_org_operators = make_recipe("call_centre.operator", _quantity=3)
         for operator in no_org_operators:
-            operator.save()
             operators["no_org"].append(operator.user.username)
 
         return operators
 
     def test_operator_listing(self):
         foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
-        foo_org.save()
         bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
-        bar_org.save()
         operators = self._assign_operators_to_organisation(foo_org, bar_org)
 
         self.operator_manager.organisation = bar_org
@@ -79,9 +76,7 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
 
     def test_cla_superuser_operator_listing(self):
         foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
-        foo_org.save()
         bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
-        bar_org.save()
         operators = self._assign_operators_to_organisation(foo_org, bar_org)
         # flatten dict of lists
         expected_usernames = list({x for v in operators.itervalues() for x in v})
@@ -99,9 +94,7 @@ class UserTestCase(CLAOperatorAuthBaseApiTestMixin, UserAPIMixin, APITestCase):
 
     def test_cannot_reset_operator_password_of_another_organisation(self):
         foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
-        foo_org.save()
         bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
-        bar_org.save()
 
         self.manager_token.user.operator.organisation = foo_org
         self.manager_token.user.operator.save()

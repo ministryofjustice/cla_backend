@@ -1,15 +1,20 @@
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 from core.admin.modeladmin import OneToOneUserAdmin
 from .forms import OperatorAdminForm, FullOperatorAdminForm, CaseworkerAdminForm
-from ..models import Operator, Caseworker
+from ..models import Operator, Caseworker, Organisation
 
 
 class OperatorAdmin(OneToOneUserAdmin):
     actions = None
     simple_op_form = OperatorAdminForm
     full_op_form = FullOperatorAdminForm
+
+    def operator_organisation(obj):
+        return obj.organisation or ""
+
     list_display = (
         "username_display",
         "email_display",
@@ -18,8 +23,26 @@ class OperatorAdmin(OneToOneUserAdmin):
         "is_active_display",
         "is_manager",
         "is_cla_superuser",
+        operator_organisation,
     )
     search_fields = ["user__username", "user__first_name", "user__last_name", "user__email"]
+    list_filter = ["organisation__name"]
+
+    def get_list_filter(self, request):
+        return self.list_filter if self._is_loggedin_superuser(request) else []
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "organisation" and not self._is_loggedin_superuser(request):
+            try:
+                operator = request.user.operator
+            except ObjectDoesNotExist:
+                pass
+            else:
+                if operator.organisation:
+                    kwargs["queryset"] = Organisation.objects.filter(pk=operator.organisation.id)
+                    kwargs["required"] = True
+                    kwargs["initial"] = operator.organisation.id
+        return super(OperatorAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
     def _is_loggedin_superuser(self, request):
         user = request.user
@@ -40,6 +63,20 @@ class OperatorAdmin(OneToOneUserAdmin):
             self.form = self.simple_op_form
 
         return super(OperatorAdmin, self).get_form(request, obj=obj, **kwargs)
+
+    def get_queryset(self, request):
+        qs = super(OperatorAdmin, self).get_queryset(request)
+        if not self._is_loggedin_superuser(request):
+            try:
+                operator = request.user.operator
+            except ObjectDoesNotExist:
+                pass
+            else:
+                query = Q(organisation__isnull=True)
+                query.add(Q(organisation=operator.organisation), Q.OR)
+                qs = qs.filter(query)
+
+        return qs
 
     def has_change_permission(self, request, obj=None):
         """
@@ -120,3 +157,4 @@ class CaseworkerAdmin(OneToOneUserAdmin):
 
 admin.site.register(Operator, OperatorAdmin)
 admin.site.register(Caseworker, CaseworkerAdmin)
+admin.site.register(Organisation)

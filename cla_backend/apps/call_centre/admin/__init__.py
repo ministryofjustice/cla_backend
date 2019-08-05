@@ -12,10 +12,7 @@ class OrganisationListFilter(admin.SimpleListFilter):
     parameter_name = "organisation"
 
     def lookups(self, request, model_admin):
-        organisations = []
-        for organisation in Organisation.objects.all():
-            organisations.append((organisation.id, organisation.name))
-
+        organisations = list(Organisation.objects.values_list("id", "name"))
         if organisations:
             organisations.append(("", "Unassigned"))
         return organisations
@@ -26,6 +23,12 @@ class OrganisationListFilter(admin.SimpleListFilter):
         if value:
             kwargs["organisation__id"] = value
         elif value == "":
+            """
+            When filtering for unassigned organisations, value will be an empty string. However when removing the
+            organisation filter (All is selected in the frontend) value will be None. This means we cannot test for
+            Falsy as both "" and None are Falsy and instead need to explicitly deal with the empty string to
+            return operators without an organisation
+            """
             kwargs["organisation__isnull"] = True
 
         return queryset.filter(**kwargs)

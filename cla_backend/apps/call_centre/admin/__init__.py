@@ -7,14 +7,34 @@ from .forms import OperatorAdminForm, FullOperatorAdminForm, CaseworkerAdminForm
 from ..models import Operator, Caseworker, Organisation
 
 
+class OrganisationListFilter(admin.SimpleListFilter):
+    title = "Organisation"
+    parameter_name = "organisation"
+
+    def lookups(self, request, model_admin):
+        organisations = []
+        for organisation in Organisation.objects.all():
+            organisations.append((organisation.id, organisation.name))
+
+        if organisations:
+            organisations.append(("", "Unassigned"))
+        return organisations
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        kwargs = {}
+        if value:
+            kwargs["organisation__id"] = value
+        elif value == "":
+            kwargs["organisation__isnull"] = True
+
+        return queryset.filter(**kwargs)
+
+
 class OperatorAdmin(OneToOneUserAdmin):
     actions = None
     simple_op_form = OperatorAdminForm
     full_op_form = FullOperatorAdminForm
-
-    def operator_organisation(obj):
-        return obj.organisation or ""
-
     list_display = (
         "username_display",
         "email_display",
@@ -23,10 +43,10 @@ class OperatorAdmin(OneToOneUserAdmin):
         "is_active_display",
         "is_manager",
         "is_cla_superuser",
-        operator_organisation,
+        "operator_organisation",
     )
     search_fields = ["user__username", "user__first_name", "user__last_name", "user__email"]
-    list_filter = ["organisation__name"]
+    list_filter = [OrganisationListFilter]
 
     def get_list_filter(self, request):
         return self.list_filter if self._is_loggedin_superuser(request) else []
@@ -39,6 +59,7 @@ class OperatorAdmin(OneToOneUserAdmin):
                 pass
             else:
                 if operator.organisation:
+                    # Restrict organisation choices to the current users organisation
                     kwargs["queryset"] = Organisation.objects.filter(pk=operator.organisation.id)
                     kwargs["required"] = True
                     kwargs["initial"] = operator.organisation.id
@@ -77,6 +98,11 @@ class OperatorAdmin(OneToOneUserAdmin):
                 qs = qs.filter(query)
 
         return qs
+
+    def operator_organisation(self, obj):
+        return obj.organisation or "Unassigned"
+
+    operator_organisation.admin_order_field = "organisation"
 
     def has_change_permission(self, request, obj=None):
         """

@@ -9,7 +9,8 @@ class OrganisationOperatorCommandTest(TestCase):
         organisation = make_recipe("call_centre.organisation", name="Agilisys")
 
         make_recipe("call_centre.operator", user=make_user(email="user1@agilisys.co.uk"))
-        make_recipe("call_centre.operator", user=make_user(email="user2@agilisys.co.uk"))
+        make_recipe("call_centre.operator", user=make_user(email="user2@Agilisys.co.uk"))
+        make_recipe("call_centre.operator", user=make_user(email="user2@agilisys.co.uki"))
         make_recipe("call_centre.operator", user=make_user(email="user3@agilisys.co.uk"), organisation=organisation)
         make_recipe("call_centre.operator", user=make_user(email="user1@hgs.co.uk"))
         make_recipe("call_centre.operator", user=make_user(email="user1@yahoo.co.uk"))

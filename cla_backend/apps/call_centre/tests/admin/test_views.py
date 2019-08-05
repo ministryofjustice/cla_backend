@@ -21,9 +21,7 @@ class OperatorAdminViewTestCase(TestCase):
 
         self.django_admin = make_user(is_staff=True, is_superuser=True)
         self.foo_organisation = make_recipe("call_centre.organisation", name="Foo org")
-        self.foo_organisation.save()
         self.bar_organisation = make_recipe("call_centre.organisation", name="Bar org")
-        self.bar_organisation.save()
         self.operators = {
             "op": make_op("op"),
             "foo_org_op": make_op("foo_org_op", organisation=self.foo_organisation),

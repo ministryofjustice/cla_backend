@@ -7,7 +7,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         organisation, created = Organisation.objects.get_or_create(name="Agilisys")
-        operators = Operator.objects.filter(organisation__isnull=True, user__email__endswith="@agilisys.co.uk")
+        operators = Operator.objects.filter(organisation__isnull=True, user__email__iendswith="@agilisys.co.uk")
         if operators.exists():
             self.stdout.write("Updating {count} Agilisys operators...".format(count=operators.count()), ending="")
             operators.update(organisation=organisation)

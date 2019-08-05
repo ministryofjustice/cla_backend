@@ -7,7 +7,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         groups = Group.objects.filter(name="CLA Superusers")
-        if not groups.exists():
-            return
-        permissions = Permission.objects.filter(name__in=["Can add organisation", "Can change organisation"])
-        groups.first().permissions.add(*permissions)
+        if groups.exists():
+            permissions = Permission.objects.filter(name__in=["Can add organisation", "Can change organisation"])
+            groups.first().permissions.add(*permissions)

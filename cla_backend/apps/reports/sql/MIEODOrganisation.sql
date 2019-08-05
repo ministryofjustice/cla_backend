@@ -18,5 +18,5 @@ FROM legalaid_eoddetails AS eod
     LEFT OUTER JOIN legalaid_category AS category ON diagnosis.category_id = category.id
     LEFT OUTER JOIN call_centre_operator AS cc_op ON cc_op.user_id = c.created_by_id
     LEFT OUTER JOIN call_centre_organisation AS cc_org ON cc_org.id = cc_op.organisation_id
-WHERE c.created >= %s AND c.created < %s
+WHERE c.created >= %s AND c.created < %s AND (cc_op.organisation_id IS NULL OR cc_op.organisation_id = %s)
 ORDER BY c.created DESC;

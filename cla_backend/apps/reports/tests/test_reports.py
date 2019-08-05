@@ -6,9 +6,11 @@ import tempfile
 
 from django.test import TestCase
 from psycopg2 import InternalError
+import mock
 
-from core.tests.mommy_utils import make_recipe
 from legalaid.utils.diversity import save_diversity_data
+from legalaid.models import Case
+from core.tests.mommy_utils import make_recipe
 import reports.forms
 from reports.utils import OBIEEExporter
 
@@ -19,13 +21,17 @@ class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
         make_recipe("cla_provider.Provider")
 
     def test_headers_count_matches_sql(self):
+        operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
         for n, i in vars(reports.forms).items():
             if (
                 inspect.isclass(i)
                 and issubclass(i, reports.forms.SQLFileDateRangeReport)
                 and i != reports.forms.SQLFileDateRangeReport
             ):
-                inst = i(data={"date_from": datetime.datetime.now(), "date_to": datetime.datetime.now()})
+                request = mock.MagicMock(user=operator.user)
+                inst = i(
+                    data={"date_from": datetime.datetime.now(), "date_to": datetime.datetime.now()}, request=request
+                )
                 inst.is_valid()
                 inst.get_queryset()
                 len_desc = len(inst.description)
@@ -90,8 +96,6 @@ class MIDuplicateCasesTestCase(TestCase):
             personal_details = make_recipe("legalaid.personal_details", **details)
             make_recipe("legalaid.case", personal_details=personal_details)
 
-        from legalaid.models import Case
-
         self.assertEqual(Case.objects.count(), 23)
 
         form = reports.forms.MIDuplicateCaseExtract(
@@ -136,3 +140,93 @@ class OBIEEExportOutputsZipTestCase(TestCase):
     def tearDown(self):
         if os.path.exists(self.td):
             shutil.rmtree(self.td, ignore_errors=True)
+
+
+class EODDetailsExportTestCase(TestCase):
+    def setUp(self):
+        self.personal_details = make_recipe(
+            "legalaid.personal_details", _fill_optional=["full_name", "date_of_birth", "postcode"]
+        )
+
+        self.foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
+        foo_operator = make_recipe(
+            "call_centre.operator", is_manager=False, is_cla_superuser=False, organisation=self.foo_org
+        )
+
+        case1 = make_recipe("legalaid.case", personal_details=self.personal_details, created_by=foo_operator.user)
+        make_recipe("legalaid.eod_details", notes="EOD notes", case=case1)
+
+        bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
+        bar_operator = make_recipe(
+            "call_centre.operator", is_manager=False, is_cla_superuser=False, organisation=bar_org
+        )
+        case2 = make_recipe("legalaid.case", personal_details=self.personal_details, created_by=bar_operator.user)
+        make_recipe("legalaid.eod_details", notes="EOD notes", case=case2)
+
+    def test_operator_manager_can_export_own_organisation_eods(self):
+        self.assertEqual(Case.objects.count(), 2)
+
+        foo_operator = make_recipe(
+            "call_centre.operator", is_manager=True, is_cla_superuser=False, organisation=self.foo_org
+        )
+        request = mock.MagicMock(user=foo_operator.user)
+        form = reports.forms.MIEODReport(
+            request=request, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
+        )
+
+        self.assertTrue(form.is_valid())
+        query_result = form.get_queryset()
+        self.assertEqual(len(query_result), 1, "Found more or less EODDetails than expected")
+        self.assertIn(self.foo_org.name, query_result[0])
+
+    def test_operator_manager_can_export_eods_without_organisation(self):
+        no_org_operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
+        case1 = make_recipe("legalaid.case", personal_details=self.personal_details, created_by=no_org_operator.user)
+        make_recipe("legalaid.eod_details", notes="EOD notes", case=case1)
+
+        self.assertEqual(Case.objects.count(), 3)
+
+        foo_operator = make_recipe(
+            "call_centre.operator", is_manager=True, is_cla_superuser=False, organisation=self.foo_org
+        )
+        request = mock.MagicMock(user=foo_operator.user)
+        form = reports.forms.MIEODReport(
+            request=request, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
+        )
+
+        self.assertTrue(form.is_valid())
+        query_result = form.get_queryset()
+        self.assertEqual(len(query_result), 2, "Found more or less EODDetails than expected")
+
+    def test_operator_manager_without_org_can_export_all_eods(self):
+        no_org_operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
+        case1 = make_recipe("legalaid.case", personal_details=self.personal_details, created_by=no_org_operator.user)
+        make_recipe("legalaid.eod_details", notes="EOD notes", case=case1)
+
+        self.assertEqual(Case.objects.count(), 3)
+
+        request = mock.MagicMock(user=no_org_operator.user)
+        form = reports.forms.MIEODReport(
+            request=request, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
+        )
+
+        self.assertTrue(form.is_valid())
+        query_result = form.get_queryset()
+        self.assertEqual(len(query_result), 3, "Found more or less EODDetails than expected")
+
+    def test_cla_superuser_without_all_eods(self):
+        no_org_operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
+        case1 = make_recipe("legalaid.case", personal_details=self.personal_details, created_by=no_org_operator.user)
+        make_recipe("legalaid.eod_details", notes="EOD notes", case=case1)
+
+        self.assertEqual(Case.objects.count(), 3)
+
+        cla_superuser = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=True)
+        request = mock.MagicMock(user=cla_superuser.user)
+        form = reports.forms.MIEODReport(
+            request=request, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
+        )
+
+        self.assertTrue(form.is_valid())
+        query_result = form.get_queryset()
+        self.assertEqual(len(query_result), 3, "Found more or less EODDetails than expected")

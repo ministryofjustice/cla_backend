@@ -40,7 +40,7 @@ def report_view(form_class, title, template="case_report", success_task=ExportTa
         tmpl = "admin/reports/{0}.html".format(template)
 
         def view(request):
-            form = form_class()
+            form = form_class(request=request)
 
             if valid_submit(request, form):
                 success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(request.POST))

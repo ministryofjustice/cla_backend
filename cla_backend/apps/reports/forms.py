@@ -7,6 +7,7 @@ from django import forms
 from django.db.transaction import atomic
 from django.utils import timezone
 from django.contrib.admin import widgets
+from django.core.exceptions import ObjectDoesNotExist
 
 from legalaid.utils import diversity
 from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
@@ -409,6 +410,17 @@ class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
 
 class MIEODReport(SQLFileDateRangeReport):
     QUERY_FILE = "MIEOD.sql"
+    OPERATION_MANAGER_QUERY_FILE = "MIEODOrganisation.sql"
+
+    def __init__(self, request, *args, **kwargs):
+        user = request.user
+        try:
+            self.operator = user.operator
+            if self.operator and self.operator.organisation and not self.operator.is_cla_superuser:
+                self.QUERY_FILE = self.OPERATION_MANAGER_QUERY_FILE
+        except ObjectDoesNotExist:
+            pass
+        super(MIEODReport, self).__init__(*args, **kwargs)
 
     def get_headers(self):
         return [
@@ -420,6 +432,7 @@ class MIEODReport(SQLFileDateRangeReport):
             "EOD_Category",
             "EOD_Notes",
             "Major",
+            "organisation",
             # 'Is_Escalated',
             # 'Is_Resolved',
             # 'Is_Justified',
@@ -427,6 +440,12 @@ class MIEODReport(SQLFileDateRangeReport):
 
     def _get_col_index(self, column_name):
         return self.get_headers().index(column_name)
+
+    def get_sql_params(self):
+        params = super(MIEODReport, self).get_sql_params()
+        if self.operator and self.operator.organisation and not self.operator.is_cla_superuser:
+            params = params + (self.operator.organisation.id,)
+        return params
 
     def get_rows(self):
         eod_choices = EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT

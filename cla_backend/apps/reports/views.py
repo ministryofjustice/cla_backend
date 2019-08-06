@@ -40,10 +40,12 @@ def report_view(form_class, title, template="case_report", success_task=ExportTa
         tmpl = "admin/reports/{0}.html".format(template)
 
         def view(request):
-            form = form_class(request=request)
+            form = form_class(user=request.user)
 
             if valid_submit(request, form):
-                success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(request.POST))
+                params = request.POST
+                params["user"] = request.user.id
+                success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(params))
 
                 messages.info(
                     request, u"Your export is being processed. It " u"will show up in the downloads tab " u"shortly."

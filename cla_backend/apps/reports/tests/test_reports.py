@@ -169,9 +169,8 @@ class EODDetailsExportTestCase(TestCase):
         foo_operator = make_recipe(
             "call_centre.operator", is_manager=True, is_cla_superuser=False, organisation=self.foo_org
         )
-        request = mock.MagicMock(user=foo_operator.user)
         form = reports.forms.MIEODReport(
-            request=request, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
+            user=foo_operator.user, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
         )
 
         self.assertTrue(form.is_valid())
@@ -189,9 +188,8 @@ class EODDetailsExportTestCase(TestCase):
         foo_operator = make_recipe(
             "call_centre.operator", is_manager=True, is_cla_superuser=False, organisation=self.foo_org
         )
-        request = mock.MagicMock(user=foo_operator.user)
         form = reports.forms.MIEODReport(
-            request=request, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
+            user=foo_operator.user, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
         )
 
         self.assertTrue(form.is_valid())
@@ -205,9 +203,8 @@ class EODDetailsExportTestCase(TestCase):
 
         self.assertEqual(Case.objects.count(), 3)
 
-        request = mock.MagicMock(user=no_org_operator.user)
         form = reports.forms.MIEODReport(
-            request=request, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
+            user=no_org_operator.user, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
         )
 
         self.assertTrue(form.is_valid())
@@ -222,9 +219,8 @@ class EODDetailsExportTestCase(TestCase):
         self.assertEqual(Case.objects.count(), 3)
 
         cla_superuser = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=True)
-        request = mock.MagicMock(user=cla_superuser.user)
         form = reports.forms.MIEODReport(
-            request=request, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
+            user=cla_superuser.user, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
         )
 
         self.assertTrue(form.is_valid())

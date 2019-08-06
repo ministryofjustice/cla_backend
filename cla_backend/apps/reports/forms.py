@@ -412,14 +412,14 @@ class MIEODReport(SQLFileDateRangeReport):
     QUERY_FILE = "MIEOD.sql"
     OPERATION_MANAGER_QUERY_FILE = "MIEODOrganisation.sql"
 
-    def __init__(self, request, *args, **kwargs):
-        user = request.user
-        try:
-            self.operator = user.operator
-            if self.operator and self.operator.organisation and not self.operator.is_cla_superuser:
-                self.QUERY_FILE = self.OPERATION_MANAGER_QUERY_FILE
-        except ObjectDoesNotExist:
-            pass
+    def __init__(self, user=None, *args, **kwargs):
+        if user:
+            try:
+                self.operator = user.operator
+                if self.operator and self.operator.organisation and not self.operator.is_cla_superuser:
+                    self.QUERY_FILE = self.OPERATION_MANAGER_QUERY_FILE
+            except ObjectDoesNotExist:
+                pass
         super(MIEODReport, self).__init__(*args, **kwargs)
 
     def get_headers(self):
@@ -443,8 +443,13 @@ class MIEODReport(SQLFileDateRangeReport):
 
     def get_sql_params(self):
         params = super(MIEODReport, self).get_sql_params()
-        if self.operator and self.operator.organisation and not self.operator.is_cla_superuser:
-            params = params + (self.operator.organisation.id,)
+        try:
+            if self.operator.organisation and not self.operator.is_cla_superuser:
+                params = params + (self.operator.organisation.id,)
+        except AttributeError:
+            pass
+        except ObjectDoesNotExist:
+            pass
         return params
 
     def get_rows(self):

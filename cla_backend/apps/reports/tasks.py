@@ -6,6 +6,7 @@ import shutil
 import time
 from contextlib import closing
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 import csvkit as csv
 
 from celery import Task
@@ -43,8 +44,12 @@ class ExportTaskBase(Task):
 
     def _set_up_form(self, form_class_name, post_data):
         form_class = import_form(form_class_name)
-        self.form = form_class()
-        self.form.data = json.loads(post_data)
+        form_data = json.loads(post_data)
+        params = {}
+        if "user" in form_data:
+            params["user"] = get_user_model().objects.filter(pk=form_data["user"]).first()
+        self.form = form_class(**params)
+        self.form.data = form_data
         self.form.is_bound = True
         if not self.form.is_valid():
             self.message = u"The form submitted was not valid"

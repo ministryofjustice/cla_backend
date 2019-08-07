@@ -41,6 +41,7 @@ from cla_common.constants import (
     ELIGIBILITY_REASONS,
     EXPRESSIONS_OF_DISSATISFACTION,
     RESEARCH_CONTACT_VIA,
+    CALLBACK_WINDOW_TYPES,
 )
 
 from legalaid.fields import MoneyField
@@ -649,6 +650,12 @@ class Case(TimeStampedModel, ModelDiffMixin):
     )
 
     requires_action_at = models.DateTimeField(auto_now=False, blank=True, null=True)
+    callback_window_type = models.CharField(
+        max_length=50,
+        choices=CALLBACK_WINDOW_TYPES.CHOICES,
+        default=CALLBACK_WINDOW_TYPES.HALF_HOUR_EITHER_SIDE,
+        editable=False,
+    )
     callback_attempt = models.PositiveSmallIntegerField(default=0)
 
     locked_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="case_locked")

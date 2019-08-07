@@ -39,6 +39,20 @@ class CaseAdmin(admin.ModelAdmin):
         "adaptation_details",
         "from_case",
     )
+    readonly_fields = ("callback_window_type",)
+
+    def get_fields(self, request, obj=None, **kwargs):
+        fields = super(CaseAdmin, self).get_fields(request, obj, **kwargs)
+        fields = self.move_field_after("callback_window_type", "requires_action_at", fields)
+        return fields
+
+    @staticmethod
+    def move_field_after(field_to_move, target_field, fields):
+        if field_to_move in fields and target_field in fields:
+            field_to_move_index = fields.index(field_to_move)
+            target_field_index = fields.index(target_field)
+            fields.insert(target_field_index + 1, fields.pop(field_to_move_index))
+        return fields
 
 
 admin.site.register(Category, CategoryModelAdmin)

@@ -1370,6 +1370,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             "source",
             "complaint_flag",
             "organisation",
+            "callback_window_type",
         ]
 
         if internal:

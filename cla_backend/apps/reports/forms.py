@@ -7,7 +7,6 @@ from django import forms
 from django.db.transaction import atomic
 from django.utils import timezone
 from django.contrib.admin import widgets
-from django.core.exceptions import ObjectDoesNotExist
 
 from legalaid.utils import diversity
 from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
@@ -17,7 +16,7 @@ from complaints.constants import SLA_DAYS
 from reports.widgets import MonthYearWidget
 
 from . import sql
-from .utils import get_reports_cursor, set_local_time_for_query
+from .utils import get_reports_cursor, set_local_time_for_query, ReportOrganisationMixin
 
 
 class ConvertDateMixin(object):
@@ -408,19 +407,9 @@ class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
         ]
 
 
-class MIEODReport(SQLFileDateRangeReport):
+class MIEODReport(ReportOrganisationMixin, SQLFileDateRangeReport):
     QUERY_FILE = "MIEOD.sql"
     OPERATION_MANAGER_QUERY_FILE = "MIEODOrganisation.sql"
-
-    def __init__(self, user=None, *args, **kwargs):
-        if user:
-            try:
-                self.operator = user.operator
-                if self.operator and self.operator.organisation and not self.operator.is_cla_superuser:
-                    self.QUERY_FILE = self.OPERATION_MANAGER_QUERY_FILE
-            except ObjectDoesNotExist:
-                pass
-        super(MIEODReport, self).__init__(*args, **kwargs)
 
     def get_headers(self):
         return [
@@ -438,19 +427,11 @@ class MIEODReport(SQLFileDateRangeReport):
             # 'Is_Justified',
         ]
 
+    def get_organisation_query_filename(self):
+        return self.OPERATION_MANAGER_QUERY_FILE
+
     def _get_col_index(self, column_name):
         return self.get_headers().index(column_name)
-
-    def get_sql_params(self):
-        params = super(MIEODReport, self).get_sql_params()
-        try:
-            if self.operator.organisation and not self.operator.is_cla_superuser:
-                params = params + (self.operator.organisation.id,)
-        except AttributeError:
-            pass
-        except ObjectDoesNotExist:
-            pass
-        return params
 
     def get_rows(self):
         eod_choices = EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT

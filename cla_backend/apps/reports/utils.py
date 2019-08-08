@@ -4,7 +4,7 @@ import shutil
 import tempfile
 from datetime import date, datetime, time, timedelta
 
-from django.core.exceptions import ImproperlyConfigured as DjangoImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured as DjangoImproperlyConfigured, ObjectDoesNotExist
 import pyminizip
 from django.conf import settings
 from django.db import connections, connection
@@ -158,3 +158,29 @@ class OBIEEExporter(object):
             os.remove(self.full_path)
         if os.path.exists(self.tmp_export_path):
             shutil.rmtree(self.tmp_export_path)
+
+
+class ReportOrganisationMixin(object):
+    def __init__(self, user=None, *args, **kwargs):
+        if user:
+            try:
+                self.operator = user.operator
+                if self.operator and self.operator.organisation and not self.operator.is_cla_superuser:
+                    self.QUERY_FILE = self.OPERATION_MANAGER_QUERY_FILE
+            except ObjectDoesNotExist:
+                pass
+        super(ReportOrganisationMixin, self).__init__(*args, **kwargs)
+
+    def get_sql_params(self):
+        params = super(ReportOrganisationMixin, self).get_sql_params()
+        try:
+            if self.operator.organisation and not self.operator.is_cla_superuser:
+                params = params + (self.operator.organisation.id,)
+        except AttributeError:
+            pass
+        except ObjectDoesNotExist:
+            pass
+        return params
+
+    def get_organisation_query_filename(self):
+        raise NotImplementedError

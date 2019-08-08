@@ -40,7 +40,10 @@ def report_view(form_class, title, template="case_report", success_task=ExportTa
         tmpl = "admin/reports/{0}.html".format(template)
 
         def view(request):
-            form = form_class(user=request.user)
+            kwargs = {}
+            if isinstance(form_class, MIEODReport):
+                kwargs["user"] = request.user
+            form = form_class(**kwargs)
 
             if valid_submit(request, form):
                 params = request.POST

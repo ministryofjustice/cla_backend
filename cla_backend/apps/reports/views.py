@@ -28,6 +28,7 @@ from .forms import (
 )
 from reports.models import Export
 from .tasks import ExportTask, OBIEEExportTask
+from .utils import ReportOrganisationMixin
 
 
 def report_view(form_class, title, template="case_report", success_task=ExportTask, file_name=None):
@@ -41,7 +42,7 @@ def report_view(form_class, title, template="case_report", success_task=ExportTa
 
         def view(request):
             kwargs = {}
-            if isinstance(form_class, MIEODReport):
+            if isinstance(form_class, ReportOrganisationMixin):
                 kwargs["user"] = request.user
             form = form_class(**kwargs)
 

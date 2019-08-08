@@ -444,8 +444,12 @@ class MIEODReport(ReportOrganisationMixin, SQLFileDateRangeReport):
             yield row
 
 
-class ComplaintsReport(SQLFileDateRangeReport):
+class ComplaintsReport(ReportOrganisationMixin, SQLFileDateRangeReport):
     QUERY_FILE = "Complaints.sql"
+    OPERATION_MANAGER_QUERY_FILE = "ComplaintsOrganisation"
+
+    def get_organisation_query_filename(self):
+        return self.OPERATION_MANAGER_QUERY_FILE
 
     def get_headers(self):
         return [
@@ -465,6 +469,7 @@ class ComplaintsReport(SQLFileDateRangeReport):
             "Complaint closed",
             "Resolved?",
             "Within SLA?",
+            "organisation",
         ]
 
     def get_sql_params(self):

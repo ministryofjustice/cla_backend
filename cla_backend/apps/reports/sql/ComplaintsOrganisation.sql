@@ -55,5 +55,5 @@ FROM complaints_complaint AS comp
     LEFT OUTER JOIN call_centre_organisation AS cc_org ON cc_org.id = cc_op.organisation_id
 WHERE comp.created >= %(from_date)s AND comp.created < %(to_date)s AND
 (SELECT COUNT(id) FROM complaint_logs WHERE complaint_logs.object_id=comp.id AND complaint_logs.code = 'COMPLAINT_VOID') = 0
-AND (cc_op.organisation_id IS NULL OR cc_op.organisation_id = %s)
+AND (cc_op.organisation_id IS NULL OR cc_op.organisation_id = %(organisation)s)
 ORDER BY comp.created DESC;

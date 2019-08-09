@@ -433,6 +433,13 @@ class MIEODReport(ReportOrganisationMixin, SQLFileDateRangeReport):
     def _get_col_index(self, column_name):
         return self.get_headers().index(column_name)
 
+    def get_sql_params(self):
+        params = super(ReportOrganisationMixin, self).get_sql_params()
+        organisation = self.get_organisation()
+        if organisation:
+            params = params + (organisation,)
+        return params
+
     def get_rows(self):
         eod_choices = EXPRESSIONS_OF_DISSATISFACTION.CHOICES_DICT
         for row in self.get_queryset():
@@ -446,7 +453,7 @@ class MIEODReport(ReportOrganisationMixin, SQLFileDateRangeReport):
 
 class ComplaintsReport(ReportOrganisationMixin, SQLFileDateRangeReport):
     QUERY_FILE = "Complaints.sql"
-    OPERATION_MANAGER_QUERY_FILE = "ComplaintsOrganisation"
+    OPERATION_MANAGER_QUERY_FILE = "ComplaintsOrganisation.sql"
 
     def get_organisation_query_filename(self):
         return self.OPERATION_MANAGER_QUERY_FILE
@@ -474,13 +481,19 @@ class ComplaintsReport(ReportOrganisationMixin, SQLFileDateRangeReport):
 
     def get_sql_params(self):
         from_date, to_date = self.date_range
-        return {
+        params = {
             "from_date": from_date,
             "to_date": to_date,
             "major": LOG_LEVELS.HIGH,
             "minor": LOG_LEVELS.MINOR,
             "sla_days": "%d days" % SLA_DAYS,
         }
+
+        organisation = self.get_organisation()
+        if organisation:
+            params["organisation"] = organisation
+
+        return params
 
 
 class MIOBIEEExportExtract(MonthRangeReportForm):

@@ -182,5 +182,22 @@ class ReportOrganisationMixin(object):
             pass
         return params
 
+    def get_organisation(self):
+        organisation = None
+        try:
+            if self.operator.organisation and not self.operator.is_cla_superuser:
+                organisation = self.operator.organisation.id
+        except AttributeError:
+            pass
+        except ObjectDoesNotExist:
+            pass
+        return organisation
+
+    def get_organisation_index(self):
+        return self.get_headers().index("organisation")
+
     def get_organisation_query_filename(self):
+        raise NotImplementedError
+
+    def get_headers(self):
         raise NotImplementedError

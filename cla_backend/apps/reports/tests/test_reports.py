@@ -6,10 +6,12 @@ import tempfile
 
 from django.test import TestCase
 from psycopg2 import InternalError
+
 import mock
 
 from legalaid.utils.diversity import save_diversity_data
-from legalaid.models import Case
+from legalaid.models import Case, EODDetails
+from complaints.models import Complaint
 from core.tests.mommy_utils import make_recipe
 import reports.forms
 from reports.utils import OBIEEExporter
@@ -142,87 +144,107 @@ class OBIEEExportOutputsZipTestCase(TestCase):
             shutil.rmtree(self.td, ignore_errors=True)
 
 
-class EODDetailsExportTestCase(TestCase):
-    def setUp(self):
-        self.personal_details = make_recipe(
-            "legalaid.personal_details", _fill_optional=["full_name", "date_of_birth", "postcode"]
-        )
+class AbstractExportWithOrganisation(object):
+    def __init__(self, *args, **kwargs):
+        super(AbstractExportWithOrganisation, self).__init__(*args, **kwargs)
+        self.form_class = None
+        self.model_class = None
+        self.foo_org = None
+        self.foo_org_operator = None
+        self.bar_org = None
+        self.bar_org_operator = None
+        self.no_org_operator = None
 
+    def setUp(self, *args, **kwargs):
+        super(AbstractExportWithOrganisation, self).setUp(*args, **kwargs)
         self.foo_org = make_recipe("call_centre.organisation", name="Organisation Foo")
-        foo_operator = make_recipe(
+        self.foo_org_operator = make_recipe(
             "call_centre.operator", is_manager=False, is_cla_superuser=False, organisation=self.foo_org
         )
+        self.create_models(self.foo_org_operator)
 
-        case1 = make_recipe("legalaid.case", personal_details=self.personal_details, created_by=foo_operator.user)
-        make_recipe("legalaid.eod_details", notes="EOD notes", case=case1)
-
-        bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
-        bar_operator = make_recipe(
-            "call_centre.operator", is_manager=False, is_cla_superuser=False, organisation=bar_org
+        self.bar_org = make_recipe("call_centre.organisation", name="Organisation Bar")
+        self.bar_org_operator = make_recipe(
+            "call_centre.operator", is_manager=False, is_cla_superuser=False, organisation=self.bar_org
         )
-        case2 = make_recipe("legalaid.case", personal_details=self.personal_details, created_by=bar_operator.user)
-        make_recipe("legalaid.eod_details", notes="EOD notes", case=case2)
+        self.create_models(self.bar_org_operator)
 
-    def test_operator_manager_can_export_own_organisation_eods(self):
-        self.assertEqual(Case.objects.count(), 2)
+        self.no_org_operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
+        self.create_models(self.no_org_operator)
 
-        foo_operator = make_recipe(
-            "call_centre.operator", is_manager=True, is_cla_superuser=False, organisation=self.foo_org
-        )
-        form = reports.forms.MIEODReport(
-            user=foo_operator.user, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
-        )
+    def create_models(self, operator):
+        raise NotImplementedError
 
-        self.assertTrue(form.is_valid())
-        query_result = form.get_queryset()
-        self.assertEqual(len(query_result), 1, "Found more or less EODDetails than expected")
-        self.assertIn(self.foo_org.name, query_result[0])
+    def assert_organisations_in_results(self, organisations, results, organisation_index):
+        for result in results:
+            self.assertIn(result[organisation_index], organisations)
 
-    def test_operator_manager_can_export_eods_without_organisation(self):
-        no_org_operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
-        case1 = make_recipe("legalaid.case", personal_details=self.personal_details, created_by=no_org_operator.user)
-        make_recipe("legalaid.eod_details", notes="EOD notes", case=case1)
+    def test_operator_manager_can_export_report_for_own_organisation(self):
+        self.assertEqual(self.model_class.objects.count(), 3)
 
-        self.assertEqual(Case.objects.count(), 3)
-
-        foo_operator = make_recipe(
-            "call_centre.operator", is_manager=True, is_cla_superuser=False, organisation=self.foo_org
-        )
-        form = reports.forms.MIEODReport(
-            user=foo_operator.user, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
+        form = self.form_class(
+            user=self.foo_org_operator.user,
+            data={"date_from": datetime.date.today(), "date_to": datetime.date.today()},
         )
 
         self.assertTrue(form.is_valid())
         query_result = form.get_queryset()
-        self.assertEqual(len(query_result), 2, "Found more or less EODDetails than expected")
+        self.assertEqual(len(query_result), 2)
+        self.assert_organisations_in_results([self.foo_org.name, None], query_result, form.get_organisation_index())
 
-    def test_operator_manager_without_org_can_export_all_eods(self):
-        no_org_operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
-        case1 = make_recipe("legalaid.case", personal_details=self.personal_details, created_by=no_org_operator.user)
-        make_recipe("legalaid.eod_details", notes="EOD notes", case=case1)
+    def test_operator_manager_without_org_can_export_all(self):
+        self.assertEqual(self.model_class.objects.count(), 3)
 
-        self.assertEqual(Case.objects.count(), 3)
-
-        form = reports.forms.MIEODReport(
-            user=no_org_operator.user, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
+        form = self.form_class(
+            user=self.no_org_operator.user, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
         )
 
         self.assertTrue(form.is_valid())
         query_result = form.get_queryset()
-        self.assertEqual(len(query_result), 3, "Found more or less EODDetails than expected")
+        self.assertEqual(len(query_result), 3)
+        self.assert_organisations_in_results(
+            [self.foo_org.name, self.bar_org.name, None], query_result, form.get_organisation_index()
+        )
 
-    def test_cla_superuser_without_all_eods(self):
-        no_org_operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
-        case1 = make_recipe("legalaid.case", personal_details=self.personal_details, created_by=no_org_operator.user)
-        make_recipe("legalaid.eod_details", notes="EOD notes", case=case1)
-
-        self.assertEqual(Case.objects.count(), 3)
-
+    def test_cla_superuser_without_all(self):
+        self.assertEqual(self.model_class.objects.count(), 3)
         cla_superuser = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=True)
-        form = reports.forms.MIEODReport(
+        form = self.form_class(
             user=cla_superuser.user, data={"date_from": datetime.date.today(), "date_to": datetime.date.today()}
         )
 
         self.assertTrue(form.is_valid())
         query_result = form.get_queryset()
-        self.assertEqual(len(query_result), 3, "Found more or less EODDetails than expected")
+        self.assertEqual(len(query_result), 3)
+        self.assert_organisations_in_results(
+            [self.foo_org.name, self.bar_org.name, None], query_result, form.get_organisation_index()
+        )
+
+
+class EODDetailsExportTestCase(AbstractExportWithOrganisation, TestCase):
+    def __init__(self, methodName=""):
+        super(EODDetailsExportTestCase, self).__init__(methodName)
+        self.form_class = reports.forms.MIEODReport
+        self.model_class = EODDetails
+
+    def create_models(self, operator):
+        personal_details = make_recipe(
+            "legalaid.personal_details", _fill_optional=["full_name", "date_of_birth", "postcode"]
+        )
+        case = make_recipe("legalaid.case", personal_details=personal_details, created_by=operator.user)
+        make_recipe("legalaid.eod_details", notes="EOD notes", case=case)
+
+
+class ComplaintsExportTestCase(AbstractExportWithOrganisation, TestCase):
+    def __init__(self, methodName=""):
+        super(ComplaintsExportTestCase, self).__init__(methodName)
+        self.form_class = reports.forms.ComplaintsReport
+        self.model_class = Complaint
+
+    def create_models(self, operator):
+        personal_details = make_recipe(
+            "legalaid.personal_details", _fill_optional=["full_name", "date_of_birth", "postcode"]
+        )
+        case = make_recipe("legalaid.case", personal_details=personal_details, created_by=operator.user)
+        eod = make_recipe("legalaid.eod_details", notes="EOD notes", case=case)
+        make_recipe("complaints.complaint", eod=eod)

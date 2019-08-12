@@ -190,7 +190,9 @@ class AbstractExportWithOrganisation(object):
         self.assertTrue(form.is_valid())
         query_result = form.get_queryset()
         self.assertEqual(len(query_result), 2)
-        self.assert_organisations_in_results([self.foo_org.name, None], query_result, form.get_organisation_index())
+        self.assert_organisations_in_results(
+            [self.foo_org.name, None], query_result, form.get_organisation_column_index()
+        )
 
     def test_operator_manager_without_org_can_export_all(self):
         self.assertEqual(self.model_class.objects.count(), 3)
@@ -203,7 +205,7 @@ class AbstractExportWithOrganisation(object):
         query_result = form.get_queryset()
         self.assertEqual(len(query_result), 3)
         self.assert_organisations_in_results(
-            [self.foo_org.name, self.bar_org.name, None], query_result, form.get_organisation_index()
+            [self.foo_org.name, self.bar_org.name, None], query_result, form.get_organisation_column_index()
         )
 
     def test_cla_superuser_without_all(self):
@@ -217,7 +219,7 @@ class AbstractExportWithOrganisation(object):
         query_result = form.get_queryset()
         self.assertEqual(len(query_result), 3)
         self.assert_organisations_in_results(
-            [self.foo_org.name, self.bar_org.name, None], query_result, form.get_organisation_index()
+            [self.foo_org.name, self.bar_org.name, None], query_result, form.get_organisation_column_index()
         )
 
 

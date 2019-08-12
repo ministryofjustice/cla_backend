@@ -162,42 +162,17 @@ class OBIEEExporter(object):
 
 class ReportOrganisationMixin(object):
     def __init__(self, user=None, *args, **kwargs):
+        self.organisation_id = 0
         if user:
             try:
-                self.operator = user.operator
-                if self.operator and self.operator.organisation and not self.operator.is_cla_superuser:
-                    self.QUERY_FILE = self.get_organisation_query_filename()
+                if user.operator and user.operator.organisation and not user.operator.is_cla_superuser:
+                    self.organisation_id = user.operator.organisation.id
             except ObjectDoesNotExist:
                 pass
         super(ReportOrganisationMixin, self).__init__(*args, **kwargs)
 
-    def get_sql_params(self):
-        params = super(ReportOrganisationMixin, self).get_sql_params()
-        try:
-            if self.operator.organisation and not self.operator.is_cla_superuser:
-                params = params + (self.operator.organisation.id,)
-        except AttributeError:
-            pass
-        except ObjectDoesNotExist:
-            pass
-        return params
-
-    def get_organisation(self):
-        organisation = None
-        try:
-            if self.operator.organisation and not self.operator.is_cla_superuser:
-                organisation = self.operator.organisation.id
-        except AttributeError:
-            pass
-        except ObjectDoesNotExist:
-            pass
-        return organisation
-
-    def get_organisation_index(self):
+    def get_organisation_column_index(self):
         return self.get_headers().index("organisation")
-
-    def get_organisation_query_filename(self):
-        raise NotImplementedError
 
     def get_headers(self):
         raise NotImplementedError

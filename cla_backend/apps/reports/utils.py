@@ -166,7 +166,7 @@ class ReportOrganisationMixin(object):
             try:
                 self.operator = user.operator
                 if self.operator and self.operator.organisation and not self.operator.is_cla_superuser:
-                    self.QUERY_FILE = self.OPERATION_MANAGER_QUERY_FILE
+                    self.QUERY_FILE = self.get_organisation_query_filename()
             except ObjectDoesNotExist:
                 pass
         super(ReportOrganisationMixin, self).__init__(*args, **kwargs)

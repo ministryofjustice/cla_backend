@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
+from django.db import transaction
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 
@@ -484,8 +485,24 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ("is_manager",)
 
+    def get_queryset(self):
+        qs = super(BaseUserViewSet, self).get_queryset()
+        operator = self.get_logged_in_user_model()
+        if operator.organisation:
+            query = Q(organisation__isnull=True)
+            query.add(Q(organisation=operator.organisation.id), Q.OR)
+            qs = qs.filter(query)
+        return qs
+
     def get_logged_in_user_model(self):
         return self.request.user.operator
+
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        operator = self.get_logged_in_user_model()
+        if operator.organisation:
+            request.DATA["organisation"] = operator.organisation.id
+        return super(UserViewSet, self).create(request, *args, **kwargs)
 
 
 class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin, FormActionMixin, FullPersonalDetailsViewSet):

@@ -1,5 +1,6 @@
 -r base.txt
 
+coverage==4.5.4
 mock==1.0.1
 model-mommy==1.2.3
 git+https://github.com/HassenPy/django-pdb.git@0.3.2#egg=django-pdb==0.3.2

@@ -142,6 +142,7 @@ jobs:
             coverage html
       - store_artifacts:
           path: htmlcov
+          destination: coverage
 
 workflows:
   version: 2

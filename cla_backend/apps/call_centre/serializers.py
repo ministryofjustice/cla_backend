@@ -24,6 +24,7 @@ from legalaid.serializers import (
     CaseNotesHistorySerializerBase,
     CSVUploadSerializerBase,
     EODDetailsSerializerBase,
+    EODDetailsCategorySerializerReadyOnly,
 )
 
 from .models import Operator
@@ -185,6 +186,13 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
 class EODDetailsSerializer(EODDetailsSerializerBase):
     class Meta(EODDetailsSerializerBase.Meta):
         fields = ("categories", "notes", "reference")
+
+
+class EODDetailsSerializerReadyOnlySerializer(EODDetailsSerializerBase):
+    categories = EODDetailsCategorySerializerReadyOnly(many=True, allow_add_remove=False, required=False)
+
+    class Meta(EODDetailsSerializerBase.Meta):
+        fields = ("categories", "reference")
 
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):

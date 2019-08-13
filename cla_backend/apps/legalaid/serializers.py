@@ -227,6 +227,12 @@ class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
         fields = ("category", "is_major")
 
 
+class EODDetailsCategorySerializerReadyOnly(serializers.ModelSerializer):
+    class Meta(object):
+        model = EODDetailsCategory
+        fields = ("id",)
+
+
 class EODDetailsSerializerBase(serializers.ModelSerializer):
     notes = serializers.CharField(max_length=5000, required=False)
     categories = EODDetailsCategorySerializerBase(many=True, allow_add_remove=True, required=False)

@@ -62,7 +62,7 @@ from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 from diagnosis.views import BaseDiagnosisViewSet
 from guidance.views import BaseGuidanceNoteViewSet
 
-from .permissions import CallCentreClientIDPermission, OperatorManagerPermission
+from .permissions import CallCentreClientIDPermission, OperatorManagerPermission, OperatorOrganisationPermission
 from .serializers import (
     EligibilityCheckSerializer,
     CaseSerializer,
@@ -82,6 +82,7 @@ from .serializers import (
     CSVUploadSerializer,
     CSVUploadDetailSerializer,
     EODDetailsSerializer,
+    EODDetailsSerializerReadyOnlySerializer,
 )
 
 from .forms import (
@@ -96,6 +97,9 @@ from .forms import (
 )
 
 from .models import Operator
+
+from .utils.organisation import case_organisation_matches_user_organisation
+from .utils.organisation.exceptions import OrganisationMatchException
 
 
 class CallCentrePermissionsViewSetMixin(object):
@@ -530,7 +534,25 @@ class AdaptationDetailsMetadataViewSet(CallCentrePermissionsViewSetMixin, BaseAd
 
 
 class EODDetailsViewSet(CallCentrePermissionsViewSetMixin, BaseEODDetailsViewSet):
+
     serializer_class = EODDetailsSerializer
+    serializer_class_readonly = EODDetailsSerializerReadyOnlySerializer
+
+    def get_serializer_class(self):
+        serializer_class = super(EODDetailsViewSet, self).get_serializer_class()
+        case = get_object_or_404(Case, reference=self.kwargs.get("case_reference"))
+        try:
+            if not case_organisation_matches_user_organisation(case, self.request.user):
+                serializer_class = self.serializer_class_readonly
+        except OrganisationMatchException:
+            pass
+
+        return serializer_class
+
+    def get_permissions(self):
+        permissions = super(EODDetailsViewSet, self).get_permissions()
+        permissions.append(OperatorOrganisationPermission())
+        return permissions
 
 
 class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):

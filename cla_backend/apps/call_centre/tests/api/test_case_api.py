@@ -246,7 +246,11 @@ class CreateCaseTestCase(BaseCaseTestCase):
 class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
     @property
     def response_keys(self):
-        return super(UpdateCaseTestCase, self).response_keys + ["complaint_count", "eod_details_count"]
+        return super(UpdateCaseTestCase, self).response_keys + [
+            "complaint_count",
+            "eod_details_count",
+            "eod_details_editable",
+        ]
 
     def test_patch_operator_notes_allowed(self):
         """

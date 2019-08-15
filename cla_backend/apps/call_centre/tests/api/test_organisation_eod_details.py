@@ -116,12 +116,14 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
 
     """
     All Operator Managers should be able to see that there is a EOD against
+    Even if the case creator belongs to another organisation.
     """
 
     def test_operator_manager_case_creator_different_organisation_see_eod_details_count(self):
         self.operator_manager.organisation = self.foo_org
-        self.operator.save()
+        self.operator_manager.save()
 
+        # Case creator belongs to another organisation
         case = make_recipe("legalaid.case", created_by=self.bar_org_operator.user)
         eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
         categories = [
@@ -141,31 +143,20 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
         response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
         self.assertEqual(response.data.get("eod_details_count"), len(categories))
+        self.assertFalse(response.data.get("eod_details_editable"))
 
-    """
-    All Operator Managers should be able to see that there is a EOD against
-    """
+        # Case creator doesn't have organisation
+        self.operator_manager.organisation = None
+        self.operator_manager.save()
 
-    def test_operator_manager_case_creator_same_organisation_see_complaints_count(self):
-        self.operator_manager.organisation = self.foo_org
-        self.operator.save()
-
-        case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
-        eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
-        categories = [
-            make_recipe(
-                "legalaid.eod_details_category", eod_details=eod, category=EXPRESSIONS_OF_DISSATISFACTION.INCORRECT
-            ),
-            make_recipe(
-                "legalaid.eod_details_category",
-                eod_details=eod,
-                category=EXPRESSIONS_OF_DISSATISFACTION.PASS_TO_PUBLIC,
-            ),
-            make_recipe(
-                "legalaid.eod_details_category", eod_details=eod, category=EXPRESSIONS_OF_DISSATISFACTION.SCOPE
-            ),
-        ]
-
-        url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
         response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
         self.assertEqual(response.data.get("eod_details_count"), len(categories))
+        self.assertTrue(response.data.get("eod_details_editable"))
+
+        # Case creator belongs to same organisation
+        self.operator_manager.organisation = self.bar_org
+        self.operator_manager.save()
+
+        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
+        self.assertEqual(response.data.get("eod_details_count"), len(categories))
+        self.assertTrue(response.data.get("eod_details_editable"))

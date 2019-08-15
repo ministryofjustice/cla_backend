@@ -27,6 +27,8 @@ from legalaid.serializers import (
 )
 
 from .models import Operator
+from .utils.organisation.exceptions import OrganisationMatchException
+from .utils.organisation import case_organisation_matches_user_organisation
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -227,12 +229,34 @@ class CaseSerializer(CaseSerializerFull):
 
     complaint_count = serializers.IntegerField(source="complaint_count", read_only=True)
     eod_details_count = serializers.IntegerField(source="eod_details_count", read_only=True)
+    eod_details_editable = serializers.BooleanField(source="eod_details_editable", read_only=True)
 
     def is_rejected(self, case):
         try:
             return case.rejected == 1
         except Exception:
             return False
+
+    def transform_eod_details_editable(self, case, value):
+        user = self.context.get("request").user
+        try:
+            has_permission = case_organisation_matches_user_organisation(case, user)
+        except OrganisationMatchException:
+            has_permission = True
+
+        return has_permission
+
+    def transform_eod_details(self, case, value):
+        user = self.context.get("request").user
+        try:
+            has_permission = case_organisation_matches_user_organisation(case, user)
+        except OrganisationMatchException:
+            has_permission = True
+
+        if has_permission:
+            return value
+
+        return None
 
     class Meta(CaseSerializerFull.Meta):
         fields = (
@@ -275,6 +299,7 @@ class CaseSerializer(CaseSerializerFull):
             "call_started",
             "complaint_count",
             "eod_details_count",
+            "eod_details_editable",
         )
 
 
@@ -314,7 +339,9 @@ class CreateCaseSerializer(CaseSerializer):
     personal_details = UUIDSerializer(slug_field="reference", required=False)
 
     class Meta(CaseSerializer.Meta):
-        fields = tuple(set(CaseSerializer.Meta.fields) - {"complaint_count", "eod_details_count"})
+        fields = tuple(
+            set(CaseSerializer.Meta.fields) - {"complaint_count", "eod_details_count", "eod_details_editable"}
+        )
 
 
 class ProviderSerializer(ProviderSerializerBase):

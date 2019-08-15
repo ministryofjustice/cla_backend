@@ -86,12 +86,14 @@ class OrganisationComplaintsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
 
     """
     All Operator Managers should be able to see that there is a complaint against
+    Even if the case creator belongs to another organisation.
     """
 
-    def test_operator_manager_case_creator_different_organisation_see_complaints_count(self):
+    def test_operator_manager_see_complaints_count(self):
         self.operator_manager.organisation = self.foo_org
-        self.operator.save()
+        self.operator_manager.save()
 
+        # Case creator belongs to another organisation
         case = make_recipe("legalaid.case", created_by=self.bar_org_operator.user)
         eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
         complaints = make_recipe(
@@ -101,23 +103,20 @@ class OrganisationComplaintsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
         response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
         self.assertEqual(response.data.get("complaint_count"), len(complaints))
-        return response
+        self.assertFalse(response.data.get("eod_details_editable"))
 
-    """
-    All Operator Managers should be able to see that there is a complaint against
-    """
+        # Case creator doesn't have organisation
+        self.operator_manager.organisation = None
+        self.operator_manager.save()
 
-    def test_operator_manager_case_creator_same_organisation_see_complaints_count(self):
-        self.operator_manager.organisation = self.foo_org
-        self.operator.save()
-
-        case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
-        eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
-        complaints = make_recipe(
-            "complaints.complaint", eod=eod, description="This is a test", category=None, _quantity=3
-        )
-
-        url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
         response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
         self.assertEqual(response.data.get("complaint_count"), len(complaints))
-        return response
+        self.assertTrue(response.data.get("eod_details_editable"))
+
+        # Case creator belongs to same organisation
+        self.operator_manager.organisation = self.bar_org
+        self.operator_manager.save()
+
+        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
+        self.assertEqual(response.data.get("complaint_count"), len(complaints))
+        self.assertTrue(response.data.get("eod_details_editable"))

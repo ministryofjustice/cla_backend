@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 from rest_framework.exceptions import MethodNotAllowed
 
 from core.permissions import ClientIDPermission
@@ -35,7 +35,8 @@ class OperatorOrganisationCasePermission(CallCentreClientIDPermission):
 
         case = self.get_case(request, view)
         if not case:
-            return False
+            # Allow list and dashboard views
+            return request.method in SAFE_METHODS
 
         try:
             has_permission = case_organisation_matches_user_organisation(case, request.user)

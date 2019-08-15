@@ -237,6 +237,8 @@ class CaseViewSet(CallCentrePermissionsViewSetMixin, mixins.CreateModelMixin, Ba
             }
         )
 
+        qs = qs.extra(select={"eod_details_editable": "SELECT NULL"})
+
         return qs
 
     def get_serializer_class(self):

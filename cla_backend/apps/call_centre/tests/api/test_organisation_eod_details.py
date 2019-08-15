@@ -29,12 +29,10 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
 
     """
     When an a case is created by an operator that has a organisation then only operators of the same organisation
-    can register complaints and EOD against that case.
+    can register EOD against that case.
     """
 
     def test_operator_can_create_eod_for_cases_created_by_operator_of_same_organisation(self):
-        from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
-
         self.operator.organisation = self.foo_org
         self.operator.save()
 
@@ -77,11 +75,10 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         eod_reloaded = EODDetails.objects.get(reference=eod.reference)
         self.assertEqual(eod_reloaded.categories.count(), 2)
-        return response
 
     """
     When an a case is created by an operator that has a organisation then only operators of the same organisation
-    can register complaints and EOD against that case.
+    can register EOD against that case.
     """
 
     def test_operator_cannot_create_eod_for_cases_created_by_operator_of_another_organisation(self):
@@ -98,16 +95,13 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         }
         response = self.client.post(create_eod_url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-        return response
 
     """
     When a case is created by an user that does not have a organisation then any operator or
-    operator managercan register a complaint and EOD against that case.
+    operator manager can register a EOD against that case.
     """
 
     def test_operator_can_create_eod_for_cases_created_by_operator_with_no_organisation(self):
-        from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
-
         self.operator.organisation = self.foo_org
         self.operator.save()
 
@@ -121,10 +115,9 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         }
         response = self.client.post(create_eod_url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
-        return response
 
     """
-    All Operator Managers should be able to see that there is a complaint against
+    All Operator Managers should be able to see that there is a EOD against
     """
 
     def test_operator_case_creator_different_organisation_eod_response(self):
@@ -158,10 +151,9 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             "categories": [{"id": category.id} for category in categories],
         }
         self.assertDictEqual(expected_dict, json.loads(response.rendered_content))
-        return response
 
     """
-    All Operator Managers should be able to see that there is a complaint against
+    All Operator Managers should be able to see that there is a EOD against
     """
 
     def test_operator_case_creator_same_organisation_eod_response(self):
@@ -196,4 +188,3 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             "categories": [{"category": category.category, "is_major": category.is_major} for category in categories],
         }
         self.assertDictEqual(expected_dict, json.loads(response.rendered_content))
-        return response

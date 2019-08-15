@@ -62,7 +62,12 @@ from knowledgebase.views import BaseArticleViewSet, BaseArticleCategoryViewSet
 from diagnosis.views import BaseDiagnosisViewSet
 from guidance.views import BaseGuidanceNoteViewSet
 
-from .permissions import CallCentreClientIDPermission, OperatorManagerPermission, OperatorOrganisationPermission
+from .permissions import (
+    CallCentreClientIDPermission,
+    OperatorManagerPermission,
+    OperatorOrganisationCasePermission,
+    OperatorOrganisationComplaintPermission,
+)
 from .serializers import (
     EligibilityCheckSerializer,
     CaseSerializer,
@@ -551,7 +556,7 @@ class EODDetailsViewSet(CallCentrePermissionsViewSetMixin, BaseEODDetailsViewSet
 
     def get_permissions(self):
         permissions = super(EODDetailsViewSet, self).get_permissions()
-        permissions.append(OperatorOrganisationPermission())
+        permissions.append(OperatorOrganisationCasePermission())
         return permissions
 
 
@@ -696,6 +701,11 @@ class ComplaintViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintViewSet):
         dashboard = self.request.QUERY_PARAMS.get("dashboard") == "True"
         show_closed = self.request.QUERY_PARAMS.get("show_closed") == "True"
         return super(ComplaintViewSet, self).get_queryset(dashboard=dashboard, show_closed=show_closed)
+
+    def get_permissions(self):
+        permissions = super(ComplaintViewSet, self).get_permissions()
+        permissions.append(OperatorOrganisationComplaintPermission())
+        return permissions
 
 
 class ComplaintCategoryViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintCategoryViewSet):

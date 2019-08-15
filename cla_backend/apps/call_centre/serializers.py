@@ -234,6 +234,7 @@ class CaseSerializer(CaseSerializerFull):
     rejected = serializers.SerializerMethodField("is_rejected")
 
     complaint_count = serializers.IntegerField(source="complaint_count", read_only=True)
+    eod_details_count = serializers.IntegerField(source="eod_details_count", read_only=True)
 
     def is_rejected(self, case):
         try:
@@ -281,6 +282,7 @@ class CaseSerializer(CaseSerializerFull):
             "eod_details",
             "call_started",
             "complaint_count",
+            "eod_details_count",
         )
 
 

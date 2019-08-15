@@ -230,6 +230,17 @@ class CaseViewSet(CallCentrePermissionsViewSetMixin, mixins.CreateModelMixin, Ba
         else:
             qs = qs.extra(select={"complaint_count": "SELECT NULL"})
 
+        qs = qs.extra(
+            select={
+                "eod_details_count": """
+                SELECT COUNT(legalaid_eoddetailscategory.id)
+                FROM legalaid_eoddetails
+                JOIN legalaid_eoddetailscategory ON legalaid_eoddetails.id = legalaid_eoddetailscategory.eod_details_id
+                WHERE legalaid_case.id = legalaid_eoddetails.case_id
+            """
+            }
+        )
+
         return qs
 
     def get_serializer_class(self):

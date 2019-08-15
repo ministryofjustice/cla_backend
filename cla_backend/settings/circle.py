@@ -15,3 +15,5 @@ DATABASES = {
         "PORT": os.environ.get("DB_PORT", ""),
     }
 }
+
+TEST_OUTPUT_DIR = "test-reports"

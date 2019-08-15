@@ -2,11 +2,11 @@ from django.core.management import call_command
 from django.test.utils import get_runner
 from django.conf import settings
 
-# use jenkins runner if present otherwise the default django one
+# use jenkins runner if present otherwise the django one from unittest-xml-reporting
 if "django_jenkins" in settings.INSTALLED_APPS:
     base_runner = "django_jenkins.runner.CITestSuiteRunner"
 else:
-    base_runner = "django.test.runner.DiscoverRunner"
+    base_runner = "xmlrunner.extra.djangotestrunner.XMLTestRunner"
 
 
 class CLADiscoverRunner(get_runner(settings, base_runner)):

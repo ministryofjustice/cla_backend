@@ -134,10 +134,20 @@ jobs:
           paths:
             - "~/.cache/pip"
       - run:
-          name: Run unit tests
+          name: Run tests with coverage
           command: |
             source env/bin/activate
-            python manage.py test --verbosity=2
+            coverage run --source cla_backend manage.py test --verbosity=2
+            coverage report -m
+            coverage html
+            coveralls
+      - store_artifacts:
+          path: htmlcov
+          destination: coverage
+      - store_test_results:
+          path: test-reports
+      - store_artifacts:
+          path: test-reports
 
 workflows:
   version: 2

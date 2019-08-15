@@ -1,5 +1,3 @@
-import json
-
 from django.core.urlresolvers import reverse
 
 from rest_framework import status
@@ -120,11 +118,8 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
     All Operator Managers should be able to see that there is a EOD against
     """
 
-    def test_operator_case_creator_different_organisation_eod_response(self):
-        # Check the returned response keys when current operator organisation
-        # does not match case creator organisation
-
-        self.operator.organisation = self.foo_org
+    def test_operator_manager_case_creator_different_organisation_see_eod_details_count(self):
+        self.operator_manager.organisation = self.foo_org
         self.operator.save()
 
         case = make_recipe("legalaid.case", created_by=self.bar_org_operator.user)
@@ -143,24 +138,16 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             ),
         ]
 
-        path = u"%s:eoddetails-detail" % self.API_URL_NAMESPACE
-        create_eod_url = reverse(path, args=(), kwargs={"case_reference": case.reference})
-        response = self.client.get(create_eod_url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
-        expected_dict = {
-            "reference": str(eod.reference),
-            "categories": [{"id": category.id} for category in categories],
-        }
-        self.assertDictEqual(expected_dict, json.loads(response.rendered_content))
+        url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
+        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
+        self.assertEqual(response.data.get("eod_details_count"), len(categories))
 
     """
     All Operator Managers should be able to see that there is a EOD against
     """
 
-    def test_operator_case_creator_same_organisation_eod_response(self):
-        # Check the returned response keys when current operator organisation
-        # does matches case creator organisation
-
-        self.operator.organisation = self.foo_org
+    def test_operator_manager_case_creator_same_organisation_see_complaints_count(self):
+        self.operator_manager.organisation = self.foo_org
         self.operator.save()
 
         case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
@@ -179,12 +166,6 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             ),
         ]
 
-        path = u"%s:eoddetails-detail" % self.API_URL_NAMESPACE
-        create_eod_url = reverse(path, args=(), kwargs={"case_reference": case.reference})
-        response = self.client.get(create_eod_url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
-        expected_dict = {
-            "reference": str(eod.reference),
-            "notes": eod.notes,
-            "categories": [{"category": category.category, "is_major": category.is_major} for category in categories],
-        }
-        self.assertDictEqual(expected_dict, json.loads(response.rendered_content))
+        url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
+        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
+        self.assertEqual(response.data.get("eod_details_count"), len(categories))

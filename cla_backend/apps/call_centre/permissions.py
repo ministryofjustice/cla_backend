@@ -1,9 +1,11 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import BasePermission
+from rest_framework.exceptions import MethodNotAllowed
 
 from core.permissions import ClientIDPermission
 from legalaid.models import Case, EODDetails
+from complaints.models import Complaint
 from .utils.organisation import case_organisation_matches_user_organisation
 from .utils.organisation.exceptions import (
     UserIsNotOperatorException,
@@ -28,10 +30,13 @@ class OperatorOrganisationCasePermission(CallCentreClientIDPermission):
         if not has_permission:
             return False
 
-        if request.method in SAFE_METHODS:
-            return True
+        if request.method not in view.allowed_methods:
+            raise MethodNotAllowed(method=request.method)
 
         case = self.get_case(request, view)
+        if not case:
+            return False
+
         try:
             has_permission = case_organisation_matches_user_organisation(case, request.user)
         except UserIsNotOperatorException:
@@ -51,5 +56,9 @@ class OperatorOrganisationCasePermission(CallCentreClientIDPermission):
 
 class OperatorOrganisationComplaintPermission(OperatorOrganisationCasePermission):
     def get_case(self, request, view):
-        eod = get_object_or_404(EODDetails, reference=request.DATA.get("eod"))
-        return eod.case
+        case = None
+        if "eod" in request.DATA:
+            case = get_object_or_404(EODDetails, reference=request.DATA.get("eod")).case
+        elif view.kwargs:
+            case = get_object_or_404(Complaint, **view.kwargs).eod.case
+        return case

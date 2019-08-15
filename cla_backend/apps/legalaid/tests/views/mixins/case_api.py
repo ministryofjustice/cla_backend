@@ -65,6 +65,7 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
             "exempt_user_reason",
             "ecf_statement",
             "complaint_flag",
+            "eod_details_count",
         ]
 
     def assertPersonalDetailsEqual(self, data, obj):

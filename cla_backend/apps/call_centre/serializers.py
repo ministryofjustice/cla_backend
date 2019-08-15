@@ -24,7 +24,6 @@ from legalaid.serializers import (
     CaseNotesHistorySerializerBase,
     CSVUploadSerializerBase,
     EODDetailsSerializerBase,
-    EODDetailsCategorySerializerReadyOnly,
 )
 
 from .models import Operator
@@ -188,13 +187,6 @@ class EODDetailsSerializer(EODDetailsSerializerBase):
         fields = ("categories", "notes", "reference")
 
 
-class EODDetailsSerializerReadyOnlySerializer(EODDetailsSerializerBase):
-    categories = EODDetailsCategorySerializerReadyOnly(many=True, allow_add_remove=False, required=False)
-
-    class Meta(EODDetailsSerializerBase.Meta):
-        fields = ("categories", "reference")
-
-
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
     you = PersonSerializer(required=False)
@@ -322,7 +314,7 @@ class CreateCaseSerializer(CaseSerializer):
     personal_details = UUIDSerializer(slug_field="reference", required=False)
 
     class Meta(CaseSerializer.Meta):
-        fields = tuple(set(CaseSerializer.Meta.fields) - {"complaint_count"})
+        fields = tuple(set(CaseSerializer.Meta.fields) - {"complaint_count", "eod_details_count"})
 
 
 class ProviderSerializer(ProviderSerializerBase):

@@ -144,6 +144,10 @@ jobs:
       - store_artifacts:
           path: htmlcov
           destination: coverage
+      - store_test_results:
+          path: test-reports
+      - store_artifacts:
+          path: test-reports
 
 workflows:
   version: 2

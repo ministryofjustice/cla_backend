@@ -4,4 +4,5 @@ coverage==4.5.4
 coveralls==1.8.2
 mock==1.0.1
 model-mommy==1.2.3
+unittest-xml-reporting==2.5.1
 git+https://github.com/HassenPy/django-pdb.git@0.3.2#egg=django-pdb==0.3.2

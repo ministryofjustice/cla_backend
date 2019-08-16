@@ -108,6 +108,9 @@ class BaseComplaintViewSet(
                     )
                 ]
             )
+
+        # Make complaint_editable accessible in serializer
+        qs = qs.extra(select={"complaint_editable": "SELECT NULL"})
         return qs
 
     def pre_save(self, obj, *args, **kwargs):

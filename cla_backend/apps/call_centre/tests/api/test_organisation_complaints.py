@@ -4,6 +4,7 @@ from rest_framework import status
 
 from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin
 from core.tests.mommy_utils import make_recipe
+from complaints.models import Complaint
 from .test_case_api import BaseCaseTestCase
 
 
@@ -120,3 +121,40 @@ class OrganisationComplaintsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
         self.assertEqual(response.data.get("complaint_count"), len(complaints))
         self.assertTrue(response.data.get("eod_details_editable"))
+
+    """
+    All Operator Managers should be able to see that there is a complaint against a case in the Complaints tab.
+    Even if the complaint belongs to another organisation.
+    """
+
+    def test_operator_manager_can_see_all_complaints_in_dashboard(self):
+        case = make_recipe("legalaid.case", created_by=self.bar_org_operator.user)
+        eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
+        complaints = make_recipe(
+            "complaints.complaint", eod=eod, description="This is a test", category=None, _quantity=3
+        )
+
+        # Case creator belongs to another organisation
+        self.operator_manager.organisation = self.foo_org
+        self.operator_manager.save()
+        self._assert_complaint_dashboard(complaints, complaint_editable=False)
+
+        # Case creator doesn't have organisation
+        self.operator_manager.organisation = None
+        self.operator_manager.save()
+        self._assert_complaint_dashboard(complaints, complaint_editable=True)
+
+        # Case creator belongs to same organisation
+        self.operator_manager.organisation = self.bar_org
+        self.operator_manager.save()
+        self._assert_complaint_dashboard(complaints, complaint_editable=True)
+
+    def _assert_complaint_dashboard(self, complaints, complaint_editable):
+        complaint_ids = [complaint.id for complaint in complaints]
+        url = reverse(u"%s:complaints-list" % self.API_URL_NAMESPACE)
+        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
+        self.assertEqual(response.data.get("count"), Complaint.objects.all().count())
+        results = response.data.get("results")
+        for complaint in results:
+            self.assertIn(complaint.get("id"), complaint_ids)
+            self.assertEqual(complaint.get("complaint_editable"), complaint_editable)

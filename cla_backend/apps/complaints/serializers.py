@@ -6,6 +6,8 @@ from cla_eventlog.serializers import LogSerializerBase
 from core.fields import NullBooleanField
 from core.serializers import UUIDSerializer
 from .models import Category, Complaint
+from call_centre.utils.organisation.exceptions import OrganisationMatchException
+from call_centre.utils.organisation import case_organisation_matches_user_organisation
 
 
 class CreatedByField(serializers.RelatedField):
@@ -35,10 +37,21 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
     full_letter = serializers.DateTimeField(source="full_letter", read_only=True)
     out_of_sla = NullBooleanField(source="out_of_sla", read_only=True)
     holding_letter_out_of_sla = NullBooleanField(source="holding_letter_out_of_sla", read_only=True)
+    complaint_editable = serializers.BooleanField(source="complaint_editable", read_only=True)
 
     # # virtual fields on model
     status_label = serializers.CharField(source="status_label", read_only=True)
     requires_action_at = serializers.DateTimeField(source="requires_action_at", read_only=True)
+
+    # Make complaint_editable virtual field field reflect whether user can edit complaint
+    def transform_complaint_editable(self, complaint, value):
+        user = self.context.get("request").user
+        try:
+            has_permission = case_organisation_matches_user_organisation(complaint.eod.case, user)
+        except OrganisationMatchException:
+            has_permission = True
+
+        return has_permission
 
     class Meta:
         model = Complaint

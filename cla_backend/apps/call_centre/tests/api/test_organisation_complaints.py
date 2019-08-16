@@ -137,19 +137,19 @@ class OrganisationComplaintsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         # Case creator belongs to another organisation
         self.operator_manager.organisation = self.foo_org
         self.operator_manager.save()
-        self._assert_complaint_dashboard(complaints, complaint_editable=False)
+        self._assert_complaint_dashboard(complaints, is_editable=False)
 
         # Case creator doesn't have organisation
         self.operator_manager.organisation = None
         self.operator_manager.save()
-        self._assert_complaint_dashboard(complaints, complaint_editable=True)
+        self._assert_complaint_dashboard(complaints, is_editable=True)
 
         # Case creator belongs to same organisation
         self.operator_manager.organisation = self.bar_org
         self.operator_manager.save()
-        self._assert_complaint_dashboard(complaints, complaint_editable=True)
+        self._assert_complaint_dashboard(complaints, is_editable=True)
 
-    def _assert_complaint_dashboard(self, complaints, complaint_editable):
+    def _assert_complaint_dashboard(self, complaints, is_editable):
         complaint_ids = [complaint.id for complaint in complaints]
         url = reverse(u"%s:complaints-list" % self.API_URL_NAMESPACE)
         response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
@@ -157,4 +157,4 @@ class OrganisationComplaintsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         results = response.data.get("results")
         for complaint in results:
             self.assertIn(complaint.get("id"), complaint_ids)
-            self.assertEqual(complaint.get("complaint_editable"), complaint_editable)
+            self.assertEqual(complaint.get("is_editable"), is_editable)

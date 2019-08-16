@@ -37,14 +37,14 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
     full_letter = serializers.DateTimeField(source="full_letter", read_only=True)
     out_of_sla = NullBooleanField(source="out_of_sla", read_only=True)
     holding_letter_out_of_sla = NullBooleanField(source="holding_letter_out_of_sla", read_only=True)
-    complaint_editable = serializers.BooleanField(source="complaint_editable", read_only=True)
+
+    is_editable = serializers.SerializerMethodField("is_complaint_editable")
 
     # # virtual fields on model
     status_label = serializers.CharField(source="status_label", read_only=True)
     requires_action_at = serializers.DateTimeField(source="requires_action_at", read_only=True)
 
-    # Make complaint_editable virtual field field reflect whether user can edit complaint
-    def transform_complaint_editable(self, complaint, value):
+    def is_complaint_editable(self, complaint):
         user = self.context.get("request").user
         try:
             has_permission = case_organisation_matches_user_organisation(complaint.eod.case, user)

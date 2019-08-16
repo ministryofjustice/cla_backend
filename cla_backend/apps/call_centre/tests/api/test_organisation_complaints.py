@@ -24,130 +24,85 @@ class OrganisationComplaintsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
 
         self.no_org_operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
 
-    """
-    When an a case is created by an operator that has a organisation then only operators of the same organisation
-    can register complaints against that case.
-    """
-
-    def test_operator_can_create_complaint_for_cases_created_by_operator_of_same_organisation(self):
-        self.operator.organisation = self.foo_org
-        self.operator.save()
+    def test_operator_create_complaint_against_case_with_organisation(self):
+        # Only operators of the same organisation as the operator that created
+        # the case can register an Complaint against the case
 
         case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
         eod = make_recipe("legalaid.eod_details", case=case)
-
-        create_complaint_url = reverse(u"%s:complaints-list" % self.API_URL_NAMESPACE)
-
         data = {"eod": str(eod.reference), "description": "This is a description"}
-        response = self.client.post(
-            create_complaint_url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token
-        )
-        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
-    """
-    When an a case is created by an operator that has a organisation then only operators of the same organisation
-    can register complaints against that case.
-    """
+        url = reverse(u"%s:complaints-list" % self.API_URL_NAMESPACE)
+        # (organisation, can_create)
+        organisations = [(self.foo_org, True), (self.bar_org, False), (None, False)]
+        for organisation, can_create in organisations:
+            self.operator.organisation = organisation
+            self.operator.save()
 
-    def test_operator_cannot_create_complaint_for_cases_created_by_operator_of_another_organisation(self):
-        self.operator.organisation = self.foo_org
-        self.operator.save()
+            response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+            expected_status_code = status.HTTP_201_CREATED if can_create else status.HTTP_403_FORBIDDEN
+            self.assertEqual(expected_status_code, response.status_code)
 
-        case = make_recipe("legalaid.case", created_by=self.bar_org_operator.user)
-        eod = make_recipe("legalaid.eod_details", case=case)
-
-        create_complaint_url = reverse(u"%s:complaints-list" % self.API_URL_NAMESPACE)
-
-        data = {"eod": str(eod.reference), "description": "This is a description"}
-        response = self.client.post(
-            create_complaint_url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token
-        )
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
-
-    """
-    When a case is created by an user that does not have a organisation then any operator or
-    operator manager can register a complaint against that case.
-    """
-
-    def test_operator_can_create_complaint_for_cases_created_by_operator_with_no_organisation(self):
-        self.operator.organisation = self.foo_org
-        self.operator.save()
+    def test_operator_create_complaint_against_case_without_organisation(self):
+        # Any operator can register an Complaint against a case when the case creator does not belong to an organisation
 
         case = make_recipe("legalaid.case", created_by=self.no_org_operator.user)
         eod = make_recipe("legalaid.eod_details", case=case)
+        data = {"eod": str(eod.reference), "description": "This is a description"}
 
         create_complaint_url = reverse(u"%s:complaints-list" % self.API_URL_NAMESPACE)
 
-        data = {"eod": str(eod.reference), "description": "This is a description"}
+        # (organisation, can_create)
+        organisations = [(self.foo_org, True), (self.bar_org, True), (None, True)]
+        for organisation, can_create in organisations:
+            self.operator.organisation = organisation
+            self.operator.save()
 
-        response = self.client.post(
-            create_complaint_url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token
-        )
-        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+            response = self.client.post(
+                create_complaint_url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token
+            )
+            expected_status_code = status.HTTP_201_CREATED if can_create else status.HTTP_403_FORBIDDEN
+            self.assertEqual(expected_status_code, response.status_code)
 
-    """
-    All Operator Managers should be able to see that there is a complaint against
-    Even if the case creator belongs to another organisation.
-    """
+    def test_all_operator_managers_can_see_complaints_count(self):
+        # All Operator managers should be able to see that there is a Complaint against
+        # Even if the case creator belongs to another organisation.
 
-    def test_operator_manager_see_complaints_count(self):
-        self.operator_manager.organisation = self.foo_org
-        self.operator_manager.save()
-
-        # Case creator belongs to another organisation
         case = make_recipe("legalaid.case", created_by=self.bar_org_operator.user)
         eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
         complaints = make_recipe(
             "complaints.complaint", eod=eod, description="This is a test", category=None, _quantity=3
         )
 
-        url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
-        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
-        self.assertEqual(response.data.get("complaint_count"), len(complaints))
-        self.assertFalse(response.data.get("eod_details_editable"))
+        # (organisation, eod_details_editable)
+        organisations = [(self.foo_org, False), (self.bar_org, True), (None, False)]
+        for organisation, eod_details_editable in organisations:
+            self.operator_manager.organisation = organisation
+            self.operator_manager.save()
 
-        # Case creator doesn't have organisation
-        self.operator_manager.organisation = None
-        self.operator_manager.save()
+            url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
+            response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
+            self.assertEqual(response.data.get("complaint_count"), len(complaints))
+            self.assertEqual(response.data.get("eod_details_editable"), eod_details_editable)
 
-        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
-        self.assertEqual(response.data.get("complaint_count"), len(complaints))
-        self.assertTrue(response.data.get("eod_details_editable"))
+    def test_all_operator_managers_can_see_all_complaints_in_dashboard(self):
+        # All Operator Managers should be able to see that there is a complaint against a case in the Complaints tab.
+        # Even if the complaint belongs to another organisation.
 
-        # Case creator belongs to same organisation
-        self.operator_manager.organisation = self.bar_org
-        self.operator_manager.save()
-
-        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
-        self.assertEqual(response.data.get("complaint_count"), len(complaints))
-        self.assertTrue(response.data.get("eod_details_editable"))
-
-    """
-    All Operator Managers should be able to see that there is a complaint against a case in the Complaints tab.
-    Even if the complaint belongs to another organisation.
-    """
-
-    def test_operator_manager_can_see_all_complaints_in_dashboard(self):
         case = make_recipe("legalaid.case", created_by=self.bar_org_operator.user)
         eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
         complaints = make_recipe(
             "complaints.complaint", eod=eod, description="This is a test", category=None, _quantity=3
         )
 
-        # Case creator belongs to another organisation
-        self.operator_manager.organisation = self.foo_org
-        self.operator_manager.save()
-        self._assert_complaint_dashboard(complaints, is_editable=False)
+        # (organisation, is_editable)
+        organisations = [(self.foo_org, False), (self.bar_org, True), (None, False)]
+        for organisation, is_editable in organisations:
+            self.operator_manager.organisation = organisation
+            self.operator_manager.save()
+            self._assert_complaint_dashboard(complaints, is_editable=is_editable)
 
-        # Case creator doesn't have organisation
-        self.operator_manager.organisation = None
-        self.operator_manager.save()
-        self._assert_complaint_dashboard(complaints, is_editable=True)
-
-        # Case creator belongs to same organisation
-        self.operator_manager.organisation = self.bar_org
-        self.operator_manager.save()
-        self._assert_complaint_dashboard(complaints, is_editable=True)
+    # Todo: logged in as cla_superuser
 
     def _assert_complaint_dashboard(self, complaints, is_editable):
         complaint_ids = [complaint.id for complaint in complaints]

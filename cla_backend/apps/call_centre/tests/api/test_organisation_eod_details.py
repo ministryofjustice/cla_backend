@@ -25,42 +25,40 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
 
         self.no_org_operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
 
-    """
-    When an a case is created by an operator that has a organisation then only operators of the same organisation
-    can register EOD against that case.
-    """
-
-    def test_operator_can_create_eod_for_cases_created_by_operator_of_same_organisation(self):
-        self.operator.organisation = self.foo_org
-        self.operator.save()
+    def test_operator_create_eod_against_case_with_organisation(self):
+        # Only operators of the same organisation as the operator that created
+        # the case can register an EOD against the case
 
         case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
-
-        path = u"%s:eoddetails-detail" % self.API_URL_NAMESPACE
-        create_eod_url = reverse(path, args=(), kwargs={"case_reference": case.reference})
-
+        url = reverse(
+            u"%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+        )
         data = {
             "case_reference": case.reference,
             "categories": [{"category": EXPRESSIONS_OF_DISSATISFACTION.INCORRECT, "is_major": False}],
             "notes": "",
         }
-        response = self.client.post(create_eod_url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
-        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
-        return response
 
-    def test_operator_can_update_eod_for_cases_created_by_operator_of_same_organisation(self):
-        from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
+        # (organisation, can_create)
+        organisations = [(self.foo_org, True), (self.bar_org, False), (None, False)]
+        for organisation, can_create in organisations:
+            self.operator.organisation = organisation
+            self.operator.save()
 
-        self.operator.organisation = self.foo_org
-        self.operator.save()
+            expected_status_code = status.HTTP_201_CREATED if can_create else status.HTTP_403_FORBIDDEN
+            response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+            self.assertEqual(expected_status_code, response.status_code)
+
+    def test_operator_update_eod_against_case_with_organisation(self):
+        # Only operators of the same organisation as the operator that created
+        # the case can register an EOD against the case
 
         case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
         eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
         self.assertEqual(eod.categories.count(), 0)
-
-        path = u"%s:eoddetails-detail" % self.API_URL_NAMESPACE
-        create_eod_url = reverse(path, args=(), kwargs={"case_reference": case.reference})
-
+        url = reverse(
+            u"%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+        )
         data = {
             "reference": str(eod.reference),
             "categories": [
@@ -69,61 +67,48 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             ],
             "notes": "",
         }
-        response = self.client.patch(create_eod_url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
-        self.assertEqual(status.HTTP_200_OK, response.status_code)
-        eod_reloaded = EODDetails.objects.get(reference=eod.reference)
-        self.assertEqual(eod_reloaded.categories.count(), 2)
 
-    """
-    When an a case is created by an operator that has a organisation then only operators of the same organisation
-    can register EOD against that case.
-    """
+        # (organisation, can_update)
+        organisations = [(self.foo_org, True), (self.bar_org, False), (None, False)]
+        for organisation, can_update in organisations:
+            self.operator.organisation = organisation
+            self.operator.save()
 
-    def test_operator_cannot_create_eod_for_cases_created_by_operator_of_another_organisation(self):
-        self.operator.organisation = self.foo_org
-        self.operator.save()
+            response = self.client.patch(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+            expected_status_code = status.HTTP_200_OK if can_update else status.HTTP_403_FORBIDDEN
+            self.assertEqual(expected_status_code, response.status_code)
+            if can_update:
+                eod_reloaded = EODDetails.objects.get(reference=eod.reference)
+                self.assertEqual(eod_reloaded.categories.count(), 2)
 
-        case = make_recipe("legalaid.case", created_by=self.bar_org_operator.user)
-        path = u"%s:eoddetails-detail" % self.API_URL_NAMESPACE
-        create_eod_url = reverse(path, args=(), kwargs={"case_reference": case.reference})
-        data = {
-            "case_reference": case.reference,
-            "categories": [{"category": EXPRESSIONS_OF_DISSATISFACTION.INCORRECT, "is_major": False}],
-            "notes": "",
-        }
-        response = self.client.post(create_eod_url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
-        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+    def test_operator_create_eod_against_case_without_organisation(self):
+        # Any operator can register an EOD against a case when the case creator does not belong to an organisation
 
-    """
-    When a case is created by an user that does not have a organisation then any operator or
-    operator manager can register a EOD against that case.
-    """
+        # (organisation, can_create)
+        organisations = [(self.foo_org, True), (self.bar_org, True), (None, True)]
+        for organisation, can_create in organisations:
+            self.operator.organisation = organisation
+            self.operator.save()
 
-    def test_operator_can_create_eod_for_cases_created_by_operator_with_no_organisation(self):
-        self.operator.organisation = self.foo_org
-        self.operator.save()
+            case = make_recipe("legalaid.case", created_by=self.no_org_operator.user)
+            url = reverse(
+                u"%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+            )
+            data = {
+                "case_reference": case.reference,
+                "categories": [{"category": EXPRESSIONS_OF_DISSATISFACTION.INCORRECT, "is_major": False}],
+                "notes": "",
+            }
 
-        case = make_recipe("legalaid.case", created_by=self.no_org_operator.user)
-        path = u"%s:eoddetails-detail" % self.API_URL_NAMESPACE
-        create_eod_url = reverse(path, args=(), kwargs={"case_reference": case.reference})
-        data = {
-            "case_reference": case.reference,
-            "categories": [{"category": EXPRESSIONS_OF_DISSATISFACTION.INCORRECT, "is_major": False}],
-            "notes": "",
-        }
-        response = self.client.post(create_eod_url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
-        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+            response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+            expected_status_code = status.HTTP_201_CREATED if can_create else status.HTTP_403_FORBIDDEN
+            self.assertEqual(expected_status_code, response.status_code)
 
-    """
-    All Operator Managers should be able to see that there is a EOD against
-    Even if the case creator belongs to another organisation.
-    """
+    # Todo: logged in as cla_superuser
+    def test_all_operators_case_can_see_eod_details_count(self):
+        # All Operator should be able to see that there is a EOD against
+        # Even if the case creator belongs to another organisation.
 
-    def test_operator_manager_case_creator_different_organisation_see_eod_details_count(self):
-        self.operator_manager.organisation = self.foo_org
-        self.operator_manager.save()
-
-        # Case creator belongs to another organisation
         case = make_recipe("legalaid.case", created_by=self.bar_org_operator.user)
         eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
         categories = [
@@ -141,22 +126,14 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         ]
 
         url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
-        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
-        self.assertEqual(response.data.get("eod_details_count"), len(categories))
-        self.assertFalse(response.data.get("eod_details_editable"))
 
-        # Case creator doesn't have organisation
-        self.operator_manager.organisation = None
-        self.operator_manager.save()
+        # (organisation, eod_details_editable)
+        organisations = [(self.foo_org, False), (self.bar_org, True), (None, False)]
+        for organisation, eod_details_editable in organisations:
+            self.operator.organisation = organisation
+            self.operator.save()
 
-        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
-        self.assertEqual(response.data.get("eod_details_count"), len(categories))
-        self.assertTrue(response.data.get("eod_details_editable"))
-
-        # Case creator belongs to same organisation
-        self.operator_manager.organisation = self.bar_org
-        self.operator_manager.save()
-
-        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
-        self.assertEqual(response.data.get("eod_details_count"), len(categories))
-        self.assertTrue(response.data.get("eod_details_editable"))
+            response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data.get("eod_details_count"), len(categories))
+            self.assertEqual(response.data.get("eod_details_editable"), eod_details_editable)

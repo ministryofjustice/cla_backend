@@ -6,7 +6,7 @@ from cla_eventlog.serializers import LogSerializerBase
 from core.fields import NullBooleanField
 from core.serializers import UUIDSerializer
 from .models import Category, Complaint
-from call_centre.utils.organisation.exceptions import OrganisationMatchException
+from call_centre.utils.organisation.exceptions import OrganisationMismatchException
 from call_centre.utils.organisation import case_organisation_matches_user_organisation
 
 
@@ -48,7 +48,7 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
         user = self.context.get("request").user
         try:
             has_permission = case_organisation_matches_user_organisation(complaint.eod.case, user)
-        except OrganisationMatchException:
+        except OrganisationMismatchException:
             has_permission = True
 
         return has_permission

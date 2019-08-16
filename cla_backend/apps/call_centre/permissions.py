@@ -7,12 +7,7 @@ from core.permissions import ClientIDPermission
 from legalaid.models import Case, EODDetails
 from complaints.models import Complaint
 from .utils.organisation import case_organisation_matches_user_organisation
-from .utils.organisation.exceptions import (
-    UserIsNotOperatorException,
-    OperatorDoesNotBelongToOrganisation,
-    CaseNotCreatedByOperatorException,
-    CaseCreatorDoesNotBelongToOrganisation,
-)
+from .utils.organisation.exceptions import OrganisationMismatchException
 
 
 class CallCentreClientIDPermission(ClientIDPermission):
@@ -40,13 +35,8 @@ class OperatorOrganisationCasePermission(CallCentreClientIDPermission):
 
         try:
             has_permission = case_organisation_matches_user_organisation(case, request.user)
-        except UserIsNotOperatorException:
-            return True
-        except OperatorDoesNotBelongToOrganisation:
-            return True
-        except CaseNotCreatedByOperatorException:
-            return True
-        except CaseCreatorDoesNotBelongToOrganisation:
+        except OrganisationMismatchException:
+            # Operator or case creator does not have an organisation
             return True
 
         return has_permission

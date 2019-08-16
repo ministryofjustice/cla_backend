@@ -1,18 +1,18 @@
-class OrganisationMatchException(Exception):
+class OrganisationMismatchException(Exception):
     pass
 
 
-class UserIsNotOperatorException(OrganisationMatchException):
+class UserIsNotOperatorException(OrganisationMismatchException):
     pass
 
 
-class OperatorDoesNotBelongToOrganisation(OrganisationMatchException):
+class OperatorDoesNotBelongToOrganisation(OrganisationMismatchException):
     pass
 
 
-class CaseNotCreatedByOperatorException(OrganisationMatchException):
+class CaseNotCreatedByOperatorException(OrganisationMismatchException):
     pass
 
 
-class CaseCreatorDoesNotBelongToOrganisation(OrganisationMatchException):
+class CaseCreatorDoesNotBelongToOrganisation(OrganisationMismatchException):
     pass

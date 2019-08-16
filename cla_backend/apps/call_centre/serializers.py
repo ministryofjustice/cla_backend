@@ -27,7 +27,7 @@ from legalaid.serializers import (
 )
 
 from .models import Operator
-from .utils.organisation.exceptions import OrganisationMatchException
+from .utils.organisation.exceptions import OrganisationMismatchException
 from .utils.organisation import case_organisation_matches_user_organisation
 
 
@@ -241,7 +241,7 @@ class CaseSerializer(CaseSerializerFull):
         user = self.context.get("request").user
         try:
             has_permission = case_organisation_matches_user_organisation(case, user)
-        except OrganisationMatchException:
+        except OrganisationMismatchException:
             has_permission = True
 
         return has_permission
@@ -250,7 +250,7 @@ class CaseSerializer(CaseSerializerFull):
         user = self.context.get("request").user
         try:
             has_permission = case_organisation_matches_user_organisation(case, user)
-        except OrganisationMatchException:
+        except OrganisationMismatchException:
             has_permission = True
 
         if has_permission:

@@ -57,6 +57,7 @@ class ComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin, Sim
             "out_of_sla",
             "holding_letter_out_of_sla",
             "requires_action_at",
+            "is_editable",
         ]
 
     def test_methods_not_allowed(self):

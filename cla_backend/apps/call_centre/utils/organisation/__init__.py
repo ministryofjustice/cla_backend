@@ -25,7 +25,7 @@ def case_organisation_matches_user_organisation(case, user):
         raise UserIsNotOperatorException("Case creator has organisation but current user is not an operator")
 
     if current_operator_organisation is None:
-        return False
+        return user.operator.is_cla_superuser
 
     return case_creator_organisation == current_operator_organisation
 

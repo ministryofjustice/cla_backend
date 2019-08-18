@@ -43,14 +43,14 @@ class OrganisationComplaintsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             expected_status_code = status.HTTP_201_CREATED if can_create else status.HTTP_403_FORBIDDEN
             self.assertEqual(expected_status_code, response.status_code)
 
-    def test_operator_create_complaint_against_case_without_organisation(self):
+    def test_any_operator_can_create_complaint_against_case_without_organisation(self):
         # Any operator can register an Complaint against a case when the case creator does not belong to an organisation
 
         case = make_recipe("legalaid.case", created_by=self.no_org_operator.user)
         eod = make_recipe("legalaid.eod_details", case=case)
         data = {"eod": str(eod.reference), "description": "This is a description"}
 
-        create_complaint_url = reverse(u"%s:complaints-list" % self.API_URL_NAMESPACE)
+        url = reverse(u"%s:complaints-list" % self.API_URL_NAMESPACE)
 
         # (organisation, can_create)
         organisations = [(self.foo_org, True), (self.bar_org, True), (None, True)]
@@ -58,11 +58,28 @@ class OrganisationComplaintsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             self.operator.organisation = organisation
             self.operator.save()
 
-            response = self.client.post(
-                create_complaint_url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token
-            )
+            response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
             expected_status_code = status.HTTP_201_CREATED if can_create else status.HTTP_403_FORBIDDEN
             self.assertEqual(expected_status_code, response.status_code)
+
+    def test_case_without_organisation_is_reassigned_on_complaint_details_creation(self):
+        # Cases created by operators with no organisation are reassigned to current
+        # operator when registering an complaint against a case
+
+        case = make_recipe("legalaid.case", created_by=self.no_org_operator.user)
+        eod = make_recipe("legalaid.eod_details", case=case)
+        data = {"eod": str(eod.reference), "description": "This is a description"}
+        url = reverse(u"%s:complaints-list" % self.API_URL_NAMESPACE)
+
+        self.operator.organisation = self.foo_org
+        self.operator.save()
+        response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+
+        self.operator_manager.organisation = self.bar_org
+        self.operator_manager.save()
+        response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
+        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
 
     def test_all_operator_managers_can_see_complaints_count(self):
         # All Operator managers should be able to see that there is a Complaint against
@@ -102,7 +119,17 @@ class OrganisationComplaintsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             self.operator_manager.save()
             self._assert_complaint_dashboard(complaints, is_editable=is_editable)
 
-    # Todo: logged in as cla_superuser
+    def test_cla_superuser_can_update_all_complaints(self):
+        self.operator_manager.organisation = None
+        self.operator_manager.is_cla_superuser = True
+        self.operator_manager.save()
+
+        case = make_recipe("legalaid.case", created_by=self.bar_org_operator.user)
+        eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
+        complaints = make_recipe(
+            "complaints.complaint", eod=eod, description="This is a test", category=None, _quantity=3
+        )
+        self._assert_complaint_dashboard(complaints, is_editable=True)
 
     def _assert_complaint_dashboard(self, complaints, is_editable):
         complaint_ids = [complaint.id for complaint in complaints]

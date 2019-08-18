@@ -25,7 +25,7 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
 
         self.no_org_operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
 
-    def test_operator_create_eod_against_case_with_organisation(self):
+    def test_operator_create_eod_against_case_with_same_organisation(self):
         # Only operators of the same organisation as the operator that created
         # the case can register an EOD against the case
 
@@ -49,7 +49,7 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
             self.assertEqual(expected_status_code, response.status_code)
 
-    def test_operator_update_eod_against_case_with_organisation(self):
+    def test_operator_update_eod_against_case_with_same_organisation(self):
         # Only operators of the same organisation as the operator that created
         # the case can register an EOD against the case
 
@@ -81,7 +81,7 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
                 eod_reloaded = EODDetails.objects.get(reference=eod.reference)
                 self.assertEqual(eod_reloaded.categories.count(), 2)
 
-    def test_operator_create_eod_against_case_without_organisation(self):
+    def test_any_operator_can_create_eod_against_case_without_organisation(self):
         # Any operator can register an EOD against a case when the case creator does not belong to an organisation
 
         # (organisation, can_create)
@@ -104,7 +104,50 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             expected_status_code = status.HTTP_201_CREATED if can_create else status.HTTP_403_FORBIDDEN
             self.assertEqual(expected_status_code, response.status_code)
 
-    # Todo: logged in as cla_superuser
+    def test_case_without_organisation_is_reassigned_on_eod_details_creation(self):
+        # Cases created by operators with no organisation are reassigned to current
+        # operator when registering an eod against a case
+
+        self.operator.organisation = self.foo_org
+        self.operator.save()
+
+        case = make_recipe("legalaid.case", created_by=self.no_org_operator.user)
+        url = reverse(
+            u"%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+        )
+        data = {
+            "case_reference": case.reference,
+            "categories": [{"category": EXPRESSIONS_OF_DISSATISFACTION.INCORRECT, "is_major": False}],
+            "notes": "",
+        }
+        response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+
+        self.operator_manager.organisation = self.bar_org
+        self.operator_manager.save()
+
+        data["reference"] = response.data.get("reference")
+        del data["case_reference"]
+        response = self.client.patch(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
+        self.assertEqual(status.HTTP_403_FORBIDDEN, response.status_code)
+
+    def test_cla_superuser_can_update_eod_details(self):
+        self.operator_manager.organisation = None
+        self.operator_manager.is_cla_superuser = True
+        self.operator_manager.save()
+
+        case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
+        url = reverse(
+            u"%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+        )
+        data = {
+            "case_reference": case.reference,
+            "categories": [{"category": EXPRESSIONS_OF_DISSATISFACTION.INCORRECT, "is_major": False}],
+            "notes": "",
+        }
+        response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+
     def test_all_operators_case_can_see_eod_details_count(self):
         # All Operator should be able to see that there is a EOD against
         # Even if the case creator belongs to another organisation.

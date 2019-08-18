@@ -101,6 +101,7 @@ from .forms import (
 )
 
 from .models import Operator
+from .utils.organisation import NoOrganisationCaseReassignmentMixin
 
 
 class CallCentrePermissionsViewSetMixin(object):
@@ -547,7 +548,7 @@ class AdaptationDetailsMetadataViewSet(CallCentrePermissionsViewSetMixin, BaseAd
     serializer_class = AdaptationDetailsSerializer
 
 
-class EODDetailsViewSet(CallCentrePermissionsViewSetMixin, BaseEODDetailsViewSet):
+class EODDetailsViewSet(CallCentrePermissionsViewSetMixin, NoOrganisationCaseReassignmentMixin, BaseEODDetailsViewSet):
 
     serializer_class = EODDetailsSerializer
 
@@ -555,6 +556,9 @@ class EODDetailsViewSet(CallCentrePermissionsViewSetMixin, BaseEODDetailsViewSet
         permissions = super(EODDetailsViewSet, self).get_permissions()
         permissions.append(OperatorOrganisationCasePermission())
         return permissions
+
+    def get_case(self):
+        return self.object.case
 
 
 class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):
@@ -664,7 +668,7 @@ class NotificationViewSet(CallCentrePermissionsViewSetMixin, BaseNotificationVie
     pass
 
 
-class ComplaintViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintViewSet):
+class ComplaintViewSet(CallCentrePermissionsViewSetMixin, NoOrganisationCaseReassignmentMixin, BaseComplaintViewSet):
     filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
     filter_fields = ("justified", "level", "category", "owner", "created_by")
 
@@ -703,6 +707,9 @@ class ComplaintViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintViewSet):
         permissions = super(ComplaintViewSet, self).get_permissions()
         permissions.append(OperatorOrganisationComplaintPermission())
         return permissions
+
+    def get_case(self):
+        return self.object.eod.case
 
 
 class ComplaintCategoryViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintCategoryViewSet):

@@ -2,7 +2,8 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from legalaid.models import EODDetails
+from legalaid.models import EODDetails, Case
+from cla_eventlog.models import Log
 from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin
 from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
 from core.tests.mommy_utils import make_recipe
@@ -112,6 +113,8 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.operator.save()
 
         case = make_recipe("legalaid.case", created_by=self.no_org_operator.user)
+        self.assertEqual(self.no_org_operator.user.id, case.created_by.id)
+
         url = reverse(
             u"%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
@@ -122,6 +125,9 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         }
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        case_reloaded = Case.objects.get(pk=case.id)
+        self.assertEqual(self.operator.user.id, case_reloaded.created_by.id)
+        self.assertIn(("CASE_CREATED_BY_CHANGED",), Log.objects.filter(case_id=case.id).values_list("code"))
 
         self.operator_manager.organisation = self.bar_org
         self.operator_manager.save()

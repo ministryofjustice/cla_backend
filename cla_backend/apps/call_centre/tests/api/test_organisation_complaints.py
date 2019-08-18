@@ -3,6 +3,8 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 
 from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin
+from legalaid.models import Case
+from cla_eventlog.models import Log
 from core.tests.mommy_utils import make_recipe
 from complaints.models import Complaint
 from .test_case_api import BaseCaseTestCase
@@ -70,11 +72,15 @@ class OrganisationComplaintsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         eod = make_recipe("legalaid.eod_details", case=case)
         data = {"eod": str(eod.reference), "description": "This is a description"}
         url = reverse(u"%s:complaints-list" % self.API_URL_NAMESPACE)
+        self.assertEqual(self.no_org_operator.user.id, case.created_by.id)
 
         self.operator.organisation = self.foo_org
         self.operator.save()
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        case_reloaded = Case.objects.get(pk=case.id)
+        self.assertEqual(self.operator.user.id, case_reloaded.created_by.id)
+        self.assertIn(("CASE_CREATED_BY_CHANGED",), Log.objects.filter(case_id=case.id).values_list("code"))
 
         self.operator_manager.organisation = self.bar_org
         self.operator_manager.save()

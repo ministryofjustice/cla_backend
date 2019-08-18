@@ -37,11 +37,12 @@ class NoOrganisationCaseReassignmentMixin(object):
     def post_save(self, obj, created=False, *args, **kwargs):
         super(NoOrganisationCaseReassignmentMixin, self).post_save(obj, created, *args, **kwargs)
         case = self.get_case()
-        if not case.created_by:
+        creator = case.created_by
+        if not creator:
             return
 
         user = self.request.user
-        if case.created_by == user:
+        if creator == user:
             return
 
         try:
@@ -53,7 +54,7 @@ class NoOrganisationCaseReassignmentMixin(object):
             return
 
         try:
-            case_organisation = case.created_by.operator.organisation
+            case_organisation = creator.operator.organisation
         except Operator.DoesNotExist:
             return
 
@@ -61,3 +62,13 @@ class NoOrganisationCaseReassignmentMixin(object):
             case.created_by = user
             case.save(update_fields=["created_by"])
             # Create log event
+            from cla_eventlog import event_registry
+
+            notes = u"Case creator changed from {creator_from} to {creator_to}".format(
+                creator_from=creator, creator_to=user
+            )
+            context = {"creator_from": creator.id, "creator_to": user.id}
+            event = event_registry.get_event("case")()
+            event.process(
+                case, created_by=user, notes=notes, complaint=obj, code="CASE_CREATED_BY_CHANGED", context=context
+            )

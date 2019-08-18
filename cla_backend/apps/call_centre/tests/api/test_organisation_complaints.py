@@ -5,6 +5,7 @@ from rest_framework import status
 from legalaid.tests.views.mixins.case_api import FullCaseAPIMixin
 from legalaid.models import Case
 from cla_eventlog.models import Log
+from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from core.tests.mommy_utils import make_recipe
 from complaints.models import Complaint
 from .test_case_api import BaseCaseTestCase
@@ -136,6 +137,57 @@ class OrganisationComplaintsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             "complaints.complaint", eod=eod, description="This is a test", category=None, _quantity=3
         )
         self._assert_complaint_dashboard(complaints, is_editable=True)
+
+    def test_operator_with_organisation_can_see_complaints_created_activity_in_log(self):
+        # Case activity log should contain COMPLAINT_CREATED records created by same organisation
+
+        case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
+        log = make_recipe(
+            "cla_eventlog.log",
+            case=case,
+            level=LOG_LEVELS.HIGH,
+            type=LOG_TYPES.SYSTEM,
+            code="COMPLAINT_CREATED",
+            created_by=self.foo_org_operator.user,
+            notes="This is a test",
+        )
+
+        # (organisation, can_see_complaint_log)
+        organisations = [(self.foo_org, True), (self.bar_org, False), (None, False)]
+        url = reverse(u"%s:log-list" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference})
+        for organisation, can_view in organisations:
+            self.operator.organisation = organisation
+            self.operator.save()
+            response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+            self.assertEqual(status.HTTP_200_OK, response.status_code)
+            if can_view:
+                self.assertEqual(len(response.data), 1)
+                self.assertEqual(response.data[0].get("code"), log.code)
+                self.assertEqual(response.data[0].get("notes"), log.notes)
+            else:
+                self.assertEqual(len(response.data), 0)
+
+    def test_cla_superuser_can_see_all_complaints_created_in_activity_log(self):
+        self.operator.is_cla_superuser = True
+        self.operator.save()
+
+        case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
+        log = make_recipe(
+            "cla_eventlog.log",
+            case=case,
+            level=LOG_LEVELS.HIGH,
+            type=LOG_TYPES.SYSTEM,
+            code="COMPLAINT_CREATED",
+            created_by=self.foo_org_operator.user,
+            notes="This is a test",
+        )
+
+        url = reverse(u"%s:log-list" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference})
+        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0].get("code"), log.code)
+        self.assertEqual(response.data[0].get("notes"), log.notes)
 
     def _assert_complaint_dashboard(self, complaints, is_editable):
         complaint_ids = [complaint.id for complaint in complaints]

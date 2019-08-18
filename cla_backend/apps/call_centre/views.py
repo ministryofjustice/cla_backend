@@ -584,6 +584,24 @@ class DiagnosisViewSet(CallCentrePermissionsViewSetMixin, BaseDiagnosisViewSet):
 class LogViewSet(CallCentrePermissionsViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
 
+    def get_queryset(self):
+        qs = super(LogViewSet, self).get_queryset()
+        user = self.request.user
+        try:
+            operator = user.operator
+        except Operator.DoesNotExist:
+            pass
+
+        if operator and operator.is_cla_superuser:
+            return qs
+
+        # Show only activity logs created by the same organisation
+        query = Q(created_by__operator__organisation__isnull=True)
+        if operator.organisation:
+            query.add(Q(created_by__operator__organisation=operator.organisation), Q.OR)
+
+        return qs.filter(query)
+
 
 class FeedbackViewSet(
     CallCentreManagerPermissionsViewSetMixin,

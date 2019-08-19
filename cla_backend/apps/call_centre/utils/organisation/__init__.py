@@ -1,33 +1,27 @@
 from call_centre.models import Operator
 
-from .exceptions import UserIsNotOperatorException
-
 
 def case_organisation_matches_user_organisation(case, user):
     # Return True when:
-    # Current operator organisations matches case creator organisation
-    # Case creator does not have organisation
+    # Current operator organisations matches case organisation
+    # Case does not have organisation
+    # Current user is cla_superuser
+    # Current user is not operator
 
-    if not case.created_by:
+    if not case.organisation:
+        # Case has no organisation anyone can edit
         return True
 
     try:
-        case_creator_organisation = case.created_by.operator.organisation
+        operator_organisation = user.operator.organisation
     except Operator.DoesNotExist:
+        # user is not operator. Organisation access control only applies to operators
         return True
 
-    if case_creator_organisation is None:
-        return True
-
-    try:
-        current_operator_organisation = user.operator.organisation
-    except Operator.DoesNotExist:
-        raise UserIsNotOperatorException("Case creator has organisation but current user is not an operator")
-
-    if current_operator_organisation is None:
+    if operator_organisation is None:
         return user.operator.is_cla_superuser
 
-    return case_creator_organisation == current_operator_organisation
+    return case.organisation == operator_organisation
 
 
 class NoOrganisationCaseAssignCurrentOrganisationMixin(object):

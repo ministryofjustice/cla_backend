@@ -26,11 +26,10 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
 
         self.no_org_operator = make_recipe("call_centre.operator", is_manager=False, is_cla_superuser=False)
 
-    def test_operator_create_eod_against_case_with_same_organisation(self):
-        # Only operators of the same organisation as the operator that created
-        # the case can register an EOD against the case
+    def test_operator_same_organisation_create_eod(self):
+        # Only operators matching the case organisation of the same organisation can register an EOD against the case
 
-        case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
+        case = make_recipe("legalaid.case", organisation=self.foo_org)
         url = reverse(
             u"%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
@@ -50,11 +49,10 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
             self.assertEqual(expected_status_code, response.status_code)
 
-    def test_operator_update_eod_against_case_with_same_organisation(self):
-        # Only operators of the same organisation as the operator that created
-        # the case can register an EOD against the case
+    def test_operator_same_organisation_update_eod(self):
+        # Only operators matching the case organisation of the same organisation can register an EOD against the case
 
-        case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
+        case = make_recipe("legalaid.case", organisation=self.foo_org)
         eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
         self.assertEqual(eod.categories.count(), 0)
         url = reverse(
@@ -83,7 +81,7 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
                 self.assertEqual(eod_reloaded.categories.count(), 2)
 
     def test_any_operator_can_create_eod_against_case_without_organisation(self):
-        # Any operator can register an EOD against a case when the case creator does not belong to an organisation
+        # Any operator can register an EOD against a case when the case does not have an organisation
 
         # (organisation, can_create)
         organisations = [(self.foo_org, True), (self.bar_org, True), (None, True)]
@@ -91,7 +89,7 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             self.operator.organisation = organisation
             self.operator.save()
 
-            case = make_recipe("legalaid.case", created_by=self.no_org_operator.user)
+            case = make_recipe("legalaid.case", organisation=None)
             url = reverse(
                 u"%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
             )
@@ -112,7 +110,7 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.operator.organisation = self.foo_org
         self.operator.save()
 
-        case = make_recipe("legalaid.case")
+        case = make_recipe("legalaid.case", organisation=None)
         self.assertIsNone(case.organisation)
 
         url = reverse(
@@ -123,6 +121,7 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             "categories": [{"category": EXPRESSIONS_OF_DISSATISFACTION.INCORRECT, "is_major": False}],
             "notes": "",
         }
+
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         case_reloaded = Case.objects.get(pk=case.id)
@@ -142,7 +141,7 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.operator_manager.is_cla_superuser = True
         self.operator_manager.save()
 
-        case = make_recipe("legalaid.case", created_by=self.foo_org_operator.user)
+        case = make_recipe("legalaid.case", organisation=self.foo_org)
         url = reverse(
             u"%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
@@ -156,9 +155,9 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
 
     def test_all_operators_case_can_see_eod_details_count(self):
         # All Operator should be able to see that there is a EOD against
-        # Even if the case creator belongs to another organisation.
+        # Even if the case belongs to another organisation.
 
-        case = make_recipe("legalaid.case", created_by=self.bar_org_operator.user)
+        case = make_recipe("legalaid.case", organisation=self.bar_org)
         eod = make_recipe("legalaid.eod_details", notes="hello", case=case)
         categories = [
             make_recipe(

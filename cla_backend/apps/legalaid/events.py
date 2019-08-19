@@ -66,11 +66,11 @@ class CaseEvent(BaseEvent):
             "description": "Case viewed",
             "stops_timer": False,
         },
-        "CASE_CREATED_BY_CHANGED": {
+        "CASE_ORGANISATION_SET": {
             "type": LOG_TYPES.SYSTEM,
             "level": LOG_LEVELS.HIGH,
             "selectable_by": [],
-            "description": "Case creator changed",
+            "description": "Case organisation set",
             "stops_timer": False,
         },
         "COMPLAINT_FLAG_TOGGLED": {

@@ -30,45 +30,33 @@ def case_organisation_matches_user_organisation(case, user):
     return case_creator_organisation == current_operator_organisation
 
 
-class NoOrganisationCaseReassignmentMixin(object):
+class NoOrganisationCaseAssignCurrentOrganisationMixin(object):
     def get_case(self):
         raise NotImplementedError
 
     def post_save(self, obj, created=False, *args, **kwargs):
-        super(NoOrganisationCaseReassignmentMixin, self).post_save(obj, created, *args, **kwargs)
+        super(NoOrganisationCaseAssignCurrentOrganisationMixin, self).post_save(obj, created, *args, **kwargs)
         case = self.get_case()
-        creator = case.created_by
-        if not creator:
+        if case.organisation:
             return
 
         user = self.request.user
-        if creator == user:
+        if case.created_by == user:
             return
 
         try:
-            user_organisation = user.operator.organisation
+            organisation = user.operator.organisation
         except Operator.DoesNotExist:
             return
 
-        if not user_organisation:
+        if not organisation:
             return
 
-        try:
-            case_organisation = creator.operator.organisation
-        except Operator.DoesNotExist:
-            return
+        case.organisation = organisation
+        case.save(update_fields=["organisation"])
+        # Create log event
+        from cla_eventlog import event_registry
 
-        if not case_organisation:
-            case.created_by = user
-            case.save(update_fields=["created_by"])
-            # Create log event
-            from cla_eventlog import event_registry
-
-            notes = u"Case creator changed from {creator_from} to {creator_to}".format(
-                creator_from=creator, creator_to=user
-            )
-            context = {"creator_from": creator.id, "creator_to": user.id}
-            event = event_registry.get_event("case")()
-            event.process(
-                case, created_by=user, notes=notes, complaint=obj, code="CASE_CREATED_BY_CHANGED", context=context
-            )
+        notes = u"Case organisation set to {organisation}".format(organisation=organisation)
+        event = event_registry.get_event("case")()
+        event.process(case, created_by=user, notes=notes, complaint=obj, code="CASE_ORGANISATION_SET")

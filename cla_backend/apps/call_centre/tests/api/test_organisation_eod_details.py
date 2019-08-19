@@ -105,15 +105,15 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             expected_status_code = status.HTTP_201_CREATED if can_create else status.HTTP_403_FORBIDDEN
             self.assertEqual(expected_status_code, response.status_code)
 
-    def test_case_without_organisation_is_reassigned_on_eod_details_creation(self):
-        # Cases created by operators with no organisation are reassigned to current
-        # operator when registering an eod against a case
+    def test_case_without_organisation_on_eod_details_creation_set_organisation(self):
+        # Cases with no organisation are assigned to the current
+        # operators organisation when registering an eod against a case
 
         self.operator.organisation = self.foo_org
         self.operator.save()
 
-        case = make_recipe("legalaid.case", created_by=self.no_org_operator.user)
-        self.assertEqual(self.no_org_operator.user.id, case.created_by.id)
+        case = make_recipe("legalaid.case")
+        self.assertIsNone(case.organisation)
 
         url = reverse(
             u"%s:eoddetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
@@ -126,8 +126,8 @@ class OrganisationEODDetailsTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         case_reloaded = Case.objects.get(pk=case.id)
-        self.assertEqual(self.operator.user.id, case_reloaded.created_by.id)
-        self.assertIn(("CASE_CREATED_BY_CHANGED",), Log.objects.filter(case_id=case.id).values_list("code"))
+        self.assertEqual(self.foo_org.id, case_reloaded.organisation.id)
+        self.assertIn(("CASE_ORGANISATION_SET",), Log.objects.filter(case_id=case.id).values_list("code"))
 
         self.operator_manager.organisation = self.bar_org
         self.operator_manager.save()

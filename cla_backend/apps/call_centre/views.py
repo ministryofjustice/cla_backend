@@ -101,7 +101,7 @@ from .forms import (
 )
 
 from .models import Operator
-from .utils.organisation import NoOrganisationCaseReassignmentMixin
+from .utils.organisation import NoOrganisationCaseAssignCurrentOrganisationMixin
 
 
 class CallCentrePermissionsViewSetMixin(object):
@@ -548,7 +548,9 @@ class AdaptationDetailsMetadataViewSet(CallCentrePermissionsViewSetMixin, BaseAd
     serializer_class = AdaptationDetailsSerializer
 
 
-class EODDetailsViewSet(CallCentrePermissionsViewSetMixin, NoOrganisationCaseReassignmentMixin, BaseEODDetailsViewSet):
+class EODDetailsViewSet(
+    CallCentrePermissionsViewSetMixin, NoOrganisationCaseAssignCurrentOrganisationMixin, BaseEODDetailsViewSet
+):
 
     serializer_class = EODDetailsSerializer
 
@@ -686,7 +688,9 @@ class NotificationViewSet(CallCentrePermissionsViewSetMixin, BaseNotificationVie
     pass
 
 
-class ComplaintViewSet(CallCentrePermissionsViewSetMixin, NoOrganisationCaseReassignmentMixin, BaseComplaintViewSet):
+class ComplaintViewSet(
+    CallCentrePermissionsViewSetMixin, NoOrganisationCaseAssignCurrentOrganisationMixin, BaseComplaintViewSet
+):
     filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
     filter_fields = ("justified", "level", "category", "owner", "created_by")
 

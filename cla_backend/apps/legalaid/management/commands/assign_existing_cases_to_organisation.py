@@ -8,8 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         default_organisation = Organisation.objects.get(name="Agilisys")
-        organisations = list(Organisation.objects.values_list("id", flat=True))
-        organisations.append(None)
+        organisations = Organisation.objects.values_list("id", flat=True)
 
         cases_qs = Case.objects.filter(organisation__isnull=True).select_related(
             "created_by", "created_by__operator__organisation"
@@ -21,9 +20,8 @@ class Command(BaseCommand):
 
         self.stdout.write("Assigning organisations based on creator organisation")
         for organisation in organisations:
-            qs = cases_qs
-            if organisation:
-                qs = qs.filter(created_by__operator__organisation=organisation)
-            else:
-                organisation = default_organisation.id
+            qs = cases_qs.filter(created_by__operator__organisation=organisation)
             qs.update(organisation=organisation)
+
+        # Cases created by users that do not have organisation will be assigned to the default organisation
+        cases_qs.update(organisation=default_organisation)

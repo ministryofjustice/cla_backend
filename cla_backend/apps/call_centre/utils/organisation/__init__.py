@@ -1,4 +1,5 @@
 from call_centre.models import Operator
+from legalaid.models import Case
 
 
 def case_organisation_matches_user_organisation(case, user):
@@ -25,19 +26,23 @@ def case_organisation_matches_user_organisation(case, user):
 
 
 class NoOrganisationCaseAssignCurrentOrganisationMixin(object):
-    def get_case(self):
-        raise NotImplementedError
+    def get_case(self, obj):
+        return None
 
-    def post_save(self, obj, created=False, *args, **kwargs):
-        super(NoOrganisationCaseAssignCurrentOrganisationMixin, self).post_save(obj, created, *args, **kwargs)
-        case = self.get_case()
+    def pre_save(self, obj, **kwargs):
+        super(NoOrganisationCaseAssignCurrentOrganisationMixin, self).pre_save(obj, **kwargs)
+        if isinstance(obj, Case):
+            case = obj
+        else:
+            case = self.get_case(obj)
+
+        if not case:
+            return
+
         if case.organisation:
             return
 
         user = self.request.user
-        if case.created_by == user:
-            return
-
         try:
             organisation = user.operator.organisation
         except Operator.DoesNotExist:
@@ -47,10 +52,14 @@ class NoOrganisationCaseAssignCurrentOrganisationMixin(object):
             return
 
         case.organisation = organisation
-        case.save(update_fields=["organisation"])
-        # Create log event
+        # When current object is a case then we don't need to save it as we are in it's pre_save
+        # but have to explicitly save it for other objects
+        if not isinstance(obj, Case):
+            case.save(update_fields=["organisation"])
+
+        # Create event log
         from cla_eventlog import event_registry
 
         notes = u"Case organisation set to {organisation}".format(organisation=organisation)
         event = event_registry.get_event("case")()
-        event.process(case, created_by=user, notes=notes, complaint=obj, code="CASE_ORGANISATION_SET")
+        event.process(case, created_by=user, notes=notes, complaint=case, code="CASE_ORGANISATION_SET")

@@ -559,8 +559,11 @@ class EODDetailsViewSet(
         permissions.append(OperatorOrganisationCasePermission())
         return permissions
 
-    def get_case(self):
-        return self.object.case
+    def get_case(self, obj):
+        try:
+            return obj.case
+        except Case.DoesNotExist:
+            return None
 
 
 class EventViewSet(CallCentrePermissionsViewSetMixin, BaseEventViewSet):
@@ -730,8 +733,8 @@ class ComplaintViewSet(
         permissions.append(OperatorOrganisationComplaintPermission())
         return permissions
 
-    def get_case(self):
-        return self.object.eod.case
+    def get_case(self, obj):
+        return obj.eod.case
 
 
 class ComplaintCategoryViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintCategoryViewSet):

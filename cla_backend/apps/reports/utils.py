@@ -4,7 +4,7 @@ import shutil
 import tempfile
 from datetime import date, datetime, time, timedelta
 
-from django.core.exceptions import ImproperlyConfigured as DjangoImproperlyConfigured, ObjectDoesNotExist
+from django.core.exceptions import ImproperlyConfigured as DjangoImproperlyConfigured
 import pyminizip
 from django.conf import settings
 from django.db import connections, connection
@@ -13,6 +13,7 @@ from django.db.utils import ConnectionDoesNotExist
 
 from core.utils import remember_cwd
 from legalaid.utils import diversity
+from call_centre.models import Operator
 
 
 def get_reports_cursor():
@@ -165,9 +166,9 @@ class ReportOrganisationMixin(object):
         self.organisation_id = 0
         if user:
             try:
-                if user.operator and user.operator.organisation and not user.operator.is_cla_superuser:
+                if user.operator.organisation and not user.operator.is_cla_superuser:
                     self.organisation_id = user.operator.organisation.id
-            except ObjectDoesNotExist:
+            except Operator.DoesNotExist:
                 pass
         super(ReportOrganisationMixin, self).__init__(*args, **kwargs)
 

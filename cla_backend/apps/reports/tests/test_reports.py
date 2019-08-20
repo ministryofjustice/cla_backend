@@ -233,7 +233,7 @@ class EODDetailsExportTestCase(AbstractExportWithOrganisation, TestCase):
         personal_details = make_recipe(
             "legalaid.personal_details", _fill_optional=["full_name", "date_of_birth", "postcode"]
         )
-        case = make_recipe("legalaid.case", personal_details=personal_details, created_by=operator.user)
+        case = make_recipe("legalaid.case", personal_details=personal_details, organisation=operator.organisation)
         make_recipe("legalaid.eod_details", notes="EOD notes", case=case)
 
 
@@ -247,6 +247,6 @@ class ComplaintsExportTestCase(AbstractExportWithOrganisation, TestCase):
         personal_details = make_recipe(
             "legalaid.personal_details", _fill_optional=["full_name", "date_of_birth", "postcode"]
         )
-        case = make_recipe("legalaid.case", personal_details=personal_details, created_by=operator.user)
+        case = make_recipe("legalaid.case", personal_details=personal_details, organisation=operator.organisation)
         eod = make_recipe("legalaid.eod_details", notes="EOD notes", case=case)
         make_recipe("complaints.complaint", eod=eod)

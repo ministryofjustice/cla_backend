@@ -250,7 +250,7 @@ class EODDetailsManager(models.Manager):
     use_for_related_fields = True
 
     def get_queryset(self):
-        return super(EODDetailsManager, self).get_queryset().select_related("case", "case__created_by__organisation")
+        return super(EODDetailsManager, self).get_queryset().select_related("case")
 
 
 class EODDetails(TimeStampedModel):
@@ -282,13 +282,6 @@ class EODDetails(TimeStampedModel):
     @property
     def is_major(self):
         return self.categories.filter(is_major=True).exists()
-
-    @property
-    def organisation(self):
-        try:
-            return self.case.created_by.operator.organisation
-        except AttributeError:
-            return None
 
     def get_category_descriptions(self, include_severity=False):
         mapper = (

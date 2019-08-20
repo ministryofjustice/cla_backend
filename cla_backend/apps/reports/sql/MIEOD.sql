@@ -16,8 +16,7 @@ FROM legalaid_eoddetails AS eod
     JOIN legalaid_case AS c ON c.id = eod.case_id
     LEFT OUTER JOIN diagnosis_diagnosistraversal AS diagnosis ON c.diagnosis_id = diagnosis.id
     LEFT OUTER JOIN legalaid_category AS category ON diagnosis.category_id = category.id
-    LEFT OUTER JOIN call_centre_operator AS cc_op ON cc_op.user_id = c.created_by_id
-    LEFT OUTER JOIN call_centre_organisation AS cc_org ON cc_org.id = cc_op.organisation_id
+    LEFT OUTER JOIN call_centre_organisation AS cc_org ON cc_org.id = c.organisation_id
 WHERE c.created >= %(from_date)s AND c.created < %(to_date)s
-AND (%(organisation)s = 0 OR (cc_op.organisation_id IS NULL OR cc_op.organisation_id = %(organisation)s))
+AND (%(organisation)s = 0 OR (c.organisation_id IS NULL OR c.organisation_id = %(organisation)s))
 ORDER BY c.created DESC;

@@ -248,6 +248,10 @@ class CaseViewSet(CallCentrePermissionsViewSetMixin, mixins.CreateModelMixin, Ba
         user = self.request.user
         if not obj.pk and not isinstance(user, AnonymousUser):
             obj.created_by = user
+            try:
+                obj.organisation = user.operator.organisation
+            except Operator.DoesNotExist:
+                pass
 
     @list_route()
     def future_callbacks(self, request, **kwargs):

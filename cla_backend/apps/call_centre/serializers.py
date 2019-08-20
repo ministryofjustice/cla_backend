@@ -233,6 +233,12 @@ class CaseSerializer(CaseSerializerFull):
         except Exception:
             return False
 
+    def _get_fields_for_partial_update(self):
+        update_fields = super(CaseSerializer, self)._get_fields_for_partial_update()
+        if self.object.organisation and "organisation" in self.object.changed_fields:
+            update_fields.append("organisation")
+        return update_fields
+
     class Meta(CaseSerializerFull.Meta):
         fields = (
             "eligibility_check",

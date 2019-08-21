@@ -222,6 +222,7 @@ class LogSerializer(LogSerializerBase):
 
 class CaseSerializer(CaseSerializerFull):
     provider_notes = serializers.CharField(max_length=5000, required=False, read_only=True)
+    organisation_name = serializers.RelatedField(source="organisation", read_only=True)
     billable_time = serializers.IntegerField(read_only=True)
     rejected = serializers.SerializerMethodField("is_rejected")
 
@@ -279,6 +280,7 @@ class CaseSerializer(CaseSerializerFull):
             "eod_details",
             "call_started",
             "complaint_count",
+            "organisation_name",
         )
 
 
@@ -304,6 +306,7 @@ class CaseListSerializer(CaseSerializer):
             "requires_action_at",
             "flagged_with_eod",
             "is_urgent",
+            "organisation_name",
         )
 
 

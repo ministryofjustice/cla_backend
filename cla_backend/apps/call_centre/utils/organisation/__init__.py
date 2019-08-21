@@ -51,7 +51,7 @@ class CaseOrganisationAssignCurrentOrganisationMixin(object):
         if not case:
             return
 
-        # When current object is a case then we don't need to save it as we are in it's pre_save
+        # When current object is a case then we don't need to save it as we are in its pre_save
         # but have to explicitly save it for other objects
-        save = True if not isinstance(obj, Case) else False
+        save = not isinstance(obj, Case)
         self.set_case_organisation(case, save)

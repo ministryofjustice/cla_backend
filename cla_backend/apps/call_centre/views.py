@@ -261,11 +261,15 @@ class CaseViewSet(CallCentrePermissionsViewSetMixin, mixins.CreateModelMixin, Ba
         """
         now = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
         in_7_days = now + datetime.timedelta(days=7)
+        category = request.QUERY_PARAMS.get("category")
         qs = (
             self.get_queryset()
             .filter(requires_action_at__gte=now, requires_action_at__lt=in_7_days)
             .order_by("requires_action_at")
         )
+        if category:
+            qs = qs.filter(diagnosis__category__code=category)
+
         self.object_list = self.filter_queryset(qs)
 
         serializer = self.get_serializer(self.object_list, many=True)

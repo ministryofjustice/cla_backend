@@ -55,7 +55,6 @@ def walk(coll):
 
 def get_full_case(matter_type1, matter_type2, provider=None):
     provider = provider or make_recipe("cla_provider.provider")
-    organisation = make_recipe("call_centre.organisation")
 
     ec = make_recipe(
         "legalaid.eligibility_check_yes",
@@ -110,7 +109,6 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         provider_closed=timezone.now(),
         provider_assigned_at=timezone.now(),
         is_urgent=True,
-        organisation=organisation,
     )
     make_recipe("legalaid.eod_details", notes="EOD notes", case=case)
     CaseKnowledgebaseAssignment.objects.create(
@@ -1369,7 +1367,6 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             "ecf_statement",
             "source",
             "complaint_flag",
-            "organisation",
         ]
 
         if internal:

@@ -399,7 +399,6 @@ class FullCaseViewSet(
         "priority",
         "null_priority",
         "flagged_with_eod",
-        "organisation__name",
     )
     ordering = ["-priority"]
 

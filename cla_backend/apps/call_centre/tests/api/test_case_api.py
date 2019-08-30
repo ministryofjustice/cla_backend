@@ -71,7 +71,6 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "complaint_flag",
             "eod_details",
             "call_started",
-            "organisation_name",
         ]
 
 

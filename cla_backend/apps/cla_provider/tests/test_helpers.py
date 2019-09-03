@@ -151,7 +151,14 @@ class ProviderAllocationHelperTestCase(TestCase):
         choosen_provider = helper.get_suggested_provider(category)
         self.assertEqual(choosen_provider, None)
 
-    def test_get_suggested_provider_best_fit(self):
+    # Running this test out side of the hours defined in settings.NON_ROTA_OPENING_HOURS causes the test to fail because
+    # Case.assign_to_provider uses cla_common.call_centre_availability.OpeningHours.available to determine if the
+    # current time is within settings.NON_ROTA_OPENING_HOURS
+    #
+    # This @mock.patch ensures that all settings.NON_ROTA_OPENING_HOURS checks always return True. This should not
+    # impact the test logic as this test is only checking provider allocation distribution
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_get_suggested_provider_best_fit(self, mock_openingHours_available):
         # slightly brute force test
 
         as_of = timezone.make_aware(
@@ -277,7 +284,14 @@ class ProviderAllocationHelperTestCase(TestCase):
             self.assertWithinAllowedAccuracy(1000, accuracy, provider3.case_set.count())
             self.assertWithinAllowedAccuracy(1000, accuracy, provider4.case_set.count())
 
-    def test_get_distribution(self):
+    # Running this test out side of the hours defined in settings.NON_ROTA_OPENING_HOURS causes the test to fail because
+    # Case.assign_to_provider uses cla_common.call_centre_availability.OpeningHours.available to determine if the
+    # current time is within settings.NON_ROTA_OPENING_HOURS
+    #
+    # This @mock.patch ensures that all settings.NON_ROTA_OPENING_HOURS checks always return True. This should not
+    # impact the test logic as this test is only checking provider allocation distribution
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_get_distribution(self, mock_openinghours_available):
         with mock.patch(
             "cla_common.call_centre_availability.current_datetime", datetime.datetime(2015, 7, 7, 11, 59, 0)
         ):
@@ -383,6 +397,9 @@ class ProviderAllocationHelperTestCase(TestCase):
                 tz2 = tz2 + datetime.timedelta(days=7 - tz2.weekday())
 
             with mock.patch("django.utils.timezone.now", lambda: tz2):
-                c2.assign_to_provider(provider2)
+                # Make sure this case is assigned to a provider within business hours.
+                # Otherwise this test will fail when tz falls out of business hours
+                with mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True):
+                    c2.assign_to_provider(provider2)
 
             self.assertDictEqual(distribution_helper.get_distribution(category), {provider2.pk: 1})

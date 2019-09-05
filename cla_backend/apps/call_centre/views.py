@@ -96,6 +96,7 @@ from .forms import (
 )
 
 from .models import Operator
+from .utils.organisation import CaseOrganisationAssignCurrentOrganisationMixin
 
 
 class CallCentrePermissionsViewSetMixin(object):
@@ -157,7 +158,13 @@ class DateRangeFilter(BaseFilterBackend):
         return qs
 
 
-class CaseViewSet(CallCentrePermissionsViewSetMixin, mixins.CreateModelMixin, BaseCaseLogMixin, FullCaseViewSet):
+class CaseViewSet(
+    CallCentrePermissionsViewSetMixin,
+    mixins.CreateModelMixin,
+    BaseCaseLogMixin,
+    CaseOrganisationAssignCurrentOrganisationMixin,
+    FullCaseViewSet,
+):
     serializer_class = CaseListSerializer
     # using CreateCaseSerializer during creation
     serializer_detail_class = CaseSerializer
@@ -341,7 +348,7 @@ class CaseViewSet(CallCentrePermissionsViewSetMixin, mixins.CreateModelMixin, Ba
 
             provider_serialised = ProviderSerializer(provider)
             return DRFResponse(data=provider_serialised.data)
-
+        self.set_case_organisation(self.get_object(), save=True)
         return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)
 
     @action()
@@ -356,15 +363,21 @@ class CaseViewSet(CallCentrePermissionsViewSetMixin, mixins.CreateModelMixin, Ba
 
     @action()
     def decline_help(self, request, reference=None, **kwargs):
-        return self._form_action(request, DeclineHelpCaseForm)
+        response = self._form_action(request, DeclineHelpCaseForm)
+        self.set_case_organisation(self.get_object())
+        return response
 
     @action()
     def suspend(self, request, reference=None, **kwargs):
-        return self._form_action(request, SuspendCaseForm)
+        response = self._form_action(request, SuspendCaseForm)
+        self.set_case_organisation(self.get_object())
+        return response
 
     @action()
-    def assign_alternative_help(self, request, **kwargs):
-        return self._form_action(request, AlternativeHelpForm)
+    def assign_alternative_help(self, request, reference=None, **kwargs):
+        response = self._form_action(request, AlternativeHelpForm)
+        self.set_case_organisation(self.get_object())
+        return response
 
     def get_log_notes(self, obj):
         return "Case created"
@@ -433,22 +446,27 @@ class CaseViewSet(CallCentrePermissionsViewSetMixin, mixins.CreateModelMixin, Ba
         # link personal details to case
         obj.personal_details = personal_details
         obj.save(update_fields=["personal_details", "modified"])
-
+        self.set_case_organisation(self.get_object(), save=True)
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
     @action()
     def call_me_back(self, request, reference=None, **kwargs):
-        return self._form_action(request, CallMeBackForm)
+        response = self._form_action(request, CallMeBackForm)
+        self.set_case_organisation(self.get_object(), save=True)
+        return response
 
     @action()
     def stop_call_me_back(self, request, reference=None, **kwargs):
-        return self._form_action(request, StopCallMeBackForm)
+        response = self._form_action(request, StopCallMeBackForm)
+        self.set_case_organisation(self.get_object(), save=True)
+        return response
 
     @action()
     def start_call(self, request, reference=None, **kwargs):
         obj = self.get_object()
         event = event_registry.get_event("case")()
         event.process(obj, status="call_started", created_by=request.user, notes="Call started")
+        self.set_case_organisation(obj, save=True)
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -505,7 +523,12 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
         return super(UserViewSet, self).create(request, *args, **kwargs)
 
 
-class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin, FormActionMixin, FullPersonalDetailsViewSet):
+class PersonalDetailsViewSet(
+    CallCentrePermissionsViewSetMixin,
+    FormActionMixin,
+    CaseOrganisationAssignCurrentOrganisationMixin,
+    FullPersonalDetailsViewSet,
+):
     serializer_class = PersonalDetailsSerializer
 
     @action()
@@ -513,11 +536,15 @@ class PersonalDetailsViewSet(CallCentrePermissionsViewSetMixin, FormActionMixin,
         return self._form_action(request, DiversityForm)
 
 
-class ThirdPartyDetailsViewSet(CallCentrePermissionsViewSetMixin, BaseThirdPartyDetailsViewSet):
+class ThirdPartyDetailsViewSet(
+    CallCentrePermissionsViewSetMixin, CaseOrganisationAssignCurrentOrganisationMixin, BaseThirdPartyDetailsViewSet
+):
     serializer_class = ThirdPartyDetailsSerializer
 
 
-class AdaptationDetailsViewSet(CallCentrePermissionsViewSetMixin, BaseAdaptationDetailsViewSet):
+class AdaptationDetailsViewSet(
+    CallCentrePermissionsViewSetMixin, CaseOrganisationAssignCurrentOrganisationMixin, BaseAdaptationDetailsViewSet
+):
     serializer_class = AdaptationDetailsSerializer
 
 
@@ -525,7 +552,9 @@ class AdaptationDetailsMetadataViewSet(CallCentrePermissionsViewSetMixin, BaseAd
     serializer_class = AdaptationDetailsSerializer
 
 
-class EODDetailsViewSet(CallCentrePermissionsViewSetMixin, BaseEODDetailsViewSet):
+class EODDetailsViewSet(
+    CallCentrePermissionsViewSetMixin, CaseOrganisationAssignCurrentOrganisationMixin, BaseEODDetailsViewSet
+):
     serializer_class = EODDetailsSerializer
 
 
@@ -545,7 +574,9 @@ class TimerViewSet(CallCentrePermissionsViewSetMixin, BaseTimerViewSet):
     pass
 
 
-class DiagnosisViewSet(CallCentrePermissionsViewSetMixin, BaseDiagnosisViewSet):
+class DiagnosisViewSet(
+    CallCentrePermissionsViewSetMixin, CaseOrganisationAssignCurrentOrganisationMixin, BaseDiagnosisViewSet
+):
     pass
 
 
@@ -636,7 +667,9 @@ class NotificationViewSet(CallCentrePermissionsViewSetMixin, BaseNotificationVie
     pass
 
 
-class ComplaintViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintViewSet):
+class ComplaintViewSet(
+    CallCentrePermissionsViewSetMixin, CaseOrganisationAssignCurrentOrganisationMixin, BaseComplaintViewSet
+):
     filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
     filter_fields = ("justified", "level", "category", "owner", "created_by")
 
@@ -670,6 +703,9 @@ class ComplaintViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintViewSet):
         dashboard = self.request.QUERY_PARAMS.get("dashboard") == "True"
         show_closed = self.request.QUERY_PARAMS.get("show_closed") == "True"
         return super(ComplaintViewSet, self).get_queryset(dashboard=dashboard, show_closed=show_closed)
+
+    def get_case(self, obj):
+        return obj.eod.case
 
 
 class ComplaintCategoryViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintCategoryViewSet):

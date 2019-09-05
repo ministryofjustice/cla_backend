@@ -80,6 +80,13 @@ class CaseEvent(BaseEvent):
             "description": "Operator started call",
             "stops_timer": False,
         },
+        "CASE_ORGANISATION_SET": {
+            "type": LOG_TYPES.SYSTEM,
+            "level": LOG_LEVELS.MINOR,
+            "selectable_by": [],
+            "description": "Case organisation set",
+            "stops_timer": False,
+        },
     }
 
     def save_log(self, log):

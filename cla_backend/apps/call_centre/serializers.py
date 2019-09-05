@@ -222,6 +222,7 @@ class LogSerializer(LogSerializerBase):
 
 class CaseSerializer(CaseSerializerFull):
     provider_notes = serializers.CharField(max_length=5000, required=False, read_only=True)
+    organisation_name = serializers.RelatedField(source="organisation", read_only=True)
     billable_time = serializers.IntegerField(read_only=True)
     rejected = serializers.SerializerMethodField("is_rejected")
 
@@ -232,6 +233,12 @@ class CaseSerializer(CaseSerializerFull):
             return case.rejected == 1
         except Exception:
             return False
+
+    def _get_fields_for_partial_update(self):
+        update_fields = super(CaseSerializer, self)._get_fields_for_partial_update()
+        if self.object.organisation and "organisation" in self.object.changed_fields:
+            update_fields.append("organisation")
+        return update_fields
 
     class Meta(CaseSerializerFull.Meta):
         fields = (
@@ -273,6 +280,7 @@ class CaseSerializer(CaseSerializerFull):
             "eod_details",
             "call_started",
             "complaint_count",
+            "organisation_name",
         )
 
 
@@ -298,6 +306,7 @@ class CaseListSerializer(CaseSerializer):
             "requires_action_at",
             "flagged_with_eod",
             "is_urgent",
+            "organisation_name",
         )
 
 

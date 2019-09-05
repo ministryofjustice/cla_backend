@@ -27,7 +27,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             case = make_recipe("legalaid.case", organisation=organisation)
             response = self.client.post(url, data={}, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
             self.assertEqual(status.HTTP_201_CREATED, response.status_code)
-            self._assert_case_organisation_updated(case, organisation, response, check_status_log=False)
+            self._assert_case_organisation_updated(case, organisation, check_status_log=False)
             self.assertNotIn(("CASE_ORGANISATION_SET",), Log.objects.filter(case_id=case.id).values_list("code"))
 
     def test_case_organisation_is_set_when_operator_updates_case_without_organisation(self):
@@ -59,7 +59,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         data = {"notes": "", "event_code": "INSUF"}
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
-        self._assert_case_organisation_updated(case, self.foo_org, response)
+        self._assert_case_organisation_updated(case, self.foo_org)
 
     def test_case_organisation_is_set_when_operator_assigns_alternative_help_to_case_without_organisation(self):
         # Assign operator organisation as the case organisation when
@@ -77,7 +77,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         data = {"notes": "", "event_code": "IRKB", "selected_providers": [article.id]}
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
-        self._assert_case_organisation_updated(case, self.foo_org, response)
+        self._assert_case_organisation_updated(case, self.foo_org)
 
     def test_case_organisation_is_set_when_operator_decline_help_to_case_without_organisation(self):
         # Assign operator organisation as the case organisation when
@@ -92,7 +92,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         data = {"notes": "", "event_code": "DECL"}
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
-        self._assert_case_organisation_updated(case, self.foo_org, response)
+        self._assert_case_organisation_updated(case, self.foo_org)
 
     def test_case_organisation_is_set_when_operator_adds_eod_to_case_without_organisation(self):
         # Assign operator organisation as the case organisation when a eod is
@@ -114,7 +114,8 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         }
 
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
-        self._assert_case_organisation_updated(case, self.foo_org, response)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self._assert_case_organisation_updated(case, self.foo_org)
 
         # Organisation should not change when another operator adds an eod
         self.operator_manager.organisation = self.bar_org
@@ -123,7 +124,8 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         data["reference"] = response.data.get("reference")
         del data["case_reference"]
         response = self.client.patch(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
-        self._assert_case_organisation_updated(case, self.foo_org, response, check_status_log=False)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self._assert_case_organisation_updated(case, self.foo_org, check_status_log=False)
 
     def test_case_organisation_is_set_when_operator_adds_complaint_to_case_without_organisation(self):
         # Assign operator organisation as the case organisation when a complaint is
@@ -147,7 +149,7 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
 
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.manager_token)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
-        self._assert_case_organisation_updated(case, self.foo_org, response, check_status_log=False)
+        self._assert_case_organisation_updated(case, self.foo_org, check_status_log=False)
 
     def test_case_organisation_is_set_when_operator_adds_adaptation_to_case_without_organisation(self):
         # Assign operator organisation as the case organisation when a adaptation is
@@ -171,7 +173,8 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             u"%s:adaptationdetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
-        self._assert_case_organisation_updated(case, self.foo_org, response)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self._assert_case_organisation_updated(case, self.foo_org)
 
     def test_case_organisation_is_set_when_operator_adds_personal_detail_to_case_without_organisation(self):
         # Assign operator organisation as the case organisation when a personal detail is
@@ -186,7 +189,13 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             u"%s:personaldetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
-        self._assert_case_organisation_updated(case, self.foo_org, response)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self._assert_case_organisation_updated(case, self.foo_org)
+
+        url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
+        data = {"notes": "This is a test", "provider_notes": "", "organisation_name": ""}
+        response = self.client.patch(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_case_organisation_is_set_when_operator_adds_third_party_detail_to_case_without_organisation(self):
         # Assign operator organisation as the case organisation when a third party detail is
@@ -207,7 +216,8 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             u"%s:thirdpartydetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
-        self._assert_case_organisation_updated(case, self.foo_org, response)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self._assert_case_organisation_updated(case, self.foo_org)
 
     def test_case_organisation_is_set_when_operator_adds_diagnosis_to_case_without_organisation(self):
         # Assign operator organisation as the case organisation when a diagnosis is
@@ -223,9 +233,33 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
             u"%s:diagnosis-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
         )
         response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
-        self._assert_case_organisation_updated(case, self.foo_org, response)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self._assert_case_organisation_updated(case, self.foo_org)
 
-    def _assert_case_organisation_updated(self, case, expected_organisation, response=None, check_status_log=True):
+    def test_case_organisation_unchanged_when_operator_without_organisation_updates(self):
+        # Assign operator organisation as the case organisation when a diagnosis is
+        # added to a case without organisation no organisation
+
+        case = make_recipe("legalaid.case", organisation=None, personal_details=None)
+        data = {}
+
+        self.operator.organisation = None
+        self.operator.save()
+
+        url = reverse(
+            u"%s:personaldetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+        )
+        response = self.client.post(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        self._assert_case_organisation_updated(case, None, check_status_log=False)
+
+        # Update the case
+        url = reverse(u"%s:case-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"reference": case.reference})
+        data = {"notes": "This is a test", "provider_notes": "", "organisation_name": ""}
+        response = self.client.patch(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+
+    def _assert_case_organisation_updated(self, case, expected_organisation, check_status_log=True):
         case_reloaded = Case.objects.get(pk=case.id)
         self.assertEqual(case_reloaded.organisation, expected_organisation)
         if check_status_log:

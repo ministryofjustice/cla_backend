@@ -347,8 +347,9 @@ class CaseViewSet(
             notify_case_assigned(provider, form.case)
 
             provider_serialised = ProviderSerializer(provider)
+            self.set_case_organisation(self.get_object(), save=True)
             return DRFResponse(data=provider_serialised.data)
-        self.set_case_organisation(self.get_object(), save=True)
+
         return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)
 
     @action()

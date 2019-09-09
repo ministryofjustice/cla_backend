@@ -71,6 +71,7 @@ WITH
         ,operator_first_view_after_cb1.rn
         ,c.source
         ,log.code
+        ,cc_org.name as organisation
       from cla_eventlog_log as log
         JOIN legalaid_case as c on c.id = log.case_id
         LEFT OUTER JOIN legalaid_personaldetails as pd on c.personal_details_id = pd.id
@@ -83,6 +84,7 @@ WITH
         LEFT OUTER JOIN auth_user as u on log.created_by_id = u.id
         LEFT OUTER JOIN operator_first_log_after_cb1 on operator_first_log_after_cb1.o_id = log.id and operator_first_log_after_cb1.rn = 1
         LEFT OUTER JOIN operator_first_view_after_cb1 on operator_first_view_after_cb1.o_id = log.id and operator_first_view_after_cb1.rn = 1
+        LEFT OUTER JOIN call_centre_organisation AS cc_org ON cc_org.id = c.organisation_id
       where
         log.code = 'CB1'
 
@@ -117,6 +119,7 @@ select
   ,code
   ,sla_30
   ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_30 ELSE operator_first_log_after_cb1__created > sla_30 END as is_over_sla_30
+  ,organisation
 from all_rows
 WHERE %s < requires_action_at AND requires_action_at < %s
 ;

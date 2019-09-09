@@ -139,6 +139,7 @@ select
   ,u.username as "Username"
   ,c.thirdparty_details_id::bool as "Has_Third_Party"
   ,ceil(EXTRACT(EPOCH FROM operator_first_action.created-c.created)) as "Time_to_OS_Action"
+  ,cc_org.name as organisation
   -- diversity fields --
   ,{diversity_expression} as diversity_json
 from cla_eventlog_log as log
@@ -163,6 +164,7 @@ from cla_eventlog_log as log
   LEFT OUTER JOIN provider_first_assign on provider_first_assign.case_id = c.id and provider_first_assign.rn = 1
   LEFT OUTER JOIN legalaid_case split_case on c.from_case_id = split_case.id
   LEFT OUTER JOIN cla_provider_provider as assigned_provider on (log.context->>'provider_id')::numeric = assigned_provider.id
+  LEFT OUTER JOIN call_centre_organisation AS cc_org ON cc_org.id = c.organisation_id
 where
   log.type = 'outcome'
   and log.created >= %s

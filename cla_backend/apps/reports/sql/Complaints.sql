@@ -42,7 +42,8 @@ SELECT
             (SELECT complaint_logs.created FROM complaint_logs WHERE complaint_logs.object_id=comp.id AND complaint_logs.code='COMPLAINT_CLOSED' LIMIT 1),
             NOW()
         )
-    ) AS within_sla
+    ) AS within_sla,
+    cc_org.name as organisation
 FROM complaints_complaint AS comp
     LEFT OUTER JOIN complaints_category AS comp_cat ON comp_cat.id = comp.category_id
     JOIN legalaid_eoddetails AS eod ON comp.eod_id = eod.id
@@ -50,6 +51,7 @@ FROM complaints_complaint AS comp
     LEFT OUTER JOIN legalaid_personaldetails AS p ON p.id = c.personal_details_id
     LEFT OUTER JOIN diagnosis_diagnosistraversal AS diagnosis ON c.diagnosis_id = diagnosis.id
     LEFT OUTER JOIN legalaid_category AS category ON diagnosis.category_id = category.id
+    LEFT OUTER JOIN call_centre_organisation AS cc_org ON cc_org.id = c.organisation_id
 WHERE comp.created >= %(from_date)s AND comp.created < %(to_date)s AND
 (SELECT COUNT(id) FROM complaint_logs WHERE complaint_logs.object_id=comp.id AND complaint_logs.code = 'COMPLAINT_VOID') = 0
 ORDER BY comp.created DESC;

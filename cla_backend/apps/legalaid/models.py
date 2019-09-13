@@ -654,6 +654,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     locked_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="case_locked")
     locked_at = models.DateTimeField(auto_now=False, blank=True, null=True)
     provider = models.ForeignKey("cla_provider.Provider", blank=True, null=True)
+    organisation = models.ForeignKey("call_centre.Organisation", blank=True, null=True)
     notes = models.TextField(blank=True)
     provider_notes = models.TextField(blank=True)
     laa_reference = models.BigIntegerField(null=True, blank=True, unique=True, editable=False)

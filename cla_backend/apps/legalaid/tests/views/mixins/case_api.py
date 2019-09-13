@@ -89,6 +89,7 @@ class BaseFullCaseAPIMixin(SimpleResourceAPIMixin):
             "matter_type1": "code",
             "matter_type2": "code",
             "media_code": "code",
+            "organisation": "pk",
         }
 
         for field, fk_pk in fks.items():

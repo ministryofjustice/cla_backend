@@ -71,6 +71,8 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "complaint_flag",
             "eod_details",
             "call_started",
+            "organisation_name",
+            "organisation",
         ]
 
 
@@ -97,6 +99,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
         adaptation_details = make_recipe("legalaid.adaptation_details")
         diagnosis = make_recipe("diagnosis.diagnosis")
         provider = make_recipe("cla_provider.provider")
+        organisation = make_recipe("call_centre.organisation")
         media_code = make_recipe("legalaid.media_code")
 
         matter_type1 = make_recipe("legalaid.matter_type1")
@@ -121,6 +124,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
             "source": CASE_SOURCE.VOICEMAIL,
             "laa_reference": 232323,
             "requires_action_by": REQUIRES_ACTION_BY.PROVIDER_REVIEW,
+            "organisation": organisation.pk,
         }
         response = self.client.post(
             self.list_url, data=data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token
@@ -146,6 +150,7 @@ class CreateCaseTestCase(BaseCaseTestCase):
                 media_code=media_code,
                 source=CASE_SOURCE.VOICEMAIL,
                 provider_notes="",
+                organisation=None,
             ),
         )
 

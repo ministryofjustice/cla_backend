@@ -249,6 +249,7 @@ class MICaseExtract(SQLFileDateRangeReport):
             "Username",
             "Has_Third_Party",
             "Time_to_OS_Action",
+            "Organisation",
         ]
 
     def get_rows(self):
@@ -347,6 +348,7 @@ class MISurveyExtract(SQLFileDateRangeReport):
             "Third Party Contact",
             "Case Refs",
             "Third Party Case Refs",
+            "Organisation",
         ]
 
 
@@ -386,6 +388,7 @@ class MICB1Extract(SQLFileDateRangeReport):
             "Code",
             "sla_30",
             "is_over_sla_30",
+            "Organisation",
         ]
 
 
@@ -423,6 +426,7 @@ class MIEODReport(SQLFileDateRangeReport):
             # 'Is_Escalated',
             # 'Is_Resolved',
             # 'Is_Justified',
+            "Organisation",
         ]
 
     def _get_col_index(self, column_name):
@@ -460,6 +464,7 @@ class ComplaintsReport(SQLFileDateRangeReport):
             "Complaint closed",
             "Resolved?",
             "Within SLA?",
+            "Organisation",
         ]
 
     def get_sql_params(self):

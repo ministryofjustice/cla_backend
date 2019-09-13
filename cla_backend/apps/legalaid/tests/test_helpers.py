@@ -217,7 +217,14 @@ class ProviderDistributionHelperTestCase(TestCase):
 
         return ideal_dist
 
-    def _assign_new_case_to_provider(self, provider):
+    # Running this test out side of the hours defined in settings.NON_ROTA_OPENING_HOURS causes the test to fail because
+    # Case.assign_to_provider uses cla_common.call_centre_availability.OpeningHours.available to determine if the
+    # current time is within settings.NON_ROTA_OPENING_HOURS
+    #
+    # This @mock.patch ensures that all settings.NON_ROTA_OPENING_HOURS checks always return True. This should not
+    # impact the test logic as this test is only checking provider allocation distribution
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def _assign_new_case_to_provider(self, provider, mock_openinghours_available):
         c1 = make_recipe("legalaid.eligible_case")
         c1.diagnosis.category = self.category
         c1.assign_to_provider(provider)

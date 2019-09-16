@@ -25,6 +25,7 @@ from .forms import (
     ComplaintsReport,
     MIDigitalCaseTypesExtract,
     MIProviderAllocationExtract,
+    MIExtractCaseViewActivityReport,
 )
 from reports.models import Export
 from .tasks import ExportTask, OBIEEExportTask
@@ -190,3 +191,10 @@ def download_file(request, file_name="", *args, **kwargs):
         raise Http404("Export does not exist")
 
     return response
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+@report_view(MIExtractCaseViewActivityReport, "MI Case Views Activity Extract")
+def mi_case_view_extract():
+    pass

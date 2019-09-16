@@ -523,3 +523,20 @@ class MetricsReport(SQLFileDateRangeReport):
             "Time_phone_ineligible",
             "Time_phone_eligible",
         ]
+
+
+class MIExtractCaseViewActivityReport(SQLFileDateRangeReport):
+    QUERY_FILE = "MIExtractCaseViewActivity.sql"
+    case_reference = forms.CharField(
+        label="Case reference",
+        required=False,
+        help_text="Optional. If not provided, the report will include all case viewed activity in the given date range",
+    )
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        case_reference = self.cleaned_data.get("case_reference") or None
+        return {"from_date": from_date, "to_date": to_date, "case_reference": case_reference}
+
+    def get_headers(self):
+        return ["Case", "Viewed", "User", "Organisation"]

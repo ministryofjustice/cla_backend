@@ -946,6 +946,15 @@ class Case(TimeStampedModel, ModelDiffMixin):
     def requires_action_by_operator_manager(self):
         return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR_MANAGER
 
+    @property
+    def callback_time_string(self):
+        if self.callback_window_type == CALLBACK_WINDOW_TYPES.HALF_HOUR_WINDOW:
+            return u"{start:%a %b %d %Y %X} - {end:%X}".format(
+                start=self.requires_action_at, end=self.requires_action_at + datetime.timedelta(minutes=30)
+            )
+        else:
+            return self.requires_action_at.strftime("%c")
+
 
 class CaseNotesHistory(TimeStampedModel):
     case = models.ForeignKey(Case, db_index=True)

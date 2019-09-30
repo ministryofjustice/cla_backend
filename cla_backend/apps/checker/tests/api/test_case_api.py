@@ -31,6 +31,7 @@ class BaseCaseTestCase(CLACheckerAuthBaseApiTestMixin, SimpleResourceAPIMixin, A
                 "personal_details",
                 "reference",
                 "requires_action_at",
+                "callback_window_type",
                 "adaptation_details",
                 "thirdparty_details",
             ],

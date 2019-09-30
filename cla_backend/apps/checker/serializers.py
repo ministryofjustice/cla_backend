@@ -165,7 +165,7 @@ class CaseSerializer(CaseSerializerBase):
     personal_details = PersonalDetailsSerializer()
     thirdparty_details = ThirdPartyDetailsSerializer(required=False)
     requires_action_at = serializers.DateTimeField(required=False)
-    callback_window_type = serializers.ChoiceField(choices=CALLBACK_WINDOW_TYPES)
+    callback_window_type = serializers.ChoiceField(choices=CALLBACK_WINDOW_TYPES, required=False)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (

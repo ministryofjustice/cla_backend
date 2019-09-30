@@ -6,7 +6,7 @@ from django.db import models, migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [("legalaid", "0021_auto_20190515_1042")]
+    dependencies = [("legalaid", "0022_case_organisation")]
 
     operations = [
         migrations.AddField(

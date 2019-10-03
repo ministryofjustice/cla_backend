@@ -654,7 +654,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     callback_window_type = models.CharField(
         max_length=50,
         choices=CALLBACK_WINDOW_TYPES.CHOICES,
-        default=CALLBACK_WINDOW_TYPES.HALF_HOUR_EITHER_SIDE,
+        default=CALLBACK_WINDOW_TYPES.HALF_HOUR_WINDOW,
         editable=False,
     )
     callback_attempt = models.PositiveSmallIntegerField(default=0)

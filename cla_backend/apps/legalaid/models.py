@@ -1,6 +1,7 @@
 import logging
 import datetime
 import re
+from django.template.defaultfilters import date as date_filter
 from django.utils import timezone
 
 from jsonfield import JSONField
@@ -948,12 +949,15 @@ class Case(TimeStampedModel, ModelDiffMixin):
 
     @property
     def callback_time_string(self):
+        if not self.requires_action_at:
+            return ""
+        end_time = self.requires_action_at + datetime.timedelta(minutes=30)
         if self.callback_window_type == CALLBACK_WINDOW_TYPES.HALF_HOUR_WINDOW:
-            return u"{start:%a %b %d %Y %X} - {end:%X}".format(
-                start=self.requires_action_at, end=self.requires_action_at + datetime.timedelta(minutes=30)
+            return u"{start} - {end}".format(
+                start=date_filter(self.requires_action_at, "g:iA"), end=date_filter(end_time, "g:iA")
             )
         else:
-            return self.requires_action_at.strftime("%c")
+            return date_filter(self.requires_action_at, "g:iA")
 
 
 class CaseNotesHistory(TimeStampedModel):

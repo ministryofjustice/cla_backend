@@ -226,6 +226,8 @@ class CaseSerializer(CaseSerializerFull):
     organisation_name = serializers.RelatedField(source="organisation", read_only=True)
     billable_time = serializers.IntegerField(read_only=True)
     rejected = serializers.SerializerMethodField("is_rejected")
+    callback_time_string = serializers.Field(source="callback_time_string")
+    callback_time_string_short = serializers.Field(source="callback_time_string_short")
 
     complaint_count = serializers.IntegerField(source="complaint_count", read_only=True)
 
@@ -275,6 +277,7 @@ class CaseSerializer(CaseSerializerFull):
             "ecf_statement",
             "case_count",
             "requires_action_at",
+            "callback_time_string",
             "callback_attempt",
             "source",
             "complaint_flag",
@@ -306,6 +309,7 @@ class CaseListSerializer(CaseSerializer):
             "case_count",
             "source",
             "requires_action_at",
+            "callback_time_string",
             "flagged_with_eod",
             "is_urgent",
             "organisation_name",

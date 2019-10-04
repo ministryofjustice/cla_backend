@@ -926,14 +926,16 @@ class Case(TimeStampedModel, ModelDiffMixin):
 
     def set_requires_action_at(self, requires_action_at):
         self.requires_action_at = requires_action_at
+        self.callback_window_type = self._meta.get_field("callback_window_type").default
         self.callback_attempt += 1
-        self.save(update_fields=["requires_action_at", "callback_attempt", "modified"])
+        self.save(update_fields=["requires_action_at", "callback_window_type", "callback_attempt", "modified"])
 
     def reset_requires_action_at(self):
         if self.requires_action_at is not None or self.callback_attempt != 0:
             self.requires_action_at = None
+            self.callback_window_type = self._meta.get_field("callback_window_type").default
             self.callback_attempt = 0
-            self.save(update_fields=["requires_action_at", "callback_attempt", "modified"])
+            self.save(update_fields=["requires_action_at", "callback_window_type", "callback_attempt", "modified"])
 
     @property
     def doesnt_requires_action(self):
@@ -950,7 +952,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     @property
     def callback_time_string(self):
         if not self.requires_action_at:
-            return ""
+            return None
         end_time = self.requires_action_at + datetime.timedelta(minutes=30)
         if self.callback_window_type == CALLBACK_WINDOW_TYPES.HALF_HOUR_WINDOW:
             return u"{start} - {end}".format(

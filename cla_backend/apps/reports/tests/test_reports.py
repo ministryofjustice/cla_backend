@@ -7,6 +7,7 @@ import tempfile
 from django.test import TestCase
 from psycopg2 import InternalError
 
+from cla_common.constants import CONTACT_SAFETY
 from core.tests.mommy_utils import make_recipe
 from legalaid.utils.diversity import save_diversity_data
 import reports.forms
@@ -54,6 +55,24 @@ class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
                     "Number of columns in %s.get_headers() doesn't match the number of columns returned by the sql query."
                     % n,
                 )
+
+
+class ReportOrganisationColumnTestCase(TestCase):
+    def test_mi_survey_dom1_extract_organisation_column(self):
+        pd = make_recipe("legalaid.personal_details", safe_to_contact=CONTACT_SAFETY.SAFE, contact_for_research=True)
+        foo_org = make_recipe("call_centre.organisation", name="Foo org")
+        bar_org = make_recipe("call_centre.organisation", name="Bar org")
+        make_recipe("legalaid.case", personal_details=pd, organisation=foo_org)
+        make_recipe("legalaid.case", personal_details=pd, organisation=bar_org)
+        data = {"date_from": datetime.datetime.now(), "date_to": datetime.datetime.now()}
+        instance = reports.forms.MISurveyExtract(data=data)
+        instance.is_valid()
+        results = instance.get_queryset()
+        self.assertEqual(len(results), 1)
+
+        columns = [column.lower() for column in instance.get_headers()]
+        index = columns.index("organisation")
+        self.assertEqual("Bar org, Foo org", results[0][index])
 
 
 class ReportsDateRangeValidationWorks(TestCase):

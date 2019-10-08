@@ -15,7 +15,7 @@ SELECT
     (SELECT COUNT(legalaid_thirdpartydetails.id) > 0 FROM legalaid_thirdpartydetails WHERE legalaid_thirdpartydetails.personal_details_id=pd.id) AS "Third Party Contact",
     (SELECT string_agg(laa_reference::varchar, ', ') FROM legalaid_case c WHERE c.personal_details_id=pd.id),
     (SELECT string_agg(c.laa_reference::varchar, ', ') FROM legalaid_thirdpartydetails t RIGHT JOIN legalaid_case c ON c.thirdparty_details_id=t.id WHERE t.personal_details_id=pd.id),
-    (SELECT cc_org.name as organisation FROM call_centre_organisation cc_org INNER JOIN legalaid_case c ON cc_org.id = c.organisation_id WHERE c.personal_details_id=pd.id) as "Organisation"
+    (SELECT string_agg(DISTINCT cc_org.name::varchar, ', ' ORDER BY cc_org.name ASC) FROM call_centre_organisation cc_org INNER JOIN legalaid_case c ON cc_org.id = c.organisation_id WHERE c.personal_details_id=pd.id) as "Organisation"
 FROM
     legalaid_personaldetails AS pd
 WHERE pd.contact_for_research = TRUE

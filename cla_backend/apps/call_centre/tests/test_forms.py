@@ -386,7 +386,12 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         self.assertEqual(log.code, expected_outcome)
 
         self.assertEqual(
-            log.notes, "Callback scheduled for %s. lorem ipsum" % timezone.localtime(dt).strftime("%d/%m/%Y %H:%M")
+            log.notes,
+            "Callback scheduled for %s - %s. lorem ipsum"
+            % (
+                timezone.localtime(dt).strftime("%d/%m/%Y %H:%M"),
+                (timezone.localtime(dt) + datetime.timedelta(minutes=30)).strftime("%H:%M"),
+            ),
         )
         self.assertEqual(log.created_by, self.user)
         self.assertEqual(log.case, case)

@@ -11,7 +11,7 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import SET_NULL
-from django.utils.timezone import utc
+from django.utils.timezone import localtime, utc
 from django.core.exceptions import ObjectDoesNotExist
 
 from model_utils.models import TimeStampedModel
@@ -956,10 +956,11 @@ class Case(TimeStampedModel, ModelDiffMixin):
         end_time = self.requires_action_at + datetime.timedelta(minutes=30)
         if self.callback_window_type == CALLBACK_WINDOW_TYPES.HALF_HOUR_WINDOW:
             return u"{start} - {end}".format(
-                start=date_filter(self.requires_action_at, "g:iA"), end=date_filter(end_time, "g:iA")
+                start=date_filter(localtime(self.requires_action_at), "g:iA"),
+                end=date_filter(localtime(end_time), "g:iA"),
             )
         else:
-            return date_filter(self.requires_action_at, "g:iA")
+            return date_filter(localtime(self.requires_action_at), "g:iA")
 
 
 class CaseNotesHistory(TimeStampedModel):

@@ -67,5 +67,7 @@ class MiSlaTestCase(TestCase):
             report = MICB1Extract()
 
             qs = report.get_queryset()
+            headers = report.get_headers()
 
-        self.assertFalse(qs[0][28])
+        values = {k: v for k, v in zip(headers, qs[0])}
+        self.assertFalse(values["is_over_sla_30"])

@@ -62,8 +62,8 @@ WITH
         ,operator_first_view_after_cb1.created as operator_first_view_after_cb1__created
         ,c.created as case_created
         ,operator_first_log_after_cb1.code as "Next_Outcome"
-        ,trim((log.context->'requires_action_at')::text, '"')::timestamptz as requires_action_at_start
-        ,trim((log.context->'requires_action_at')::text, '"')::timestamptz + interval '30 minutes' as requires_action_at_end
+        ,trim((log.context->'requires_action_at')::text, '"')::timestamptz as callback_window_start
+        ,trim((log.context->'requires_action_at')::text, '"')::timestamptz + interval '30 minutes' as callback_window_end
         ,operator_first_log_after_cb1.rn
         ,operator_first_view_after_cb1.rn
         ,c.source
@@ -105,15 +105,15 @@ select
   ,operator_first_view_after_cb1__created
   ,operator_first_log_after_cb1__created
   ,"Next_Outcome"
-  ,requires_action_at_start
-  ,requires_action_at_end
-  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() BETWEEN requires_action_at_start AND requires_action_at_end ELSE operator_first_log_after_cb1__created BETWEEN requires_action_at_start AND requires_action_at_end END as is_within_sla_1
-  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() BETWEEN requires_action_at_start - interval '72 hours' AND requires_action_at_end + interval '72 hours' ELSE operator_first_log_after_cb1__created BETWEEN requires_action_at_start - interval '72 hours' AND requires_action_at_end + interval '72 hours' END as is_within_sla_2
+  ,callback_window_start
+  ,callback_window_end
+  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() BETWEEN callback_window_start AND callback_window_end ELSE operator_first_log_after_cb1__created BETWEEN callback_window_start AND callback_window_end END as is_within_sla_1
+  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours' ELSE operator_first_log_after_cb1__created BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours' END as is_within_sla_2
   ,source
   ,code
   ,organisation
 from all_rows
-WHERE %s < requires_action_at_start AND requires_action_at_start < %s
+WHERE %s < callback_window_start AND callback_window_start < %s
 ;
 
 

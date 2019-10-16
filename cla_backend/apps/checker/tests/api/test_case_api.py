@@ -31,6 +31,7 @@ class BaseCaseTestCase(CLACheckerAuthBaseApiTestMixin, SimpleResourceAPIMixin, A
                 "personal_details",
                 "reference",
                 "requires_action_at",
+                "callback_window_type",
                 "adaptation_details",
                 "thirdparty_details",
             ],
@@ -223,7 +224,11 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
 
         self.assertEqual(
             log.notes,
-            "Callback scheduled for %s. " % (timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M")),
+            "Callback scheduled for %s - %s. "
+            % (
+                timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M"),
+                (timezone.localtime(self._default_dt) + datetime.timedelta(minutes=30)).strftime("%H:%M"),
+            ),
         )
         _dt = timezone.localtime(self._default_dt)
         self.assertDictEqual(

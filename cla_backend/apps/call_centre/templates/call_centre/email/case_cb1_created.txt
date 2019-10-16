@@ -9,6 +9,6 @@ Tel: {{ case.personal_details.mobile_phone }}
 {% endif %}
 Reference: {{ case.reference }}
 
-Time slot: {{ case.requires_action_at|date:"c" }}
+Time slot: {{ case.callback_time_string }}
 {% endfilter %}
 URL: {{ case_url }}

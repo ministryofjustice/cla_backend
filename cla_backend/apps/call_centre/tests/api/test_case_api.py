@@ -66,6 +66,7 @@ class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, BaseFullCaseAPIMixin, AP
             "outcome_code",
             "outcome_description",
             "requires_action_at",
+            "callback_time_string",
             "callback_attempt",
             "source",
             "complaint_flag",
@@ -857,8 +858,9 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         return self._default_local_dt + datetime.timedelta(minutes=480)
 
     def get_expected_notes(self, data):
-        return "Callback scheduled for %s. %s" % (
+        return "Callback scheduled for %s - %s. %s" % (
             timezone.localtime(self._default_dt).strftime("%d/%m/%Y %H:%M"),
+            (timezone.localtime(self._default_dt) + datetime.timedelta(minutes=30)).strftime("%H:%M"),
             data["notes"],
         )
 

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.utils.functional import SimpleLazyObject
 from rest_framework import serializers
 
+from cla_common.constants import CALLBACK_WINDOW_TYPES
 from diagnosis.graph import get_graph
 from diagnosis.serializers import DiagnosisSerializer
 
@@ -164,6 +165,7 @@ class CaseSerializer(CaseSerializerBase):
     personal_details = PersonalDetailsSerializer()
     thirdparty_details = ThirdPartyDetailsSerializer(required=False)
     requires_action_at = serializers.DateTimeField(required=False)
+    callback_window_type = serializers.ChoiceField(choices=CALLBACK_WINDOW_TYPES, required=False)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
@@ -171,6 +173,7 @@ class CaseSerializer(CaseSerializerBase):
             "personal_details",
             "reference",
             "requires_action_at",
+            "callback_window_type",
             "adaptation_details",
             "thirdparty_details",
         )

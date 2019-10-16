@@ -1,3 +1,5 @@
+import datetime
+
 from django.utils import timezone
 
 from cla_eventlog.forms import BaseCaseLogForm
@@ -24,8 +26,9 @@ class BaseCallMeBackForm(BaseCaseLogForm):
 
     def get_notes(self):
         dt = timezone.localtime(self.get_requires_action_at())
-        return u"Callback scheduled for {dt}. {notes}".format(
-            dt=dt.strftime("%d/%m/%Y %H:%M"), notes=self.cleaned_data["notes"] or ""
+        end = dt + datetime.timedelta(minutes=30)
+        return u"Callback scheduled for {start} - {end}. {notes}".format(
+            start=dt.strftime("%d/%m/%Y %H:%M"), end=end.strftime("%H:%M"), notes=self.cleaned_data["notes"] or ""
         )
 
     def save(self, user):

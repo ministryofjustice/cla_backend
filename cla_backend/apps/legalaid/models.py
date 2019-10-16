@@ -1,6 +1,7 @@
 import logging
 import datetime
 import re
+from django.template.defaultfilters import date as date_filter
 from django.utils import timezone
 
 from jsonfield import JSONField
@@ -10,7 +11,7 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import SET_NULL
-from django.utils.timezone import utc
+from django.utils.timezone import localtime, utc
 from django.core.exceptions import ObjectDoesNotExist
 
 from model_utils.models import TimeStampedModel
@@ -41,6 +42,7 @@ from cla_common.constants import (
     ELIGIBILITY_REASONS,
     EXPRESSIONS_OF_DISSATISFACTION,
     RESEARCH_CONTACT_VIA,
+    CALLBACK_WINDOW_TYPES,
 )
 
 from legalaid.fields import MoneyField
@@ -649,6 +651,12 @@ class Case(TimeStampedModel, ModelDiffMixin):
     )
 
     requires_action_at = models.DateTimeField(auto_now=False, blank=True, null=True)
+    callback_window_type = models.CharField(
+        max_length=50,
+        choices=CALLBACK_WINDOW_TYPES.CHOICES,
+        default=CALLBACK_WINDOW_TYPES.HALF_HOUR_WINDOW,
+        editable=False,
+    )
     callback_attempt = models.PositiveSmallIntegerField(default=0)
 
     locked_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="case_locked")
@@ -918,14 +926,16 @@ class Case(TimeStampedModel, ModelDiffMixin):
 
     def set_requires_action_at(self, requires_action_at):
         self.requires_action_at = requires_action_at
+        self.callback_window_type = self._meta.get_field("callback_window_type").default
         self.callback_attempt += 1
-        self.save(update_fields=["requires_action_at", "callback_attempt", "modified"])
+        self.save(update_fields=["requires_action_at", "callback_window_type", "callback_attempt", "modified"])
 
     def reset_requires_action_at(self):
         if self.requires_action_at is not None or self.callback_attempt != 0:
             self.requires_action_at = None
+            self.callback_window_type = self._meta.get_field("callback_window_type").default
             self.callback_attempt = 0
-            self.save(update_fields=["requires_action_at", "callback_attempt", "modified"])
+            self.save(update_fields=["requires_action_at", "callback_window_type", "callback_attempt", "modified"])
 
     @property
     def doesnt_requires_action(self):
@@ -938,6 +948,19 @@ class Case(TimeStampedModel, ModelDiffMixin):
     @property
     def requires_action_by_operator_manager(self):
         return self.requires_action_by == REQUIRES_ACTION_BY.OPERATOR_MANAGER
+
+    @property
+    def callback_time_string(self):
+        if not self.requires_action_at:
+            return None
+        end_time = self.requires_action_at + datetime.timedelta(minutes=30)
+        if self.callback_window_type == CALLBACK_WINDOW_TYPES.HALF_HOUR_WINDOW:
+            return u"{start} - {end}".format(
+                start=date_filter(localtime(self.requires_action_at), "g:iA"),
+                end=date_filter(localtime(end_time), "g:iA"),
+            )
+        else:
+            return date_filter(localtime(self.requires_action_at), "g:iA")
 
 
 class CaseNotesHistory(TimeStampedModel):

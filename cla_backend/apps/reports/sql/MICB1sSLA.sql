@@ -64,6 +64,8 @@ WITH
         ,operator_first_log_after_cb1.code as "Next_Outcome"
         ,trim((log.context->'requires_action_at')::text, '"')::timestamptz as callback_window_start
         ,trim((log.context->'requires_action_at')::text, '"')::timestamptz + interval '30 minutes' as callback_window_end
+        ,trim((log.context->'sla_120')::text, '"')::timestamptz as sla_120
+        ,trim((log.context->'sla_480')::text, '"')::timestamptz as sla_480
         ,operator_first_log_after_cb1.rn
         ,operator_first_view_after_cb1.rn
         ,c.source
@@ -107,8 +109,18 @@ select
   ,"Next_Outcome"
   ,callback_window_start
   ,callback_window_end
-  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() BETWEEN callback_window_start AND callback_window_end ELSE operator_first_log_after_cb1__created BETWEEN callback_window_start AND callback_window_end END as is_within_sla_1
-  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours' ELSE operator_first_log_after_cb1__created BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours' END as is_within_sla_2
+  ,CASE
+   WHEN source='WEB' AND operator_first_log_after_cb1__created IS NULL THEN now() NOT BETWEEN callback_window_start AND callback_window_end
+   WHEN source='WEB' THEN operator_first_log_after_cb1__created NOT BETWEEN callback_window_start AND callback_window_end
+   WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_120
+   ELSE operator_first_log_after_cb1__created > sla_120
+   END as missed_sla_1
+  ,CASE
+   WHEN source='WEB' AND operator_first_log_after_cb1__created IS NULL THEN now() NOT BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours'
+   WHEN source='WEB' THEN operator_first_log_after_cb1__created NOT BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours'
+   WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_480
+   ELSE operator_first_log_after_cb1__created > sla_480
+   END as missed_sla_2
   ,source
   ,code
   ,organisation

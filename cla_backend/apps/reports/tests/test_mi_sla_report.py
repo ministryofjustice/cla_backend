@@ -5,9 +5,12 @@ from django.test import TestCase
 from django.utils import timezone
 import mock
 
+from cla_common.constants import CASE_SOURCE
+
 from core.tests.mommy_utils import make_recipe, make_user
 from cla_eventlog import event_registry
 from cla_eventlog.models import Log
+from legalaid.forms import get_sla_time
 from reports.forms import MICB1Extract
 
 
@@ -28,28 +31,38 @@ def patch_field(cls, field_name, dt):
         yield
 
 
-class MiSlaTestCase(TestCase):
-    @staticmethod
-    def get_report(callback_minutes_after_window_start):
-        dt = _make_datetime(2015, 1, 2, 9, 0, 0)
-        with patch_field(Log, "created", dt + datetime.timedelta(minutes=1)):
-            case = make_recipe("legalaid.case")
+class MiSlaTestCaseBase(TestCase):
+    source = None
+
+    def get_report(self, callback_minutes_after):
+        dt = _make_datetime(2015, 1, 2, 9, 1, 0)
+        with patch_field(Log, "created", dt - datetime.timedelta(minutes=1)):
+            case = make_recipe("legalaid.case", source=self.source)
 
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
         event = event_registry.get_event("call_me_back")()
-        with patch_field(Log, "created", dt + datetime.timedelta(minutes=1)):
+        with patch_field(Log, "created", dt):
             event.get_log_code(case=case)
             event.process(
-                case, created_by=user, notes="", context={"requires_action_at": dt + datetime.timedelta(minutes=1)}
+                case,
+                created_by=user,
+                notes="",
+                context={
+                    "requires_action_at": dt,
+                    "sla_15": get_sla_time(dt, 15),
+                    "sla_30": get_sla_time(dt, 30),
+                    "sla_120": get_sla_time(dt, 120),
+                    "sla_480": get_sla_time(dt, 480),
+                },
             )
 
         case.requires_action_at = dt
         case.save()
 
         event = event_registry.get_event("case")()
-        with patch_field(Log, "created", dt + datetime.timedelta(minutes=callback_minutes_after_window_start)):
+        with patch_field(Log, "created", dt + datetime.timedelta(minutes=callback_minutes_after)):
             event.process(case, status="call_started", created_by=user, notes="Call started")
 
         date_range = (_make_datetime(2015, 1, 1), _make_datetime(2015, 2, 1))
@@ -62,27 +75,50 @@ class MiSlaTestCase(TestCase):
 
         return {k: v for k, v in zip(headers, qs[0])}
 
+
+class MiSlaTestCaseWeb(MiSlaTestCaseBase):
+    source = CASE_SOURCE.WEB
+
     def test_within_window(self):
         values = self.get_report(25)
-        self.assertTrue(values["is_within_sla_1"])
-        self.assertTrue(values["is_within_sla_2"])
+        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
     def test_after_window(self):
         values = self.get_report(35)
-        self.assertFalse(values["is_within_sla_1"])
-        self.assertTrue(values["is_within_sla_2"])
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
     def test_before_window(self):
         values = self.get_report(-5)
-        self.assertFalse(values["is_within_sla_1"])
-        self.assertTrue(values["is_within_sla_2"])
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
     def test_after_sla_2_limit(self):
         values = self.get_report(75 * 60)
-        self.assertFalse(values["is_within_sla_1"])
-        self.assertFalse(values["is_within_sla_2"])
+        self.assertTrue(values["missed_sla_1"])
+        self.assertTrue(values["missed_sla_2"])
 
     def test_before_sla_2_limit(self):
         values = self.get_report(-75 * 60)
-        self.assertFalse(values["is_within_sla_1"])
-        self.assertFalse(values["is_within_sla_2"])
+        self.assertTrue(values["missed_sla_1"])
+        self.assertTrue(values["missed_sla_2"])
+
+
+class MiSlaTestCasePhone(MiSlaTestCaseBase):
+    source = CASE_SOURCE.PHONE
+
+    def test_within_two_hours(self):
+        values = self.get_report(90)
+        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    def test_within_eight_hours(self):
+        values = self.get_report(4 * 60)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    def test_beyond_eight_working_hours(self):
+        values = self.get_report(24 * 60)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertTrue(values["missed_sla_2"])

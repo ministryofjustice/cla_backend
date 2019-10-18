@@ -193,6 +193,7 @@ PROJECT_APPS = (
     "notifications",
     "performance",
     "complaints",
+    "cla_auditlog",
 )
 
 if BACKEND_ENABLED:

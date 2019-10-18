@@ -25,7 +25,7 @@ from .forms import (
     ComplaintsReport,
     MIDigitalCaseTypesExtract,
     MIProviderAllocationExtract,
-    MIExtractCaseViewActivityReport,
+    MIExtractCaseViewAuditLog,
 )
 from reports.models import Export
 from .tasks import ExportTask, OBIEEExportTask
@@ -195,6 +195,6 @@ def download_file(request, file_name="", *args, **kwargs):
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MIExtractCaseViewActivityReport, "MI Case Views Activity Extract")
+@report_view(MIExtractCaseViewAuditLog, "MI Case Views Audit Log Extract")
 def mi_case_view_extract():
     pass

@@ -387,6 +387,46 @@ class MICB1Extract(SQLFileDateRangeReport):
         ]
 
 
+class MICB1ExtractAgilisys(SQLFileDateRangeReport):
+    QUERY_FILE = "MICB1sSLAAgilisys.sql"
+
+    max_date_range = 3
+
+    def get_headers(self):
+        return [
+            "LAA_Reference",
+            "Hash_ID_personal_details_captured",
+            "Case_ID",
+            "Provider_ID_if_allocated",
+            "Law_Category_Name",
+            "Date_Case_Created",
+            "Last_Modified_Date",
+            "Outcome_Code_Child",
+            "Matter_Type_1",
+            "Matter_Type_2",
+            "created_by_id",
+            "Scope_Status",
+            "Eligibility_Status",
+            "Outcome_Created_At",
+            "Username",
+            "operator_first_view_after_cb1__created",
+            "operator_first_log_after_cb1__created",
+            "Next_Outcome",
+            "requires_action_at",
+            "sla_15",
+            "sla_120",
+            "sla_480",
+            "is_over_sla_15",
+            "is_over_sla_120",
+            "is_over_sla_480",
+            "Source",
+            "Code",
+            "sla_30",
+            "is_over_sla_30",
+            "Organisation",
+        ]
+
+
 class MIDigitalCaseTypesExtract(SQLFileDateRangeReport):
     QUERY_FILE = "MIDigitalCaseTypes.sql"
 

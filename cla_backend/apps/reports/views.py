@@ -17,6 +17,7 @@ from .forms import (
     MIAlternativeHelpExtract,
     MISurveyExtract,
     MICB1Extract,
+    MICB1ExtractAgilisys,
     MIVoiceReport,
     MIEODReport,
     MIOBIEEExportExtract,
@@ -119,6 +120,13 @@ def mi_survey_extract():
 @permission_required("legalaid.run_reports")
 @report_view(MICB1Extract, "MI CB1 Extract")
 def mi_cb1_extract():
+    pass
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+@report_view(MICB1ExtractAgilisys, "MI CB1 Extract for Agilisys")
+def mi_cb1_extract_agilisys():
     pass
 
 

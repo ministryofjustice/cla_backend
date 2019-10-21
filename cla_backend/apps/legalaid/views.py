@@ -48,8 +48,6 @@ from .models import (
     ContactResearchMethod,
 )
 
-from cla_auditlog.models import AuditLog
-
 
 class CaseFormActionMixin(FormActionMixin):
     """
@@ -550,7 +548,6 @@ class FullCaseViewSet(
 
         event = event_registry.get_event("case")()
         event.process(self.object, status="viewed", created_by=request.user, notes="Case viewed")
-        self.object.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
 
         return resp
 

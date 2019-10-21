@@ -9,6 +9,7 @@ from model_utils.models import TimeStampedModel
 from cla_eventlog.constants import LOG_LEVELS
 from complaints.constants import COMPLAINT_SOURCE, SLA_DAYS, HOLDING_LETTER_SLA_DAYS
 from legalaid.utils.sla import get_day_sla_time
+from cla_auditlog.models import AuditLog
 
 
 class ComplaintManager(models.Manager):
@@ -58,6 +59,7 @@ class Complaint(TimeStampedModel):
     )
 
     logs = GenericRelation("cla_eventlog.ComplaintLog", related_query_name="complaint")
+    audit_log = models.ManyToManyField(AuditLog)
 
     objects = ComplaintManager()
 

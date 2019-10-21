@@ -1,19 +1,26 @@
-from django.test import TestCase
-from django.core.urlresolvers import reverse
+from rest_framework.test import APITestCase
 
-from core.tests.mommy_utils import make_recipe
-
+from core.tests.test_base import SimpleResourceAPIMixin
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
+from call_centre.tests.api.test_case_api import BaseCaseTestCase
+from complaints.tests.test_complaints_api import ComplaintTestMixin
 
 
-class CaseViewSetTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
-    def setUp(self):
-        super(CaseViewSetTestCase, self).setUp()
-
+class CaseViewSetTestCase(BaseCaseTestCase):
     def test_audit_log_multiple_case_views(self):
-        case = make_recipe("legalaid.case")
-        url = reverse("call_centre:case-detail", args=(), kwargs={"reference": case.reference})
-        self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.operator_manager_token)
-        self.assertEqual(case.audit_log.count(), 1)
-        self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.operator_manager_token)
-        self.assertEqual(case.audit_log.count(), 2)
+        count = self.resource.audit_log.count()
+        self.client.get(self.detail_url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.operator_manager_token)
+        self.assertEqual(self.resource.audit_log.count(), count + 1)
+        self.client.get(self.detail_url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.operator_manager_token)
+        self.assertEqual(self.resource.audit_log.count(), count + 2)
+
+
+class ComplaintsViewSetTestCase(
+    ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase
+):
+    def test_audit_log_multiple_complaint_views(self):
+        count = self.resource.audit_log.count()
+        self.client.get(self.detail_url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.operator_manager_token)
+        self.assertEqual(self.resource.audit_log.count(), count + 1)
+        self.client.get(self.detail_url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.operator_manager_token)
+        self.assertEqual(self.resource.audit_log.count(), count + 2)

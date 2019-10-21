@@ -98,6 +98,8 @@ from .forms import (
 from .models import Operator
 from .utils.organisation import CaseOrganisationAssignCurrentOrganisationMixin
 
+from cla_auditlog.models import AuditLog
+
 
 class CallCentrePermissionsViewSetMixin(object):
     permission_classes = (CallCentreClientIDPermission,)
@@ -255,6 +257,11 @@ class CaseViewSet(
         user = self.request.user
         if not obj.pk and not isinstance(user, AnonymousUser):
             obj.created_by = user
+
+    def retrieve(self, request, *args, **kwargs):
+        response = super(CaseViewSet, self).retrieve(request, *args, **kwargs)
+        self.object.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
+        return response
 
     @list_route()
     def future_callbacks(self, request, **kwargs):
@@ -707,6 +714,11 @@ class ComplaintViewSet(
 
     def get_case(self, obj):
         return obj.eod.case
+
+    def retrieve(self, request, *args, **kwargs):
+        response = super(ComplaintViewSet, self).retrieve(request, *args, **kwargs)
+        self.object.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
+        return response
 
 
 class ComplaintCategoryViewSet(CallCentrePermissionsViewSetMixin, BaseComplaintCategoryViewSet):

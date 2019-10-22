@@ -7,5 +7,6 @@ FROM cla_auditlog_auditlog audit_log
     INNER JOIN auth_user auth ON auth.id = audit_log.user_id
     INNER JOIN call_centre_operator op on op.user_id = audit_log.user_id
     LEFT JOIN call_centre_organisation org ON org.id = op.organisation_id
+WHERE audit_log.created >= %(from_date)s AND audit_log.created < %(to_date)s
 GROUP BY auth.username, audit_log.created::date, c.reference, audit_log.action, org.name
-ORDER BY audit_log.created::date
+ORDER BY audit_log.created::date DESC, c.reference, "Count" DESC

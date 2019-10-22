@@ -79,97 +79,53 @@ class ReportOrganisationColumnTestCase(TestCase):
 
 class ReportMiAuditLogExtractTestCase(TestCase):
     def test_mi_case_audit_log_extract(self):
-        def get_reference(model):
-            return model.reference
+        def get_expected(model, operator, audit):
+            return (
+                model.reference,
+                AuditLog.ACTIONS.VIEWED,
+                operator.user.username,
+                operator.organisation.name,
+                audit.created,
+            )
 
-        self._test_model_audit_log_("legalaid.case", reports.forms.MIExtractCaseViewAuditLog, get_reference)
+        self._test_model_audit_log_("legalaid.case", reports.forms.MIExtractCaseViewAuditLog, get_expected)
 
     def test_mi_complaint_audit_log_extract(self):
-        def get_reference(model):
-            return model.eod.case.reference
+        def get_expected(model, operator, audit):
+            return (
+                model.eod.case.reference,
+                model.pk,
+                AuditLog.ACTIONS.VIEWED,
+                operator.user.username,
+                operator.organisation.name,
+                audit.created,
+            )
 
-        self._test_model_audit_log_(
-            "complaints.complaint", reports.forms.MIExtractComplaintViewAuditLog, get_reference
-        )
+        self._test_model_audit_log_("complaints.complaint", reports.forms.MIExtractComplaintViewAuditLog, get_expected)
 
-    def _test_model_audit_log_(self, model_def, form_cls, get_reference):
-        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
-        dates = {"date_from": yesterday, "date_to": datetime.datetime.now()}
+    def _test_model_audit_log_(self, model_def, form_cls, get_expected):
+        dates = {"date_from": datetime.datetime.now(), "date_to": datetime.datetime.now()}
 
         foo_org = make_recipe("call_centre.organisation", name="Foo org")
         bar_org = make_recipe("call_centre.organisation", name="Bar org")
 
         operator1 = make_recipe("call_centre.operator", organisation=foo_org)
         operator2 = make_recipe("call_centre.operator", organisation=bar_org)
+        operators = [operator1, operator2]
 
-        model1 = make_recipe(model_def)
-        model1.audit_log.add(
-            make_recipe(
-                "cla_auditlog.audit_log", user=operator1.user, action=AuditLog.ACTIONS.VIEWED, created=yesterday
-            )
-        )
-        model1.audit_log.add(
-            make_recipe(
-                "cla_auditlog.audit_log", user=operator1.user, action=AuditLog.ACTIONS.VIEWED, created=yesterday
-            )
-        )
-        model1.audit_log.add(
-            make_recipe(
-                "cla_auditlog.audit_log", user=operator2.user, action=AuditLog.ACTIONS.VIEWED, created=yesterday
-            )
-        )
-
-        model2 = make_recipe(model_def)
-        model2.audit_log.add(
-            make_recipe("cla_auditlog.audit_log", user=operator2.user, action=AuditLog.ACTIONS.VIEWED)
-        )
-        model2.audit_log.add(
-            make_recipe("cla_auditlog.audit_log", user=operator2.user, action=AuditLog.ACTIONS.VIEWED)
-        )
-        model2.audit_log.add(
-            make_recipe("cla_auditlog.audit_log", user=operator1.user, action=AuditLog.ACTIONS.VIEWED)
-        )
-
-        expected_results = [
-            (
-                get_reference(model2),
-                AuditLog.ACTIONS.VIEWED,
-                datetime.date.today(),
-                operator2.user.username,
-                operator2.organisation.name,
-                2,
-            ),
-            (
-                get_reference(model2),
-                AuditLog.ACTIONS.VIEWED,
-                datetime.date.today(),
-                operator1.user.username,
-                operator1.organisation.name,
-                1,
-            ),
-            (
-                get_reference(model1),
-                AuditLog.ACTIONS.VIEWED,
-                yesterday.date(),
-                operator1.user.username,
-                operator1.organisation.name,
-                2,
-            ),
-            (
-                get_reference(model1),
-                AuditLog.ACTIONS.VIEWED,
-                yesterday.date(),
-                operator2.user.username,
-                operator2.organisation.name,
-                1,
-            ),
-        ]
+        models = [make_recipe(model_def), make_recipe(model_def)]
+        expected_results = []
+        for model in models:
+            for operator in operators:
+                audit = make_recipe("cla_auditlog.audit_log", user=operator.user, action=AuditLog.ACTIONS.VIEWED)
+                model.audit_log.add(audit)
+                expected_results.append(get_expected(model, operator, audit))
 
         instance = form_cls(data=dates)
         instance.is_valid()
         results = instance.get_queryset()
         self.assertEqual(len(results), 4)
-        self.assertItemsEqual(results, expected_results)
+        self.assertEqual(results, list(reversed(expected_results)))
 
 
 class ReportsDateRangeValidationWorks(TestCase):

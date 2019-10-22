@@ -533,7 +533,7 @@ class MIExtractCaseViewAuditLog(SQLFileDateRangeReport):
         return {"from_date": from_date, "to_date": to_date}
 
     def get_headers(self):
-        return ["Case", "Action", "Date", "Operator", "Organisation", "Count"]
+        return ["Case", "Action", "Operator", "Organisation", "Date"]
 
 
 class MIExtractComplaintViewAuditLog(SQLFileDateRangeReport):
@@ -544,4 +544,4 @@ class MIExtractComplaintViewAuditLog(SQLFileDateRangeReport):
         return {"from_date": from_date, "to_date": to_date}
 
     def get_headers(self):
-        return ["Case", "Action", "Date", "Operator", "Organisation", "Count"]
+        return ["Case", "Complaint Id", "Action", "Operator", "Organisation", "Date"]

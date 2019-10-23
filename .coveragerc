@@ -1,0 +1,3 @@
+[run]
+source = cla_backend
+omit = *migrations*'

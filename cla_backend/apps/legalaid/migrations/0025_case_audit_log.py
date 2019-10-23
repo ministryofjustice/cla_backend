@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="case",
             name="audit_log",
-            field=models.ManyToManyField(to="cla_auditlog.AuditLog"),
+            field=models.ManyToManyField(to="cla_auditlog.AuditLog", blank=True),
             preserve_default=True,
         )
     ]

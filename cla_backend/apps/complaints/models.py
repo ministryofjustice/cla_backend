@@ -59,7 +59,7 @@ class Complaint(TimeStampedModel):
     )
 
     logs = GenericRelation("cla_eventlog.ComplaintLog", related_query_name="complaint")
-    audit_log = models.ManyToManyField(AuditLog)
+    audit_log = models.ManyToManyField(AuditLog, blank=True)
 
     objects = ComplaintManager()
 

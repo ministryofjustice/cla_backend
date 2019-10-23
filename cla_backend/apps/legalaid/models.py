@@ -640,7 +640,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
-    audit_log = models.ManyToManyField(AuditLog)
+    audit_log = models.ManyToManyField(AuditLog, blank=True)
 
     requires_action_by = models.CharField(
         max_length=50,

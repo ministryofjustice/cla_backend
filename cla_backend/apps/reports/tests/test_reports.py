@@ -107,8 +107,8 @@ class ReportsDateRangeValidationWorks(TestCase):
         class T(reports.forms.DateRangeReportForm):
             max_date_range = 5
 
-        start = datetime.datetime(2019, 3, 29, 12)  # GMT
-        end = datetime.datetime(2019, 4, 2, 12)  # BST
+        start = datetime.datetime(2019, 3, 29)  # GMT
+        end = datetime.datetime(2019, 4, 2)  # BST
         i = T(data={"date_from": start, "date_to": end})
         self.assertTrue(i.is_valid())
 
@@ -116,8 +116,8 @@ class ReportsDateRangeValidationWorks(TestCase):
         class T(reports.forms.DateRangeReportForm):
             max_date_range = 5
 
-        start = datetime.datetime(2019, 10, 25, 12)  # BST
-        end = datetime.datetime(2019, 10, 29, 12)  # GMT
+        start = datetime.datetime(2019, 10, 25)  # BST
+        end = datetime.datetime(2019, 10, 29)  # GMT
         i = T(data={"date_from": start, "date_to": end})
         self.assertTrue(i.is_valid())
 
@@ -125,8 +125,8 @@ class ReportsDateRangeValidationWorks(TestCase):
         class T(reports.forms.DateRangeReportForm):
             max_date_range = 5
 
-        start = datetime.datetime(2019, 3, 29, 12)  # GMT
-        end = datetime.datetime(2019, 4, 3, 12)  # BST
+        start = datetime.datetime(2019, 3, 29)  # GMT
+        end = datetime.datetime(2019, 4, 3)  # BST
         i = T(data={"date_from": start, "date_to": end})
         self.assertFalse(i.is_valid())
 
@@ -134,8 +134,8 @@ class ReportsDateRangeValidationWorks(TestCase):
         class T(reports.forms.DateRangeReportForm):
             max_date_range = 5
 
-        start = datetime.datetime(2019, 10, 25, 12)  # BST
-        end = datetime.datetime(2019, 10, 30, 12)  # GMT
+        start = datetime.datetime(2019, 10, 25)  # BST
+        end = datetime.datetime(2019, 10, 30)  # GMT
         i = T(data={"date_from": start, "date_to": end})
         self.assertFalse(i.is_valid())
 

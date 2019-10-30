@@ -107,32 +107,36 @@ class ReportsDateRangeValidationWorks(TestCase):
         class T(reports.forms.DateRangeReportForm):
             max_date_range = 5
 
-        start = datetime.datetime(2019, 3, 29, 12)
-        i = T(data={"date_from": start, "date_to": start + datetime.timedelta(days=4)})
+        start = datetime.datetime(2019, 3, 29, 12)  # GMT
+        end = datetime.datetime(2019, 4, 2, 12)  # BST
+        i = T(data={"date_from": start, "date_to": end})
         self.assertTrue(i.is_valid())
 
     def test_valid_date_range_clocks_going_back(self):
         class T(reports.forms.DateRangeReportForm):
             max_date_range = 5
 
-        start = datetime.datetime(2019, 10, 25, 12)
-        i = T(data={"date_from": start, "date_to": start + datetime.timedelta(days=4)})
+        start = datetime.datetime(2019, 10, 25, 12)  # BST
+        end = datetime.datetime(2019, 10, 29, 12)  # GMT
+        i = T(data={"date_from": start, "date_to": end})
         self.assertTrue(i.is_valid())
 
     def test_invalid_date_range_clocks_going_forward(self):
         class T(reports.forms.DateRangeReportForm):
             max_date_range = 5
 
-        start = datetime.datetime(2019, 3, 29, 12)
-        i = T(data={"date_from": start, "date_to": start + datetime.timedelta(days=5)})
+        start = datetime.datetime(2019, 3, 29, 12)  # GMT
+        end = datetime.datetime(2019, 4, 3, 12)  # BST
+        i = T(data={"date_from": start, "date_to": end})
         self.assertFalse(i.is_valid())
 
     def test_invalid_date_range_clocks_going_back(self):
         class T(reports.forms.DateRangeReportForm):
             max_date_range = 5
 
-        start = datetime.datetime(2019, 10, 25, 12)
-        i = T(data={"date_from": start, "date_to": start + datetime.timedelta(days=5)})
+        start = datetime.datetime(2019, 10, 25, 12)  # BST
+        end = datetime.datetime(2019, 10, 30, 12)  # GMT
+        i = T(data={"date_from": start, "date_to": end})
         self.assertFalse(i.is_valid())
 
 

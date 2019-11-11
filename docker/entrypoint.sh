@@ -28,6 +28,7 @@ load_test_data() {
         python manage.py loaddata test_provider_allocations.json
         python manage.py loaddata test_auth_clients.json
         python manage.py loaddata test_rotas.json
+        python manage.py loaddata test_contact_research_methods.json
 
     fi
 }

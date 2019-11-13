@@ -13,6 +13,8 @@ from legalaid.utils.diversity import save_diversity_data
 import reports.forms
 from reports.utils import OBIEEExporter
 
+from cla_auditlog.models import AuditLog
+
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
     def setUp(self):
@@ -73,6 +75,57 @@ class ReportOrganisationColumnTestCase(TestCase):
         columns = [column.lower() for column in instance.get_headers()]
         index = columns.index("organisation")
         self.assertEqual("Bar org, Foo org", results[0][index])
+
+
+class ReportMiAuditLogExtractTestCase(TestCase):
+    def test_mi_case_audit_log_extract(self):
+        def get_expected(model, operator, audit):
+            return (
+                model.reference,
+                AuditLog.ACTIONS.VIEWED,
+                operator.user.username,
+                operator.organisation.name,
+                audit.created,
+            )
+
+        self._test_model_audit_log_("legalaid.case", reports.forms.MIExtractCaseViewAuditLog, get_expected)
+
+    def test_mi_complaint_audit_log_extract(self):
+        def get_expected(model, operator, audit):
+            return (
+                model.eod.case.reference,
+                model.pk,
+                AuditLog.ACTIONS.VIEWED,
+                operator.user.username,
+                operator.organisation.name,
+                audit.created,
+            )
+
+        self._test_model_audit_log_("complaints.complaint", reports.forms.MIExtractComplaintViewAuditLog, get_expected)
+
+    def _test_model_audit_log_(self, model_def, form_cls, get_expected):
+        dates = {"date_from": datetime.datetime.now(), "date_to": datetime.datetime.now()}
+
+        foo_org = make_recipe("call_centre.organisation", name="Foo org")
+        bar_org = make_recipe("call_centre.organisation", name="Bar org")
+
+        operator1 = make_recipe("call_centre.operator", organisation=foo_org)
+        operator2 = make_recipe("call_centre.operator", organisation=bar_org)
+        operators = [operator1, operator2]
+
+        models = [make_recipe(model_def), make_recipe(model_def)]
+        expected_results = []
+        for model in models:
+            for operator in operators:
+                audit = make_recipe("cla_auditlog.audit_log", user=operator.user, action=AuditLog.ACTIONS.VIEWED)
+                model.audit_log.add(audit)
+                expected_results.append(get_expected(model, operator, audit))
+
+        instance = form_cls(data=dates)
+        instance.is_valid()
+        results = instance.get_queryset()
+        self.assertEqual(len(results), 4)
+        self.assertEqual(results, list(reversed(expected_results)))
 
 
 class ReportsDateRangeValidationWorks(TestCase):

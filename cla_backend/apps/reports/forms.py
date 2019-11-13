@@ -523,3 +523,25 @@ class MetricsReport(SQLFileDateRangeReport):
             "Time_phone_ineligible",
             "Time_phone_eligible",
         ]
+
+
+class MIExtractCaseViewAuditLog(SQLFileDateRangeReport):
+    QUERY_FILE = "MIExtractCaseAuditLog.sql"
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return ["Case", "Action", "Operator", "Organisation", "Date"]
+
+
+class MIExtractComplaintViewAuditLog(SQLFileDateRangeReport):
+    QUERY_FILE = "MIExtractComplaintAuditLog.sql"
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return ["Case", "Complaint Id", "Action", "Operator", "Organisation", "Date"]

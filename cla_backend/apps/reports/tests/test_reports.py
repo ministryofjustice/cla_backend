@@ -129,18 +129,68 @@ class ReportMiAuditLogExtractTestCase(TestCase):
 
 
 class ReportsDateRangeValidationWorks(TestCase):
-    def test_range_validation_works(self):
+    def test_valid_date_range(self):
+        class T(reports.forms.DateRangeReportForm):
+            max_date_range = 5
+
+        now = datetime.datetime.now()
+        i = T(data={"date_from": now - datetime.timedelta(days=4), "date_to": now})
+        self.assertTrue(i.is_valid())
+        self.assertEqual(i.errors.keys(), [])
+
+    def test_invalid_date_range(self):
         class T(reports.forms.DateRangeReportForm):
             max_date_range = 5
 
         now = datetime.datetime.now()
         i = T(data={"date_from": now - datetime.timedelta(days=5), "date_to": now})
         self.assertFalse(i.is_valid())
-        self.assertEqual(
-            i.errors, {u"__all__": [u"The date range (6 days, 0:00:00) should span no more than 5 working days"]}
+        self.assertEqual(i.errors.keys(), ["__all__"])
+        self.assertEqual(len(i.errors["__all__"]), 1)
+        self.assertIn(
+            i.errors[u"__all__"][0],
+            [
+                u"The date range (6 days, 0:00:00) should span no more than 5 working days",
+                u"The date range (6 days, 1:00:00) should span no more than 5 working days",
+                u"The date range (5 days, 23:00:00) should span no more than 5 working days",
+            ],
         )
-        i2 = T(data={"date_from": now - datetime.timedelta(days=1), "date_to": now})
-        self.assertTrue(i2.is_valid())
+
+    def test_valid_date_range_clocks_going_forward(self):
+        class T(reports.forms.DateRangeReportForm):
+            max_date_range = 5
+
+        start = datetime.datetime(2019, 3, 29)  # GMT
+        end = datetime.datetime(2019, 4, 2)  # BST
+        i = T(data={"date_from": start, "date_to": end})
+        self.assertTrue(i.is_valid())
+
+    def test_valid_date_range_clocks_going_back(self):
+        class T(reports.forms.DateRangeReportForm):
+            max_date_range = 5
+
+        start = datetime.datetime(2019, 10, 25)  # BST
+        end = datetime.datetime(2019, 10, 29)  # GMT
+        i = T(data={"date_from": start, "date_to": end})
+        self.assertTrue(i.is_valid())
+
+    def test_invalid_date_range_clocks_going_forward(self):
+        class T(reports.forms.DateRangeReportForm):
+            max_date_range = 5
+
+        start = datetime.datetime(2019, 3, 29)  # GMT
+        end = datetime.datetime(2019, 4, 3)  # BST
+        i = T(data={"date_from": start, "date_to": end})
+        self.assertFalse(i.is_valid())
+
+    def test_invalid_date_range_clocks_going_back(self):
+        class T(reports.forms.DateRangeReportForm):
+            max_date_range = 5
+
+        start = datetime.datetime(2019, 10, 25)  # BST
+        end = datetime.datetime(2019, 10, 30)  # GMT
+        i = T(data={"date_from": start, "date_to": end})
+        self.assertFalse(i.is_valid())
 
 
 class MIDuplicateCasesTestCase(TestCase):

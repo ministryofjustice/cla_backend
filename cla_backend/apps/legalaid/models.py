@@ -48,7 +48,7 @@ from cla_common.constants import (
 from legalaid.fields import MoneyField
 
 from cla_common.constants import CASE_SOURCE
-
+from cla_auditlog.models import AuditLog
 
 logger = logging.getLogger(__name__)
 
@@ -640,6 +640,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
     personal_details = models.ForeignKey(PersonalDetails, blank=True, null=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    audit_log = models.ManyToManyField(AuditLog, blank=True)
 
     requires_action_by = models.CharField(
         max_length=50,

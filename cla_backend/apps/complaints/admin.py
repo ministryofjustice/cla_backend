@@ -12,6 +12,9 @@ class ComplaintAdmin(admin.ModelAdmin):
             obj.created_by = request.user
         obj.save()
 
+    # Shouldn't be editable
+    exclude = ("audit_log",)
+
 
 admin.site.register(Complaint, ComplaintAdmin)
 admin.site.register(Category)

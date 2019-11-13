@@ -43,6 +43,7 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
     class Meta:
         model = Complaint
         read_only_fields = ("created", "modified", "resolved")
+        exclude = ("audit_log",)
 
 
 class ComplaintLogSerializerBase(LogSerializerBase):

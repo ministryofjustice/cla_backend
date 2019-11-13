@@ -40,6 +40,8 @@ class CaseAdmin(admin.ModelAdmin):
         "from_case",
     )
     readonly_fields = ("callback_window_type",)
+    # Shouldn't be editable
+    exclude = ("audit_log",)
 
     def get_fields(self, request, obj=None, **kwargs):
         fields = super(CaseAdmin, self).get_fields(request, obj, **kwargs)

@@ -34,7 +34,7 @@ def patch_field(cls, field_name, dt):
 class MiSlaTestCaseBase(TestCase):
     source = None
 
-    def get_report(self, callback_minutes_after):
+    def get_report(self, callback_minutes_after, callback_attempt=0):
         dt = _make_datetime(2015, 1, 2, 9, 1, 0)
         with patch_field(Log, "created", dt - datetime.timedelta(minutes=1)):
             case = make_recipe("legalaid.case", source=self.source)
@@ -42,28 +42,32 @@ class MiSlaTestCaseBase(TestCase):
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
-        event = event_registry.get_event("call_me_back")()
-        with patch_field(Log, "created", dt):
-            event.get_log_code(case=case)
-            event.process(
-                case,
-                created_by=user,
-                notes="",
-                context={
-                    "requires_action_at": dt,
-                    "sla_15": get_sla_time(dt, 15),
-                    "sla_30": get_sla_time(dt, 30),
-                    "sla_120": get_sla_time(dt, 120),
-                    "sla_480": get_sla_time(dt, 480),
-                },
-            )
+        requires_action_act = dt
+        while callback_attempt >= 0:
+            event = event_registry.get_event("call_me_back")()
+            with patch_field(Log, "created", requires_action_act):
+                event.get_log_code(case=case)
+                event.process(
+                    case,
+                    created_by=user,
+                    notes="",
+                    context={
+                        "requires_action_at": requires_action_act,
+                        "sla_15": get_sla_time(dt, 15),
+                        "sla_30": get_sla_time(dt, 30),
+                        "sla_120": get_sla_time(dt, 120),
+                        "sla_480": get_sla_time(dt, 480),
+                    },
+                )
+                case.set_requires_action_at(requires_action_act)
 
-        case.requires_action_at = dt
-        case.save()
+            event = event_registry.get_event("case")()
+            requires_action_act = requires_action_act + datetime.timedelta(minutes=callback_minutes_after)
+            with patch_field(Log, "created", requires_action_act):
+                event.process(case, status="call_started", created_by=user, notes="Call started")
+            requires_action_act = requires_action_act + datetime.timedelta(minutes=30, seconds=30)
 
-        event = event_registry.get_event("case")()
-        with patch_field(Log, "created", dt + datetime.timedelta(minutes=callback_minutes_after)):
-            event.process(case, status="call_started", created_by=user, notes="Call started")
+            callback_attempt = callback_attempt - 1
 
         date_range = (_make_datetime(2015, 1, 1), _make_datetime(2015, 2, 1))
 
@@ -103,6 +107,21 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
         values = self.get_report(-75 * 60)
         self.assertTrue(values["missed_sla_1"])
         self.assertTrue(values["missed_sla_2"])
+
+    def test_within_cb2_window(self):
+        values = self.get_report(35, callback_attempt=1)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    def test_cb2_after_sla_2_limit(self):
+        values = self.get_report(75 * 60, callback_attempt=1)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertTrue(values["missed_sla_2"])
+
+    def test_within_cb3_window(self):
+        values = self.get_report(70, callback_attempt=2)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
 
 class MiSlaTestCasePhone(MiSlaTestCaseBase):

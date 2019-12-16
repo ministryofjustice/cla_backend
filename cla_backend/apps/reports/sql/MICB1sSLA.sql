@@ -4,12 +4,17 @@ WITH
          o.id as o_id
         ,no.id as no_id
         ,no.code as code
+        ,log_call_started.code as cs_code
         ,no.created
         ,row_number() over (PARTITION BY o.id order by no.id asc) as rn
       from cla_eventlog_log o
         JOIN cla_eventlog_log no on
                                    o.case_id = no.case_id
                                    and no.id > o.id
+        LEFT JOIN cla_eventlog_log log_call_started on
+                                   log_call_started.case_id = no.case_id
+                                   and log_call_started.id > o.id
+                                   and log_call_started.code = 'CALL_STARTED'
         JOIN call_centre_operator AS op ON no.created_by_id = op.user_id
       order by no.id asc
 
@@ -46,6 +51,7 @@ WITH
         ,mt1.code as "Matter_Type_1"
         ,mt2.code as "Matter_Type_2"
         ,log.created_by_id
+        ,cs_code
         ,CASE diagnosis.state
          when 'INSCOPE' then 'PASS'
          when 'OUTOFSCOPE' then 'FAIL'
@@ -110,6 +116,7 @@ select
   ,callback_window_start
   ,callback_window_end
   ,CASE
+   WHEN source='WEB' AND operator_first_log_after_cb1__created IS NULL AND now() < callback_window_start THEN FALSE
    WHEN source='WEB' AND operator_first_log_after_cb1__created IS NULL THEN now() NOT BETWEEN callback_window_start AND callback_window_end
    WHEN source='WEB' THEN operator_first_log_after_cb1__created NOT BETWEEN callback_window_start AND callback_window_end
    WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_120
@@ -117,7 +124,8 @@ select
    END as missed_sla_1
   ,CASE
    WHEN source='WEB' AND operator_first_log_after_cb1__created IS NULL THEN now() NOT BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours'
-   WHEN source='WEB' THEN operator_first_log_after_cb1__created NOT BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours'
+   WHEN source='WEB' AND "cs_code" IS NOT NULL THEN  operator_first_log_after_cb1__created NOT BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours'
+   WHEN source='WEB' THEN  now() NOT BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours'
    WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_480
    ELSE operator_first_log_after_cb1__created > sla_480
    END as missed_sla_2

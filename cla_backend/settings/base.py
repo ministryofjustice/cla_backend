@@ -308,6 +308,8 @@ OPERATOR_HOURS = {
     "saturday": (datetime.time(9, 0), datetime.time(12, 30)),
     "2018-12-24": (datetime.time(9, 0), datetime.time(17, 30)),
     "2018-12-31": (datetime.time(9, 0), datetime.time(17, 30)),
+    "2019-12-24": (datetime.time(9, 0), datetime.time(18, 00)),
+    "2019-12-31": (datetime.time(9, 0), datetime.time(18, 00)),
 }
 
 OBIEE_IP_PERMISSIONS = ("*",)

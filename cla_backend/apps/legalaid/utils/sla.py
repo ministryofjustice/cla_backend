@@ -1,7 +1,6 @@
 # coding=utf-8
 from datetime import timedelta
 from django.utils import timezone
-from django.conf import settings
 
 from cla_common.call_centre_availability import (
     SLOT_INTERVAL_MINS,
@@ -10,9 +9,10 @@ from cla_common.call_centre_availability import (
     on_sunday,
     on_bank_holiday,
 )
+from cla_common.constants import OPERATOR_HOURS
 
 
-operator_hours = OpeningHours(**settings.OPERATOR_HOURS)
+operator_hours = OpeningHours(**OPERATOR_HOURS)
 
 
 def is_in_business_hours(dt):

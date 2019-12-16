@@ -3,6 +3,7 @@ import sys
 import os
 
 from cla_common.call_centre_availability import OpeningHours
+from cla_common.constants import OPERATOR_HOURS
 
 # PATH vars
 
@@ -302,15 +303,6 @@ CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get("CALL_CENTRE_NOTIFY_EMAIL_ADDR
 NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(17, 0))}
 
 NON_ROTA_OPENING_HOURS = OpeningHours(**NON_ROTA_HOURS)
-
-OPERATOR_HOURS = {
-    "weekday": (datetime.time(9, 0), datetime.time(20, 0)),
-    "saturday": (datetime.time(9, 0), datetime.time(12, 30)),
-    "2018-12-24": (datetime.time(9, 0), datetime.time(17, 30)),
-    "2018-12-31": (datetime.time(9, 0), datetime.time(17, 30)),
-    "2019-12-24": (datetime.time(9, 0), datetime.time(18, 00)),
-    "2019-12-31": (datetime.time(9, 0), datetime.time(18, 00)),
-}
 
 OBIEE_IP_PERMISSIONS = ("*",)
 

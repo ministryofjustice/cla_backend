@@ -58,7 +58,9 @@ class ProviderAllocationFormTestCase(TestCase):
     @mock.patch("cla_provider.models.timezone.now")
     @mock.patch("cla_provider.helpers.timezone.now")
     def test_save_out_office_hours_bank_holiday(self, timezone_mock, models_timezone_mock):
-        _mock_datetime_now_with(datetime.datetime(2014, 1, 1, 9, 1, 0), timezone_mock, models_timezone_mock)
+        _mock_datetime_now_with(
+            datetime.datetime(datetime.date.today().year, 1, 1, 9, 1, 0), timezone_mock, models_timezone_mock
+        )
 
         case = make_recipe("legalaid.case")
         category = case.eligibility_check.category
@@ -183,7 +185,9 @@ class ProviderAllocationFormTestCase(TestCase):
     @mock.patch("cla_provider.models.timezone.now")
     @mock.patch("cla_provider.helpers.timezone.now")
     def test_save_out_office_hours_no_valid_provider(self, timezone_mock, models_timezone_mock):
-        _mock_datetime_now_with(datetime.datetime(2014, 1, 1, 8, 59, 0), timezone_mock, models_timezone_mock)
+        _mock_datetime_now_with(
+            datetime.datetime(datetime.date.today().year, 1, 1, 8, 59, 0), timezone_mock, models_timezone_mock
+        )
 
         case = make_recipe("legalaid.case")
         category = case.eligibility_check.category

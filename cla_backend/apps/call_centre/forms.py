@@ -1,14 +1,13 @@
 import datetime
 
 from django import forms
-from django.conf import settings
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.forms.util import ErrorList
 from django.utils import timezone
 
 from cla_common.call_centre_availability import OpeningHours
-from cla_common.constants import GENDERS, ETHNICITIES, RELIGIONS, SEXUAL_ORIENTATIONS, DISABILITIES
+from cla_common.constants import GENDERS, ETHNICITIES, RELIGIONS, SEXUAL_ORIENTATIONS, DISABILITIES, OPERATOR_HOURS
 
 from knowledgebase.models import Article
 
@@ -22,7 +21,7 @@ from cla_provider.models import Provider
 from cla_provider.helpers import notify_case_RDSPed
 
 
-OPERATOR_HOURS = OpeningHours(**settings.OPERATOR_HOURS)
+operator_hours = OpeningHours(**OPERATOR_HOURS)
 
 
 class ProviderAllocationForm(BaseCaseLogForm):
@@ -209,7 +208,7 @@ class CallMeBackForm(BaseCallMeBackForm):
         if timezone.is_naive(_dt):
             _dt = timezone.make_aware(_dt, timezone.utc)
         _dt = timezone.localtime(_dt)
-        return _dt not in OPERATOR_HOURS
+        return _dt not in operator_hours
 
     def get_kwargs(self):
         kwargs = super(CallMeBackForm, self).get_kwargs()

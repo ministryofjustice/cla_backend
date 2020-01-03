@@ -845,6 +845,17 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_validator_education_matter_type1_code_edjr_is_valid(self):
+        test_values = {
+            "Matter Type 1": u"EDJR",
+            "Matter Type 2": u"ENUR",
+            "Stage Reached": u"EA",
+            "Outcome Code": u"EZ",
+            "Fixed Fee Code": u"NA",
+        }
+        self._test_generated_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_invalid_outcome_code(self):
         test_values = {
             "Matter Type 1": u"EPRO",

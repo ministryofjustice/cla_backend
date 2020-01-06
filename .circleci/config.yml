@@ -6,8 +6,6 @@ jobs:
     environment:
       DSD_DOCKER_REGISTRY: "registry.service.dsd.io"
       DSD_DOCKER_IMAGE: "cla_backend"
-      ECR_DOCKER_REGISTRY: "926803513772.dkr.ecr.eu-west-1.amazonaws.com"
-      ECR_DOCKER_IMAGE: "laa-get-access/laa-cla-backend"
     steps:
       - checkout
       - setup_remote_docker:
@@ -21,13 +19,6 @@ jobs:
               --password $DOCKER_PASSWORD \
               --email "${DOCKER_USERNAME}@digital.justice.gov.uk" \
               $DSD_DOCKER_REGISTRY
-      - run:
-          name: Login to the ECR Docker registry
-          command: |
-            apk add --no-cache --no-progress py2-pip
-            pip install awscli
-            ecr_login="$(aws ecr get-login --region eu-west-1 --no-include-email)"
-            ${ecr_login}
       - run:
           name: Build Docker image
           command: |

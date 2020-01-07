@@ -123,9 +123,15 @@ select
    ELSE operator_first_log_after_cb1__created > sla_120
    END as missed_sla_1
   ,CASE
-   WHEN source='WEB' AND operator_first_log_after_cb1__created IS NULL THEN now() NOT BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours'
-   WHEN source='WEB' AND "cs_code" IS NOT NULL THEN  operator_first_log_after_cb1__created NOT BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours'
-   WHEN source='WEB' THEN  now() NOT BETWEEN callback_window_start - interval '72 hours' AND callback_window_end + interval '72 hours'
+-- User not contacted and now < callback_window_start window
+   WHEN source='WEB' AND operator_first_log_after_cb1__created IS NULL AND now() < callback_window_start THEN FALSE
+-- User not contacted within the 72 hours
+   WHEN source='WEB' AND operator_first_log_after_cb1__created IS NULL THEN now() NOT BETWEEN callback_window_start AND callback_window_end + interval '72 hours'
+-- User contacted but before the callback_window_start window
+   WHEN source='WEB' AND "cs_code" IS NOT NULL AND operator_first_log_after_cb1__created < callback_window_start THEN FALSE
+-- User contacted within the 72 hours
+   WHEN source='WEB' AND "cs_code" IS NOT NULL THEN  operator_first_log_after_cb1__created NOT BETWEEN callback_window_start AND callback_window_end + interval '72 hours'
+   WHEN source='WEB' THEN  now() NOT BETWEEN callback_window_start AND callback_window_end + interval '72 hours'
    WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_480
    ELSE operator_first_log_after_cb1__created > sla_480
    END as missed_sla_2

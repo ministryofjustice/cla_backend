@@ -115,6 +115,8 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb1_uncalled_and_current_time_before_sla1(self):
         # SLA 1 miss is FALSE - Current time before SLA1 window
         # SLA 2 miss is FALSE - Current time is within sla2 window
+
+        # 9:01 tomorrow
         created = _make_datetime(hour=9, minute=1) + datetime.timedelta(days=1)
         case = self.make_case(created)
         user = make_user()
@@ -133,6 +135,8 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb1_uncalled_and_current_time_after_sla1(self):
         # SLA 1 miss is TRUE - Current time is after SLA1 window and CB2 hasn't been scheduled
         # SLA 2 miss is FALSE - Current time is within sla2 window
+
+        # 9:01 yesterday
         created = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
         case = self.make_case(created)
         user = make_user()
@@ -151,6 +155,8 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb2_created_WITHIN_sla1_window_and_current_time_WITHIN_sla2_window(self):
         # SLA 1 miss is FALSE - CB2 created within sla1 window
         # SLA 2 miss is FALSE - Current time is within sla2 window
+
+        # 9:01 yesterday
         created = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
         case = self.make_case(created)
         user = make_user()
@@ -172,6 +178,8 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb2_created_BEFORE_sla1_window_and_current_time_WITHIN_sla2_window(self):
         # SLA 1 miss is TRUE - CB2 created before sla1 window
         # SLA 2 miss is FALSE - Current time is within sla2 window
+
+        # 9:01 yesterday
         created = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
         case = self.make_case(created)
         user = make_user()
@@ -193,6 +201,8 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb2_created_AFTER_sla1_window_and_current_time_WITHIN_sla2_window(self):
         # SLA 1 miss is TRUE  - CB2 created after sla1 window
         # SLA 2 miss is FALSE - Current time is within sla2 window
+
+        # 9:01 yesterday
         created = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
         case = self.make_case(created)
         user = make_user()
@@ -214,6 +224,8 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb2_created_AFTER_sla1_window_and_current_time_AFTER_sla2_window(self):
         # SLA 1 miss is TRUE  - CB2 created after sla1 window
         # SLA 2 miss is TRUE  - Current time is after sla2 window
+
+        # 9:01 4 days ago
         created = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=4)
         case = self.make_case(created)
         user = make_user()

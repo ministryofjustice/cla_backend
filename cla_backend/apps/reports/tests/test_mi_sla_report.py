@@ -42,27 +42,28 @@ class MiSlaTestCaseBase(TestCase):
         with patch_field(Log, "created", dt - datetime.timedelta(minutes=1)):
             return make_recipe("legalaid.case", source=self.source)
 
-    def schedule_callback(self, case, user, requires_action_act):
+    def schedule_callback(self, case, user, created, requires_action_at=None):
+        requires_action_at = requires_action_at or created + datetime.timedelta(minutes=35)
         event = event_registry.get_event("call_me_back")()
-        with patch_field(Log, "created", requires_action_act):
+        with patch_field(Log, "created", created):
             event.get_log_code(case=case)
             event.process(
                 case,
                 created_by=user,
                 notes="",
                 context={
-                    "requires_action_at": requires_action_act,
-                    "sla_15": get_sla_time(requires_action_act, 15),
-                    "sla_30": get_sla_time(requires_action_act, 30),
-                    "sla_120": get_sla_time(requires_action_act, 120),
-                    "sla_480": get_sla_time(requires_action_act, 480),
+                    "requires_action_at": requires_action_at,
+                    "sla_15": get_sla_time(requires_action_at, 15),
+                    "sla_30": get_sla_time(requires_action_at, 30),
+                    "sla_120": get_sla_time(requires_action_at, 120),
+                    "sla_480": get_sla_time(requires_action_at, 480),
                 },
             )
-            case.set_requires_action_at(requires_action_act)
+            case.set_requires_action_at(requires_action_at)
 
-    def start_call(self, case, user, dt):
+    def start_call(self, case, user, created):
         event = event_registry.get_event("case")()
-        with patch_field(Log, "created", dt):
+        with patch_field(Log, "created", created):
             event.process(case, status="call_started", created_by=user, notes="Call started")
 
     def get_report(self, date_range):
@@ -75,13 +76,14 @@ class MiSlaTestCaseBase(TestCase):
         return {k: v for k, v in zip(headers, qs[0])}
 
     def create_and_get_report(self, callback_minutes_after):
-        dt = _make_datetime(2015, 1, 2, 9, 1, 0)
-        case = self.make_case(dt)
+        created = _make_datetime(2015, 1, 2, 9, 1, 0)
+        case = self.make_case(created)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
-        self.schedule_callback(case, user, dt)
-        self.start_call(case, user, dt + datetime.timedelta(minutes=callback_minutes_after))
+        requires_action_at = created + datetime.timedelta(hours=1)
+        self.schedule_callback(case, user, created, requires_action_at)
+        self.start_call(case, user, requires_action_at + datetime.timedelta(minutes=callback_minutes_after))
 
         date_range = (_make_datetime(2015, 1, 1), _make_datetime(2015, 2, 1))
         return self.get_report(date_range)
@@ -111,34 +113,36 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
         self.assertTrue(values["missed_sla_2"])
 
     def test_cb1_uncalled_and_current_time_before_sla1(self):
-        # SLA 1 miss is FALSE - No action before sla1 window
+        # SLA 1 miss is FALSE - Current time before SLA1 window
         # SLA 2 miss is FALSE - Current time is within sla2 window
-        dt = _make_datetime(hour=9, minute=1) + datetime.timedelta(days=1)
-        case = self.make_case(dt)
+        created = _make_datetime(hour=9, minute=1) + datetime.timedelta(days=1)
+        case = self.make_case(created)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
         # Create CB 1
-        self.schedule_callback(case, user, dt)
+        requires_action_at = created + datetime.timedelta(hours=1)
+        self.schedule_callback(case, user, created, requires_action_at)
 
-        date_range = (dt - datetime.timedelta(days=2), dt + datetime.timedelta(days=2))
+        date_range = (created - datetime.timedelta(days=2), created + datetime.timedelta(days=2))
         values = self.get_report(date_range)
 
         self.assertFalse(values["missed_sla_1"])
         self.assertFalse(values["missed_sla_2"])
 
     def test_cb1_uncalled_and_current_time_after_sla1(self):
-        # SLA 1 miss is TRUE - No action within sla1 window
+        # SLA 1 miss is TRUE - Current time is after SLA1 window and CB2 hasn't been scheduled
         # SLA 2 miss is FALSE - Current time is within sla2 window
-        dt = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
-        case = self.make_case(dt)
+        created = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
+        case = self.make_case(created)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
         # Create CB 1
-        self.schedule_callback(case, user, dt)
+        requires_action_at = created + datetime.timedelta(hours=1)
+        self.schedule_callback(case, user, created, requires_action_at)
 
-        date_range = (dt - datetime.timedelta(days=2), dt + datetime.timedelta(days=2))
+        date_range = (created - datetime.timedelta(days=2), created + datetime.timedelta(days=2))
         values = self.get_report(date_range)
 
         self.assertTrue(values["missed_sla_1"])
@@ -147,17 +151,19 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb2_scheduled_WITHIN_sla1_window_and_current_time_WITHIN_sla2_window(self):
         # SLA 1 miss is FALSE - CB2 Scheduled within sla1 window
         # SLA 2 miss is FALSE - Current time is within sla2 window
-        dt = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
-        case = self.make_case(dt)
+        created = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
+        case = self.make_case(created)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
         # Create CB 1
-        self.schedule_callback(case, user, dt)
-        # Create CB2
-        self.schedule_callback(case, user, dt + datetime.timedelta(minutes=25))
+        requires_action_at = created + datetime.timedelta(hours=1)
+        self.schedule_callback(case, user, created, requires_action_at)
 
-        date_range = (dt - datetime.timedelta(days=2), dt + datetime.timedelta(days=1))
+        # Create CB2 within SLA1 window
+        self.schedule_callback(case, user, requires_action_at + datetime.timedelta(minutes=25))
+
+        date_range = (created - datetime.timedelta(days=2), created + datetime.timedelta(days=1))
         values = self.get_report(date_range)
 
         self.assertFalse(values["missed_sla_1"])
@@ -166,17 +172,19 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb2_scheduled_BEFORE_sla1_window_and_current_time_WITHIN_sla2_window(self):
         # SLA 1 miss is TRUE - CB2 Scheduled before sla1 window
         # SLA 2 miss is FALSE - Current time is within sla2 window
-        dt = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
-        case = self.make_case(dt)
+        created = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
+        case = self.make_case(created)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
         # Create CB 1
-        self.schedule_callback(case, user, dt)
-        # Create CB2
-        self.schedule_callback(case, user, dt + datetime.timedelta(minutes=-5))
+        requires_action_at = created + datetime.timedelta(hours=1)
+        self.schedule_callback(case, user, created, requires_action_at)
 
-        date_range = (dt - datetime.timedelta(days=2), dt + datetime.timedelta(days=1))
+        # Create CB2 before SLA1 window
+        self.schedule_callback(case, user, requires_action_at + datetime.timedelta(minutes=-5))
+
+        date_range = (created - datetime.timedelta(days=2), created + datetime.timedelta(days=1))
         values = self.get_report(date_range)
 
         self.assertTrue(values["missed_sla_1"])
@@ -185,17 +193,19 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb2_scheduled_AFTER_sla1_window_and_current_time_WITHIN_sla2_window(self):
         # SLA 1 miss is TRUE  - CB2 Scheduled after sla1 window
         # SLA 2 miss is FALSE - Current time is within sla2 window
-        dt = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
-        case = self.make_case(dt)
+        created = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=1)
+        case = self.make_case(created)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
         # Create CB1
-        self.schedule_callback(case, user, dt)
-        # Create CB2
-        self.schedule_callback(case, user, dt + datetime.timedelta(minutes=31))
+        requires_action_at = created + datetime.timedelta(hours=1)
+        self.schedule_callback(case, user, created, requires_action_at)
 
-        date_range = (dt - datetime.timedelta(days=2), dt + datetime.timedelta(days=1))
+        # Create CB2 after SLA1 window
+        self.schedule_callback(case, user, requires_action_at + datetime.timedelta(minutes=31))
+
+        date_range = (created - datetime.timedelta(days=2), created + datetime.timedelta(days=1))
         values = self.get_report(date_range)
 
         self.assertTrue(values["missed_sla_1"])
@@ -204,17 +214,19 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb2_scheduled_AFTER_sla1_window_and_current_time_AFTER_sla2_window(self):
         # SLA 1 miss is TRUE  - CB2 Scheduled after sla1 window
         # SLA 2 miss is TRUE  - Current time is after sla2 window
-        dt = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=4)
-        case = self.make_case(dt)
+        created = _make_datetime(hour=9, minute=1) - datetime.timedelta(days=4)
+        case = self.make_case(created)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
         # Create CB 1
-        self.schedule_callback(case, user, dt)
-        # Create CB2
-        self.schedule_callback(case, user, dt + datetime.timedelta(minutes=31))
+        requires_action_at = created + datetime.timedelta(hours=1)
+        self.schedule_callback(case, user, created, requires_action_at)
 
-        date_range = (dt - datetime.timedelta(days=5), dt + datetime.timedelta(days=5))
+        # Create CB2 after SLA1 window
+        self.schedule_callback(case, user, requires_action_at + datetime.timedelta(minutes=31))
+
+        date_range = (created - datetime.timedelta(days=5), created + datetime.timedelta(days=5))
         values = self.get_report(date_range)
 
         self.assertTrue(values["missed_sla_1"])
@@ -223,18 +235,20 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb2_scheduled_WITHIN_sla1_window_and_call_answered_WITHIN_sla2_window(self):
         # SLA 1 miss is FALSE  - CB2 Scheduled within sla1 window
         # SLA 2 miss is FALSE  - Call answered within SLA2 window
-        dt = _make_datetime(2015, 1, 2, 9, 1, 0)
-        case = self.make_case(dt)
+        created = _make_datetime(2015, 1, 2, 9, 1, 0)
+        case = self.make_case(created)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
         # Create CB 1
-        self.schedule_callback(case, user, dt)
-        # Create CB2
-        self.schedule_callback(case, user, dt + datetime.timedelta(minutes=25))
+        requires_action_at = created + datetime.timedelta(hours=1)
+        self.schedule_callback(case, user, created, requires_action_at)
+
+        # Create CB2 within SLA1 window
+        self.schedule_callback(case, user, requires_action_at + datetime.timedelta(minutes=25))
 
         # Start call
-        self.start_call(case, user, dt + datetime.timedelta(minutes=60))
+        self.start_call(case, user, requires_action_at + datetime.timedelta(minutes=60))
 
         date_range = (_make_datetime(2015, 1, 1), _make_datetime(2015, 2, 1))
         values = self.get_report(date_range)
@@ -245,20 +259,23 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
     def test_cb3_scheduled_WITHIN_sla1_window_and_call_answered_WITHIN_sla2_window(self):
         # SLA 1 miss is FALSE  - CB3 Scheduled within sla1 window
         # SLA 2 miss is FALSE  - Call answered within SLA2 window
-        dt = _make_datetime(2015, 1, 2, 9, 1, 0)
-        case = self.make_case(dt)
+        created = _make_datetime(2015, 1, 2, 9, 1, 0)
+        case = self.make_case(created)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
         # Create CB 1
-        self.schedule_callback(case, user, dt)
-        # Create CB2
-        self.schedule_callback(case, user, dt + datetime.timedelta(minutes=25))
-        # Create CB3
-        self.schedule_callback(case, user, dt + datetime.timedelta(minutes=28))
+        requires_action_at = created + datetime.timedelta(hours=1)
+        self.schedule_callback(case, user, created, requires_action_at)
+
+        # Create CB2 within SLA1 window
+        self.schedule_callback(case, user, requires_action_at + datetime.timedelta(minutes=25))
+
+        # Create CB3 within SLA1 window
+        self.schedule_callback(case, user, requires_action_at + datetime.timedelta(minutes=28))
 
         # Start call
-        self.start_call(case, user, dt + datetime.timedelta(minutes=60 * 60))
+        self.start_call(case, user, requires_action_at + datetime.timedelta(minutes=60 * 60))
 
         date_range = (_make_datetime(2015, 1, 1), _make_datetime(2015, 2, 1))
         values = self.get_report(date_range)

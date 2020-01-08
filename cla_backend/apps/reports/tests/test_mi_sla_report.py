@@ -296,20 +296,5 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
         self.assertFalse(values["missed_sla_2"])
 
 
-class MiSlaTestCasePhone(MiSlaTestCaseBase):
+class MiSlaTestCasePhone(MiSlaTestCaseWeb):
     source = CASE_SOURCE.PHONE
-
-    def test_within_two_hours(self):
-        values = self.create_and_get_report(90)
-        self.assertFalse(values["missed_sla_1"])
-        self.assertFalse(values["missed_sla_2"])
-
-    def test_within_eight_hours(self):
-        values = self.create_and_get_report(4 * 60)
-        self.assertTrue(values["missed_sla_1"])
-        self.assertFalse(values["missed_sla_2"])
-
-    def test_beyond_eight_working_hours(self):
-        values = self.create_and_get_report(24 * 60)
-        self.assertTrue(values["missed_sla_1"])
-        self.assertTrue(values["missed_sla_2"])

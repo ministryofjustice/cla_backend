@@ -5,6 +5,7 @@ import re
 
 from django.conf import settings
 from django.template.loader import get_template_from_string, Context
+from django.utils import translation
 from django.utils.encoding import force_text
 from django.utils.functional import lazy, SimpleLazyObject
 from django.utils.six import text_type
@@ -139,10 +140,13 @@ class GraphImporter(object):
         node_id_map = dict()
         context_key = self.prop_mapping[self.KEY_CONTEXT]["id"]
 
-        def _get_text(a_node):
+        def _get_text(a_node, translate=True):
             if is_templated and a_node.text and "{%" in a_node.text:
                 tpl = get_template_from_string(u"{%% load i18n %%}%s" % a_node.text)
-                return lazy(lambda: tpl.render(Context()), text_type)()
+                if translate:
+                    return lazy(lambda: tpl.render(Context()), text_type)()
+                with translation.override("en"):
+                    return tpl.render(Context())
             return a_node.text
 
         def _get_markdown(_text):
@@ -164,11 +168,11 @@ class GraphImporter(object):
                 context[child.tag] = _get_text(child)
             return context
 
-        def _get_node_data_value_or_default(_node, key, as_type=None):
+        def _get_node_data_value_or_default(_node, key, as_type=None, translate=True):
             attr_key = self.prop_mapping[key]["id"]
             try:
                 data_node = self.xpath_ns(_node, 'ns:data[@key="%s"]' % attr_key)[0]
-                value = _get_text(data_node)
+                value = _get_text(data_node, translate=translate)
             except IndexError:
                 value = self.prop_mapping[key]["default"]
             if callable(as_type) and value:
@@ -202,6 +206,7 @@ class GraphImporter(object):
                 permanent_node_id,
                 label=label,
                 title=_get_node_data_value_or_default(node, self.KEY_TITLE),
+                key=_get_node_data_value_or_default(node, self.KEY_BODY, translate=False),
                 order=order,
                 context=_process_context(node),
                 help_text=help_text,

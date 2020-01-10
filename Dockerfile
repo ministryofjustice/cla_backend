@@ -7,6 +7,7 @@ RUN apk add --no-cache \
       py2-pip \
       supervisor \
       tzdata \
+      curl \
       uwsgi-python && \
     rm /etc/nginx/conf.d/default.conf && \
     # Create new user and assign permissions in this layer to allow it to work with aufs
@@ -40,6 +41,16 @@ COPY ./docker/supervisord-services.ini /etc/supervisor.d/
 
 WORKDIR /home/app/django
 COPY . .
+
+# Install AWS RDS Root cert
+RUN mkdir /home/app/django/.postgresql \
+  && curl https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
+    > /home/app/django/.postgresql/root.crt
+RUN curl https://s3.amazonaws.com/rds-downloads/rds-ca-2015-root.pem \
+    >> /home/app/django/.postgresql/root.crt
+ENV PGSSLROOTCERT /home/app/django/.postgresql/root.crt
+# Verify database server certificate
+ENV PGSSLMODE=verify-full
 
 RUN ln -s /home/app/django/cla_backend/settings/docker.py /home/app/django/cla_backend/settings/local.py
 

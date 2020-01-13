@@ -22,6 +22,6 @@ def noop(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-    dependencies = [("legalaid", "0025_case_audit_log")]
+    dependencies = [("legalaid", "0026_safe_to_contact_remove_no_message")]
 
     operations = [migrations.RunPython(matter_type1_updates, noop)]

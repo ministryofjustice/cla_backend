@@ -152,6 +152,30 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
         self.assertTrue(values["missed_sla_1"])
         self.assertFalse(values["missed_sla_2"])
 
+    def test_cb2_created_before_sla1_and_current_time_before_sla1(self):
+        # SLA 1 miss is TRUE - CB2 is created before SLA1 window
+        # SLA 2 miss is FALSE - Current time is within sla2 window
+
+        # 9:01 tomorrow
+        created = _make_datetime(hour=9, minute=1) + datetime.timedelta(days=1)
+        case = self.make_case(created)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+
+        # Create CB 1
+        requires_action_at = created + datetime.timedelta(hours=3)
+        self.schedule_callback(case, user, created, requires_action_at)
+
+        # Create CB 2 before SLA1 window
+        cb2_created = requires_action_at + datetime.timedelta(minutes=-20)
+        self.schedule_callback(case, user, created, cb2_created)
+
+        date_range = (created - datetime.timedelta(days=2), created + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
     def test_cb2_created_WITHIN_sla1_window_and_current_time_WITHIN_sla2_window(self):
         # SLA 1 miss is FALSE - CB2 created within sla1 window
         # SLA 2 miss is FALSE - Current time is within sla2 window

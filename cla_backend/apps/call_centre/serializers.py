@@ -3,6 +3,7 @@ from rest_framework import serializers
 from cla_common.constants import FEEDBACK_ISSUE
 from core.serializers import UUIDSerializer
 from cla_eventlog.serializers import LogSerializerBase
+from cla_eventlog import registry as event_registry
 
 from legalaid.serializers import (
     EligibilityCheckSerializerBase,
@@ -216,8 +217,13 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
 
 
 class LogSerializer(LogSerializerBase):
+    description = serializers.SerializerMethodField("get_description")
+
     class Meta(LogSerializerBase.Meta):
-        fields = ("code", "created_by", "created", "notes", "type", "level", "timer", "patch")
+        fields = ("code", "created_by", "created", "notes", "type", "level", "timer", "patch", "description")
+
+    def get_description(self, log):
+        return event_registry.event_registry.all().get(log.code, {}).get("description", "")
 
 
 class CaseSerializer(CaseSerializerFull):

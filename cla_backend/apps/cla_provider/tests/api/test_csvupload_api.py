@@ -1246,6 +1246,17 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         self._test_generated_contract_row_validates(override=test_values)
 
     @override_settings(CONTRACT_2018_ENABLED=True)
+    def test_signposting_lrep_code(self):
+        test_values = {
+            "Matter Type 1": u"EPRO",
+            "Matter Type 2": u"ESOS",
+            "Stage Reached": u"EA",
+            "Signposting / Referral": u"LREP",
+            "Fixed Fee Code": u"NA",
+        }
+        self._test_generated_contract_row_validates(override=test_values)
+
+    @override_settings(CONTRACT_2018_ENABLED=True)
     def test_signposting_code_invalid(self):
         test_values = {
             "Matter Type 1": u"EPRO",

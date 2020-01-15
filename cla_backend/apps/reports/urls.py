@@ -31,6 +31,7 @@ urlpatterns = patterns(
     url(r"^mi-alternative-help-extract/$", views.mi_alternative_help_extract, name="mi_alternative_help_extract"),
     url(r"^mi-survey-extract/$", views.mi_survey_extract, name="mi_survey_extract"),
     url(r"^mi-cb1-extract/$", views.mi_cb1_extract, name="mi_cb1_extract"),
+    url(r"^mi-cb1-extract-agilisys/$", views.mi_cb1_extract_agilisys, name="mi_cb1_extract_agilisys"),
     url(r"^mi-voice-extract/$", views.mi_voice_extract, name="mi_voice_extract"),
     url(r"^mi-digital-case-type-extract/$", views.mi_digital_case_type_extract, name="mi_digital_case_type_extract"),
     url(r"^mi-eod-extract/$", views.mi_eod_extract, name="mi_eod_extract"),

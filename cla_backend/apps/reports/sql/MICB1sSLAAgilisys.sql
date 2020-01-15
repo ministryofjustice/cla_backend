@@ -4,17 +4,12 @@ WITH
          o.id as o_id
         ,no.id as no_id
         ,no.code as code
-        ,log_call_started.code as cs_code
         ,no.created
         ,row_number() over (PARTITION BY o.id order by no.id asc) as rn
       from cla_eventlog_log o
         JOIN cla_eventlog_log no on
                                    o.case_id = no.case_id
                                    and no.id > o.id
-        LEFT JOIN cla_eventlog_log log_call_started on
-                                   log_call_started.case_id = no.case_id
-                                   and log_call_started.id > o.id
-                                   and log_call_started.code = 'CALL_STARTED'
         JOIN call_centre_operator AS op ON no.created_by_id = op.user_id
       order by no.id asc
 
@@ -51,7 +46,6 @@ WITH
         ,mt1.code as "Matter_Type_1"
         ,mt2.code as "Matter_Type_2"
         ,log.created_by_id
-        ,cs_code
         ,CASE diagnosis.state
          when 'INSCOPE' then 'PASS'
          when 'OUTOFSCOPE' then 'FAIL'
@@ -68,8 +62,9 @@ WITH
         ,operator_first_view_after_cb1.created as operator_first_view_after_cb1__created
         ,c.created as case_created
         ,operator_first_log_after_cb1.code as "Next_Outcome"
-        ,trim((log.context->'requires_action_at')::text, '"')::timestamptz as callback_window_start
-        ,trim((log.context->'requires_action_at')::text, '"')::timestamptz + interval '30 minutes' as callback_window_end
+        ,trim((log.context->'requires_action_at')::text, '"')::timestamptz as requires_action_at
+        ,trim((log.context->'sla_15')::text, '"')::timestamptz as sla_15
+        ,CAST(log.context->>'sla_30' AS TIMESTAMPTZ) as sla_30
         ,trim((log.context->'sla_120')::text, '"')::timestamptz as sla_120
         ,trim((log.context->'sla_480')::text, '"')::timestamptz as sla_480
         ,operator_first_log_after_cb1.rn
@@ -113,30 +108,20 @@ select
   ,operator_first_view_after_cb1__created
   ,operator_first_log_after_cb1__created
   ,"Next_Outcome"
-  ,callback_window_start
-  ,callback_window_end
-  ,CASE
-   WHEN source IN ('WEB', 'PHONE') AND operator_first_log_after_cb1__created IS NULL AND now() < callback_window_start THEN FALSE
-   WHEN source IN ('WEB', 'PHONE') AND operator_first_log_after_cb1__created IS NULL THEN now() NOT BETWEEN callback_window_start AND callback_window_end
-   WHEN source IN ('WEB', 'PHONE') THEN operator_first_log_after_cb1__created NOT BETWEEN callback_window_start AND callback_window_end
-   WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_120
-   ELSE operator_first_log_after_cb1__created > sla_120
-   END as missed_sla_1
-  ,CASE
-   -- User not contacted and current time is after SLA 2
-   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NULL AND now() > callback_window_end + interval '72 hours' THEN TRUE
-   -- User contacted and contact time is after SLA 2
-   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NOT NULL AND operator_first_log_after_cb1__created > callback_window_end + interval '72 hours'  THEN TRUE
-   -- Everything web / phone case is False
-   WHEN source IN ('WEB', 'PHONE') THEN FALSE
-   WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_480
-   ELSE operator_first_log_after_cb1__created > sla_480
-   END as missed_sla_2
+  ,requires_action_at
+  ,sla_15
+  ,sla_120
+  ,sla_480
+  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_15 ELSE operator_first_log_after_cb1__created > sla_15 END as is_over_sla_15
+  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_120 ELSE operator_first_log_after_cb1__created > sla_120 END as is_over_sla_120
+  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_480 ELSE operator_first_log_after_cb1__created > sla_480 END as is_over_sla_480
   ,source
   ,code
+  ,sla_30
+  ,CASE WHEN operator_first_log_after_cb1__created IS NULL THEN now() > sla_30 ELSE operator_first_log_after_cb1__created > sla_30 END as is_over_sla_30
   ,organisation
 from all_rows
-WHERE %s < callback_window_start AND callback_window_start < %s
+WHERE %s < requires_action_at AND requires_action_at < %s
 ;
 
 

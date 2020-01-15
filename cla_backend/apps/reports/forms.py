@@ -377,6 +377,41 @@ class MICB1Extract(SQLFileDateRangeReport):
             "operator_first_view_after_cb1__created",
             "operator_first_log_after_cb1__created",
             "Next_Outcome",
+            "callback_window_start",
+            "callback_window_end",
+            "missed_sla_1",
+            "missed_sla_2",
+            "Source",
+            "Code",
+            "Organisation",
+        ]
+
+
+class MICB1ExtractAgilisys(SQLFileDateRangeReport):
+    QUERY_FILE = "MICB1sSLAAgilisys.sql"
+
+    max_date_range = 3
+
+    def get_headers(self):
+        return [
+            "LAA_Reference",
+            "Hash_ID_personal_details_captured",
+            "Case_ID",
+            "Provider_ID_if_allocated",
+            "Law_Category_Name",
+            "Date_Case_Created",
+            "Last_Modified_Date",
+            "Outcome_Code_Child",
+            "Matter_Type_1",
+            "Matter_Type_2",
+            "created_by_id",
+            "Scope_Status",
+            "Eligibility_Status",
+            "Outcome_Created_At",
+            "Username",
+            "operator_first_view_after_cb1__created",
+            "operator_first_log_after_cb1__created",
+            "Next_Outcome",
             "requires_action_at",
             "sla_15",
             "sla_120",

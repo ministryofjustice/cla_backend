@@ -20,6 +20,13 @@ jobs:
               --email "${DOCKER_USERNAME}@digital.justice.gov.uk" \
               $DSD_DOCKER_REGISTRY
       - run:
+          name: Login to the ECR Docker registry
+          command: |
+            apk add --no-cache --no-progress py2-pip
+            pip install awscli
+            ecr_login="$(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)"
+            ${ecr_login}
+      - run:
           name: Build Docker image
           command: |
             docker build --tag application:$CIRCLE_SHA1 \

@@ -46,6 +46,7 @@ RUN ln -s /home/app/django/cla_backend/settings/docker.py /home/app/django/cla_b
 RUN python manage.py collectstatic --noinput && \
     python manage.py compilemessages
 
+USER 1000
 EXPOSE 80
 
 ENTRYPOINT ["docker/entrypoint.sh"]

@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: cla_backend_local
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []

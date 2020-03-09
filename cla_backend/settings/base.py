@@ -4,6 +4,7 @@ import os
 
 from cla_common.call_centre_availability import OpeningHours
 from cla_common.constants import OPERATOR_HOURS
+from cla_common.services import CacheAdapter
 
 # PATH vars
 
@@ -351,6 +352,15 @@ CELERY_IMPORTS = ["reports.tasks", "notifications.tasks"]
 
 CONTRACT_2018_ENABLED = os.environ.get("CONTRACT_2018_ENABLED", "True") == "True"
 PING_JSON_KEYS["CONTRACT_2018_ENABLED_key"] = "CONTRACT_2018_ENABLED"
+
+
+def bank_holidays_cache_adapter_factory():
+    from django.core.cache import cache
+
+    return cache
+
+
+CacheAdapter.set_adapter_factory(bank_holidays_cache_adapter_factory)
 
 # .local.py overrides all the common settings.
 try:

@@ -71,7 +71,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "cla-backend.selectorLabels" . | nindent 6 }}
+      app: db
   template:
     metadata:
       labels:

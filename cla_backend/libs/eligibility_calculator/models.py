@@ -118,7 +118,12 @@ class CaseData(ModelMixin, object):
         "partner": Person,
         "property_data": None,
         "disputed_savings": Savings,
+        "skipped": False,
     }
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("skipped", False)
+        super(CaseData, self).__init__(*args, **kwargs)
 
     @property
     def non_disputed_liquid_capital(self):

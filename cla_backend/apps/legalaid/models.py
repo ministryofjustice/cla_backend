@@ -380,6 +380,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
     your_problem_notes = models.TextField(blank=True)
     notes = models.TextField(blank=True)
     state = models.CharField(max_length=50, default=ELIGIBILITY_STATES.UNKNOWN, choices=ELIGIBILITY_STATES.CHOICES)
+    skipped = models.NullBooleanField(blank=True, null=True)
     dependants_young = models.PositiveIntegerField(
         null=True, blank=True, default=None, validators=[MaxValueValidator(50)]
     )
@@ -477,6 +478,8 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
 
     def to_case_data(self):
         d = {}
+
+        d["skipped"] = self.skipped or False
 
         if self.category:
             d["category"] = self.category.code

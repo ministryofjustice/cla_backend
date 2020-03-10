@@ -35,6 +35,7 @@ case_data_dict = {
         },
     },
     "property_data": [],
+    "skipped": False,
     # 'property_data': [(22, 0, 100)],
 }
 

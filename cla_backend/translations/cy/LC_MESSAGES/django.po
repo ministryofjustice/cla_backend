@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-10 09:26+0000\n"
+"POT-Creation-Date: 2020-03-10 12:24+0000\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -353,7 +353,7 @@ msgstr "Mae tribiwnlys haen gyntaf wedi gwrthod rhoi caniatâd i chi apelio pend
 #: apps/diagnosis/data/graph.graphml.tpl:1816
 #: apps/diagnosis/data/graph.graphml.tpl:2205
 #: apps/diagnosis/data/graph.graphml.tpl:2242
-#: apps/diagnosis/data/graph.graphml.tpl:3143
+#: apps/diagnosis/data/graph.graphml.tpl:3158
 msgid "None of the above"
 msgstr "Dim o'r uchod"
 
@@ -2273,13 +2273,13 @@ msgstr "Mae'r cleient wedi cael llythyr gan eu landlord cymdeithasol (gan gynnwy
 msgid "Letter of proceedings"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3125
+#: apps/diagnosis/data/graph.graphml.tpl:3130
 #, fuzzy
 #| msgid "Any other issue"
 msgid "Letter of issue"
 msgstr "Unrhyw fater arall"
 
-#: apps/diagnosis/data/graph.graphml.tpl:3134
+#: apps/diagnosis/data/graph.graphml.tpl:3144
 msgid "Date to attend court"
 msgstr ""
 

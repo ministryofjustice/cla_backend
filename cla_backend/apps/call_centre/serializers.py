@@ -212,6 +212,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "on_passported_benefits",
             "on_nass_benefits",
             "state",
+            "skipped",
             "specific_benefits",
         )
 

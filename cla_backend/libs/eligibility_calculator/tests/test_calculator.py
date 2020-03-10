@@ -648,6 +648,17 @@ class TestCalculator(CalculatorTestBase):
         self.assertTrue(checker.is_gross_income_eligible())
         self.assertDictEqual(checker.calcs, {"gross_income": constants.BASE_LIMIT - 1})
 
+    def test_skipped(self):
+        too_much_money = constants.BASE_LIMIT + 1
+        case_data = self.get_default_case_data(you__income__earnings=too_much_money, skipped=False)
+        checker = EligibilityChecker(case_data)
+        self.assertFalse(checker.is_eligible())
+
+        too_much_money = constants.BASE_LIMIT + 1
+        case_data = self.get_default_case_data(you__income__earnings=too_much_money, skipped=True)
+        checker = EligibilityChecker(case_data)
+        self.assertTrue(checker.is_eligible())
+
     def test_gross_income_is_ineligible(self):
         too_much_money = constants.BASE_LIMIT + 1
         case_data = self.get_default_case_data(you__income__earnings=too_much_money)
@@ -1461,6 +1472,7 @@ class IsEligibleTestCase(unittest.TestCase):
         is_gross_income=None,
         is_disposable_income=None,
         is_disposable_capital=None,
+        skipped=False,
     ):
         # gross_income, disposable_income, disposable_capital
         """
@@ -1474,6 +1486,7 @@ class IsEligibleTestCase(unittest.TestCase):
         """
         case_data = mock.MagicMock()
         case_data.category = is_category
+        case_data.skipped = skipped
         mocked_on_passported_benefits = mock.PropertyMock(return_value=is_passported)
         mocked_on_nass_benefits = mock.PropertyMock(return_value=is_nass_benefits)
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits

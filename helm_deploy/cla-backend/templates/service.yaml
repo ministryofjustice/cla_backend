@@ -13,3 +13,16 @@ spec:
       name: http
   selector:
     {{- include "cla-backend.selectorLabels" . | nindent 4 }}
+---
+{{- if .Values.localPostgres.enabled -}}
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: db
+  spec:
+    type: NodePort
+    ports:
+      - port: 5432
+    selector:
+      app: db
+{{- end }}

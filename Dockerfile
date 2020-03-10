@@ -38,6 +38,12 @@ COPY ./docker/nginx.conf /etc/nginx/nginx.conf
 COPY ./docker/htpassword /etc/nginx/conf.d/htpassword
 COPY ./docker/supervisord-services.ini /etc/supervisor.d/
 
+RUN mkdir /var/run/supervisor/
+RUN chown -R www-data: /var/run/
+RUN chown -R www-data: /var/log/
+RUN chown -R www-data /var/tmp/nginx
+RUN chown -R www-data /var/lib/nginx/
+
 WORKDIR /home/app/django
 COPY . .
 
@@ -46,8 +52,10 @@ RUN ln -s /home/app/django/cla_backend/settings/docker.py /home/app/django/cla_b
 RUN python manage.py collectstatic --noinput && \
     python manage.py compilemessages
 
+RUN apk add --no-cache curl
+
 USER 1000
 EXPOSE 80
 
 ENTRYPOINT ["docker/entrypoint.sh"]
-CMD ["supervisord", "--nodaemon"]
+CMD ["supervisord", "--configuration=/home/app/django/docker/supervisord.conf"]

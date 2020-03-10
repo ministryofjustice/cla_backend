@@ -1,0 +1,14 @@
+# Default values for cla-backend in a dev environment.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: cla_backend_local
+  pullPolicy: IfNotPresent
+
+localPostgres:
+  enabled: true
+
+service:
+  type: NodePort
+  port: 80

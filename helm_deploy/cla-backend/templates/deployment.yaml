@@ -75,7 +75,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "cla-backend.selectorLabels" . | nindent 8 }}
+        app: db
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

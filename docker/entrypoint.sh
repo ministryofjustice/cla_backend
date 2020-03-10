@@ -38,9 +38,9 @@ admin_password() {
 
 cd /home/app/django
 
-sentry_config
-migrations
-admin_password
-load_test_data
+# sentry_config
+# migrations
+# admin_password
+# load_test_data
 
 exec "$@"

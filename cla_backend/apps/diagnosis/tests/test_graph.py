@@ -93,6 +93,13 @@ class GraphTestCase(TestCase):
             u"If a local authority is involved in taking a child into care and the applicant has received a letter of proceedings or letter of issue sent or client has a court date, a financial assessment is not required",
         )
 
+    def test_nodes_have_finance_context(self):
+        _graph = get_graph(file_name=settings.DIAGNOSIS_FILE_NAME)
+        keys = ["n403", "n404", "n405"]
+        for key in keys:
+            node = _graph.node[key]
+            self.assertEqual(node["context"]["finance"], "skip")
+
     def test_nodes_have_description(self):
         _graph = get_graph(file_name=settings.DIAGNOSIS_FILE_NAME)
         node = _graph.node["n404"]

@@ -55,7 +55,7 @@ RUN python manage.py collectstatic --noinput && \
 RUN apk add --no-cache curl
 
 USER 1000
-EXPOSE 80
+EXPOSE 8000
 
 ENTRYPOINT ["docker/entrypoint.sh"]
 CMD ["supervisord", "--configuration=/home/app/django/docker/supervisord.conf"]

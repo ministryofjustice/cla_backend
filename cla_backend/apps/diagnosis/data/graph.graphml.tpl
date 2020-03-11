@@ -1,6 +1,6 @@
 {% load i18n %}<?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
-  <!--Created by yEd 3.19-->
+  <!--Created by yEd 3.19.1.1-->
   <key for="port" id="d0" yfiles.type="portgraphics"/>
   <key for="port" id="d1" yfiles.type="portgeometry"/>
   <key for="port" id="d2" yfiles.type="portuserdata"/>
@@ -842,8 +842,7 @@ An occupation order can restrict who can live in the family home, and even restr
       <data key="d10" xml:space="preserve">n101</data>
       </node>
     <node id="n94">
-      <data key="d3" xml:space="preserve">{% blocktrans %}Public law problem (the local council is involved)
-eg care proceedings or adoption{% endblocktrans %}</data>
+      <data key="d3" xml:space="preserve">{% trans "Care or adoption proceedings by a local authority (public law)" %}</data>
       <data key="d4" xml:space="preserve">Public law
 </data>
       <data key="d6"/>
@@ -2801,8 +2800,7 @@ You should now direct the client to their nearest contracted quality assured fam
       <data key="d10" xml:space="preserve">n317</data>
       </node>
     <node id="n309">
-      <data key="d3" xml:space="preserve">{% blocktrans %}Private law problem (between two individuals)
-eg divorce, contact with children, finances{% endblocktrans %}</data>
+      <data key="d3" xml:space="preserve">{% trans "Divorce, contact with children, finances between two individuals (private law)" %}</data>
       <data key="d4" xml:space="preserve">Private Law</data>
       <data key="d7" xml:space="preserve">3</data>
       <data key="d8" xml:space="preserve">{% trans "Between two or more individuals." %}</data>
@@ -3114,7 +3112,7 @@ The client needs to complete a financial assessment</data>
     <node id="n345">
       <data key="d3" xml:space="preserve">{% trans "Letter of proceedings" %}</data>
       <data key="d4" xml:space="preserve">Letter of proceedings</data>
-      <data key="d6">
+      <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
 <finance xml:space="preserve">skip</finance>
 </context>
@@ -3129,7 +3127,7 @@ No financial assessment is required.</data>
     <node id="n346">
       <data key="d3" xml:space="preserve">{% trans "Letter of issue" %}</data>
       <data key="d4" xml:space="preserve">Letter of issue</data>
-      <data key="d6">
+      <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
 <finance xml:space="preserve">skip</finance>
 </context>
@@ -3143,7 +3141,7 @@ No financial assessment is required.</data>
     <node id="n347">
       <data key="d3" xml:space="preserve">{% trans "Date to attend court" %}</data>
       <data key="d4" xml:space="preserve">Date to attend court</data>
-      <data key="d6">
+      <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
 <finance xml:space="preserve">skip</finance>
 </context>

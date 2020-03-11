@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-10 12:24+0000\n"
+"POT-Creation-Date: 2020-03-11 16:07+0000\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -103,7 +103,7 @@ msgid "Date field has wrong format. Use { \"day\": 25, \"month\": 12, \"year\": 
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:48
-#: apps/diagnosis/data/graph.graphml.tpl:1553
+#: apps/diagnosis/data/graph.graphml.tpl:1552
 msgid "Clinical negligence"
 msgstr ""
 
@@ -112,7 +112,7 @@ msgid "Problems with your medical care and treatment"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:56
-#: apps/diagnosis/data/graph.graphml.tpl:2156
+#: apps/diagnosis/data/graph.graphml.tpl:2155
 msgid "Community care"
 msgstr ""
 
@@ -147,8 +147,8 @@ msgid "Choose the option that best describes your personal situation"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:81
-#: apps/diagnosis/data/graph.graphml.tpl:882
-#: apps/diagnosis/data/graph.graphml.tpl:2236
+#: apps/diagnosis/data/graph.graphml.tpl:881
+#: apps/diagnosis/data/graph.graphml.tpl:2235
 msgid "Discrimination"
 msgstr ""
 
@@ -174,7 +174,7 @@ msgid "What is your education problem about?"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:97
-#: apps/diagnosis/data/graph.graphml.tpl:1441
+#: apps/diagnosis/data/graph.graphml.tpl:1440
 msgid "Employment"
 msgstr ""
 
@@ -199,7 +199,7 @@ msgid "Choose the option that best describes your housing situation"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:113
-#: apps/diagnosis/data/graph.graphml.tpl:1571
+#: apps/diagnosis/data/graph.graphml.tpl:1570
 msgid "Immigration and asylum"
 msgstr ""
 
@@ -214,7 +214,7 @@ msgid "Choose the option that best describes your situation"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:121
-#: apps/diagnosis/data/graph.graphml.tpl:1608
+#: apps/diagnosis/data/graph.graphml.tpl:1607
 msgid "Mental health"
 msgstr ""
 
@@ -223,7 +223,7 @@ msgid "Help with mental health and mental capacity legal issues"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:129
-#: apps/diagnosis/data/graph.graphml.tpl:1624
+#: apps/diagnosis/data/graph.graphml.tpl:1623
 msgid "Personal injury"
 msgstr ""
 
@@ -232,7 +232,7 @@ msgid "An accident that was not your fault"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:137
-#: apps/diagnosis/data/graph.graphml.tpl:2140
+#: apps/diagnosis/data/graph.graphml.tpl:2139
 msgid "Public law"
 msgstr ""
 
@@ -249,7 +249,7 @@ msgid "You’ve been treated wrongly by the police or other authorities with the
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:152
-#: apps/diagnosis/data/graph.graphml.tpl:1391
+#: apps/diagnosis/data/graph.graphml.tpl:1390
 msgid "Welfare benefits"
 msgstr ""
 
@@ -280,8 +280,8 @@ msgstr ""
 #: apps/diagnosis/data/checker-graph.graphml.tpl:442
 #: apps/diagnosis/data/checker-graph.graphml.tpl:500
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1260
-#: apps/diagnosis/data/graph.graphml.tpl:1910
-#: apps/diagnosis/data/graph.graphml.tpl:2047
+#: apps/diagnosis/data/graph.graphml.tpl:1909
+#: apps/diagnosis/data/graph.graphml.tpl:2046
 msgid "Any other problem"
 msgstr ""
 
@@ -308,7 +308,7 @@ msgstr ""
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1062
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1105
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1147
-#: apps/diagnosis/data/graph.graphml.tpl:3107
+#: apps/diagnosis/data/graph.graphml.tpl:3105
 msgid "Yes"
 msgstr ""
 
@@ -319,7 +319,7 @@ msgstr ""
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1069
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1112
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1154
-#: apps/diagnosis/data/graph.graphml.tpl:3098
+#: apps/diagnosis/data/graph.graphml.tpl:3096
 msgid "No"
 msgstr ""
 
@@ -349,11 +349,11 @@ msgstr ""
 #: apps/diagnosis/data/checker-graph.graphml.tpl:579
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1007
 #: apps/diagnosis/data/graph.graphml.tpl:780
-#: apps/diagnosis/data/graph.graphml.tpl:1426
-#: apps/diagnosis/data/graph.graphml.tpl:1816
-#: apps/diagnosis/data/graph.graphml.tpl:2205
-#: apps/diagnosis/data/graph.graphml.tpl:2242
-#: apps/diagnosis/data/graph.graphml.tpl:3158
+#: apps/diagnosis/data/graph.graphml.tpl:1425
+#: apps/diagnosis/data/graph.graphml.tpl:1815
+#: apps/diagnosis/data/graph.graphml.tpl:2204
+#: apps/diagnosis/data/graph.graphml.tpl:2241
+#: apps/diagnosis/data/graph.graphml.tpl:3156
 msgid "None of the above"
 msgstr ""
 
@@ -366,7 +366,7 @@ msgid "How old are you?"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:241
-#: apps/diagnosis/data/graph.graphml.tpl:934
+#: apps/diagnosis/data/graph.graphml.tpl:933
 msgid "Disability"
 msgstr ""
 
@@ -378,18 +378,18 @@ msgstr ""
 #: apps/diagnosis/data/checker-graph.graphml.tpl:278
 #: apps/diagnosis/data/checker-graph.graphml.tpl:337
 #: apps/diagnosis/data/checker-graph.graphml.tpl:344
-#: apps/diagnosis/data/graph.graphml.tpl:942
-#: apps/diagnosis/data/graph.graphml.tpl:1065
-#: apps/diagnosis/data/graph.graphml.tpl:1139
-#: apps/diagnosis/data/graph.graphml.tpl:1243
-#: apps/diagnosis/data/graph.graphml.tpl:2068
-#: apps/diagnosis/data/graph.graphml.tpl:2077
-#: apps/diagnosis/data/graph.graphml.tpl:2087
-#: apps/diagnosis/data/graph.graphml.tpl:2095
-#: apps/diagnosis/data/graph.graphml.tpl:2105
-#: apps/diagnosis/data/graph.graphml.tpl:2119
-#: apps/diagnosis/data/graph.graphml.tpl:2127
-#: apps/diagnosis/data/graph.graphml.tpl:2135
+#: apps/diagnosis/data/graph.graphml.tpl:941
+#: apps/diagnosis/data/graph.graphml.tpl:1064
+#: apps/diagnosis/data/graph.graphml.tpl:1138
+#: apps/diagnosis/data/graph.graphml.tpl:1242
+#: apps/diagnosis/data/graph.graphml.tpl:2067
+#: apps/diagnosis/data/graph.graphml.tpl:2076
+#: apps/diagnosis/data/graph.graphml.tpl:2086
+#: apps/diagnosis/data/graph.graphml.tpl:2094
+#: apps/diagnosis/data/graph.graphml.tpl:2104
+#: apps/diagnosis/data/graph.graphml.tpl:2118
+#: apps/diagnosis/data/graph.graphml.tpl:2126
+#: apps/diagnosis/data/graph.graphml.tpl:2134
 msgid "Where did the discrimination occur?"
 msgstr ""
 
@@ -402,13 +402,13 @@ msgid "Marriage or civil partnership"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:262
-#: apps/diagnosis/data/graph.graphml.tpl:2062
-#: apps/diagnosis/data/graph.graphml.tpl:2124
+#: apps/diagnosis/data/graph.graphml.tpl:2061
+#: apps/diagnosis/data/graph.graphml.tpl:2123
 msgid "Pregnancy or maternity"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:269
-#: apps/diagnosis/data/graph.graphml.tpl:2073
+#: apps/diagnosis/data/graph.graphml.tpl:2072
 msgid "Race"
 msgstr ""
 
@@ -511,7 +511,7 @@ msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:395
 #: apps/diagnosis/data/checker-graph.graphml.tpl:564
-#: apps/diagnosis/data/graph.graphml.tpl:1289
+#: apps/diagnosis/data/graph.graphml.tpl:1288
 msgid "Harassment"
 msgstr ""
 
@@ -746,13 +746,13 @@ msgid "Is the child a victim of child abuse within the family?"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1119
-#: apps/diagnosis/data/graph.graphml.tpl:1118
-#: apps/diagnosis/data/graph.graphml.tpl:1224
-#: apps/diagnosis/data/graph.graphml.tpl:1264
-#: apps/diagnosis/data/graph.graphml.tpl:1941
-#: apps/diagnosis/data/graph.graphml.tpl:1967
-#: apps/diagnosis/data/graph.graphml.tpl:2221
-#: apps/diagnosis/data/graph.graphml.tpl:2728
+#: apps/diagnosis/data/graph.graphml.tpl:1117
+#: apps/diagnosis/data/graph.graphml.tpl:1223
+#: apps/diagnosis/data/graph.graphml.tpl:1263
+#: apps/diagnosis/data/graph.graphml.tpl:1940
+#: apps/diagnosis/data/graph.graphml.tpl:1966
+#: apps/diagnosis/data/graph.graphml.tpl:2220
+#: apps/diagnosis/data/graph.graphml.tpl:2727
 msgid "Other"
 msgstr ""
 
@@ -1053,7 +1053,7 @@ msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:457
 #: apps/diagnosis/data/graph.graphml.tpl:676
-#: apps/diagnosis/data/graph.graphml.tpl:3025
+#: apps/diagnosis/data/graph.graphml.tpl:3023
 msgid "Select the option that best describes the client’s situation."
 msgstr ""
 
@@ -1212,24 +1212,22 @@ msgid "Child abduction - the client wants advice"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:845
-msgid ""
-"Public law problem (the local council is involved)\n"
-"eg care proceedings or adoption"
+msgid "Care or adoption proceedings by a local authority (public law)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:851
+#: apps/diagnosis/data/graph.graphml.tpl:850
 msgid "Typically the local council is involved due to child protection concerns."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:852
+#: apps/diagnosis/data/graph.graphml.tpl:851
 msgid "Are they the parent of the child or someone with parental responsibility?"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:866
+#: apps/diagnosis/data/graph.graphml.tpl:865
 msgid "None of the above (including guardianship, wills and probate, power of attorney, finding a family mediator)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:885
+#: apps/diagnosis/data/graph.graphml.tpl:884
 msgid ""
 "The discrimination category covers advice on cases that contravene the Equalities Act 2010.\n"
 "\n"
@@ -1250,7 +1248,7 @@ msgid ""
 "The client's problem could start in another category (eg housing) but the client will believe that thay have been discriminated against, harassed or victimised."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:905
+#: apps/diagnosis/data/graph.graphml.tpl:904
 msgid ""
 "The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else’s discrimination claim\n"
 "\n"
@@ -1267,28 +1265,28 @@ msgid ""
 "* sexual orientation"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:919
+#: apps/diagnosis/data/graph.graphml.tpl:918
 msgid "Select the type of discrimination that applies"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:924
+#: apps/diagnosis/data/graph.graphml.tpl:923
 msgid "Direct discrimination"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:927
+#: apps/diagnosis/data/graph.graphml.tpl:926
 msgid "Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:928
-#: apps/diagnosis/data/graph.graphml.tpl:1283
-#: apps/diagnosis/data/graph.graphml.tpl:1293
-#: apps/diagnosis/data/graph.graphml.tpl:1303
+#: apps/diagnosis/data/graph.graphml.tpl:927
+#: apps/diagnosis/data/graph.graphml.tpl:1282
+#: apps/diagnosis/data/graph.graphml.tpl:1292
+#: apps/diagnosis/data/graph.graphml.tpl:1302
 msgid ""
 "On what basis has the client been discriminated against?\n"
 "Give details in the operator notes, especially if more than one option applies."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:937
+#: apps/diagnosis/data/graph.graphml.tpl:936
 msgid ""
 "Disability is defined as a physical or mental impairment, which has a substantial and long term adverse effect on a person's ability to carry out normal day-to-day activities.\n"
 "\n"
@@ -1297,132 +1295,132 @@ msgid ""
 "The disability does not have to have a name or a diagnosis to meet this definition."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:947
-#: apps/diagnosis/data/graph.graphml.tpl:1070
-#: apps/diagnosis/data/graph.graphml.tpl:1144
-#: apps/diagnosis/data/graph.graphml.tpl:1248
+#: apps/diagnosis/data/graph.graphml.tpl:946
+#: apps/diagnosis/data/graph.graphml.tpl:1069
+#: apps/diagnosis/data/graph.graphml.tpl:1143
+#: apps/diagnosis/data/graph.graphml.tpl:1247
 msgid "Work"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:963
-#: apps/diagnosis/data/graph.graphml.tpl:1160
+#: apps/diagnosis/data/graph.graphml.tpl:962
+#: apps/diagnosis/data/graph.graphml.tpl:1159
 msgid "Provision of a service (eg a meal in a restaurant, access to a shopping mall)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:979
+#: apps/diagnosis/data/graph.graphml.tpl:978
 msgid "Exercise of a public function (eg a police officer carrying out a search as part of a criminal investigation)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:995
-#: apps/diagnosis/data/graph.graphml.tpl:1086
-#: apps/diagnosis/data/graph.graphml.tpl:1192
+#: apps/diagnosis/data/graph.graphml.tpl:994
+#: apps/diagnosis/data/graph.graphml.tpl:1085
+#: apps/diagnosis/data/graph.graphml.tpl:1191
 msgid "Association or private club (eg a golf club, a private members' club)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1011
+#: apps/diagnosis/data/graph.graphml.tpl:1010
 msgid "At home (in rental accommodation)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1027
+#: apps/diagnosis/data/graph.graphml.tpl:1026
 msgid "Education (schools)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1043
+#: apps/diagnosis/data/graph.graphml.tpl:1042
 msgid "Education (higher education or general qualification bodies)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1059
+#: apps/diagnosis/data/graph.graphml.tpl:1058
 msgid "Age (the client is under 18)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1062
+#: apps/diagnosis/data/graph.graphml.tpl:1061
 msgid ""
 "This refers to discrimination against people of a:\n"
 "* particular age (eg 17-year-olds), or\n"
 "* range of ages (eg 10 to 15-year-olds)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1102
-#: apps/diagnosis/data/graph.graphml.tpl:1208
+#: apps/diagnosis/data/graph.graphml.tpl:1101
+#: apps/diagnosis/data/graph.graphml.tpl:1207
 msgid "Education (higher education/general qualification bodies)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1133
+#: apps/diagnosis/data/graph.graphml.tpl:1132
 msgid "Age (the client is 18 or over)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1136
+#: apps/diagnosis/data/graph.graphml.tpl:1135
 msgid ""
 "This refers to discrimination against people of a:\n"
 "* particular age (eg 19-year-olds), or\n"
 "* range of ages (eg 60 to 80-year-olds)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1176
+#: apps/diagnosis/data/graph.graphml.tpl:1175
 msgid "Exercise of a public function (eg a police officer carrying out a search)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1239
+#: apps/diagnosis/data/graph.graphml.tpl:1238
 msgid "Being married or in a civil partnership"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1242
+#: apps/diagnosis/data/graph.graphml.tpl:1241
 msgid "This refers to people who are married or in a civil partnership, including same sex couples."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1279
+#: apps/diagnosis/data/graph.graphml.tpl:1278
 msgid "Indirect discrimination"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1282
+#: apps/diagnosis/data/graph.graphml.tpl:1281
 msgid "The client thinks that new ways of doing things have put them at a disadvantage compared to someone else because of a protected characteristic (eg an employer states that employees cannot have dreadlocks or a pub refuses access to people with hats. This puts employees or patrons of a certain religion at a disadvantage when compared to others.)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1292
+#: apps/diagnosis/data/graph.graphml.tpl:1291
 msgid "Something happened to make the client feel that they were in an environment that was intimidating, hostile, degrading, humiliating or offensive or that violated their dignity."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1299
+#: apps/diagnosis/data/graph.graphml.tpl:1298
 msgid "Victimisation due to a discrimination claim"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1302
+#: apps/diagnosis/data/graph.graphml.tpl:1301
 msgid "The client thinks that they have been treated worse, or disadvantaged in some way, because they have brought a claim of discrimination, given evidence or information in relation to someone else’s claim of discrimination, made a complaint of discrimination, or been suspected of doing one of these things. For example, an employee is dismissed after making a discrimination claim."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1309
+#: apps/diagnosis/data/graph.graphml.tpl:1308
 msgid "Special educational needs (SEN) in a child or young person under 25 - client could be the parent or the child or young person"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1325
+#: apps/diagnosis/data/graph.graphml.tpl:1324
 msgid "Advised to bring judicial review proceedings in an education matter"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1341
+#: apps/diagnosis/data/graph.graphml.tpl:1340
 msgid "Discrimination may have occurred due to the child or young person’s SEN or other protected characteristic (eg a school excludes a disabled child from a school trip, a student is being bullied because they're gay but the school is taking no action)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1344
+#: apps/diagnosis/data/graph.graphml.tpl:1343
 msgid "Search guidance for 'discrimination education' for more information and a list of questions to ask."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1348
+#: apps/diagnosis/data/graph.graphml.tpl:1347
 msgid "The client's problem is about admissions, exclusions, other disciplinary procedures, school trips, bullying, any problems at school caused by a child’s disability or any other similar situation"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1355
+#: apps/diagnosis/data/graph.graphml.tpl:1354
 msgid "Any other education problem"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1360
+#: apps/diagnosis/data/graph.graphml.tpl:1359
 msgid "The client is a teacher or employee of the local authority"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1376
+#: apps/diagnosis/data/graph.graphml.tpl:1375
 msgid "The client is calling for general advice, not about a legal issue specific to them (eg they want to know if a school can stop them removing their child, as opposed to calling after the school has taken action against them for removing their child)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1394
+#: apps/diagnosis/data/graph.graphml.tpl:1393
 msgid ""
 "The welfare benefits category of law covers advice on:\n"
 "\n"
@@ -1439,11 +1437,11 @@ msgid ""
 "All other benefit problems are out of scope."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1410
+#: apps/diagnosis/data/graph.graphml.tpl:1409
 msgid "The client wants to appeal their benefits decision on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court. (Or a first-tier tribunal has refused the client permission to appeal their benefits decision in the Upper Tribunal and they want advice about how to appeal this decision.)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1444
+#: apps/diagnosis/data/graph.graphml.tpl:1443
 msgid ""
 "The employment category covers advice on\n"
 "\n"
@@ -1455,11 +1453,11 @@ msgid ""
 "* pay, tax and the National Minimum Wage."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1455
+#: apps/diagnosis/data/graph.graphml.tpl:1454
 msgid "The client may have been discriminated against (eg employer not making reasonable adjustments for a disability)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1458
+#: apps/diagnosis/data/graph.graphml.tpl:1457
 msgid ""
 "More examples of discrimination issues include issues around:\n"
 "\n"
@@ -1469,89 +1467,89 @@ msgid ""
 "* being victimised due to having made a claim of discrimination in the workplace"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1467
+#: apps/diagnosis/data/graph.graphml.tpl:1466
 msgid "Discrimination does not apply (Confirm no other matters such as homelessness arise as a result of employment issue)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1482
+#: apps/diagnosis/data/graph.graphml.tpl:1481
 msgid "Consumer"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1485
+#: apps/diagnosis/data/graph.graphml.tpl:1484
 msgid "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other consumer cases will be out of scope."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1489
+#: apps/diagnosis/data/graph.graphml.tpl:1488
 msgid "The client may have been discriminated against"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1494
-#: apps/diagnosis/data/graph.graphml.tpl:1522
-#: apps/diagnosis/data/graph.graphml.tpl:1651
-#: apps/diagnosis/data/graph.graphml.tpl:1673
+#: apps/diagnosis/data/graph.graphml.tpl:1493
+#: apps/diagnosis/data/graph.graphml.tpl:1521
+#: apps/diagnosis/data/graph.graphml.tpl:1650
+#: apps/diagnosis/data/graph.graphml.tpl:1672
 msgid "Discrimination does not apply"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1509
+#: apps/diagnosis/data/graph.graphml.tpl:1508
 msgid "Claims against public authorities"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1512
+#: apps/diagnosis/data/graph.graphml.tpl:1511
 msgid "The key thing to determine in claims against public authorities is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1516
+#: apps/diagnosis/data/graph.graphml.tpl:1515
 msgid "The client has been discriminated against (eg a police officer used racially abusive language when making an arrest)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1537
+#: apps/diagnosis/data/graph.graphml.tpl:1536
 msgid "Crime"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1556
+#: apps/diagnosis/data/graph.graphml.tpl:1555
 msgid ""
 "Signpost clinical negligence cases to face-to-face providers in the client's area.\n"
 "Generally, only cases that relate to infants with a brain injury are in scope for legal aid but it's possible that other cases may qualify for exceptional case funding."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1577
+#: apps/diagnosis/data/graph.graphml.tpl:1576
 msgid "Any other matter"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1592
+#: apps/diagnosis/data/graph.graphml.tpl:1591
 msgid "The client is losing their home due to the Border Force refusing to support them or withdrawing their support"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1627
+#: apps/diagnosis/data/graph.graphml.tpl:1626
 msgid "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other personal injury cases will be out of scope."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1641
-#: apps/diagnosis/data/graph.graphml.tpl:1667
+#: apps/diagnosis/data/graph.graphml.tpl:1640
+#: apps/diagnosis/data/graph.graphml.tpl:1666
 msgid "The client has been discriminated against"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1679
+#: apps/diagnosis/data/graph.graphml.tpl:1678
 msgid "Client in rented accomodation"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1685
+#: apps/diagnosis/data/graph.graphml.tpl:1684
 msgid "Client is homeowner"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1691
+#: apps/diagnosis/data/graph.graphml.tpl:1690
 msgid "None of the above apply"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1708
+#: apps/diagnosis/data/graph.graphml.tpl:1707
 msgid "Client does not have BOTH evidence of the disrepair AND reason to believe the disrepair poses a serious risk of harm, injury or illness to them or their family"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1733
+#: apps/diagnosis/data/graph.graphml.tpl:1732
 msgid "Client is the alleged abusive partner and wants to defend an injunction. This will be in scope for Civil Legal Advice."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1736
+#: apps/diagnosis/data/graph.graphml.tpl:1735
 msgid ""
 "Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act. There are two main forms of injunction\n"
 "\n"
@@ -1562,121 +1560,121 @@ msgid ""
 "Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1756
+#: apps/diagnosis/data/graph.graphml.tpl:1755
 msgid "The client is being harassed by a partner, ex-partner or family member"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1759
+#: apps/diagnosis/data/graph.graphml.tpl:1758
 msgid "Seeking protection from a partner, ex partner or other family member due to a fear of violence or unwanted behaviour which is causing them alarm or distress. Also covers client who have previously taken action to stop harassment (i.e. sought an injunction) but this is not being complied with."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1773
-#: apps/diagnosis/data/graph.graphml.tpl:2015
+#: apps/diagnosis/data/graph.graphml.tpl:1772
+#: apps/diagnosis/data/graph.graphml.tpl:2014
 msgid "The client's problem is about admissions"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1779
+#: apps/diagnosis/data/graph.graphml.tpl:1778
 msgid "The client's problem is about bullying, and none of the other issues above apply"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1785
+#: apps/diagnosis/data/graph.graphml.tpl:1784
 msgid "A child or young person is out of school or in a Pupil Referral Unit, or is not receiving full-time education"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1791
+#: apps/diagnosis/data/graph.graphml.tpl:1790
 msgid "The client's problem is about exclusion from school"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1797
+#: apps/diagnosis/data/graph.graphml.tpl:1796
 msgid "The client's problem is about further education"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1803
+#: apps/diagnosis/data/graph.graphml.tpl:1802
 msgid ""
 "The problem is about a school, college or local authority's failure to\n"
 "provide for a child or young person's educational needs, or specifically about the failure to provide the support set out in the assessment of their needs"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1810
+#: apps/diagnosis/data/graph.graphml.tpl:1809
 msgid "The client's problem is about higher education"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1821
+#: apps/diagnosis/data/graph.graphml.tpl:1820
 msgid "The client's problem is about transport"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1857
+#: apps/diagnosis/data/graph.graphml.tpl:1856
 msgid "Any other issue"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1863
+#: apps/diagnosis/data/graph.graphml.tpl:1862
 msgid "The client is enquiring about an application or admissions appeal in the normal admissions round (ie reception and secondary school transfers)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1888
+#: apps/diagnosis/data/graph.graphml.tpl:1887
 msgid "Negligence in the provision of education"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1904
+#: apps/diagnosis/data/graph.graphml.tpl:1903
 msgid "The client's problem relates to special needs not being met properly for a child of compulsory school age, or a young person in compulsory or further education"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1935
+#: apps/diagnosis/data/graph.graphml.tpl:1934
 msgid "There has been a formal fixed term exclusion from school (a suspension) of up to five days and the child has not received more than one other fixed term exclusion in the last school year"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1983
+#: apps/diagnosis/data/graph.graphml.tpl:1982
 msgid "The client's problem is about SEN, transport, admissions or exclusions"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:1999
+#: apps/diagnosis/data/graph.graphml.tpl:1998
 msgid "The client's problem is about fees or funding"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2031
+#: apps/diagnosis/data/graph.graphml.tpl:2030
 msgid "The client's problem is about exclusion - but not for failure at exams or malpractice allegations eg plagiarism"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2065
+#: apps/diagnosis/data/graph.graphml.tpl:2064
 msgid ""
 "This refers to:\n"
 "* pregnancy\n"
 "* having recently given birth (and can include the need to breastfeed)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2076
+#: apps/diagnosis/data/graph.graphml.tpl:2075
 msgid "Race refers to a group of people defined by their race, colour, nationality (including citizenship), ethnic or national origins."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2082
+#: apps/diagnosis/data/graph.graphml.tpl:2081
 msgid "Religion or belief (or lack of belief)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2085
+#: apps/diagnosis/data/graph.graphml.tpl:2084
 msgid ""
 "Religion refers to any religious or philosophical belief. This also includes a lack of religious belief (eg atheism).\n"
 "Generally, a belief should affect your life choices or the way you live for it to be included in the definition."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2092
+#: apps/diagnosis/data/graph.graphml.tpl:2091
 msgid "Sex"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2100
+#: apps/diagnosis/data/graph.graphml.tpl:2099
 msgid "Sexual orientation"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2103
+#: apps/diagnosis/data/graph.graphml.tpl:2102
 msgid ""
 "Sexual orientation is whether a person's sexual attraction is towards their own sex, the opposite sex or to both sexes.\n"
 "This can also cover situations where discrimination is based on perceived sexual orientation, which may not be the case."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2110
+#: apps/diagnosis/data/graph.graphml.tpl:2109
 msgid "Gender reassignment"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2113
+#: apps/diagnosis/data/graph.graphml.tpl:2112
 msgid ""
 "It is unlawful to discriminate against someone due to their gender reassignment.\n"
 "\n"
@@ -1686,23 +1684,23 @@ msgid ""
 "* has already undergone (or partially undergone) the process of gender reassignment"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2132
+#: apps/diagnosis/data/graph.graphml.tpl:2131
 msgid "Disability or failure to make reasonable adjustments for a disabled person"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2172
+#: apps/diagnosis/data/graph.graphml.tpl:2171
 msgid "The client has been identified as homeless through a Community Care Assessment"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2178
+#: apps/diagnosis/data/graph.graphml.tpl:2177
 msgid "The client has not been identified as homeless through a Community Care Assessment"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2184
+#: apps/diagnosis/data/graph.graphml.tpl:2183
 msgid "Client wants advice about international family maintenance"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2187
+#: apps/diagnosis/data/graph.graphml.tpl:2186
 msgid ""
 "Covers enforcement of maintenance orders made outside the UK. Clients who have obtained maintenance orders in one country can apply to have them registered and enforced in another country. \n"
 "\n"
@@ -1711,22 +1709,22 @@ msgid ""
 "**NOTE: These are very unusual cases.**"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2245
+#: apps/diagnosis/data/graph.graphml.tpl:2244
 msgid "Not a Civil Legal Advice category or legal problem."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2259
+#: apps/diagnosis/data/graph.graphml.tpl:2258
 msgid ""
 "IMPORTANT: Where a client or a child is AT IMMEDIATE RISK OF ABUSE you must follow the Civil Legal Advice Child, Young Person and Adult at Risk of Abuse Policy. You may need to report the matter to protection services.\n"
 "\n"
 "*Click 'Next' to continue*"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2267
+#: apps/diagnosis/data/graph.graphml.tpl:2266
 msgid "Legal advice in support of family mediation"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2270
+#: apps/diagnosis/data/graph.graphml.tpl:2269
 msgid ""
 "Family mediation can help people whose relationships have broken down to reach their own agreement about money, property and childcare, without going to court.\n"
 "\n"
@@ -1735,7 +1733,7 @@ msgid ""
 "*Please note: Mediation must be ongoing or have concluded. Clients will not qualify for Civil Legal Advice advice where mediation has not yet taken place or they have only attended Mediation Assessment Information Meeting (MIAM).*"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2288
+#: apps/diagnosis/data/graph.graphml.tpl:2287
 msgid ""
 "Please read out the following to the client:\n"
 "\n"
@@ -1747,29 +1745,29 @@ msgid ""
 "*I can’t guarantee that these organisations/this organisation will take on your case under legal aid so please check with them to see whether they are able to help you. If you do not qualify for legal aid you may have to pay for their service. So check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2301
-#: apps/diagnosis/data/graph.graphml.tpl:2314
-#: apps/diagnosis/data/graph.graphml.tpl:2327
-#: apps/diagnosis/data/graph.graphml.tpl:2340
-#: apps/diagnosis/data/graph.graphml.tpl:2353
-#: apps/diagnosis/data/graph.graphml.tpl:2366
-#: apps/diagnosis/data/graph.graphml.tpl:2379
-#: apps/diagnosis/data/graph.graphml.tpl:2392
-#: apps/diagnosis/data/graph.graphml.tpl:2405
-#: apps/diagnosis/data/graph.graphml.tpl:2418
-#: apps/diagnosis/data/graph.graphml.tpl:2431
-#: apps/diagnosis/data/graph.graphml.tpl:2444
-#: apps/diagnosis/data/graph.graphml.tpl:2457
-#: apps/diagnosis/data/graph.graphml.tpl:2470
-#: apps/diagnosis/data/graph.graphml.tpl:2483
-#: apps/diagnosis/data/graph.graphml.tpl:2496
-#: apps/diagnosis/data/graph.graphml.tpl:2510
-#: apps/diagnosis/data/graph.graphml.tpl:2523
-#: apps/diagnosis/data/graph.graphml.tpl:2743
-#: apps/diagnosis/data/graph.graphml.tpl:2939
-#: apps/diagnosis/data/graph.graphml.tpl:2968
-#: apps/diagnosis/data/graph.graphml.tpl:2981
-#: apps/diagnosis/data/graph.graphml.tpl:3054
+#: apps/diagnosis/data/graph.graphml.tpl:2300
+#: apps/diagnosis/data/graph.graphml.tpl:2313
+#: apps/diagnosis/data/graph.graphml.tpl:2326
+#: apps/diagnosis/data/graph.graphml.tpl:2339
+#: apps/diagnosis/data/graph.graphml.tpl:2352
+#: apps/diagnosis/data/graph.graphml.tpl:2365
+#: apps/diagnosis/data/graph.graphml.tpl:2378
+#: apps/diagnosis/data/graph.graphml.tpl:2391
+#: apps/diagnosis/data/graph.graphml.tpl:2404
+#: apps/diagnosis/data/graph.graphml.tpl:2417
+#: apps/diagnosis/data/graph.graphml.tpl:2430
+#: apps/diagnosis/data/graph.graphml.tpl:2443
+#: apps/diagnosis/data/graph.graphml.tpl:2456
+#: apps/diagnosis/data/graph.graphml.tpl:2469
+#: apps/diagnosis/data/graph.graphml.tpl:2482
+#: apps/diagnosis/data/graph.graphml.tpl:2495
+#: apps/diagnosis/data/graph.graphml.tpl:2509
+#: apps/diagnosis/data/graph.graphml.tpl:2522
+#: apps/diagnosis/data/graph.graphml.tpl:2742
+#: apps/diagnosis/data/graph.graphml.tpl:2937
+#: apps/diagnosis/data/graph.graphml.tpl:2966
+#: apps/diagnosis/data/graph.graphml.tpl:2979
+#: apps/diagnosis/data/graph.graphml.tpl:3052
 msgid ""
 "Please read the following to the client:\n"
 "\n"
@@ -1782,17 +1780,17 @@ msgid ""
 "Remember to record details of the conversation in your CHS notes.]"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2536
-#: apps/diagnosis/data/graph.graphml.tpl:2550
-#: apps/diagnosis/data/graph.graphml.tpl:2564
-#: apps/diagnosis/data/graph.graphml.tpl:2578
-#: apps/diagnosis/data/graph.graphml.tpl:2592
-#: apps/diagnosis/data/graph.graphml.tpl:2606
-#: apps/diagnosis/data/graph.graphml.tpl:2620
-#: apps/diagnosis/data/graph.graphml.tpl:2634
-#: apps/diagnosis/data/graph.graphml.tpl:2648
-#: apps/diagnosis/data/graph.graphml.tpl:2662
-#: apps/diagnosis/data/graph.graphml.tpl:2676
+#: apps/diagnosis/data/graph.graphml.tpl:2535
+#: apps/diagnosis/data/graph.graphml.tpl:2549
+#: apps/diagnosis/data/graph.graphml.tpl:2563
+#: apps/diagnosis/data/graph.graphml.tpl:2577
+#: apps/diagnosis/data/graph.graphml.tpl:2591
+#: apps/diagnosis/data/graph.graphml.tpl:2605
+#: apps/diagnosis/data/graph.graphml.tpl:2619
+#: apps/diagnosis/data/graph.graphml.tpl:2633
+#: apps/diagnosis/data/graph.graphml.tpl:2647
+#: apps/diagnosis/data/graph.graphml.tpl:2661
+#: apps/diagnosis/data/graph.graphml.tpl:2675
 msgid ""
 "Please read the following to the client:\n"
 "\n"
@@ -1805,11 +1803,11 @@ msgid ""
 "Remember to record details of the conversation in your CHS notes.]*"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2700
+#: apps/diagnosis/data/graph.graphml.tpl:2699
 msgid "Domestic abuse (including psychological, physical, financial, sexual or emotional abuse, forced marriage, child abduction, female genital mutilation and harassment). Also includes defence against a non-molestation or occupation order where the client is the alleged abuser."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2703
+#: apps/diagnosis/data/graph.graphml.tpl:2702
 msgid ""
 "Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act.\n"
 "\n"
@@ -1818,22 +1816,22 @@ msgid ""
 "Guidance contains an article \"Domestic violence and abuse - definition\" for more information. Search for 'dv' or 'abuse' to find it quickest."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2711
+#: apps/diagnosis/data/graph.graphml.tpl:2710
 msgid "Forced marriage - the client wants advice"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2714
+#: apps/diagnosis/data/graph.graphml.tpl:2713
 msgid "This is where a marriage is about to take place or has taken place without the full and free consent of each party. This may be due to actual or threats of physical force or violence, emotional pressure or psychological abuse. Civil Legal Advice Specialists can offer advice on seeking an order to protect the client from such a marriage occuring or how to end such a marriage."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2756
+#: apps/diagnosis/data/graph.graphml.tpl:2755
 msgid ""
 "Is there a dispute for which family mediation is relevant? If so, please check if client has heard of/and considered Family Mediation.\n"
 "\n"
 "*On the following screen please select if they want to find a local mediator, or that mediation isn't relevant to the problem. Click next to continue.*"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2761
+#: apps/diagnosis/data/graph.graphml.tpl:2760
 msgid ""
 "Family mediators are trained to work with people whose relationships have broken down. They will listen to both sides of the argument and help you to reach your own agreement about money, property and childcare, without going to court.\n"
 "\n"
@@ -1846,15 +1844,15 @@ msgid ""
 "If you are qualify you can get legal aid for family mediation as well as legal advice to support the mediation process. This can include the cost of making any agreement that you reach in mediation legally binding by applying to the court - this is called applying for a consent order."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2773
+#: apps/diagnosis/data/graph.graphml.tpl:2772
 msgid "Client wishes to find mediator."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2779
+#: apps/diagnosis/data/graph.graphml.tpl:2778
 msgid "Client does not wish to find a mediator."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2785
+#: apps/diagnosis/data/graph.graphml.tpl:2784
 msgid ""
 "Please read the following to the client:\n"
 "\n"
@@ -1867,36 +1865,34 @@ msgid ""
 "You should now direct the client to their nearest contracted quality assured family mediation service using the directory (Find An Adviser tool)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2798
+#: apps/diagnosis/data/graph.graphml.tpl:2797
 msgid "The client has already taken action to stop domestic abuse (e.g. via an injunction) but needs to take further action as the order is not being complied with"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2804
-msgid ""
-"Private law problem (between two individuals)\n"
-"eg divorce, contact with children, finances"
+#: apps/diagnosis/data/graph.graphml.tpl:2803
+msgid "Divorce, contact with children, finances between two individuals (private law)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2808
+#: apps/diagnosis/data/graph.graphml.tpl:2806
 msgid "Between two or more individuals."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2812
+#: apps/diagnosis/data/graph.graphml.tpl:2810
 msgid "Divorce/Nullity/Dissolution"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2815
+#: apps/diagnosis/data/graph.graphml.tpl:2813
 msgid ""
 "* Divorce - ending a marriage\n"
 "* Nullity - declaring a marriage null and void so it is regarded not to have taken place\n"
 "* Dissolution - ending a same sex Civil Partnership"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2821
+#: apps/diagnosis/data/graph.graphml.tpl:2819
 msgid "Children disputes (eg contact with children)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2824
+#: apps/diagnosis/data/graph.graphml.tpl:2822
 msgid ""
 "Includes advice on the following areas\n"
 "\n"
@@ -1906,11 +1902,11 @@ msgid ""
 "* Transferring status of Parentage"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2833
+#: apps/diagnosis/data/graph.graphml.tpl:2831
 msgid "Financial matters"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2836
+#: apps/diagnosis/data/graph.graphml.tpl:2834
 msgid ""
 "Includes advice on financial disputes arising out of:\n"
 "\n"
@@ -1919,27 +1915,27 @@ msgid ""
 "* Maintenance"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2844
+#: apps/diagnosis/data/graph.graphml.tpl:2842
 msgid "Not a dispute for which mediation is relevant."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2850
+#: apps/diagnosis/data/graph.graphml.tpl:2848
 msgid "Domestic abuse (or their abuser has a criminal conviction)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2856
+#: apps/diagnosis/data/graph.graphml.tpl:2854
 msgid "The client's child has experienced child abuse within the family, or the abuser has a criminal conviction (remember that if the caller is the abuser, this will not be in scope)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2862
+#: apps/diagnosis/data/graph.graphml.tpl:2860
 msgid "The client is under 18"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2868
+#: apps/diagnosis/data/graph.graphml.tpl:2866
 msgid "No abuse."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2884
+#: apps/diagnosis/data/graph.graphml.tpl:2882
 msgid ""
 "Please read the following to the client:\n"
 "\n"
@@ -1948,7 +1944,7 @@ msgid ""
 "*Please note that before a specialist advisor can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof.\"*"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2903
+#: apps/diagnosis/data/graph.graphml.tpl:2901
 msgid ""
 "Please read out the following to the client:\n"
 "\n"
@@ -1961,63 +1957,63 @@ msgid ""
 "Remember to record details of the conversation in your CHS notes.]*"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2917
+#: apps/diagnosis/data/graph.graphml.tpl:2915
 msgid "The matter relates to a child in care, a care leaver, or the call is made by a foster carer."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2933
+#: apps/diagnosis/data/graph.graphml.tpl:2931
 msgid "The client may have been discriminated against (select this button to proceed to the discrimination category)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2952
+#: apps/diagnosis/data/graph.graphml.tpl:2950
 msgid "Female genital mutilation - the client is worried they may become a victim"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2994
+#: apps/diagnosis/data/graph.graphml.tpl:2992
 msgid "International child abduction – The client lives abroad but their child has been taken to the UK"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3000
+#: apps/diagnosis/data/graph.graphml.tpl:2998
 msgid "Any other child abduction problem"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3003
+#: apps/diagnosis/data/graph.graphml.tpl:3001
 msgid "Seeking protection from the unlawful removal of a child from the UK or the return of a child who has been unlawfully removed from the UK or unlawfully removed within the UK. A child is someone under 18 and the client must be the parent or someone with parental responsibility for that child."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3017
+#: apps/diagnosis/data/graph.graphml.tpl:3015
 msgid "No financial assessment is needed for this problem."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3022
+#: apps/diagnosis/data/graph.graphml.tpl:3020
 msgid "The client’s social landlord intends to get (or has got) an Antisocial Behaviour Order or Antisocial Behaviour Injunction against the client or someone living with them."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3030
+#: apps/diagnosis/data/graph.graphml.tpl:3028
 msgid "Client has private landlord"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3036
+#: apps/diagnosis/data/graph.graphml.tpl:3034
 msgid "Client has received an ASBO/ASBI and wishes to challenge"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3042
+#: apps/diagnosis/data/graph.graphml.tpl:3040
 msgid "Court has issued notice of ASBO/ASBI proceedings"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3048
+#: apps/diagnosis/data/graph.graphml.tpl:3046
 msgid "Client has received a letter from their social landlord (including local authorities) confirming an intention to apply for an ASBO or ASBI"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3115
+#: apps/diagnosis/data/graph.graphml.tpl:3113
 msgid "Letter of proceedings"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3130
+#: apps/diagnosis/data/graph.graphml.tpl:3128
 msgid "Letter of issue"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3144
+#: apps/diagnosis/data/graph.graphml.tpl:3142
 msgid "Date to attend court"
 msgstr ""
 

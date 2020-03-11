@@ -12,3 +12,8 @@ localPostgres:
 service:
   type: NodePort
   port: 80
+
+# Lists don't deep merge, so this list of envVars overrides anything defined in an earlier values file
+envVars:
+  - name: DB_PORT
+    value: "5432"

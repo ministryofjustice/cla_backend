@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         {{- include "cla-backend.selectorLabels" . | nindent 8 }}
+        app: web
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

@@ -49,6 +49,7 @@ spec:
                 secretKeyRef:
                   name: db
                   key: password
+            {{- toYaml .Values.envVars | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

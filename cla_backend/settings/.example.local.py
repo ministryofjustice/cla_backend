@@ -30,3 +30,5 @@ DATABASES = {
 CELERY_ALWAYS_EAGER = True
 
 OBIEE_ZIP_PASSWORD = "test"
+
+TEST_OUTPUT_DIR = "test-reports"

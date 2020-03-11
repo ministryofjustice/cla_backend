@@ -63,3 +63,4 @@ cla_backend/static/
 
 # PyCharm
 .idea
+test-reports/*

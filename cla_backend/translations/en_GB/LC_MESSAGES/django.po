@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-12 10:52+0000\n"
+"POT-Creation-Date: 2020-03-12 10:56+0000\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -1050,7 +1050,7 @@ msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:457
 #: apps/diagnosis/data/graph.graphml.tpl:676
-#: apps/diagnosis/data/graph.graphml.tpl:3028
+#: apps/diagnosis/data/graph.graphml.tpl:3023
 msgid "Select the option that best describes the client’s situation."
 msgstr ""
 
@@ -1759,10 +1759,10 @@ msgstr ""
 #: apps/diagnosis/data/graph.graphml.tpl:2508
 #: apps/diagnosis/data/graph.graphml.tpl:2521
 #: apps/diagnosis/data/graph.graphml.tpl:2741
-#: apps/diagnosis/data/graph.graphml.tpl:2942
-#: apps/diagnosis/data/graph.graphml.tpl:2971
-#: apps/diagnosis/data/graph.graphml.tpl:2984
-#: apps/diagnosis/data/graph.graphml.tpl:3057
+#: apps/diagnosis/data/graph.graphml.tpl:2937
+#: apps/diagnosis/data/graph.graphml.tpl:2966
+#: apps/diagnosis/data/graph.graphml.tpl:2979
+#: apps/diagnosis/data/graph.graphml.tpl:3052
 msgid ""
 "Please read the following to the client:\n"
 "\n"
@@ -1959,50 +1959,46 @@ msgid "The matter relates to a child in care, a care leaver, or the call is made
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:2931
-msgid "Please note: if a local authority is trying to take a child into care, no financial assessment is needed for the parent."
-msgstr ""
-
-#: apps/diagnosis/data/graph.graphml.tpl:2936
 msgid "The client may have been discriminated against (select this button to proceed to the discrimination category)"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2955
+#: apps/diagnosis/data/graph.graphml.tpl:2950
 msgid "Female genital mutilation - the client is worried they may become a victim"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:2997
+#: apps/diagnosis/data/graph.graphml.tpl:2992
 msgid "International child abduction – The client lives abroad but their child has been taken to the UK"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3003
+#: apps/diagnosis/data/graph.graphml.tpl:2998
 msgid "Any other child abduction problem"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3006
+#: apps/diagnosis/data/graph.graphml.tpl:3001
 msgid "Seeking protection from the unlawful removal of a child from the UK or the return of a child who has been unlawfully removed from the UK or unlawfully removed within the UK. A child is someone under 18 and the client must be the parent or someone with parental responsibility for that child."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3020
+#: apps/diagnosis/data/graph.graphml.tpl:3015
 msgid "No financial assessment is needed for this problem."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3025
+#: apps/diagnosis/data/graph.graphml.tpl:3020
 msgid "The client’s social landlord intends to get (or has got) an Antisocial Behaviour Order or Antisocial Behaviour Injunction against the client or someone living with them."
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3033
+#: apps/diagnosis/data/graph.graphml.tpl:3028
 msgid "Client has private landlord"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3039
+#: apps/diagnosis/data/graph.graphml.tpl:3034
 msgid "Client has received an ASBO/ASBI and wishes to challenge"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3045
+#: apps/diagnosis/data/graph.graphml.tpl:3040
 msgid "Court has issued notice of ASBO/ASBI proceedings"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3051
+#: apps/diagnosis/data/graph.graphml.tpl:3046
 msgid "Client has received a letter from their social landlord (including local authorities) confirming an intention to apply for an ASBO or ASBI"
 msgstr ""
 

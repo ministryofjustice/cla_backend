@@ -1720,7 +1720,7 @@ An occupation order can restrict who can live in the family home, and even restr
       <data key="d10" xml:space="preserve"><![CDATA[n103]]></data>
       <data key="d13">
         <y:ShapeNode>
-          <y:Geometry height="30.0" width="150.0" x="545.5293309771826" y="470.0"/>
+          <y:Geometry height="30.0" width="150.0" x="433.52933097718255" y="632.265625"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="53.546875" x="48.2265625" xml:space="preserve" y="5.93359375">INSCOPE<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
@@ -6199,6 +6199,42 @@ Remember to record details of the conversation in your CHS notes.]]]></data>
           <y:Fill color="#FF99CC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="139.9140625" x="5.04296875" xml:space="preserve" y="5.93359375">HOUSING OUTOFSCOPE<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n343">
+      <data key="d3" xml:space="preserve"><![CDATA[Yes]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Yes
+]]></data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d9" xml:space="preserve"><![CDATA[Does the client have any of the following?]]></data>
+      <data key="d10" xml:space="preserve"><![CDATA[n401]]></data>
+      <data key="d12" xml:space="preserve"><![CDATA[The client is the parent of the child or someone with parental responsibility]]></data>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="439.0586619543651" y="543.265625"/>
+          <y:Fill color="#CCFFCC" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="24.279296875" x="62.8603515625" xml:space="preserve" y="5.93359375">Yes<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n344">
+      <data key="d3" xml:space="preserve"><![CDATA[No]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[No]]></data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve"><![CDATA[n402]]></data>
+      <data key="d12" xml:space="preserve"><![CDATA[**The client is not a parent or guardian of the child**
+
+The client needs to complete a financial assessment]]></data>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="605.5586790054564" y="543.265625"/>
+          <y:Fill color="#CCFFCC" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="20.236328125" x="64.8818359375" xml:space="preserve" y="5.93359375">No<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -11689,6 +11725,39 @@ Remember to record details of the conversation in your CHS notes.]]]></data>
       </data>
     </edge>
     <edge id="e461" source="n339" target="n342">
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e462" source="n94" target="n343">
+      <data key="d16"/>
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e463" source="n94" target="n344">
+      <data key="d16"/>
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e464" source="n344" target="n95">
+      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

@@ -3091,6 +3091,24 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
       </data>
       <data key="d10" xml:space="preserve">n88</data>
       </node>
+    <node id="n343">
+      <data key="d3" xml:space="preserve">{% trans "Yes" %}</data>
+      <data key="d4" xml:space="preserve">Yes
+</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d9" xml:space="preserve">{% trans "Does the client have any of the following?" %}</data>
+      <data key="d10" xml:space="preserve">n401</data>
+      <data key="d12" xml:space="preserve">The client is the parent of the child or someone with parental responsibility</data>
+      </node>
+    <node id="n344">
+      <data key="d3" xml:space="preserve">{% trans "No" %}</data>
+      <data key="d4" xml:space="preserve">No</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n402</data>
+      <data key="d12" xml:space="preserve">**The client is not a parent or guardian of the child**
+
+The client needs to complete a financial assessment</data>
+      </node>
     <edge id="e0" source="n1" target="n2">
       </edge>
     <edge id="e1" source="n2" target="n3">
@@ -4014,6 +4032,15 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
     <edge id="e460" source="n338" target="n341">
       </edge>
     <edge id="e461" source="n339" target="n342">
+      </edge>
+    <edge id="e462" source="n94" target="n343">
+      <data key="d16"/>
+      </edge>
+    <edge id="e463" source="n94" target="n344">
+      <data key="d16"/>
+      </edge>
+    <edge id="e464" source="n344" target="n95">
+      <data key="d16"/>
       </edge>
   </graph>
   <data key="d14">

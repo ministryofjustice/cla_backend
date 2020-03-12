@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-12 11:02+0000\n"
+"POT-Creation-Date: 2020-03-12 11:14+0000\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -308,6 +308,7 @@ msgstr ""
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1062
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1105
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1147
+#: apps/diagnosis/data/graph.graphml.tpl:3095
 msgid "Yes"
 msgstr ""
 
@@ -318,6 +319,7 @@ msgstr ""
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1069
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1112
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1154
+#: apps/diagnosis/data/graph.graphml.tpl:3104
 msgid "No"
 msgstr ""
 
@@ -2000,6 +2002,10 @@ msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:3045
 msgid "Client has received a letter from their social landlord (including local authorities) confirming an intention to apply for an ASBO or ASBI"
+msgstr ""
+
+#: apps/diagnosis/data/graph.graphml.tpl:3099
+msgid "Does the client have any of the following?"
 msgstr ""
 
 #: apps/timer/models.py:55

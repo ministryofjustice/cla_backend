@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-21 07:52+0000\n"
+"POT-Creation-Date: 2020-03-12 10:39+0000\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -15,34 +15,34 @@ msgstr ""
 "X-Language: cy\n"
 "X-Source-Language: en_GB\n"
 
-#: apps/call_centre/forms.py:57
+#: apps/call_centre/forms.py:53
 msgid "There is no provider specified in the system to handle cases of this law category."
 msgstr "Nid oes darparwr penodol ar y system i ddelio ag achosion yn y categori hwn o'r gyfraith."
 
-#: apps/call_centre/forms.py:63
+#: apps/call_centre/forms.py:57
 msgid "Can't assign to specialist provider without setting matter_type1 and matter_type2"
 msgstr "Ni ellir aseinio i ddarparwr arbenigol heb nodi matter_type1 a matter_type2"
 
-#: apps/call_centre/forms.py:69
+#: apps/call_centre/forms.py:64
 #, python-brace-format
 msgid "Category of matter type 1: {category1} must match category of matter type 2: {category2}"
 msgstr "Categori mater math 1: rhaid i {category1} gyd-fynd â chategori mater math 2: {category2}"
 
-#: apps/call_centre/forms.py:80
+#: apps/call_centre/forms.py:78
 #, python-brace-format
 msgid "Category of Matter Types: {category1}, {category2} must match category of case: {case_category}"
 msgstr "Categori mathau o faterion: rhaid i {category1} a {category2} gyd-fynd â chategori'r achos: {case_category}"
 
-#: apps/cla_provider/models.py:155
+#: apps/cla_provider/models.py:167
 #, python-brace-format
 msgid "Provider {provider} doesn't offer help for {category}"
 msgstr "Nid yw'r darparwr {provider} yn cynnig help ar gyfer {category}"
 
-#: apps/cla_provider/models.py:168
+#: apps/cla_provider/models.py:179
 msgid "Overlapping rota allocation not allowed"
 msgstr "Ni chaniateir dyrannu rota sy'n gwrthdaro"
 
-#: apps/core/admin/fields.py:57
+#: apps/core/admin/fields.py:52
 msgid "One or more tags not allowed. Allowed tags: "
 msgstr "Ni chaniateir un neu fwy o dagiau. Tagiau a ganiateir: "
 
@@ -58,41 +58,41 @@ msgstr "Nid oedd y ddau faes cyfrinair yr un fath."
 msgid "Username"
 msgstr "Enw defnyddiwr"
 
-#: apps/core/admin/forms.py:16
+#: apps/core/admin/forms.py:17
 msgid "Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only."
 msgstr "Gofynnol. 30 nod neu lai. Llythrennau, rhifau a @/./+/-/_ yn unig."
 
-#: apps/core/admin/forms.py:19
+#: apps/core/admin/forms.py:18
 msgid "This value may contain only letters, numbers and @/./+/-/_ characters."
 msgstr "Dim ond llythrennau, rhifau a nodau @/./+/-/_ y gellir eu cynnwys yn y gwerth hwn."
 
-#: apps/core/admin/forms.py:27 apps/core/admin/forms.py:35
-#: apps/core/admin/forms.py:45 apps/core/forms.py:20
+#: apps/core/admin/forms.py:24 apps/core/admin/forms.py:28
+#: apps/core/admin/forms.py:37 apps/core/forms.py:12
 msgid "Password"
 msgstr "Cyfrinair"
 
-#: apps/core/admin/forms.py:30 apps/core/admin/forms.py:38
-#: apps/core/admin/forms.py:50
+#: apps/core/admin/forms.py:25 apps/core/admin/forms.py:30
+#: apps/core/admin/forms.py:44
 msgid "Password confirmation"
 msgstr "Cadarnhau'r cyfrinair"
 
-#: apps/core/admin/forms.py:40
+#: apps/core/admin/forms.py:32
 msgid "Enter the same password as above, for verification."
 msgstr "Rhowch yr un cyfrinair ag uchod, er mwyn ei wirio."
 
-#: apps/core/admin/forms.py:46
+#: apps/core/admin/forms.py:39
 msgid "Raw passwords are not stored, so there is no way to see this user's password, but you can change the password using <a href=\"password/\">this form</a>."
 msgstr "Nid yw cyfrineiriau crai yn cael eu storio, felly nid oes modd gweld cyfrinair y defnyddiwr hwn, ond gallwch newid y cyfrinair gan ddefnyddio <a href=\"password/\"> y ffurflen hon </a>."
 
-#: apps/core/admin/modeladmin.py:87
+#: apps/core/admin/modeladmin.py:86
 msgid "Account unlocked successfully."
 msgstr "Mae'r cyfrif wedi'i ddatgloi yn llwyddiannus."
 
-#: apps/core/admin/modeladmin.py:103
+#: apps/core/admin/modeladmin.py:102
 msgid "Password changed successfully."
 msgstr "Newidiwyd y cyfrinair yn llwyddiannus."
 
-#: apps/core/admin/modeladmin.py:113
+#: apps/core/admin/modeladmin.py:112
 #, python-format
 msgid "Change password: %s"
 msgstr "Newid cyfrinair: %s"
@@ -2264,7 +2264,7 @@ msgstr "Mae'r cleient wedi cael llythyr gan eu landlord cymdeithasol (gan gynnwy
 msgid "created"
 msgstr ""
 
-#: apps/timer/models.py:57
+#: apps/timer/models.py:56
 msgid "modified"
 msgstr ""
 

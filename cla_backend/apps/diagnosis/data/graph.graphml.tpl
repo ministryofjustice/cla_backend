@@ -1,25 +1,25 @@
 {% load i18n %}<?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
-  <!--Created by yEd 3.16.2.1-->
+  <!--Created by yEd 3.19.1.1-->
   <key for="port" id="d0" yfiles.type="portgraphics"/>
   <key for="port" id="d1" yfiles.type="portgeometry"/>
   <key for="port" id="d2" yfiles.type="portuserdata"/>
   <key attr.name="body" attr.type="string" for="node" id="d3"/>
   <key attr.name="title" attr.type="string" for="node" id="d4"/>
   <key attr.name="context:test" attr.type="string" for="node" id="d5">
-    <default/>
+    <default xml:space="preserve"/>
   </key>
   <key attr.name="context:xml" for="node" id="d6">
     <default/>
   </key>
   <key attr.name="order" attr.type="int" for="node" id="d7">
-    <default>9999</default>
+    <default xml:space="preserve">9999</default>
   </key>
   <key attr.name="help" attr.type="string" for="node" id="d8">
-    <default/>
+    <default xml:space="preserve"/>
   </key>
   <key attr.name="heading" attr.type="string" for="node" id="d9">
-    <default/>
+    <default xml:space="preserve"/>
   </key>
   <key attr.name="permanent_id" attr.type="string" for="node" id="d10"/>
   <key attr.name="url" attr.type="string" for="node" id="d11"/>
@@ -31,10 +31,10 @@
   <key for="edge" id="d17" yfiles.type="edgegraphics"/>
   <graph edgedefault="directed" id="G">
     <node id="n0">
-      <data key="d3">{% trans "Education" %}</data>
-      <data key="d4">Education</data>
-      <data key="d7">4</data>
-      <data key="d8">{% blocktrans %}The education category of law covers all issues arising out of education including:
+      <data key="d3" xml:space="preserve">{% trans "Education" %}</data>
+      <data key="d4" xml:space="preserve">Education</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}The education category of law covers all issues arising out of education including:
 
 * Special Educational Needs (SEN)
 * learning difficulties
@@ -45,19 +45,19 @@
 * children being out of school
 
 Please note education covers nursery education, primary, secondary and higher education as well as home schooling, training and apprenticeships.{% endblocktrans %}</data>
-      <data key="d10">n0</data>
+      <data key="d10" xml:space="preserve">n0</data>
       </node>
     <node id="n1">
-      <data key="d3">{% trans "Diagnosis for operators" %}</data>
-      <data key="d4">Diagnosis for operators</data>
-      <data key="d5">testcontext</data>
-      <data key="d10">start</data>
+      <data key="d3" xml:space="preserve">{% trans "Diagnosis for operators" %}</data>
+      <data key="d4" xml:space="preserve">Diagnosis for operators</data>
+      <data key="d5" xml:space="preserve">testcontext</data>
+      <data key="d10" xml:space="preserve">start</data>
       </node>
     <node id="n2">
-      <data key="d3">{% trans "Debt and housing - loss of home" %}</data>
-      <data key="d4">Debt/Housing - Loss of Home</data>
-      <data key="d7">1</data>
-      <data key="d8">{% blocktrans %}This category covers the legal area of Debt, and the areas of Housing covering home loss.
+      <data key="d3" xml:space="preserve">{% trans "Debt and housing - loss of home" %}</data>
+      <data key="d4" xml:space="preserve">Debt/Housing - Loss of Home</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}This category covers the legal area of Debt, and the areas of Housing covering home loss.
 
 Debt covers advice on
 
@@ -86,13 +86,13 @@ The following are covered in 'other housing'.
 * ASBO/ASBI
 
 Clients in temporary accommodation will be covered for in scope housing.{% endblocktrans %}</data>
-      <data key="d10">n2</data>
+      <data key="d10" xml:space="preserve">n2</data>
       </node>
     <node id="n3">
-      <data key="d3">{% trans "Home owner, and the nature of the debt means they are at immediate risk of losing their home *(Includes shared ownership if the client is living in the property)*" %}</data>
-      <data key="d4">Client owns a house </data>
-      <data key="d7">1</data>
-      <data key="d8">{% blocktrans %}A client's home is defined as the house, caravan, houseboat or other vehicle or structure that is their only or main residence. The references to caravan, houseboat or other vehicle include the land on which it is located or to which it is moored.
+      <data key="d3" xml:space="preserve">{% trans "Home owner, and the nature of the debt means they are at immediate risk of losing their home *(Includes shared ownership if the client is living in the property)*" %}</data>
+      <data key="d4" xml:space="preserve">Client owns a house </data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}A client's home is defined as the house, caravan, houseboat or other vehicle or structure that is their only or main residence. The references to caravan, houseboat or other vehicle include the land on which it is located or to which it is moored.
 
 Operators should interpret the definition as a client would only be in scope if they lived in the home in question. If someone lives or owns another property and the matter relates to a different proeperty to the one they live in then this would be out of scope.
 
@@ -101,564 +101,564 @@ If the client is a co-owner of the property and they live in it as their only or
 Search guidance for 'timeline' to see the home repossession timeline.
 
 *FYI: Debt matters need to arise from an issue where the client owns their own home. Problems relating to homes that are rented or leased from another person fall within Housing.*{% endblocktrans %}</data>
-      <data key="d10">n3</data>
+      <data key="d10" xml:space="preserve">n3</data>
       </node>
     <node id="n4">
-      <data key="d3">{% trans "The mortgage lender is seeking or has sought a court order to recover the property (due to mortgage arrears)" %}</data>
-      <data key="d4">Mortgage lender is s</data>
-      <data key="d7">1</data>
-      <data key="d8">{% blocktrans %}Check the mortgage possession timeline in guidance - search for 'timeline'.
+      <data key="d3" xml:space="preserve">{% trans "The mortgage lender is seeking or has sought a court order to recover the property (due to mortgage arrears)" %}</data>
+      <data key="d4" xml:space="preserve">Mortgage lender is s</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Check the mortgage possession timeline in guidance - search for 'timeline'.
 
 Record here how you have identified that the mortgage lender is seeking/has sought a court order enabling them to recover possession of the client's property.
 
 Record in Operator Notes what documents client has received. These may include a Default Notice or Possession Warrant.{% endblocktrans %}</data>
-      <data key="d9">{% trans "Select the type of documentation the client has received:" %}</data>
-      <data key="d10">n4</data>
-      <data key="d11"/>
+      <data key="d9" xml:space="preserve">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d10" xml:space="preserve">n4</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n5">
-      <data key="d3">{% trans "A warrant of possession has been received by client" %}</data>
-      <data key="d4">Client has received </data>
-      <data key="d7">2</data>
-      <data key="d9">{% trans "HEADING ON WARRANT" %}</data>
-      <data key="d10">n5</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "A warrant of possession has been received by client" %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d9" xml:space="preserve">{% trans "HEADING ON WARRANT" %}</data>
+      <data key="d10" xml:space="preserve">n5</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n6">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>debt</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">debt</category>
 </context>
       </data>
-      <data key="d10">n6</data>
+      <data key="d10" xml:space="preserve">n6</data>
       </node>
     <node id="n7">
-      <data key="d3">{% trans "A claim form has been received by client" %}</data>
-      <data key="d4">Client has received </data>
-      <data key="d7">3</data>
-      <data key="d9">{% trans "HEADING ON CLAIM FORM" %}</data>
-      <data key="d10">n7</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "A claim form has been received by client" %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d9" xml:space="preserve">{% trans "HEADING ON CLAIM FORM" %}</data>
+      <data key="d10" xml:space="preserve">n7</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n8">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>debt</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">debt</category>
 </context>
       </data>
-      <data key="d10">n8</data>
+      <data key="d10" xml:space="preserve">n8</data>
       </node>
     <node id="n9">
-      <data key="d3">{% trans "The client has other documentation that places their home at immediate (date-based) risk" %}</data>
-      <data key="d4">Other documentation </data>
-      <data key="d7">4</data>
-      <data key="d9">{% trans "HEADING ON OTHER" %}</data>
-      <data key="d10">n9</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "The client has other documentation that places their home at immediate (date-based) risk" %}</data>
+      <data key="d4" xml:space="preserve">Other documentation </data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d9" xml:space="preserve">{% trans "HEADING ON OTHER" %}</data>
+      <data key="d10" xml:space="preserve">n9</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n10">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>debt</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">debt</category>
 </context>
       </data>
-      <data key="d10">n10</data>
+      <data key="d10" xml:space="preserve">n10</data>
       </node>
     <node id="n11">
-      <data key="d3">{% trans "A creditor is seeking a court order forcing the sale of the client’s property to recoup the debt they are owed" %}</data>
-      <data key="d4">Creditor is seeking </data>
-      <data key="d7">2</data>
-      <data key="d9">{% trans "Select the type of documentation the client has received:" %}</data>
-      <data key="d10">n11</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "A creditor is seeking a court order forcing the sale of the client’s property to recoup the debt they are owed" %}</data>
+      <data key="d4" xml:space="preserve">Creditor is seeking </data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d9" xml:space="preserve">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d10" xml:space="preserve">n11</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n12">
-      <data key="d3">{% trans "Sale of client's home is being forced in order to recoup a charging order on their property." %}</data>
-      <data key="d4">Client has received </data>
-      <data key="d7">2</data>
-      <data key="d8">{% blocktrans %}A Charging Order is placed on a property by the court securing an outstanding debt against the home or other property.
+      <data key="d3" xml:space="preserve">{% trans "Sale of client's home is being forced in order to recoup a charging order on their property." %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}A Charging Order is placed on a property by the court securing an outstanding debt against the home or other property.
 
 This alone will not constitute a serious risk to the client's home, but if there is a court order forcing the sale of the home in order to recoup the debt then this will be in scope.
 
 If a client disagrees with a charging order that is in place, and wants to know how to set it aside, or requires general advice regarding the order, then this will be out of scope unless a court is forcing them to sell their home to recoup the debt.
 
 If client has received a charging order please record this in Operator Notes.{% endblocktrans %}</data>
-      <data key="d10">n12</data>
+      <data key="d10" xml:space="preserve">n12</data>
       </node>
     <node id="n13">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>debt</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">debt</category>
 </context>
       </data>
-      <data key="d10">n13</data>
+      <data key="d10" xml:space="preserve">n13</data>
       </node>
     <node id="n14">
-      <data key="d3">{% trans "Letter Before Action received by client" %}</data>
-      <data key="d4">Client has received </data>
-      <data key="d7">1</data>
-      <data key="d8">{% trans "client is being taken to court on a given date due to debt" %}</data>
-      <data key="d10">n14</data>
+      <data key="d3" xml:space="preserve">{% trans "Letter Before Action received by client" %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% trans "client is being taken to court on a given date due to debt" %}</data>
+      <data key="d10" xml:space="preserve">n14</data>
       </node>
     <node id="n15">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>debt</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">debt</category>
 </context>
       </data>
-      <data key="d10">n15</data>
+      <data key="d10" xml:space="preserve">n15</data>
       </node>
     <node id="n16">
-      <data key="d3">{% trans "Other documentation that places client’s own home at immediate (date based) risk." %}</data>
-      <data key="d4">Other documentation </data>
-      <data key="d10">n16</data>
+      <data key="d3" xml:space="preserve">{% trans "Other documentation that places client’s own home at immediate (date based) risk." %}</data>
+      <data key="d4" xml:space="preserve">Other documentation </data>
+      <data key="d10" xml:space="preserve">n16</data>
       </node>
     <node id="n17">
-      <data key="d3">{% trans "A creditor is seeking to make the client bankrupt in order to recoup the debt they are owed and the client’s estate includes their own home" %}</data>
-      <data key="d4">Creditor is seeking </data>
-      <data key="d7">3</data>
-      <data key="d9">{% trans "Select the type of documentation the client has received:" %}</data>
-      <data key="d10">n17</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "A creditor is seeking to make the client bankrupt in order to recoup the debt they are owed and the client’s estate includes their own home" %}</data>
+      <data key="d4" xml:space="preserve">Creditor is seeking </data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d9" xml:space="preserve">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d10" xml:space="preserve">n17</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n18">
-      <data key="d3">{% trans "Statutory Demand" %}</data>
-      <data key="d4">Client has received </data>
-      <data key="d7">2</data>
-      <data key="d8">{% trans "court has ordered the client sell their house" %}</data>
-      <data key="d10">n18</data>
+      <data key="d3" xml:space="preserve">{% trans "Statutory Demand" %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d8" xml:space="preserve">{% trans "court has ordered the client sell their house" %}</data>
+      <data key="d10" xml:space="preserve">n18</data>
       </node>
     <node id="n19">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>debt</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">debt</category>
 </context>
       </data>
-      <data key="d10">n19</data>
+      <data key="d10" xml:space="preserve">n19</data>
       </node>
     <node id="n20">
-      <data key="d3">{% trans "Bankruptcy Petition" %}</data>
-      <data key="d4">Client has received </data>
-      <data key="d7">1</data>
-      <data key="d8">{% trans "formal notification that third party wants to make client bankrupt through the courts" %}</data>
-      <data key="d10">n20</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "Bankruptcy Petition" %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% trans "formal notification that third party wants to make client bankrupt through the courts" %}</data>
+      <data key="d10" xml:space="preserve">n20</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n21">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>debt</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">debt</category>
 </context>
       </data>
-      <data key="d10">n21</data>
+      <data key="d10" xml:space="preserve">n21</data>
       </node>
     <node id="n22">
-      <data key="d3">{% trans "Other documentation that places client’s own home at immediate (date based) risk." %}</data>
-      <data key="d4">Other documentation </data>
-      <data key="d10">n22</data>
+      <data key="d3" xml:space="preserve">{% trans "Other documentation that places client’s own home at immediate (date based) risk." %}</data>
+      <data key="d4" xml:space="preserve">Other documentation </data>
+      <data key="d10" xml:space="preserve">n22</data>
       </node>
     <node id="n23">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>debt</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">debt</category>
 </context>
       </data>
-      <data key="d10">n23</data>
+      <data key="d10" xml:space="preserve">n23</data>
       </node>
     <node id="n24">
-      <data key="d3">{% trans "In rented accommodation" %}</data>
-      <data key="d4">client in rented acc</data>
-      <data key="d7">2</data>
-      <data key="d10">n24</data>
+      <data key="d3" xml:space="preserve">{% trans "In rented accommodation" %}</data>
+      <data key="d4" xml:space="preserve">client in rented acc</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n24</data>
       </node>
     <node id="n25">
-      <data key="d3">{% trans "The landlord is seeking to recover possession of the property" %}</data>
-      <data key="d4">Landlord is seeking </data>
-      <data key="d7">1</data>
-      <data key="d9">{% trans "Select the type of documentation the client has received:" %}</data>
-      <data key="d10">n25</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "The landlord is seeking to recover possession of the property" %}</data>
+      <data key="d4" xml:space="preserve">Landlord is seeking </data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d9" xml:space="preserve">{% trans "Select the type of documentation the client has received:" %}</data>
+      <data key="d10" xml:space="preserve">n25</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n26">
-      <data key="d3">{% trans "Letter from the landlord confirming that informal arrangements can no longer continue" %}</data>
-      <data key="d4">Client has received </data>
-      <data key="d7">1</data>
-      <data key="d10">n26</data>
+      <data key="d3" xml:space="preserve">{% trans "Letter from the landlord confirming that informal arrangements can no longer continue" %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n26</data>
       </node>
     <node id="n27">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n27</data>
+      <data key="d10" xml:space="preserve">n27</data>
       </node>
     <node id="n28">
-      <data key="d3">{% trans "Notice to Quit (a letter from the landlord giving the tenant notice to leave the property - for cases where the renting arrangement does not have a secure tenure)" %}</data>
-      <data key="d4">Client has received </data>
-      <data key="d7">2</data>
-      <data key="d10">n28</data>
+      <data key="d3" xml:space="preserve">{% trans "Notice to Quit (a letter from the landlord giving the tenant notice to leave the property - for cases where the renting arrangement does not have a secure tenure)" %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n28</data>
       </node>
     <node id="n29">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n29</data>
+      <data key="d10" xml:space="preserve">n29</data>
       </node>
     <node id="n30">
-      <data key="d3">{% trans "Letter Before Action (a letter the landlord sends before starting proceedings to recover possession of the property)" %}</data>
-      <data key="d4">Client has received </data>
-      <data key="d7">3</data>
-      <data key="d10">n30</data>
+      <data key="d3" xml:space="preserve">{% trans "Letter Before Action (a letter the landlord sends before starting proceedings to recover possession of the property)" %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d10" xml:space="preserve">n30</data>
       </node>
     <node id="n31">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n31</data>
+      <data key="d10" xml:space="preserve">n31</data>
       </node>
     <node id="n32">
-      <data key="d3">{% trans "Notices from the landlord under section 83 of the Housing Act 1985 and sections 8 and 21 of the Housing Act 1988 (these give the client notice before the landlord starts formal possession proceedings for the property)" %}</data>
-      <data key="d4">Client has received </data>
-      <data key="d7">4</data>
-      <data key="d10">n32</data>
+      <data key="d3" xml:space="preserve">{% trans "Notices from the landlord under section 83 of the Housing Act 1985 and sections 8 and 21 of the Housing Act 1988 (these give the client notice before the landlord starts formal possession proceedings for the property)" %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d10" xml:space="preserve">n32</data>
       </node>
     <node id="n33">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n33</data>
+      <data key="d10" xml:space="preserve">n33</data>
       </node>
     <node id="n34">
-      <data key="d3">{% trans "Possession proceedings - issued by the court and giving the client notice of a hearing date for possession proceedings" %}</data>
-      <data key="d4">Possession proceedin</data>
-      <data key="d7">8</data>
-      <data key="d10">n34</data>
+      <data key="d3" xml:space="preserve">{% trans "Possession proceedings - issued by the court and giving the client notice of a hearing date for possession proceedings" %}</data>
+      <data key="d4" xml:space="preserve">Possession proceedin</data>
+      <data key="d7" xml:space="preserve">8</data>
+      <data key="d10" xml:space="preserve">n34</data>
       </node>
     <node id="n35">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n35</data>
+      <data key="d10" xml:space="preserve">n35</data>
       </node>
     <node id="n36">
-      <data key="d3">{% trans "Possession Order from the court (this gives the client notice of possession - at the end of the specified period the creditor may apply to bailiffs to execute a warrant for possession)" %}</data>
-      <data key="d4">The client has recei</data>
-      <data key="d7">5</data>
-      <data key="d10">n36</data>
+      <data key="d3" xml:space="preserve">{% trans "Possession Order from the court (this gives the client notice of possession - at the end of the specified period the creditor may apply to bailiffs to execute a warrant for possession)" %}</data>
+      <data key="d4" xml:space="preserve">The client has recei</data>
+      <data key="d7" xml:space="preserve">5</data>
+      <data key="d10" xml:space="preserve">n36</data>
       </node>
     <node id="n37">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n37</data>
+      <data key="d10" xml:space="preserve">n37</data>
       </node>
     <node id="n38">
-      <data key="d3">{% trans "Warrant for eviction from the court bailiffs (this gives county court bailiffs the power to evict occupiers and change the locks)" %}</data>
-      <data key="d4">The client has recei</data>
-      <data key="d7">6</data>
-      <data key="d10">n38</data>
+      <data key="d3" xml:space="preserve">{% trans "Warrant for eviction from the court bailiffs (this gives county court bailiffs the power to evict occupiers and change the locks)" %}</data>
+      <data key="d4" xml:space="preserve">The client has recei</data>
+      <data key="d7" xml:space="preserve">6</data>
+      <data key="d10" xml:space="preserve">n38</data>
       </node>
     <node id="n39">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n39</data>
+      <data key="d10" xml:space="preserve">n39</data>
       </node>
     <node id="n40">
-      <data key="d3">{% trans "There is other evidence that landlord is seeking to recover possession and placing the home at immediate risk" %}</data>
-      <data key="d4">There is other evide</data>
-      <data key="d7">7</data>
-      <data key="d10">n40</data>
+      <data key="d3" xml:space="preserve">{% trans "There is other evidence that landlord is seeking to recover possession and placing the home at immediate risk" %}</data>
+      <data key="d4" xml:space="preserve">There is other evide</data>
+      <data key="d7" xml:space="preserve">7</data>
+      <data key="d10" xml:space="preserve">n40</data>
       </node>
     <node id="n41">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n41</data>
+      <data key="d10" xml:space="preserve">n41</data>
       </node>
     <node id="n42">
-      <data key="d3">{% trans "None of the above - consider whether discrimination might apply" %}</data>
-      <data key="d4">If none of the above</data>
-      <data key="d10">n42</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "None of the above - consider whether discrimination might apply" %}</data>
+      <data key="d4" xml:space="preserve">If none of the above</data>
+      <data key="d10" xml:space="preserve">n42</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n43">
-      <data key="d3">{% trans "The landlord is unlawfully evicting the client without due process (eg will be changing the locks)" %}</data>
-      <data key="d4">Landlord is unlawful</data>
-      <data key="d7">2</data>
-      <data key="d10">n43</data>
+      <data key="d3" xml:space="preserve">{% trans "The landlord is unlawfully evicting the client without due process (eg will be changing the locks)" %}</data>
+      <data key="d4" xml:space="preserve">Landlord is unlawful</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n43</data>
       </node>
     <node id="n44">
-      <data key="d3">{% trans "Describe scenario carefully in notes - client's circumstances and why they believe they are facing eviction or have been evicted. *Then click 'next' to continue*" %}</data>
-      <data key="d4">Describe scenario ca</data>
-      <data key="d10">n44</data>
+      <data key="d3" xml:space="preserve">{% trans "Describe scenario carefully in notes - client's circumstances and why they believe they are facing eviction or have been evicted. *Then click 'next' to continue*" %}</data>
+      <data key="d4" xml:space="preserve">Describe scenario ca</data>
+      <data key="d10" xml:space="preserve">n44</data>
       </node>
     <node id="n45">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n45</data>
+      <data key="d10" xml:space="preserve">n45</data>
       </node>
     <node id="n46">
-      <data key="d3">{% trans "Homeless or at risk of becoming homeless within 56 days" %}</data>
-      <data key="d4">Client becoming homeless</data>
-      <data key="d7">3</data>
-      <data key="d9">{% trans "Select the option that best describes the client’s situation." %}</data>
-      <data key="d10">n46</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "Homeless or at risk of becoming homeless within 56 days" %}</data>
+      <data key="d4" xml:space="preserve">Client becoming homeless</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d9" xml:space="preserve">{% trans "Select the option that best describes the client’s situation." %}</data>
+      <data key="d10" xml:space="preserve">n46</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n47">
-      <data key="d3">{% trans "The landlord has unlawfully evicted the client without due process" %}</data>
-      <data key="d4">Landlord has unlawfu</data>
-      <data key="d8">{% trans "(eg changed the locks)" %}</data>
-      <data key="d10">n47</data>
+      <data key="d3" xml:space="preserve">{% trans "The landlord has unlawfully evicted the client without due process" %}</data>
+      <data key="d4" xml:space="preserve">Landlord has unlawfu</data>
+      <data key="d8" xml:space="preserve">{% trans "(eg changed the locks)" %}</data>
+      <data key="d10" xml:space="preserve">n47</data>
       </node>
     <node id="n48">
-      <data key="d3">{% trans "Describe scenario carefully in notes - including the client's circumstances and why they believe they are facing eviction or have been evicted" %}</data>
-      <data key="d4">Describe scenario ca</data>
-      <data key="d10">n48</data>
+      <data key="d3" xml:space="preserve">{% trans "Describe scenario carefully in notes - including the client's circumstances and why they believe they are facing eviction or have been evicted" %}</data>
+      <data key="d4" xml:space="preserve">Describe scenario ca</data>
+      <data key="d10" xml:space="preserve">n48</data>
       </node>
     <node id="n49">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n49</data>
+      <data key="d10" xml:space="preserve">n49</data>
       </node>
     <node id="n50">
-      <data key="d3">{% trans "An informal licensing or renting arrangement is ending" %}</data>
-      <data key="d4">Informal licensing/r</data>
-      <data key="d10">n50</data>
+      <data key="d3" xml:space="preserve">{% trans "An informal licensing or renting arrangement is ending" %}</data>
+      <data key="d4" xml:space="preserve">Informal licensing/r</data>
+      <data key="d10" xml:space="preserve">n50</data>
       </node>
     <node id="n51">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n51</data>
+      <data key="d10" xml:space="preserve">n51</data>
       </node>
     <node id="n52">
-      <data key="d3">{% trans "The client has received a Notice to Quit from the landlord" %}</data>
-      <data key="d4">Notice to Quit from </data>
-      <data key="d10">n52</data>
+      <data key="d3" xml:space="preserve">{% trans "The client has received a Notice to Quit from the landlord" %}</data>
+      <data key="d4" xml:space="preserve">Notice to Quit from </data>
+      <data key="d10" xml:space="preserve">n52</data>
       </node>
     <node id="n53">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n53</data>
+      <data key="d10" xml:space="preserve">n53</data>
       </node>
     <node id="n54">
-      <data key="d3">{% trans "The client can't access their home (eg due to letter from partner, closure order for property)" %}</data>
-      <data key="d4">Client unable to acc</data>
-      <data key="d10">n54</data>
+      <data key="d3" xml:space="preserve">{% trans "The client can't access their home (eg due to letter from partner, closure order for property)" %}</data>
+      <data key="d4" xml:space="preserve">Client unable to acc</data>
+      <data key="d10" xml:space="preserve">n54</data>
       </node>
     <node id="n55">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n55</data>
+      <data key="d10" xml:space="preserve">n55</data>
       </node>
     <node id="n56">
-      <data key="d3">{% trans "A court has issued possession proceedings" %}</data>
-      <data key="d4">Possession proceedin</data>
-      <data key="d10">n56</data>
+      <data key="d3" xml:space="preserve">{% trans "A court has issued possession proceedings" %}</data>
+      <data key="d4" xml:space="preserve">Possession proceedin</data>
+      <data key="d10" xml:space="preserve">n56</data>
       </node>
     <node id="n57">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n57</data>
+      <data key="d10" xml:space="preserve">n57</data>
       </node>
     <node id="n58">
-      <data key="d3">{% trans "The client has received a possession order from the court (outlining the decision of the court)" %}</data>
-      <data key="d4">Client received a po</data>
-      <data key="d10">n58</data>
+      <data key="d3" xml:space="preserve">{% trans "The client has received a possession order from the court (outlining the decision of the court)" %}</data>
+      <data key="d4" xml:space="preserve">Client received a po</data>
+      <data key="d10" xml:space="preserve">n58</data>
       </node>
     <node id="n59">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n59</data>
+      <data key="d10" xml:space="preserve">n59</data>
       </node>
     <node id="n60">
-      <data key="d3">{% trans "The client has received a warrant for eviction from the court bailliffs" %}</data>
-      <data key="d4">Client received a wa</data>
-      <data key="d10">n60</data>
+      <data key="d3" xml:space="preserve">{% trans "The client has received a warrant for eviction from the court bailliffs" %}</data>
+      <data key="d4" xml:space="preserve">Client received a wa</data>
+      <data key="d10" xml:space="preserve">n60</data>
       </node>
     <node id="n61">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n61</data>
+      <data key="d10" xml:space="preserve">n61</data>
       </node>
     <node id="n62">
-      <data key="d3">{% trans "The client has received a letter from the local authority saying that they do not qualify for accommodation or assistance and they want to challenge this decision" %}</data>
-      <data key="d4">Client received a le</data>
-      <data key="d10">n62</data>
+      <data key="d3" xml:space="preserve">{% trans "The client has received a letter from the local authority saying that they do not qualify for accommodation or assistance and they want to challenge this decision" %}</data>
+      <data key="d4" xml:space="preserve">Client received a le</data>
+      <data key="d10" xml:space="preserve">n62</data>
       </node>
     <node id="n63">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n63</data>
+      <data key="d10" xml:space="preserve">n63</data>
       </node>
     <node id="n64">
-      <data key="d3">{% trans "The client believes it is not reasonable to continue to occupy the property (eg a recently disabled person can't easily access the property, the client can't afford to live in the property, there is a threat of violence towards the client or their family)" %}</data>
-      <data key="d4">Client believes that</data>
-      <data key="d10">n64</data>
+      <data key="d3" xml:space="preserve">{% trans "The client believes it is not reasonable to continue to occupy the property (eg a recently disabled person can't easily access the property, the client can't afford to live in the property, there is a threat of violence towards the client or their family)" %}</data>
+      <data key="d4" xml:space="preserve">Client believes that</data>
+      <data key="d10" xml:space="preserve">n64</data>
       </node>
     <node id="n65">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n65</data>
+      <data key="d10" xml:space="preserve">n65</data>
       </node>
     <node id="n66">
-      <data key="d3">{% trans "The client is being refused accommodation or has had it terminated by the UK Border Force" %}</data>
-      <data key="d4">Client is being refu</data>
-      <data key="d10">n66</data>
+      <data key="d3" xml:space="preserve">{% trans "The client is being refused accommodation or has had it terminated by the UK Border Force" %}</data>
+      <data key="d4" xml:space="preserve">Client is being refu</data>
+      <data key="d10" xml:space="preserve">n66</data>
       </node>
     <node id="n67">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n67</data>
+      <data key="d10" xml:space="preserve">n67</data>
       </node>
     <node id="n68">
-      <data key="d3">{% trans "Other (please give details in notes)" %}</data>
-      <data key="d4">Other</data>
-      <data key="d7">99999</data>
-      <data key="d10">n68</data>
+      <data key="d3" xml:space="preserve">{% trans "Other (please give details in notes)" %}</data>
+      <data key="d4" xml:space="preserve">Other</data>
+      <data key="d7" xml:space="preserve">99999</data>
+      <data key="d10" xml:space="preserve">n68</data>
       </node>
     <node id="n69">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n69</data>
+      <data key="d10" xml:space="preserve">n69</data>
       </node>
     <node id="n70">
-      <data key="d3">{% trans "Owes other money (check that the consequences of this don’t place the client in another category of debt)" %}</data>
-      <data key="d4">Other money owed (ch</data>
-      <data key="d7">4</data>
-      <data key="d10">n70</data>
+      <data key="d3" xml:space="preserve">{% trans "Owes other money (check that the consequences of this don’t place the client in another category of debt)" %}</data>
+      <data key="d4" xml:space="preserve">Other money owed (ch</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d10" xml:space="preserve">n70</data>
       </node>
     <node id="n71">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns=""> 	<category>debt</category> </context>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve"> 	<category xml:space="preserve">debt</category> </context>
       </data>
-      <data key="d10">n71</data>
+      <data key="d10" xml:space="preserve">n71</data>
       </node>
     <node id="n72">
-      <data key="d3">{% trans "None of the above -  consider whether discrimination might apply and click on 'Help' for examples" %}</data>
-      <data key="d4">If none of the above</data>
-      <data key="d8">{% blocktrans %}Examples of discrimination in the debt and housing category might include:
+      <data key="d3" xml:space="preserve">{% trans "None of the above -  consider whether discrimination might apply and click on 'Help' for examples" %}</data>
+      <data key="d4" xml:space="preserve">If none of the above</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Examples of discrimination in the debt and housing category might include:
 
 * the client has been treated differently by their landlord compared to other tenants of the same landlord
 * the landlord has refused to make reasonable adjustments to the property to accommodate a client's disability
 * an estate agent is only offering a minority group properties that are considered hard to let{% endblocktrans %}</data>
-      <data key="d10">n72</data>
+      <data key="d10" xml:space="preserve">n72</data>
       </node>
     <node id="n73">
-      <data key="d3">{% trans "Other housing matters" %}</data>
-      <data key="d4">Other housing matter</data>
-      <data key="d7">2</data>
-      <data key="d8">{% blocktrans %}This category covers the legal area of Housing outside home loss.
+      <data key="d3" xml:space="preserve">{% trans "Other housing matters" %}</data>
+      <data key="d4" xml:space="preserve">Other housing matter</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}This category covers the legal area of Housing outside home loss.
 
 It covers advice on
 
@@ -667,125 +667,125 @@ It covers advice on
 * ASBO/ASBI
 
 For loss of home please click 'back' and select the first category.{% endblocktrans %}</data>
-      <data key="d10">n73</data>
+      <data key="d10" xml:space="preserve">n73</data>
       </node>
     <node id="n74">
-      <data key="d3">{% trans "Housing disrepair (necessary repairs have not been carried out) - for people in **rented** accomodation only" %}</data>
-      <data key="d4">Housing disrepair is</data>
-      <data key="d7">1</data>
-      <data key="d9">{% trans "Select the option that best describes the client’s situation." %}</data>
-      <data key="d10">n74</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "Housing disrepair (necessary repairs have not been carried out) - for people in **rented** accomodation only" %}</data>
+      <data key="d4" xml:space="preserve">Housing disrepair is</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d9" xml:space="preserve">{% trans "Select the option that best describes the client’s situation." %}</data>
+      <data key="d10" xml:space="preserve">n74</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n75">
-      <data key="d3">{% trans "Client has photos of disrepair AND the disrepair puts them or their family at serious risk of harm or injury (this includes an injury or illness that has already happened)" %}</data>
-      <data key="d4">Client has photos of</data>
-      <data key="d7">1</data>
-      <data key="d10">n75</data>
+      <data key="d3" xml:space="preserve">{% trans "Client has photos of disrepair AND the disrepair puts them or their family at serious risk of harm or injury (this includes an injury or illness that has already happened)" %}</data>
+      <data key="d4" xml:space="preserve">Client has photos of</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n75</data>
       </node>
     <node id="n76">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n76</data>
+      <data key="d10" xml:space="preserve">n76</data>
       </node>
     <node id="n77">
-      <data key="d3">{% trans "Client has report by an expert (e.g. a surveyor) on the disrepair AND the disrepair puts them or their family at serious risk of harm, injury or illness" %}</data>
-      <data key="d4">Client has report by</data>
-      <data key="d7">2</data>
-      <data key="d10">n77</data>
+      <data key="d3" xml:space="preserve">{% trans "Client has report by an expert (e.g. a surveyor) on the disrepair AND the disrepair puts them or their family at serious risk of harm, injury or illness" %}</data>
+      <data key="d4" xml:space="preserve">Client has report by</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n77</data>
       </node>
     <node id="n78">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n78</data>
+      <data key="d10" xml:space="preserve">n78</data>
       </node>
     <node id="n79">
-      <data key="d3">{% trans "ASBO/ASBI (Antisocial Behaviour Order/Antisocial Behaviour Injunction)" %}</data>
-      <data key="d4">ASBO/ASBI</data>
-      <data key="d7">3</data>
-      <data key="d10">n79</data>
+      <data key="d3" xml:space="preserve">{% trans "ASBO/ASBI (Antisocial Behaviour Order/Antisocial Behaviour Injunction)" %}</data>
+      <data key="d4" xml:space="preserve">ASBO/ASBI</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d10" xml:space="preserve">n79</data>
       </node>
     <node id="n80">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n86</data>
+      <data key="d10" xml:space="preserve">n86</data>
       </node>
     <node id="n81">
-      <data key="d3">{% trans "Harassment (being threatened or disturbed in your home, on more than one occasion)" %}</data>
-      <data key="d4">Harrassment (being d</data>
-      <data key="d7">2</data>
-      <data key="d10">n89</data>
+      <data key="d3" xml:space="preserve">{% trans "Harassment (being threatened or disturbed in your home, on more than one occasion)" %}</data>
+      <data key="d4" xml:space="preserve">Harrassment (being d</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n89</data>
       </node>
     <node id="n82">
-      <data key="d3">{% trans "Client is being harassed by a landlord and needs injunction or restraining order" %}</data>
-      <data key="d4">Client is being hara</data>
-      <data key="d10">n90</data>
+      <data key="d3" xml:space="preserve">{% trans "Client is being harassed by a landlord and needs injunction or restraining order" %}</data>
+      <data key="d4" xml:space="preserve">Client is being hara</data>
+      <data key="d10" xml:space="preserve">n90</data>
       </node>
     <node id="n83">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n91</data>
+      <data key="d10" xml:space="preserve">n91</data>
       </node>
     <node id="n84">
-      <data key="d3">{% trans "Client is being harassed by a neighbour and needs injunction or restraining order" %}</data>
-      <data key="d4">Client is being hara</data>
-      <data key="d10">n92</data>
+      <data key="d3" xml:space="preserve">{% trans "Client is being harassed by a neighbour and needs injunction or restraining order" %}</data>
+      <data key="d4" xml:space="preserve">Client is being hara</data>
+      <data key="d10" xml:space="preserve">n92</data>
       </node>
     <node id="n85">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n93</data>
+      <data key="d10" xml:space="preserve">n93</data>
       </node>
     <node id="n86">
-      <data key="d3">{% trans "Other out of scope, rediagnose" %}</data>
-      <data key="d4">Other out of</data>
-      <data key="d10">n94</data>
+      <data key="d3" xml:space="preserve">{% trans "Other out of scope, rediagnose" %}</data>
+      <data key="d4" xml:space="preserve">Other out of</data>
+      <data key="d10" xml:space="preserve">n94</data>
       </node>
     <node id="n87">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n95</data>
+      <data key="d10" xml:space="preserve">n95</data>
       </node>
     <node id="n88">
-      <data key="d3">{% trans "None of the above" %}</data>
-      <data key="d4">None of the above</data>
-      <data key="d10">n96</data>
+      <data key="d3" xml:space="preserve">{% trans "None of the above" %}</data>
+      <data key="d4" xml:space="preserve">None of the above</data>
+      <data key="d10" xml:space="preserve">n96</data>
       </node>
     <node id="n89">
-      <data key="d3">{% trans "Family" %}</data>
-      <data key="d4">Family</data>
-      <data key="d7">3</data>
-      <data key="d8">{% blocktrans %}The family category of law includes advice on:
+      <data key="d3" xml:space="preserve">{% trans "Family" %}</data>
+      <data key="d4" xml:space="preserve">Family</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}The family category of law includes advice on:
 
 * difficulty in getting contact with children or being denied contact
 * trying to get custody and parental rights
@@ -796,85 +796,85 @@ For loss of home please click 'back' and select the first category.{% endblocktr
 * trying to adopt a child who's in care
 * enforcing previous court orders
 * child abduction{% endblocktrans %}</data>
-      <data key="d10">n97</data>
+      <data key="d10" xml:space="preserve">n97</data>
       </node>
     <node id="n90">
-      <data key="d3">{% trans "Domestic abuse (including child abuse) - the client wants to protect themselves or their children" %}</data>
-      <data key="d4">Client protecting self</data>
-      <data key="d7">1</data>
-      <data key="d8">{% blocktrans %}DV/CA - Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order (an injunction) that tells a person they're not allowed to do a certain act. There are two main forms of injunction
+      <data key="d3" xml:space="preserve">{% trans "Domestic abuse (including child abuse) - the client wants to protect themselves or their children" %}</data>
+      <data key="d4" xml:space="preserve">Client protecting self</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}DV/CA - Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order (an injunction) that tells a person they're not allowed to do a certain act. There are two main forms of injunction
 
 A non-molestation order - aimed at preventing a client's partner or ex-partner from using or threatening violence against them or their child, or intimidating, harassing or pestering them.
 
 An occupation order can restrict who can live in the family home, and even restrict the abuser from entering the surrounding area. They can also be used where clients do not feel safe continuing to live with their partner, or if they have already left home because of abuse, but want to return and exclude the abuser.{% endblocktrans %}</data>
-      <data key="d10">n98</data>
+      <data key="d10" xml:space="preserve">n98</data>
       </node>
     <node id="n91">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n99</data>
+      <data key="d10" xml:space="preserve">n99</data>
       </node>
     <node id="n92">
-      <data key="d3">{% trans "Child abduction - the client wants advice" %}</data>
-      <data key="d4"/>
-      <data key="d7">5</data>
-      <data key="d10">n100</data>
+      <data key="d3" xml:space="preserve">{% trans "Child abduction - the client wants advice" %}</data>
+      <data key="d4" xml:space="preserve"/>
+      <data key="d7" xml:space="preserve">5</data>
+      <data key="d10" xml:space="preserve">n100</data>
       </node>
     <node id="n93">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n101</data>
+      <data key="d10" xml:space="preserve">n101</data>
       </node>
     <node id="n94">
-      <data key="d3">{% blocktrans %}Public law problem (the local council is involved)
+      <data key="d3" xml:space="preserve">{% blocktrans %}Public law problem (the local council is involved)
 eg care proceedings or adoption{% endblocktrans %}</data>
-      <data key="d4">Public law
+      <data key="d4" xml:space="preserve">Public law
 </data>
-      <data key="d7">2</data>
-      <data key="d8">{% trans "Typically the local council is involved due to child protection concerns." %}</data>
-      <data key="d10">n102</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d8" xml:space="preserve">{% trans "Typically the local council is involved due to child protection concerns." %}</data>
+      <data key="d10" xml:space="preserve">n102</data>
       </node>
     <node id="n95">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n103</data>
+      <data key="d10" xml:space="preserve">n103</data>
       </node>
     <node id="n96">
-      <data key="d3">{% trans "None of the above (including guardianship, wills and probate, power of attorney, finding a family mediator)" %}</data>
-      <data key="d4">None of the above (i</data>
-      <data key="d7">4</data>
-      <data key="d10">n104</data>
+      <data key="d3" xml:space="preserve">{% trans "None of the above (including guardianship, wills and probate, power of attorney, finding a family mediator)" %}</data>
+      <data key="d4" xml:space="preserve">None of the above (i</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d10" xml:space="preserve">n104</data>
       </node>
     <node id="n97">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n105</data>
+      <data key="d10" xml:space="preserve">n105</data>
       </node>
     <node id="n98">
-      <data key="d3">{% trans "Discrimination" %}</data>
-      <data key="d4">Discrimination</data>
-      <data key="d7">5</data>
-      <data key="d8">{% blocktrans %}The discrimination category covers advice on cases that contravene the Equalities Act 2010.
+      <data key="d3" xml:space="preserve">{% trans "Discrimination" %}</data>
+      <data key="d4" xml:space="preserve">Discrimination</data>
+      <data key="d7" xml:space="preserve">5</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}The discrimination category covers advice on cases that contravene the Equalities Act 2010.
 
 It is against the law to discriminate against anyone because of:
 
@@ -891,10 +891,10 @@ It is against the law to discriminate against anyone because of:
 These are called 'protected characteristics'. To find out more, search the guidance for 'protected characteristics'.
 
 The client's problem could start in another category (eg housing) but the client will believe that thay have been discriminated against, harassed or victimised.{% endblocktrans %}</data>
-      <data key="d10">n106</data>
+      <data key="d10" xml:space="preserve">n106</data>
       </node>
     <node id="n99">
-      <data key="d3">{% blocktrans %}The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else’s discrimination claim
+      <data key="d3" xml:space="preserve">{% blocktrans %}The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else’s discrimination claim
 
 It is against the law to discriminate against anyone because of:
 
@@ -907,483 +907,483 @@ It is against the law to discriminate against anyone because of:
 * religion, belief or lack of religion or belief
 * sex
 * sexual orientation{% endblocktrans %}</data>
-      <data key="d4">Has the client been </data>
-      <data key="d9">{% trans "Select the type of discrimination that applies" %}</data>
-      <data key="d10">n107</data>
-      <data key="d11"/>
+      <data key="d4" xml:space="preserve">Has the client been </data>
+      <data key="d9" xml:space="preserve">{% trans "Select the type of discrimination that applies" %}</data>
+      <data key="d10" xml:space="preserve">n107</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n100">
-      <data key="d3">{% trans "Direct discrimination" %}</data>
-      <data key="d4">Direct discriminatio</data>
-      <data key="d7">1</data>
-      <data key="d8">{% trans "Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result." %}</data>
-      <data key="d9">{% blocktrans %}On what basis has the client been discriminated against?
+      <data key="d3" xml:space="preserve">{% trans "Direct discrimination" %}</data>
+      <data key="d4" xml:space="preserve">Direct discriminatio</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% trans "Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result." %}</data>
+      <data key="d9" xml:space="preserve">{% blocktrans %}On what basis has the client been discriminated against?
 Give details in the operator notes, especially if more than one option applies.{% endblocktrans %}</data>
-      <data key="d10">n108</data>
-      <data key="d11"/>
+      <data key="d10" xml:space="preserve">n108</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n101">
-      <data key="d3">{% trans "Disability" %}</data>
-      <data key="d4">Disability Pregnancy</data>
-      <data key="d7">5</data>
-      <data key="d8">{% blocktrans %}Disability is defined as a physical or mental impairment, which has a substantial and long term adverse effect on a person's ability to carry out normal day-to-day activities.
+      <data key="d3" xml:space="preserve">{% trans "Disability" %}</data>
+      <data key="d4" xml:space="preserve">Disability Pregnancy</data>
+      <data key="d7" xml:space="preserve">5</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Disability is defined as a physical or mental impairment, which has a substantial and long term adverse effect on a person's ability to carry out normal day-to-day activities.
 
 People with cancer or who are HIV+ are classed as having a disability.
 
 The disability does not have to have a name or a diagnosis to meet this definition.{% endblocktrans %}</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n109</data>
-      <data key="d11"/>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n109</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n102">
-      <data key="d3">{% trans "Work" %}</data>
-      <data key="d4">Work</data>
-      <data key="d7">1</data>
-      <data key="d10">n110</data>
+      <data key="d3" xml:space="preserve">{% trans "Work" %}</data>
+      <data key="d4" xml:space="preserve">Work</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n110</data>
       </node>
     <node id="n103">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n111</data>
+      <data key="d10" xml:space="preserve">n111</data>
       </node>
     <node id="n104">
-      <data key="d3">{% trans "Provision of a service (eg a meal in a restaurant, access to a shopping mall)" %}</data>
-      <data key="d4">Provision of a servi</data>
-      <data key="d7">2</data>
-      <data key="d10">n112</data>
+      <data key="d3" xml:space="preserve">{% trans "Provision of a service (eg a meal in a restaurant, access to a shopping mall)" %}</data>
+      <data key="d4" xml:space="preserve">Provision of a servi</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n112</data>
       </node>
     <node id="n105">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n113</data>
+      <data key="d10" xml:space="preserve">n113</data>
       </node>
     <node id="n106">
-      <data key="d3">{% trans "Exercise of a public function (eg a police officer carrying out a search as part of a criminal investigation)" %}</data>
-      <data key="d4">Exercise of a public</data>
-      <data key="d7">4</data>
-      <data key="d10">n114</data>
+      <data key="d3" xml:space="preserve">{% trans "Exercise of a public function (eg a police officer carrying out a search as part of a criminal investigation)" %}</data>
+      <data key="d4" xml:space="preserve">Exercise of a public</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d10" xml:space="preserve">n114</data>
       </node>
     <node id="n107">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n115</data>
+      <data key="d10" xml:space="preserve">n115</data>
       </node>
     <node id="n108">
-      <data key="d3">{% trans "Association or private club (eg a golf club, a private members' club)" %}</data>
-      <data key="d4">Association or priva</data>
-      <data key="d7">5</data>
-      <data key="d10">n116</data>
+      <data key="d3" xml:space="preserve">{% trans "Association or private club (eg a golf club, a private members' club)" %}</data>
+      <data key="d4" xml:space="preserve">Association or priva</data>
+      <data key="d7" xml:space="preserve">5</data>
+      <data key="d10" xml:space="preserve">n116</data>
       </node>
     <node id="n109">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n117</data>
+      <data key="d10" xml:space="preserve">n117</data>
       </node>
     <node id="n110">
-      <data key="d3">{% trans "At home (in rental accommodation)" %}</data>
-      <data key="d4">Premises</data>
-      <data key="d7">3</data>
-      <data key="d10">n118</data>
+      <data key="d3" xml:space="preserve">{% trans "At home (in rental accommodation)" %}</data>
+      <data key="d4" xml:space="preserve">Premises</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d10" xml:space="preserve">n118</data>
       </node>
     <node id="n111">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n119</data>
+      <data key="d10" xml:space="preserve">n119</data>
       </node>
     <node id="n112">
-      <data key="d3">{% trans "Education (schools)" %}</data>
-      <data key="d4">Education (schools)</data>
-      <data key="d7">6</data>
-      <data key="d10">n120</data>
+      <data key="d3" xml:space="preserve">{% trans "Education (schools)" %}</data>
+      <data key="d4" xml:space="preserve">Education (schools)</data>
+      <data key="d7" xml:space="preserve">6</data>
+      <data key="d10" xml:space="preserve">n120</data>
       </node>
     <node id="n113">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n121</data>
+      <data key="d10" xml:space="preserve">n121</data>
       </node>
     <node id="n114">
-      <data key="d3">{% trans "Education (higher education or general qualification bodies)" %}</data>
-      <data key="d4">Education (higher ed</data>
-      <data key="d7">7</data>
-      <data key="d10">n122</data>
+      <data key="d3" xml:space="preserve">{% trans "Education (higher education or general qualification bodies)" %}</data>
+      <data key="d4" xml:space="preserve">Education (higher ed</data>
+      <data key="d7" xml:space="preserve">7</data>
+      <data key="d10" xml:space="preserve">n122</data>
       </node>
     <node id="n115">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n123</data>
+      <data key="d10" xml:space="preserve">n123</data>
       </node>
     <node id="n116">
-      <data key="d3">{% trans "Age (the client is under 18)" %}</data>
-      <data key="d4">Age (where client is</data>
-      <data key="d7">2</data>
-      <data key="d8">{% blocktrans %}This refers to discrimination against people of a:
+      <data key="d3" xml:space="preserve">{% trans "Age (the client is under 18)" %}</data>
+      <data key="d4" xml:space="preserve">Age (where client is</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}This refers to discrimination against people of a:
 * particular age (eg 17-year-olds), or
 * range of ages (eg 10 to 15-year-olds){% endblocktrans %}</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n124</data>
-      <data key="d11"/>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n124</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n117">
-      <data key="d3">{% trans "Work" %}</data>
-      <data key="d4">Work</data>
-      <data key="d7">1</data>
-      <data key="d10">n125</data>
+      <data key="d3" xml:space="preserve">{% trans "Work" %}</data>
+      <data key="d4" xml:space="preserve">Work</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n125</data>
       </node>
     <node id="n118">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n126</data>
+      <data key="d10" xml:space="preserve">n126</data>
       </node>
     <node id="n119">
-      <data key="d3">{% trans "Association or private club (eg a golf club, a private members' club)" %}</data>
-      <data key="d4">Association or priva</data>
-      <data key="d7">3</data>
-      <data key="d10">n127</data>
+      <data key="d3" xml:space="preserve">{% trans "Association or private club (eg a golf club, a private members' club)" %}</data>
+      <data key="d4" xml:space="preserve">Association or priva</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d10" xml:space="preserve">n127</data>
       </node>
     <node id="n120">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n128</data>
+      <data key="d10" xml:space="preserve">n128</data>
       </node>
     <node id="n121">
-      <data key="d3">{% trans "Education (higher education/general qualification bodies)" %}</data>
-      <data key="d4">Education (higher ed</data>
-      <data key="d7">2</data>
-      <data key="d10">n129</data>
+      <data key="d3" xml:space="preserve">{% trans "Education (higher education/general qualification bodies)" %}</data>
+      <data key="d4" xml:space="preserve">Education (higher ed</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n129</data>
       </node>
     <node id="n122">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n130</data>
+      <data key="d10" xml:space="preserve">n130</data>
       </node>
     <node id="n123">
-      <data key="d3">{% trans "Other" %}</data>
-      <data key="d4">Other</data>
-      <data key="d10">n131</data>
+      <data key="d3" xml:space="preserve">{% trans "Other" %}</data>
+      <data key="d4" xml:space="preserve">Other</data>
+      <data key="d10" xml:space="preserve">n131</data>
       </node>
     <node id="n124">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOF</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOF</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n132</data>
+      <data key="d10" xml:space="preserve">n132</data>
       </node>
     <node id="n125">
-      <data key="d3">{% trans "Age (the client is 18 or over)" %}</data>
-      <data key="d4">Age (where client is</data>
-      <data key="d7">1</data>
-      <data key="d8">{% blocktrans %}This refers to discrimination against people of a:
+      <data key="d3" xml:space="preserve">{% trans "Age (the client is 18 or over)" %}</data>
+      <data key="d4" xml:space="preserve">Age (where client is</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}This refers to discrimination against people of a:
 * particular age (eg 19-year-olds), or
 * range of ages (eg 60 to 80-year-olds){% endblocktrans %}</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n133</data>
-      <data key="d11"/>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n133</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n126">
-      <data key="d3">{% trans "Work" %}</data>
-      <data key="d4">Work</data>
-      <data key="d7">1</data>
-      <data key="d10">n134</data>
+      <data key="d3" xml:space="preserve">{% trans "Work" %}</data>
+      <data key="d4" xml:space="preserve">Work</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n134</data>
       </node>
     <node id="n127">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n135</data>
+      <data key="d10" xml:space="preserve">n135</data>
       </node>
     <node id="n128">
-      <data key="d3">{% trans "Provision of a service (eg a meal in a restaurant, access to a shopping mall)" %}</data>
-      <data key="d4">Provision of a servi</data>
-      <data key="d7">4</data>
-      <data key="d10">n136</data>
+      <data key="d3" xml:space="preserve">{% trans "Provision of a service (eg a meal in a restaurant, access to a shopping mall)" %}</data>
+      <data key="d4" xml:space="preserve">Provision of a servi</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d10" xml:space="preserve">n136</data>
       </node>
     <node id="n129">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n137</data>
+      <data key="d10" xml:space="preserve">n137</data>
       </node>
     <node id="n130">
-      <data key="d3">{% trans "Exercise of a public function (eg a police officer carrying out a search)" %}</data>
-      <data key="d4">Exercise of a public</data>
-      <data key="d7">2</data>
-      <data key="d10">n138</data>
+      <data key="d3" xml:space="preserve">{% trans "Exercise of a public function (eg a police officer carrying out a search)" %}</data>
+      <data key="d4" xml:space="preserve">Exercise of a public</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n138</data>
       </node>
     <node id="n131">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n139</data>
+      <data key="d10" xml:space="preserve">n139</data>
       </node>
     <node id="n132">
-      <data key="d3">{% trans "Association or private club (eg a golf club, a private members' club)" %}</data>
-      <data key="d4">Association or priva</data>
-      <data key="d7">3</data>
-      <data key="d10">n140</data>
+      <data key="d3" xml:space="preserve">{% trans "Association or private club (eg a golf club, a private members' club)" %}</data>
+      <data key="d4" xml:space="preserve">Association or priva</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d10" xml:space="preserve">n140</data>
       </node>
     <node id="n133">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n141</data>
+      <data key="d10" xml:space="preserve">n141</data>
       </node>
     <node id="n134">
-      <data key="d3">{% trans "Education (higher education/general qualification bodies)" %}</data>
-      <data key="d4">Education (higher ed</data>
-      <data key="d7">5</data>
-      <data key="d10">n142</data>
+      <data key="d3" xml:space="preserve">{% trans "Education (higher education/general qualification bodies)" %}</data>
+      <data key="d4" xml:space="preserve">Education (higher ed</data>
+      <data key="d7" xml:space="preserve">5</data>
+      <data key="d10" xml:space="preserve">n142</data>
       </node>
     <node id="n135">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n143</data>
+      <data key="d10" xml:space="preserve">n143</data>
       </node>
     <node id="n136">
-      <data key="d3">{% trans "Other" %}</data>
-      <data key="d4">Other</data>
-      <data key="d10">n144</data>
+      <data key="d3" xml:space="preserve">{% trans "Other" %}</data>
+      <data key="d4" xml:space="preserve">Other</data>
+      <data key="d10" xml:space="preserve">n144</data>
       </node>
     <node id="n137">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOF</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOF</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n145</data>
+      <data key="d10" xml:space="preserve">n145</data>
       </node>
     <node id="n138">
-      <data key="d3">{% trans "Being married or in a civil partnership" %}</data>
-      <data key="d4">Marriage and civil p</data>
-      <data key="d7">6</data>
-      <data key="d8">{% trans "This refers to people who are married or in a civil partnership, including same sex couples." %}</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n146</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "Being married or in a civil partnership" %}</data>
+      <data key="d4" xml:space="preserve">Marriage and civil p</data>
+      <data key="d7" xml:space="preserve">6</data>
+      <data key="d8" xml:space="preserve">{% trans "This refers to people who are married or in a civil partnership, including same sex couples." %}</data>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n146</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n139">
-      <data key="d3">{% trans "Work" %}</data>
-      <data key="d4">Work</data>
-      <data key="d7">1</data>
-      <data key="d10">n147</data>
+      <data key="d3" xml:space="preserve">{% trans "Work" %}</data>
+      <data key="d4" xml:space="preserve">Work</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n147</data>
       </node>
     <node id="n140">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">DISCRIMINATION INSCO</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">DISCRIMINATION INSCO</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n148</data>
+      <data key="d10" xml:space="preserve">n148</data>
       </node>
     <node id="n141">
-      <data key="d3">{% trans "Other" %}</data>
-      <data key="d4">Other</data>
-      <data key="d10">n149</data>
+      <data key="d3" xml:space="preserve">{% trans "Other" %}</data>
+      <data key="d4" xml:space="preserve">Other</data>
+      <data key="d10" xml:space="preserve">n149</data>
       </node>
     <node id="n142">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOF</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOF</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n150</data>
+      <data key="d10" xml:space="preserve">n150</data>
       </node>
     <node id="n143">
-      <data key="d3">{% trans "Indirect discrimination" %}</data>
-      <data key="d4">Indirect discriminat</data>
-      <data key="d7">2</data>
-      <data key="d8">{% trans "The client thinks that new ways of doing things have put them at a disadvantage compared to someone else because of a protected characteristic (eg an employer states that employees cannot have dreadlocks or a pub refuses access to people with hats. This puts employees or patrons of a certain religion at a disadvantage when compared to others.)" %}</data>
-      <data key="d9">{% blocktrans %}On what basis has the client been discriminated against?
+      <data key="d3" xml:space="preserve">{% trans "Indirect discrimination" %}</data>
+      <data key="d4" xml:space="preserve">Indirect discriminat</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d8" xml:space="preserve">{% trans "The client thinks that new ways of doing things have put them at a disadvantage compared to someone else because of a protected characteristic (eg an employer states that employees cannot have dreadlocks or a pub refuses access to people with hats. This puts employees or patrons of a certain religion at a disadvantage when compared to others.)" %}</data>
+      <data key="d9" xml:space="preserve">{% blocktrans %}On what basis has the client been discriminated against?
 Give details in the operator notes, especially if more than one option applies.{% endblocktrans %}</data>
-      <data key="d10">n151</data>
-      <data key="d11"/>
+      <data key="d10" xml:space="preserve">n151</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n144">
-      <data key="d3">{% trans "Harassment" %}</data>
-      <data key="d4">Harassment - Somethi</data>
-      <data key="d7">6</data>
-      <data key="d8">{% trans "Something happened to make the client feel that they were in an environment that was intimidating, hostile, degrading, humiliating or offensive or that violated their dignity." %}</data>
-      <data key="d9">{% blocktrans %}On what basis has the client been discriminated against?
+      <data key="d3" xml:space="preserve">{% trans "Harassment" %}</data>
+      <data key="d4" xml:space="preserve">Harassment - Somethi</data>
+      <data key="d7" xml:space="preserve">6</data>
+      <data key="d8" xml:space="preserve">{% trans "Something happened to make the client feel that they were in an environment that was intimidating, hostile, degrading, humiliating or offensive or that violated their dignity." %}</data>
+      <data key="d9" xml:space="preserve">{% blocktrans %}On what basis has the client been discriminated against?
 Give details in the operator notes, especially if more than one option applies.{% endblocktrans %}</data>
-      <data key="d10">n152</data>
-      <data key="d11"/>
+      <data key="d10" xml:space="preserve">n152</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n145">
-      <data key="d3">{% trans "Victimisation due to a discrimination claim" %}</data>
-      <data key="d4">Victimisation due to</data>
-      <data key="d7">3</data>
-      <data key="d8">{% trans "The client thinks that they have been treated worse, or disadvantaged in some way, because they have brought a claim of discrimination, given evidence or information in relation to someone else’s claim of discrimination, made a complaint of discrimination, or been suspected of doing one of these things. For example, an employee is dismissed after making a discrimination claim." %}</data>
-      <data key="d9">{% blocktrans %}On what basis has the client been discriminated against?
+      <data key="d3" xml:space="preserve">{% trans "Victimisation due to a discrimination claim" %}</data>
+      <data key="d4" xml:space="preserve">Victimisation due to</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d8" xml:space="preserve">{% trans "The client thinks that they have been treated worse, or disadvantaged in some way, because they have brought a claim of discrimination, given evidence or information in relation to someone else’s claim of discrimination, made a complaint of discrimination, or been suspected of doing one of these things. For example, an employee is dismissed after making a discrimination claim." %}</data>
+      <data key="d9" xml:space="preserve">{% blocktrans %}On what basis has the client been discriminated against?
 Give details in the operator notes, especially if more than one option applies.{% endblocktrans %}</data>
-      <data key="d10">n153</data>
-      <data key="d11"/>
+      <data key="d10" xml:space="preserve">n153</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n146">
-      <data key="d3">{% trans "Special educational needs (SEN) in a child or young person under 25 - client could be the parent or the child or young person" %}</data>
-      <data key="d4">Client has parental </data>
-      <data key="d7">1</data>
-      <data key="d10">n154</data>
+      <data key="d3" xml:space="preserve">{% trans "Special educational needs (SEN) in a child or young person under 25 - client could be the parent or the child or young person" %}</data>
+      <data key="d4" xml:space="preserve">Client has parental </data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n154</data>
       </node>
     <node id="n147">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n155</data>
+      <data key="d10" xml:space="preserve">n155</data>
       </node>
     <node id="n148">
-      <data key="d3">{% trans "Advised to bring judicial review proceedings in an education matter" %}</data>
-      <data key="d4">They have been advis</data>
-      <data key="d7">4</data>
-      <data key="d10">n156</data>
+      <data key="d3" xml:space="preserve">{% trans "Advised to bring judicial review proceedings in an education matter" %}</data>
+      <data key="d4" xml:space="preserve">They have been advis</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d10" xml:space="preserve">n156</data>
       </node>
     <node id="n149">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n157</data>
+      <data key="d10" xml:space="preserve">n157</data>
       </node>
     <node id="n150">
-      <data key="d3">{% trans "Discrimination may have occurred due to the child or young person’s SEN or other protected characteristic (eg a school excludes a disabled child from a school trip, a student is being bullied because they're gay but the school is taking no action)" %}</data>
-      <data key="d4">Discrimination may a</data>
-      <data key="d7">3</data>
-      <data key="d8">{% trans "Search guidance for 'discrimination education' for more information and a list of questions to ask." %}</data>
-      <data key="d10">n158</data>
+      <data key="d3" xml:space="preserve">{% trans "Discrimination may have occurred due to the child or young person’s SEN or other protected characteristic (eg a school excludes a disabled child from a school trip, a student is being bullied because they're gay but the school is taking no action)" %}</data>
+      <data key="d4" xml:space="preserve">Discrimination may a</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d8" xml:space="preserve">{% trans "Search guidance for 'discrimination education' for more information and a list of questions to ask." %}</data>
+      <data key="d10" xml:space="preserve">n158</data>
       </node>
     <node id="n151">
-      <data key="d3">{% trans "The client's problem is about admissions, exclusions, other disciplinary procedures, school trips, bullying, any problems at school caused by a child’s disability or any other similar situation" %}</data>
-      <data key="d4">Problem covers admis</data>
-      <data key="d7">1</data>
-      <data key="d10">n159</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem is about admissions, exclusions, other disciplinary procedures, school trips, bullying, any problems at school caused by a child’s disability or any other similar situation" %}</data>
+      <data key="d4" xml:space="preserve">Problem covers admis</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n159</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n152">
-      <data key="d3">{% trans "Any other education problem" %}</data>
-      <data key="d4">None of the above</data>
-      <data key="d10">n160</data>
+      <data key="d3" xml:space="preserve">{% trans "Any other education problem" %}</data>
+      <data key="d4" xml:space="preserve">None of the above</data>
+      <data key="d10" xml:space="preserve">n160</data>
       </node>
     <node id="n153">
-      <data key="d3">{% trans "The client is a teacher or employee of the local authority" %}</data>
-      <data key="d4">Teacher or employee </data>
-      <data key="d7">2</data>
-      <data key="d10">n161</data>
+      <data key="d3" xml:space="preserve">{% trans "The client is a teacher or employee of the local authority" %}</data>
+      <data key="d4" xml:space="preserve">Teacher or employee </data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n161</data>
       </node>
     <node id="n154">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n162</data>
+      <data key="d10" xml:space="preserve">n162</data>
       </node>
     <node id="n155">
-      <data key="d3">{% trans "The client is calling for general advice, not about a legal issue specific to them (eg they want to know if a school can stop them removing their child, as opposed to calling after the school has taken action against them for removing their child)" %}</data>
-      <data key="d4">Calling for general </data>
-      <data key="d10">n163</data>
+      <data key="d3" xml:space="preserve">{% trans "The client is calling for general advice, not about a legal issue specific to them (eg they want to know if a school can stop them removing their child, as opposed to calling after the school has taken action against them for removing their child)" %}</data>
+      <data key="d4" xml:space="preserve">Calling for general </data>
+      <data key="d10" xml:space="preserve">n163</data>
       </node>
     <node id="n156">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n164</data>
+      <data key="d10" xml:space="preserve">n164</data>
       </node>
     <node id="n157">
-      <data key="d3">{% trans "Welfare benefits" %}</data>
-      <data key="d4">Welfare benefits</data>
-      <data key="d7">6</data>
-      <data key="d8">{% blocktrans %}The welfare benefits category of law covers advice on:
+      <data key="d3" xml:space="preserve">{% trans "Welfare benefits" %}</data>
+      <data key="d4" xml:space="preserve">Welfare benefits</data>
+      <data key="d7" xml:space="preserve">6</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}The welfare benefits category of law covers advice on:
 
 * entitlement to benefits and help when benefits are refused
 * benefit appeals and tribunals
@@ -1396,44 +1396,44 @@ The client's problem will be in scope for legal aid if:
 * a first-tier tribunal has refused them permission to appeal a benefits decision in the Upper Tribunal, and they want advice about how to appeal this decision
 
 All other benefit problems are out of scope.{% endblocktrans %}</data>
-      <data key="d10">n165</data>
+      <data key="d10" xml:space="preserve">n165</data>
       </node>
     <node id="n158">
-      <data key="d3">{% trans "The client wants to appeal their benefits decision on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court. (Or a first-tier tribunal has refused the client permission to appeal their benefits decision in the Upper Tribunal and they want advice about how to appeal this decision.)" %}</data>
-      <data key="d4">Primary question: Cl</data>
-      <data key="d7">1</data>
-      <data key="d10">n166</data>
+      <data key="d3" xml:space="preserve">{% trans "The client wants to appeal their benefits decision on a point of law in the Upper Tribunal, Court of Appeal or Supreme Court. (Or a first-tier tribunal has refused the client permission to appeal their benefits decision in the Upper Tribunal and they want advice about how to appeal this decision.)" %}</data>
+      <data key="d4" xml:space="preserve">Primary question: Cl</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n166</data>
       </node>
     <node id="n159">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>benefits</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">benefits</category>
 </context>
       </data>
-      <data key="d10">n167</data>
+      <data key="d10" xml:space="preserve">n167</data>
       </node>
     <node id="n160">
-      <data key="d3">{% trans "None of the above" %}</data>
-      <data key="d4">None of the above</data>
-      <data key="d10">n168</data>
+      <data key="d3" xml:space="preserve">{% trans "None of the above" %}</data>
+      <data key="d4" xml:space="preserve">None of the above</data>
+      <data key="d10" xml:space="preserve">n168</data>
       </node>
     <node id="n161">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>benefits</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">benefits</category>
 </context>
       </data>
-      <data key="d10">n169</data>
+      <data key="d10" xml:space="preserve">n169</data>
       </node>
     <node id="n162">
-      <data key="d3">{% trans "Employment" %}</data>
-      <data key="d4">Employment</data>
-      <data key="d7">7</data>
-      <data key="d8">{% blocktrans %}The employment category covers advice on
+      <data key="d3" xml:space="preserve">{% trans "Employment" %}</data>
+      <data key="d4" xml:space="preserve">Employment</data>
+      <data key="d7" xml:space="preserve">7</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}The employment category covers advice on
 
 * redundancies, dismissals and disciplinaries
 * contracts, workers' rights and working hours
@@ -1441,843 +1441,843 @@ All other benefit problems are out of scope.{% endblocktrans %}</data>
 * employment status
 * holidays, time off, sick leave, maternity &amp; paternity leave and other absence
 * pay, tax and the National Minimum Wage.{% endblocktrans %}</data>
-      <data key="d10">n170</data>
+      <data key="d10" xml:space="preserve">n170</data>
       </node>
     <node id="n163">
-      <data key="d3">{% trans "The client may have been discriminated against (eg employer not making reasonable adjustments for a disability)" %}</data>
-      <data key="d4">Discrimination may a</data>
-      <data key="d7">1</data>
-      <data key="d8">{% blocktrans %}More examples of discrimination issues include issues around:
+      <data key="d3" xml:space="preserve">{% trans "The client may have been discriminated against (eg employer not making reasonable adjustments for a disability)" %}</data>
+      <data key="d4" xml:space="preserve">Discrimination may a</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}More examples of discrimination issues include issues around:
 
 * equal pay
 * being treated worse due to pregnancy or maternity leave
 * sexual harassment in the workplace
 * being victimised due to having made a claim of discrimination in the workplace{% endblocktrans %}</data>
-      <data key="d10">n171</data>
+      <data key="d10" xml:space="preserve">n171</data>
       </node>
     <node id="n164">
-      <data key="d3">{% trans "Discrimination does not apply (Confirm no other matters such as homelessness arise as a result of employment issue)" %}</data>
-      <data key="d4">Discrimination does </data>
-      <data key="d10">n172</data>
+      <data key="d3" xml:space="preserve">{% trans "Discrimination does not apply (Confirm no other matters such as homelessness arise as a result of employment issue)" %}</data>
+      <data key="d4" xml:space="preserve">Discrimination does </data>
+      <data key="d10" xml:space="preserve">n172</data>
       </node>
     <node id="n165">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>employment</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">employment</category>
 </context>
       </data>
-      <data key="d10">n173</data>
+      <data key="d10" xml:space="preserve">n173</data>
       </node>
     <node id="n166">
-      <data key="d3">{% trans "Consumer" %}</data>
-      <data key="d4">Consumer</data>
-      <data key="d7">8</data>
-      <data key="d8">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other consumer cases will be out of scope." %}</data>
-      <data key="d10">n174</data>
+      <data key="d3" xml:space="preserve">{% trans "Consumer" %}</data>
+      <data key="d4" xml:space="preserve">Consumer</data>
+      <data key="d7" xml:space="preserve">8</data>
+      <data key="d8" xml:space="preserve">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other consumer cases will be out of scope." %}</data>
+      <data key="d10" xml:space="preserve">n174</data>
       </node>
     <node id="n167">
-      <data key="d3">{% trans "The client may have been discriminated against" %}</data>
-      <data key="d4">Emp discrimination?</data>
-      <data key="d10">n175</data>
+      <data key="d3" xml:space="preserve">{% trans "The client may have been discriminated against" %}</data>
+      <data key="d4" xml:space="preserve">Emp discrimination?</data>
+      <data key="d10" xml:space="preserve">n175</data>
       </node>
     <node id="n168">
-      <data key="d3">{% trans "Discrimination does not apply" %}</data>
-      <data key="d4">out of sco</data>
-      <data key="d10">n176</data>
+      <data key="d3" xml:space="preserve">{% trans "Discrimination does not apply" %}</data>
+      <data key="d4" xml:space="preserve">out of sco</data>
+      <data key="d10" xml:space="preserve">n176</data>
       </node>
     <node id="n169">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE </data>
-      <data key="d6">
-        <context xmlns="">
-	<category>consumer</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE </data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">consumer</category>
 </context>
       </data>
-      <data key="d10">n177</data>
+      <data key="d10" xml:space="preserve">n177</data>
       </node>
     <node id="n170">
-      <data key="d3">{% trans "Claims against public authorities" %}</data>
-      <data key="d4">Actions against the </data>
-      <data key="d7">9</data>
-      <data key="d8">{% trans "The key thing to determine in claims against public authorities is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow." %}</data>
-      <data key="d10">n178</data>
+      <data key="d3" xml:space="preserve">{% trans "Claims against public authorities" %}</data>
+      <data key="d4" xml:space="preserve">Actions against the </data>
+      <data key="d7" xml:space="preserve">9</data>
+      <data key="d8" xml:space="preserve">{% trans "The key thing to determine in claims against public authorities is whether the client has been discriminated against. If the client says they have been discriminated against, or if you pick up that they have been discriminated against from what they say, select 'The client has been discriminated against' on the next screen to proceed to the discrimination flow." %}</data>
+      <data key="d10" xml:space="preserve">n178</data>
       </node>
     <node id="n171">
-      <data key="d3">{% trans "The client has been discriminated against (eg a police officer used racially abusive language when making an arrest)" %}</data>
-      <data key="d4">Client has been subj</data>
-      <data key="d7">1</data>
-      <data key="d10">n179</data>
+      <data key="d3" xml:space="preserve">{% trans "The client has been discriminated against (eg a police officer used racially abusive language when making an arrest)" %}</data>
+      <data key="d4" xml:space="preserve">Client has been subj</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n179</data>
       </node>
     <node id="n172">
-      <data key="d3">{% trans "Discrimination does not apply" %}</data>
-      <data key="d4">Client has not been </data>
-      <data key="d10">n180</data>
+      <data key="d3" xml:space="preserve">{% trans "Discrimination does not apply" %}</data>
+      <data key="d4" xml:space="preserve">Client has not been </data>
+      <data key="d10" xml:space="preserve">n180</data>
       </node>
     <node id="n173">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE DISCL</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>aap</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE DISCL</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">aap</category>
 </context>
       </data>
-      <data key="d10">n181</data>
+      <data key="d10" xml:space="preserve">n181</data>
       </node>
     <node id="n174">
-      <data key="d3">{% trans "Crime" %}</data>
-      <data key="d4">Crime</data>
-      <data key="d7">10</data>
-      <data key="d10">n182</data>
+      <data key="d3" xml:space="preserve">{% trans "Crime" %}</data>
+      <data key="d4" xml:space="preserve">Crime</data>
+      <data key="d7" xml:space="preserve">10</data>
+      <data key="d10" xml:space="preserve">n182</data>
       </node>
     <node id="n175">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE DISCLAIME</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>crime</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE DISCLAIME</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">crime</category>
 </context>
       </data>
-      <data key="d10">n183</data>
+      <data key="d10" xml:space="preserve">n183</data>
       </node>
     <node id="n176">
-      <data key="d3">{% trans "Clinical negligence" %}</data>
-      <data key="d4">Clinical Negligence</data>
-      <data key="d7">12</data>
-      <data key="d8">{% blocktrans %}Signpost clinical negligence cases to face-to-face providers in the client's area.
+      <data key="d3" xml:space="preserve">{% trans "Clinical negligence" %}</data>
+      <data key="d4" xml:space="preserve">Clinical Negligence</data>
+      <data key="d7" xml:space="preserve">12</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Signpost clinical negligence cases to face-to-face providers in the client's area.
 Generally, only cases that relate to infants with a brain injury are in scope for legal aid but it's possible that other cases may qualify for exceptional case funding.{% endblocktrans %}</data>
-      <data key="d10">n184</data>
+      <data key="d10" xml:space="preserve">n184</data>
       </node>
     <node id="n177">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>clinneg</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">clinneg</category>
 </context>
       </data>
-      <data key="d10">n185</data>
+      <data key="d10" xml:space="preserve">n185</data>
       </node>
     <node id="n178">
-      <data key="d3">{% trans "Immigration and asylum" %}</data>
-      <data key="d4">Immigration and Asyl</data>
-      <data key="d7">11</data>
-      <data key="d10">n186</data>
+      <data key="d3" xml:space="preserve">{% trans "Immigration and asylum" %}</data>
+      <data key="d4" xml:space="preserve">Immigration and Asyl</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n186</data>
       </node>
     <node id="n179">
-      <data key="d3">{% trans "Any other matter" %}</data>
-      <data key="d4">Client not subject t</data>
-      <data key="d10">n187</data>
+      <data key="d3" xml:space="preserve">{% trans "Any other matter" %}</data>
+      <data key="d4" xml:space="preserve">Client not subject t</data>
+      <data key="d10" xml:space="preserve">n187</data>
       </node>
     <node id="n180">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE DISCLAIME</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>immigration</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE DISCLAIME</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">immigration</category>
 </context>
       </data>
-      <data key="d10">n188</data>
+      <data key="d10" xml:space="preserve">n188</data>
       </node>
     <node id="n181">
-      <data key="d3">{% trans "The client is losing their home due to the Border Force refusing to support them or withdrawing their support" %}</data>
-      <data key="d4">Client is losing hom</data>
-      <data key="d7">1</data>
-      <data key="d10">n189</data>
+      <data key="d3" xml:space="preserve">{% trans "The client is losing their home due to the Border Force refusing to support them or withdrawing their support" %}</data>
+      <data key="d4" xml:space="preserve">Client is losing hom</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n189</data>
       </node>
     <node id="n182">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n190</data>
+      <data key="d10" xml:space="preserve">n190</data>
       </node>
     <node id="n183">
-      <data key="d3">{% trans "Mental health" %}</data>
-      <data key="d4">Mental Health</data>
-      <data key="d7">13</data>
-      <data key="d10">n191</data>
+      <data key="d3" xml:space="preserve">{% trans "Mental health" %}</data>
+      <data key="d4" xml:space="preserve">Mental Health</data>
+      <data key="d7" xml:space="preserve">13</data>
+      <data key="d10" xml:space="preserve">n191</data>
       </node>
     <node id="n184">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE D</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>mentalhealth</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE D</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">mentalhealth</category>
 </context>
       </data>
-      <data key="d10">n192</data>
+      <data key="d10" xml:space="preserve">n192</data>
       </node>
     <node id="n185">
-      <data key="d3">{% trans "Personal injury" %}</data>
-      <data key="d4">Personal Injury</data>
-      <data key="d7">14</data>
-      <data key="d8">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other personal injury cases will be out of scope." %}</data>
-      <data key="d10">n193</data>
+      <data key="d3" xml:space="preserve">{% trans "Personal injury" %}</data>
+      <data key="d4" xml:space="preserve">Personal Injury</data>
+      <data key="d7" xml:space="preserve">14</data>
+      <data key="d8" xml:space="preserve">{% trans "The key thing to determine in this category is whether the client has been discriminated against. Discrimination cases will be in scope. All other personal injury cases will be out of scope." %}</data>
+      <data key="d10" xml:space="preserve">n193</data>
       </node>
     <node id="n186">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE DISCLA</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>pi</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE DISCLA</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">pi</category>
 </context>
       </data>
-      <data key="d10">n194</data>
+      <data key="d10" xml:space="preserve">n194</data>
       </node>
     <node id="n187">
-      <data key="d3">{% trans "The client has been discriminated against" %}</data>
-      <data key="d4"/>
-      <data key="d5">Discrimination applies
+      <data key="d3" xml:space="preserve">{% trans "The client has been discriminated against" %}</data>
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve">Discrimination applies
 </data>
-      <data key="d7">1</data>
-      <data key="d10">n195</data>
-      <data key="d12">The client has been discriminated against
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n195</data>
+      <data key="d12" xml:space="preserve">The client has been discriminated against
 </data>
       </node>
     <node id="n188">
-      <data key="d3">{% trans "Discrimination does not apply" %}</data>
-      <data key="d4"/>
-      <data key="d10">n196</data>
+      <data key="d3" xml:space="preserve">{% trans "Discrimination does not apply" %}</data>
+      <data key="d4" xml:space="preserve"/>
+      <data key="d10" xml:space="preserve">n196</data>
       </node>
     <node id="n189">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4"/>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve"/>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n197</data>
-      <data key="d12">OUTOFSCOPE</data>
+      <data key="d10" xml:space="preserve">n197</data>
+      <data key="d12" xml:space="preserve">OUTOFSCOPE</data>
       </node>
     <node id="n190">
-      <data key="d3">{% trans "The client has been discriminated against" %}</data>
-      <data key="d4">If none of the above</data>
-      <data key="d7">1</data>
-      <data key="d10">n198</data>
+      <data key="d3" xml:space="preserve">{% trans "The client has been discriminated against" %}</data>
+      <data key="d4" xml:space="preserve">If none of the above</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n198</data>
       </node>
     <node id="n191">
-      <data key="d3">{% trans "Discrimination does not apply" %}</data>
-      <data key="d4">No discrimination</data>
-      <data key="d7">2</data>
-      <data key="d10">n199</data>
+      <data key="d3" xml:space="preserve">{% trans "Discrimination does not apply" %}</data>
+      <data key="d4" xml:space="preserve">No discrimination</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n199</data>
       </node>
     <node id="n192">
-      <data key="d3">{% trans "Client in rented accomodation" %}</data>
-      <data key="d4">Rented property</data>
-      <data key="d7">2</data>
-      <data key="d10">n200</data>
+      <data key="d3" xml:space="preserve">{% trans "Client in rented accomodation" %}</data>
+      <data key="d4" xml:space="preserve">Rented property</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n200</data>
       </node>
     <node id="n193">
-      <data key="d3">{% trans "Client is homeowner" %}</data>
-      <data key="d4">Client is homeowner</data>
-      <data key="d7">2</data>
-      <data key="d10">n201</data>
+      <data key="d3" xml:space="preserve">{% trans "Client is homeowner" %}</data>
+      <data key="d4" xml:space="preserve">Client is homeowner</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n201</data>
       </node>
     <node id="n194">
-      <data key="d3">{% trans "None of the above apply" %}</data>
-      <data key="d4">None of above
+      <data key="d3" xml:space="preserve">{% trans "None of the above apply" %}</data>
+      <data key="d4" xml:space="preserve">None of above
 </data>
-      <data key="d7">4</data>
-      <data key="d10">n202</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d10" xml:space="preserve">n202</data>
       </node>
     <node id="n195">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>debt</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">debt</category>
 </context>
       </data>
-      <data key="d10">n203</data>
+      <data key="d10" xml:space="preserve">n203</data>
       </node>
     <node id="n196">
-      <data key="d3">{% trans "Client does not have BOTH evidence of the disrepair AND reason to believe the disrepair poses a serious risk of harm, injury or illness to them or their family" %}</data>
-      <data key="d4">Not both</data>
-      <data key="d10">n204</data>
+      <data key="d3" xml:space="preserve">{% trans "Client does not have BOTH evidence of the disrepair AND reason to believe the disrepair poses a serious risk of harm, injury or illness to them or their family" %}</data>
+      <data key="d4" xml:space="preserve">Not both</data>
+      <data key="d10" xml:space="preserve">n204</data>
       </node>
     <node id="n197">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n205</data>
+      <data key="d10" xml:space="preserve">n205</data>
       </node>
     <node id="n198">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>debt</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">debt</category>
 </context>
       </data>
-      <data key="d10">n206</data>
+      <data key="d10" xml:space="preserve">n206</data>
       </node>
     <node id="n199">
-      <data key="d3">{% trans "Client is the alleged abusive partner and wants to defend an injunction. This will be in scope for Civil Legal Advice." %}</data>
-      <data key="d4">Client wants to contest injunction DV</data>
-      <data key="d7">4</data>
-      <data key="d8">{% blocktrans %}Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act. There are two main forms of injunction
+      <data key="d3" xml:space="preserve">{% trans "Client is the alleged abusive partner and wants to defend an injunction. This will be in scope for Civil Legal Advice." %}</data>
+      <data key="d4" xml:space="preserve">Client wants to contest injunction DV</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act. There are two main forms of injunction
 
 * A non-molestation order - aimed at preventing your partner or ex-partner from using or threatening violence against you or your child, or intimidating, harassing or pestering you, in order to ensure the health, safety and well-being of yourself and your children.
 
 * An occupation order can aimed at deciding who can live in the family home, and can also restrict your abuser from entering the surrounding area. If you do not feel safe continuing to live with your partner, or if you have left home because of violence, but want to return and exclude your abuser, you may want to apply for an occupation order.
 
 Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it.{% endblocktrans %}</data>
-      <data key="d10">n207</data>
+      <data key="d10" xml:space="preserve">n207</data>
       </node>
     <node id="n200">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n208</data>
+      <data key="d10" xml:space="preserve">n208</data>
       </node>
     <node id="n201">
-      <data key="d3">{% trans "The client is being harassed by a partner, ex-partner or family member" %}</data>
-      <data key="d4">Client being harassed by partner or ex-partner</data>
-      <data key="d7">3</data>
-      <data key="d8">{% trans "Seeking protection from a partner, ex partner or other family member due to a fear of violence or unwanted behaviour which is causing them alarm or distress. Also covers client who have previously taken action to stop harassment (i.e. sought an injunction) but this is not being complied with." %}</data>
-      <data key="d10">n209</data>
+      <data key="d3" xml:space="preserve">{% trans "The client is being harassed by a partner, ex-partner or family member" %}</data>
+      <data key="d4" xml:space="preserve">Client being harassed by partner or ex-partner</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d8" xml:space="preserve">{% trans "Seeking protection from a partner, ex partner or other family member due to a fear of violence or unwanted behaviour which is causing them alarm or distress. Also covers client who have previously taken action to stop harassment (i.e. sought an injunction) but this is not being complied with." %}</data>
+      <data key="d10" xml:space="preserve">n209</data>
       </node>
     <node id="n202">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n210</data>
+      <data key="d10" xml:space="preserve">n210</data>
       </node>
     <node id="n203">
-      <data key="d3">{% trans "The client's problem is about admissions" %}</data>
-      <data key="d4">Admissions</data>
-      <data key="d7">3</data>
-      <data key="d10">n211</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem is about admissions" %}</data>
+      <data key="d4" xml:space="preserve">Admissions</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d10" xml:space="preserve">n211</data>
       </node>
     <node id="n204">
-      <data key="d3">{% trans "The client's problem is about bullying, and none of the other issues above apply" %}</data>
-      <data key="d4">Bullying</data>
-      <data key="d7">9</data>
-      <data key="d10">n212</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem is about bullying, and none of the other issues above apply" %}</data>
+      <data key="d4" xml:space="preserve">Bullying</data>
+      <data key="d7" xml:space="preserve">9</data>
+      <data key="d10" xml:space="preserve">n212</data>
       </node>
     <node id="n205">
-      <data key="d3">{% trans "A child or young person is out of school or in a Pupil Referral Unit, or is not receiving full-time education" %}</data>
-      <data key="d4">Child out of school</data>
-      <data key="d7">1</data>
-      <data key="d10">n213</data>
+      <data key="d3" xml:space="preserve">{% trans "A child or young person is out of school or in a Pupil Referral Unit, or is not receiving full-time education" %}</data>
+      <data key="d4" xml:space="preserve">Child out of school</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n213</data>
       </node>
     <node id="n206">
-      <data key="d3">{% trans "The client's problem is about exclusion from school" %}</data>
-      <data key="d4">Exclusions</data>
-      <data key="d7">2</data>
-      <data key="d10">n214</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem is about exclusion from school" %}</data>
+      <data key="d4" xml:space="preserve">Exclusions</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n214</data>
       </node>
     <node id="n207">
-      <data key="d3">{% trans "The client's problem is about further education" %}</data>
-      <data key="d4">Further education</data>
-      <data key="d7">5</data>
-      <data key="d10">n215</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem is about further education" %}</data>
+      <data key="d4" xml:space="preserve">Further education</data>
+      <data key="d7" xml:space="preserve">5</data>
+      <data key="d10" xml:space="preserve">n215</data>
       </node>
     <node id="n208">
-      <data key="d3">{% blocktrans %}The problem is about a school, college or local authority's failure to
+      <data key="d3" xml:space="preserve">{% blocktrans %}The problem is about a school, college or local authority's failure to
 provide for a child or young person's educational needs, or specifically about the failure to provide the support set out in the assessment of their needs{% endblocktrans %}</data>
-      <data key="d4">Failure to provide support</data>
-      <data key="d7">6</data>
-      <data key="d10">n216</data>
+      <data key="d4" xml:space="preserve">Failure to provide support</data>
+      <data key="d7" xml:space="preserve">6</data>
+      <data key="d10" xml:space="preserve">n216</data>
       </node>
     <node id="n209">
-      <data key="d3">{% trans "The client's problem is about higher education" %}</data>
-      <data key="d4">Higher education</data>
-      <data key="d7">7</data>
-      <data key="d10">n217</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem is about higher education" %}</data>
+      <data key="d4" xml:space="preserve">Higher education</data>
+      <data key="d7" xml:space="preserve">7</data>
+      <data key="d10" xml:space="preserve">n217</data>
       </node>
     <node id="n210">
-      <data key="d3">{% trans "None of the above" %}</data>
-      <data key="d4">None of the above</data>
-      <data key="d10">n218</data>
+      <data key="d3" xml:space="preserve">{% trans "None of the above" %}</data>
+      <data key="d4" xml:space="preserve">None of the above</data>
+      <data key="d10" xml:space="preserve">n218</data>
       </node>
     <node id="n211">
-      <data key="d3">{% trans "The client's problem is about transport" %}</data>
-      <data key="d4">Transport</data>
-      <data key="d7">8</data>
-      <data key="d10">n219</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem is about transport" %}</data>
+      <data key="d4" xml:space="preserve">Transport</data>
+      <data key="d7" xml:space="preserve">8</data>
+      <data key="d10" xml:space="preserve">n219</data>
       </node>
     <node id="n212">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n220</data>
+      <data key="d10" xml:space="preserve">n220</data>
       </node>
     <node id="n213">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n221</data>
+      <data key="d10" xml:space="preserve">n221</data>
       </node>
     <node id="n214">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n222</data>
+      <data key="d10" xml:space="preserve">n222</data>
       </node>
     <node id="n215">
-      <data key="d3">{% trans "Any other issue" %}</data>
-      <data key="d4">Any other issue</data>
-      <data key="d7">2</data>
-      <data key="d10">n223</data>
+      <data key="d3" xml:space="preserve">{% trans "Any other issue" %}</data>
+      <data key="d4" xml:space="preserve">Any other issue</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n223</data>
       </node>
     <node id="n216">
-      <data key="d3">{% trans "The client is enquiring about an application or admissions appeal in the normal admissions round (ie reception and secondary school transfers)" %}</data>
-      <data key="d4">Normal admissions round</data>
-      <data key="d10">n224</data>
+      <data key="d3" xml:space="preserve">{% trans "The client is enquiring about an application or admissions appeal in the normal admissions round (ie reception and secondary school transfers)" %}</data>
+      <data key="d4" xml:space="preserve">Normal admissions round</data>
+      <data key="d10" xml:space="preserve">n224</data>
       </node>
     <node id="n217">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n225</data>
+      <data key="d10" xml:space="preserve">n225</data>
       </node>
     <node id="n218">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n226</data>
+      <data key="d10" xml:space="preserve">n226</data>
       </node>
     <node id="n219">
-      <data key="d3">{% trans "Negligence in the provision of education" %}</data>
-      <data key="d4">Education negligence</data>
-      <data key="d7">4</data>
-      <data key="d10">n227</data>
+      <data key="d3" xml:space="preserve">{% trans "Negligence in the provision of education" %}</data>
+      <data key="d4" xml:space="preserve">Education negligence</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d10" xml:space="preserve">n227</data>
       </node>
     <node id="n220">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n228</data>
+      <data key="d10" xml:space="preserve">n228</data>
       </node>
     <node id="n221">
-      <data key="d3">{% trans "The client's problem relates to special needs not being met properly for a child of compulsory school age, or a young person in compulsory or further education" %}</data>
-      <data key="d4">SEN negligence</data>
-      <data key="d7">1</data>
-      <data key="d10">n229</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem relates to special needs not being met properly for a child of compulsory school age, or a young person in compulsory or further education" %}</data>
+      <data key="d4" xml:space="preserve">SEN negligence</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n229</data>
       </node>
     <node id="n222">
-      <data key="d3">{% trans "Any other problem" %}</data>
-      <data key="d4">Education negligence</data>
-      <data key="d10">n230</data>
+      <data key="d3" xml:space="preserve">{% trans "Any other problem" %}</data>
+      <data key="d4" xml:space="preserve">Education negligence</data>
+      <data key="d10" xml:space="preserve">n230</data>
       </node>
     <node id="n223">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n231</data>
+      <data key="d10" xml:space="preserve">n231</data>
       </node>
     <node id="n224">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n232</data>
+      <data key="d10" xml:space="preserve">n232</data>
       </node>
     <node id="n225">
-      <data key="d3">{% trans "There has been a formal fixed term exclusion from school (a suspension) of up to five days and the child has not received more than one other fixed term exclusion in the last school year" %}</data>
-      <data key="d4">Suspension</data>
-      <data key="d7">1</data>
-      <data key="d10">n233</data>
+      <data key="d3" xml:space="preserve">{% trans "There has been a formal fixed term exclusion from school (a suspension) of up to five days and the child has not received more than one other fixed term exclusion in the last school year" %}</data>
+      <data key="d4" xml:space="preserve">Suspension</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n233</data>
       </node>
     <node id="n226">
-      <data key="d3">{% trans "Other" %}</data>
-      <data key="d4">Other</data>
-      <data key="d7">2</data>
-      <data key="d10">n234</data>
+      <data key="d3" xml:space="preserve">{% trans "Other" %}</data>
+      <data key="d4" xml:space="preserve">Other</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n234</data>
       </node>
     <node id="n227">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n235</data>
+      <data key="d10" xml:space="preserve">n235</data>
       </node>
     <node id="n228">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n236</data>
+      <data key="d10" xml:space="preserve">n236</data>
       </node>
     <node id="n229">
-      <data key="d3">{% trans "Other" %}</data>
-      <data key="d4">Other</data>
-      <data key="d7">2</data>
-      <data key="d10">n237</data>
+      <data key="d3" xml:space="preserve">{% trans "Other" %}</data>
+      <data key="d4" xml:space="preserve">Other</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n237</data>
       </node>
     <node id="n230">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n238</data>
+      <data key="d10" xml:space="preserve">n238</data>
       </node>
     <node id="n231">
-      <data key="d3">{% trans "The client's problem is about SEN, transport, admissions or exclusions" %}</data>
-      <data key="d4">SEN, transport etc</data>
-      <data key="d7">1</data>
-      <data key="d10">n239</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem is about SEN, transport, admissions or exclusions" %}</data>
+      <data key="d4" xml:space="preserve">SEN, transport etc</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n239</data>
       </node>
     <node id="n232">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n240</data>
+      <data key="d10" xml:space="preserve">n240</data>
       </node>
     <node id="n233">
-      <data key="d3">{% trans "The client's problem is about fees or funding" %}</data>
-      <data key="d4">Fees or funding</data>
-      <data key="d7">3</data>
-      <data key="d10">n241</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem is about fees or funding" %}</data>
+      <data key="d4" xml:space="preserve">Fees or funding</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d10" xml:space="preserve">n241</data>
       </node>
     <node id="n234">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n242</data>
+      <data key="d10" xml:space="preserve">n242</data>
       </node>
     <node id="n235">
-      <data key="d3">{% trans "The client's problem is about admissions" %}</data>
-      <data key="d4">Admissions case</data>
-      <data key="d7">1</data>
-      <data key="d10">n243</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem is about admissions" %}</data>
+      <data key="d4" xml:space="preserve">Admissions case</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n243</data>
       </node>
     <node id="n236">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n244</data>
+      <data key="d10" xml:space="preserve">n244</data>
       </node>
     <node id="n237">
-      <data key="d3">{% trans "The client's problem is about exclusion - but not for failure at exams or malpractice allegations eg plagiarism" %}</data>
-      <data key="d4">Exclusion case</data>
-      <data key="d7">2</data>
-      <data key="d10">n245</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's problem is about exclusion - but not for failure at exams or malpractice allegations eg plagiarism" %}</data>
+      <data key="d4" xml:space="preserve">Exclusion case</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n245</data>
       </node>
     <node id="n238">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n246</data>
+      <data key="d10" xml:space="preserve">n246</data>
       </node>
     <node id="n239">
-      <data key="d3">{% trans "Any other problem" %}</data>
-      <data key="d4">Other</data>
-      <data key="d10">n247</data>
+      <data key="d3" xml:space="preserve">{% trans "Any other problem" %}</data>
+      <data key="d4" xml:space="preserve">Other</data>
+      <data key="d10" xml:space="preserve">n247</data>
       </node>
     <node id="n240">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n248</data>
+      <data key="d10" xml:space="preserve">n248</data>
       </node>
     <node id="n241">
-      <data key="d3">{% trans "Pregnancy or maternity" %}</data>
-      <data key="d4">Disability Pregnancy</data>
-      <data key="d7">4</data>
-      <data key="d8">{% blocktrans %}This refers to:
+      <data key="d3" xml:space="preserve">{% trans "Pregnancy or maternity" %}</data>
+      <data key="d4" xml:space="preserve">Disability Pregnancy</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}This refers to:
 * pregnancy
 * having recently given birth (and can include the need to breastfeed){% endblocktrans %}</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n249</data>
-      <data key="d11"/>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n249</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n242">
-      <data key="d3">{% trans "Race" %}</data>
-      <data key="d4">Race</data>
-      <data key="d7">7</data>
-      <data key="d8">{% trans "Race refers to a group of people defined by their race, colour, nationality (including citizenship), ethnic or national origins." %}</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n250</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "Race" %}</data>
+      <data key="d4" xml:space="preserve">Race</data>
+      <data key="d7" xml:space="preserve">7</data>
+      <data key="d8" xml:space="preserve">{% trans "Race refers to a group of people defined by their race, colour, nationality (including citizenship), ethnic or national origins." %}</data>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n250</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n243">
-      <data key="d3">{% trans "Religion or belief (or lack of belief)" %}</data>
-      <data key="d4">Disability Pregnancy</data>
-      <data key="d7">8</data>
-      <data key="d8">{% blocktrans %}Religion refers to any religious or philosophical belief. This also includes a lack of religious belief (eg atheism).
+      <data key="d3" xml:space="preserve">{% trans "Religion or belief (or lack of belief)" %}</data>
+      <data key="d4" xml:space="preserve">Disability Pregnancy</data>
+      <data key="d7" xml:space="preserve">8</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Religion refers to any religious or philosophical belief. This also includes a lack of religious belief (eg atheism).
 Generally, a belief should affect your life choices or the way you live for it to be included in the definition.{% endblocktrans %}</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n251</data>
-      <data key="d11"/>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n251</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n244">
-      <data key="d3">{% trans "Sex" %}</data>
-      <data key="d4">sex</data>
-      <data key="d7">9</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n252</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "Sex" %}</data>
+      <data key="d4" xml:space="preserve">sex</data>
+      <data key="d7" xml:space="preserve">9</data>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n252</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n245">
-      <data key="d3">{% trans "Sexual orientation" %}</data>
-      <data key="d4">sexual orientation</data>
-      <data key="d7">10</data>
-      <data key="d8">{% blocktrans %}Sexual orientation is whether a person's sexual attraction is towards their own sex, the opposite sex or to both sexes.
+      <data key="d3" xml:space="preserve">{% trans "Sexual orientation" %}</data>
+      <data key="d4" xml:space="preserve">sexual orientation</data>
+      <data key="d7" xml:space="preserve">10</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Sexual orientation is whether a person's sexual attraction is towards their own sex, the opposite sex or to both sexes.
 This can also cover situations where discrimination is based on perceived sexual orientation, which may not be the case.{% endblocktrans %}</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n253</data>
-      <data key="d11"/>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n253</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n246">
-      <data key="d3">{% trans "Gender reassignment" %}</data>
-      <data key="d4">gender reassignment</data>
-      <data key="d7">3</data>
-      <data key="d8">{% blocktrans %}It is unlawful to discriminate against someone due to their gender reassignment.
+      <data key="d3" xml:space="preserve">{% trans "Gender reassignment" %}</data>
+      <data key="d4" xml:space="preserve">gender reassignment</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}It is unlawful to discriminate against someone due to their gender reassignment.
 
 This includes where someone is:
 * is proposing to undergo gender reassignment
 * is currently undergoing gender reassignment
 * has already undergone (or partially undergone) the process of gender reassignment{% endblocktrans %}</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n254</data>
-      <data key="d11"/>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n254</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n247">
-      <data key="d3">{% trans "Pregnancy or maternity" %}</data>
-      <data key="d4">Discrimination due to pregnancy or having a child</data>
-      <data key="d7">5</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n255</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "Pregnancy or maternity" %}</data>
+      <data key="d4" xml:space="preserve">Discrimination due to pregnancy or having a child</data>
+      <data key="d7" xml:space="preserve">5</data>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n255</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n248">
-      <data key="d3">{% trans "Disability or failure to make reasonable adjustments for a disabled person" %}</data>
-      <data key="d4">Disability Pregnancy</data>
-      <data key="d7">6</data>
-      <data key="d9">{% trans "Where did the discrimination occur?" %}</data>
-      <data key="d10">n256</data>
-      <data key="d11"/>
+      <data key="d3" xml:space="preserve">{% trans "Disability or failure to make reasonable adjustments for a disabled person" %}</data>
+      <data key="d4" xml:space="preserve">Disability Pregnancy</data>
+      <data key="d7" xml:space="preserve">6</data>
+      <data key="d9" xml:space="preserve">{% trans "Where did the discrimination occur?" %}</data>
+      <data key="d10" xml:space="preserve">n256</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n249">
-      <data key="d3">{% trans "Public law" %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n257</data>
+      <data key="d3" xml:space="preserve">{% trans "Public law" %}</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n257</data>
       </node>
     <node id="n250">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE DISCLAIME</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>publiclaw</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE DISCLAIME</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">publiclaw</category>
 </context>
       </data>
-      <data key="d10">n258</data>
+      <data key="d10" xml:space="preserve">n258</data>
       </node>
     <node id="n251">
-      <data key="d3">{% trans "Community care" %}</data>
-      <data key="d4">Community Care</data>
-      <data key="d7">10</data>
-      <data key="d10">n259</data>
+      <data key="d3" xml:space="preserve">{% trans "Community care" %}</data>
+      <data key="d4" xml:space="preserve">Community Care</data>
+      <data key="d7" xml:space="preserve">10</data>
+      <data key="d10" xml:space="preserve">n259</data>
       </node>
     <node id="n252">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE DISCLAIME</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>commcare</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE DISCLAIME</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">commcare</category>
 </context>
       </data>
-      <data key="d10">n260</data>
+      <data key="d10" xml:space="preserve">n260</data>
       </node>
     <node id="n253">
-      <data key="d3">{% trans "The client has been identified as homeless through a Community Care Assessment" %}</data>
-      <data key="d4">Community Care Assesment - Homeless</data>
-      <data key="d7">10</data>
-      <data key="d10">n261</data>
+      <data key="d3" xml:space="preserve">{% trans "The client has been identified as homeless through a Community Care Assessment" %}</data>
+      <data key="d4" xml:space="preserve">Community Care Assesment - Homeless</data>
+      <data key="d7" xml:space="preserve">10</data>
+      <data key="d10" xml:space="preserve">n261</data>
       </node>
     <node id="n254">
-      <data key="d3">{% trans "The client has not been identified as homeless through a Community Care Assessment" %}</data>
-      <data key="d4">ComCare: Not homeless</data>
-      <data key="d7">10</data>
-      <data key="d10">n262</data>
+      <data key="d3" xml:space="preserve">{% trans "The client has not been identified as homeless through a Community Care Assessment" %}</data>
+      <data key="d4" xml:space="preserve">ComCare: Not homeless</data>
+      <data key="d7" xml:space="preserve">10</data>
+      <data key="d10" xml:space="preserve">n262</data>
       </node>
     <node id="n255">
-      <data key="d3">{% trans "Client wants advice about international family maintenance" %}</data>
-      <data key="d4">International family maintenance</data>
-      <data key="d7">3</data>
-      <data key="d8">{% blocktrans %}Covers enforcement of maintenance orders made outside the UK. Clients who have obtained maintenance orders in one country can apply to have them registered and enforced in another country. 
+      <data key="d3" xml:space="preserve">{% trans "Client wants advice about international family maintenance" %}</data>
+      <data key="d4" xml:space="preserve">International family maintenance</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Covers enforcement of maintenance orders made outside the UK. Clients who have obtained maintenance orders in one country can apply to have them registered and enforced in another country. 
 
 So where a client wants to obtain an order outside the UK this will not be in scope.
 
 **NOTE: These are very unusual cases.**{% endblocktrans %}</data>
-      <data key="d10">n263</data>
+      <data key="d10" xml:space="preserve">n263</data>
       </node>
     <node id="n256">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n264</data>
+      <data key="d10" xml:space="preserve">n264</data>
       </node>
     <node id="n257">
-      <data key="d3">{% trans "None of the above" %}</data>
-      <data key="d4">none of the above</data>
-      <data key="d7">999</data>
-      <data key="d10">n265</data>
+      <data key="d3" xml:space="preserve">{% trans "None of the above" %}</data>
+      <data key="d4" xml:space="preserve">none of the above</data>
+      <data key="d7" xml:space="preserve">999</data>
+      <data key="d10" xml:space="preserve">n265</data>
       </node>
     <node id="n258">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOF</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOF</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n266</data>
+      <data key="d10" xml:space="preserve">n266</data>
       </node>
     <node id="n259">
-      <data key="d3">{% trans "Other" %}</data>
-      <data key="d4">Other</data>
-      <data key="d10">n267</data>
+      <data key="d3" xml:space="preserve">{% trans "Other" %}</data>
+      <data key="d4" xml:space="preserve">Other</data>
+      <data key="d10" xml:space="preserve">n267</data>
       </node>
     <node id="n260">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOF</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>discrimination</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOF</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">discrimination</category>
 </context>
       </data>
-      <data key="d10">n268</data>
+      <data key="d10" xml:space="preserve">n268</data>
       </node>
     <node id="n261">
-      <data key="d3">{% trans "Discrimination" %}</data>
-      <data key="d4">Discrimination</data>
-      <data key="d7">4</data>
-      <data key="d10">n269</data>
+      <data key="d3" xml:space="preserve">{% trans "Discrimination" %}</data>
+      <data key="d4" xml:space="preserve">Discrimination</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d10" xml:space="preserve">n269</data>
       </node>
     <node id="n262">
-      <data key="d3">{% trans "None of the above" %}</data>
-      <data key="d4">Personal Injury</data>
+      <data key="d3" xml:space="preserve">{% trans "None of the above" %}</data>
+      <data key="d4" xml:space="preserve">Personal Injury</data>
       <data key="d6"/>
-      <data key="d8">{% trans "Not a Civil Legal Advice category or legal problem." %}</data>
-      <data key="d10">n270</data>
+      <data key="d8" xml:space="preserve">{% trans "Not a Civil Legal Advice category or legal problem." %}</data>
+      <data key="d10" xml:space="preserve">n270</data>
       </node>
     <node id="n263">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE DISCLA</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>none</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE DISCLA</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">none</category>
 </context>
       </data>
-      <data key="d10">n271</data>
+      <data key="d10" xml:space="preserve">n271</data>
       </node>
     <node id="n264">
-      <data key="d3">{% blocktrans %}IMPORTANT: Where a client or a child is AT IMMEDIATE RISK OF ABUSE you must follow the Civil Legal Advice Child, Young Person and Adult at Risk of Abuse Policy. You may need to report the matter to protection services.
+      <data key="d3" xml:space="preserve">{% blocktrans %}IMPORTANT: Where a client or a child is AT IMMEDIATE RISK OF ABUSE you must follow the Civil Legal Advice Child, Young Person and Adult at Risk of Abuse Policy. You may need to report the matter to protection services.
 
 *Click 'Next' to continue*{% endblocktrans %}</data>
-      <data key="d4">REMEMBER: report</data>
-      <data key="d7">1</data>
-      <data key="d10">n272</data>
+      <data key="d4" xml:space="preserve">REMEMBER: report</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n272</data>
       </node>
     <node id="n265">
-      <data key="d3">{% trans "Legal advice in support of family mediation" %}</data>
-      <data key="d4">Mediation</data>
-      <data key="d7">3</data>
-      <data key="d8">{% blocktrans %}Family mediation can help people whose relationships have broken down to reach their own agreement about money, property and childcare, without going to court.
+      <data key="d3" xml:space="preserve">{% trans "Legal advice in support of family mediation" %}</data>
+      <data key="d4" xml:space="preserve">Mediation</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Family mediation can help people whose relationships have broken down to reach their own agreement about money, property and childcare, without going to court.
 
 If the client wants legal advice to support of ongoing or recently completed mediation process this will be in scope. This can include making any agreement reached in mediation legally binding by applying to the court (a consent order).
 
 *Please note: Mediation must be ongoing or have concluded. Clients will not qualify for Civil Legal Advice advice where mediation has not yet taken place or they have only attended Mediation Assessment Information Meeting (MIAM).*{% endblocktrans %}</data>
-      <data key="d10">n273</data>
+      <data key="d10" xml:space="preserve">n273</data>
       </node>
     <node id="n266">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n274</data>
+      <data key="d10" xml:space="preserve">n274</data>
       </node>
     <node id="n267">
-      <data key="d3">{% blocktrans %}Please read out the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read out the following to the client:
 
 
 *Based on what you have told me today your problem may be covered by legal aid. But you will still need to show that you qualify financially.*
@@ -2285,12 +2285,12 @@ If the client wants legal advice to support of ongoing or recently completed med
 *I’m afraid that Civil Legal Advice does not provide advice about the issue that you are calling about. But our service is not your only option and I will direct you to alternative help.*
 
 *I can’t guarantee that these organisations/this organisation will take on your case under legal aid so please check with them to see whether they are able to help you. If you do not qualify for legal aid you may have to pay for their service. So check any costs, their opening hours and whether you can make an appointment. Also check any insurance policies you may have that provide legal cover as any potential costs may be covered by this.*{% endblocktrans %}</data>
-      <data key="d4">Primary question: Cl</data>
-      <data key="d7">1</data>
-      <data key="d10">n275</data>
+      <data key="d4" xml:space="preserve">Primary question: Cl</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n275</data>
       </node>
     <node id="n268">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2299,11 +2299,11 @@ If the client wants legal advice to support of ongoing or recently completed med
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n276</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n276</data>
       </node>
     <node id="n269">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2312,11 +2312,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n278</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n278</data>
       </node>
     <node id="n270">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2325,11 +2325,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n279</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n279</data>
       </node>
     <node id="n271">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2338,11 +2338,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n280</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n280</data>
       </node>
     <node id="n272">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2351,11 +2351,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n281</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n281</data>
       </node>
     <node id="n273">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2364,11 +2364,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n282</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n282</data>
       </node>
     <node id="n274">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2377,11 +2377,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n283</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n283</data>
       </node>
     <node id="n275">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2390,11 +2390,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n284</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n284</data>
       </node>
     <node id="n276">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2403,11 +2403,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n285</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n285</data>
       </node>
     <node id="n277">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2416,11 +2416,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n286</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n286</data>
       </node>
     <node id="n278">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2429,11 +2429,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n287</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n287</data>
       </node>
     <node id="n279">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2442,11 +2442,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n288</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n288</data>
       </node>
     <node id="n280">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2455,11 +2455,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n289</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n289</data>
       </node>
     <node id="n281">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2468,11 +2468,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n290</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n290</data>
       </node>
     <node id="n282">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2481,11 +2481,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n291</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n291</data>
       </node>
     <node id="n283">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2494,12 +2494,12 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n292</data>
-      <data key="d11"/>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n292</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n284">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2508,11 +2508,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n293</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n293</data>
       </node>
     <node id="n285">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2521,11 +2521,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n294</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n294</data>
       </node>
     <node id="n286">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2534,12 +2534,12 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n295</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n295</data>
       </node>
     <node id="n287">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2548,12 +2548,12 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n296</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n296</data>
       </node>
     <node id="n288">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2562,12 +2562,12 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n297</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n297</data>
       </node>
     <node id="n289">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2576,12 +2576,12 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n298</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n298</data>
       </node>
     <node id="n290">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2590,12 +2590,12 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n299</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n299</data>
       </node>
     <node id="n291">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2604,12 +2604,12 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n300</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n300</data>
       </node>
     <node id="n292">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2618,12 +2618,12 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n301</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n301</data>
       </node>
     <node id="n293">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2632,12 +2632,12 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n302</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n302</data>
       </node>
     <node id="n294">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2646,12 +2646,12 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n303</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n303</data>
       </node>
     <node id="n295">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2660,12 +2660,12 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n304</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n304</data>
       </node>
     <node id="n296">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2674,65 +2674,65 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Public Law</data>
-      <data key="d7">11</data>
-      <data key="d10">n305</data>
+      <data key="d4" xml:space="preserve">Public Law</data>
+      <data key="d7" xml:space="preserve">11</data>
+      <data key="d10" xml:space="preserve">n305</data>
       </node>
     <node id="n297">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n306</data>
+      <data key="d10" xml:space="preserve">n306</data>
       </node>
     <node id="n298">
-      <data key="d3">{% trans "Domestic abuse (including psychological, physical, financial, sexual or emotional abuse, forced marriage, child abduction, female genital mutilation and harassment). Also includes defence against a non-molestation or occupation order where the client is the alleged abuser." %}</data>
-      <data key="d4">Client wants to prev</data>
-      <data key="d7">1</data>
-      <data key="d8">{% blocktrans %}Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act.
+      <data key="d3" xml:space="preserve">{% trans "Domestic abuse (including psychological, physical, financial, sexual or emotional abuse, forced marriage, child abduction, female genital mutilation and harassment). Also includes defence against a non-molestation or occupation order where the client is the alleged abuser." %}</data>
+      <data key="d4" xml:space="preserve">Client wants to prev</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Where a Client wants to seek a court order to protect themselves or a child from abuse via a court order 'an injunction' that tells a person they're not allowed to do a certain act.
 
 Some clients who are the alleged abuser do not agree with the injunction against them and wish to get help in defending themselves against it.
 
 Guidance contains an article "Domestic violence and abuse - definition" for more information. Search for 'dv' or 'abuse' to find it quickest.{% endblocktrans %}</data>
-      <data key="d10">n307</data>
+      <data key="d10" xml:space="preserve">n307</data>
       </node>
     <node id="n299">
-      <data key="d3">{% trans "Forced marriage - the client wants advice" %}</data>
-      <data key="d4">Client wants to prev</data>
-      <data key="d7">6</data>
-      <data key="d8">{% trans "This is where a marriage is about to take place or has taken place without the full and free consent of each party. This may be due to actual or threats of physical force or violence, emotional pressure or psychological abuse. Civil Legal Advice Specialists can offer advice on seeking an order to protect the client from such a marriage occuring or how to end such a marriage." %}</data>
-      <data key="d10">n308</data>
+      <data key="d3" xml:space="preserve">{% trans "Forced marriage - the client wants advice" %}</data>
+      <data key="d4" xml:space="preserve">Client wants to prev</data>
+      <data key="d7" xml:space="preserve">6</data>
+      <data key="d8" xml:space="preserve">{% trans "This is where a marriage is about to take place or has taken place without the full and free consent of each party. This may be due to actual or threats of physical force or violence, emotional pressure or psychological abuse. Civil Legal Advice Specialists can offer advice on seeking an order to protect the client from such a marriage occuring or how to end such a marriage." %}</data>
+      <data key="d10" xml:space="preserve">n308</data>
       </node>
     <node id="n300">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n309</data>
+      <data key="d10" xml:space="preserve">n309</data>
       </node>
     <node id="n301">
-      <data key="d3">{% trans "Other" %}</data>
-      <data key="d4">Other</data>
-      <data key="d10">n310</data>
+      <data key="d3" xml:space="preserve">{% trans "Other" %}</data>
+      <data key="d4" xml:space="preserve">Other</data>
+      <data key="d10" xml:space="preserve">n310</data>
       </node>
     <node id="n302">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n311</data>
+      <data key="d10" xml:space="preserve">n311</data>
       </node>
     <node id="n303">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2741,16 +2741,16 @@ Guidance contains an article "Domestic violence and abuse - definition" for more
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n312</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n312</data>
       </node>
     <node id="n304">
-      <data key="d3">{% blocktrans %}Is there a dispute for which family mediation is relevant? If so, please check if client has heard of/and considered Family Mediation.
+      <data key="d3" xml:space="preserve">{% blocktrans %}Is there a dispute for which family mediation is relevant? If so, please check if client has heard of/and considered Family Mediation.
 
 *On the following screen please select if they want to find a local mediator, or that mediation isn't relevant to the problem. Click next to continue.*{% endblocktrans %}</data>
-      <data key="d4">None of the above (i</data>
-      <data key="d7">1</data>
-      <data key="d8">{% blocktrans %}Family mediators are trained to work with people whose relationships have broken down. They will listen to both sides of the argument and help you to reach your own agreement about money, property and childcare, without going to court.
+      <data key="d4" xml:space="preserve">None of the above (i</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Family mediators are trained to work with people whose relationships have broken down. They will listen to both sides of the argument and help you to reach your own agreement about money, property and childcare, without going to court.
 
 It is not just separating couples that can use mediation. It may also help grandparents or step-families resolve their issues.
 
@@ -2759,22 +2759,22 @@ Mediation provides a safe and neutral setting for you to talk and explore your c
 Search for 'Family Mediation' in the guidance search box for more help.
 
 If you are qualify you can get legal aid for family mediation as well as legal advice to support the mediation process. This can include the cost of making any agreement that you reach in mediation legally binding by applying to the court - this is called applying for a consent order.{% endblocktrans %}</data>
-      <data key="d10">n313</data>
+      <data key="d10" xml:space="preserve">n313</data>
       </node>
     <node id="n305">
-      <data key="d3">{% trans "Client wishes to find mediator." %}</data>
-      <data key="d4">None of the above (i</data>
-      <data key="d7">1</data>
-      <data key="d10">n314</data>
+      <data key="d3" xml:space="preserve">{% trans "Client wishes to find mediator." %}</data>
+      <data key="d4" xml:space="preserve">None of the above (i</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n314</data>
       </node>
     <node id="n306">
-      <data key="d3">{% trans "Client does not wish to find a mediator." %}</data>
-      <data key="d4">None of the above (i</data>
-      <data key="d7">2</data>
-      <data key="d10">n315</data>
+      <data key="d3" xml:space="preserve">{% trans "Client does not wish to find a mediator." %}</data>
+      <data key="d4" xml:space="preserve">None of the above (i</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n315</data>
       </node>
     <node id="n307">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *If you have Internet access I can tell you where to find more information about Family Mediation and how to search for a family mediator.*
 
@@ -2783,116 +2783,116 @@ If you are qualify you can get legal aid for family mediation as well as legal a
 *If you qualify you may be able to get legal aid to cover the costs of Family Mediation as well as legal advice to support the mediation process. Or you may need to pay for the service. Please speak to the mediation service to find out more.*
 
 You should now direct the client to their nearest contracted quality assured family mediation service using the directory (Find An Adviser tool){% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n316</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n316</data>
       </node>
     <node id="n308">
-      <data key="d3">{% trans "The client has already taken action to stop domestic abuse (e.g. via an injunction) but needs to take further action as the order is not being complied with" %}</data>
-      <data key="d4">Client being harassed by partner or ex-partner</data>
-      <data key="d7">2</data>
-      <data key="d10">n317</data>
+      <data key="d3" xml:space="preserve">{% trans "The client has already taken action to stop domestic abuse (e.g. via an injunction) but needs to take further action as the order is not being complied with" %}</data>
+      <data key="d4" xml:space="preserve">Client being harassed by partner or ex-partner</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n317</data>
       </node>
     <node id="n309">
-      <data key="d3">{% blocktrans %}Private law problem (between two individuals)
+      <data key="d3" xml:space="preserve">{% blocktrans %}Private law problem (between two individuals)
 eg divorce, contact with children, finances{% endblocktrans %}</data>
-      <data key="d4">Private Law</data>
-      <data key="d7">3</data>
-      <data key="d8">{% trans "Between two or more individuals." %}</data>
-      <data key="d10">n318</data>
+      <data key="d4" xml:space="preserve">Private Law</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d8" xml:space="preserve">{% trans "Between two or more individuals." %}</data>
+      <data key="d10" xml:space="preserve">n318</data>
       </node>
     <node id="n310">
-      <data key="d3">{% trans "Divorce/Nullity/Dissolution" %}</data>
-      <data key="d4">Divorce</data>
-      <data key="d7">1</data>
-      <data key="d8">{% blocktrans %}* Divorce - ending a marriage
+      <data key="d3" xml:space="preserve">{% trans "Divorce/Nullity/Dissolution" %}</data>
+      <data key="d4" xml:space="preserve">Divorce</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}* Divorce - ending a marriage
 * Nullity - declaring a marriage null and void so it is regarded not to have taken place
 * Dissolution - ending a same sex Civil Partnership{% endblocktrans %}</data>
-      <data key="d10">n319</data>
+      <data key="d10" xml:space="preserve">n319</data>
       </node>
     <node id="n311">
-      <data key="d3">{% trans "Children disputes (eg contact with children)" %}</data>
-      <data key="d4">Children disputes (a</data>
-      <data key="d7">2</data>
-      <data key="d8">{% blocktrans %}Includes advice on the following areas
+      <data key="d3" xml:space="preserve">{% trans "Children disputes (eg contact with children)" %}</data>
+      <data key="d4" xml:space="preserve">Children disputes (a</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Includes advice on the following areas
 
 * Parental Responsibility
 * Contact
 * Residence
 * Transferring status of Parentage{% endblocktrans %}</data>
-      <data key="d10">n320</data>
+      <data key="d10" xml:space="preserve">n320</data>
       </node>
     <node id="n312">
-      <data key="d3">{% trans "Financial matters" %}</data>
-      <data key="d4">Financial matters</data>
-      <data key="d7">3</data>
-      <data key="d8">{% blocktrans %}Includes advice on financial disputes arising out of:
+      <data key="d3" xml:space="preserve">{% trans "Financial matters" %}</data>
+      <data key="d4" xml:space="preserve">Financial matters</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d8" xml:space="preserve">{% blocktrans %}Includes advice on financial disputes arising out of:
 
 * Divorce/separation (including civil partnerships) including Inheritance and trusts of land
 * Transfer of tenancies on divorce/separation
 * Maintenance{% endblocktrans %}</data>
-      <data key="d10">n321</data>
+      <data key="d10" xml:space="preserve">n321</data>
       </node>
     <node id="n313">
-      <data key="d3">{% trans "Not a dispute for which mediation is relevant." %}</data>
-      <data key="d4">None of the above (i</data>
-      <data key="d7">3</data>
-      <data key="d10">n322</data>
+      <data key="d3" xml:space="preserve">{% trans "Not a dispute for which mediation is relevant." %}</data>
+      <data key="d4" xml:space="preserve">None of the above (i</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d10" xml:space="preserve">n322</data>
       </node>
     <node id="n314">
-      <data key="d3">{% trans "Domestic abuse (or their abuser has a criminal conviction)" %}</data>
-      <data key="d4">Client has been subj</data>
-      <data key="d7">2</data>
-      <data key="d10">n323</data>
+      <data key="d3" xml:space="preserve">{% trans "Domestic abuse (or their abuser has a criminal conviction)" %}</data>
+      <data key="d4" xml:space="preserve">Client has been subj</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n323</data>
       </node>
     <node id="n315">
-      <data key="d3">{% trans "The client's child has experienced child abuse within the family, or the abuser has a criminal conviction (remember that if the caller is the abuser, this will not be in scope)" %}</data>
-      <data key="d4">Relationship has inv</data>
-      <data key="d7">3</data>
-      <data key="d10">n324</data>
+      <data key="d3" xml:space="preserve">{% trans "The client's child has experienced child abuse within the family, or the abuser has a criminal conviction (remember that if the caller is the abuser, this will not be in scope)" %}</data>
+      <data key="d4" xml:space="preserve">Relationship has inv</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d10" xml:space="preserve">n324</data>
       </node>
     <node id="n316">
-      <data key="d3">{% trans "The client is under 18" %}</data>
-      <data key="d4">Client is under 18</data>
-      <data key="d7">1</data>
-      <data key="d10">n325</data>
+      <data key="d3" xml:space="preserve">{% trans "The client is under 18" %}</data>
+      <data key="d4" xml:space="preserve">Client is under 18</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n325</data>
       </node>
     <node id="n317">
-      <data key="d3">{% trans "No abuse." %}</data>
-      <data key="d4">Client is under 18</data>
-      <data key="d7">4</data>
-      <data key="d10">n326</data>
+      <data key="d3" xml:space="preserve">{% trans "No abuse." %}</data>
+      <data key="d4" xml:space="preserve">Client is under 18</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d10" xml:space="preserve">n326</data>
       </node>
     <node id="n318">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n327</data>
+      <data key="d10" xml:space="preserve">n327</data>
       </node>
     <node id="n319">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *"We may be able to put you through to a specialist provider who could help you with this area of law, but before I can transfer you we need to complete a short financial assessment to see if you can get legal aid.*
 
 *Please note that before a specialist advisor can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof."*{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n328</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n328</data>
       </node>
     <node id="n320">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n329</data>
+      <data key="d10" xml:space="preserve">n329</data>
       </node>
     <node id="n321">
-      <data key="d3">{% blocktrans %}Please read out the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read out the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.
 
@@ -2901,39 +2901,39 @@ We can provide helplines, websites or F2F however please be aware that you may h
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*{% endblocktrans %}</data>
-      <data key="d4">Primary question: Cl</data>
-      <data key="d7">1</data>
-      <data key="d10">n330</data>
+      <data key="d4" xml:space="preserve">Primary question: Cl</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n330</data>
       </node>
     <node id="n322">
-      <data key="d3">{% trans "The matter relates to a child in care, a care leaver, or the call is made by a foster carer." %}</data>
-      <data key="d4">Child in care</data>
-      <data key="d7">5</data>
-      <data key="d10">n331</data>
+      <data key="d3" xml:space="preserve">{% trans "The matter relates to a child in care, a care leaver, or the call is made by a foster carer." %}</data>
+      <data key="d4" xml:space="preserve">Child in care</data>
+      <data key="d7" xml:space="preserve">5</data>
+      <data key="d10" xml:space="preserve">n331</data>
       </node>
     <node id="n323">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>education</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
 </context>
       </data>
-      <data key="d10">n332</data>
+      <data key="d10" xml:space="preserve">n332</data>
       </node>
     <node id="n324">
-      <data key="d3">{% trans "Please note: if a local authority is trying to take a child into care, no financial assessment is needed for the parent." %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n333</data>
+      <data key="d3" xml:space="preserve">{% trans "Please note: if a local authority is trying to take a child into care, no financial assessment is needed for the parent." %}</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n333</data>
       </node>
     <node id="n325">
-      <data key="d3">{% trans "The client may have been discriminated against (select this button to proceed to the discrimination category)" %}</data>
-      <data key="d4">Discrimination?</data>
-      <data key="d7">2</data>
-      <data key="d10">n334</data>
+      <data key="d3" xml:space="preserve">{% trans "The client may have been discriminated against (select this button to proceed to the discrimination category)" %}</data>
+      <data key="d4" xml:space="preserve">Discrimination?</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d10" xml:space="preserve">n334</data>
       </node>
     <node id="n326">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2942,27 +2942,27 @@ Remember to record details of the conversation in your CHS notes.]*{% endblocktr
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n335</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n335</data>
       </node>
     <node id="n327">
-      <data key="d3">{% trans "Female genital mutilation - the client is worried they may become a victim" %}</data>
-      <data key="d4">FGM</data>
-      <data key="d7">7</data>
-      <data key="d10">n336</data>
+      <data key="d3" xml:space="preserve">{% trans "Female genital mutilation - the client is worried they may become a victim" %}</data>
+      <data key="d4" xml:space="preserve">FGM</data>
+      <data key="d7" xml:space="preserve">7</data>
+      <data key="d10" xml:space="preserve">n336</data>
       </node>
     <node id="n328">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n337</data>
+      <data key="d10" xml:space="preserve">n337</data>
       </node>
     <node id="n329">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2971,11 +2971,11 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n338</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n338</data>
       </node>
     <node id="n330">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -2984,71 +2984,71 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
-      <data key="d10">n339</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
+      <data key="d10" xml:space="preserve">n339</data>
       </node>
     <node id="n331">
-      <data key="d3">{% trans "International child abduction – The client lives abroad but their child has been taken to the UK" %}</data>
-      <data key="d4"/>
-      <data key="d7">1</data>
-      <data key="d10">n340</data>
+      <data key="d3" xml:space="preserve">{% trans "International child abduction – The client lives abroad but their child has been taken to the UK" %}</data>
+      <data key="d4" xml:space="preserve"/>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n340</data>
       </node>
     <node id="n332">
-      <data key="d3">{% trans "Any other child abduction problem" %}</data>
-      <data key="d4"/>
-      <data key="d7">2</data>
-      <data key="d8">{% trans "Seeking protection from the unlawful removal of a child from the UK or the return of a child who has been unlawfully removed from the UK or unlawfully removed within the UK. A child is someone under 18 and the client must be the parent or someone with parental responsibility for that child." %}</data>
-      <data key="d10">n341</data>
+      <data key="d3" xml:space="preserve">{% trans "Any other child abduction problem" %}</data>
+      <data key="d4" xml:space="preserve"/>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d8" xml:space="preserve">{% trans "Seeking protection from the unlawful removal of a child from the UK or the return of a child who has been unlawfully removed from the UK or unlawfully removed within the UK. A child is someone under 18 and the client must be the parent or someone with parental responsibility for that child." %}</data>
+      <data key="d10" xml:space="preserve">n341</data>
       </node>
     <node id="n333">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>family</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
 </context>
       </data>
-      <data key="d10">n342</data>
+      <data key="d10" xml:space="preserve">n342</data>
       </node>
     <node id="n334">
-      <data key="d3">{% trans "No financial assessment is needed for this problem." %}</data>
-      <data key="d4"/>
-      <data key="d10">n343</data>
+      <data key="d3" xml:space="preserve">{% trans "No financial assessment is needed for this problem." %}</data>
+      <data key="d4" xml:space="preserve"/>
+      <data key="d10" xml:space="preserve">n343</data>
       </node>
     <node id="n335">
-      <data key="d3">{% trans "The client’s social landlord intends to get (or has got) an Antisocial Behaviour Order or Antisocial Behaviour Injunction against the client or someone living with them." %}</data>
-      <data key="d4">Social landlord</data>
+      <data key="d3" xml:space="preserve">{% trans "The client’s social landlord intends to get (or has got) an Antisocial Behaviour Order or Antisocial Behaviour Injunction against the client or someone living with them." %}</data>
+      <data key="d4" xml:space="preserve">Social landlord</data>
       <data key="d6"/>
-      <data key="d9">{% trans "Select the option that best describes the client’s situation." %}</data>
-      <data key="d10">n80</data>
-      <data key="d11"/>
+      <data key="d9" xml:space="preserve">{% trans "Select the option that best describes the client’s situation." %}</data>
+      <data key="d10" xml:space="preserve">n80</data>
+      <data key="d11" xml:space="preserve"/>
       </node>
     <node id="n336">
-      <data key="d3">{% trans "Client has private landlord" %}</data>
-      <data key="d4">Private landlord</data>
+      <data key="d3" xml:space="preserve">{% trans "Client has private landlord" %}</data>
+      <data key="d4" xml:space="preserve">Private landlord</data>
       <data key="d6"/>
-      <data key="d10">n87</data>
+      <data key="d10" xml:space="preserve">n87</data>
       </node>
     <node id="n337">
-      <data key="d3">{% trans "Client has received an ASBO/ASBI and wishes to challenge" %}</data>
-      <data key="d4">Client has received </data>
+      <data key="d3" xml:space="preserve">{% trans "Client has received an ASBO/ASBI and wishes to challenge" %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
       <data key="d6"/>
-      <data key="d10">n85</data>
+      <data key="d10" xml:space="preserve">n85</data>
       </node>
     <node id="n338">
-      <data key="d3">{% trans "Court has issued notice of ASBO/ASBI proceedings" %}</data>
-      <data key="d4">Court has issued not</data>
+      <data key="d3" xml:space="preserve">{% trans "Court has issued notice of ASBO/ASBI proceedings" %}</data>
+      <data key="d4" xml:space="preserve">Court has issued not</data>
       <data key="d6"/>
-      <data key="d10">n83</data>
+      <data key="d10" xml:space="preserve">n83</data>
       </node>
     <node id="n339">
-      <data key="d3">{% trans "Client has received a letter from their social landlord (including local authorities) confirming an intention to apply for an ASBO or ASBI" %}</data>
-      <data key="d4">Client has received </data>
+      <data key="d3" xml:space="preserve">{% trans "Client has received a letter from their social landlord (including local authorities) confirming an intention to apply for an ASBO or ASBI" %}</data>
+      <data key="d4" xml:space="preserve">Client has received </data>
       <data key="d6"/>
-      <data key="d10">n81</data>
+      <data key="d10" xml:space="preserve">n81</data>
       </node>
     <node id="n340">
-      <data key="d3">{% blocktrans %}Please read the following to the client:
+      <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on.  However we can provide alternative contact details of organisations who may be able to assist you.*
 
@@ -3057,39 +3057,39 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]{% endblocktrans %}</data>
-      <data key="d4">None of the above, a</data>
+      <data key="d4" xml:space="preserve">None of the above, a</data>
       <data key="d6"/>
-      <data key="d10">n277</data>
+      <data key="d10" xml:space="preserve">n277</data>
       </node>
     <node id="n341">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n84</data>
+      <data key="d10" xml:space="preserve">n84</data>
       </node>
     <node id="n342">
-      <data key="d3">INSCOPE</data>
-      <data key="d4">INSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n82</data>
+      <data key="d10" xml:space="preserve">n82</data>
       </node>
     <node id="n343">
-      <data key="d3">OUTOFSCOPE</data>
-      <data key="d4">OUTOFSCOPE</data>
-      <data key="d6">
-        <context xmlns="">
-	<category>housing</category>
+      <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d4" xml:space="preserve">OUTOFSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10">n88</data>
+      <data key="d10" xml:space="preserve">n88</data>
       </node>
     <edge id="e0" source="n1" target="n2">
       </edge>

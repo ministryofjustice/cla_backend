@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-21 07:52+0000\n"
+"POT-Creation-Date: 2020-03-12 10:39+0000\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -15,34 +15,34 @@ msgstr ""
 "X-Language: en_GB\n"
 "X-Source-Language: en_GB\n"
 
-#: apps/call_centre/forms.py:57
+#: apps/call_centre/forms.py:53
 msgid "There is no provider specified in the system to handle cases of this law category."
 msgstr ""
 
-#: apps/call_centre/forms.py:63
+#: apps/call_centre/forms.py:57
 msgid "Can't assign to specialist provider without setting matter_type1 and matter_type2"
 msgstr ""
 
-#: apps/call_centre/forms.py:69
+#: apps/call_centre/forms.py:64
 #, python-brace-format
 msgid "Category of matter type 1: {category1} must match category of matter type 2: {category2}"
 msgstr ""
 
-#: apps/call_centre/forms.py:80
+#: apps/call_centre/forms.py:78
 #, python-brace-format
 msgid "Category of Matter Types: {category1}, {category2} must match category of case: {case_category}"
 msgstr ""
 
-#: apps/cla_provider/models.py:155
+#: apps/cla_provider/models.py:167
 #, python-brace-format
 msgid "Provider {provider} doesn't offer help for {category}"
 msgstr ""
 
-#: apps/cla_provider/models.py:168
+#: apps/cla_provider/models.py:179
 msgid "Overlapping rota allocation not allowed"
 msgstr ""
 
-#: apps/core/admin/fields.py:57
+#: apps/core/admin/fields.py:52
 msgid "One or more tags not allowed. Allowed tags: "
 msgstr ""
 
@@ -58,41 +58,41 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: apps/core/admin/forms.py:16
+#: apps/core/admin/forms.py:17
 msgid "Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only."
 msgstr ""
 
-#: apps/core/admin/forms.py:19
+#: apps/core/admin/forms.py:18
 msgid "This value may contain only letters, numbers and @/./+/-/_ characters."
 msgstr ""
 
-#: apps/core/admin/forms.py:27 apps/core/admin/forms.py:35
-#: apps/core/admin/forms.py:45 apps/core/forms.py:20
+#: apps/core/admin/forms.py:24 apps/core/admin/forms.py:28
+#: apps/core/admin/forms.py:37 apps/core/forms.py:12
 msgid "Password"
 msgstr ""
 
-#: apps/core/admin/forms.py:30 apps/core/admin/forms.py:38
-#: apps/core/admin/forms.py:50
+#: apps/core/admin/forms.py:25 apps/core/admin/forms.py:30
+#: apps/core/admin/forms.py:44
 msgid "Password confirmation"
 msgstr ""
 
-#: apps/core/admin/forms.py:40
+#: apps/core/admin/forms.py:32
 msgid "Enter the same password as above, for verification."
 msgstr ""
 
-#: apps/core/admin/forms.py:46
+#: apps/core/admin/forms.py:39
 msgid "Raw passwords are not stored, so there is no way to see this user's password, but you can change the password using <a href=\"password/\">this form</a>."
 msgstr ""
 
-#: apps/core/admin/modeladmin.py:87
+#: apps/core/admin/modeladmin.py:86
 msgid "Account unlocked successfully."
 msgstr ""
 
-#: apps/core/admin/modeladmin.py:103
+#: apps/core/admin/modeladmin.py:102
 msgid "Password changed successfully."
 msgstr ""
 
-#: apps/core/admin/modeladmin.py:113
+#: apps/core/admin/modeladmin.py:112
 #, python-format
 msgid "Change password: %s"
 msgstr ""
@@ -1482,7 +1482,7 @@ msgid "Discrimination does not apply"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:1501
-msgid "Claims Against Public Authorities"
+msgid "Claims against public authorities"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:1504
@@ -2006,7 +2006,7 @@ msgstr ""
 msgid "created"
 msgstr ""
 
-#: apps/timer/models.py:57
+#: apps/timer/models.py:56
 msgid "modified"
 msgstr ""
 

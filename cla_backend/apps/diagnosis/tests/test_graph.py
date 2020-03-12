@@ -84,3 +84,11 @@ class GraphTestCase(TestCase):
         checker_graph = get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME)
         node = checker_graph.node["n43n2"]
         self.assertEqual(node["heading"], u"Choose the option that best describes your debt problem")
+
+    def test_nodes_have_subheading(self):
+        _graph = get_graph(file_name=settings.DIAGNOSIS_FILE_NAME)
+        node = _graph.node["n97"]
+        self.assertEqual(
+            node["context"]["subheading"],
+            u"If a local authority is involved in taking a child into care and the applicant has received a letter of proceedings or letter of issue sent or client has a court date, a financial assessment is not required",
+        )

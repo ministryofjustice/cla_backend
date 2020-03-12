@@ -1589,6 +1589,11 @@ For loss of home please click 'back' and select the first category.]]></data>
     <node id="n89">
       <data key="d3" xml:space="preserve"><![CDATA[Family]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Family]]></data>
+      <data key="d6">
+        <context xml:space="preserve" xmlns="">
+<subheading xml:space="preserve">If a local authority is involved in taking a child into care and the applicant has received a letter of proceedings or letter of issue sent or client has a court date, a financial assessment is not required</subheading>
+</context>
+      </data>
       <data key="d7" xml:space="preserve">3</data>
       <data key="d8" xml:space="preserve"><![CDATA[The family category of law includes advice on:
 
@@ -1601,6 +1606,7 @@ For loss of home please click 'back' and select the first category.]]></data>
 * trying to adopt a child who's in care
 * enforcing previous court orders
 * child abduction]]></data>
+      <data key="d9" xml:space="preserve"><![CDATA[f a child is being taken into care, a financial assessment may not be required.]]></data>
       <data key="d10" xml:space="preserve"><![CDATA[n97]]></data>
       <data key="d13">
         <y:ShapeNode>

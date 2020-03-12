@@ -784,6 +784,11 @@ For loss of home please click 'back' and select the first category.{% endblocktr
     <node id="n89">
       <data key="d3" xml:space="preserve">{% trans "Family" %}</data>
       <data key="d4" xml:space="preserve">Family</data>
+      <data key="d6">
+        <context xmlns="" xml:space="preserve">
+<subheading xml:space="preserve">If a local authority is involved in taking a child into care and the applicant has received a letter of proceedings or letter of issue sent or client has a court date, a financial assessment is not required</subheading>
+</context>
+      </data>
       <data key="d7" xml:space="preserve">3</data>
       <data key="d8" xml:space="preserve">{% blocktrans %}The family category of law includes advice on:
 
@@ -796,6 +801,7 @@ For loss of home please click 'back' and select the first category.{% endblocktr
 * trying to adopt a child who's in care
 * enforcing previous court orders
 * child abduction{% endblocktrans %}</data>
+      <data key="d9" xml:space="preserve">{% trans "f a child is being taken into care, a financial assessment may not be required." %}</data>
       <data key="d10" xml:space="preserve">n97</data>
       </node>
     <node id="n90">

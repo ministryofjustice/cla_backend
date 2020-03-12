@@ -1606,7 +1606,7 @@ For loss of home please click 'back' and select the first category.]]></data>
 * trying to adopt a child who's in care
 * enforcing previous court orders
 * child abduction]]></data>
-      <data key="d9" xml:space="preserve"><![CDATA[f a child is being taken into care, a financial assessment may not be required.]]></data>
+      <data key="d9" xml:space="preserve"><![CDATA[if a child is being taken into care, a financial assessment may not be required.]]></data>
       <data key="d10" xml:space="preserve"><![CDATA[n97]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -6227,7 +6227,7 @@ Remember to record details of the conversation in your CHS notes.]]]></data>
       <data key="d10" xml:space="preserve"><![CDATA[n402]]></data>
       <data key="d12" xml:space="preserve"><![CDATA[**The client is not a parent or guardian of the child**
 
-The client needs to complete a financial assessment]]></data>
+A financial assessment will need to be completed.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="605.5586790054564" y="543.265625"/>
@@ -6241,8 +6241,8 @@ The client needs to complete a financial assessment]]></data>
     <node id="n345">
       <data key="d3" xml:space="preserve"><![CDATA[Letter of proceedings]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Letter of proceedings]]></data>
-      <data key="d6">
-        <context xml:space="preserve" xmlns="">
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
   <finance xml:space="preserve">passported</finance>    
 </context>
       </data>
@@ -6264,8 +6264,8 @@ No financial assessment is required.]]></data>
     <node id="n346">
       <data key="d3" xml:space="preserve"><![CDATA[Letter of issue]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Letter of issue]]></data>
-      <data key="d6">
-        <context xml:space="preserve" xmlns="">
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
   <finance xml:space="preserve">passported</finance>    
 </context>
       </data>
@@ -6288,8 +6288,8 @@ No financial assessment is required.]]></data>
     <node id="n347">
       <data key="d3" xml:space="preserve"><![CDATA[Date to attend court]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Date to attend court]]></data>
-      <data key="d6">
-        <context xml:space="preserve" xmlns="">
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
   <finance xml:space="preserve">passported</finance>    
 </context>
       </data>

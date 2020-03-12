@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-12 11:54+0000\n"
+"POT-Creation-Date: 2020-03-12 16:24+0000\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -1191,7 +1191,7 @@ msgid ""
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:804
-msgid "f a child is being taken into care, a financial assessment may not be required."
+msgid "if a child is being taken into care, a financial assessment may not be required."
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:808

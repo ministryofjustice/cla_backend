@@ -801,7 +801,7 @@ For loss of home please click 'back' and select the first category.{% endblocktr
 * trying to adopt a child who's in care
 * enforcing previous court orders
 * child abduction{% endblocktrans %}</data>
-      <data key="d9" xml:space="preserve">{% trans "f a child is being taken into care, a financial assessment may not be required." %}</data>
+      <data key="d9" xml:space="preserve">{% trans "if a child is being taken into care, a financial assessment may not be required." %}</data>
       <data key="d10" xml:space="preserve">n97</data>
       </node>
     <node id="n90">
@@ -3106,12 +3106,12 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
       <data key="d10" xml:space="preserve">n402</data>
       <data key="d12" xml:space="preserve">**The client is not a parent or guardian of the child**
 
-The client needs to complete a financial assessment</data>
+A financial assessment will need to be completed.</data>
       </node>
     <node id="n345">
       <data key="d3" xml:space="preserve">{% trans "Letter of proceedings" %}</data>
       <data key="d4" xml:space="preserve">Letter of proceedings</data>
-      <data key="d6">
+      <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
   <finance xml:space="preserve">passported</finance>    
 </context>
@@ -3125,7 +3125,7 @@ No financial assessment is required.</data>
     <node id="n346">
       <data key="d3" xml:space="preserve">{% trans "Letter of issue" %}</data>
       <data key="d4" xml:space="preserve">Letter of issue</data>
-      <data key="d6">
+      <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
   <finance xml:space="preserve">passported</finance>    
 </context>
@@ -3140,7 +3140,7 @@ No financial assessment is required.</data>
     <node id="n347">
       <data key="d3" xml:space="preserve">{% trans "Date to attend court" %}</data>
       <data key="d4" xml:space="preserve">Date to attend court</data>
-      <data key="d6">
+      <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
   <finance xml:space="preserve">passported</finance>    
 </context>

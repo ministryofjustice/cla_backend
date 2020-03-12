@@ -66,6 +66,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         is_you_or_your_partner_over_60=True,
         has_partner=True,
         calculations={"disposable_income": 1000},
+        has_passported_proceedings_letter=False,
     )
     make_recipe(
         "legalaid.property",
@@ -636,6 +637,16 @@ class EligibilityCheckTestCase(TestCase):
         # 4. PropertyExpectedException => UNKNOWN
         check.update_state()
         self.assertEqual(check.state, ELIGIBILITY_STATES.UNKNOWN)
+
+    def test_has_passported_proceedings_letter(self):
+        check = make_recipe("legalaid.eligibility_check", has_passported_proceedings_letter=False)
+        state, ec, reasons = check.get_eligibility_state()
+        self.assertEqual(state, ELIGIBILITY_STATES.UNKNOWN)
+
+        check.has_passported_proceedings_letter = True
+        check.save()
+        state, ec, reasons = check.get_eligibility_state()
+        self.assertEqual(state, ELIGIBILITY_STATES.YES)
 
 
 class CaseTestCase(TestCase):
@@ -1238,6 +1249,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
                 "has_partner",
                 "calculations",
                 "specific_benefits",
+                "has_passported_proceedings_letter",
             ],
             check_not_None=True,
         )

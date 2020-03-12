@@ -1461,6 +1461,7 @@ class IsEligibleTestCase(unittest.TestCase):
         is_gross_income=None,
         is_disposable_income=None,
         is_disposable_capital=None,
+        has_passported_proceedings_letter=None,
     ):
         # gross_income, disposable_income, disposable_capital
         """
@@ -1474,6 +1475,8 @@ class IsEligibleTestCase(unittest.TestCase):
         """
         case_data = mock.MagicMock()
         case_data.category = is_category
+        case_data.facts = mock.MagicMock()
+        case_data.facts.has_passported_proceedings_letter = has_passported_proceedings_letter
         mocked_on_passported_benefits = mock.PropertyMock(return_value=is_passported)
         mocked_on_nass_benefits = mock.PropertyMock(return_value=is_nass_benefits)
         type(case_data.facts).on_passported_benefits = mocked_on_passported_benefits

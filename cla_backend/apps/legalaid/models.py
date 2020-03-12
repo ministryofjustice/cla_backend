@@ -387,6 +387,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
         null=True, blank=True, default=None, validators=[MaxValueValidator(50)]
     )
     on_passported_benefits = models.NullBooleanField(default=None)
+    has_passported_proceedings_letter = models.NullBooleanField(default=None)
     on_nass_benefits = models.NullBooleanField(default=None)
     specific_benefits = JSONField(null=True, blank=True)
 
@@ -488,6 +489,7 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
         )
 
         d["facts"]["on_passported_benefits"] = self.on_passported_benefits
+        d["facts"]["has_passported_proceedings_letter"] = self.has_passported_proceedings_letter
         d["facts"]["on_nass_benefits"] = self.on_nass_benefits
 
         if self.you:

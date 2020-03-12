@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-12 11:14+0000\n"
+"POT-Creation-Date: 2020-03-12 11:45+0000\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -319,7 +319,7 @@ msgstr "Ie"
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1069
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1112
 #: apps/diagnosis/data/checker-graph.graphml.tpl:1154
-#: apps/diagnosis/data/graph.graphml.tpl:3104
+#: apps/diagnosis/data/graph.graphml.tpl:3103
 msgid "No"
 msgstr "Na"
 
@@ -353,6 +353,7 @@ msgstr "Mae tribiwnlys haen gyntaf wedi gwrthod rhoi caniatâd i chi apelio pend
 #: apps/diagnosis/data/graph.graphml.tpl:1814
 #: apps/diagnosis/data/graph.graphml.tpl:2203
 #: apps/diagnosis/data/graph.graphml.tpl:2240
+#: apps/diagnosis/data/graph.graphml.tpl:3141
 msgid "None of the above"
 msgstr "Dim o'r uchod"
 
@@ -2259,8 +2260,25 @@ msgstr "Llys wedi cyflwyno rhybudd o achos ASBO/ASBI"
 msgid "Client has received a letter from their social landlord (including local authorities) confirming an intention to apply for an ASBO or ASBI"
 msgstr "Mae'r cleient wedi cael llythyr gan eu landlord cymdeithasol (gan gynnwys awdurdodau lleol) yn cadarnhau bwriad i wneud cais am ASBO neu ASBI"
 
-#: apps/diagnosis/data/graph.graphml.tpl:3099
+#: apps/diagnosis/data/graph.graphml.tpl:3098
+#: apps/diagnosis/data/graph.graphml.tpl:3124
+#: apps/diagnosis/data/graph.graphml.tpl:3134
+#: apps/diagnosis/data/graph.graphml.tpl:3144
 msgid "Does the client have any of the following?"
+msgstr ""
+
+#: apps/diagnosis/data/graph.graphml.tpl:3112
+msgid "Letter of proceedings"
+msgstr ""
+
+#: apps/diagnosis/data/graph.graphml.tpl:3121
+#, fuzzy
+#| msgid "Any other issue"
+msgid "Letter of issue"
+msgstr "Unrhyw fater arall"
+
+#: apps/diagnosis/data/graph.graphml.tpl:3131
+msgid "Date to attend court"
 msgstr ""
 
 #: apps/timer/models.py:55

@@ -1589,8 +1589,8 @@ For loss of home please click 'back' and select the first category.]]></data>
     <node id="n89">
       <data key="d3" xml:space="preserve"><![CDATA[Family]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Family]]></data>
-      <data key="d6">
-        <context xml:space="preserve" xmlns="">
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
 <subheading xml:space="preserve">If a local authority is involved in taking a child into care and the applicant has received a letter of proceedings or letter of issue sent or client has a court date, a financial assessment is not required</subheading>
 </context>
       </data>
@@ -1720,7 +1720,7 @@ An occupation order can restrict who can live in the family home, and even restr
       <data key="d10" xml:space="preserve"><![CDATA[n103]]></data>
       <data key="d13">
         <y:ShapeNode>
-          <y:Geometry height="30.0" width="150.0" x="433.52933097718255" y="632.265625"/>
+          <y:Geometry height="30.0" width="150.0" x="605.5586790054564" y="632.265625"/>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="53.546875" x="48.2265625" xml:space="preserve" y="5.93359375">INSCOPE<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
@@ -6205,8 +6205,7 @@ Remember to record details of the conversation in your CHS notes.]]]></data>
     </node>
     <node id="n343">
       <data key="d3" xml:space="preserve"><![CDATA[Yes]]></data>
-      <data key="d4" xml:space="preserve"><![CDATA[Yes
-]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Yes]]></data>
       <data key="d7" xml:space="preserve">1</data>
       <data key="d9" xml:space="preserve"><![CDATA[Does the client have any of the following?]]></data>
       <data key="d10" xml:space="preserve"><![CDATA[n401]]></data>
@@ -6235,6 +6234,81 @@ The client needs to complete a financial assessment]]></data>
           <y:Fill color="#CCFFCC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="20.236328125" x="64.8818359375" xml:space="preserve" y="5.93359375">No<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n345">
+      <data key="d3" xml:space="preserve"><![CDATA[Letter of proceedings]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Letter of proceedings]]></data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve"><![CDATA[n403]]></data>
+      <data key="d12" xml:space="preserve"><![CDATA[**The client has received a letter of proceedings, letter of issue or have a court date.**
+
+No financial assessment is required.]]></data>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="146.1173239087302" y="714.265625"/>
+          <y:Fill color="#CCFFCC" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="128.453125" x="10.7734375" xml:space="preserve" y="5.93359375">Letter of proceedings<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n346">
+      <data key="d3" xml:space="preserve"><![CDATA[Letter of issue]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Letter of issue]]></data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d9" xml:space="preserve"><![CDATA[Does the client have any of the following?]]></data>
+      <data key="d10" xml:space="preserve"><![CDATA[n404]]></data>
+      <data key="d12" xml:space="preserve"><![CDATA[**The client has received a letter of proceedings, letter of issue or have a court date.**
+
+No financial assessment is required.]]></data>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="307.2346478174604" y="714.265625"/>
+          <y:Fill color="#CCFFCC" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="86.869140625" x="31.5654296875" xml:space="preserve" y="5.93359375">Letter of issue<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n347">
+      <data key="d3" xml:space="preserve"><![CDATA[Date to attend court]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Date to attend court]]></data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d9" xml:space="preserve"><![CDATA[Does the client have any of the following?]]></data>
+      <data key="d10" xml:space="preserve"><![CDATA[n405]]></data>
+      <data key="d12" xml:space="preserve"><![CDATA[**The client has received a letter of proceedings, letter of issue or have a court date.**
+
+No financial assessment is required.]]></data>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="468.35197172619064" y="714.265625"/>
+          <y:Fill color="#CCFFCC" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="121.69140625" x="14.154296875" xml:space="preserve" y="5.93359375">Date to attend court<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n348">
+      <data key="d3" xml:space="preserve"><![CDATA[None of the above]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[None of the above]]></data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d9" xml:space="preserve"><![CDATA[Does the client have any of the following?]]></data>
+      <data key="d10" xml:space="preserve"><![CDATA[n406]]></data>
+      <data key="d12" xml:space="preserve"><![CDATA[**The client has not received a letter of proceedings, letter of issue or have a court date.**
+
+A financial assessment will need to be completed.]]></data>
+      <data key="d13">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="150.0" x="629.4692956349209" y="714.265625"/>
+          <y:Fill color="#CCFFCC" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="110.611328125" x="19.6943359375" xml:space="preserve" y="5.93359375">None of the above<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -11735,7 +11809,6 @@ The client needs to complete a financial assessment]]></data>
       </data>
     </edge>
     <edge id="e462" source="n94" target="n343">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -11746,7 +11819,6 @@ The client needs to complete a financial assessment]]></data>
       </data>
     </edge>
     <edge id="e463" source="n94" target="n344">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -11757,6 +11829,93 @@ The client needs to complete a financial assessment]]></data>
       </data>
     </edge>
     <edge id="e464" source="n344" target="n95">
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e465" source="n343" target="n345">
+      <data key="d16"/>
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e466" source="n343" target="n346">
+      <data key="d16"/>
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e467" source="n343" target="n347">
+      <data key="d16"/>
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e468" source="n343" target="n348">
+      <data key="d16"/>
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e469" source="n345" target="n95">
+      <data key="d16"/>
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e470" source="n346" target="n95">
+      <data key="d16"/>
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e471" source="n347" target="n95">
+      <data key="d16"/>
+      <data key="d17">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e472" source="n348" target="n95">
       <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>

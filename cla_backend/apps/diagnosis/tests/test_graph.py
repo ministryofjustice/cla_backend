@@ -92,3 +92,11 @@ class GraphTestCase(TestCase):
             node["context"]["subheading"],
             u"If a local authority is involved in taking a child into care and the applicant has received a letter of proceedings or letter of issue sent or client has a court date, a financial assessment is not required",
         )
+
+    def test_nodes_have_description(self):
+        _graph = get_graph(file_name=settings.DIAGNOSIS_FILE_NAME)
+        node = _graph.node["n404"]
+        self.assertEqual(
+            unicode(node["description"]),
+            u"<p><strong>The client has received a letter of proceedings, letter of issue or have a court date.</strong></p>\n<p>No financial assessment is required.</p>",
+        )

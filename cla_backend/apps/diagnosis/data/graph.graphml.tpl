@@ -784,7 +784,7 @@ For loss of home please click 'back' and select the first category.{% endblocktr
     <node id="n89">
       <data key="d3" xml:space="preserve">{% trans "Family" %}</data>
       <data key="d4" xml:space="preserve">Family</data>
-      <data key="d6">
+      <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
 <subheading xml:space="preserve">If a local authority is involved in taking a child into care and the applicant has received a letter of proceedings or letter of issue sent or client has a court date, a financial assessment is not required</subheading>
 </context>
@@ -3093,8 +3093,7 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
       </node>
     <node id="n343">
       <data key="d3" xml:space="preserve">{% trans "Yes" %}</data>
-      <data key="d4" xml:space="preserve">Yes
-</data>
+      <data key="d4" xml:space="preserve">Yes</data>
       <data key="d7" xml:space="preserve">1</data>
       <data key="d9" xml:space="preserve">{% trans "Does the client have any of the following?" %}</data>
       <data key="d10" xml:space="preserve">n401</data>
@@ -3108,6 +3107,45 @@ Remember to record details of the conversation in your CHS notes.]{% endblocktra
       <data key="d12" xml:space="preserve">**The client is not a parent or guardian of the child**
 
 The client needs to complete a financial assessment</data>
+      </node>
+    <node id="n345">
+      <data key="d3" xml:space="preserve">{% trans "Letter of proceedings" %}</data>
+      <data key="d4" xml:space="preserve">Letter of proceedings</data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n403</data>
+      <data key="d12" xml:space="preserve">**The client has received a letter of proceedings, letter of issue or have a court date.**
+
+No financial assessment is required.</data>
+      </node>
+    <node id="n346">
+      <data key="d3" xml:space="preserve">{% trans "Letter of issue" %}</data>
+      <data key="d4" xml:space="preserve">Letter of issue</data>
+      <data key="d7" xml:space="preserve">2</data>
+      <data key="d9" xml:space="preserve">{% trans "Does the client have any of the following?" %}</data>
+      <data key="d10" xml:space="preserve">n404</data>
+      <data key="d12" xml:space="preserve">**The client has received a letter of proceedings, letter of issue or have a court date.**
+
+No financial assessment is required.</data>
+      </node>
+    <node id="n347">
+      <data key="d3" xml:space="preserve">{% trans "Date to attend court" %}</data>
+      <data key="d4" xml:space="preserve">Date to attend court</data>
+      <data key="d7" xml:space="preserve">3</data>
+      <data key="d9" xml:space="preserve">{% trans "Does the client have any of the following?" %}</data>
+      <data key="d10" xml:space="preserve">n405</data>
+      <data key="d12" xml:space="preserve">**The client has received a letter of proceedings, letter of issue or have a court date.**
+
+No financial assessment is required.</data>
+      </node>
+    <node id="n348">
+      <data key="d3" xml:space="preserve">{% trans "None of the above" %}</data>
+      <data key="d4" xml:space="preserve">None of the above</data>
+      <data key="d7" xml:space="preserve">4</data>
+      <data key="d9" xml:space="preserve">{% trans "Does the client have any of the following?" %}</data>
+      <data key="d10" xml:space="preserve">n406</data>
+      <data key="d12" xml:space="preserve">**The client has not received a letter of proceedings, letter of issue or have a court date.**
+
+A financial assessment will need to be completed.</data>
       </node>
     <edge id="e0" source="n1" target="n2">
       </edge>
@@ -4034,12 +4072,33 @@ The client needs to complete a financial assessment</data>
     <edge id="e461" source="n339" target="n342">
       </edge>
     <edge id="e462" source="n94" target="n343">
-      <data key="d16"/>
       </edge>
     <edge id="e463" source="n94" target="n344">
-      <data key="d16"/>
       </edge>
     <edge id="e464" source="n344" target="n95">
+      </edge>
+    <edge id="e465" source="n343" target="n345">
+      <data key="d16"/>
+      </edge>
+    <edge id="e466" source="n343" target="n346">
+      <data key="d16"/>
+      </edge>
+    <edge id="e467" source="n343" target="n347">
+      <data key="d16"/>
+      </edge>
+    <edge id="e468" source="n343" target="n348">
+      <data key="d16"/>
+      </edge>
+    <edge id="e469" source="n345" target="n95">
+      <data key="d16"/>
+      </edge>
+    <edge id="e470" source="n346" target="n95">
+      <data key="d16"/>
+      </edge>
+    <edge id="e471" source="n347" target="n95">
+      <data key="d16"/>
+      </edge>
+    <edge id="e472" source="n348" target="n95">
       <data key="d16"/>
       </edge>
   </graph>

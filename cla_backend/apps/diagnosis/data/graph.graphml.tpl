@@ -842,8 +842,7 @@ An occupation order can restrict who can live in the family home, and even restr
       <data key="d10" xml:space="preserve">n101</data>
       </node>
     <node id="n94">
-      <data key="d3" xml:space="preserve">{% blocktrans %}Public law problem (the local council is involved)
-eg care proceedings or adoption{% endblocktrans %}</data>
+      <data key="d3" xml:space="preserve">{% trans "Care or adoption proceedings by a local authority (public law)" %}</data>
       <data key="d4" xml:space="preserve">Public law
 </data>
       <data key="d7" xml:space="preserve">2</data>
@@ -2799,8 +2798,7 @@ You should now direct the client to their nearest contracted quality assured fam
       <data key="d10" xml:space="preserve">n317</data>
       </node>
     <node id="n309">
-      <data key="d3" xml:space="preserve">{% blocktrans %}Private law problem (between two individuals)
-eg divorce, contact with children, finances{% endblocktrans %}</data>
+      <data key="d3" xml:space="preserve">{% trans "Divorce, contact with children, finances between two individuals (private law)" %}</data>
       <data key="d4" xml:space="preserve">Private Law</data>
       <data key="d7" xml:space="preserve">3</data>
       <data key="d8" xml:space="preserve">{% trans "Between two or more individuals." %}</data>

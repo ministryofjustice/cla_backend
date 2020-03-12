@@ -1692,8 +1692,7 @@ An occupation order can restrict who can live in the family home, and even restr
       </data>
     </node>
     <node id="n94">
-      <data key="d3" xml:space="preserve"><![CDATA[Public law problem (the local council is involved)
-eg care proceedings or adoption]]></data>
+      <data key="d3" xml:space="preserve"><![CDATA[Care or adoption proceedings by a local authority (public law)]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Public law
 ]]></data>
       <data key="d7" xml:space="preserve">2</data>
@@ -5602,8 +5601,7 @@ You should now direct the client to their nearest contracted quality assured fam
       </data>
     </node>
     <node id="n309">
-      <data key="d3" xml:space="preserve"><![CDATA[Private law problem (between two individuals)
-eg divorce, contact with children, finances]]></data>
+      <data key="d3" xml:space="preserve"><![CDATA[Divorce, contact with children, finances between two individuals (private law)]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Private Law]]></data>
       <data key="d7" xml:space="preserve">3</data>
       <data key="d8" xml:space="preserve"><![CDATA[Between two or more individuals.]]></data>

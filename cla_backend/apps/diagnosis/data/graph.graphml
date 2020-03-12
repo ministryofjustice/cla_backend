@@ -6241,6 +6241,11 @@ The client needs to complete a financial assessment]]></data>
     <node id="n345">
       <data key="d3" xml:space="preserve"><![CDATA[Letter of proceedings]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Letter of proceedings]]></data>
+      <data key="d6">
+        <context xml:space="preserve" xmlns="">
+  <finance xml:space="preserve">passported</finance>    
+</context>
+      </data>
       <data key="d7" xml:space="preserve">1</data>
       <data key="d10" xml:space="preserve"><![CDATA[n403]]></data>
       <data key="d12" xml:space="preserve"><![CDATA[**The client has received a letter of proceedings, letter of issue or have a court date.**
@@ -6259,6 +6264,11 @@ No financial assessment is required.]]></data>
     <node id="n346">
       <data key="d3" xml:space="preserve"><![CDATA[Letter of issue]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Letter of issue]]></data>
+      <data key="d6">
+        <context xml:space="preserve" xmlns="">
+  <finance xml:space="preserve">passported</finance>    
+</context>
+      </data>
       <data key="d7" xml:space="preserve">2</data>
       <data key="d9" xml:space="preserve"><![CDATA[Does the client have any of the following?]]></data>
       <data key="d10" xml:space="preserve"><![CDATA[n404]]></data>
@@ -6278,6 +6288,11 @@ No financial assessment is required.]]></data>
     <node id="n347">
       <data key="d3" xml:space="preserve"><![CDATA[Date to attend court]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Date to attend court]]></data>
+      <data key="d6">
+        <context xml:space="preserve" xmlns="">
+  <finance xml:space="preserve">passported</finance>    
+</context>
+      </data>
       <data key="d7" xml:space="preserve">3</data>
       <data key="d9" xml:space="preserve"><![CDATA[Does the client have any of the following?]]></data>
       <data key="d10" xml:space="preserve"><![CDATA[n405]]></data>
@@ -11839,7 +11854,6 @@ A financial assessment will need to be completed.]]></data>
       </data>
     </edge>
     <edge id="e465" source="n343" target="n345">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -11850,7 +11864,6 @@ A financial assessment will need to be completed.]]></data>
       </data>
     </edge>
     <edge id="e466" source="n343" target="n346">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -11861,7 +11874,6 @@ A financial assessment will need to be completed.]]></data>
       </data>
     </edge>
     <edge id="e467" source="n343" target="n347">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -11872,7 +11884,6 @@ A financial assessment will need to be completed.]]></data>
       </data>
     </edge>
     <edge id="e468" source="n343" target="n348">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -11883,7 +11894,6 @@ A financial assessment will need to be completed.]]></data>
       </data>
     </edge>
     <edge id="e469" source="n345" target="n95">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -11894,7 +11904,6 @@ A financial assessment will need to be completed.]]></data>
       </data>
     </edge>
     <edge id="e470" source="n346" target="n95">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -11905,7 +11914,6 @@ A financial assessment will need to be completed.]]></data>
       </data>
     </edge>
     <edge id="e471" source="n347" target="n95">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -11916,7 +11924,6 @@ A financial assessment will need to be completed.]]></data>
       </data>
     </edge>
     <edge id="e472" source="n348" target="n95">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

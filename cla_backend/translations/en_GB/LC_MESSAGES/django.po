@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-12 11:45+0000\n"
+"POT-Creation-Date: 2020-03-12 11:54+0000\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -353,7 +353,7 @@ msgstr ""
 #: apps/diagnosis/data/graph.graphml.tpl:1814
 #: apps/diagnosis/data/graph.graphml.tpl:2203
 #: apps/diagnosis/data/graph.graphml.tpl:2240
-#: apps/diagnosis/data/graph.graphml.tpl:3141
+#: apps/diagnosis/data/graph.graphml.tpl:3156
 msgid "None of the above"
 msgstr ""
 
@@ -2006,9 +2006,9 @@ msgid "Client has received a letter from their social landlord (including local 
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:3098
-#: apps/diagnosis/data/graph.graphml.tpl:3124
 #: apps/diagnosis/data/graph.graphml.tpl:3134
-#: apps/diagnosis/data/graph.graphml.tpl:3144
+#: apps/diagnosis/data/graph.graphml.tpl:3149
+#: apps/diagnosis/data/graph.graphml.tpl:3159
 msgid "Does the client have any of the following?"
 msgstr ""
 
@@ -2016,11 +2016,11 @@ msgstr ""
 msgid "Letter of proceedings"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3121
+#: apps/diagnosis/data/graph.graphml.tpl:3126
 msgid "Letter of issue"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3131
+#: apps/diagnosis/data/graph.graphml.tpl:3141
 msgid "Date to attend court"
 msgstr ""
 

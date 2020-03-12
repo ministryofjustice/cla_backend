@@ -3111,6 +3111,11 @@ The client needs to complete a financial assessment</data>
     <node id="n345">
       <data key="d3" xml:space="preserve">{% trans "Letter of proceedings" %}</data>
       <data key="d4" xml:space="preserve">Letter of proceedings</data>
+      <data key="d6">
+        <context xmlns="" xml:space="preserve">
+  <finance xml:space="preserve">passported</finance>    
+</context>
+      </data>
       <data key="d7" xml:space="preserve">1</data>
       <data key="d10" xml:space="preserve">n403</data>
       <data key="d12" xml:space="preserve">**The client has received a letter of proceedings, letter of issue or have a court date.**
@@ -3120,6 +3125,11 @@ No financial assessment is required.</data>
     <node id="n346">
       <data key="d3" xml:space="preserve">{% trans "Letter of issue" %}</data>
       <data key="d4" xml:space="preserve">Letter of issue</data>
+      <data key="d6">
+        <context xmlns="" xml:space="preserve">
+  <finance xml:space="preserve">passported</finance>    
+</context>
+      </data>
       <data key="d7" xml:space="preserve">2</data>
       <data key="d9" xml:space="preserve">{% trans "Does the client have any of the following?" %}</data>
       <data key="d10" xml:space="preserve">n404</data>
@@ -3130,6 +3140,11 @@ No financial assessment is required.</data>
     <node id="n347">
       <data key="d3" xml:space="preserve">{% trans "Date to attend court" %}</data>
       <data key="d4" xml:space="preserve">Date to attend court</data>
+      <data key="d6">
+        <context xmlns="" xml:space="preserve">
+  <finance xml:space="preserve">passported</finance>    
+</context>
+      </data>
       <data key="d7" xml:space="preserve">3</data>
       <data key="d9" xml:space="preserve">{% trans "Does the client have any of the following?" %}</data>
       <data key="d10" xml:space="preserve">n405</data>
@@ -4078,28 +4093,20 @@ A financial assessment will need to be completed.</data>
     <edge id="e464" source="n344" target="n95">
       </edge>
     <edge id="e465" source="n343" target="n345">
-      <data key="d16"/>
       </edge>
     <edge id="e466" source="n343" target="n346">
-      <data key="d16"/>
       </edge>
     <edge id="e467" source="n343" target="n347">
-      <data key="d16"/>
       </edge>
     <edge id="e468" source="n343" target="n348">
-      <data key="d16"/>
       </edge>
     <edge id="e469" source="n345" target="n95">
-      <data key="d16"/>
       </edge>
     <edge id="e470" source="n346" target="n95">
-      <data key="d16"/>
       </edge>
     <edge id="e471" source="n347" target="n95">
-      <data key="d16"/>
       </edge>
     <edge id="e472" source="n348" target="n95">
-      <data key="d16"/>
       </edge>
   </graph>
   <data key="d14">

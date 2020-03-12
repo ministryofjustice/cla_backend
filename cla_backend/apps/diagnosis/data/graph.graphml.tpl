@@ -847,6 +847,7 @@ An occupation order can restrict who can live in the family home, and even restr
 </data>
       <data key="d7" xml:space="preserve">2</data>
       <data key="d8" xml:space="preserve">{% trans "Typically the local council is involved due to child protection concerns." %}</data>
+      <data key="d9" xml:space="preserve">{% trans "Are they the parent of the child or someone with parental responsibility?" %}</data>
       <data key="d10" xml:space="preserve">n102</data>
       </node>
     <node id="n95">

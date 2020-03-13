@@ -27,6 +27,7 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilit
             "is_you_or_your_partner_over_60",
             "state",
             "specific_benefits",
+            "has_passported_proceedings_letter",
         ]
 
     def test_notes_are_readonly(self):

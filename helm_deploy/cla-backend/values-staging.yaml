@@ -1,0 +1,30 @@
+# Default values for cla-backend in a dev environment.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/laa-get-access/cla_backend
+  pullPolicy: IfNotPresent
+
+imagePullSecrets:
+  - ecr-repo-laa-cla-backend
+
+localPostgres:
+  enabled: true
+
+ingress:
+  enabled: true
+  hosts:
+    - host: laa-cla-backend-staging.apps.live-1.cloud-platform.service.justice.gov.uk
+      paths: ['/']
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# Lists don't deep merge, so this list of envVars overrides anything defined in an earlier values file
+envVars:
+  - name: DB_HOST
+    value: $(DB_SERVICE_HOST)
+  - name: DB_PORT
+    value: $(DB_SERVICE_PORT)

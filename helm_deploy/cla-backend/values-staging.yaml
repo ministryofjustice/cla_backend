@@ -6,9 +6,6 @@ image:
   repository: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/laa-get-access/cla_backend
   pullPolicy: IfNotPresent
 
-imagePullSecrets:
-  - ecr-repo-laa-cla-backend
-
 localPostgres:
   enabled: true
 

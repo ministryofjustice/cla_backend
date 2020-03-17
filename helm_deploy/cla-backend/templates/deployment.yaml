@@ -50,6 +50,7 @@ spec:
                 secretKeyRef:
                   name: db
                   key: password
+                  optional: true
             {{- toYaml .Values.envVars | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -90,7 +91,7 @@ spec:
         - name: db
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "postgres"
+          image: "bitnami/postgresql"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http

@@ -25,3 +25,5 @@ envVars:
     value: $(DB_SERVICE_HOST)
   - name: DB_PORT
     value: $(DB_SERVICE_PORT)
+  - name: DEBUG
+    value: "false"

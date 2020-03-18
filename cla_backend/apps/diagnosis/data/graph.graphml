@@ -1606,7 +1606,7 @@ For loss of home please click 'back' and select the first category.]]></data>
 * trying to adopt a child who's in care
 * enforcing previous court orders
 * child abduction]]></data>
-      <data key="d9" xml:space="preserve"><![CDATA[if a child is being taken into care, a financial assessment may not be required.]]></data>
+      <data key="d9" xml:space="preserve"><![CDATA[If a child is being taken into care, a financial assessment may not be required.]]></data>
       <data key="d10" xml:space="preserve"><![CDATA[n97]]></data>
       <data key="d13">
         <y:ShapeNode>
@@ -6243,7 +6243,7 @@ A financial assessment will need to be completed.]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Letter of proceedings]]></data>
       <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
-  <finance xml:space="preserve">passported</finance>    
+  <finance xml:space="preserve">passported</finance>
 </context>
       </data>
       <data key="d7" xml:space="preserve">1</data>
@@ -6266,7 +6266,7 @@ No financial assessment is required.]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Letter of issue]]></data>
       <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
-  <finance xml:space="preserve">passported</finance>    
+  <finance xml:space="preserve">passported</finance>
 </context>
       </data>
       <data key="d7" xml:space="preserve">2</data>
@@ -6290,7 +6290,7 @@ No financial assessment is required.]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Date to attend court]]></data>
       <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
-  <finance xml:space="preserve">passported</finance>    
+  <finance xml:space="preserve">passported</finance>
 </context>
       </data>
       <data key="d7" xml:space="preserve">3</data>

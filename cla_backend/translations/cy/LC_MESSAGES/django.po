@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-12 16:24+0000\n"
+"POT-Creation-Date: 2020-03-18 09:40+0000\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -1278,7 +1278,7 @@ msgstr ""
 #: apps/diagnosis/data/graph.graphml.tpl:804
 #, fuzzy
 #| msgid "Please note: if a local authority is trying to take a child into care, no financial assessment is needed for the parent."
-msgid "if a child is being taken into care, a financial assessment may not be required."
+msgid "If a child is being taken into care, a financial assessment may not be required."
 msgstr "Sylwch: os yw'r awdurdod lleol yn ceisio rhoi'r plentyn mewn gofal, nid oes angen asesiad ariannol ar gyfer y rhiant."
 
 #: apps/diagnosis/data/graph.graphml.tpl:808

@@ -801,7 +801,7 @@ For loss of home please click 'back' and select the first category.{% endblocktr
 * trying to adopt a child who's in care
 * enforcing previous court orders
 * child abduction{% endblocktrans %}</data>
-      <data key="d9" xml:space="preserve">{% trans "if a child is being taken into care, a financial assessment may not be required." %}</data>
+      <data key="d9" xml:space="preserve">{% trans "If a child is being taken into care, a financial assessment may not be required." %}</data>
       <data key="d10" xml:space="preserve">n97</data>
       </node>
     <node id="n90">
@@ -3113,7 +3113,7 @@ A financial assessment will need to be completed.</data>
       <data key="d4" xml:space="preserve">Letter of proceedings</data>
       <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
-  <finance xml:space="preserve">passported</finance>    
+  <finance xml:space="preserve">passported</finance>
 </context>
       </data>
       <data key="d7" xml:space="preserve">1</data>
@@ -3127,7 +3127,7 @@ No financial assessment is required.</data>
       <data key="d4" xml:space="preserve">Letter of issue</data>
       <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
-  <finance xml:space="preserve">passported</finance>    
+  <finance xml:space="preserve">passported</finance>
 </context>
       </data>
       <data key="d7" xml:space="preserve">2</data>
@@ -3142,7 +3142,7 @@ No financial assessment is required.</data>
       <data key="d4" xml:space="preserve">Date to attend court</data>
       <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
-  <finance xml:space="preserve">passported</finance>    
+  <finance xml:space="preserve">passported</finance>
 </context>
       </data>
       <data key="d7" xml:space="preserve">3</data>

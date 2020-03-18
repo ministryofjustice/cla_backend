@@ -4,6 +4,7 @@ import os
 import json
 import shutil
 import time
+import logging
 from contextlib import closing
 from django.contrib.auth.models import User
 import csvkit as csv
@@ -18,6 +19,8 @@ from django.conf import settings
 from .utils import OBIEEExporter
 from .models import Export
 from .constants import EXPORT_STATUS
+
+logger = logging.getLogger(__name__)
 
 
 @contextlib.contextmanager
@@ -123,8 +126,10 @@ class OBIEEExportTask(ExportTaskBase):
             try:
                 self.filepath = exporter.export()
                 self.send_to_s3()
-            except Exception:
-                self.message = u"An error occurred creating the zip file"
+            except Exception as e:
+                message = getattr(e, "message", "") or getattr(e, "strerror", "")
+                logging.error(u"OBIEE EXTRACT ERROR: {message}".format(message=message), exc_info=True)
+                self.message = u"An error occurred creating the zip file: {message}".format(message=message)
                 raise
             finally:
                 pass

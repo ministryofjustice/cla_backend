@@ -4,6 +4,7 @@
 
 image:
   repository: cla_backend_local
+  tag: latest
   pullPolicy: IfNotPresent
 
 localPostgres:

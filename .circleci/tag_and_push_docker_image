@@ -8,16 +8,12 @@ function tag_and_push() {
   echo
   echo "Tagging and pushing $tag..."
   docker tag $built_tag $tag
-  # Multiple push attempts to work around DSD registry 504 timeouts:
-  # https://github.com/ministryofjustice/cloud-platform/issues/572
-  docker push $tag || docker push $tag || docker push $tag
+  docker push $tag
 }
 
+tag_and_push "$ECR_DOCKER_REPOSITORY:$safe_git_branch.$short_sha"
+tag_and_push "$ECR_DOCKER_REPOSITORY:$safe_git_branch"
+
 if [ "$CIRCLE_BRANCH" == "master" ]; then
-  tag_and_push "$ECR_DOCKER_REGISTRY/$ECR_DOCKER_IMAGE:$CIRCLE_SHA1"
-  tag_and_push "$DSD_DOCKER_REGISTRY/$DSD_DOCKER_IMAGE:$CIRCLE_SHA1"
-  tag_and_push "$DSD_DOCKER_REGISTRY/$DSD_DOCKER_IMAGE:$safe_git_branch.$short_sha"
+  tag_and_push "$ECR_DOCKER_REPOSITORY:latest"
 fi
-tag_and_push "$ECR_DOCKER_REGISTRY/$ECR_DOCKER_IMAGE:$safe_git_branch"
-tag_and_push "$ECR_DEPLOY_IMAGE"
-tag_and_push "$DSD_DOCKER_REGISTRY/$DSD_DOCKER_IMAGE:$safe_git_branch.latest"

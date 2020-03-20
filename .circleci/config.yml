@@ -1,24 +1,15 @@
-version: 2
+version: 2.1
+orbs:
+  slack: circleci/slack@3.4.2
 jobs:
   build:
     docker:
       - image: docker:17.03-git
-    environment:
-      DSD_DOCKER_REGISTRY: "registry.service.dsd.io"
-      DSD_DOCKER_IMAGE: "cla_backend"
     steps:
       - checkout
       - setup_remote_docker:
-          version: 17.03.0-ce
+          version: "18.09.3"
           docker_layer_caching: true
-      - run:
-          name: Login to the DSD Docker registry
-          command: |
-            docker login \
-              --username $DOCKER_USERNAME \
-              --password $DOCKER_PASSWORD \
-              --email "${DOCKER_USERNAME}@digital.justice.gov.uk" \
-              $DSD_DOCKER_REGISTRY
       - run:
           name: Login to the ECR Docker registry
           command: |
@@ -147,6 +138,24 @@ jobs:
       - store_artifacts:
           path: test-reports
 
+staging_deploy:
+  docker:
+    - image: $(ECR_ENDPOINT)/cloud-platform/tools:circleci
+  steps:
+    - checkout
+    - run:
+        name: Initialise Kubernetes staging context
+        command: |
+          setup-kube-auth
+          kubectl config use-context staging
+    - deploy:
+        name: Deploy to staging
+        command: |
+          .circle/define_environment_variables
+          IMAGE_TAG=ECR_DEPLOY_IMAGE
+          ./bin/staging_deploy.sh
+    - slack/status
+
 workflows:
   version: 2
   build_and_test:
@@ -157,3 +166,10 @@ workflows:
           requires:
             - lint
             - test
+      - staging_deploy_approval:
+          type: approval
+          requires:
+            - build
+      - staging_deploy:
+          requires:
+            - staging_deploy_approval

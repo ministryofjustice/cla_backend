@@ -138,23 +138,23 @@ jobs:
       - store_artifacts:
           path: test-reports
 
-staging_deploy:
-  docker:
-    - image: $(ECR_ENDPOINT)/cloud-platform/tools:circleci
-  steps:
-    - checkout
-    - run:
-        name: Initialise Kubernetes staging context
-        command: |
-          setup-kube-auth
-          kubectl config use-context staging
-    - deploy:
-        name: Deploy to staging
-        command: |
-          .circle/define_environment_variables
-          IMAGE_TAG=ECR_DEPLOY_IMAGE
-          ./bin/staging_deploy.sh
-    - slack/status
+  staging_deploy:
+    docker:
+      - image: $(ECR_ENDPOINT)/cloud-platform/tools:circleci
+    steps:
+      - checkout
+      - run:
+          name: Initialise Kubernetes staging context
+          command: |
+            setup-kube-auth
+            kubectl config use-context staging
+      - deploy:
+          name: Deploy to staging
+          command: |
+            .circle/define_environment_variables
+            IMAGE_TAG=ECR_DEPLOY_IMAGE
+            ./bin/staging_deploy.sh
+      - slack/status
 
 workflows:
   version: 2

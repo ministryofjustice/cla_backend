@@ -165,7 +165,7 @@ workflows:
       - build:
           requires:
             - lint
-            - test
+            # - test
           context: laa-cla-backend
       - staging_deploy_approval:
           type: approval

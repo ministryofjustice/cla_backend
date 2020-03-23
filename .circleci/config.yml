@@ -166,6 +166,7 @@ workflows:
           requires:
             - lint
             - test
+          context: laa-cla-backend
       - staging_deploy_approval:
           type: approval
           requires:
@@ -173,3 +174,4 @@ workflows:
       - staging_deploy:
           requires:
             - staging_deploy_approval
+          context: laa-cla-backend

@@ -144,6 +144,12 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install helm v3
+          command: |
+            wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+            tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+            mv linux-amd64/helm /usr/local/bin/helm
+      - run:
           name: Initialise Kubernetes staging context
           command: |
             setup-kube-auth

@@ -140,7 +140,7 @@ jobs:
 
   staging_deploy:
     docker:
-      - image: $(ECR_ENDPOINT)/cloud-platform/tools:circleci
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
     steps:
       - checkout
       - run:

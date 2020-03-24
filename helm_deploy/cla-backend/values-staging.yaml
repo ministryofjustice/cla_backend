@@ -3,7 +3,6 @@
 # Declare variables to be passed into your templates.
 
 image:
-  repository: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/laa-get-access/cla_backend
   pullPolicy: IfNotPresent
 
 localPostgres:

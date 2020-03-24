@@ -158,7 +158,6 @@ jobs:
           name: Deploy to staging
           command: |
             .circleci/define_build_environment_variables
-            IMAGE_TAG=${ECR_DEPLOY_IMAGE}
             ./bin/staging_deploy.sh
       - slack/status
 

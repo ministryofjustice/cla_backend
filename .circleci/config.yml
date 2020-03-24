@@ -157,7 +157,7 @@ jobs:
       - deploy:
           name: Deploy to staging
           command: |
-            .circleci/define_build_environment_variables
+            source .circleci/define_build_environment_variables
             ./bin/staging_deploy.sh
       - slack/status
 

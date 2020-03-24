@@ -1,7 +1,8 @@
 #!/bin/bash -e
 export DOCKER_REPOSITORY="$ECR_DOCKER_REPOSITORY"
 
-safe_git_branch=${CIRCLE_BRANCH//\//-}
-short_sha="$(git rev-parse --short=7 $CIRCLE_SHA1)"
-export IMAGE_TAG="$safe_git_branch.$short_sha"
-export ECR_DEPLOY_IMAGE="$DOCKER_REPOSITORY/$IMAGE_TAG"
+SAFE_GIT_BRANCH=${CIRCLE_BRANCH//\//-}
+SHORT_SHA="$(git rev-parse --short=7 $CIRCLE_SHA1)"
+
+export IMAGE_TAG="$SAFE_GIT_BRANCH.$SHORT_SHA"
+export ECR_DEPLOY_IMAGE="$DOCKER_REPOSITORY:$IMAGE_TAG"

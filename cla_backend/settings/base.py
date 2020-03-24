@@ -26,7 +26,7 @@ PING_JSON_KEYS = {
     "build_tag_key": "APP_BUILD_TAG",
 }
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = ()

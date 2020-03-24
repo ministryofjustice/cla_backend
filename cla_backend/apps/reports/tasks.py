@@ -110,6 +110,9 @@ class OBIEEExportTask(ExportTaskBase):
         self.user = User.objects.get(pk=user_id)
         self._create_export()
         self._set_up_form(form_class_name, post_data)
+        # A task is not instantiated for every request. So unless we reset this message it will contain incorrect value
+        # https://docs.celeryproject.org/en/3.0/userguide/tasks.html#instantiation
+        self.message = ""
 
         diversity_keyphrase = self.form.cleaned_data["passphrase"]
         start = self.form.month

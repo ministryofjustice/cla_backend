@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/sh -e
 export DOCKER_REPOSITORY="$ECR_DOCKER_REPOSITORY"
 
 SAFE_GIT_BRANCH=${CIRCLE_BRANCH//\//-}

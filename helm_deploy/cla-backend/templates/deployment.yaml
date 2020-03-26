@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "cla-backend.fullname" . }}
+  name: {{ include "cla-backend.fullname" . }}-app
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}
 spec:
@@ -69,7 +69,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db
+  name: {{ include "cla-backend.fullname" . }}-db
 spec:
   replicas: 1
   selector:

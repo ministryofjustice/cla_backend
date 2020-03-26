@@ -44,7 +44,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: ALLOWED_HOSTS
-              value: '*'
+              value: "{{ .Values.host }}"
             - name: DB_PASSWORD
               valueFrom: 
                 secretKeyRef:

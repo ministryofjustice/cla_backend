@@ -4,7 +4,7 @@ set -e
 ROOT=$(dirname "$0")
 HELM_DIR="$ROOT/../helm_deploy/cla-backend/"
 
-CLEANED_BRANCH_NAME=$(echo $CIRCLE_BRANCH | sed 's/^feature[-/]//' | sed 's:^\w*\/::' | tr -s ' _/[]().' '-' | cut -c1-28 | sed 's/-$//')
+CLEANED_BRANCH_NAME=$(echo $CIRCLE_BRANCH | sed 's/^feature[-/]//' | sed 's:^\w*\/::' | tr -s ' _/[]().' '-' | tr '[:upper:]' '[:lower:]' | cut -c1-28 | sed 's/-$//')
 RELEASE_NAME=${CLEANED_BRANCH_NAME}
 RELEASE_HOST="$RELEASE_NAME.$STAGING_HOST"
 

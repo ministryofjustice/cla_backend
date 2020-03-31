@@ -16,7 +16,5 @@ service:
 
 # Lists don't deep merge, so this list of envVars overrides anything defined in an earlier values file
 envVars:
-  - name: DB_HOST
-    value: $(DB_SERVICE_HOST)
-  - name: DB_PORT
-    value: $(DB_SERVICE_PORT)
+  - name: DEBUG
+    value: "True"

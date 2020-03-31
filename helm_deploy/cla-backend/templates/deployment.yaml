@@ -51,6 +51,7 @@ spec:
                   name: db
                   key: password
                   optional: true
+            {{ include "cla-backend.localPostgresEnvVars" . | nindent 12 }}
             {{- toYaml .Values.envVars | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

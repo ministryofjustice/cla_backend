@@ -61,3 +61,15 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Local postgres env vars
+*/}}
+{{- define "cla-backend.localPostgresEnvVars" -}}
+{{- if .Values.localPostgres.enabled }}
+- name: DB_HOST
+  value: {{ include "cla-backend.fullname" . }}-db
+- name: DB_PORT
+  value: "5432"
+{{- end }}
+{{- end -}}

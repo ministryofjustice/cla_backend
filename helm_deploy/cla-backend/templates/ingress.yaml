@@ -33,6 +33,6 @@ spec:
         paths:
           - path: "/"
             backend:
-              serviceName: {{ $fullName }}
+              serviceName: {{ $fullName }}-app
               servicePort: {{ $svcPort }}
 {{- end }}

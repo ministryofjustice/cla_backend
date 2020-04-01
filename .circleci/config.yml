@@ -141,6 +141,9 @@ jobs:
   staging_deploy:
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+    shell: /bin/sh -leo pipefail
+    environment:
+      BASH_ENV: /etc/profile
     steps:
       - checkout
       - run:

@@ -162,8 +162,8 @@ jobs:
             echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV
       - slack/notify:
           message: ':tada: Deployed branch $CIRCLE_BRANCH'
-          title: $RELEASE_HOST
-          title_link: $RELEASE_HOST
+          title: 'Deployed to: $RELEASE_HOST'
+          title_link: '$RELEASE_HOST'
 
 workflows:
   version: 2

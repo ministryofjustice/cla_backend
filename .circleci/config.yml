@@ -168,12 +168,34 @@ jobs:
           title: '$RELEASE_HOST'
           title_link: 'https://$RELEASE_HOST/admin/'
 
+  cleanup_merged:
+    docker:
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+    steps:
+      - checkout
+      - run:
+          name: Install helm v3
+          command: |
+            wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+            tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+            mv linux-amd64/helm /usr/local/bin/helm
+      - run:
+          name: Initialise Kubernetes staging context
+          command: |
+            setup-kube-auth
+            kubectl config use-context staging
+      - run:
+          name: Delete staging release
+          command: |
+            ./bin/delete_staging_release
+
 workflows:
   version: 2
   build_and_test:
     jobs:
       - lint
       - test
+      - cleanup_merged
       - build:
           requires:
             - lint

@@ -195,7 +195,8 @@ workflows:
     jobs:
       - lint
       - test
-      - cleanup_merged
+      - cleanup_merged:
+          context: laa-cla-backend
       - build:
           requires:
             - lint

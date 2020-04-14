@@ -12,6 +12,7 @@ from cla_eventlog import event_registry
 from cla_eventlog.models import Log
 from legalaid.forms import get_sla_time
 from reports.forms import MICB1Extract
+from legalaid.models import Case
 
 
 def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
@@ -37,6 +38,7 @@ def patch_field(cls, field_name, dt):
 
 class MiSlaTestCaseBase(TestCase):
     source = None
+    requires_action_at_minutes_offset = 60
 
     def make_case(self, dt):
         with patch_field(Log, "created", dt - datetime.timedelta(minutes=1)):
@@ -75,17 +77,20 @@ class MiSlaTestCaseBase(TestCase):
 
         return {k: v for k, v in zip(headers, qs[0])}
 
-    def create_and_get_report(self, callback_minutes_after):
-        created = _make_datetime(2015, 1, 2, 9, 1, 0)
-        case = self.make_case(created)
+    def create_and_get_report(self, callback_minutes_after, case=None):
+        created = case.created if case else _make_datetime(2015, 1, 2, 9, 1, 0)
+        case = case or self.make_case(created)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
-        requires_action_at = created + datetime.timedelta(hours=1)
+        requires_action_at = created + datetime.timedelta(minutes=self.requires_action_at_minutes_offset)
         self.schedule_callback(case, user, created, requires_action_at)
         self.start_call(case, user, requires_action_at + datetime.timedelta(minutes=callback_minutes_after))
 
-        date_range = (_make_datetime(2015, 1, 1), _make_datetime(2015, 2, 1))
+        date_range = (
+            created.replace(hour=0, minute=0),
+            created.replace(hour=0, minute=0) + datetime.timedelta(days=1),
+        )
         return self.get_report(date_range)
 
 
@@ -322,3 +327,128 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase):
 
 class MiSlaTestCasePhone(MiSlaTestCaseWeb):
     source = CASE_SOURCE.PHONE
+
+
+class MiSlaTestCaseSMS(MiSlaTestCaseBase):
+    source = CASE_SOURCE.SMS
+
+    def make_case(self, dt):
+        with patch_field(Case, "created", dt - datetime.timedelta(minutes=2)):
+            return super(MiSlaTestCaseSMS, self).make_case(dt)
+
+    def test_call_answered_within_sla1_window(self):
+        # To meet SLA1 SMS and Voice mail cases need to contacted two hours from the case creation and not the
+        # 2 hours from the callback time https://dsdmoj.atlassian.net/browse/LGA-1051
+        created = _make_datetime(2015, 1, 2, 9, 1, 0)
+        case = self.make_case(created)
+        # 90 minutes from case creation (30 + self.requires_action_at_minutes_offset)
+        # is still within the 2 hours for SLA1
+        values = self.create_and_get_report(30, case=case)
+        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    def test_call_answered_after_sla1_window(self):
+        # To meet SLA1 SMS and Voice mail cases need to contacted two hours from the case creation and not the
+        # 2 hours from the callback time https://dsdmoj.atlassian.net/browse/LGA-1051
+        created = _make_datetime(2015, 1, 2, 9, 1, 0)
+        case = self.make_case(created)
+        # 125 minutes from case creation (65 + self.requires_action_at_minutes_offset)
+        # is outside of SlA1
+        values = self.create_and_get_report(65, case=case)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    def test_uncalled_and_current_time_within_sla1(self):
+        # SLA 1 miss is FALSE - Current time before SLA1 window
+        # SLA 2 miss is FALSE - Current time is within sla2 window
+
+        # Create the case 1 hour ago
+        today = datetime.datetime.now()
+        created = _make_datetime(hour=today.hour, minute=today.minute, second=today.second) - datetime.timedelta(
+            hours=1
+        )
+        case = self.make_case(created)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+
+        # Create CB 1 after 10 minutes of creating the case
+        requires_action_at = created + datetime.timedelta(minutes=10)
+        self.schedule_callback(case, user, created, requires_action_at)
+
+        date_range = (created, created + datetime.timedelta(hours=1))
+        values = self.get_report(date_range)
+
+        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    def test_uncalled_and_current_time_after_sla1(self):
+        # SLA 1 miss is TRUE - Uncalled and Current time is after SLA1 window
+        # SLA 2 miss is FALSE - Uncalled BUT Current time is within sla2 window
+
+        # Create the case 2 hours and 10 minutes ago
+        today = datetime.datetime.now()
+        created = _make_datetime(hour=today.hour, minute=today.minute, second=today.second) - datetime.timedelta(
+            hours=2, minutes=10
+        )
+        case = self.make_case(created)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+
+        # Create CB 1 after 8 minutes of creating the case
+        requires_action_at = created + datetime.timedelta(minutes=8)
+        self.schedule_callback(case, user, created, requires_action_at)
+
+        date_range = (created, created + datetime.timedelta(hours=3))
+        values = self.get_report(date_range)
+
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    def test_uncalled_and_current_time_within_sla2(self):
+        # SLA 1 miss is TRUE - Uncalled and Current time is after SLA1
+        # SLA 2 miss is FALSE - Uncalled BUT Current time is within SLA2
+        # Create the case 7 hour ago
+        today = datetime.datetime.now()
+        created = _make_datetime(hour=today.hour, minute=today.minute, second=today.second) - datetime.timedelta(
+            hours=7
+        )
+        case = self.make_case(created)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+
+        # Create CB 1 after 60 minutes of creating the case
+        requires_action_at = created + datetime.timedelta(minutes=8)
+        self.schedule_callback(case, user, created, requires_action_at)
+
+        date_range = (created, created + datetime.timedelta(hours=7))
+        values = self.get_report(date_range)
+
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    def test_uncalled_and_current_time_after_sla2(self):
+        # SLA 1 miss is TRUE - Uncalled and Current time is after SLA1
+        # SLA 2 miss is TRUE - Uncalled and Current time is after SLA2
+
+        # Create the case 9 hour ago
+        today = datetime.datetime.now()
+        created = _make_datetime(hour=today.hour, minute=today.minute, second=today.second) - datetime.timedelta(
+            hours=9
+        )
+        case = self.make_case(created)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+
+        # Create CB 1 after 60 minutes of creating the case
+        requires_action_at = created + datetime.timedelta(minutes=8)
+        self.schedule_callback(case, user, created, requires_action_at)
+
+        date_range = (created, created + datetime.timedelta(hours=9))
+        values = self.get_report(date_range)
+
+        self.assertTrue(values["missed_sla_1"])
+        self.assertTrue(values["missed_sla_2"])
+
+
+class MiSlaTestCaseVoiceMail(MiSlaTestCaseBase):
+    source = CASE_SOURCE.VOICEMAIL

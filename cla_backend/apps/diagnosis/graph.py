@@ -19,6 +19,7 @@ from cla_common.constants import DIAGNOSIS_SCOPE
 class GraphImporter(object):
     KEY_BODY = "body"
     KEY_TITLE = "title"
+    KEY_DESCRIPTION = "description"
     KEY_CONTEXT = "context"
     KEY_ORDER = "order"
     KEY_HELP = "help"
@@ -119,6 +120,7 @@ class GraphImporter(object):
         self.prop_mapping = {
             self.KEY_BODY: _get_id_default_dict_for("body"),
             self.KEY_TITLE: _get_id_default_dict_for("title"),
+            self.KEY_DESCRIPTION: _get_id_default_dict_for("description"),
             self.KEY_CONTEXT: _get_id_default_dict_for("context:xml"),
             self.KEY_ORDER: _get_id_default_dict_for("order"),
             self.KEY_HELP: _get_id_default_dict_for("help"),
@@ -202,10 +204,15 @@ class GraphImporter(object):
             if help_text:
                 help_text = _get_markdown(help_text)
 
+            description = _get_node_data_value_or_default(node, self.KEY_DESCRIPTION)
+            if description:
+                description = _get_markdown(description)
+
             self.graph.add_node(
                 permanent_node_id,
                 label=label,
                 title=_get_node_data_value_or_default(node, self.KEY_TITLE),
+                description=description,
                 key=_get_node_data_value_or_default(node, self.KEY_BODY, translate=False),
                 order=order,
                 context=_process_context(node),

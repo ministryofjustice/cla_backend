@@ -302,6 +302,9 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
+        if self.case_data.facts.has_passported_proceedings_letter:
+            return True
+
         if self.case_data.facts.on_nass_benefits and self.should_passport_nass():
             return True
 

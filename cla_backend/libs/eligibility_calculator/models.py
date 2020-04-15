@@ -83,6 +83,10 @@ class Person(ModelMixin, object):
 
 
 class Facts(ModelMixin, object):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("has_passported_proceedings_letter", None)
+        super(Facts, self).__init__(*args, **kwargs)
+
     PROPERTY_META = {
         "is_you_or_your_partner_over_60": None,
         "on_passported_benefits": None,
@@ -91,6 +95,7 @@ class Facts(ModelMixin, object):
         "is_partner_opponent": None,
         "dependants_old": None,
         "dependants_young": None,
+        "has_passported_proceedings_letter": None,
     }
 
     @property

@@ -121,7 +121,7 @@ select
    WHEN source IN ('WEB', 'PHONE') THEN operator_first_log_after_cb1__created NOT BETWEEN callback_window_start AND callback_window_end
    -- User has NOT been contacted and current time is after the SLA1 window for SMS and VOICE MAIL
    WHEN operator_first_log_after_cb1__created IS NULL THEN now() > "Date_Case_Created" + interval '2 hours'
-   -- User has been contacted and current time is after the SLA1 window for SMS and VOICE MAIL
+   -- User has been contacted and contact time is after the SLA1 window for SMS and VOICE MAIL
    ELSE operator_first_log_after_cb1__created > "Date_Case_Created" + interval '2 hours'
    END as missed_sla_1
   ,CASE
@@ -133,7 +133,7 @@ select
    WHEN source IN ('WEB', 'PHONE') THEN FALSE
    -- User has NOT been contacted and current time is after the SLA2 window for SMS and VOICE MAIL
    WHEN operator_first_log_after_cb1__created IS NULL THEN now() > "Date_Case_Created" + interval '8 hours'
-   -- User has been contacted and current time is after the SLA2 window for SMS and VOICE MAIL
+   -- User has been contacted and contact time is after the SLA2 window for SMS and VOICE MAIL
    ELSE operator_first_log_after_cb1__created > "Date_Case_Created" + interval '8 hours'
    END as missed_sla_2
   ,source

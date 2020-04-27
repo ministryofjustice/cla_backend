@@ -1986,8 +1986,8 @@ CONTACT<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:Mo
           </data>
         </node>
         <node id="n57::n33">
-          <data key="d3" xml:space="preserve"><![CDATA[INSCOPE]]></data>
-          <data key="d7" xml:space="preserve"><![CDATA[INSCOPE]]></data>
+          <data key="d3" xml:space="preserve"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d7" xml:space="preserve"><![CDATA[OUTOFSCOPE]]></data>
           <data key="d9" xml:space="preserve">
             <context xmlns="" xml:space="preserve">
 <category xml:space="preserve">employment</category>
@@ -1998,10 +1998,10 @@ CONTACT<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:Mo
           <data key="d15">
             <y:ShapeNode>
               <y:Geometry height="30.0" width="92.205078125" x="3239.615172371032" y="1169.46484375"/>
-              <y:Fill color="#00FF00" transparent="false"/>
+              <y:Fill color="#FF0000" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="83.962890625" x="4.12109375" xml:space="preserve" y="-1.1328125">EMPLOYMENT
-INSCOPE<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#FFFFFF" verticalTextPosition="bottom" visible="true" width="83.962890625" x="4.12109375" xml:space="preserve" y="-1.1328125">EMPLOYMENT
+OUTOFSCOPE<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:Shape type="rectangle"/>
             </y:ShapeNode>
           </data>

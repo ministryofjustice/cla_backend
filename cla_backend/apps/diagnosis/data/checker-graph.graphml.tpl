@@ -956,8 +956,8 @@
           <data key="d13" xml:space="preserve"/>
           </node>
         <node id="n57::n33">
-          <data key="d3" xml:space="preserve">INSCOPE</data>
-          <data key="d7" xml:space="preserve">INSCOPE</data>
+          <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+          <data key="d7" xml:space="preserve">OUTOFSCOPE</data>
           <data key="d9" xml:space="preserve">
             <context xmlns="" xml:space="preserve">
 <category xml:space="preserve">employment</category>
@@ -986,6 +986,17 @@
 </context>
           </data>
           <data key="d11" xml:space="preserve">n120</data>
+          <data key="d13" xml:space="preserve"/>
+          </node>
+        <node id="n57::n36">
+          <data key="d3" xml:space="preserve">OUTOFSCOPE</data>
+          <data key="d7" xml:space="preserve">OUTOFSCOPE</data>
+          <data key="d9" xml:space="preserve">
+            <context xmlns="" xml:space="preserve">
+<category xml:space="preserve">housing</category>
+</context>
+          </data>
+          <data key="d11" xml:space="preserve">n82n152</data>
           <data key="d13" xml:space="preserve"/>
           </node>
       </graph>
@@ -1769,7 +1780,7 @@
       </edge>
     <edge id="e249" source="n91" target="n57::n35">
       </edge>
-    <edge id="e250" source="n86" target="n57::n15">
+    <edge id="e250" source="n86" target="n57::n36">
       </edge>
   </graph>
   <data key="d16">

@@ -1262,14 +1262,14 @@
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="83.931640625" width="6655.392063492062" x="486.49469556051594" y="1131.666015625"/>
+              <y:Geometry height="110.396484375" width="6655.3920634920605" x="486.49469556051594" y="1131.666015625"/>
               <y:Fill color="#F5F5F5" transparent="false"/>
               <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
-              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#EBEBEB" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="21.666015625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#000000" verticalTextPosition="bottom" visible="true" width="6655.392063492062" x="0.0" xml:space="preserve" y="0.0">OUTCOMES</y:NodeLabel>
+              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#EBEBEB" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="21.666015625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#000000" verticalTextPosition="bottom" visible="true" width="6655.3920634920605" x="0.0" xml:space="preserve" y="0.0">OUTCOMES</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
               <y:State closed="false" closedHeight="50.0" closedWidth="50.0" innerGraphDisplayEnabled="false"/>
               <y:Insets bottom="15" bottomF="15.0" left="15" leftF="15.0" right="15" rightF="15.0" top="15" topF="15.0"/>
-              <y:BorderInsets bottom="0" bottomF="0.0" left="1" leftF="1.000052703372944" right="1" rightF="1.0002387152781012" top="0" topF="0.0"/>
+              <y:BorderInsets bottom="26" bottomF="26.46484375" left="1" leftF="1.000052703372944" right="1" rightF="1.0002387152762822" top="0" topF="0.0"/>
             </y:GroupNode>
             <y:GroupNode>
               <y:Geometry height="50.0" width="50.0" x="0.0" y="1191.666015625"/>
@@ -2043,6 +2043,27 @@ INELIGIBLE<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y
               <y:Fill color="#FF0000" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#FFFFFF" verticalTextPosition="bottom" visible="true" width="82.205078125" x="9.113281249999943" xml:space="preserve" y="-1.1328125">OTHER
+OUTOFSCOPE<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:Shape type="rectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="n57::n36">
+          <data key="d3" xml:space="preserve"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d7" xml:space="preserve"><![CDATA[OUTOFSCOPE]]></data>
+          <data key="d9" xml:space="preserve">
+            <context xmlns="" xml:space="preserve">
+<category xml:space="preserve">housing</category>
+</context>
+          </data>
+          <data key="d11" xml:space="preserve"><![CDATA[n82n152]]></data>
+          <data key="d13" xml:space="preserve"/>
+          <data key="d15">
+            <y:ShapeNode>
+              <y:Geometry height="30.0" width="95.357421875" x="5325.911334325396" y="1169.46484375"/>
+              <y:Fill color="#FF0000" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#FFFFFF" verticalTextPosition="bottom" visible="true" width="85.357421875" x="5.0" xml:space="preserve" y="-1.1328125">IMMIGRATION
 OUTOFSCOPE<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:Shape type="rectangle"/>
             </y:ShapeNode>
@@ -5880,12 +5901,14 @@ OUTOFSCOPE<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e250" source="n86" target="n57::n15">
+    <edge id="e250" source="n86" target="n57::n36">
       <data key="d19">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="15.0" tx="7.94645182291697" ty="-15.0">
+          <y:Path sx="0.0" sy="15.0" tx="0.0" ty="-15.0">
             <y:Point x="5391.4355685763885" y="386.666015625"/>
             <y:Point x="5497.08160032242" y="386.666015625"/>
+            <y:Point x="5497.08160032242" y="1129.0"/>
+            <y:Point x="5373.590045262896" y="1129.0"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>

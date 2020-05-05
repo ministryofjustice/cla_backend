@@ -3,7 +3,8 @@ FROM alpine:3.9
 RUN apk add --no-cache \
       bash \
       py2-pip \
-      tzdata
+      tzdata \
+      redis
 
 RUN adduser -D app && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime

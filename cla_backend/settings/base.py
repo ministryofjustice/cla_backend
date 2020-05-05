@@ -312,7 +312,9 @@ OBIEE_EMAIL_TO = os.environ.get("OBIEE_EMAIL_TO", DEFAULT_EMAIL_TO)
 OBIEE_ZIP_PASSWORD = os.environ.get("OBIEE_ZIP_PASSWORD")
 
 # celery
-if all([os.environ.get("SQS_ACCESS_KEY"), os.environ.get("SQS_SECRET_KEY")]):
+if os.environ.has_key("CELERY_BROKER_URL"):
+    BROKER_URL = os.environ["CELERY_BROKER_URL"]
+elif all([os.environ.get("SQS_ACCESS_KEY"), os.environ.get("SQS_SECRET_KEY")]):
     import urllib
 
     BROKER_URL = "sqs://{access_key}:{secret_key}@".format(
@@ -333,10 +335,12 @@ else:
 
 BROKER_TRANSPORT_OPTIONS = {
     "polling_interval": 10,
-    "region": "eu-west-1",
+    "region": "eu-west-2",
     "wait_time_seconds": 20,
-    "queue_name_prefix": _queue_prefix % {"env": CLA_ENV},
+    "queue_name_prefix": "laa-get-access-staging-",
 }
+os.environ.setdefault("BOTO_ENDPOINTS", here("endpoints.json"))
+CELERY_DEFAULT_QUEUE = "laa-get-access-staging-cla_backend_staging_queue"
 CELERY_ACCEPT_CONTENT = ["yaml"]  # because json serializer doesn't support dates
 CELERY_TASK_SERIALIZER = "yaml"  # for consistency
 CELERY_RESULT_SERIALIZER = "yaml"  # as above but not actually used

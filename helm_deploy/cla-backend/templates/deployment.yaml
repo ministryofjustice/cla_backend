@@ -52,11 +52,26 @@ spec:
             - name: ALLOWED_HOSTS
               value: "{{ .Values.host }}"
             - name: DB_PASSWORD
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: db
                   key: password
                   optional: true
+            - name: CELERY_BROKER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ec-cluster
+                  key: primary_endpoint_address
+            - name: CELERY_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: ec-cluster
+                  key: primary_endpoint_address
+            - name: CELERY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ec-cluster
+                  key: auth_token
             {{ include "cla-backend.localPostgresEnvVars" . | nindent 12 }}
             {{- toYaml .Values.envVars | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -108,7 +123,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: POSTGRES_PASSWORD
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: db
                   key: password
@@ -116,6 +131,21 @@ spec:
               value: postgres
             - name: POSTGRES_DB
               value: cla_backend
+            - name: CELERY_BROKER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ec-cluster
+                  key: primary_endpoint_address
+            - name: CELERY_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: ec-cluster
+                  key: primary_endpoint_address
+            - name: CELERY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ec-cluster
+                  key: auth_token
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

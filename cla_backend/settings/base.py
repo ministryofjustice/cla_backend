@@ -312,8 +312,14 @@ OBIEE_EMAIL_TO = os.environ.get("OBIEE_EMAIL_TO", DEFAULT_EMAIL_TO)
 OBIEE_ZIP_PASSWORD = os.environ.get("OBIEE_ZIP_PASSWORD")
 
 # celery
-if os.environ.has_key("CELERY_BROKER_URL"):
-    BROKER_URL = os.environ["CELERY_BROKER_URL"]
+if "CELERY_BROKER_URL" in os.environ:
+    import urllib
+
+    # BROKER_URL = os.environ["CELERY_BROKER_URL"]
+    BROKER_URL = "rediss://:{password}:{host}:6379".format(
+        password=urllib.quote(os.environ.get("CELERY_PASSWORD"), safe=""),
+        host=urllib.quote(os.environ.get("CELERY_HOST"), safe=""),
+    )
 elif all([os.environ.get("SQS_ACCESS_KEY"), os.environ.get("SQS_SECRET_KEY")]):
     import urllib
 

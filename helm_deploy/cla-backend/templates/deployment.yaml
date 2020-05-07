@@ -110,14 +110,14 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: db
+        - name: {{ include "cla-backend.fullname" . }}-db
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "bitnami/postgresql"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 5432
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

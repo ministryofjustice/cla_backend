@@ -9,4 +9,5 @@ kubectl config use-context docker-for-desktop
 helm upgrade cla-backend \
   $HELM_DIR \
   --values ${HELM_DIR}/values-dev.yaml \
-  --install
+  --install \
+  --debug

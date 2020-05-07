@@ -18,3 +18,5 @@ service:
 envVars:
   - name: DEBUG
     value: "True"
+  - name: ALLOW_EMPTY_PASSWORD
+    value: "yes"

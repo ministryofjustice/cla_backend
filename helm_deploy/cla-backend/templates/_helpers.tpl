@@ -73,3 +73,30 @@ Local postgres env vars
   value: "5432"
 {{- end }}
 {{- end -}}
+
+{{- define "cla-backend.app.vars" -}}
+- name: DB_HOST
+  value: {{ include "cla-backend.fullname" . }}-db
+- name: DB_PORT
+  value: "5432"
+- name: DB_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: db
+      key: password
+      optional: true
+- name: DB_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: db
+      key: name
+      optional: true
+- name: ALLOWED_HOSTS
+  value: "{{ .Values.host }}"
+- name: LOG_LEVEL
+  value: "{{ .Values.logLevl }}"
+  {{ range .Values.envVars }}
+- name: {{ .name }}
+  value: "{{ .value }}"
+  {{ end }}
+{{- end -}}

@@ -20,3 +20,10 @@ envVars:
     value: "True"
   - name: ALLOW_EMPTY_PASSWORD
     value: "yes"
+
+worker:
+  concurrency: 1
+  enabled: true
+  broker:
+    local: true
+    image: "redis:5.0.9-alpine3.11"

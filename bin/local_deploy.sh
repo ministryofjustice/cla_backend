@@ -10,4 +10,5 @@ helm upgrade cla-backend \
   $HELM_DIR \
   --values ${HELM_DIR}/values-dev.yaml \
   --install \
+  --force \
   --debug

@@ -1,0 +1,68 @@
+{{- if .Values.worker.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cla-backend.fullname" . }}-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "cla-backend.fullname" . }}-worker
+  template:
+    metadata:
+      labels:
+        app: {{ include "cla-backend.fullname" . }}-worker
+    spec:
+      containers:
+        - name: {{ include "cla-backend.fullname" . }}-worker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: ["docker/run_worker.sh"]
+          readinessProbe:
+            exec:
+              command: ["docker/ping_services.sh"]
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["docker/ping_services.sh"]
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 10
+          env:
+            - name: WORKER_APP_CONCURRENCY
+              value: "{{ .Values.worker.concurrency }}"
+            {{ include "cla-backend.app.vars" . | nindent 12 }}
+            - name: CELERY_BROKER_URL
+              {{ if .Values.worker.url }}
+              value: {{ .Values.worker.url }}
+              {{ else }}
+              valueFrom:
+                secretKeyRef:
+                  name: ec-cluster
+                  key: url
+              {{ end }}
+
+{{ end }}
+{{ if .Values.worker.broker.local }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broker
+  template:
+    metadata:
+      labels:
+        app: broker
+    spec:
+      containers:
+        - name: broker
+          image: {{ .Values.worker.broker.image }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+  {{ end }}

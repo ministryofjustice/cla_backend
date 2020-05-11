@@ -22,3 +22,6 @@ ingress:
 envVars:
   - name: DEBUG
     value: "False"
+
+worker:
+  concurrency: 2

@@ -36,11 +36,11 @@ admin_password() {
     echo "from django.contrib.auth.models import User; User.objects.create_superuser('cla_admin', 'jags.parbha@digital.justice.gov.uk', '$ADMIN_PASSWORD')" | ./manage.py shell || echo "user already exists"
 }
 
-cd /home/app/django
+cd /home/app
 
 # sentry_config
-# migrations
+ migrations
 # admin_password
-# load_test_data
+ load_test_data
 
 exec "$@"

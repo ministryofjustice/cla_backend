@@ -55,7 +55,9 @@ ingress:
 localPostgres:
   enabled: false
 
-envVars: []
+envVars:
+  - name: BACKEND_ENABLED
+    value: "True"
 
 worker:
   concurrency: 8

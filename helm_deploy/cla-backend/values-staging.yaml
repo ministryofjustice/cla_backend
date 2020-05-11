@@ -22,6 +22,8 @@ ingress:
 envVars:
   - name: DEBUG
     value: "False"
+  - name: LOAD_TEST_DATA
+    value: "True"
 
 worker:
   concurrency: 2

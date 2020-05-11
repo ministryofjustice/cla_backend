@@ -20,6 +20,8 @@ envVars:
     value: "True"
   - name: ALLOW_EMPTY_PASSWORD
     value: "yes"
+  - name: LOAD_TEST_DATA
+    value: "True"
 
 worker:
   concurrency: 1

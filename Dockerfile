@@ -17,6 +17,7 @@ RUN apk add --no-cache \
       libxslt-dev \
       linux-headers \
       postgresql-dev \
+      redis \
       python2-dev && \
     pip install -U setuptools pip==18.1 wheel
 

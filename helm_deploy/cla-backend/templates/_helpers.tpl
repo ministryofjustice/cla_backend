@@ -95,6 +95,17 @@ Local postgres env vars
   value: "{{ .Values.host }}"
 - name: LOG_LEVEL
   value: "{{ .Values.logLevl }}"
+{{ if .Values.worker.enabled }}
+- name: CELERY_BROKER_URL
+  {{ if .Values.worker.url }}
+  value: {{ .Values.worker.url }}
+  {{ else }}
+  valueFrom:
+    secretKeyRef:
+      name: ec-cluster
+      key: url
+  {{ end }}
+{{ end }}
   {{ range .Values.envVars }}
 - name: {{ .name }}
   value: "{{ .value }}"

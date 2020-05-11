@@ -34,15 +34,6 @@ spec:
             - name: WORKER_APP_CONCURRENCY
               value: "{{ .Values.worker.concurrency }}"
             {{ include "cla-backend.app.vars" . | nindent 12 }}
-            - name: CELERY_BROKER_URL
-              {{ if .Values.worker.url }}
-              value: {{ .Values.worker.url }}
-              {{ else }}
-              valueFrom:
-                secretKeyRef:
-                  name: ec-cluster
-                  key: url
-              {{ end }}
 
 {{ end }}
 {{ if .Values.worker.broker.local }}

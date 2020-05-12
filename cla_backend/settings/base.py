@@ -1,6 +1,7 @@
 import datetime
 import sys
 import os
+import ssl
 
 from cla_common.call_centre_availability import OpeningHours
 from cla_common.constants import OPERATOR_HOURS
@@ -325,6 +326,10 @@ else:
     # if no BROKER_URL specified then don't try to use celery
     # because it'll just cause errors
     CELERY_ALWAYS_EAGER = True
+
+CELERY_BROKER_USE_SSL = os.environ.get("CELERY_BROKER_USE_SSL", None)
+if CELERY_BROKER_USE_SSL:
+    CELERY_BROKER_USE_SSL = {"ssl_cert_reqs": ssl.CERT_NONE}
 
 CLA_ENV = os.environ.get("CLA_ENV", "local")
 IS_AWS_ENV = os.environ.get("AWS") == "True"

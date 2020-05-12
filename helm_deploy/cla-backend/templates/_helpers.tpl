@@ -113,6 +113,12 @@ Local postgres env vars
       name: s3
       key: bucket_name
       optional: true
+- name: OBIEE_ZIP_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: obiee-zip
+      key: password
+      optional: true
 {{ if .Values.worker.enabled }}
 - name: CELERY_BROKER_URL
   {{ if .Values.worker.url }}

@@ -59,7 +59,7 @@ envVars:
   - name: BACKEND_ENABLED
     value: "True"
   - name: CELERY_BROKER_USE_SSL
-          value: "true"
+    value: "true"
 worker:
   concurrency: 8
   enabled: true

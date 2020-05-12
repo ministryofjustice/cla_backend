@@ -24,6 +24,6 @@ spec:
         - name: migrate-db
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["docker/entrypoint.sh"]
+          command: ["docker/migration.sh"]
           env:
             {{ include "cla-backend.app.vars" . | nindent 12 }}

@@ -1,11 +1,5 @@
 #!/bin/bash -e
 
-sentry_config() {
-! $([[  "$CLA_ENV" == "prod" || "$CLA_ENV" == "staging" ]]) ||
-    grep sentry /etc/hosts > /dev/null 2>&1 ||
-    echo "$SENTRY_IPADDRESS $SENTRY_HOSTNAME" >> /etc/hosts
-}
-
 migrations() {
     if [ "$BACKEND_ENABLED" == "True" ]; then
 
@@ -32,15 +26,8 @@ load_test_data() {
     fi
 }
 
-admin_password() {
-    echo "from django.contrib.auth.models import User; User.objects.create_superuser('cla_admin', 'jags.parbha@digital.justice.gov.uk', '$ADMIN_PASSWORD')" | ./manage.py shell || echo "user already exists"
-}
-
 cd /home/app
-
-# sentry_config
-# migrations
-# admin_password
-# load_test_data
+migrations
+load_test_data
 
 exec "$@"

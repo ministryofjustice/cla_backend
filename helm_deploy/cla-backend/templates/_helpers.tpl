@@ -95,6 +95,24 @@ Local postgres env vars
   value: "{{ .Values.host }}"
 - name: LOG_LEVEL
   value: "{{ .Values.logLevl }}"
+- name: AWS_ACCESS_KEY_ID
+  valueFrom:
+    secretKeyRef:
+      name: s3
+      key: access_key_id
+      optional: true
+- name: AWS_SECRET_ACCESS_KEY
+  valueFrom:
+    secretKeyRef:
+      name: s3
+      key: secret_access_key
+      optional: true
+- name: AWS_STORAGE_BUCKET_NAME
+  valueFrom:
+    secretKeyRef:
+      name: s3
+      key: bucket_name
+      optional: true
 {{ if .Values.worker.enabled }}
 - name: CELERY_BROKER_URL
   {{ if .Values.worker.url }}

@@ -338,12 +338,12 @@ if IS_AWS_ENV:
 else:
     _queue_prefix = "env-%(env)s-"
 
-BROKER_TRANSPORT_OPTIONS = {
-    "polling_interval": 10,
-    "region": "eu-west-1",
-    "wait_time_seconds": 20,
-    "queue_name_prefix": _queue_prefix % {"env": CLA_ENV},
-}
+# BROKER_TRANSPORT_OPTIONS = {
+#     "polling_interval": 10,
+#     "region": "eu-west-1",
+#     "wait_time_seconds": 20,
+#     "queue_name_prefix": _queue_prefix % {"env": CLA_ENV},
+# }
 CELERY_ACCEPT_CONTENT = ["yaml"]  # because json serializer doesn't support dates
 CELERY_TASK_SERIALIZER = "yaml"  # for consistency
 CELERY_RESULT_SERIALIZER = "yaml"  # as above but not actually used

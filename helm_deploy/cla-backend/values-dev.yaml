@@ -26,7 +26,8 @@ envVars:
 worker:
   concurrency: 1
   enabled: true
-  url: "redis://guest@broker:6739"
+  url: "redis://broker:6739"
   broker:
     local: true
-    image: "redis:5.0.9-alpine3.11"
+    image: "redis:4.0.10-alpine3.8"
+logLevl: DEBUG

@@ -130,7 +130,9 @@ Local postgres env vars
       key: url
   {{ end }}
 {{ end }}
-  {{ range .Values.envVars }}
+- name: CELERY_BROKER_USE_SSL
+  value: "True"
+ {{ range .Values.envVars }}
 - name: {{ .name }}
   value: "{{ .value }}"
   {{ end }}

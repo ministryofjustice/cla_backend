@@ -30,3 +30,5 @@ worker:
   enabled: true
   broker:
     local: false
+
+logLevl: DEBUG

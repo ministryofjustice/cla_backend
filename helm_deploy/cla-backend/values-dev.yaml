@@ -29,5 +29,5 @@ worker:
   url: "redis://broker:6379"
   broker:
     local: true
-    image: "redis:4.0.10-alpine3.8"
+    image: "redis:5.0.6-alpine3.10"
 logLevl: DEBUG

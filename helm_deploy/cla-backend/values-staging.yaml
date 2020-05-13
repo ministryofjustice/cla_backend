@@ -27,3 +27,6 @@ envVars:
 
 worker:
   concurrency: 2
+  enabled: true
+  broker:
+    local: false

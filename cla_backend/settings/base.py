@@ -344,17 +344,18 @@ else:
 #     "wait_time_seconds": 20,
 #     "queue_name_prefix": _queue_prefix % {"env": CLA_ENV},
 # }
+
 CELERY_ACCEPT_CONTENT = ["yaml"]  # because json serializer doesn't support dates
 CELERY_TASK_SERIALIZER = "yaml"  # for consistency
 CELERY_RESULT_SERIALIZER = "yaml"  # as above but not actually used
 CELERY_ENABLE_UTC = True  # I think this is the default now anyway
-CELERY_RESULT_BACKEND = None  # SQS doesn't support it
-CELERY_IGNORE_RESULT = True  # SQS doesn't support it
-CELERY_MESSAGE_COMPRESSION = "gzip"  # got to look after the pennies
-CELERY_DISABLE_RATE_LIMITS = True  # they don't work with SQS
-CELERY_ENABLE_REMOTE_CONTROL = False  # doesn't work well under docker
+# #CELERY_RESULT_BACKEND = None  # SQS doesn't support it
+# #CELERY_IGNORE_RESULT = True  # SQS doesn't support it
+# CELERY_MESSAGE_COMPRESSION = "gzip"  # got to look after the pennies
+# #CELERY_DISABLE_RATE_LIMITS = True  # they don't work with SQS
+# CELERY_ENABLE_REMOTE_CONTROL = False  # doesn't work well under docker
 CELERY_TIMEZONE = "UTC"
-# apps with celery tasks
+# # apps with celery tasks
 CELERY_IMPORTS = ["reports.tasks", "notifications.tasks"]
 
 CONTRACT_2018_ENABLED = os.environ.get("CONTRACT_2018_ENABLED", "True") == "True"

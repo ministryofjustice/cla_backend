@@ -27,8 +27,7 @@ COPY ./requirements ./requirements
 RUN pip install -r ./requirements/production.txt
 
 COPY . .
-
+RUN chown app:app -R cla_backend/tmp
 USER 1000
 EXPOSE 8000
-
 CMD ["docker/run.sh"]

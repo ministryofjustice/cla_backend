@@ -329,7 +329,7 @@ else:
 
 CELERY_BROKER_USE_SSL = os.environ.get("CELERY_BROKER_USE_SSL", None)
 if CELERY_BROKER_USE_SSL:
-    CELERY_BROKER_USE_SSL = {"ssl_cert_reqs": ssl.CERT_NONE}
+    BROKER_USE_SSL = {"ssl_cert_reqs": ssl.CERT_NONE}
 
 CLA_ENV = os.environ.get("CLA_ENV", "local")
 IS_AWS_ENV = os.environ.get("AWS") == "True"

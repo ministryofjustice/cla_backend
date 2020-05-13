@@ -18,6 +18,8 @@ RUN apk add --no-cache \
       linux-headers \
       postgresql-dev \
       redis \
+      ruby \
+      busybox-extras \
       python2-dev && \
     pip install -U setuptools pip==18.1 wheel
 

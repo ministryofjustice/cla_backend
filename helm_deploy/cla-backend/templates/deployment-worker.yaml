@@ -43,7 +43,7 @@ kind: Deployment
 metadata:
   name: broker
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas.worker }}
   selector:
     matchLabels:
       app: broker

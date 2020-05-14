@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicas.app }}
   selector:
     matchLabels:
       {{- include "cla-backend.selectorLabels" . | nindent 6 }}

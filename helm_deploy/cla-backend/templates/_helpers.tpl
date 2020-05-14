@@ -113,25 +113,30 @@ Local postgres env vars
       name: s3
       key: bucket_name
       optional: true
+- name: SQS_ACCESS_KEY
+  valueFrom:
+    secretKeyRef:
+      name: sqs
+      key: access_key_id
+      optional: true
+- name: SQS_SECRET_KEY
+  valueFrom:
+    secretKeyRef:
+      name: sqs
+      key: secret_access_key
+      optional: true
+- name: CELERY_PREDEFINED_QUEUE_URL
+  valueFrom:
+    secretKeyRef:
+      name: sqs
+      key: sqs_id
+      optional: true
 - name: OBIEE_ZIP_PASSWORD
   valueFrom:
     secretKeyRef:
       name: obiee-zip
       key: password
       optional: true
-{{ if .Values.worker.enabled }}
-- name: CELERY_BROKER_URL
-  {{ if .Values.worker.url }}
-  value: {{ .Values.worker.url }}
-  {{ else }}
-  valueFrom:
-    secretKeyRef:
-      name: ec-cluster
-      key: url
-  {{ end }}
-{{ end }}
-- name: CELERY_BROKER_USE_SSL
-  value: "True"
  {{ range .Values.envVars }}
 - name: {{ .name }}
   value: "{{ .value }}"

@@ -2,7 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicas:
+  app: 1
+  worker: 2
 logLevl: INFO
 image:
   repository: cla_backend
@@ -58,13 +60,12 @@ localPostgres:
 envVars:
   - name: BACKEND_ENABLED
     value: "True"
-  - name: CELERY_BROKER_USE_SSL
-    value: "true"
-worker:
-  concurrency: 8
-  enabled: true
-  broker:
-    local: false
+  - name: SQS_REGION
+    value: "eu-west-2"
+  - name: BOTO_ENDPOINTS
+    value: "/hom/app"
+  - name: WORKER_APP_CONCURRENCY
+    value: 4
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

@@ -8,7 +8,7 @@ from cla_common.constants import OPERATOR_HOURS
 from cla_common.services import CacheAdapter
 
 from kombu import transport
-from cla_backend.apps.core.sqs import CLASQSChannel
+from cla_backend.sqs import CLASQSChannel
 
 # PATH vars
 

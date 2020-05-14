@@ -29,14 +29,8 @@ envVars:
   - name: SQS_REGION
     value: "eu-west-2"
   - name: BOTO_ENDPOINTS
-    value: "/hom/app/boto_endpoints.json"
+    value: "/home/app/boto_endpoints.json"
   - name: WORKER_APP_CONCURRENCY
-    value: 4
-
-worker:
-  concurrency: 2
-  enabled: true
-  broker:
-    local: false
+    value: "4"
 
 logLevl: DEBUG

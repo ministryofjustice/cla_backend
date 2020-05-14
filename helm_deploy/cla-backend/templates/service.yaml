@@ -26,17 +26,4 @@ spec:
   selector:
     app: {{ include "cla-backend.fullname" . }}-db
 {{- end }}
----
-{{- if .Values.worker.broker.local  -}}
-apiVersion: v1
-kind: Service
-metadata:
-  name: broker
-spec:
-  type: NodePort
-  ports:
-    - port: 6379
-      targetPort: 6379
-  selector:
-    app: broker
-{{- end }}
+

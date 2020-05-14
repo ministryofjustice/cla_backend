@@ -63,7 +63,7 @@ envVars:
   - name: SQS_REGION
     value: "eu-west-2"
   - name: BOTO_ENDPOINTS
-    value: "/hom/app"
+    value: "/hom/app/boto_endpoints.json"
   - name: WORKER_APP_CONCURRENCY
     value: 4
 

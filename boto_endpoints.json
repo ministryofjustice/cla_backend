@@ -1,0 +1,5 @@
+{
+   "sqs": {
+        "us-west-2": "us-west-2.queue.amazonaws.com"
+    }
+}

@@ -7,6 +7,9 @@ from cla_common.call_centre_availability import OpeningHours
 from cla_common.constants import OPERATOR_HOURS
 from cla_common.services import CacheAdapter
 
+from kombu import transport
+from core.sqs import CLASQSChannel
+
 # PATH vars
 
 here = lambda *x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
@@ -312,10 +315,7 @@ OBIEE_ENABLED = os.environ.get("OBIEE_ENABLED", "True") == "True"
 OBIEE_EMAIL_TO = os.environ.get("OBIEE_EMAIL_TO", DEFAULT_EMAIL_TO)
 OBIEE_ZIP_PASSWORD = os.environ.get("OBIEE_ZIP_PASSWORD")
 
-# celery
-if "CELERY_BROKER_URL" in os.environ:
-    BROKER_URL = os.environ["CELERY_BROKER_URL"]
-elif all([os.environ.get("SQS_ACCESS_KEY"), os.environ.get("SQS_SECRET_KEY")]):
+if all([os.environ.get("SQS_ACCESS_KEY"), os.environ.get("SQS_SECRET_KEY")]):
     import urllib
 
     BROKER_URL = "sqs://{access_key}:{secret_key}@".format(
@@ -327,10 +327,6 @@ else:
     # because it'll just cause errors
     CELERY_ALWAYS_EAGER = True
 
-CELERY_BROKER_USE_SSL = os.environ.get("CELERY_BROKER_USE_SSL", None)
-if CELERY_BROKER_USE_SSL:
-    BROKER_USE_SSL = {"ssl_cert_reqs": ssl.CERT_NONE}
-
 CLA_ENV = os.environ.get("CLA_ENV", "local")
 IS_AWS_ENV = os.environ.get("AWS") == "True"
 if IS_AWS_ENV:
@@ -338,22 +334,33 @@ if IS_AWS_ENV:
 else:
     _queue_prefix = "env-%(env)s-"
 
-# BROKER_TRANSPORT_OPTIONS = {
-#     "polling_interval": 10,
-#     "region": "eu-west-1",
-#     "wait_time_seconds": 20,
-#     "queue_name_prefix": _queue_prefix % {"env": CLA_ENV},
-# }
+
+BROKER_TRANSPORT_OPTIONS = {
+    "polling_interval": 10,
+    "region": os.environ.get("SQS_REGION", "eu-west-1"),
+    "wait_time_seconds": 20,
+    "queue_name_prefix": _queue_prefix % {"env": CLA_ENV},
+}
+
+if "CELERY_PREDEFINED_QUEUE_URL" in os.environ:
+    # Monkey patch the SQS transport channel to use our channel
+    transport.SQS.Transport.Channel = CLASQSChannel
+
+    predefined_queue_url = os.environ.get("CELERY_PREDEFINED_QUEUE_URL")
+    CELERY_DEFAULT_QUEUE = predefined_queue_url.split("/")[-1]
+    BROKER_TRANSPORT_OPTIONS["predefined_queue_url"] = predefined_queue_url
+    del BROKER_TRANSPORT_OPTIONS["queue_name_prefix"]
+
 
 CELERY_ACCEPT_CONTENT = ["yaml"]  # because json serializer doesn't support dates
 CELERY_TASK_SERIALIZER = "yaml"  # for consistency
 CELERY_RESULT_SERIALIZER = "yaml"  # as above but not actually used
 CELERY_ENABLE_UTC = True  # I think this is the default now anyway
-# #CELERY_RESULT_BACKEND = None  # SQS doesn't support it
-# #CELERY_IGNORE_RESULT = True  # SQS doesn't support it
-# CELERY_MESSAGE_COMPRESSION = "gzip"  # got to look after the pennies
-# #CELERY_DISABLE_RATE_LIMITS = True  # they don't work with SQS
-# CELERY_ENABLE_REMOTE_CONTROL = False  # doesn't work well under docker
+CELERY_RESULT_BACKEND = None  # SQS doesn't support it
+CELERY_IGNORE_RESULT = True  # SQS doesn't support it
+CELERY_MESSAGE_COMPRESSION = "gzip"  # got to look after the pennies
+CELERY_DISABLE_RATE_LIMITS = True  # they don't work with SQS
+CELERY_ENABLE_REMOTE_CONTROL = False  # doesn't work well under docker
 CELERY_TIMEZONE = "UTC"
 # # apps with celery tasks
 CELERY_IMPORTS = ["reports.tasks", "notifications.tasks"]

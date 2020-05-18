@@ -49,16 +49,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-            - name: ALLOWED_HOSTS
-              value: "{{ .Values.host }}"
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db
-                  key: password
-                  optional: true
-            {{ include "cla-backend.localPostgresEnvVars" . | nindent 12 }}
-            {{- toYaml .Values.envVars | nindent 12 }}
+            {{ include "cla-backend.app.vars" . | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -102,7 +93,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 5432
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

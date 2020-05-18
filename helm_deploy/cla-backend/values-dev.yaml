@@ -21,9 +21,6 @@ envVars:
   DB_HOST:
     secret:
       optional: true
-  DB_PORT:
-    secret:
-      optional: true
   DB_NAME:
     secret:
       optional: true

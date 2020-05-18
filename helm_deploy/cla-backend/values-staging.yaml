@@ -34,3 +34,5 @@ envVars:
   DB_USER:
     secret:
       optional: true
+  LOAD_TEST_DATA:
+    value: "True"

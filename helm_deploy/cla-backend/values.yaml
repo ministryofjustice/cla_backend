@@ -55,7 +55,28 @@ ingress:
 localPostgres:
   enabled: false
 
-envVars: []
+envVars:
+  DB_HOST:
+    secret:
+      name: db
+      key: host
+  DB_PORT:
+    secret:
+      name: db
+      key: port
+  DB_NAME:
+    secret:
+      name: db
+      key: name
+  DB_USER:
+    secret:
+      name: db
+      key: user
+  DB_PASSWORD:
+    secret:
+      name: db
+      key: password
+
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

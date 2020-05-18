@@ -56,6 +56,8 @@ localPostgres:
   enabled: false
 
 envVars:
+  ALLOWED_HOSTS:
+    value: "localhost"
   DB_HOST:
     secret:
       name: db

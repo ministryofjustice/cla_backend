@@ -27,10 +27,9 @@ spec:
           command: ["python", "manage.py", "migrate", "--noinput"]
           env:
             - name: DB_PASSWORD
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: db
                   key: password
                   optional: true
             {{ include "cla-backend.localPostgresEnvVars" . | nindent 12 }}
-            {{- toYaml .Values.envVars | nindent 12 }}

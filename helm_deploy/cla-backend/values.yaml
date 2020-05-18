@@ -64,6 +64,7 @@ envVars:
     secret:
       name: db
       key: port
+      optional: true
   DB_NAME:
     secret:
       name: db

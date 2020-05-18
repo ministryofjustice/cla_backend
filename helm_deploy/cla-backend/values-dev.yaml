@@ -33,3 +33,11 @@ envVars:
   DB_PASSWORD:
     secret:
       optional: true
+  LOAD_TEST_DATA:
+    value: "True"
+  ADMIN_USER:
+    value: "admin"
+    secret: null
+  ADMIN_PASSWORD:
+    secret: null
+    value: "admin"

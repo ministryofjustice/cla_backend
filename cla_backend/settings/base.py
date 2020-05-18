@@ -328,7 +328,6 @@ else:
     CELERY_ALWAYS_EAGER = True
 
 S3_USE_SIGV4 = os.environ.get("S3_USE_SIGV4")
-AWS_S3_HOST = os.environ.get("AWS_S3_HOST")
 
 CLA_ENV = os.environ.get("CLA_ENV", "local")
 IS_AWS_ENV = os.environ.get("AWS") == "True"

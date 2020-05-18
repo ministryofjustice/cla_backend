@@ -17,9 +17,6 @@ RUN apk add --no-cache \
       libxslt-dev \
       linux-headers \
       postgresql-dev \
-      redis \
-      ruby \
-      busybox-extras \
       python2-dev && \
     pip install -U setuptools pip==18.1 wheel
 
@@ -29,7 +26,9 @@ COPY ./requirements ./requirements
 RUN pip install -r ./requirements/production.txt
 
 COPY . .
+# Make sure upload directory has correct permissions
 RUN chown app:app -R cla_backend/tmp
+
 USER 1000
 EXPOSE 8000
 CMD ["docker/run.sh"]

@@ -24,12 +24,6 @@ spec:
         - name: migrate-db
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["python", "manage.py", "migrate", "--noinput"]
+          command: ["bash", "docker/migrate.sh"]
           env:
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db
-                  key: password
-                  optional: true
-            {{ include "cla-backend.localPostgresEnvVars" . | nindent 12 }}
+            {{ include "cla-backend.app.vars" . | nindent 12 }}

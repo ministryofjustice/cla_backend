@@ -76,6 +76,16 @@ envVars:
     secret:
       name: db
       key: password
+  ADMIN_USER:
+    secret:
+      name: admin
+      key: user
+  ADMIN_PASSWORD:
+    secret:
+      name: admin
+      key: password
+  BACKEND_ENABLED:
+    value: "True"
 
 
 resources: {}

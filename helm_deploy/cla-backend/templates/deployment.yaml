@@ -52,7 +52,7 @@ spec:
             - name: ALLOWED_HOSTS
               value: "{{ .Values.host }}"
             - name: DB_PASSWORD
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: db
                   key: password
@@ -81,11 +81,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db
+      app: {{ include "cla-backend.fullname" . }}-db
   template:
     metadata:
       labels:
-        app: db
+        app: {{ include "cla-backend.fullname" . }}-db
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -95,7 +95,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: db
+        - name: {{ include "cla-backend.fullname" . }}-db
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "bitnami/postgresql"
@@ -108,7 +108,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: POSTGRES_PASSWORD
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: db
                   key: password

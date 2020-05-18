@@ -69,7 +69,7 @@ class ExportTaskBase(Task):
 
     def send_to_s3(self):
         conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
+        bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME, validate=False)
         k = bucket.new_key(settings.EXPORT_DIR + os.path.basename(self.filepath))
         k.set_contents_from_filename(self.filepath)
         shutil.rmtree(self.filepath, ignore_errors=True)

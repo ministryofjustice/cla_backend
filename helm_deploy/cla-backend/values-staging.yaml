@@ -30,6 +30,10 @@ envVars:
     value: "eu-west-2"
   - name: BOTO_ENDPOINTS
     value: "/home/app/boto_endpoints.json"
+  - name: AWS_S3_HOST
+    value: "s3.eu-west-2.amazonaws.com"
+  - name: S3_USE_SIGV4
+    value: "True"
   - name: WORKER_APP_CONCURRENCY
     value: "4"
 

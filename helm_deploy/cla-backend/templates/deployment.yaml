@@ -32,20 +32,20 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
-#          livenessProbe:
-#            httpGet:
-#              path: /status/
-#              port: http
-#              httpHeaders:
-#                - name: Host
-#                  value: "{{ .Values.host }}"
-#          readinessProbe:
-#            httpGet:
-#              path: /status/
-#              port: http
-#              httpHeaders:
-#                - name: Host
-#                  value: "{{ .Values.host }}"
+          livenessProbe:
+            httpGet:
+              path: /status/
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: "{{ .Values.host }}"
+          readinessProbe:
+            httpGet:
+              path: /status/
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: "{{ .Values.host }}"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:

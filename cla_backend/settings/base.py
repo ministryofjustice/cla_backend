@@ -333,7 +333,7 @@ else:
 
 BROKER_TRANSPORT_OPTIONS = {
     "polling_interval": 10,
-    "region": "eu-west-1",
+    "region": os.environ.get("SQS_REGION", "eu-west-1"),
     "wait_time_seconds": 20,
     "queue_name_prefix": _queue_prefix % {"env": CLA_ENV},
 }

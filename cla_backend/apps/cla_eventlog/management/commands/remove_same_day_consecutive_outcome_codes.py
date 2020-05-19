@@ -13,7 +13,7 @@ from pytz import UTC
 from cla_butler.stack import is_first_instance, InstanceNotInAsgException, StackException
 from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_eventlog.models import Log
-from reports.tasks import get_s3_connection
+from reports.utils import get_s3_connection
 
 logger = logging.getLogger(__name__)
 

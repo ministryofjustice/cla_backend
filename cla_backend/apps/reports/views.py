@@ -1,6 +1,5 @@
 import json
 import re
-import boto
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -30,7 +29,7 @@ from .forms import (
     MIExtractComplaintViewAuditLog,
 )
 from reports.models import Export
-from .tasks import ExportTask, OBIEEExportTask
+from .tasks import ExportTask, OBIEEExportTask, get_s3_connection
 
 
 def report_view(form_class, title, template="case_report", success_task=ExportTask, file_name=None):
@@ -176,7 +175,7 @@ def metrics_report():
 
 @staff_member_required
 def download_file(request, file_name="", *args, **kwargs):
-    conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    conn = get_s3_connection()
     bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
     k = bucket.get_key(settings.EXPORT_DIR + file_name)
 

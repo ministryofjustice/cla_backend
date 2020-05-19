@@ -13,6 +13,7 @@ from pytz import UTC
 from cla_butler.stack import is_first_instance, InstanceNotInAsgException, StackException
 from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_eventlog.models import Log
+from reports.tasks import get_s3_connection
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +102,7 @@ class Command(BaseCommand):
 
     @staticmethod
     def get_or_create_s3_bucket():
-        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        conn = get_s3_connection()
         bucket_name = settings.AWS_DELETED_OBJECTS_BUCKET_NAME
         try:
             return conn.get_bucket(bucket_name)

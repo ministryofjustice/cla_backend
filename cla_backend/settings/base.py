@@ -6,6 +6,9 @@ from cla_common.call_centre_availability import OpeningHours
 from cla_common.constants import OPERATOR_HOURS
 from cla_common.services import CacheAdapter
 
+from kombu import transport
+from cla_backend.sqs import CLASQSChannel
+
 # PATH vars
 
 here = lambda *x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
@@ -337,6 +340,16 @@ BROKER_TRANSPORT_OPTIONS = {
     "wait_time_seconds": 20,
     "queue_name_prefix": _queue_prefix % {"env": CLA_ENV},
 }
+
+if "CELERY_PREDEFINED_QUEUE_URL" in os.environ:
+    # Monkey patch the SQS transport channel to use our channel
+    transport.SQS.Transport.Channel = CLASQSChannel
+
+    predefined_queue_url = os.environ.get("CELERY_PREDEFINED_QUEUE_URL")
+    CELERY_DEFAULT_QUEUE = predefined_queue_url.split("/")[-1]
+    BROKER_TRANSPORT_OPTIONS["predefined_queue_url"] = predefined_queue_url
+    del BROKER_TRANSPORT_OPTIONS["queue_name_prefix"]
+
 CELERY_ACCEPT_CONTENT = ["yaml"]  # because json serializer doesn't support dates
 CELERY_TASK_SERIALIZER = "yaml"  # for consistency
 CELERY_RESULT_SERIALIZER = "yaml"  # as above but not actually used

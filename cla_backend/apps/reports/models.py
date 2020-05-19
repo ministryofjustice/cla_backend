@@ -5,7 +5,7 @@ from django.db.models.signals import pre_delete
 
 from model_utils.models import TimeStampedModel
 from reports.constants import EXPORT_STATUS
-from reports.tasks import get_s3_connection
+from reports.utils import get_s3_connection
 
 
 class Export(TimeStampedModel):

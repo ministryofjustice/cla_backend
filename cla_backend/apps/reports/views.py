@@ -29,7 +29,8 @@ from .forms import (
     MIExtractComplaintViewAuditLog,
 )
 from reports.models import Export
-from .tasks import ExportTask, OBIEEExportTask, get_s3_connection
+from .tasks import ExportTask, OBIEEExportTask
+from reports.utils import get_s3_connection
 
 
 def report_view(form_class, title, template="case_report", success_task=ExportTask, file_name=None):

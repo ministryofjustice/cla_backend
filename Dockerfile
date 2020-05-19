@@ -27,6 +27,9 @@ RUN pip install -r ./requirements/production.txt
 
 COPY . .
 
+# Make sure upload directory has correct permissions
+RUN chown app:app -R cla_backend/tmp
+
 USER 1000
 EXPOSE 8000
 

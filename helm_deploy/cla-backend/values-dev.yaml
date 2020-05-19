@@ -38,3 +38,18 @@ envVars:
   ADMIN_PASSWORD:
     secret: null
     value: "admin"
+  SQS_ACCESS_KEY:
+    secret:
+      optional: true
+  SQS_SECRET_KEY:
+    secret:
+      optional: true
+  AWS_ACCESS_KEY_ID:
+    secret:
+      optional: true
+  AWS_SECRET_ACCESS_KEY:
+    secret:
+      optional: true
+  AWS_STORAGE_BUCKET_NAME:
+    secret:
+      optional: true

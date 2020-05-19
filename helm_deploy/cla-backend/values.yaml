@@ -56,8 +56,6 @@ localPostgres:
   enabled: false
 
 envVars:
-  ALLOWED_HOSTS:
-    value: "localhost"
   BACKEND_ENABLED:
     value: "True"
   DB_HOST:

@@ -111,6 +111,12 @@ envVars:
     secret:
       name: s3
       key: bucket_name
+  AWS_S3_HOST:
+    value: "s3.eu-west-2.amazonaws.com"
+  S3_USE_SIGV4:
+    value: "True"
+  BOTO_ENDPOINTS:
+    value: "/home/app/boto_endpoints.json"
 
 
 resources: {}

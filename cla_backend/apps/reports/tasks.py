@@ -68,7 +68,12 @@ class ExportTaskBase(Task):
         self.export.save()
 
     def send_to_s3(self):
-        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+        from boto.s3.connection import NoHostProvided
+
+        # Annoyingly the host parameter boto.s3.connection.S3Connection needs to be host string if it's not the default
+        # value of boto.s3.connection.NoHostProvided class reference and not None
+        host = os.environ.get("AWS_S3_HOST", NoHostProvided)
+        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, host=host)
         bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
         k = bucket.new_key(settings.EXPORT_DIR + os.path.basename(self.filepath))
         k.set_contents_from_filename(self.filepath)

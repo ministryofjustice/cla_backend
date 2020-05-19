@@ -53,3 +53,9 @@ envVars:
   AWS_STORAGE_BUCKET_NAME:
     secret:
       optional: true
+  CELERY_PREDEFINED_QUEUE_URL:
+    secret:
+      optional: true
+  OBIEE_ZIP_PASSWORD:
+    secret:
+      optional: true

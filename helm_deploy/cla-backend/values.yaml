@@ -117,6 +117,14 @@ envVars:
     value: "True"
   BOTO_ENDPOINTS:
     value: "/home/app/boto_endpoints.json"
+  CELERY_PREDEFINED_QUEUE_URL:
+    secret:
+      name: sqs
+      key: sqs_id
+  OBIEE_ZIP_PASSWORD:
+    secret:
+      name: obiee
+      key: password
 
 
 resources: {}

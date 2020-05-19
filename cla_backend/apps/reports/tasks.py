@@ -1,5 +1,4 @@
 import contextlib
-import boto
 import os
 import json
 import shutil
@@ -15,7 +14,7 @@ from django.utils.six import text_type
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 
-from .utils import OBIEEExporter
+from .utils import OBIEEExporter, get_s3_connection
 from .models import Export
 from .constants import EXPORT_STATUS
 
@@ -23,15 +22,6 @@ from .constants import EXPORT_STATUS
 @contextlib.contextmanager
 def csv_writer(csv_file):
     yield csv.writer(csv_file)
-
-
-def get_s3_connection():
-    from boto.s3.connection import NoHostProvided
-
-    # Annoyingly the host parameter boto.s3.connection.S3Connection needs to be host string if it's not the default
-    # value of boto.s3.connection.NoHostProvided class reference and not None
-    host = os.environ.get("AWS_S3_HOST", NoHostProvided)
-    return boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, host=host)
 
 
 def import_form(class_name):

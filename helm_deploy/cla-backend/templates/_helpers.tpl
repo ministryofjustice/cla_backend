@@ -75,6 +75,8 @@ Local postgres env vars
 {{- end -}}
 
 {{- define "cla-backend.app.vars" -}}
+- name: ALLOWED_HOSTS
+  value: "{{ .Values.host }}"
 {{ range $name, $data := .Values.envVars }}
 - name: {{ $name }}
 {{- if $data.value }}

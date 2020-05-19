@@ -58,6 +58,8 @@ localPostgres:
 envVars:
   ALLOWED_HOSTS:
     value: "localhost"
+  BACKEND_ENABLED:
+    value: "True"
   DB_HOST:
     secret:
       name: db
@@ -87,8 +89,28 @@ envVars:
     secret:
       name: admin
       key: password
-  BACKEND_ENABLED:
-    value: "True"
+  SQS_REGION:
+    value: "eu-west-2"
+  SQS_ACCESS_KEY:
+    secret:
+      name: sqs
+      key: access_key_id
+  SQS_SECRET_KEY:
+    secret:
+      name: sqs
+      key: secret_access_key
+  AWS_ACCESS_KEY_ID:
+    secret:
+      name: s3
+      key: access_key_id
+  AWS_SECRET_ACCESS_KEY:
+    secret:
+      name: s3
+      key: secret_access_key
+  AWS_STORAGE_BUCKET_NAME:
+    secret:
+      name: s3
+      key: bucket_name
 
 
 resources: {}

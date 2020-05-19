@@ -158,3 +158,13 @@ class OBIEEExporter(object):
             os.remove(self.full_path)
         if os.path.exists(self.tmp_export_path):
             shutil.rmtree(self.tmp_export_path)
+
+
+def get_s3_connection():
+    import boto
+    from boto.s3.connection import NoHostProvided
+
+    # Annoyingly the host parameter boto.s3.connection.S3Connection needs to be host string if it's not the default
+    # value of boto.s3.connection.NoHostProvided class reference and not None
+    host = os.environ.get("AWS_S3_HOST", NoHostProvided)
+    return boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, host=host)

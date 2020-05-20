@@ -23,6 +23,7 @@ load_test_data() {
 }
 
 admin_password() {
+  if [ -z "$ADMIN_USER" ] && [ -z "$ADMIN_PASSWORD" ]; then
     echo "from django.contrib.auth.models import User; User.objects.create_superuser('$ADMIN_USER', 'civil-legal-advice@digital.justice.gov.uk', '$ADMIN_PASSWORD')" | ./manage.py shell || echo "user already exists"
 }
 

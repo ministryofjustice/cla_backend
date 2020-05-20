@@ -108,7 +108,13 @@ envVars:
   AWS_STORAGE_BUCKET_NAME:
     secret:
       name: s3
-      key: bucket_name
+      key: reports_bucket_name
+  AWS_DELETED_OBJECTS_BUCKET_NAME:
+    secret:
+      name: s3
+      key: deleted_objects_bucket_name
+  AWS_DELETED_OBJECTS_BUCKET_REGION:
+    value: "eu-west-2"
   AWS_S3_HOST:
     value: "s3.eu-west-2.amazonaws.com"
   S3_USE_SIGV4:

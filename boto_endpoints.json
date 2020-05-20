@@ -1,5 +1,8 @@
 {
    "sqs": {
         "eu-west-2": "eu-west-2.queue.amazonaws.com"
-    }
+    },
+  "s3": {
+    "eu-west-2": "s3.eu-west-2.amazonaws.com"
+  }
 }

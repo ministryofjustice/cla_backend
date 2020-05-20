@@ -343,6 +343,8 @@ BROKER_TRANSPORT_OPTIONS = {
 
 if "CELERY_PREDEFINED_QUEUE_URL" in os.environ:
     # Monkey patch the SQS transport channel to use our channel
+    # This is to stop actions such as ListQueues being triggered
+    # which we do not have on the cloud platform environments
     transport.SQS.Transport.Channel = CLASQSChannel
 
     predefined_queue_url = os.environ.get("CELERY_PREDEFINED_QUEUE_URL")

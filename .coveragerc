@@ -2,4 +2,4 @@
 source = cla_backend
 omit =
         *migrations*
-        settings/*
+        cla_backend/settings/*

@@ -3,6 +3,7 @@ import random
 import mock
 import datetime
 
+from cla_common.constants import OPERATOR_HOURS
 from django.utils import timezone
 from django.test import TestCase
 
@@ -57,7 +58,8 @@ class SLATimeHelperTestCase(TestCase):
 
     def test_get_sla_time_adding_time_past_end_of_weekday_rolls_over_to_next_working_day(self):
         with mock.patch("cla_common.call_centre_availability.bank_holidays", return_value=[]) as bank_hol:
-            end_of_weekday = self._datetime(iso_day_of_week=self.monday, hour=19, minute=59)
+            end_time = OPERATOR_HOURS["weekday"][1]
+            end_of_weekday = self._datetime(iso_day_of_week=self.monday, hour=end_time.hour - 1, minute=59)
 
             next_day_15_mins = self._change(end_of_weekday, plus_days=1, hour=9, minute=14)
             next_day_2_hours = self._change(end_of_weekday, plus_days=1, hour=10, minute=59)
@@ -69,15 +71,16 @@ class SLATimeHelperTestCase(TestCase):
 
             self.assertTrue(bank_hol.called)
 
-    def test_get_sla_time_adding_time_on_saturday_end_of_day_rolls_over_to_next_working_day(self):
+    def test_get_sla_time_adding_time_on_saturday_rolls_over_to_next_working_day(self):
         with mock.patch("cla_common.call_centre_availability.bank_holidays", return_value=[]) as bank_hol:
-            saturday_end_of_day = self._datetime(iso_day_of_week=self.saturday, hour=12, minute=29)
-            next_monday = self._change(saturday_end_of_day, plus_days=2, hour=9, minute=14)
-            self.assertEqual(get_sla_time(saturday_end_of_day, 15), next_monday)
+            saturday = self._datetime(iso_day_of_week=self.saturday, hour=12, minute=0)
+            next_monday = self._change(saturday, plus_days=2, hour=9, minute=15)
+            self.assertEqual(get_sla_time(saturday, 15), next_monday)
             self.assertTrue(bank_hol.called)
 
     def test_get_sla_time_adding_time_before_bank_holiday_rolls_over_to_working_day_after_holiday(self):
-        almost_end_of_day = self._datetime(iso_day_of_week=self.monday, hour=19, minute=44)
+        end_time = OPERATOR_HOURS["weekday"][1]
+        almost_end_of_day = self._datetime(iso_day_of_week=self.monday, hour=end_time.hour - 1, minute=44)
         fake_bank_holiday = timezone.make_naive(
             self._change(almost_end_of_day, plus_days=1, hour=0, minute=0), self.tz
         )
@@ -85,7 +88,7 @@ class SLATimeHelperTestCase(TestCase):
         with mock.patch(
             "cla_common.call_centre_availability.bank_holidays", return_value=[fake_bank_holiday]
         ) as bank_hol:
-            end_of_day = self._change(almost_end_of_day, plus_days=0, hour=19, minute=59)
+            end_of_day = self._change(almost_end_of_day, plus_days=0, hour=end_time.hour - 1, minute=59)
             day_after_bank_holiday = self._change(almost_end_of_day, plus_days=2, hour=10, minute=44)
             self.assertEqual(get_sla_time(almost_end_of_day, 15), end_of_day)
             self.assertEqual(get_sla_time(almost_end_of_day, 120), day_after_bank_holiday)

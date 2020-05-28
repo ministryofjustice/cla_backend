@@ -75,8 +75,11 @@ Local postgres env vars
 {{- end -}}
 
 {{- define "cla-backend.app.vars" -}}
+{{- $environment := .Values.environment -}}
 - name: ALLOWED_HOSTS
   value: "{{ .Values.host }}"
+- name:  CLA_ENV
+  value: "{{ $environment }}"
 {{ range $name, $data := .Values.envVars }}
 - name: {{ $name }}
 {{- if $data.value }}
@@ -86,7 +89,11 @@ Local postgres env vars
     secretKeyRef:
       name: {{ $data.secret.name }}
       key: {{ $data.secret.key }}
+      {{- if eq $environment "development" }}
+      optional: true
+      {{- else }}
       optional: {{ $data.secret.optional | default false }}
+      {{- end }}
 {{- end -}}
 {{- end -}}
 {{ include "cla-backend.localPostgresEnvVars" . }}

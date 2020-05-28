@@ -1,7 +1,7 @@
 # Default values for cla-backend in a dev environment.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
+environment: "development"
 image:
   repository: cla_backend_local
   tag: latest
@@ -18,18 +18,6 @@ service:
 envVars:
   DEBUG:
     value: "True"
-  DB_HOST:
-    secret:
-      optional: true
-  DB_NAME:
-    secret:
-      optional: true
-  DB_USER:
-    secret:
-      optional: true
-  DB_PASSWORD:
-    secret:
-      optional: true
   LOAD_TEST_DATA:
     value: "True"
   ADMIN_USER:
@@ -38,24 +26,7 @@ envVars:
   ADMIN_PASSWORD:
     secret: null
     value: "admin"
-  SQS_ACCESS_KEY:
-    secret:
-      optional: true
-  SQS_SECRET_KEY:
-    secret:
-      optional: true
-  AWS_ACCESS_KEY_ID:
-    secret:
-      optional: true
-  AWS_SECRET_ACCESS_KEY:
-    secret:
-      optional: true
-  AWS_STORAGE_BUCKET_NAME:
-    secret:
-      optional: true
-  CELERY_PREDEFINED_QUEUE_URL:
-    secret:
-      optional: true
-  OBIEE_ZIP_PASSWORD:
-    secret:
-      optional: true
+
+
+
+

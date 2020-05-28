@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
-
+environment: "prod"
 image:
   repository: cla_backend
   tag: latest
@@ -56,8 +56,22 @@ localPostgres:
   enabled: false
 
 envVars:
-  BACKEND_ENABLED:
-    value: "True"
+  SITE_HOSTNAME:
+    secret:
+      name: frontend
+      key: hostname
+  FRONTEND_HOST_NAME:
+    secret:
+      name: frontend
+      key: url
+  EXPRESS_SERVER_PORT:
+    secret:
+      name: express
+      key: port
+  SOCKETIO_SERVER_URL:
+    secret:
+      name: express
+      key: url
   DB_HOST:
     secret:
       name: db
@@ -79,6 +93,10 @@ envVars:
     secret:
       name: db
       key: password
+  SECRET_KEY:
+    secret:
+      name: secret
+      key: value
   ADMIN_USER:
     secret:
       name: admin
@@ -87,6 +105,50 @@ envVars:
     secret:
       name: admin
       key: password
+  SMTP_USER:
+    secret:
+      name: smtp
+      key: user
+  SMTP_PASSWORD:
+    secret:
+      name: smtp
+      key: password
+  SMTP_HOST:
+    secret:
+      name: smtp
+      key: host
+  RAVEN_CONFIG_DSN:
+    secret:
+      name: sentry
+      key: dsn
+  RAVEN_CONFIG_SITE:
+    secret:
+      name: sentry
+      key: site
+  SENTRY_IPADDRESS:
+    secret:
+      name: sentry
+      key: ip
+  SENTRY_HOSTNAME:
+    secret:
+      name: sentry
+      key: hostname
+  CALL_CENTRE_NOTIFY_EMAIL_ADDRESS:
+    secret:
+      name: call-centre
+      key: notify_email
+  DIVERSITY_PUBLIC_KEY:
+    secret:
+      name: diversity-keys
+      key: public
+  DIVERSITY_PRIVATE_KEY:
+    secret:
+      name: diversity-keys
+      key: private
+  ADMIN_ENABLED:
+    value: "True"
+  BACKEND_ENABLED:
+    value: "True"
   SQS_REGION:
     value: "eu-west-2"
   SQS_ACCESS_KEY:
@@ -97,6 +159,26 @@ envVars:
     secret:
       name: sqs
       key: secret_access_key
+  OBIEE_EMAIL_TO:
+    secret:
+      name: obiee
+      key: email
+  OBIEE_ZIP_PASSWORD:
+    secret:
+      name: obiee
+      key: password
+  PERFORMANCE_PLATFORM_TOKEN:
+    secret:
+      name: performance-platform
+      key: token
+  PERFORMANCE_PLATFORM_API:
+    secret:
+      name: performance-platform
+      key: url
+  AWS_STORAGE_BUCKET_NAME:
+    secret:
+      name: s3
+      key: reports_bucket_name
   AWS_ACCESS_KEY_ID:
     secret:
       name: s3
@@ -105,10 +187,6 @@ envVars:
     secret:
       name: s3
       key: secret_access_key
-  AWS_STORAGE_BUCKET_NAME:
-    secret:
-      name: s3
-      key: reports_bucket_name
   AWS_DELETED_OBJECTS_BUCKET_NAME:
     secret:
       name: s3
@@ -125,11 +203,6 @@ envVars:
     secret:
       name: sqs
       key: sqs_id
-  OBIEE_ZIP_PASSWORD:
-    secret:
-      name: obiee
-      key: password
-
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

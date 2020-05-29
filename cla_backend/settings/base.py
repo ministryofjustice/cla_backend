@@ -6,6 +6,9 @@ from cla_common.call_centre_availability import OpeningHours
 from cla_common.constants import OPERATOR_HOURS
 from cla_common.services import CacheAdapter
 
+from kombu import transport
+from cla_backend.sqs import CLASQSChannel
+
 # PATH vars
 
 here = lambda *x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
@@ -76,7 +79,7 @@ AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
 
 AWS_DELETED_OBJECTS_BUCKET_NAME = os.environ.get("AWS_DELETED_OBJECTS_BUCKET_NAME", "")
-AWS_DELETED_OBJECTS_BUCKET_REGION = "eu-west-1"
+AWS_DELETED_OBJECTS_BUCKET_REGION = os.environ.get("AWS_DELETED_OBJECTS_BUCKET_REGION", "eu-west-1")
 
 SITE_HOSTNAME = os.environ.get("SITE_HOSTNAME", "cla.local:8000")
 
@@ -333,10 +336,22 @@ else:
 
 BROKER_TRANSPORT_OPTIONS = {
     "polling_interval": 10,
-    "region": "eu-west-1",
+    "region": os.environ.get("SQS_REGION", "eu-west-1"),
     "wait_time_seconds": 20,
     "queue_name_prefix": _queue_prefix % {"env": CLA_ENV},
 }
+
+if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):
+    # Monkey patch the SQS transport channel to use our channel
+    # This is to stop actions such as ListQueues being triggered
+    # which we do not have on the cloud platform environments
+    transport.SQS.Transport.Channel = CLASQSChannel
+
+    predefined_queue_url = os.environ.get("CELERY_PREDEFINED_QUEUE_URL")
+    CELERY_DEFAULT_QUEUE = predefined_queue_url.split("/")[-1]
+    BROKER_TRANSPORT_OPTIONS["predefined_queue_url"] = predefined_queue_url
+    del BROKER_TRANSPORT_OPTIONS["queue_name_prefix"]
+
 CELERY_ACCEPT_CONTENT = ["yaml"]  # because json serializer doesn't support dates
 CELERY_TASK_SERIALIZER = "yaml"  # for consistency
 CELERY_RESULT_SERIALIZER = "yaml"  # as above but not actually used

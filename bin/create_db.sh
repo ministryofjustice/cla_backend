@@ -23,13 +23,14 @@ load_test_data() {
 }
 
 admin_password() {
-    echo "from django.contrib.auth.models import User; User.objects.create_superuser('cla_admin', 'jags.parbha@digital.justice.gov.uk', '$ADMIN_PASSWORD')" | ./manage.py shell || echo "user already exists"
+  if [ -z "$ADMIN_USER" ] && [ -z "$ADMIN_PASSWORD" ]; then
+    echo "from django.contrib.auth.models import User; User.objects.create_superuser('$ADMIN_USER', 'civil-legal-advice@digital.justice.gov.uk', '$ADMIN_PASSWORD')" | ./manage.py shell || echo "user already exists"
 }
 
 cd /home/app/
 
 migrations
-# admin_password
+admin_password
 load_test_data
 
 exec "$@"

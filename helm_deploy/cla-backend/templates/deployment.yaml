@@ -49,16 +49,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-            - name: ALLOWED_HOSTS
-              value: "{{ .Values.host }}"
-            - name: DB_PASSWORD
-              valueFrom: 
-                secretKeyRef:
-                  name: db
-                  key: password
-                  optional: true
-            {{ include "cla-backend.localPostgresEnvVars" . | nindent 12 }}
-            {{- toYaml .Values.envVars | nindent 12 }}
+            {{ include "cla-backend.app.vars" . | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -81,11 +72,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db
+      app: {{ include "cla-backend.fullname" . }}-db
   template:
     metadata:
       labels:
-        app: db
+        app: {{ include "cla-backend.fullname" . }}-db
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -95,27 +86,30 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: db
+        - name: {{ include "cla-backend.fullname" . }}-db
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "bitnami/postgresql"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 5432
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: POSTGRES_PASSWORD
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: db
                   key: password
+                  optional: true
             - name: POSTGRES_USER
               value: postgres
             - name: POSTGRES_DB
               value: cla_backend
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

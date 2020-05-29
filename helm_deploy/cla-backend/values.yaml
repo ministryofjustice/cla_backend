@@ -55,7 +55,81 @@ ingress:
 localPostgres:
   enabled: false
 
-envVars: []
+envVars:
+  BACKEND_ENABLED:
+    value: "True"
+  DB_HOST:
+    secret:
+      name: db
+      key: host
+  DB_PORT:
+    secret:
+      name: db
+      key: port
+      optional: true
+  DB_NAME:
+    secret:
+      name: db
+      key: name
+  DB_USER:
+    secret:
+      name: db
+      key: user
+  DB_PASSWORD:
+    secret:
+      name: db
+      key: password
+  ADMIN_USER:
+    secret:
+      name: admin
+      key: user
+  ADMIN_PASSWORD:
+    secret:
+      name: admin
+      key: password
+  SQS_REGION:
+    value: "eu-west-2"
+  SQS_ACCESS_KEY:
+    secret:
+      name: sqs
+      key: access_key_id
+  SQS_SECRET_KEY:
+    secret:
+      name: sqs
+      key: secret_access_key
+  AWS_ACCESS_KEY_ID:
+    secret:
+      name: s3
+      key: access_key_id
+  AWS_SECRET_ACCESS_KEY:
+    secret:
+      name: s3
+      key: secret_access_key
+  AWS_STORAGE_BUCKET_NAME:
+    secret:
+      name: s3
+      key: reports_bucket_name
+  AWS_DELETED_OBJECTS_BUCKET_NAME:
+    secret:
+      name: s3
+      key: deleted_objects_bucket_name
+  AWS_DELETED_OBJECTS_BUCKET_REGION:
+    value: "eu-west-2"
+  AWS_S3_HOST:
+    value: "s3.eu-west-2.amazonaws.com"
+  S3_USE_SIGV4:
+    value: "True"
+  BOTO_ENDPOINTS:
+    value: "/home/app/boto_endpoints.json"
+  CELERY_PREDEFINED_QUEUE_URL:
+    secret:
+      name: sqs
+      key: sqs_id
+  OBIEE_ZIP_PASSWORD:
+    secret:
+      name: obiee
+      key: password
+
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

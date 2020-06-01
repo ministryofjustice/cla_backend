@@ -1,7 +1,6 @@
 import json
 import os
 
-from django.conf import settings
 from django.db import connection
 from django.utils import timezone
 
@@ -22,20 +21,16 @@ def _format_env_key(key):
 
 
 def get_public_key():
-    if settings.IS_AWS_ENV:
-        key = os.environ.get("DIVERSITY_PUBLIC_KEY")
-        if key:
-            return _format_env_key(key)
-        return _read_key_file(_dev_public_key)
+    key = os.environ.get("DIVERSITY_PUBLIC_KEY")
+    if key:
+        return _format_env_key(key)
     return _read_key_file(os.environ.get("DIVERSITY_PUBLIC_KEY_PATH", _dev_public_key))
 
 
 def get_private_key():
-    if settings.IS_AWS_ENV:
-        key = os.environ.get("DIVERSITY_PRIVATE_KEY")
-        if key:
-            return _format_env_key(key)
-        return _read_key_file(_dev_private_key)
+    key = os.environ.get("DIVERSITY_PRIVATE_KEY")
+    if key:
+        return _format_env_key(key)
     return _read_key_file(os.environ.get("DIVERSITY_PRIVATE_KEY_PATH", _dev_private_key))
 
 

@@ -26,7 +26,3 @@ envVars:
   ADMIN_PASSWORD:
     secret: null
     value: "admin"
-
-
-
-

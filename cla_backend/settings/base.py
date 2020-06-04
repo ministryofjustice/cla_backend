@@ -310,7 +310,6 @@ NON_ROTA_OPENING_HOURS = OpeningHours(**NON_ROTA_HOURS)
 
 OBIEE_IP_PERMISSIONS = ("*",)
 
-OBIEE_ENABLED = os.environ.get("OBIEE_ENABLED", "True") == "True"
 OBIEE_EMAIL_TO = os.environ.get("OBIEE_EMAIL_TO", DEFAULT_EMAIL_TO)
 OBIEE_ZIP_PASSWORD = os.environ.get("OBIEE_ZIP_PASSWORD")
 
@@ -328,17 +327,12 @@ else:
     CELERY_ALWAYS_EAGER = True
 
 CLA_ENV = os.environ.get("CLA_ENV", "local")
-IS_AWS_ENV = os.environ.get("AWS") == "True"
-if IS_AWS_ENV:
-    _queue_prefix = "aws-%(env)s-"
-else:
-    _queue_prefix = "env-%(env)s-"
 
 BROKER_TRANSPORT_OPTIONS = {
     "polling_interval": 10,
     "region": os.environ.get("SQS_REGION", "eu-west-1"),
     "wait_time_seconds": 20,
-    "queue_name_prefix": _queue_prefix % {"env": CLA_ENV},
+    "queue_name_prefix": "env-%(env)s-" % {"env": CLA_ENV},
 }
 
 if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):

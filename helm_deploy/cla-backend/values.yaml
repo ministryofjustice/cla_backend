@@ -175,7 +175,13 @@ envVars:
     secret:
       name: performance-platform
       key: url
-  AWS_STORAGE_BUCKET_NAME:
+  STATIC_FILES_BACKEND:
+    value: s3
+  AWS_STATIC_FILES_STORAGE_BUCKET_NAME:
+      secret:
+        name: s3
+        key: static_files_bucket_name
+  AWS_REPORTS_STORAGE_BUCKET_NAME:
     secret:
       name: s3
       key: reports_bucket_name

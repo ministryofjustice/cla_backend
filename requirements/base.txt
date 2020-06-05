@@ -53,4 +53,4 @@ git+https://github.com/ministryofjustice/django-moj-irat.git@0.3#egg=django-moj-
 boto3>=1.5,<2
 
 uwsgi==2.0.18
-django-storages==1.9.1
+django-storages==1.5.2

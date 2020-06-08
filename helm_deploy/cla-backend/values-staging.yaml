@@ -33,24 +33,3 @@ envVars:
       optional: true
   LOAD_TEST_DATA:
     value: "True"
-  SQS_ACCESS_KEY:
-    secret:
-      optional: true
-  SQS_SECRET_KEY:
-    secret:
-      optional: true
-  AWS_ACCESS_KEY_ID:
-    secret:
-      optional: true
-  AWS_SECRET_ACCESS_KEY:
-    secret:
-      optional: true
-  AWS_STORAGE_BUCKET_NAME:
-    secret:
-      optional: true
-  CELERY_PREDEFINED_QUEUE_URL:
-    secret:
-      optional: true
-  OBIEE_ZIP_PASSWORD:
-    secret:
-      optional: true

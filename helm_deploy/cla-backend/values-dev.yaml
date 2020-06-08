@@ -26,5 +26,3 @@ envVars:
   ADMIN_PASSWORD:
     secret: null
     value: "admin"
-  STATIC_FILES_BACKEND:
-    value: local

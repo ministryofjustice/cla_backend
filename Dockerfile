@@ -29,7 +29,7 @@ COPY . .
 
 # Make sure upload directory has correct permissions
 RUN chown app:app -R cla_backend/tmp
-RUN mkdir static && chown app:app -R static
+RUN mkdir -p cla_backend/static && chown app:app -R cla_backend/static
 
 USER 1000
 EXPOSE 8000

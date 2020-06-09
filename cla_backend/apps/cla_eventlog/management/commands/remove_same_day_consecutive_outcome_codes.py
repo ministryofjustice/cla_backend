@@ -107,7 +107,7 @@ class Command(BaseCommand):
         try:
             return conn.get_bucket(bucket_name)
         except boto.exception.S3ResponseError:
-            conn.create_bucket(bucket_name, location=settings.AWS_DELETED_OBJECTS_BUCKET_REGION)
+            conn.create_bucket(bucket_name, location=settings.AWS_S3_REGION_NAME)
             return conn.get_bucket(bucket_name)
 
     @staticmethod

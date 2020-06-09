@@ -197,7 +197,7 @@ envVars:
     secret:
       name: s3
       key: deleted_objects_bucket_name
-  AWS_DELETED_OBJECTS_BUCKET_REGION:
+  AWS_S3_REGION_NAME:
     value: "eu-west-2"
   AWS_S3_HOST:
     value: "s3.eu-west-2.amazonaws.com"

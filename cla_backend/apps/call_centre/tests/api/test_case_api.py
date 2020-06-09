@@ -855,7 +855,7 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
     @property
     def _default_local_dt_sla_480(self):
-        return self._default_local_dt + datetime.timedelta(minutes=480)
+        return self._default_local_dt + datetime.timedelta(days=1)
 
     def get_expected_notes(self, data):
         return "Callback scheduled for %s - %s. %s" % (
@@ -871,7 +871,11 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         self.resource.callback_attempt = cb_no - 1
         self.resource.save()
 
-        self.test_successful()
+        with mock.patch(
+            "cla_common.call_centre_availability.current_datetime",
+            return_value=datetime.datetime(2015, 3, 23, 10, 0, 0, 0),
+        ):
+            self.test_successful()
 
         log = self.resource.log_set.first()
         self.assertEqual(log.code, "CB{}".format(cb_no))

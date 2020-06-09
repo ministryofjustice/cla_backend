@@ -1,6 +1,7 @@
 import datetime
 import uuid
 
+import mock
 from django.utils import timezone
 from django.core import mail
 from rest_framework import status
@@ -208,7 +209,12 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
             "personal_details": self.get_personal_details_default_post_data(),
             "requires_action_at": self._default_dt.isoformat(),
         }
-        response = self.client.post(self.list_url, data=data, format="json")
+        with mock.patch(
+            "cla_common.call_centre_availability.current_datetime",
+            return_value=datetime.datetime(2015, 3, 23, 10, 0, 0, 0),
+        ):
+            response = self.client.post(self.list_url, data=data, format="json")
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCaseResponseKeys(response)
 
@@ -236,7 +242,7 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
             {
                 "requires_action_at": _dt.isoformat(),
                 "sla_120": (_dt + datetime.timedelta(minutes=120)).isoformat(),
-                "sla_480": (_dt + datetime.timedelta(minutes=480)).isoformat(),
+                "sla_480": (_dt + datetime.timedelta(days=1)).isoformat(),
                 "sla_15": (_dt + datetime.timedelta(minutes=15)).isoformat(),
                 "sla_30": (_dt + datetime.timedelta(minutes=30)).isoformat(),
             },

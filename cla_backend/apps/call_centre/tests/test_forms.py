@@ -380,7 +380,11 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
 
         self.assertTrue(form.is_valid())
 
-        form.save(self.user)
+        with mock.patch(
+            "cla_common.call_centre_availability.current_datetime",
+            return_value=datetime.datetime(2015, 3, 23, 10, 0, 0, 0),
+        ):
+            form.save(self.user)
 
         case = Case.objects.get(pk=case.pk)
 
@@ -408,7 +412,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
             {
                 "requires_action_at": _dt.isoformat(),
                 "sla_120": (_dt + datetime.timedelta(minutes=120)).isoformat(),
-                "sla_480": (_dt + datetime.timedelta(minutes=480)).isoformat(),
+                "sla_480": (_dt + datetime.timedelta(days=1)).isoformat(),
                 "sla_15": (_dt + datetime.timedelta(minutes=15)).isoformat(),
                 "sla_30": (_dt + datetime.timedelta(minutes=30)).isoformat(),
             },

@@ -27,9 +27,9 @@ RUN pip install -r ./requirements/production.txt
 
 COPY . .
 
-# Make sure upload directory has correct permissions
-RUN chown app:app -R cla_backend/tmp
-RUN mkdir -p cla_backend/static && chown app:app -R cla_backend/static
+# Make sure static assets directory has correct permissions
+RUN mkdir -p cla_backend/assets
+RUN chown -R app:app /home/app
 
 USER 1000
 EXPOSE 8000

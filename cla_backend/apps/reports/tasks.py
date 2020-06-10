@@ -68,7 +68,7 @@ class ExportTaskBase(Task):
 
     def send_to_s3(self):
         conn = get_s3_connection()
-        bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
+        bucket = conn.lookup(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
         k = bucket.new_key(settings.EXPORT_DIR + os.path.basename(self.filepath))
         k.set_contents_from_filename(self.filepath)
         shutil.rmtree(self.filepath, ignore_errors=True)

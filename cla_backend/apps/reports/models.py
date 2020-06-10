@@ -23,7 +23,7 @@ class Export(TimeStampedModel):
 
 def delete_export_file(sender, instance=None, **kwargs):
     conn = get_s3_connection()
-    bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
+    bucket = conn.lookup(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
 
     try:
         k = bucket.get_key(settings.EXPORT_DIR + os.path.basename(instance.path))

@@ -177,7 +177,7 @@ def metrics_report():
 @staff_member_required
 def download_file(request, file_name="", *args, **kwargs):
     conn = get_s3_connection()
-    bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
+    bucket = conn.lookup(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
     k = bucket.get_key(settings.EXPORT_DIR + file_name)
 
     if k is None:

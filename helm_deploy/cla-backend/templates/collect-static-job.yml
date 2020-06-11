@@ -24,6 +24,6 @@ spec:
         - name: collect-static
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/home/app/bin/collect_static.sh"]
+          command: ["python", "manage.py", "collectstatic", "--noinput"]
           env:
             {{ include "cla-backend.app.vars" . | nindent 12 }}

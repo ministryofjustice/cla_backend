@@ -1,0 +1,26 @@
+[
+  {
+    "pk": 1,
+    "model": "legalaid.ContactResearchMethod",
+    "fields": {
+      "method": "PHONE",
+      "reference": "c59cb4ed-f5c4-4fda-8698-c295870013b5"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "legalaid.ContactResearchMethod",
+    "fields": {
+      "method": "SMS",
+      "reference": "dc3e0748-3a8e-4863-8d3b-4cc47b8ccfbc"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "legalaid.ContactResearchMethod",
+    "fields": {
+      "method": "EMAIL",
+      "reference": "9b88d95d-8872-4670-970f-270f5ecca249"
+    }
+  }
+]

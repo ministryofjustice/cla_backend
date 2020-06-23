@@ -3,7 +3,8 @@ FROM alpine:3.9
 RUN apk add --no-cache \
       bash \
       py2-pip \
-      tzdata
+      tzdata \
+      gettext
 
 RUN adduser -D app && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime
@@ -28,8 +29,10 @@ RUN pip install -r ./requirements/production.txt
 COPY . .
 
 # Make sure static assets directory has correct permissions
-RUN mkdir -p cla_backend/assets
-RUN chown -R app:app /home/app
+RUN chown -R app:app /home/app && \
+    mkdir -p cla_backend/assets
+
+RUN python manage.py compilemessages
 
 USER 1000
 EXPOSE 8000

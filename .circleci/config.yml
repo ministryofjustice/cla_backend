@@ -201,9 +201,9 @@ workflows:
       - cleanup_merged:
           context: laa-cla-backend
       - build:
-          requires:
-            - lint
-            - test
+#          requires:
+#            - lint
+#            - test
           context: laa-cla-backend
       - deploy:
           name: uat_deploy

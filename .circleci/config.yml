@@ -168,6 +168,39 @@ jobs:
           title: '$RELEASE_HOST'
           title_link: 'https://$RELEASE_HOST/admin/'
 
+  deploy:
+    parameters:
+      namespace:
+        type: string
+    docker:
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+    shell: /bin/sh -leo pipefail
+    environment:
+      BASH_ENV: /etc/profile
+    steps:
+      - checkout
+      - run:
+          name: Install helm v3
+          command: |
+            wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+            tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+            mv linux-amd64/helm /usr/local/bin/helm
+      - run:
+          name: Initialise Kubernetes << parameters.namespace >> context
+          command: |
+            setup-kube-auth
+            kubectl config use-context << parameters.namespace >>
+      - deploy:
+          name: Deploy to << parameters.namespace >>
+          command: |
+            source .circleci/define_build_environment_variables << parameters.namespace >>
+            ./bin/<< parameters.namespace >>_deploy.sh
+            echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV
+      - slack/notify:
+          message: ':tada: (<< parameters.namespace >>) Deployed branch $CIRCLE_BRANCH'
+          title: '$RELEASE_HOST'
+          title_link: 'https://$RELEASE_HOST/admin/'
+
   cleanup_merged:
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci

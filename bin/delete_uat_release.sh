@@ -29,3 +29,5 @@ then
 else
   echo "This commit is not a merged pull request"
 fi
+
+# Dummy commit

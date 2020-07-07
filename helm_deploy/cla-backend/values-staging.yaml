@@ -22,14 +22,5 @@ ingress:
 envVars:
   DEBUG:
     value: "False"
-  DB_HOST:
-    secret:
-      optional: true
-  DB_NAME:
-    secret:
-      optional: true
-  DB_USER:
-    secret:
-      optional: true
   LOAD_TEST_DATA:
     value: "True"

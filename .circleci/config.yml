@@ -249,7 +249,15 @@ workflows:
           type: approval
           requires:
             - build
-      - staging_deploy:
+          filters:
+            branches:
+              only:
+                - master
+                - epic/LGA-959-kubernetes
+                - feature/multi-branch-deploy
+      - deploy:
+          name: staging_deploy
+          namespace: staging
           requires:
             - staging_deploy_approval
           context: laa-cla-backend

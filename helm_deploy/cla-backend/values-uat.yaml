@@ -1,0 +1,34 @@
+# Default values for cla-backend in a dev environment.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+environment: "uat"
+image:
+  pullPolicy: IfNotPresent
+
+localPostgres:
+  enabled: true
+
+ingress:
+  enabled: true
+  hosts:
+    - host: laa-cla-backend-uat.apps.live-1.cloud-platform.service.justice.gov.uk
+      paths: ['/']
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# Lists don't deep merge, so this list of envVars overrides anything defined in an earlier values file
+envVars:
+  DEBUG:
+    value: "False"
+  DB_HOST:
+    secret:
+      optional: true
+  DB_PORT:
+    secret:
+      name: database
+      key: port
+      optional: true
+  LOAD_TEST_DATA:
+    value: "True"

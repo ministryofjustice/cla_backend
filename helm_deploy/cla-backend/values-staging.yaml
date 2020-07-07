@@ -6,7 +6,7 @@ image:
   pullPolicy: IfNotPresent
 
 localPostgres:
-  enabled: true
+  enabled: false
 
 ingress:
   enabled: true

@@ -138,36 +138,6 @@ jobs:
       - store_artifacts:
           path: test-reports
 
-  staging_deploy:
-    docker:
-      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
-    shell: /bin/sh -leo pipefail
-    environment:
-      BASH_ENV: /etc/profile
-    steps:
-      - checkout
-      - run:
-          name: Install helm v3
-          command: |
-            wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
-            tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
-            mv linux-amd64/helm /usr/local/bin/helm
-      - run:
-          name: Initialise Kubernetes staging context
-          command: |
-            setup-kube-auth
-            kubectl config use-context staging
-      - deploy:
-          name: Deploy to staging
-          command: |
-            source .circleci/define_build_environment_variables
-            ./bin/staging_deploy.sh
-            echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV
-      - slack/notify:
-          message: ':tada: Deployed branch $CIRCLE_BRANCH'
-          title: '$RELEASE_HOST'
-          title_link: 'https://$RELEASE_HOST/admin/'
-
   deploy:
     parameters:
       namespace:

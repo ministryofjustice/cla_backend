@@ -183,14 +183,14 @@ jobs:
             tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
             mv linux-amd64/helm /usr/local/bin/helm
       - run:
-          name: Initialise Kubernetes staging context
+          name: Initialise Kubernetes uat context
           command: |
             setup-kube-auth
-            kubectl config use-context staging
+            kubectl config use-context uat
       - run:
-          name: Delete staging release
+          name: Delete uat release
           command: |
-            ./bin/delete_staging_release.sh
+            ./bin/delete_uat_release.sh
 
 workflows:
   version: 2

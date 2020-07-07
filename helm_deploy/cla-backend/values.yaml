@@ -74,24 +74,24 @@ envVars:
       key: url
   DB_HOST:
     secret:
-      name: db
+      name: database
       key: host
   DB_PORT:
     secret:
-      name: db
+      name: database
       key: port
       optional: true
   DB_NAME:
     secret:
-      name: db
+      name: database
       key: name
   DB_USER:
     secret:
-      name: db
+      name: database
       key: user
   DB_PASSWORD:
     secret:
-      name: db
+      name: database
       key: password
   SECRET_KEY:
     secret:

@@ -225,7 +225,6 @@ workflows:
               only:
                 - master
                 - epic/LGA-959-kubernetes
-                - feature/multi-branch-deploy
       - deploy:
           name: staging_deploy
           namespace: staging
@@ -241,7 +240,6 @@ workflows:
             branches:
               only:
                 - master
-                - feature/multi-branch-deploy
       - deploy:
           name: production_deploy
           namespace: production

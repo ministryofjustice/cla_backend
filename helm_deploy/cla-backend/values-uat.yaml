@@ -1,17 +1,17 @@
 # Default values for cla-backend in a dev environment.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-environment: "staging"
+environment: "uat"
 image:
   pullPolicy: IfNotPresent
 
 localPostgres:
-  enabled: false
+  enabled: true
 
 ingress:
   enabled: true
   hosts:
-    - host: laa-cla-backend-staging.apps.live-1.cloud-platform.service.justice.gov.uk
+    - host: laa-cla-backend-uat.apps.live-1.cloud-platform.service.justice.gov.uk
       paths: ['/']
   tls: []
   #  - secretName: chart-example-tls
@@ -22,5 +22,13 @@ ingress:
 envVars:
   DEBUG:
     value: "False"
+  DB_HOST:
+    secret:
+      optional: true
+  DB_PORT:
+    secret:
+      name: database
+      key: port
+      optional: true
   LOAD_TEST_DATA:
     value: "True"

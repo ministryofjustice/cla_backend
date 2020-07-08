@@ -138,7 +138,10 @@ jobs:
       - store_artifacts:
           path: test-reports
 
-  staging_deploy:
+  deploy:
+    parameters:
+      namespace:
+        type: string
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
     shell: /bin/sh -leo pipefail
@@ -153,18 +156,18 @@ jobs:
             tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
             mv linux-amd64/helm /usr/local/bin/helm
       - run:
-          name: Initialise Kubernetes staging context
+          name: Initialise Kubernetes << parameters.namespace >> context
           command: |
             setup-kube-auth
-            kubectl config use-context staging
+            kubectl config use-context << parameters.namespace >>
       - deploy:
-          name: Deploy to staging
+          name: Deploy to << parameters.namespace >>
           command: |
-            source .circleci/define_build_environment_variables
-            ./bin/staging_deploy.sh
+            source .circleci/define_build_environment_variables << parameters.namespace >>
+            ./bin/<< parameters.namespace >>_deploy.sh
             echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV
       - slack/notify:
-          message: ':tada: Deployed branch $CIRCLE_BRANCH'
+          message: ':tada: (<< parameters.namespace >>) Deployed branch $CIRCLE_BRANCH'
           title: '$RELEASE_HOST'
           title_link: 'https://$RELEASE_HOST/admin/'
 
@@ -180,14 +183,14 @@ jobs:
             tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
             mv linux-amd64/helm /usr/local/bin/helm
       - run:
-          name: Initialise Kubernetes staging context
+          name: Initialise Kubernetes uat context
           command: |
             setup-kube-auth
-            kubectl config use-context staging
+            kubectl config use-context uat
       - run:
-          name: Delete staging release
+          name: Delete uat release
           command: |
-            ./bin/delete_staging_release.sh
+            ./bin/delete_uat_release.sh
 
 workflows:
   version: 2
@@ -202,11 +205,44 @@ workflows:
             - lint
             - test
           context: laa-cla-backend
+      - deploy:
+          name: uat_deploy
+          namespace: uat
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - master
+          context: laa-cla-backend
+
       - staging_deploy_approval:
           type: approval
           requires:
             - build
-      - staging_deploy:
+          filters:
+            branches:
+              only:
+                - master
+                - epic/LGA-959-kubernetes
+      - deploy:
+          name: staging_deploy
+          namespace: staging
           requires:
             - staging_deploy_approval
+          context: laa-cla-backend
+
+      - production_deploy_approval:
+          requires:
+            - staging_deploy
+          type: approval
+          filters:
+            branches:
+              only:
+                - master
+      - deploy:
+          name: production_deploy
+          namespace: production
+          requires:
+            - production_deploy_approval
           context: laa-cla-backend

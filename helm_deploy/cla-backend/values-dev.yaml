@@ -26,3 +26,14 @@ envVars:
   ADMIN_PASSWORD:
     secret: null
     value: "admin"
+  DB_HOST:
+    secret:
+      optional: true
+  DB_PORT:
+    secret:
+      name: database
+      key: port
+      optional: true
+  REPLICA_DB_HOST:
+    secret:
+      optional: true

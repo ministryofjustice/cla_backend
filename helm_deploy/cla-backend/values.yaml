@@ -93,6 +93,10 @@ envVars:
     secret:
       name: database
       key: password
+  REPLICA_DB_HOST:
+    secret:
+      name: database
+      key: replica_host
   SECRET_KEY:
     secret:
       name: secret

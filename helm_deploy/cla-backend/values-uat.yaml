@@ -30,5 +30,8 @@ envVars:
       name: database
       key: port
       optional: true
+  REPLICA_DB_HOST:
+    secret:
+      optional: true
   LOAD_TEST_DATA:
     value: "True"

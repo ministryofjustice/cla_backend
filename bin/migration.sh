@@ -60,18 +60,18 @@ PGPASSWORD=$SOURCE_DB_PASS pg_dump -U $SOURCE_DB_USER \
       -h $TARGET_DB_HOST \
       -d $TARGET_DB_NAME \
       -f pre-data.sql \
-      2>> errors.txt
+      2>> errors.txt 1>> output.txt
 
  echo 'Doing restore data'
  PGPASSWORD=$TARGET_DB_PASS psql -U $TARGET_DB_USER \
       -h $TARGET_DB_HOST \
       -d $TARGET_DB_NAME \
       -f data.sql \
-      2>> errors.txt
+      2>> errors.txt 1>> output.txt
 
  echo 'Doing restore post-data'
  PGPASSWORD=$TARGET_DB_PASS psql -U $TARGET_DB_USER \
       -h $TARGET_DB_HOST \
       -d $TARGET_DB_NAME \
       -f post-data.sql \
-      2>> errors.txt
+      2>> errors.txt 1>> output.txt

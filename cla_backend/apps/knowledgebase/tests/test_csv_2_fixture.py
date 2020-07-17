@@ -12,9 +12,6 @@ class TestCSV2Fixture(TestCase):
     def setUp(self):
         self.datetime_now = datetime.now().replace(tzinfo=timezone.get_current_timezone()).isoformat()
 
-    def format_json(self, value):
-        return json.dumps(value, indent=4)
-
     def compare_dicts(self, outputDict, expectedDict):
         for key, value in expectedDict.items():
             self.assertIsInstance(value, type(outputDict[key]))

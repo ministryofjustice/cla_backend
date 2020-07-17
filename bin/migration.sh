@@ -2,7 +2,7 @@
 set -e
 
 # Make sure we can connect to the target database
-if PGPASSWORD=$TARGET_DB_PASS psql \
+if PGPASSWORD=$TARGET_DB_PASSWORD psql \
 -U $TARGET_DB_USER \
 -h $TARGET_DB_HOST \
 -lqt | cut -d \| -f 1 | grep -qw $TARGET_DB_NAME;
@@ -14,7 +14,7 @@ else
 fi
 
 # Make sure we can connect to the source database
-if PGPASSWORD=$SOURCE_DB_PASS psql \
+if PGPASSWORD=$SOURCE_DB_PASSWORD psql \
 -U $SOURCE_DB_USER \
 -h $SOURCE_DB_HOST \
 -lqt | cut -d \| -f 1 | grep -qw $SOURCE_DB_NAME;
@@ -26,26 +26,26 @@ else
 fi
 
 # Clear out the old database
-PGPASSWORD=$TARGET_DB_PASS psql -d $TARGET_DB_NAME -c 'drop schema public cascade;create schema public;'
+PGPASSWORD=$TARGET_DB_PASSWORD psql -d $TARGET_DB_NAME -c 'drop schema public cascade;create schema public;'
 
 ##################################################################################################################
 # Dump the source database
 ##################################################################################################################
-PGPASSWORD=$SOURCE_DB_PASS pg_dump -U $SOURCE_DB_USER \
+PGPASSWORD=$SOURCE_DB_PASSWORD pg_dump -U $SOURCE_DB_USER \
       -h $SOURCE_DB_HOST \
       -d $SOURCE_DB_NAME \
       -O \
      --section=pre-data > pre-data.sql
 
  echo 'Dumping data...'
- PGPASSWORD=$SOURCE_DB_PASS pg_dump -U $SOURCE_DB_USER \
+ PGPASSWORD=$SOURCE_DB_PASSWORD pg_dump -U $SOURCE_DB_USER \
       -h $SOURCE_DB_HOST \
       -d $SOURCE_DB_NAME \
       -O \
       --section=data > data.sql
 
  echo 'Dumping post-data...'
- PGPASSWORD=$SOURCE_DB_PASS pg_dump -U $SOURCE_DB_USER \
+ PGPASSWORD=$SOURCE_DB_PASSWORD pg_dump -U $SOURCE_DB_USER \
       -h $SOURCE_DB_HOST \
       -d $SOURCE_DB_NAME \
       -O \
@@ -56,21 +56,21 @@ PGPASSWORD=$SOURCE_DB_PASS pg_dump -U $SOURCE_DB_USER \
 # Restore the target database
 ##################################################################################################################
  echo 'Doing restore pre-data'
- PGPASSWORD=$TARGET_DB_PASS psql -U $TARGET_DB_USER \
+ PGPASSWORD=$TARGET_DB_PASSWORD psql -U $TARGET_DB_USER \
       -h $TARGET_DB_HOST \
       -d $TARGET_DB_NAME \
       -f pre-data.sql \
       2>> errors.txt 1>> output.txt
 
  echo 'Doing restore data'
- PGPASSWORD=$TARGET_DB_PASS psql -U $TARGET_DB_USER \
+ PGPASSWORD=$TARGET_DB_PASSWORD psql -U $TARGET_DB_USER \
       -h $TARGET_DB_HOST \
       -d $TARGET_DB_NAME \
       -f data.sql \
       2>> errors.txt 1>> output.txt
 
  echo 'Doing restore post-data'
- PGPASSWORD=$TARGET_DB_PASS psql -U $TARGET_DB_USER \
+ PGPASSWORD=$TARGET_DB_PASSWORD psql -U $TARGET_DB_USER \
       -h $TARGET_DB_HOST \
       -d $TARGET_DB_NAME \
       -f post-data.sql \

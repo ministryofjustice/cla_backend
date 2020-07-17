@@ -17,10 +17,11 @@ class TestCSV2Fixture(TestCase):
 
     def compare_dicts(self, outputDict, expectedDict):
         for key, value in expectedDict.items():
-            parsed_datetime = parse_datetime(value)
-            if isinstance(parsed_datetime, datetime):
-                self.compare_datetimes(parse_datetime(outputDict[key]), parsed_datetime)
             self.assertIsInstance(value, type(outputDict[key]))
+            if isinstance(parse_datetime(value), datetime):
+                self.compare_datetimes(parse_datetime(outputDict[key]), parse_datetime(value))
+            else:
+                self.assertEqual(outputDict[key], value)
 
     def compare_datetimes(self, outputDatetime, expectedDatetime):
         time_diff = outputDatetime - expectedDatetime
@@ -28,12 +29,17 @@ class TestCSV2Fixture(TestCase):
         self.assertLessEqual(time_diff_in_seconds, 0.5)
 
     def compare_lists(self, outputList, expectedList):
-        for count, expectedObject in enumerate(expectedList):
-            outputObject = outputList[count]
+        for expectedObject, outputObject in zip(expectedList, outputList):
+            self.compare_length(outputObject, expectedObject)
             for key, value in expectedObject.items():
+                self.assertIsInstance(value, type(outputObject[key]))
                 if isinstance(value, dict):
                     self.compare_dicts(outputObject[key], value)
-                self.assertIsInstance(value, type(outputObject[key]))
+                else:
+                    self.assertEqual(value, outputObject[key])
+
+    def compare_length(self, output, expected):
+        self.assertAlmostEqual(len(output), len(expected))
 
     def test_fixture_with_required_article_category_fields(self):
         file = open("./cla_backend/apps/knowledgebase/tests/CSVData/testcsv.csv")
@@ -204,4 +210,5 @@ class TestCSV2Fixture(TestCase):
             },
         ]
         outputList = json.loads(outputJSON)
+        self.compare_length(outputList, expectedList)
         self.compare_lists(outputList, expectedList)

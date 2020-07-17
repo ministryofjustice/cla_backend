@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: database-migration
-          image: "cla_backend:database_migration"
+          image: "saidmoj/database-migration:latest"
           imagePullPolicy: Always
           env:
             - name: SOURCE_DB_HOST

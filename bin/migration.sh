@@ -26,7 +26,10 @@ else
 fi
 
 # Clear out the old database
-PGPASSWORD=$TARGET_DB_PASSWORD psql -d $TARGET_DB_NAME -c 'drop schema public cascade;create schema public;'
+PGPASSWORD=$TARGET_DB_PASSWORD psql -U $TARGET_DB_USER \
+-h $TARGET_DB_HOST \
+-d $TARGET_DB_NAME \
+-c 'drop schema public cascade;create schema public;'
 
 ##################################################################################################################
 # Dump the source database

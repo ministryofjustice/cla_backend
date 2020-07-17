@@ -18,7 +18,7 @@ class TestCSV2Fixture(TestCase):
     def compare_dicts(self, outputDict, expectedDict):
         for key, value in expectedDict.items():
             parsed_datetime = parse_datetime(value)
-            if parse_datetime and isinstance(parsed_datetime, datetime):
+            if isinstance(parsed_datetime, datetime):
                 self.compare_datetimes(parse_datetime(outputDict[key]), parsed_datetime)
             self.assertIsInstance(value, type(outputDict[key]))
 
@@ -28,13 +28,12 @@ class TestCSV2Fixture(TestCase):
         self.assertLessEqual(time_diff_in_seconds, 0.5)
 
     def compare_lists(self, outputList, expectedList):
-        for expectedField in expectedList:
-            for outputField in outputList:
-                if expectedField["pk"] == outputField["pk"]:
-                    for key, value in expectedField.items():
-                        if isinstance(value, dict):
-                            self.compare_dicts(outputField[key], value)
-                        self.assertIsInstance(value, type(outputField[key]))
+        for count, expectedObject in enumerate(expectedList):
+            outputObject = outputList[count]
+            for key, value in expectedObject.items():
+                if isinstance(value, dict):
+                    self.compare_dicts(outputObject[key], value)
+                self.assertIsInstance(value, type(outputObject[key]))
 
     def test_fixture_with_required_article_category_fields(self):
         file = open("./cla_backend/apps/knowledgebase/tests/CSVData/testcsv.csv")
@@ -46,8 +45,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Debt",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -55,8 +54,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Education",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -64,8 +63,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Discrimination",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -73,8 +72,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Housing",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -82,8 +81,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Family",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -91,8 +90,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Welfare benefits",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -100,8 +99,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Action against police",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -109,8 +108,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Clinical negligence",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -118,8 +117,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Community care",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -127,8 +126,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Consumer",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -136,8 +135,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Crime",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -145,8 +144,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Employment",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -154,8 +153,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Immigration and asylum",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -163,8 +162,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Mental health",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -172,8 +171,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Miscellaneous",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -181,8 +180,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Personal injury",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -190,8 +189,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Public",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
             {
@@ -199,8 +198,8 @@ class TestCSV2Fixture(TestCase):
                 u"model": u"knowledgebase.articlecategory",
                 u"fields": {
                     u"name": u"Generic",
-                    u"created": u"""{date}""".format(date=self.datetime_now),
-                    u"modified": u"""{date}""".format(date=self.datetime_now),
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
                 },
             },
         ]

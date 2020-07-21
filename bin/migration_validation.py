@@ -82,7 +82,6 @@ if __name__ == "__main__":
     source_cursor = get_source_db_cursor()
     target_tables = get_all_tables(target_cursor)
     source_tables = get_all_tables(source_cursor)
-    tables_diff = [table[0] for table in source_tables if table not in target_tables]
 
     errors = []
     for table in source_tables:

@@ -34,6 +34,7 @@ PGPASSWORD=$TARGET_DB_PASSWORD psql -U $TARGET_DB_USER \
 ##################################################################################################################
 # Dump the source database
 ##################################################################################################################
+echo 'Dumping pre-data...'
 PGPASSWORD=$SOURCE_DB_PASSWORD pg_dump -U $SOURCE_DB_USER \
       -h $SOURCE_DB_HOST \
       -d $SOURCE_DB_NAME \
@@ -80,4 +81,4 @@ PGPASSWORD=$SOURCE_DB_PASSWORD pg_dump -U $SOURCE_DB_USER \
       2>> errors.txt 1>> output.txt
 
 echo 'Doing post migration validations'
-python /home/app/migration_validation.py
+python /home/app/migration_validation.py 2>> errors.txt 1>> output.txt

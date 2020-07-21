@@ -81,4 +81,4 @@ PGPASSWORD=$SOURCE_DB_PASSWORD pg_dump -U $SOURCE_DB_USER \
       2>> errors.txt 1>> output.txt
 
 echo 'Doing post migration validations'
-python /home/app/migration_validation.py 2>> errors.txt 1>> output.txt
+python /home/app/migration_validation.py 2>> errors.txt

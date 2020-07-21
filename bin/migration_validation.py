@@ -77,6 +77,20 @@ def get_current_sequence_value(cursor, sequence):
     return cursor.fetchone()
 
 
+def get_last_row(cursor, table_name):
+    keys = {"django_session": "session_key"}
+    cursor.execute(
+        """
+        SELECT *
+        FROM %s
+        ORDER BY %s desc
+        LIMIT 1
+        """
+        % (table_name, keys.get(table_name, "id"))
+    )
+    return cursor.fetchone()
+
+
 if __name__ == "__main__":
     target_cursor = get_target_db_cursor()
     source_cursor = get_source_db_cursor()
@@ -85,20 +99,30 @@ if __name__ == "__main__":
 
     errors = []
     for table in source_tables:
+        # Check table exists in target database
         if table not in target_tables:
             errors.append("Table %s does not exist in target database" % table[0])
         else:
+            # Check row count match for table
             source_count = get_row_count(source_cursor, table[0])
             target_count = get_row_count(target_cursor, table[0])
             if target_count != source_count:
                 errors.append("Table {} \t source:{} target:{}".format(table[0], source_count, target_count))
 
+            # Check last row match for table
+            source_values = get_last_row(source_cursor, table[0])
+            target_values = get_last_row(target_cursor, table[0])
+            if source_values != target_values:
+                errors.append("Target values in table %s do not match source" % table[0])
+
     source_sequences = get_database_sequences(source_cursor)
     target_sequences = get_database_sequences(target_cursor)
     for sequence in source_sequences:
+        # Check sequence exists in database
         if sequence not in target_sequences:
             errors.append("Sequence %s does not exist in target database" % sequence[0])
         else:
+            # Check last sequence values match
             source_sequence_value = get_current_sequence_value(source_cursor, sequence[0])
             target_sequence_value = get_current_sequence_value(target_cursor, sequence[0])
             if source_sequence_value != target_sequence_value:

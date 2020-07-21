@@ -27,7 +27,7 @@ class TestCSV2Fixture(TestCase):
         time_diff_in_seconds = time_diff.total_seconds()
         self.assertLessEqual(time_diff_in_seconds, 0.5)
 
-    def compare_lists(self, outputList, expectedList):
+    def compare_list_of_records(self, outputList, expectedList):
         for expectedObject, outputObject in zip(expectedList, outputList):
             self.compare_length(outputObject, expectedObject)
             for key, value in expectedObject.items():
@@ -40,8 +40,9 @@ class TestCSV2Fixture(TestCase):
     def compare_length(self, output, expected):
         self.assertAlmostEqual(len(output), len(expected))
 
-    def compare_sorted_lists(self, output, expected):
+    def compare_sorted_list_of_records(self, output, expected):
         for outputObj, expectedObj in zip(output, expected):
+            self.compare_length(output, expected)
             for key, value in expectedObj.items():
                 if key == "pk":
                     self.assertIsInstance(value, int)
@@ -221,7 +222,7 @@ class TestCSV2Fixture(TestCase):
         ]
         outputList = json.loads(outputJSON)
         self.compare_length(outputList, expectedList)
-        self.compare_lists(outputList, expectedList)
+        self.compare_list_of_records(outputList, expectedList)
 
     def test_fixture_with_other_resource_for_clients_entry_type(self):
         file = open("./cla_backend/apps/knowledgebase/tests/CSVData/csv_with_entry_type.csv")
@@ -415,7 +416,7 @@ class TestCSV2Fixture(TestCase):
         ]
         outputList = json.loads(outputJSON)
         self.compare_length(outputList, expectedList)
-        self.compare_lists(outputList, expectedList)
+        self.compare_list_of_records(outputList, expectedList)
 
     def test_fixture_with_legal_resource_for_clients_entry_type(self):
         file = open("./cla_backend/apps/knowledgebase/tests/CSVData/legal_resource_entry_type.csv")
@@ -609,7 +610,7 @@ class TestCSV2Fixture(TestCase):
         ]
         outputList = json.loads(outputJSON)
         self.compare_length(outputList, expectedList)
-        self.compare_lists(outputList, expectedList)
+        self.compare_list_of_records(outputList, expectedList)
 
     def test_fixture_with_prefilled_spreadsheet(self):
         file = open("./cla_backend/apps/knowledgebase/tests/CSVData/pre_filled_spreadsheet.csv")
@@ -1008,9 +1009,9 @@ class TestCSV2Fixture(TestCase):
         expected_article_category_maxtrix = expectedList[len(expectedList) - 18 :]
         output_article_category_maxtrix = outputList[len(outputList) - 18 :]
 
-        self.compare_lists(output_article_categories, expected_article_categories)
+        self.compare_list_of_records(output_article_categories, expected_article_categories)
 
         sortedOutputList = sorted(output_article_category_maxtrix, key=lambda x: x["fields"]["article_category"])
         sortedExpectedList = sorted(expected_article_category_maxtrix, key=lambda x: x["fields"]["article_category"])
 
-        self.compare_sorted_lists(sortedOutputList, sortedExpectedList)
+        self.compare_sorted_list_of_records(sortedOutputList, sortedExpectedList)

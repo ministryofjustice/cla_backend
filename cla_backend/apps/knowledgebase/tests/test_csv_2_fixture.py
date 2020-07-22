@@ -1004,14 +1004,196 @@ class TestCSV2Fixture(TestCase):
 
         self.compare_length(outputList, expectedList)
 
-        expected_article_categories = expectedList[: len(expectedList) - 18]
-        output_article_categories = outputList[: len(outputList) - 18]
-        expected_article_category_maxtrix = expectedList[len(expectedList) - 18 :]
-        output_article_category_maxtrix = outputList[len(outputList) - 18 :]
+        output_records_in_order = outputList[: len(outputList) - 18]
+        expected_records_in_order = expectedList[: len(expectedList) - 18]
 
-        self.compare_list_of_records(output_article_categories, expected_article_categories)
+        output_article_category_maxtrix = outputList[len(outputList) - 18 :]
+        expected_article_category_maxtrix = expectedList[len(expectedList) - 18 :]
+
+        self.compare_list_of_records(output_records_in_order, expected_records_in_order)
 
         sortedOutputList = sorted(output_article_category_maxtrix, key=lambda x: x["fields"]["article_category"])
         sortedExpectedList = sorted(expected_article_category_maxtrix, key=lambda x: x["fields"]["article_category"])
 
         self.compare_sorted_list_of_records(sortedOutputList, sortedExpectedList)
+
+    def test_fixture_with_empty_csv(self):
+        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/empty_csv.csv")
+        csv = KnowledgebaseCsvParse(file)
+        outputJSON = csv.fixture_as_json()
+        expectedList = [
+            {
+                u"pk": 1,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Debt",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 2,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Education",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 3,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Discrimination",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 4,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Housing",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 5,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Family",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 6,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Welfare benefits",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 7,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Action against police",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 8,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Clinical negligence",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 9,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Community care",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 10,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Consumer",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 11,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Crime",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 12,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Employment",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 13,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Immigration and asylum",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 14,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Mental health",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 15,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Miscellaneous",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 16,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Personal injury",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 17,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Public",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+            {
+                u"pk": 18,
+                u"model": u"knowledgebase.articlecategory",
+                u"fields": {
+                    u"name": u"Generic",
+                    u"created": u"{date}".format(date=self.datetime_now),
+                    u"modified": u"{date}".format(date=self.datetime_now),
+                },
+            },
+        ]
+
+        outputList = json.loads(outputJSON)
+        self.compare_length(outputList, expectedList)
+        self.compare_list_of_records(outputList, expectedList)
+
+
+# TODO
+# Refactor actually functionality
+# Start by changing the code and see if the code breaks. Also try changing the last test by making the "preferred_signpost" false/true for some of them. Make sure it fails
+# Once that is tested, try changing the actual code and see if it breaks. Means our test are working as expected
+# Then start refactoring. Find out again what the cc number is and what makes up the cc number - is it all the for loops, if statements combined or is it a particular piece of code
+# Then refactor and see what could be rewritten. Potentially may need to break functionality into classes and have certain classes handle the functionality instead of having it written imperatively

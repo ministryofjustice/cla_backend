@@ -117,6 +117,27 @@ class KnowledgebaseCsvParse(object):
             article_category_lookup[ac_field] = position
         return fixture, article_category_lookup
 
+    def create_article_category_maxtrix(self, record_categories, position, article_category_lookup):
+        records = []
+        for article_cat_position, (csv_field, spreadsheet_value) in enumerate(record_categories.iteritems()):
+            if len(spreadsheet_value) > 0:
+                if spreadsheet_value != "x" and not spreadsheet_value.startswith("Preferred"):
+                    self.log("Odd value %s in %s" % (spreadsheet_value, csv_field))
+                    continue
+                d = {
+                    "pk": article_cat_position,
+                    "model": "knowledgebase.articlecategorymatrix",
+                    "fields": {
+                        "created": self.datetime_now,
+                        "modified": self.datetime_now,
+                        "article": position,
+                        "article_category": article_category_lookup[csv_field],
+                        "preferred_signpost": spreadsheet_value.startswith("Preferred"),
+                    },
+                }
+                records.append(d)
+        return records
+
     def fixture_as_json(self):
         """
         @return: String of complete JSON doc. with all three record types.
@@ -166,15 +187,6 @@ class KnowledgebaseCsvParse(object):
             )
             fixture.extend(article_category_maxtrix_records)
 
-        #             record_category_object = RecordCategoryObjects()
-        #             record_category_object.create_article_category_maxtrix(
-        #                 record_categories, self.datetime_now, position, article_category_lookup, self.log
-        #             )
-        #             fixture.extend(record_category_object.records)
-
-        # TODO
-        # Finish writing functionality as a class
-
         for stat, s_count in stats.iteritems():
             self.log("%s records %s" % (s_count, stat))
 
@@ -182,24 +194,3 @@ class KnowledgebaseCsvParse(object):
 
     def log(self, msg):
         sys.stderr.write(msg + "\n")
-
-    def create_article_category_maxtrix(self, record_categories, position, article_category_lookup):
-        records = []
-        for article_cat_position, (csv_field, spreadsheet_value) in enumerate(record_categories.iteritems()):
-            if len(spreadsheet_value) > 0:
-                if spreadsheet_value != "x" and not spreadsheet_value.startswith("Preferred"):
-                    self.log("Odd value %s in %s" % (spreadsheet_value, csv_field))
-                    continue
-                d = {
-                    "pk": article_cat_position,
-                    "model": "knowledgebase.articlecategorymatrix",
-                    "fields": {
-                        "created": self.datetime_now,
-                        "modified": self.datetime_now,
-                        "article": position,
-                        "article_category": article_category_lookup[csv_field],
-                        "preferred_signpost": spreadsheet_value.startswith("Preferred"),
-                    },
-                }
-                records.append(d)
-        return records

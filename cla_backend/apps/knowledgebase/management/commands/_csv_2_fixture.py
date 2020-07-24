@@ -117,7 +117,37 @@ class KnowledgebaseCsvParse(object):
             article_category_lookup[ac_field] = position
         return fixture, article_category_lookup
 
-    def create_article_category_maxtrix(self, record_categories, position, article_category_lookup):
+    def _create_record_objects(self, r, position):
+        record_categories = {}
+        d = {
+            "pk": position,
+            "model": "knowledgebase.article",
+            "fields": {"created": self.datetime_now, "modified": self.datetime_now},
+        }
+        for csv_field, django_field_name in self.field_mapping.iteritems():
+
+            if csv_field in self.csv_article_category_fields:
+                # these are the ArticleCategory related fields
+                record_categories[csv_field] = r[csv_field]
+
+            elif django_field_name == "resource_type":
+                d["fields"][django_field_name] = r[csv_field][:5].upper()
+
+            elif django_field_name == "website":
+
+                website = r[csv_field].decode("ascii", "ignore")
+                if not website.startswith("http"):
+                    website = "http://" + website
+
+                d["fields"][django_field_name] = website
+
+            else:
+                # normal field
+                d["fields"][django_field_name] = r[csv_field].decode("ascii", "ignore")
+
+        return record_categories, d
+
+    def _create_article_category_maxtrix(self, record_categories, position, article_category_lookup):
         records = []
         for article_cat_position, (csv_field, spreadsheet_value) in enumerate(record_categories.iteritems()):
             if len(spreadsheet_value) > 0:
@@ -152,39 +182,14 @@ class KnowledgebaseCsvParse(object):
                 continue
 
             stats["loaded"] += 1
-            record_categories = {}
             position += 1
-            d = {
-                "pk": position,
-                "model": "knowledgebase.article",
-                "fields": {"created": self.datetime_now, "modified": self.datetime_now},
-            }
-            for csv_field, django_field_name in self.field_mapping.iteritems():
 
-                if csv_field in self.csv_article_category_fields:
-                    # these are the ArticleCategory related fields
-                    record_categories[csv_field] = r[csv_field]
-
-                elif django_field_name == "resource_type":
-                    d["fields"][django_field_name] = r[csv_field][:5].upper()
-
-                elif django_field_name == "website":
-
-                    website = r[csv_field].decode("ascii", "ignore")
-                    if not website.startswith("http"):
-                        website = "http://" + website
-
-                    d["fields"][django_field_name] = website
-
-                else:
-                    # normal field
-                    d["fields"][django_field_name] = r[csv_field].decode("ascii", "ignore")
-
+            record_categories, d = self._create_record_objects(r, position)
             fixture.append(d)
 
             # map ArticleCategory records via ArticleCategoryMatrix
 
-            article_category_maxtrix_records = self.create_article_category_maxtrix(
+            article_category_maxtrix_records = self._create_article_category_maxtrix(
                 record_categories, position, article_category_lookup
             )
             fixture.extend(article_category_maxtrix_records)

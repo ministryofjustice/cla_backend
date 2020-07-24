@@ -122,9 +122,7 @@ class KnowledgebaseCsvParse(object):
         @return: String of complete JSON doc. with all three record types.
         """
 
-        fixture = []
-        ac_fixture, article_category_lookup = self._article_category_fixture()
-        fixture.extend(ac_fixture)
+        fixture, article_category_lookup = self._article_category_fixture()
 
         stats = {"skipped": 0, "loaded": 0}
         for position, r in enumerate(self.csv_reader):

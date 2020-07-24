@@ -127,8 +127,7 @@ class KnowledgebaseCsvParse(object):
         fixture.extend(ac_fixture)
 
         stats = {"skipped": 0, "loaded": 0}
-        position = 0
-        for r in self.csv_reader:
+        for position, r in enumerate(self.csv_reader):
             if r["Entry type"] != "Other resource for clients" and r["Entry type"] != "Legal resource for clients":
                 stats["skipped"] += 1
                 continue

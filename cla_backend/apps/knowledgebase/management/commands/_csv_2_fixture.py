@@ -143,15 +143,13 @@ class KnowledgebaseCsvParse(object):
                 "fields": {"created": self.datetime_now, "modified": self.datetime_now},
             }
             for csv_field, django_field_name in self.field_mapping.iteritems():
+
                 if csv_field in self.csv_article_category_fields:
                     # these are the ArticleCategory related fields
                     record_categories[csv_field] = r[csv_field]
 
                 elif django_field_name == "resource_type":
-                    if r[csv_field] == "Legal resource for clients":
-                        d["fields"][django_field_name] = "LEGAL"
-                    else:
-                        d["fields"][django_field_name] = "OTHER"
+                    d["fields"][django_field_name] = r[csv_field][:5].upper()
 
                 elif django_field_name == "website":
 

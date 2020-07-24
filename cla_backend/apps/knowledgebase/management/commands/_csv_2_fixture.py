@@ -182,6 +182,8 @@ class KnowledgebaseCsvParse(object):
 
             fixture.append(d)
 
+            # map ArticleCategory records via ArticleCategoryMatrix
+
             article_category_maxtrix_records = self.create_article_category_maxtrix(
                 record_categories, position, article_category_lookup
             )

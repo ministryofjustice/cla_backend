@@ -1189,11 +1189,3 @@ class TestCSV2Fixture(TestCase):
         outputList = json.loads(outputJSON)
         self.compare_length(outputList, expectedList)
         self.compare_list_of_records(outputList, expectedList)
-
-
-# TODO
-# Refactor actually functionality
-# Start by changing the code and see if the code breaks. Also try changing the last test by making the "preferred_signpost" false/true for some of them. Make sure it fails
-# Once that is tested, try changing the actual code and see if it breaks. Means our test are working as expected
-# Then start refactoring. Find out again what the cc number is and what makes up the cc number - is it all the for loops, if statements combined or is it a particular piece of code
-# Then refactor and see what could be rewritten. Potentially may need to break functionality into classes and have certain classes handle the functionality instead of having it written imperatively

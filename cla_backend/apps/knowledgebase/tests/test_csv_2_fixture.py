@@ -40,12 +40,16 @@ class TestCSV2Fixture(TestCase):
     def compare_length(self, output, expected):
         self.assertAlmostEqual(len(output), len(expected))
 
-    def compare_article_category_matrices(self, output, expected):
+    def compare_article_category_matrices(self, output, expected, pk_range):
         for outputObj, expectedObj in zip(output, expected):
             self.compare_length(output, expected)
             for key, value in expectedObj.items():
                 if key == "pk":
                     self.assertIsInstance(value, int)
+                    self.assertIsInstance(value, type(outputObj[key]))
+                    min_pk_value, max_pk_value = pk_range
+                    self.assertGreaterEqual(value, min_pk_value)
+                    self.assertLessEqual(value, max_pk_value)
                 elif isinstance(value, dict):
                     self.compare_dicts(outputObj[key], value)
                 else:
@@ -1237,12 +1241,17 @@ class TestCSV2Fixture(TestCase):
         output_article_1_category_matrix = outputList[19:37]
         expected_article_1_category_matrix = expectedList[19:37]
 
+        pk_range_acm_1 = (
+            min(output_article_1_category_matrix, key=lambda x: x["pk"])["pk"],
+            max(output_article_1_category_matrix, key=lambda x: x["pk"])["pk"],
+        )
+
         output_sorted_acm_1 = sorted(output_article_1_category_matrix, key=lambda x: x["fields"]["article_category"])
         expected_sorted_acm_1 = sorted(
             expected_article_1_category_matrix, key=lambda x: x["fields"]["article_category"]
         )
 
-        self.compare_article_category_matrices(output_sorted_acm_1, expected_sorted_acm_1)
+        self.compare_article_category_matrices(output_sorted_acm_1, expected_sorted_acm_1, pk_range_acm_1)
 
         output_article_2 = outputList[37:38]
         expected_article_2 = expectedList[37:38]
@@ -1252,14 +1261,17 @@ class TestCSV2Fixture(TestCase):
         output_article_2_category_matrix = outputList[-18:]
         expected_article_2_category_matrix = expectedList[-18:]
 
-        print(output_article_2_category_matrix, expected_article_2_category_matrix)
+        pk_range_acm_2 = (
+            min(output_article_2_category_matrix, key=lambda x: x["pk"])["pk"],
+            max(output_article_2_category_matrix, key=lambda x: x["pk"])["pk"],
+        )
 
         output_sorted_acm_2 = sorted(output_article_2_category_matrix, key=lambda x: x["fields"]["article_category"])
         expected_sorted_acm_2 = sorted(
             expected_article_2_category_matrix, key=lambda x: x["fields"]["article_category"]
         )
 
-        self.compare_article_category_matrices(output_sorted_acm_2, expected_sorted_acm_2)
+        self.compare_article_category_matrices(output_sorted_acm_2, expected_sorted_acm_2, pk_range_acm_2)
 
 
 #     def test_fixture_with_empty_csv(self):

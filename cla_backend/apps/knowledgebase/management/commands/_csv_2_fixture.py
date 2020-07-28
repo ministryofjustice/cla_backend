@@ -117,82 +117,75 @@ class KnowledgebaseCsvParse(object):
             article_category_lookup[ac_field] = position
         return fixture, article_category_lookup
 
-    def _create_record_objects(self, r, position):
-        record_categories = {}
-        d = {
-            "pk": position,
-            "model": "knowledgebase.article",
-            "fields": {"created": self.datetime_now, "modified": self.datetime_now},
-        }
-        for csv_field, django_field_name in self.field_mapping.iteritems():
-
-            if csv_field in self.csv_article_category_fields:
-                # these are the ArticleCategory related fields
-                record_categories[csv_field] = r[csv_field]
-
-            elif django_field_name == "resource_type":
-                d["fields"][django_field_name] = r[csv_field][:5].upper()
-
-            elif django_field_name == "website":
-
-                website = r[csv_field].decode("ascii", "ignore")
-                if not website.startswith("http"):
-                    website = "http://" + website
-
-                d["fields"][django_field_name] = website
-
-            else:
-                # normal field
-                d["fields"][django_field_name] = r[csv_field].decode("ascii", "ignore")
-
-        return record_categories, d
-
-    def _create_article_category_maxtrix(self, record_categories, position, article_category_lookup):
-        records = []
-        for article_cat_position, (csv_field, spreadsheet_value) in enumerate(record_categories.iteritems()):
-            if len(spreadsheet_value) > 0:
-                if spreadsheet_value != "x" and not spreadsheet_value.startswith("Preferred"):
-                    self.log("Odd value %s in %s" % (spreadsheet_value, csv_field))
-                    continue
-                d = {
-                    "pk": article_cat_position,
-                    "model": "knowledgebase.articlecategorymatrix",
-                    "fields": {
-                        "created": self.datetime_now,
-                        "modified": self.datetime_now,
-                        "article": position,
-                        "article_category": article_category_lookup[csv_field],
-                        "preferred_signpost": spreadsheet_value.startswith("Preferred"),
-                    },
-                }
-                records.append(d)
-        return records
-
-    def fixture_as_json(self):
+    def fixture_as_json(self):  # noqa: C901
         """
         @return: String of complete JSON doc. with all three record types.
         """
 
-        fixture, article_category_lookup = self._article_category_fixture()
+        fixture = []
+        ac_fixture, article_category_lookup = self._article_category_fixture()
+        fixture.extend(ac_fixture)
 
         stats = {"skipped": 0, "loaded": 0}
-        for position, r in enumerate(self.csv_reader):
+        position = 0
+        article_cat_position = 0
+        for r in self.csv_reader:
             if r["Entry type"] != "Other resource for clients" and r["Entry type"] != "Legal resource for clients":
                 stats["skipped"] += 1
                 continue
 
             stats["loaded"] += 1
+            record_categories = {}
             position += 1
+            d = {
+                "pk": position,
+                "model": "knowledgebase.article",
+                "fields": {"created": self.datetime_now, "modified": self.datetime_now},
+            }
+            for csv_field, django_field_name in self.field_mapping.iteritems():
+                if csv_field in self.csv_article_category_fields:
+                    # these are the ArticleCategory related fields
+                    record_categories[csv_field] = r[csv_field]
 
-            record_categories, d = self._create_record_objects(r, position)
+                elif django_field_name == "resource_type":
+                    if r[csv_field] == "Legal resource for clients":
+                        d["fields"][django_field_name] = "LEGAL"
+                    else:
+                        d["fields"][django_field_name] = "OTHER"
+
+                elif django_field_name == "website":
+
+                    website = r[csv_field].decode("ascii", "ignore")
+                    if not website.startswith("http"):
+                        website = "http://" + website
+
+                    d["fields"][django_field_name] = website
+
+                else:
+                    # normal field
+                    d["fields"][django_field_name] = r[csv_field].decode("ascii", "ignore")
+
             fixture.append(d)
 
             # map ArticleCategory records via ArticleCategoryMatrix
-
-            article_category_maxtrix_records = self._create_article_category_maxtrix(
-                record_categories, position, article_category_lookup
-            )
-            fixture.extend(article_category_maxtrix_records)
+            for csv_field, spreadsheet_value in record_categories.iteritems():
+                if len(spreadsheet_value) > 0:
+                    if spreadsheet_value != "x" and not spreadsheet_value.startswith("Preferred"):
+                        self.log("Odd value %s in %s" % (spreadsheet_value, csv_field))
+                        continue
+                    article_cat_position += 1
+                    d = {
+                        "pk": article_cat_position,
+                        "model": "knowledgebase.articlecategorymatrix",
+                        "fields": {
+                            "created": self.datetime_now,
+                            "modified": self.datetime_now,
+                            "article": position,
+                            "article_category": article_category_lookup[csv_field],
+                            "preferred_signpost": spreadsheet_value.startswith("Preferred"),
+                        },
+                    }
+                    fixture.append(d)
 
         for stat, s_count in stats.iteritems():
             self.log("%s records %s" % (s_count, stat))

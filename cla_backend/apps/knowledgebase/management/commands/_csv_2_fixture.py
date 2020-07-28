@@ -117,55 +117,53 @@ class KnowledgebaseCsvParse(object):
             article_category_lookup[ac_field] = position
         return fixture, article_category_lookup
 
-    def fixture_as_json(self):  # noqa: C901
+    def _create_article_and_categories(self, r, position):
+        record_categories = {}
+        d = {
+            "pk": position,
+            "model": "knowledgebase.article",
+            "fields": {"created": self.datetime_now, "modified": self.datetime_now},
+        }
+        for csv_field, django_field_name in self.field_mapping.iteritems():
+
+            if csv_field in self.csv_article_category_fields:
+                # these are the ArticleCategory related fields
+                record_categories[csv_field] = r[csv_field]
+
+            elif django_field_name == "resource_type":
+                d["fields"][django_field_name] = r[csv_field][:5].upper()
+
+            elif django_field_name == "website":
+
+                website = r[csv_field].decode("ascii", "ignore")
+                if not website.startswith("http"):
+                    website = "http://" + website
+
+                d["fields"][django_field_name] = website
+
+            else:
+                # normal field
+                d["fields"][django_field_name] = r[csv_field].decode("ascii", "ignore")
+
+        return record_categories, d
+
+    def fixture_as_json(self):
         """
         @return: String of complete JSON doc. with all three record types.
         """
 
-        fixture = []
-        ac_fixture, article_category_lookup = self._article_category_fixture()
-        fixture.extend(ac_fixture)
-
-        stats = {"skipped": 0, "loaded": 0}
-        position = 0
+        fixture, article_category_lookup = self._article_category_fixture()
         article_cat_position = 0
-        for r in self.csv_reader:
+        stats = {"skipped": 0, "loaded": 0}
+        for position, r in enumerate(self.csv_reader):
             if r["Entry type"] != "Other resource for clients" and r["Entry type"] != "Legal resource for clients":
                 stats["skipped"] += 1
                 continue
 
             stats["loaded"] += 1
-            record_categories = {}
             position += 1
-            d = {
-                "pk": position,
-                "model": "knowledgebase.article",
-                "fields": {"created": self.datetime_now, "modified": self.datetime_now},
-            }
-            for csv_field, django_field_name in self.field_mapping.iteritems():
-                if csv_field in self.csv_article_category_fields:
-                    # these are the ArticleCategory related fields
-                    record_categories[csv_field] = r[csv_field]
-
-                elif django_field_name == "resource_type":
-                    if r[csv_field] == "Legal resource for clients":
-                        d["fields"][django_field_name] = "LEGAL"
-                    else:
-                        d["fields"][django_field_name] = "OTHER"
-
-                elif django_field_name == "website":
-
-                    website = r[csv_field].decode("ascii", "ignore")
-                    if not website.startswith("http"):
-                        website = "http://" + website
-
-                    d["fields"][django_field_name] = website
-
-                else:
-                    # normal field
-                    d["fields"][django_field_name] = r[csv_field].decode("ascii", "ignore")
-
-            fixture.append(d)
+            record_categories, article = self._create_article_and_categories(r, position)
+            fixture.append(article)
 
             # map ArticleCategory records via ArticleCategoryMatrix
             for csv_field, spreadsheet_value in record_categories.iteritems():

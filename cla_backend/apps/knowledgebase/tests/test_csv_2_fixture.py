@@ -1022,7 +1022,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 1,
+                u"pk": 19,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1033,7 +1033,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 2,
+                u"pk": 20,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1044,7 +1044,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 3,
+                u"pk": 21,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1055,7 +1055,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 4,
+                u"pk": 22,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1066,7 +1066,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 5,
+                u"pk": 23,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1077,7 +1077,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 6,
+                u"pk": 24,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1088,7 +1088,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 7,
+                u"pk": 25,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1099,7 +1099,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 8,
+                u"pk": 26,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1110,7 +1110,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 9,
+                u"pk": 27,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1121,7 +1121,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 10,
+                u"pk": 28,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1132,7 +1132,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 11,
+                u"pk": 29,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1143,7 +1143,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 12,
+                u"pk": 30,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1154,7 +1154,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 13,
+                u"pk": 31,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1165,7 +1165,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 14,
+                u"pk": 32,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1176,7 +1176,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 15,
+                u"pk": 33,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1187,7 +1187,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 16,
+                u"pk": 34,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1198,7 +1198,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 17,
+                u"pk": 35,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),
@@ -1209,7 +1209,7 @@ class TestCSV2Fixture(TestCase):
                 },
             },
             {
-                u"pk": 18,
+                u"pk": 36,
                 u"model": u"knowledgebase.articlecategorymatrix",
                 u"fields": {
                     u"created": u"{date}".format(date=self.datetime_now),

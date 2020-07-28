@@ -117,7 +117,7 @@ class KnowledgebaseCsvParse(object):
             article_category_lookup[ac_field] = position
         return fixture, article_category_lookup
 
-    def _create_record_objects(self, r, position):
+    def _create_article_and_categories(self, r, position):
         record_categories = {}
         d = {
             "pk": position,
@@ -147,34 +147,13 @@ class KnowledgebaseCsvParse(object):
 
         return record_categories, d
 
-    def _create_article_category_maxtrix(self, record_categories, position, article_category_lookup):
-        records = []
-        for article_cat_position, (csv_field, spreadsheet_value) in enumerate(record_categories.iteritems()):
-            if len(spreadsheet_value) > 0:
-                if spreadsheet_value != "x" and not spreadsheet_value.startswith("Preferred"):
-                    self.log("Odd value %s in %s" % (spreadsheet_value, csv_field))
-                    continue
-                d = {
-                    "pk": article_cat_position,
-                    "model": "knowledgebase.articlecategorymatrix",
-                    "fields": {
-                        "created": self.datetime_now,
-                        "modified": self.datetime_now,
-                        "article": position,
-                        "article_category": article_category_lookup[csv_field],
-                        "preferred_signpost": spreadsheet_value.startswith("Preferred"),
-                    },
-                }
-                records.append(d)
-        return records
-
     def fixture_as_json(self):
         """
         @return: String of complete JSON doc. with all three record types.
         """
 
         fixture, article_category_lookup = self._article_category_fixture()
-
+        article_cat_position = 0
         stats = {"skipped": 0, "loaded": 0}
         for position, r in enumerate(self.csv_reader):
             if r["Entry type"] != "Other resource for clients" and r["Entry type"] != "Legal resource for clients":
@@ -183,16 +162,28 @@ class KnowledgebaseCsvParse(object):
 
             stats["loaded"] += 1
             position += 1
-
-            record_categories, d = self._create_record_objects(r, position)
-            fixture.append(d)
+            record_categories, article = self._create_article_and_categories(r, position)
+            fixture.append(article)
 
             # map ArticleCategory records via ArticleCategoryMatrix
-
-            article_category_maxtrix_records = self._create_article_category_maxtrix(
-                record_categories, position, article_category_lookup
-            )
-            fixture.extend(article_category_maxtrix_records)
+            for csv_field, spreadsheet_value in record_categories.iteritems():
+                if len(spreadsheet_value) > 0:
+                    if spreadsheet_value != "x" and not spreadsheet_value.startswith("Preferred"):
+                        self.log("Odd value %s in %s" % (spreadsheet_value, csv_field))
+                        continue
+                    article_cat_position += 1
+                    d = {
+                        "pk": article_cat_position,
+                        "model": "knowledgebase.articlecategorymatrix",
+                        "fields": {
+                            "created": self.datetime_now,
+                            "modified": self.datetime_now,
+                            "article": position,
+                            "article_category": article_category_lookup[csv_field],
+                            "preferred_signpost": spreadsheet_value.startswith("Preferred"),
+                        },
+                    }
+                    fixture.append(d)
 
         for stat, s_count in stats.iteritems():
             self.log("%s records %s" % (s_count, stat))

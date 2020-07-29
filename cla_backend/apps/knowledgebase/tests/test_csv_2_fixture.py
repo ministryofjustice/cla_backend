@@ -22,9 +22,9 @@ class TestCSV2Fixture(TestCase):
         expected_sorted_acm = sorted(expected_category_matrix, key=lambda x: x["fields"]["article_category"])
         return output_sorted_acm, expected_sorted_acm
 
-    def slice_records(self, output_records, expected_records, startRange=None, endRange=None):
-        output_sliced = output_records[startRange:endRange]
-        expected_sliced = expected_records[startRange:endRange]
+    def slice_records(self, output_records, expected_records, start_index=None, end_index=None):
+        output_sliced = output_records[start_index:end_index]
+        expected_sliced = expected_records[start_index:end_index]
         return output_sliced, expected_sliced
 
     def compare_dicts(self, outputDict, expectedDict):
@@ -1246,7 +1246,7 @@ class TestCSV2Fixture(TestCase):
         self.compare_length(outputList, expectedList)
 
         output_article_categories, expected_article_categories = self.slice_records(
-            outputList, expectedList, endRange=18
+            outputList, expectedList, end_index=18
         )
         self.compare_list_of_records(output_article_categories, expected_article_categories)
 

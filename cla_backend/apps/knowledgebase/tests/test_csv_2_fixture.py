@@ -29,13 +29,14 @@ class TestCSV2Fixture(TestCase):
 
     def compare_dicts(self, outputDict, expectedDict):
         for key, value in expectedDict.items():
-            self.assertIsInstance(value, type(outputDict[key]))
+            outputValue = outputDict[key]
+            self.assertIsInstance(value, type(outputValue))
             if isinstance(value, int):
-                self.assertEqual(outputDict[key], value)
+                self.assertEqual(outputValue, value)
             elif isinstance(parse_datetime(value), datetime):
-                self.compare_datetimes(parse_datetime(outputDict[key]), parse_datetime(value))
-            else:
-                self.assertEqual(outputDict[key], value)
+                self.compare_datetimes(parse_datetime(outputValue), parse_datetime(value))
+            elif isinstance(value, unicode):
+                self.assertEqual(outputValue, value)
 
     def compare_datetimes(self, outputDatetime, expectedDatetime):
         time_diff = outputDatetime - expectedDatetime
@@ -46,30 +47,31 @@ class TestCSV2Fixture(TestCase):
         for expectedObject, outputObject in zip(expectedList, outputList):
             self.compare_length(outputObject, expectedObject)
             for key, value in expectedObject.items():
-                self.assertIsInstance(value, type(outputObject[key]))
+                outputValue = outputObject[key]
+                self.assertIsInstance(value, type(outputValue))
                 if isinstance(value, dict):
-                    self.compare_dicts(outputObject[key], value)
+                    self.compare_dicts(outputValue, value)
                 else:
-                    self.assertEqual(outputObject[key], value)
+                    self.assertEqual(outputValue, value)
 
     def compare_length(self, output, expected):
-        self.assertAlmostEqual(len(output), len(expected))
+        self.assertEqual(len(output), len(expected))
 
     def compare_article_category_matrices(self, output, expected, pk_range):
         for outputObj, expectedObj in zip(output, expected):
             self.compare_length(output, expected)
             for key, value in expectedObj.items():
+                outputValue = outputObj[key]
                 if key == "pk":
-                    self.assertIsInstance(value, int)
-                    self.assertIsInstance(value, type(outputObj[key]))
+                    self.assertEqual(type(value), type(outputValue))
                     min_pk_value, max_pk_value = pk_range
                     self.assertGreaterEqual(value, min_pk_value)
                     self.assertLessEqual(value, max_pk_value)
                 elif isinstance(value, dict):
-                    self.compare_dicts(outputObj[key], value)
+                    self.compare_dicts(outputValue, value)
                 else:
-                    self.assertIsInstance(value, type(outputObj[key]))
-                    self.assertEqual(outputObj[key], value)
+                    self.assertIsInstance(value, type(outputValue))
+                    self.assertEqual(outputValue, value)
 
     def test_fixture_with_required_article_category_fields(self):
         file = open("./cla_backend/apps/knowledgebase/tests/CSVData/testcsv.csv")

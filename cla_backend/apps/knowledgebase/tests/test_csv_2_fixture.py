@@ -31,11 +31,9 @@ class TestCSV2Fixture(TestCase):
         for key, value in expectedDict.items():
             outputValue = outputDict[key]
             self.assertIsInstance(value, type(outputValue))
-            if isinstance(value, int):
-                self.assertEqual(outputValue, value)
-            elif isinstance(parse_datetime(value), datetime):
+            if isinstance(value, unicode) and isinstance(parse_datetime(value), datetime):
                 self.compare_datetimes(parse_datetime(outputValue), parse_datetime(value))
-            elif isinstance(value, unicode):
+            else:
                 self.assertEqual(outputValue, value)
 
     def compare_datetimes(self, outputDatetime, expectedDatetime):

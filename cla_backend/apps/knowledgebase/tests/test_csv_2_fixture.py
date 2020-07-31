@@ -30,7 +30,7 @@ class TestCSV2Fixture(TestCase):
     def compare_dicts(self, outputDict, expectedDict):
         for key, value in expectedDict.items():
             outputValue = outputDict[key]
-            self.assertIsInstance(value, type(outputValue))
+            self.assertEqual(type(outputValue), type(value))
             if isinstance(value, unicode) and isinstance(parse_datetime(value), datetime):
                 self.compare_datetimes(parse_datetime(outputValue), parse_datetime(value))
             else:
@@ -46,7 +46,7 @@ class TestCSV2Fixture(TestCase):
             self.compare_length(outputObject, expectedObject)
             for key, value in expectedObject.items():
                 outputValue = outputObject[key]
-                self.assertIsInstance(value, type(outputValue))
+                self.assertEqual(type(outputValue), type(value))
                 if isinstance(value, dict):
                     self.compare_dicts(outputValue, value)
                 else:
@@ -57,18 +57,18 @@ class TestCSV2Fixture(TestCase):
 
     def compare_article_category_matrices(self, output, expected, pk_range):
         for outputObj, expectedObj in zip(output, expected):
-            self.compare_length(output, expected)
+            self.compare_length(outputObj, expectedObj)
             for key, value in expectedObj.items():
                 outputValue = outputObj[key]
                 if key == "pk":
-                    self.assertEqual(type(value), type(outputValue))
+                    self.assertEqual(type(outputValue), type(value))
                     min_pk_value, max_pk_value = pk_range
                     self.assertGreaterEqual(value, min_pk_value)
                     self.assertLessEqual(value, max_pk_value)
                 elif isinstance(value, dict):
                     self.compare_dicts(outputValue, value)
                 else:
-                    self.assertIsInstance(value, type(outputValue))
+                    self.assertEqual(type(outputValue), type(value))
                     self.assertEqual(outputValue, value)
 
     def test_fixture_with_required_article_category_fields(self):

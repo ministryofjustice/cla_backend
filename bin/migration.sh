@@ -80,5 +80,12 @@ PGPASSWORD=$SOURCE_DB_PASSWORD pg_dump -U $SOURCE_DB_USER \
       -f post-data.sql \
       2>> errors.txt 1>> output.txt
 
+echo "Running ANALYZE;"
+PGPASSWORD=$TARGET_DB_PASSWORD psql -U $TARGET_DB_USER \
+-h $TARGET_DB_HOST \
+-d $TARGET_DB_NAME \
+-c 'ANALYZE;' \
+2>> errors.txt 1>> output.txt
+
 echo 'Doing post migration validations'
 python /home/app/migration_validation.py 2>> errors.txt

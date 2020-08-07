@@ -42,6 +42,36 @@ host: 'localhost'
 ingress:
   enabled: true
   annotations: {}
+  whitelist:
+    # MoJ
+    - 81.134.202.29/32
+    # MoJ/LAA
+    - 52.17.239.55/32
+    - 62.25.109.201/32
+    - 62.25.109.203/32
+    # ATOS datacentre
+    - 157.203.176.0/24
+    - 157.203.177.0/24
+    # LAA Manchester/32
+    - 62.25.109.201/32
+    - 62.25.109.203/32
+    - 31.97.19.127/32
+    - 31.67.24.68/32
+    # ARK Data Center IP ranges.
+    - 194.33.192.0/25
+    - 194.33.196.0/25
+    # Kubernetes - live0
+    - 34.247.134.240/32
+    - 34.251.93.81/32
+    - 52.17.133.167/32
+    # Kubernetes - live1
+    - 35.178.209.113/32
+    - 3.8.51.207/32
+    - 35.177.252.54/32
+    # HGS, new Civil Legal Aid call centre provider from Autumn 2019
+    - 213.78.108.84/32
+    - 84.43.86.100/32
+    - 185.38.246.208/32
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   # hosts:

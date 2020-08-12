@@ -1441,3 +1441,206 @@ class TestCSV2Fixture(TestCase):
         outputList = json.loads(outputJSON)
         self.compare_length(outputList, expectedList)
         self.compare_list_of_records(outputList, expectedList)
+
+    def test_fixture_with_helpline_field_removed(self):
+        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/csv_with_no_helpline_field.csv")
+        try:
+            csv = KnowledgebaseCsvParse(file)
+        except SystemExit:
+            self.fail("SystemExit Exception with a error code of -1")
+        else:
+            outputJSON = csv.fixture_as_json()
+            expectedList = [
+                {
+                    u"pk": 1,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Debt",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 2,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Education",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 3,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Discrimination",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 4,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Housing",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 5,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Family",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 6,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Welfare benefits",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 7,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Action against police",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 8,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Clinical negligence",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 9,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Community care",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 10,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Consumer",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 11,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Crime",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 12,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Employment",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 13,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Immigration and asylum",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 14,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Mental health",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 15,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Miscellaneous",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 16,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Personal injury",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 17,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Public",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 18,
+                    u"model": u"knowledgebase.articlecategory",
+                    u"fields": {
+                        u"name": u"Generic",
+                        u"created": u"{date}".format(date=self.datetime_now),
+                        u"modified": u"{date}".format(date=self.datetime_now),
+                    },
+                },
+                {
+                    u"pk": 1,
+                    "model": u"knowledgebase.article",
+                    "fields": {
+                        "created": u"{date}".format(date=self.datetime_now),
+                        "modified": u"{date}".format(date=self.datetime_now),
+                        "resource_type": u"OTHER",
+                        "website": u"https://Website 2",
+                        "geographic_coverage": u"Coverage 2",
+                        "type_of_service": u"Type of service 2",
+                        "description": u"Description",
+                        "service_name": u"Service",
+                        "organisation": u"Organisation",
+                        "accessibility": u"Accessibility 2",
+                        "when_to_use": u"When to use",
+                        "how_to_use": u"Guidance 2",
+                        "address": u"Address 2",
+                        "keywords": u"Current keywords 2",
+                        "opening_hours": u"Opening hours 2",
+                    },
+                },
+            ]
+            outputList = json.loads(outputJSON)
+            self.compare_length(outputList, expectedList)
+            self.compare_list_of_records(outputList, expectedList)
+
+
+#         outputList = json.loads(outputJSON)
+#         self.compare_length(outputList, expectedList)
+#         self.compare_list_of_records(outputList, expectedList)
+#         self.assertEqual(output, expected)

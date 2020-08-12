@@ -28,13 +28,13 @@ class TestCSV2Fixture(TestCase):
         return output_sliced, expected_sliced
 
     def compare_dicts(self, outputDict, expectedDict):
-        for key, value in expectedDict.items():
-            outputValue = outputDict[key]
-            self.assertEqual(type(outputValue), type(value))
-            if isinstance(value, unicode) and isinstance(parse_datetime(value), datetime):
-                self.compare_datetimes(parse_datetime(outputValue), parse_datetime(value))
+        for key, outputValue in outputDict.items():
+            expectedValue = expectedDict[key]
+            self.assertEqual(type(outputValue), type(expectedValue))
+            if isinstance(outputValue, unicode) and isinstance(parse_datetime(outputValue), datetime):
+                self.compare_datetimes(parse_datetime(outputValue), parse_datetime(expectedValue))
             else:
-                self.assertEqual(outputValue, value)
+                self.assertEqual(outputValue, expectedValue)
 
     def compare_datetimes(self, outputDatetime, expectedDatetime):
         time_diff = outputDatetime - expectedDatetime

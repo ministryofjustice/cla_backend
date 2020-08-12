@@ -43,7 +43,6 @@ class KnowledgebaseCsvParse(object):
             "Public": "Public",
             "Generic": "Generic",
             # </ArticleCategory>
-            "Helpline": "helpline",
             "Website": "website",
             "Address": "address",
             "Opening Hours": "opening_hours",

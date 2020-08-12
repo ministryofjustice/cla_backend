@@ -12,9 +12,9 @@ class TestCSV2Fixture(TestCase):
     def setUp(self):
         self.datetime_now = datetime.now().replace(tzinfo=timezone.get_current_timezone()).isoformat()
 
-    def calculate_pk_range(self, article_category_matrices):
-        min_range = min(article_category_matrices, key=lambda x: x["pk"])
-        max_range = max(article_category_matrices, key=lambda x: x["pk"])
+    def calculate_pk_range(self, article_category_matrix):
+        min_range = min(article_category_matrix, key=lambda x: x["pk"])
+        max_range = max(article_category_matrix, key=lambda x: x["pk"])
         return min_range["pk"], max_range["pk"]
 
     def sort_article_category_matrices(self, output_category_matrix, expected_category_matrix):
@@ -42,15 +42,15 @@ class TestCSV2Fixture(TestCase):
         self.assertLessEqual(time_diff_in_seconds, 0.5)
 
     def compare_list_of_records(self, outputList, expectedList):
-        for expectedObject, outputObject in zip(expectedList, outputList):
+        for outputObject, expectedObject in zip(outputList, expectedList):
             self.compare_length(outputObject, expectedObject)
-            for key, value in expectedObject.items():
-                outputValue = outputObject[key]
-                self.assertEqual(type(outputValue), type(value))
-                if isinstance(value, dict):
-                    self.compare_dicts(outputValue, value)
+            for key, outputValue in outputObject.items():
+                expectedValue = expectedObject[key]
+                self.assertEqual(type(outputValue), type(expectedValue))
+                if isinstance(outputValue, dict):
+                    self.compare_dicts(outputValue, expectedValue)
                 else:
-                    self.assertEqual(outputValue, value)
+                    self.assertEqual(outputValue, expectedValue)
 
     def compare_length(self, output, expected):
         self.assertEqual(len(output), len(expected))
@@ -58,18 +58,18 @@ class TestCSV2Fixture(TestCase):
     def compare_article_category_matrices(self, output, expected, pk_range):
         for outputObj, expectedObj in zip(output, expected):
             self.compare_length(outputObj, expectedObj)
-            for key, value in expectedObj.items():
-                outputValue = outputObj[key]
+            for key, outputValue in outputObj.items():
+                expectedValue = expectedObj[key]
                 if key == "pk":
-                    self.assertEqual(type(outputValue), type(value))
+                    self.assertEqual(type(outputValue), type(expectedValue))
                     min_pk_value, max_pk_value = pk_range
-                    self.assertGreaterEqual(value, min_pk_value)
-                    self.assertLessEqual(value, max_pk_value)
-                elif isinstance(value, dict):
-                    self.compare_dicts(outputValue, value)
+                    self.assertGreaterEqual(outputValue, min_pk_value)
+                    self.assertLessEqual(outputValue, max_pk_value)
+                elif isinstance(outputValue, dict):
+                    self.compare_dicts(outputValue, expectedValue)
                 else:
-                    self.assertEqual(type(outputValue), type(value))
-                    self.assertEqual(outputValue, value)
+                    self.assertEqual(type(outputValue), type(expectedValue))
+                    self.assertEqual(outputValue, expectedValue)
 
     def test_fixture_with_required_article_category_fields(self):
         file = open("./cla_backend/apps/knowledgebase/tests/CSVData/testcsv.csv")
@@ -1239,6 +1239,7 @@ class TestCSV2Fixture(TestCase):
 
         self.compare_length(outputList, expectedList)
 
+        # Refactor
         output_article_categories, expected_article_categories = self.slice_records(
             outputList, expectedList, end_index=18
         )
@@ -1248,18 +1249,19 @@ class TestCSV2Fixture(TestCase):
         self.compare_list_of_records(output_article_1, expected_article_1)
 
         output_acm_1, expected_acm_1 = self.slice_records(outputList, expectedList, 19, 37)
-        pk_range_acm_1 = self.calculate_pk_range(output_acm_1)
+        pk_range_acm_1 = self.calculate_pk_range(expected_acm_1)
         output_sorted_acm_1, expected_sorted_acm_1 = self.sort_article_category_matrices(output_acm_1, expected_acm_1)
         self.compare_article_category_matrices(output_sorted_acm_1, expected_sorted_acm_1, pk_range_acm_1)
 
         output_article_2, expected_article_2 = self.slice_records(outputList, expectedList, 37, 38)
         self.compare_list_of_records(output_article_2, expected_article_2)
 
+        # Remove these two lines. Same as output_acm2, expected_acm_2
         output_article_2_category_matrix = outputList[-18:]
         expected_article_2_category_matrix = expectedList[-18:]
 
         output_acm_2, expected_acm_2 = self.slice_records(outputList, expectedList, -18)
-        pk_range_acm_2 = self.calculate_pk_range(output_article_2_category_matrix)
+        pk_range_acm_2 = self.calculate_pk_range(expected_article_2_category_matrix)
         output_sorted_acm_2, expected_sorted_acm_2 = self.sort_article_category_matrices(
             output_article_2_category_matrix, expected_article_2_category_matrix
         )

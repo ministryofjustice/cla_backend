@@ -1620,7 +1620,7 @@ class TestCSV2Fixture(TestCase):
                         "created": u"{date}".format(date=self.datetime_now),
                         "modified": u"{date}".format(date=self.datetime_now),
                         "resource_type": u"OTHER",
-                        "website": u"https://Website 2",
+                        "website": u"http://Website 2",
                         "geographic_coverage": u"Coverage 2",
                         "type_of_service": u"Type of service 2",
                         "description": u"Description",

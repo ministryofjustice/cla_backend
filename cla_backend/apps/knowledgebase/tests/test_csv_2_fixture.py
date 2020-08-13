@@ -1,9 +1,12 @@
 import json
+import os
 from datetime import datetime
 
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
+from django.core import management
+
 
 from knowledgebase.management.commands._csv_2_fixture import KnowledgebaseCsvParse
 
@@ -11,6 +14,22 @@ from knowledgebase.management.commands._csv_2_fixture import KnowledgebaseCsvPar
 class TestCSV2Fixture(TestCase):
     def setUp(self):
         self.datetime_now = datetime.now().replace(tzinfo=timezone.get_current_timezone()).isoformat()
+
+    def find_path_to_csvfile(self, relative_path):
+        dirname = os.path.abspath(os.path.dirname(__file__))
+        csv_file = "CSVData/{}.csv".format(relative_path)
+        return os.path.join(dirname, csv_file)
+
+    def load_JSON_fixture_into_DB(self, relative_path):
+        try:
+            management.call_command(
+                "builddata",
+                "load_knowledgebase_csv",
+                "cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json",
+            )
+            management.call_command("loaddata", "cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json")
+        except Exception as e:
+            self.fail(e)
 
     def calculate_pk_range(self, article_category_matrix):
         min_range = min(article_category_matrix, key=lambda x: x["pk"])
@@ -72,7 +91,8 @@ class TestCSV2Fixture(TestCase):
                     self.assertEqual(outputValue, expectedValue)
 
     def test_fixture_with_required_article_category_fields(self):
-        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/testcsv.csv")
+        csv_file = self.find_path_to_csvfile("testcsv")
+        file = open(csv_file)
         try:
             csv = KnowledgebaseCsvParse(file)
         except SystemExit:
@@ -248,7 +268,8 @@ class TestCSV2Fixture(TestCase):
             self.compare_list_of_records(outputList, expectedList)
 
     def test_fixture_with_other_resource_for_clients_entry_type(self):
-        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/csv_with_entry_type.csv")
+        csv_file = self.find_path_to_csvfile("csv_with_entry_type")
+        file = open(csv_file)
         try:
             csv = KnowledgebaseCsvParse(file)
         except SystemExit:
@@ -445,7 +466,8 @@ class TestCSV2Fixture(TestCase):
             self.compare_list_of_records(outputList, expectedList)
 
     def test_fixture_with_legal_resource_for_clients_entry_type(self):
-        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/legal_resource_entry_type.csv")
+        csv_file = self.find_path_to_csvfile("legal_resource_entry_type")
+        file = open(csv_file)
         try:
             csv = KnowledgebaseCsvParse(file)
         except SystemExit:
@@ -642,7 +664,8 @@ class TestCSV2Fixture(TestCase):
             self.compare_list_of_records(outputList, expectedList)
 
     def test_fixture_with_prefilled_spreadsheet(self):
-        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/pre_filled_spreadsheet.csv")
+        csv_file = self.find_path_to_csvfile("pre_filled_spreadsheet")
+        file = open(csv_file)
         try:
             csv = KnowledgebaseCsvParse(file)
         except SystemExit:
@@ -1286,7 +1309,8 @@ class TestCSV2Fixture(TestCase):
             self.compare_article_category_matrices(output_sorted_acm_2, expected_sorted_acm_2, pk_range_acm_2)
 
     def test_fixture_with_empty_csv(self):
-        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/empty_csv.csv")
+        csv_file = self.find_path_to_csvfile("empty_csv")
+        file = open(csv_file)
         try:
             csv = KnowledgebaseCsvParse(file)
         except SystemExit:

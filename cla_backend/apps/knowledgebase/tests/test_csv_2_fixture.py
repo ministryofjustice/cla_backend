@@ -21,7 +21,6 @@ class TestCSV2Fixture(TestCase):
         return os.path.join(dirname, csv_file)
 
     def load_JSON_fixture_into_DB(self, relative_path):
-        print("Trying to Load Article into DB...")
         try:
             management.call_command("builddata", "load_knowledgebase_csv", self.find_path_to_csvfile(relative_path))
             management.call_command(
@@ -30,7 +29,7 @@ class TestCSV2Fixture(TestCase):
         except Exception as e:
             self.fail(e)
         else:
-            print("Article Loaded into DB Success!")
+            print("Record successfully loaded into DB!")
 
     def calculate_pk_range(self, article_category_matrix):
         min_range = min(article_category_matrix, key=lambda x: x["pk"])
@@ -466,6 +465,7 @@ class TestCSV2Fixture(TestCase):
             outputList = json.loads(outputJSON)
             self.compare_length(outputList, expectedList)
             self.compare_list_of_records(outputList, expectedList)
+            self.load_JSON_fixture_into_DB("csv_with_entry_type")
 
     def test_fixture_with_legal_resource_for_clients_entry_type(self):
         csv_file = self.find_path_to_csvfile("legal_resource_entry_type")
@@ -664,6 +664,7 @@ class TestCSV2Fixture(TestCase):
             outputList = json.loads(outputJSON)
             self.compare_length(outputList, expectedList)
             self.compare_list_of_records(outputList, expectedList)
+            self.load_JSON_fixture_into_DB("legal_resource_entry_type")
 
     def test_fixture_with_prefilled_spreadsheet(self):
         csv_file = self.find_path_to_csvfile("pre_filled_spreadsheet")
@@ -1309,6 +1310,7 @@ class TestCSV2Fixture(TestCase):
                 output_article_2_category_matrix, expected_article_2_category_matrix
             )
             self.compare_article_category_matrices(output_sorted_acm_2, expected_sorted_acm_2, pk_range_acm_2)
+            self.load_JSON_fixture_into_DB("pre_filled_spreadsheet")
 
     def test_fixture_with_empty_csv(self):
         csv_file = self.find_path_to_csvfile("empty_csv")
@@ -1487,3 +1489,4 @@ class TestCSV2Fixture(TestCase):
             outputList = json.loads(outputJSON)
             self.compare_length(outputList, expectedList)
             self.compare_list_of_records(outputList, expectedList)
+            self.load_JSON_fixture_into_DB("empty_csv")

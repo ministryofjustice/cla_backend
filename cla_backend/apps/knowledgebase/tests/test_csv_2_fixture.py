@@ -254,7 +254,6 @@ class TestCSV2Fixture(TestCase):
         except SystemExit:
             self.fail("Missing required fields")
         else:
-            csv = KnowledgebaseCsvParse(file)
             outputJSON = csv.fixture_as_json()
             expectedList = [
                 {

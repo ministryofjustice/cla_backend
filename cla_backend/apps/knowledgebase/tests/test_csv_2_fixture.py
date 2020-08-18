@@ -745,6 +745,12 @@ class TestCSV2Fixture(TestCase):
             self.assertEqual(min_pk, 1)
             self.assertEqual(max_pk, 36)
 
+            first_set_of_acm = filter(lambda x: x["fields"]["article"] == 1, article_category_matrices)
+            second_set_of_acm = filter(lambda x: x["fields"]["article"] == 2, article_category_matrices)
+
+            self.assertEqual(len(first_set_of_acm), 18)
+            self.assertEqual(len(second_set_of_acm), 18)
+
     def test_fixture_with_empty_csv(self):
         csv_file = self.find_path_to_csvfile("empty_csv")
         file = open(csv_file)

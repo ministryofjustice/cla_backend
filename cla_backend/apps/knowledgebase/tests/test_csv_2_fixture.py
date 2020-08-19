@@ -332,7 +332,7 @@ class TestCSV2Fixture(TestCase):
             outputArticle = outputList[-1]
             self.assertEqual(outputArticle["fields"]["resource_type"], u"OTHER")
 
-    def test_fixture_with_filled_out_article(self):
+    def test_fixture_with_complete_article(self):
         csv_file = self.find_path_to_csvfile("complete_article")
         file = open(csv_file)
         try:
@@ -551,8 +551,8 @@ class TestCSV2Fixture(TestCase):
             output_sorted_acm, expected_sorted_acm = self.sort_article_category_matrices(output_acm, expectedList)
             self.compare_article_category_matrices(output_sorted_acm, expected_sorted_acm, pk_range_for_acm)
 
-    def test_fixture_with_prefilled_spreadsheet(self):
-        csv_file = self.find_path_to_csvfile("pre_filled_spreadsheet")
+    def test_fixture_with_multiple_articles(self):
+        csv_file = self.find_path_to_csvfile("multiple_articles")
         file = open(csv_file)
         try:
             csv = KnowledgebaseCsvParse(file)

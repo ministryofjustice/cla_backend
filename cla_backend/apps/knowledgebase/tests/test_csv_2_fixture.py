@@ -277,33 +277,29 @@ class TestCSV2Fixture(TestCase):
             self.fail("Missing required fields")
         else:
             outputJSON = csv.fixture_as_json()
-            expectedList = [
-                {
-                    u"pk": 1,
-                    "model": u"knowledgebase.article",
-                    "fields": {
-                        "created": u"{date}".format(date=self.datetime_now),
-                        "modified": u"{date}".format(date=self.datetime_now),
-                        "resource_type": u"LEGAL",
-                        "website": u"https://www.google.com",
-                        "geographic_coverage": u"Baz",
-                        "type_of_service": u"Baz",
-                        "description": u"Bar",
-                        "service_name": u"Bar",
-                        "organisation": u"Foo",
-                        "accessibility": u"Foo",
-                        "when_to_use": u"Baz",
-                        "how_to_use": u"Foo",
-                        "address": u"Foo",
-                        "keywords": u"Bar",
-                        "opening_hours": u"Bar",
-                    },
-                }
-            ]
+            expectedDict = {
+                "resource_type": u"LEGAL",
+                "website": u"https://www.google.com",
+                "geographic_coverage": u"Baz",
+                "type_of_service": u"Baz",
+                "description": u"Bar",
+                "service_name": u"Bar",
+                "organisation": u"Foo",
+                "accessibility": u"Foo",
+                "when_to_use": u"Baz",
+                "how_to_use": u"Foo",
+                "address": u"Foo",
+                "keywords": u"Bar",
+                "opening_hours": u"Bar",
+            }
             outputList = json.loads(outputJSON)
-            outputArticle = filter(lambda x: x["model"] == "knowledgebase.article", outputList)
-            self.compare_length(outputArticle, expectedList)
-            self.compare_list_of_records(outputArticle, expectedList)
+            output_article_list = filter(lambda x: x["model"] == "knowledgebase.article", outputList)
+            self.assertEqual(len(output_article_list), 1)
+
+            output_article = output_article_list[0]
+            for expectedKey, expectedValue in expectedDict:
+                self.assertEqual(output_article["fields"][expectedKey], expectedValue)
+
             self.load_JSON_fixture_into_DB("legal_resource_entry_type")
 
     def test_fixture_handling_with_entry_type_of_legal_resource_for_clients(self):

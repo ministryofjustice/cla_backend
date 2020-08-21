@@ -574,7 +574,8 @@ class TestCSV2Fixture(TestCase):
             article_1, article_2 = article_records
 
             self.assertEqual(len(article_records), 2)
-            self.assertNotEqual(article_1["fields"]["website"], article_2["fields"]["website"])
+            self.assertEqual(article_1["fields"]["website"], "http://Baz")
+            self.assertEqual(article_2["fields"]["website"], "http://Website 2")
             self.assertNotEqual(article_1["pk"], article_2["pk"])
 
             article_category_matrices = sorted_records["knowledgebase.articlecategorymatrix"]

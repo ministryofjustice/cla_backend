@@ -31,14 +31,14 @@ class TestCSV2Fixture(TestCase):
         else:
             print("Record successfully loaded into DB!")
 
-    def calculate_pk_range(self, article_category_matrix):
-        min_range = min(article_category_matrix, key=lambda x: x["pk"])
-        max_range = max(article_category_matrix, key=lambda x: x["pk"])
+    def calculate_pk_range(self, article_category_matrices):
+        min_range = min(article_category_matrices, key=lambda x: x["pk"])
+        max_range = max(article_category_matrices, key=lambda x: x["pk"])
         return min_range["pk"], max_range["pk"]
 
-    def sort_article_category_matrices(self, output_category_matrix, expected_category_matrix):
-        output_sorted_acm = sorted(output_category_matrix, key=lambda x: x["fields"]["article_category"])
-        expected_sorted_acm = sorted(expected_category_matrix, key=lambda x: x["fields"]["article_category"])
+    def sort_article_category_matrices(self, output_category_matrices, expected_category_matrices):
+        output_sorted_acm = sorted(output_category_matrices, key=lambda x: x["fields"]["article_category"])
+        expected_sorted_acm = sorted(expected_category_matrices, key=lambda x: x["fields"]["article_category"])
         return output_sorted_acm, expected_sorted_acm
 
     def slice_records(self, output_records, expected_records, start_index=None, end_index=None):

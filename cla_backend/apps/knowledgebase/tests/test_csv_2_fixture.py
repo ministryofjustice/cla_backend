@@ -38,7 +38,7 @@ class TestCSV2Fixture(TestCase):
 
     def sort_article_category_matrices(self, output_category_matrices, expected_category_matrices):
         output_sorted_acm = sorted(output_category_matrices, key=lambda x: x["fields"]["article_category"])
-        expected_sorted_acm = sorted(expected_category_matrices, key=lambda x: x["fields"]["article_category"])
+        expected_sorted_acm = sorted(expected_category_matrices, key=lambda x: x["article_category"])
         return output_sorted_acm, expected_sorted_acm
 
     def slice_records(self, output_records, expected_records, start_index=None, end_index=None):
@@ -343,213 +343,39 @@ class TestCSV2Fixture(TestCase):
             outputJSON = csv.fixture_as_json()
             outputList = json.loads(outputJSON)
             expectedList = [
-                {
-                    u"pk": 1,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 1,
-                        u"preferred_signpost": False,
-                    },
-                },
-                {
-                    u"pk": 2,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 2,
-                        u"preferred_signpost": True,
-                    },
-                },
-                {
-                    u"pk": 3,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 3,
-                        u"preferred_signpost": False,
-                    },
-                },
-                {
-                    u"pk": 4,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 4,
-                        u"preferred_signpost": False,
-                    },
-                },
-                {
-                    u"pk": 5,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 5,
-                        u"preferred_signpost": False,
-                    },
-                },
-                {
-                    u"pk": 6,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 6,
-                        u"preferred_signpost": True,
-                    },
-                },
-                {
-                    u"pk": 7,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 7,
-                        u"preferred_signpost": False,
-                    },
-                },
-                {
-                    u"pk": 8,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 8,
-                        u"preferred_signpost": True,
-                    },
-                },
-                {
-                    u"pk": 9,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 9,
-                        u"preferred_signpost": False,
-                    },
-                },
-                {
-                    u"pk": 10,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 10,
-                        u"preferred_signpost": True,
-                    },
-                },
-                {
-                    u"pk": 11,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 11,
-                        u"preferred_signpost": True,
-                    },
-                },
-                {
-                    u"pk": 12,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 12,
-                        u"preferred_signpost": False,
-                    },
-                },
-                {
-                    u"pk": 13,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 13,
-                        u"preferred_signpost": True,
-                    },
-                },
-                {
-                    u"pk": 14,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 14,
-                        u"preferred_signpost": False,
-                    },
-                },
-                {
-                    u"pk": 15,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 15,
-                        u"preferred_signpost": False,
-                    },
-                },
-                {
-                    u"pk": 16,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 16,
-                        u"preferred_signpost": False,
-                    },
-                },
-                {
-                    u"pk": 17,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 17,
-                        u"preferred_signpost": True,
-                    },
-                },
-                {
-                    u"pk": 18,
-                    u"model": u"knowledgebase.articlecategorymatrix",
-                    u"fields": {
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                        u"article": 1,
-                        u"article_category": 18,
-                        u"preferred_signpost": True,
-                    },
-                },
+                {u"article": 1, u"article_category": 1, u"preferred_signpost": False},
+                {u"article": 1, u"article_category": 2, u"preferred_signpost": True},
+                {u"article": 1, u"article_category": 3, u"preferred_signpost": False},
+                {u"article": 1, u"article_category": 4, u"preferred_signpost": False},
+                {u"article": 1, u"article_category": 5, u"preferred_signpost": False},
+                {u"article": 1, u"article_category": 6, u"preferred_signpost": True},
+                {u"article": 1, u"article_category": 7, u"preferred_signpost": False},
+                {u"article": 1, u"article_category": 8, u"preferred_signpost": True},
+                {u"article": 1, u"article_category": 9, u"preferred_signpost": False},
+                {u"article": 1, u"article_category": 10, u"preferred_signpost": True},
+                {u"article": 1, u"article_category": 11, u"preferred_signpost": True},
+                {u"article": 1, u"article_category": 12, u"preferred_signpost": False},
+                {u"article": 1, u"article_category": 13, u"preferred_signpost": True},
+                {u"article": 1, u"article_category": 14, u"preferred_signpost": False},
+                {u"article": 1, u"article_category": 15, u"preferred_signpost": False},
+                {u"article": 1, u"article_category": 16, u"preferred_signpost": False},
+                {u"article": 1, u"article_category": 17, u"preferred_signpost": True},
+                {u"article": 1, u"article_category": 18, u"preferred_signpost": True},
             ]
             outputList = json.loads(outputJSON)
+
             output_acm = filter(lambda x: x["model"] == "knowledgebase.articlecategorymatrix", outputList)
-            self.compare_length(output_acm, expectedList)
+            output_acm_sorted, expected_acm_sorted = self.sort_article_category_matrices(output_acm, expectedList)
+            for output, expected in zip(output_acm_sorted, expected_acm_sorted):
+                self.assertEqual(output["fields"]["article"], expected["article"])
+                self.assertEqual(output["fields"]["article_category"], expected["article_category"])
+                self.assertEqual(output["fields"]["preferred_signpost"], expected["preferred_signpost"])
 
-            pk_range_for_acm = self.calculate_pk_range(expectedList)
+            self.assertEqual(len(output_acm), 18)
 
-            output_sorted_acm, expected_sorted_acm = self.sort_article_category_matrices(output_acm, expectedList)
-            self.compare_article_category_matrices(output_sorted_acm, expected_sorted_acm, pk_range_for_acm)
+            min_pk, max_pk = self.calculate_pk_range(output_acm)
+            self.assertEqual(min_pk, 1)
+            self.assertEqual(max_pk, 18)
 
     def test_fixture_with_multiple_articles(self):
         csv_file = self.find_path_to_csvfile("multiple_articles")

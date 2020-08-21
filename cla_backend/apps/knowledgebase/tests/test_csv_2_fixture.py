@@ -121,6 +121,8 @@ class TestCSV2Fixture(TestCase):
                 {u"name": u"Generic"},
             ]
             self.assertEqual(len(outputList), 18)
+            self.assertEqual(outputList[0].keys(), [u"pk", u"model", u"fields"])
+            self.assertEqual(outputList[0]["fields"].keys(), [u"created", u"name", u"modified"])
 
             for output, expectedDict in zip(outputList, expectedList):
                 for expectedKey, expectedValue in expectedDict.items():

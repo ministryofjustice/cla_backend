@@ -331,6 +331,7 @@ class TestCSV2Fixture(TestCase):
             outputList = json.loads(outputJSON)
             outputArticle = outputList[-1]
             self.assertEqual(outputArticle["fields"]["resource_type"], u"OTHER")
+            self.load_JSON_fixture_into_DB("csv_with_entry_type")
 
     def test_fixture_with_complete_article(self):
         csv_file = self.find_path_to_csvfile("complete_article")
@@ -375,6 +376,7 @@ class TestCSV2Fixture(TestCase):
             min_pk, max_pk = self.calculate_pk_range(output_acm)
             self.assertEqual(min_pk, 1)
             self.assertEqual(max_pk, 18)
+            self.load_JSON_fixture_into_DB("complete_article")
 
     def test_fixture_with_multiple_articles(self):
         csv_file = self.find_path_to_csvfile("multiple_articles")
@@ -415,6 +417,7 @@ class TestCSV2Fixture(TestCase):
 
             self.assertEqual(len(first_set_of_acm), 18)
             self.assertEqual(len(second_set_of_acm), 18)
+            self.load_JSON_fixture_into_DB("multiple_articles")
 
     def test_fixture_with_empty_csv(self):
         csv_file = self.find_path_to_csvfile("empty_csv")

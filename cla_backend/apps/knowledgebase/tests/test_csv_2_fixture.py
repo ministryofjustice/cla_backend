@@ -122,9 +122,9 @@ class TestCSV2Fixture(TestCase):
             ]
             self.assertEqual(len(outputList), 18)
 
-            for output, expected in zip(outputList, expectedList):
-                for expectedKey, expectedValue in expectedList.items():
-                    self.assertEqual(output[expectedKey], expectedValue)
+            for output, expectedDict in zip(outputList, expectedList):
+                for expectedKey, expectedValue in expectedDict.items():
+                    self.assertEqual(output["fields"][expectedKey], expectedValue)
 
             self.load_JSON_fixture_into_DB("testcsv")
 
@@ -157,7 +157,7 @@ class TestCSV2Fixture(TestCase):
             self.assertEqual(len(output_article_list), 1)
 
             output_article = output_article_list[0]
-            for expectedKey, expectedValue in expectedDict:
+            for expectedKey, expectedValue in expectedDict.items():
                 self.assertEqual(output_article["fields"][expectedKey], expectedValue)
 
             self.load_JSON_fixture_into_DB("legal_resource_entry_type")

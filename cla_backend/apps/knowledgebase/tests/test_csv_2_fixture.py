@@ -367,9 +367,8 @@ class TestCSV2Fixture(TestCase):
             output_acm = filter(lambda x: x["model"] == "knowledgebase.articlecategorymatrix", outputList)
             output_acm_sorted, expected_acm_sorted = self.sort_article_category_matrices(output_acm, expectedList)
             for output, expected in zip(output_acm_sorted, expected_acm_sorted):
-                self.assertEqual(output["fields"]["article"], expected["article"])
-                self.assertEqual(output["fields"]["article_category"], expected["article_category"])
-                self.assertEqual(output["fields"]["preferred_signpost"], expected["preferred_signpost"])
+                for expectedKey, expectedValue in expected.items():
+                    self.assertEqual(output["fields"][expectedKey], expectedValue)
 
             self.assertEqual(len(output_acm), 18)
 

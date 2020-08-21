@@ -347,6 +347,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
         model = Case
         fields = ()
         exclude = ("audit_log",)
+        read_only_fields = ("exempt_user", "exempt_user_reason")
 
 
 class CaseSerializerFull(CaseSerializerBase):

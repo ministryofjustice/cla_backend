@@ -21,15 +21,10 @@ class TestCSV2Fixture(TestCase):
         return os.path.join(dirname, csv_file)
 
     def load_JSON_fixture_into_DB(self, relative_path):
-        try:
-            management.call_command("builddata", "load_knowledgebase_csv", self.find_path_to_csvfile(relative_path))
-            management.call_command(
-                "loaddata", os.path.abspath("cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json")
-            )
-        except Exception as e:
-            self.fail(e)
-        else:
-            print("Record successfully loaded into DB!")
+        management.call_command("builddata", "load_knowledgebase_csv", self.find_path_to_csvfile(relative_path))
+        management.call_command(
+            "loaddata", os.path.abspath("cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json")
+        )
 
     def calculate_pk_range(self, article_category_matrices):
         min_range = min(article_category_matrices, key=lambda x: x["pk"])

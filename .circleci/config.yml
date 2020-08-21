@@ -223,7 +223,6 @@ workflows:
           filters:
             branches:
               only:
-                - master
                 - epic/LGA-959-kubernetes
       - deploy:
           name: staging_deploy
@@ -239,6 +238,7 @@ workflows:
           filters:
             branches:
               only:
+                - epic/LGA-959-kubernetes
                 - master
       - deploy:
           name: production_deploy
@@ -246,3 +246,4 @@ workflows:
           requires:
             - production_deploy_approval
           context: laa-cla-backend
+

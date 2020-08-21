@@ -101,171 +101,31 @@ class TestCSV2Fixture(TestCase):
             outputJSON = csv.fixture_as_json()
             outputList = json.loads(outputJSON)
             expectedList = [
-                {
-                    u"pk": 1,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Debt",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 2,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Education",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 3,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Discrimination",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 4,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Housing",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 5,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Family",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 6,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Welfare benefits",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 7,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Action against police",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 8,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Clinical negligence",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 9,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Community care",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 10,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Consumer",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 11,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Crime",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 12,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Employment",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 13,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Immigration and asylum",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 14,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Mental health",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 15,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Miscellaneous",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 16,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Personal injury",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 17,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Public",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
-                {
-                    u"pk": 18,
-                    u"model": u"knowledgebase.articlecategory",
-                    u"fields": {
-                        u"name": u"Generic",
-                        u"created": u"{date}".format(date=self.datetime_now),
-                        u"modified": u"{date}".format(date=self.datetime_now),
-                    },
-                },
+                {u"name": u"Debt"},
+                {u"name": u"Education"},
+                {u"name": u"Discrimination"},
+                {u"name": u"Housing"},
+                {u"name": u"Family"},
+                {u"name": u"Welfare benefits"},
+                {u"name": u"Action against police"},
+                {u"name": u"Clinical negligence"},
+                {u"name": u"Community care"},
+                {u"name": u"Consumer"},
+                {u"name": u"Crime"},
+                {u"name": u"Employment"},
+                {u"name": u"Immigration and asylum"},
+                {u"name": u"Mental health"},
+                {u"name": u"Miscellaneous"},
+                {u"name": u"Personal injury"},
+                {u"name": u"Public"},
+                {u"name": u"Generic"},
             ]
-            self.compare_length(outputList, expectedList)
-            self.compare_list_of_records(outputList, expectedList)
+            self.assertEqual(len(outputList), 18)
+
+            for output, expected in zip(outputList, expectedList):
+                for expectedKey, expectedValue in expectedList.items():
+                    self.assertEqual(output[expectedKey], expectedValue)
+
             self.load_JSON_fixture_into_DB("testcsv")
 
     def test_fixture_with_valid_entry_type_field(self):

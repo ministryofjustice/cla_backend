@@ -9,13 +9,8 @@ from knowledgebase.management.commands._csv_2_fixture import KnowledgebaseCsvPar
 
 
 class TestCSV2Fixture(TestCase):
-    def find_path_to_csvfile(self, relative_path):
-        dirname = os.path.abspath(os.path.dirname(__file__))
-        csv_file = "CSVData/{}.csv".format(relative_path)
-        return os.path.join(dirname, csv_file)
-
-    def load_JSON_fixture_into_DB(self, relative_path):
-        management.call_command("builddata", "load_knowledgebase_csv", self.find_path_to_csvfile(relative_path))
+    def load_JSON_fixture_into_DB(self, csv_file_path):
+        management.call_command("builddata", "load_knowledgebase_csv", csv_file_path)
         management.call_command(
             "loaddata", os.path.abspath("cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json")
         )
@@ -26,8 +21,8 @@ class TestCSV2Fixture(TestCase):
         return min_range["pk"], max_range["pk"]
 
     def test_fixture_with_required_article_category_fields(self):
-        csv_file = self.find_path_to_csvfile("testcsv")
-        file = open(csv_file)
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/testcsv.csv")
+        file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
         outputJSON = csv.fixture_as_json()
         outputList = json.loads(outputJSON)
@@ -59,11 +54,11 @@ class TestCSV2Fixture(TestCase):
             for expectedKey, expectedValue in expectedDict.items():
                 self.assertEqual(output["fields"][expectedKey], expectedValue)
 
-        self.load_JSON_fixture_into_DB("testcsv")
+        self.load_JSON_fixture_into_DB(csv_file_path)
 
     def test_fixture_with_valid_entry_type_field(self):
-        csv_file = self.find_path_to_csvfile("legal_resource_entry_type")
-        file = open(csv_file)
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/legal_resource_entry_type.csv")
+        file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
         outputJSON = csv.fixture_as_json()
         expectedDict = {
@@ -113,11 +108,11 @@ class TestCSV2Fixture(TestCase):
         for expectedKey, expectedValue in expectedDict.items():
             self.assertEqual(output_article["fields"][expectedKey], expectedValue)
 
-        self.load_JSON_fixture_into_DB("legal_resource_entry_type")
+        self.load_JSON_fixture_into_DB(csv_file_path)
 
     def test_fixture_handling_with_entry_type_of_legal_resource_for_clients(self):
-        csv_file = self.find_path_to_csvfile("legal_resource_entry_type")
-        file = open(csv_file)
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/legal_resource_entry_type.csv")
+        file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
         outputJSON = csv.fixture_as_json()
         outputList = json.loads(outputJSON)
@@ -125,18 +120,18 @@ class TestCSV2Fixture(TestCase):
         self.assertEqual(outputArticle["fields"]["resource_type"], u"LEGAL")
 
     def test_fixture_handling_with_entry_type_of_other_resource_for_clients(self):
-        csv_file = self.find_path_to_csvfile("csv_with_entry_type")
-        file = open(csv_file)
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/csv_with_entry_type.csv")
+        file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
         outputJSON = csv.fixture_as_json()
         outputList = json.loads(outputJSON)
         outputArticle = outputList[-1]
         self.assertEqual(outputArticle["fields"]["resource_type"], u"OTHER")
-        self.load_JSON_fixture_into_DB("csv_with_entry_type")
+        self.load_JSON_fixture_into_DB(csv_file_path)
 
     def test_fixture_with_complete_article(self):
-        csv_file = self.find_path_to_csvfile("complete_article")
-        file = open(csv_file)
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/complete_article.csv")
+        file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
         outputJSON = csv.fixture_as_json()
         outputList = json.loads(outputJSON)
@@ -184,11 +179,11 @@ class TestCSV2Fixture(TestCase):
         min_pk, max_pk = self.calculate_pk_range(output_acm)
         self.assertEqual(min_pk, 1)
         self.assertEqual(max_pk, 18)
-        self.load_JSON_fixture_into_DB("complete_article")
+        self.load_JSON_fixture_into_DB(csv_file_path)
 
     def test_fixture_with_multiple_articles(self):
-        csv_file = self.find_path_to_csvfile("multiple_articles")
-        file = open(csv_file)
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/multiple_articles.csv")
+        file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
         outputJSON = csv.fixture_as_json()
         outputList = json.loads(outputJSON)
@@ -221,13 +216,13 @@ class TestCSV2Fixture(TestCase):
 
         self.assertEqual(len(first_set_of_acm), 18)
         self.assertEqual(len(second_set_of_acm), 18)
-        self.load_JSON_fixture_into_DB("multiple_articles")
+        self.load_JSON_fixture_into_DB(csv_file_path)
 
     def test_fixture_with_empty_csv(self):
-        csv_file = self.find_path_to_csvfile("empty_csv")
-        file = open(csv_file)
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/empty_csv.csv")
+        file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
         outputJSON = csv.fixture_as_json()
         outputList = json.loads(outputJSON)
         self.assertEqual(len(outputList), 18)
-        self.load_JSON_fixture_into_DB("empty_csv")
+        self.load_JSON_fixture_into_DB(csv_file_path)

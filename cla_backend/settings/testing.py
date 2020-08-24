@@ -19,6 +19,8 @@ DATABASES["default"]["ENGINE"] = "cla_backend.apps.reports.db.backend"
 
 ALLOWED_HOSTS = ["*"]
 
+TEST_OUTPUT_DIR = "test-reports"
+
 
 class DisableMigrations(object):
     def __contains__(self, item):

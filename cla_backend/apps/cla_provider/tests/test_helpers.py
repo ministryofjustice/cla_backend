@@ -10,7 +10,6 @@ import mock
 from cla_provider.models import ProviderAllocation
 from legalaid.models import Case
 
-from unittest import skip
 from core.tests.mommy_utils import make_recipe
 
 from cla_provider.helpers import ProviderAllocationHelper, ProviderDistributionHelper
@@ -235,8 +234,14 @@ class ProviderAllocationHelperTestCase(TestCase):
                 "Expected: %s, Got: %s  - not within allowed accuracy: %s" % (expected, n, accuracy)
             )
 
-    @skip("because test is flaky... waiting for Python dev to fix")
-    def test_even_allocation(self):
+    # Running this test out side of the hours defined in settings.NON_ROTA_OPENING_HOURS causes the test to fail because
+    # Case.assign_to_provider uses cla_common.call_centre_availability.OpeningHours.available to determine if the
+    # current time is within settings.NON_ROTA_OPENING_HOURS
+    #
+    # This @mock.patch ensures that all settings.NON_ROTA_OPENING_HOURS checks always return True. This should not
+    # impact the test logic as this test is only checking provider allocation distribution
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_even_distribution(self, mock_openinghours_available):
         # Test the distribution of cases to {accuracy} accuracy over {total} cases
         total = 8000
         accuracy = Decimal("0.001")

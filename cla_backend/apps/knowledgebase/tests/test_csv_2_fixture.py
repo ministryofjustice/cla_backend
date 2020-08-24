@@ -47,8 +47,10 @@ class TestCSV2Fixture(TestCase):
             {u"name": u"Generic"},
         ]
         self.assertEqual(len(outputList), 18)
-        self.assertEqual(outputList[0].keys(), [u"pk", u"model", u"fields"])
-        self.assertEqual(outputList[0]["fields"].keys(), [u"created", u"name", u"modified"])
+
+        article_category = outputList[0]
+        self.assertItemsEqual(article_category.keys(), [u"fields", u"model", u"pk"])
+        self.assertItemsEqual(article_category["fields"].keys(), [u"created", u"modified", u"name"])
 
         for output, expectedDict in zip(outputList, expectedList):
             for expectedKey, expectedValue in expectedDict.items():
@@ -82,9 +84,9 @@ class TestCSV2Fixture(TestCase):
 
         article = output_article_list[0]
 
-        self.assertEqual(sorted(article.keys()), [u"fields", u"model", u"pk"])
-        self.assertEqual(
-            sorted(article["fields"].keys()),
+        self.assertItemsEqual(article.keys(), [u"fields", u"model", u"pk"])
+        self.assertItemsEqual(
+            article["fields"].keys(),
             [
                 u"accessibility",
                 u"address",
@@ -161,9 +163,9 @@ class TestCSV2Fixture(TestCase):
 
         output_acm_record = output_acm[0]
 
-        self.assertEqual(sorted(output_acm_record.keys()), [u"fields", u"model", u"pk"])
-        self.assertEqual(
-            sorted(output_acm_record["fields"].keys()),
+        self.assertItemsEqual(output_acm_record.keys(), [u"fields", u"model", u"pk"])
+        self.assertItemsEqual(
+            output_acm_record["fields"].keys(),
             [u"article", u"article_category", u"created", u"modified", u"preferred_signpost"],
         )
 

@@ -145,6 +145,30 @@ class TestCSV2Fixture(TestCase):
         output_article_list = filter(lambda x: x["model"] == "knowledgebase.article", outputList)
         self.assertEqual(len(output_article_list), 1)
 
+        article = output_article_list[0]
+
+        self.assertEqual(sorted(article.keys()), [u"fields", u"model", u"pk"])
+        self.assertEqual(
+            sorted(article["fields"].keys()),
+            [
+                u"accessibility",
+                u"address",
+                u"created",
+                u"description",
+                u"geographic_coverage",
+                u"how_to_use",
+                u"keywords",
+                u"modified",
+                u"opening_hours",
+                u"organisation",
+                u"resource_type",
+                u"service_name",
+                u"type_of_service",
+                u"website",
+                u"when_to_use",
+            ],
+        )
+
         output_article = output_article_list[0]
         for expectedKey, expectedValue in expectedDict.items():
             self.assertEqual(output_article["fields"][expectedKey], expectedValue)

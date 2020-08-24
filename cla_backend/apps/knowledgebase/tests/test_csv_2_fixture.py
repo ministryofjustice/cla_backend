@@ -223,6 +223,15 @@ class TestCSV2Fixture(TestCase):
         outputList = json.loads(outputJSON)
 
         output_acm = filter(lambda x: x["model"] == "knowledgebase.articlecategorymatrix", outputList)
+
+        output_acm_record = output_acm[0]
+
+        self.assertEqual(sorted(output_acm_record.keys()), [u"fields", u"model", u"pk"])
+        self.assertEqual(
+            sorted(output_acm_record["fields"].keys()),
+            [u"article", u"article_category", u"created", u"modified", u"preferred_signpost"],
+        )
+
         output_acm_sorted, expected_acm_sorted = self.sort_article_category_matrices(output_acm, expectedList)
         for output, expected in zip(output_acm_sorted, expected_acm_sorted):
             for expectedKey, expectedValue in expected.items():

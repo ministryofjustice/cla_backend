@@ -79,11 +79,14 @@ class TestCSV2Fixture(TestCase):
             "opening_hours": u"Bar",
         }
         outputList = json.loads(outputJSON)
+
+        output_article_category_list = filter(lambda x: x["model"] == "knowledgebase.articlecategory", outputList)
+        self.assertEqual(len(output_article_category_list), 18)
+
         output_article_list = filter(lambda x: x["model"] == "knowledgebase.article", outputList)
         self.assertEqual(len(output_article_list), 1)
 
         article = output_article_list[0]
-
         self.assertItemsEqual(article.keys(), [u"fields", u"model", u"pk"])
         self.assertItemsEqual(
             article["fields"].keys(),
@@ -159,10 +162,19 @@ class TestCSV2Fixture(TestCase):
         ]
         outputList = json.loads(outputJSON)
 
-        output_acm = filter(lambda x: x["model"] == "knowledgebase.articlecategorymatrix", outputList)
+        sorted_records = defaultdict(list)
 
+        for record in outputList:
+            sorted_records[record["model"]].append(record)
+
+        output_article_category_list = sorted_records["knowledgebase.articlecategory"]
+        self.assertEqual(len(output_article_category_list), 18)
+
+        output_article_list = sorted_records["knowledgebase.article"]
+        self.assertEqual(len(output_article_list), 1)
+
+        output_acm = sorted_records["knowledgebase.articlecategorymatrix"]
         output_acm_record = output_acm[0]
-
         self.assertItemsEqual(output_acm_record.keys(), [u"fields", u"model", u"pk"])
         self.assertItemsEqual(
             output_acm_record["fields"].keys(),
@@ -200,7 +212,6 @@ class TestCSV2Fixture(TestCase):
 
         article_records = sorted_records["knowledgebase.article"]
         article_1, article_2 = article_records
-
         self.assertEqual(len(article_records), 2)
         self.assertEqual(article_1["fields"]["website"], "http://Baz")
         self.assertEqual(article_2["fields"]["website"], "http://Website 2")
@@ -208,16 +219,15 @@ class TestCSV2Fixture(TestCase):
 
         article_category_matrices = sorted_records["knowledgebase.articlecategorymatrix"]
         min_pk, max_pk = self.calculate_pk_range(article_category_matrices)
-
         self.assertEqual(len(article_category_matrices), 36)
         self.assertEqual(min_pk, 1)
         self.assertEqual(max_pk, 36)
 
         first_set_of_acm = filter(lambda x: x["fields"]["article"] == 1, article_category_matrices)
         second_set_of_acm = filter(lambda x: x["fields"]["article"] == 2, article_category_matrices)
-
         self.assertEqual(len(first_set_of_acm), 18)
         self.assertEqual(len(second_set_of_acm), 18)
+
         self.load_JSON_fixture_into_DB(csv_file_path)
 
     def test_fixture_with_empty_csv(self):

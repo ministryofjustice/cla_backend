@@ -1,20 +1,14 @@
 import json
 import os
-from datetime import datetime
 from collections import defaultdict
 
 from django.test import TestCase
-from django.utils import timezone
-from django.utils.dateparse import parse_datetime
 from django.core import management
 
 from knowledgebase.management.commands._csv_2_fixture import KnowledgebaseCsvParse
 
 
 class TestCSV2Fixture(TestCase):
-    def setUp(self):
-        self.datetime_now = datetime.now().replace(tzinfo=timezone.get_current_timezone()).isoformat()
-
     def find_path_to_csvfile(self, relative_path):
         dirname = os.path.abspath(os.path.dirname(__file__))
         csv_file = "CSVData/{}.csv".format(relative_path)
@@ -30,60 +24,6 @@ class TestCSV2Fixture(TestCase):
         min_range = min(article_category_matrices, key=lambda x: x["pk"])
         max_range = max(article_category_matrices, key=lambda x: x["pk"])
         return min_range["pk"], max_range["pk"]
-
-    def sort_article_category_matrices(self, output_category_matrices, expected_category_matrices):
-        output_sorted_acm = sorted(output_category_matrices, key=lambda x: x["fields"]["article_category"])
-        expected_sorted_acm = sorted(expected_category_matrices, key=lambda x: x["article_category"])
-        return output_sorted_acm, expected_sorted_acm
-
-    def slice_records(self, output_records, expected_records, start_index=None, end_index=None):
-        output_sliced = output_records[start_index:end_index]
-        expected_sliced = expected_records[start_index:end_index]
-        return output_sliced, expected_sliced
-
-    def compare_dicts(self, outputDict, expectedDict):
-        for key, outputValue in outputDict.items():
-            expectedValue = expectedDict[key]
-            self.assertEqual(type(outputValue), type(expectedValue))
-            if isinstance(outputValue, unicode) and isinstance(parse_datetime(outputValue), datetime):
-                self.compare_datetimes(parse_datetime(outputValue), parse_datetime(expectedValue))
-            else:
-                self.assertEqual(outputValue, expectedValue)
-
-    def compare_datetimes(self, outputDatetime, expectedDatetime):
-        time_diff = outputDatetime - expectedDatetime
-        time_diff_in_seconds = time_diff.total_seconds()
-        self.assertLessEqual(time_diff_in_seconds, 0.5)
-
-    def compare_list_of_records(self, outputList, expectedList):
-        for outputObject, expectedObject in zip(outputList, expectedList):
-            self.compare_length(outputObject, expectedObject)
-            for key, outputValue in outputObject.items():
-                expectedValue = expectedObject[key]
-                self.assertEqual(type(outputValue), type(expectedValue))
-                if isinstance(outputValue, dict):
-                    self.compare_dicts(outputValue, expectedValue)
-                else:
-                    self.assertEqual(outputValue, expectedValue)
-
-    def compare_length(self, output, expected):
-        self.assertEqual(len(output), len(expected))
-
-    def compare_article_category_matrices(self, output, expected, pk_range):
-        for outputObj, expectedObj in zip(output, expected):
-            self.compare_length(outputObj, expectedObj)
-            for key, outputValue in outputObj.items():
-                expectedValue = expectedObj[key]
-                if key == "pk":
-                    self.assertEqual(type(outputValue), type(expectedValue))
-                    min_pk_value, max_pk_value = pk_range
-                    self.assertGreaterEqual(outputValue, min_pk_value)
-                    self.assertLessEqual(outputValue, max_pk_value)
-                elif isinstance(outputValue, dict):
-                    self.compare_dicts(outputValue, expectedValue)
-                else:
-                    self.assertEqual(type(outputValue), type(expectedValue))
-                    self.assertEqual(outputValue, expectedValue)
 
     def test_fixture_with_required_article_category_fields(self):
         csv_file = self.find_path_to_csvfile("testcsv")
@@ -232,7 +172,9 @@ class TestCSV2Fixture(TestCase):
             [u"article", u"article_category", u"created", u"modified", u"preferred_signpost"],
         )
 
-        output_acm_sorted, expected_acm_sorted = self.sort_article_category_matrices(output_acm, expectedList)
+        output_acm_sorted = sorted(output_acm, key=lambda x: x["fields"]["article_category"])
+        expected_acm_sorted = sorted(expectedList, key=lambda x: x["article_category"])
+
         for output, expected in zip(output_acm_sorted, expected_acm_sorted):
             for expectedKey, expectedValue in expected.items():
                 self.assertEqual(output["fields"][expectedKey], expectedValue)

@@ -24,9 +24,9 @@ class TestCSV2Fixture(TestCase):
         csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/testcsv.csv")
         file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        outputList = json.loads(outputJSON)
-        expectedList = [
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
+        expected_values = [
             {u"name": u"Debt"},
             {u"name": u"Education"},
             {u"name": u"Discrimination"},
@@ -46,15 +46,15 @@ class TestCSV2Fixture(TestCase):
             {u"name": u"Public"},
             {u"name": u"Generic"},
         ]
-        self.assertEqual(len(outputList), 18)
+        self.assertEqual(len(output_list), 18)
 
-        article_category = outputList[0]
+        article_category = output_list[0]
         self.assertItemsEqual(article_category.keys(), [u"fields", u"model", u"pk"])
         self.assertItemsEqual(article_category["fields"].keys(), [u"created", u"modified", u"name"])
 
-        for output, expectedDict in zip(outputList, expectedList):
-            for expectedKey, expectedValue in expectedDict.items():
-                self.assertEqual(output["fields"][expectedKey], expectedValue)
+        for output_dict, expected_dict in zip(output_list, expected_values):
+            for expected_key, expected_value in expected_dict.items():
+                self.assertEqual(output_dict["fields"][expected_key], expected_value)
 
         self.load_JSON_fixture_into_DB(csv_file_path)
 
@@ -62,8 +62,8 @@ class TestCSV2Fixture(TestCase):
         csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/legal_resource_entry_type.csv")
         file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        expectedDict = {
+        output_json = csv.fixture_as_json()
+        expected_values = {
             "resource_type": u"LEGAL",
             "website": u"https://www.google.com",
             "geographic_coverage": u"Baz",
@@ -78,12 +78,12 @@ class TestCSV2Fixture(TestCase):
             "keywords": u"Bar",
             "opening_hours": u"Bar",
         }
-        outputList = json.loads(outputJSON)
+        output_list = json.loads(output_json)
 
-        output_article_category_list = filter(lambda x: x["model"] == "knowledgebase.articlecategory", outputList)
+        output_article_category_list = filter(lambda x: x["model"] == "knowledgebase.articlecategory", output_list)
         self.assertEqual(len(output_article_category_list), 18)
 
-        output_article_list = filter(lambda x: x["model"] == "knowledgebase.article", outputList)
+        output_article_list = filter(lambda x: x["model"] == "knowledgebase.article", output_list)
         self.assertEqual(len(output_article_list), 1)
 
         article = output_article_list[0]
@@ -110,8 +110,8 @@ class TestCSV2Fixture(TestCase):
         )
 
         output_article = output_article_list[0]
-        for expectedKey, expectedValue in expectedDict.items():
-            self.assertEqual(output_article["fields"][expectedKey], expectedValue)
+        for expected_key, expected_value in expected_values.items():
+            self.assertEqual(output_article["fields"][expected_key], expected_value)
 
         self.load_JSON_fixture_into_DB(csv_file_path)
 
@@ -119,27 +119,27 @@ class TestCSV2Fixture(TestCase):
         csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/legal_resource_entry_type.csv")
         file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        outputList = json.loads(outputJSON)
-        outputArticle = outputList[-1]
-        self.assertEqual(outputArticle["fields"]["resource_type"], u"LEGAL")
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
+        output_article = output_list[-1]
+        self.assertEqual(output_article["fields"]["resource_type"], u"LEGAL")
 
     def test_fixture_handling_with_entry_type_of_other_resource_for_clients(self):
         csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/csv_with_entry_type.csv")
         file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        outputList = json.loads(outputJSON)
-        outputArticle = outputList[-1]
-        self.assertEqual(outputArticle["fields"]["resource_type"], u"OTHER")
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
+        output_article = output_list[-1]
+        self.assertEqual(output_article["fields"]["resource_type"], u"OTHER")
         self.load_JSON_fixture_into_DB(csv_file_path)
 
     def test_fixture_with_complete_article(self):
         csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/complete_article.csv")
         file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        outputList = json.loads(outputJSON)
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
         expectedList = [
             {u"article": 1, u"article_category": 1, u"preferred_signpost": False},
             {u"article": 1, u"article_category": 2, u"preferred_signpost": True},
@@ -160,11 +160,11 @@ class TestCSV2Fixture(TestCase):
             {u"article": 1, u"article_category": 17, u"preferred_signpost": True},
             {u"article": 1, u"article_category": 18, u"preferred_signpost": True},
         ]
-        outputList = json.loads(outputJSON)
+        output_list = json.loads(output_json)
 
         sorted_records = defaultdict(list)
 
-        for record in outputList:
+        for record in output_list:
             sorted_records[record["model"]].append(record)
 
         output_article_category_list = sorted_records["knowledgebase.articlecategory"]
@@ -185,8 +185,8 @@ class TestCSV2Fixture(TestCase):
         expected_acm_sorted = sorted(expectedList, key=lambda x: x["article_category"])
 
         for output, expected in zip(output_acm_sorted, expected_acm_sorted):
-            for expectedKey, expectedValue in expected.items():
-                self.assertEqual(output["fields"][expectedKey], expectedValue)
+            for expected_key, expected_value in expected.items():
+                self.assertEqual(output["fields"][expected_key], expected_value)
 
         self.assertEqual(len(output_acm), 18)
 
@@ -199,12 +199,12 @@ class TestCSV2Fixture(TestCase):
         csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/multiple_articles.csv")
         file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        outputList = json.loads(outputJSON)
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
 
         sorted_records = defaultdict(list)
 
-        for record in outputList:
+        for record in output_list:
             sorted_records[record["model"]].append(record)
 
         article_category_records = sorted_records["knowledgebase.articlecategory"]
@@ -234,7 +234,7 @@ class TestCSV2Fixture(TestCase):
         csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/empty_csv.csv")
         file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        outputList = json.loads(outputJSON)
-        self.assertEqual(len(outputList), 18)
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
+        self.assertEqual(len(output_list), 18)
         self.load_JSON_fixture_into_DB(csv_file_path)

@@ -12,4 +12,5 @@ class Command(BaseCommand):
         parser.add_argument("--force", action="store_true", dest="force", help="Force running of housekeeping task")
 
     def handle(self, *args, **options):
+        self.stdout.write("Deleting public diagnosis that are more than a day old")
         DeleteOldData().run()

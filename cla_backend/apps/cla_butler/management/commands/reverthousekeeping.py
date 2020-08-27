@@ -1,6 +1,6 @@
 # coding=utf-8
 import os
-import logging
+
 from django.conf import settings
 from django.contrib.admin.models import LogEntry
 from django.core.management.base import BaseCommand
@@ -52,8 +52,6 @@ MODELS = [
     LogEntry,
 ]
 
-logger = logging.getLogger("django")
-
 
 class Command(BaseCommand):
 
@@ -63,7 +61,6 @@ class Command(BaseCommand):
         parser.add_argument("directory", nargs=1)
 
     def handle(self, *args, **options):
-        logger.info("Running monitor_multiple_outcome_codes cron job")
         path = os.path.join(settings.TEMP_DIR, args[0])
         filewriter = QuerysetToFile(path)
 

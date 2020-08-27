@@ -408,3 +408,51 @@ class ProviderAllocationHelperTestCase(TestCase):
                     c2.assign_to_provider(provider2)
 
             self.assertDictEqual(distribution_helper.get_distribution(category), {provider2.pk: 1})
+
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_allocation_resets_each_day(self, mock_openinghours_available):
+        base_datetime = timezone.make_aware(
+            datetime.datetime(day=7, month=7, year=2015, hour=12, minute=0), timezone.get_current_timezone()
+        )
+        category = make_recipe("legalaid.category")
+
+        provider1 = make_recipe("cla_provider.provider", active=True)
+        provider2 = make_recipe("cla_provider.provider", active=True)
+        make_recipe("cla_provider.provider_allocation", weighted_distribution=1, provider=provider1, category=category)
+        make_recipe("cla_provider.provider_allocation", weighted_distribution=1, provider=provider2, category=category)
+        ProviderAllocation.objects.update(modified=base_datetime - datetime.timedelta(days=30))
+
+        existing_eligibility_checks = make_recipe("legalaid.eligibility_check_yes", category=category, _quantity=50)
+        new_eligibility_checks = make_recipe("legalaid.eligibility_check_yes", category=category, _quantity=50)
+
+        with mock.patch("cla_common.call_centre_availability.current_datetime", base_datetime), mock.patch(
+            "legalaid.models.timezone.now", return_value=base_datetime
+        ):
+            for e in existing_eligibility_checks:
+                as_of = base_datetime
+                helper = ProviderAllocationHelper(as_of)
+                d = make_recipe("diagnosis.diagnosis_yes", category=category)
+                c = make_recipe("legalaid.eligible_case", eligibility_check=e, diagnosis=d)
+                c.assign_to_provider(provider1)
+
+        self.assertEqual(provider1.case_set.count(), 50)
+        self.assertEqual(provider2.case_set.count(), 0)
+
+        new_datetime = base_datetime + datetime.timedelta(days=1)
+        with mock.patch("cla_common.call_centre_availability.current_datetime", new_datetime), mock.patch(
+            "legalaid.models.timezone.now", return_value=new_datetime
+        ):
+            for e in new_eligibility_checks:
+                as_of = base_datetime + datetime.timedelta(days=1)
+                helper = ProviderAllocationHelper(as_of)
+                d = make_recipe("diagnosis.diagnosis_yes", category=category)
+                c = make_recipe("legalaid.eligible_case", eligibility_check=e, diagnosis=d)
+                p = helper.get_suggested_provider(category)
+                c.assign_to_provider(p)
+
+        self.assertEqual(provider1.case_set.count(), 75)
+        self.assertEqual(provider2.case_set.count(), 25)
+
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_allocation_with_low_volume_per_day(self, mock_openinghours_available):
+        pass

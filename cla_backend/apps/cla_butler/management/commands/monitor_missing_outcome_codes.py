@@ -16,6 +16,7 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
+        self.stdout.write("Checking for missing outcome codes")
         self.check_for_missing_outcome_codes()
 
     @staticmethod

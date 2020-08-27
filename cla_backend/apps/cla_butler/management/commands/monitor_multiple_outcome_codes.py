@@ -15,7 +15,7 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        logger.error("Running monitor_multiple_outcome_codes cron job")
+        self.stdout.write("Checking for multiple outcome codes")
         self.check_for_multiple_outcome_codes()
 
     @staticmethod

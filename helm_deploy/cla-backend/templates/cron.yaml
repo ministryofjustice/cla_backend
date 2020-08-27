@@ -31,7 +31,7 @@ spec:
       template:
         spec:
           containers:
-          - name: housekeeping
+          - name: monitor-missing-outcome-codes
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
             command: ["python", "manage.py", "monitor_missing_outcome_codes"]
             env:
@@ -51,7 +51,7 @@ spec:
       template:
         spec:
           containers:
-          - name: housekeeping
+          - name: monitor-multiple-outcome-codes
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
             command: ["python", "manage.py", "monitor_multiple_outcome_codes"]
             env:

@@ -443,7 +443,7 @@ class ProviderAllocationHelperTestCase(TestCase):
             "legalaid.models.timezone.now", return_value=new_datetime
         ):
             for e in new_eligibility_checks:
-                as_of = base_datetime + datetime.timedelta(days=1)
+                as_of = new_datetime
                 helper = ProviderAllocationHelper(as_of)
                 d = make_recipe("diagnosis.diagnosis_yes", category=category)
                 c = make_recipe("legalaid.eligible_case", eligibility_check=e, diagnosis=d)
@@ -455,4 +455,30 @@ class ProviderAllocationHelperTestCase(TestCase):
 
     @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
     def test_allocation_with_low_volume_per_day(self, mock_openinghours_available):
-        pass
+        base_datetime = timezone.make_aware(
+            datetime.datetime(day=7, month=7, year=2015, hour=12, minute=0), timezone.get_current_timezone()
+        )
+        category = make_recipe("legalaid.category")
+
+        provider1 = make_recipe("cla_provider.provider", active=True)
+        provider2 = make_recipe("cla_provider.provider", active=True)
+        make_recipe("cla_provider.provider_allocation", weighted_distribution=1, provider=provider1, category=category)
+        make_recipe("cla_provider.provider_allocation", weighted_distribution=1, provider=provider2, category=category)
+        ProviderAllocation.objects.update(modified=base_datetime - datetime.timedelta(days=30))
+
+        eligibility_checks = make_recipe("legalaid.eligibility_check_yes", category=category, _quantity=30)
+
+        for i, e in enumerate(eligibility_checks):
+            as_of = base_datetime + datetime.timedelta(days=i)
+            with mock.patch("cla_common.call_centre_availability.current_datetime", base_datetime), mock.patch(
+                "legalaid.models.timezone.now", return_value=as_of
+            ):
+                helper = ProviderAllocationHelper(as_of)
+                d = make_recipe("diagnosis.diagnosis_yes", category=category)
+                c = make_recipe("legalaid.eligible_case", eligibility_check=e, diagnosis=d)
+                p = helper.get_suggested_provider(category)
+                c.assign_to_provider(p)
+
+        # This is an appalling pass threshold: it accepts a distribution as bad as 25/5
+        # The current code can't guarantee doing better than that reliably
+        self.assertLessEqual(abs(provider1.case_set.count() - provider2.case_set.count()), 10)

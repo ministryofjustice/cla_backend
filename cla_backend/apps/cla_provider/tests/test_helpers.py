@@ -244,7 +244,7 @@ class ProviderAllocationHelperTestCase(TestCase):
     @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
     def test_even_distribution(self, mock_openinghours_available):
         # Test the distribution of cases to {accuracy} accuracy over {total} cases
-        total = 8000
+        total = 80
         accuracy = Decimal("0.001")
         with mock.patch(
             "cla_common.call_centre_availability.current_datetime", datetime.datetime(2015, 7, 7, 11, 59, 0)
@@ -285,10 +285,10 @@ class ProviderAllocationHelperTestCase(TestCase):
 
             self.assertEqual(Case.objects.all().count(), total)
 
-            self.assertWithinAllowedAccuracy(5000, accuracy, provider1.case_set.count())
-            self.assertWithinAllowedAccuracy(1000, accuracy, provider2.case_set.count())
-            self.assertWithinAllowedAccuracy(1000, accuracy, provider3.case_set.count())
-            self.assertWithinAllowedAccuracy(1000, accuracy, provider4.case_set.count())
+            self.assertWithinAllowedAccuracy(50, accuracy, provider1.case_set.count())
+            self.assertWithinAllowedAccuracy(10, accuracy, provider2.case_set.count())
+            self.assertWithinAllowedAccuracy(10, accuracy, provider3.case_set.count())
+            self.assertWithinAllowedAccuracy(10, accuracy, provider4.case_set.count())
 
     # Running this test out side of the hours defined in settings.NON_ROTA_OPENING_HOURS causes the test to fail because
     # Case.assign_to_provider uses cla_common.call_centre_availability.OpeningHours.available to determine if the

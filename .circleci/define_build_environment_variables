@@ -11,7 +11,7 @@ export ECR_DEPLOY_IMAGE="$DOCKER_REPOSITORY/$IMAGE_TAG"
 
 case $NAMESPACE in
   production)
-      export NAMESPACE_HOST="${PRODUCTION_HOST}"
+      export NAMESPACE_HOST="${PRODUCTION_HOST_DEFAULT}"
       ;;
   uat)
       export NAMESPACE_HOST="${UAT_HOST}"

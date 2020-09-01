@@ -20,13 +20,8 @@ spec:
   tls:
     - hosts:
        - "{{ .Values.host }}"
-      {{- if .Values.ingress.tls }}
-      {{- range .Values.ingress.tls }}
-      {{- range .hosts }}
-        - {{ . | quote }}
-      {{- end }}
-      secretName: {{ .secretName }}
-      {{- end }}
+      {{- if .Values.tlsSecretName }}
+      secretName: {{ .Values.tlsSecretName }}
       {{- end }}
   rules:
     - host: "{{ .Values.host }}"

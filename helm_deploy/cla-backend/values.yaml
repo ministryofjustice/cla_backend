@@ -74,16 +74,6 @@ ingress:
     - 185.38.246.208/32
     - 185.91.131.4/32
 
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  # hosts:
-    # - host: chart-example.local
-      # paths: []
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
 localPostgres:
   enabled: false
 

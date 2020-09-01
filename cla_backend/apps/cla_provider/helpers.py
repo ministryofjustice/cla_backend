@@ -30,7 +30,6 @@ class ProviderDistributionHelper(object):
             .filter(assigned_out_of_hours=False)
             .exclude(log__code="MANREF")
             .exclude(provider=None)
-            .filter(provider_assigned_at__gte=self.date)
         )
 
         if last_update and last_update.modified > self.date:

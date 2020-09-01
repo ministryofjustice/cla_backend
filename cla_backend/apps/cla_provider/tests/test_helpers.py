@@ -2,6 +2,7 @@ from collections import defaultdict
 import datetime
 from decimal import Decimal
 from cla_common.call_centre_availability import on_bank_holiday
+from unittest import skip
 
 from django.test import TestCase
 from django.utils import timezone
@@ -410,7 +411,7 @@ class ProviderAllocationHelperTestCase(TestCase):
             self.assertDictEqual(distribution_helper.get_distribution(category), {provider2.pk: 1})
 
     @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
-    def test_allocation_resets_each_day(self, mock_openinghours_available):
+    def test_allocation_resets_when_weighting_changes(self, mock_openinghours_available):
         base_datetime = timezone.make_aware(
             datetime.datetime(day=7, month=7, year=2015, hour=12, minute=0), timezone.get_current_timezone()
         )
@@ -439,6 +440,7 @@ class ProviderAllocationHelperTestCase(TestCase):
         self.assertEqual(provider2.case_set.count(), 0)
 
         new_datetime = base_datetime + datetime.timedelta(days=1)
+        ProviderAllocation.objects.update(modified=new_datetime)
         with mock.patch("cla_common.call_centre_availability.current_datetime", new_datetime), mock.patch(
             "legalaid.models.timezone.now", return_value=new_datetime
         ):
@@ -453,6 +455,7 @@ class ProviderAllocationHelperTestCase(TestCase):
         self.assertEqual(provider1.case_set.count(), 75)
         self.assertEqual(provider2.case_set.count(), 25)
 
+    @skip("Allocation only considers the distribution from the same day")
     @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
     def test_allocation_with_low_volume_per_day(self, mock_openinghours_available):
         base_datetime = timezone.make_aware(
@@ -479,6 +482,4 @@ class ProviderAllocationHelperTestCase(TestCase):
                 p = helper.get_suggested_provider(category)
                 c.assign_to_provider(p)
 
-        # This is an appalling pass threshold: it accepts a distribution as bad as 25/5
-        # The current code can't guarantee doing better than that reliably
-        self.assertLessEqual(abs(provider1.case_set.count() - provider2.case_set.count()), 10)
+        self.assertEqual(provider1.case_set.count(), provider2.case_set.count())

@@ -1,1443 +1,240 @@
 import json
-from datetime import datetime
+import os
+from collections import defaultdict
 
 from django.test import TestCase
-from django.utils import timezone
-from django.utils.dateparse import parse_datetime
+from django.core import management
 
 from knowledgebase.management.commands._csv_2_fixture import KnowledgebaseCsvParse
 
 
 class TestCSV2Fixture(TestCase):
-    def setUp(self):
-        self.datetime_now = datetime.now().replace(tzinfo=timezone.get_current_timezone()).isoformat()
+    def load_JSON_fixture_into_DB(self, csv_file_path):
+        management.call_command("builddata", "load_knowledgebase_csv", csv_file_path)
+        management.call_command(
+            "loaddata", os.path.abspath("cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json")
+        )
 
     def calculate_pk_range(self, article_category_matrices):
         min_range = min(article_category_matrices, key=lambda x: x["pk"])
         max_range = max(article_category_matrices, key=lambda x: x["pk"])
         return min_range["pk"], max_range["pk"]
 
-    def sort_article_category_matrices(self, output_category_matrix, expected_category_matrix):
-        output_sorted_acm = sorted(output_category_matrix, key=lambda x: x["fields"]["article_category"])
-        expected_sorted_acm = sorted(expected_category_matrix, key=lambda x: x["fields"]["article_category"])
-        return output_sorted_acm, expected_sorted_acm
-
-    def slice_records(self, output_records, expected_records, start_index=None, end_index=None):
-        output_sliced = output_records[start_index:end_index]
-        expected_sliced = expected_records[start_index:end_index]
-        return output_sliced, expected_sliced
-
-    def compare_dicts(self, outputDict, expectedDict):
-        for key, value in expectedDict.items():
-            outputValue = outputDict[key]
-            self.assertEqual(type(outputValue), type(value))
-            if isinstance(value, unicode) and isinstance(parse_datetime(value), datetime):
-                self.compare_datetimes(parse_datetime(outputValue), parse_datetime(value))
-            else:
-                self.assertEqual(outputValue, value)
-
-    def compare_datetimes(self, outputDatetime, expectedDatetime):
-        time_diff = outputDatetime - expectedDatetime
-        time_diff_in_seconds = time_diff.total_seconds()
-        self.assertLessEqual(time_diff_in_seconds, 0.5)
-
-    def compare_list_of_records(self, outputList, expectedList):
-        for expectedObject, outputObject in zip(expectedList, outputList):
-            self.compare_length(outputObject, expectedObject)
-            for key, value in expectedObject.items():
-                outputValue = outputObject[key]
-                self.assertEqual(type(outputValue), type(value))
-                if isinstance(value, dict):
-                    self.compare_dicts(outputValue, value)
-                else:
-                    self.assertEqual(outputValue, value)
-
-    def compare_length(self, output, expected):
-        self.assertEqual(len(output), len(expected))
-
-    def compare_article_category_matrices(self, output, expected, pk_range):
-        for outputObj, expectedObj in zip(output, expected):
-            self.compare_length(outputObj, expectedObj)
-            for key, value in expectedObj.items():
-                outputValue = outputObj[key]
-                if key == "pk":
-                    self.assertEqual(type(outputValue), type(value))
-                    min_pk_value, max_pk_value = pk_range
-                    self.assertGreaterEqual(value, min_pk_value)
-                    self.assertLessEqual(value, max_pk_value)
-                elif isinstance(value, dict):
-                    self.compare_dicts(outputValue, value)
-                else:
-                    self.assertEqual(type(outputValue), type(value))
-                    self.assertEqual(outputValue, value)
-
     def test_fixture_with_required_article_category_fields(self):
-        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/testcsv.csv")
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/testcsv.csv")
+        file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        expectedList = [
-            {
-                u"pk": 1,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Debt",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 2,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Education",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 3,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Discrimination",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 4,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Housing",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 5,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Family",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 6,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Welfare benefits",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 7,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Action against police",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 8,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Clinical negligence",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 9,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Community care",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 10,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Consumer",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 11,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Crime",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 12,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Employment",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 13,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Immigration and asylum",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 14,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Mental health",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 15,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Miscellaneous",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 16,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Personal injury",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 17,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Public",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 18,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Generic",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
+        expected_values = [
+            {u"name": u"Debt"},
+            {u"name": u"Education"},
+            {u"name": u"Discrimination"},
+            {u"name": u"Housing"},
+            {u"name": u"Family"},
+            {u"name": u"Welfare benefits"},
+            {u"name": u"Action against police"},
+            {u"name": u"Clinical negligence"},
+            {u"name": u"Community care"},
+            {u"name": u"Consumer"},
+            {u"name": u"Crime"},
+            {u"name": u"Employment"},
+            {u"name": u"Immigration and asylum"},
+            {u"name": u"Mental health"},
+            {u"name": u"Miscellaneous"},
+            {u"name": u"Personal injury"},
+            {u"name": u"Public"},
+            {u"name": u"Generic"},
         ]
-        outputList = json.loads(outputJSON)
-        self.compare_length(outputList, expectedList)
-        self.compare_list_of_records(outputList, expectedList)
+        self.assertEqual(len(output_list), 18)
 
-    def test_fixture_with_other_resource_for_clients_entry_type(self):
-        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/csv_with_entry_type.csv")
+        article_category = output_list[0]
+        self.assertItemsEqual(article_category.keys(), [u"fields", u"model", u"pk"])
+        self.assertItemsEqual(article_category["fields"].keys(), [u"created", u"modified", u"name"])
+
+        for output_dict, expected_dict in zip(output_list, expected_values):
+            for expected_key, expected_value in expected_dict.items():
+                self.assertEqual(output_dict["fields"][expected_key], expected_value)
+
+        self.load_JSON_fixture_into_DB(csv_file_path)
+
+    def test_fixture_with_valid_entry_type_field(self):
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/legal_resource_entry_type.csv")
+        file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        expectedList = [
-            {
-                u"pk": 1,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Debt",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 2,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Education",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 3,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Discrimination",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 4,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Housing",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 5,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Family",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 6,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Welfare benefits",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 7,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Action against police",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 8,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Clinical negligence",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 9,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Community care",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 10,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Consumer",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 11,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Crime",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 12,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Employment",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 13,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Immigration and asylum",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 14,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Mental health",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 15,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Miscellaneous",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 16,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Personal injury",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 17,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Public",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 18,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Generic",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 1,
-                "model": u"knowledgebase.article",
-                "fields": {
-                    "created": u"{date}".format(date=self.datetime_now),
-                    "modified": u"{date}".format(date=self.datetime_now),
-                    "resource_type": u"OTHER",
-                    "website": u"http://Baz",
-                    "geographic_coverage": u"Baz",
-                    "type_of_service": u"Baz",
-                    "description": u"Bar",
-                    "service_name": u"Bar",
-                    "organisation": u"Foo",
-                    "helpline": u"Bar",
-                    "accessibility": u"Foo",
-                    "when_to_use": u"Baz",
-                    "how_to_use": u"Foo",
-                    "address": u"Foo",
-                    "keywords": u"Bar",
-                    "opening_hours": u"Bar",
-                },
-            },
-        ]
-        outputList = json.loads(outputJSON)
-        self.compare_length(outputList, expectedList)
-        self.compare_list_of_records(outputList, expectedList)
+        output_json = csv.fixture_as_json()
+        expected_values = {
+            "resource_type": u"LEGAL",
+            "website": u"https://www.google.com",
+            "geographic_coverage": u"Baz",
+            "type_of_service": u"Baz",
+            "description": u"Bar",
+            "service_name": u"Bar",
+            "organisation": u"Foo",
+            "accessibility": u"Foo",
+            "when_to_use": u"Baz",
+            "how_to_use": u"Foo",
+            "address": u"Foo",
+            "keywords": u"Bar",
+            "opening_hours": u"Bar",
+        }
+        output_list = json.loads(output_json)
 
-    def test_fixture_with_legal_resource_for_clients_entry_type(self):
-        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/legal_resource_entry_type.csv")
-        csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        expectedList = [
-            {
-                u"pk": 1,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Debt",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 2,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Education",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 3,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Discrimination",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 4,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Housing",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 5,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Family",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 6,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Welfare benefits",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 7,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Action against police",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 8,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Clinical negligence",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 9,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Community care",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 10,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Consumer",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 11,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Crime",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 12,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Employment",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 13,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Immigration and asylum",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 14,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Mental health",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 15,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Miscellaneous",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 16,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Personal injury",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 17,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Public",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 18,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Generic",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 1,
-                "model": u"knowledgebase.article",
-                "fields": {
-                    "created": u"{date}".format(date=self.datetime_now),
-                    "modified": u"{date}".format(date=self.datetime_now),
-                    "resource_type": u"LEGAL",
-                    "website": u"https://www.google.com",
-                    "geographic_coverage": u"Baz",
-                    "type_of_service": u"Baz",
-                    "description": u"Bar",
-                    "service_name": u"Bar",
-                    "organisation": u"Foo",
-                    "helpline": u"Bar",
-                    "accessibility": u"Foo",
-                    "when_to_use": u"Baz",
-                    "how_to_use": u"Foo",
-                    "address": u"Foo",
-                    "keywords": u"Bar",
-                    "opening_hours": u"Bar",
-                },
-            },
-        ]
-        outputList = json.loads(outputJSON)
-        self.compare_length(outputList, expectedList)
-        self.compare_list_of_records(outputList, expectedList)
+        output_article_category_list = filter(lambda x: x["model"] == "knowledgebase.articlecategory", output_list)
+        self.assertEqual(len(output_article_category_list), 18)
 
-    def test_fixture_with_prefilled_spreadsheet(self):
-        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/pre_filled_spreadsheet.csv")
-        csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        expectedList = [
-            {
-                u"pk": 1,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Debt",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 2,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Education",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 3,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Discrimination",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 4,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Housing",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 5,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Family",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 6,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Welfare benefits",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 7,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Action against police",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 8,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Clinical negligence",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 9,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Community care",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 10,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Consumer",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 11,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Crime",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 12,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Employment",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 13,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Immigration and asylum",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 14,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Mental health",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 15,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Miscellaneous",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 16,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Personal injury",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 17,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Public",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 18,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Generic",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 1,
-                "model": u"knowledgebase.article",
-                "fields": {
-                    "created": u"{date}".format(date=self.datetime_now),
-                    "modified": u"{date}".format(date=self.datetime_now),
-                    "resource_type": u"LEGAL",
-                    "website": u"http://Baz",
-                    "geographic_coverage": u"Baz",
-                    "type_of_service": u"Baz",
-                    "description": u"Bar",
-                    "service_name": u"Bar",
-                    "organisation": u"Foo",
-                    "helpline": u"Bar",
-                    "accessibility": u"Foo",
-                    "when_to_use": u"Baz",
-                    "how_to_use": u"Foo",
-                    "address": u"Foo",
-                    "keywords": u"Bar",
-                    "opening_hours": u"Bar",
-                },
-            },
-            {
-                u"pk": 1,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 1,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 2,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 2,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 3,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 3,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 4,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 4,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 5,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 5,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 6,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 6,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 7,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 7,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 8,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 8,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 9,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 9,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 10,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 10,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 11,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 11,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 12,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 12,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 13,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 13,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 14,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 14,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 15,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 15,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 16,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 16,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 17,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 17,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 18,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 1,
-                    u"article_category": 18,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 2,
-                "model": u"knowledgebase.article",
-                "fields": {
-                    "created": u"{date}".format(date=self.datetime_now),
-                    "modified": u"{date}".format(date=self.datetime_now),
-                    "resource_type": u"OTHER",
-                    "website": u"http://Website 2",
-                    "geographic_coverage": u"Coverage 2",
-                    "type_of_service": u"Type of service 2",
-                    "description": u"Description 2",
-                    "service_name": u"Service 2",
-                    "organisation": u"Organisation 2",
-                    "helpline": u"Helpline 2",
-                    "accessibility": u"Accessibility 2",
-                    "when_to_use": u"When to use 2",
-                    "how_to_use": u"Guidance 2",
-                    "address": u"Address 2",
-                    "keywords": u"Current keywords 2",
-                    "opening_hours": u"Opening hours 2",
-                },
-            },
-            {
-                u"pk": 19,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 1,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 20,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 2,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 21,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 3,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 22,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 4,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 23,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 5,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 24,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 6,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 25,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 7,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 26,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 8,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 27,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 9,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 28,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 10,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 29,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 11,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 30,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 12,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 31,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 13,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 32,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 14,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 33,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 15,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 34,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 16,
-                    u"preferred_signpost": False,
-                },
-            },
-            {
-                u"pk": 35,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 17,
-                    u"preferred_signpost": True,
-                },
-            },
-            {
-                u"pk": 36,
-                u"model": u"knowledgebase.articlecategorymatrix",
-                u"fields": {
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                    u"article": 2,
-                    u"article_category": 18,
-                    u"preferred_signpost": True,
-                },
-            },
-        ]
-        outputList = json.loads(outputJSON)
+        output_article_list = filter(lambda x: x["model"] == "knowledgebase.article", output_list)
+        self.assertEqual(len(output_article_list), 1)
 
-        self.compare_length(outputList, expectedList)
-
-        output_article_categories, expected_article_categories = self.slice_records(
-            outputList, expectedList, end_index=18
+        article = output_article_list[0]
+        self.assertItemsEqual(article.keys(), [u"fields", u"model", u"pk"])
+        self.assertItemsEqual(
+            article["fields"].keys(),
+            [
+                u"accessibility",
+                u"address",
+                u"created",
+                u"description",
+                u"geographic_coverage",
+                u"how_to_use",
+                u"keywords",
+                u"modified",
+                u"opening_hours",
+                u"organisation",
+                u"resource_type",
+                u"service_name",
+                u"type_of_service",
+                u"website",
+                u"when_to_use",
+            ],
         )
-        self.compare_list_of_records(output_article_categories, expected_article_categories)
 
-        output_article_1, expected_article_1 = self.slice_records(outputList, expectedList, 18, 19)
-        self.compare_list_of_records(output_article_1, expected_article_1)
+        output_article = output_article_list[0]
+        for expected_key, expected_value in expected_values.items():
+            self.assertEqual(output_article["fields"][expected_key], expected_value)
 
-        output_acm_1, expected_acm_1 = self.slice_records(outputList, expectedList, 19, 37)
-        pk_range_acm_1 = self.calculate_pk_range(output_acm_1)
-        output_sorted_acm_1, expected_sorted_acm_1 = self.sort_article_category_matrices(output_acm_1, expected_acm_1)
-        self.compare_article_category_matrices(output_sorted_acm_1, expected_sorted_acm_1, pk_range_acm_1)
+        self.load_JSON_fixture_into_DB(csv_file_path)
 
-        output_article_2, expected_article_2 = self.slice_records(outputList, expectedList, 37, 38)
-        self.compare_list_of_records(output_article_2, expected_article_2)
+    def test_fixture_handling_with_entry_type_of_legal_resource_for_clients(self):
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/legal_resource_entry_type.csv")
+        file = open(csv_file_path)
+        csv = KnowledgebaseCsvParse(file)
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
+        output_article = output_list[-1]
+        self.assertEqual(output_article["fields"]["resource_type"], u"LEGAL")
 
-        output_article_2_category_matrix = outputList[-18:]
-        expected_article_2_category_matrix = expectedList[-18:]
+    def test_fixture_handling_with_entry_type_of_other_resource_for_clients(self):
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/csv_with_entry_type.csv")
+        file = open(csv_file_path)
+        csv = KnowledgebaseCsvParse(file)
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
+        output_article = output_list[-1]
+        self.assertEqual(output_article["fields"]["resource_type"], u"OTHER")
+        self.load_JSON_fixture_into_DB(csv_file_path)
 
-        output_acm_2, expected_acm_2 = self.slice_records(outputList, expectedList, -18)
-        pk_range_acm_2 = self.calculate_pk_range(output_article_2_category_matrix)
-        output_sorted_acm_2, expected_sorted_acm_2 = self.sort_article_category_matrices(
-            output_article_2_category_matrix, expected_article_2_category_matrix
+    def test_fixture_with_complete_article(self):
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/complete_article.csv")
+        file = open(csv_file_path)
+        csv = KnowledgebaseCsvParse(file)
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
+        expectedList = [
+            {u"article": 1, u"article_category": 1, u"preferred_signpost": False},
+            {u"article": 1, u"article_category": 2, u"preferred_signpost": True},
+            {u"article": 1, u"article_category": 3, u"preferred_signpost": False},
+            {u"article": 1, u"article_category": 4, u"preferred_signpost": False},
+            {u"article": 1, u"article_category": 5, u"preferred_signpost": False},
+            {u"article": 1, u"article_category": 6, u"preferred_signpost": True},
+            {u"article": 1, u"article_category": 7, u"preferred_signpost": False},
+            {u"article": 1, u"article_category": 8, u"preferred_signpost": True},
+            {u"article": 1, u"article_category": 9, u"preferred_signpost": False},
+            {u"article": 1, u"article_category": 10, u"preferred_signpost": True},
+            {u"article": 1, u"article_category": 11, u"preferred_signpost": True},
+            {u"article": 1, u"article_category": 12, u"preferred_signpost": False},
+            {u"article": 1, u"article_category": 13, u"preferred_signpost": True},
+            {u"article": 1, u"article_category": 14, u"preferred_signpost": False},
+            {u"article": 1, u"article_category": 15, u"preferred_signpost": False},
+            {u"article": 1, u"article_category": 16, u"preferred_signpost": False},
+            {u"article": 1, u"article_category": 17, u"preferred_signpost": True},
+            {u"article": 1, u"article_category": 18, u"preferred_signpost": True},
+        ]
+        output_list = json.loads(output_json)
+
+        sorted_records = defaultdict(list)
+
+        for record in output_list:
+            sorted_records[record["model"]].append(record)
+
+        output_article_category_list = sorted_records["knowledgebase.articlecategory"]
+        self.assertEqual(len(output_article_category_list), 18)
+
+        output_article_list = sorted_records["knowledgebase.article"]
+        self.assertEqual(len(output_article_list), 1)
+
+        output_acm = sorted_records["knowledgebase.articlecategorymatrix"]
+        output_acm_record = output_acm[0]
+        self.assertItemsEqual(output_acm_record.keys(), [u"fields", u"model", u"pk"])
+        self.assertItemsEqual(
+            output_acm_record["fields"].keys(),
+            [u"article", u"article_category", u"created", u"modified", u"preferred_signpost"],
         )
-        self.compare_article_category_matrices(output_sorted_acm_2, expected_sorted_acm_2, pk_range_acm_2)
+
+        output_acm_sorted = sorted(output_acm, key=lambda x: x["fields"]["article_category"])
+        expected_acm_sorted = sorted(expectedList, key=lambda x: x["article_category"])
+
+        for output, expected in zip(output_acm_sorted, expected_acm_sorted):
+            for expected_key, expected_value in expected.items():
+                self.assertEqual(output["fields"][expected_key], expected_value)
+
+        self.assertEqual(len(output_acm), 18)
+
+        min_pk, max_pk = self.calculate_pk_range(output_acm)
+        self.assertEqual(min_pk, 1)
+        self.assertEqual(max_pk, 18)
+        self.load_JSON_fixture_into_DB(csv_file_path)
+
+    def test_fixture_with_multiple_articles(self):
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/multiple_articles.csv")
+        file = open(csv_file_path)
+        csv = KnowledgebaseCsvParse(file)
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
+
+        sorted_records = defaultdict(list)
+
+        for record in output_list:
+            sorted_records[record["model"]].append(record)
+
+        article_category_records = sorted_records["knowledgebase.articlecategory"]
+        self.assertEqual(len(article_category_records), 18)
+
+        article_records = sorted_records["knowledgebase.article"]
+        article_1, article_2 = article_records
+        self.assertEqual(len(article_records), 2)
+        self.assertEqual(article_1["fields"]["website"], "http://Baz")
+        self.assertEqual(article_2["fields"]["website"], "http://Website 2")
+        self.assertNotEqual(article_1["pk"], article_2["pk"])
+
+        article_category_matrices = sorted_records["knowledgebase.articlecategorymatrix"]
+        min_pk, max_pk = self.calculate_pk_range(article_category_matrices)
+        self.assertEqual(len(article_category_matrices), 36)
+        self.assertEqual(min_pk, 1)
+        self.assertEqual(max_pk, 36)
+
+        first_set_of_acm = filter(lambda x: x["fields"]["article"] == 1, article_category_matrices)
+        second_set_of_acm = filter(lambda x: x["fields"]["article"] == 2, article_category_matrices)
+        self.assertEqual(len(first_set_of_acm), 18)
+        self.assertEqual(len(second_set_of_acm), 18)
+
+        self.load_JSON_fixture_into_DB(csv_file_path)
 
     def test_fixture_with_empty_csv(self):
-        file = open("./cla_backend/apps/knowledgebase/tests/CSVData/empty_csv.csv")
+        csv_file_path = os.path.abspath("cla_backend/apps/knowledgebase/tests/CSVData/empty_csv.csv")
+        file = open(csv_file_path)
         csv = KnowledgebaseCsvParse(file)
-        outputJSON = csv.fixture_as_json()
-        expectedList = [
-            {
-                u"pk": 1,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Debt",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 2,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Education",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 3,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Discrimination",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 4,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Housing",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 5,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Family",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 6,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Welfare benefits",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 7,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Action against police",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 8,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Clinical negligence",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 9,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Community care",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 10,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Consumer",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 11,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Crime",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 12,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Employment",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 13,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Immigration and asylum",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 14,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Mental health",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 15,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Miscellaneous",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 16,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Personal injury",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 17,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Public",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-            {
-                u"pk": 18,
-                u"model": u"knowledgebase.articlecategory",
-                u"fields": {
-                    u"name": u"Generic",
-                    u"created": u"{date}".format(date=self.datetime_now),
-                    u"modified": u"{date}".format(date=self.datetime_now),
-                },
-            },
-        ]
-
-        outputList = json.loads(outputJSON)
-        self.compare_length(outputList, expectedList)
-        self.compare_list_of_records(outputList, expectedList)
+        output_json = csv.fixture_as_json()
+        output_list = json.loads(output_json)
+        self.assertEqual(len(output_list), 18)
+        self.load_JSON_fixture_into_DB(csv_file_path)

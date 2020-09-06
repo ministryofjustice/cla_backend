@@ -2,6 +2,7 @@ from collections import defaultdict
 import datetime
 from decimal import Decimal
 from cla_common.call_centre_availability import on_bank_holiday
+from unittest import skip
 
 from django.test import TestCase
 from django.utils import timezone
@@ -10,7 +11,6 @@ import mock
 from cla_provider.models import ProviderAllocation
 from legalaid.models import Case
 
-from unittest import skip
 from core.tests.mommy_utils import make_recipe
 
 from cla_provider.helpers import ProviderAllocationHelper, ProviderDistributionHelper
@@ -235,10 +235,16 @@ class ProviderAllocationHelperTestCase(TestCase):
                 "Expected: %s, Got: %s  - not within allowed accuracy: %s" % (expected, n, accuracy)
             )
 
-    @skip("because test is flaky... waiting for Python dev to fix")
-    def test_even_allocation(self):
+    # Running this test out side of the hours defined in settings.NON_ROTA_OPENING_HOURS causes the test to fail because
+    # Case.assign_to_provider uses cla_common.call_centre_availability.OpeningHours.available to determine if the
+    # current time is within settings.NON_ROTA_OPENING_HOURS
+    #
+    # This @mock.patch ensures that all settings.NON_ROTA_OPENING_HOURS checks always return True. This should not
+    # impact the test logic as this test is only checking provider allocation distribution
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_even_distribution(self, mock_openinghours_available):
         # Test the distribution of cases to {accuracy} accuracy over {total} cases
-        total = 8000
+        total = 80
         accuracy = Decimal("0.001")
         with mock.patch(
             "cla_common.call_centre_availability.current_datetime", datetime.datetime(2015, 7, 7, 11, 59, 0)
@@ -279,10 +285,10 @@ class ProviderAllocationHelperTestCase(TestCase):
 
             self.assertEqual(Case.objects.all().count(), total)
 
-            self.assertWithinAllowedAccuracy(5000, accuracy, provider1.case_set.count())
-            self.assertWithinAllowedAccuracy(1000, accuracy, provider2.case_set.count())
-            self.assertWithinAllowedAccuracy(1000, accuracy, provider3.case_set.count())
-            self.assertWithinAllowedAccuracy(1000, accuracy, provider4.case_set.count())
+            self.assertWithinAllowedAccuracy(50, accuracy, provider1.case_set.count())
+            self.assertWithinAllowedAccuracy(10, accuracy, provider2.case_set.count())
+            self.assertWithinAllowedAccuracy(10, accuracy, provider3.case_set.count())
+            self.assertWithinAllowedAccuracy(10, accuracy, provider4.case_set.count())
 
     # Running this test out side of the hours defined in settings.NON_ROTA_OPENING_HOURS causes the test to fail because
     # Case.assign_to_provider uses cla_common.call_centre_availability.OpeningHours.available to determine if the
@@ -403,3 +409,77 @@ class ProviderAllocationHelperTestCase(TestCase):
                     c2.assign_to_provider(provider2)
 
             self.assertDictEqual(distribution_helper.get_distribution(category), {provider2.pk: 1})
+
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_allocation_resets_when_weighting_changes(self, mock_openinghours_available):
+        base_datetime = timezone.make_aware(
+            datetime.datetime(day=7, month=7, year=2015, hour=12, minute=0), timezone.get_current_timezone()
+        )
+        category = make_recipe("legalaid.category")
+
+        provider1 = make_recipe("cla_provider.provider", active=True)
+        provider2 = make_recipe("cla_provider.provider", active=True)
+        make_recipe("cla_provider.provider_allocation", weighted_distribution=1, provider=provider1, category=category)
+        make_recipe("cla_provider.provider_allocation", weighted_distribution=1, provider=provider2, category=category)
+        ProviderAllocation.objects.update(modified=base_datetime - datetime.timedelta(days=30))
+
+        existing_eligibility_checks = make_recipe("legalaid.eligibility_check_yes", category=category, _quantity=50)
+        new_eligibility_checks = make_recipe("legalaid.eligibility_check_yes", category=category, _quantity=50)
+
+        with mock.patch("cla_common.call_centre_availability.current_datetime", base_datetime), mock.patch(
+            "legalaid.models.timezone.now", return_value=base_datetime
+        ):
+            for e in existing_eligibility_checks:
+                as_of = base_datetime
+                helper = ProviderAllocationHelper(as_of)
+                d = make_recipe("diagnosis.diagnosis_yes", category=category)
+                c = make_recipe("legalaid.eligible_case", eligibility_check=e, diagnosis=d)
+                c.assign_to_provider(provider1)
+
+        self.assertEqual(provider1.case_set.count(), 50)
+        self.assertEqual(provider2.case_set.count(), 0)
+
+        new_datetime = base_datetime + datetime.timedelta(days=1)
+        ProviderAllocation.objects.update(modified=new_datetime)
+        with mock.patch("cla_common.call_centre_availability.current_datetime", new_datetime), mock.patch(
+            "legalaid.models.timezone.now", return_value=new_datetime
+        ):
+            for e in new_eligibility_checks:
+                as_of = new_datetime
+                helper = ProviderAllocationHelper(as_of)
+                d = make_recipe("diagnosis.diagnosis_yes", category=category)
+                c = make_recipe("legalaid.eligible_case", eligibility_check=e, diagnosis=d)
+                p = helper.get_suggested_provider(category)
+                c.assign_to_provider(p)
+
+        self.assertEqual(provider1.case_set.count(), 75)
+        self.assertEqual(provider2.case_set.count(), 25)
+
+    @skip("Allocation only considers the distribution from the same day")
+    @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
+    def test_allocation_with_low_volume_per_day(self, mock_openinghours_available):
+        base_datetime = timezone.make_aware(
+            datetime.datetime(day=7, month=7, year=2015, hour=12, minute=0), timezone.get_current_timezone()
+        )
+        category = make_recipe("legalaid.category")
+
+        provider1 = make_recipe("cla_provider.provider", active=True)
+        provider2 = make_recipe("cla_provider.provider", active=True)
+        make_recipe("cla_provider.provider_allocation", weighted_distribution=1, provider=provider1, category=category)
+        make_recipe("cla_provider.provider_allocation", weighted_distribution=1, provider=provider2, category=category)
+        ProviderAllocation.objects.update(modified=base_datetime - datetime.timedelta(days=30))
+
+        eligibility_checks = make_recipe("legalaid.eligibility_check_yes", category=category, _quantity=30)
+
+        for i, e in enumerate(eligibility_checks):
+            as_of = base_datetime + datetime.timedelta(days=i)
+            with mock.patch("cla_common.call_centre_availability.current_datetime", base_datetime), mock.patch(
+                "legalaid.models.timezone.now", return_value=as_of
+            ):
+                helper = ProviderAllocationHelper(as_of)
+                d = make_recipe("diagnosis.diagnosis_yes", category=category)
+                c = make_recipe("legalaid.eligible_case", eligibility_check=e, diagnosis=d)
+                p = helper.get_suggested_provider(category)
+                c.assign_to_provider(p)
+
+        self.assertEqual(provider1.case_set.count(), provider2.case_set.count())

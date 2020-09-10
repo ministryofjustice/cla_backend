@@ -717,6 +717,8 @@ class Case(TimeStampedModel, ModelDiffMixin):
     complaint_flag = models.BooleanField(default=False)
     is_urgent = models.BooleanField(default=False)
 
+    context = JSONField(null=True, blank=True, help_text="Field to store extra case data for reporting")
+
     class Meta(object):
         ordering = ("-created",)
         permissions = (
@@ -846,10 +848,29 @@ class Case(TimeStampedModel, ModelDiffMixin):
             clone_model(cls=CaseKnowledgebaseAssignment, pk=cka_id, config={"override_values": {"case": new_case}})
         return new_case
 
+    def add_sms_voice_mail_slas(self, *args, **kwargs):
+        from .utils.sla import get_sla_time
+
+        if self.source not in [CASE_SOURCE.SMS, CASE_SOURCE.VOICEMAIL]:
+            return
+
+        self.context = self.context or {}
+        update_fields = kwargs.get("update_fields", [])
+        if update_fields and "context" not in update_fields:
+            kwargs["update_fields"].append("context")
+
+        values = {
+            "sms_voice_mail_sla1": get_sla_time(datetime.datetime.utcnow(), 160),
+            "sms_voice_mail_sla2": get_sla_time(datetime.datetime.utcnow(), 480),
+        }
+        for key, value in values.items():
+            if key not in self.context:
+                self.context[key] = value
+
     def save(self, *args, **kwargs):
         self._set_reference_if_necessary()
         self._set_search_field()
-
+        self.add_sms_voice_mail_slas(*args, **kwargs)
         if not self.pk:
             super(Case, self).save(*args, **kwargs)
             self.laa_reference = self.pk + settings.LAA_REFERENCE_SEED

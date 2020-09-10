@@ -201,7 +201,7 @@ class CallMeBackForm(BaseCallMeBackForm):
     priority_callback = forms.BooleanField(required=False)
 
     def _is_dt_too_soon(self, dt):
-        return dt <= timezone.now() + datetime.timedelta(minutes=30)
+        return dt <= timezone.now() - datetime.timedelta(minutes=30)
 
     def _is_dt_out_of_hours(self, dt):
         _dt = dt

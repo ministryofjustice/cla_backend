@@ -839,6 +839,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
                     "provider_assigned_at",
                     "assigned_out_of_hours",
                     "is_urgent",
+                    "context",
                 ],
                 "clone_fks": ["thirdparty_details", "adaptation_details"],
                 "override_values": override_values,

@@ -112,6 +112,7 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         provider_assigned_at=timezone.now(),
         is_urgent=True,
         organisation=organisation,
+        context={},
     )
     make_recipe("legalaid.eod_details", notes="EOD notes", case=case)
     CaseKnowledgebaseAssignment.objects.create(
@@ -1370,6 +1371,7 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
             "provider_closed",
             "search_field",
             "is_urgent",
+            "context",
         ]
         equal_fields = [
             "personal_details",

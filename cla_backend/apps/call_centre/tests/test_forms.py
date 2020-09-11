@@ -453,12 +453,10 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         # invalid format
         _test(case, now_utc.strftime("%Y/%m/%d %H:%M"), u"Enter a valid date/time.")
 
-        # datetime in the past
-        _test(case, self._strftime(now_utc), u"Specify a date not in the current half hour.")
-
+        # datetime in the past, beyond the current window
         _test(
             case,
-            self._strftime(now_utc + datetime.timedelta(minutes=30)),
+            self._strftime(now_utc - datetime.timedelta(minutes=35)),
             u"Specify a date not in the current half hour.",
         )
 
@@ -481,6 +479,28 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         mon = now_utc.replace(day=16, hour=20, minute=1, second=0, microsecond=0)
 
         _test(case, self._strftime(mon), u"Specify a date within working hours.")
+
+    @mock.patch("call_centre.forms.timezone.now")
+    def test_valid_datetime(self, mocked_now):
+        now_utc = datetime.datetime(2015, 3, 13, 10, 15).replace(tzinfo=timezone.utc)
+        mocked_now.return_value = now_utc
+
+        case = make_recipe("legalaid.case")
+
+        def _test(case, datetime):
+            data = self.get_default_data()
+            data["datetime"] = datetime
+            form = self.FORM(case=case, data=data)
+
+            self.assertTrue(form.is_valid())
+
+        # datetime in the future
+        _test(case, self._strftime(now_utc + datetime.timedelta(minutes=10)))
+        _test(case, self._strftime(now_utc + datetime.timedelta(minutes=30)))
+        _test(case, self._strftime(now_utc + datetime.timedelta(minutes=180)))
+
+        # datetime in the current 30 minute window
+        _test(case, self._strftime(now_utc - datetime.timedelta(minutes=14)))
 
     def test_CB4_not_allowed(self):
         case = make_recipe("legalaid.case", callback_attempt=3)

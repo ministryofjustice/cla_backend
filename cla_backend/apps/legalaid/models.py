@@ -861,8 +861,8 @@ class Case(TimeStampedModel, ModelDiffMixin):
             kwargs["update_fields"].append("context")
 
         values = {
-            "sms_voice_mail_sla1": get_sla_time(datetime.datetime.utcnow(), 160),
-            "sms_voice_mail_sla2": get_sla_time(datetime.datetime.utcnow(), 480),
+            "sms_voice_mail_sla1": get_sla_time(timezone.now(), 120),
+            "sms_voice_mail_sla2": get_sla_time(timezone.now(), 480),
         }
         for key, value in values.items():
             if key not in self.context:

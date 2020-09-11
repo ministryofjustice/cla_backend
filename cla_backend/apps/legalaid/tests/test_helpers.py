@@ -108,6 +108,28 @@ class SLATimeHelperTestCase(TestCase):
                 get_sla_time(date, 480)
                 self.assertTrue(bank_hol.called)
 
+    def test_sla_get_remainder_from_end_of_day_working(self):
+        from legalaid.utils.sla import get_remainder_from_end_of_day
+
+        start = datetime.datetime(year=2020, month=9, day=9, hour=17, minute=0)
+        until = start + datetime.timedelta(hours=10)
+        until = timezone.make_aware(until, timezone.get_current_timezone())
+        with mock.patch("cla_common.call_centre_availability.current_datetime", return_value=start):
+            remainder = get_remainder_from_end_of_day(start.date(), until)
+            seven_hours_in_minutes = 7 * 60
+            self.assertEqual(seven_hours_in_minutes, remainder.total_seconds() / 60)
+
+    def test_sla_get_remainder_from_end_of_day_broken(self):
+        from legalaid.utils.sla import get_remainder_from_end_of_day
+
+        start = datetime.datetime(year=2020, month=9, day=9, hour=19, minute=30)
+        until = start + datetime.timedelta(hours=10)
+        until = timezone.make_aware(until, timezone.get_current_timezone())
+        with mock.patch("cla_common.call_centre_availability.current_datetime", return_value=start):
+            remainder = get_remainder_from_end_of_day(start.date(), until)
+            nine_and_half_hours_in_minutes = 9.5 * 60
+            self.assertEqual(nine_and_half_hours_in_minutes, remainder.total_seconds() / 60)
+
 
 class ProviderAllocationHelperTestCase(TestCase):
     def setUp(self):

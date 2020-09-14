@@ -500,7 +500,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         _test(case, self._strftime(now_utc + datetime.timedelta(minutes=180)))
 
         # datetime in the current 30 minute window
-        _test(case, self._strftime(now_utc - datetime.timedelta(minutes=14)))
+        _test(case, self._strftime(now_utc + datetime.timedelta(minutes=-14)))
 
     def test_CB4_not_allowed(self):
         case = make_recipe("legalaid.case", callback_attempt=3)

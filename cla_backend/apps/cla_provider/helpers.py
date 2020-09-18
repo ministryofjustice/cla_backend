@@ -18,8 +18,8 @@ from legalaid.models import Case
 
 
 class ProviderDistributionHelper(object):
-    def __init__(self, dt):
-        self.date = dt.replace(hour=0, minute=0, second=0)
+    def __init__(self, dt=None):
+        self.date = dt.replace(hour=0, minute=0, second=0) if dt else None
 
     def get_distribution(self, category, include_pre_allocations=False):
         last_update = ProviderAllocation.objects.filter(category=category).order_by("-modified").first()
@@ -32,7 +32,10 @@ class ProviderDistributionHelper(object):
             .exclude(provider=None)
         )
 
-        if last_update and last_update.modified > self.date:
+        if self.date:
+            raw = raw.filter(provider_assigned_at__gte=self.date)
+
+        if last_update:
             raw = raw.filter(provider_assigned_at__gte=last_update.modified)
 
         raw = raw.values("provider").annotate(num_allocations=Count("id"))
@@ -76,7 +79,7 @@ class ProviderAllocationHelper(object):
     def __init__(self, as_of=None):
         self._providers_in_category = None
         self.as_of = timezone.localtime(as_of or timezone.now())
-        self.distribution = ProviderDistributionHelper(self.as_of)
+        self.distribution = ProviderDistributionHelper()
 
     def get_qualifying_providers_allocation(self, category):
         """

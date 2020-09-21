@@ -1,22 +1,18 @@
 # coding=utf-8
 from contextlib import contextmanager
 import datetime
+
+from cla_common.call_centre_availability import OpeningHours
 from django.test import TestCase
 from django.utils import timezone
 import mock
-from legalaid.utils import sla  # noqa: E402
-from cla_common.constants import CASE_SOURCE, OPERATOR_HOURS
-from cla_common.call_centre_availability import OpeningHours
 
+from cla_common.constants import CASE_SOURCE
 from core.tests.mommy_utils import make_recipe, make_user
 from cla_eventlog import event_registry
 from cla_eventlog.models import Log
 from legalaid.forms import get_sla_time
 from reports.forms import MICB1Extract
-
-
-OPERATOR_HOURS["weekday"] = (datetime.time(9, 0), datetime.time(20, 0))
-sla.operator_hours = OpeningHours(**OPERATOR_HOURS)
 
 
 def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
@@ -29,13 +25,6 @@ def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
 
 
 def mock_now(dt):
-    return dt
-
-
-def _mock_datetime_now_with(date, *mocks):
-    dt = date.replace(tzinfo=timezone.get_current_timezone())
-    for _mock in mocks:
-        _mock.return_value = dt
     return dt
 
 
@@ -341,6 +330,7 @@ class MiSlaTestCasePhone(MiSlaTestCaseWeb):
 
 class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     source = CASE_SOURCE.SMS
+
     # fmt: off
     """
     Rules used to determine if SLA1/SLA2 was missed
@@ -359,12 +349,18 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     """
     # fmt: on
 
-    def _get_current_time_to_start_of_working_day(self):
-        start_hour = OPERATOR_HOURS["weekday"][0].hour
-        start_minutes = OPERATOR_HOURS["weekday"][0].minute
+    def setUp(self):
+        super(MiSlaTestCaseSMS, self).setUp()
+        hours = {"weekday": (datetime.time(9, 0), datetime.time(20, 0))}
+        operator_hours = OpeningHours(**hours)
+        from legalaid.utils import sla
 
-        now_tz = _make_datetime(year=2020, month=9, day=9, hour=start_hour, minute=start_minutes)
-        return now_tz
+        self.operator_hours_patcher = mock.patch.object(sla, "operator_hours", operator_hours)
+        self.operator_hours_patcher.start()
+
+    def tearDown(self):
+        super(MiSlaTestCaseSMS, self).tearDown()
+        self.operator_hours_patcher.stop()
 
     def _move_time_forward(self, dt, timezone_mock, naive_mock, minutes_forward):
         dt += datetime.timedelta(minutes=minutes_forward)
@@ -377,7 +373,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     @mock.patch("django.utils.timezone.now")
     @mock.patch("cla_common.call_centre_availability.current_datetime")
     def test_current_time_before_sla1(self, mock_common_datetime, timezone_mock):
-        now_tz = self._get_current_time_to_start_of_working_day()
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
         timezone_mock.return_value = now_tz
         # Mock the current datetime used for the call centre availability checks
         mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
@@ -407,7 +403,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     @mock.patch("django.utils.timezone.now")
     @mock.patch("cla_common.call_centre_availability.current_datetime")
     def test_current_time_after_sla1(self, mock_common_datetime, timezone_mock):
-        now_tz = self._get_current_time_to_start_of_working_day()
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
         timezone_mock.return_value = now_tz
         # Mock the current datetime used for the call centre availability checks
         mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
@@ -437,7 +433,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     @mock.patch("django.utils.timezone.now")
     @mock.patch("cla_common.call_centre_availability.current_datetime")
     def test_current_time_before_sla2(self, mock_common_datetime, timezone_mock):
-        now_tz = self._get_current_time_to_start_of_working_day()
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
         timezone_mock.return_value = now_tz
         # Mock the current datetime used for the call centre availability checks
         mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
@@ -467,7 +463,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     @mock.patch("django.utils.timezone.now")
     @mock.patch("cla_common.call_centre_availability.current_datetime")
     def test_current_time_after_sla2(self, mock_common_datetime, timezone_mock):
-        now_tz = self._get_current_time_to_start_of_working_day()
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
         timezone_mock.return_value = now_tz
         # Mock the current datetime used for the call centre availability checks
         mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
@@ -497,7 +493,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     @mock.patch("django.utils.timezone.now")
     @mock.patch("cla_common.call_centre_availability.current_datetime")
     def test_cb2_current_time_before_sla1(self, mock_common_datetime, timezone_mock):
-        now_tz = self._get_current_time_to_start_of_working_day()
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
         timezone_mock.return_value = now_tz
         # Mock the current datetime used for the call centre availability checks
         mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
@@ -529,7 +525,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     @mock.patch("django.utils.timezone.now")
     @mock.patch("cla_common.call_centre_availability.current_datetime")
     def test_cb2_current_time_after_sla1(self, mock_common_datetime, timezone_mock):
-        now_tz = self._get_current_time_to_start_of_working_day()
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
         timezone_mock.return_value = now_tz
         # Mock the current datetime used for the call centre availability checks
         mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
@@ -561,7 +557,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     @mock.patch("django.utils.timezone.now")
     @mock.patch("cla_common.call_centre_availability.current_datetime")
     def test_cb2_current_time_before_sla2(self, mock_common_datetime, timezone_mock):
-        now_tz = self._get_current_time_to_start_of_working_day()
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
         timezone_mock.return_value = now_tz
         # Mock the current datetime used for the call centre availability checks
         mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
@@ -593,7 +589,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     @mock.patch("django.utils.timezone.now")
     @mock.patch("cla_common.call_centre_availability.current_datetime")
     def test_cb2_current_time_after_sla2(self, mock_common_datetime, timezone_mock):
-        now_tz = self._get_current_time_to_start_of_working_day()
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
         timezone_mock.return_value = now_tz
         # Mock the current datetime used for the call centre availability checks
         mock_common_datetime.return_value = timezone.make_naive(now_tz, now_tz.tzinfo)
@@ -611,9 +607,6 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
         # Generate report without a successful callback
         date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        print("sla_480", values["sla_480"])
-        print("cs_created", values["cs_created"])
-        print("NOW", now_tz)
         self.assertTrue(values["missed_sla_1"])
         self.assertTrue(values["missed_sla_2"])
 

@@ -387,8 +387,6 @@ class MICB1Extract(SQLFileDateRangeReport):
             "Source",
             "Code",
             "Organisation",
-            "sla_480",
-            "cs_created",
         ]
 
     def get_sql_params(self):

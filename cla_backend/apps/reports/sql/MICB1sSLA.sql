@@ -5,6 +5,7 @@ WITH
         ,no.id as no_id
         ,no.code as code
         ,log_call_started.code as cs_code
+        ,log_call_started.created as cs_created
         ,no.created
         ,row_number() over (PARTITION BY o.id order by no.id asc) as rn
       from cla_eventlog_log o
@@ -52,6 +53,7 @@ WITH
         ,mt2.code as "Matter_Type_2"
         ,log.created_by_id
         ,cs_code
+        ,cs_created
         ,CASE diagnosis.state
          when 'INSCOPE' then 'PASS'
          when 'OUTOFSCOPE' then 'FAIL'
@@ -116,31 +118,33 @@ select
   ,callback_window_start
   ,callback_window_end
   ,CASE
-   WHEN source IN ('WEB', 'PHONE') AND operator_first_log_after_cb1__created IS NULL AND now() < callback_window_start THEN FALSE
-   WHEN source IN ('WEB', 'PHONE') AND operator_first_log_after_cb1__created IS NULL THEN now() NOT BETWEEN callback_window_start AND callback_window_end
+   WHEN source IN ('WEB', 'PHONE') AND operator_first_log_after_cb1__created IS NULL AND %(now)s < callback_window_start THEN FALSE
+   WHEN source IN ('WEB', 'PHONE') AND operator_first_log_after_cb1__created IS NULL THEN %(now)s  NOT BETWEEN callback_window_start AND callback_window_end
    WHEN source IN ('WEB', 'PHONE') THEN operator_first_log_after_cb1__created NOT BETWEEN callback_window_start AND callback_window_end
    -- User has NOT been contacted and current time is after the SLA1 window for SMS and VOICE MAIL
-   WHEN operator_first_log_after_cb1__created IS NULL THEN now() > "Date_Case_Created" + interval '2 hours'
+   WHEN source IN ('SMS', 'VOICEMAIL') AND cs_created IS NULL THEN %(now)s  > sla_120
    -- User has been contacted and contact time is after the SLA1 window for SMS and VOICE MAIL
-   ELSE operator_first_log_after_cb1__created > "Date_Case_Created" + interval '2 hours'
+   ELSE source IN ('SMS', 'VOICEMAIL') AND cs_created > sla_120
    END as missed_sla_1
   ,CASE
    -- User not contacted and current time is after SLA 2
-   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NULL AND now() > callback_window_end + interval '72 hours' THEN TRUE
+   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NULL AND %(now)s > callback_window_end + interval '72 hours' THEN TRUE
    -- User contacted and contact time is after SLA 2
    WHEN source IN ('WEB', 'PHONE') AND cs_code IS NOT NULL AND operator_first_log_after_cb1__created > callback_window_end + interval '72 hours'  THEN TRUE
    -- Everything else that is a web / phone case is False
    WHEN source IN ('WEB', 'PHONE') THEN FALSE
    -- User has NOT been contacted and current time is after the SLA2 window for SMS and VOICE MAIL
-   WHEN operator_first_log_after_cb1__created IS NULL THEN now() > "Date_Case_Created" + interval '8 hours'
+   WHEN source IN ('SMS', 'VOICEMAIL') AND cs_created IS NULL THEN %(now)s  > sla_480
    -- User has been contacted and contact time is after the SLA2 window for SMS and VOICE MAIL
-   ELSE operator_first_log_after_cb1__created > "Date_Case_Created" + interval '8 hours'
+   ELSE source IN ('SMS', 'VOICEMAIL') AND cs_created > sla_480
    END as missed_sla_2
   ,source
   ,code
   ,organisation
+  ,sla_480
+  ,cs_created
 from all_rows
-WHERE %s < callback_window_start AND callback_window_start < %s
+WHERE %(from_date)s < callback_window_start AND callback_window_start < %(to_date)s
 ;
 
 

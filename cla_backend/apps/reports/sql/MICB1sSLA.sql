@@ -141,8 +141,6 @@ select
   ,source
   ,code
   ,organisation
-  ,sla_480
-  ,cs_created
 from all_rows
 WHERE %(from_date)s < callback_window_start AND callback_window_start < %(to_date)s
 ;

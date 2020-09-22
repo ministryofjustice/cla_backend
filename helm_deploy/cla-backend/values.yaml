@@ -72,6 +72,8 @@ ingress:
     - 213.78.108.84/32
     - 84.43.86.100/32
     - 185.38.246.208/32
+    - 185.91.131.4/32
+
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   # hosts:

@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: house-keeping
+  name: {{ .Release.Name }}-house-keeping
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}
 spec:
@@ -21,7 +21,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: monitor-missing-outcome-codes
+  name: {{ .Release.Name }}-missing-codes
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}
 spec:
@@ -41,7 +41,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: monitor-multiple-outcome-codes
+  name: {{ .Release.Name }}-multiple-codes
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}
 spec:

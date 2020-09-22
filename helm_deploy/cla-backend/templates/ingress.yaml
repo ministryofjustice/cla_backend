@@ -20,8 +20,8 @@ spec:
   tls:
     - hosts:
        - "{{ .Values.host }}"
-      {{- if .Values.tlsSecretName }}
-      secretName: {{ .Values.tlsSecretName }}
+      {{- if .Values.secretName }}
+      secretName: {{ .Values.secretName }}
       {{- end }}
   rules:
     - host: "{{ .Values.host }}"

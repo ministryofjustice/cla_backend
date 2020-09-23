@@ -164,7 +164,8 @@ jobs:
           name: Deploy to << parameters.namespace >>
           command: |
             source .circleci/define_build_environment_variables << parameters.namespace >>
-            export PINGDOM_IPS=`python bin/pingdom_ips.py`
+            pip3 install requests
+            export PINGDOM_IPS=`python3 bin/pingdom_ips.py`
             ./bin/<< parameters.namespace >>_deploy.sh
             echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV
       - slack/notify:

@@ -7,7 +7,7 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "cla-backend.whitelist" -}}
-{{ join "," .Values.ingress.whitelist }}
+{{ join "," .Values.ingress.whitelist }},{{- .Values.pingdomIPs }}
 {{- end -}}
 
 {{/*

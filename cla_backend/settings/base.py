@@ -85,6 +85,7 @@ AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME", "eu-west-1")
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False
 
 # This bucket needs to a private bucket as it will contain sensitive reports
 AWS_REPORTS_STORAGE_BUCKET_NAME = os.environ.get("AWS_REPORTS_STORAGE_BUCKET_NAME")

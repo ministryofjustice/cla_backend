@@ -12,4 +12,5 @@ helm upgrade $RELEASE_NAME \
   --set secretName=tls-certificate \
   --set image.repository=$DOCKER_REPOSITORY \
   --set image.tag=$IMAGE_TAG \
+  --set-string pingdomIPs=$PINGDOM_IPS \
   --install

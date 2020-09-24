@@ -14,6 +14,9 @@ service:
   type: NodePort
   port: 80
 
+ingress:
+  enabled: false
+
 # Lists don't deep merge, so this list of envVars overrides anything defined in an earlier values file
 envVars:
   DEBUG:

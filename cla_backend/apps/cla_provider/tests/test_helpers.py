@@ -2,7 +2,6 @@ from collections import defaultdict
 import datetime
 from decimal import Decimal
 from cla_common.call_centre_availability import on_bank_holiday
-from unittest import skip
 
 from django.test import TestCase
 from django.utils import timezone
@@ -455,7 +454,6 @@ class ProviderAllocationHelperTestCase(TestCase):
         self.assertEqual(provider1.case_set.count(), 75)
         self.assertEqual(provider2.case_set.count(), 25)
 
-    @skip("Allocation only considers the distribution from the same day")
     @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
     def test_allocation_with_low_volume_per_day(self, mock_openinghours_available):
         base_datetime = timezone.make_aware(

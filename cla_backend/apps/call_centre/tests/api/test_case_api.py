@@ -855,7 +855,7 @@ class CallMeBackTestCase(ImplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
 
     @property
     def _default_local_dt_sla_480(self):
-        return self._default_local_dt + datetime.timedelta(days=1)
+        return self._default_local_dt + datetime.timedelta(hours=8)
 
     def get_expected_notes(self, data):
         return "Callback scheduled for %s - %s. %s" % (

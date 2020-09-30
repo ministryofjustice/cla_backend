@@ -16,6 +16,7 @@ from legalaid.forms import get_sla_time
 
 class SLATimeHelperTestCase(TestCase):
 
+    sunday = 0
     monday = 1
     saturday = 6
     tz = timezone.get_default_timezone()
@@ -71,11 +72,11 @@ class SLATimeHelperTestCase(TestCase):
 
             self.assertTrue(bank_hol.called)
 
-    def test_get_sla_time_adding_time_on_saturday_rolls_over_to_next_working_day(self):
+    def test_get_sla_time_adding_time_on_sunday_rolls_over_to_next_working_day(self):
         with mock.patch("cla_common.call_centre_availability.bank_holidays", return_value=[]) as bank_hol:
-            saturday = self._datetime(iso_day_of_week=self.saturday, hour=12, minute=0)
-            next_monday = self._change(saturday, plus_days=2, hour=9, minute=15)
-            self.assertEqual(get_sla_time(saturday, 15), next_monday)
+            sunday = self._datetime(iso_day_of_week=self.sunday, hour=12, minute=0)
+            next_monday = self._change(sunday, plus_days=1, hour=9, minute=15)
+            self.assertEqual(get_sla_time(sunday, 15), next_monday)
             self.assertTrue(bank_hol.called)
 
     def test_get_sla_time_adding_time_before_bank_holiday_rolls_over_to_working_day_after_holiday(self):

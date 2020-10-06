@@ -2,11 +2,13 @@ import datetime
 import sys
 import os
 
+import sentry_sdk
 from cla_common.call_centre_availability import OpeningHours
 from cla_common.constants import OPERATOR_HOURS
 from cla_common.services import CacheAdapter
-
 from kombu import transport
+from sentry_sdk.integrations.django import DjangoIntegration
+
 from cla_backend.sqs import CLASQSChannel
 
 # PATH vars
@@ -257,25 +259,17 @@ LOGGING = {
             "class": "django.utils.log.AdminEmailHandler",
         },
         "console": {"level": "INFO", "class": "logging.StreamHandler", "formatter": "simple", "stream": sys.stdout},
-        "sentry": {
-            "level": "ERROR",
-            "class": "raven.handlers.logging.SentryHandler",
-            "formatter": "simple",
-            "dsn": os.environ.get("RAVEN_CONFIG_DSN"),
-        },
     },
     "loggers": {"django.request": {"handlers": ["mail_admins"], "level": "ERROR", "propagate": True}},
 }
 
-if "RAVEN_CONFIG_DSN" in os.environ:
-    RAVEN_CONFIG = {"dsn": os.environ.get("RAVEN_CONFIG_DSN"), "site": os.environ.get("RAVEN_CONFIG_SITE")}
-
-    INSTALLED_APPS += ("raven.contrib.django.raven_compat",)
-
-    MIDDLEWARE_CLASSES = (
-        "raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware",
-        # 'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
-    ) + MIDDLEWARE_CLASSES
+if "SENTRY_DSN" in os.environ:
+    sentry_sdk.init(
+        dsn=os.environ.get("SENTRY_DSN"),
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=1.0,
+        environment=os.environ.get("CLA_ENV", "unknown"),
+    )
 
 # SECURITY
 

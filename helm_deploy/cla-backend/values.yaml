@@ -148,22 +148,10 @@ envVars:
     secret:
       name: smtp
       key: host
-  RAVEN_CONFIG_DSN:
+  SENTRY_DSN:
     secret:
       name: sentry
       key: dsn
-  RAVEN_CONFIG_SITE:
-    secret:
-      name: sentry
-      key: site
-  SENTRY_IPADDRESS:
-    secret:
-      name: sentry
-      key: ip
-  SENTRY_HOSTNAME:
-    secret:
-      name: sentry
-      key: hostname
   CALL_CENTRE_NOTIFY_EMAIL_ADDRESS:
     secret:
       name: call-centre

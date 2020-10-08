@@ -22,6 +22,7 @@ spec:
       serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 30
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -46,6 +47,10 @@ spec:
               httpHeaders:
                 - name: Host
                   value: "{{ .Values.host }}"
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sleep","30"]
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:

@@ -19,6 +19,9 @@ case $NAMESPACE in
   staging)
       export NAMESPACE_HOST="${STAGING_HOST}"
       ;;
+  training)
+      export NAMESPACE_HOST="${TRAINING_HOST}"
+      ;;
   *)
       return
       ;;

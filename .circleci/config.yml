@@ -233,6 +233,22 @@ workflows:
             - staging_deploy_approval
           context: laa-cla-backend
 
+      - training_deploy_approval:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - epic/LGA-959-kubernetes
+                - feature/LGA-1438-training-environment-setup
+      - deploy:
+          name: training_deploy
+          namespace: training
+          requires:
+            - training_deploy_approval
+          context: laa-cla-backend
+
       - production_deploy_approval:
           requires:
             - staging_deploy

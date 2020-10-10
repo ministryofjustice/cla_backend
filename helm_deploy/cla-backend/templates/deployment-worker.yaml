@@ -19,3 +19,15 @@ spec:
           args: ["docker/run_worker.sh"]
           env:
             {{ include "cla-backend.app.vars" . | nindent 12 }}
+          readinessProbe:
+            exec:
+              command: ["python", "manage.py", "worker_probes"]
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["python", "manage.py", "worker_probes"]
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 10

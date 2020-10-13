@@ -6,8 +6,14 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "cla-backend.whitelist_additional" -}}
+{{- if .Values.ingress.whitelist_additional -}}
+,{{ join "," .Values.ingress.whitelist_additional }}
+{{- end -}}
+{{- end -}}
+
 {{- define "cla-backend.whitelist" -}}
-{{ join "," .Values.ingress.whitelist }},{{- .Values.pingdomIPs }}
+{{ join "," .Values.ingress.whitelist }},{{- .Values.pingdomIPs }}{{ include "cla-backend.whitelist_additional" . }}
 {{- end -}}
 
 {{/*

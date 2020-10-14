@@ -6,7 +6,7 @@ HELM_DIR="$ROOT/../helm_deploy/cla-backend/"
 
 helm upgrade $RELEASE_NAME \
   $HELM_DIR \
-  --namespace=${KUBE_ENV_STAGING_NAMESPACE} \
+  --namespace=${KUBE_ENV_TRAINING_NAMESPACE} \
   --values ${HELM_DIR}/values-training.yaml \
   --set host=$RELEASE_HOST \
   --set secretName=tls-certificate \

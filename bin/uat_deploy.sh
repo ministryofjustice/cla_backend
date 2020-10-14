@@ -9,6 +9,7 @@ helm upgrade $RELEASE_NAME \
   --namespace=${KUBE_ENV_UAT_NAMESPACE} \
   --values ${HELM_DIR}/values-uat.yaml \
   --set fullnameOverride=$RELEASE_NAME \
+  --set environment=$RELEASE_NAME \
   --set host=$RELEASE_HOST \
   --set image.repository=$DOCKER_REPOSITORY \
   --set image.tag=$IMAGE_TAG \

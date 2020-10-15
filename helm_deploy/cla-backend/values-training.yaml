@@ -18,3 +18,6 @@ envVars:
     value: "False"
   LOAD_TEST_DATA:
     value: "True"
+  REPLICA_DB_HOST:
+    value: ~
+    secret: ~

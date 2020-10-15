@@ -21,3 +21,12 @@ envVars:
   REPLICA_DB_HOST:
     value: ~
     secret: ~
+  SMTP_USER:
+    secret:
+      optional: true
+  SMTP_PASSWORD:
+    secret:
+      optional: true
+  SMTP_HOST:
+    secret:
+      optional: true

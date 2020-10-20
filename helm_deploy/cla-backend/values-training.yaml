@@ -1,0 +1,32 @@
+
+# Default values for cla-backend in a dev environment.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+environment: "training"
+image:
+  pullPolicy: IfNotPresent
+
+localPostgres:
+  enabled: false
+
+ingress:
+  enabled: true
+
+# Lists don't deep merge, so this list of envVars overrides anything defined in an earlier values file
+envVars:
+  DEBUG:
+    value: "False"
+  LOAD_TEST_DATA:
+    value: "True"
+  REPLICA_DB_HOST:
+    value: ~
+    secret: ~
+  SMTP_USER:
+    secret:
+      optional: true
+  SMTP_PASSWORD:
+    secret:
+      optional: true
+  SMTP_HOST:
+    secret:
+      optional: true

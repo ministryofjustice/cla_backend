@@ -242,6 +242,14 @@ workflows:
               only:
                 - epic/LGA-959-kubernetes
                 - master
+
+      - deploy:
+          name: training_deploy
+          namespace: training
+          requires:
+            - production_deploy_approval
+          context: laa-cla-backend
+
       - deploy:
           name: production_deploy
           namespace: production

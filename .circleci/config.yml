@@ -262,6 +262,7 @@ workflows:
       - deploy:
           name: training_deploy
           namespace: training
+          dynamic_hostname: false
           requires:
             - production_deploy_approval
           context: laa-cla-backend

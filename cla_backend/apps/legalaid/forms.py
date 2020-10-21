@@ -24,6 +24,7 @@ class BaseCallMeBackForm(BaseCaseLogForm):
             "sla_30": get_sla_time(_dt, 30),
             "sla_120": get_sla_time(_dt, 120),
             "sla_480": get_sla_time(_dt, 480),
+            "sla_72h": get_sla_time(_dt, 4320),
         }
 
     def get_notes(self):

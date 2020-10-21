@@ -61,6 +61,9 @@ class Log(TimeStampedModel):
         return False
 
     def save(self, *args, **kwargs):
+        if kwargs.pop("save_model_only", False):
+            return super(Log, self).save(*args, **kwargs)
+
         if self.is_consecutive_outcome_today():
             logger.warning("LGA-125 Preventing save of consecutive duplicate outcome code on same day")
             return

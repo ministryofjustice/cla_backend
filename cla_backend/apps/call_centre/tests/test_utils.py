@@ -1,7 +1,7 @@
-import datetime
 from unittest import TestCase
 import mock
 import jsonpatch
+from django.conf import settings
 from core.utils import format_patch
 from cla_common.call_centre_availability import OpeningHours
 from legalaid.utils import sla
@@ -28,11 +28,7 @@ class CallCentreFixedOperatingHours(object):
     def setUp(self):
         super(CallCentreFixedOperatingHours, self).setUp()
 
-        hours = {
-            "weekday": (datetime.time(9, 0), datetime.time(20, 0)),
-            "saturday": (datetime.time(9, 0), datetime.time(12, 30)),
-        }
-        operator_hours = OpeningHours(**hours)
+        operator_hours = OpeningHours(**settings.OPERATOR_HOURS)
 
         self.operator_hours_patcher = mock.patch.object(sla, "operator_hours", operator_hours)
         self.operator_hours_patcher.start()

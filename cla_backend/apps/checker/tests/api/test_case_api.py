@@ -14,9 +14,12 @@ from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
 from legalaid.models import Case, PersonalDetails
 from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
+from call_centre.tests.test_utils import CallCentreFixedOperatingHours
 
 
-class BaseCaseTestCase(CLACheckerAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase):
+class BaseCaseTestCase(
+    CLACheckerAuthBaseApiTestMixin, CallCentreFixedOperatingHours, SimpleResourceAPIMixin, APITestCase
+):
     LOOKUP_KEY = "reference"
     API_URL_BASE_NAME = "case"
     RESOURCE_RECIPE = "legalaid.case"
@@ -237,6 +240,7 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
             ),
         )
         _dt = timezone.localtime(self._default_dt)
+        expected_sla_72h = datetime.datetime(2015, 4, 9, 13, 30, 0, 0)
         self.assertDictEqual(
             log.context,
             {
@@ -245,6 +249,7 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
                 "sla_480": (_dt + datetime.timedelta(hours=8)).isoformat(),
                 "sla_15": (_dt + datetime.timedelta(minutes=15)).isoformat(),
                 "sla_30": (_dt + datetime.timedelta(minutes=30)).isoformat(),
+                "sla_72h": timezone.make_aware(expected_sla_72h, _dt.tzinfo).isoformat(),
             },
         )
 

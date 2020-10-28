@@ -16,6 +16,7 @@ from call_centre.forms import (
     StopCallMeBackForm,
 )
 from cla_common.constants import CASE_SOURCE
+from call_centre.tests.test_utils import CallCentreFixedOperatingHours
 
 
 def _mock_datetime_now_with(date, *mocks):
@@ -336,7 +337,7 @@ class DeclineHelpCaseFormTestCase(EventSpecificLogFormTestCaseMixin, TestCase):
     FORM = DeclineHelpCaseForm
 
 
-class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
+class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, CallCentreFixedOperatingHours, TestCase):
     FORM = CallMeBackForm
 
     def _strftime(self, date):
@@ -346,6 +347,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
     def __call__(self, runner, mocked_now, *args, **kwargs):
         self.mocked_now = mocked_now
         self.mocked_now.return_value = datetime.datetime(2015, 3, 24, 10, 0, 0, 0).replace(tzinfo=timezone.utc)
+        self.expected_sla_72h = datetime.datetime(2015, 4, 9, 13, 30, 0, 0)
         self.default_dt = self.mocked_now().replace(day=30)
 
         super(CallMeBackFormTestCase, self).__call__(runner, *args, **kwargs)
@@ -416,6 +418,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
                     "sla_480": (_dt + datetime.timedelta(hours=8)).isoformat(),
                     "sla_15": (_dt + datetime.timedelta(minutes=15)).isoformat(),
                     "sla_30": (_dt + datetime.timedelta(minutes=30)).isoformat(),
+                    "sla_72h": timezone.make_aware(self.expected_sla_72h, _dt.tzinfo).isoformat(),
                 },
             )
 

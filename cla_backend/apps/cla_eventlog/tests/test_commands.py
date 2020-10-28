@@ -10,26 +10,13 @@ from cla_eventlog import event_registry
 from cla_eventlog.models import Log
 from legalaid.forms import get_sla_time
 from cla_eventlog.management.commands.add_72h_to_context import Command
-from cla_common.call_centre_availability import OpeningHours
+from call_centre.tests.test_utils import CallCentreFixedOperatingHours
 
 
-class Add72workingHoursToContextCommandTestCase(TestCase):
+class Add72workingHoursToContextCommandTestCase(CallCentreFixedOperatingHours, TestCase):
     def setUp(self):
         super(Add72workingHoursToContextCommandTestCase, self).setUp()
         self.instance = Command()
-
-        hours = {
-            "weekday": (datetime.time(9, 0), datetime.time(20, 0)),
-            "saturday": (datetime.time(9, 0), datetime.time(12, 30)),
-        }
-        operator_hours = OpeningHours(**hours)
-        from legalaid.utils import sla
-
-        self.operator_hours_patcher = mock.patch.object(sla, "operator_hours", operator_hours)
-        self.operator_hours_patcher.start()
-
-    def tearDown(self):
-        self.operator_hours_patcher.stop()
 
     def create_callback(self, requires_action_at):
         case = make_recipe("legalaid.case")

@@ -45,6 +45,9 @@ class MiSlaTestCaseBase(TestCase):
 
     def schedule_callback(self, case, user, created, requires_action_at=None):
         requires_action_at = requires_action_at or created + datetime.timedelta(minutes=35)
+        sla_base_time = requires_action_at
+        if case.source in [CASE_SOURCE.SMS, CASE_SOURCE.VOICEMAIL]:
+            sla_base_time = case.created
         event = event_registry.get_event("call_me_back")()
         with patch_field(Log, "created", created):
             event.get_log_code(case=case)
@@ -54,10 +57,10 @@ class MiSlaTestCaseBase(TestCase):
                 notes="",
                 context={
                     "requires_action_at": requires_action_at,
-                    "sla_15": get_sla_time(requires_action_at, 15),
-                    "sla_30": get_sla_time(requires_action_at, 30),
-                    "sla_120": get_sla_time(requires_action_at, 120),
-                    "sla_480": get_sla_time(requires_action_at, 480),
+                    "sla_15": get_sla_time(sla_base_time, 15),
+                    "sla_30": get_sla_time(sla_base_time, 30),
+                    "sla_120": get_sla_time(sla_base_time, 120),
+                    "sla_480": get_sla_time(sla_base_time, 480),
                 },
             )
             case.set_requires_action_at(requires_action_at)
@@ -589,6 +592,8 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     @mock.patch("django.utils.timezone.now")
     @mock.patch("cla_common.call_centre_availability.current_datetime")
     def test_cb2_current_time_after_sla2(self, mock_common_datetime, timezone_mock):
+        # Scenario: SLA2 is missed eventhough a successful callback was attempted after the SLA2 window
+
         now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
         timezone_mock.return_value = now_tz
         # Mock the current datetime used for the call centre availability checks
@@ -597,10 +602,14 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
         case = self.make_case(now_tz, created=now_tz)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
+
+        # Move current time 1 hour forward
+        now_tz = self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=60)
+
         # Create CB1
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
         # Move current time 1 minute after SLA2
-        now_tz = self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=481)
+        now_tz = self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=421)
         # Create  CB2
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
 

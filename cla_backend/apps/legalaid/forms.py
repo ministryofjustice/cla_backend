@@ -12,10 +12,12 @@ class BaseCallMeBackForm(BaseCaseLogForm):
     def get_requires_action_at(self):
         raise NotImplementedError()
 
+    def get_sla_offset(self, _dt):
+        return timezone.localtime(_dt)
+
     def get_context(self):
         requires_action_at = self.get_requires_action_at()
-
-        _dt = timezone.localtime(requires_action_at)
+        _dt = self.get_sla_offset(requires_action_at)
         return {
             "requires_action_at": _dt,
             "sla_15": get_sla_time(_dt, 15),

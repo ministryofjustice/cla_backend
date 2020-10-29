@@ -3,7 +3,6 @@ import datetime
 import mock
 from django.test import TestCase
 from django.utils import timezone
-
 from core.tests.mommy_utils import make_recipe, make_user
 from cla_eventlog.tests.test_forms import BaseCaseLogFormTestCaseMixin, EventSpecificLogFormTestCaseMixin
 from cla_eventlog.models import Log
@@ -16,6 +15,7 @@ from call_centre.forms import (
     CallMeBackForm,
     StopCallMeBackForm,
 )
+from cla_common.constants import CASE_SOURCE
 
 
 def _mock_datetime_now_with(date, *mocks):
@@ -370,7 +370,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         case = make_recipe("legalaid.case", callback_attempt=2)
         self._test_save_successfull(case, 3, "CB3")
 
-    def _test_save_successfull(self, case, expected_attempt, expected_outcome):
+    def _test_save_successfull(self, case, expected_attempt, expected_outcome, skip_assert_log_context=False):
         self.assertEqual(Log.objects.count(), 0)
         self.assertEqual(case.callback_attempt, expected_attempt - 1)
 
@@ -406,17 +406,18 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         self.assertNotEqual(case.requires_action_at, None)
         self.maxDiff = None
 
-        _dt = timezone.localtime(dt)
-        self.assertDictEqual(
-            log.context,
-            {
-                "requires_action_at": _dt.isoformat(),
-                "sla_120": (_dt + datetime.timedelta(minutes=120)).isoformat(),
-                "sla_480": (_dt + datetime.timedelta(hours=8)).isoformat(),
-                "sla_15": (_dt + datetime.timedelta(minutes=15)).isoformat(),
-                "sla_30": (_dt + datetime.timedelta(minutes=30)).isoformat(),
-            },
-        )
+        if not skip_assert_log_context:
+            _dt = timezone.localtime(dt)
+            self.assertDictEqual(
+                log.context,
+                {
+                    "requires_action_at": _dt.isoformat(),
+                    "sla_120": (_dt + datetime.timedelta(minutes=120)).isoformat(),
+                    "sla_480": (_dt + datetime.timedelta(hours=8)).isoformat(),
+                    "sla_15": (_dt + datetime.timedelta(minutes=15)).isoformat(),
+                    "sla_30": (_dt + datetime.timedelta(minutes=30)).isoformat(),
+                },
+            )
 
         self.assertEqual(
             case.requires_action_at,
@@ -510,6 +511,48 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):
         self.assertFalse(form.is_valid())
         self.assertItemsEqual(form.errors.keys(), ["__all__"])
         self.assertItemsEqual(form.errors["__all__"], [u"Reached max number of callbacks allowed"])
+
+    @mock.patch("django.utils.timezone.now")
+    def test_callback_SMS_sla_date_from_case_creation_date(self, mocked_now):
+        # When case.source is SMS then sla offset should be from case.created field
+        # rather than the requires_action_at field
+        mocked_now.return_value = self.mocked_now.return_value
+        created = timezone.localtime(self.default_dt, timezone.get_default_timezone())
+        case = make_recipe("legalaid.case", created=created, source=CASE_SOURCE.SMS)
+        self._test_save_successfull(case, 1, "CB1", skip_assert_log_context=True)
+        requires_action_at = timezone.localtime(case.requires_action_at, timezone.get_default_timezone())
+        log = Log.objects.filter().last()
+        self.assertDictEqual(
+            log.context,
+            {
+                "requires_action_at": requires_action_at.isoformat(),
+                "sla_120": (case.created + datetime.timedelta(minutes=120)).isoformat(),
+                "sla_480": (case.created + datetime.timedelta(hours=8)).isoformat(),
+                "sla_15": (case.created + datetime.timedelta(minutes=15)).isoformat(),
+                "sla_30": (case.created + datetime.timedelta(minutes=30)).isoformat(),
+            },
+        )
+
+    @mock.patch("django.utils.timezone.now")
+    def test_callback_VOICEMAIL_sla_date_from_case_creation_date(self, mocked_now):
+        # When case.source is VOICEMAIL then sla offset should be from case.created field
+        # rather than the requires_action_at field
+        mocked_now.return_value = self.mocked_now.return_value
+        created = timezone.localtime(self.default_dt, timezone.get_default_timezone())
+        case = make_recipe("legalaid.case", created=created, source=CASE_SOURCE.VOICEMAIL)
+        self._test_save_successfull(case, 1, "CB1", skip_assert_log_context=True)
+        requires_action_at = timezone.localtime(case.requires_action_at, timezone.get_default_timezone())
+        log = Log.objects.filter().last()
+        self.assertDictEqual(
+            log.context,
+            {
+                "requires_action_at": requires_action_at.isoformat(),
+                "sla_120": (case.created + datetime.timedelta(minutes=120)).isoformat(),
+                "sla_480": (case.created + datetime.timedelta(hours=8)).isoformat(),
+                "sla_15": (case.created + datetime.timedelta(minutes=15)).isoformat(),
+                "sla_30": (case.created + datetime.timedelta(minutes=30)).isoformat(),
+            },
+        )
 
 
 class StopCallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, TestCase):

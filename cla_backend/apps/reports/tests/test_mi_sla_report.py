@@ -333,6 +333,8 @@ class MiSlaTestCasePhone(MiSlaTestCaseWeb):
 
 class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     source = CASE_SOURCE.SMS
+    SLA1_MINUTES = 120
+    SLA2_MINUTES = 480
 
     # fmt: off
     """
@@ -365,6 +367,22 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
         super(MiSlaTestCaseSMS, self).tearDown()
         self.operator_hours_patcher.stop()
 
+    def move_time_forward_minutes_before_sla1(self, dt, timezone_mock, naive_mock, minutes):
+        move_minutes = self.SLA1_MINUTES - minutes
+        return self._move_time_forward(dt, timezone_mock, naive_mock, move_minutes)
+
+    def move_time_forward_minutes_after_sla1(self, dt, timezone_mock, naive_mock, minutes):
+        move_minutes = self.SLA1_MINUTES + minutes
+        return self._move_time_forward(dt, timezone_mock, naive_mock, move_minutes)
+
+    def move_time_forward_minutes_before_sla2(self, dt, timezone_mock, naive_mock, minutes):
+        move_minutes = self.SLA2_MINUTES - minutes
+        return self._move_time_forward(dt, timezone_mock, naive_mock, move_minutes)
+
+    def move_time_forward_minutes_after_sla2(self, dt, timezone_mock, naive_mock, minutes):
+        move_minutes = self.SLA2_MINUTES + minutes
+        return self._move_time_forward(dt, timezone_mock, naive_mock, move_minutes)
+
     def _move_time_forward(self, dt, timezone_mock, naive_mock, minutes_forward):
         dt += datetime.timedelta(minutes=minutes_forward)
         timezone_mock.return_value = dt
@@ -388,7 +406,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
 
         # Move current time to 1 minute before SLA1
-        self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=119)
+        self.move_time_forward_minutes_before_sla1(now_tz, timezone_mock, mock_common_datetime, minutes=1)
         # Generate report without a callback
         date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
@@ -418,7 +436,8 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
 
         # Move current time to 1 minute after SLA1
-        now_tz = self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=121)
+        now_tz = self.move_time_forward_minutes_after_sla1(now_tz, timezone_mock, mock_common_datetime, minutes=1)
+
         # Generate report without a callback
         date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
@@ -448,7 +467,8 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
 
         # Move current time to 1 minute before SLA2
-        now_tz = self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=479)
+        now_tz = self.move_time_forward_minutes_before_sla2(now_tz, timezone_mock, mock_common_datetime, minutes=1)
+
         # Generate report without a callback
         date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
@@ -478,7 +498,8 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
 
         # Move current time to 1 minute after SLA2
-        now_tz = self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=481)
+        now_tz = self.move_time_forward_minutes_after_sla2(now_tz, timezone_mock, mock_common_datetime, minutes=1)
+
         # Generate report without a callback
         date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
@@ -507,7 +528,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
         # Create CB1
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
         # Move current time to 1 minute before SLA1
-        now_tz = self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=119)
+        now_tz = self.move_time_forward_minutes_before_sla1(now_tz, timezone_mock, mock_common_datetime, minutes=1)
         # Create  CB2
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
 
@@ -539,7 +560,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
         # Create CB1
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
         # Move current time 1 minute after SLA1
-        now_tz = self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=121)
+        now_tz = self.move_time_forward_minutes_after_sla1(now_tz, timezone_mock, mock_common_datetime, minutes=1)
         # Create  CB2
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
 
@@ -571,7 +592,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
         # Create CB1
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
         # Move current time 1 minute before SLA2
-        now_tz = self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=479)
+        now_tz = self.move_time_forward_minutes_before_sla2(now_tz, timezone_mock, mock_common_datetime, minutes=1)
         # Create  CB2
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
 
@@ -609,7 +630,7 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase):
         # Create CB1
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
         # Move current time 1 minute after SLA2
-        now_tz = self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=421)
+        now_tz = self.move_time_forward_minutes_after_sla2(now_tz, timezone_mock, mock_common_datetime, minutes=1)
         # Create  CB2
         self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
 

@@ -104,11 +104,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: database
-                  key: password
-                  optional: true
+              value: {{ .Values.envVars.DB_PASSWORD.value }}
             - name: POSTGRES_USER
               value: postgres
             - name: POSTGRES_DB

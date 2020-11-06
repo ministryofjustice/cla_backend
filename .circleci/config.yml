@@ -168,7 +168,7 @@ jobs:
             source .circleci/define_build_environment_variables << parameters.namespace >> << parameters.dynamic_hostname >>
             pip3 install requests
             export PINGDOM_IPS=`python3 bin/pingdom_ips.py`
-            ./bin/<< parameters.namespace >>_deploy.sh
+            ./bin/<< parameters.namespace >>_deploy.sh << parameters.dynamic_hostname >>
             echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV
       - slack/notify:
           message: ':tada: (<< parameters.namespace >>) Deployed branch $CIRCLE_BRANCH'

@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cla-backend.fullname" . }}-app
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "cla-backend.selectorLabels" . | nindent 4 }}
+---
+{{- if .Values.localPostgres.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cla-backend.fullname" . }}-db
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+  selector:
+    app: {{ include "cla-backend.fullname" . }}-db
+{{- end }}

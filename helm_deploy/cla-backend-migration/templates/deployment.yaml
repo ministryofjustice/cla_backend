@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database-migration
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database-migration
+  template:
+    metadata:
+      labels:
+        app: database-migration
+    spec:
+      containers:
+        - name: database-migration
+          image: "saidmoj/database-migration:latest"
+          imagePullPolicy: Always
+          env:
+            - name: TARGET_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: host
+            - name: TARGET_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: name
+            - name: TARGET_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: user
+            - name: TARGET_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: password
+            - name: SOURCE_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: migration-database
+                  key: host
+            - name: SOURCE_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: migration-database
+                  key: name
+            - name: SOURCE_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: migration-database
+                  key: user
+            - name: SOURCE_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: migration-database
+                  key: password

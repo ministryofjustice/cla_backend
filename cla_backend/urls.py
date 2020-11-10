@@ -8,6 +8,8 @@ from django.conf.urls.static import static
 
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+handler404 = "core.views.page_not_found"
+
 
 if settings.ADMIN_ENABLED:
     # Uncomment the next two lines to enable the admin:

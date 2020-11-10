@@ -1,0 +1,79 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-house-keeping
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "0 5 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: housekeeping
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            command: ["python", "manage.py", "housekeeping"]
+            env:
+              {{ include "cla-backend.app.vars" . | nindent 12 }}
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-missing-codes
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "15 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: run-command
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            command: ["python", "manage.py", "monitor_missing_outcome_codes"]
+            env:
+              {{ include "cla-backend.app.vars" . | nindent 12 }}
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-multiple-codes
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "*/15 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: run-command
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            command: ["python", "manage.py", "monitor_multiple_outcome_codes"]
+            env:
+              {{ include "cla-backend.app.vars" . | nindent 12 }}
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-performance
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "1 1 * * 1"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: run-command
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            command: ["python", "manage.py", "send_to_performance_platform"]
+            env:
+              {{ include "cla-backend.app.vars" . | nindent 12 }}
+          restartPolicy: OnFailure

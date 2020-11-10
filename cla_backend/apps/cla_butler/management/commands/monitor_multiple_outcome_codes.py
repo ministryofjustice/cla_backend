@@ -3,7 +3,6 @@ import logging
 from django.core.management.base import BaseCommand
 from django.db.models import Count, Max, Min
 from django.utils.timezone import now
-from cla_butler.stack import is_first_instance, InstanceNotInAsgException, StackException
 from cla_eventlog.models import Log
 
 logger = logging.getLogger(__name__)
@@ -16,10 +15,8 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        if self.should_run_housekeeping(**options):
-            self.check_for_multiple_outcome_codes()
-        else:
-            logger.debug("LGA-294 Skip check_for_multiple_outcome_codes: running on secondary instance")
+        self.stdout.write("Checking for multiple outcome codes")
+        self.check_for_multiple_outcome_codes()
 
     @staticmethod
     def check_for_multiple_outcome_codes():
@@ -68,16 +65,3 @@ class Command(BaseCommand):
                 logger.warning("LGA-294 investigation. Multiple outcome codes today for case: {}".format(i))
         else:
             logger.info("LGA-294 No multiple outcome codes found for today")
-
-    @staticmethod
-    def should_run_housekeeping(**options):
-        if options.get("force", False):
-            return True
-        try:
-            return is_first_instance()
-        except InstanceNotInAsgException:
-            logger.info("EC2 instance not in an ASG")
-            return True
-        except StackException:
-            logger.info("Not running on EC2 instance")
-            return True

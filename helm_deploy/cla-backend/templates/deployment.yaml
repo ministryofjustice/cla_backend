@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cla-backend.fullname" . }}-app
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "cla-backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "cla-backend.selectorLabels" . | nindent 8 }}
+        app: web
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /status/
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: "{{ .Values.host }}"
+          readinessProbe:
+            httpGet:
+              path: /status/
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: "{{ .Values.host }}"
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sleep","30"]
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            {{ include "cla-backend.app.vars" . | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+---
+{{- if .Values.localPostgres.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cla-backend.fullname" . }}-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "cla-backend.fullname" . }}-db
+  template:
+    metadata:
+      labels:
+        app: {{ include "cla-backend.fullname" . }}-db
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ include "cla-backend.fullname" . }}-db
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "bitnami/postgresql"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5432
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.envVars.DB_PASSWORD.value }}
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_DB
+              value: cla_backend
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}

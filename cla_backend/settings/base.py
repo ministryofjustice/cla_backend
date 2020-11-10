@@ -2,9 +2,14 @@ import datetime
 import sys
 import os
 
+import sentry_sdk
 from cla_common.call_centre_availability import OpeningHours
 from cla_common.constants import OPERATOR_HOURS
 from cla_common.services import CacheAdapter
+from kombu import transport
+from sentry_sdk.integrations.django import DjangoIntegration
+
+from cla_backend.sqs import CLASQSChannel
 
 # PATH vars
 
@@ -26,7 +31,7 @@ PING_JSON_KEYS = {
     "build_tag_key": "APP_BUILD_TAG",
 }
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = ()
@@ -71,18 +76,31 @@ else:
 
 TEMP_DIR = root("tmp")
 EXPORT_DIR = "/exports/"
-AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME", "")
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", "")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", "")
 
-AWS_DELETED_OBJECTS_BUCKET_NAME = os.environ.get("AWS_DELETED_OBJECTS_BUCKET_NAME", "")
-AWS_DELETED_OBJECTS_BUCKET_REGION = "eu-west-1"
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.11/howto/static-files/
+if os.environ.get("STATIC_FILES_BACKEND") == "s3":
+    STATICFILES_STORAGE = "cla_backend.libs.aws.s3.StaticS3Storage"
+
+AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME", "eu-west-1")
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False
+
+# This bucket needs to a private bucket as it will contain sensitive reports
+AWS_REPORTS_STORAGE_BUCKET_NAME = os.environ.get("AWS_REPORTS_STORAGE_BUCKET_NAME")
+# This bucket needs to a public bucket as it will serve public assets such as css,images and js
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STATIC_FILES_STORAGE_BUCKET_NAME")
+
+AWS_DELETED_OBJECTS_BUCKET_NAME = os.environ.get("AWS_DELETED_OBJECTS_BUCKET_NAME")
 
 SITE_HOSTNAME = os.environ.get("SITE_HOSTNAME", "cla.local:8000")
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split()
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -241,25 +259,17 @@ LOGGING = {
             "class": "django.utils.log.AdminEmailHandler",
         },
         "console": {"level": "INFO", "class": "logging.StreamHandler", "formatter": "simple", "stream": sys.stdout},
-        "sentry": {
-            "level": "ERROR",
-            "class": "raven.handlers.logging.SentryHandler",
-            "formatter": "simple",
-            "dsn": os.environ.get("RAVEN_CONFIG_DSN"),
-        },
     },
     "loggers": {"django.request": {"handlers": ["mail_admins"], "level": "ERROR", "propagate": True}},
 }
 
-if "RAVEN_CONFIG_DSN" in os.environ:
-    RAVEN_CONFIG = {"dsn": os.environ.get("RAVEN_CONFIG_DSN"), "site": os.environ.get("RAVEN_CONFIG_SITE")}
-
-    INSTALLED_APPS += ("raven.contrib.django.raven_compat",)
-
-    MIDDLEWARE_CLASSES = (
-        "raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware",
-        # 'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
-    ) + MIDDLEWARE_CLASSES
+if "SENTRY_DSN" in os.environ:
+    sentry_sdk.init(
+        dsn=os.environ.get("SENTRY_DSN"),
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=1.0,
+        environment=os.environ.get("CLA_ENV", "unknown"),
+    )
 
 # SECURITY
 
@@ -307,7 +317,6 @@ NON_ROTA_OPENING_HOURS = OpeningHours(**NON_ROTA_HOURS)
 
 OBIEE_IP_PERMISSIONS = ("*",)
 
-OBIEE_ENABLED = os.environ.get("OBIEE_ENABLED", "True") == "True"
 OBIEE_EMAIL_TO = os.environ.get("OBIEE_EMAIL_TO", DEFAULT_EMAIL_TO)
 OBIEE_ZIP_PASSWORD = os.environ.get("OBIEE_ZIP_PASSWORD")
 
@@ -325,18 +334,25 @@ else:
     CELERY_ALWAYS_EAGER = True
 
 CLA_ENV = os.environ.get("CLA_ENV", "local")
-IS_AWS_ENV = os.environ.get("AWS") == "True"
-if IS_AWS_ENV:
-    _queue_prefix = "aws-%(env)s-"
-else:
-    _queue_prefix = "env-%(env)s-"
 
 BROKER_TRANSPORT_OPTIONS = {
     "polling_interval": 10,
-    "region": "eu-west-1",
+    "region": os.environ.get("SQS_REGION", "eu-west-1"),
     "wait_time_seconds": 20,
-    "queue_name_prefix": _queue_prefix % {"env": CLA_ENV},
+    "queue_name_prefix": "env-%(env)s-" % {"env": CLA_ENV},
 }
+
+if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):
+    # Monkey patch the SQS transport channel to use our channel
+    # This is to stop actions such as ListQueues being triggered
+    # which we do not have on the cloud platform environments
+    transport.SQS.Transport.Channel = CLASQSChannel
+
+    predefined_queue_url = os.environ.get("CELERY_PREDEFINED_QUEUE_URL")
+    CELERY_DEFAULT_QUEUE = predefined_queue_url.split("/")[-1]
+    BROKER_TRANSPORT_OPTIONS["predefined_queue_url"] = predefined_queue_url
+    del BROKER_TRANSPORT_OPTIONS["queue_name_prefix"]
+
 CELERY_ACCEPT_CONTENT = ["yaml"]  # because json serializer doesn't support dates
 CELERY_TASK_SERIALIZER = "yaml"  # for consistency
 CELERY_RESULT_SERIALIZER = "yaml"  # as above but not actually used

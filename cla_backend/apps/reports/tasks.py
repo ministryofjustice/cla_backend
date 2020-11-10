@@ -1,5 +1,4 @@
 import contextlib
-import boto
 import os
 import json
 import shutil
@@ -15,7 +14,7 @@ from django.utils.six import text_type
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 
-from .utils import OBIEEExporter
+from .utils import OBIEEExporter, get_s3_connection
 from .models import Export
 from .constants import EXPORT_STATUS
 
@@ -68,8 +67,8 @@ class ExportTaskBase(Task):
         self.export.save()
 
     def send_to_s3(self):
-        conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
+        conn = get_s3_connection()
+        bucket = conn.lookup(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
         k = bucket.new_key(settings.EXPORT_DIR + os.path.basename(self.filepath))
         k.set_contents_from_filename(self.filepath)
         shutil.rmtree(self.filepath, ignore_errors=True)

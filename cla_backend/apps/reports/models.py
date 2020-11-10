@@ -1,4 +1,3 @@
-import boto
 import os
 from django.conf import settings
 from django.db import models
@@ -6,6 +5,7 @@ from django.db.models.signals import pre_delete
 
 from model_utils.models import TimeStampedModel
 from reports.constants import EXPORT_STATUS
+from reports.utils import get_s3_connection
 
 
 class Export(TimeStampedModel):
@@ -22,8 +22,8 @@ class Export(TimeStampedModel):
 
 
 def delete_export_file(sender, instance=None, **kwargs):
-    conn = boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-    bucket = conn.lookup(settings.AWS_STORAGE_BUCKET_NAME)
+    conn = get_s3_connection()
+    bucket = conn.lookup(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
 
     try:
         k = bucket.get_key(settings.EXPORT_DIR + os.path.basename(instance.path))

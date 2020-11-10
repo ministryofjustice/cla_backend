@@ -1,24 +1,15 @@
-version: 2
+version: 2.1
+orbs:
+  slack: circleci/slack@3.4.2
 jobs:
   build:
     docker:
       - image: docker:17.03-git
-    environment:
-      DSD_DOCKER_REGISTRY: "registry.service.dsd.io"
-      DSD_DOCKER_IMAGE: "cla_backend"
     steps:
       - checkout
       - setup_remote_docker:
-          version: 17.03.0-ce
+          version: "18.09.3"
           docker_layer_caching: true
-      - run:
-          name: Login to the DSD Docker registry
-          command: |
-            docker login \
-              --username $DOCKER_USERNAME \
-              --password $DOCKER_PASSWORD \
-              --email "${DOCKER_USERNAME}@digital.justice.gov.uk" \
-              $DSD_DOCKER_REGISTRY
       - run:
           name: Login to the ECR Docker registry
           command: |
@@ -147,13 +138,139 @@ jobs:
       - store_artifacts:
           path: test-reports
 
+  deploy:
+    parameters:
+      namespace:
+        type: string
+      dynamic_hostname:
+        type: boolean
+    docker:
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+    shell: /bin/sh -leo pipefail
+    environment:
+      BASH_ENV: /etc/profile
+    steps:
+      - checkout
+      - run:
+          name: Install helm v3
+          command: |
+            wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+            tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+            mv linux-amd64/helm /usr/local/bin/helm
+      - run:
+          name: Initialise Kubernetes << parameters.namespace >> context
+          command: |
+            setup-kube-auth
+            kubectl config use-context << parameters.namespace >>
+      - deploy:
+          name: Deploy to << parameters.namespace >>
+          command: |
+            source .circleci/define_build_environment_variables << parameters.namespace >> << parameters.dynamic_hostname >>
+            pip3 install requests
+            export PINGDOM_IPS=`python3 bin/pingdom_ips.py`
+            ./bin/<< parameters.namespace >>_deploy.sh << parameters.dynamic_hostname >>
+            echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV
+      - slack/notify:
+          message: ':tada: (<< parameters.namespace >>) Deployed branch $CIRCLE_BRANCH'
+          title: '$RELEASE_HOST'
+          title_link: 'https://$RELEASE_HOST/admin/'
+
+  cleanup_merged:
+    docker:
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+    steps:
+      - checkout
+      - run:
+          name: Install helm v3
+          command: |
+            wget https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+            tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
+            mv linux-amd64/helm /usr/local/bin/helm
+      - run:
+          name: Initialise Kubernetes uat context
+          command: |
+            setup-kube-auth
+            kubectl config use-context uat
+      - run:
+          name: Delete uat release
+          command: |
+            ./bin/delete_uat_release.sh
+
 workflows:
   version: 2
   build_and_test:
     jobs:
       - lint
       - test
+      - cleanup_merged:
+          context: laa-cla-backend
       - build:
           requires:
             - lint
             - test
+          context: laa-cla-backend
+      - deploy:
+          name: uat_deploy
+          namespace: uat
+          dynamic_hostname: true
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - master
+          context: laa-cla-backend
+
+      - static_uat_deploy_approval:
+          type: approval
+          requires:
+            - build
+      - deploy:
+          name: static_uat_deploy
+          namespace: uat
+          dynamic_hostname: false
+          requires:
+            - static_uat_deploy_approval
+          context: laa-cla-backend
+
+      - staging_deploy_approval:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - epic/LGA-959-kubernetes
+      - deploy:
+          name: staging_deploy
+          namespace: staging
+          dynamic_hostname: false
+          requires:
+            - staging_deploy_approval
+          context: laa-cla-backend
+
+      - production_deploy_approval:
+          requires:
+            - staging_deploy
+          type: approval
+          filters:
+            branches:
+              only:
+                - epic/LGA-959-kubernetes
+                - master
+
+      - deploy:
+          name: training_deploy
+          namespace: training
+          dynamic_hostname: false
+          requires:
+            - production_deploy_approval
+          context: laa-cla-backend
+
+      - deploy:
+          name: production_deploy
+          namespace: production
+          dynamic_hostname: false
+          requires:
+            - production_deploy_approval
+          context: laa-cla-backend

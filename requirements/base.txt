@@ -7,7 +7,7 @@ Django==1.7.9
 django-model-utils==2.2
 
 psycopg2==2.7.5
-raven==5.1.1
+sentry-sdk==0.18.0
 
 djangorestframework==2.3.14
 jsonfield==0.9.22
@@ -51,3 +51,6 @@ git+https://github.com/ministryofjustice/django-moj-irat.git@0.3#egg=django-moj-
 
 # stack interrogation
 boto3>=1.5,<2
+
+uwsgi==2.0.18
+django-storages==1.5.2

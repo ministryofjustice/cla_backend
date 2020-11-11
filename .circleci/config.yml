@@ -240,7 +240,7 @@ workflows:
           filters:
             branches:
               only:
-                - epic/LGA-959-kubernetes
+                - master
       - deploy:
           name: staging_deploy
           namespace: staging
@@ -256,7 +256,6 @@ workflows:
           filters:
             branches:
               only:
-                - epic/LGA-959-kubernetes
                 - master
 
       - deploy:

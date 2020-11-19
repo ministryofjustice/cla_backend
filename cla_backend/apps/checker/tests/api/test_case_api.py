@@ -240,7 +240,7 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
             ),
         )
         _dt = timezone.localtime(self._default_dt)
-        expected_sla_72h = datetime.datetime(2015, 4, 9, 13, 30, 0, 0)
+        expected_sla_72h = datetime.datetime(2015, 4, 7, 13, 30, 0, 0)
         self.assertDictEqual(
             log.context,
             {

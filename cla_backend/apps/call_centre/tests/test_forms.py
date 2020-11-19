@@ -347,7 +347,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, CallCentreFixedOperat
     def __call__(self, runner, mocked_now, *args, **kwargs):
         self.mocked_now = mocked_now
         self.mocked_now.return_value = datetime.datetime(2015, 3, 24, 10, 0, 0, 0).replace(tzinfo=timezone.utc)
-        self.expected_sla_72h = datetime.datetime(2015, 4, 9, 13, 30, 0, 0)
+        self.expected_sla_72h = datetime.datetime(2015, 4, 7, 13, 30, 0, 0)
         self.default_dt = self.mocked_now().replace(day=30)
 
         super(CallMeBackFormTestCase, self).__call__(runner, *args, **kwargs)
@@ -533,6 +533,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, CallCentreFixedOperat
                 "sla_480": (case.created + datetime.timedelta(hours=8)).isoformat(),
                 "sla_15": (case.created + datetime.timedelta(minutes=15)).isoformat(),
                 "sla_30": (case.created + datetime.timedelta(minutes=30)).isoformat(),
+                "sla_72h": timezone.make_aware(self.expected_sla_72h, created.tzinfo).isoformat(),
             },
         )
 
@@ -554,6 +555,7 @@ class CallMeBackFormTestCase(BaseCaseLogFormTestCaseMixin, CallCentreFixedOperat
                 "sla_480": (case.created + datetime.timedelta(hours=8)).isoformat(),
                 "sla_15": (case.created + datetime.timedelta(minutes=15)).isoformat(),
                 "sla_30": (case.created + datetime.timedelta(minutes=30)).isoformat(),
+                "sla_72h": timezone.make_aware(self.expected_sla_72h, created.tzinfo).isoformat(),
             },
         )
 

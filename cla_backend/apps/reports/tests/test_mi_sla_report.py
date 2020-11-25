@@ -1,18 +1,18 @@
 # coding=utf-8
 from contextlib import contextmanager
 import datetime
+
+from cla_common.call_centre_availability import OpeningHours
 from django.test import TestCase
 from django.utils import timezone
 import mock
 
 from cla_common.constants import CASE_SOURCE
-
 from core.tests.mommy_utils import make_recipe, make_user
 from cla_eventlog import event_registry
 from cla_eventlog.models import Log
 from legalaid.forms import get_sla_time
 from reports.forms import MICB1Extract
-from legalaid.models import Case
 
 
 def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
@@ -21,8 +21,7 @@ def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
     month = month if month else today.month
     day = day if day else today.day
     dt = datetime.datetime(year, month, day, hour, minute, second)
-    tz = timezone.get_current_timezone()
-    return timezone.make_aware(dt, tz)
+    return timezone.make_aware(dt, timezone.get_current_timezone())
 
 
 def mock_now(dt):
@@ -40,12 +39,15 @@ class MiSlaTestCaseBase(TestCase):
     source = None
     requires_action_at_minutes_offset = 60
 
-    def make_case(self, dt):
+    def make_case(self, dt, **kwargs):
         with patch_field(Log, "created", dt - datetime.timedelta(minutes=1)):
-            return make_recipe("legalaid.case", source=self.source)
+            return make_recipe("legalaid.case", source=self.source, **kwargs)
 
     def schedule_callback(self, case, user, created, requires_action_at=None):
         requires_action_at = requires_action_at or created + datetime.timedelta(minutes=35)
+        sla_base_time = requires_action_at
+        if case.source in [CASE_SOURCE.SMS, CASE_SOURCE.VOICEMAIL]:
+            sla_base_time = case.created
         event = event_registry.get_event("call_me_back")()
         with patch_field(Log, "created", created):
             event.get_log_code(case=case)
@@ -55,10 +57,10 @@ class MiSlaTestCaseBase(TestCase):
                 notes="",
                 context={
                     "requires_action_at": requires_action_at,
-                    "sla_15": get_sla_time(requires_action_at, 15),
-                    "sla_30": get_sla_time(requires_action_at, 30),
-                    "sla_120": get_sla_time(requires_action_at, 120),
-                    "sla_480": get_sla_time(requires_action_at, 480),
+                    "sla_15": get_sla_time(sla_base_time, 15),
+                    "sla_30": get_sla_time(sla_base_time, 30),
+                    "sla_120": get_sla_time(sla_base_time, 120),
+                    "sla_480": get_sla_time(sla_base_time, 480),
                 },
             )
             case.set_requires_action_at(requires_action_at)
@@ -331,124 +333,321 @@ class MiSlaTestCasePhone(MiSlaTestCaseWeb):
 
 class MiSlaTestCaseSMS(MiSlaTestCaseBase):
     source = CASE_SOURCE.SMS
+    SLA1_MINUTES = 120
+    SLA2_MINUTES = 480
 
-    def make_case(self, dt):
-        with patch_field(Case, "created", dt - datetime.timedelta(minutes=2)):
-            return super(MiSlaTestCaseSMS, self).make_case(dt)
+    # fmt: off
+    """
+    Rules used to determine if SLA1/SLA2 was missed
+    Note: A callback attempt is when the operator has clicked the start call button after successfully contacting the user
+    +-----------+--------------+-----------------------------------+--------------------------------------------------------------------+-------------------------------------------------------------------+
+    |           |              | Callback attempted within 2 hours | Callback attempted after 2 hours AND current time within 8h window | Callback attempted after 2 hours AND current time after 8h window |
+    +-----------+--------------+-----------------------------------+--------------------------------------------------------------------+-------------------------------------------------------------------+
+    | SMS       | SLA 1 missed | FALSE                             | TRUE                                                               | TRUE                                                              |
+    +-----------+--------------+-----------------------------------+--------------------------------------------------------------------+-------------------------------------------------------------------+
+    |           | SLA 2 missed | FALSE                             | FALSE                                                              | TRUE                                                              |
+    +-----------+--------------+-----------------------------------+--------------------------------------------------------------------+-------------------------------------------------------------------+
+    | Voicemail | SLA 1 missed | FALSE                             | TRUE                                                               | TRUE                                                              |
+    +-----------+--------------+-----------------------------------+--------------------------------------------------------------------+-------------------------------------------------------------------+
+    |           | SLA 2 missed | FALSE                             | FALSE                                                              | TRUE                                                              |
+    +-----------+--------------+-----------------------------------+--------------------------------------------------------------------+-------------------------------------------------------------------+
+    """
+    # fmt: on
 
-    def test_call_answered_within_sla1_window(self):
-        # To meet SLA1 SMS and Voice mail cases need to contacted two hours from the case creation and not the
-        # 2 hours from the callback time https://dsdmoj.atlassian.net/browse/LGA-1051
-        created = _make_datetime(2015, 1, 2, 9, 1, 0)
-        case = self.make_case(created)
-        # 90 minutes from case creation (30 + self.requires_action_at_minutes_offset)
-        # is still within the 2 hours for SLA1
-        values = self.create_and_get_report(30, case=case)
+    def setUp(self):
+        super(MiSlaTestCaseSMS, self).setUp()
+        hours = {"weekday": (datetime.time(9, 0), datetime.time(20, 0))}
+        operator_hours = OpeningHours(**hours)
+        from legalaid.utils import sla
+
+        self.operator_hours_patcher = mock.patch.object(sla, "operator_hours", operator_hours)
+        self.operator_hours_patcher.start()
+
+    def tearDown(self):
+        super(MiSlaTestCaseSMS, self).tearDown()
+        self.operator_hours_patcher.stop()
+
+    def move_time_forward_minutes_before_sla1(self, dt, timezone_mock, naive_mock, minutes):
+        move_minutes = self.SLA1_MINUTES - minutes
+        return self._move_time_forward(dt, timezone_mock, naive_mock, move_minutes)
+
+    def move_time_forward_minutes_after_sla1(self, dt, timezone_mock, naive_mock, minutes):
+        move_minutes = self.SLA1_MINUTES + minutes
+        return self._move_time_forward(dt, timezone_mock, naive_mock, move_minutes)
+
+    def move_time_forward_minutes_before_sla2(self, dt, timezone_mock, naive_mock, minutes):
+        move_minutes = self.SLA2_MINUTES - minutes
+        return self._move_time_forward(dt, timezone_mock, naive_mock, move_minutes)
+
+    def move_time_forward_minutes_after_sla2(self, dt, timezone_mock, naive_mock, minutes):
+        move_minutes = self.SLA2_MINUTES + minutes
+        return self._move_time_forward(dt, timezone_mock, naive_mock, move_minutes)
+
+    def _move_time_forward(self, dt, timezone_mock, naive_mock, minutes_forward):
+        dt += datetime.timedelta(minutes=minutes_forward)
+        timezone_mock.return_value = dt
+        if naive_mock:
+            naive_mock.return_value = timezone.make_naive(dt, dt.tzinfo)
+
+        return dt
+
+    @mock.patch("django.utils.timezone.now")
+    @mock.patch("cla_common.call_centre_availability.current_datetime")
+    def test_current_time_before_sla1(self, mock_common_datetime, timezone_mock):
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
+        timezone_mock.return_value = now_tz
+        # Mock the current datetime used for the call centre availability checks
+        mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
+
+        case = self.make_case(now_tz, created=now_tz)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+        # Create a callback that is due now
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
+
+        # Move current time to 1 minute before SLA1
+        self.move_time_forward_minutes_before_sla1(now_tz, timezone_mock, mock_common_datetime, minutes=1)
+        # Generate report without a callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
         self.assertFalse(values["missed_sla_1"])
         self.assertFalse(values["missed_sla_2"])
 
-    def test_call_answered_after_sla1_window(self):
-        # To meet SLA1 SMS and Voice mail cases need to contacted two hours from the case creation and not the
-        # 2 hours from the callback time https://dsdmoj.atlassian.net/browse/LGA-1051
-        created = _make_datetime(2015, 1, 2, 9, 1, 0)
-        case = self.make_case(created)
-        # 125 minutes from case creation (65 + self.requires_action_at_minutes_offset)
-        # is outside of SlA1
-        values = self.create_and_get_report(65, case=case)
-        self.assertTrue(values["missed_sla_1"])
-        self.assertFalse(values["missed_sla_2"])
-
-    def test_uncalled_and_current_time_within_sla1(self):
-        # SLA 1 miss is FALSE - Current time before SLA1 window
-        # SLA 2 miss is FALSE - Current time is within sla2 window
-
-        # Create the case 1 hour ago
-        today = datetime.datetime.now()
-        created = _make_datetime(hour=today.hour, minute=today.minute, second=today.second) - datetime.timedelta(
-            hours=1
-        )
-        case = self.make_case(created)
-        user = make_user()
-        make_recipe("call_centre.operator", user=user)
-
-        # Create CB 1 after 10 minutes of creating the case
-        requires_action_at = created + datetime.timedelta(minutes=10)
-        self.schedule_callback(case, user, created, requires_action_at)
-
-        date_range = (created, created + datetime.timedelta(hours=1))
+        # Start a call
+        self.start_call(case, user, now_tz)
+        # Generate report with a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-
         self.assertFalse(values["missed_sla_1"])
         self.assertFalse(values["missed_sla_2"])
 
-    def test_uncalled_and_current_time_after_sla1(self):
-        # SLA 1 miss is TRUE - Uncalled and Current time is after SLA1 window
-        # SLA 2 miss is FALSE - Uncalled BUT Current time is within sla2 window
+    @mock.patch("django.utils.timezone.now")
+    @mock.patch("cla_common.call_centre_availability.current_datetime")
+    def test_current_time_after_sla1(self, mock_common_datetime, timezone_mock):
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
+        timezone_mock.return_value = now_tz
+        # Mock the current datetime used for the call centre availability checks
+        mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
 
-        # Create the case 2 hours and 10 minutes ago
-        today = datetime.datetime.now()
-        created = _make_datetime(hour=today.hour, minute=today.minute, second=today.second) - datetime.timedelta(
-            hours=2, minutes=10
-        )
-        case = self.make_case(created)
+        case = self.make_case(now_tz, created=now_tz)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
+        # Create a callback that is due now
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
 
-        # Create CB 1 after 8 minutes of creating the case
-        requires_action_at = created + datetime.timedelta(minutes=8)
-        self.schedule_callback(case, user, created, requires_action_at)
+        # Move current time to 1 minute after SLA1
+        now_tz = self.move_time_forward_minutes_after_sla1(now_tz, timezone_mock, mock_common_datetime, minutes=1)
 
-        date_range = (created, created + datetime.timedelta(hours=3))
+        # Generate report without a callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-
         self.assertTrue(values["missed_sla_1"])
         self.assertFalse(values["missed_sla_2"])
 
-    def test_uncalled_and_current_time_within_sla2(self):
-        # SLA 1 miss is TRUE - Uncalled and Current time is after SLA1
-        # SLA 2 miss is FALSE - Uncalled BUT Current time is within SLA2
-        # Create the case 7 hour ago
-        today = datetime.datetime.now()
-        created = _make_datetime(hour=today.hour, minute=today.minute, second=today.second) - datetime.timedelta(
-            hours=7
-        )
-        case = self.make_case(created)
-        user = make_user()
-        make_recipe("call_centre.operator", user=user)
-
-        # Create CB 1 after 60 minutes of creating the case
-        requires_action_at = created + datetime.timedelta(minutes=8)
-        self.schedule_callback(case, user, created, requires_action_at)
-
-        date_range = (created, created + datetime.timedelta(hours=7))
+        # Start a call
+        self.start_call(case, user, now_tz)
+        # Generate report with a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-
         self.assertTrue(values["missed_sla_1"])
         self.assertFalse(values["missed_sla_2"])
 
-    def test_uncalled_and_current_time_after_sla2(self):
-        # SLA 1 miss is TRUE - Uncalled and Current time is after SLA1
-        # SLA 2 miss is TRUE - Uncalled and Current time is after SLA2
+    @mock.patch("django.utils.timezone.now")
+    @mock.patch("cla_common.call_centre_availability.current_datetime")
+    def test_current_time_before_sla2(self, mock_common_datetime, timezone_mock):
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
+        timezone_mock.return_value = now_tz
+        # Mock the current datetime used for the call centre availability checks
+        mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
 
-        # Create the case 9 hour ago
-        today = datetime.datetime.now()
-        created = _make_datetime(hour=today.hour, minute=today.minute, second=today.second) - datetime.timedelta(
-            hours=9
-        )
-        case = self.make_case(created)
+        case = self.make_case(now_tz, created=now_tz)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+        # Create a callback that is due now
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
+
+        # Move current time to 1 minute before SLA2
+        now_tz = self.move_time_forward_minutes_before_sla2(now_tz, timezone_mock, mock_common_datetime, minutes=1)
+
+        # Generate report without a callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+        # Start a call
+        self.start_call(case, user, now_tz)
+        # Generate report with a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    @mock.patch("django.utils.timezone.now")
+    @mock.patch("cla_common.call_centre_availability.current_datetime")
+    def test_current_time_after_sla2(self, mock_common_datetime, timezone_mock):
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
+        timezone_mock.return_value = now_tz
+        # Mock the current datetime used for the call centre availability checks
+        mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
+
+        case = self.make_case(now_tz, created=now_tz)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+        # Create a callback that is due now
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
+
+        # Move current time to 1 minute after SLA2
+        now_tz = self.move_time_forward_minutes_after_sla2(now_tz, timezone_mock, mock_common_datetime, minutes=1)
+
+        # Generate report without a callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertTrue(values["missed_sla_2"])
+
+        # Start a call
+        self.start_call(case, user, now_tz)
+        # Generate report with a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertTrue(values["missed_sla_2"])
+
+    @mock.patch("django.utils.timezone.now")
+    @mock.patch("cla_common.call_centre_availability.current_datetime")
+    def test_cb2_current_time_before_sla1(self, mock_common_datetime, timezone_mock):
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
+        timezone_mock.return_value = now_tz
+        # Mock the current datetime used for the call centre availability checks
+        mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
+
+        case = self.make_case(now_tz, created=now_tz)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+        # Create CB1
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
+        # Move current time to 1 minute before SLA1
+        now_tz = self.move_time_forward_minutes_before_sla1(now_tz, timezone_mock, mock_common_datetime, minutes=1)
+        # Create  CB2
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
+
+        # Generate report without a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+        # Start a call
+        self.start_call(case, user, now_tz)
+        # Generate report with a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    @mock.patch("django.utils.timezone.now")
+    @mock.patch("cla_common.call_centre_availability.current_datetime")
+    def test_cb2_current_time_after_sla1(self, mock_common_datetime, timezone_mock):
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
+        timezone_mock.return_value = now_tz
+        # Mock the current datetime used for the call centre availability checks
+        mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
+
+        case = self.make_case(now_tz, created=now_tz)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+        # Create CB1
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
+        # Move current time 1 minute after SLA1
+        now_tz = self.move_time_forward_minutes_after_sla1(now_tz, timezone_mock, mock_common_datetime, minutes=1)
+        # Create  CB2
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
+
+        # Generate report without a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+        # Start a call
+        self.start_call(case, user, now_tz)
+        # Generate report with a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    @mock.patch("django.utils.timezone.now")
+    @mock.patch("cla_common.call_centre_availability.current_datetime")
+    def test_cb2_current_time_before_sla2(self, mock_common_datetime, timezone_mock):
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
+        timezone_mock.return_value = now_tz
+        # Mock the current datetime used for the call centre availability checks
+        mock_common_datetime.return_value = timezone.make_naive(now_tz, timezone.get_current_timezone())
+
+        case = self.make_case(now_tz, created=now_tz)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+        # Create CB1
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
+        # Move current time 1 minute before SLA2
+        now_tz = self.move_time_forward_minutes_before_sla2(now_tz, timezone_mock, mock_common_datetime, minutes=1)
+        # Create  CB2
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
+
+        # Generate report without a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+        # Start a call
+        self.start_call(case, user, now_tz)
+        # Generate report with a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    @mock.patch("django.utils.timezone.now")
+    @mock.patch("cla_common.call_centre_availability.current_datetime")
+    def test_cb2_current_time_after_sla2(self, mock_common_datetime, timezone_mock):
+        # Scenario: SLA2 is missed eventhough a successful callback was attempted after the SLA2 window
+
+        now_tz = _make_datetime(year=2020, month=9, day=9, hour=9, minute=0)
+        timezone_mock.return_value = now_tz
+        # Mock the current datetime used for the call centre availability checks
+        mock_common_datetime.return_value = timezone.make_naive(now_tz, now_tz.tzinfo)
+
+        case = self.make_case(now_tz, created=now_tz)
         user = make_user()
         make_recipe("call_centre.operator", user=user)
 
-        # Create CB 1 after 60 minutes of creating the case
-        requires_action_at = created + datetime.timedelta(minutes=8)
-        self.schedule_callback(case, user, created, requires_action_at)
+        # Move current time 1 hour forward
+        now_tz = self._move_time_forward(now_tz, timezone_mock, mock_common_datetime, minutes_forward=60)
 
-        date_range = (created, created + datetime.timedelta(hours=9))
+        # Create CB1
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
+        # Move current time 1 minute after SLA2
+        now_tz = self.move_time_forward_minutes_after_sla2(now_tz, timezone_mock, mock_common_datetime, minutes=1)
+        # Create  CB2
+        self.schedule_callback(case, user, created=now_tz, requires_action_at=now_tz)
+
+        # Generate report without a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_1"])
+        self.assertTrue(values["missed_sla_2"])
 
+        # Start a call
+        self.start_call(case, user, now_tz)
+        # Generate report with a successful callback
+        date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
         self.assertTrue(values["missed_sla_1"])
         self.assertTrue(values["missed_sla_2"])
 
 
-class MiSlaTestCaseVoiceMail(MiSlaTestCaseBase):
+class MiSlaTestCaseVoiceMail(MiSlaTestCaseSMS):
     source = CASE_SOURCE.VOICEMAIL

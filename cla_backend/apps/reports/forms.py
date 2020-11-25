@@ -357,6 +357,9 @@ class MICB1Extract(SQLFileDateRangeReport):
 
     max_date_range = 3
 
+    def get_now(self):
+        return timezone.now()
+
     def get_headers(self):
         return [
             "LAA_Reference",
@@ -385,6 +388,10 @@ class MICB1Extract(SQLFileDateRangeReport):
             "Code",
             "Organisation",
         ]
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date, "now": self.get_now()}
 
 
 class MICB1ExtractAgilisys(SQLFileDateRangeReport):

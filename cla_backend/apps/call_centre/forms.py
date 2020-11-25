@@ -7,7 +7,15 @@ from django.forms.util import ErrorList
 from django.utils import timezone
 
 from cla_common.call_centre_availability import OpeningHours
-from cla_common.constants import GENDERS, ETHNICITIES, RELIGIONS, SEXUAL_ORIENTATIONS, DISABILITIES, OPERATOR_HOURS
+from cla_common.constants import (
+    GENDERS,
+    ETHNICITIES,
+    RELIGIONS,
+    SEXUAL_ORIENTATIONS,
+    DISABILITIES,
+    OPERATOR_HOURS,
+    CASE_SOURCE,
+)
 
 from knowledgebase.models import Article
 
@@ -199,6 +207,15 @@ class CallMeBackForm(BaseCallMeBackForm):
     # format "2013-12-29 23:59" always in UTC
     datetime = forms.DateTimeField()
     priority_callback = forms.BooleanField(required=False)
+
+    def get_sla_base_time(self, _dt):
+        if self.case.source in [CASE_SOURCE.SMS, CASE_SOURCE.VOICEMAIL]:
+            created = self.case.created
+            if timezone.is_naive(created):
+                created = timezone.make_aware(created, timezone.get_default_timezone())
+            return timezone.localtime(created)
+        else:
+            return super(CallMeBackForm, self).get_sla_base_time(_dt)
 
     def _is_dt_too_soon(self, dt):
         return dt <= timezone.now() - datetime.timedelta(minutes=30)

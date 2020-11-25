@@ -208,14 +208,14 @@ class CallMeBackForm(BaseCallMeBackForm):
     datetime = forms.DateTimeField()
     priority_callback = forms.BooleanField(required=False)
 
-    def get_sla_offset(self, _dt):
+    def get_sla_base_time(self, _dt):
         if self.case.source in [CASE_SOURCE.SMS, CASE_SOURCE.VOICEMAIL]:
             created = self.case.created
             if timezone.is_naive(created):
                 created = timezone.make_aware(created, timezone.get_default_timezone())
             return timezone.localtime(created)
         else:
-            return super(CallMeBackForm, self).get_sla_offset(_dt)
+            return super(CallMeBackForm, self).get_sla_base_time(_dt)
 
     def _is_dt_too_soon(self, dt):
         return dt <= timezone.now() - datetime.timedelta(minutes=30)

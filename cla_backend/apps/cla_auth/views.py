@@ -1,6 +1,5 @@
 import logging
 
-from django_statsd.clients import statsd
 from ipware.ip import get_ip
 from rest_framework.exceptions import Throttled
 
@@ -41,7 +40,6 @@ class AccessTokenView(Oauth2AccessTokenView):
         try:
             self.check_throttles(request)
         except Throttled as exc:
-            statsd.incr("login.throttled")
             logger.info(
                 "login throttled",
                 extra={
@@ -61,7 +59,6 @@ class AccessTokenView(Oauth2AccessTokenView):
     def get_password_grant(self, request, data, client):
         form = ClientIdPasswordGrantForm(data, client=client)
         if not form.is_valid():
-            statsd.incr("login.failed")
             logger.info(
                 "login failed",
                 extra={
@@ -79,7 +76,6 @@ class AccessTokenView(Oauth2AccessTokenView):
         else:
             form.on_form_valid()
 
-        statsd.incr("login.success")
         logger.info(
             "login succeeded",
             extra={

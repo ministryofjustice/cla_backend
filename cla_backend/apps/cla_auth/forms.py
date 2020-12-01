@@ -3,7 +3,6 @@ import logging
 
 from django.conf import settings
 from django.utils import timezone
-from django_statsd.clients import statsd
 
 from provider.oauth2.forms import PasswordGrantForm
 from provider.forms import OAuthValidationError
@@ -41,7 +40,6 @@ class ClientIdPasswordGrantForm(PasswordGrantForm):
         if attempts >= settings.LOGIN_FAILURE_LIMIT:
             self.account_lockedout = True
 
-            statsd.incr("account.lockout.created")
             logger.info("account locked out", extra={"username": username})
 
             raise OAuthValidationError({"error": "locked_out"})

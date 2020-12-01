@@ -4,7 +4,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.utils.timezone import now, localtime
 from django.utils.formats import date_format
-from django_statsd.clients import statsd
 
 logger = logging.getLogger(__name__)
 
@@ -19,8 +18,6 @@ Is CLA Superuser: {4}
 
 def log_operator_created(sender, instance, created, **kwargs):
     if created:
-        statsd.incr("operator.created")
-
         logger.info(
             "Operator user created",
             extra={
@@ -51,8 +48,6 @@ def log_operator_modified(sender, instance, **kwargs):
         sender.objects.get(pk=instance.pk)
     except sender.DoesNotExist:
         return
-
-    statsd.incr("operator.modified")
 
     logger.info(
         "Operator user modified",

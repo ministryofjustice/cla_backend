@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 from django.db import connection
-from django_statsd.clients import statsd
 from django.utils.translation import ugettext_lazy as _
 
 from legalaid.models import Case
@@ -63,7 +62,6 @@ class Timer(models.Model):
 
     @classmethod
     def start(cls, user):
-        statsd.incr("timer.start")
         timer, created = cls.objects.get_or_create(
             created_by=user, cancelled=False, stopped__isnull=True, defaults={"created_by": user}
         )
@@ -75,7 +73,6 @@ class Timer(models.Model):
         return self.stopped
 
     def stop(self, cancelled=False):
-        statsd.incr("timer.stopped")
         if self.is_stopped():
             raise ValueError(u"The timer has already been stopped")
 
@@ -106,6 +103,4 @@ class Timer(models.Model):
             total_billable_time, = cursor.fetchone()
             if total_billable_time:
                 self.linked_case.billable_time = total_billable_time
-                if total_billable_time:
-                    statsd.timing("timer.total_time", total_billable_time * 1000)
                 self.linked_case.save(update_fields=["billable_time"])

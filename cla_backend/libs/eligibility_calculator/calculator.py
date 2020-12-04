@@ -80,7 +80,7 @@ class CapitalCalculator(object):
         if not prop:
             return
 
-        mortgage_disregard = min(prop["mortgage_left"], self.mortgage_disregard_available)
+        mortgage_disregard = prop["mortgage_left"]
 
         property_equity = prop["value"] - mortgage_disregard
         # if prop.in_joint_names:
@@ -88,10 +88,7 @@ class CapitalCalculator(object):
             property_equity * prop["share"] / 100
         )  # assuming that you filled in share with the right figure (that is, in_joint_names not required)
 
-        remaining_mortgage_disregard = self.mortgage_disregard_available - mortgage_disregard
-
         prop["equity"] = max(property_equity, 0)
-        self.mortgage_disregard_available = remaining_mortgage_disregard
 
     def _apply_SMOD_disregard(self, prop):
         if not prop or not prop["disputed"]:
@@ -113,7 +110,6 @@ class CapitalCalculator(object):
         prop["equity"] = max(prop["equity"] - self.equity_disregard_available, 0)
 
     def _reset_state(self):
-        self.mortgage_disregard_available = constants.MORTGAGE_DISREGARD
         self.SMOD_disregard_available = constants.SMOD_DISREGARD
         self.equity_disregard_available = constants.EQUITY_DISREGARD
 

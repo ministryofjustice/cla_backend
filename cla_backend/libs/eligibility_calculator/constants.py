@@ -2,7 +2,6 @@ from .util import BetweenDict
 
 
 # Disposable capital
-MORTGAGE_DISREGARD = 10000000
 SMOD_DISREGARD = 10000000
 EQUITY_DISREGARD = 10000000
 

@@ -63,10 +63,10 @@ class TestCapitalCalculator(unittest.TestCase):
         calc = CapitalCalculator(properties=[self.make_property(52000000, 15000000, 100, True, True)])
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 22000000)
-        self.assertEqual(calc.main_property["equity"], 22000000)
+        self.assertEqual(capital, 17000000)
+        self.assertEqual(calc.main_property["equity"], 17000000)
         self.assertDictEqual(
-            calc.calcs, {"property_equities": [22000000], "property_capital": 22000000, "liquid_capital": 0}
+            calc.calcs, {"property_equities": [17000000], "property_capital": 17000000, "liquid_capital": 0}
         )
 
     def test_scenario_smod_3(self):
@@ -82,12 +82,10 @@ class TestCapitalCalculator(unittest.TestCase):
         )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 500000)
+        self.assertEqual(capital, 0)
         self.assertEqual(calc.main_property["equity"], 0)
-        self.assertEqual(calc.other_properties[0]["equity"], 500000)
-        self.assertDictEqual(
-            calc.calcs, {"property_equities": [0, 500000], "property_capital": 500000, "liquid_capital": 0}
-        )
+        self.assertEqual(calc.other_properties[0]["equity"], 0)
+        self.assertDictEqual(calc.calcs, {"property_equities": [0, 0], "property_capital": 0, "liquid_capital": 0})
 
     def test_scenario_smod_4(self):
         # The applicant’s main home is worth £240,000 and her other property is worth £90,000,
@@ -103,12 +101,10 @@ class TestCapitalCalculator(unittest.TestCase):
         )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 1000000)
-        self.assertEqual(calc.main_property["equity"], 1000000)
+        self.assertEqual(capital, 0)
+        self.assertEqual(calc.main_property["equity"], 0)
         self.assertEqual(calc.other_properties[0]["equity"], 0)
-        self.assertDictEqual(
-            calc.calcs, {"property_equities": [1000000, 0], "property_capital": 1000000, "liquid_capital": 0}
-        )
+        self.assertDictEqual(calc.calcs, {"property_equities": [0, 0], "property_capital": 0, "liquid_capital": 0})
 
     def test_scenario_no_smod_1(self):
         # The applicant has a home worth £150,000 and the mortgage is £75,000
@@ -124,11 +120,9 @@ class TestCapitalCalculator(unittest.TestCase):
         calc = CapitalCalculator(properties=[self.make_property(21500000, 20000000, 100, False, True)])
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 1500000)
-        self.assertEqual(calc.main_property["equity"], 1500000)
-        self.assertDictEqual(
-            calc.calcs, {"property_equities": [1500000], "property_capital": 1500000, "liquid_capital": 0}
-        )
+        self.assertEqual(capital, 0)
+        self.assertEqual(calc.main_property["equity"], 0)
+        self.assertDictEqual(calc.calcs, {"property_equities": [0], "property_capital": 0, "liquid_capital": 0})
 
     def test_scenario_no_smod_3(self):
         # The client has a main dwelling worth £150,000 and a second dwelling worth £100,000.
@@ -141,11 +135,11 @@ class TestCapitalCalculator(unittest.TestCase):
         )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 5000000)
-        self.assertEqual(calc.main_property["equity"], 3000000)
+        self.assertEqual(capital, 2000000)
+        self.assertEqual(calc.main_property["equity"], 0)
         self.assertEqual(calc.other_properties[0]["equity"], 2000000)
         self.assertDictEqual(
-            calc.calcs, {"property_equities": [3000000, 2000000], "property_capital": 5000000, "liquid_capital": 0}
+            calc.calcs, {"property_equities": [0, 2000000], "property_capital": 2000000, "liquid_capital": 0}
         )
 
     def test_laa_scenario_A12(self):
@@ -183,9 +177,9 @@ class TestCapitalCalculator(unittest.TestCase):
         )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 800100)
+        self.assertEqual(capital, 800000)
         self.assertDictEqual(
-            calc.calcs, {"property_equities": [0, 800100], "property_capital": 800100, "liquid_capital": 0}
+            calc.calcs, {"property_equities": [0, 800000], "property_capital": 800000, "liquid_capital": 0}
         )
 
     def test_laa_scenario_A15(self):
@@ -193,9 +187,9 @@ class TestCapitalCalculator(unittest.TestCase):
         calc = CapitalCalculator(properties=[self.make_property(20800100, 10000100, 100, False, True)])
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 800100)
+        self.assertEqual(capital, 800000)
         self.assertDictEqual(
-            calc.calcs, {"property_equities": [800100], "property_capital": 800100, "liquid_capital": 0}
+            calc.calcs, {"property_equities": [800000], "property_capital": 800000, "liquid_capital": 0}
         )
 
     def test_laa_scenario_A16(self):
@@ -209,9 +203,9 @@ class TestCapitalCalculator(unittest.TestCase):
         )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 3300000)
+        self.assertEqual(capital, 800000)
         self.assertDictEqual(
-            calc.calcs, {"property_equities": [2500000, 0], "property_capital": 2500000, "liquid_capital": 800000}
+            calc.calcs, {"property_equities": [0, 0], "property_capital": 0, "liquid_capital": 800000}
         )
 
     def test_laa_scenario_A17(self):
@@ -315,7 +309,7 @@ class TestCapitalCalculator(unittest.TestCase):
         # Client and Partner 1 Property each, Not SMOD
         # MV £156,000, Mortgage £89,000, Equity Disregard
         # MV £129,000, Mortgage £45,000
-        # Capital £1,000 from First, £84,000 from Second Fail
+        # Capital £0 from First, £84,000 from Second Fail
 
         # from @marco, it doesn't matter which property is the
         # main one as no SMOD applies
@@ -328,11 +322,11 @@ class TestCapitalCalculator(unittest.TestCase):
         )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 8500000)
-        self.assertEqual(calc.main_property["equity"], 100000)
+        self.assertEqual(capital, 8400000)
+        self.assertEqual(calc.main_property["equity"], 0)
         self.assertEqual(calc.other_properties[0]["equity"], 8400000)
         self.assertDictEqual(
-            calc.calcs, {"property_equities": [100000, 8400000], "property_capital": 8500000, "liquid_capital": 0}
+            calc.calcs, {"property_equities": [0, 8400000], "property_capital": 8400000, "liquid_capital": 0}
         )
 
     def test_laa_scenario_smod_8(self):
@@ -360,7 +354,7 @@ class TestCapitalCalculator(unittest.TestCase):
         # Client and Partner 1 Property each, Second SMOD
         # MV £156,000, Mortgage £89,000, Equity Disregard
         # MV £129,000, Mortgage £45,000, SMOD
-        # Capital £1,000 from First, Pass
+        # Capital £0, Pass
 
         calc = CapitalCalculator(
             properties=[
@@ -370,18 +364,16 @@ class TestCapitalCalculator(unittest.TestCase):
         )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 100000)
-        self.assertEqual(calc.main_property["equity"], 100000)
+        self.assertEqual(capital, 0)
+        self.assertEqual(calc.main_property["equity"], 0)
         self.assertEqual(calc.other_properties[0]["equity"], 0)
-        self.assertDictEqual(
-            calc.calcs, {"property_equities": [100000, 0], "property_capital": 100000, "liquid_capital": 0}
-        )
+        self.assertDictEqual(calc.calcs, {"property_equities": [0, 0], "property_capital": 0, "liquid_capital": 0})
 
     def test_laa_scenario_smod_10(self):
         # Client and Partner 1 Property each, Both SMOD
         # MV £156,000, Mortgage £89,000, SMOD, Equity Disregard
         # MV £129,000, Mortgage £45,000, SMOD
-        # Capital £84,000 from Second, Fail
+        # Capital £51,000 from Second, Fail
 
         calc = CapitalCalculator(
             properties=[
@@ -391,11 +383,11 @@ class TestCapitalCalculator(unittest.TestCase):
         )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 8400000)
+        self.assertEqual(capital, 5100000)
         self.assertEqual(calc.main_property["equity"], 0)
-        self.assertEqual(calc.other_properties[0]["equity"], 8400000)
+        self.assertEqual(calc.other_properties[0]["equity"], 5100000)
         self.assertDictEqual(
-            calc.calcs, {"property_equities": [0, 8400000], "property_capital": 8400000, "liquid_capital": 0}
+            calc.calcs, {"property_equities": [0, 5100000], "property_capital": 5100000, "liquid_capital": 0}
         )
 
     def test_laa_scenario_smod_11(self):
@@ -421,7 +413,7 @@ class TestCapitalCalculator(unittest.TestCase):
         # Client and Partner 1 Property each, Reside in Partner's Property, Second SMOD
         # MV £156,000, Mortgage £89,000, SMOD
         # MV £129,000, Mortgage £45,000,Equity Disregard
-        # Capital £18,000 Fail
+        # Capital £0 Pass
 
         calc = CapitalCalculator(
             properties=[
@@ -431,16 +423,14 @@ class TestCapitalCalculator(unittest.TestCase):
         )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 1800000)
-        self.assertDictEqual(
-            calc.calcs, {"property_equities": [0, 1800000], "property_capital": 1800000, "liquid_capital": 0}
-        )
+        self.assertEqual(capital, 0)
+        self.assertDictEqual(calc.calcs, {"property_equities": [0, 0], "property_capital": 0, "liquid_capital": 0})
 
     def test_laa_scenario_smod_13(self):
         # Client and Partner 1 Property each, Reside in Partner's Property, Both SMOD
         # MV £156,000, Mortgage £89,000, SMOD
         # MV £129,000, Mortgage £45,000, SMOD, Equity Disregard
-        # Capital £67,000 Fail
+        # Capital £51,000 Fail
 
         calc = CapitalCalculator(
             properties=[
@@ -450,9 +440,9 @@ class TestCapitalCalculator(unittest.TestCase):
         )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 6700000)
+        self.assertEqual(capital, 5100000)
         self.assertDictEqual(
-            calc.calcs, {"property_equities": [6700000, 0], "property_capital": 6700000, "liquid_capital": 0}
+            calc.calcs, {"property_equities": [5100000, 0], "property_capital": 5100000, "liquid_capital": 0}
         )
 
     def test_laa_scenario_smod_14(self):
@@ -476,7 +466,7 @@ class TestCapitalCalculator(unittest.TestCase):
         # Client - 2 Properties, Both SMOD, High Value, Joint Owned
         # MV £340,000, Mortgage £220,500, 50%, SMOD, Equity Disregard
         # MV £210,000, Mortgage £195,000, 50%, SMOD
-        # Capital £55,000 Fail
+        # Capital £0 Pass
 
         calc = CapitalCalculator(
             properties=[
@@ -486,10 +476,8 @@ class TestCapitalCalculator(unittest.TestCase):
         )
         capital = calc.calculate_capital()
 
-        self.assertEqual(capital, 5500000)
-        self.assertDictEqual(
-            calc.calcs, {"property_equities": [0, 5500000], "property_capital": 5500000, "liquid_capital": 0}
-        )
+        self.assertEqual(capital, 0)
+        self.assertDictEqual(calc.calcs, {"property_equities": [0, 0], "property_capital": 0, "liquid_capital": 0})
 
     def test_scenario_assets_smod_1(self):
         # The applicant has a home worth £120,000 and the mortgage is £80,000.
@@ -595,21 +583,21 @@ class TestCapitalCalculator(unittest.TestCase):
             disputed_liquid_capital=1000000 + 1200000,
         )
         capital = calc.calculate_capital()
-        self.assertEqual(calc.main_property["equity"], 100000)
-        self.assertEqual(capital, 1186789)
+        self.assertEqual(calc.main_property["equity"], 0)
+        self.assertEqual(capital, 1086789)
         self.assertDictEqual(
-            calc.calcs, {"property_equities": [100000, 0], "property_capital": 100000, "liquid_capital": 1086789}
+            calc.calcs, {"property_equities": [0, 0], "property_capital": 0, "liquid_capital": 1086789}
         )
 
     def test_laa_scenario_assets_smod_A57(self):
         # Client, Partner, No Children, Passported (IS), Property
         # MV £156,000, Mortgage £89,000, Equity Disregard
         # MV £129,000, Mortgage £45,000, SMOD
-        # Capital from property £1,000, SMOD remaining after property £16,000
+        # Capital from property £0, SMOD remaining after property £16,000
         # Undisputed Assets Savings £3000 Investments £1500 IOV £499.99 Owed £0
         # Partner Assets Savings £1,000, Investments £1,000
         # Disputed Assets Savings £0 Investments £2,500, IOV £500 Owed £0
-        # Just Pass (£7,999.99 capital and £13,000 SMOD remaining)
+        # Just Pass (£6,999.99 capital and £13,000 SMOD remaining)
         calc = CapitalCalculator(
             properties=[
                 self.make_property(15600000, 8900000, 100, False, True),
@@ -619,9 +607,9 @@ class TestCapitalCalculator(unittest.TestCase):
             disputed_liquid_capital=250000 + 50000,
         )
         capital = calc.calculate_capital()
-        self.assertEqual(capital, 799999)
+        self.assertEqual(capital, 699999)
         self.assertDictEqual(
-            calc.calcs, {"property_equities": [100000, 0], "property_capital": 100000, "liquid_capital": 699999}
+            calc.calcs, {"property_equities": [0, 0], "property_capital": 0, "liquid_capital": 699999}
         )
 
 
@@ -784,10 +772,10 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
                 "dependants_allowance": 0,
                 "employment_allowance": 0,
                 "partner_employment_allowance": 0,
-                "property_capital": 10000001,
-                "property_equities": [10000001],
+                "property_capital": 10000000,
+                "property_equities": [10000000],
                 "liquid_capital": 79999,
-                "disposable_capital_assets": 80000,
+                "disposable_capital_assets": 79999,
             },
         )
 
@@ -808,10 +796,10 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
                 "dependants_allowance": 0,
                 "employment_allowance": 0,
                 "partner_employment_allowance": 0,
-                "property_capital": 10000002,
-                "property_equities": [10000002],
+                "property_capital": 10000001,
+                "property_equities": [10000001],
                 "liquid_capital": 79999,
-                "disposable_capital_assets": 80001,
+                "disposable_capital_assets": 80000,
             },
         )
 
@@ -861,10 +849,10 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
                 "dependants_allowance": 0,
                 "employment_allowance": 4500,
                 "partner_employment_allowance": 0,
-                "property_capital": 2,
-                "property_equities": [2],
+                "property_capital": 1,
+                "property_equities": [1],
                 "liquid_capital": 800004,
-                "disposable_capital_assets": 800006,
+                "disposable_capital_assets": 800005,
             },
         )
 

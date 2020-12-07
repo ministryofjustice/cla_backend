@@ -164,7 +164,6 @@ SECRET_KEY = "o=>4$)9?38N@^}d&pj,VL9^{r][xM9L.9cfE:xZZNk(N?v27+i"
 # )
 
 MIDDLEWARE_CLASSES = (
-    "core.middleware.GraphiteMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

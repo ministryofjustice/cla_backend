@@ -1,4 +1,4 @@
-COPY (SELECT
+SELECT
 id,
 created,
 modified,
@@ -15,5 +15,4 @@ address,
 opening_hours,
 how_to_use,
 accessibility
-FROM knowledgebase_article
-TO STDOUT CSV HEADER;
+FROM knowledgebase_article;

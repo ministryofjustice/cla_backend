@@ -11,7 +11,6 @@ from django.http import HttpResponseRedirect
 from django.utils.html import escape
 from django.contrib import messages
 from django.contrib.auth.forms import AdminPasswordChangeForm
-from django_statsd.clients import statsd
 
 from cla_auth.models import AccessAttempt
 
@@ -80,7 +79,6 @@ class OneToOneUserAdmin(admin.ModelAdmin):
         user = one2one_model.user
 
         AccessAttempt.objects.delete_for_username(user.username)
-        statsd.incr("account.lockout.reset")
 
         self.log_change(request, user, "Reset locked account (user %s)" % user.username)
         msg = ugettext("Account unlocked successfully.")

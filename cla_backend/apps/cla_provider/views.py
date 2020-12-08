@@ -5,7 +5,6 @@ from cla_provider.helpers import ProviderExtractFormatter
 from core.permissions import IsProviderPermission
 
 from django.shortcuts import get_object_or_404
-from django_statsd.clients import statsd
 from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import mixins
@@ -232,13 +231,11 @@ class ProviderExtract(APIView):
                     headers={"Access-Control-Allow-Origin": "*"},
                 )
             self.check_object_permissions(request, case)
-            statsd.incr("provider_extract.exported")
 
             logger.info("Provider case exported", extra={"USERNAME": request.user.username, "POSTDATA": request.POST})
 
             return ProviderExtractFormatter(case).format()
         else:
-            statsd.incr("provider_extract.malformed")
             return DRFResponse(
                 form.errors, content_type="text/xml", status=400, headers={"Access-Control-Allow-Origin": "*"}
             )

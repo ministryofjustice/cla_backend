@@ -4,7 +4,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.utils.timezone import now, localtime
 from django.utils.formats import date_format
-from django_statsd.clients import statsd
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +19,6 @@ Is manager: {4}
 
 def log_staff_created(sender, instance, created, **kwargs):
     if created:
-        statsd.incr("specialiststaff.created")
-
         logger.info(
             "Specialist user created",
             extra={
@@ -52,8 +49,6 @@ def log_staff_modified(sender, instance, **kwargs):
         sender.objects.get(pk=instance.pk)
     except sender.DoesNotExist:
         return
-
-    statsd.incr("specialiststaff.modified")
 
     logger.info(
         "Specialist user modified",

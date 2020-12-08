@@ -5,7 +5,6 @@ from django import forms
 from django.db import connection, transaction, IntegrityError
 from django.core.paginator import Paginator
 from django.utils.crypto import get_random_string
-from django_statsd.clients import statsd
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action, link
 from rest_framework.exceptions import PermissionDenied
@@ -141,7 +140,6 @@ class BaseUserViewSet(
 
         user = self.get_object().user
         AccessAttempt.objects.delete_for_username(user.username)
-        statsd.incr("account.lockout.reset")
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
     def list(self, request, *args, **kwargs):

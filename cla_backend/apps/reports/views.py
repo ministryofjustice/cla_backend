@@ -27,6 +27,7 @@ from .forms import (
     MIProviderAllocationExtract,
     MIExtractCaseViewAuditLog,
     MIExtractComplaintViewAuditLog,
+    AllKnowledgeBaseArticles,
 )
 from reports.models import Export
 from .tasks import ExportTask, OBIEEExportTask
@@ -213,4 +214,11 @@ def mi_case_view_audit_log_extract():
 @permission_required("legalaid.run_reports")
 @report_view(MIExtractComplaintViewAuditLog, "MI Complaints Views Audit Log Extract")
 def mi_complaint_view_audit_log_extract():
+    pass
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+@report_view(AllKnowledgeBaseArticles, "Knowledge Base Articles")
+def all_knowledgebase_articles():
     pass

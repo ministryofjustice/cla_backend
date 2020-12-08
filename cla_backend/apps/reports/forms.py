@@ -587,3 +587,13 @@ class MIExtractComplaintViewAuditLog(SQLFileDateRangeReport):
 
     def get_headers(self):
         return ["Case", "Complaint Id", "Action", "Operator", "Organisation", "Date"]
+
+
+class AllKnowledgeBaseArticles(SQLFileReportMixin, ReportForm):
+    QUERY_FILE = "AllKnowledgeBaseArticles.sql"
+
+    # def get_sql_params(self):
+    # return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return ["Case", "Complaint Id", "Action", "Operator", "Organisation", "Date"]

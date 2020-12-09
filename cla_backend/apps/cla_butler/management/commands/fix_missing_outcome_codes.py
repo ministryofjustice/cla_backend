@@ -2,7 +2,6 @@
 import logging
 from django.core.management.base import BaseCommand
 
-from cla_butler.stack import is_first_instance, InstanceNotInAsgException, StackException
 
 from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_eventlog.models import Log
@@ -14,10 +13,7 @@ class Command(BaseCommand):
     help = "LGA-275 specific command to re-denormalize outcome codes missing from Case instances"
 
     def handle(self, *args, **options):
-        if self.should_run_housekeeping(**options):
-            self.re_denormalize_outcome_codes_to_cases()
-        else:
-            logger.info("Skip check_for_missing_outcome_codes because running on secondary instance")
+        self.re_denormalize_outcome_codes_to_cases()
 
     @staticmethod
     def re_denormalize_outcome_codes_to_cases():
@@ -29,16 +25,3 @@ class Command(BaseCommand):
             outcome.case.outcome_code = outcome.code
             outcome.case.save()
             logger.info("LGA-275: Filled missing outcome code for case {}".format(outcome.case.reference))
-
-    @staticmethod
-    def should_run_housekeeping(**options):
-        if options.get("force", False):
-            return True
-        try:
-            return is_first_instance()
-        except InstanceNotInAsgException:
-            logger.info("EC2 instance not in an ASG")
-            return True
-        except StackException:
-            logger.info("Not running on EC2 instance")
-            return True

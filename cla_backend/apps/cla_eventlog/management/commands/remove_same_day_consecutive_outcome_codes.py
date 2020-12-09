@@ -10,7 +10,6 @@ from django.core.management.base import BaseCommand
 from django.utils.timezone import now
 from pytz import UTC
 
-from cla_butler.stack import is_first_instance, InstanceNotInAsgException, StackException
 from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_eventlog.models import Log
 from reports.utils import get_s3_connection
@@ -22,12 +21,7 @@ class Command(BaseCommand):
     help = "LGA-125 specific command. Remove same day consecutive outcome codes."
 
     def handle(self, *args, **options):
-        if self.should_run_housekeeping(**options):
-            self.remove_same_day_consecutive_outcome_codes()
-        else:
-            logger.info(
-                "LGA-125: Skip remove_same_day_consecutive_outcome_codes because running on secondary instance"
-            )
+        self.remove_same_day_consecutive_outcome_codes()
 
     def remove_same_day_consecutive_outcome_codes(self):
         logger.info("\nLGA-125: start remove_same_day_consecutive_outcome_codes {}".format(now()))
@@ -109,16 +103,3 @@ class Command(BaseCommand):
         except boto.exception.S3ResponseError:
             conn.create_bucket(bucket_name, location=settings.AWS_S3_REGION_NAME)
             return conn.get_bucket(bucket_name)
-
-    @staticmethod
-    def should_run_housekeeping(**options):
-        if options.get("force", False):
-            return True
-        try:
-            return is_first_instance()
-        except InstanceNotInAsgException:
-            logger.info("EC2 instance not in an ASG")
-            return True
-        except StackException:
-            logger.info("Not running on EC2 instance")
-            return True

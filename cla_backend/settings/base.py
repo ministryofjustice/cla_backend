@@ -369,6 +369,8 @@ CELERY_IMPORTS = ["reports.tasks", "notifications.tasks"]
 CONTRACT_2018_ENABLED = os.environ.get("CONTRACT_2018_ENABLED", "True") == "True"
 PING_JSON_KEYS["CONTRACT_2018_ENABLED_key"] = "CONTRACT_2018_ENABLED"
 
+MORTGAGE_CAP_REMOVAL_DATE = datetime.datetime(year=2021, month=1, day=28)
+
 
 def bank_holidays_cache_adapter_factory():
     from django.core.cache import cache

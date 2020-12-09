@@ -1,3 +1,6 @@
+from django.conf import settings
+from django.utils import timezone
+
 from . import constants
 from . import exceptions
 
@@ -75,20 +78,48 @@ class CapitalCalculator(object):
         none_values = [k for k, v in prop.items() if v is None]
         return none_values, len(none_values) == len(prop)
 
+    @staticmethod
+    def is_post_mortgage_cap_removal():
+        if not hasattr(settings, "MORTGAGE_CAP_REMOVAL_DATE"):
+            return False
+
+        dt = timezone.make_aware(settings.MORTGAGE_CAP_REMOVAL_DATE, timezone.get_current_timezone())
+        return timezone.now() >= dt
+
     # for each other property
     def _calculate_property_equity(self, prop):
         if not prop:
             return
 
-        mortgage_disregard = prop["mortgage_left"]
+        def pre_mortgage_cap_removal():
+            mortgage_disregard = min(prop["mortgage_left"], self.mortgage_disregard_available)
 
-        property_equity = prop["value"] - mortgage_disregard
-        # if prop.in_joint_names:
-        property_equity = (
-            property_equity * prop["share"] / 100
-        )  # assuming that you filled in share with the right figure (that is, in_joint_names not required)
+            property_equity = prop["value"] - mortgage_disregard
+            # if prop.in_joint_names:
+            property_equity = (
+                property_equity * prop["share"] / 100
+            )  # assuming that you filled in share with the right figure (that is, in_joint_names not required)
 
-        prop["equity"] = max(property_equity, 0)
+            remaining_mortgage_disregard = self.mortgage_disregard_available - mortgage_disregard
+
+            prop["equity"] = max(property_equity, 0)
+            self.mortgage_disregard_available = remaining_mortgage_disregard
+
+        def post_mortgage_cap_removal():
+            mortgage_disregard = prop["mortgage_left"]
+
+            property_equity = prop["value"] - mortgage_disregard
+            # if prop.in_joint_names:
+            property_equity = (
+                property_equity * prop["share"] / 100
+            )  # assuming that you filled in share with the right figure (that is, in_joint_names not required)
+
+            prop["equity"] = max(property_equity, 0)
+
+        if self.is_post_mortgage_cap_removal():
+            post_mortgage_cap_removal()
+        else:
+            pre_mortgage_cap_removal()
 
     def _apply_SMOD_disregard(self, prop):
         if not prop or not prop["disputed"]:
@@ -110,6 +141,7 @@ class CapitalCalculator(object):
         prop["equity"] = max(prop["equity"] - self.equity_disregard_available, 0)
 
     def _reset_state(self):
+        self.mortgage_disregard_available = constants.MORTGAGE_DISREGARD
         self.SMOD_disregard_available = constants.SMOD_DISREGARD
         self.equity_disregard_available = constants.EQUITY_DISREGARD
 

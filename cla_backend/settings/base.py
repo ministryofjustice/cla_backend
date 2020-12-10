@@ -3,6 +3,7 @@ import sys
 import os
 
 import sentry_sdk
+from boto.s3.connection import NoHostProvided
 from cla_common.call_centre_availability import OpeningHours
 from cla_common.constants import OPERATOR_HOURS
 from cla_common.services import CacheAdapter
@@ -88,6 +89,10 @@ AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
+
+# Annoyingly the host parameter boto.s3.connection.S3Connection needs to be host string if it's not the default
+# value of boto.s3.connection.NoHostProvided class reference and not None
+AWS_S3_HOST = os.environ.get("AWS_S3_HOST", NoHostProvided)
 
 # This bucket needs to a private bucket as it will contain sensitive reports
 AWS_REPORTS_STORAGE_BUCKET_NAME = os.environ.get("AWS_REPORTS_STORAGE_BUCKET_NAME")
@@ -257,7 +262,10 @@ LOGGING = {
         },
         "console": {"level": "INFO", "class": "logging.StreamHandler", "formatter": "simple", "stream": sys.stdout},
     },
-    "loggers": {"django.request": {"handlers": ["mail_admins"], "level": "ERROR", "propagate": True}},
+    "loggers": {
+        "": {"handlers": ["console"], "level": "DEBUG", "propagate": True},
+        "django.request": {"handlers": ["mail_admins"], "level": "ERROR", "propagate": True},
+    },
 }
 
 if "SENTRY_DSN" in os.environ:

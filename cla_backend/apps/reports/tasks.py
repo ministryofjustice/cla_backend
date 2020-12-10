@@ -6,6 +6,7 @@ import time
 from contextlib import closing
 from django.contrib.auth.models import User
 import csvkit as csv
+import logging
 
 from celery import Task
 from django.core.exceptions import ImproperlyConfigured
@@ -17,6 +18,9 @@ from django.conf import settings
 from .utils import OBIEEExporter, get_s3_connection
 from .models import Export
 from .constants import EXPORT_STATUS
+
+
+logger = logging.getLogger(__name__)
 
 
 @contextlib.contextmanager
@@ -68,7 +72,11 @@ class ExportTaskBase(Task):
 
     def send_to_s3(self):
         conn = get_s3_connection()
-        bucket = conn.lookup(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
+        try:
+            bucket = conn.get_bucket(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
+        except Exception as e:
+            logger.error('Reports bucket could not be fetched. Ensure s3 credentials are set. You may need the S3_USE_SIGV4 environment variable')
+            raise e
         k = bucket.new_key(settings.EXPORT_DIR + os.path.basename(self.filepath))
         k.set_contents_from_filename(self.filepath)
         shutil.rmtree(self.filepath, ignore_errors=True)

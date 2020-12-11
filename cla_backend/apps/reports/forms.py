@@ -596,4 +596,21 @@ class AllKnowledgeBaseArticles(SQLFileReportMixin, ReportForm):
         return {}
 
     def get_headers(self):
-        return ["Case", "Complaint Id", "Action", "Operator", "Organisation", "Date"]
+        return [
+            "ID",
+            "Created",
+            "Modified",
+            "Organisation",
+            "Service name",
+            "Description",
+            "Website",
+            "Keywords",
+            "When to use",
+            "Geographic coverage",
+            "Type of service",
+            "Resource type",
+            "Address",
+            "Opening hours",
+            "How to use",
+            "Accessibility"
+        ]

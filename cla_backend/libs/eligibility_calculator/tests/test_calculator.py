@@ -13,7 +13,6 @@ from ..models import CaseData, Facts
 class MortgageCapRemovalMixin(object):
     def setUp(self):
         super(MortgageCapRemovalMixin, self).setUp()
-        super(MortgageCapRemovalMixin, self).setUp()
         if CapitalCalculator.is_post_mortgage_cap_removal():
             self.expected_results_key = "post_mortgage_cap_removal"
         else:

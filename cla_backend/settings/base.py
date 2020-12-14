@@ -336,7 +336,6 @@ BROKER_TRANSPORT_OPTIONS = {
     "polling_interval": 10,
     "region": os.environ.get("SQS_REGION", "eu-west-1"),
     "wait_time_seconds": 20,
-    "queue_name_prefix": "env-%(env)s-" % {"env": CLA_ENV},
 }
 
 if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):
@@ -348,7 +347,8 @@ if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):
     predefined_queue_url = os.environ.get("CELERY_PREDEFINED_QUEUE_URL")
     CELERY_DEFAULT_QUEUE = predefined_queue_url.split("/")[-1]
     BROKER_TRANSPORT_OPTIONS["predefined_queue_url"] = predefined_queue_url
-    del BROKER_TRANSPORT_OPTIONS["queue_name_prefix"]
+else:
+    BROKER_TRANSPORT_OPTIONS["queue_name_prefix"] = "env-%(env)s-" % {"env": CLA_ENV}
 
 CELERY_ACCEPT_CONTENT = ["yaml"]  # because json serializer doesn't support dates
 CELERY_TASK_SERIALIZER = "yaml"  # for consistency

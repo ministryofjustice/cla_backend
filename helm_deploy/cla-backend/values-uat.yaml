@@ -8,6 +8,9 @@ image:
 localPostgres:
   enabled: true
 
+queueWorkers:
+  enabled: false
+
 ingress:
   enabled: true
   whitelist_additional:
@@ -38,3 +41,7 @@ envVars:
       optional: true
   LOAD_TEST_DATA:
     value: "True"
+  SQS_ACCESS_KEY:
+    value: "False"
+  SQS_SECRET_KEY:
+    value: "False"

@@ -6,7 +6,7 @@ from legalaid.utils.sla import is_in_business_hours, operator_hours
 
 
 class SlaCustomBusinessHoursTestCase(TestCase):
-    year = 2019
+    year = 2020
 
     xmas_eve = date(year=year, month=12, day=24)
     xmas_eve_before_hours = datetime.combine(xmas_eve, time(hour=8, minute=59))

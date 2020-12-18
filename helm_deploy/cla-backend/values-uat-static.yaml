@@ -22,3 +22,5 @@ envVars:
       optional: true
   LOAD_TEST_DATA:
     value: "True"
+  MORTGAGE_CAP_REMOVAL_DATE:
+    value: "2020-01-28 00:00"

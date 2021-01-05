@@ -74,6 +74,7 @@ WITH
         ,trim((log.context->'requires_action_at')::text, '"')::timestamptz + interval '30 minutes' as callback_window_end
         ,trim((log.context->'sla_120')::text, '"')::timestamptz as sla_120
         ,trim((log.context->'sla_480')::text, '"')::timestamptz as sla_480
+        ,trim((log.context->'sla_72h')::text, '"')::timestamptz as sla_72h
         ,operator_first_log_after_cb1.rn
         ,operator_first_view_after_cb1.rn
         ,c.source
@@ -128,9 +129,9 @@ select
    END as missed_sla_1
   ,CASE
    -- User not contacted and current time is after SLA 2
-   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NULL AND %(now)s > callback_window_end + interval '72 hours' THEN TRUE
+   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NULL AND %(now)s > sla_72h THEN TRUE
    -- User contacted and contact time is after SLA 2
-   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NOT NULL AND operator_first_log_after_cb1__created > callback_window_end + interval '72 hours'  THEN TRUE
+   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NOT NULL AND operator_first_log_after_cb1__created > sla_72h  THEN TRUE
    -- Everything else that is a web / phone case is False
    WHEN source IN ('WEB', 'PHONE') THEN FALSE
    -- User has NOT been contacted and current time is after the SLA2 window for SMS and VOICE MAIL

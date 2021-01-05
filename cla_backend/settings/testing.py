@@ -1,7 +1,6 @@
 from datetime import date, time
 from .base import *
 
-
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
@@ -20,6 +19,8 @@ DATABASES["default"]["ENGINE"] = "cla_backend.apps.reports.db.backend"
 ALLOWED_HOSTS = ["*"]
 
 TEST_OUTPUT_DIR = "test-reports"
+
+OPERATOR_HOURS = {"weekday": (time(9, 0), time(20, 0)), "saturday": (time(9, 0), time(12, 30))}
 
 
 class DisableMigrations(object):

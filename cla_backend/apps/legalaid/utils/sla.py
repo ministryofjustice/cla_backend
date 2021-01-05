@@ -37,9 +37,10 @@ def get_next_business_day(start_date):
 
 
 def get_sla_time(start_time, minutes_delta):
-    end_of_business_day = operator_hours.time_slots(start_time.date())
-    if end_of_business_day:
-        end_of_business_day = end_of_business_day[-1] + timedelta(minutes=SLOT_INTERVAL_MINS)
+    time_slots_today = operator_hours.time_slots(start_time.date())
+    end_of_business_day = None
+    if time_slots_today:
+        end_of_business_day = time_slots_today[-1] + timedelta(minutes=SLOT_INTERVAL_MINS)
         end_of_business_day = timezone.make_aware(end_of_business_day, timezone.get_default_timezone())
 
     next_business_day = get_next_business_day(start_time.date())

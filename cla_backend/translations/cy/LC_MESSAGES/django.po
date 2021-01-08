@@ -583,8 +583,8 @@ msgid "You’re looking to start family mediation or you’re seeking legal advi
 msgstr "Rydych yn ystyried dechrau cyfryngu teuluol neu'n ceisio am gyngor cyfreithiol i'w gefnogi"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:479
-msgid "Have you already started family mediation? (This includes cases that have already finished)"
-msgstr "Ydych chi wedi dechrau cyfryngu teuluol eisoes? (Mae hyn yn cynnwys achosion sydd wedi dod i ben eisoes)"
+msgid "Have you taken part in a family mediation session?"
+msgstr "Ydych chi wedi cymryd rhan mewn sesiwn cyfryngu i deuluoedd?"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:485
 msgid "You are under 18"

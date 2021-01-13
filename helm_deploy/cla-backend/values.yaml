@@ -82,6 +82,9 @@ ingress:
 localPostgres:
   enabled: false
 
+queueWorkers:
+  enabled: true
+
 envVars:
   SITE_HOSTNAME:
     secret:

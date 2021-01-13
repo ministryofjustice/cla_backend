@@ -3,6 +3,7 @@ import sys
 import os
 
 import sentry_sdk
+from boto.s3.connection import NoHostProvided
 from cla_common.call_centre_availability import OpeningHours
 from cla_common.constants import OPERATOR_HOURS
 from cla_common.services import CacheAdapter
@@ -10,6 +11,13 @@ from kombu import transport
 from sentry_sdk.integrations.django import DjangoIntegration
 
 from cla_backend.sqs import CLASQSChannel
+
+
+def env_var_truthy_intention(name):
+    '''Returns True if the env var is truthy and not the string "False"'''
+    value = os.environ.get(name, False)
+    return value and value != "False"
+
 
 # PATH vars
 
@@ -88,6 +96,10 @@ AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
+
+# Annoyingly the host parameter boto.s3.connection.S3Connection needs to be host string if it's not the default
+# value of boto.s3.connection.NoHostProvided class reference and not None
+AWS_S3_HOST = os.environ.get("AWS_S3_HOST", NoHostProvided)
 
 # This bucket needs to a private bucket as it will contain sensitive reports
 AWS_REPORTS_STORAGE_BUCKET_NAME = os.environ.get("AWS_REPORTS_STORAGE_BUCKET_NAME")
@@ -257,7 +269,10 @@ LOGGING = {
         },
         "console": {"level": "INFO", "class": "logging.StreamHandler", "formatter": "simple", "stream": sys.stdout},
     },
-    "loggers": {"django.request": {"handlers": ["mail_admins"], "level": "ERROR", "propagate": True}},
+    "loggers": {
+        "": {"handlers": ["console"], "level": "DEBUG", "propagate": True},
+        "django.request": {"handlers": ["mail_admins"], "level": "ERROR", "propagate": True},
+    },
 }
 
 if "SENTRY_DSN" in os.environ:
@@ -310,7 +325,7 @@ OBIEE_EMAIL_TO = os.environ.get("OBIEE_EMAIL_TO", DEFAULT_EMAIL_TO)
 OBIEE_ZIP_PASSWORD = os.environ.get("OBIEE_ZIP_PASSWORD")
 
 # celery
-if all([os.environ.get("SQS_ACCESS_KEY"), os.environ.get("SQS_SECRET_KEY")]):
+if all([env_var_truthy_intention("SQS_ACCESS_KEY"), env_var_truthy_intention("SQS_SECRET_KEY")]):
     import urllib
 
     BROKER_URL = "sqs://{access_key}:{secret_key}@".format(
@@ -328,7 +343,6 @@ BROKER_TRANSPORT_OPTIONS = {
     "polling_interval": 10,
     "region": os.environ.get("SQS_REGION", "eu-west-1"),
     "wait_time_seconds": 20,
-    "queue_name_prefix": "env-%(env)s-" % {"env": CLA_ENV},
 }
 
 if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):
@@ -340,7 +354,8 @@ if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):
     predefined_queue_url = os.environ.get("CELERY_PREDEFINED_QUEUE_URL")
     CELERY_DEFAULT_QUEUE = predefined_queue_url.split("/")[-1]
     BROKER_TRANSPORT_OPTIONS["predefined_queue_url"] = predefined_queue_url
-    del BROKER_TRANSPORT_OPTIONS["queue_name_prefix"]
+else:
+    BROKER_TRANSPORT_OPTIONS["queue_name_prefix"] = "env-%(env)s-" % {"env": CLA_ENV}
 
 CELERY_ACCEPT_CONTENT = ["yaml"]  # because json serializer doesn't support dates
 CELERY_TASK_SERIALIZER = "yaml"  # for consistency

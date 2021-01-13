@@ -583,7 +583,7 @@ msgid "You’re looking to start family mediation or you’re seeking legal advi
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:479
-msgid "Have you already started family mediation? (This includes cases that have already finished)"
+msgid "Have you taken part in a family mediation session?"
 msgstr ""
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:485

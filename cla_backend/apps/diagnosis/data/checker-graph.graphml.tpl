@@ -476,7 +476,7 @@
     <node id="n42">
       <data key="d3" xml:space="preserve">{% trans "Family mediation" %}</data>
       <data key="d4" xml:space="preserve">{% trans "You’re looking to start family mediation or you’re seeking legal advice in support of it" %}</data>
-      <data key="d5" xml:space="preserve">{% trans "Have you already started family mediation? (This includes cases that have already finished)" %}</data>
+      <data key="d5" xml:space="preserve">{% trans "Have you taken part in a family mediation session?" %}</data>
       <data key="d10" xml:space="preserve">4</data>
       <data key="d11" xml:space="preserve">n59</data>
       <data key="d13" xml:space="preserve"/>

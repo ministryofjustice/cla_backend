@@ -95,19 +95,8 @@ class BaseComplaintViewSet(
             }
         )
         if dashboard and not show_closed:
-            qs = qs.extra(
-                where=[
-                    """
-                    SELECT COUNT(id) < 1 FROM cla_eventlog_log
-                    WHERE
-                        cla_eventlog_log.content_type_id={complaint_ct}
-                        AND cla_eventlog_log.object_id=complaints_complaint.id
-                        AND cla_eventlog_log.code IN ('{closed_code}', '{voided_code}')
-                    """.format(
-                        **sql_params
-                    )
-                ]
-            )
+            complaint_events = ComplaintLog.objects.filter(content_type=sql_params['complaint_ct'], code__in=["COMPLAINT_CLOSED", "COMPLAINT_VOID"]).values_list('object_id', flat=True)
+            qs = qs.exclude(id__in=complaint_events)
         return qs
 
     def pre_save(self, obj, *args, **kwargs):

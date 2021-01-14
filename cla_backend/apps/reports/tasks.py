@@ -90,7 +90,7 @@ class ExportTask(ExportTaskBase):
 
         self.filepath = self._filepath(filename)
         try:
-            csv_data = list(self.form)
+            csv_data = self.form.get_output()
             csv_file = open(self.filepath, "w")
             with csv_writer(csv_file) as writer:
                 map(writer.writerow, csv_data)
@@ -103,6 +103,8 @@ class ExportTask(ExportTaskBase):
                 self.message = u"Check passphrase and try again"
             else:
                 self.message = u"An error occurred:\n%s" % error_message
+        except Exception as e:
+            import ipdb;ipdb.set_trace()
 
 
 class OBIEEExportTask(ExportTaskBase):

@@ -13,6 +13,7 @@ from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
 from cla_eventlog import event_registry
 from complaints.constants import SLA_DAYS
+from knowledgebase.models import Article
 from reports.widgets import MonthYearWidget
 
 from . import sql
@@ -42,6 +43,9 @@ class ReportForm(ConvertDateMixin, forms.Form):
         yield self.get_headers()
         for row in self.get_rows():
             yield row
+
+    def get_output(self):
+        return list(self)
 
 
 class DateRangeReportForm(ReportForm):
@@ -589,28 +593,104 @@ class MIExtractComplaintViewAuditLog(SQLFileDateRangeReport):
         return ["Case", "Complaint Id", "Action", "Operator", "Organisation", "Date"]
 
 
-class AllKnowledgeBaseArticles(SQLFileReportMixin, ReportForm):
-    QUERY_FILE = "AllKnowledgeBaseArticles.sql"
+class AllKnowledgeBaseArticles(ReportForm):
+    def get_queryset(self):
+        return Article.objects.prefetch_related('article_category', 'telephonenumber_set')
 
-    def get_sql_params(self):
-        return {}
+    def get_rows(self):
+        for article in self.get_queryset():
+            telephone_numbers = article.telephonenumber_set.all()
+            categories = article.article_category.all()
+            yield [
+                article.pk,
+                article.created,
+                article.modified,
+                article.resource_type,
+                article.service_name,
+                article.service_tag,
+                article.organisation,
+                article.website,
+                article.email,
+                article.description,
+                article.public_description,
+                article.how_to_use,
+                article.when_to_use,
+                article.address,
+                article.opening_hours,
+                article.keywords,
+                article.geographic_coverage,
+                article.type_of_service,
+                article.accessibility,
+                self.get_from_nth_if_exists(telephone_numbers, 1, "name"),
+                self.get_from_nth_if_exists(telephone_numbers, 1, "number"),
+                self.get_from_nth_if_exists(telephone_numbers, 2, "name"),
+                self.get_from_nth_if_exists(telephone_numbers, 2, "number"),
+                self.get_from_nth_if_exists(telephone_numbers, 3, "name"),
+                self.get_from_nth_if_exists(telephone_numbers, 3, "number"),
+                self.get_from_nth_if_exists(telephone_numbers, 4, "name"),
+                self.get_from_nth_if_exists(telephone_numbers, 4, "number"),
+                self.get_from_nth_if_exists(categories, 1, "name"),
+                self.get_from_nth_if_exists(categories, 1, "preferred_signpost"),
+                self.get_from_nth_if_exists(categories, 2, "name"),
+                self.get_from_nth_if_exists(categories, 2, "preferred_signpost"),
+                self.get_from_nth_if_exists(categories, 3, "name"),
+                self.get_from_nth_if_exists(categories, 3, "preferred_signpost"),
+                self.get_from_nth_if_exists(categories, 4, "name"),
+                self.get_from_nth_if_exists(categories, 4, "preferred_signpost"),
+                self.get_from_nth_if_exists(categories, 5, "name"),
+                self.get_from_nth_if_exists(categories, 5, "preferred_signpost"),
+                self.get_from_nth_if_exists(categories, 6, "name"),
+                self.get_from_nth_if_exists(categories, 6, "preferred_signpost"),
+            ]
 
     def get_headers(self):
         return [
             "ID",
             "Created",
             "Modified",
-            "Organisation",
-            "Service name",
-            "Description",
-            "Website",
-            "Keywords",
-            "When to use",
-            "Geographic coverage",
-            "Type of service",
             "Resource type",
+            "Service name",
+            "Service tag",
+            "Organisation",
+            "Website",
+            "Email",
+            "Description",
+            "Public description",
+            "How to use",
+            "When to use",
             "Address",
             "Opening hours",
-            "How to use",
-            "Accessibility"
+            "Keywords",
+            "Geographic coverage",
+            "Type of service",
+            "Accessibility",
+            "Tel 1 name",
+            "Tel 1 number",
+            "Tel 2 name",
+            "Tel 2 number",
+            "Tel 3 name",
+            "Tel 3 number",
+            "Tel 4 name",
+            "Tel 4 number",
+            "Category 1",
+            "Preferred signpost for category 1",
+            "Category 2",
+            "Preferred signpost for category 2",
+            "Category 3",
+            "Preferred signpost for category 3",
+            "Category 4",
+            "Preferred signpost for category 4",
+            "Category 5",
+            "Preferred signpost for category 5",
+            "Category 6",
+            "Preferred signpost for category 6",
         ]
+
+    @staticmethod
+    def get_from_nth_if_exists(items, n, attribute):
+        try:
+            item = items[n - 1]
+        except IndexError:
+            return ''
+        else :
+            return getattr(item, attribute)

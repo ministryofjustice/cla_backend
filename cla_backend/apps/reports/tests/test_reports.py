@@ -258,3 +258,26 @@ class OBIEEExportOutputsZipTestCase(TestCase):
     def tearDown(self):
         if os.path.exists(self.td):
             shutil.rmtree(self.td, ignore_errors=True)
+
+
+class TestKnowledgeBaseArticlesExport(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        article_1, article_2, article_3, article4 = make_recipe("knowledgebase.article", _quantity=4)
+        cls.telephone_numbers = make_recipe("knowledgebase.telephone_number", article=article_1, _quantity=2)
+        return super(TestKnowledgeBaseArticlesExport, cls).setUpClass()
+
+    def test_queries(self):
+        with self.assertNumQueries(3):  # Articles + prefetch_related of phone numbers and article categories
+            reports.forms.AllKnowledgeBaseArticles().get_output()
+
+    def test_lengths(self):
+        output = reports.forms.AllKnowledgeBaseArticles().get_output()
+        self.assertEqual([len(row) for row in output], [39] * 5)
+
+    def test_values(self):
+        output = reports.forms.AllKnowledgeBaseArticles().get_output()
+        first_article_row = output[1]
+        self.assertEqual(first_article_row[20], self.telephone_numbers[0].number)
+        self.assertEqual(first_article_row[22], self.telephone_numbers[1].number)
+        self.assertEqual(first_article_row[24], '')

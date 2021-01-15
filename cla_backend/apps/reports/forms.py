@@ -595,12 +595,12 @@ class MIExtractComplaintViewAuditLog(SQLFileDateRangeReport):
 
 class AllKnowledgeBaseArticles(ReportForm):
     def get_queryset(self):
-        return Article.objects.prefetch_related('article_category', 'telephonenumber_set')
+        return Article.objects.prefetch_related('articlecategorymatrix_set__article_category', 'telephonenumber_set')
 
     def get_rows(self):
         for article in self.get_queryset():
             telephone_numbers = article.telephonenumber_set.all()
-            categories = article.article_category.all()
+            categories = article.articlecategorymatrix_set.all()
             yield [
                 article.pk,
                 article.created,
@@ -621,26 +621,26 @@ class AllKnowledgeBaseArticles(ReportForm):
                 article.geographic_coverage,
                 article.type_of_service,
                 article.accessibility,
-                self.get_from_nth_if_exists(telephone_numbers, 1, "name"),
-                self.get_from_nth_if_exists(telephone_numbers, 1, "number"),
-                self.get_from_nth_if_exists(telephone_numbers, 2, "name"),
-                self.get_from_nth_if_exists(telephone_numbers, 2, "number"),
-                self.get_from_nth_if_exists(telephone_numbers, 3, "name"),
-                self.get_from_nth_if_exists(telephone_numbers, 3, "number"),
-                self.get_from_nth_if_exists(telephone_numbers, 4, "name"),
-                self.get_from_nth_if_exists(telephone_numbers, 4, "number"),
-                self.get_from_nth_if_exists(categories, 1, "name"),
-                self.get_from_nth_if_exists(categories, 1, "preferred_signpost"),
-                self.get_from_nth_if_exists(categories, 2, "name"),
-                self.get_from_nth_if_exists(categories, 2, "preferred_signpost"),
-                self.get_from_nth_if_exists(categories, 3, "name"),
-                self.get_from_nth_if_exists(categories, 3, "preferred_signpost"),
-                self.get_from_nth_if_exists(categories, 4, "name"),
-                self.get_from_nth_if_exists(categories, 4, "preferred_signpost"),
-                self.get_from_nth_if_exists(categories, 5, "name"),
-                self.get_from_nth_if_exists(categories, 5, "preferred_signpost"),
-                self.get_from_nth_if_exists(categories, 6, "name"),
-                self.get_from_nth_if_exists(categories, 6, "preferred_signpost"),
+                get_from_nth(telephone_numbers, 1, "name"),
+                get_from_nth(telephone_numbers, 1, "number"),
+                get_from_nth(telephone_numbers, 2, "name"),
+                get_from_nth(telephone_numbers, 2, "number"),
+                get_from_nth(telephone_numbers, 3, "name"),
+                get_from_nth(telephone_numbers, 3, "number"),
+                get_from_nth(telephone_numbers, 4, "name"),
+                get_from_nth(telephone_numbers, 4, "number"),
+                get_from_nth(categories, 1, "article_category.name"),
+                get_from_nth(categories, 1, "preferred_signpost"),
+                get_from_nth(categories, 2, "article_category.name"),
+                get_from_nth(categories, 2, "preferred_signpost"),
+                get_from_nth(categories, 3, "article_category.name"),
+                get_from_nth(categories, 3, "preferred_signpost"),
+                get_from_nth(categories, 4, "article_category.name"),
+                get_from_nth(categories, 4, "preferred_signpost"),
+                get_from_nth(categories, 5, "article_category.name"),
+                get_from_nth(categories, 5, "preferred_signpost"),
+                get_from_nth(categories, 6, "article_category.name"),
+                get_from_nth(categories, 6, "preferred_signpost"),
             ]
 
     def get_headers(self):
@@ -686,11 +686,18 @@ class AllKnowledgeBaseArticles(ReportForm):
             "Preferred signpost for category 6",
         ]
 
-    @staticmethod
-    def get_from_nth_if_exists(items, n, attribute):
-        try:
-            item = items[n - 1]
-        except IndexError:
-            return ''
-        else :
-            return getattr(item, attribute)
+def get_from_nth(items, n, attribute):
+    try:
+        item = items[n - 1]
+    except IndexError:
+        return ''
+    else:
+        return get_recursively(item, attribute)
+
+def get_recursively(item, attribute):
+    attribute_parts = attribute.split('.')
+    value = getattr(item, attribute_parts[0])
+    remaining = '.'.join(attribute_parts[1:])
+    if remaining:
+        return get_recursively(value, remaining)
+    return value if value != None else ''

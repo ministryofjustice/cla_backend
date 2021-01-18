@@ -137,88 +137,98 @@ class GraphImporter(object):
                 }
             )
 
-    def process_nodes(self, is_templated=settings.DIAGNOSES_USE_TEMPLATES):  # noqa: C901
-        # C901 cc=19 cocumented in LGA-416
+    @staticmethod
+    def _get_text(a_node, is_templated, translate=True):
+        if is_templated and a_node.text and "{%" in a_node.text:
+            tpl = get_template_from_string(u"{%% load i18n %%}%s" % a_node.text)
+            if translate:
+                return lazy(lambda: tpl.render(Context()), text_type)()
+            with translation.override("en"):
+                return tpl.render(Context())
+        return a_node.text
+
+    @staticmethod
+    def _get_markdown(_text, is_templated):
+        if is_templated:
+            return lazy(lambda: markdown.markdown(force_text(_text)), text_type)()
+        return _text
+
+    def _get_node_data_value_or_default(
+        self, _node, key, as_type=None, translate=True, is_templated=settings.DIAGNOSES_USE_TEMPLATES
+    ):
+        attr_key = self.prop_mapping[key]["id"]
+        try:
+            data_node = self.xpath_ns(_node, 'ns:data[@key="%s"]' % attr_key)[0]
+            value = self._get_text(data_node, is_templated, translate=translate)
+        except IndexError:
+            value = self.prop_mapping[key]["default"]
+        if callable(as_type) and value:
+            return as_type(value)
+        return value
+
+    def _process_context(self, _node, context_key, is_templated):
+        xml_context = self.xpath_ns(_node, 'ns:data[@key="%s"]' % context_key)
+        if not xml_context:
+            return None
+        xml_context = xml_context[0].find("context")
+
+        if xml_context is None:
+            return None
+
+        context = {}
+        for child in xml_context.getchildren():
+            context[child.tag] = self._get_text(child, is_templated)
+        return context
+
+    @staticmethod
+    def str_to_bool(string):
+        return string.lower() == "true"
+
+    def process_nodes(self, is_templated=settings.DIAGNOSES_USE_TEMPLATES):
         node_id_map = dict()
         context_key = self.prop_mapping[self.KEY_CONTEXT]["id"]
-
-        def _get_text(a_node, translate=True):
-            if is_templated and a_node.text and "{%" in a_node.text:
-                tpl = get_template_from_string(u"{%% load i18n %%}%s" % a_node.text)
-                if translate:
-                    return lazy(lambda: tpl.render(Context()), text_type)()
-                with translation.override("en"):
-                    return tpl.render(Context())
-            return a_node.text
-
-        def _get_markdown(_text):
-            if is_templated:
-                return lazy(lambda: markdown.markdown(force_text(_text)), text_type)()
-            return _text
-
-        def _process_context(_node):
-            xml_context = self.xpath_ns(_node, 'ns:data[@key="%s"]' % context_key)
-            if not xml_context:
-                return None
-            xml_context = xml_context[0].find("context")
-
-            if xml_context is None:
-                return None
-
-            context = {}
-            for child in xml_context.getchildren():
-                context[child.tag] = _get_text(child)
-            return context
-
-        def _get_node_data_value_or_default(_node, key, as_type=None, translate=True):
-            attr_key = self.prop_mapping[key]["id"]
-            try:
-                data_node = self.xpath_ns(_node, 'ns:data[@key="%s"]' % attr_key)[0]
-                value = _get_text(data_node, translate=translate)
-            except IndexError:
-                value = self.prop_mapping[key]["default"]
-            if callable(as_type) and value:
-                return as_type(value)
-            return value
-
-        def str_to_bool(s):
-            return s.lower() == "true"
 
         # looping through the nodes
         nodes = self.xpath_ns(self.doc, "//ns:node")
         for node in nodes:
             node_id = node.attrib["id"]
-            permanent_node_id = _get_node_data_value_or_default(node, self.KEY_PERMANENT_ID)
+            permanent_node_id = self._get_node_data_value_or_default(
+                node, self.KEY_PERMANENT_ID, is_templated=is_templated
+            )
             node_id_map[node_id] = permanent_node_id
 
             try:
-                order = int(_get_node_data_value_or_default(node, self.KEY_ORDER))
+                order = int(self._get_node_data_value_or_default(node, self.KEY_ORDER, is_templated=is_templated))
             except TypeError:
                 order = 9999
 
-            label = _get_node_data_value_or_default(node, self.KEY_BODY)
+            label = self._get_node_data_value_or_default(node, self.KEY_BODY, is_templated=is_templated)
             if label:
-                label = _get_markdown(label)
+                label = self._get_markdown(label, is_templated)
 
-            help_text = _get_node_data_value_or_default(node, self.KEY_HELP)
+            help_text = self._get_node_data_value_or_default(node, self.KEY_HELP, is_templated=is_templated)
             if help_text:
-                help_text = _get_markdown(help_text)
+                help_text = self._get_markdown(help_text, is_templated=is_templated)
 
-            description = _get_node_data_value_or_default(node, self.KEY_DESCRIPTION)
+            description = self._get_node_data_value_or_default(node, self.KEY_DESCRIPTION, is_templated=is_templated)
             if description:
-                description = _get_markdown(description)
+                description = self._get_markdown(description, is_templated=is_templated)
 
             self.graph.add_node(
                 permanent_node_id,
                 label=label,
-                title=_get_node_data_value_or_default(node, self.KEY_TITLE),
+                title=self._get_node_data_value_or_default(node, self.KEY_TITLE, is_templated=is_templated),
                 description=description,
-                key=_get_node_data_value_or_default(node, self.KEY_BODY, translate=False),
+                key=self._get_node_data_value_or_default(
+                    node, self.KEY_BODY, is_templated=is_templated, translate=False
+                ),
                 order=order,
-                context=_process_context(node),
+                context=self._process_context(node, context_key=context_key, is_templated=is_templated),
                 help_text=help_text,
-                heading=_get_node_data_value_or_default(node, self.KEY_HEADING),
-                data_safety=_get_node_data_value_or_default(node, self.KEY_DATA_SAFETY, str_to_bool),
+                heading=self._get_node_data_value_or_default(node, self.KEY_HEADING, is_templated=is_templated),
+                data_safety=self._get_node_data_value_or_default(
+                    node, self.KEY_DATA_SAFETY, self.str_to_bool, is_templated=is_templated
+                ),
             )
 
         return node_id_map

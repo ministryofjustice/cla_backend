@@ -103,8 +103,6 @@ class ExportTask(ExportTaskBase):
                 self.message = u"Check passphrase and try again"
             else:
                 self.message = u"An error occurred:\n%s" % error_message
-        except Exception as e:
-            import ipdb;ipdb.set_trace()
 
 
 class OBIEEExportTask(ExportTaskBase):

@@ -686,6 +686,7 @@ class AllKnowledgeBaseArticles(ReportForm):
             "Preferred signpost for category 6",
         ]
 
+
 def get_from_nth(items, n, attribute):
     try:
         item = items[n - 1]
@@ -694,10 +695,11 @@ def get_from_nth(items, n, attribute):
     else:
         return get_recursively(item, attribute)
 
+
 def get_recursively(item, attribute):
     attribute_parts = attribute.split('.')
     value = getattr(item, attribute_parts[0])
     remaining = '.'.join(attribute_parts[1:])
     if remaining:
         return get_recursively(value, remaining)
-    return value if value != None else ''
+    return value if value is not None else ''

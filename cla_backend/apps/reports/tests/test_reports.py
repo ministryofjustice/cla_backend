@@ -258,3 +258,31 @@ class OBIEEExportOutputsZipTestCase(TestCase):
     def tearDown(self):
         if os.path.exists(self.td):
             shutil.rmtree(self.td, ignore_errors=True)
+
+
+class TestKnowledgeBaseArticlesExport(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        article_1, article_2, article_3, article4 = make_recipe("knowledgebase.article", _quantity=4)
+        make_recipe("knowledgebase.telephone_number", article=article_1, number=123)
+        make_recipe("knowledgebase.telephone_number", article=article_1, number=456, name="special")
+        make_recipe("knowledgebase.telephone_number", article=article_2, number=789)
+        make_recipe("knowledgebase.article_category_matrix", article=article_1, article_category__name='a category')
+        make_recipe("knowledgebase.article_category_matrix", article=article_1, article_category__name='another category', preferred_signpost=True)
+
+    def test_queries(self):
+        with self.assertNumQueries(4):  # Articles + prefetch_related of phone numbers and article categories
+            reports.forms.AllKnowledgeBaseArticles().get_output()
+
+    def test_lengths(self):
+        output = reports.forms.AllKnowledgeBaseArticles().get_output()
+        self.assertEqual([len(row) for row in output], [39] * 5)
+
+    def test_values(self):
+        output = reports.forms.AllKnowledgeBaseArticles().get_output()
+        # phone number with no name; phone number with a name; no third phone number
+        self.assertEqual(output[1][19:25], ["", "123", "special", "456", "", ""])
+        # third number is on the second article
+        self.assertEqual(output[2][19:25], ["", "789", "", "", "", ""])
+        # category name; article is not preferred signpost; second category name; article is preferred signpost; no third category
+        self.assertEqual(output[1][27:33], ["a category", False, "another category", True, "", ""])

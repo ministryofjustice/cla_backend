@@ -13,6 +13,7 @@ from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
 from cla_eventlog import event_registry
 from complaints.constants import SLA_DAYS
+from knowledgebase.models import Article
 from reports.widgets import MonthYearWidget
 
 from . import sql
@@ -42,6 +43,9 @@ class ReportForm(ConvertDateMixin, forms.Form):
         yield self.get_headers()
         for row in self.get_rows():
             yield row
+
+    def get_output(self):
+        return list(self)
 
 
 class DateRangeReportForm(ReportForm):
@@ -587,3 +591,115 @@ class MIExtractComplaintViewAuditLog(SQLFileDateRangeReport):
 
     def get_headers(self):
         return ["Case", "Complaint Id", "Action", "Operator", "Organisation", "Date"]
+
+
+class AllKnowledgeBaseArticles(ReportForm):
+    def get_queryset(self):
+        return Article.objects.prefetch_related('articlecategorymatrix_set__article_category', 'telephonenumber_set')
+
+    def get_rows(self):
+        for article in self.get_queryset():
+            telephone_numbers = article.telephonenumber_set.all()
+            categories = article.articlecategorymatrix_set.all()
+            yield [
+                article.pk,
+                article.created,
+                article.modified,
+                article.resource_type,
+                article.service_name,
+                article.service_tag,
+                article.organisation,
+                article.website,
+                article.email,
+                article.description,
+                article.public_description,
+                article.how_to_use,
+                article.when_to_use,
+                article.address,
+                article.opening_hours,
+                article.keywords,
+                article.geographic_coverage,
+                article.type_of_service,
+                article.accessibility,
+                get_from_nth(telephone_numbers, 1, "name"),
+                get_from_nth(telephone_numbers, 1, "number"),
+                get_from_nth(telephone_numbers, 2, "name"),
+                get_from_nth(telephone_numbers, 2, "number"),
+                get_from_nth(telephone_numbers, 3, "name"),
+                get_from_nth(telephone_numbers, 3, "number"),
+                get_from_nth(telephone_numbers, 4, "name"),
+                get_from_nth(telephone_numbers, 4, "number"),
+                get_from_nth(categories, 1, "article_category.name"),
+                get_from_nth(categories, 1, "preferred_signpost"),
+                get_from_nth(categories, 2, "article_category.name"),
+                get_from_nth(categories, 2, "preferred_signpost"),
+                get_from_nth(categories, 3, "article_category.name"),
+                get_from_nth(categories, 3, "preferred_signpost"),
+                get_from_nth(categories, 4, "article_category.name"),
+                get_from_nth(categories, 4, "preferred_signpost"),
+                get_from_nth(categories, 5, "article_category.name"),
+                get_from_nth(categories, 5, "preferred_signpost"),
+                get_from_nth(categories, 6, "article_category.name"),
+                get_from_nth(categories, 6, "preferred_signpost"),
+            ]
+
+    def get_headers(self):
+        return [
+            "ID",
+            "Created",
+            "Modified",
+            "Resource type",
+            "Service name",
+            "Service tag",
+            "Organisation",
+            "Website",
+            "Email",
+            "Description",
+            "Public description",
+            "How to use",
+            "When to use",
+            "Address",
+            "Opening hours",
+            "Keywords",
+            "Geographic coverage",
+            "Type of service",
+            "Accessibility",
+            "Tel 1 name",
+            "Tel 1 number",
+            "Tel 2 name",
+            "Tel 2 number",
+            "Tel 3 name",
+            "Tel 3 number",
+            "Tel 4 name",
+            "Tel 4 number",
+            "Category 1",
+            "Preferred signpost for category 1",
+            "Category 2",
+            "Preferred signpost for category 2",
+            "Category 3",
+            "Preferred signpost for category 3",
+            "Category 4",
+            "Preferred signpost for category 4",
+            "Category 5",
+            "Preferred signpost for category 5",
+            "Category 6",
+            "Preferred signpost for category 6",
+        ]
+
+
+def get_from_nth(items, n, attribute):
+    try:
+        item = items[n - 1]
+    except IndexError:
+        return ''
+    else:
+        return get_recursively(item, attribute)
+
+
+def get_recursively(item, attribute):
+    attribute_parts = attribute.split('.')
+    value = getattr(item, attribute_parts[0])
+    remaining = '.'.join(attribute_parts[1:])
+    if remaining:
+        return get_recursively(value, remaining)
+    return value if value is not None else ''

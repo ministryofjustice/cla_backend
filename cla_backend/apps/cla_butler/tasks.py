@@ -12,6 +12,7 @@ from django.utils import timezone
 from provider.oauth2.models import AccessToken
 
 from checker.models import ReasonForContactingCategory, ReasonForContacting
+from cla_auditlog.models import AuditLog
 from cla_eventlog.models import Log
 from cla_provider.models import Feedback
 from complaints.models import Complaint
@@ -122,6 +123,7 @@ class DeleteOldData(Task):
         self.cleanup_model_from_case(pks, Feedback)
         self.cleanup_model_from_case(pks, Timer, "linked_case", "timer")
         self.cleanup_model_from_case(pks, CaseKnowledgebaseAssignment)
+        self.cleanup_audit(pks)
         self.cleanup_model_from_case(pks, Complaint, "eod__case_id")
         self.cleanup_model_from_case(pks, EODDetailsCategory, "eod_details__case_id")
         self.cleanup_model_from_case(pks, EODDetails)
@@ -181,3 +183,11 @@ class DeleteOldData(Task):
     def cleanup_adaptation_details(self):
         ads = AdaptationDetails.objects.filter(case__isnull=True)
         self._delete_objects(ads)
+
+    def cleanup_audit(self, pks):
+        audit_logs = AuditLog.objects.filter(case__in=pks)
+        audit_logs.delete()
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list('pk', flat=True)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list('pk', flat=True)
+        audit_logs = AuditLog.objects.filter(complaint__in=case_complaints)
+        audit_logs.delete()

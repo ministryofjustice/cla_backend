@@ -79,13 +79,13 @@ class TasksTestCase(TestCase):
 
     def test_delete_old_data_run_case_over_two_years_successful_delete(self):
         log = make_recipe("cla_auditlog.audit_log")
-        
-        # Creating a case thats three years old so it gets picked up properly by the delete data  
+
+        # Creating a case thats three years old so it gets picked up properly by the delete data
         freezer = freeze_time(timezone.now() + relativedelta(years=-3))
         freezer.start()
         case = make_recipe("legalaid.case", audit_log=[log])
         freezer.stop()
-        
+
         eod = make_recipe("legalaid.eod_details", case=case)
         make_recipe("complaints.complaint", eod=eod, audit_log=[log])
         pks = get_pks(Case.objects.all())
@@ -107,13 +107,12 @@ class TasksTestCase(TestCase):
         case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list('pk', flat=True)
         self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 0)
 
-
     def test_delete_old_data_run_case_under_two_years_unsuccessful_delete(self):
         log = make_recipe("cla_auditlog.audit_log")
-        
-        # Creating a case using current timestamp 
+
+        # Creating a case using current timestamp
         case = make_recipe("legalaid.case", audit_log=[log])
-        
+
         eod = make_recipe("legalaid.eod_details", case=case)
         make_recipe("complaints.complaint", eod=eod, audit_log=[log])
         pks = get_pks(Case.objects.all())

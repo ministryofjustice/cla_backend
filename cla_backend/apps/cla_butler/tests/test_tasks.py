@@ -66,14 +66,14 @@ class TasksTestCase(TestCase):
         make_recipe("complaints.complaint", eod=eod, audit_log=[log])
         pks = get_pks(Case.objects.all())
 
-        eods = EODDetails.objects.filter(case_id__in=pks).values_list('pk', flat=True)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list('pk', flat=True)
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
 
         self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 1)
 
         self.delete_old_data.cleanup_audit(pks)
 
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list('pk', flat=True)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
 
         self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 0)
 
@@ -89,13 +89,13 @@ class TasksTestCase(TestCase):
         eod = make_recipe("legalaid.eod_details", case=case)
         make_recipe("complaints.complaint", eod=eod, audit_log=[log])
         pks = get_pks(Case.objects.all())
-        eods = EODDetails.objects.filter(case_id__in=pks).values_list('pk', flat=True)
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
         self.assertEqual(len(Case.objects.all()), 1)
         self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 1)
         self.assertEqual(len(EODDetails.objects.all()), 1)
         self.assertEqual(len(Complaint.objects.all()), 1)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list('pk', flat=True)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
         self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 1)
 
         self.delete_old_data.run()
@@ -104,7 +104,7 @@ class TasksTestCase(TestCase):
         self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 0)
         self.assertEqual(len(EODDetails.objects.all()), 0)
         self.assertEqual(len(Complaint.objects.all()), 0)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list('pk', flat=True)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
         self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 0)
 
     def test_delete_old_data_run_case_under_two_years_unsuccessful_delete(self):
@@ -116,13 +116,13 @@ class TasksTestCase(TestCase):
         eod = make_recipe("legalaid.eod_details", case=case)
         make_recipe("complaints.complaint", eod=eod, audit_log=[log])
         pks = get_pks(Case.objects.all())
-        eods = EODDetails.objects.filter(case_id__in=pks).values_list('pk', flat=True)
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
         self.assertEqual(len(Case.objects.all()), 1)
         self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 1)
         self.assertEqual(len(EODDetails.objects.all()), 1)
         self.assertEqual(len(Complaint.objects.all()), 1)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list('pk', flat=True)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
         self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 1)
 
         self.delete_old_data.run()
@@ -131,5 +131,5 @@ class TasksTestCase(TestCase):
         self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 1)
         self.assertEqual(len(EODDetails.objects.all()), 1)
         self.assertEqual(len(Complaint.objects.all()), 1)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list('pk', flat=True)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
         self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 1)

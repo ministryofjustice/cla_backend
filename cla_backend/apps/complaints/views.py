@@ -95,7 +95,7 @@ class BaseComplaintViewSet(
             }
         )
         if dashboard and not show_closed:
-            complaint_events = ComplaintLog.objects.filter(content_type=sql_params['complaint_ct'], code__in=["COMPLAINT_CLOSED", "COMPLAINT_VOID"]).values_list('object_id', flat=True)
+            complaint_events = ComplaintLog.objects.filter(content_type=sql_params['complaint_ct'], code__in=["COMPLAINT_CLOSED", "COMPLAINT_VOID"]).values_list('object_id', flat=True).order_by('object_id').distinct('object_id')
             qs = qs.exclude(id__in=complaint_events)
         return qs
 

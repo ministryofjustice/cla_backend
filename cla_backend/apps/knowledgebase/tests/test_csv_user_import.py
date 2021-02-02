@@ -11,7 +11,7 @@ from core.tests.mommy_utils import make_recipe
 
 class KnowledgebaseCSVImporterTester(TestCase):
     def setUp(self):
-        self.importer = KnowledgebaseCSVImporter(None)
+        self.importer = KnowledgebaseCSVImporter()
         self.row = self.get_csv_row()
 
     def test_article_row_import__new_article(self):

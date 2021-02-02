@@ -2,16 +2,25 @@ from django import forms
 from knowledgebase.utils.csv_user_import import KnowledgebaseCSVImporter
 
 
-class KnowledgebaseCsvUploadForm(forms.Form):
+class KnowledgebaseCSVUploadForm(forms.Form):
     csv_file = forms.FileField(required=True)
 
-    def clean(self):
-        cleaned_data = super(KnowledgebaseCsvUploadForm, self).clean()
-        importer = KnowledgebaseCSVImporter(cleaned_data["csv_file"])
-        try:
-            importer.parse()
-        except Exception as e:
-            raise forms.ValidationError(e.message)
+    def __init__(self, *args, **kwargs):
+        super(KnowledgebaseCSVUploadForm, self).__init__(*args, **kwargs)
+        self.rows = []
 
-    def process(self):
-        pass
+    @staticmethod
+    def _errors_validation_errors(cls, errors):
+        validation_errors = []
+        for error in errors:
+            validation_errors.append(forms.ValidationError(error))
+        raise forms.ValidationError(validation_errors)
+
+    def clean(self):
+        cleaned_data = super(KnowledgebaseCSVUploadForm, self).clean()
+        rows, errors = KnowledgebaseCSVImporter.parse(cleaned_data["csv_file"])
+        if errors:
+            self._errors_validation_errors(errors)
+
+    def save(self):
+        KnowledgebaseCSVImporter.save(self.rows)

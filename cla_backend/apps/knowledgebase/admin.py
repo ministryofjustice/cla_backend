@@ -4,7 +4,7 @@ from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from .models import Article, ArticleCategoryMatrix, TelephoneNumber
-from .forms import KnowledgebaseCsvUploadForm
+from .forms import KnowledgebaseCSVUploadForm
 
 
 class TelephoneNumberInline(admin.TabularInline):
@@ -56,9 +56,9 @@ class ArticleAdmin(admin.ModelAdmin):
         return my_urls + urls
 
     def import_csv(self, request):
-        form = KnowledgebaseCsvUploadForm()
+        form = KnowledgebaseCSVUploadForm()
         if request.method == "POST":
-            form = KnowledgebaseCsvUploadForm(request.POST, request.FILES)
+            form = KnowledgebaseCSVUploadForm(request.POST, request.FILES)
             if form.is_valid():
                 return HttpResponseRedirect(
                     reverse("admin:%s_%s_changelist" % (self.model._meta.app_label, self.model._meta.model_name))

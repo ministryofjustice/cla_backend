@@ -9,17 +9,16 @@ from .csv_user_import_mappings import (
 
 
 class KnowledgebaseCSVImporter:
-    def __init__(self, csv_file_absolute_path):
-        self.csv_file_absolute_path = csv_file_absolute_path
+    def __init__(self, csv_file_handler):
+        self.csv_file_handler = csv_file_handler
 
     def parse(self):
         rows = []
-        with open(self.csv_file_absolute_path, "rb") as csvfile:
-            reader = csv.reader(csvfile, delimiter=",")
-            # Skip header
-            next(reader)
-            for row in reader:
-                rows.append(self.process_row(row))
+        reader = csv.reader(self.csv_file_handler, delimiter=",")
+        # Skip header
+        next(reader)
+        for row in reader:
+            rows.append(self.process_row(row))
         return rows
 
     def save(self, rows):
@@ -67,7 +66,7 @@ class KnowledgebaseCSVImporter:
                 data[field] = row[column]
 
         if pk:
-            article = Article.objects.get(pk=pk)
+            article = self._get_article_from_pk(pk)
             for field, value in data.items():
                 setattr(article, field, value)
         else:
@@ -75,6 +74,12 @@ class KnowledgebaseCSVImporter:
 
         article.full_clean()
         return article
+
+    def _get_article_from_pk(self, pk):
+        try:
+            return Article.objects.get(pk=pk)
+        except Article.DoesNotExist:
+            raise ValueError("Could not find article with an ID of : %s" % pk)
 
     def get_telephone_numbers_from_row(self, article, mappings, row):
         telephone_numbers = []

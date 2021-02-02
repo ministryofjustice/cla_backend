@@ -56,12 +56,14 @@ class ArticleAdmin(admin.ModelAdmin):
         return my_urls + urls
 
     def import_csv(self, request):
-        form = KnowledgebaseCsvUploadForm(request.POST)
-        if request.method == "POST" and form.is_valid():
-            return HttpResponseRedirect(
-                reverse("admin:%s_%s_changelist" % (self.model._meta.app_label, self.model._meta.model_name))
-            )
-        return render(request, "admin/knowledgebase/csv-upload.html", {"form": KnowledgebaseCsvUploadForm()})
+        form = KnowledgebaseCsvUploadForm()
+        if request.method == "POST":
+            form = KnowledgebaseCsvUploadForm(request.POST, request.FILES)
+            if form.is_valid():
+                return HttpResponseRedirect(
+                    reverse("admin:%s_%s_changelist" % (self.model._meta.app_label, self.model._meta.model_name))
+                )
+        return render(request, "admin/knowledgebase/csv-upload.html", {"form": form})
 
 
 class ArticleCategoryMatrixAdmin(admin.ModelAdmin):

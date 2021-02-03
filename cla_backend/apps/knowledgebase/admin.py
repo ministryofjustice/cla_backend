@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
+from django.contrib import messages
 from .models import Article, ArticleCategoryMatrix, TelephoneNumber
 from .forms import KnowledgebaseCSVUploadForm
 
@@ -63,6 +64,7 @@ class ArticleAdmin(admin.ModelAdmin):
             form = KnowledgebaseCSVUploadForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
+                messages.add_message(request, messages.SUCCESS, "CSV Imported successfully")
                 return HttpResponseRedirect(
                     reverse("admin:%s_%s_changelist" % (self.model._meta.app_label, self.model._meta.model_name))
                 )

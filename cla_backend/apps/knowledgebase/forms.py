@@ -10,7 +10,7 @@ class KnowledgebaseCSVUploadForm(forms.Form):
         self.rows = []
 
     @staticmethod
-    def _errors_validation_errors(cls, errors):
+    def _errors_validation_errors(errors):
         validation_errors = []
         for error in errors:
             validation_errors.append(forms.ValidationError(error))

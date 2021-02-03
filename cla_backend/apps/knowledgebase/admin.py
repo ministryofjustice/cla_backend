@@ -52,7 +52,9 @@ class ArticleAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super(ArticleAdmin, self).get_urls()
-        my_urls = patterns("", url(r"^import-csv/$", self.import_csv, name="knowledgebase_import_csv"))
+        my_urls = patterns(
+            "", url(r"^import-csv/$", self.admin_site.admin_view(self.import_csv), name="knowledgebase_import_csv")
+        )
         return my_urls + urls
 
     def import_csv(self, request):

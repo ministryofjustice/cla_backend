@@ -62,6 +62,7 @@ class ArticleAdmin(admin.ModelAdmin):
         if request.method == "POST":
             form = KnowledgebaseCSVUploadForm(request.POST, request.FILES)
             if form.is_valid():
+                form.save()
                 return HttpResponseRedirect(
                     reverse("admin:%s_%s_changelist" % (self.model._meta.app_label, self.model._meta.model_name))
                 )

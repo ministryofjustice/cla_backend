@@ -1,5 +1,6 @@
 import datetime
 from django.test import TestCase
+from knowledgebase.models import Article, TelephoneNumber, ArticleCategoryMatrix
 from knowledgebase.utils.csv_user_import import KnowledgebaseCSVImporter
 from knowledgebase.utils.csv_user_import_mappings import (
     ARTICLE_COLUMN_FIELD_MAPPING,
@@ -26,6 +27,12 @@ class KnowledgebaseCSVImporterTester(TestCase):
         self.row[0] = existing_article.pk
         article = self.importer.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, self.row)
         self._assert_row_against_article(self.row, article)
+
+    def test_article_row_import__missing_pk(self):
+        # Set the pk field in the csv row to to a value that does not exist
+        self.row[0] = 1000
+        with self.assertRaisesMessage(ValueError, "Could not find article with an ID of : 1000"):
+            self.importer.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, self.row)
 
     def test_telephone_numbers_row(self):
         article = make_recipe("knowledgebase.article")
@@ -65,6 +72,35 @@ class KnowledgebaseCSVImporterTester(TestCase):
             self.importer.get_get_article_category_matrices_from_row(
                 article, ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING, self.row
             )
+
+    def test_save(self):
+        self.assertEqual(Article.objects.count(), 0)
+        self.assertEqual(TelephoneNumber.objects.count(), 0)
+        self.assertEqual(ArticleCategoryMatrix.objects.count(), 0)
+
+        make_recipe("knowledgebase.article_category", name="Employment")
+        make_recipe("knowledgebase.article_category", name="Discrimination")
+
+        article = self.importer.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, self.row)
+        telephone_numbers = self.importer.get_telephone_numbers_from_row(
+            article, TELEPHONE_COLUMN_FIELD_MAPPING, self.row
+        )
+        article_category_matrices = self.importer.get_get_article_category_matrices_from_row(
+            article, ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING, self.row
+        )
+        rows = [
+            {
+                "article": article,
+                "telephone_numbers": telephone_numbers,
+                "article_category_matrices": article_category_matrices,
+            }
+        ]
+
+        self.importer.save(rows)
+
+        self.assertEqual(Article.objects.count(), 1)
+        self.assertEqual(article.article_category.count(), 2)
+        self.assertEqual(TelephoneNumber.objects.filter(article=article).count(), 2)
 
     def _assert_row_telephone(self, row, fields, telephone):
         for column, field_name in fields:

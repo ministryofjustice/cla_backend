@@ -18,7 +18,7 @@ class KnowledgebaseCSVUploadForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(KnowledgebaseCSVUploadForm, self).clean()
-        rows, errors = KnowledgebaseCSVImporter.parse(cleaned_data["csv_file"])
+        self.rows, errors = KnowledgebaseCSVImporter.parse(cleaned_data["csv_file"])
         if errors:
             self._errors_validation_errors(errors)
 

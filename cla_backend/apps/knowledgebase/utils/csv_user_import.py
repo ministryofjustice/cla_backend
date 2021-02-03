@@ -33,20 +33,24 @@ class KnowledgebaseCSVImporter:
 
     @classmethod
     def save_telephone_numbers(cls, article, telephone_numbers):
-        existing_telephone_numbers = TelephoneNumber.objects.get_or_none(article=article)
+        existing_telephone_numbers = TelephoneNumber.objects.filter(article=article)
         if existing_telephone_numbers:
             existing_telephone_numbers.delete()
 
         for telephone_number in telephone_numbers:
+            # Strange this needs to be set explicitly because the telephone_number.article field is already set
+            telephone_number.article_id = article.pk
             telephone_number.save()
 
     @classmethod
     def save_article_category_matrices(cls, article, matrices):
-        existing_matrices = ArticleCategoryMatrix.objects.get_or_none(article=article)
+        existing_matrices = ArticleCategoryMatrix.objects.filter(article=article)
         if existing_matrices:
             existing_matrices.delete()
 
         for matrix in matrices:
+            # Strange this needs to be set explicitly because the matrix.article field is already set
+            matrix.article_id = article.pk
             matrix.save()
 
     @classmethod
@@ -117,7 +121,7 @@ class KnowledgebaseCSVImporter:
         if data:
             data["article"] = article
             telephone_number = TelephoneNumber(**data)
-            telephone_number.full_clean()
+            telephone_number.full_clean(exclude=["article"])
         return telephone_number
 
     @classmethod
@@ -130,5 +134,5 @@ class KnowledgebaseCSVImporter:
         if data:
             data["article"] = article
             matrix = ArticleCategoryMatrix(**data)
-            matrix.full_clean()
+            matrix.full_clean(exclude=["article"])
         return matrix

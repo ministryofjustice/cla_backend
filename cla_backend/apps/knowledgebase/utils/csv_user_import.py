@@ -76,8 +76,8 @@ class KnowledgebaseCSVImporter:
             else:
                 data[field] = row[column]
 
-        if pk:
-            article = cls._get_article_from_pk(pk)
+        article = cls._get_article_from_pk(pk)
+        if article:
             for field, value in data.items():
                 setattr(article, field, value)
         else:
@@ -88,6 +88,11 @@ class KnowledgebaseCSVImporter:
 
     @classmethod
     def _get_article_from_pk(cls, pk):
+        if pk == "NEW":
+            return None
+
+        if not type(pk, int):
+            raise ValueError("ID must be an existing ID or NEW. Value given %s" % pk)
         try:
             return Article.objects.get(pk=pk)
         except Article.DoesNotExist:

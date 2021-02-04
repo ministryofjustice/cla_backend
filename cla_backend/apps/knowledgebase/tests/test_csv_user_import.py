@@ -17,8 +17,6 @@ class KnowledgebaseCSVImporterTester(TestCase):
 
     def test_article_row_import__new_article(self):
         article = self.importer.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, self.row)
-        # Set the pk field in the csv row to None
-        self.row[0] = None
         self._assert_row_against_article(self.row, article)
 
     def test_article_row_import__existing_article(self):
@@ -126,7 +124,7 @@ class KnowledgebaseCSVImporterTester(TestCase):
 
     def get_csv_row(self):
         return [
-            "",
+            "NEW",
             "2014-06-27 14:52:55.547000+00:00",
             "2015-01-28 15:06:18.718000+00:00",
             "LEGAL",

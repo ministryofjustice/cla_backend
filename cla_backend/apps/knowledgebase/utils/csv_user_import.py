@@ -91,7 +91,7 @@ class KnowledgebaseCSVImporter:
         if pk == "NEW":
             return None
 
-        if not type(pk, int):
+        if not isinstance(pk, int):
             raise ValueError("ID must be an existing ID or NEW. Value given %s" % pk)
         try:
             return Article.objects.get(pk=pk)

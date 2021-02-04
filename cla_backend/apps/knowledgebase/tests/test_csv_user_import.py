@@ -17,6 +17,8 @@ class KnowledgebaseCSVImporterTester(TestCase):
 
     def test_article_row_import__new_article(self):
         article = self.importer.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, self.row)
+        # We expect the pk value of the new article to be None
+        self.row[0] = None
         self._assert_row_against_article(self.row, article)
 
     def test_article_row_import__existing_article(self):

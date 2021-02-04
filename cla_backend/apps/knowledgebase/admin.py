@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.shortcuts import render
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied
 from django.http.response import HttpResponseRedirect
 from django.contrib import messages
 from .models import Article, ArticleCategoryMatrix, TelephoneNumber
@@ -59,6 +60,9 @@ class ArticleAdmin(admin.ModelAdmin):
         return my_urls + urls
 
     def import_csv(self, request):
+        if not self.has_change_permission(request):
+            raise PermissionDenied
+
         form = KnowledgebaseCSVUploadForm()
         if request.method == "POST":
             form = KnowledgebaseCSVUploadForm(request.POST, request.FILES)

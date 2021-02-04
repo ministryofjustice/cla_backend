@@ -10,7 +10,7 @@ class KnowledgebaseCSVUploadForm(forms.Form):
         self.rows = []
 
     @staticmethod
-    def _errors_validation_errors(errors):
+    def _raise_validation_errors(errors):
         validation_errors = []
         for error in errors:
             validation_errors.append(forms.ValidationError(error))
@@ -20,7 +20,7 @@ class KnowledgebaseCSVUploadForm(forms.Form):
         cleaned_data = super(KnowledgebaseCSVUploadForm, self).clean()
         self.rows, errors = KnowledgebaseCSVImporter.parse(cleaned_data["csv_file"])
         if errors:
-            self._errors_validation_errors(errors)
+            self._raise_validation_errors(errors)
 
     def save(self):
         KnowledgebaseCSVImporter.save(self.rows)

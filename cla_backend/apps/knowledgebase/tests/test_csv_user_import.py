@@ -102,6 +102,48 @@ class KnowledgebaseCSVImporterTester(TestCase):
         self.assertEqual(article.article_category.count(), 2)
         self.assertEqual(TelephoneNumber.objects.filter(article=article).count(), 2)
 
+    def test_save_transaction(self):
+        # We are not going to create the categories that the ArticleCategoryMatrix.article_category requires
+        # This should cause an error when saving the ArticleCategoryMatrix object
+
+        self.assertEqual(Article.objects.count(), 0)
+        self.assertEqual(TelephoneNumber.objects.count(), 0)
+        self.assertEqual(ArticleCategoryMatrix.objects.count(), 0)
+
+        make_recipe("knowledgebase.article_category", name="Employment")
+        make_recipe("knowledgebase.article_category", name="Discrimination")
+
+        article = self.importer.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, self.row)
+        telephone_numbers = self.importer.get_telephone_numbers_from_row(
+            article, TELEPHONE_COLUMN_FIELD_MAPPING, self.row
+        )
+        article_category_matrices = self.importer.get_get_article_category_matrices_from_row(
+            article, ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING, self.row
+        )
+
+        rows = [
+            {
+                "article": article,
+                "telephone_numbers": telephone_numbers,
+                "article_category_matrices": article_category_matrices,
+            }
+        ]
+
+        def save_article_category_matrices(*args, **kwargs):
+            self.assertEqual(Article.objects.count(), 1)
+            self.assertEqual(TelephoneNumber.objects.count(), 2)
+            raise ValueError("Cannot save article category matrices")
+
+        self.importer.save_article_category_matrices = save_article_category_matrices
+
+        expected_exception_msg = "Cannot save article category matrices"
+        with self.assertRaisesMessage(ValueError, expected_exception_msg):
+            self.importer.save(rows)
+
+        self.assertEqual(Article.objects.count(), 0)
+        self.assertEqual(TelephoneNumber.objects.count(), 0)
+        self.assertEqual(ArticleCategoryMatrix.objects.count(), 0)
+
     def _assert_row_telephone(self, row, fields, telephone):
         for column, field_name in fields:
             expected_value = row[column]

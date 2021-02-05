@@ -1,5 +1,6 @@
 import csv
 from django.db import transaction
+from django.core.exceptions import ValidationError
 from knowledgebase.models import Article, TelephoneNumber, ArticleCategoryMatrix
 from .csv_user_import_mappings import (
     ARTICLE_COLUMN_FIELD_MAPPING,
@@ -18,6 +19,9 @@ class KnowledgebaseCSVImporter:
         for index, row in enumerate(reader):
             try:
                 rows.append(self.process_row(row))
+            except ValidationError as e:
+                for field, message in e.message_dict.items():
+                    errors.append("row %s: %s: %s" % (index + 1, field, message))
             except Exception as e:
                 errors.append("row %s: %s" % (index + 1, e.message))
         return [rows, errors]
@@ -70,6 +74,11 @@ class KnowledgebaseCSVImporter:
             else:
                 data[field] = row[column]
 
+        if not data["created"]:
+            data.pop("created")
+        if not data["modified"]:
+            data.pop("modified")
+
         article = self._get_article_from_pk(pk)
         if article:
             for field, value in data.items():
@@ -83,9 +92,6 @@ class KnowledgebaseCSVImporter:
     def _get_article_from_pk(self, pk):
         if pk == "NEW":
             return None
-
-        if not isinstance(pk, int):
-            raise ValueError("ID must be an existing ID or NEW. Value given %s" % pk)
         try:
             return Article.objects.get(pk=pk)
         except Article.DoesNotExist:

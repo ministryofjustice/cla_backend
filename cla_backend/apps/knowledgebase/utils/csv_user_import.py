@@ -9,8 +9,7 @@ from .csv_user_import_mappings import (
 
 
 class KnowledgebaseCSVImporter:
-    @classmethod
-    def parse(cls, csv_file_handler):
+    def parse(self, csv_file_handler):
         rows = []
         errors = []
         reader = csv.reader(csv_file_handler, delimiter=",")
@@ -18,16 +17,15 @@ class KnowledgebaseCSVImporter:
         next(reader)
         for index, row in enumerate(reader):
             try:
-                rows.append(cls.process_row(row))
+                rows.append(self.process_row(row))
             except Exception as e:
                 errors.append("row %s: %s" % (index + 1, e.message))
         return [rows, errors]
 
-    @classmethod
-    def process_row(cls, row):
-        article = cls.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, row)
-        telephone_numbers = cls.get_telephone_numbers_from_row(article, TELEPHONE_COLUMN_FIELD_MAPPING, row)
-        article_category_matrices = cls.get_get_article_category_matrices_from_row(
+    def process_row(self, row):
+        article = self.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, row)
+        telephone_numbers = self.get_telephone_numbers_from_row(article, TELEPHONE_COLUMN_FIELD_MAPPING, row)
+        article_category_matrices = self.get_get_article_category_matrices_from_row(
             article, ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING, row
         )
         return {
@@ -36,16 +34,14 @@ class KnowledgebaseCSVImporter:
             "article_category_matrices": article_category_matrices,
         }
 
-    @classmethod
-    def save(cls, rows):
+    def save(self, rows):
         with transaction.atomic():
             for row in rows:
                 row["article"].save()
-                cls.save_telephone_numbers(row["article"], row["telephone_numbers"])
-                cls.save_article_category_matrices(row["article"], row["article_category_matrices"])
+                self.save_telephone_numbers(row["article"], row["telephone_numbers"])
+                self.save_article_category_matrices(row["article"], row["article_category_matrices"])
 
-    @classmethod
-    def save_telephone_numbers(cls, article, telephone_numbers):
+    def save_telephone_numbers(self, article, telephone_numbers):
         existing_telephone_numbers = TelephoneNumber.objects.filter(article=article)
         if existing_telephone_numbers:
             existing_telephone_numbers.delete()
@@ -55,8 +51,7 @@ class KnowledgebaseCSVImporter:
             telephone_number.article_id = article.pk
             telephone_number.save()
 
-    @classmethod
-    def save_article_category_matrices(cls, article, matrices):
+    def save_article_category_matrices(self, article, matrices):
         existing_matrices = ArticleCategoryMatrix.objects.filter(article=article)
         if existing_matrices:
             existing_matrices.delete()
@@ -66,8 +61,7 @@ class KnowledgebaseCSVImporter:
             matrix.article_id = article.pk
             matrix.save()
 
-    @classmethod
-    def get_article_from_row(cls, fields, row):
+    def get_article_from_row(self, fields, row):
         data = {}
         pk = None
         for column, field in fields:
@@ -76,7 +70,7 @@ class KnowledgebaseCSVImporter:
             else:
                 data[field] = row[column]
 
-        article = cls._get_article_from_pk(pk)
+        article = self._get_article_from_pk(pk)
         if article:
             for field, value in data.items():
                 setattr(article, field, value)
@@ -86,8 +80,7 @@ class KnowledgebaseCSVImporter:
         article.full_clean()
         return article
 
-    @classmethod
-    def _get_article_from_pk(cls, pk):
+    def _get_article_from_pk(self, pk):
         if pk == "NEW":
             return None
 
@@ -98,17 +91,15 @@ class KnowledgebaseCSVImporter:
         except Article.DoesNotExist:
             raise ValueError("Could not find article with an ID of : %s" % pk)
 
-    @classmethod
-    def get_telephone_numbers_from_row(cls, article, mappings, row):
+    def get_telephone_numbers_from_row(self, article, mappings, row):
         telephone_numbers = []
         for fields in mappings:
-            telephone_number = cls.get_telephone_number_from_row(article, fields, row)
+            telephone_number = self.get_telephone_number_from_row(article, fields, row)
             if telephone_number:
                 telephone_numbers.append(telephone_number)
         return telephone_numbers
 
-    @classmethod
-    def get_telephone_number_from_row(cls, article, fields, row):
+    def get_telephone_number_from_row(self, article, fields, row):
         data = {}
         telephone_number = None
         for column, field in fields:
@@ -120,17 +111,15 @@ class KnowledgebaseCSVImporter:
             telephone_number.full_clean(exclude=["article"])
         return telephone_number
 
-    @classmethod
-    def get_get_article_category_matrices_from_row(cls, article, mappings, row):
+    def get_get_article_category_matrices_from_row(self, article, mappings, row):
         matrices = []
         for fields in mappings:
-            matrix = cls.get_get_article_category_matrix_from_row(article, fields, row)
+            matrix = self.get_get_article_category_matrix_from_row(article, fields, row)
             if matrix:
                 matrices.append(matrix)
         return matrices
 
-    @classmethod
-    def get_get_article_category_matrix_from_row(cls, article, fields, row):
+    def get_get_article_category_matrix_from_row(self, article, fields, row):
         data = {}
         matrix = None
         for column, field, value_transformer in fields:

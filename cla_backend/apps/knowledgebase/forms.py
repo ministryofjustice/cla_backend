@@ -7,6 +7,7 @@ class KnowledgebaseCSVUploadForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(KnowledgebaseCSVUploadForm, self).__init__(*args, **kwargs)
+        self.importer = KnowledgebaseCSVImporter()
         self.rows = []
 
     @staticmethod
@@ -18,9 +19,9 @@ class KnowledgebaseCSVUploadForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(KnowledgebaseCSVUploadForm, self).clean()
-        self.rows, errors = KnowledgebaseCSVImporter.parse(cleaned_data["csv_file"])
+        self.rows, errors = self.importer.parse(cleaned_data["csv_file"])
         if errors:
             self._raise_validation_errors(errors)
 
     def save(self):
-        KnowledgebaseCSVImporter.save(self.rows)
+        self.importer.save(self.rows)

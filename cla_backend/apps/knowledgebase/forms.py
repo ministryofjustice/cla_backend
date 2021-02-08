@@ -22,6 +22,7 @@ class KnowledgebaseCSVUploadForm(forms.Form):
         self.rows, errors = self.importer.parse(cleaned_data["csv_file"])
         if errors:
             self._raise_validation_errors(errors)
+        return cleaned_data
 
     def save(self):
         self.importer.save(self.rows)

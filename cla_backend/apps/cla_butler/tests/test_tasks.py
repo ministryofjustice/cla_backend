@@ -12,9 +12,13 @@ from legalaid.models import Case, EODDetails, PersonalDetails
 
 class TasksTestCase(TestCase):
     """
-    Currently in Django v1.7 these tests anything with an M2M relationship will not be tested correctly
-    Due to the DB of the tests not being a persisted.
-    Updating to at least Django v1.8 should fix this.
+    Currently in Django v1.7 database constraint checks are done until a transaction is committed.
+    In TestCase they are never committed so therefore any tests with M2M relationships, such as
+    'test_cleanup_personal_details_no_case_attached_successful' are currently passing with a false positive.
+
+    On upgrade to Django v1.8+, check_constraints() happens at the set up of the TestCase, while
+    the test should still pass because of code improvements, any future changes and testing around
+    features that include DB constraints, such as many to many relationships should be tested more fully.
     """
 
     def setUp(self):

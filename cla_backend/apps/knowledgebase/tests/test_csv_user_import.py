@@ -16,7 +16,7 @@ class KnowledgebaseCSVImporterTester(TestCase):
         self.row = self.get_csv_row()
 
     def test_article_row_import__new_article(self):
-        article = self.importer.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, self.row)
+        article = self.importer.get_article_from_row(self.row)
         # We expect the pk value of the new article to be None
         self.row[0] = None
         self._assert_row_against_article(self.row, article)
@@ -25,20 +25,18 @@ class KnowledgebaseCSVImporterTester(TestCase):
         existing_article = make_recipe("knowledgebase.article")
         # Set the pk field in the csv row to to an existing Article pk
         self.row[0] = existing_article.pk
-        article = self.importer.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, self.row)
+        article = self.importer.get_article_from_row(self.row)
         self._assert_row_against_article(self.row, article)
 
     def test_article_row_import__missing_pk(self):
         # Set the pk field in the csv row to to a value that does not exist
         self.row[0] = 1000
         with self.assertRaisesMessage(ValueError, "Could not find article with an ID of : 1000"):
-            self.importer.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, self.row)
+            self.importer.get_article_from_row(self.row)
 
     def test_telephone_numbers_row(self):
         article = make_recipe("knowledgebase.article")
-        telephone_numbers = self.importer.get_telephone_numbers_from_row(
-            article, TELEPHONE_COLUMN_FIELD_MAPPING, self.row
-        )
+        telephone_numbers = self.importer.get_telephone_numbers_from_row(article, self.row)
         self.assertEqual(len(telephone_numbers), 2)
         self._assert_row_telephone(self.row, TELEPHONE_COLUMN_FIELD_MAPPING[0], telephone_numbers[0])
         self._assert_row_telephone(self.row, TELEPHONE_COLUMN_FIELD_MAPPING[1], telephone_numbers[1])
@@ -47,9 +45,7 @@ class KnowledgebaseCSVImporterTester(TestCase):
         employment_category = make_recipe("knowledgebase.article_category", name="Employment")
         discrimination_category = make_recipe("knowledgebase.article_category", name="Discrimination")
         article = make_recipe("knowledgebase.article")
-        matrices = self.importer.get_get_article_category_matrices_from_row(
-            article, ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING, self.row
-        )
+        matrices = self.importer.get_article_category_matrices_from_row(article, self.row)
         self.assertEqual(len(matrices), 2)
         self.assertEqual(matrices[0].article_category, employment_category)
         self.assertFalse(matrices[0].preferred_signpost)
@@ -59,9 +55,7 @@ class KnowledgebaseCSVImporterTester(TestCase):
     def test_article_category_matrices_from_row__non_existing_category(self):
         article = make_recipe("knowledgebase.article")
         with self.assertRaisesMessage(ValueError, "Could not find category with name: Employment"):
-            self.importer.get_get_article_category_matrices_from_row(
-                article, ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING, self.row
-            )
+            self.importer.get_article_category_matrices_from_row(article, self.row)
 
     def test_article_category_matrices_from_row__invalid_preferred_signpost(self):
         make_recipe("knowledgebase.article_category", name="Employment")
@@ -69,9 +63,7 @@ class KnowledgebaseCSVImporterTester(TestCase):
         with self.assertRaisesMessage(ValueError, "Yes is an invalid value for Preferred signpost"):
             signpost_index = ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING[0][1][0]
             self.row[signpost_index] = "Yes"
-            self.importer.get_get_article_category_matrices_from_row(
-                article, ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING, self.row
-            )
+            self.importer.get_article_category_matrices_from_row(article, self.row)
 
     def test_save(self):
         self.assertEqual(Article.objects.count(), 0)
@@ -81,13 +73,9 @@ class KnowledgebaseCSVImporterTester(TestCase):
         make_recipe("knowledgebase.article_category", name="Employment")
         make_recipe("knowledgebase.article_category", name="Discrimination")
 
-        article = self.importer.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, self.row)
-        telephone_numbers = self.importer.get_telephone_numbers_from_row(
-            article, TELEPHONE_COLUMN_FIELD_MAPPING, self.row
-        )
-        article_category_matrices = self.importer.get_get_article_category_matrices_from_row(
-            article, ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING, self.row
-        )
+        article = self.importer.get_article_from_row(self.row)
+        telephone_numbers = self.importer.get_telephone_numbers_from_row(article, self.row)
+        article_category_matrices = self.importer.get_article_category_matrices_from_row(article, self.row)
         rows = [
             {
                 "article": article,
@@ -113,13 +101,9 @@ class KnowledgebaseCSVImporterTester(TestCase):
         make_recipe("knowledgebase.article_category", name="Employment")
         make_recipe("knowledgebase.article_category", name="Discrimination")
 
-        article = self.importer.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, self.row)
-        telephone_numbers = self.importer.get_telephone_numbers_from_row(
-            article, TELEPHONE_COLUMN_FIELD_MAPPING, self.row
-        )
-        article_category_matrices = self.importer.get_get_article_category_matrices_from_row(
-            article, ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING, self.row
-        )
+        article = self.importer.get_article_from_row(self.row)
+        telephone_numbers = self.importer.get_telephone_numbers_from_row(article, self.row)
+        article_category_matrices = self.importer.get_article_category_matrices_from_row(article, self.row)
 
         rows = [
             {

@@ -27,11 +27,9 @@ class KnowledgebaseCSVImporter:
         return [rows, errors]
 
     def process_row(self, row):
-        article = self.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, row)
-        telephone_numbers = self.get_telephone_numbers_from_row(article, TELEPHONE_COLUMN_FIELD_MAPPING, row)
-        article_category_matrices = self.get_article_category_matrices_from_row(
-            article, ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING, row
-        )
+        article = self.get_article_from_row(row)
+        telephone_numbers = self.get_telephone_numbers_from_row(article, row)
+        article_category_matrices = self.get_article_category_matrices_from_row(article, row)
         return {
             "article": article,
             "telephone_numbers": telephone_numbers,
@@ -65,10 +63,10 @@ class KnowledgebaseCSVImporter:
             matrix.article_id = article.pk
             matrix.save()
 
-    def get_article_from_row(self, fields, row):
+    def get_article_from_row(self, row):
         data = {}
         pk = None
-        for column, field in fields:
+        for column, field in ARTICLE_COLUMN_FIELD_MAPPING:
             if field == "pk":
                 pk = row[column]
             else:
@@ -97,9 +95,9 @@ class KnowledgebaseCSVImporter:
         except Article.DoesNotExist:
             raise ValueError("Could not find article with an ID of : %s" % pk)
 
-    def get_telephone_numbers_from_row(self, article, mappings, row):
+    def get_telephone_numbers_from_row(self, article, row):
         telephone_numbers = []
-        for fields in mappings:
+        for fields in TELEPHONE_COLUMN_FIELD_MAPPING:
             telephone_number = self.get_telephone_number_from_row(article, fields, row)
             if telephone_number:
                 telephone_numbers.append(telephone_number)
@@ -117,9 +115,9 @@ class KnowledgebaseCSVImporter:
             telephone_number.full_clean(exclude=["article"])
         return telephone_number
 
-    def get_article_category_matrices_from_row(self, article, mappings, row):
+    def get_article_category_matrices_from_row(self, article, row):
         matrices = []
-        for fields in mappings:
+        for fields in ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING:
             matrix = self.get_get_article_category_matrix_from_row(article, fields, row)
             if matrix:
                 matrices.append(matrix)

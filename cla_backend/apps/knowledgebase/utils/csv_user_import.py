@@ -118,12 +118,12 @@ class KnowledgebaseCSVImporter:
     def get_article_category_matrices_from_row(self, article, row):
         matrices = []
         for fields in ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING:
-            matrix = self.get_get_article_category_matrix_from_row(article, fields, row)
+            matrix = self.get_article_category_matrix_from_row(article, fields, row)
             if matrix:
                 matrices.append(matrix)
         return matrices
 
-    def get_get_article_category_matrix_from_row(self, article, fields, row):
+    def get_article_category_matrix_from_row(self, article, fields, row):
         data = {}
         matrix = None
         for column, field, value_transformer in fields:

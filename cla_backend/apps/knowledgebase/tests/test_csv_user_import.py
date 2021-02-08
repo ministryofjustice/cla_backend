@@ -160,15 +160,17 @@ class KnowledgebaseCSVImporterTester(TestCase):
             }
         ]
 
-        def save_article_category_matrices(*args, **kwargs):
+        def save_article_category_matrices(article, matrices):
             self.assertEqual(Article.objects.count(), 1)
             self.assertEqual(TelephoneNumber.objects.count(), 2)
-            raise ValueError("Cannot save article category matrices")
+            matrices[0] = None
+            return self.importer._original_save_article_category_matrices(article, matrices)
 
+        self.importer._original_save_article_category_matrices = self.importer.save_article_category_matrices
         self.importer.save_article_category_matrices = save_article_category_matrices
 
-        expected_exception_msg = "Cannot save article category matrices"
-        with self.assertRaisesMessage(ValueError, expected_exception_msg):
+        expected_exception_msg = "'NoneType' object has no attribute 'article_id'"
+        with self.assertRaisesMessage(AttributeError, expected_exception_msg):
             self.importer.save(rows)
 
         self.assertEqual(Article.objects.count(), 0)

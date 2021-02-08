@@ -141,9 +141,6 @@ class KnowledgebaseCSVImporterTester(TestCase):
         self.assertEqual(TelephoneNumber.objects.filter(article=article).count(), 2)
 
     def test_save_transaction(self):
-        # We are not going to create the categories that the ArticleCategoryMatrix.article_category requires
-        # This should cause an error when saving the ArticleCategoryMatrix object
-
         self.assertEqual(Article.objects.count(), 0)
         self.assertEqual(TelephoneNumber.objects.count(), 0)
         self.assertEqual(ArticleCategoryMatrix.objects.count(), 0)

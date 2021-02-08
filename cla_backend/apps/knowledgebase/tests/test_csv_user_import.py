@@ -179,7 +179,7 @@ class KnowledgebaseCSVImporterTester(TestCase):
             "",
             "This is the article description",
             "This is the article description",
-            "This ios how to use it",
+            "This is how to use it",
             "This is when to use it",
             """102 Petty France
             LONDON

@@ -29,7 +29,7 @@ class KnowledgebaseCSVImporter:
     def process_row(self, row):
         article = self.get_article_from_row(ARTICLE_COLUMN_FIELD_MAPPING, row)
         telephone_numbers = self.get_telephone_numbers_from_row(article, TELEPHONE_COLUMN_FIELD_MAPPING, row)
-        article_category_matrices = self.get_get_article_category_matrices_from_row(
+        article_category_matrices = self.get_article_category_matrices_from_row(
             article, ARTICLE_CATEGORY_MATRIX_COLUMN_FIELD_MAPPING, row
         )
         return {
@@ -117,7 +117,7 @@ class KnowledgebaseCSVImporter:
             telephone_number.full_clean(exclude=["article"])
         return telephone_number
 
-    def get_get_article_category_matrices_from_row(self, article, mappings, row):
+    def get_article_category_matrices_from_row(self, article, mappings, row):
         matrices = []
         for fields in mappings:
             matrix = self.get_get_article_category_matrix_from_row(article, fields, row)

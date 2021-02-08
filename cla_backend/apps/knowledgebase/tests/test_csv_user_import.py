@@ -66,15 +66,17 @@ class KnowledgebaseCSVImporterTester(TestCase):
     def test_article_row_import__new_article(self):
         article = self.importer.get_article_from_row(self.row)
         # We expect the pk value of the new article to be None
-        self.row[0] = None
-        self._assert_row_against_article(self.row, article)
+        expected = self.row
+        expected[0] = None
+        self._assert_row_against_article(expected, article)
 
     def test_article_row_import__existing_article(self):
         existing_article = make_recipe("knowledgebase.article")
         # Set the pk field in the csv row to to an existing Article pk
-        self.row[0] = existing_article.pk
+        expected = self.row
+        expected[0] = existing_article.pk
         article = self.importer.get_article_from_row(self.row)
-        self._assert_row_against_article(self.row, article)
+        self._assert_row_against_article(expected, article)
 
     def test_article_row_import__missing_pk(self):
         # Set the pk field in the csv row to to a value that does not exist

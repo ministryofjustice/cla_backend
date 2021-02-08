@@ -1,4 +1,5 @@
 import datetime
+import copy
 from django.test import TestCase
 from knowledgebase.models import Article, TelephoneNumber, ArticleCategoryMatrix
 from knowledgebase.utils.csv_user_import import KnowledgebaseCSVImporter
@@ -11,9 +12,56 @@ from core.tests.mommy_utils import make_recipe
 
 
 class KnowledgebaseCSVImporterTester(TestCase):
+    _CSV_ROW = [
+        "NEW",
+        "2014-06-27 14:52:55.547000+00:00",
+        "2015-01-28 15:06:18.718000+00:00",
+        "LEGAL",
+        "LAA",
+        "[PREF DISCRIMINATION]",
+        "LAA (Legal Aid Agency)",
+        "https,//www.gov.uk/government/organisations/legal-aid-agency",
+        "",
+        "This is the article description",
+        "This is the article description",
+        "This is how to use it",
+        "This is when to use it",
+        """102 Petty France
+        LONDON
+        SW1H 9AJ
+        """,
+        """Monday-Friday, 8am-8pm
+        Saturday, 9am-1pm
+        """,
+        "employment, helpline, employers, contract, tribunal, grievance",
+        "UK",
+        "Employment advice helpline",
+        "This is accessible text",
+        "",
+        "0300 123 1100",
+        "Text relay",
+        "18001 0300 123 1100",
+        "",
+        "",
+        "",
+        "",
+        "Employment",
+        "FALSE",
+        "Discrimination",
+        "TRUE",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+    ]
+
     def setUp(self):
         self.importer = KnowledgebaseCSVImporter()
-        self.row = self.get_csv_row()
+        self.row = copy.copy(self._CSV_ROW)
 
     def test_article_row_import__new_article(self):
         article = self.importer.get_article_from_row(self.row)
@@ -149,51 +197,3 @@ class KnowledgebaseCSVImporterTester(TestCase):
                 model_value = str(model_value)
             error_msg = "Article.%s expected value %s` got %s instead" % (field_name, expected_value, model_value)
             self.assertEqual(expected_value, model_value, error_msg)
-
-    def get_csv_row(self):
-        return [
-            "NEW",
-            "2014-06-27 14:52:55.547000+00:00",
-            "2015-01-28 15:06:18.718000+00:00",
-            "LEGAL",
-            "LAA",
-            "[PREF DISCRIMINATION]",
-            "LAA (Legal Aid Agency)",
-            "https,//www.gov.uk/government/organisations/legal-aid-agency",
-            "",
-            "This is the article description",
-            "This is the article description",
-            "This is how to use it",
-            "This is when to use it",
-            """102 Petty France
-            LONDON
-            SW1H 9AJ
-            """,
-            """Monday-Friday, 8am-8pm
-            Saturday, 9am-1pm
-            """,
-            "employment, helpline, employers, contract, tribunal, grievance",
-            "UK",
-            "Employment advice helpline",
-            "This is accessible text",
-            "",
-            "0300 123 1100",
-            "Text relay",
-            "18001 0300 123 1100",
-            "",
-            "",
-            "",
-            "",
-            "Employment",
-            "FALSE",
-            "Discrimination",
-            "TRUE",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-        ]

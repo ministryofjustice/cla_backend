@@ -23,13 +23,14 @@ class KnowledgebaseCSVImporter:
                 for field, message in e.message_dict.items():
                     errors.append("row %s: %s: %s" % (index + 1, field, message))
             except Exception as e:
-                errors.append("row %s: %s" % (index + 1, e.message))
+                errors.append("row %s: %s" % (index + 1, str(e)))
         return [rows, errors]
 
     def process_row(self, row):
-        article = self.get_article_from_row(row)
-        telephone_numbers = self.get_telephone_numbers_from_row(article, row)
-        article_category_matrices = self.get_article_category_matrices_from_row(article, row)
+        encoded_row = [unicode(cell, "utf-8") for cell in row]
+        article = self.get_article_from_row(encoded_row)
+        telephone_numbers = self.get_telephone_numbers_from_row(article, encoded_row)
+        article_category_matrices = self.get_article_category_matrices_from_row(article, encoded_row)
         return {
             "article": article,
             "telephone_numbers": telephone_numbers,

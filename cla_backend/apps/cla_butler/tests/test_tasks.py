@@ -18,8 +18,7 @@ class TasksTestCase(TestCase):
 
     On upgrade to Django v1.8+, check_constraints() is implemented in TestCase so that it will correctly check
     constraints such as M2M relationships and raise an IntegrityError and fail the test.
-    While the test should still pass because of code improvements, any future changes and testing around
-    features that include DB constraints, such as many to many relationships should be tested more fully.
+    The tests should at this point continue to pass.
     """
 
     def setUp(self):

@@ -11,6 +11,7 @@ from ..models import (
     Savings,
     Case,
     PersonalDetails,
+    ContactResearchMethod,
     Income,
     Deductions,
     Person,
@@ -74,6 +75,8 @@ eligibility_check_yes = Recipe(
 
 property = Recipe(Property, eligibility_check=foreign_key(eligibility_check))
 
+contact_research_method = Recipe(ContactResearchMethod, method="PHONE")
+
 personal_details = Recipe(
     PersonalDetails,
     mobile_phone=seq(555),
@@ -83,6 +86,8 @@ personal_details = Recipe(
     postcode=seq("postcode"),
     full_name=seq("fullname"),
 )
+
+research_method = Recipe(ContactResearchMethod, personal_details_id=foreign_key(personal_details))
 
 thirdparty_details = Recipe(ThirdPartyDetails, personal_details=foreign_key(personal_details))
 

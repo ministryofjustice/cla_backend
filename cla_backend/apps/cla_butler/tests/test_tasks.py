@@ -7,10 +7,20 @@ from cla_butler.tasks import DeleteOldData, get_pks
 from core.tests.mommy_utils import make_recipe
 from cla_auditlog.models import AuditLog
 from complaints.models import Complaint
-from legalaid.models import Case, EODDetails
+from legalaid.models import Case, EODDetails, PersonalDetails
 
 
 class TasksTestCase(TestCase):
+    """
+    Currently in Django v1.7 database constraint checks are not done until a transaction is committed.
+    In TestCase they are never committed so therefore any tests with M2M relationships, such as
+    'test_cleanup_personal_details_no_case_attached_successful', are currently passing with a false positive.
+
+    On upgrade to Django v1.8+, check_constraints() is implemented in TestCase so that it will correctly check
+    constraints such as M2M relationships and raise an IntegrityError and fail the test.
+    The tests should at this point continue to pass.
+    """
+
     def setUp(self):
         super(TasksTestCase, self).setUp()
         self.delete_old_data = DeleteOldData()
@@ -47,6 +57,16 @@ class TasksTestCase(TestCase):
         self.delete_old_data.cleanup_model_from_case(pks, EODDetails)
 
         self.assertEqual(len(EODDetails.objects.all()), 0)
+
+    def test_cleanup_personal_details_no_case_attached_successful(self):
+        contact_method = make_recipe("legalaid.contact_research_method")
+        make_recipe("legalaid.personal_details", contact_for_research_methods=[contact_method])
+
+        self.assertEqual(len(PersonalDetails.objects.all()), 1)
+
+        self.delete_old_data.cleanup_personal_details()
+
+        self.assertEqual(len(PersonalDetails.objects.all()), 0)
 
     def test_cleanup_case_audit(self):
         log = make_recipe("cla_auditlog.audit_log")

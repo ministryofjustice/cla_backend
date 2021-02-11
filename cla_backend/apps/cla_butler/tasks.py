@@ -178,6 +178,9 @@ class DeleteOldData(Task):
 
     def cleanup_personal_details(self):
         pds = PersonalDetails.objects.filter(case__isnull=True, thirdpartydetails__isnull=True)
+        PersonalDetails.contact_for_research_methods.through.objects.filter(
+            personaldetails_id__in=pds.values_list("pk", flat=True)
+        ).delete()
         self._delete_objects(pds)
 
     def cleanup_adaptation_details(self):
@@ -189,7 +192,7 @@ class DeleteOldData(Task):
         audit_logs = AuditLog.objects.filter(case__in=pks)
         audit_logs.delete()
         # Deleting complaint audit logs
-        eods = EODDetails.objects.filter(case_id__in=pks).values_list('pk', flat=True)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list('pk', flat=True)
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
         audit_logs = AuditLog.objects.filter(complaint__in=case_complaints)
         audit_logs.delete()

@@ -318,9 +318,10 @@ CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get("CALL_CENTRE_NOTIFY_EMAIL_ADDR
 NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(17, 0))}
 DISCRIMINATION_NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(18, 0))}
 
+# Opening hours for a provider of a particular category, the key matches the category key
 NON_ROTA_OPENING_HOURS = {
     "NON_ROTA": OpeningHours(**NON_ROTA_HOURS),
-    "DISCRIMINATION_NON_ROTA": OpeningHours(**DISCRIMINATION_NON_ROTA_HOURS),
+    "discrimination": OpeningHours(**DISCRIMINATION_NON_ROTA_HOURS),
 }
 
 OBIEE_IP_PERMISSIONS = ("*",)

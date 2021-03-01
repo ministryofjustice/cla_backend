@@ -7,6 +7,7 @@ from boto.s3.connection import NoHostProvided
 from cla_common.call_centre_availability import OpeningHours
 from cla_common.constants import OPERATOR_HOURS
 from cla_common.services import CacheAdapter
+from collections import defaultdict
 from kombu import transport
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -319,10 +320,9 @@ NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(17, 0))}
 DISCRIMINATION_NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(18, 0))}
 
 # Opening hours for a provider of a particular category, the key matches the category key
-NON_ROTA_OPENING_HOURS = {
-    "NON_ROTA": OpeningHours(**NON_ROTA_HOURS),
-    "discrimination": OpeningHours(**DISCRIMINATION_NON_ROTA_HOURS),
-}
+NON_ROTA_OPENING_HOURS = defaultdict(
+    lambda: OpeningHours(**NON_ROTA_HOURS), {"discrimination": OpeningHours(**DISCRIMINATION_NON_ROTA_HOURS)}
+)
 
 OBIEE_IP_PERMISSIONS = ("*",)
 

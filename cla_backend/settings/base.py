@@ -7,6 +7,7 @@ from boto.s3.connection import NoHostProvided
 from cla_common.call_centre_availability import OpeningHours
 from cla_common.constants import OPERATOR_HOURS
 from cla_common.services import CacheAdapter
+from collections import defaultdict
 from kombu import transport
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -316,8 +317,14 @@ else:
 CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get("CALL_CENTRE_NOTIFY_EMAIL_ADDRESS", DEFAULT_EMAIL_TO)
 
 NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(17, 0))}
+DISCRIMINATION_NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(18, 0))}
 
-NON_ROTA_OPENING_HOURS = OpeningHours(**NON_ROTA_HOURS)
+# If an unknown or empty is used to get from NON_ROTA_OPENING_HOURS then it will default to a basic NON_ROTA_HOURS
+NON_ROTA_OPENING_HOURS = defaultdict(lambda: OpeningHours(**NON_ROTA_HOURS))
+
+# If provider types have different opening hours they will need to be added here, with the category they service as the key.
+NON_ROTA_OPENING_HOURS["discrimination"] = OpeningHours(**DISCRIMINATION_NON_ROTA_HOURS)
+
 
 OBIEE_IP_PERMISSIONS = ("*",)
 

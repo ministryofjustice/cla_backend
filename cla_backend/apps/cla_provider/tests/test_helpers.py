@@ -150,10 +150,6 @@ class ProviderAllocationHelperTestCase(TestCase):
         choosen_provider = helper.get_suggested_provider(category)
         self.assertEqual(choosen_provider, None)
 
-    # Running this test out side of the hours defined in settings.NON_ROTA_OPENING_HOURS causes the test to fail because
-    # Case.assign_to_provider uses cla_common.call_centre_availability.OpeningHours.available to determine if the
-    # current time is within settings.NON_ROTA_OPENING_HOURS
-    #
     # This @mock.patch ensures that all settings.NON_ROTA_OPENING_HOURS checks always return True. This should not
     # impact the test logic as this test is only checking provider allocation distribution
     @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
@@ -234,10 +230,6 @@ class ProviderAllocationHelperTestCase(TestCase):
                 "Expected: %s, Got: %s  - not within allowed accuracy: %s" % (expected, n, accuracy)
             )
 
-    # Running this test out side of the hours defined in settings.NON_ROTA_OPENING_HOURS causes the test to fail because
-    # Case.assign_to_provider uses cla_common.call_centre_availability.OpeningHours.available to determine if the
-    # current time is within settings.NON_ROTA_OPENING_HOURS
-    #
     # This @mock.patch ensures that all settings.NON_ROTA_OPENING_HOURS checks always return True. This should not
     # impact the test logic as this test is only checking provider allocation distribution
     @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)
@@ -289,10 +281,6 @@ class ProviderAllocationHelperTestCase(TestCase):
             self.assertWithinAllowedAccuracy(10, accuracy, provider3.case_set.count())
             self.assertWithinAllowedAccuracy(10, accuracy, provider4.case_set.count())
 
-    # Running this test out side of the hours defined in settings.NON_ROTA_OPENING_HOURS causes the test to fail because
-    # Case.assign_to_provider uses cla_common.call_centre_availability.OpeningHours.available to determine if the
-    # current time is within settings.NON_ROTA_OPENING_HOURS
-    #
     # This @mock.patch ensures that all settings.NON_ROTA_OPENING_HOURS checks always return True. This should not
     # impact the test logic as this test is only checking provider allocation distribution
     @mock.patch("cla_common.call_centre_availability.OpeningHours.available", return_value=True)

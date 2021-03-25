@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
 from django.http.response import HttpResponseRedirect
 from django.contrib import messages
-from .models import Article, ArticleCategoryMatrix, TelephoneNumber
+from .models import Article, ArticleCategoryMatrix, TelephoneNumber, ArticleCategory
 from .forms import KnowledgebaseCSVUploadForm
 
 
@@ -90,5 +90,6 @@ class ArticleCategoryMatrixAdmin(admin.ModelAdmin):
         return obj.article_category.name
 
 
+admin.site.register(ArticleCategory, admin.ModelAdmin)
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(ArticleCategoryMatrix, ArticleCategoryMatrixAdmin)

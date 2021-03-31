@@ -320,7 +320,7 @@ NINE_TO_FIVE = (datetime.time(9, 0), datetime.time(17, 0))
 
 NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(17, 0))}
 DISCRIMINATION_NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(18, 0))}
-EDUCATION_NON_ROTA_HOURS = {"monday": NINE_TO_FIVE, "tuesday": NINE_TO_FIVE, "wednesday": NINE_TO_FIVE}
+EDUCATION_NON_ROTA_HOURS = {"monday": NINE_TO_FIVE, "tuesday": NINE_TO_FIVE}
 
 # If an unknown or empty is used to get from NON_ROTA_OPENING_HOURS then it will default to a basic NON_ROTA_HOURS
 NON_ROTA_OPENING_HOURS = defaultdict(lambda: OpeningHours(**NON_ROTA_HOURS))

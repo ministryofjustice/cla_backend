@@ -1,7 +1,0 @@
-{
-    "_id": "url-friendly Base64 encoding of '<_timestamp>.<period>.<stage>'",
-    "_timestamp": "2015-06-10T00:00:00+00:00",
-    "period": "week",
-    "stage": "created",
-    "count": 100
-}

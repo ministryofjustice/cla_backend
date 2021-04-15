@@ -220,7 +220,6 @@ PROJECT_APPS = (
     "eligibility_calculator",
     "guidance",
     "notifications",
-    "performance",
     "complaints",
     "cla_auditlog",
 )

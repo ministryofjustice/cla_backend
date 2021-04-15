@@ -1,8 +1,0 @@
-{
-    "_id": "url-friendly Base64 encoding of '<_timestamp>.<period>.<channel_type>.<channel>'",
-    "_timestamp": "2015-06-10T00:00:00+00:00",
-    "period": "week",
-    "channel_type": "digital",
-    "channel": "phone",
-    "count": 2000
-}

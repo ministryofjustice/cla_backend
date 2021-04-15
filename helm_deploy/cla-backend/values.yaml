@@ -189,14 +189,6 @@ envVars:
     secret:
       name: obiee
       key: password
-  PERFORMANCE_PLATFORM_TOKEN:
-    secret:
-      name: performance-platform
-      key: token
-  PERFORMANCE_PLATFORM_API:
-    secret:
-      name: performance-platform
-      key: url
   STATIC_FILES_BACKEND:
     value: s3
   AWS_REPORTS_STORAGE_BUCKET_NAME:

@@ -221,7 +221,6 @@ PROJECT_APPS = (
     "eligibility_calculator",
     "guidance",
     "notifications",
-    "performance",
     "complaints",
     "cla_auditlog",
 )
@@ -241,9 +240,6 @@ DIAGNOSES_USE_TEMPLATES = True
 # Address of server to send notifications to frontend
 FRONTEND_HOST_NAME = os.environ.get("FRONTEND_HOST_NAME", "http://127.0.0.1")
 EXPRESS_SERVER_PORT = os.environ.get("EXPRESS_SERVER_PORT", 8005)
-
-PERFORMANCE_PLATFORM_TOKEN = os.environ.get("PERFORMANCE_PLATFORM_TOKEN", "ppt")
-PERFORMANCE_PLATFORM_API = os.environ.get("PERFORMANCE_PLATFORM_API", "")
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

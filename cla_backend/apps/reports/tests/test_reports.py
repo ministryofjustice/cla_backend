@@ -6,14 +6,17 @@ import tempfile
 
 from django.test import TestCase
 from psycopg2 import InternalError
+from freezegun import freeze_time
 
 from cla_common.constants import CONTACT_SAFETY
-from core.tests.mommy_utils import make_recipe
+from core.tests.mommy_utils import make_recipe, make_user
 from legalaid.utils.diversity import save_diversity_data
 import reports.forms
 from reports.utils import OBIEEExporter
-
+from cla_eventlog import event_registry
 from cla_auditlog.models import AuditLog
+from cla_provider.helpers import ProviderAllocationHelper
+from call_centre.forms import ProviderAllocationForm
 
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
@@ -267,8 +270,13 @@ class TestKnowledgeBaseArticlesExport(TestCase):
         make_recipe("knowledgebase.telephone_number", article=article_1, number=123)
         make_recipe("knowledgebase.telephone_number", article=article_1, number=456, name="special")
         make_recipe("knowledgebase.telephone_number", article=article_2, number=789)
-        make_recipe("knowledgebase.article_category_matrix", article=article_1, article_category__name='a category')
-        make_recipe("knowledgebase.article_category_matrix", article=article_1, article_category__name='another category', preferred_signpost=True)
+        make_recipe("knowledgebase.article_category_matrix", article=article_1, article_category__name="a category")
+        make_recipe(
+            "knowledgebase.article_category_matrix",
+            article=article_1,
+            article_category__name="another category",
+            preferred_signpost=True,
+        )
 
     def test_queries(self):
         with self.assertNumQueries(4):  # Articles + prefetch_related of phone numbers and article categories
@@ -286,3 +294,52 @@ class TestKnowledgeBaseArticlesExport(TestCase):
         self.assertEqual(output[2][19:25], ["", "789", "", "", "", ""])
         # category name; article is not preferred signpost; second category name; article is preferred signpost; no third category
         self.assertEqual(output[1][27:33], ["a category", False, "another category", True, "", ""])
+
+
+class MiCaseExtractTestCase(TestCase):
+    dt = datetime.datetime(year=2020, month=4, day=15, hour=13)
+
+    def get_report(self, date_from, date_to):
+        report = reports.forms.MICaseExtract(data={"date_from": date_from, "date_to": date_to})
+        self.assertTrue(report.is_valid())
+        row = next(report.get_rows())
+        headers = report.get_headers()
+
+        return {k: v for k, v in zip(headers, row)}
+
+    @freeze_time(dt, as_arg=True)
+    def test_time_to_sp_access(freezer, self):
+
+        # Case created on a Thursday
+        case = make_recipe("legalaid.case")
+        category = case.eligibility_check.category
+        case.matter_type1 = make_recipe("legalaid.matter_type1", category=category)
+        case.matter_type2 = make_recipe("legalaid.matter_type2", category=category)
+        case.save()
+        user = make_user()
+        provider = make_recipe("cla_provider.provider", active=True)
+        staff = make_recipe("cla_provider.staff", provider=provider)
+        make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=provider, category=category
+        )
+
+        # Case assigned to provider on a Friday
+        freezer.tick(datetime.timedelta(days=1))
+        helper = ProviderAllocationHelper()
+        form = ProviderAllocationForm(
+            case=case,
+            data={"provider": helper.get_suggested_provider(category).pk},
+            providers=helper.get_qualifying_providers(category),
+        )
+
+        self.assertTrue(form.is_valid())
+        form.save(user)
+
+        # Case viewed by a provider on Sunday
+        freezer.tick(datetime.timedelta(days=2))
+        event = event_registry.get_event("case")()
+        event.process(case, status="viewed", created_by=staff.user, notes="Case viewed")
+
+        report = self.get_report(self.dt, freezer.time_to_freeze)
+        two_days_in_seconds = 172800
+        self.assertEqual(report["Time_to_SP_Access"], two_days_in_seconds)

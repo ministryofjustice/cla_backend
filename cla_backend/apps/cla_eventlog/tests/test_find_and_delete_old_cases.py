@@ -3,6 +3,7 @@ from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
+from cla_butler.tasks import get_pks
 from core.tests.mommy_utils import make_recipe
 from cla_eventlog.models import Log
 from legalaid.models import Case
@@ -46,14 +47,26 @@ class FindAndDeleteOldCases(TestCase):
 
         self.assertEqual(len(logs), 9)
 
-        event_logs_created_two_years_ago = Log.objects.filter(
-            # Cases created two years ago or over
-            case__created__lte=timezone.now() + relativedelta(years=-2),
-            # That have logs created two years ago or over
-            created__lte=timezone.now() + relativedelta(years=-2),
-            # Where the code field on the log = "CASE_VIEWED"
-            code__contains="CASE_VIEWED",
-        )
-        self.assertEqual(len(event_logs_created_two_years_ago), 2)
-        for log in event_logs_created_two_years_ago:
-            self.assertIn(log.case.id, [old_case_2.id])
+        case_pks = get_pks(Case.objects.all())
+        cases_and_logs = {}
+
+        for case_pk in case_pks:
+            case = Case.objects.get(id=case_pk)
+            # Logs are arranged in descending order based upon the event_logs Meta ordering setting
+            case_logs = Log.objects.filter(case__id=case_pk, code="CASE_VIEWED")
+            cases_and_logs[case.reference] = case_logs
+
+        cases_to_delete = []
+        two_years_ago = timezone.now() + relativedelta(years=-2)
+
+        for case_reference, case_logs in cases_and_logs.items():
+            latest_log = case_logs.first()
+            if latest_log.created <= two_years_ago:
+                cases_to_delete.append(case_reference)
+
+        self.assertEqual(len(cases_to_delete), 1)
+
+        for case_reference, case_logs in cases_and_logs.items():
+            case_id = Case.objects.get(reference=case_reference).id
+            for log in case_logs:
+                self.assertIn(log.case.id, [case_id])

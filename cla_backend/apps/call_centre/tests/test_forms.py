@@ -232,7 +232,7 @@ class ProviderAllocationFormTestCase(TestCase):
 
         case = make_recipe("legalaid.case")
         category = case.eligibility_check.category
-
+        user = make_user()
         provider = make_recipe("cla_provider.provider", active=True)
 
         make_recipe(
@@ -246,40 +246,13 @@ class ProviderAllocationFormTestCase(TestCase):
             providers=helper.get_qualifying_providers(category),
         )
 
-        self.assertFalse(form.is_valid())
-        self.assertDictEqual(
-            form.errors,
-            {"__all__": [u"Can't assign to specialist provider without setting matter_type1 and matter_type2"]},
-        )
+        self.assertTrue(form.is_valid())
 
-    @mock.patch("cla_provider.models.timezone.now")
-    @mock.patch("cla_provider.helpers.timezone.now")
-    def test_save_without_matter_type_only_mt1(self, timezone_mock, models_timezone_mock):
-        _mock_datetime_now_with(datetime.datetime(2014, 1, 2, 12, 59, 0), timezone_mock, models_timezone_mock)
+        self.assertEqual(Log.objects.count(), 0)
+        form.save(user)
 
-        case = make_recipe("legalaid.case")
-        category = case.eligibility_check.category
-
-        provider = make_recipe("cla_provider.provider", active=True)
-
-        make_recipe(
-            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=provider, category=category
-        )
-        case.matter_type1 = make_recipe("legalaid.matter_type1", category=category)
-        case.save()
-
-        helper = ProviderAllocationHelper()
-        form = ProviderAllocationForm(
-            case=case,
-            data={"provider": helper.get_suggested_provider(category).pk},
-            providers=helper.get_qualifying_providers(category),
-        )
-
-        self.assertFalse(form.is_valid())
-        self.assertDictEqual(
-            form.errors,
-            {"__all__": [u"Can't assign to specialist provider without setting matter_type1 and matter_type2"]},
-        )
+        self.assertEqual(case.provider, provider)
+        self.assertEqual(Log.objects.count(), 1)
 
     @mock.patch("cla_provider.models.timezone.now")
     @mock.patch("cla_provider.helpers.timezone.now")

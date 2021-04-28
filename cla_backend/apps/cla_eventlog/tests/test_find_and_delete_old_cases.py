@@ -2,71 +2,65 @@ from django.test import TestCase
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+import datetime
 
-from cla_butler.tasks import get_pks
 from core.tests.mommy_utils import make_recipe
 from cla_eventlog.models import Log
 from legalaid.models import Case
 
 
+def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
+    today = datetime.date.today()
+    year = year if year else today.year
+    month = month if month else today.month
+    day = day if day else today.day
+    dt = datetime.datetime(year, month, day, hour, minute, second)
+    return timezone.make_aware(dt, timezone.get_current_timezone())
+
+
 class FindAndDeleteOldCases(TestCase):
-    def create_three_year_old_case(self):
+    def create_case(self, created_at):
         case = None
-        freezer = freeze_time(timezone.now() + relativedelta(years=-3))
+        freezer = freeze_time(created_at)
         freezer.start()
         case = make_recipe("legalaid.case")
         freezer.stop()
         return case
 
-    def create_event_log_for_case(self, case, code, created=None):
-        if created:
-            make_recipe("cla_eventlog.log", case=case, code=code, created=created)
-        else:
-            make_recipe("cla_eventlog.log", case=case, code=code)
+    def create_event_log_for_case(self, case, code, created):
+        make_recipe("cla_eventlog.log", case=case, code=code, created=created)
 
-    def test_find_cases_viewed_two_years_ago(self):
-        new_case = make_recipe("legalaid.case")
-        old_case_1 = self.create_three_year_old_case()
-        old_case_2 = self.create_three_year_old_case()
+    def test_old_case_with_recent_event_logs(self):
+        date = datetime.datetime(year=2014, month=4, day=27, hour=9)
+        case = self.create_case(date)
 
-        self.assertEqual(len(Case.objects.all()), 3)
+        self.create_event_log_for_case(case, "CASE_VIEWED", datetime.datetime(year=2014, month=5, day=30, hour=9))
+        self.create_event_log_for_case(case, "CASE_VIEWED", datetime.datetime(year=2018, month=4, day=27, hour=9))
+        self.create_event_log_for_case(case, "CASE_VIEWED", datetime.datetime(year=2020, month=4, day=27, hour=9))
 
-        self.create_event_log_for_case(new_case, "CASE_VIEWED")
-        self.create_event_log_for_case(new_case, "CASE_CREATED")
-        self.create_event_log_for_case(new_case, "CASE_VIEWED", created=timezone.now() + relativedelta(years=-3))
+        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
 
-        self.create_event_log_for_case(old_case_1, "CASE_VIEWED")
-        self.create_event_log_for_case(old_case_1, "MT_CHANGED")
-        self.create_event_log_for_case(old_case_1, "CASE_VIEWED", created=timezone.now() + relativedelta(years=-1))
+        cases = Case.objects.all()
+        self.assertEqual(len(cases), 1)
 
-        self.create_event_log_for_case(old_case_2, "CASE_VIEWED", created=timezone.now() + relativedelta(years=-3))
-        self.create_event_log_for_case(old_case_2, "CASE_CREATED", created=timezone.now() + relativedelta(years=-3))
-        self.create_event_log_for_case(old_case_2, "CASE_VIEWED", created=timezone.now() + relativedelta(years=-2))
+    def delete_old_cases(self, date):
+        two_years_ago = date + relativedelta(years=-2)
 
-        logs = Log.objects.all()
+        event_log_cases = self.get_old_cases(two_years_ago)
+        for case in event_log_cases:
+            case.delete()
 
-        self.assertEqual(len(logs), 9)
+    def get_old_cases(self, date):
+        old_cases = []
+        filtered_cases = Case.objects.filter(created__lte=date)
 
-        case_pks = get_pks(Case.objects.all())
-        cases_and_logs = {}
+        for case in filtered_cases:
+            try:
+                latest_log = Log.objects.filter(case__id=case.id).latest("created")
+                if latest_log.created <= date:
+                    old_cases.append(case)
+            except Log.DoesNotExist:
+                # Delete old case without any event logs
+                old_cases.append(case)
 
-        for case_pk in case_pks:
-            case = Case.objects.get(id=case_pk)
-            # Logs are arranged in descending order based upon the event_logs Meta ordering setting
-            case_logs = Log.objects.filter(case__id=case_pk, code="CASE_VIEWED")
-            cases_and_logs[case.reference] = case_logs
-
-        cases_to_delete = []
-        two_years_ago = timezone.now() + relativedelta(years=-2)
-
-        for case_reference, case_logs in cases_and_logs.items():
-            latest_log = case_logs.first()
-            if latest_log.created <= two_years_ago:
-                cases_to_delete.append(case_reference)
-
-        self.assertEqual(len(cases_to_delete), 1)
-
-        for case_reference, case_logs in cases_and_logs.items():
-            case_id = Case.objects.get(reference=case_reference).id
-            for log in case_logs:
-                self.assertIn(log.case.id, [case_id])
+        return old_cases

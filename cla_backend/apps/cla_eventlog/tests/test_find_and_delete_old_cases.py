@@ -9,7 +9,7 @@ from complaints.models import Complaint
 from legalaid.models import Case, EODDetails, EligibilityCheck, PersonalDetails
 from diagnosis.models import DiagnosisTraversal
 from cla_auditlog.models import AuditLog
-from cla_eventlog.management.commands.find_and_delete_old_cases import Command
+from cla_eventlog.management.commands.find_and_delete_old_cases import Command, FindAndDeleteCasesUsingCreationTime
 
 
 def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
@@ -49,8 +49,16 @@ class FindAndDeleteOldCases(TestCase):
         self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2018, month=4, day=27, hour=9))
         self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2020, month=4, day=27, hour=9))
 
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        freezer = freeze_time(dt)
+        freezer.start()
+        task = FindAndDeleteCasesUsingCreationTime()
+        task._setup()
         with self.assertNumQueries(3):
-            self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+            task.get_eligible_cases()
+        freezer.stop()
+
+        self.delete_old_cases(dt)
 
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 3)

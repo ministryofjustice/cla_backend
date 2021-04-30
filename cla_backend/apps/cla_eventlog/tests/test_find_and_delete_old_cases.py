@@ -1,12 +1,15 @@
 from django.test import TestCase
 from django.utils import timezone
-from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 import datetime
 
 from core.tests.mommy_utils import make_recipe
 from cla_eventlog.models import Log
-from legalaid.models import Case
+from complaints.models import Complaint
+from legalaid.models import Case, EODDetails, EligibilityCheck, PersonalDetails
+from diagnosis.models import DiagnosisTraversal
+from cla_auditlog.models import AuditLog
+from cla_eventlog.management.commands.find_and_delete_old_cases import Command
 
 
 def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
@@ -19,48 +22,131 @@ def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
 
 
 class FindAndDeleteOldCases(TestCase):
-    def create_case(self, created_at):
+    def create_case(self, current_time, case_type="legalaid.case"):
         case = None
-        freezer = freeze_time(created_at)
+        freezer = freeze_time(current_time)
         freezer.start()
-        case = make_recipe("legalaid.case")
+        case = make_recipe(case_type)
         freezer.stop()
         return case
 
     def create_event_log_for_case(self, case, code, created):
         make_recipe("cla_eventlog.log", case=case, code=code, created=created)
 
+    def delete_old_cases(self, current_time):
+        freezer = freeze_time(current_time)
+        freezer.start()
+        Command().execute()
+        freezer.stop()
+
     def test_old_case_with_recent_event_logs(self):
-        date = datetime.datetime(year=2014, month=4, day=27, hour=9)
+        date = _make_datetime(year=2014, month=4, day=27, hour=9)
         case = self.create_case(date)
 
-        self.create_event_log_for_case(case, "CASE_VIEWED", datetime.datetime(year=2014, month=5, day=30, hour=9))
-        self.create_event_log_for_case(case, "CASE_VIEWED", datetime.datetime(year=2018, month=4, day=27, hour=9))
-        self.create_event_log_for_case(case, "CASE_VIEWED", datetime.datetime(year=2020, month=4, day=27, hour=9))
+        self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2014, month=5, day=30, hour=9))
+        self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2018, month=4, day=27, hour=9))
+        self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2020, month=4, day=27, hour=9))
 
         self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
 
-        cases = Case.objects.all()
-        self.assertEqual(len(cases), 1)
+        self.assertEqual(Case.objects.all().count(), 1)
+        self.assertEqual(Log.objects.all().count(), 3)
 
-    def delete_old_cases(self, date):
-        two_years_ago = date + relativedelta(years=-2)
+    def test_old_case_with_recent_complaint(self):
+        date = _make_datetime(year=2014, month=4, day=27, hour=9)
+        case = self.create_case(date)
 
-        event_log_cases = self.get_old_cases(two_years_ago)
-        for case in event_log_cases:
-            case.delete()
+        self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2014, month=5, day=30, hour=9))
+        self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2018, month=4, day=27, hour=9))
 
-    def get_old_cases(self, date):
-        old_cases = []
-        filtered_cases = Case.objects.filter(created__lte=date)
+        complaint_date = _make_datetime(year=2020, month=4, day=27, hour=9)
+        eod = make_recipe("legalaid.eod_details", case=case)
+        log = make_recipe("cla_auditlog.audit_log")
+        make_recipe("complaints.complaint", eod=eod, audit_log=[log], created=complaint_date)
 
-        for case in filtered_cases:
-            try:
-                latest_log = Log.objects.filter(case__id=case.id).latest("created")
-                if latest_log.created <= date:
-                    old_cases.append(case)
-            except Log.DoesNotExist:
-                # Delete old case without any event logs
-                old_cases.append(case)
+        self.create_event_log_for_case(case, "COMPLAINT_CREATED", complaint_date)
 
-        return old_cases
+        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.assertEqual(Case.objects.all().count(), 1)
+        self.assertEqual(Complaint.objects.all().count(), 1)
+        self.assertEqual(Log.objects.all().count(), 3)
+        self.assertEqual(EODDetails.objects.all().count(), 1)
+
+    def test_old_case_with_recent_means_test_change(self):
+        date = _make_datetime(year=2014, month=4, day=27, hour=9)
+        case = self.create_case(date, "legalaid.eligible_case")
+
+        self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2014, month=5, day=30, hour=9))
+        self.create_event_log_for_case(case, "MT_CHANGED", _make_datetime(year=2020, month=4, day=27, hour=9))
+
+        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.assertEqual(Case.objects.all().count(), 1)
+        self.assertEqual(Log.objects.all().count(), 2)
+        self.assertEqual(EligibilityCheck.objects.all().count(), 1)
+
+    def test_old_case_with_two_logs_with_same_date_of_creation(self):
+        date = _make_datetime(year=2014, month=4, day=27, hour=9)
+        case = self.create_case(date, "legalaid.eligible_case")
+
+        self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2020, month=4, day=27, hour=9))
+        self.create_event_log_for_case(case, "MT_CHANGED", _make_datetime(year=2020, month=4, day=27, hour=9))
+
+        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.assertEqual(Case.objects.all().count(), 1)
+        self.assertEqual(Log.objects.all().count(), 2)
+        self.assertEqual(EligibilityCheck.objects.all().count(), 1)
+
+    def test_relatively_new_case_with_no_event_logs(self):
+        date = _make_datetime(year=2020, month=4, day=27, hour=9)
+        self.create_case(date)
+
+        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.assertEqual(Case.objects.all().count(), 1)
+        self.assertEqual(Log.objects.all().count(), 0)
+
+    def test_old_case_with_no_event_logs(self):
+        date = _make_datetime(year=2014, month=4, day=27, hour=9)
+        self.create_case(date)
+
+        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.assertEqual(Case.objects.all().count(), 0)
+        self.assertEqual(Log.objects.all().count(), 0)
+        self.assertEqual(AuditLog.objects.all().count(), 0)
+        self.assertEqual(Complaint.objects.all().count(), 0)
+        self.assertEqual(EODDetails.objects.all().count(), 0)
+        self.assertEqual(EligibilityCheck.objects.all().count(), 0)
+        self.assertEqual(DiagnosisTraversal.objects.all().count(), 0)
+        self.assertEqual(PersonalDetails.objects.all().count(), 0)
+
+    def test_old_case_with_old_event_logs(self):
+        date = _make_datetime(year=2014, month=4, day=27, hour=9)
+        case = self.create_case(date)
+
+        self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2014, month=5, day=30, hour=9))
+        self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2018, month=4, day=27, hour=9))
+
+        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.assertEqual(Case.objects.all().count(), 0)
+        self.assertEqual(Log.objects.all().count(), 0)
+        self.assertEqual(AuditLog.objects.all().count(), 0)
+        self.assertEqual(Complaint.objects.all().count(), 0)
+        self.assertEqual(EODDetails.objects.all().count(), 0)
+        self.assertEqual(EligibilityCheck.objects.all().count(), 0)
+        self.assertEqual(DiagnosisTraversal.objects.all().count(), 0)
+        self.assertEqual(PersonalDetails.objects.all().count(), 0)
+
+    def test_old_case_with_old_means_test_changed_log(self):
+        date = _make_datetime(year=2014, month=4, day=27, hour=9)
+        case = self.create_case(date, "legalaid.eligible_case")
+
+        self.create_event_log_for_case(case, "MT_CHANGED", _make_datetime(year=2014, month=5, day=30, hour=9))
+
+        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.assertEqual(Case.objects.all().count(), 0)
+        self.assertEqual(Log.objects.all().count(), 0)
+        self.assertEqual(AuditLog.objects.all().count(), 0)
+        self.assertEqual(Complaint.objects.all().count(), 0)
+        self.assertEqual(EODDetails.objects.all().count(), 0)
+        self.assertEqual(EligibilityCheck.objects.all().count(), 0)
+        self.assertEqual(DiagnosisTraversal.objects.all().count(), 0)
+        self.assertEqual(PersonalDetails.objects.all().count(), 0)

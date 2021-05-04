@@ -55,6 +55,7 @@ class ProviderAllocationFormTestCase(TestCase):
 
         self.assertEqual(case.provider, provider)
         self.assertEqual(Log.objects.count(), 1)
+        self.assertContains(Log.objects.first().notes, "Assigned to ")
 
     @mock.patch("cla_provider.models.timezone.now")
     @mock.patch("cla_provider.helpers.timezone.now")
@@ -134,6 +135,7 @@ class ProviderAllocationFormTestCase(TestCase):
 
         self.assertEqual(case.provider, provider)
         self.assertEqual(Log.objects.count(), 1)
+        self.assertContains(Log.objects.first().notes, "Assigned to ")
 
     @mock.patch("cla_provider.models.timezone.now")
     @mock.patch("cla_provider.helpers.timezone.now")
@@ -182,6 +184,7 @@ class ProviderAllocationFormTestCase(TestCase):
 
             self.assertEqual(case.provider, provider)
             self.assertEqual(Log.objects.count(), 1)
+            self.assertContains(Log.objects.first().notes, "Assigned to ")
 
     @mock.patch("cla_provider.models.timezone.now")
     @mock.patch("cla_provider.helpers.timezone.now")
@@ -253,6 +256,7 @@ class ProviderAllocationFormTestCase(TestCase):
 
         self.assertEqual(case.provider, provider)
         self.assertEqual(Log.objects.count(), 1)
+        self.assertContains(Log.objects.first().notes, "Assigned to ")
 
     @mock.patch("cla_provider.models.timezone.now")
     @mock.patch("cla_provider.helpers.timezone.now")

@@ -42,8 +42,6 @@ class FindAndDeleteOldCases(TestCase):
     def test_old_case_with_recent_event_logs(self):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
         case = self.create_case(date)
-        self.create_case(date)
-        self.create_case(date)
 
         self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2014, month=5, day=30, hour=9))
         self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2018, month=4, day=27, hour=9))
@@ -54,8 +52,10 @@ class FindAndDeleteOldCases(TestCase):
         freezer.start()
         task = FindAndDeleteCasesUsingCreationTime()
         task._setup()
-        with self.assertNumQueries(3):
-            task.get_eligible_cases()
+        # Only need to check for this once as every test case uses this method via calling self.delete_old_cases
+        with self.assertNumQueries(1):
+            query = task.get_eligible_cases()
+            query.count()
         freezer.stop()
 
         self.delete_old_cases(dt)

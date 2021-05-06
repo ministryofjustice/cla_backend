@@ -116,10 +116,10 @@ class SplitCaseForm(BaseCaseLogForm):
 
     category = forms.ModelChoiceField(queryset=Category.objects.all(), to_field_name="code", required=True)
     matter_type1 = forms.ModelChoiceField(
-        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE), to_field_name="code"
+        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE), to_field_name="code", required=False
     )
     matter_type2 = forms.ModelChoiceField(
-        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO), to_field_name="code"
+        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO), to_field_name="code", required=False
     )
     internal = forms.BooleanField(required=False)
 

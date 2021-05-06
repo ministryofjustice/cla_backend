@@ -128,10 +128,11 @@ class SplitCaseForm(BaseCaseLogForm):
         super(SplitCaseForm, self).__init__(*args, **kwargs)
 
     def is_matter_type_valid(self, category, level, choosen_matter_type):
-        try:
-            MatterType.objects.get(level=level, category=category, code=choosen_matter_type.code)
-        except MatterType.DoesNotExist:
-            return False
+        if choosen_matter_type:
+            try:
+                MatterType.objects.get(level=level, category=category, code=choosen_matter_type.code)
+            except MatterType.DoesNotExist:
+                return False
 
         return True
 

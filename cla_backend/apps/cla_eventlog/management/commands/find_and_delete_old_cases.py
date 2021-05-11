@@ -7,6 +7,7 @@ from cla_butler.tasks import DeleteOldData
 
 class FindAndDeleteCasesUsingCreationTime(DeleteOldData):
     def get_eligible_cases(self):
+        super(FindAndDeleteCasesUsingCreationTime, self)._setup()
         two_years = self.now - relativedelta(years=2)
 
         return Case.objects.filter(created__lte=two_years).exclude(log__created__gte=two_years)

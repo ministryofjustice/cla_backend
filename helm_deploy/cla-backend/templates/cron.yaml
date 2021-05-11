@@ -57,3 +57,23 @@ spec:
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
           restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-mi-cb1-report
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "0 5 * * 0" 
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: reporting
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            command: ["python", "manage.py", "mi_cb1_report"]
+            env:
+              {{ include "cla-backend.app.vars" . | nindent 12 }}
+          restartPolicy: OnFailure

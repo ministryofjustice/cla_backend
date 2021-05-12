@@ -20,8 +20,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         instance = FindAndDeleteCasesUsingCreationTime()
+        cases = instance.get_eligible_cases()
         if len(args) == 0:
-            cases = instance.get_eligible_cases()
             print(cases.count())
+        elif args[0] == "test_find":
+            return cases
         elif args[0] == "delete":
             instance.run()

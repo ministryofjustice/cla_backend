@@ -24,7 +24,7 @@ def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
 class FindAndDeleteOldCases(TestCase):
     def setUp(self):
         super(FindAndDeleteOldCases, self).setUp()
-        self.instance = Command()
+        self.command = Command()
 
     def create_case(self, current_time, case_type="legalaid.case"):
         case = None
@@ -38,14 +38,17 @@ class FindAndDeleteOldCases(TestCase):
         make_recipe("cla_eventlog.log", case=case, code=code, created=created)
 
     def delete_old_cases(self, current_time):
-        self.instance.execute("delete")
+        freezer = freeze_time(current_time)
+        freezer.start()
+        self.command.execute("delete")
+        freezer.stop()
 
     def find_old_cases(self, current_time):
         cases = None
         freezer = freeze_time(current_time)
         freezer.start()
         # Using handle method because command execute method can only return a string i.e it can't return a queryset
-        cases = self.instance.handle("test_find")
+        cases = self.command.handle("test_find")
         freezer.stop()
         return cases
 

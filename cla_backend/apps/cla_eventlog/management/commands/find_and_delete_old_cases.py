@@ -7,7 +7,7 @@ from cla_butler.tasks import DeleteOldData
 
 class FindAndDeleteCasesUsingCreationTime(DeleteOldData):
     def get_eligible_cases(self):
-        super(FindAndDeleteCasesUsingCreationTime, self)._setup()
+        self._setup()
         two_years = self.now - relativedelta(years=2)
 
         return Case.objects.filter(created__lte=two_years).exclude(log__created__gte=two_years)
@@ -19,10 +19,9 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **kwargs):
-        if args[0] == "find":
-            cases = FindAndDeleteCasesUsingCreationTime().get_eligible_cases()
-            print(cases)
+        instance = FindAndDeleteCasesUsingCreationTime()
+        if len(args) == 0:
+            cases = instance.get_eligible_cases()
             print(cases.count())
-
-        if args[0] == "delete":
-            FindAndDeleteCasesUsingCreationTime().run()
+        elif args[0] == "delete":
+            instance.run()

@@ -14,7 +14,15 @@ class FindAndDeleteCasesUsingCreationTime(DeleteOldData):
 
 
 class Command(BaseCommand):
-    help = "Find and delete cases that are 2 years old or over that were not deleted prior to the task command being fixed"
+    help = (
+        "Find or delete cases that are 2 years old or over that were not deleted prior to the task command being fixed"
+    )
 
     def handle(self, *args, **kwargs):
-        FindAndDeleteCasesUsingCreationTime().run()
+        if args[0] == "find":
+            cases = FindAndDeleteCasesUsingCreationTime().get_eligible_cases()
+            print(cases)
+            print(cases.count())
+
+        if args[0] == "delete":
+            FindAndDeleteCasesUsingCreationTime().run()

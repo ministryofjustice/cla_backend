@@ -61,9 +61,6 @@ class ProviderAllocationForm(BaseCaseLogForm):
             nfe.append(_(u"There is no provider specified in " u"the system to handle cases of this law category."))
             del self._errors["provider"]
 
-        if not (self.case.matter_type1 and self.case.matter_type2):
-            nfe.append(_(u"Can't assign to specialist provider without setting " u"matter_type1 and matter_type2"))
-
         if (self.case.matter_type1 and self.case.matter_type2) and (
             not self.case.matter_type1.category == self.case.matter_type2.category
         ):

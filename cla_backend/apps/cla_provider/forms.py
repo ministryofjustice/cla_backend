@@ -116,10 +116,10 @@ class SplitCaseForm(BaseCaseLogForm):
 
     category = forms.ModelChoiceField(queryset=Category.objects.all(), to_field_name="code", required=True)
     matter_type1 = forms.ModelChoiceField(
-        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE), to_field_name="code", required=True
+        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE), to_field_name="code", required=False
     )
     matter_type2 = forms.ModelChoiceField(
-        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO), to_field_name="code", required=True
+        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO), to_field_name="code", required=False
     )
     internal = forms.BooleanField(required=False)
 
@@ -128,10 +128,11 @@ class SplitCaseForm(BaseCaseLogForm):
         super(SplitCaseForm, self).__init__(*args, **kwargs)
 
     def is_matter_type_valid(self, category, level, choosen_matter_type):
-        try:
-            MatterType.objects.get(level=level, category=category, code=choosen_matter_type.code)
-        except MatterType.DoesNotExist:
-            return False
+        if choosen_matter_type:
+            try:
+                MatterType.objects.get(level=level, category=category, code=choosen_matter_type.code)
+            except MatterType.DoesNotExist:
+                return False
 
         return True
 

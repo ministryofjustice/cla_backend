@@ -171,14 +171,7 @@ class SplitCaseFormTestCase(TestCase):
         # 1. EMPTY DATA
         form = SplitCaseForm(case=self.case, request=self.request, data={})
         self.assertFalse(form.is_valid())
-        self.assertDictEqual(
-            form.errors,
-            {
-                "category": ["This field is required."],
-                "matter_type1": ["This field is required."],
-                "matter_type2": ["This field is required."],
-            },
-        )
+        self.assertDictEqual(form.errors, {"category": ["This field is required."]})
 
         # 2. INVALID DATA
         form = SplitCaseForm(

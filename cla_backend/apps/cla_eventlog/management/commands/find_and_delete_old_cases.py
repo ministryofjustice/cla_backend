@@ -22,7 +22,7 @@ class Command(BaseCommand):
         instance = FindAndDeleteCasesUsingCreationTime()
         cases = instance.get_eligible_cases()
         if len(args) == 0:
-            print(cases.count())
+            print("Number of cases to be deleted: " + str(cases.count()))
         elif args[0] == "test_find":
             return cases
         elif args[0] == "delete":

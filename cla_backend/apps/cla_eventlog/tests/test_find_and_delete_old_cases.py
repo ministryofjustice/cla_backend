@@ -24,7 +24,7 @@ def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
 class FindAndDeleteOldCases(TestCase):
     def setUp(self):
         super(FindAndDeleteOldCases, self).setUp()
-        self.command = FindAndDeleteCasesUsingCreationTime()
+        self.instance = FindAndDeleteCasesUsingCreationTime()
 
     def create_case(self, current_time, case_type="legalaid.case"):
         case = None
@@ -38,13 +38,15 @@ class FindAndDeleteOldCases(TestCase):
         make_recipe("cla_eventlog.log", case=case, code=code, created=created)
 
     def delete_old_cases(self, current_time):
-        self.command.run()
+        self.instance.run()
 
     def find_old_cases(self, current_time):
+        cases = None
         freezer = freeze_time(current_time)
         freezer.start()
-        self.command.get_eligible_cases()
+        cases = self.instance.get_eligible_cases()
         freezer.stop()
+        return cases
 
     def test_old_case_with_recent_event_logs(self):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
@@ -55,8 +57,7 @@ class FindAndDeleteOldCases(TestCase):
         self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2020, month=4, day=27, hour=9))
 
         dt = _make_datetime(year=2021, month=1, day=1, hour=9)
-
-        oldCasesFound = self.command.get_eligible_cases()
+        oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 0)
         # Only need to check for this once as every test case uses this method via calling self.delete_old_cases
         with self.assertNumQueries(1):
@@ -77,13 +78,13 @@ class FindAndDeleteOldCases(TestCase):
         eod = make_recipe("legalaid.eod_details", case=case)
         log = make_recipe("cla_auditlog.audit_log")
         make_recipe("complaints.complaint", eod=eod, audit_log=[log], created=complaint_date)
-
         self.create_event_log_for_case(case, "COMPLAINT_CREATED", complaint_date)
 
-        oldCasesFound = self.command.get_eligible_cases()
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 0)
 
-        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.delete_old_cases(dt)
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Complaint.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 3)
@@ -96,10 +97,11 @@ class FindAndDeleteOldCases(TestCase):
         self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2014, month=5, day=30, hour=9))
         self.create_event_log_for_case(case, "MT_CHANGED", _make_datetime(year=2020, month=4, day=27, hour=9))
 
-        oldCasesFound = self.command.get_eligible_cases()
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 0)
 
-        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.delete_old_cases(dt)
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 2)
         self.assertEqual(EligibilityCheck.objects.count(), 1)
@@ -111,10 +113,11 @@ class FindAndDeleteOldCases(TestCase):
         self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2020, month=4, day=27, hour=9))
         self.create_event_log_for_case(case, "MT_CHANGED", _make_datetime(year=2020, month=4, day=27, hour=9))
 
-        oldCasesFound = self.command.get_eligible_cases()
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 0)
 
-        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.delete_old_cases(dt)
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 2)
         self.assertEqual(EligibilityCheck.objects.count(), 1)
@@ -123,10 +126,11 @@ class FindAndDeleteOldCases(TestCase):
         date = _make_datetime(year=2020, month=4, day=27, hour=9)
         self.create_case(date)
 
-        oldCasesFound = self.command.get_eligible_cases()
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 0)
 
-        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.delete_old_cases(dt)
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 0)
 
@@ -134,10 +138,11 @@ class FindAndDeleteOldCases(TestCase):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
         self.create_case(date)
 
-        oldCasesFound = self.command.get_eligible_cases()
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 1)
 
-        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        self.delete_old_cases(dt)
         self.assertEqual(Case.objects.count(), 0)
         self.assertEqual(Log.objects.count(), 0)
         self.assertEqual(AuditLog.objects.count(), 0)
@@ -150,14 +155,14 @@ class FindAndDeleteOldCases(TestCase):
     def test_old_case_with_old_event_logs(self):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
         case = self.create_case(date)
-
-        oldCasesFound = self.command.get_eligible_cases()
-        self.assertEqual(oldCasesFound.count(), 1)
-
         self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2014, month=5, day=30, hour=9))
         self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2018, month=4, day=27, hour=9))
 
-        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        oldCasesFound = self.find_old_cases(dt)
+        self.assertEqual(oldCasesFound.count(), 1)
+
+        self.delete_old_cases(dt)
         self.assertEqual(Case.objects.count(), 0)
         self.assertEqual(Log.objects.count(), 0)
         self.assertEqual(AuditLog.objects.count(), 0)
@@ -170,13 +175,13 @@ class FindAndDeleteOldCases(TestCase):
     def test_old_case_with_old_means_test_changed_is_deleted(self):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
         case = self.create_case(date, "legalaid.eligible_case")
-
-        oldCasesFound = self.command.get_eligible_cases()
-        self.assertEqual(oldCasesFound.count(), 1)
-
         self.create_event_log_for_case(case, "MT_CHANGED", _make_datetime(year=2014, month=5, day=30, hour=9))
 
-        self.delete_old_cases(_make_datetime(year=2021, month=1, day=1, hour=9))
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        oldCasesFound = self.find_old_cases(dt)
+        self.assertEqual(oldCasesFound.count(), 1)
+
+        self.delete_old_cases(dt)
         self.assertEqual(Case.objects.count(), 0)
         self.assertEqual(Log.objects.count(), 0)
         self.assertEqual(AuditLog.objects.count(), 0)

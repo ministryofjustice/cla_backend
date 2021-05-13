@@ -21,16 +21,17 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         instance = FindAndDeleteCasesUsingCreationTime()
         cases = instance.get_eligible_cases()
-        if len(args) and args[0] == "delete":
+        django_command = sys.argv[1]
+        if args and args[0] == "delete":
             if len(args) > 1 and args[1] == "no-input":
                 instance.run()
-            elif sys.argv[1] == "test":
+            elif django_command == "test":
                 instance.run()
             else:
                 answer = raw_input(
-                    "Number of cases that will be deleted: "
-                    + str(cases.count())
-                    + "\nAre you sure about this? (Yes/No) "
+                    "Number of cases that will be deleted: {0}\nAre you sure about this? (Yes/No) ".format(
+                        str(cases.count())
+                    )
                 )
                 if answer == "Yes":
                     instance.run()

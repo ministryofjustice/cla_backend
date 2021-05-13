@@ -1,3 +1,4 @@
+import sys
 from django.core.management.base import BaseCommand
 from dateutil.relativedelta import relativedelta
 
@@ -7,7 +8,6 @@ from cla_butler.tasks import DeleteOldData
 
 class FindAndDeleteCasesUsingCreationTime(DeleteOldData):
     def get_eligible_cases(self):
-        self._setup()
         two_years = self.now - relativedelta(years=2)
 
         return Case.objects.filter(created__lte=two_years).exclude(log__created__gte=two_years)
@@ -21,9 +21,9 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         instance = FindAndDeleteCasesUsingCreationTime()
         cases = instance.get_eligible_cases()
-        if len(args) == 0:
-            print("Number of cases to be deleted: " + str(cases.count()))
-        elif args[0] == "test_find":
-            return cases
-        elif args[0] == "delete":
+        if len(args) and args[0] == "delete":
             instance.run()
+        elif sys.argv[1] == "test":
+            return cases
+        else:
+            print("Number of cases to be deleted: " + str(cases.count()))

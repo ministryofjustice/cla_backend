@@ -203,6 +203,7 @@ class FindAndDeleteOldCases(TestCase):
         case_1 = self.create_case(date, "legalaid.eligible_case")
         case_2 = self.create_case(date, "legalaid.eligible_case")
         self.create_event_log_for_case(case_0, "MT_CHANGED", _make_datetime(year=2014, month=5, day=30, hour=9))
+        self.create_event_log_for_case(case_0, "MT_CHANGED", _make_datetime(year=2018, month=5, day=30, hour=9))
         self.create_event_log_for_case(case_1, "MT_CHANGED", _make_datetime(year=2014, month=5, day=30, hour=9))
         self.create_event_log_for_case(case_2, "MT_CHANGED", _make_datetime(year=2020, month=4, day=27, hour=9))
 
@@ -221,7 +222,8 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(oldCasesFound.count(), 2)
 
         self.delete_old_cases(dt)
-        self.assertEqual(Case.objects.count(), 1)
+        valid_case = Case.objects.filter(id=case_2.id)
+        self.assertEqual(valid_case.count(), 1)
         self.assertEqual(Log.objects.count(), 1)
         self.assertEqual(AuditLog.objects.count(), 1)
         self.assertEqual(Complaint.objects.count(), 1)

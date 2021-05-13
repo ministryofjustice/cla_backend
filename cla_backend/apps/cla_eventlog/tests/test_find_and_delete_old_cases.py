@@ -50,7 +50,7 @@ class FindAndDeleteOldCases(TestCase):
         freezer.stop()
         return cases
 
-    def test_old_case_with_recent_event_logs(self):
+    def test_old_case_with_recent_event_logs_is_not_deleted(self):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
         case = self.create_case(date)
 
@@ -66,7 +66,7 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 3)
 
-    def test_old_case_with_recent_complaint(self):
+    def test_old_case_with_recent_complaint_is_not_deleted(self):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
         case = self.create_case(date)
 
@@ -89,7 +89,7 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(Log.objects.count(), 3)
         self.assertEqual(EODDetails.objects.count(), 1)
 
-    def test_old_case_with_recent_means_test_change(self):
+    def test_old_case_with_recent_means_test_change_is_not_deleted(self):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
         case = self.create_case(date, "legalaid.eligible_case")
 
@@ -105,7 +105,7 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(Log.objects.count(), 2)
         self.assertEqual(EligibilityCheck.objects.count(), 1)
 
-    def test_old_case_with_two_logs_with_same_date_of_creation(self):
+    def test_old_case_with_two_logs_with_same_date_of_creation_is_not_deleted(self):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
         case = self.create_case(date, "legalaid.eligible_case")
 
@@ -121,7 +121,7 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(Log.objects.count(), 2)
         self.assertEqual(EligibilityCheck.objects.count(), 1)
 
-    def test_relatively_new_case_with_no_event_logs(self):
+    def test_relatively_new_case_with_no_event_logs_is_not_deleted(self):
         date = _make_datetime(year=2020, month=4, day=27, hour=9)
         self.create_case(date)
 
@@ -133,7 +133,7 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 0)
 
-    def test_old_case_with_no_event_logs(self):
+    def test_old_case_with_no_event_logs_is_deleted(self):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
         self.create_case(date)
         self.create_case(date)
@@ -158,7 +158,7 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(DiagnosisTraversal.objects.count(), 0)
         self.assertEqual(PersonalDetails.objects.count(), 0)
 
-    def test_old_case_with_old_event_logs(self):
+    def test_old_case_with_old_event_logs_is_deleted(self):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
         case = self.create_case(date)
         self.create_event_log_for_case(case, "CASE_VIEWED", _make_datetime(year=2014, month=5, day=30, hour=9))
@@ -196,3 +196,36 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(EligibilityCheck.objects.count(), 0)
         self.assertEqual(DiagnosisTraversal.objects.count(), 0)
         self.assertEqual(PersonalDetails.objects.count(), 0)
+
+    def test_old_and_new_cases_are_deleted_correctly(self):
+        date = _make_datetime(year=2014, month=4, day=27, hour=9)
+        case_0 = self.create_case(date, "legalaid.eligible_case")
+        case_1 = self.create_case(date, "legalaid.eligible_case")
+        case_2 = self.create_case(date, "legalaid.eligible_case")
+        self.create_event_log_for_case(case_0, "MT_CHANGED", _make_datetime(year=2014, month=5, day=30, hour=9))
+        self.create_event_log_for_case(case_1, "MT_CHANGED", _make_datetime(year=2014, month=5, day=30, hour=9))
+        self.create_event_log_for_case(case_2, "MT_CHANGED", _make_datetime(year=2020, month=4, day=27, hour=9))
+
+        audit_log_1 = make_recipe("cla_auditlog.audit_log")
+        audit_log_2 = make_recipe("cla_auditlog.audit_log")
+        audit_log_3 = make_recipe("cla_auditlog.audit_log")
+        eod_0 = make_recipe("legalaid.eod_details", case=case_0)
+        eod_1 = make_recipe("legalaid.eod_details", case=case_1)
+        eod_2 = make_recipe("legalaid.eod_details", case=case_2)
+        make_recipe("complaints.complaint", eod=eod_0, audit_log=[audit_log_1])
+        make_recipe("complaints.complaint", eod=eod_1, audit_log=[audit_log_2])
+        make_recipe("complaints.complaint", eod=eod_2, audit_log=[audit_log_3])
+
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        oldCasesFound = self.find_old_cases(dt)
+        self.assertEqual(oldCasesFound.count(), 2)
+
+        self.delete_old_cases(dt)
+        self.assertEqual(Case.objects.count(), 1)
+        self.assertEqual(Log.objects.count(), 1)
+        self.assertEqual(AuditLog.objects.count(), 1)
+        self.assertEqual(Complaint.objects.count(), 1)
+        self.assertEqual(EODDetails.objects.count(), 1)
+        self.assertEqual(EligibilityCheck.objects.count(), 1)
+        self.assertEqual(DiagnosisTraversal.objects.count(), 1)
+        self.assertEqual(PersonalDetails.objects.count(), 1)

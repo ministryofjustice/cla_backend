@@ -27,7 +27,6 @@ class FindAndDeleteOldCases(TestCase):
         self.command = Command()
 
     def create_case(self, current_time, case_type="legalaid.case"):
-        case = None
         freezer = freeze_time(current_time)
         freezer.start()
         case = make_recipe(case_type)
@@ -44,7 +43,6 @@ class FindAndDeleteOldCases(TestCase):
         freezer.stop()
 
     def find_old_cases(self, current_time):
-        cases = None
         freezer = freeze_time(current_time)
         freezer.start()
         # Using handle method because command execute method can only return a string i.e it can't return a queryset
@@ -142,12 +140,13 @@ class FindAndDeleteOldCases(TestCase):
         self.create_case(date)
 
         dt = _make_datetime(year=2021, month=1, day=1, hour=9)
-        oldCasesFound = self.find_old_cases(dt)
-        self.assertEqual(oldCasesFound.count(), 3)
 
         # Only need to check for this once as every test case uses this method via calling self.find_old_cases
         with self.assertNumQueries(1):
+            oldCasesFound = self.find_old_cases(dt)
             oldCasesFound.count()
+
+        self.assertEqual(oldCasesFound.count(), 3)
 
         self.delete_old_cases(dt)
         self.assertEqual(Case.objects.count(), 0)

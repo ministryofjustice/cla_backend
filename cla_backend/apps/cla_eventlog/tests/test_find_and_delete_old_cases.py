@@ -48,7 +48,7 @@ class FindAndDeleteOldCases(TestCase):
         freezer = freeze_time(current_time)
         freezer.start()
         # Using handle method because command execute method can only return a string i.e it can't return a queryset
-        cases = self.command.handle("test_find")
+        cases = self.command.handle()
         freezer.stop()
         return cases
 

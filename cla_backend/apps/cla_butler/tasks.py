@@ -64,8 +64,10 @@ class DeleteOldData(Task):
     data = serializers.serialize("json", SomeModel.objects.all())
     """
 
-    def run(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         self._setup()
+
+    def run(self, *args, **kwargs):
         self.cleanup_cases()
         self.cleanup_diagnosis()
         self.cleanup_eligibility_check()

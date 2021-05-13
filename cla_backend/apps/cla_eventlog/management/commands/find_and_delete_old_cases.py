@@ -30,7 +30,7 @@ class Command(BaseCommand):
             else:
                 answer = raw_input(
                     "Number of cases that will be deleted: {0}\nAre you sure about this? (Yes/No) ".format(
-                        str(cases.count())
+                        cases.count()
                     )
                 )
                 if answer == "Yes":

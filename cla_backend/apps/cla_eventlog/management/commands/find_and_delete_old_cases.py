@@ -22,7 +22,18 @@ class Command(BaseCommand):
         instance = FindAndDeleteCasesUsingCreationTime()
         cases = instance.get_eligible_cases()
         if len(args) and args[0] == "delete":
-            instance.run()
+            if len(args) > 1 and args[1] == "no-input":
+                instance.run()
+            elif sys.argv[1] == "test":
+                instance.run()
+            else:
+                answer = raw_input(
+                    "Number of cases that will be deleted: "
+                    + str(cases.count())
+                    + "\nAre you sure about this? (Yes/No) "
+                )
+                if answer == "Yes":
+                    instance.run()
         elif sys.argv[1] == "test":
             return cases
         else:

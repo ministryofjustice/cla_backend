@@ -28,17 +28,17 @@ class Command(BaseCommand):
                 instance.run()
             else:
                 return cases
-
-        if django_command == "find_and_delete_old_cases":  # If command is run in terminal
-            if len(args) > 1 and args[1] == "no-input":
-                instance.run()
-            elif args and args[0] == "delete":
-                answer = raw_input(
-                    "Number of cases that will be deleted: {0}\nAre you sure about this? (Yes/No) ".format(
-                        cases.count()
-                    )
-                )
-                if answer == "Yes":
+        else:  # If command is run in terminal
+            if args and args[0] == "delete":
+                if len(args) > 1 and args[1] == "no-input":
                     instance.run()
+                else:
+                    answer = raw_input(
+                        "Number of cases that will be deleted: {0}\nAre you sure about this? (Yes/No) ".format(
+                            cases.count()
+                        )
+                    )
+                    if answer == "Yes":
+                        instance.run()
             else:
                 print("Number of cases to be deleted: " + str(cases.count()))

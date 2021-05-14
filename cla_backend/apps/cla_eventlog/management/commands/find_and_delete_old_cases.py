@@ -22,12 +22,17 @@ class Command(BaseCommand):
         instance = FindAndDeleteCasesUsingCreationTime()
         cases = instance.get_eligible_cases()
         django_command = sys.argv[1]
-        if args and args[0] == "delete":
-            if len(args) > 1 and args[1] == "no-input":
-                instance.run()
-            elif django_command == "test":
+
+        if django_command == "test":  # If command is run in test
+            if args and args[0] == "delete":
                 instance.run()
             else:
+                return cases
+
+        if django_command == "find_and_delete_old_cases":  # If command is run in terminal
+            if len(args) > 1 and args[1] == "no-input":
+                instance.run()
+            elif args and args[0] == "delete":
                 answer = raw_input(
                     "Number of cases that will be deleted: {0}\nAre you sure about this? (Yes/No) ".format(
                         cases.count()
@@ -35,7 +40,5 @@ class Command(BaseCommand):
                 )
                 if answer == "Yes":
                     instance.run()
-        elif sys.argv[1] == "test":
-            return cases
-        else:
-            print("Number of cases to be deleted: " + str(cases.count()))
+            else:
+                print("Number of cases to be deleted: " + str(cases.count()))

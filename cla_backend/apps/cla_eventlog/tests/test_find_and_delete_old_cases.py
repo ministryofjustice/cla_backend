@@ -136,17 +136,10 @@ class FindAndDeleteOldCases(TestCase):
     def test_old_case_with_no_event_logs_is_deleted(self):
         date = _make_datetime(year=2014, month=4, day=27, hour=9)
         self.create_case(date)
-        self.create_case(date)
-        self.create_case(date)
 
         dt = _make_datetime(year=2021, month=1, day=1, hour=9)
-
-        # Only need to check for this once as every test case uses this method via calling self.find_old_cases
-        with self.assertNumQueries(1):
-            oldCasesFound = self.find_old_cases(dt)
-            oldCasesFound.count()
-
-        self.assertEqual(oldCasesFound.count(), 3)
+        oldCasesFound = self.find_old_cases(dt)
+        self.assertEqual(oldCasesFound.count(), 1)
 
         self.delete_old_cases(dt)
         self.assertEqual(Case.objects.count(), 0)
@@ -218,7 +211,10 @@ class FindAndDeleteOldCases(TestCase):
         make_recipe("complaints.complaint", eod=eod_2, audit_log=[audit_log_3])
 
         dt = _make_datetime(year=2021, month=1, day=1, hour=9)
-        oldCasesFound = self.find_old_cases(dt)
+        with self.assertNumQueries(1):
+            oldCasesFound = self.find_old_cases(dt)
+            oldCasesFound.count()
+
         self.assertEqual(oldCasesFound.count(), 2)
 
         self.delete_old_cases(dt)

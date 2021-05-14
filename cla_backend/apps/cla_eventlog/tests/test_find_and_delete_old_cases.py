@@ -222,8 +222,9 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(oldCasesFound.count(), 2)
 
         self.delete_old_cases(dt)
-        valid_case = Case.objects.filter(id=case_2.id)
-        self.assertEqual(valid_case.count(), 1)
+        case_ids = Case.objects.values_list("id", flat=True)
+        # Check there is only 1 case and that case is the relatively new case
+        self.assertEqual(list(case_ids), [case_2.id])
         self.assertEqual(Log.objects.count(), 1)
         self.assertEqual(AuditLog.objects.count(), 1)
         self.assertEqual(Complaint.objects.count(), 1)

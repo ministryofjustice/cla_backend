@@ -64,8 +64,10 @@ class DeleteOldData(Task):
     data = serializers.serialize("json", SomeModel.objects.all())
     """
 
-    def run(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         self._setup()
+
+    def run(self, *args, **kwargs):
         self.cleanup_cases()
         self.cleanup_diagnosis()
         self.cleanup_eligibility_check()
@@ -112,8 +114,7 @@ class DeleteOldData(Task):
         tokens.delete()
 
     def cleanup_cases(self):
-        two_years = self.now - relativedelta(years=2)
-        cases = Case.objects.filter(modified__lte=two_years)
+        cases = self.get_eligible_cases()
         pks = get_pks(cases)
         from_cases = Case.objects.filter(from_case_id__in=pks)
         fpks = get_pks(from_cases)
@@ -131,6 +132,10 @@ class DeleteOldData(Task):
         self.cleanup_model_from_case(pks, ReasonForContacting)
         self._delete_objects(from_cases)
         self._delete_objects(cases)
+
+    def get_eligible_cases(self):
+        two_years = self.now - relativedelta(years=2)
+        return Case.objects.filter(modified__lte=two_years)
 
     def cleanup_model_from_case(self, pks, model, attr="case_id", case_log_attr=None):
         attr_in = "{attribute}__in".format(attribute=attr)

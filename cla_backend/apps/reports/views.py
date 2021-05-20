@@ -34,29 +34,23 @@ from .tasks import ExportTask, OBIEEExportTask
 from reports.utils import get_s3_connection
 
 
-def report_view(form_class, title, template="case_report", success_task=ExportTask, file_name=None):
-    def wrapper(fn):
-        slug = re.sub("[^0-9a-zA-Z]+", "_", title.lower()).strip("_")
-        if not file_name:
-            filename = "{0}.csv".format(slug)
-        else:
-            filename = file_name
-        tmpl = "admin/reports/{0}.html".format(template)
+def report_view(request, form_class, title, template="case_report", success_task=ExportTask, file_name=None):
+    slug = re.sub("[^0-9a-zA-Z]+", "_", title.lower()).strip("_")
+    if not file_name:
+        filename = "{0}.csv".format(slug)
+    else:
+        filename = file_name
+    tmpl = "admin/reports/{0}.html".format(template)
 
-        def view(request):
-            form = form_class()
-            if valid_submit(request, form):
-                success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(request.POST))
+    form = form_class()
+    if valid_submit(request, form):
+        success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(request.POST))
 
-                messages.info(
-                    request, u"Your export is being processed. It " u"will show up in the downloads tab " u"shortly."
-                )
+        messages.info(
+            request, u"Your export is being processed. It " u"will show up in the downloads tab " u"shortly."
+        )
 
-            return render(request, tmpl, {"title": title, "form": form})
-
-        return view
-
-    return wrapper
+    return render(request, tmpl, {"title": title, "form": form})
 
 
 def valid_submit(request, form):
@@ -69,109 +63,116 @@ def valid_submit(request, form):
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MIProviderAllocationExtract, "MI Provider Allocation")
-def mi_provider_allocation_extract():
-    pass
+def mi_provider_allocation_extract(request):
+    return report_view(request, MIProviderAllocationExtract, "MI Provider Allocation")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MICaseExtract, "MI Case Extract")
-def mi_case_extract():
-    pass
+def mi_case_extract(request):
+    return report_view(request, MICaseExtract, "MI Case Extract")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MIFeedbackExtract, "MI Feedback Extract")
-def mi_feedback_extract():
-    pass
+def mi_feedback_extract(request):
+    return report_view(request, MIFeedbackExtract, "MI Feedback Extract")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MIDuplicateCaseExtract, "MI Duplicate Case Extract")
-def mi_duplicate_case_extract():
-    pass
+def mi_duplicate_case_extract(request):
+    return report_view(request, MIDuplicateCaseExtract, "MI Duplicate Case Extract")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MIContactsPerCaseByCategoryExtract, "MI Contacts Per Case By Category")
-def mi_contacts_extract():
-    pass
+def mi_contacts_extract(request):
+    return report_view(request, MIContactsPerCaseByCategoryExtract, "MI Contacts Per Case By Category")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MIAlternativeHelpExtract, "MI Alternative Help Extract")
-def mi_alternative_help_extract():
-    pass
+def mi_alternative_help_extract(request):
+    return report_view(request, MIAlternativeHelpExtract, "MI Alternative Help Extract")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MISurveyExtract, "MI Survey Extract (ONLY RUN ON DOM1)")
-def mi_survey_extract():
-    pass
+def mi_survey_extract(request):
+    return report_view(request, MISurveyExtract, "MI Survey Extract (ONLY RUN ON DOM1)")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MICB1Extract, "MI CB1 Extract")
-def mi_cb1_extract():
-    pass
+def mi_cb1_extract(request):
+    return report_view(request, MICB1Extract, "MI CB1 Extract")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MICB1ExtractAgilisys, "MI CB1 Extract for Agilisys")
-def mi_cb1_extract_agilisys():
-    pass
+def mi_cb1_extract_agilisys(request):
+    return report_view(request, MICB1ExtractAgilisys, "MI CB1 Extract for Agilisys")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MIVoiceReport, "MI Voice Report")
-def mi_voice_extract():
-    pass
+def mi_voice_extract(request):
+    return report_view(request, MIVoiceReport, "MI Voice Report")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MIDigitalCaseTypesExtract, "MI Digital Case Types Report")
-def mi_digital_case_type_extract():
-    pass
+def mi_digital_case_type_extract(request):
+    return report_view(request, MIDigitalCaseTypesExtract, "MI Digital Case Types Report")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MIEODReport, "MI EOD Report")
-def mi_eod_extract():
-    pass
+def mi_eod_extract(request):
+    return report_view(request, MIEODReport, "MI EOD Report")
 
 
 @staff_member_required
 @permission_required("legalaid.run_complaints_report")
-@report_view(ComplaintsReport, "Complaints Report")
-def mi_complaints():
-    pass
+def mi_complaints(request):
+    return report_view(request, ComplaintsReport, "Complaints Report")
 
 
 @staff_member_required
 @permission_required("legalaid.run_obiee_reports")
-@report_view(
-    MIOBIEEExportExtract, "MI Export to Email for OBIEE", file_name="cla.database.zip", success_task=OBIEEExportTask
-)
-def mi_obiee_extract():
-    pass
+def mi_obiee_extract(request):
+    return report_view(
+        request,
+        MIOBIEEExportExtract,
+        "MI Export to Email for OBIEE",
+        file_name="cla.database.zip",
+        success_task=OBIEEExportTask,
+    )
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-@report_view(MetricsReport, "Metrics Report")
-def metrics_report():
-    pass
+def metrics_report(request):
+    return report_view(request, MetricsReport, "Metrics Report")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def mi_case_view_audit_log_extract(request):
+    report_view(request, MIExtractCaseViewAuditLog, "MI Case Views Audit Log Extract")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def mi_complaint_view_audit_log_extract(request):
+    report_view(request, MIExtractComplaintViewAuditLog, "MI Complaints Views Audit Log Extract")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def all_knowledgebase_articles(request):
+    report_view(request, AllKnowledgeBaseArticles, "Knowledge Base Articles")
 
 
 @staff_member_required
@@ -200,24 +201,3 @@ def download_file(request, file_name="", *args, **kwargs):
         raise Http404("Export does not exist")
 
     return response
-
-
-@staff_member_required
-@permission_required("legalaid.run_reports")
-@report_view(MIExtractCaseViewAuditLog, "MI Case Views Audit Log Extract")
-def mi_case_view_audit_log_extract():
-    pass
-
-
-@staff_member_required
-@permission_required("legalaid.run_reports")
-@report_view(MIExtractComplaintViewAuditLog, "MI Complaints Views Audit Log Extract")
-def mi_complaint_view_audit_log_extract():
-    pass
-
-
-@staff_member_required
-@permission_required("legalaid.run_reports")
-@report_view(AllKnowledgeBaseArticles, "Knowledge Base Articles")
-def all_knowledgebase_articles():
-    pass

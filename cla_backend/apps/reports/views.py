@@ -53,6 +53,12 @@ def report_view(request, form_class, title, template="case_report", success_task
     return render(request, tmpl, {"title": title, "form": form})
 
 
+def scheduled_report_view(request, form_class, title):
+    tmpl = "admin/reports/case_report.html"
+
+    return render(request, tmpl, {"title": title})
+
+
 def valid_submit(request, form):
     if request.method == "POST":
         form.data = request.POST
@@ -106,7 +112,10 @@ def mi_survey_extract(request):
 @staff_member_required
 @permission_required("legalaid.run_reports")
 def mi_cb1_extract(request):
-    return report_view(request, MICB1Extract, "MI CB1 Extract")
+    if settings.SHOW_NEW_CB1:
+        return scheduled_report_view(request, MICB1Extract, "MI CB1 Extract")
+    else:
+        return report_view(request, MICB1Extract, "MI CB1 Extract")
 
 
 @staff_member_required

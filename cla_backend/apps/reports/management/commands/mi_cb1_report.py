@@ -18,7 +18,6 @@ class Command(BaseCommand):
     def create_report(self):
         report_data = '{"action": "Export", "csrfmiddlewaretoken": "PQk4Pt55CL0NBapx9hSqZTJkSn6tL6TL", "date_from": "2021-05-08", "date_to": "2021-05-10"}'
 
-        # report_data = json_stuff_goes_here
         web_user = get_web_user()
         filename_of_report = "WEEKLY-REPORT-TEST.csv"
         ExportTask().delay(web_user.pk, filename_of_report, "MICB1Extract", report_data)

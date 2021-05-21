@@ -17,6 +17,12 @@
   <script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
   {{ media }}
 
+  {% if form %}
+    <script>window.reportUrl = '/admin/reports/api/exports/'</script>
+  {% else %}
+    <script>window.reportUrl = '/admin/reports/api/exports/scheduled/'</script>
+  {% endif %}
+
   <script type="text/javascript" src="{% static "admin/js/core.js" %}"></script>
   <script type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
   <script type="text/javascript" src="{% static "admin/js/jquery.init.js" %}"></script>
@@ -41,16 +47,18 @@
 {% block coltype %}flex{% endblock %}
 
 {% block content %}
-  <div id="content-main">
-    <div id="changelist" class="module">
-      <form id="claimpricing_form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
-        <div id="toolbar">
-          {% block inner_form %}
-          {% endblock inner_form %}
-        </div>
-        {% block submit_row %}
-        {% endblock submit_row %}
-      </form>
+  {% if form %}
+    <div id="content-main">
+      <div id="changelist" class="module">
+        <form id="claimpricing_form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+          <div id="toolbar">
+            {% block inner_form %}
+            {% endblock inner_form %}
+          </div>
+          {% block submit_row %}
+          {% endblock submit_row %}
+        </form>
+      </div>
     </div>
-  </div>
+  {% endif %}
 {% endblock %}

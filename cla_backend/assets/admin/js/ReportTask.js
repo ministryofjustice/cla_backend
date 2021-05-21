@@ -15,7 +15,7 @@
   }
 
   var ReportTask = {
-    url: '/admin/reports/api/exports/',
+    url: window.reportUrl,
     el: null,
 
     init: function () {

@@ -29,6 +29,8 @@ root = lambda *x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
 sys.path.insert(0, root("apps"))
 sys.path.insert(0, root("libs"))
 
+SHOW_NEW_CB1 = os.environ.get("SHOW_NEW_CB1", "False").lower() == "true"
+
 HEALTHCHECKS = ["moj_irat.healthchecks.database_healthcheck", "status.healthchecks.check_disk"]
 
 AUTODISCOVER_HEALTHCHECKS = True

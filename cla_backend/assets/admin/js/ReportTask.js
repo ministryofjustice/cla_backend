@@ -39,7 +39,7 @@
       var self = this;
       $.ajax({
         method: 'DELETE',
-        url: self.url  + id + '/',
+        url: '/admin/reports/api/exports/' + id + '/',
         headers: {
           'X-CSRFTOKEN': readCookie('csrftoken')
         },

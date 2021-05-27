@@ -72,14 +72,17 @@
         }
         $task.append(linkcol);
 
-        var deleteCol = $('<td></td>');
-        var $deleteLink = $('<a class="delete-task"></a>')
-          .text('DELETE')
-          .data('id', data[i]['id']);
-        deleteCol.append($deleteLink);
-        $task.append(deleteCol);
+        var index = this.url.indexOf("scheduled")
+        if (index == -1) {
+          var deleteCol = $('<td></td>');
+          var $deleteLink = $('<a class="delete-task"></a>')
+            .text('DELETE')
+            .data('id', data[i]['id']);
+          deleteCol.append($deleteLink);
+          $task.append(deleteCol);
 
-        this.table.append($task);
+          this.table.append($task);
+        }
       }
     },
 

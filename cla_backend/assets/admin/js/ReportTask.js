@@ -80,9 +80,9 @@
             .data('id', data[i]['id']);
           deleteCol.append($deleteLink);
           $task.append(deleteCol);
-
-          this.table.append($task);
         }
+
+        this.table.append($task);
       }
     },
 

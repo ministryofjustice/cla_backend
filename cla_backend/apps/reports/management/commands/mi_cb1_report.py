@@ -20,7 +20,7 @@ class Command(BaseCommand):
         date_from = (date.today() - timedelta(days=7)).strftime("%Y-%m-%d")
         date_to = date.today().strftime("%Y-%m-%d")
 
-        report_data = '{{"action": "Export", "csrfmiddlewaretoken": "PQk4Pt55CL0NBapx9hSqZTJkSn6tL6TL", "date_from": {0}, "date_to": {1}}}'.format(
+        report_data = '{{"action": "Export", "csrfmiddlewaretoken": "PQk4Pt55CL0NBapx9hSqZTJkSn6tL6TL", "date_from": "{0}", "date_to": "{1}"}}'.format(
             date_from, date_to
         )
 

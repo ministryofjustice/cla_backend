@@ -870,7 +870,7 @@ class Case(TimeStampedModel, ModelDiffMixin):
         self.provider_closed = None
         case_category = getattr(self.eligibility_check.category, "code") if self.eligibility_check else None
         non_rota_hours = settings.NON_ROTA_OPENING_HOURS[case_category]
-        self.assigned_out_of_hours = self.provider_assigned_at not in non_rota_hours
+        self.assigned_out_of_hours = not non_rota_hours.available(self.provider_assigned_at, tz_aware=True)
         self.is_urgent = is_urgent
 
         self.save(

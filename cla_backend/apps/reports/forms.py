@@ -359,7 +359,8 @@ class MISurveyExtract(SQLFileDateRangeReport):
 class MICB1Extract(SQLFileDateRangeReport):
     QUERY_FILE = "MICB1sSLA.sql"
 
-    max_date_range = 7
+    # currently sunday to sunday
+    max_date_range = 8
 
     def get_now(self):
         return timezone.now()

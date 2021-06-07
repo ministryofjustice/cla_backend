@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
+from django.contrib.auth.models import User
 from freezegun import freeze_time
 import datetime
 
@@ -33,8 +34,11 @@ class FindAndDeleteOldCases(TestCase):
         freezer.stop()
         return case
 
-    def create_event_log_for_case(self, case, code, created):
-        make_recipe("cla_eventlog.log", case=case, code=code, created=created)
+    def create_event_log_for_case(self, case, code, created, created_by=None):
+        if created_by:
+            make_recipe("cla_eventlog.log", case=case, code=code, created=created, created_by=created_by)
+        else:
+            make_recipe("cla_eventlog.log", case=case, code=code, created=created)
 
     def delete_old_cases(self, current_time):
         freezer = freeze_time(current_time)
@@ -228,3 +232,23 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(EligibilityCheck.objects.count(), 1)
         self.assertEqual(DiagnosisTraversal.objects.count(), 1)
         self.assertEqual(PersonalDetails.objects.count(), 1)
+
+    def test_log_is_deleted_when_viewed_by_digital_justice_user(self):
+        case_date = _make_datetime(year=2014, month=5, day=24, hour=9)
+        complaint_date = _make_datetime(year=2014, month=5, day=27, hour=9)
+        case = self.create_case(case_date, "legalaid.eligible_case")
+        eod = make_recipe("legalaid.eod_details", case=case)
+        digital_justice_user = User.objects.create_user("digital_justice_user", "email@digital.justice.gov.uk")
+        make_recipe("complaints.complaint", eod=eod, created=complaint_date)
+        self.create_event_log_for_case(
+            case, "CASE_VIEWED", _make_datetime(year=2020, month=5, day=27, hour=9), digital_justice_user
+        )
+
+        today = _make_datetime(year=2021, month=1, day=1, hour=9)
+        digital_justice_user_logs = Log.objects.filter(created_by__email__endswith="digital.justice.gov.uk")
+        self.delete_logs(today, digital_justice_user_logs)
+
+        self.assertEqual(Log.objects.count(), 0)
+        self.assertEqual(Case.objects.count(), 1)
+        cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=digital_justice_user)
+        self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)

@@ -201,7 +201,7 @@ def download_file(request, file_name="", *args, **kwargs):
     response["Content-Disposition"] = "attachment; filename=%s" % smart_str(file_name)
     response["X-Sendfile"] = smart_str("%s%s" % (settings.TEMP_DIR, file_name))
 
-    if not file_name.__contains__("WEEKLY-REPORT"):
+    if not file_name.__contains__("scheduled"):
         try:
             export_record = Export.objects.get(user_id=request.user.pk, path__endswith=file_name)
             export_record.delete()

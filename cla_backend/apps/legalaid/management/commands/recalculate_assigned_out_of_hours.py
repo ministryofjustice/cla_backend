@@ -8,9 +8,11 @@ from legalaid.models import Case
 class Command(BaseCommand):
     help = "Recalculate case.assigned_out_of_hours since a given date"
 
-    unchanged = []
-    change_to_true = []
-    change_to_false = []
+    def __init__(self, *args, **kwargs):
+        self.unchanged = []
+        self.change_to_true = []
+        self.change_to_false = []
+        super(Command, self).__init__(*args, **kwargs)
 
     def handle(self, *args, **options):
         try:

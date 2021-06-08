@@ -46,9 +46,7 @@ def report_view(request, form_class, title, template="case_report", success_task
     if valid_submit(request, form):
         success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(request.POST))
 
-        messages.info(
-            request, u"Your export is being processed. It " u"will show up in the downloads tab " u"shortly."
-        )
+        messages.info(request, u"Your export is being processed. It will show up in the downloads tab shortly.")
 
     return render(request, tmpl, {"title": title, "form": form})
 

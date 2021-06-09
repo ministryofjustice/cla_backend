@@ -275,7 +275,7 @@ class FindAndDeleteOldCases(TestCase):
         cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=non_digital_justice_user)
         self.assertEqual(cases_with_digital_justice_user_logs.count(), 1)
 
-    def test_single_log_deletion_when_case_is_viewed_by_digital_and_non_digital_users(self):
+    def test_log_deletion_when_case_is_viewed_by_digital_and_non_digital_users(self):
         case_date = _make_datetime(year=2014, month=5, day=24, hour=9)
         case = self.create_case(case_date, "legalaid.eligible_case")
 
@@ -303,7 +303,35 @@ class FindAndDeleteOldCases(TestCase):
         # Implies implicitly that the non digital justice user log did not get deleted
         self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
 
-    def test_multiple_log_deletion_when_case_is_viewed_by_digital_and_non_digital_users(self):
+    def test_log_deletion_when_case_viewed_on_the_same_day_by_digital_and_non_digital_users(self):
+        case_date = _make_datetime(year=2014, month=5, day=24, hour=9)
+        case = self.create_case(case_date, "legalaid.eligible_case")
+
+        complaint_date = _make_datetime(year=2014, month=5, day=27, hour=9)
+        eod = make_recipe("legalaid.eod_details", case=case)
+        make_recipe("complaints.complaint", eod=eod, created=complaint_date)
+
+        digital_justice_user = User.objects.create_user("digital_justice_user", "email@digital.justice.gov.uk")
+        self.create_event_log_for_case(
+            case, "CASE_VIEWED", _make_datetime(year=2020, month=5, day=27, hour=9), digital_justice_user
+        )
+
+        non_digital_justice_user = User.objects.create_user("non_digital_justice_user", "chs.user@email.com")
+        self.create_event_log_for_case(
+            case, "CASE_VIEWED", _make_datetime(year=2020, month=5, day=27, hour=9), non_digital_justice_user
+        )
+
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        self.delete_logs(dt)
+
+        self.assertEqual(Log.objects.count(), 1)
+        self.assertEqual(Case.objects.count(), 1)
+
+        cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=digital_justice_user)
+        # Implies implicitly that the non digital justice user log did not get deleted
+        self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
+
+    def test_log_deletion_when_case_is_viewed_multiple_times_by_digital_and_non_digital_users(self):
         case_date = _make_datetime(year=2014, month=5, day=24, hour=9)
         case = self.create_case(case_date, "legalaid.eligible_case")
 
@@ -340,5 +368,46 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(Case.objects.count(), 1)
 
         cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=digital_justice_user)
-        # Implies implicitly that the non digital justice user log did not get deleted
+        # Implies implicitly that the non digital justice user logs did not get deleted
+        self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
+
+    def test_log_deletion_across_multiple_cases(self):
+        case_1_date = _make_datetime(year=2014, month=5, day=24, hour=9)
+        case_1 = self.create_case(case_1_date, "legalaid.eligible_case")
+
+        case_2_date = _make_datetime(year=2014, month=9, day=29, hour=9)
+        case_2 = self.create_case(case_2_date, "legalaid.eligible_case")
+
+        complaint_1_date = _make_datetime(year=2014, month=5, day=27, hour=9)
+        eod_1 = make_recipe("legalaid.eod_details", case=case_1)
+        make_recipe("complaints.complaint", eod=eod_1, created=complaint_1_date)
+
+        complaint_2_date = _make_datetime(year=2014, month=6, day=28, hour=9)
+        eod_2 = make_recipe("legalaid.eod_details", case=case_2)
+        make_recipe("complaints.complaint", eod=eod_2, created=complaint_2_date)
+
+        digital_justice_user = User.objects.create_user("digital_justice_user", "email@digital.justice.gov.uk")
+        self.create_event_log_for_case(
+            case_1, "CASE_VIEWED", _make_datetime(year=2020, month=5, day=27, hour=9), digital_justice_user
+        )
+        self.create_event_log_for_case(
+            case_2, "CASE_VIEWED", _make_datetime(year=2020, month=3, day=22, hour=9), digital_justice_user
+        )
+
+        non_digital_justice_user = User.objects.create_user("non_digital_justice_user", "chs.user@email.com")
+        self.create_event_log_for_case(
+            case_1, "CASE_VIEWED", _make_datetime(year=2020, month=5, day=30, hour=9), non_digital_justice_user
+        )
+        self.create_event_log_for_case(
+            case_2, "CASE_VIEWED", _make_datetime(year=2020, month=3, day=30, hour=9), non_digital_justice_user
+        )
+
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        self.delete_logs(dt)
+
+        self.assertEqual(Log.objects.count(), 2)
+        self.assertEqual(Case.objects.count(), 2)
+
+        cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=digital_justice_user)
+        # Implies implicitly that the non digital justice user logs did not get deleted
         self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)

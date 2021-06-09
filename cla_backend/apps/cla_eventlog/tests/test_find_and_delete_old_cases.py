@@ -262,7 +262,7 @@ class FindAndDeleteOldCases(TestCase):
         eod = make_recipe("legalaid.eod_details", case=case)
         make_recipe("complaints.complaint", eod=eod, created=complaint_date)
 
-        non_digital_justice_user = User.objects.create_user("non_digital_justice_user", "email@chs.email.com")
+        non_digital_justice_user = User.objects.create_user("non_digital_justice_user", "chs.user@email.com")
         self.create_event_log_for_case(
             case, "CASE_VIEWED", _make_datetime(year=2020, month=6, day=27, hour=9), non_digital_justice_user
         )
@@ -272,5 +272,5 @@ class FindAndDeleteOldCases(TestCase):
 
         self.assertEqual(Log.objects.count(), 1)
         self.assertEqual(Case.objects.count(), 1)
-        cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=digital_justice_user)
-        self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
+        cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=non_digital_justice_user)
+        self.assertEqual(cases_with_digital_justice_user_logs.count(), 1)

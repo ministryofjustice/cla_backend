@@ -2,6 +2,6 @@
 
 #Sphinx
 django-extensions==1.4.9
-Werkzeug==0.9.6
+Werkzeug==0.15.3
 django-debug-toolbar==1.2.2
 pre-commit==1.14.2

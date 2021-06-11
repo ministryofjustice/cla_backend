@@ -46,6 +46,12 @@ class FindAndDeleteOldCases(TestCase):
         self.command.execute("delete")
         freezer.stop()
 
+    def delete_logs(self, current_time):
+        freezer = freeze_time(current_time)
+        freezer.start()
+        self.command.execute("delete-logs")
+        freezer.stop()
+
     def find_old_cases(self, current_time):
         freezer = freeze_time(current_time)
         freezer.start()

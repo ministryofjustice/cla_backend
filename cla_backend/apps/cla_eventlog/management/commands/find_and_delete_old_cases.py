@@ -24,32 +24,31 @@ class Command(BaseCommand):
         2. Delete logs created by users with a @digital.justice.gov.uk email
         """
 
+    def get_user_input(self, qs_type, qs):
+        return raw_input(
+            "Number of {0} that will be deleted: {1}\nAre you sure about this? (Yes/No) ".format(
+                qs_type, qs.count()
+            )
+        )
+
     def handle_test_command(self, args, cases):
-        digital_justice_user_logs = self.instance.get_digital_justice_user_logs()
         if args[0] == "delete":
             self.instance.run()
         elif args[0] == "delete-logs":
+            digital_justice_user_logs = self.instance.get_digital_justice_user_logs()
             self.instance._delete_objects(digital_justice_user_logs)
 
     def handle_terminal_command(self, args, cases):
-        digital_justice_user_logs = self.instance.get_digital_justice_user_logs()
         if args[0] == "delete":
             if len(args) > 1 and args[1] == "no-input":
                 self.instance.run()
             else:
-                answer = raw_input(
-                    "Number of cases that will be deleted: {0}\nAre you sure about this? (Yes/No) ".format(
-                        cases.count()
-                    )
-                )
+                answer = get_user_input("cases", cases)
                 if answer == "Yes":
                     self.instance.run()
         elif args[0] == "delete-logs":
-            answer = raw_input(
-                "Number of digital justice user logs that will be deleted: {0}\nAre you sure about this? (Yes/No) ".format(
-                    digital_justice_user_logs.count()
-                )
-            )
+            digital_justice_user_logs = self.instance.get_digital_justice_user_logs()
+            answer = get_user_input("digital justice user logs", digital_justice_user_logs)
             if answer == "Yes":
                 self.instance._delete_objects(digital_justice_user_logs)
 

@@ -43,12 +43,12 @@ class Command(BaseCommand):
             if len(args) > 1 and args[1] == "no-input":
                 self.instance.run()
             else:
-                answer = get_user_input("cases", cases)
+                answer = self.get_user_input("cases", cases)
                 if answer == "Yes":
                     self.instance.run()
         elif args[0] == "delete-logs":
             digital_justice_user_logs = self.instance.get_digital_justice_user_logs()
-            answer = get_user_input("digital justice user logs", digital_justice_user_logs)
+            answer = self.get_user_input("digital justice user logs", digital_justice_user_logs)
             if answer == "Yes":
                 self.instance._delete_objects(digital_justice_user_logs)
 

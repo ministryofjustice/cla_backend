@@ -35,10 +35,10 @@ class FindAndDeleteOldCases(TestCase):
         return case
 
     def create_event_log_for_case(self, case, code, created, created_by=None):
+        kwargs = {"case": case, "code": code, "created": created}
         if created_by:
-            make_recipe("cla_eventlog.log", case=case, code=code, created=created, created_by=created_by)
-        else:
-            make_recipe("cla_eventlog.log", case=case, code=code, created=created)
+            kwargs.update(created_by=created_by)
+        make_recipe("cla_eventlog.log", **kwargs)
 
     def delete_old_cases(self, current_time):
         freezer = freeze_time(current_time)
@@ -239,7 +239,7 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(DiagnosisTraversal.objects.count(), 1)
         self.assertEqual(PersonalDetails.objects.count(), 1)
 
-    def test_log_is_deleted_when_case_is_viewed_by_digital_justice_user(self):
+    def test_case_viewed_by_digital_justice_user(self):
         case_date = _make_datetime(year=2014, month=5, day=24, hour=9)
         case = self.create_case(case_date, "legalaid.eligible_case")
 
@@ -260,7 +260,7 @@ class FindAndDeleteOldCases(TestCase):
         cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=digital_justice_user)
         self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
 
-    def test_log_is_not_deleted_when_case_is_viewed_by_non_digital_justice_user(self):
+    def test_case_viewed_by_non_digital_justice_user(self):
         case_date = _make_datetime(year=2014, month=5, day=24, hour=9)
         case = self.create_case(case_date, "legalaid.eligible_case")
 
@@ -281,7 +281,7 @@ class FindAndDeleteOldCases(TestCase):
         cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=non_digital_justice_user)
         self.assertEqual(cases_with_digital_justice_user_logs.count(), 1)
 
-    def test_log_deletion_when_case_is_viewed_by_digital_and_non_digital_users(self):
+    def test_case_viewed_by_digital_and_non_digital_users(self):
         case_date = _make_datetime(year=2014, month=5, day=24, hour=9)
         case = self.create_case(case_date, "legalaid.eligible_case")
 
@@ -309,7 +309,7 @@ class FindAndDeleteOldCases(TestCase):
         # Implies implicitly that the non digital justice user log did not get deleted
         self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
 
-    def test_log_deletion_when_case_viewed_on_the_same_day_by_digital_and_non_digital_users(self):
+    def test_case_viewed_same_day_by_digital_and_non_digital_users(self):
         case_date = _make_datetime(year=2014, month=5, day=24, hour=9)
         case = self.create_case(case_date, "legalaid.eligible_case")
 
@@ -337,7 +337,7 @@ class FindAndDeleteOldCases(TestCase):
         # Implies implicitly that the non digital justice user log did not get deleted
         self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
 
-    def test_log_deletion_when_case_is_viewed_multiple_times_by_digital_and_non_digital_users(self):
+    def test_case_viewed_multiple_times_by_digital_and_non_digital_users(self):
         case_date = _make_datetime(year=2014, month=5, day=24, hour=9)
         case = self.create_case(case_date, "legalaid.eligible_case")
 
@@ -377,7 +377,7 @@ class FindAndDeleteOldCases(TestCase):
         # Implies implicitly that the non digital justice user logs did not get deleted
         self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
 
-    def test_log_deletion_across_multiple_cases(self):
+    def test_multiple_cases_viewed_by_multiple_users(self):
         case_1_date = _make_datetime(year=2014, month=5, day=24, hour=9)
         case_1 = self.create_case(case_1_date, "legalaid.eligible_case")
 

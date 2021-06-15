@@ -26,9 +26,7 @@ class Command(BaseCommand):
 
     def get_user_input(self, qs_type, qs):
         return raw_input(
-            "Number of {0} that will be deleted: {1}\nAre you sure about this? (Yes/No) ".format(
-                qs_type, qs.count()
-            )
+            "Number of {0} that will be deleted: {1}\nAre you sure about this? (Yes/No) ".format(qs_type, qs.count())
         )
 
     def handle_test_command(self, args, cases):
@@ -47,10 +45,14 @@ class Command(BaseCommand):
                 if answer == "Yes":
                     self.instance.run()
         elif args[0] == "delete-logs":
-            digital_justice_user_logs = self.instance.get_digital_justice_user_logs()
-            answer = self.get_user_input("digital justice user logs", digital_justice_user_logs)
-            if answer == "Yes":
-                self.instance._delete_objects(digital_justice_user_logs)
+            if len(args) > 1 and args[1] == "no-input":
+                self.instance.run()
+            else:
+                digital_justice_user_logs = self.instance.get_digital_justice_user_logs()
+                answer = self.get_user_input("digital justice user logs", digital_justice_user_logs)
+
+                if answer == "Yes":
+                    self.instance._delete_objects(digital_justice_user_logs)
 
     def handle(self, *args, **kwargs):
         self.instance = FindAndDeleteCasesUsingCreationTime()

@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
+from django.contrib.auth.models import User
 from freezegun import freeze_time
 import datetime
 
@@ -33,13 +34,39 @@ class FindAndDeleteOldCases(TestCase):
         freezer.stop()
         return case
 
-    def create_event_log_for_case(self, case, code, created):
-        make_recipe("cla_eventlog.log", case=case, code=code, created=created)
+    def create_complaint(self, case, **kwargs):
+        eod = make_recipe("legalaid.eod_details", case=case)
+        make_recipe("complaints.complaint", eod=eod, **kwargs)
+
+    def create_event_logs_for_users(self, usersData, case):
+        for userData in usersData:
+            self.create_event_logs_for_case(userData[1], case, userData[0])
+
+    def create_event_logs_for_case(self, dates, *args):
+        for date in dates:
+            self.create_event_log_for_case(args[0], "CASE_VIEWED", date, args[1])
+
+    def create_event_log_for_case(self, case, code, created, created_by=None):
+        kwargs = {"case": case, "code": code, "created": created}
+        if created_by:
+            kwargs.update(created_by=created_by)
+        make_recipe("cla_eventlog.log", **kwargs)
+
+    def create_users(id):
+        user_1 = User.objects.create_user("digital_justice_user", "email@digital.justice.gov.uk")
+        user_2 = User.objects.create_user("non_digital_justice_user", "chs.user@email.com")
+        return [user_1, user_2]
 
     def delete_old_cases(self, current_time):
         freezer = freeze_time(current_time)
         freezer.start()
         self.command.execute("delete")
+        freezer.stop()
+
+    def delete_logs(self, current_time):
+        freezer = freeze_time(current_time)
+        freezer.start()
+        self.command.execute("delete-logs")
         freezer.stop()
 
     def find_old_cases(self, current_time):
@@ -228,3 +255,149 @@ class FindAndDeleteOldCases(TestCase):
         self.assertEqual(EligibilityCheck.objects.count(), 1)
         self.assertEqual(DiagnosisTraversal.objects.count(), 1)
         self.assertEqual(PersonalDetails.objects.count(), 1)
+
+    def test_case_viewed_by_digital_justice_user(self):
+        case = self.create_case(_make_datetime(year=2014, month=5, day=24, hour=9), "legalaid.eligible_case")
+        self.create_complaint(case, created=_make_datetime(year=2014, month=5, day=27, hour=9))
+
+        digital_justice_user, non_digital_justice_user = self.create_users()
+        self.create_event_log_for_case(
+            case, "CASE_VIEWED", _make_datetime(year=2020, month=5, day=27, hour=9), digital_justice_user
+        )
+
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        self.delete_logs(dt)
+
+        self.assertEqual(Log.objects.count(), 0)
+        self.assertEqual(Case.objects.count(), 1)
+        cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=digital_justice_user)
+        self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
+
+    def test_case_viewed_by_non_digital_justice_user(self):
+        case = self.create_case(_make_datetime(year=2014, month=5, day=24, hour=9), "legalaid.eligible_case")
+        self.create_complaint(case, created=_make_datetime(year=2014, month=5, day=27, hour=9))
+
+        digital_justice_user, non_digital_justice_user = self.create_users()
+        self.create_event_log_for_case(
+            case, "CASE_VIEWED", _make_datetime(year=2020, month=6, day=27, hour=9), non_digital_justice_user
+        )
+
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        self.delete_logs(dt)
+
+        self.assertEqual(Log.objects.count(), 1)
+        self.assertEqual(Case.objects.count(), 1)
+        cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=non_digital_justice_user)
+        self.assertEqual(cases_with_digital_justice_user_logs.count(), 1)
+
+    def test_case_viewed_by_digital_and_non_digital_users(self):
+        case = self.create_case(_make_datetime(year=2014, month=5, day=24, hour=9), "legalaid.eligible_case")
+        self.create_complaint(case, created=_make_datetime(year=2014, month=5, day=27, hour=9))
+
+        digital_justice_user, non_digital_justice_user = self.create_users()
+        self.create_event_logs_for_users(
+            [
+                (digital_justice_user, [_make_datetime(year=2020, month=5, day=27, hour=9)]),
+                (non_digital_justice_user, [_make_datetime(year=2020, month=6, day=27, hour=9)]),
+            ],
+            case,
+        )
+
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        self.delete_logs(dt)
+
+        self.assertEqual(Log.objects.count(), 1)
+        self.assertEqual(Case.objects.count(), 1)
+        cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=digital_justice_user)
+        # Implies implicitly that the non digital justice user log did not get deleted
+        self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
+
+    def test_case_viewed_same_day_by_digital_and_non_digital_users(self):
+        case = self.create_case(_make_datetime(year=2014, month=5, day=24, hour=9), "legalaid.eligible_case")
+        self.create_complaint(case, created=_make_datetime(year=2014, month=5, day=27, hour=9))
+
+        digital_justice_user, non_digital_justice_user = self.create_users()
+        self.create_event_logs_for_users(
+            [
+                (digital_justice_user, [_make_datetime(year=2020, month=5, day=27, hour=9)]),
+                (non_digital_justice_user, [_make_datetime(year=2020, month=5, day=27, hour=9)]),
+            ],
+            case,
+        )
+
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        self.delete_logs(dt)
+
+        self.assertEqual(Log.objects.count(), 1)
+        self.assertEqual(Case.objects.count(), 1)
+        cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=digital_justice_user)
+        # Implies implicitly that the non digital justice user log did not get deleted
+        self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
+
+    def test_case_viewed_multiple_times_by_digital_and_non_digital_users(self):
+        case = self.create_case(_make_datetime(year=2014, month=5, day=24, hour=9), "legalaid.eligible_case")
+        self.create_complaint(case, created=_make_datetime(year=2014, month=5, day=27, hour=9))
+
+        digital_justice_user, non_digital_justice_user = self.create_users()
+        self.create_event_logs_for_users(
+            [
+                (
+                    digital_justice_user,
+                    [
+                        _make_datetime(year=2020, month=5, day=27, hour=9),
+                        _make_datetime(year=2020, month=6, day=27, hour=9),
+                        _make_datetime(year=2020, month=8, day=27, hour=9),
+                    ],
+                ),
+                (
+                    non_digital_justice_user,
+                    [
+                        _make_datetime(year=2020, month=3, day=22, hour=9),
+                        _make_datetime(year=2020, month=6, day=22, hour=9),
+                        _make_datetime(year=2020, month=9, day=21, hour=9),
+                    ],
+                ),
+            ],
+            case,
+        )
+
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        self.delete_logs(dt)
+
+        self.assertEqual(Log.objects.count(), 3)
+        self.assertEqual(Case.objects.count(), 1)
+        cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=digital_justice_user)
+        # Implies implicitly that the non digital justice user logs did not get deleted
+        self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)
+
+    def test_multiple_cases_viewed_by_multiple_users(self):
+        case_1 = self.create_case(_make_datetime(year=2014, month=5, day=24, hour=9), "legalaid.eligible_case")
+        case_2 = self.create_case(_make_datetime(year=2014, month=9, day=29, hour=9), "legalaid.eligible_case")
+
+        self.create_complaint(case_1, created=_make_datetime(year=2014, month=5, day=27, hour=9))
+        self.create_complaint(case_2, created=_make_datetime(year=2014, month=6, day=28, hour=9))
+
+        digital_justice_user, non_digital_justice_user = self.create_users()
+        self.create_event_logs_for_users(
+            [
+                (digital_justice_user, [_make_datetime(year=2020, month=5, day=27, hour=9)]),
+                (non_digital_justice_user, [_make_datetime(year=2020, month=5, day=30, hour=9)]),
+            ],
+            case_1,
+        )
+        self.create_event_logs_for_users(
+            [
+                (digital_justice_user, [_make_datetime(year=2020, month=3, day=22, hour=9)]),
+                (non_digital_justice_user, [_make_datetime(year=2020, month=3, day=30, hour=9)]),
+            ],
+            case_2,
+        )
+
+        dt = _make_datetime(year=2021, month=1, day=1, hour=9)
+        self.delete_logs(dt)
+
+        self.assertEqual(Log.objects.count(), 2)
+        self.assertEqual(Case.objects.count(), 2)
+        cases_with_digital_justice_user_logs = Case.objects.filter(log__created_by=digital_justice_user)
+        # Implies implicitly that the non digital justice user logs did not get deleted
+        self.assertEqual(cases_with_digital_justice_user_logs.count(), 0)

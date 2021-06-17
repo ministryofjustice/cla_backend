@@ -201,14 +201,15 @@ def download_file(request, file_name="", *args, **kwargs):
     response["Content-Disposition"] = "attachment; filename=%s" % smart_str(file_name)
     response["X-Sendfile"] = smart_str("%s%s" % (settings.TEMP_DIR, file_name))
 
-    def delete_record():
-        if "scheduled" not in file_name:
-            try:
-                export_record = Export.objects.get(user_id=request.user.pk, path__endswith=file_name)
-                export_record.delete()
-            except Export.DoesNotExist:
-                raise Http404("Export does not exist")
-
-    delete_record()
+    if "scheduled" not in file_name:
+        delete_record(request.user.pk, file_name)
 
     return response
+
+
+def delete_record(user_id, file_name):
+    try:
+        export_record = Export.objects.get(user_id=user_id, path__endswith=file_name)
+        export_record.delete()
+    except Export.DoesNotExist:
+        raise Http404("Export does not exist")

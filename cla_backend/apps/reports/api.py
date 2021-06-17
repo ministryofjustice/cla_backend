@@ -19,6 +19,8 @@ class ExportListView(generics.ListAPIView, generics.DestroyAPIView):
 
     def get_queryset(self):
         if self.scheduled:
-            return super(ExportListView, self).get_queryset().filter(user=get_web_user())
+            user = get_web_user()
         else:
-            return super(ExportListView, self).get_queryset().filter(user=self.request.user)
+            user = self.request.user
+
+        return super(ExportListView, self).get_queryset().filter(user=user)

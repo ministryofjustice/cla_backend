@@ -15,7 +15,7 @@
   }
 
   var ReportTask = {
-    url: '/admin/reports/api/exports/',
+    url: window.reportUrl,
     el: null,
 
     init: function () {
@@ -39,7 +39,7 @@
       var self = this;
       $.ajax({
         method: 'DELETE',
-        url: self.url  + id + '/',
+        url: '/admin/reports/api/exports/' + id + '/',
         headers: {
           'X-CSRFTOKEN': readCookie('csrftoken')
         },
@@ -72,12 +72,15 @@
         }
         $task.append(linkcol);
 
-        var deleteCol = $('<td></td>');
-        var $deleteLink = $('<a class="delete-task"></a>')
-          .text('DELETE')
-          .data('id', data[i]['id']);
-        deleteCol.append($deleteLink);
-        $task.append(deleteCol);
+        var index = this.url.indexOf("scheduled")
+        if (index == -1) {
+          var deleteCol = $('<td></td>');
+          var $deleteLink = $('<a class="delete-task"></a>')
+            .text('DELETE')
+            .data('id', data[i]['id']);
+          deleteCol.append($deleteLink);
+          $task.append(deleteCol);
+        }
 
         this.table.append($task);
       }

@@ -359,7 +359,8 @@ class MISurveyExtract(SQLFileDateRangeReport):
 class MICB1Extract(SQLFileDateRangeReport):
     QUERY_FILE = "MICB1sSLA.sql"
 
-    max_date_range = 3
+    # currently sunday to sunday
+    max_date_range = 8
 
     def get_now(self):
         return timezone.now()
@@ -595,7 +596,7 @@ class MIExtractComplaintViewAuditLog(SQLFileDateRangeReport):
 
 class AllKnowledgeBaseArticles(ReportForm):
     def get_queryset(self):
-        return Article.objects.prefetch_related('articlecategorymatrix_set__article_category', 'telephonenumber_set')
+        return Article.objects.prefetch_related("articlecategorymatrix_set__article_category", "telephonenumber_set")
 
     def get_rows(self):
         for article in self.get_queryset():
@@ -691,15 +692,15 @@ def get_from_nth(items, n, attribute):
     try:
         item = items[n - 1]
     except IndexError:
-        return ''
+        return ""
     else:
         return get_recursively(item, attribute)
 
 
 def get_recursively(item, attribute):
-    attribute_parts = attribute.split('.')
+    attribute_parts = attribute.split(".")
     value = getattr(item, attribute_parts[0])
-    remaining = '.'.join(attribute_parts[1:])
+    remaining = ".".join(attribute_parts[1:])
     if remaining:
         return get_recursively(value, remaining)
-    return value if value is not None else ''
+    return value if value is not None else ""

@@ -7,6 +7,7 @@ from . import api
 urlpatterns = patterns(
     "",
     url(r"^api/exports/$", api.ExportListView.as_view(), name="exports"),
+    url(r"^api/exports/scheduled/$", api.ExportListView.as_view(scheduled=True), name="scheduled"),
     url(r"^api/exports/(?P<pk>[0-9]+)/$", api.ExportListView.as_view(), name="exports"),
     url(r"^exports/download/(?P<file_name>[A-Za-z0-9-_\.]+)$", views.download_file, name="exports"),
     url(

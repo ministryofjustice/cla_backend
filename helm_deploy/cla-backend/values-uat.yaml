@@ -45,3 +45,5 @@ envVars:
     value: "False"
   SQS_SECRET_KEY:
     value: "False"
+  SHOW_NEW_CB1:
+    value: "True"

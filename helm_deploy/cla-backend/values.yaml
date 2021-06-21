@@ -223,6 +223,8 @@ envVars:
     secret:
       name: sqs
       key: sqs_id
+  SHOW_NEW_CB1:
+    value: "False"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

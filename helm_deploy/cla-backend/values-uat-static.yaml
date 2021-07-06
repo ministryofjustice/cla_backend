@@ -24,3 +24,9 @@ envVars:
     value: "True"
   MORTGAGE_CAP_REMOVAL_DATE:
     value: "2020-01-28 00:00"
+  SITE_HOSTNAME:
+    value: "cla-frontend-socket-server.laa-cla-frontend-uat.svc.cluster.local"
+  FRONTEND_HOST_NAME:
+    value: "http://cla-frontend-socket-server.laa-cla-frontend-uat.svc.cluster.local"
+  EXPRESS_SERVER_PORT:
+    value: "80"

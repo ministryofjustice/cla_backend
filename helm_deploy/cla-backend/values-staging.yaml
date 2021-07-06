@@ -19,3 +19,9 @@ envVars:
     value: "False"
   LOAD_TEST_DATA:
     value: "True"
+  SITE_HOSTNAME:
+    value: "cla-frontend-socket-server.laa-cla-frontend-staging.svc.cluster.local"
+  FRONTEND_HOST_NAME:
+    value: "http://cla-frontend-socket-server.laa-cla-frontend-staging.svc.cluster.local"
+  EXPRESS_SERVER_PORT:
+    value: "80"

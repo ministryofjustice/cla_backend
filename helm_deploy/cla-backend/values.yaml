@@ -87,21 +87,13 @@ queueWorkers:
 
 envVars:
   SITE_HOSTNAME:
-    secret:
-      name: frontend
-      key: hostname
+    value: "cases.civillegaladvice.service.gov.uk"
   FRONTEND_HOST_NAME:
-    secret:
-      name: frontend
-      key: url
+    value: "http://cases.civillegaladvice.service.gov.uk"
   EXPRESS_SERVER_PORT:
-    secret:
-      name: express
-      key: port
+    value: "8005"
   SOCKETIO_SERVER_URL:
-    secret:
-      name: express
-      key: url
+    value: "/socket.io"
   DB_HOST:
     secret:
       name: database

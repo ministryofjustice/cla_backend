@@ -45,3 +45,7 @@ envVars:
     value: "False"
   SQS_SECRET_KEY:
     value: "False"
+  SITE_HOSTNAME:
+    value: "cla-frontend-socket-server.laa-cla-frontend-uat.svc.cluster.local"
+  FRONTEND_HOST_NAME:
+    value: "http://cla-frontend-socket-server.laa-cla-frontend-uat.svc.cluster.local"

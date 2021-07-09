@@ -87,11 +87,11 @@ queueWorkers:
 
 envVars:
   SITE_HOSTNAME:
-    value: "cla-frontend-socket-server.laa-cla-frontend-production.svc.cluster.local"
+    value: "cases.civillegaladvice.service.gov.uk"
   FRONTEND_HOST_NAME:
-    value: "http://cla-frontend-socket-server.laa-cla-frontend-production.svc.cluster.local"
+    value: "http://cases.civillegaladvice.service.gov.uk"
   EXPRESS_SERVER_PORT:
-    value: "80"
+    value: "8005"
   SOCKETIO_SERVER_URL:
     value: "/socket.io"
   DB_HOST:

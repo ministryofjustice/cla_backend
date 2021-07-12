@@ -5,6 +5,8 @@ environment: "uat"
 image:
   pullPolicy: IfNotPresent
 
+replicaCount: 1
+
 localPostgres:
   enabled: true
 

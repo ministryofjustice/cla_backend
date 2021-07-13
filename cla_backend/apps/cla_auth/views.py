@@ -1,4 +1,6 @@
 import logging
+from sentry_sdk import capture_exception
+
 
 from ipware.ip import get_ip
 from rest_framework.exceptions import Throttled
@@ -87,3 +89,10 @@ class AccessTokenView(Oauth2AccessTokenView):
             },
         )
         return form.cleaned_data
+
+    def error_response(self, error, content_type="application/json", status=400, **kwargs):
+        response = super(AccessTokenView, self).error_response(error, content_type, status, **kwargs)
+        message = "INVESTIGATE-LGA-1746: {} {}".format(response.status_code, response.content)
+        capture_exception()
+        logging.info(message)
+        return response

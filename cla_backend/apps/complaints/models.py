@@ -159,9 +159,11 @@ class Complaint(TimeStampedModel):
     @property
     def out_of_sla(self):
         """
-        True if complaint is unresolved for over 15 working days. test text
+        True if complaint is unresolved for over 15 working days.
         """
-        sla = get_day_sla_time(self.created, SLA_DAYS)
+        test = 0
+        if test == 0:
+            sla = get_day_sla_time(self.created, SLA_DAYS)
         return (self.closed or timezone.now()) > sla
 
     @property

@@ -161,9 +161,7 @@ class Complaint(TimeStampedModel):
         """
         True if complaint is unresolved for over 15 working days.
         """
-        test = 0
-        if test == 0:
-            sla = get_day_sla_time(self.created, SLA_DAYS)
+        sla = get_day_sla_time(self.created, SLA_DAYS)
         return (self.closed or timezone.now()) > sla
 
     @property

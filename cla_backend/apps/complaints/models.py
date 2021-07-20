@@ -33,6 +33,7 @@ class ComplaintManager(models.Manager):
 class Complaint(TimeStampedModel):
     eod = models.ForeignKey("legalaid.EODDetails")
 
+    test = models.TextField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     source = models.CharField(max_length=15, choices=COMPLAINT_SOURCE, blank=True)
     level = models.PositiveSmallIntegerField(

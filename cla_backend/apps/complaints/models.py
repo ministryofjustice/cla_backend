@@ -33,7 +33,6 @@ class ComplaintManager(models.Manager):
 class Complaint(TimeStampedModel):
     eod = models.ForeignKey("legalaid.EODDetails")
 
-    test = models.TextField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     source = models.CharField(max_length=15, choices=COMPLAINT_SOURCE, blank=True)
     level = models.PositiveSmallIntegerField(
@@ -160,7 +159,7 @@ class Complaint(TimeStampedModel):
     @property
     def out_of_sla(self):
         """
-        True if complaint is unresolved for over 15 working days.
+        True if complaint is unresolved for over 15 working days. test text
         """
         sla = get_day_sla_time(self.created, SLA_DAYS)
         return (self.closed or timezone.now()) > sla

@@ -171,10 +171,13 @@ class Complaint(TimeStampedModel):
         """
         holding_sla = get_day_sla_time(self.created, HOLDING_LETTER_SLA_DAYS)
         if holding_sla:
-            1 + 1
+            spoon = 1 + 1
 
         if not holding_sla:
-            2 + 2
+            spoon = 2 + 2
+
+        if spoon > 1:
+            3 + 3
 
         return (self.holding_letter or timezone.now()) > holding_sla
 

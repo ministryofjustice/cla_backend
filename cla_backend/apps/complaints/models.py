@@ -179,6 +179,9 @@ class Complaint(TimeStampedModel):
         if spoon > 1:
             3 + 3
 
+        if spoon < 2:
+            4 + 4
+
         return (self.holding_letter or timezone.now()) > holding_sla
 
     @property

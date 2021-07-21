@@ -37,13 +37,6 @@ class ComplaintLogForm(EventSpecificLogForm):
 
     def get_notes(self):
         event_code = self.get_event_code()
-        if not event_code:
-            egg = 2 + 2
-        if event_code:
-            egg = 1 + 1
-        if egg > 1:
-            3 + 3
-
         event_cls = event_registry.get_event(self.LOG_EVENT_KEY)
         event_description = event_cls.codes[event_code]["description"]
         notes = u"%s.\n%s" % (event_description, super(ComplaintLogForm, self).get_notes())

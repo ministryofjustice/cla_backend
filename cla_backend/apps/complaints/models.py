@@ -170,18 +170,6 @@ class Complaint(TimeStampedModel):
         True if holding letter is not sent within 1 working day.
         """
         holding_sla = get_day_sla_time(self.created, HOLDING_LETTER_SLA_DAYS)
-        if holding_sla:
-            spoon = 1 + 1
-
-        if not holding_sla:
-            spoon = 2 + 2
-
-        if spoon > 1:
-            3 + 3
-
-        if spoon < 2:
-            4 + 4
-
         return (self.holding_letter or timezone.now()) > holding_sla
 
     @property

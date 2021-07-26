@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   slack: circleci/slack@3.4.2
+  codecov: codecov/codecov@1.0.2
 jobs:
   build:
     docker:
@@ -129,10 +130,16 @@ jobs:
             coverage run manage.py test --verbosity=2
             coverage report -m
             coverage html
+            coverage xml
             coveralls
       - store_artifacts:
           path: htmlcov
           destination: coverage
+      - store_artifacts:
+          path: coverage.xml
+          destination: coverage
+      - codecov/upload:
+          file: coverage.xml
       - store_test_results:
           path: test-reports
       - store_artifacts:

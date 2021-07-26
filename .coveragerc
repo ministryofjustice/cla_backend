@@ -3,3 +3,12 @@ source = cla_backend
 omit =
         *migrations*
         cla_backend/settings/*
+        ./venv/*
+        *tests*
+        *apps.py
+        *manage.py
+        *__init__.py
+        *asgi*
+        *wsgi*
+        *admin.py
+        *urls.py

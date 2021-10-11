@@ -274,11 +274,26 @@ LOGGING = {
     },
 }
 
+
+LOW_SAMPLE_RATE_TRANSACTIONS = ["/status/", "/status", "/admin/", "/admin/login/"]
+
+
+def traces_sampler(sampling_context):
+    try:
+        name = sampling_context["transaction_context"]["name"]
+    except Exception:
+        pass
+    else:
+        if name in LOW_SAMPLE_RATE_TRANSACTIONS:
+            return 0.0001
+    return 0.1
+
+
 if "SENTRY_DSN" in os.environ:
     sentry_sdk.init(
         dsn=os.environ.get("SENTRY_DSN"),
         integrations=[DjangoIntegration()],
-        traces_sample_rate=0.5,
+        traces_sampler=traces_sampler,
         environment=os.environ.get("CLA_ENV", "unknown"),
     )
 

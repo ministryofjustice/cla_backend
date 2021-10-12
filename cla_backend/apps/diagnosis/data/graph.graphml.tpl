@@ -2880,9 +2880,9 @@ You should now direct the client to their nearest contracted quality assured fam
     <node id="n319">
       <data key="d3" xml:space="preserve">{% blocktrans %}Please read the following to the client:
 
-*"We may be able to put you through to a specialist provider who could help you with this area of law, but before I can transfer you we need to complete a short financial assessment to see if you can get legal aid.*
+*"We may be able to put you through to a legal adviser who could help you with this area of law, before I can transfer you we need to complete a short financial assessment to see if you can get legal aid."*
 
-*Please note that before a specialist advisor can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof."*{% endblocktrans %}</data>
+*Please note that before a legal adviser can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof."*{% endblocktrans %}</data>
       <data key="d4" xml:space="preserve">None of the above, a</data>
       <data key="d10" xml:space="preserve">n328</data>
       </node>

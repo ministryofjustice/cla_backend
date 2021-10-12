@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 10:30+0000\n"
+"POT-Creation-Date: 2021-10-06 11:23+0100\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -15,20 +15,16 @@ msgstr ""
 "X-Language: cy\n"
 "X-Source-Language: en_GB\n"
 
-#: apps/call_centre/forms.py:53
+#: apps/call_centre/forms.py:61
 msgid "There is no provider specified in the system to handle cases of this law category."
 msgstr "Nid oes darparwr penodol ar y system i ddelio ag achosion yn y categori hwn o'r gyfraith."
 
-#: apps/call_centre/forms.py:57
-msgid "Can't assign to specialist provider without setting matter_type1 and matter_type2"
-msgstr "Ni ellir aseinio i ddarparwr arbenigol heb nodi matter_type1 a matter_type2"
-
-#: apps/call_centre/forms.py:64
+#: apps/call_centre/forms.py:69
 #, python-brace-format
 msgid "Category of matter type 1: {category1} must match category of matter type 2: {category2}"
 msgstr "Categori mater math 1: rhaid i {category1} gyd-fynd â chategori mater math 2: {category2}"
 
-#: apps/call_centre/forms.py:78
+#: apps/call_centre/forms.py:83
 #, python-brace-format
 msgid "Category of Matter Types: {category1}, {category2} must match category of case: {case_category}"
 msgstr "Categori mathau o faterion: rhaid i {category1} a {category2} gyd-fynd â chategori'r achos: {case_category}"
@@ -84,15 +80,15 @@ msgstr "Rhowch yr un cyfrinair ag uchod, er mwyn ei wirio."
 msgid "Raw passwords are not stored, so there is no way to see this user's password, but you can change the password using <a href=\"password/\">this form</a>."
 msgstr "Nid yw cyfrineiriau crai yn cael eu storio, felly nid oes modd gweld cyfrinair y defnyddiwr hwn, ond gallwch newid y cyfrinair gan ddefnyddio <a href=\"password/\"> y ffurflen hon </a>."
 
-#: apps/core/admin/modeladmin.py:86
+#: apps/core/admin/modeladmin.py:84
 msgid "Account unlocked successfully."
 msgstr "Mae'r cyfrif wedi'i ddatgloi yn llwyddiannus."
 
-#: apps/core/admin/modeladmin.py:102
+#: apps/core/admin/modeladmin.py:100
 msgid "Password changed successfully."
 msgstr "Newidiwyd y cyfrinair yn llwyddiannus."
 
-#: apps/core/admin/modeladmin.py:112
+#: apps/core/admin/modeladmin.py:110
 #, python-format
 msgid "Change password: %s"
 msgstr "Newid cyfrinair: %s"
@@ -2186,12 +2182,19 @@ msgid "No abuse."
 msgstr "Dim cam-drin."
 
 #: apps/diagnosis/data/graph.graphml.tpl:2881
+#, fuzzy
+#| msgid ""
+#| "Please read the following to the client:\n"
+#| "\n"
+#| "*\"We may be able to put you through to a specialist provider who could help you with this area of law, but before I can transfer you we need to complete a short financial assessment to see if you can get legal aid.*\n"
+#| "\n"
+#| "*Please note that before a specialist advisor can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof.\"*"
 msgid ""
 "Please read the following to the client:\n"
 "\n"
-"*\"We may be able to put you through to a specialist provider who could help you with this area of law, but before I can transfer you we need to complete a short financial assessment to see if you can get legal aid.*\n"
+"*\"We may be able to put you through to a legal adviser who could help you with this area of law, before I can transfer you we need to complete a short financial assessment to see if you can get legal aid.\"*\n"
 "\n"
-"*Please note that before a specialist advisor can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof.\"*"
+"*Please note that before a legal adviser can assist you, you will need to provide proof of what you have told me about today. They will explain to you what you can use as proof.\"*"
 msgstr ""
 "Darllenwch y canlynol i'r cleient:\n"
 "\n"
@@ -2281,11 +2284,11 @@ msgstr "Unrhyw fater arall"
 msgid "Date to attend court"
 msgstr ""
 
-#: apps/timer/models.py:55
+#: apps/timer/models.py:54
 msgid "created"
 msgstr ""
 
-#: apps/timer/models.py:56
+#: apps/timer/models.py:55
 msgid "modified"
 msgstr ""
 
@@ -2339,13 +2342,16 @@ msgstr "Dim ar gael"
 msgid "Unknown content"
 msgstr "Cynnwys dieithr"
 
-#: templates/admin/reports/base.html:35
+#: templates/admin/reports/base.html:41
 msgid "Home"
 msgstr "Hafan"
 
-#: templates/admin/reports/base.html:36
+#: templates/admin/reports/base.html:42
 msgid "Reports"
 msgstr "Adroddiadau"
+
+#~ msgid "Can't assign to specialist provider without setting matter_type1 and matter_type2"
+#~ msgstr "Ni ellir aseinio i ddarparwr arbenigol heb nodi matter_type1 a matter_type2"
 
 #~ msgid ""
 #~ "Public law problem (the local council is involved)\n"

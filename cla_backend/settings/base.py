@@ -283,12 +283,7 @@ LOW_SAMPLE_RATE_TRANSACTIONS = ["/status/", "/status", "/admin/", "/admin/login/
 def traces_sampler(sampling_context):
     logger = logging.getLogger(__name__)
     try:
-        logger.warning(json.dumps(sampling_context.keys()))
-        logger.warning(sampling_context["wsgi_environ"].get("PATH_INFO"))
-    except Exception:
-        pass
-    try:
-        name = sampling_context["transaction_context"]["name"]
+        name = sampling_context["wsgi_environ"].get("PATH_INFO")
     except Exception:
         pass
     else:

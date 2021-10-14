@@ -1,6 +1,4 @@
 import datetime
-import json
-import logging
 import sys
 import os
 
@@ -281,7 +279,6 @@ LOW_SAMPLE_RATE_TRANSACTIONS = ["/status/", "/status", "/admin/", "/admin/login/
 
 
 def traces_sampler(sampling_context):
-    logger = logging.getLogger(__name__)
     try:
         name = sampling_context["wsgi_environ"].get("PATH_INFO")
     except Exception:

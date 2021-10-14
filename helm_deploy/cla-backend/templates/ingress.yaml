@@ -12,6 +12,8 @@ metadata:
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}
   annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: {{ $fullName }}-{{ .Release.Namespace }}-{{- .Values.ingress.cluster.live1.name -}}
+    external-dns.alpha.kubernetes.io/aws-weight: "{{- .Values.ingress.cluster.live1.weight -}}"
     nginx.ingress.kubernetes.io/whitelist-source-range: "{{ include "cla-backend.whitelist" . }}"
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}

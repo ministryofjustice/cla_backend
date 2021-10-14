@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import sys
 import os
@@ -284,9 +285,9 @@ def traces_sampler(sampling_context):
     try:
         name = sampling_context["transaction_context"]["name"]
     except Exception:
-        logger.warning("Could not find transaction name")
+        pass
     else:
-        logger.warning("Transaction name: {}".format(name))
+        logger.warning(json.dumps(sampling_context["transaction_context"]))
         if name in LOW_SAMPLE_RATE_TRANSACTIONS:
             return 0.0001
     return 0.1

@@ -280,7 +280,7 @@ LOW_SAMPLE_RATE_TRANSACTIONS = ["/status/", "/status", "/admin/", "/admin/login/
 
 def traces_sampler(sampling_context):
     try:
-        name = sampling_context["transaction_context"]["name"]
+        name = sampling_context["wsgi_environ"].get("PATH_INFO")
     except Exception:
         pass
     else:

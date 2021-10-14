@@ -287,7 +287,7 @@ def traces_sampler(sampling_context):
     except Exception:
         pass
     else:
-        logger.warning(json.dumps(sampling_context["transaction_context"]))
+        logger.warning(json.dumps(sampling_context["transaction_context"].keys()))
         if name in LOW_SAMPLE_RATE_TRANSACTIONS:
             return 0.0001
     return 0.1

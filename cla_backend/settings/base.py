@@ -1,4 +1,5 @@
 import datetime
+import logging
 import sys
 import os
 
@@ -279,11 +280,13 @@ LOW_SAMPLE_RATE_TRANSACTIONS = ["/status/", "/status", "/admin/", "/admin/login/
 
 
 def traces_sampler(sampling_context):
+    logger = logging.getLogger(__name__)
     try:
         name = sampling_context["transaction_context"]["name"]
     except Exception:
-        pass
+        logger.warning("Could not find transaction name")
     else:
+        logger.warning("Transaction name: {}".format(name))
         if name in LOW_SAMPLE_RATE_TRANSACTIONS:
             return 0.0001
     return 0.1

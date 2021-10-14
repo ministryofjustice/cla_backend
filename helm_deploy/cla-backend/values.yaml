@@ -42,6 +42,13 @@ host: 'localhost'
 ingress:
   enabled: true
   annotations: {}
+  cluster:
+    live1:
+      name: blue
+      weight: 100
+    live:
+      name: ~
+      weight: 0
   whitelist:
     # MoJ
     - 81.134.202.29/32

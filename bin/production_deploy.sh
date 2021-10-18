@@ -8,6 +8,8 @@ helm upgrade $RELEASE_NAME \
   $HELM_DIR \
   --namespace=${KUBE_ENV_PRODUCTION_NAMESPACE} \
   --set host=$RELEASE_HOST \
+  --set ingress.cluster.name=${INGRESS_CLUSTER_NAME} \
+  --set ingress.cluster.weight=${INGRESS_CLUSTER_WEIGHT} \
   --set secretName=tls-certificate \
   --set image.repository=$DOCKER_REPOSITORY \
   --set image.tag=$IMAGE_TAG \

@@ -9,6 +9,8 @@ helm upgrade $RELEASE_NAME \
   --namespace=${KUBE_ENV_TRAINING_NAMESPACE} \
   --values ${HELM_DIR}/values-training.yaml \
   --set host=$RELEASE_HOST \
+  --set ingress.cluster.name=${INGRESS_CLUSTER_NAME} \
+  --set ingress.cluster.weight=${INGRESS_CLUSTER_WEIGHT} \
   --set secretName=tls-certificate \
   --set image.repository=$DOCKER_REPOSITORY \
   --set image.tag=$IMAGE_TAG \

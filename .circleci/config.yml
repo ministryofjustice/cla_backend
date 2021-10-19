@@ -169,6 +169,8 @@ jobs:
       - deploy:
           name: Deploy to << parameters.namespace >>
           command: |
+            export INGRESS_CLUSTER_NAME=`kubectl get configmap ingress-cluster -o jsonpath='{.data.name}'`
+            export INGRESS_CLUSTER_WEIGHT=`kubectl get configmap ingress-cluster -o jsonpath='{.data.weight}'`
             source .circleci/define_build_environment_variables << parameters.namespace >> << parameters.dynamic_hostname >>
             pip3 install requests
             export PINGDOM_IPS=`python3 bin/pingdom_ips.py`

@@ -42,6 +42,9 @@ host: 'localhost'
 ingress:
   enabled: true
   annotations: {}
+  cluster:
+    name: ~
+    weight: ~
   whitelist:
     # MoJ
     - 81.134.202.29/32

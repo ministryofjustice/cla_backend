@@ -158,10 +158,14 @@ jobs:
             tar -zxvf helm-v3.1.2-linux-amd64.tar.gz
             mv linux-amd64/helm /usr/local/bin/helm
       - run:
-          name: Initialise Kubernetes << parameters.namespace >> context
+          name: Authenticate with cluster
           command: |
-            setup-kube-auth
-            kubectl config use-context << parameters.namespace >>
+            echo -n ${K8S_CLUSTER_CERT} | base64 -d > ./ca.crt
+            kubectl config set-cluster ${K8S_CLUSTER_NAME} --certificate-authority=./ca.crt --server=${K8S_SERVER_ADDRESS}
+            kubectl config set-credentials circleci --token=${K8S_TOKEN}
+            kubectl config set-context ${K8S_CLUSTER_NAME} --cluster=${K8S_CLUSTER_NAME} --user=circleci --namespace=${K8S_NAMESPACE}
+            kubectl config use-context ${K8S_CLUSTER_NAME}
+            kubectl --namespace=${K8S_NAMESPACE} get pods
       - deploy:
           name: Deploy to << parameters.namespace >>
           command: |
@@ -221,19 +225,23 @@ workflows:
             branches:
               ignore:
                 - master
-          context: laa-cla-backend
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live1-uat
 
       - static_uat_deploy_approval:
           type: approval
           requires:
             - build
       - deploy:
-          name: static_uat_deploy
+          name: static_uat_deploy_live1
           namespace: uat
           dynamic_hostname: false
           requires:
             - static_uat_deploy_approval
-          context: laa-cla-backend
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live1-uat
 
       - staging_deploy_approval:
           type: approval
@@ -244,16 +252,18 @@ workflows:
               only:
                 - master
       - deploy:
-          name: staging_deploy
+          name: staging_deploy_live1
           namespace: staging
           dynamic_hostname: false
           requires:
             - staging_deploy_approval
-          context: laa-cla-backend
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live1-staging
 
       - production_deploy_approval:
           requires:
-            - staging_deploy
+            - staging_deploy_live1
           type: approval
           filters:
             branches:
@@ -261,17 +271,21 @@ workflows:
                 - master
 
       - deploy:
-          name: training_deploy
+          name: training_deploy_live1
           namespace: training
           dynamic_hostname: false
           requires:
             - production_deploy_approval
-          context: laa-cla-backend
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live1-training
 
       - deploy:
-          name: production_deploy
+          name: production_deploy_live1
           namespace: production
           dynamic_hostname: false
           requires:
             - production_deploy_approval
-          context: laa-cla-backend
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live1-production

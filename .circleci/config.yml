@@ -261,7 +261,7 @@ workflows:
 
       - production_deploy_approval:
           requires:
-            - staging_deploy
+            - staging_deploy_live1
           type: approval
           filters:
             branches:

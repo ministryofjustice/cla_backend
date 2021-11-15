@@ -34,7 +34,7 @@ jobs:
           command: .circleci/tag_and_push_docker_image application:$CIRCLE_SHA1
   lint:
     docker:
-      - image: cimg/python:2.7
+      - image: circleci/python:2.7
     steps:
       - checkout
       - run:
@@ -61,7 +61,7 @@ jobs:
             flake8 cla_backend
   formatting:
     docker:
-      - image: cimg/python:3.7
+      - image: circleci/python:3.7
     steps:
       - checkout
       - run:
@@ -88,12 +88,12 @@ jobs:
             black --check cla_backend
   test:
     docker:
-      - image: cimg/python:2.7
+      - image: circleci/python:2.7
         environment:
           DB_NAME: circle_test
           DB_USER: root
           DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
-      - image: cimg/postgres:9.4-alpine
+      - image: circleci/postgres:9.4-alpine
         environment:
           POSTGRES_USER: root
           POSTGRES_DB: circle_test

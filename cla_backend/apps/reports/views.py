@@ -167,19 +167,19 @@ def metrics_report(request):
 @staff_member_required
 @permission_required("legalaid.run_reports")
 def mi_case_view_audit_log_extract(request):
-    report_view(request, MIExtractCaseViewAuditLog, "MI Case Views Audit Log Extract")
+    return report_view(request, MIExtractCaseViewAuditLog, "MI Case Views Audit Log Extract")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
 def mi_complaint_view_audit_log_extract(request):
-    report_view(request, MIExtractComplaintViewAuditLog, "MI Complaints Views Audit Log Extract")
+    return report_view(request, MIExtractComplaintViewAuditLog, "MI Complaints Views Audit Log Extract")
 
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
 def all_knowledgebase_articles(request):
-    report_view(request, AllKnowledgeBaseArticles, "Knowledge Base Articles")
+    return report_view(request, AllKnowledgeBaseArticles, "Knowledge Base Articles")
 
 
 @staff_member_required

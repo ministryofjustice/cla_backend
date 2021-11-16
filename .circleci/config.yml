@@ -248,8 +248,19 @@ workflows:
           type: approval
           requires:
             - build
+
       - deploy:
-          name: static_uat_deploy_live1
+          name: static_uat_deploy_live
+          namespace: uat
+          dynamic_hostname: false
+          requires:
+            - static_uat_deploy_approval
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live-uat
+
+      - deploy:
+          name: static_uat_deploy_live_1
           namespace: uat
           dynamic_hostname: false
           requires:

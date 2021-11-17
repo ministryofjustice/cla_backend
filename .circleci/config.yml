@@ -307,7 +307,17 @@ workflows:
                 - master
 
       - deploy:
-          name: training_deploy_live1
+          name: training_deploy_live
+          namespace: training
+          dynamic_hostname: false
+          requires:
+            - production_deploy_approval
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live-training
+
+      - deploy:
+          name: training_deploy_live_1
           namespace: training
           dynamic_hostname: false
           requires:

@@ -287,6 +287,16 @@ workflows:
            - laa-cla-backend
            - laa-cla-backend-live1-staging
 
+      - deploy:
+          name: staging_deploy_live
+          namespace: staging
+          dynamic_hostname: false
+          requires:
+            - staging_deploy_approval
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live-staging
+
       - production_deploy_approval:
           requires:
             - staging_deploy_live1

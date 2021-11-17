@@ -215,8 +215,9 @@ workflows:
             - lint
             - test
           context: laa-cla-backend
+
       - deploy:
-          name: uat_deploy
+          name: uat_deploy_live_1
           namespace: uat
           dynamic_hostname: true
           requires:
@@ -229,12 +230,37 @@ workflows:
            - laa-cla-backend
            - laa-cla-backend-live1-uat
 
+      - deploy:
+          name: uat_deploy_live
+          namespace: uat
+          dynamic_hostname: true
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - master
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live-uat
+
       - static_uat_deploy_approval:
           type: approval
           requires:
             - build
+
       - deploy:
-          name: static_uat_deploy_live1
+          name: static_uat_deploy_live
+          namespace: uat
+          dynamic_hostname: false
+          requires:
+            - static_uat_deploy_approval
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live-uat
+
+      - deploy:
+          name: static_uat_deploy_live_1
           namespace: uat
           dynamic_hostname: false
           requires:

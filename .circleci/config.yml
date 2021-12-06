@@ -203,7 +203,16 @@ workflows:
       - lint
       - test
       - cleanup_merged:
-          context: laa-cla-backend
+          name: cleanup_merged_live1
+          context:
+            - laa-cla-backend
+            - laa-cla-backend-live1-uat
+      - cleanup_merged:
+          name: cleanup_merged_live
+          context:
+            - laa-cla-backend
+            - laa-cla-backend-live-uat
+
       - build:
           requires:
             - lint

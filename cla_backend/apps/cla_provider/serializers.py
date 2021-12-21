@@ -183,6 +183,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "on_nass_benefits",
             "state",
             "specific_benefits",
+            "disregards",
             "has_passported_proceedings_letter",
         )
 

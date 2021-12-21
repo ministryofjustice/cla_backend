@@ -10,7 +10,7 @@ from rest_framework import serializers
 from core.drf.fields import ThreePartDateField
 from core.serializers import UUIDSerializer, ClaModelSerializer, PartialUpdateExcludeReadonlySerializerMixin, JSONField
 
-from cla_common.constants import MATTER_TYPE_LEVELS, SPECIFIC_BENEFITS
+from cla_common.constants import DISREGARDS, MATTER_TYPE_LEVELS, SPECIFIC_BENEFITS
 from cla_common.money_interval.models import MoneyInterval
 
 from cla_provider.models import Provider, OutOfHoursRota, Feedback, CSVUpload
@@ -244,6 +244,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     your_problem_notes = serializers.CharField(max_length=500, required=False)
     notes = serializers.CharField(max_length=5000, required=False)
     specific_benefits = JSONField(required=False)
+    disregards = JSONField(required=False)
 
     class Meta(object):
         model = EligibilityCheck
@@ -271,6 +272,20 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
                 # translate into safer bool values
                 data_benefits = {k: bool(v) for k, v in data_benefits.items()}
                 attrs[source] = data_benefits
+
+        return attrs
+
+    def validate_disregards(self, attrs, source):
+        if source in attrs:
+            data_disregards = attrs[source]
+            if data_disregards:
+                extra_fields = set(data_disregards.keys()) - set(DISREGARDS.CHOICES_DICT.keys())
+                if extra_fields:
+                    raise serializers.ValidationError("Fields %s not recognised" % ", ".join(list(extra_fields)))
+
+                # translate into safer bool values
+                data_disregards = {k: bool(v) for k, v in data_disregards.items()}
+                attrs[source] = data_disregards
 
         return attrs
 

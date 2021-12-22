@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   slack: circleci/slack@3.4.2
-  e2e: ministryofjustice/cla-end-to-end-tests@dev:first
+  cla-end-to-end-tests: ministryofjustice/cla-end-to-end-tests@dev:first
 jobs:
   build:
     docker:
@@ -139,12 +139,6 @@ jobs:
       - store_artifacts:
           path: test-reports
 
-  end-to-end-tests:
-    docker:
-      - image: circleci/python:2.7-jessie
-    steps:
-      - e2e/behave
-
   deploy:
     parameters:
       namespace:
@@ -226,7 +220,7 @@ workflows:
             - test
           context: laa-cla-backend
 
-      - end-to-end-tests:
+      - cla-end-to-end-tests/behave:
           requires:
             - build
           context: laa-cla-backend

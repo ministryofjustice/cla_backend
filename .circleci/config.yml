@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   slack: circleci/slack@3.4.2
-  e2e: ministryofjustice/cla-end-to-end-tests
+  e2e: ministryofjustice/cla-end-to-end-tests@dev:first
 jobs:
   build:
     docker:

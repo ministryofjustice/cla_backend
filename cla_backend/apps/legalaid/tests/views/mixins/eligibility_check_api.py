@@ -41,6 +41,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             "has_partner",
             "on_passported_benefits",
             "specific_benefits",
+            "disregards",
             "on_nass_benefits",
             "is_you_or_your_partner_over_60",
         ]
@@ -216,6 +217,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             "is_you_or_your_partner_over_60": random.choice([None, True, False]),
             "on_passported_benefits": random.choice([None, True, False]),
             "specific_benefits": None,
+            "disregards": None,
         }
         response = self._create(data=data)
 
@@ -233,6 +235,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                 is_you_or_your_partner_over_60=data["is_you_or_your_partner_over_60"],
                 on_passported_benefits=data["on_passported_benefits"],
                 specific_benefits=None,
+                disregards=None,
             ),
         )
 

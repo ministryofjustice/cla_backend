@@ -131,6 +131,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "on_passported_benefits",
             "on_nass_benefits",
             "specific_benefits",
+            "disregards",
         )
 
 

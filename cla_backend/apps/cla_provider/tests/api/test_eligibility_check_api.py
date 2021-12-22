@@ -31,6 +31,7 @@ class EligibilityCheckTestCase(CLAProviderAuthBaseApiTestMixin, NestedEligibilit
             "is_you_or_your_partner_over_60",
             "state",
             "specific_benefits",
+            "disregards",
             "has_passported_proceedings_letter",
         ]
 

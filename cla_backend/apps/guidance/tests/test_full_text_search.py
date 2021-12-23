@@ -25,7 +25,7 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
         self.assertTitlesEqual(search_results, titles)
 
         search_results = self._get_search_results("prompt")
-        self.assertEqual(len(search_results), 13)
+        self.assertEqual(len(search_results), 14)
         titles = [
             u"Debt Prompts",
             u"Discrimination Prompts",
@@ -40,6 +40,7 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
             u"Opening Call",
             u"Welfare Benefit Prompts",
             u"Zero income prompts",
+            u"Disregard prompts",
         ]
         self.assertTitlesEqual(search_results, titles)
 
@@ -54,7 +55,7 @@ class FullTextSearchTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):
         response = self._get_with_auth(url, {"search": "prompt"})
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.data, list)
-        self.assertEqual(len(response.data), 13)
+        self.assertEqual(len(response.data), 14)
         self.assertIn("id", response.data[0])
         self.assertIn("title", response.data[0])
 

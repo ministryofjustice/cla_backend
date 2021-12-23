@@ -3287,5 +3287,17 @@
     },
     "model": "guidance.note",
     "pk": 38
+},
+{
+    "fields": {
+        "body": "<h2>Disregards</h2>\n<p>Disregards are being introduced to the civil means test to allow for: </p>\n<p>A mandatory disregard for one-off lump sum payments for UK government funded schemes where there has been a state error; and</p>\n<p>A discretionary disregard for UK schemes (government or charity) designed to provide financial support to direct or indirect victims of a serious incident external to state action such as a violent crime, terrorist action or a national emergency.</p>\n<p>Payments made through such schemes will be disregarded when calculating the disposable income, gross income or disposable capital of an applicant (at the time of their initial application and for any reassessment).</p>\n<p>The mandatory disregards will be made to the following schemes; Infected blood support scheme, Vaccine Damage Payments, Variant Creutzfeldt-Jakob disease (vCJD) Trust.  Discretionary disregard will be applied to the following schemes; Criminal injuries compensation scheme, National Emergencies Trust (NET) payment, We Love Manchester Emergency Fund, The London Emergencies Trust.</p>\n",
+        "name": "disregards",
+        "raw_body": "## Disregards guidance\r\n\r\nDisregards are being introduced to the civil means test to allow for: \r\n\r\nA mandatory disregard for one-off lump sum payments for UK government funded schemes where there has been a state error; and\r\nA discretionary disregard for UK schemes (government or charity) designed to provide financial support to direct or indirect victims of a serious incident external to state action such as a violent crime, terrorist action or a national emergency.\r\nPayments made through such schemes will be disregarded when calculating the disposable income, gross income or disposable capital of an applicant (at the time of their initial application and for any reassessment).\r\nThe mandatory disregards will be made to the following schemes; Infected blood support scheme, Vaccine Damage Payments, Variant Creutzfeldt-Jakob disease (vCJD) Trust.  Discretionary disregard will be applied to the following schemes; Criminal injuries compensation scheme, National Emergencies Trust (NET) payment, We Love Manchester Emergency Fund, The London Emergencies Trust.\r\n",
+        "title": "Disregard prompts",
+        "modified": "2015-03-02T14:29:51.459Z",
+        "created": "2015-03-02T13:45:11.020Z"
+    },
+    "model": "guidance.note",
+    "pk": 39
 }
 ]

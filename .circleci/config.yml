@@ -225,9 +225,11 @@ workflows:
             - build
           context: laa-cla-backend
           pre-steps:
+            - checkout:
+                path: cla_backend
             - run:
                 command: |
-                  source .circleci/define_build_environment_variables testing false
+                  source cla_backend/.circleci/define_build_environment_variables testing false
                   export CLA_E2E_BACKEND_IMAGE=$ECR_DEPLOY_IMAGE
 
       - deploy:

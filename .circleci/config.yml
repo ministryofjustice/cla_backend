@@ -221,8 +221,6 @@ workflows:
           context: laa-cla-backend
 
       - cla-end-to-end-tests/behave:
-          requires:
-            - build
           context: laa-cla-backend
 
       - deploy:

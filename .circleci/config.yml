@@ -229,7 +229,8 @@ workflows:
                 path: cla_backend
             - run:
                 command: |
-                  source cla_backend/.circleci/define_build_environment_variables testing false
+                  cd cla_backend
+                  source .circleci/define_build_environment_variables testing
                   export CLA_E2E_BACKEND_IMAGE=$ECR_DEPLOY_IMAGE
 
       - deploy:

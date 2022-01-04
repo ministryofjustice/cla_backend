@@ -24,6 +24,7 @@ def status(request):
             c.execute("SELECT 1")
             row = c.fetchone()
             db_ready = row[0] == 1
+            db_ready = False
             return JSONResponse({"db": {"ready": db_ready, "message": message}})
         except DatabaseError as e:
             message = str(e)

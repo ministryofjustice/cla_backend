@@ -224,6 +224,11 @@ workflows:
           requires:
             - build
           context: laa-cla-backend
+          pre-steps:
+            - run:
+                command: |
+                  source .circleci/define_build_environment_variables testing false
+                  export CLA_E2E_BACKEND_IMAGE=$ECR_DEPLOY_IMAGE
 
       - deploy:
           name: uat_deploy_live_1

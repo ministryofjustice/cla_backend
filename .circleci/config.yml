@@ -230,6 +230,7 @@ workflows:
                   cd cla_backend
                   source .circleci/define_build_environment_variables testing
                   echo "export CLA_BACKEND_IMAGE=$ECR_DEPLOY_IMAGE" >> $BASH_ENV
+                  echo "Setting CLA Backend image $CLA_BACKEND_IMAGE"
 
       - deploy:
           name: uat_deploy_live_1

@@ -15,6 +15,7 @@ dependants_old,
 on_passported_benefits,
 on_nass_benefits,
 specific_benefits,
+CASE WHEN lower(disregards::text) LIKE '%%:true%%' THEN 'Yes' ELSE 'No' end as "Disregarded Payment",
 is_you_or_your_partner_over_60,
 has_partner,
 calculations

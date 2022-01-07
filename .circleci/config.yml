@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   slack: circleci/slack@3.4.2
+  cla-end-to-end-tests: ministryofjustice/cla-end-to-end-tests@dev:first
 jobs:
   build:
     docker:
@@ -218,6 +219,20 @@ workflows:
             - lint
             - test
           context: laa-cla-backend
+
+      - cla-end-to-end-tests/behave:
+          requires:
+            - build
+          context: laa-cla-backend
+          pre-steps:
+            - checkout:
+                path: cla_backend
+            - run:
+                command: |
+                  cd cla_backend
+                  source .circleci/define_build_environment_variables testing
+                  echo "export CLA_BACKEND_IMAGE=$ECR_DEPLOY_IMAGE" >> $BASH_ENV
+                  echo "Setting CLA Backend image $ECR_DEPLOY_IMAGE"
 
       - deploy:
           name: uat_deploy_live_1

@@ -11,8 +11,8 @@ function tag_and_push() {
   docker push $tag
 }
 
-tag_and_push "$ECR_DOCKER_REPOSITORY:$safe_git_branch.$short_sha"
-tag_and_push "$ECR_DOCKER_REPOSITORY:$safe_git_branch"
+tag_and_push "$ECR_DOCKER_REPOSITORY:$CLEANED_BRANCH_NAME.$short_sha"
+tag_and_push "$ECR_DOCKER_REPOSITORY:$CLEANED_BRANCH_NAME"
 
 if [ "$CIRCLE_BRANCH" == "master" ]; then
   tag_and_push "$ECR_DOCKER_REPOSITORY:latest"

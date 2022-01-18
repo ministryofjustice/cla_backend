@@ -24,7 +24,7 @@ Next, create the environment and start it up:
 
     cd cla_backend
     virtualenv -p python2.7 env --prompt=\(cla_be\)
-    
+
     source env/bin/activate
 
 Update pip to the latest version:
@@ -74,6 +74,8 @@ Load initial data:
 Start the server:
 
     ./manage.py runserver 8000
+
+See [Troubleshooting](#troubleshooting) if this fails because the DEBUG environment variable was not set:
 
 See the list of users in `/admin/auth/user/`. Passwords are the same as the usernames.
 
@@ -144,6 +146,10 @@ If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" 
 
     createuser -s -e postgres
 
+If you get the error `CommandError: You must set settings.ALLOWED_HOSTS if DEBUG is False.` then set up a DEBUG environment variable. The easiest way to do this is to add the following line to settings/local.py
+
+    DEBUG = ‘True'
+    
 ## Releasing
 
 ### Releasing to non-production

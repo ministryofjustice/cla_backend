@@ -23,8 +23,8 @@ Clone the repository:
 Next, create the environment and start it up:
 
     cd cla_backend
-    virtualenv env --prompt=\(cla_be\)
-
+    virtualenv -p python2.7 env --prompt=\(cla_be\)
+    
     source env/bin/activate
 
 Update pip to the latest version:

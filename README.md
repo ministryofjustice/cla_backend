@@ -148,7 +148,7 @@ If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" 
 
 If you get the error `CommandError: You must set settings.ALLOWED_HOSTS if DEBUG is False.` then set up a DEBUG environment variable. The easiest way to do this is to add the following line to settings/local.py
 
-    DEBUG = ‘True'
+    DEBUG = True
 
 ## Releasing
 

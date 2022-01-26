@@ -23,7 +23,7 @@ Clone the repository:
 Next, create the environment and start it up:
 
     cd cla_backend
-    virtualenv env --prompt=\(cla_be\)
+    virtualenv -p python2.7 env --prompt=\(cla_be\)
 
     source env/bin/activate
 
@@ -35,7 +35,7 @@ Install python dependencies:
 
     pip install -r requirements/dev.txt
 
-Create the database inside postgres. Type `psql -d template1` to enter postgres, then enter:
+Create the database inside postgres. Make sure the postgres service is started. Type `psql -d template1` to enter postgres, then enter:
 
     CREATE DATABASE cla_backend WITH ENCODING 'UTF-8';
     \c cla_backend
@@ -63,7 +63,7 @@ Sync and migrate the database (n.b. see [Troubleshooting](#troubleshooting) if t
 
     ./manage.py migrate
 
-Create an admin user by running the following command and specifying username == password == 'admin':
+Create an admin user by running the following command and specifying username == password == 'admin' (email choice not relevant):
 
     ./manage.py createsuperuser
 
@@ -74,6 +74,8 @@ Load initial data:
 Start the server:
 
     ./manage.py runserver 8000
+
+See [Troubleshooting](#troubleshooting) if this fails because the DEBUG environment variable was not set:
 
 See the list of users in `/admin/auth/user/`. Passwords are the same as the usernames.
 
@@ -140,9 +142,13 @@ If you are experiencing errors when creating and syncing the database, make sure
     export PATH="/Applications/Postgres.app/Contents/Versions/9.4/bin/:$PATH"
     export DYLD_LIBRARY_PATH="/Applications/Postgres.app/Contents/Versions/9.4/lib/:$DYLD_LIBRARY_PATH"
 
-If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" does not exist`, you will need to create the user `postgres` on the database.
+If you get the error `django.db.utils.OperationalError: FATAL:  role "postgres" does not exist`, you will need to create the user `postgres` on the database. Run this from the command line (not in psql).
 
     createuser -s -e postgres
+
+If you get the error `CommandError: You must set settings.ALLOWED_HOSTS if DEBUG is False.` then set up a DEBUG environment variable. The easiest way to do this is to add the following line to settings/local.py
+
+    DEBUG = True
 
 ## Releasing
 

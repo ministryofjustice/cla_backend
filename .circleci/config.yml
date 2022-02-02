@@ -295,15 +295,6 @@ workflows:
             branches:
               only:
                 - master
-      - deploy:
-          name: staging_deploy_live1
-          namespace: staging
-          dynamic_hostname: false
-          requires:
-            - staging_deploy_approval
-          context:
-           - laa-cla-backend
-           - laa-cla-backend-live1-staging
 
       - deploy:
           name: staging_deploy_live
@@ -317,7 +308,7 @@ workflows:
 
       - production_deploy_approval:
           requires:
-            - staging_deploy_live1
+            - staging_deploy_live
           type: approval
           filters:
             branches:

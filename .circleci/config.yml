@@ -307,16 +307,6 @@ workflows:
            - laa-cla-backend-live1-training
 
       - deploy:
-          name: production_deploy_live1
-          namespace: production
-          dynamic_hostname: false
-          requires:
-            - production_deploy_approval
-          context:
-           - laa-cla-backend
-           - laa-cla-backend-live1-production
-
-      - deploy:
           name: production_deploy_live
           namespace: production
           dynamic_hostname: false

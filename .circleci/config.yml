@@ -204,11 +204,6 @@ workflows:
       - lint
       - test
       - cleanup_merged:
-          name: cleanup_merged_live1
-          context:
-            - laa-cla-backend
-            - laa-cla-backend-live1-uat
-      - cleanup_merged:
           name: cleanup_merged_live
           context:
             - laa-cla-backend
@@ -233,20 +228,6 @@ workflows:
                   source .circleci/define_build_environment_variables testing
                   echo "export CLA_BACKEND_IMAGE=$ECR_DEPLOY_IMAGE" >> $BASH_ENV
                   echo "Setting CLA Backend image $ECR_DEPLOY_IMAGE"
-
-      - deploy:
-          name: uat_deploy_live_1
-          namespace: uat
-          dynamic_hostname: true
-          requires:
-            - build
-          filters:
-            branches:
-              ignore:
-                - master
-          context:
-           - laa-cla-backend
-           - laa-cla-backend-live1-uat
 
       - deploy:
           name: uat_deploy_live
@@ -276,16 +257,6 @@ workflows:
           context:
            - laa-cla-backend
            - laa-cla-backend-live-uat
-
-      - deploy:
-          name: static_uat_deploy_live_1
-          namespace: uat
-          dynamic_hostname: false
-          requires:
-            - static_uat_deploy_approval
-          context:
-           - laa-cla-backend
-           - laa-cla-backend-live1-uat
 
       - staging_deploy_approval:
           type: approval

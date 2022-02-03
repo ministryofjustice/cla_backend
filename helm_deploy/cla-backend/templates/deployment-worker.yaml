@@ -24,12 +24,12 @@ spec:
             exec:
               command: ["python", "manage.py", "worker_probes"]
             initialDelaySeconds: 10
-            timeoutSeconds: 2
+            timeoutSeconds: 10
             periodSeconds: 10
           livenessProbe:
             exec:
               command: ["python", "manage.py", "worker_probes"]
             initialDelaySeconds: 10
-            timeoutSeconds: 2
+            timeoutSeconds: 10
             periodSeconds: 10
 {{- end }}

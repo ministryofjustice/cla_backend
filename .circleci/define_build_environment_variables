@@ -11,28 +11,10 @@ export short_sha="$(git rev-parse --short=7 $CIRCLE_SHA1)"
 export IMAGE_TAG="$CLEANED_BRANCH_NAME.$short_sha"
 export ECR_DEPLOY_IMAGE="$DOCKER_REPOSITORY:$IMAGE_TAG"
 
-case $NAMESPACE in
-  production)
-      export NAMESPACE_HOST="${PRODUCTION_HOST}"
-      ;;
-  uat)
-      export NAMESPACE_HOST="${UAT_HOST}"
-      ;;
-  staging)
-      export NAMESPACE_HOST="${STAGING_HOST}"
-      ;;
-  training)
-      export NAMESPACE_HOST="${TRAINING_HOST}"
-      ;;
-  *)
-      return
-      ;;
-esac
-
 if [ $DYNAMIC_HOSTNAME = true ]; then
   export RELEASE_NAME=${CLEANED_BRANCH_NAME}
-  export RELEASE_HOST=${RELEASE_NAME}-${NAMESPACE_HOST}
+  export RELEASE_HOST=${RELEASE_NAME}-${HOST}
 else
   export RELEASE_NAME=cla-backend
-  export RELEASE_HOST=${NAMESPACE_HOST}
+  export RELEASE_HOST=${HOST}
 fi

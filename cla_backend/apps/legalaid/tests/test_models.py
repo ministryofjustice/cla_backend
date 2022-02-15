@@ -811,7 +811,7 @@ class CaseTestCase(TestCase):
             case.personal_details.case_count shouldn't get updated
         """
         case = make_recipe("legalaid.case")
-        self.assertTrue(case.personal_details, None)
+        self.assertIsNone(case.personal_details)
 
     def test_case_count_gets_updated_if_pd_not_null(self):
         pd = make_recipe("legalaid.personal_details")

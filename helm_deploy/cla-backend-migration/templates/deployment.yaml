@@ -14,8 +14,12 @@ spec:
     spec:
       containers:
         - name: database-migration
-          image: "saidmoj/database-migration:latest"
+          image: "database-migration"
           imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
           env:
             - name: TARGET_DB_HOST
               valueFrom:

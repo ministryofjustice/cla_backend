@@ -26,6 +26,7 @@ jobs:
               --label build.git.branch=$CIRCLE_BRANCH \
               --label build.url=$CIRCLE_BUILD_URL \
               .
+            docker build --tag database-migration -f database-migration.dockerfile ./bin
       - run:
           name: Validate Python version
           command: |

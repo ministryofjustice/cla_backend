@@ -38,7 +38,7 @@ echo 'Dumping pre-data...'
 PGPASSWORD=$SOURCE_DB_PASSWORD pg_dump -U $SOURCE_DB_USER \
       -h $SOURCE_DB_HOST \
       -d $SOURCE_DB_NAME \
-      -O \
+      -Ox \
      --section=pre-data > pre-data.sql
 
  echo 'Dumping data...'

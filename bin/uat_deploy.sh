@@ -8,6 +8,9 @@ VALUES="values-uat-static.yaml"
 if [ $DYNAMIC_HOSTNAME = true ]; then
   VALUES="values-uat.yaml"
 fi
+
+echo "Using values file:$VALUES"
+
 helm upgrade $RELEASE_NAME \
   $HELM_DIR \
   --namespace=${KUBE_ENV_UAT_NAMESPACE} \

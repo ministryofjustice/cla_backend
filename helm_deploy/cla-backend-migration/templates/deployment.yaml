@@ -14,12 +14,11 @@ spec:
     spec:
       containers:
         - name: database-migration
-          image: "database-migration"
+          image: "754256621582.dkr.ecr.eu-west-2.amazonaws.com/laa-get-access/cla_backend:database-migration"
           imagePullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            readOnlyRootFilesystem: true
           env:
             - name: TARGET_DB_HOST
               valueFrom:

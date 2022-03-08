@@ -7,12 +7,13 @@ RUN apk add \
       postgresql-dev \
       python3-dev \
       tzdata \
-      screen
+      screen \
+      --no-cache
 
 RUN adduser -D app && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
-RUN pip install psycopg2==2.7.5
+RUN pip install psycopg2==2.7.5 --no-cache-dir
 
 USER 1000
 WORKDIR /home/app

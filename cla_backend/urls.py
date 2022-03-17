@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
+from status.views import MaintenanceModeView
 
 
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -21,6 +22,7 @@ if settings.ADMIN_ENABLED:
 
     urlpatterns += patterns(
         "",
+        url(r"^maintenance$", view=MaintenanceModeView.as_view(), name="maintenance_page"),
         url(r"^status/", include("status.urls", namespace="status")),
         url(r"^admin/", include(admin.site.urls)),
         url(r"^admin/reports/", include("reports.urls", namespace="reports")),

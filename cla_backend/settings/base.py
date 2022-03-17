@@ -186,6 +186,7 @@ MIDDLEWARE_CLASSES = (
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "status.middleware.MaintenanceModeMiddleware",
 )
 
 ROOT_URLCONF = "cla_backend.urls"
@@ -408,6 +409,8 @@ def bank_holidays_cache_adapter_factory():
 
 
 CacheAdapter.set_adapter_factory(bank_holidays_cache_adapter_factory)
+
+MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
 
 # .local.py overrides all the common settings.
 try:

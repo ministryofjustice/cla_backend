@@ -7,7 +7,6 @@
             "provider_viewed": "2022-03-29T11:12:42.995Z",
             "locked_at": null,
             "search_field": "M721268679",
-            "adaptation_details": 6,
             "source": "PHONE",
             "organisation": null,
             "ecf_statement": null,
@@ -39,10 +38,6 @@
             "eligibility_check": 6,
             "billable_time": 17,
             "is_urgent": false,
-            "audit_log": [
-                11,
-                12
-            ],
             "from_case": null,
             "provider_notes": ""
         },
@@ -57,7 +52,6 @@
             "provider_viewed": "2022-03-29T11:11:24.323Z",
             "locked_at": null,
             "search_field": "F918921549",
-            "adaptation_details": 7,
             "source": "PHONE",
             "organisation": null,
             "ecf_statement": null,
@@ -89,11 +83,6 @@
             "eligibility_check": 7,
             "billable_time": 166,
             "is_urgent": false,
-            "audit_log": [
-                13,
-                14,
-                15
-            ],
             "from_case": null,
             "provider_notes": ""
         },

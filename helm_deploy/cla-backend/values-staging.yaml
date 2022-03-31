@@ -25,27 +25,3 @@ envVars:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-staging.svc.cluster.local"
   EXPRESS_SERVER_PORT:
     value: "80"
-  DB_HOST:
-    secret:
-      name: database-10
-      key: host
-  DB_PORT:
-    secret:
-      name: database-10
-      key: port
-  DB_NAME:
-    secret:
-      name: database-10
-      key: name
-  DB_USER:
-    secret:
-      name: database-10
-      key: user
-  DB_PASSWORD:
-    secret:
-      name: database-10
-      key: password
-  REPLICA_DB_HOST:
-    secret:
-      name: database-10
-      key: replica_host

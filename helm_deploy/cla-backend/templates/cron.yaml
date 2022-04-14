@@ -41,26 +41,6 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-multiple-codes
-  labels:
-    {{- include "cla-backend.labels" . | nindent 4 }}
-spec:
-  schedule: "*/15 * * * *"
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-          - name: run-command
-            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-            command: ["python", "manage.py", "monitor_multiple_outcome_codes"]
-            env:
-              {{ include "cla-backend.app.vars" . | nindent 12 }}
-          restartPolicy: OnFailure
----
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
   name: {{ .Release.Name }}-mi-cb1-report
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}

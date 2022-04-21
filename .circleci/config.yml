@@ -202,18 +202,18 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - lint
-      - test
-      - cleanup_merged:
-          name: cleanup_merged_live
-          context:
-            - laa-cla-backend
-            - laa-cla-backend-live-uat
+#      - lint
+#      - test
+#      - cleanup_merged:
+#          name: cleanup_merged_live
+#          context:
+#            - laa-cla-backend
+#            - laa-cla-backend-live-uat
 
       - build:
-          requires:
-            - lint
-            - test
+#          requires:
+#            - lint
+#            - test
           context: laa-cla-backend
 
       - cla-end-to-end-tests/behave:

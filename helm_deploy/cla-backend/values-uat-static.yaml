@@ -17,6 +17,27 @@ ingress:
 envVars:
   DEBUG:
     value: "False"
+  DB_HOST:
+    secret:
+      name: database
+      key: host
+  DB_PORT:
+    secret:
+      name: database
+      key: port
+      optional: true
+  DB_NAME:
+    secret:
+      name: database
+      key: name
+  DB_USER:
+    secret:
+      name: database
+      key: user
+  DB_PASSWORD:
+    secret:
+      name: database
+      key: password
   REPLICA_DB_HOST:
     secret:
       optional: true

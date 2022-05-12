@@ -19,6 +19,8 @@ envVars:
     value: "False"
   LOAD_TEST_DATA:
     value: "True"
+  LOAD_END_TO_END_FIXTURES:
+    value: "False"
   SITE_HOSTNAME:
     value: "cla-frontend-socket-server.laa-cla-frontend-staging.svc.cluster.local"
   FRONTEND_HOST_NAME:

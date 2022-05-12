@@ -21,6 +21,10 @@ load_test_data() {
         python manage.py loaddata test_rotas.json
         python manage.py loaddata kb_from_knowledgebase.json
 
+        if [ "$LOAD_END_TO_END_FIXTURES" == "True"]; then
+            python manage.py loaddata test_special_provider_case.json
+            python manage.py loaddata test_callbacks.json
+        fi
 
     fi
 }

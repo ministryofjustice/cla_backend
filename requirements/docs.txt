@@ -2,3 +2,4 @@
 
 sphinx-rtd-theme==0.1.6
 django-rest-swagger==0.1.14
+sphinx>=3.0.4 # not directly required, pinned by Snyk to avoid a vulnerability

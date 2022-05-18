@@ -20,6 +20,8 @@ load_test_data() {
         python manage.py loaddata test_auth_clients.json
         python manage.py loaddata test_rotas.json
         python manage.py loaddata kb_from_knowledgebase.json
+        python manage.py loaddata test_special_provider_case.json
+        python manage.py loaddata test_callbacks.json
 
     fi
 }

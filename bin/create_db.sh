@@ -20,7 +20,17 @@ load_test_data() {
         python manage.py loaddata test_auth_clients.json
         python manage.py loaddata test_rotas.json
         python manage.py loaddata kb_from_knowledgebase.json
+        python manage.py loaddata test_special_provider_case.json
+        python manage.py loaddata test_callbacks.json
 
+    fi
+}
+
+load_end_to_end_test_data() {
+    if [ "$LOAD_END_TO_END_FIXTURES" == "True" ]; then
+
+        python manage.py loaddata test_special_provider_case.json
+        python manage.py loaddata test_callbacks.json
 
     fi
 }
@@ -36,5 +46,6 @@ cd /home/app/
 migrations
 admin_password
 load_test_data
+load_end_to_end_test_data
 
 exec "$@"

@@ -1,6 +1,136 @@
 [
     {
         "fields": {
+            "code": "CASE_CREATED",
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "notes": "Case created",
+            "type": "system",
+            "level": 29,
+            "timer": 1,
+            "patch": null,
+            "case": 4
+        },
+        "model": "cla_eventlog.log",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "modified": "2022-05-24T12:33:56.371Z",
+            "stopped": "2022-05-24T12:33:56.371Z",
+            "cancelled": "False"
+        },
+        "model": "timer.timer",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "code": "CASE_CREATED",
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "notes": "Case created",
+            "type": "system",
+            "level": 29,
+            "timer": 2,
+            "patch": null,
+            "case": 5
+        },
+        "model": "cla_eventlog.log",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "modified": "2022-05-24T12:33:56.371Z",
+            "stopped": "2022-05-24T12:33:56.371Z",
+            "cancelled": "False"
+        },
+        "model": "timer.timer",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "code": "CASE_CREATED",
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "notes": "Case created",
+            "type": "system",
+            "level": 29,
+            "timer": 3,
+            "patch": null,
+            "case": 6
+        },
+        "model": "cla_eventlog.log",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "modified": "2022-05-24T12:33:56.371Z",
+            "stopped": "2022-05-24T12:33:56.371Z",
+            "cancelled": "False"
+        },
+        "model": "timer.timer",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "code": "CASE_CREATED",
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "notes": "Case created",
+            "type": "system",
+            "level": 29,
+            "timer": 4,
+            "patch": null,
+            "case": 7
+        },
+        "model": "cla_eventlog.log",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "modified": "2022-05-24T12:33:56.371Z",
+            "stopped": "2022-05-24T12:33:56.371Z",
+            "cancelled": "False"
+        },
+        "model": "timer.timer",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "code": "CASE_CREATED",
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "notes": "Case created",
+            "type": "system",
+            "level": 29,
+            "timer": 5,
+            "patch": null,
+            "case": 8
+        },
+        "model": "cla_eventlog.log",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "modified": "2022-05-24T12:33:56.371Z",
+            "stopped": "2022-05-24T12:33:56.371Z",
+            "cancelled": "False"
+        },
+        "model": "timer.timer",
+        "pk": 5
+    },
+    {
+        "fields": {
             "created": "2022-03-29T18:11:44.139Z",
             "credit_balance": 0,
             "asset_balance": 0,
@@ -687,7 +817,7 @@
             "personal_details": 1,
             "requires_action_at": null,
             "callback_window_type": "HALF_HOUR_WINDOW",
-            "provider": 11,
+            "provider": null,
             "provider_closed": null,
             "assigned_out_of_hours": true,
             "media_code": 4,
@@ -733,7 +863,7 @@
             "personal_details": 2,
             "requires_action_at": null,
             "callback_window_type": "HALF_HOUR_WINDOW",
-            "provider": 11,
+            "provider": null,
             "provider_closed": null,
             "assigned_out_of_hours": true,
             "media_code": 4,
@@ -779,7 +909,7 @@
             "personal_details": 2,
             "requires_action_at": null,
             "callback_window_type": "HALF_HOUR_WINDOW",
-            "provider": 11,
+            "provider": null,
             "provider_closed": null,
             "assigned_out_of_hours": true,
             "media_code": 4,
@@ -825,7 +955,7 @@
             "personal_details": 2,
             "requires_action_at": null,
             "callback_window_type": "HALF_HOUR_WINDOW",
-            "provider": 11,
+            "provider": null,
             "provider_closed": null,
             "assigned_out_of_hours": true,
             "media_code": 4,
@@ -871,7 +1001,7 @@
             "personal_details": 2,
             "requires_action_at": null,
             "callback_window_type": "HALF_HOUR_WINDOW",
-            "provider": 11,
+            "provider": null,
             "provider_closed": null,
             "assigned_out_of_hours": false,
             "media_code": 4,

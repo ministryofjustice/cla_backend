@@ -23,7 +23,7 @@ load_test_data() {
 
     fi
 }
-x
+
 load_end_to_end_test_data() {
     if [ "$LOAD_END_TO_END_FIXTURES" == "True" ]; then
 

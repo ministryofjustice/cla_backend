@@ -17,6 +17,7 @@
     {
         "fields": {
             "created_by": 2,
+            "linked_case": 4,
             "created": "2022-05-24T12:33:56.371Z",
             "modified": "2022-05-24T12:33:56.371Z",
             "stopped": "2022-05-24T12:33:56.371Z",
@@ -43,6 +44,7 @@
     {
         "fields": {
             "created_by": 2,
+            "linked_case": 5,
             "created": "2022-05-24T12:33:56.371Z",
             "modified": "2022-05-24T12:33:56.371Z",
             "stopped": "2022-05-24T12:33:56.371Z",
@@ -69,6 +71,7 @@
     {
         "fields": {
             "created_by": 2,
+            "linked_case": 6,
             "created": "2022-05-24T12:33:56.371Z",
             "modified": "2022-05-24T12:33:56.371Z",
             "stopped": "2022-05-24T12:33:56.371Z",
@@ -95,6 +98,7 @@
     {
         "fields": {
             "created_by": 2,
+            "linked_case": 7,
             "created": "2022-05-24T12:33:56.371Z",
             "modified": "2022-05-24T12:33:56.371Z",
             "stopped": "2022-05-24T12:33:56.371Z",
@@ -121,6 +125,7 @@
     {
         "fields": {
             "created_by": 2,
+            "linked_case": 8,
             "created": "2022-05-24T12:33:56.371Z",
             "modified": "2022-05-24T12:33:56.371Z",
             "stopped": "2022-05-24T12:33:56.371Z",

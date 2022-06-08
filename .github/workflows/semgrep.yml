@@ -9,11 +9,9 @@ jobs:
   semgrep:
     name: Scan
     runs-on: ubuntu-latest
-    container:
-      image: returntocorp/semgrep-action@v3
     steps:
-    - uses: actions/checkout@v3
-    - run: semgrep ci
+    - uses: actions/checkout@v2
+    - uses: returntocorp/semgrep-action@v1
       with:
         auditOn: push
         publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}

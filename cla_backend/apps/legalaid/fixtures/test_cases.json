@@ -1,0 +1,146 @@
+[
+    {
+        "fields": {
+            "code": "CASE_CREATED",
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "notes": "Case created",
+            "type": "system",
+            "level": 29,
+            "timer": 11,
+            "patch": null,
+            "case": 11
+        },
+        "model": "cla_eventlog.log",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "created_by": 2,
+            "created": "2022-05-24T12:33:56.371Z",
+            "modified": "2022-05-24T12:33:56.371Z",
+            "stopped": "2022-05-24T12:33:56.371Z",
+            "cancelled": "False"
+        },
+        "model": "timer.timer",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "reference": "777b8a97952344eaab8daa6bb69a79b5",
+            "vulnerable_user": false,
+            "street": "10 Jakku road",
+            "postcode": "ST4 4AR",
+            "full_name": "Rey Skywalker",
+            "case_count": 1,
+            "ni_number": "RS123456R",
+            "search_field": "###ST44AR###2003-01-01###01/01/2003###01/01/03###01/1/2003###01/1/03###1/01/2003###1/01/03###1/1/2003###1/1/03###018651111234",
+            "safe_to_email": "SAFE",
+            "contact_for_research": false,
+            "title": null,
+            "date_of_birth": "2003-01-01",
+            "home_phone": "",
+            "email": "",
+            "mobile_phone": "01865 111 1234",
+            "diversity": null,
+            "contact_for_research_via": "PHONE",
+            "contact_for_research_methods": [],
+            "safe_to_contact": "SAFE",
+            "created": "2022-03-29T18:10:53.107Z",
+            "modified": "2022-03-29T18:12:30.691Z",
+            "diversity_modified": null
+        },
+        "model": "legalaid.personaldetails",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "text_relay": false,
+            "skype_webcam": false,
+            "bsl_webcam": false,
+            "reference": "106eaccaed8811ec8ea00242ac120002",
+            "language": null,
+            "created": "2022-03-29T18:10:53.106Z",
+            "no_adaptations_required": true,
+            "notes": "",
+            "minicom": false,
+            "modified": "2022-03-29T18:12:30.689Z",
+            "callback_preference": false
+        },
+        "model": "legalaid.adaptationdetails",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "savings": null,
+            "income": null,
+            "deductions": null,
+            "modified": "2022-03-29T18:11:44.160Z",
+            "created": "2022-03-29T18:11:44.146Z"
+        },
+        "model": "legalaid.person",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "category": 8,
+            "graph_version": "c5aec84ff6d5ce512d4fba489309d479",
+            "reference": "30703462ed8811ec8ea00242ac120002",
+            "created": "2022-03-29T18:10:54.608Z",
+            "modified": "2022-03-29T18:11:06.666Z",
+            "matter_type2": null,
+            "state": "INSCOPE",
+            "matter_type1": null,
+            "current_node_id": "n111",
+            "nodes": "[{\"context\":null,\"key\":\"Discrimination\",\"title\":\"Discrimination\",\"id\":\"n106\",\"label\":\"<p>Discrimination</p>\",\"data_safety\":null,\"help_text\":\"<p>The discrimination category covers advice on cases that contravene the Equalities Act 2010.</p>\\n<p>It is against the law to discriminate against anyone because of:</p>\\n<ul>\\n<li>age</li>\\n<li>gender reassignment</li>\\n<li>being married or in a civil partnership</li>\\n<li>being pregnant or having recently given birth</li>\\n<li>disability</li>\\n<li>race including colour, nationality, ethnic or national origin</li>\\n<li>religion, belief or lack of religion or belief</li>\\n<li>sex</li>\\n<li>sexual orientation</li>\\n</ul>\\n<p>These are called 'protected characteristics'. To find out more, search the guidance for 'protected characteristics'.</p>\\n<p>The client's problem could start in another category (eg housing) but the client will believe that thay have been discriminated against, harassed or victimised.</p>\",\"heading\":null,\"order\":5,\"description\":null},{\"context\":null,\"key\":\"The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else\\u2019s discrimination claim\\n\\nIt is against the law to discriminate against anyone because of:\\n\\n* age\\n* gender reassignment\\n* being married or in a civil partnership\\n* being pregnant or having recently given birth\\n* disability\\n* race including colour, nationality, ethnic or national origin\\n* religion, belief or lack of religion or belief\\n* sex\\n* sexual orientation\",\"title\":\"Has the client been \",\"label\":\"<p>The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else\\u2019s discrimination claim</p>\\n<p>It is against the law to discriminate against anyone because of:</p>\\n<ul>\\n<li>age</li>\\n<li>gender reassignment</li>\\n<li>being married or in a civil partnership</li>\\n<li>being pregnant or having recently given birth</li>\\n<li>disability</li>\\n<li>race including colour, nationality, ethnic or national origin</li>\\n<li>religion, belief or lack of religion or belief</li>\\n<li>sex</li>\\n<li>sexual orientation</li>\\n</ul>\",\"data_safety\":null,\"help_text\":null,\"order\":9999,\"heading\":\"Select the type of discrimination that applies\",\"id\":\"n107\",\"description\":null},{\"context\":null,\"key\":\"Direct discrimination\",\"title\":\"Direct discriminatio\",\"id\":\"n108\",\"label\":\"<p>Direct discrimination</p>\",\"data_safety\":null,\"help_text\":\"<p>Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result.</p>\",\"heading\":\"On what basis has the client been discriminated against?\\nGive details in the operator notes, especially if more than one option applies.\",\"order\":1,\"description\":null},{\"context\":null,\"key\":\"Disability\",\"title\":\"Disability Pregnancy\",\"label\":\"<p>Disability</p>\",\"data_safety\":null,\"help_text\":\"<p>Disability is defined as a physical or mental impairment, which has a substantial and long term adverse effect on a person's ability to carry out normal day-to-day activities.</p>\\n<p>People with cancer or who are HIV+ are classed as having a disability.</p>\\n<p>The disability does not have to have a name or a diagnosis to meet this definition.</p>\",\"order\":5,\"heading\":\"Where did the discrimination occur?\",\"id\":\"n109\",\"description\":null},{\"context\":null,\"key\":\"Work\",\"title\":\"Work\",\"id\":\"n110\",\"label\":\"<p>Work</p>\",\"data_safety\":null,\"help_text\":null,\"heading\":null,\"order\":1,\"description\":null},{\"context\":{\"category\":\"discrimination\"},\"key\":\"INSCOPE\",\"title\":\"DISCRIMINATION INSCO\",\"id\":\"n111\",\"label\":\"<p>INSCOPE</p>\",\"data_safety\":null,\"help_text\":null,\"heading\":null,\"order\":9999,\"description\":null}]"
+        },
+        "model": "diagnosis.diagnosistraversal",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "reference": "UC-0001-0002",
+            "outcome_code": "MANALC",
+            "outcome_code_id": 4,
+            "provider_viewed": "2022-03-29T18:13:31.628Z",
+            "locked_at": null,
+            "search_field": "UC00010002",
+            "adaptation_details": null,
+            "source": "WEB",
+            "organisation": null,
+            "ecf_statement": null,
+            "created_by": 2,
+            "personal_details": 11,
+            "requires_action_at": null,
+            "callback_window_type": "HALF_HOUR_WINDOW",
+            "provider": null,
+            "provider_closed": null,
+            "assigned_out_of_hours": true,
+            "media_code": 4,
+            "provider_assigned_at": "2022-03-29T18:12:40.378Z",
+            "callback_attempt": 0,
+            "laa_reference": 4000020,
+            "exempt_user": null,
+            "level": 29,
+            "thirdparty_details": null,
+            "created": "2022-03-29T18:08:59.007Z",
+            "notes": "case created",
+            "locked_by": null,
+            "provider_accepted": null,
+            "modified": "2022-03-29T18:12:40.402Z",
+            "exempt_user_reason": null,
+            "matter_type2": 16,
+            "requires_action_by": "operator",
+            "complaint_flag": false,
+            "matter_type1": 8,
+            "diagnosis": 11,
+            "eligibility_check": null,
+            "billable_time": 0,
+            "is_urgent": false,
+            "from_case": null,
+            "provider_notes": ""
+        },
+        "model": "legalaid.case",
+        "pk": 11
+    }
+]

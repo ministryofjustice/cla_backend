@@ -1728,6 +1728,30 @@
     }
 },
 {
+    "pk": 73,
+    "model": "knowledgebase.article",
+    "fields": {
+        "website": "https://www.housing-ombudsman.org.uk/",
+        "geographic_coverage": "UK",
+        "type_of_service": "Women and children experiencing, or who have experienced, domestic violence Friends and family seeking to support women and children who are experiencing, or who have experienced, domestic violence Professionals supporting women and children experiencing domestic violence.",
+        "description": "The Housing Ombudsman Service is set up by law to look at complaints about the housing organisations that are registered with us. The service is free, independent and impartial.\n\nThey resolve disputes involving the tenants and leaseholders of social landlords (housing associations and local authorities) and voluntary members (private landlords and letting agents who are committed to good service for their tenants).",
+        "created": "2014-06-27T14:52:55.547Z",
+        "accessibility": "Interpretation service available. Type Talk for calers with hearing difficulties. Womens Aid and Refuge websites provide some information in other languages",
+        "service_name": "Housing Ombudsman",
+        "organisation": "Housing Ombudsman",
+        "modified": "2015-01-28T15:06:18.894Z",
+        "service_tag": "",
+        "when_to_use": "Clients with disputes with landlord",
+        "how_to_use": "To be used as supplement to category-specific referrals",
+        "public_description": "Free, impartial service to look at complaints about registered housing organisations.\n\nGet help to resolve disputes involving tenants and leaseholders of social landlords (housing associations and local authorities) and voluntary members (private landlords and letting agents who are committed to good service for their tenants).\n\nWebsite is not translated in Welsh.",
+        "address": "Housing Ombudsman Service, PO Box 152, Liverpool L33 7WQ",
+        "keywords": "housing, complaints, ombudsman, tenant, landlord",
+        "opening_hours": "Monday, Thursday, Friday 9.15am-5.15pm, Tuesday and Wednesday 9.15am-1.15pm except Public Holidays",
+        "email": "info@housing-ombudsman.org.uk",
+        "resource_type": "OTHER"
+    }
+},
+{
     "pk": 1, 
     "model": "knowledgebase.articlecategory", 
     "fields": {
@@ -3163,6 +3187,17 @@
         "modified": "2015-01-27T12:11:46.822Z", 
         "name": "Text relay", 
         "created": "2015-01-27T12:11:46.821Z"
+    }
+},
+{
+    "pk": 115,
+    "model": "knowledgebase.articlecategorymatrix",
+    "fields": {
+        "article": 73,
+        "preferred_signpost": false,
+        "modified": "2014-06-27T14:52:55.547Z",
+        "article_category": 4,
+        "created": "2014-06-27T14:52:55.547Z"
     }
 },
 {

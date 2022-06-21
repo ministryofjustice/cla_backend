@@ -335,9 +335,9 @@ NINE_TO_FIVE = (datetime.time(9, 0), datetime.time(17, 0))
 NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(17, 0))}
 DISCRIMINATION_NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(18, 0))}
 
-JULY_EDUCATION = os.environ.get("JULY_EDUCATION", "False").lower() == "true"
+JULY_EDUCATION_FEATURE_FLAG = os.environ.get("JULY_EDUCATION", "False").lower() == "true"
 
-if JULY_EDUCATION is True:
+if JULY_EDUCATION_FEATURE_FLAG is True:
     EDUCATION_NON_ROTA_HOURS = {
         "monday": NINE_TO_FIVE,
         "tuesday": NINE_TO_FIVE,

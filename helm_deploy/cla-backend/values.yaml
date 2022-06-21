@@ -228,6 +228,11 @@ envVars:
       name: maintenance-mode
       key: "value"
       optional: true
+  JULY_EDUCATION:
+    configmap:
+      name: july-education
+      key: "value"
+      optional: true
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

@@ -30,7 +30,6 @@ load_end_to_end_test_data() {
         python manage.py loaddata test_special_provider_case.json
         python manage.py loaddata test_callbacks.json
         python manage.py loaddata test_user_with_case.json
-        python manage.py loaddata test_cases.json
         python manage.py loaddata test_assign_f2f_case.json
 
     fi

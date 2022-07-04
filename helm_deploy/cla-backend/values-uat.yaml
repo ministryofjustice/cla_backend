@@ -43,6 +43,8 @@ envVars:
       optional: true
   LOAD_TEST_DATA:
     value: "True"
+  LOAD_TEST_USERS:
+    value: "True"
   LOAD_END_TO_END_FIXTURES:
     value: "False"
   SQS_ACCESS_KEY:

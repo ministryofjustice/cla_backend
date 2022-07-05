@@ -20,9 +20,9 @@ envVars:
   REPLICA_DB_HOST:
     secret:
       optional: true
-  LOAD_TEST_DATA:
+  LOAD_SEED_DATA:
     value: "True"
-  LOAD_TEST_USERS:
+  LOAD_TEST_DATA:
     value: "True"
   LOAD_END_TO_END_FIXTURES:
     value: "False"

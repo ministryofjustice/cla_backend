@@ -12,8 +12,8 @@ migrations() {
     python manage.py loaddata initial_guidance_notes.json
 }
 
-load_test_data() {
-    if [ "$LOAD_TEST_DATA" == "True" ]; then
+load_seed_data() {
+    if [ "$LOAD_SEED_DATA" == "True" ]; then
 
         python manage.py loaddata test_provider.json
         python manage.py loaddata test_provider_allocations.json
@@ -23,8 +23,8 @@ load_test_data() {
     fi
 }
 
-load_test_users() {
-    if [ "$LOAD_TEST_USERS" == "True" ]; then
+load_test_data() {
+    if [ "$LOAD_TEST_DATA" == "True" ]; then
         python manage.py loaddata test_auth_clients.json
         python manage.py loaddata test_provider.json
         python manage.py loaddata test_provider_users.json
@@ -52,8 +52,8 @@ cd /home/app/
 
 migrations
 admin_password
+load_seed_data
 load_test_data
-load_test_users
 load_end_to_end_test_data
 
 exec "$@"

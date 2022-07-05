@@ -6,11 +6,11 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from status.views import MaintenanceModeView
 
-
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# STATIC_ROOT required to allow static files to be generated in docker builds
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler404 = "core.views.page_not_found"
-
 
 if settings.ADMIN_ENABLED:
     # Uncomment the next two lines to enable the admin:

@@ -18,7 +18,7 @@ ingress:
 envVars:
   DEBUG:
     value: "False"
-  LOAD_TEST_DATA:
+  LOAD_SEED_DATA:
     value: "True"
   LOAD_END_TO_END_FIXTURES:
     value: "False"

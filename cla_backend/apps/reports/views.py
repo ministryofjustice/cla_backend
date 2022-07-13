@@ -200,13 +200,14 @@ def download_file(request, file_name="", *args, **kwargs):
         for key, val in headers.items():
             response[key] = val
     else:
+        # only do this locally if debugging
+        if settings.DEBUG:
+            def _filepath(filename):
+                return os.path.join(settings.TEMP_DIR, os.path.basename(filename))
 
-        def _filepath(filename):
-            return os.path.join(settings.TEMP_DIR, os.path.basename(filename))
-
-        filepath = _filepath(file_name)
-        csv_file = open(filepath, "r")
-        response = HttpResponse(csv_file)
+            filepath = _filepath(file_name)
+            csv_file = open(filepath, "r")
+            response = HttpResponse(csv_file)
 
     response["Content-Disposition"] = "attachment; filename=%s" % smart_str(file_name)
     response["X-Sendfile"] = smart_str("%s%s" % (settings.TEMP_DIR, file_name))

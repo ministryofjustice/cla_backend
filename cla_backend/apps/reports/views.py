@@ -202,7 +202,7 @@ def download_file(request, file_name="", *args, **kwargs):
     else:
 
         def _filepath(filename):
-            return os.path.join(settings.TEMP_DIR, filename)
+            return os.path.join(settings.TEMP_DIR, os.path.basename(filename))
 
         filepath = _filepath(file_name)
         csv_file = open(filepath, "r")

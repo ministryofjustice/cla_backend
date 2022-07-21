@@ -8,6 +8,7 @@ class DownloadFileTestCase(TestCase):
 
     @patch('reports.views.get_s3_connection')
     def test_download_no_aws(self, mock_s3):
+        # mock pythons open()
         with patch("__builtin__.open", mock_open(read_data="data")) as mock_file:
             mock_request = MagicMock()
             # if file_name contains string "schedule"

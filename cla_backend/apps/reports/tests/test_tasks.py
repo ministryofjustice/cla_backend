@@ -66,4 +66,3 @@ class MICB1ExportTaskTestCase(TestCase):
         settings.AWS_REPORTS_STORAGE_BUCKET_NAME = False
         self.run_task()
         assert not self.task.send_to_s3.called
-

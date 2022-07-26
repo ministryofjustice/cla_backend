@@ -22,7 +22,7 @@ class Export(TimeStampedModel):
 
 
 def delete_export_file(sender, instance=None, **kwargs):
-    # check if there is a connection to aws, otherwise nothing to delete
+    # check if there is a connection to aws, otherwise delete locally
     if settings.AWS_REPORTS_STORAGE_BUCKET_NAME:
         conn = get_s3_connection()
         bucket = conn.lookup(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
@@ -32,6 +32,10 @@ def delete_export_file(sender, instance=None, **kwargs):
             bucket.delete_key(k)
         except (ValueError, AttributeError):
             pass
+    else:
+        filepath = settings.TEMP_DIR + "/" + os.path.basename(instance.path)
+        # delete the file
+        os.remove(filepath)
 
 
 pre_delete.connect(delete_export_file, sender=Export)

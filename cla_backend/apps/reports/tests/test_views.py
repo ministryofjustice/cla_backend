@@ -8,7 +8,7 @@ class DownloadFileTestCase(TestCase):
     @patch("reports.views.get_s3_connection")
     def test_download_no_aws(self, mock_s3):
         # mock pythons open()
-        with patch("__builtin__.open", mock_open(read_data="data")) as mock_file:
+        with patch("__builtin__.open", mock_open(read_data="data")):
             mock_request = MagicMock()
             # if file_name contains string "schedule"
             # delete from the database doesn't occur.
@@ -17,9 +17,7 @@ class DownloadFileTestCase(TestCase):
             settings.DEBUG = True
             # download_file(request, file_name="", *args, **kwargs):
             download_file(mock_request, file_name)
-            assert open("path/to/open").read() == "data"
         assert not mock_s3.called
-        mock_file.assert_called_with("path/to/open")
 
     @patch("reports.views.get_s3_connection", return_value=MagicMock())
     def test_download_with_aws(self, mock_s3):

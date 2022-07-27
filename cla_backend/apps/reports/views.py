@@ -1,6 +1,6 @@
 import json
 import re
-
+import os
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
@@ -184,19 +184,32 @@ def all_knowledgebase_articles(request):
 
 @staff_member_required
 def download_file(request, file_name="", *args, **kwargs):
-    conn = get_s3_connection()
-    bucket = conn.lookup(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
-    k = bucket.get_key(settings.EXPORT_DIR + file_name)
+    # check if there is a connection to aws, otherwise download from local TEMP_DIR
+    if settings.AWS_REPORTS_STORAGE_BUCKET_NAME:
+        conn = get_s3_connection()
+        bucket = conn.lookup(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
+        k = bucket.get_key(settings.EXPORT_DIR + file_name)
 
-    if k is None:
-        raise Http404("Export does not exist")
+        if k is None:
+            raise Http404("Export does not exist")
 
-    k.open_read()
-    headers = dict(k.resp.getheaders())
-    response = HttpResponse(k)
+        k.open_read()
+        headers = dict(k.resp.getheaders())
+        response = HttpResponse(k)
 
-    for key, val in headers.items():
-        response[key] = val
+        for key, val in headers.items():
+            response[key] = val
+    else:
+        # only do this locally if debugging
+        if not settings.DEBUG:
+            raise Http404("Cannot download from local as not in DEBUG mode")
+
+        def _filepath(filename):
+            return os.path.join(settings.TEMP_DIR, os.path.basename(filename))
+
+        filepath = _filepath(file_name)
+        csv_file = open(filepath, "r")
+        response = HttpResponse(csv_file)
 
     response["Content-Disposition"] = "attachment; filename=%s" % smart_str(file_name)
     response["X-Sendfile"] = smart_str("%s%s" % (settings.TEMP_DIR, file_name))

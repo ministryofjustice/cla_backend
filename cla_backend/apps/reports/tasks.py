@@ -75,7 +75,9 @@ class ExportTaskBase(Task):
         try:
             bucket = conn.get_bucket(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
         except Exception as e:
-            logger.error('Reports bucket could not be fetched. Ensure s3 credentials are set. You may need the S3_USE_SIGV4 environment variable')
+            logger.error(
+                "Reports bucket couldn't be fetched. Ensure s3 credentials set. You may need the S3_USE_SIGV4 env var"
+            )
             raise e
         k = bucket.new_key(settings.EXPORT_DIR + os.path.basename(self.filepath))
         k.set_contents_from_filename(self.filepath)
@@ -95,7 +97,9 @@ class ExportTask(ExportTaskBase):
             with csv_writer(csv_file) as writer:
                 map(writer.writerow, csv_data)
             csv_file.close()
-            self.send_to_s3()
+            # check if there is a connection to aws, otherwise don't try to save
+            if settings.AWS_REPORTS_STORAGE_BUCKET_NAME:
+                self.send_to_s3()
         except InternalError as error:
             error_message = text_type(error).strip()
             if "wrong key" in error_message.lower() or "corrupt data" in error_message.lower():

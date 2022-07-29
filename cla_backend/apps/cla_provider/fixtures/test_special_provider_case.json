@@ -622,7 +622,7 @@
           "complaint_flag": false,
           "matter_type1": null,
           "diagnosis": 4,
-          "eligibility_check": 3,
+          "eligibility_check": null,
           "billable_time": 0,
           "is_urgent": false,
           "from_case": null,

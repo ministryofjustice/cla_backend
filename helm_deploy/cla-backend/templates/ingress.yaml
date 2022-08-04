@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "cla-backend.fullname" . -}}
+{{- $fullName := include "cla-backend.fullname" . -}}v1.22
 {{- $svcPort := .Values.service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -11,7 +11,6 @@ metadata:
 # Add annotation to exclude 503 error pages from the list the cloud-platform error pages
 # and use our error pages for 503 errors
     nginx.ingress.kubernetes.io/custom-http-errors: "413,502,504"
-    kubernetes.io/ingress.class: "modsec01"
     {{- if .Values.ingress.cluster.name }}
     external-dns.alpha.kubernetes.io/set-identifier: "{{ $fullName }}-{{ .Release.Namespace }}-{{- .Values.ingress.cluster.name -}}"
     external-dns.alpha.kubernetes.io/aws-weight: "{{- .Values.ingress.cluster.weight -}}"
@@ -24,6 +23,7 @@ metadata:
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       SecRuleRemoveById 200001
 spec:
+  ingressClassName: "modsec"
   tls:
     - hosts:
        - "{{ .Values.host }}"

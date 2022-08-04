@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "cla-backend.fullname" . -}}v1.22
+{{- $fullName := include "cla-backend.fullname" . v1.22-}}
 {{- $svcPort := .Values.service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress

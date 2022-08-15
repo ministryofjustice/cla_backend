@@ -46,7 +46,10 @@ PyYAML==3.11
 pyminizip==0.2.3
 
 #Irat healthcheck and ping package
-git+https://github.com/ministryofjustice/django-moj-irat.git@0.3#egg=django-moj-irat==0.3
+# Temporarily forked until we move to django1.8
+# use git+https://github.com/ministryofjustice/django-moj-irat.git@0.3#egg=django-moj-irat==0.3 when we have upgraded to
+# django 1.8
+git+https://github.com/said-moj/django-moj-irat.git@0.3.1#egg=django-moj-irat==0.3.1
 
 # stack interrogation
 boto3>=1.5,<2

@@ -23,7 +23,7 @@ RUN apk add --no-cache \
 
 WORKDIR /home/app
 
-COPY ./requirements/generated/production.txt ./requirements/production.txt
+COPY ./requirements/generated/ ./requirements
 RUN pip install -r ./requirements/production.txt
 
 COPY . .

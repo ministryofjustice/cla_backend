@@ -32,7 +32,7 @@ cffi==1.15.1
     # via cryptography
 cfgv==2.0.1
     # via pre-commit
-git+https://github.com/ministryofjustice/cla_common.git@0.3.16#egg=cla_common
+https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.16.tar.gz
     # via -r requirements/source/requirements-base.in
 click==7.1.2
     # via pip-tools
@@ -79,13 +79,13 @@ django-ipware==0.1.0
     # via -r requirements/source/requirements-base.in
 django-model-utils==2.2
     # via -r requirements/source/requirements-base.in
-git+https://github.com/said-moj/django-moj-irat.git@0.3.1#egg=django-moj-irat==0.3
+https://github.com/said-moj/django-moj-irat/archive/refs/tags/0.3.1.tar.gz
     # via -r requirements/source/requirements-base.in
-git+https://github.com/ministryofjustice/django-oauth2-provider.git@b75571be3e19647fe8e726c5fcf8ce8bf9fd7540#egg=django-oauth2-provider==0.2.6.1-dev
+https://github.com/ministryofjustice/django-oauth2-provider/archive/refs/tags/v2.7.0.beta.tar.gz
     # via -r requirements/source/requirements-base.in
-git+https://github.com/ministryofjustice/django-pagedown.git@v0.2.2#egg=django-pagedown==0.2.2
+https://github.com/ministryofjustice/django-pagedown/archive/refs/tags/v0.2.2.tar.gz
     # via -r requirements/source/requirements-base.in
-git+https://github.com/HassenPy/django-pdb.git@0.3.2#egg=django-pdb==0.3.2
+https://github.com/HassenPy/django-pdb/archive/refs/tags/0.3.2.tar.gz
     # via -r requirements/source/requirements-testing.in
 django-storages==1.5.2
     # via -r requirements/source/requirements-base.in
@@ -106,7 +106,7 @@ djangorestframework==2.3.14
     #   -r requirements/source/requirements-base.in
     #   drf-extensions
     #   drf-nested-routers
-git+https://github.com/ministryofjustice/djorm-ext-pgfulltext.git@0.1.0#egg=djorm-ext-pgfulltext==0.1.0
+https://github.com/ministryofjustice/djorm-ext-pgfulltext/archive/refs/tags/0.1.0.tar.gz
     # via -r requirements/source/requirements-base.in
 docopt==0.6.2
     # via

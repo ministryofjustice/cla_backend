@@ -15,4 +15,4 @@ repos:
       - id: pip-compile
         name: pip-compile requirements-dev.in
         files: requirements-dev.in
-        args: [requirements/source/requirements-dev.in, "--output-file", requirements/generated/requirements-dev.txt]
+        args: [requirements/source/requirements-dev.in, "--dry-run"]

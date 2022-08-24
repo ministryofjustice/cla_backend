@@ -1,18 +1,19 @@
 repos:
--   repo: https://github.com/ambv/black
-    rev: 18.9b0
-    hooks:
-    - id: black
-      language_version: python3.7
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.1.0
-    hooks:
-    - id: flake8
-      args: ['--config=setup.cfg',  '--exclude=./cla_backend/settings/*,./docs/*']
+#-   repo: https://github.com/ambv/black
+#    rev: 18.9b0
+#    hooks:
+#    - id: black
+#      language_version: python3.7
+#-   repo: https://github.com/pre-commit/pre-commit-hooks
+#    rev: v2.1.0
+#    hooks:
+#    - id: flake8
+#      args: ['--config=setup.cfg',  '--exclude=./cla_backend/settings/*,./docs/*']
 -   repo: https://github.com/jazzband/pip-tools
     rev: 5.5.0
     hooks:
       - id: pip-compile
+        language_version: python2.7
         name: pip-compile requirements-dev.in
         files: requirements-dev.in
-        args: [requirements/source/requirements-dev.in, "--dry-run"]
+        args: [requirements/source/requirements-dev.in, "--output-file", "requirements/generated/requirements-dev.txt"]

@@ -14,21 +14,21 @@ repos:
     hooks:
       - id: pip-compile
         name: pip-compile requirements-docs.in
-        files: docs.in
+        files: requirements-(base|docs).in
         args: [requirements/source/requirements-docs.in, "--output-file", requirements/generated/requirements-docs.txt]
       - id: pip-compile
         name: pip-compile requirements-dev.in
-        files: requirements-dev.in
+        files: requirements-(base|dev).in
         args: [requirements/source/requirements-dev.in, "--output-file", requirements/generated/requirements-dev.txt]
       - id: pip-compile
         name: pip-compile requirements-lint.in
-        files: lint.in
+        files: requirements-(base|lint).in
         args: [requirements/source/requirements-lint.in, "--output-file", requirements/generated/requirements-lint.txt]
       - id: pip-compile
         name: pip-compile requirements-testing.in
-        files: testing.in
+        files: requirements-(base|testing).in
         args: [requirements/source/requirements-testing.in, "--output-file", requirements/generated/requirements-testing.txt]
       - id: pip-compile
         name: pip-compile requirements-production.in
-        files: requirements-production.in
+        files: requirements-(base|production).in
         args: [requirements/source/requirements-production.in, "--output-file", requirements/generated/requirements-production.txt]

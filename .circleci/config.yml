@@ -90,7 +90,7 @@ jobs:
             black --check cla_backend
   pip-compile:
     docker:
-      - image: circleci/python:2.7
+      - image: cimg/python:2.7
     steps:
       - checkout
       - run:

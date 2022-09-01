@@ -42,4 +42,3 @@ urlpatterns = patterns(
     url(r"^all-knowledgebase-articles/$", views.all_knowledgebase_articles, name="all_knowledgebase_articles"),
     url(r"^case-outcome-code-report/$", views.case_outcome_code_report, name="case_outcome_code_report"),
 )
-

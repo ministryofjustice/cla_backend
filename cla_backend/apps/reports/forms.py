@@ -12,6 +12,8 @@ from legalaid.utils import diversity
 from cla_common.constants import EXPRESSIONS_OF_DISSATISFACTION
 from cla_eventlog.constants import LOG_TYPES, LOG_LEVELS
 from cla_eventlog import event_registry
+from cla_eventlog.models import Log
+from legalaid.models import Case
 from complaints.constants import SLA_DAYS
 from knowledgebase.models import Article
 from reports.widgets import MonthYearWidget
@@ -592,6 +594,31 @@ class MIExtractComplaintViewAuditLog(SQLFileDateRangeReport):
 
     def get_headers(self):
         return ["Case", "Complaint Id", "Action", "Operator", "Organisation", "Date"]
+
+
+class OutcomeCodeReport(DateRangeReportForm):
+    def get_queryset(self):
+        from_date, to_date = self.date_range
+        cases = Case.objects.filter(modified__range=(from_date, to_date))
+        logs = Log.objects.filter(case__in=cases, type="outcome")
+
+        return logs
+
+    def get_rows(self):
+        for item in self.get_queryset():
+
+            yield [
+                item.case,
+                item.created,
+                item.code
+            ]
+
+    def get_headers(self):
+        return [
+            "Case ID",
+            "Outcome created at",
+            "Outcome code"
+        ]
 
 
 class AllKnowledgeBaseArticles(ReportForm):

@@ -46,14 +46,14 @@ jobs:
             virtualenv lint-env
       - restore_cache:
           keys:
-            - pip-v1-{{ checksum "requirements/lint.txt" }}
+            - pip-v1-{{ checksum "requirements/generated/requirements-lint.txt" }}
       - run:
           name: Install dependencies
           command: |
             source lint-env/bin/activate
-            pip install --requirement requirements/lint.txt
+            pip install --requirement requirements/generated/requirements-lint.txt
       - save_cache:
-          key: pip-v1-{{ checksum "requirements/lint.txt" }}
+          key: pip-v1-{{ checksum "requirements/generated/requirements-lint.txt" }}
           paths:
             - "~/.cache/pip"
       - run:
@@ -88,6 +88,33 @@ jobs:
           command: |
             source lint-env/bin/activate
             black --check cla_backend
+  pip-compile:
+    docker:
+      - image: cimg/python:2.7
+    steps:
+      - checkout
+      - run:
+          name: Setup Python environment
+          command: |
+            pip install virtualenv
+            virtualenv pip-compile-env
+      - restore_cache:
+          keys:
+            - pip-v1-pip-compile
+      - run:
+          name: Install dependencies
+          command: |
+            source pip-compile-env/bin/activate
+            pip install pre-commit==1.14.2
+      - save_cache:
+          key: pip-v1-pip-compile
+          paths:
+            - "~/.cache/pip"
+      - run:
+          name: Check for changes with pip-compile
+          command: |
+            source pip-compile-env/bin/activate
+            ls requirements/source/* | xargs pre-commit run pip-compile --files
   test:
     docker:
       - image: circleci/python:2.7
@@ -114,14 +141,14 @@ jobs:
             pip install pip==18.1
       - restore_cache:
           keys:
-            - pip-v2-{{ checksum "requirements/base.txt" }}-{{ checksum "requirements/testing.txt" }}
+            - pip-v2-{{ checksum "requirements/generated/requirements-testing.txt" }}
       - run:
           name: Install dependencies
           command: |
             source env/bin/activate
-            pip install --requirement requirements.txt --requirement requirements/testing.txt
+            pip install --requirement requirements/generated/requirements-testing.txt
       - save_cache:
-          key: pip-v2-{{ checksum "requirements/base.txt" }}-{{ checksum "requirements/testing.txt" }}
+          key: pip-v2-{{ checksum "requirements/generated/requirements-testing.txt" }}
           paths:
             - "~/.cache/pip"
       - run:
@@ -203,7 +230,11 @@ workflows:
   build_and_test:
     jobs:
       - lint
-      - test
+      - pip-compile
+      - test:
+          requires:
+            - lint
+            - pip-compile
       - cleanup_merged:
           name: cleanup_merged_live
           context:
@@ -212,7 +243,6 @@ workflows:
 
       - build:
           requires:
-            - lint
             - test
           context: laa-cla-backend
 

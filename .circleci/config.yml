@@ -117,7 +117,7 @@ jobs:
             ls requirements/source/* | xargs pre-commit run pip-compile --files
   test:
     docker:
-      - image: cimg/python:2.7
+      - image: circleci/python:2.7
         environment:
           DB_NAME: circle_test
           DB_USER: root

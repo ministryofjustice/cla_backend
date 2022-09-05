@@ -117,7 +117,7 @@ jobs:
             ls requirements/source/* | xargs pre-commit run pip-compile --files
   test:
     docker:
-      - image: circleci/python:2.7
+      - image: cimg/python:2.7
         environment:
           DB_NAME: circle_test
           DB_USER: root
@@ -135,6 +135,7 @@ jobs:
       - run:
           name: Setup Python environment
           command: |
+            apt-get install libpython2.7
             pip install virtualenv
             virtualenv env
             source env/bin/activate

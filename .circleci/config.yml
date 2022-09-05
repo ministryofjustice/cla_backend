@@ -36,7 +36,7 @@ jobs:
           command: .circleci/tag_and_push_docker_image application:$CIRCLE_SHA1
   lint:
     docker:
-      - image: circleci/python:2.7
+      - image: cimg/python:2.7
     steps:
       - checkout
       - run:
@@ -63,7 +63,7 @@ jobs:
             flake8 cla_backend
   formatting:
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/python:3.7
     steps:
       - checkout
       - run:
@@ -117,7 +117,7 @@ jobs:
             ls requirements/source/* | xargs pre-commit run pip-compile --files
   test:
     docker:
-      - image: circleci/python:2.7
+      - image: cimg/python:2.7
         environment:
           DB_NAME: circle_test
           DB_USER: root

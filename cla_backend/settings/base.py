@@ -5,7 +5,6 @@ import os
 import sentry_sdk
 from boto.s3.connection import NoHostProvided
 from cla_common.call_centre_availability import OpeningHours
-from cla_common.constants import OPERATOR_HOURS
 from cla_common.services import CacheAdapter
 from collections import defaultdict
 from kombu import transport
@@ -51,6 +50,15 @@ MANAGERS = ADMINS
 
 EMAIL_FROM_ADDRESS = "no-reply@civillegaladvice.service.gov.uk"
 DEFAULT_EMAIL_TO = "cla-alerts@digital.justice.gov.uk"
+
+# Want to alter start and end times via environment variables.
+# In case these are not set, default values are set here
+DEFAULT_NON_ROTA_START_TIME_HR = 8
+DEFAULT_NON_ROTA_END_TIME_HR = 17
+DEFAULT_ED_START_TIME_HR = 9
+DEFAULT_ED_END_TIME_HR = 17
+DEFAULT_DISCRIM_START_TIME_HR = 8
+DEFAULT_DISCRIM_END_TIME_HR = 18
 
 OPERATOR_USER_ALERT_EMAILS = []
 SPECIALIST_USER_ALERT_EMAILS = []
@@ -330,22 +338,31 @@ else:
 
 CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get("CALL_CENTRE_NOTIFY_EMAIL_ADDRESS", DEFAULT_EMAIL_TO)
 
-NINE_TO_FIVE = (datetime.time(9, 0), datetime.time(17, 0))
+# LGA-2236 Set rota hours start and end times using environment variables so can change without updating the code.
+NON_ROTA_START_TIME_HR = int(os.environ.get("NON_ROTA_START_TIME_HR", DEFAULT_NON_ROTA_START_TIME_HR))
+NON_ROTA_END_TIME_HR = int(os.environ.get("NON_ROTA_END_TIME_HR", DEFAULT_NON_ROTA_END_TIME_HR))
 
-NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(17, 0))}
-DISCRIMINATION_NON_ROTA_HOURS = {"weekday": (datetime.time(8, 0), datetime.time(18, 0))}
+EDUCATION_START_TIME_HR = int(os.environ.get("EDUCATION_START_TIME_HR", DEFAULT_ED_START_TIME_HR))
+EDUCATION_END_TIME_HR = int(os.environ.get("EDUCATION_END_TIME_HR", DEFAULT_ED_END_TIME_HR))
+
+DISCRIMINATION_START_TIME_HR = int(os.environ.get("DISCRIMINATION_START_TIME_HR", DEFAULT_DISCRIM_START_TIME_HR))
+DISCRIMINATION_END_TIME_HR = int(os.environ.get("DISCRIMINATION_END_TIME_HR", DEFAULT_DISCRIM_END_TIME_HR))
+
+NON_ROTA_HOURS = {"weekday": (datetime.time(NON_ROTA_START_TIME_HR, 0), datetime.time(NON_ROTA_END_TIME_HR, 0))}
+EDUCATION_DAILY_HOURS = (datetime.time(EDUCATION_START_TIME_HR, 0), datetime.time(EDUCATION_END_TIME_HR, 0))
+DISCRIMINATION_NON_ROTA_HOURS = {"weekday": (datetime.time(DISCRIMINATION_START_TIME_HR, 0), datetime.time(DISCRIMINATION_END_TIME_HR, 0))}
 
 JULY_EDUCATION_FEATURE_FLAG = os.environ.get("JULY_EDUCATION", "False").lower() == "true"
 
 if JULY_EDUCATION_FEATURE_FLAG is True:
     EDUCATION_NON_ROTA_HOURS = {
-        "monday": NINE_TO_FIVE,
-        "tuesday": NINE_TO_FIVE,
-        "wednesday": NINE_TO_FIVE,
-        "thursday": NINE_TO_FIVE,
+        "monday": EDUCATION_DAILY_HOURS,
+        "tuesday": EDUCATION_DAILY_HOURS,
+        "wednesday": EDUCATION_DAILY_HOURS,
+        "thursday": EDUCATION_DAILY_HOURS,
     }
 else:
-    EDUCATION_NON_ROTA_HOURS = {"monday": NINE_TO_FIVE, "tuesday": NINE_TO_FIVE, "wednesday": NINE_TO_FIVE}
+    EDUCATION_NON_ROTA_HOURS = {"monday": EDUCATION_DAILY_HOURS, "tuesday": EDUCATION_DAILY_HOURS, "wednesday": EDUCATION_DAILY_HOURS}
 
 # If an unknown or empty is used to get from NON_ROTA_OPENING_HOURS then it will default to a basic NON_ROTA_HOURS
 NON_ROTA_OPENING_HOURS = defaultdict(lambda: OpeningHours(**NON_ROTA_HOURS))

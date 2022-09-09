@@ -46,6 +46,7 @@ class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
             client_id="call_centre",
             client_secret="secret",
             redirect_uris="http://localhost/redirect",
+            authorization_grant_type="password",
         )
 
         # create an staff API client
@@ -56,6 +57,7 @@ class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
             client_id="cla_provider",
             client_secret="secret",
             redirect_uris="http://provider.localhost/redirect",
+            authorization_grant_type="password",
         )
 
         # create provider and staff user

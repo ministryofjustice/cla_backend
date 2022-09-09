@@ -1,6 +1,8 @@
 import logging
 import json
 
+from django.views.generic.base import TemplateResponseMixin
+
 from ipware.ip import get_ip
 from rest_framework.exceptions import Throttled
 
@@ -13,7 +15,7 @@ from .throttling import LoginRateThrottle
 logger = logging.getLogger(__name__)
 
 
-class AccessTokenView(Oauth2AccessTokenView):
+class AccessTokenView(Oauth2AccessTokenView, TemplateResponseMixin):
     throttle_classes = [LoginRateThrottle]
 
     def get_throttles(self):
@@ -42,7 +44,12 @@ class AccessTokenView(Oauth2AccessTokenView):
             self.check_throttles(request)
         except Throttled as exc:
             logger.info("login throttled: {}".format(self._get_request_log_extras(request)))
-            response = self.error_response({"error": "throttled", "detail": exc.detail}, status=exc.status_code)
+            error = "throttled"
+            first_error_item = OAuthToolkitError(error)
+            first_error_item.urlencoded = "/"
+            error_item = OAuthToolkitError(first_error_item, redirect_uri="/")
+            redirect, error_response = super(AccessTokenView, self).error_response(error_item, **kwargs)
+            response = self.render_to_response(error_response, status=401)
 
             if exc.wait:
                 response["X-Throttle-Wait-Seconds"] = "%d" % exc.wait
@@ -77,7 +84,11 @@ class AccessTokenView(Oauth2AccessTokenView):
         }
 
     def error_response(self, error, content_type="application/json", status=400, **kwargs):
-        response = super(AccessTokenView, self).error_response(error, content_type, status, **kwargs)
+        first_error_item = OAuthToolkitError(error)
+        first_error_item.urlencoded = "/"
+        error_item = OAuthToolkitError(first_error_item, redirect_uri="/")
+        redirect, error_response = super(AccessTokenView, self).error_response(error_item, **kwargs)
+        response = self.render_to_response(error_response, status)
         message = "INVESTIGATE-LGA-1746: {} {}".format(response.status_code, response.content)
         logging.info(message)
         return response

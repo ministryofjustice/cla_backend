@@ -46,6 +46,7 @@ class LoginTestCase(TestCase):
             client_id="call_centre",
             client_secret="secret",
             redirect_uris="http://localhost/redirect",
+            authorization_grant_type="password",
         )
 
         # create an staff API client
@@ -56,6 +57,7 @@ class LoginTestCase(TestCase):
             client_id="cla_provider",
             client_secret="secret",
             redirect_uris="http://provider.localhost/redirect",
+            authorization_grant_type="password",
         )
 
     def get_data(self, **kwargs):
@@ -76,12 +78,12 @@ class LoginTestCase(TestCase):
     def test_invalid_auth_settings(self):
         # invalid client_id
         response = self.client.post(self.url, data=self.get_operator_data(client_id="invalid"))
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "invalid_client"}')
 
         # invalid client secret
         response = self.client.post(self.url, data=self.get_operator_data(client_secret="invalid"))
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "invalid_client"}')
 
     def test_operator_success(self):
@@ -90,8 +92,8 @@ class LoginTestCase(TestCase):
 
     def test_operator_invalid_password(self):
         response = self.client.post(self.url, data=self.get_operator_data(password="invalid"))
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.content, '{"error": "invalid_grant"}')
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.content, '{"error_description": "Invalid credentials given.", "error": "invalid_grant"}')
 
     def test_staff_success(self):
         response = self.client.post(self.url, data=self.get_provider_data())
@@ -100,27 +102,27 @@ class LoginTestCase(TestCase):
 
     def test_staff_invalid_password(self):
         response = self.client.post(self.url, data=self.get_provider_data(password="invalid"))
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.content, '{"error": "invalid_grant"}')
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.content, '{"error_description": "Invalid credentials given.", "error": "invalid_grant"}')
 
     def test_locks_user_out_after_n_attempts(self):
         self.assertEqual(AccessAttempt.objects.count(), 0)
 
         for index in range(settings.LOGIN_FAILURE_LIMIT):
             response = self.client.post(self.url, data=self.get_operator_data(password="invalid"))
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.content, '{"error": "invalid_grant"}')
+            self.assertEqual(response.status_code, 401)
+            self.assertEqual(response.content, '{"error_description": "Invalid credentials given.", "error": "invalid_grant"}')
 
         self.assertEqual(AccessAttempt.objects.count(), settings.LOGIN_FAILURE_LIMIT)
 
         # the n-th time, the user's account will be locked out
         response = self.client.post(self.url, data=self.get_operator_data(password="invalid"))
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "locked_out"}')
 
         # from now on, even if the password is corrent, the account is locked
         response = self.client.post(self.url, data=self.get_operator_data())
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "locked_out"}')
 
         with mock.patch("cla_auth.forms.timezone") as mocked_timezone:
@@ -161,7 +163,7 @@ class LoginTestCase(TestCase):
         op_user.save()
 
         response = self.client.post(self.url, data=data)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "account_disabled"}')
 
     def test_inactive_provider_failure(self):
@@ -176,5 +178,5 @@ class LoginTestCase(TestCase):
         sp_user.save()
 
         response = self.client.post(self.url, data=data)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "account_disabled"}')

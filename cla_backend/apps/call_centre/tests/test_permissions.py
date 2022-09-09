@@ -6,7 +6,7 @@ from rest_framework.authentication import OAuth2Authentication
 from rest_framework.views import APIView
 
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
-from provider.oauth2.models import Client, AccessToken
+from provider_oauth2.models import Client, AccessToken
 from .. import permissions
 
 

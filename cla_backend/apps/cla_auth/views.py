@@ -4,8 +4,8 @@ import json
 from ipware.ip import get_ip
 from rest_framework.exceptions import Throttled
 
-from provider.oauth2.views import AccessTokenView as Oauth2AccessTokenView
-from provider.views import OAuthError
+from oauth2_provider.views import TokenView as Oauth2AccessTokenView
+from oauth2_provider.exceptions import OAuthToolkitError
 
 from .forms import ClientIdPasswordGrantForm
 from .throttling import LoginRateThrottle
@@ -59,7 +59,7 @@ class AccessTokenView(Oauth2AccessTokenView):
 
             form.on_form_invalid()
 
-            raise OAuthError(form.errors)
+            raise OAuthToolkitError(form.errors)
         else:
             form.on_form_valid()
 

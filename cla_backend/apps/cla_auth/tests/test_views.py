@@ -8,7 +8,7 @@ from django.conf import settings
 from django.utils import timezone
 import mock
 
-from provider.oauth2.models import Client
+from oauth2_provider.models import Application
 from core.tests.mommy_utils import make_recipe
 from cla_provider.models import Staff
 from call_centre.models import Operator
@@ -39,25 +39,23 @@ class LoginTestCase(TestCase):
         self.prov.save()
 
         # create an operator API client
-        self.op_client = Client.objects.create(
+        self.op_client = Application.objects.create(
             user=self.op_user,
             name="operator",
             client_type=0,
             client_id="call_centre",
             client_secret="secret",
-            url="http://localhost/",
-            redirect_uri="http://localhost/redirect",
+            redirect_uris="http://localhost/redirect",
         )
 
         # create an staff API client
-        self.staff_api_client = Client.objects.create(
+        self.staff_api_client = Application.objects.create(
             user=self.staff_user,
             name="staff",
             client_type=0,
             client_id="cla_provider",
             client_secret="secret",
-            url="http://provider.localhost/",
-            redirect_uri="http://provider.localhost/redirect",
+            redirect_uris="http://provider.localhost/redirect",
         )
 
     def get_data(self, **kwargs):

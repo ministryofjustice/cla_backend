@@ -1,12 +1,11 @@
 [
     {
         "pk": 1,
-        "model": "oauth2.client",
+        "model": "oauth2_provider.application",
         "fields": {
             "name": "operator",
-            "url": "http://localhost/",
             "client_type": 0,
-            "redirect_uri": "http://operator.localhost/",
+            "redirect_uris": "http://operator.localhost/",
             "user": null,
             "client_id": "b4b9220ffcb11ebfdab1",
             "client_secret": "2df71313bdd38a2e1b815015e1b14387e7681d41"
@@ -14,12 +13,11 @@
     },
     {
         "pk": 2,
-        "model": "oauth2.client",
+        "model": "oauth2_provider.application",
         "fields": {
             "name": "staff",
-            "url": "http://localhost/",
             "client_type": 0,
-            "redirect_uri": "http://staff.localhost/",
+            "redirect_uris": "http://staff.localhost/",
             "user": null,
             "client_id": "59657ed22d980251cdd3",
             "client_secret": "0494287c65bdf61d29f0eeed467ec8e090f0d80f"
@@ -27,12 +25,11 @@
     },
     {
         "pk": 3, 
-        "model": "oauth2.client", 
+        "model": "oauth2_provider.application", 
         "fields": {
             "name": "OBIEE", 
-            "url": "http://localhost/", 
             "client_type": 0, 
-            "redirect_uri": "http://obiee.localhost/", 
+            "redirect_uris": "http://obiee.localhost/", 
             "user": 95, 
             "client_id": "39d31fdffd8c89ebb6d5", 
             "client_secret": "7ad5e3cbcdf656ececbd235557f99ec049bee604"

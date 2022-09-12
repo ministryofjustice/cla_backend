@@ -47,6 +47,6 @@ class CallCentreClientIDPermissionTestCase(CLAOperatorAuthBaseApiTestMixin, Test
             redirect_uris="http://localhost/redirect",
             authorization_grant_type="password",
         )
-        new_token = AccessToken.objects.create(user=self.user, client=new_client, token="token2", scope=0)
+        new_token = AccessToken.objects.create(user=self.user, application=new_client, token="token2", scope=0)
         response = self.client.get("/mock_view/", HTTP_AUTHORIZATION="Bearer %s" % new_token.token)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

@@ -60,8 +60,6 @@ https://github.com/said-moj/django-moj-irat/archive/refs/tags/0.3.1.tar.gz
     # via -r requirements/source/requirements-base.in
 django-oauth-toolkit==0.11.0
     # via -r requirements/source/requirements-base.in
-https://github.com/ministryofjustice/django-oauth2-provider/archive/refs/tags/v2.7.0.beta.tar.gz
-    # via -r requirements/source/requirements-base.in
 https://github.com/ministryofjustice/django-pagedown/archive/refs/tags/v0.2.2.tar.gz
     # via -r requirements/source/requirements-base.in
 django-storages==1.5.2
@@ -156,8 +154,6 @@ scandir==1.10.0
     # via pathlib2
 sentry-sdk==0.19.3
     # via -r requirements/source/requirements-base.in
-shortuuid==0.5.0
-    # via django-oauth2-provider
 six==1.16.0
     # via
     #   bleach

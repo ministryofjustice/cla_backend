@@ -233,6 +233,8 @@ if BACKEND_ENABLED:
 if ADMIN_ENABLED:
     INSTALLED_APPS += ("django.contrib.admin", "pagedown", "reports")
 
+OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
+
 INSTALLED_APPS += PROJECT_APPS
 
 # DIAGNOSIS

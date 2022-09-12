@@ -18,7 +18,6 @@ https://github.com/ministryofjustice/django-pagedown/archive/refs/tags/v0.2.2.ta
 
 Markdown==2.5.2
 bleach==2.0.0
-https://github.com/ministryofjustice/django-oauth2-provider/archive/refs/tags/v2.7.0.beta.tar.gz
 
 django-oauth-toolkit==0.11.0
 django-braces==1.8.1

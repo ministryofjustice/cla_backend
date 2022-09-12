@@ -6,7 +6,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import override_settings
-from provider.oauth2.models import AccessToken
+from oauth2_provider.models import AccessToken
 from rest_framework import serializers
 from rest_framework.test import APITestCase
 
@@ -50,10 +50,10 @@ class CSVUploadTestCase(CSVUploadAPIMixin, CLAProviderAuthBaseApiTestMixin, APIT
         self.wrong_provider = make_recipe("cla_provider.provider")
         self.wrong_provider.staff_set.add(Staff(user=self.wrong_user, is_manager=True))
         self.wrong_provider.save()
-
+        expiry_date = datetime.datetime.now() + datetime.timedelta(days=2)
         # Create an access token from wrong user
         self.wrong_staff_token = AccessToken.objects.create(
-            user=self.wrong_user, client=self.staff_api_client, token="wrong_stafF_token", scope=0
+            user=self.wrong_user, application=self.staff_api_client, token="wrong_stafF_token", scope=0, expires=expiry_date
         )
 
     def assertResponseKeys(self, response, detail=False, paginated=False):

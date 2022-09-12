@@ -1,3 +1,5 @@
+import datetime
+
 from django.conf.urls import patterns
 from django.http import HttpResponse
 from django.test import TestCase
@@ -47,6 +49,7 @@ class CallCentreClientIDPermissionTestCase(CLAOperatorAuthBaseApiTestMixin, Test
             redirect_uris="http://localhost/redirect",
             authorization_grant_type="password",
         )
-        new_token = AccessToken.objects.create(user=self.user, application=new_client, token="token2", scope=0)
+        expiry_date = datetime.datetime.now() + datetime.timedelta(days=2)
+        new_token = AccessToken.objects.create(user=self.user, application=new_client, token="token2", scope=0, expires=expiry_date)
         response = self.client.get("/mock_view/", HTTP_AUTHORIZATION="Bearer %s" % new_token.token)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

@@ -5,6 +5,7 @@ import logging
 from django.conf import settings
 from django.http import HttpResponse
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 from ipware.ip import get_ip
 from rest_framework.exceptions import Throttled
@@ -12,9 +13,6 @@ from rest_framework.exceptions import Throttled
 from oauth2_provider.views import TokenView as Oauth2AccessTokenView
 from oauth2_provider.exceptions import OAuthToolkitError
 from oauthlib.oauth2.rfc6749 import OAuth2Error
-
-from call_centre.models import Operator
-from cla_provider.models import Staff
 
 from .forms import ClientIdPasswordGrantForm
 from .models import AccessAttempt
@@ -89,15 +87,12 @@ class AccessTokenView(Oauth2AccessTokenView):
     def check_user_is_active(self, request):
         user = None
         username = request.POST.get("username")
-        client_id = request.POST.get("client_id")
-        if client_id == "call_centre":
-            user = Operator.objects.get(user__username=username)
-        elif client_id == "cla_provider":
-            user = Staff.objects.get(user__username=username)
-        else:
+        try:
+            user = User.objects.get(username=username)
+        except:
             raise OAuth2Error("invalid_client")
 
-        if not user.user.is_active:
+        if not user.is_active:
             raise OAuth2Error("account_disabled")
 
     def check_login_attempts(self, request):

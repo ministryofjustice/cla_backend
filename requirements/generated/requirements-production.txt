@@ -40,6 +40,10 @@ decorator==4.4.2
     # via networkx
 dj-database-url==0.3.0
     # via -r requirements/source/requirements-base.in
+django-braces==1.8.1
+    # via
+    #   -r requirements/source/requirements-base.in
+    #   django-oauth-toolkit
 django-docopt-command==0.2.0
     # via -r requirements/source/requirements-base.in
 django-extended-choices==0.3.0
@@ -54,6 +58,8 @@ django-model-utils==2.2
     # via -r requirements/source/requirements-base.in
 https://github.com/said-moj/django-moj-irat/archive/refs/tags/0.3.1.tar.gz
     # via -r requirements/source/requirements-base.in
+django-oauth-toolkit==0.11.0
+    # via -r requirements/source/requirements-base.in
 https://github.com/ministryofjustice/django-oauth2-provider/archive/refs/tags/v2.7.0.beta.tar.gz
     # via -r requirements/source/requirements-base.in
 https://github.com/ministryofjustice/django-pagedown/archive/refs/tags/v0.2.2.tar.gz
@@ -67,6 +73,7 @@ django==1.7.9
     #   -r requirements/source/requirements-base.in
     #   django-model-utils
     #   django-moj-irat
+    #   django-oauth-toolkit
     #   django-pagedown
     #   django-uuidfield
     #   jsonfield
@@ -113,6 +120,8 @@ markdown==2.5.2
     # via -r requirements/source/requirements-base.in
 networkx==1.9.1
     # via -r requirements/source/requirements-base.in
+oauthlib==1.1.2
+    # via django-oauth-toolkit
 openpyxl==2.6.4
     # via csvkit
 pathlib2==2.3.7.post1
@@ -153,6 +162,8 @@ six==1.16.0
     # via
     #   bleach
     #   csvkit
+    #   django-braces
+    #   django-oauth-toolkit
     #   html5lib
     #   pathlib2
     #   python-dateutil

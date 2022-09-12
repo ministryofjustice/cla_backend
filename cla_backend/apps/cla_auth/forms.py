@@ -71,5 +71,5 @@ class ClientIdPasswordGrantForm(AllowForm):
 
         if not model.user.is_active:
             raise OAuth2Error("account_disabled")
-        
+
         return super(ClientIdPasswordGrantForm, self).clean()

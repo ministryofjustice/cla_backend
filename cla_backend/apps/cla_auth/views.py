@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 class AccessTokenView(Oauth2AccessTokenView):
     throttle_classes = [LoginRateThrottle]
+
     def __init__(self, *args, **kwargs):
         super(AccessTokenView, self).__init__(*args, **kwargs)
         self.account_lockedout = False
@@ -65,9 +66,8 @@ class AccessTokenView(Oauth2AccessTokenView):
         except OAuth2Error as exc:
             logger.info("User is inactive: {}".format(request.POST.get("username")))
             response = self.error_response({"error": exc.description}, status=401)
-
             return response
-        
+
         response = super(AccessTokenView, self).dispatch(request, *args, **kwargs)
         if response.status_code > 399:
             self.on_invalid_attempt(request)
@@ -75,7 +75,6 @@ class AccessTokenView(Oauth2AccessTokenView):
             self.on_valid_attempt(request)
 
         return response
-            
 
     def on_invalid_attempt(self, request):
         if not self.account_lockedout:
@@ -142,8 +141,7 @@ class AccessTokenView(Oauth2AccessTokenView):
         }
 
     def error_response(self, error, content_type="application/json", status=400, **kwargs):
-        response = HttpResponse(json.dumps(error), content_type=content_type,
-            status=status, **kwargs)
+        response = HttpResponse(json.dumps(error), content_type=content_type, status=status, **kwargs)
         message = "INVESTIGATE-LGA-1746: {} {}".format(response.status_code, response.content)
         logging.info(message)
         return response

@@ -112,7 +112,6 @@ class LoginTestCase(TestCase):
             response = self.client.post(self.url, data=self.get_operator_data(password="invalid"))
             self.assertEqual(response.status_code, 401)
             self.assertEqual(response.content, '{"error_description": "Invalid credentials given.", "error": "invalid_grant"}')
-
         self.assertEqual(AccessAttempt.objects.count(), settings.LOGIN_FAILURE_LIMIT)
 
         # the n-th time, the user's account will be locked out
@@ -125,7 +124,7 @@ class LoginTestCase(TestCase):
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "locked_out"}')
 
-        with mock.patch("cla_auth.forms.timezone") as mocked_timezone:
+        with mock.patch("cla_auth.views.timezone") as mocked_timezone:
             mocked_timezone.now.return_value = timezone.now() + datetime.timedelta(
                 minutes=settings.LOGIN_FAILURE_COOLOFF_TIME
             )
@@ -161,7 +160,6 @@ class LoginTestCase(TestCase):
         op_user = User.objects.get(username=data["username"])
         op_user.is_active = False
         op_user.save()
-
         response = self.client.post(self.url, data=data)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "account_disabled"}')

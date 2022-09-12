@@ -4,8 +4,8 @@ import logging
 from django.conf import settings
 from django.utils import timezone
 
-from provider.oauth2.forms import PasswordGrantForm
-from provider.forms import OAuthValidationError
+from oauth2_provider.forms import AllowForm
+from oauthlib.oauth2.rfc6749 import OAuth2Error
 
 from call_centre.models import Operator
 from cla_provider.models import Staff
@@ -15,7 +15,7 @@ from .models import AccessAttempt
 logger = logging.getLogger(__name__)
 
 
-class ClientIdPasswordGrantForm(PasswordGrantForm):
+class ClientIdPasswordGrantForm(AllowForm):
     def __init__(self, *args, **kwargs):
         super(ClientIdPasswordGrantForm, self).__init__(*args, **kwargs)
         self.account_lockedout = False
@@ -42,7 +42,7 @@ class ClientIdPasswordGrantForm(PasswordGrantForm):
 
             logger.info("account locked out", extra={"username": username})
 
-            raise OAuthValidationError({"error": "locked_out"})
+            raise OAuth2Error("locked_out")
 
     def on_form_invalid(self):
         if not self.account_lockedout:
@@ -67,9 +67,9 @@ class ClientIdPasswordGrantForm(PasswordGrantForm):
         try:
             model = ModelClazz.objects.get(user__username=data.get("username"))
         except ModelClazz.DoesNotExist:
-            raise OAuthValidationError({"error": "invalid_grant"})
+            raise OAuth2Error("invalid_grant")
 
         if not model.user.is_active:
-            raise OAuthValidationError({"error": "account_disabled"})
-
+            raise OAuth2Error("account_disabled")
+        
         return super(ClientIdPasswordGrantForm, self).clean()

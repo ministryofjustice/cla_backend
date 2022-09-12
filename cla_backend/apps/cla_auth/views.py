@@ -1,22 +1,33 @@
-import logging
+import datetime
 import json
+import logging
 
-from django.views.generic.base import TemplateResponseMixin
+from django.conf import settings
+from django.http import HttpResponse
+from django.utils import timezone
 
 from ipware.ip import get_ip
 from rest_framework.exceptions import Throttled
 
 from oauth2_provider.views import TokenView as Oauth2AccessTokenView
 from oauth2_provider.exceptions import OAuthToolkitError
+from oauthlib.oauth2.rfc6749 import OAuth2Error
+
+from call_centre.models import Operator
+from cla_provider.models import Staff
 
 from .forms import ClientIdPasswordGrantForm
+from .models import AccessAttempt
 from .throttling import LoginRateThrottle
 
 logger = logging.getLogger(__name__)
 
 
-class AccessTokenView(Oauth2AccessTokenView, TemplateResponseMixin):
+class AccessTokenView(Oauth2AccessTokenView):
     throttle_classes = [LoginRateThrottle]
+    def __init__(self, *args, **kwargs):
+        super(AccessTokenView, self).__init__(*args, **kwargs)
+        self.account_lockedout = False
 
     def get_throttles(self):
         """
@@ -42,20 +53,67 @@ class AccessTokenView(Oauth2AccessTokenView, TemplateResponseMixin):
     def dispatch(self, request, *args, **kwargs):
         try:
             self.check_throttles(request)
+            self.check_login_attempts(request)
+            self.check_user_is_active(request)
         except Throttled as exc:
             logger.info("login throttled: {}".format(self._get_request_log_extras(request)))
-            error = "throttled"
-            first_error_item = OAuthToolkitError(error)
-            first_error_item.urlencoded = "/"
-            error_item = OAuthToolkitError(first_error_item, redirect_uri="/")
-            redirect, error_response = super(AccessTokenView, self).error_response(error_item, **kwargs)
-            response = self.render_to_response(error_response, status=401)
+            response = self.error_response({"error": "throttled", "detail": exc.detail}, status=exc.status_code)
 
             if exc.wait:
                 response["X-Throttle-Wait-Seconds"] = "%d" % exc.wait
             return response
+        except OAuth2Error as exc:
+            logger.info("User is inactive: {}".format(request.POST.get("username")))
+            response = self.error_response({"error": exc.description}, status=401)
 
-        return super(AccessTokenView, self).dispatch(request, *args, **kwargs)
+            return response
+        
+        response = super(AccessTokenView, self).dispatch(request, *args, **kwargs)
+        if response.status_code > 399:
+            self.on_invalid_attempt(request)
+        else:
+            self.on_valid_attempt(request)
+
+        return response
+            
+
+    def on_invalid_attempt(self, request):
+        if not self.account_lockedout:
+            username = request.POST.get("username")
+            if username:
+                AccessAttempt.objects.create_for_username(username)
+
+    def on_valid_attempt(self, request):
+        username = request.POST.get("username")
+        AccessAttempt.objects.delete_for_username(username)
+
+    def check_user_is_active(self, request):
+        user = None
+        username = request.POST.get("username")
+        client_id = request.POST.get("client_id")
+        if client_id == "call_centre":
+            user = Operator.objects.get(user__username=username)
+        elif client_id == "cla_provider":
+            user = Staff.objects.get(user__username=username)
+        else:
+            raise OAuth2Error("invalid_client")
+
+        if not user.user.is_active:
+            raise OAuth2Error("account_disabled")
+
+    def check_login_attempts(self, request):
+        username = request.POST.get("username")
+
+        cooloff_time = timezone.now() - datetime.timedelta(minutes=settings.LOGIN_FAILURE_COOLOFF_TIME)
+
+        attempts = AccessAttempt.objects.filter(username=username, created__gt=cooloff_time).count()
+
+        if attempts >= settings.LOGIN_FAILURE_LIMIT:
+            self.account_lockedout = True
+
+            logger.info("account locked out", extra={"username": username})
+
+            raise OAuth2Error("locked_out")
 
     def get_password_grant(self, request, data, client):
         form = ClientIdPasswordGrantForm(data, client=client)
@@ -84,11 +142,8 @@ class AccessTokenView(Oauth2AccessTokenView, TemplateResponseMixin):
         }
 
     def error_response(self, error, content_type="application/json", status=400, **kwargs):
-        first_error_item = OAuthToolkitError(error)
-        first_error_item.urlencoded = "/"
-        error_item = OAuthToolkitError(first_error_item, redirect_uri="/")
-        redirect, error_response = super(AccessTokenView, self).error_response(error_item, **kwargs)
-        response = self.render_to_response(error_response, status)
+        response = HttpResponse(json.dumps(error), content_type=content_type,
+            status=status, **kwargs)
         message = "INVESTIGATE-LGA-1746: {} {}".format(response.status_code, response.content)
         logging.info(message)
         return response

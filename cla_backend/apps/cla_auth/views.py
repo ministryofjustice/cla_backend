@@ -89,7 +89,7 @@ class AccessTokenView(Oauth2AccessTokenView):
         username = request.POST.get("username")
         try:
             user = User.objects.get(username=username)
-        except:
+        except User.DoesNotExist:
             raise OAuth2Error("invalid_client")
 
         if not user.is_active:

@@ -51,14 +51,6 @@ MANAGERS = ADMINS
 EMAIL_FROM_ADDRESS = "no-reply@civillegaladvice.service.gov.uk"
 DEFAULT_EMAIL_TO = "cla-alerts@digital.justice.gov.uk"
 
-# Want to alter start and end times via environment variables.
-# In case these are not set, default values are set here
-DEFAULT_NON_ROTA_START_TIME_HR = 8
-DEFAULT_NON_ROTA_END_TIME_HR = 17
-DEFAULT_ED_START_TIME_HR = 9
-DEFAULT_ED_END_TIME_HR = 17
-DEFAULT_DISCRIM_START_TIME_HR = 8
-DEFAULT_DISCRIM_END_TIME_HR = 18
 
 OPERATOR_USER_ALERT_EMAILS = []
 SPECIALIST_USER_ALERT_EMAILS = []
@@ -339,6 +331,15 @@ else:
 CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get("CALL_CENTRE_NOTIFY_EMAIL_ADDRESS", DEFAULT_EMAIL_TO)
 
 # LGA-2236 Set rota hours start and end times using environment variables so can change without updating the code.
+# Want to alter start and end times via environment variables.
+# In case these are not set, default values are set here
+DEFAULT_NON_ROTA_START_TIME_HR = 8
+DEFAULT_NON_ROTA_END_TIME_HR = 17
+DEFAULT_ED_START_TIME_HR = 9
+DEFAULT_ED_END_TIME_HR = 17
+DEFAULT_DISCRIM_START_TIME_HR = 8
+DEFAULT_DISCRIM_END_TIME_HR = 18
+
 NON_ROTA_START_TIME_HR = int(os.environ.get("NON_ROTA_START_TIME_HR", DEFAULT_NON_ROTA_START_TIME_HR))
 NON_ROTA_END_TIME_HR = int(os.environ.get("NON_ROTA_END_TIME_HR", DEFAULT_NON_ROTA_END_TIME_HR))
 

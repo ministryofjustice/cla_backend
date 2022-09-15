@@ -15,10 +15,8 @@ from cla_provider.models import Staff
 
 from oauth2_provider.models import Application
 from oauth2_provider.views import TokenView as Oauth2AccessTokenView
-from oauth2_provider.exceptions import OAuthToolkitError
 from oauthlib.oauth2.rfc6749 import OAuth2Error
 
-from .forms import ClientIdPasswordGrantForm
 from .models import AccessAttempt
 from .throttling import LoginRateThrottle
 
@@ -80,6 +78,10 @@ class AccessTokenView(Oauth2AccessTokenView):
         return response
 
     def on_invalid_attempt(self, request):
+        """
+        This creates an invalid access attempt, these get checked and counted 
+        each time a user attempts to login.
+        """
         if not self.account_lockedout:
             username = request.POST.get("username")
             if username:
@@ -87,7 +89,8 @@ class AccessTokenView(Oauth2AccessTokenView):
 
     def on_valid_attempt(self, request):
         """
-        This checks that the user is set to active
+        When a user has successfully logged in deletes the login attempts made
+        to keep the table clear.
         """
         username = request.POST.get("username")
         AccessAttempt.objects.delete_for_username(username)
@@ -109,7 +112,7 @@ class AccessTokenView(Oauth2AccessTokenView):
     def check_user_against_model(self, request):
         """
         This is more for the frontend, it tries to log the user in as an operator first
-        if that fails, it tries to log in the user as a provider.  It uses this to find 
+        if that fails, it tries to log in the user as a provider.  It uses this to find
         where to send the user.
         """
         try:
@@ -136,6 +139,10 @@ class AccessTokenView(Oauth2AccessTokenView):
         return class_name
 
     def check_login_attempts(self, request):
+        """
+        This checks how many login attempts there have been, it locks the user out when the
+        LOGIN_FAILURE_LIMIT has been hit.
+        """
         username = request.POST.get("username")
 
         cooloff_time = timezone.now() - datetime.timedelta(minutes=settings.LOGIN_FAILURE_COOLOFF_TIME)
@@ -148,22 +155,6 @@ class AccessTokenView(Oauth2AccessTokenView):
             logger.info("account locked out", extra={"username": username})
 
             raise OAuth2Error("locked_out")
-
-    def get_password_grant(self, request, data, client):
-        form = ClientIdPasswordGrantForm(data, client=client)
-        if not form.is_valid():
-            log_extras = self._get_request_log_extras(request)
-            log_extras["FORM_ERRORS"] = form.errors
-            logger.info("login failed: {}".format(json.dumps(log_extras)))
-
-            form.on_form_invalid()
-
-            raise OAuthToolkitError(form.errors)
-        else:
-            form.on_form_valid()
-
-        logger.info("login succeeded: {}".format(json.dumps(self._get_request_log_extras(request))))
-        return form.cleaned_data
 
     def _get_request_log_extras(self, request):
         return {

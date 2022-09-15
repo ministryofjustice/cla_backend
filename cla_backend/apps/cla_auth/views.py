@@ -79,7 +79,7 @@ class AccessTokenView(Oauth2AccessTokenView):
 
     def on_invalid_attempt(self, request):
         """
-        This creates an invalid access attempt, these get checked and counted 
+        This creates an invalid access attempt, these get checked and counted
         each time a user attempts to login.
         """
         if not self.account_lockedout:

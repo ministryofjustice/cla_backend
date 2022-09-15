@@ -10,6 +10,10 @@ from django.contrib.auth.models import User
 from ipware.ip import get_ip
 from rest_framework.exceptions import Throttled
 
+from call_centre.models import Operator
+from cla_provider.models import Staff
+
+from oauth2_provider.models import Application
 from oauth2_provider.views import TokenView as Oauth2AccessTokenView
 from oauth2_provider.exceptions import OAuthToolkitError
 from oauthlib.oauth2.rfc6749 import OAuth2Error
@@ -54,6 +58,7 @@ class AccessTokenView(Oauth2AccessTokenView):
             self.check_throttles(request)
             self.check_login_attempts(request)
             self.check_user_is_active(request)
+            self.check_user_against_model(request)
         except Throttled as exc:
             logger.info("login throttled: {}".format(self._get_request_log_extras(request)))
             response = self.error_response({"error": "throttled", "detail": exc.detail}, status=exc.status_code)
@@ -62,7 +67,7 @@ class AccessTokenView(Oauth2AccessTokenView):
                 response["X-Throttle-Wait-Seconds"] = "%d" % exc.wait
             return response
         except OAuth2Error as exc:
-            logger.info("User is inactive: {}".format(request.POST.get("username")))
+            logger.info("User: {}; Error: {}".format(request.POST.get("username"), exc.description))
             response = self.error_response({"error": exc.description}, status=401)
             return response
 
@@ -81,10 +86,16 @@ class AccessTokenView(Oauth2AccessTokenView):
                 AccessAttempt.objects.create_for_username(username)
 
     def on_valid_attempt(self, request):
+        """
+        This checks that the user is set to active
+        """
         username = request.POST.get("username")
         AccessAttempt.objects.delete_for_username(username)
 
     def check_user_is_active(self, request):
+        """
+        This checks that the user is set to active
+        """
         user = None
         username = request.POST.get("username")
         try:
@@ -94,6 +105,35 @@ class AccessTokenView(Oauth2AccessTokenView):
 
         if not user.is_active:
             raise OAuth2Error("account_disabled")
+
+    def check_user_against_model(self, request):
+        """
+        This is more for the frontend, it tries to log the user in as an operator first
+        if that fails, it tries to log in the user as a provider.  It uses this to find 
+        where to send the user.
+        """
+        try:
+            client = Application.objects.get(client_id=request.POST.get("client_id"))
+        except Application.DoesNotExist:
+            raise OAuth2Error("invalid_client")
+
+        class_name = self.get_user_model(client.name)
+
+        try:
+            assert class_name.objects.get(user__username=request.POST.get("username"))
+        except class_name.DoesNotExist:
+            raise OAuth2Error("invalid_grant")
+
+    def get_user_model(self, client_name):
+        """
+        This gets the appropriate model for the client/application name.
+        """
+        class_name = None
+        if client_name == "operator":
+            class_name = Operator
+        elif client_name == "staff":
+            class_name = Staff
+        return class_name
 
     def check_login_attempts(self, request):
         username = request.POST.get("username")

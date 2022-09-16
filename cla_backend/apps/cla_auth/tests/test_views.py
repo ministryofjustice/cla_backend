@@ -75,16 +75,34 @@ class LoginTestCase(TestCase):
         data.update(kwargs)
         return self.get_data(**data)
 
-    def test_invalid_auth_settings(self):
+    def test_invalid_client_id(self):
         # invalid client_id
         response = self.client.post(self.url, data=self.get_operator_data(client_id="invalid"))
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "invalid_client"}')
 
-        # invalid client secret
+    def test_invalid_client_secret(self):
         response = self.client.post(self.url, data=self.get_operator_data(client_secret="invalid"))
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "invalid_client"}')
+
+    def test_client_name_doesnt_match_any_user_model(self):
+        # Create api client with name that doesnt match a user model
+        self.test_api_client = Application.objects.create(
+            user=self.op_user,
+            name="test",
+            client_type=0,
+            client_id="test",
+            client_secret="secret",
+            redirect_uris="http://provider.localhost/redirect",
+            authorization_grant_type="password",
+        )
+
+        data = {"client_id": "test", "username": "operator", "password": "operator"}
+
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.content, '{"error": "invalid_grant"}')
 
     def test_operator_success(self):
         response = self.client.post(self.url, data=self.get_operator_data())

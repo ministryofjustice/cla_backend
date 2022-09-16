@@ -121,7 +121,7 @@ class AccessTokenView(Oauth2AccessTokenView):
             raise OAuth2Error("invalid_client")
 
         class_name = self.get_user_model(client.name)
-
+        
         try:
             assert class_name.objects.get(user__username=request.POST.get("username"))
         except class_name.DoesNotExist:
@@ -136,6 +136,9 @@ class AccessTokenView(Oauth2AccessTokenView):
             class_name = Operator
         elif client_name == "staff":
             class_name = Staff
+        else:
+            raise OAuth2Error("invalid_grant")
+
         return class_name
 
     def check_login_attempts(self, request):

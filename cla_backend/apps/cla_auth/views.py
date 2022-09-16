@@ -121,7 +121,7 @@ class AccessTokenView(Oauth2AccessTokenView):
             raise OAuth2Error("invalid_client")
 
         class_name = self.get_user_model(client.name)
-        
+
         try:
             assert class_name.objects.get(user__username=request.POST.get("username"))
         except class_name.DoesNotExist:

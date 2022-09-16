@@ -167,7 +167,9 @@ class AccessTokenView(Oauth2AccessTokenView):
         }
 
     def error_response(self, error, content_type="application/json", status=400, **kwargs):
+        """
+        This constructs an error response into a http response.
+        """
         response = HttpResponse(json.dumps(error), content_type=content_type, status=status, **kwargs)
-        message = "INVESTIGATE-LGA-1746: {} {}".format(response.status_code, response.content)
-        logging.info(message)
+
         return response

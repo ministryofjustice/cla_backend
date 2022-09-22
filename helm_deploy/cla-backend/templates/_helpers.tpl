@@ -87,7 +87,8 @@ Local postgres env vars
 {{- define "cla-backend.app.vars" -}}
 {{- $environment := .Values.environment -}}
 - name: ALLOWED_HOSTS
-  value: "{{ .Values.host }}"
+{{/* Add the service name to the list of allowed hosts: */}}
+  value: "{{ .Values.host }}" {{ include "cla-backend.fullname" . }}-app
 - name:  CLA_ENV
   value: "{{ $environment }}"
 {{ range $name, $data := .Values.envVars }}

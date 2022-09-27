@@ -60,7 +60,7 @@ https://github.com/said-moj/django-moj-irat/archive/refs/tags/0.3.1.tar.gz
     # via -r requirements/source/requirements-base.in
 https://github.com/ministryofjustice/django-oauth2-provider/archive/refs/tags/v2.7.0.beta.tar.gz
     # via -r requirements/source/requirements-base.in
-https://github.com/ministryofjustice/django-pagedown/archive/refs/tags/v0.2.2.tar.gz
+https://github.com/timmyomahony/django-pagedown/archive/refs/tags/v1.1.tar.gz
     # via -r requirements/source/requirements-base.in
 django-rest-swagger==0.1.14
     # via -r requirements/source/requirements-docs.in

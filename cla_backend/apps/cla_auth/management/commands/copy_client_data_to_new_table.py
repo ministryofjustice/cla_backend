@@ -35,9 +35,9 @@ class Command(BaseCommand):
                     redirect_uris=client["redirect_uris"],
                     authorization_grant_type="password",
                 )
-        except IntegrityError as e:
+        except IntegrityError:
             # I am passing this error, it means the details are in the table already.
-            # as a precaution this script doesnt get taken out immediatly I don't 
+            # as a precaution this script doesnt get taken out immediatly I don't
             # want it failing the start up script for backend.
             pass
 

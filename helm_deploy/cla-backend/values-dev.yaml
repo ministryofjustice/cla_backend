@@ -48,3 +48,5 @@ envVars:
     value: ~
   FRONTEND_HOST_NAME:
     value: ~
+  CLIENT_DATA_COPY:
+    value: "False"

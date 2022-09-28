@@ -31,3 +31,5 @@ envVars:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-staging.svc.cluster.local"
   EXPRESS_SERVER_PORT:
     value: "80"
+  CLIENT_DATA_COPY:
+    value: "False"

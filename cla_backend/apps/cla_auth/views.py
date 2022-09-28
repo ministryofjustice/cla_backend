@@ -115,6 +115,7 @@ class AccessTokenView(Oauth2AccessTokenView):
         if that fails, it tries to log in the user as a provider.  It uses this to find
         where to send the user.
         """
+        # Initial getting the client, if client doesnt exist we catch the error
         try:
             client = Application.objects.get(client_id=request.POST.get("client_id"))
         except Application.DoesNotExist:

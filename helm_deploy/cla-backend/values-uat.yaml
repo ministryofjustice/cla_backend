@@ -55,3 +55,5 @@ envVars:
     value: "cla-frontend-socket-server.laa-cla-frontend-uat.svc.cluster.local"
   FRONTEND_HOST_NAME:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-uat.svc.cluster.local"
+  CLIENT_DATA_COPY:
+    value: "False"

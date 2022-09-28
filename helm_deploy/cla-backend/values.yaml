@@ -233,6 +233,8 @@ envVars:
       name: july-education
       key: "value"
       optional: true
+  CLIENT_DATA_COPY:
+    value: "True"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

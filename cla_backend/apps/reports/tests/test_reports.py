@@ -267,8 +267,13 @@ class TestKnowledgeBaseArticlesExport(TestCase):
         make_recipe("knowledgebase.telephone_number", article=article_1, number=123)
         make_recipe("knowledgebase.telephone_number", article=article_1, number=456, name="special")
         make_recipe("knowledgebase.telephone_number", article=article_2, number=789)
-        make_recipe("knowledgebase.article_category_matrix", article=article_1, article_category__name='a category')
-        make_recipe("knowledgebase.article_category_matrix", article=article_1, article_category__name='another category', preferred_signpost=True)
+        make_recipe("knowledgebase.article_category_matrix", article=article_1, article_category__name="a category")
+        make_recipe(
+            "knowledgebase.article_category_matrix",
+            article=article_1,
+            article_category__name="another category",
+            preferred_signpost=True,
+        )
 
     def test_queries(self):
         with self.assertNumQueries(4):  # Articles + prefetch_related of phone numbers and article categories

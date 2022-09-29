@@ -351,13 +351,15 @@ DISCRIMINATION_END_TIME_HR = int(os.environ.get("DISCRIMINATION_END_TIME_HR", DE
 
 NON_ROTA_HOURS = {"weekday": (datetime.time(NON_ROTA_START_TIME_HR, 0), datetime.time(NON_ROTA_END_TIME_HR, 0))}
 EDUCATION_DAILY_HOURS = (datetime.time(EDUCATION_START_TIME_HR, 0), datetime.time(EDUCATION_END_TIME_HR, 0))
-DISCRIMINATION_NON_ROTA_HOURS = {"weekday": (datetime.time(DISCRIMINATION_START_TIME_HR, 0), datetime.time(DISCRIMINATION_END_TIME_HR, 0))}
+DISCRIMINATION_NON_ROTA_HOURS = {
+    "weekday": (datetime.time(DISCRIMINATION_START_TIME_HR, 0), datetime.time(DISCRIMINATION_END_TIME_HR, 0))
+}
 
 EDUCATION_NON_ROTA_HOURS = {
-        "monday": EDUCATION_DAILY_HOURS,
-        "tuesday": EDUCATION_DAILY_HOURS,
-        "wednesday": EDUCATION_DAILY_HOURS,
-        "thursday": EDUCATION_DAILY_HOURS,
+    "monday": EDUCATION_DAILY_HOURS,
+    "tuesday": EDUCATION_DAILY_HOURS,
+    "wednesday": EDUCATION_DAILY_HOURS,
+    "thursday": EDUCATION_DAILY_HOURS,
 }
 
 # If an unknown or empty is used to get from NON_ROTA_OPENING_HOURS then it will default to a basic NON_ROTA_HOURS

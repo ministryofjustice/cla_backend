@@ -41,6 +41,8 @@ envVars:
   REPLICA_DB_HOST:
     secret:
       optional: true
+  CLIENT_DATA_COPY:
+    value: "True"
   LOAD_SEED_DATA:
     value: "True"
   LOAD_TEST_DATA:
@@ -55,5 +57,3 @@ envVars:
     value: "cla-frontend-socket-server.laa-cla-frontend-uat.svc.cluster.local"
   FRONTEND_HOST_NAME:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-uat.svc.cluster.local"
-  CLIENT_DATA_COPY:
-    value: "True"

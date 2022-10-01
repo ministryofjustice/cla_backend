@@ -77,14 +77,10 @@ class LoginTestCase(TestCase):
 
     def test_invalid_client_id(self):
         # invalid client_id
-        response = self.client.post(self.url, data=self.get_operator_data(client_id="invalid"))
-        self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.content, '{"error": "invalid_client"}')
+        self.assert_invalid_grant_error(self.get_operator_data(client_id="invalid"))
 
     def test_invalid_client_secret(self):
-        response = self.client.post(self.url, data=self.get_operator_data(client_secret="invalid"))
-        self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.content, '{"error": "invalid_client"}')
+        self.assert_invalid_grant_error(self.get_operator_data(client_secret="invalid"))
 
     def test_client_name_doesnt_match_any_user_model(self):
         # Create api client with name that doesnt match a user model
@@ -99,10 +95,7 @@ class LoginTestCase(TestCase):
         )
 
         data = {"client_id": "test", "username": "operator", "password": "operator"}
-
-        response = self.client.post(self.url, data=data)
-        self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.content, '{"error": "invalid_grant"}')
+        self.assert_invalid_grant_error(data)
 
     def test_operator_success(self):
         response = self.client.post(self.url, data=self.get_operator_data())
@@ -196,3 +189,21 @@ class LoginTestCase(TestCase):
         response = self.client.post(self.url, data=data)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "account_disabled"}')
+    
+    def test_username_does_not_exist(self):
+        unlinked_username = "unknown"
+        User.objects.create_user(unlinked_username, self.staff_email, self.staff_password)
+
+        data = self.get_provider_data(username = unlinked_username)
+
+        self.assert_invalid_grant_error(data)
+
+    def test_user_does_not_exist(self):
+        data = self.get_provider_data(username = "user-does-not-exist")
+
+        self.assert_invalid_grant_error(data)
+    
+    def assert_invalid_grant_error(self, data):
+        response = self.client.post(self.url, data=data)
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.content, '{"error": "invalid_grant"}')

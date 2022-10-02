@@ -31,6 +31,13 @@ envVars:
   DB_NAME:
     value: "cla_backend"
     secret: ~
+  DB_HOST:
+    secret:
+      optional: true
+  DB_PORT:
+    secret:
+      key: port
+      optional: true
   REPLICA_DB_HOST:
     secret:
       optional: true

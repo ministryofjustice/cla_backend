@@ -56,4 +56,4 @@ envVars:
   FRONTEND_HOST_NAME:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-uat.svc.cluster.local"
   MIGRATE_OAUTH_DATA:
-    value: "False"
+    value: "True"

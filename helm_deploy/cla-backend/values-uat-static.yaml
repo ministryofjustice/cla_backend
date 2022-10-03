@@ -37,4 +37,4 @@ envVars:
   EXPRESS_SERVER_PORT:
     value: "80"
   MIGRATE_OAUTH_DATA:
-    value: "False"
+    value: "True"

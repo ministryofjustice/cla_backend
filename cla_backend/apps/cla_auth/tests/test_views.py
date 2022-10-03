@@ -108,7 +108,7 @@ class LoginTestCase(TestCase):
     def test_operator_invalid_password(self):
         response = self.client.post(self.url, data=self.get_operator_data(password="invalid"))
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.content, '{"error_description": "Invalid credentials given.", "error": "invalid_grant"}')
+        self.assertEqual(response.content, self.INVALID_CREDENTIALS_ERROR)
 
     def test_staff_success(self):
         response = self.client.post(self.url, data=self.get_provider_data())
@@ -118,7 +118,7 @@ class LoginTestCase(TestCase):
     def test_staff_invalid_password(self):
         response = self.client.post(self.url, data=self.get_provider_data(password="invalid"))
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.content, '{"error_description": "Invalid credentials given.", "error": "invalid_grant"}')
+        self.assertEqual(response.content, self.INVALID_CREDENTIALS_ERROR)
 
     def test_locks_user_out_after_n_attempts(self):
         self.assertEqual(AccessAttempt.objects.count(), 0)
@@ -126,7 +126,7 @@ class LoginTestCase(TestCase):
         for index in range(settings.LOGIN_FAILURE_LIMIT):
             response = self.client.post(self.url, data=self.get_operator_data(password="invalid"))
             self.assertEqual(response.status_code, 401)
-            self.assertEqual(response.content, '{"error_description": "Invalid credentials given.", "error": "invalid_grant"}')
+            self.assertEqual(response.content, self.INVALID_CREDENTIALS_ERROR)
         self.assertEqual(AccessAttempt.objects.count(), settings.LOGIN_FAILURE_LIMIT)
 
         # the n-th time, the user's account will be locked out

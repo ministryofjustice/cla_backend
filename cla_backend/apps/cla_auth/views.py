@@ -149,9 +149,9 @@ class AccessTokenView(Oauth2AccessTokenView):
         """
         username = request.POST.get("username")
 
-        cooloff_time = timezone.now() - datetime.timedelta(minutes=settings.LOGIN_FAILURE_COOLOFF_TIME)
+        cool_off_time = timezone.now() - datetime.timedelta(minutes=settings.LOGIN_FAILURE_COOLOFF_TIME)
 
-        attempts = AccessAttempt.objects.filter(username=username, created__gt=cooloff_time).count()
+        attempts = AccessAttempt.objects.filter(username=username, created__gt=cool_off_time).count()
 
         if attempts >= settings.LOGIN_FAILURE_LIMIT:
             self.account_lockedout = True

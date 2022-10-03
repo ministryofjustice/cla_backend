@@ -16,8 +16,9 @@ from cla_auth.models import AccessAttempt
 
 
 class LoginTestCase(TestCase):
-    invalid_grant_error = '{"error": "invalid_grant"}'
-    invalid_client_error = '{"error": "invalid_client"}'
+    INVALID_GRANT_ERROR = '{"error": "invalid_grant"}'
+    INVALID_CLIENT_ERROR = '{"error": "invalid_client"}'
+    INVALID_CREDENTIALS_ERROR = '{"error_description": "Invalid credentials given.", "error": "invalid_grant"}'
 
     def setUp(self):
         super(LoginTestCase, self).setUp()
@@ -80,10 +81,10 @@ class LoginTestCase(TestCase):
 
     def test_invalid_client_id(self):
         # invalid client_id
-        self.assert_unauthorised_response(self.get_operator_data(client_id="invalid"), self.invalid_client_error)
+        self.assert_unauthorised_response(self.get_operator_data(client_id="invalid"), self.INVALID_CLIENT_ERROR)
 
     def test_invalid_client_secret(self):
-        self.assert_unauthorised_response(self.get_operator_data(client_secret="invalid"), self.invalid_client_error)
+        self.assert_unauthorised_response(self.get_operator_data(client_secret="invalid"), self.INVALID_CLIENT_ERROR)
 
     def test_client_name_doesnt_match_any_user_model(self):
         # Create api client with name that doesnt match a user model
@@ -98,7 +99,7 @@ class LoginTestCase(TestCase):
         )
 
         data = {"client_id": "test", "username": "operator", "password": "operator"}
-        self.assert_unauthorised_response(data, self.invalid_grant_error)
+        self.assert_unauthorised_response(data, self.INVALID_GRANT_ERROR)
 
     def test_operator_success(self):
         response = self.client.post(self.url, data=self.get_operator_data())
@@ -196,12 +197,12 @@ class LoginTestCase(TestCase):
 
         data = self.get_provider_data(username=unlinked_username)
 
-        self.assert_unauthorised_response(data, self.invalid_grant_error)
+        self.assert_unauthorised_response(data, self.INVALID_GRANT_ERROR)
 
     def test_user_does_not_exist(self):
         data = self.get_provider_data(username="user-does-not-exist")
 
-        self.assert_unauthorised_response(data, self.invalid_client_error)
+        self.assert_unauthorised_response(data, self.INVALID_CLIENT_ERROR)
 
     def assert_unauthorised_response(self, data, expected_error):
         response = self.client.post(self.url, data=data)

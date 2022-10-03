@@ -49,7 +49,7 @@ admin_password() {
 }
 
 copy_old_client_data_to_new_table() {
-    iif [ "$CLIENT_DATA_COPY" == "True" ]; then
+    if [ "$MIGRATE_OAUTH_DATA" == "True" ]; then
         python manage.py copy_client_data_to_new_table
     fi
 }

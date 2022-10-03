@@ -99,7 +99,7 @@ class LoginTestCase(TestCase):
         )
 
         data = {"client_id": "test", "username": "operator", "password": "operator"}
-        self.assert_invalid_grant_error(data)
+        self.assert_unauthorised_error(data, '{"error": "invalid_grant"}')
 
     def test_operator_success(self):
         response = self.client.post(self.url, data=self.get_operator_data())

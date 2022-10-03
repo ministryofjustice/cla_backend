@@ -229,9 +229,11 @@ PROJECT_APPS = (
 )
 
 if BACKEND_ENABLED:
-    INSTALLED_APPS += ("rest_framework", "provider.oauth2")
+    INSTALLED_APPS += ("rest_framework", "oauth2_provider")
 if ADMIN_ENABLED:
     INSTALLED_APPS += ("django.contrib.admin", "pagedown", "reports")
+
+OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
 
 INSTALLED_APPS += PROJECT_APPS
 
@@ -305,7 +307,7 @@ LOGIN_FAILURE_COOLOFF_TIME = 60  # in minutes
 
 # Django rest-framework-auth
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework.authentication.OAuth2Authentication",),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("oauth2_provider.ext.rest_framework.OAuth2Authentication",),
     "DEFAULT_PERMISSION_CLASSES": ("core.permissions.AllowNone",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_THROTTLE_RATES": {"login": "10/sec"},

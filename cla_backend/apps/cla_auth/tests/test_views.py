@@ -194,15 +194,15 @@ class LoginTestCase(TestCase):
         unlinked_username = "unknown"
         User.objects.create_user(unlinked_username, self.staff_email, self.staff_password)
 
-        data = self.get_provider_data(username = unlinked_username)
+        data = self.get_provider_data(username=unlinked_username)
 
         self.assert_invalid_grant_error(data)
 
     def test_user_does_not_exist(self):
-        data = self.get_provider_data(username = "user-does-not-exist")
+        data = self.get_provider_data(username="user-does-not-exist")
 
         self.assert_invalid_grant_error(data)
-    
+
     def assert_invalid_grant_error(self, data):
         response = self.client.post(self.url, data=data)
         self.assertEqual(response.status_code, 401)

@@ -16,6 +16,9 @@ from cla_auth.models import AccessAttempt
 
 
 class LoginTestCase(TestCase):
+    invalid_grant_error = '{"error": "invalid_grant"}'
+    invalid_client_error = '{"error": "invalid_client"}'
+
     def setUp(self):
         super(LoginTestCase, self).setUp()
 
@@ -77,10 +80,10 @@ class LoginTestCase(TestCase):
 
     def test_invalid_client_id(self):
         # invalid client_id
-        self.assert_unauthorised_response(self.get_operator_data(client_id="invalid"), '{"error": "invalid_client"}')
+        self.assert_unauthorised_response(self.get_operator_data(client_id="invalid"), self.invalid_client_error)
 
     def test_invalid_client_secret(self):
-        self.assert_unauthorised_response(self.get_operator_data(client_secret="invalid"), '{"error": "invalid_client"}')
+        self.assert_unauthorised_response(self.get_operator_data(client_secret="invalid"), self.invalid_client_error)
 
     def test_client_name_doesnt_match_any_user_model(self):
         # Create api client with name that doesnt match a user model
@@ -193,12 +196,12 @@ class LoginTestCase(TestCase):
 
         data = self.get_provider_data(username=unlinked_username)
 
-        self.assert_unauthorised_response(data, '{"error": "invalid_grant"}')
+        self.assert_unauthorised_response(data, self.invalid_grant_error)
 
     def test_user_does_not_exist(self):
         data = self.get_provider_data(username="user-does-not-exist")
 
-        self.assert_unauthorised_response(data, '{"error": "invalid_client"}')
+        self.assert_unauthorised_response(data, self.invalid_client_error)
 
     def assert_unauthorised_response(self, data, expected_error):
         response = self.client.post(self.url, data=data)

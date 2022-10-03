@@ -28,7 +28,6 @@ class AccessTokenView(Oauth2AccessTokenView):
 
     def __init__(self, *args, **kwargs):
         super(AccessTokenView, self).__init__(*args, **kwargs)
-        self.account_lockedout = False
 
     def get_throttles(self):
         """
@@ -82,10 +81,10 @@ class AccessTokenView(Oauth2AccessTokenView):
         This creates an invalid access attempt, these get checked and counted
         each time a user attempts to login.
         """
-        if not self.account_lockedout:
-            username = request.POST.get("username")
-            if username:
-                AccessAttempt.objects.create_for_username(username)
+
+        username = request.POST.get("username")
+        if username:
+            AccessAttempt.objects.create_for_username(username)
 
     def on_valid_attempt(self, request):
         """
@@ -154,7 +153,6 @@ class AccessTokenView(Oauth2AccessTokenView):
         attempts = AccessAttempt.objects.filter(username=username, created__gt=cool_off_time).count()
 
         if attempts >= settings.LOGIN_FAILURE_LIMIT:
-            self.account_lockedout = True
 
             logger.info("account locked out", extra={"username": username})
 

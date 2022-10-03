@@ -189,7 +189,7 @@ class LoginTestCase(TestCase):
         response = self.client.post(self.url, data=data)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.content, '{"error": "account_disabled"}')
-    
+
     def test_username_does_not_exist(self):
         unlinked_username = "unknown"
         User.objects.create_user(unlinked_username, self.staff_email, self.staff_password)

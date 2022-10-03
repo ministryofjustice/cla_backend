@@ -44,7 +44,7 @@ envVars:
   LOAD_SEED_DATA:
     value: "True"
   LOAD_TEST_DATA:
-    value: "True"
+    value: "False"
   LOAD_END_TO_END_FIXTURES:
     value: "False"
   SQS_ACCESS_KEY:

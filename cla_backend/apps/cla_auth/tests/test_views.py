@@ -77,10 +77,14 @@ class LoginTestCase(TestCase):
 
     def test_invalid_client_id(self):
         # invalid client_id
-        self.assert_invalid_grant_error(self.get_operator_data(client_id="invalid"))
+        response = self.client.post(self.url, data=self.get_operator_data(client_id="invalid"))
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.content, '{"error": "invalid_client"}')
 
     def test_invalid_client_secret(self):
-        self.assert_invalid_grant_error(self.get_operator_data(client_secret="invalid"))
+        response = self.client.post(self.url, data=self.get_operator_data(client_secret="invalid"))
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.content, '{"error": "invalid_client"}')
 
     def test_client_name_doesnt_match_any_user_model(self):
         # Create api client with name that doesnt match a user model
@@ -196,14 +200,14 @@ class LoginTestCase(TestCase):
 
         data = self.get_provider_data(username=unlinked_username)
 
-        self.assert_invalid_grant_error(data)
+        self.assert_unauthorised_error(data, '{"error": "invalid_grant"}')
 
     def test_user_does_not_exist(self):
         data = self.get_provider_data(username="user-does-not-exist")
 
-        self.assert_invalid_grant_error(data)
+        self.assert_unauthorised_error(data, '{"error": "invalid_client"}')
 
-    def assert_invalid_grant_error(self, data):
+    def assert_unauthorised_error(self, data, expected_error):
         response = self.client.post(self.url, data=data)
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.content, '{"error": "invalid_grant"}')
+        self.assertEqual(response.content, expected_error)

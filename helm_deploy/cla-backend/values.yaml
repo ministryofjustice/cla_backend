@@ -233,7 +233,7 @@ envVars:
       name: july-education
       key: "value"
       optional: true
-  CLIENT_DATA_COPY:
+  MIGRATE_OAUTH_DATA:
     value: "True"
 
 resources: {}

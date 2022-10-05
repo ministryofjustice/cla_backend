@@ -48,6 +48,12 @@ admin_password() {
     fi
 }
 
+copy_old_client_data_to_new_table() {
+    if [ "$MIGRATE_OAUTH_DATA" == "True" ]; then
+        python manage.py copy_client_data_to_new_table
+    fi
+}
+
 cd /home/app/
 
 migrations
@@ -55,5 +61,6 @@ admin_password
 load_seed_data
 load_test_data
 load_end_to_end_test_data
+copy_old_client_data_to_new_table
 
 exec "$@"

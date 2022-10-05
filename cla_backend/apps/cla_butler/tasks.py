@@ -9,7 +9,7 @@ from django.contrib.sessions.models import Session
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
-from provider.oauth2.models import AccessToken
+from oauth2_provider.models import AccessToken
 
 from checker.models import ReasonForContactingCategory, ReasonForContacting
 from cla_auditlog.models import AuditLog

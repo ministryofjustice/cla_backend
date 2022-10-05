@@ -1,13 +1,23 @@
-import logging
+import datetime
 import json
+import logging
+
+from django.conf import settings
+from django.http import HttpResponse
+from django.utils import timezone
+from django.contrib.auth.models import User
 
 from ipware.ip import get_ip
 from rest_framework.exceptions import Throttled
 
-from provider.oauth2.views import AccessTokenView as Oauth2AccessTokenView
-from provider.views import OAuthError
+from call_centre.models import Operator
+from cla_provider.models import Staff
 
-from .forms import ClientIdPasswordGrantForm
+from oauth2_provider.models import Application
+from oauth2_provider.views import TokenView as Oauth2AccessTokenView
+from oauthlib.oauth2.rfc6749 import OAuth2Error
+
+from .models import AccessAttempt
 from .throttling import LoginRateThrottle
 
 logger = logging.getLogger(__name__)
@@ -15,6 +25,9 @@ logger = logging.getLogger(__name__)
 
 class AccessTokenView(Oauth2AccessTokenView):
     throttle_classes = [LoginRateThrottle]
+
+    def __init__(self, *args, **kwargs):
+        super(AccessTokenView, self).__init__(*args, **kwargs)
 
     def get_throttles(self):
         """
@@ -40,6 +53,9 @@ class AccessTokenView(Oauth2AccessTokenView):
     def dispatch(self, request, *args, **kwargs):
         try:
             self.check_throttles(request)
+            self.check_login_attempts(request)
+            self.check_user_is_active(request)
+            self.check_user_against_model(request)
         except Throttled as exc:
             logger.info("login throttled: {}".format(self._get_request_log_extras(request)))
             response = self.error_response({"error": "throttled", "detail": exc.detail}, status=exc.status_code)
@@ -47,24 +63,100 @@ class AccessTokenView(Oauth2AccessTokenView):
             if exc.wait:
                 response["X-Throttle-Wait-Seconds"] = "%d" % exc.wait
             return response
+        except OAuth2Error as exc:
+            logger.info("User: {}; Error: {}".format(request.POST.get("username"), exc.description))
+            response = self.error_response({"error": exc.description}, status=401)
+            return response
 
-        return super(AccessTokenView, self).dispatch(request, *args, **kwargs)
-
-    def get_password_grant(self, request, data, client):
-        form = ClientIdPasswordGrantForm(data, client=client)
-        if not form.is_valid():
-            log_extras = self._get_request_log_extras(request)
-            log_extras["FORM_ERRORS"] = form.errors
-            logger.info("login failed: {}".format(json.dumps(log_extras)))
-
-            form.on_form_invalid()
-
-            raise OAuthError(form.errors)
+        response = super(AccessTokenView, self).dispatch(request, *args, **kwargs)
+        if response.status_code > 399:
+            self.on_invalid_attempt(request)
         else:
-            form.on_form_valid()
+            self.on_valid_attempt(request)
 
-        logger.info("login succeeded: {}".format(json.dumps(self._get_request_log_extras(request))))
-        return form.cleaned_data
+        return response
+
+    def on_invalid_attempt(self, request):
+        """
+        This creates an invalid access attempt, these get checked and counted
+        each time a user attempts to login.
+        """
+
+        username = request.POST.get("username")
+        if username:
+            AccessAttempt.objects.create_for_username(username)
+
+    def on_valid_attempt(self, request):
+        """
+        When a user has successfully logged in deletes the login attempts made
+        to keep the table clear.
+        """
+        username = request.POST.get("username")
+        AccessAttempt.objects.delete_for_username(username)
+
+    def check_user_is_active(self, request):
+        """
+        This checks that the user is set to active
+        """
+        user = None
+        username = request.POST.get("username")
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise OAuth2Error("invalid_client")
+
+        if not user.is_active:
+            raise OAuth2Error("account_disabled")
+
+    def check_user_against_model(self, request):
+        """
+        This is more for the frontend, it tries to log the user in as an operator first
+        if that fails, it tries to log in the user as a provider.  It uses this to find
+        where to send the user.
+        """
+        # Initial getting the client, if client doesnt exist we catch the error
+        try:
+            client = Application.objects.get(client_id=request.POST.get("client_id"))
+        except Application.DoesNotExist:
+            raise OAuth2Error("invalid_client")
+
+        class_name = self.get_user_model(client.name)
+
+        try:
+            assert class_name.objects.get(user__username=request.POST.get("username"))
+        except class_name.DoesNotExist:
+            raise OAuth2Error("invalid_grant")
+
+    def get_user_model(self, client_name):
+        """
+        This gets the appropriate model for the client/application name.
+        """
+        class_name = None
+        if client_name == "operator":
+            class_name = Operator
+        elif client_name == "staff":
+            class_name = Staff
+        else:
+            raise OAuth2Error("invalid_grant")
+
+        return class_name
+
+    def check_login_attempts(self, request):
+        """
+        This checks how many login attempts there have been, it locks the user out when the
+        LOGIN_FAILURE_LIMIT has been hit.
+        """
+        username = request.POST.get("username")
+
+        cool_off_time = timezone.now() - datetime.timedelta(minutes=settings.LOGIN_FAILURE_COOLOFF_TIME)
+
+        attempts = AccessAttempt.objects.filter(username=username, created__gt=cool_off_time).count()
+
+        if attempts >= settings.LOGIN_FAILURE_LIMIT:
+
+            logger.info("account locked out", extra={"username": username})
+
+            raise OAuth2Error("locked_out")
 
     def _get_request_log_extras(self, request):
         return {
@@ -77,7 +169,9 @@ class AccessTokenView(Oauth2AccessTokenView):
         }
 
     def error_response(self, error, content_type="application/json", status=400, **kwargs):
-        response = super(AccessTokenView, self).error_response(error, content_type, status, **kwargs)
-        message = "INVESTIGATE-LGA-1746: {} {}".format(response.status_code, response.content)
-        logging.info(message)
+        """
+        This constructs an error response into a http response.
+        """
+        response = HttpResponse(json.dumps(error), content_type=content_type, status=status, **kwargs)
+
         return response

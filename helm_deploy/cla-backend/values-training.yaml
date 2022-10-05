@@ -42,3 +42,5 @@ envVars:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-training.svc.cluster.local"
   EXPRESS_SERVER_PORT:
     value: "80"
+  MIGRATE_OAUTH_DATA:
+    value: "True"

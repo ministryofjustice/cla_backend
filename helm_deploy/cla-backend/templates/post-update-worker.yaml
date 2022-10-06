@@ -3,8 +3,8 @@ kind: Job
 metadata:
   name: "{{ .Release.Name }}-post-update-worker"
   labels:
-    app.kubernetes.io.managed-by: { { .Release.Service | quote } }
-    app.kubernetes.io.instance: { { .Release.Name | quote } }
+    app.kubernetes.io.managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io.instance: {{ .Release.Name | quote }}
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
   annotations:
     "helm.sh/hook": post-install,post-upgrade
@@ -15,14 +15,15 @@ spec:
     metadata:
       name: "{{ .Release.Name }}-post-update-worker"
       labels:
-        app.kubernetes.io.managed-by: { { .Release.Service | quote } }
-        app.kubernetes.io.instance: { { .Release.Name | quote } }
+        app.kubernetes.io.managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io.instance: {{ .Release.Name | quote }}
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
       restartPolicy: Never
       containers:
         - name: post-update-worker
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: { { .Values.image.pullPolicy } }
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/home/app/bin/post_update_tasks.sh"]
-          env: { { include "cla-backend.app.vars" . | nindent 12 } }
+          env:
+            {{ include "cla-backend.app.vars" . | nindent 12 }}

@@ -24,6 +24,9 @@ spec:
         - name: post-update-worker
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
           command: ["/home/app/bin/post_update_tasks.sh"]
           env:
             {{ include "cla-backend.app.vars" . | nindent 12 }}

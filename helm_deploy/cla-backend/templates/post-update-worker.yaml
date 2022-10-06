@@ -27,6 +27,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            readOnlyRootFilesystem: true
           command: ["/home/app/bin/post_update_tasks.sh"]
           env:
             {{ include "cla-backend.app.vars" . | nindent 12 }}

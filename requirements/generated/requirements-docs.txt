@@ -82,7 +82,7 @@ django==1.7.11
     #   django-rest-swagger
     #   django-uuidfield
     #   jsonfield
-djangorestframework==2.3.14
+djangorestframework==2.4.8
     # via
     #   -r requirements/source/requirements-base.in
     #   django-rest-swagger

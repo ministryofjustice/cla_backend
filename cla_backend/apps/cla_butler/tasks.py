@@ -47,21 +47,8 @@ class DeleteOldData(Task):
     """
     Deletes old data that is no longer needed.
 
-    Case data more than 2 years old is no longer needed so will be deleted.
-
     We also delete empty cases and data thet is not connected to anything in
     particular.
-
-    Maybe faster to dump to json using
-    from django.core.serializers.json import DjangoJSONEncoder
-    json.dumps(list(Case.objects.all()[:100].values()), cls=DjangoJSONEncoder)
-
-    or
-
-    https://docs.djangoproject.com/en/1.8/topics/serialization/
-
-    from django.core import serializers
-    data = serializers.serialize("json", SomeModel.objects.all())
     """
 
     def __init__(self, *args, **kwargs):
@@ -80,6 +67,16 @@ class DeleteOldData(Task):
 
     def _setup(self):
         self.now = timezone.now()
+
+    def get_cases_for_deletion(self):
+        """
+        This gets cases which are over three years old and have a specific
+        outcome code indicating its closed.
+        """
+        three_years = self.now - relativedelta(years=3)
+        # outcome_codes list is temporary and a work in progress
+        outcome_codes = ["COI", "MIS", "REOPEN", "SPOP"]
+        return Case.objects.filter(modified__lte=three_years).exclude(outcome_code__in=outcome_codes)
 
     def _delete_logs(self, qs):
         ct = ContentType.objects.get_for_model(qs.model)
@@ -114,7 +111,7 @@ class DeleteOldData(Task):
         tokens.delete()
 
     def cleanup_cases(self):
-        cases = self.get_eligible_cases()
+        cases = self.get_cases_for_deletion()
         pks = get_pks(cases)
         from_cases = Case.objects.filter(from_case_id__in=pks)
         fpks = get_pks(from_cases)
@@ -132,10 +129,6 @@ class DeleteOldData(Task):
         self.cleanup_model_from_case(pks, ReasonForContacting)
         self._delete_objects(from_cases)
         self._delete_objects(cases)
-
-    def get_eligible_cases(self):
-        two_years = self.now - relativedelta(years=2)
-        return Case.objects.filter(modified__lte=two_years)
 
     def cleanup_model_from_case(self, pks, model, attr="case_id", case_log_attr=None):
         attr_in = "{attribute}__in".format(attribute=attr)

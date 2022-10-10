@@ -97,13 +97,16 @@ class TasksTestCase(TestCase):
 
         self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 0)
 
-    def test_delete_old_data_run_case_over_two_years_successful_delete(self):
+    def test_delete_old_data_over_3_years_successful_delete(self):
+        """
+        This tests a case over three years without an exclude outcome_code
+        """
         log = make_recipe("cla_auditlog.audit_log")
 
         # Creating a case thats three years old so it gets picked up properly by the delete data
-        freezer = freeze_time(timezone.now() + relativedelta(years=-3))
+        freezer = freeze_time(timezone.now() + relativedelta(years=-4))
         freezer.start()
-        case = make_recipe("legalaid.case", audit_log=[log])
+        case = make_recipe("legalaid.case", audit_log=[log], outcome_code="CB1")
         freezer.stop()
 
         eod = make_recipe("legalaid.eod_details", case=case)
@@ -127,7 +130,41 @@ class TasksTestCase(TestCase):
         case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
         self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 0)
 
-    def test_delete_old_data_run_case_under_two_years_unsuccessful_delete(self):
+    def test_delete_old_data_run_case_over_3_years_excluded_code_unsuccessful_delete(self):
+        """
+        This makes sure that even if a case is over 3 years 
+        its not deleted due to having an excluded outcome_code
+        """
+        log = make_recipe("cla_auditlog.audit_log")
+
+        # Creating a case thats three years old so it gets picked up properly by the delete data
+        freezer = freeze_time(timezone.now() + relativedelta(years=-4))
+        freezer.start()
+        case = make_recipe("legalaid.case", audit_log=[log], outcome_code="SPOP")
+        freezer.stop()
+
+        eod = make_recipe("legalaid.eod_details", case=case)
+        make_recipe("complaints.complaint", eod=eod, audit_log=[log])
+        pks = get_pks(Case.objects.all())
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+
+        self.assertEqual(len(Case.objects.all()), 1)
+        self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 1)
+        self.assertEqual(len(EODDetails.objects.all()), 1)
+        self.assertEqual(len(Complaint.objects.all()), 1)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
+        self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 1)
+
+        self.delete_old_data.run()
+
+        self.assertEqual(len(Case.objects.all()), 1)
+        self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 1)
+        self.assertEqual(len(EODDetails.objects.all()), 1)
+        self.assertEqual(len(Complaint.objects.all()), 1)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
+        self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 1)
+
+    def test_delete_old_data_run_case_under_three_years_unsuccessful_delete(self):
         log = make_recipe("cla_auditlog.audit_log")
 
         # Creating a case using current timestamp

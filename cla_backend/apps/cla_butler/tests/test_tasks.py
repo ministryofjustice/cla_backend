@@ -132,7 +132,7 @@ class TasksTestCase(TestCase):
 
     def test_delete_old_data_run_case_over_3_years_excluded_code_unsuccessful_delete(self):
         """
-        This makes sure that even if a case is over 3 years 
+        This makes sure that even if a case is over 3 years
         its not deleted due to having an excluded outcome_code
         """
         log = make_recipe("cla_auditlog.audit_log")

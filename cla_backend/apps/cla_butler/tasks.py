@@ -68,7 +68,7 @@ class DeleteOldData(Task):
     def _setup(self):
         self.now = timezone.now()
 
-    def get_cases_for_deletion(self):
+    def get_eligible_cases(self):
         """
         This gets cases which are over three years old and have a specific
         outcome code indicating its closed.
@@ -111,7 +111,7 @@ class DeleteOldData(Task):
         tokens.delete()
 
     def cleanup_cases(self):
-        cases = self.get_cases_for_deletion()
+        cases = self.get_eligible_cases()
         pks = get_pks(cases)
         from_cases = Case.objects.filter(from_case_id__in=pks)
         fpks = get_pks(from_cases)

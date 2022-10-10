@@ -6,11 +6,11 @@ from cla_butler.tasks import DeleteOldData
 
 class Command(BaseCommand):
 
-    help = "Deletes public diagnosis that are more than a day old"
+    help = "Deleting cases that are over three years old and that dont have an excluded outcome_code"
 
     def add_arguments(self, parser):
         parser.add_argument("--force", action="store_true", dest="force", help="Force running of housekeeping task")
 
     def handle(self, *args, **options):
-        self.stdout.write("Deleting public diagnosis that are more than a day old")
+        self.stdout.write("Deleting cases that are over three years old and that dont have an excluded outcome_code")
         DeleteOldData().run()

@@ -75,7 +75,7 @@ class DeleteOldData(Task):
         outcome code indicating its closed.
         """
         three_years = self.now - relativedelta(years=3)
-        
+
         return Case.objects.filter(modified__lte=three_years).exclude(outcome_code__in=self.OUTCOME_CODES)
 
     def _delete_logs(self, qs):

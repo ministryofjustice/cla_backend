@@ -50,6 +50,7 @@ class DeleteOldData(Task):
     We also delete empty cases and data thet is not connected to anything in
     particular.
     """
+    OUTCOME_CODES = ["COI", "MIS", "REOPEN", "SPOP"]
 
     def __init__(self, *args, **kwargs):
         self._setup()
@@ -74,9 +75,8 @@ class DeleteOldData(Task):
         outcome code indicating its closed.
         """
         three_years = self.now - relativedelta(years=3)
-        # outcome_codes list is temporary and a work in progress
-        outcome_codes = ["COI", "MIS", "REOPEN", "SPOP"]
-        return Case.objects.filter(modified__lte=three_years).exclude(outcome_code__in=outcome_codes)
+        
+        return Case.objects.filter(modified__lte=three_years).exclude(outcome_code__in=self.OUTCOME_CODES)
 
     def _delete_logs(self, qs):
         ct = ContentType.objects.get_for_model(qs.model)

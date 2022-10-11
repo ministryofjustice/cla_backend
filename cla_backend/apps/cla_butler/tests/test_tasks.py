@@ -25,6 +25,27 @@ class TasksTestCase(TestCase):
         super(TasksTestCase, self).setUp()
         self.delete_old_data = DeleteOldData()
 
+    def data_deletion_check(self, primary_keys, eods, before_data_count, after_data_count):
+        """
+        Checks the data before, runs the delete_old_data command and then checks
+        the data afterwards to see if it has been deleted/not deleted
+        """
+        self.assertEqual(len(Case.objects.all()), before_data_count)
+        self.assertEqual(len(AuditLog.objects.filter(case__in=primary_keys)), before_data_count)
+        self.assertEqual(len(EODDetails.objects.all()), before_data_count)
+        self.assertEqual(len(Complaint.objects.all()), before_data_count)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
+        self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), before_data_count)
+
+        self.delete_old_data.run()
+
+        self.assertEqual(len(Case.objects.all()), after_data_count)
+        self.assertEqual(len(AuditLog.objects.filter(case__in=primary_keys)), after_data_count)
+        self.assertEqual(len(EODDetails.objects.all()), after_data_count)
+        self.assertEqual(len(Complaint.objects.all()), after_data_count)
+        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
+        self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), after_data_count)
+
     def test_delete_objects(self):
         make_recipe("legalaid.case")
         cases = Case.objects.all()
@@ -114,21 +135,7 @@ class TasksTestCase(TestCase):
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
-        self.assertEqual(len(Case.objects.all()), 1)
-        self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 1)
-        self.assertEqual(len(EODDetails.objects.all()), 1)
-        self.assertEqual(len(Complaint.objects.all()), 1)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
-        self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 1)
-
-        self.delete_old_data.run()
-
-        self.assertEqual(len(Case.objects.all()), 0)
-        self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 0)
-        self.assertEqual(len(EODDetails.objects.all()), 0)
-        self.assertEqual(len(Complaint.objects.all()), 0)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
-        self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 0)
+        self.data_deletion_check(pks, eods, 1, 0)
 
     def test_delete_old_data_run_case_over_3_years_excluded_code_unsuccessful_delete(self):
         """
@@ -137,56 +144,30 @@ class TasksTestCase(TestCase):
         """
         log = make_recipe("cla_auditlog.audit_log")
 
-        # Creating a case thats three years old so it gets picked up properly by the delete data
-        freezer = freeze_time(timezone.now() + relativedelta(years=-4))
-        freezer.start()
-        case = make_recipe("legalaid.case", audit_log=[log], outcome_code="SPOP")
-        freezer.stop()
+        count = 0
+        for code in self.delete_old_data.OUTCOME_CODES:
+            count += 1
+            freezer = freeze_time(timezone.now() + relativedelta(years=-4))
+            freezer.start()
+            case = make_recipe("legalaid.case", audit_log=[log], outcome_code=code)
+            freezer.stop()
 
-        eod = make_recipe("legalaid.eod_details", case=case)
-        make_recipe("complaints.complaint", eod=eod, audit_log=[log])
-        pks = get_pks(Case.objects.all())
-        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+            eod = make_recipe("legalaid.eod_details", case=case)
+            make_recipe("complaints.complaint", eod=eod, audit_log=[log])
+            pks = get_pks(Case.objects.all())
+            eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
-        self.assertEqual(len(Case.objects.all()), 1)
-        self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 1)
-        self.assertEqual(len(EODDetails.objects.all()), 1)
-        self.assertEqual(len(Complaint.objects.all()), 1)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
-        self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 1)
-
-        self.delete_old_data.run()
-
-        self.assertEqual(len(Case.objects.all()), 1)
-        self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 1)
-        self.assertEqual(len(EODDetails.objects.all()), 1)
-        self.assertEqual(len(Complaint.objects.all()), 1)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
-        self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 1)
+            self.data_deletion_check(pks, eods, count, count)
 
     def test_delete_old_data_run_case_under_three_years_unsuccessful_delete(self):
         log = make_recipe("cla_auditlog.audit_log")
 
         # Creating a case using current timestamp
-        case = make_recipe("legalaid.case", audit_log=[log])
+        case = make_recipe("legalaid.case", audit_log=[log], outcome_code="SPOP")
 
         eod = make_recipe("legalaid.eod_details", case=case)
         make_recipe("complaints.complaint", eod=eod, audit_log=[log])
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
-        self.assertEqual(len(Case.objects.all()), 1)
-        self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 1)
-        self.assertEqual(len(EODDetails.objects.all()), 1)
-        self.assertEqual(len(Complaint.objects.all()), 1)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
-        self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 1)
-
-        self.delete_old_data.run()
-
-        self.assertEqual(len(Case.objects.all()), 1)
-        self.assertEqual(len(AuditLog.objects.filter(case__in=pks)), 1)
-        self.assertEqual(len(EODDetails.objects.all()), 1)
-        self.assertEqual(len(Complaint.objects.all()), 1)
-        case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
-        self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), 1)
+        self.data_deletion_check(pks, eods, 1, 1)

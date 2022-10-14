@@ -1,6 +1,17 @@
 # coding=utf-8
 from django.core import validators
 from django.db import models
+from rest_framework.serializers import WritableField
+
+
+class MoneyFieldDRF(WritableField):
+    def __init__(self, max_value=9999999999, min_value=0, *args, **kwargs):
+        kwargs.setdefault("validators", [])
+        if max_value is not None:
+            kwargs["validators"].append(validators.MaxValueValidator(max_value))
+        if min_value is not None:
+            kwargs["validators"].append(validators.MinValueValidator(min_value))
+        super(MoneyFieldDRF, self).__init__(*args, **kwargs)
 
 
 class MoneyField(models.BigIntegerField):

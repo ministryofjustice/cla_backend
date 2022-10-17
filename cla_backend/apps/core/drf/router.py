@@ -41,7 +41,7 @@ class NestedCLARouter(NestedSimpleRouter):
             initkwargs={"suffix": "Instance"},
         ),
         # Dynamically generated routes.
-        # Generated using @action or @link decorators on methods of the viewset.
+        # Generated using @detail_route or @list_route decorators on methods of the viewset.
         DynamicDetailRoute(url=r"^{prefix}/{methodname}/$", name="{basename}-{methodnamehyphen}", initkwargs={}),
     ]
 

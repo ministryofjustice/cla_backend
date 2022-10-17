@@ -3,7 +3,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, mixins
-from rest_framework.decorators import action, link
+from rest_framework.decorators import detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response as DRFResponse
 
@@ -64,14 +64,14 @@ class EligibilityCheckViewSet(
     def get_request_user(self):
         return get_web_user()
 
-    @action()
+    @detail_route(methods=["post"])
     def is_eligible(self, request, *args, **kwargs):
         obj = self.get_object()
 
         response, ec, reasons = obj.get_eligibility_state()
         return DRFResponse({"is_eligible": response, "reasons": reasons})
 
-    @link()
+    @detail_route()
     def case_ref(self, request, *args, **kwargs):
         try:
             return DRFResponse({"reference": self.get_object().case.reference})

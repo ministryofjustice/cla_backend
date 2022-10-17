@@ -1,7 +1,7 @@
 import json
 
 from rest_framework import mixins, viewsets, status
-from rest_framework.decorators import action
+from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 
 from core.drf.mixins import NestedGenericModelMixin
@@ -16,11 +16,11 @@ class DiagnosisModelMixin(object):
     model = DiagnosisTraversal
     lookup_field = "reference"
 
-    @action()
+    @detail_route(methods=["post"])
     def move_down(self, request, **kwargs):
         return self.partial_update(request, **kwargs)
 
-    @action()
+    @detail_route(methods=["post"])
     def move_up(self, request, **kwargs):
         self.object = self.get_object()
         serializer = self.get_serializer(self.object)

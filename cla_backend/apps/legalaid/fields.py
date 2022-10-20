@@ -1,10 +1,10 @@
 # coding=utf-8
 from django.core import validators
 from django.db import models
-from rest_framework.serializers import WritableField
+from rest_framework.serializers import Field
 
 
-class MoneyFieldDRF(WritableField):
+class MoneyFieldDRF(Field):
     def __init__(self, max_value=9999999999, min_value=0, *args, **kwargs):
         kwargs.setdefault("validators", [])
         if max_value is not None:

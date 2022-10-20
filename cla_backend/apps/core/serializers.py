@@ -32,7 +32,7 @@ class NullBooleanModelSerializerMixin(object):
         super(NullBooleanModelSerializerMixin, self).__init__(*args, **kwargs)
 
 
-class JSONField(serializers.WritableField):
+class JSONField(serializers.Field):
     def to_native(self, obj):
         return obj
 

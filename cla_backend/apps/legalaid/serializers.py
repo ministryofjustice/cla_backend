@@ -317,7 +317,9 @@ class MediaCodeSerializerBase(ClaModelSerializer):
 
 
 class ContactResearchMethodSerializerBase(ClaModelSerializer):
-    group = serializers.SlugRelatedField(slug_field="method", read_only=True, queryset=ContactResearchMethod.objects.all())
+    group = serializers.SlugRelatedField(
+        slug_field="method", read_only=True, queryset=ContactResearchMethod.objects.all()
+    )
 
     class Meta(object):
         model = ContactResearchMethod

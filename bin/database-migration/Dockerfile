@@ -13,7 +13,7 @@ RUN apk add \
 RUN adduser -D app && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
-RUN pip install psycopg2==2.7.5 --no-cache-dir
+RUN pip install psycopg2==2.7.5 pgdatadiff==0.2.1 --no-cache-dir
 
 USER 1000
 WORKDIR /home/app

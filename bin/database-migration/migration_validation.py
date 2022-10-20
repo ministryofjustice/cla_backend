@@ -3,6 +3,8 @@ import sys
 import os
 import psycopg2
 
+from pgdatadiff.pgdatadiff import DBDiff
+
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -91,6 +93,30 @@ def get_last_row(cursor, table_name):
     return cursor.fetchone()
 
 
+def check_table_data():
+    errors = []
+    connection_string_template = "postgres://{}:{}@{}/{}"
+
+    source_db = connection_string_template.format(
+        os.environ["SOURCE_DB_USER"],
+        os.environ["SOURCE_DB_PASSWORD"],
+        os.environ["SOURCE_DB_HOST"],
+        os.environ["SOURCE_DB_NAME"]
+    )
+    target_db = connection_string_template.format(
+        os.environ["TARGET_DB_USER"],
+        os.environ["TARGET_DB_PASSWORD"],
+        os.environ["TARGET_DB_HOST"],
+        os.environ["TARGET_DB_NAME"]
+    )
+
+    pg_diff_tool = DBDiff(source_db, target_db, chunk_size=100000)
+    if pg_diff_tool.diff_all_table_data():
+        errors.append("Differences found in the migrated data by the pgDataDiff tool.")
+
+    return errors
+
+
 if __name__ == "__main__":
     target_cursor = get_target_db_cursor()
     source_cursor = get_source_db_cursor()
@@ -131,6 +157,8 @@ if __name__ == "__main__":
                         sequence[0], source_sequence_value, target_sequence_value
                     )
                 )
+
+    errors += check_table_data()
 
     if errors:
         eprint("\n".join(errors))

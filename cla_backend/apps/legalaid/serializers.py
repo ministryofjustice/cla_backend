@@ -49,8 +49,8 @@ class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
 
 
 class OutOfHoursRotaSerializerBase(ClaModelSerializer):
-    category = serializers.SlugRelatedField(slug_field="code")
-    provider = serializers.PrimaryKeyRelatedField()
+    category = serializers.SlugRelatedField(slug_field="code", queryset=Category.objects.all())
+    provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all())
 
     class Meta(object):
         model = OutOfHoursRota
@@ -240,7 +240,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     property_set = PropertySerializerBase(allow_add_remove=True, many=True, required=False)
     you = PersonSerializerBase(required=False)
     partner = PersonSerializerBase(required=False)
-    category = serializers.SlugRelatedField(slug_field="code", required=False)
+    category = serializers.SlugRelatedField(slug_field="code", required=False, queryset=Category.objects.all())
     your_problem_notes = serializers.CharField(max_length=500, required=False)
     notes = serializers.CharField(max_length=5000, required=False)
     specific_benefits = JSONField(required=False)
@@ -301,7 +301,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 
 
 class MatterTypeSerializerBase(ClaModelSerializer):
-    category = serializers.SlugRelatedField(slug_field="code", read_only=True)
+    category = serializers.SlugRelatedField(slug_field="code", read_only=True, queryset=Category.objects.all())
 
     class Meta(object):
         model = MatterType
@@ -309,7 +309,7 @@ class MatterTypeSerializerBase(ClaModelSerializer):
 
 
 class MediaCodeSerializerBase(ClaModelSerializer):
-    group = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    group = serializers.SlugRelatedField(slug_field="name", read_only=True, queryset=MediaCode.objects.all())
 
     class Meta(object):
         model = MediaCode
@@ -317,7 +317,7 @@ class MediaCodeSerializerBase(ClaModelSerializer):
 
 
 class ContactResearchMethodSerializerBase(ClaModelSerializer):
-    group = serializers.SlugRelatedField(slug_field="method", read_only=True)
+    group = serializers.SlugRelatedField(slug_field="method", read_only=True, queryset=ContactResearchMethod.objects.all())
 
     class Meta(object):
         model = ContactResearchMethod
@@ -336,7 +336,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     matter_type2 = serializers.SlugRelatedField(
         slug_field="code", required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO)
     )
-    media_code = serializers.SlugRelatedField(slug_field="code", required=False)
+    media_code = serializers.SlugRelatedField(slug_field="code", required=False, queryset=MediaCode.objects.all())
     outcome_code = serializers.CharField(max_length=50, required=False)
     outcome_description = serializers.SerializerMethodField("_get_outcome_description")
     call_started = serializers.SerializerMethodField("_call_started")

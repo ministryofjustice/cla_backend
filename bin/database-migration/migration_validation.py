@@ -93,7 +93,8 @@ def get_last_row(cursor, table_name):
     return cursor.fetchone()
 
 
-def check_table_data(error_list):
+def check_table_data():
+    errors = []
     connection_string_template = "postgres://{}:{}@{}/{}"
 
     source_db = connection_string_template.format(
@@ -111,9 +112,9 @@ def check_table_data(error_list):
 
     pg_diff_tool = DBDiff(source_db, target_db, chunk_size=100000)
     if pg_diff_tool.diff_all_table_data():
-        error_list.append("Differences found in the migrated data by the pgDataDiff tool.")
+        errors.append("Differences found in the migrated data by the pgDataDiff tool.")
 
-    return error_list
+    return errors
 
 
 if __name__ == "__main__":
@@ -157,7 +158,7 @@ if __name__ == "__main__":
                     )
                 )
 
-    errors = check_table_data(errors)
+    errors += check_table_data()
 
     if errors:
         eprint("\n".join(errors))

@@ -5,7 +5,7 @@ from rest_framework import serializers
 from django.utils.translation import ugettext_lazy as _
 
 
-class ThreePartDateField(serializers.WritableField):
+class ThreePartDateField(serializers.Field):
     """
     A serializer field for handling three part date time JSON formatted
     datetime.date.

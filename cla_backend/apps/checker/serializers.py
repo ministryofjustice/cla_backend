@@ -20,6 +20,8 @@ from legalaid.serializers import (
     ThirdPartyDetailsSerializerBase,
 )
 
+from legalaid.models import EligibilityCheck
+
 from checker.models import ReasonForContacting, ReasonForContactingCategory
 
 checker_graph = SimpleLazyObject(lambda: get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME))
@@ -109,7 +111,7 @@ class PartnerPersonSerializer(PersonSerializer):
 
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
-    property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
+    property_set = PropertySerializer(many=True, required=False)
     you = PersonSerializer(required=False)
     partner = PartnerPersonSerializer(required=False)
     # TODO: DRF doesn't validate, fields that aren't REQ'd = True
@@ -161,7 +163,7 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
 
 
 class CaseSerializer(CaseSerializerBase):
-    eligibility_check = UUIDSerializer(slug_field="reference", required=False)
+    eligibility_check = UUIDSerializer(slug_field="reference", required=False, queryset=EligibilityCheck.objects.all())
     adaptation_details = AdaptationDetailsSerializer(required=False)
     personal_details = PersonalDetailsSerializer()
     thirdparty_details = ThirdPartyDetailsSerializer(required=False)

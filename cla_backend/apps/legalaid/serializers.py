@@ -229,15 +229,23 @@ class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
 
 class EODDetailsSerializerBase(serializers.ModelSerializer):
     notes = serializers.CharField(max_length=5000, required=False)
-    categories = EODDetailsCategorySerializerBase(many=True, allow_add_remove=True, required=False)
+    categories = EODDetailsCategorySerializerBase(many=True, required=False)
 
     class Meta(object):
         model = EODDetails
         fields = ()
 
+    # from DRF 3.0 onwards, there is no allow_add_remove option
+    # writable nested serialization must be handed explicitly
+    def create(self, validated_data):
+        eod_details_category_data = validated_data.pop("eoddetailscategory")
+        eoddetails = EODDetails.objects.create(**validated_data)
+        EODDetailsCategory.objects.create(eoddetails=eoddetails, **eod_details_category_data)
+        return eoddetails
+
 
 class EligibilityCheckSerializerBase(ClaModelSerializer):
-    property_set = PropertySerializerBase(allow_add_remove=True, many=True, required=False)
+    property_set = PropertySerializerBase(many=True, required=False)
     you = PersonSerializerBase(required=False)
     partner = PersonSerializerBase(required=False)
     category = serializers.SlugRelatedField(slug_field="code", required=False, queryset=Category.objects.all())
@@ -249,6 +257,14 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     class Meta(object):
         model = EligibilityCheck
         fields = ()
+
+    # from DRF 3.0 onwards, there is no allow_add_remove option
+    # writable nested serialization must be handed explicitly
+    def create(self, validated_data):
+        property_set_data = validated_data.pop("property_set")
+        eligibilitycheck = EligibilityCheck.objects.create(**property_set_data)
+        Property.objects.create(eligibilitycheck=eligibilitycheck, **property_set_data)
+        return eligibilitycheck
 
     def validate_property_set(self, attrs, source):
         """

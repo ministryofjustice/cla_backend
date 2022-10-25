@@ -7,6 +7,7 @@ from django.core import mail
 import mock
 from rest_framework.test import APITestCase
 from rest_framework import status
+from cla_provider.helpers import ProviderAllocationHelper
 
 from legalaid.models import Case, CaseNotesHistory
 from legalaid.tests.views.mixins.case_api import (
@@ -24,7 +25,7 @@ from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 from core.tests.mommy_utils import make_recipe
 
 from call_centre.forms import DeclineHelpCaseForm, SuspendCaseForm
-from call_centre.serializers import CaseSerializer
+from call_centre.serializers import CaseSerializer, ProviderSerializer
 
 
 class BaseCaseTestCase(CLAOperatorAuthBaseApiTestMixin, BaseFullCaseAPIMixin, APITestCase):
@@ -283,6 +284,110 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["provider_notes"], self.resource.provider_notes)
         self.assertNotEqual(response.data["provider_notes"], "abc123")
+
+
+class SuggestProviderTestCase(BaseCaseTestCase):
+    #     # new tests to check assign_suggest view
+    #     # this post always returns a response with the format:
+    #     # {"suggested_provider": *, "as_of": "date_time",
+    #     #  "suitable_providers":
+    #     #  [{"name": "*", "id": pk, "short_code": "*",
+    #     "telephone_frontdoor": "*", "telephone_backdoor": "0845 122 8677"},
+    #     #  ...]}
+
+    @classmethod
+    def setUpClass(cls):
+        cls.suggested_cat_providers = None
+        cls.suggested_category = None
+        cls.cat_eligibility_check = None
+
+    def setUp(self):
+        super(CLAOperatorAuthBaseApiTestMixin, self).setUp()
+        category1 = make_recipe("legalaid.category")
+        category2 = make_recipe("legalaid.category")
+
+        cat1_provider1 = make_recipe("cla_provider.provider", active=True)
+        make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=cat1_provider1, category=category1
+        )
+
+        cat1_provider2 = make_recipe("cla_provider.provider", active=True)
+        make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=cat1_provider2, category=category1
+        )
+
+        cat2_provider1 = make_recipe("cla_provider.provider", active=True)
+        make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=cat2_provider1, category=category2
+        )
+        cat2_provider2 = make_recipe("cla_provider.provider", active=True)
+        make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=cat2_provider2, category=category2
+        )
+
+        helper1 = ProviderAllocationHelper()
+        self.suggested_cat_providers = helper1.get_qualifying_providers(category1)
+        helper2 = ProviderAllocationHelper()
+        self.other_cat_providers = helper2.get_qualifying_providers(category2)
+        # create a case associated with the first category we created above
+        self.suggested_category = category1
+        self.cat_eligibility_check = make_recipe("legalaid.eligibility_check", category=self.suggested_category)
+
+    @mock.patch("cla_provider.models.timezone.now")
+    @mock.patch("cla_provider.helpers.timezone.now")
+    def test_suggest_assign_case_without_category(self, tz_model_mock, tz_helper_tz):
+        # should return null for suggested_provider and all providers as suitable
+        case = make_recipe("legalaid.case", eligibility_check=None)
+        return self._test_assign_suggest(case, tz_model_mock, tz_helper_tz, category_assigned=False, out_of_hours=True)
+
+    @mock.patch("cla_provider.models.timezone.now")
+    @mock.patch("cla_provider.helpers.timezone.now")
+    def test_suggest_assign_case_with_category_out_of_hours(self, tz_model_mock, tz_helper_tz):
+        # should return null for suggested_provider and providers within the same category as suitable
+        case = make_recipe("legalaid.case", eligibility_check=self.cat_eligibility_check)
+        category = case.eligibility_check.category
+        self.assertEqual(category, self.suggested_category)
+        return self._test_assign_suggest(case, tz_model_mock, tz_helper_tz, category_assigned=True, out_of_hours=True)
+
+    @mock.patch("cla_provider.models.timezone.now")
+    @mock.patch("cla_provider.helpers.timezone.now")
+    def test_suggest_assign_case_with_category_in_hours(self, tz_model_mock, tz_helper_tz):
+        # return named provider for suggested_provider and  providers with the same category as suitable
+        case = make_recipe("legalaid.case", eligibility_check=self.cat_eligibility_check)
+        category = case.eligibility_check.category
+        self.assertEqual(category, self.suggested_category)
+        return self._test_assign_suggest(case, tz_model_mock, tz_helper_tz, category_assigned=True, out_of_hours=False)
+
+    def _test_assign_suggest(self, case, tz_model_mock, tz_helper_tz, category_assigned, out_of_hours):
+        # fix the date and time so we can check in and out of hours.
+        if out_of_hours:
+            fake_day = datetime.datetime(2014, 1, 2, 22, 1, 0).replace(tzinfo=timezone.get_current_timezone())
+        else:
+            fake_day = datetime.datetime(2014, 1, 2, 9, 1, 0).replace(tzinfo=timezone.get_current_timezone())
+
+        tz_model_mock.return_value = fake_day
+        tz_helper_tz.return_value = fake_day
+
+        url = reverse("call_centre:case-assign-suggest", args=(), kwargs={"reference": case.reference})
+        response = self.client.get(url, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # check the suggested provider
+        if out_of_hours or not category_assigned:
+            self.assertIsNone(response.data["suggested_provider"])
+        else:
+            name = response.data["suggested_provider"]["name"]
+            self.assertIn(name, [unicode(x.name) for x in self.suggested_cat_providers])
+        #  now check the suitable_providers
+        if category_assigned:
+            # this should be all the providers in suggested category
+            suitable_providers = [ProviderSerializer(p).data for p in self.suggested_cat_providers]
+            self.assertEqual(response.data["suitable_providers"], suitable_providers)
+        else:
+            # this should be all providers
+            suitable_providers = [
+                ProviderSerializer(p).data for p in self.suggested_cat_providers + self.other_cat_providers
+            ]
+            self.assertEqual(response.data["suitable_providers"], suitable_providers)
 
 
 class AssignCaseTestCase(BaseCaseTestCase):

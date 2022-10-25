@@ -13,8 +13,7 @@ from cla_common.money_interval.serializers import MoneyIntervalModelSerializerMi
 class MoneyFieldModelSerializerMixin(object):
     def __init__(self, *args, **kwargs):
         # add a model serializer which is used throughout this project
-        self.field_mapping = self._field_mapping.mapping.copy()  # ouch
-        self.field_mapping[MoneyField] = MoneyFieldDRF
+        self._field_mapping[MoneyField] = MoneyFieldDRF
         super(MoneyFieldModelSerializerMixin, self).__init__(*args, **kwargs)
 
 
@@ -26,8 +25,7 @@ class UUIDSerializer(serializers.SlugRelatedField):
 class NullBooleanModelSerializerMixin(object):
     def __init__(self, *args, **kwargs):
         # add a model serializer which is used throughout this project
-        self.field_mapping = self.field_mapping.copy()
-        self.field_mapping[models.NullBooleanField] = fields.NullBooleanField
+        self._field_mapping[models.NullBooleanField] = fields.NullBooleanField
         super(NullBooleanModelSerializerMixin, self).__init__(*args, **kwargs)
 
 

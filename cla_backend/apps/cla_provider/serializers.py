@@ -159,7 +159,7 @@ class PartnerPersonSerializer(PersonSerializer):
 
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
-    property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
+    property_set = PropertySerializer(many=True, required=False)
     you = PersonSerializer(required=False)
     partner = PartnerPersonSerializer(required=False)
     notes = serializers.CharField(max_length=500, required=False, read_only=True)

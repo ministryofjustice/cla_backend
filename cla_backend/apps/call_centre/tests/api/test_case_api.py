@@ -295,6 +295,12 @@ class SuggestProviderTestCase(BaseCaseTestCase):
     #     "telephone_frontdoor": "*", "telephone_backdoor": "0845 122 8677"},
     #     #  ...]}
 
+    @classmethod
+    def setUpClass(cls):
+        cls.suggested_cat_providers = None
+        cls.suggested_category = None
+        cls.cat_eligibility_check = None
+
     def setUp(self):
         super(CLAOperatorAuthBaseApiTestMixin, self).setUp()
         category1 = make_recipe("legalaid.category")
@@ -373,11 +379,9 @@ class SuggestProviderTestCase(BaseCaseTestCase):
             self.assertIn(name, [unicode(x.name) for x in self.suggested_cat_providers])
         #  now check the suitable_providers
         if category_assigned:
+            # this should be all the providers in suggested category
             suitable_providers = [ProviderSerializer(p).data for p in self.suggested_cat_providers]
             self.assertEqual(response.data["suitable_providers"], suitable_providers)
-            # this should be all of the providers in suggested category
-
-            # self.assertItemsEqual(response.data["suitable_provider"], law_category=self.providers["category_id"]=])
         else:
             # this should be all providers
             suitable_providers = [

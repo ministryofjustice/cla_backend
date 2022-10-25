@@ -317,7 +317,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 
 
 class MatterTypeSerializerBase(ClaModelSerializer):
-    category = serializers.SlugRelatedField(slug_field="code", read_only=True, queryset=Category.objects.all())
+    category = serializers.SlugRelatedField(slug_field="code", read_only=True)
 
     class Meta(object):
         model = MatterType
@@ -325,7 +325,7 @@ class MatterTypeSerializerBase(ClaModelSerializer):
 
 
 class MediaCodeSerializerBase(ClaModelSerializer):
-    group = serializers.SlugRelatedField(slug_field="name", read_only=True, queryset=MediaCode.objects.all())
+    group = serializers.SlugRelatedField(slug_field="name", read_only=True)
 
     class Meta(object):
         model = MediaCode
@@ -333,9 +333,7 @@ class MediaCodeSerializerBase(ClaModelSerializer):
 
 
 class ContactResearchMethodSerializerBase(ClaModelSerializer):
-    group = serializers.SlugRelatedField(
-        slug_field="method", read_only=True, queryset=ContactResearchMethod.objects.all()
-    )
+    group = serializers.SlugRelatedField(slug_field="method", read_only=True)
 
     class Meta(object):
         model = ContactResearchMethod

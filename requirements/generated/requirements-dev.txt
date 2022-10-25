@@ -35,7 +35,7 @@ cfgv==2.0.1
     # via pre-commit
 chardet==4.0.0
     # via requests
-https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.16.tar.gz
+https://github.com/ministryofjustice/cla_common/archive/refs/heads/feature/LGA-1773-cla-common.zip
     # via -r requirements/source/requirements-base.in
 click==7.1.2
     # via pip-tools
@@ -68,7 +68,7 @@ dbf==0.94.003
     # via csvkit
 decorator==4.4.2
     # via networkx
-distlib==0.3.5
+distlib==0.3.6
     # via virtualenv
 dj-database-url==0.3.0
     # via -r requirements/source/requirements-base.in
@@ -141,7 +141,7 @@ filelock==3.2.1
     # via virtualenv
 freezegun==0.3.14
     # via -r requirements/source/requirements-testing.in
-futures==3.3.0
+futures==3.4.0
     # via
     #   pre-commit
     #   s3transfer
@@ -275,7 +275,7 @@ six==1.16.0
     #   virtualenv
 speaklater==1.3
     # via cla-common
-sqlalchemy==1.4.40
+sqlalchemy==1.4.44
     # via csvkit
 sqlparse==0.3.1
     # via django-debug-toolbar
@@ -289,7 +289,9 @@ typing==3.10.0.0
     #   pathlib2
 unittest-xml-reporting==2.5.1
     # via -r requirements/source/requirements-testing.in
-urllib3[secure]==1.26.11
+urllib3-secure-extra==0.1.0
+    # via urllib3
+urllib3[secure]==1.26.13
     # via
     #   botocore
     #   coveralls

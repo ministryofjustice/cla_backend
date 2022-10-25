@@ -7,16 +7,7 @@ from rest_framework_extensions.serializers import PartialUpdateSerializerMixin
 
 from core import fields
 from legalaid.fields import MoneyField, MoneyFieldDRF
-from cla_common.money_interval.fields import MoneyIntervalField
-from cla_common.money_interval.serializers import MoneyIntervalDRFField
-
-
-class MoneyIntervalModelSerializerMixin(object):
-    def __init__(self, *args, **kwargs):
-        # add a model serializer which is used throughout this project
-        self.field_mapping = self._field_mapping.mapping.copy()  # ouch
-        self.field_mapping[MoneyIntervalField] = MoneyIntervalDRFField
-        super(MoneyIntervalModelSerializerMixin, self).__init__(*args, **kwargs)
+from cla_common.money_interval.serializers import MoneyIntervalModelSerializerMixin
 
 
 class MoneyFieldModelSerializerMixin(object):

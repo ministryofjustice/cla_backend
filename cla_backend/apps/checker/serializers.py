@@ -20,7 +20,7 @@ from legalaid.serializers import (
     ThirdPartyDetailsSerializerBase,
 )
 
-from legalaid.models import EligibilityCheck
+from legalaid.models import Case, EligibilityCheck
 
 from checker.models import ReasonForContacting, ReasonForContactingCategory
 
@@ -194,9 +194,19 @@ class ReasonForContactingCategorySerializer(serializers.ModelSerializer):
 
 
 class ReasonForContactingSerializer(serializers.ModelSerializer):
-    reasons = ReasonForContactingCategorySerializer(many=True, allow_add_remove=True, required=False)
-    case = serializers.SlugRelatedField(slug_field="reference", read_only=False, required=False)
+    reasons = ReasonForContactingCategorySerializer(many=True, required=False)
+    case = serializers.SlugRelatedField(
+        slug_field="reference", read_only=False, required=False, queryset=Case.objects.all()
+    )
 
     class Meta(object):
         model = ReasonForContacting
         fields = ("reference", "reasons", "other_reasons", "case", "referrer", "user_agent")
+
+    # from DRF 3.0 onwards, there is no allow_add_remove option
+    # writable nested serialization must be handed explicitly
+    def create(self, validated_data):
+        reasons_data = validated_data.pop("reasons")
+        reasons_for_contacting = ReasonForContactingCategory.objects.create(**reasons_data)
+        ReasonForContactingCategory.objects.create(reasons_for_contacting=reasons_for_contacting, **reasons_data)
+        return reasons_for_contacting

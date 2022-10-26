@@ -13,7 +13,7 @@ from diagnosis.serializers import DiagnosisSerializer
 
 class DiagnosisModelMixin(object):
     serializer_class = DiagnosisSerializer
-    model = DiagnosisTraversal
+    queryset = DiagnosisTraversal.objects.all()
     lookup_field = "reference"
 
     @detail_route(methods=["post"])

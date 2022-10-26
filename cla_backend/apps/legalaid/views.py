@@ -6,7 +6,7 @@ from django.db import connection, transaction, IntegrityError
 from django.core.paginator import Paginator
 from django.utils.crypto import get_random_string
 from rest_framework import viewsets, mixins, status
-from rest_framework.decorators import action, link
+from rest_framework.decorators import detail_route
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend
@@ -122,7 +122,7 @@ class BaseUserViewSet(
         self.check_object_permissions(self.request, obj)
         return obj
 
-    @action()
+    @detail_route(methods=["post"])
     def password_reset(self, request, *args, **kwargs):
         user = self.get_object().user
         try:
@@ -132,7 +132,7 @@ class BaseUserViewSet(
         except PermissionDenied as pd:
             return DRFResponse(pd.detail, status=status.HTTP_403_FORBIDDEN)
 
-    @action()
+    @detail_route(methods=["post"])
     def reset_lockout(self, request, *args, **kwargs):
         logged_in_user_model = self.get_logged_in_user_model()
         if not logged_in_user_model.is_manager:
@@ -165,12 +165,12 @@ class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet
     model = EligibilityCheck
     lookup_field = "reference"
 
-    @link()
+    @detail_route()
     def validate(self, request, **kwargs):
         obj = self.get_object()
         return DRFResponse(obj.validate())
 
-    @action()
+    @detail_route(methods=["post"])
     def is_eligible(self, request, *args, **kwargs):
         obj = self.get_object()
 

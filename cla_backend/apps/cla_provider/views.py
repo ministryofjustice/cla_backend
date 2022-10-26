@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from legalaid.permissions import IsManagerOrMePermission
 
 from rest_framework import mixins
-from rest_framework.decorators import action, link
+from rest_framework.decorators import detail_route
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import SearchFilter
 
@@ -151,35 +151,35 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
 
         return qs
 
-    @action()
+    @detail_route(methods=["post"])
     def reject(self, request, reference=None, **kwargs):
         """
         Rejects a case
         """
         return self._form_action(request, Form=RejectCaseForm)
 
-    @action()
+    @detail_route(methods=["post"])
     def accept(self, request, reference=None, **kwargs):
         """
         Accepts a case
         """
         return self._form_action(request, Form=AcceptCaseForm, no_body=False)
 
-    @action()
+    @detail_route(methods=["post"])
     def close(self, request, reference=None, **kwargs):
         """
         Closes a case
         """
         return self._form_action(request, Form=CloseCaseForm)
 
-    @action()
+    @detail_route(methods=["post"])
     def reopen(self, request, reference=None, **kwargs):
         """
         Reopens a case
         """
         return self._form_action(request, Form=ReopenCaseForm, no_body=False)
 
-    @link()
+    @detail_route()
     def legal_help_form_extract(self, *args, **kwargs):
         case = self.get_object()
         data = {
@@ -189,7 +189,7 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
         }
         return DRFResponse(data)
 
-    @action()
+    @detail_route(methods=["post"])
     def split(self, request, reference=None, **kwargs):
         return self._form_action(request, Form=SplitCaseForm, form_kwargs={"request": request})
 

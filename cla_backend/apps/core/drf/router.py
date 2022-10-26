@@ -1,21 +1,15 @@
-from collections import namedtuple, OrderedDict
-
+from collections import OrderedDict
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import NoReverseMatch
-
 from rest_framework import views
 from rest_framework.routers import BaseRouter, flatten, replace_methodname
 from rest_framework.urlpatterns import format_suffix_patterns
-from rest_framework.compat import url
+from django.conf.urls import url
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 
 from rest_framework_nested.routers import NestedSimpleRouter as OriginalNestedSimpleRouter
-
-
-Route = namedtuple("Route", ["url", "mapping", "name", "initkwargs"])
-DynamicDetailRoute = namedtuple("DynamicDetailRoute", ["url", "name", "initkwargs"])
-DynamicListRoute = namedtuple("DynamicListRoute", ["url", "name", "initkwargs"])
+from rest_framework.routers import Route, DynamicDetailRoute, DynamicListRoute
 
 
 class NestedSimpleRouter(OriginalNestedSimpleRouter):
@@ -47,13 +41,8 @@ class NestedCLARouter(NestedSimpleRouter):
             initkwargs={"suffix": "Instance"},
         ),
         # Dynamically generated routes.
-        # Generated using @action or @link decorators on methods of the viewset.
-        Route(
-            url=r"^{prefix}/{methodname}/$",
-            mapping={"{httpmethod}": "{methodname}"},
-            name="{basename}-{methodnamehyphen}",
-            initkwargs={},
-        ),
+        # Generated using @detail_route or @list_route decorators on methods of the viewset.
+        DynamicDetailRoute(url=r"^{prefix}/{methodname}/$", name="{basename}-{methodnamehyphen}", initkwargs={}),
     ]
 
 

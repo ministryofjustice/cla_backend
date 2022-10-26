@@ -242,7 +242,7 @@ class ProviderExtract(APIView):
 
 
 class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
-    model = Staff
+    queryset = Staff.objects.all()
     serializer_class = StaffSerializer
 
     permission_classes = (CLAProviderClientIDPermission, IsManagerOrMePermission)

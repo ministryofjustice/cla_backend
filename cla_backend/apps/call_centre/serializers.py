@@ -28,6 +28,7 @@ from legalaid.serializers import (
 )
 
 from .models import Operator
+from legalaid.models import PersonalDetails
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -332,7 +333,7 @@ class CreateCaseSerializer(CaseSerializer):
     No other fields can be used when creating a case atm.
     """
 
-    personal_details = UUIDSerializer(slug_field="reference", required=False)
+    personal_details = UUIDSerializer(slug_field="reference", required=False, queryset=PersonalDetails.objects.all())
 
     class Meta(CaseSerializer.Meta):
         fields = tuple(set(CaseSerializer.Meta.fields) - {"complaint_count"})

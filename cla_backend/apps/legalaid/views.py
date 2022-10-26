@@ -535,7 +535,10 @@ class FullCaseViewSet(
                 "flagged_with_eod": self.FLAGGED_WITH_EOD_SQL,
             }
         )
-
+        # LGA-1773 can no longer pass queryset to get_object > drf 3.0,
+        # Check flag to allow select_related in parent viewset from NestedGenericModelMixin
+        if hasattr(self, "do_select_related") and self.do_select_related:
+            qs = qs.select_related(None)
         return qs
 
     def get_dashboard_qs(self, qs):

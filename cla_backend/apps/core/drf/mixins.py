@@ -25,9 +25,9 @@ class NestedGenericModelMixin(object):
         if not parent_key:
             raise NoParentReferenceException("Trying to do a nested lookup on a non-nested viewset")
         parent_viewset_instance = self.parent(request=self.request, kwargs={self.lookup_field: parent_key})
-        parent_obj = parent_viewset_instance.get_object(
-            queryset=parent_viewset_instance.get_queryset().select_related(None)
-        )
+        # LGA-1773 can no longer pass queryset to get_object > drf 3.0, set flag to allow select_related in parent viewset
+        parent_viewset_instance.do_select_related = True
+        parent_obj = parent_viewset_instance.get_object()
         return parent_obj
 
     def get_parent_object_or_none(self):

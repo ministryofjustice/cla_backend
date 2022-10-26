@@ -116,13 +116,13 @@ class PropertyViewSet(
     parent_lookup = "eligibility_check"
     parent_model = EligibilityCheck
 
-    model = Property
+    queryset = Property.objects.all()
     serializer_class = PropertySerializer
 
 
 class CaseViewSet(PublicAPIViewSetMixin, BaseCaseLogMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
 
-    model = Case
+    queryset = Case.objects.all()
     serializer_class = CaseSerializer
 
     def pre_save(self, obj, *args, **kwargs):
@@ -171,7 +171,7 @@ class DiagnosisViewSet(
 class ReasonForContactingViewSet(
     PublicAPIViewSetMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet
 ):
-    model = ReasonForContacting
+    queryset = ReasonForContacting.objects.all()
     serializer_class = ReasonForContactingSerializer
     lookup_field = "reference"
 

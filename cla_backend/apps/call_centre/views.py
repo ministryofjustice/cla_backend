@@ -478,7 +478,7 @@ class CaseViewSet(
 
 
 class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelViewSet):
-    model = Provider
+    queryset = Provider.objects.all()
     serializer_class = ProviderSerializer
 
     queryset = Provider.objects.active()
@@ -498,11 +498,11 @@ class OutOfHoursRotaViewSet(
 ):
 
     serializer_class = OutOfHoursRotaSerializer
-    model = OutOfHoursRota
+    queryset = OutOfHoursRota.objects.all()
 
 
 class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
-    model = Operator
+    queryset = Operator.objects.all()
 
     permission_classes = (CallCentreClientIDPermission, IsManagerOrMePermission)
     serializer_class = OperatorSerializer
@@ -598,7 +598,7 @@ class FeedbackViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):
-    model = Feedback
+    queryset = Feedback.objects.all()
     lookup_field = "reference"
     serializer_class = FeedbackSerializer
 
@@ -629,7 +629,7 @@ class CaseArchivedViewSet(
 ):
 
     lookup_field = "laa_reference"
-    model = CaseArchived
+    queryset = CaseArchived.objects.all()
     serializer_class = CaseArchivedSerializer
 
     search_fields = ["search_field"]

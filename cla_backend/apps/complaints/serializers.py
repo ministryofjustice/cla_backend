@@ -1,6 +1,6 @@
 # coding=utf-8
 from rest_framework import serializers
-
+from django.contrib.auth import get_user_model
 from cla_eventlog.models import ComplaintLog
 from cla_eventlog.serializers import LogSerializerBase
 from core.fields import NullBooleanField
@@ -20,8 +20,10 @@ class CategorySerializerBase(serializers.ModelSerializer):
 
 
 class ComplaintSerializerBase(serializers.ModelSerializer):
-    eod = UUIDSerializer(slug_field="reference")
-    owner = serializers.SlugRelatedField(slug_field="username", required=False)
+    eod = UUIDSerializer(slug_field="reference", queryset="eod")
+    owner = serializers.SlugRelatedField(
+        slug_field="username", required=False, queryset=get_user_model().objects.all()
+    )
     created_by = CreatedByField(read_only=True)
     category_name = serializers.CharField(source="category.name", read_only=True)
     full_name = serializers.CharField(source="eod.case.personal_details.full_name", read_only=True)

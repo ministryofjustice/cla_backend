@@ -19,31 +19,6 @@ ingress:
 envVars:
   DEBUG:
     value: "False"
-  DB_HOST:
-    secret:
-      name: database-11
-      key: host
-  DB_PORT:
-    secret:
-      name: database-11
-      key: port
-      optional: true
-  DB_NAME:
-    secret:
-      name: database-11
-      key: name
-  DB_USER:
-    secret:
-      name: database-11
-      key: user
-  DB_PASSWORD:
-    secret:
-      name: database-11
-      key: password
-  REPLICA_DB_HOST:
-    secret:
-      name: database-11
-      key: replica_host
   LOAD_SEED_DATA:
     value: "True"
   LOAD_TEST_DATA:

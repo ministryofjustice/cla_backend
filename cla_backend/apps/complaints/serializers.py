@@ -9,7 +9,7 @@ from .models import Category, Complaint
 
 
 class CreatedByField(serializers.RelatedField):
-    def to_native(self, obj):
+    def to_representation(self, obj):
         return {"username": obj.username, "first_name": obj.first_name, "last_name": obj.last_name}
 
 

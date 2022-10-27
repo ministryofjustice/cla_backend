@@ -3,7 +3,7 @@ from rest_framework.pagination import BasePaginationSerializer
 from rest_framework import serializers
 
 
-class RelativeNextPageField(serializers.Field):
+class RelativeNextPageField(serializers.ReadOnlyField):
     page_field = "page"
 
     def to_native(self, value):
@@ -13,7 +13,7 @@ class RelativeNextPageField(serializers.Field):
         return replace_query_param("", self.page_field, page)
 
 
-class RelativePreviousPageField(serializers.Field):
+class RelativePreviousPageField(serializers.ReadOnlyField):
     page_field = "page"
 
     def to_native(self, value):
@@ -24,6 +24,6 @@ class RelativePreviousPageField(serializers.Field):
 
 
 class RelativeUrlPaginationSerializer(BasePaginationSerializer):
-    count = serializers.Field(source="paginator.count")
-    next = RelativeNextPageField("*")
-    previous = RelativePreviousPageField("*")
+    count = serializers.ReadOnlyField(source="paginator.count")
+    next = RelativeNextPageField(source="*")
+    previous = RelativePreviousPageField(source="*")

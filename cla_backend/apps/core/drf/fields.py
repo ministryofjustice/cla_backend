@@ -61,7 +61,7 @@ class ThreePartDateField(serializers.Field):
             msg = self.error_messages["invalid"]
             raise serializers.ValidationError(msg)
 
-    def to_native(self, value):
+    def to_representation(self, value):
         """
         Transform datetime.date object to json.
         """

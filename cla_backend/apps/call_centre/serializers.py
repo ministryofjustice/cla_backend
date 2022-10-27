@@ -236,7 +236,6 @@ class CaseSerializer(CaseSerializerFull):
     billable_time = serializers.IntegerField(read_only=True)
     rejected = serializers.SerializerMethodField("is_rejected")
     callback_time_string = serializers.Field()
-    callback_time_string_short = serializers.Field()
 
     complaint_count = serializers.IntegerField(read_only=True)
 

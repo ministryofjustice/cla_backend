@@ -392,7 +392,7 @@ class CaseSerializerFull(CaseSerializerBase):
     adaptation_details = UUIDSerializer(required=False, slug_field="reference", read_only=True)
 
     eod_details = UUIDSerializer(required=False, slug_field="reference", read_only=True)
-    flagged_with_eod = serializers.BooleanField(source="flagged_with_eod", read_only=True)
+    flagged_with_eod = serializers.BooleanField(read_only=True)
 
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)

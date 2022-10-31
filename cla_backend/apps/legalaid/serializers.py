@@ -468,7 +468,7 @@ class CaseNotesHistorySerializerBase(ClaModelSerializer):
     created = serializers.DateTimeField(read_only=True)
     operator_notes = serializers.CharField(read_only=True)
     provider_notes = serializers.CharField(read_only=True)
-    type_notes = serializers.SerializerMethodField("get_type_notes")
+    type_notes = serializers.SerializerMethodField()
 
     def get_type_notes(self, obj):
         if obj.provider_notes is not None:

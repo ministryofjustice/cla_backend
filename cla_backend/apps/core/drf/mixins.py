@@ -147,7 +147,7 @@ class ClaPrePostSaveMixin(object):
             stack = []
             for item in inspect.stack():
                 if item[3] == "pre_save":
-                    stack.append("{file}:{function}".format(file=item[1], function=item[3]))
+                    stack.append("{file} {function}:line {line}".format(file=item[1], function=item[3], line=item[2]))
             message = "{message}\nReplace following with perform_create or perform_update:\n {stack}".format(
                 message=message, stack="\n".join(stack)
             )

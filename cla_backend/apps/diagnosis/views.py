@@ -4,7 +4,7 @@ from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 
-from core.drf.mixins import NestedGenericModelMixin
+from core.drf.mixins import NestedGenericModelMixin, ClaCreateModelMixin, ClaUpdateModelMixin
 from cla_eventlog import event_registry
 from legalaid.models import Case
 from diagnosis.models import DiagnosisTraversal
@@ -65,9 +65,9 @@ class DiagnosisModelMixin(object):
 
 class BaseDiagnosisViewSet(
     DiagnosisModelMixin,
-    mixins.CreateModelMixin,
+    ClaCreateModelMixin,
     mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
+    ClaUpdateModelMixin,
     mixins.DestroyModelMixin,
     NestedGenericModelMixin,
     viewsets.GenericViewSet,

@@ -24,7 +24,7 @@ from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
-from core.drf.mixins import FormActionMixin
+from core.drf.mixins import FormActionMixin, ClaCreateModelMixin, ClaUpdateModelMixin
 from notifications.views import BaseNotificationViewSet
 
 from complaints.views import (
@@ -114,8 +114,8 @@ class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
 
 class EligibilityCheckViewSet(
     CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     BaseNestedEligibilityCheckViewSet,
 ):
@@ -161,7 +161,7 @@ class DateRangeFilter(BaseFilterBackend):
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin,
+    ClaCreateModelMixin,
     BaseCaseLogMixin,
     CaseOrganisationAssignCurrentOrganisationMixin,
     FullCaseViewSet,
@@ -489,8 +489,8 @@ class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
 
 class OutOfHoursRotaViewSet(
     CallCentreManagerPermissionsViewSetMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
@@ -594,7 +594,7 @@ class LogViewSet(CallCentrePermissionsViewSetMixin, BaseLogViewSet):
 class FeedbackViewSet(
     CallCentreManagerPermissionsViewSetMixin,
     mixins.ListModelMixin,
-    mixins.UpdateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):

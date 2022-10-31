@@ -358,8 +358,8 @@ class BaseCaseLogMixin(object):
             context["eligibility_state"] = obj.eligibility_check.state
         return context
 
-    def perform_created(self, serializer):
-        obj = super(BaseCaseLogMixin, self).perform_created(serializer)
+    def perform_create(self, serializer):
+        obj = super(BaseCaseLogMixin, self).perform_create(serializer)
 
         event = event_registry.get_event("case")()
         event.process(

@@ -250,12 +250,11 @@ class CaseViewSet(
 
         return qs
 
-    def pre_save(self, obj, *args, **kwargs):
-        super(CaseViewSet, self).pre_save(obj, *args, **kwargs)
-
+    def perform_create(self, serializer):
         user = self.request.user
-        if not obj.pk and not isinstance(user, AnonymousUser):
-            obj.created_by = user
+        if not isinstance(user, AnonymousUser):
+            serializer.validated_data["created_by"] = user
+        return super(CaseViewSet, self).perform_create(serializer)
 
     def retrieve(self, request, *args, **kwargs):
         response = super(CaseViewSet, self).retrieve(request, *args, **kwargs)

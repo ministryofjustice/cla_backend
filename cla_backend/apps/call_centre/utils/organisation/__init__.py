@@ -4,8 +4,16 @@ from cla_eventlog import event_registry
 
 
 class CaseOrganisationAssignCurrentOrganisationMixin(object):
-    def get_case(self, obj):
-        if hasattr(obj, "case"):
+    def perform_create(self, serializer):
+        self.save_organisation()
+        return super(CaseOrganisationAssignCurrentOrganisationMixin, self).perform_create(serializer)
+
+    def perform_update(self, serializer):
+        self.save_organisation(self.get_object())
+        super(CaseOrganisationAssignCurrentOrganisationMixin, self).perform_update(serializer)
+
+    def get_case(self, obj=None):
+        if obj and hasattr(obj, "case"):
             try:
                 return obj.case
             except Case.DoesNotExist:
@@ -41,8 +49,8 @@ class CaseOrganisationAssignCurrentOrganisationMixin(object):
             event = event_registry.get_event("case")()
             event.process(case, created_by=user, notes=notes, complaint=case, code="CASE_ORGANISATION_SET")
 
-    def pre_save(self, obj, **kwargs):
-        super(CaseOrganisationAssignCurrentOrganisationMixin, self).pre_save(obj, **kwargs)
+    def save_organisation(self, obj=None):
+
         if isinstance(obj, Case):
             case = obj
         else:

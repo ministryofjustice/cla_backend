@@ -3,6 +3,7 @@ from cla_provider.authentication import LegacyCHSAuthentication
 from cla_provider.forms import ProviderExtractForm
 from cla_provider.helpers import ProviderExtractFormatter
 from core.permissions import IsProviderPermission
+from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
 
 from django.shortcuts import get_object_or_404
 from legalaid.permissions import IsManagerOrMePermission
@@ -73,7 +74,7 @@ class CategoryViewSet(CLAProviderPermissionViewSetMixin, BaseCategoryViewSet):
 
 class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,
-    mixins.UpdateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     BaseNestedEligibilityCheckViewSet,
 ):
@@ -288,7 +289,7 @@ class LogViewSet(CLAProviderPermissionViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
 
 
-class FeedbackViewSet(CLAProviderPermissionViewSetMixin, BaseFeedbackViewSet, mixins.CreateModelMixin):
+class FeedbackViewSet(CLAProviderPermissionViewSetMixin, BaseFeedbackViewSet, ClaCreateModelMixin):
     serializer_class = FeedbackSerializer
 
     filter_backends = (OrderingFilter,)

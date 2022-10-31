@@ -10,7 +10,7 @@ from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.models import ComplaintLog
 from complaints.forms import ComplaintLogForm
-from core.drf.mixins import FormActionMixin, NestedGenericModelMixin
+from core.drf.mixins import FormActionMixin, NestedGenericModelMixin, ClaCreateModelMixin, ClaUpdateModelMixin
 
 from .models import Complaint, Category
 from .serializers import ComplaintSerializerBase, CategorySerializerBase, ComplaintLogSerializerBase
@@ -26,8 +26,8 @@ class ComplaintFormActionMixin(FormActionMixin):
 
 class BaseComplaintViewSet(
     ComplaintFormActionMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet,

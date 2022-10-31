@@ -13,7 +13,13 @@ from rest_framework.filters import OrderingFilter, DjangoFilterBackend
 from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
-from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin, FormActionMixin
+from core.drf.mixins import (
+    NestedGenericModelMixin,
+    JsonPatchViewSetMixin,
+    FormActionMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
+)
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
@@ -85,11 +91,7 @@ class PasswordResetForm(forms.Form):
 
 
 class BaseUserViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    CaseFormActionMixin,
-    viewsets.GenericViewSet,
+    mixins.RetrieveModelMixin, mixins.ListModelMixin, ClaCreateModelMixin, CaseFormActionMixin, viewsets.GenericViewSet
 ):
     permission_classes = (IsManagerOrMePermission,)
 
@@ -241,8 +243,8 @@ class BaseContactResearchMethodViewSet(mixins.RetrieveModelMixin, mixins.ListMod
 
 
 class FullPersonalDetailsViewSet(
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     NestedGenericModelMixin,
     viewsets.GenericViewSet,
@@ -255,8 +257,8 @@ class FullPersonalDetailsViewSet(
 
 
 class BaseThirdPartyDetailsViewSet(
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     NestedGenericModelMixin,
     viewsets.GenericViewSet,
@@ -268,8 +270,8 @@ class BaseThirdPartyDetailsViewSet(
 
 
 class BaseAdaptationDetailsViewSet(
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     NestedGenericModelMixin,
     viewsets.GenericViewSet,
@@ -280,7 +282,7 @@ class BaseAdaptationDetailsViewSet(
     PARENT_FIELD = "adaptation_details"
 
 
-class BaseAdaptationDetailsMetadataViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class BaseAdaptationDetailsMetadataViewSet(ClaCreateModelMixin, viewsets.GenericViewSet):
     queryset = AdaptationDetails.objects.all()
     serializer_class = AdaptationDetailsSerializerBase
 
@@ -289,8 +291,8 @@ class BaseAdaptationDetailsMetadataViewSet(mixins.CreateModelMixin, viewsets.Gen
 
 
 class BaseEODDetailsViewSet(
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     NestedGenericModelMixin,
     viewsets.GenericViewSet,
@@ -372,7 +374,7 @@ class BaseCaseLogMixin(object):
 
 class FullCaseViewSet(
     DetailSerializerMixin,
-    mixins.UpdateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     CaseFormActionMixin,
@@ -585,7 +587,7 @@ class FullCaseViewSet(
 class BaseFeedbackViewSet(
     NestedGenericModelMixin,
     mixins.ListModelMixin,
-    mixins.UpdateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):
@@ -609,8 +611,8 @@ class BaseCSVUploadReadOnlyViewSet(
 class BaseCSVUploadViewSet(
     DetailSerializerMixin,
     mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet,
 ):

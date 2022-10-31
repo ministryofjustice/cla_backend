@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response as DRFResponse
 
 from core.models import get_web_user
+from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
 from checker.helpers import notify_callback_created
 from diagnosis.views import DiagnosisModelMixin
 
@@ -54,8 +55,8 @@ class ArticleViewSet(PublicAPIViewSetMixin, BaseArticleViewSet):
 
 class EligibilityCheckViewSet(
     PublicAPIViewSetMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     BaseEligibilityCheckViewSet,
 ):
@@ -104,8 +105,8 @@ class NestedModelMixin(object):
 class PropertyViewSet(
     PublicAPIViewSetMixin,
     NestedModelMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
@@ -120,7 +121,7 @@ class PropertyViewSet(
     serializer_class = PropertySerializer
 
 
-class CaseViewSet(PublicAPIViewSetMixin, BaseCaseLogMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
+class CaseViewSet(PublicAPIViewSetMixin, BaseCaseLogMixin, ClaCreateModelMixin, viewsets.GenericViewSet):
 
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
@@ -149,9 +150,9 @@ class CaseViewSet(PublicAPIViewSetMixin, BaseCaseLogMixin, mixins.CreateModelMix
 class DiagnosisViewSet(
     PublicAPIViewSetMixin,
     DiagnosisModelMixin,
-    mixins.CreateModelMixin,
+    ClaCreateModelMixin,
     mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
+    ClaUpdateModelMixin,
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
@@ -169,7 +170,7 @@ class DiagnosisViewSet(
 
 
 class ReasonForContactingViewSet(
-    PublicAPIViewSetMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet
+    PublicAPIViewSetMixin, ClaCreateModelMixin, ClaUpdateModelMixin, viewsets.GenericViewSet
 ):
     queryset = ReasonForContacting.objects.all()
     serializer_class = ReasonForContactingSerializer

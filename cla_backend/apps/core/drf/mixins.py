@@ -1,4 +1,6 @@
 import jsonpatch
+import inspect
+import warnings
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.fields.related import SingleRelatedObjectDescriptor, ReverseSingleRelatedObjectDescriptor
@@ -7,6 +9,7 @@ from django.http import Http404
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.response import Response as DRFResponse
 from rest_framework import status
+from rest_framework import mixins
 
 
 class NoParentReferenceException(BaseException):
@@ -132,3 +135,51 @@ class FormActionMixin(object):
                 return DRFResponse(serializer.data, status=status.HTTP_200_OK)
 
         return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)
+
+
+class ClaPrePostSaveMixin(object):
+    def pre_save(self, obj, created=False):
+        caller = inspect.stack()[1][3]
+        message = "pre_save has been removed in DRF 3.0"
+        if caller == "perform_update" or caller == "perform_create":
+            warnings.warn(message, DeprecationWarning)
+        else:
+            stack = []
+            for item in inspect.stack():
+                if item[3] == "pre_save":
+                    stack.append("{file}:{function}".format(file=item[1], function=item[3]))
+            message = "{message}\nReplace following with perform_create or perform_update:\n {stack}".format(
+                message=message, stack="\n".join(stack)
+            )
+            raise NotImplementedError(message)
+
+    def post_save(self, obj, created=False):
+        caller = inspect.stack()[1][3]
+        message = "post_save has been removed in DRF 3.0"
+        if caller == "perform_update" or caller == "perform_create":
+            warnings.warn(message, DeprecationWarning)
+        else:
+            stack = []
+            for item in inspect.stack():
+                if item[3] == "post_save":
+                    stack.append("{file}:{function}".format(file=item[1], function=item[3]))
+            message = "{message}\nReplace following with perform_create or perform_update:\n {stack}".format(
+                message=message, stack="\n".join(stack)
+            )
+            raise NotImplementedError(message)
+
+
+class ClaCreateModelMixin(ClaPrePostSaveMixin, mixins.CreateModelMixin):
+    def perform_create(self, serializer):
+        self.pre_save(serializer)
+        obj = serializer.save()
+        self.post_save(serializer, created=True)
+        return obj
+
+
+class ClaUpdateModelMixin(ClaPrePostSaveMixin, mixins.UpdateModelMixin):
+    def perform_update(self, serializer):
+        obj = self.get_object()
+        self.pre_save(obj)
+        super(ClaUpdateModelMixin, self).perform_update(serializer)
+        self.post_save(obj, created=False)

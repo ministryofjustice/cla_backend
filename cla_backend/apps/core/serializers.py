@@ -6,8 +6,17 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework_extensions.serializers import PartialUpdateSerializerMixin
 
 from core import fields
+from legalaid.fields import MoneyField, MoneyFieldDRF
 
 from cla_common.money_interval.serializers import MoneyIntervalModelSerializerMixin
+
+
+class MoneyFieldModelSerializerMixin(object):
+    def __init__(self, *args, **kwargs):
+        # add a model serializer which is used throughout this project
+        self.field_mapping = self.field_mapping.copy()  # ouch
+        self.field_mapping[MoneyField] = MoneyFieldDRF
+        super(MoneyFieldModelSerializerMixin, self).__init__(*args, **kwargs)
 
 
 class UUIDSerializer(serializers.SlugRelatedField):
@@ -28,7 +37,9 @@ class JSONField(serializers.WritableField):
         return obj
 
 
-class ClaModelSerializer(MoneyIntervalModelSerializerMixin, NullBooleanModelSerializerMixin, ModelSerializer):
+class ClaModelSerializer(
+    MoneyIntervalModelSerializerMixin, NullBooleanModelSerializerMixin, MoneyFieldModelSerializerMixin, ModelSerializer
+):
     pass
 
 

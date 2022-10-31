@@ -34,7 +34,7 @@ class MarkdownAdminField(forms.CharField):
         self.extensions = kwargs.pop("extensions", [])
 
         if "widget" not in kwargs:
-            kwargs["widget"] = AdminPagedownWidget(extensions=self.extensions)
+            kwargs["widget"] = AdminPagedownWidget()
 
         self.markdown_whitelist = kwargs.pop("markdown_whitelist", DEFAULT_MARKDOWN_WHITELIST)
 

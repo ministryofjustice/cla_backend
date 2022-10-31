@@ -1,4 +1,3 @@
-
 # Default values for cla-backend in a dev environment.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -25,8 +24,9 @@ envVars:
   LOAD_END_TO_END_FIXTURES:
     value: "False"
   REPLICA_DB_HOST:
-    value: ~
-    secret: ~
+    secret:
+      name: database-11
+      key: replica_host
   SMTP_USER:
     secret:
       optional: true
@@ -42,3 +42,5 @@ envVars:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-training.svc.cluster.local"
   EXPRESS_SERVER_PORT:
     value: "80"
+  MIGRATE_OAUTH_DATA:
+    value: "True"

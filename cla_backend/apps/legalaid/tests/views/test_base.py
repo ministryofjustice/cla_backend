@@ -1,7 +1,7 @@
 import datetime
 from django.contrib.auth.models import User
 
-from provider.oauth2.models import Client, AccessToken
+from oauth2_provider.models import Application, AccessToken
 
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import CLABaseApiTestMixin
@@ -39,25 +39,25 @@ class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
         self.mgr_user = User.objects.create_user(self.mgr_username, self.mgr_email, self.mgr_password)
 
         # create an operator API client
-        self.operator_api_client = Client.objects.create(
+        self.operator_api_client = Application.objects.create(
             user=self.user,
             name="operator",
             client_type=0,
             client_id="call_centre",
             client_secret="secret",
-            url="http://localhost/",
-            redirect_uri="http://localhost/redirect",
+            redirect_uris="http://localhost/redirect",
+            authorization_grant_type="password",
         )
 
         # create an staff API client
-        self.staff_api_client = Client.objects.create(
+        self.staff_api_client = Application.objects.create(
             user=self.user,
             name="staff",
             client_type=0,
             client_id="cla_provider",
             client_secret="secret",
-            url="http://provider.localhost/",
-            redirect_uri="http://provider.localhost/redirect",
+            redirect_uris="http://provider.localhost/redirect",
+            authorization_grant_type="password",
         )
 
         # create provider and staff user
@@ -76,7 +76,7 @@ class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
         # Create an access token
         self.operator_token = AccessToken.objects.create(
             user=self.user,
-            client=self.operator_api_client,
+            application=self.operator_api_client,
             token="operator_token",
             scope=0,
             expires=self.token_expires,
@@ -84,19 +84,19 @@ class CLAAuthBaseApiTestMixin(CLABaseApiTestMixin):
 
         self.operator_manager_token = AccessToken.objects.create(
             user=self.mgr_user,
-            client=self.operator_api_client,
+            application=self.operator_api_client,
             token="operator_manager_token",
             scope=0,
             expires=self.token_expires,
         )
         # Create an access token
         self.staff_token = AccessToken.objects.create(
-            user=self.user, client=self.staff_api_client, token="stafF_token", scope=0, expires=self.token_expires
+            user=self.user, application=self.staff_api_client, token="stafF_token", scope=0, expires=self.token_expires
         )
 
         self.staff_manager_token = AccessToken.objects.create(
             user=self.mgr_user,
-            client=self.staff_api_client,
+            application=self.staff_api_client,
             token="stafF_token_mgr",
             scope=0,
             expires=self.token_expires,

@@ -26,10 +26,11 @@ class ClientIDPermission(BasePermission):
     client_name = None
 
     def get_client_name(self, token):
-        client_name = cache.get("cla.oauth_client_%s" % token.client_id)
+        client = token.application
+        client_name = cache.get("cla.oauth_client_%s" % client.client_id)
         if not client_name:
-            client_name = token.client.name
-            cache.set("cla.oauth_client_%s" % token.client_id, client_name)
+            client_name = client.name
+            cache.set("cla.oauth_client_%s" % client.client_id, client_name)
         return client_name
 
     def has_permission(self, request, view):
@@ -37,7 +38,7 @@ class ClientIDPermission(BasePermission):
 
         if not token:
             return False
-        if hasattr(token, "client_id"):  # OAuth 2
+        if hasattr(token, "application"):  # OAuth 2
             return self.client_name == self.get_client_name(token)
         assert False, (
             "TokenHasReadWriteScope requires the " "`OAuth2Authentication` authentication " "class to be used."

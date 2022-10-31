@@ -16,7 +16,7 @@ class SingletonRouter(DefaultRouter):
         DELETE: deletes the object
 
      * prefix/<method>/
-        used for @action and @link methods (NOTE: not tested yet)
+        used for @detail_route and @list_route methods (NOTE: not tested yet)
     """
 
     routes = [
@@ -34,7 +34,7 @@ class SingletonRouter(DefaultRouter):
             initkwargs={"suffix": "Instance"},
         ),
         # Dynamically generated routes.
-        # Generated using @action or @link decorators on methods of the viewset
+        # Generated using @detail_route or @list_route decorators on methods of the viewset
         Route(
             url=r"^{prefix}/{methodname}{trailing_slash}$",
             mapping={"{httpmethod}": "{methodname}"},

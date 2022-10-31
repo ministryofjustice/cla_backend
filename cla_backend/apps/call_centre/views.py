@@ -161,10 +161,10 @@ class DateRangeFilter(BaseFilterBackend):
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
-    ClaCreateModelMixin,
     BaseCaseLogMixin,
     CaseOrganisationAssignCurrentOrganisationMixin,
     FullCaseViewSet,
+    ClaCreateModelMixin,
 ):
     serializer_class = CaseListSerializer
     # using CreateCaseSerializer during creation

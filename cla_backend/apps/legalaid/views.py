@@ -358,18 +358,17 @@ class BaseCaseLogMixin(object):
             context["eligibility_state"] = obj.eligibility_check.state
         return context
 
-    def post_save(self, obj, created=False):
-        super(BaseCaseLogMixin, self).post_save(obj, created=created)
+    def perform_created(self, serializer):
+        obj = super(BaseCaseLogMixin, self).perform_created(serializer)
 
-        if created:
-            event = event_registry.get_event("case")()
-            event.process(
-                obj,
-                status="created",
-                created_by=obj.created_by,
-                notes=self.get_log_notes(obj),
-                context=self.get_log_context(obj),
-            )
+        event = event_registry.get_event("case")()
+        event.process(
+            obj,
+            status="created",
+            created_by=obj.created_by,
+            notes=self.get_log_notes(obj),
+            context=self.get_log_context(obj),
+        )
 
 
 class FullCaseViewSet(
@@ -554,8 +553,9 @@ class FullCaseViewSet(
 
         return resp
 
-    def pre_save(self, obj):
-        super(FullCaseViewSet, self).pre_save(obj)
+    def perform_update(self, serializer):
+        super(FullCaseViewSet, self).perform_update(serializer)
+        obj = self.get_object()
         if obj.pk:
             if "notes" in obj.changed_fields:
                 cnh = CaseNotesHistory(case=obj)
@@ -577,11 +577,6 @@ class FullCaseViewSet(
                     created_by=self.request.user,
                     notes="Complaint flag toggled: %s" % obj.complaint_flag,
                 )
-
-            # if we want to add more checks on changed fields then we should
-            # probably refactor this method to look at a list on the view
-            # called 'action_on_changed_fields' and enumerate that and perform
-            # the appropriate thing instead of adding more stuff here
 
 
 class BaseFeedbackViewSet(

@@ -27,7 +27,11 @@ botocore==1.20.112
 celery==3.1.17
     # via -r requirements/source/requirements-base.in
 certifi==2021.10.8
-    # via sentry-sdk
+    # via
+    #   requests
+    #   sentry-sdk
+chardet==4.0.0
+    # via requests
 https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.16.tar.gz
     # via -r requirements/source/requirements-base.in
 configparser==4.0.2
@@ -104,6 +108,8 @@ futures==3.3.0
     # via s3transfer
 html5lib==1.1
     # via bleach
+idna==2.10
+    # via requests
 imagesize==1.4.1
     # via sphinx
 importlib-metadata==2.1.3
@@ -166,7 +172,7 @@ pytz==2021.1
     #   cla-common
 pyyaml==5.4
     # via -r requirements/source/requirements-base.in
-requests==2.6.0
+requests==2.27.1
     # via
     #   -r requirements/source/requirements-base.in
     #   cla-common
@@ -209,6 +215,7 @@ typing==3.10.0.0
 urllib3==1.26.11
     # via
     #   botocore
+    #   requests
     #   sentry-sdk
 uwsgi==2.0.18
     # via -r requirements/source/requirements-base.in

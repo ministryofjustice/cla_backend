@@ -6,6 +6,7 @@ from cla_eventlog.serializers import LogSerializerBase
 from core.fields import NullBooleanField
 from core.serializers import UUIDSerializer
 from .models import Category, Complaint
+from legalaid.models import EODDetails
 
 
 class CreatedByField(serializers.RelatedField):
@@ -20,7 +21,7 @@ class CategorySerializerBase(serializers.ModelSerializer):
 
 
 class ComplaintSerializerBase(serializers.ModelSerializer):
-    eod = UUIDSerializer(slug_field="reference", queryset="eod")
+    eod = UUIDSerializer(slug_field="reference", queryset=EODDetails.objects.all())
     owner = serializers.SlugRelatedField(
         slug_field="username", required=False, queryset=get_user_model().objects.all()
     )
@@ -40,7 +41,7 @@ class ComplaintSerializerBase(serializers.ModelSerializer):
 
     # # virtual fields on model
     status_label = serializers.CharField(read_only=True)
-    requires_action_at = serializers.DateTimeField(source="requires_action_at", read_only=True)
+    requires_action_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Complaint

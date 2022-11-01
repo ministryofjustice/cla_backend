@@ -352,7 +352,7 @@ class CaseViewSet(
             notify_case_assigned(provider, form.case)
 
             provider_serialised = ProviderSerializer(provider)
-            self.set_case_organisation(self.get_object(), save=True)
+            self.set_case_organisation(self.get_object())
             return DRFResponse(data=provider_serialised.data)
 
         return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)
@@ -452,19 +452,19 @@ class CaseViewSet(
         # link personal details to case
         obj.personal_details = personal_details
         obj.save(update_fields=["personal_details", "modified"])
-        self.set_case_organisation(self.get_object(), save=True)
+        self.set_case_organisation(self.get_object())
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
     @detail_route(methods=["post"])
     def call_me_back(self, request, reference=None, **kwargs):
         response = self._form_action(request, CallMeBackForm)
-        self.set_case_organisation(self.get_object(), save=True)
+        self.set_case_organisation(self.get_object())
         return response
 
     @detail_route(methods=["post"])
     def stop_call_me_back(self, request, reference=None, **kwargs):
         response = self._form_action(request, StopCallMeBackForm)
-        self.set_case_organisation(self.get_object(), save=True)
+        self.set_case_organisation(self.get_object())
         return response
 
     @detail_route(methods=["post"])
@@ -472,7 +472,7 @@ class CaseViewSet(
         obj = self.get_object()
         event = event_registry.get_event("case")()
         event.process(obj, status="call_started", created_by=request.user, notes="Call started")
-        self.set_case_organisation(obj, save=True)
+        self.set_case_organisation(obj)
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
 

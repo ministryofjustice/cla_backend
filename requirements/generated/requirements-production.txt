@@ -10,7 +10,7 @@ anyjson==0.3.3
     # via kombu
 billiard==3.3.0.23
     # via celery
-bleach==2.0.0
+bleach==3.3.0
     # via -r requirements/source/requirements-base.in
 boto3==1.17.112
     # via -r requirements/source/requirements-base.in
@@ -96,8 +96,6 @@ et-xmlfile==1.0.1
     # via openpyxl
 futures==3.3.0
     # via s3transfer
-html5lib==1.1
-    # via bleach
 idna==2.10
     # via requests
 importlib-metadata==2.1.3
@@ -128,6 +126,8 @@ oauthlib==1.1.2
     # via django-oauth-toolkit
 openpyxl==2.6.4
     # via csvkit
+packaging==20.9
+    # via bleach
 pathlib2==2.3.7.post1
     # via importlib-metadata
 polib==1.0.6
@@ -136,6 +136,8 @@ psycopg2==2.7.5
     # via -r requirements/source/requirements-base.in
 pyminizip==0.2.3
     # via -r requirements/source/requirements-base.in
+pyparsing==2.4.7
+    # via packaging
 python-dateutil==2.2
     # via
     #   -r requirements/source/requirements-base.in
@@ -166,7 +168,6 @@ six==1.16.0
     #   csvkit
     #   django-braces
     #   django-oauth-toolkit
-    #   html5lib
     #   pathlib2
     #   python-dateutil
 speaklater==1.3
@@ -185,7 +186,7 @@ urllib3==1.26.11
 uwsgi==2.0.18
     # via -r requirements/source/requirements-base.in
 webencodings==0.5.1
-    # via html5lib
+    # via bleach
 xlrd==2.0.1
     # via csvkit
 zipp==1.2.0

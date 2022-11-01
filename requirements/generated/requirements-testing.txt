@@ -10,7 +10,7 @@ anyjson==0.3.3
     # via kombu
 billiard==3.3.0.23
     # via celery
-bleach==2.0.0
+bleach==3.3.0
     # via -r requirements/source/requirements-base.in
 boto3==1.17.112
     # via -r requirements/source/requirements-base.in
@@ -118,8 +118,6 @@ freezegun==0.3.14
     # via -r requirements/source/requirements-testing.in
 futures==3.3.0
     # via s3transfer
-html5lib==1.1
-    # via bleach
 idna==2.10
     # via
     #   requests
@@ -160,6 +158,8 @@ oauthlib==1.1.2
     # via django-oauth-toolkit
 openpyxl==2.6.4
     # via csvkit
+packaging==20.9
+    # via bleach
 pathlib2==2.3.7.post1
     # via importlib-metadata
 polib==1.0.6
@@ -172,6 +172,8 @@ pyminizip==0.2.3
     # via -r requirements/source/requirements-base.in
 pyopenssl==21.0.0
     # via urllib3
+pyparsing==2.4.7
+    # via packaging
 python-dateutil==2.2
     # via
     #   -r requirements/source/requirements-base.in
@@ -206,7 +208,6 @@ six==1.16.0
     #   django-braces
     #   django-oauth-toolkit
     #   freezegun
-    #   html5lib
     #   model-mommy
     #   pathlib2
     #   pyopenssl
@@ -231,7 +232,7 @@ urllib3[secure]==1.26.11
 uwsgi==2.0.18
     # via -r requirements/source/requirements-base.in
 webencodings==0.5.1
-    # via html5lib
+    # via bleach
 xlrd==2.0.1
     # via csvkit
 zipp==1.2.0

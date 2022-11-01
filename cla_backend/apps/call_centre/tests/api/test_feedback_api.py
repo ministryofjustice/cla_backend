@@ -37,6 +37,7 @@ class FeedbackAPITestCase(SimpleResourceAPIMixin, CLAOperatorAuthBaseApiTestMixi
 
         self.assertResponseKeys(resp)
         self.assertEqual(resp.data["comment"], self.resource.comment)
+        self.assertEqual(resp.data["provider"], self.resource.created_by.provider.name)
 
     def test_patch_other_fields_allowed(self):
         data = {"justified": not self.resource.justified, "resolved": not self.resource.resolved}

@@ -64,7 +64,7 @@ class FeedbackSerializerBase(serializers.ModelSerializer):
 
     justified = serializers.BooleanField(read_only=True)
     resolved = serializers.BooleanField(read_only=True)
-    provider = serializers.SerializerMethodField("get_provider")
+    provider = serializers.SerializerMethodField()
 
     def get_provider(self, obj):
         return obj.created_by.provider

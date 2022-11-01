@@ -288,7 +288,7 @@ virtualenv==20.15.1
     # via pre-commit
 webencodings==0.5.1
     # via html5lib
-werkzeug==0.9.6
+werkzeug==0.15.3
     # via -r requirements/source/requirements-dev.in
 xlrd==2.0.1
     # via csvkit

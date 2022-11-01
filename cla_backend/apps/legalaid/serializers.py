@@ -67,7 +67,7 @@ class FeedbackSerializerBase(serializers.ModelSerializer):
     provider = serializers.SerializerMethodField()
 
     def get_provider(self, obj):
-        return obj.created_by.provider
+        return obj.created_by.provider.name
 
     class Meta(object):
         model = Feedback

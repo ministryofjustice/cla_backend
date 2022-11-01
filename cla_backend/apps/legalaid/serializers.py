@@ -76,7 +76,7 @@ class FeedbackSerializerBase(serializers.ModelSerializer):
 
 class CSVUploadSerializerBase(serializers.ModelSerializer):
 
-    rows = serializers.SerializerMethodField("get_rows")
+    rows = serializers.SerializerMethodField()
     provider = serializers.CharField(read_only=True, source="provider.name")
     created_by = serializers.CharField(read_only=True, source="created_by.user.username")
     body = JSONField()

@@ -53,7 +53,11 @@ class OutOfHoursRotaSerializerBase(ClaModelSerializer):
     provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all())
 
     def validate(self, attrs):
-        instance = OutOfHoursRota(**attrs)
+        # if this is for a patch rather than a post then an instance already exists
+        if self.instance is not None:
+            instance = self.instance
+        else:
+            instance = OutOfHoursRota(**attrs)
         instance.clean()
         return attrs
 

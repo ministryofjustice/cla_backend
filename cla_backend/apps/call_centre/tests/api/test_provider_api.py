@@ -238,7 +238,7 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
             self.list_url, HTTP_AUTHORIZATION="Bearer %s" % self.token, format="json", data=post_data
         )
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response2.data, {"__all__": [u"Overlapping rota allocation not allowed"]})
+        self.assertEqual(response2.data, {"non_field_errors": [u"Overlapping rota allocation not allowed"]})
 
     def test_post_overlapping_timespan_not_allowed_overlaps_end(self):
         """
@@ -264,7 +264,7 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
 
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response2.data, {"__all__": [u"Overlapping rota allocation not allowed"]})
+        self.assertEqual(response2.data, {"non_field_errors": [u"Overlapping rota allocation not allowed"]})
 
     def test_post_overlapping_timespan_not_allowed_overlaps_start(self):
         """

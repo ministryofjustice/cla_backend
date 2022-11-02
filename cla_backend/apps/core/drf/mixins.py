@@ -66,6 +66,27 @@ class NestedGenericModelMixin(object):
 
         return super(NestedGenericModelMixin, self).get_queryset()
 
+    def perform_create(self, serializer):
+        if not self.is_one_to_one_nested():
+            return super(NestedGenericModelMixin, self).perform_create(serializer)
+
+        parent_obj = self.get_parent_object_or_none()
+        obj = super(NestedGenericModelMixin, self).perform_create(serializer)
+        if parent_obj:
+            if getattr(parent_obj, self.PARENT_FIELD):
+                raise MethodNotAllowed(
+                    "POST: %s already has a %s associated to it" % (parent_obj, obj.__class__.__name__)
+                )
+            else:
+                setattr(parent_obj, self.PARENT_FIELD, obj)
+                parent_obj.save(update_fields=[self.PARENT_FIELD])
+
+        return obj
+
+    def perform_update(self, serializer):
+        if not self.is_one_to_one_nested():
+            return super(NestedGenericModelMixin, self).perform_update(serializer)
+
     def post_save(self, obj, created=False):
         """
         associates `obj` to the parent

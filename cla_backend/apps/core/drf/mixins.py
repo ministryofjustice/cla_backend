@@ -151,7 +151,10 @@ class ClaPrePostSaveMixin(object):
             message = "{message}\nReplace following with perform_create or perform_update:\n {stack}".format(
                 message=message, stack="\n".join(stack)
             )
-            raise NotImplementedError(message)
+            # raise NotImplementedError(message)
+            warnings.warn(message)
+            # raise NotImplementedError(message)
+            super(ClaPrePostSaveMixin, self).pre_save(obj, created)
 
     def post_save(self, obj, created=False):
         caller = inspect.stack()[1][3]
@@ -166,7 +169,9 @@ class ClaPrePostSaveMixin(object):
             message = "{message}\nReplace following with perform_create or perform_update:\n {stack}".format(
                 message=message, stack="\n".join(stack)
             )
-            raise NotImplementedError(message)
+            warnings.warn(message)
+            # raise NotImplementedError(message)
+            super(ClaPrePostSaveMixin, self).post_save(obj, created)
 
 
 class ClaCreateModelMixin(ClaPrePostSaveMixin, mixins.CreateModelMixin):

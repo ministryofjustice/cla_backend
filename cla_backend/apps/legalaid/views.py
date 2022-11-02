@@ -302,20 +302,20 @@ class BaseEODDetailsViewSet(
     lookup_field = "reference"
     PARENT_FIELD = "eod_details"
 
-    def pre_save(self, obj):
-        # delete all existing EOD categories and use those from request as replacement set
-        if isinstance(obj, EODDetails) and obj.pk:
-            obj.categories.all().delete()
+    def perform_update(self, serializer):
+        if isinstance(serializer.instance, EODDetails):
+            serializer.instance.categories.all().delete()
 
-        obj.case = Case.objects.get(reference=self.kwargs.get("case_reference"))
+        serializer.validated_data["case"] = Case.objects.get(reference=self.kwargs.get("case_reference"))
+        super(BaseEODDetailsViewSet, self).perform_update(serializer)
 
-        super(BaseEODDetailsViewSet, self).pre_save(obj)
-
-    def post_save(self, obj, created=False):
-        return super(BaseEODDetailsViewSet, self).post_save(obj, False)
+    def perform_create(self, serializer):
+        serializer.validated_data["case"] = Case.objects.get(reference=self.kwargs.get("case_reference"))
+        return super(BaseEODDetailsViewSet, self).perform_create(serializer)
 
 
 class BaseCaseOrderingFilter(OrderingFilter):
+
     default_modified = "modified"
 
     def filter_queryset(self, request, queryset, view):

@@ -111,7 +111,23 @@ class CaseEventAvoidDuplicatesTestCase(EventTestCaseMixin, TestCase):
 class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
     EVENT_KEY = "suspend_case"
 
-    CODES = ["INSUF", "ABND", "TERM", "IRCB", "COPE", "DUPL", "RDSP", "SAME", "WROF", "MRNB", "MRCC"]
+    CODES = [
+        "INSUF",
+        "ABND",
+        "TERM",
+        "IRCB",
+        "COPE",
+        "DUPL",
+        "RDSP",
+        "SAME",
+        "WROF",
+        "MRNB",
+        "MRCC",
+        "REFDPA",
+        "RELBD",
+        "RSTR",
+        "NOLA",
+    ]
 
     def test_INSUF(self):
         self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
@@ -164,4 +180,24 @@ class SuspendCaseEventTestCase(EventTestCaseMixin, TestCase):
     def test_MRCC(self):
         self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
             self.CODES, code="MRCC", expected_level=LOG_LEVELS.HIGH
+        )
+
+    def test_REFDPA(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
+            self.CODES, code="REFDPA", expected_level=LOG_LEVELS.HIGH
+        )
+
+    def test_RELBD(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
+            self.CODES, code="RELBD", expected_level=LOG_LEVELS.HIGH
+        )
+
+    def test_RSTR(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
+            self.CODES, code="RSTR", expected_level=LOG_LEVELS.HIGH
+        )
+
+    def test_NOLA(self):
+        self._test_process_with_expicit_code_and_requires_action_None_if_op_or_op_manager(
+            self.CODES, code="NOLA", expected_level=LOG_LEVELS.HIGH
         )

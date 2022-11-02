@@ -213,7 +213,7 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         response2 = self.client.post(
             self.list_url, HTTP_AUTHORIZATION="Bearer %s" % self.token, format="json", data=post_data
         )
-        self.assertEqual(response2.data, {"__all__": [u"Provider Name2 doesn't offer help for Name1"]})
+        self.assertEqual(response2.data, {"non_field_errors": [u"Provider Name2 doesn't offer help for Name1"]})
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_post_overlapping_timespan_not_allowed_overlaps_exactly(self):
@@ -290,7 +290,7 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
 
         self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response2.data, {"__all__": [u"Overlapping rota allocation not allowed"]})
+        self.assertEqual(response2.data, {"non_field_errors": [u"Overlapping rota allocation not allowed"]})
 
     def test_end_date_must_be_greater_than_start_date(self):
 
@@ -301,7 +301,7 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data, {"__all__": [u"End date must be after start date."]})
+        self.assertEqual(response.data, {"non_field_errors": [u"End date must be after start date."]})
 
         # can't set same
         post_data = self._get_default_post_data()
@@ -311,7 +311,7 @@ class OutOfHoursRotaTests(CLAOperatorAuthBaseApiTestMixin, APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data, {"__all__": [u"End date must be after start date."]})
+        self.assertEqual(response.data, {"non_field_errors": [u"End date must be after start date."]})
 
     def test_non_manager_not_authorized(self):
         self.operator.is_manager = False

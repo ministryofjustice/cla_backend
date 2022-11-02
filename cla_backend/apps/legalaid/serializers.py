@@ -52,6 +52,11 @@ class OutOfHoursRotaSerializerBase(ClaModelSerializer):
     category = serializers.SlugRelatedField(slug_field="code", queryset=Category.objects.all())
     provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all())
 
+    def validate(self, attrs):
+        instance = OutOfHoursRota(**attrs)
+        instance.clean()
+        return attrs
+
     class Meta(object):
         model = OutOfHoursRota
 

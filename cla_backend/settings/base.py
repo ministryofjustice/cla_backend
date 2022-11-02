@@ -327,12 +327,14 @@ if "SENTRY_DSN" in os.environ:
 LOGIN_FAILURE_LIMIT = 5
 LOGIN_FAILURE_COOLOFF_TIME = 60  # in minutes
 
-# Django rest-framework-auth
+# Django rest-framework-overrides
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("oauth2_provider.ext.rest_framework.OAuth2Authentication",),
     "DEFAULT_PERMISSION_CLASSES": ("core.permissions.AllowNone",),
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_THROTTLE_RATES": {"login": "10/sec"},
+    # DRF3.0 on provides a default date time format, used to be none
+    "DATETIME_FORMAT": None,
 }
 
 # the start number of the LAA reference, must be 7 digit number and must

@@ -237,7 +237,7 @@ class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
 
 
 class EODDetailsSerializerBase(serializers.ModelSerializer):
-    notes = serializers.CharField(max_length=5000, required=False)
+    notes = serializers.CharField(max_length=5000, required=False, allow_blank=True)
     categories = EODDetailsCategorySerializerBase(many=True, required=False)
 
     class Meta(object):

@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 from cla_butler.tasks import DeleteOldData
 
 
-class Command(BaseCommand):
+class DeleteCasesWithoutPersonalData(BaseCommand):
 
     help = "Deleting cases that are over three years old and that dont have an excluded outcome_code"
 
@@ -13,4 +13,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write("Deleting cases that are over three years old and that dont have an excluded outcome_code")
-        DeleteOldData().run("three_years")
+        DeleteOldData().run("no_personal_details")

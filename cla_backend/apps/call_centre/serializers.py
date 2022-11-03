@@ -232,12 +232,18 @@ class LogSerializer(LogSerializerBase):
 class CaseSerializer(CaseSerializerFull):
     provider_notes = serializers.CharField(max_length=5000, required=False, read_only=True)
     organisation = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
-    organisation_name = serializers.RelatedField(source="organisation", read_only=True)
+    organisation_name = serializers.SerializerMethodField()
     billable_time = serializers.IntegerField(read_only=True)
     rejected = serializers.SerializerMethodField("is_rejected")
     callback_time_string = serializers.ReadOnlyField()
 
     complaint_count = serializers.IntegerField(read_only=True)
+
+    def get_organisation_name(self, case):
+        if not case.organisation:
+            return
+
+        return case.organisation.name
 
     def is_rejected(self, case):
         try:

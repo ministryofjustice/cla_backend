@@ -219,6 +219,33 @@ class OrganisationCaseAssignmentTestCase(BaseCaseTestCase, FullCaseAPIMixin):
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self._assert_case_organisation_updated(case, self.foo_org)
 
+    def test_case_organisation_is_set_when_operator_update_third_party_detail_to_case_without_organisation(self):
+        # Assign operator organisation as the case organisation when a third party detail is
+        # updated to a case without organisation no organisation
+
+        personal_details = make_recipe("legalaid.personal_details")
+        thirdparty_details = make_recipe("legalaid.thirdparty_details", personal_details=personal_details)
+        case = make_recipe(
+            "legalaid.case", organisation=None, personal_details=None, thirdparty_details=thirdparty_details
+        )
+
+        data = {
+            "personal_details": {"full_name": "John Smith"},
+            "case_reference": case.reference,
+            "personal_relationship": "PROFESSIONAL",
+            "pass_phrase": "pass",
+        }
+
+        self.operator.organisation = self.foo_org
+        self.operator.save()
+
+        url = reverse(
+            u"%s:thirdpartydetails-detail" % self.API_URL_NAMESPACE, args=(), kwargs={"case_reference": case.reference}
+        )
+        response = self.client.patch(url, data, format="json", HTTP_AUTHORIZATION="Bearer %s" % self.token)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self._assert_case_organisation_updated(case, self.foo_org)
+
     def test_case_organisation_is_set_when_operator_adds_diagnosis_to_case_without_organisation(self):
         # Assign operator organisation as the case organisation when a diagnosis is
         # added to a case without organisation no organisation

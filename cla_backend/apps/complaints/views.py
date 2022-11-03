@@ -106,43 +106,46 @@ class BaseComplaintViewSet(
             qs = qs.exclude(id__in=complaint_events)
         return qs
 
-    def pre_save(self, obj, *args, **kwargs):
-        super(BaseComplaintViewSet, self).pre_save(obj)
-
+    def perform_create(self, serializer):
         user = self.request.user
-        if not obj.pk:
-            # new complaint
-            if not isinstance(user, AnonymousUser):
-                obj.created_by = user
-            obj._update_owner = bool(obj.owner)
+        eod = serializer.validated_data["eod"]
+        # new complaint
+        if not isinstance(user, AnonymousUser):
+            serializer.validated_data["created_by"] = user
 
-            if "level" not in self.request.DATA and obj.eod_id:
-                if obj.eod.is_major:
-                    obj.level = LOG_LEVELS.HIGH
-                else:
-                    obj.level = LOG_LEVELS.MINOR
+        if "level" not in self.request.DATA and eod.id:
+            if eod.is_major:
+                serializer.validated_data["level"] = LOG_LEVELS.HIGH
+            else:
+                serializer.validated_data["level"] = LOG_LEVELS.MINOR
 
-        else:
-            # editing existing complaint
-            original_obj = self.model.objects.get(pk=obj.pk)
-            obj._update_owner = original_obj.owner_id != obj.owner_id
+        obj = super(BaseComplaintViewSet, self).perform_create(serializer)
 
-    def post_save(self, obj, created=False):
-        if created:
-            description = u"Original expressions of dissatisfaction:\n%s\n\n%s" % (
-                u"\n".join(map(lambda desc: u"- %s" % desc, obj.eod.get_category_descriptions(include_severity=True))),
-                obj.eod.notes,
-            )
-            notes = u"Complaint created.\n\n{description}".format(description=description.strip()).strip()
+        description = u"Original expressions of dissatisfaction:\n%s\n\n%s" % (
+            u"\n".join(map(lambda desc: u"- %s" % desc, obj.eod.get_category_descriptions(include_severity=True))),
+            obj.eod.notes,
+        )
+        notes = u"Complaint created.\n\n{description}".format(description=description.strip()).strip()
 
-            event = event_registry.get_event("complaint")()
-            event.process(
-                obj.eod.case, created_by=self.request.user, notes=notes, complaint=obj, code="COMPLAINT_CREATED"
-            )
-            obj.eod.case.complaint_flag = True
-            obj.eod.case.save()
+        event = event_registry.get_event("complaint")()
+        event.process(obj.eod.case, created_by=self.request.user, notes=notes, complaint=obj, code="COMPLAINT_CREATED")
+        obj.eod.case.complaint_flag = True
+        obj.eod.case.save()
 
-        if getattr(obj, "_update_owner", False):
+        return obj
+
+    def perform_update(self, serializer):
+        obj = serializer.instance
+        new_owner = serializer.validated_data.get("owner", None)
+        has_owner_changed = False
+        if obj.owner and new_owner and obj.owner.username != new_owner:
+            has_owner_changed = True
+        elif not obj.owner and new_owner:
+            has_owner_changed = True
+
+        super(BaseComplaintViewSet, self).perform_update(serializer)
+
+        if has_owner_changed:
             event = event_registry.get_event("complaint")()
             event.process(
                 obj.eod.case,

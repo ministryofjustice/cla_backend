@@ -710,8 +710,10 @@ class ComplaintViewSet(
         show_closed = self.request.QUERY_PARAMS.get("show_closed") == "True"
         return super(ComplaintViewSet, self).get_queryset(dashboard=dashboard, show_closed=show_closed)
 
-    def get_case(self, obj):
-        return obj.eod.case
+    def get_case(self, validated_data, obj=None):
+        # Cannot always depend on obj as it will be None when a new case is being created
+        # when this method gets triggered in a perform_create before the instance is saved
+        return validated_data["eod"].case
 
     def retrieve(self, request, *args, **kwargs):
         response = super(ComplaintViewSet, self).retrieve(request, *args, **kwargs)

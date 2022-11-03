@@ -223,6 +223,42 @@ class SuspendCaseEvent(BaseEvent):
             "order": 110,
             "set_requires_action_by": None_if_owned_by_op_or_op_manager,
         },
+        "REFDPA": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [LOG_ROLES.OPERATOR],
+            "description": "Refused DPA",
+            "stops_timer": True,
+            "order": 120,
+            "set_requires_action_by": None_if_owned_by_op_or_op_manager,
+        },
+        "RELBD": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [LOG_ROLES.OPERATOR],
+            "description": u"Don't transfer / COI identifier",
+            "stops_timer": True,
+            "order": 130,
+            "set_requires_action_by": None_if_owned_by_op_or_op_manager,
+        },
+        "RSTR": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [LOG_ROLES.OPERATOR],
+            "description": "Restricted from service",
+            "stops_timer": True,
+            "order": 140,
+            "set_requires_action_by": None_if_owned_by_op_or_op_manager,
+        },
+        "NOLA": {
+            "type": LOG_TYPES.OUTCOME,
+            "level": LOG_LEVELS.HIGH,
+            "selectable_by": [LOG_ROLES.OPERATOR],
+            "description": "No Legal Aid",
+            "stops_timer": True,
+            "order": 150,
+            "set_requires_action_by": None_if_owned_by_op_or_op_manager,
+        },
     }
 
 

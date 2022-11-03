@@ -6,14 +6,14 @@ from cla_eventlog import event_registry
 class CaseOrganisationAssignCurrentOrganisationMixin(object):
     def perform_create(self, serializer):
         obj = super(CaseOrganisationAssignCurrentOrganisationMixin, self).perform_create(serializer)
-        self.save_organisation()
+        self.save_organisation(serializer.validated_data)
         return obj
 
     def perform_update(self, serializer):
         super(CaseOrganisationAssignCurrentOrganisationMixin, self).perform_update(serializer)
-        self.save_organisation(self.get_object())
+        self.save_organisation(serializer.validated_data, self.get_object())
 
-    def get_case(self, obj=None):
+    def get_case(self, validated_data, obj=None):
         if obj and hasattr(obj, "case"):
             try:
                 return obj.case
@@ -48,12 +48,12 @@ class CaseOrganisationAssignCurrentOrganisationMixin(object):
         event = event_registry.get_event("case")()
         event.process(case, created_by=user, notes=notes, complaint=case, code="CASE_ORGANISATION_SET")
 
-    def save_organisation(self, obj=None):
+    def save_organisation(self, validated_data, obj=None):
 
         if isinstance(obj, Case):
             case = obj
         else:
-            case = self.get_case(obj)
+            case = self.get_case(validated_data, obj=obj)
 
         if not case:
             return

@@ -202,6 +202,29 @@ class ThirdPartyPersonalDetailsSerializerBase(PersonalDetailsSerializerBase):
 class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
     personal_details = ThirdPartyPersonalDetailsSerializerBase(required=True)
 
+    # from DRF 3.0 onwards, there is no allow_add_remove option
+    # writable nested serialization must be handed explicitly
+    def create(self, validated_data):
+        personal_details_data = validated_data.pop("personal_details")
+        personal_details = PersonalDetails.objects.create(**personal_details_data)
+        third_party_details = ThirdPartyDetails.objects.create(personal_details=personal_details, **validated_data)
+        return third_party_details
+
+    def update(self, instance, validated_data):
+        personal_details_data = validated_data.pop("personal_details")
+        # Save the fields on the instance
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        # Save the updated fields on the personal details object
+        personal_details = instance.personal_details
+        for attr, value in personal_details_data.items():
+            setattr(personal_details, attr, value)
+        personal_details.save()
+
+        return instance
+
     class Meta(object):
         model = ThirdPartyDetails
         fields = ()

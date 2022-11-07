@@ -25,7 +25,7 @@ class DiagnosisModelMixin(object):
     @detail_route(methods=["post"])
     def move_up(self, request, **kwargs):
         self.object = self.get_object()
-        serializer = self.get_serializer(self.object)
+        serializer = self.get_serializer(self.object, data={})
 
         self.object = serializer.move_up()
         return Response(serializer.data, status=status.HTTP_200_OK)

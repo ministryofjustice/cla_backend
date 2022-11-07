@@ -188,7 +188,7 @@ class DiagnosisSerializer(ClaModelSerializer):
         If there are no nodes, it raises ParseError.
         If current node is end node, it moves up 2 nodes
         """
-        nodes = self.object.nodes or []
+        nodes = self.instance.nodes or []
         nodes_count = len(nodes)
 
         # no nodes => can't go up
@@ -204,11 +204,12 @@ class DiagnosisSerializer(ClaModelSerializer):
             if is_pre_end_node(self.graph, pre_node_id) and nodes_count > 2:
                 pre_node_id = nodes[-3]["id"]
 
-            self.object.current_node_id = pre_node_id
+            self.instance.current_node_id = pre_node_id
 
-        self.save(force_update=True)
+        if self.is_valid():
+            self.save(force_update=True)
 
-        return self.object
+        return self.instance
 
     class Meta(object):
         model = DiagnosisTraversal

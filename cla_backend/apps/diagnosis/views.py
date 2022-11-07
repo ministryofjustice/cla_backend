@@ -42,13 +42,12 @@ class DiagnosisModelMixin(object):
         kwargs = {"created_by": self.get_current_user(), "status": status, "patch": patch}
         diagnosis_event.process(obj.case, **kwargs)
 
-    def post_delete(self, obj, *args, **kwargs):
-        ret = super(DiagnosisModelMixin, self).post_delete(obj, *args, **kwargs)
-        if obj.is_state_unknown():
-            self.create_diagnosis_log(obj, status="incomplete_deleted")
+    def perform_destroy(self, instance):
+        super(DiagnosisModelMixin, self).perform_destroy(instance)
+        if instance.is_state_unknown():
+            self.create_diagnosis_log(instance, status="incomplete_deleted")
         else:
-            self.create_diagnosis_log(obj, status="deleted")
-        return ret
+            self.create_diagnosis_log(instance, status="deleted")
 
     def perform_create(self, serializer):
         previous_state = serializer.validated_data.get("state", DIAGNOSIS_SCOPE.UNKNOWN)

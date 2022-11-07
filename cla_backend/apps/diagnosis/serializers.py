@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 
 class DiagnosisSerializer(ClaModelSerializer):
-    choices = SerializerMethodField("get_choices")
-    nodes = SerializerMethodField("get_nodes")
+    choices = SerializerMethodField()
+    nodes = SerializerMethodField()
     current_node_id = ChoiceField(choices=[])
     category = SlugRelatedField(slug_field="code", required=False, queryset=Category.objects.all())
     matter_type1 = SlugRelatedField(slug_field="code", required=False, queryset=MatterType.objects.all())
@@ -38,23 +38,23 @@ class DiagnosisSerializer(ClaModelSerializer):
     def _get_graph(self):
         return graph
 
-    def is_version_in_conflict(self, request):
-        if not self.object:
+    def is_version_in_conflict(self, instance):
+        if not instance:
             return False
 
-        if not self.object.is_state_unknown():
+        if not instance.is_state_unknown():
             return False
 
-        return self.object.graph_version != self.graph.graph["version"]
+        return instance.graph_version != self.graph.graph["version"]
 
-    def get_choices(self, request):
-        return self._get_nodes()
+    def get_choices(self, instance):
+        return self._get_nodes(instance)
 
-    def get_nodes(self, request):
-        if not self.object:
+    def get_nodes(self, instance):
+        if not instance:
             return []
 
-        nodes = self.object.nodes
+        nodes = instance.nodes
         # this is just so that we don't show the INSCOPE / OUTOFSCOPE node
         # in the interface, nothing else clever happening
         # if not self.full_nodes_dump:
@@ -63,14 +63,14 @@ class DiagnosisSerializer(ClaModelSerializer):
 
         return nodes
 
-    def _get_nodes(self, request=None):
-        if self.is_version_in_conflict(request):
+    def _get_nodes(self, instance=None):
+        if self.is_version_in_conflict(instance):
             return []
 
-        if not self.object or not self.object.is_state_unknown():
+        if not instance or not instance.is_state_unknown():
             return []
 
-        current_node_id = self.object.current_node_id or "start"
+        current_node_id = instance.current_node_id or "start"
 
         # populating choices
         children = self.graph.successors(current_node_id)
@@ -84,10 +84,10 @@ class DiagnosisSerializer(ClaModelSerializer):
         nodes = sorted(nodes, key=lambda x: x["order"])
         return nodes
 
-    def get_context(self, obj):
+    def get_context(self, nodes):
         context = {}
-        if obj.nodes:
-            for node in obj.nodes:
+        if nodes:
+            for node in nodes:
                 context.update(node["context"] or {})
         return context
 
@@ -124,53 +124,63 @@ class DiagnosisSerializer(ClaModelSerializer):
             "matter_type2": get_matter_type(matter_type2_code, node_id),
         }
 
-    def _set_state(self, obj):
-        if is_terminal(self.graph, obj.current_node_id):
-            obj.state = get_node_scope_value(self.graph, obj.current_node_id)
+    def _set_state(self, validated_data):
+        current_node_id = validated_data.get("current_node_id")
+        nodes = validated_data.get("nodes", [])
+        if is_terminal(self.graph, current_node_id):
+            validated_data["state"] = get_node_scope_value(self.graph, current_node_id)
 
-            context_data = self._get_from_context(self.get_context(obj), obj.current_node_id)
-            obj.category = context_data["category"]
-            obj.matter_type1 = context_data["matter_type1"]
-            obj.matter_type2 = context_data["matter_type2"]
+            context_data = self._get_from_context(self.get_context(nodes), current_node_id)
+            validated_data["category"] = context_data["category"]
+            validated_data["matter_type1"] = context_data["matter_type1"]
+            validated_data["matter_type2"] = context_data["matter_type2"]
         else:
-            obj.state = DIAGNOSIS_SCOPE.UNKNOWN
-            obj.category = None
-            obj.matter_type1 = None
-            obj.matter_type2 = None
+            validated_data["state"] = DIAGNOSIS_SCOPE.UNKNOWN
+            validated_data["category"] = None
+            validated_data["matter_type1"] = None
+            validated_data["matter_type2"] = None
 
-    def process_obj(self, obj):
-        if obj.current_node_id:
-            current_node = self.graph.node[obj.current_node_id]
-            current_node["id"] = obj.current_node_id
+    def process_obj(self, validated_data):
+        current_node_id = validated_data.get("current_node_id")
+        if current_node_id:
+            current_node = self.graph.node[current_node_id]
+            current_node["id"] = current_node_id
 
             current_node = dict(map(lambda item: (item[0], eval_promise(item[1])), current_node.items()))
 
             # delete all nodes after current_node_id and add current not
             nodes = []
-            for node in obj.nodes or []:
-                if node["id"] == obj.current_node_id:
+            current_nodes = validated_data.get("nodes", [])
+            for node in current_nodes:
+                if node["id"] == current_node_id:
                     break
                 nodes.append(node)
 
             nodes.append(current_node)
-            obj.nodes = nodes
+            validated_data["nodes"] = nodes
 
             # if pre end node => process end node directly
-            if is_pre_end_node(self.graph, obj.current_node_id):
-                obj.current_node_id = self.graph.successors(obj.current_node_id)[0]
-                self.process_obj(obj)
+            if is_pre_end_node(self.graph, current_node_id):
+                validated_data["current_node_id"] = self.graph.successors(current_node_id)[0]
+                self.process_obj(validated_data)
         else:
-            obj.nodes = []
+            validated_data["nodes"] = []
 
-    def save_object(self, obj, **kwargs):
-        if not obj.graph_version:
-            obj.graph_version = self.graph.graph["version"]
-
+    def create(self, validated_data):
+        validated_data["graph_version"] = self.graph.graph["version"]
         # if obj.current_node_id:
-        self.process_obj(obj)
-        self._set_state(obj)
+        self.process_obj(validated_data)
+        self._set_state(validated_data)
 
-        return super(DiagnosisSerializer, self).save_object(obj, **kwargs)
+        return super(DiagnosisSerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        if not instance.graph_version:
+            instance.graph_version = self.graph.graph["version"]
+        # if obj.current_node_id:
+        self.process_obj(validated_data)
+        self._set_state(validated_data)
+        return super(DiagnosisSerializer, self).update(instance, validated_data)
 
     def move_up(self):
         """

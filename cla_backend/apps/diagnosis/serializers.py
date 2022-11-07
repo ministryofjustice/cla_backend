@@ -1,7 +1,7 @@
 import logging
 
 from rest_framework.exceptions import ParseError
-from rest_framework.fields import ChoiceField, SerializerMethodField
+from rest_framework.fields import CharField, SerializerMethodField
 from rest_framework.relations import SlugRelatedField
 
 from cla_common.constants import DIAGNOSIS_SCOPE
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class DiagnosisSerializer(ClaModelSerializer):
     choices = SerializerMethodField()
     nodes = SerializerMethodField()
-    current_node_id = ChoiceField(choices=[])
+    current_node_id = CharField()
     category = SlugRelatedField(slug_field="code", required=False, queryset=Category.objects.all())
     matter_type1 = SlugRelatedField(slug_field="code", required=False, queryset=MatterType.objects.all())
     matter_type2 = SlugRelatedField(slug_field="code", required=False, queryset=MatterType.objects.all())

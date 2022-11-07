@@ -22,6 +22,7 @@ class TasksTestCase(TestCase):
     """
 
     delete_option_three_years = "three_years"
+    no_personal_details = "no_personal_details"
 
     def setUp(self):
         super(TasksTestCase, self).setUp()
@@ -173,3 +174,66 @@ class TasksTestCase(TestCase):
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
         self.data_deletion_check(pks, eods, 1, 1, self.delete_option_three_years)
+
+    def test_delete_no_personal_details_success(self):
+        """
+        This tests a case with no personal details is removed successfully
+        """
+        log = make_recipe("cla_auditlog.audit_log")
+
+        # Creating a case that's only one year old
+        freezer = freeze_time(timezone.now() + relativedelta(years=-1))
+        freezer.start()
+        # Personal details are automatically added, so we need to set it to none
+        case = make_recipe("legalaid.case", audit_log=[log], personal_details=None)
+        freezer.stop()
+
+        eod = make_recipe("legalaid.eod_details", case=case)
+        make_recipe("complaints.complaint", eod=eod, audit_log=[log])
+        pks = get_pks(Case.objects.all())
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+
+        self.data_deletion_check(pks, eods, 1, 0, self.no_personal_details)
+
+    def test_delete_no_personal_details_unsuccessful(self):
+        """
+        This tests a case with personal details. Test should fail as there is nothing to delete.
+        """
+        log = make_recipe("cla_auditlog.audit_log")
+
+        # Creating a case that's only one year old
+        freezer = freeze_time(timezone.now() + relativedelta(years=-1))
+        freezer.start()
+        # Personal details are automatically added
+        case = make_recipe("legalaid.case", audit_log=[log])
+        freezer.stop()
+
+        eod = make_recipe("legalaid.eod_details", case=case)
+        make_recipe("complaints.complaint", eod=eod, audit_log=[log])
+        pks = get_pks(Case.objects.all())
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+
+        self.data_deletion_check(pks, eods, 1, 1, self.no_personal_details)
+
+    def test_delete_incorrect_delete_option_argument_passed(self):
+        """
+        This tests a case that passes an incorrect delete option argument.
+        """
+        log = make_recipe("cla_auditlog.audit_log")
+
+        # Creating a case that's only one year old
+        freezer = freeze_time(timezone.now() + relativedelta(years=-4))
+        freezer.start()
+        # Personal details are automatically added
+        case = make_recipe("legalaid.case", audit_log=[log], personal_details=None)
+        freezer.stop()
+
+        eod = make_recipe("legalaid.eod_details", case=case)
+        make_recipe("complaints.complaint", eod=eod, audit_log=[log])
+        pks = get_pks(Case.objects.all())
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+
+        # Check that an exception was raised because of incorrect delete option argument
+        with self.assertRaises(Exception):
+            # pass foo as an incorrect argument
+            self.data_deletion_check(self.data_deletion_check(pks, eods, 1, 1, "Foo"))

@@ -23,6 +23,9 @@ def _make_datetime(year=None, month=None, day=None, hour=0, minute=0, second=0):
 
 
 class FindAndDeleteOldCases(TestCase):
+
+    delete_option_three_years = "three_years"
+
     def setUp(self):
         super(FindAndDeleteOldCases, self).setUp()
         self.command = Command()
@@ -89,7 +92,7 @@ class FindAndDeleteOldCases(TestCase):
         oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 0)
 
-        self.delete_old_cases(dt)
+        self.delete_old_cases(dt, self.delete_option_three_years)
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 3)
 
@@ -110,7 +113,7 @@ class FindAndDeleteOldCases(TestCase):
         oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 0)
 
-        self.delete_old_cases(dt)
+        self.delete_old_cases(dt, self.delete_option_three_years)
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Complaint.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 3)
@@ -127,7 +130,7 @@ class FindAndDeleteOldCases(TestCase):
         oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 0)
 
-        self.delete_old_cases(dt)
+        self.delete_old_cases(dt, self.delete_option_three_years)
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 2)
         self.assertEqual(EligibilityCheck.objects.count(), 1)
@@ -143,7 +146,7 @@ class FindAndDeleteOldCases(TestCase):
         oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 0)
 
-        self.delete_old_cases(dt)
+        self.delete_old_cases(dt, self.delete_option_three_years)
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 2)
         self.assertEqual(EligibilityCheck.objects.count(), 1)
@@ -156,7 +159,7 @@ class FindAndDeleteOldCases(TestCase):
         oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 0)
 
-        self.delete_old_cases(dt)
+        self.delete_old_cases(dt, self.delete_option_three_years)
         self.assertEqual(Case.objects.count(), 1)
         self.assertEqual(Log.objects.count(), 0)
 
@@ -168,7 +171,7 @@ class FindAndDeleteOldCases(TestCase):
         oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 1)
 
-        self.delete_old_cases(dt)
+        self.delete_old_cases(dt, self.delete_option_three_years)
         self.assertEqual(Case.objects.count(), 0)
         self.assertEqual(Log.objects.count(), 0)
         self.assertEqual(AuditLog.objects.count(), 0)
@@ -188,7 +191,7 @@ class FindAndDeleteOldCases(TestCase):
         oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 1)
 
-        self.delete_old_cases(dt)
+        self.delete_old_cases(dt, self.delete_option_three_years)
         self.assertEqual(Case.objects.count(), 0)
         self.assertEqual(Log.objects.count(), 0)
         self.assertEqual(AuditLog.objects.count(), 0)
@@ -207,7 +210,7 @@ class FindAndDeleteOldCases(TestCase):
         oldCasesFound = self.find_old_cases(dt)
         self.assertEqual(oldCasesFound.count(), 1)
 
-        self.delete_old_cases(dt)
+        self.delete_old_cases(dt, self.delete_option_three_years)
         self.assertEqual(Case.objects.count(), 0)
         self.assertEqual(Log.objects.count(), 0)
         self.assertEqual(AuditLog.objects.count(), 0)
@@ -244,7 +247,7 @@ class FindAndDeleteOldCases(TestCase):
 
         self.assertEqual(oldCasesFound.count(), 2)
 
-        self.delete_old_cases(dt)
+        self.delete_old_cases(dt, self.delete_option_three_years)
         case_ids = Case.objects.values_list("id", flat=True)
         # Check there is only 1 case and that case is the relatively new case
         self.assertEqual(list(case_ids), [case_2.id])

@@ -21,11 +21,13 @@ class TasksTestCase(TestCase):
     The tests should at this point continue to pass.
     """
 
+    delete_option_three_years = "three_years"
+
     def setUp(self):
         super(TasksTestCase, self).setUp()
         self.delete_old_data = DeleteOldData()
 
-    def data_deletion_check(self, primary_keys, eods, before_data_count, after_data_count):
+    def data_deletion_check(self, primary_keys, eods, before_data_count, after_data_count, delete_option):
         """
         Checks the data before, runs the delete_old_data command and then checks
         the data afterwards to see if it has been deleted/not deleted
@@ -36,8 +38,8 @@ class TasksTestCase(TestCase):
         self.assertEqual(len(Complaint.objects.all()), before_data_count)
         case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
         self.assertEqual(len(AuditLog.objects.filter(complaint__in=case_complaints)), before_data_count)
-
-        self.delete_old_data.run()
+        # Pass in string parameters with which test to run.
+        self.delete_old_data.run(delete_option)
 
         self.assertEqual(len(Case.objects.all()), after_data_count)
         self.assertEqual(len(AuditLog.objects.filter(case__in=primary_keys)), after_data_count)
@@ -135,7 +137,7 @@ class TasksTestCase(TestCase):
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
-        self.data_deletion_check(pks, eods, 1, 0)
+        self.data_deletion_check(pks, eods, 1, 0, self.delete_option_three_years)
 
     def test_delete_old_data_run_case_over_3_years_excluded_code_unsuccessful_delete(self):
         """
@@ -157,7 +159,7 @@ class TasksTestCase(TestCase):
             pks = get_pks(Case.objects.all())
             eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
-            self.data_deletion_check(pks, eods, count, count)
+            self.data_deletion_check(pks, eods, count, count, self.delete_option_three_years)
 
     def test_delete_old_data_run_case_under_three_years_unsuccessful_delete(self):
         log = make_recipe("cla_auditlog.audit_log")
@@ -170,4 +172,4 @@ class TasksTestCase(TestCase):
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
-        self.data_deletion_check(pks, eods, 1, 1)
+        self.data_deletion_check(pks, eods, 1, 1, self.delete_option_three_years)

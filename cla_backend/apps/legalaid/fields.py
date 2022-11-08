@@ -16,6 +16,9 @@ class MoneyFieldDRF(Field):
     def to_representation(self, obj):
         return obj
 
+    def to_internal_value(self, data):
+        return data
+
 
 class MoneyField(models.BigIntegerField):
     """

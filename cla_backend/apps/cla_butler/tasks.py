@@ -5,6 +5,7 @@ import logging
 import time
 
 from celery import Task
+from cla_butler.constants import delete_option_three_years, delete_option_no_personal_details
 from django.contrib.sessions.models import Session
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
@@ -124,9 +125,9 @@ class DeleteOldData(Task):
         tokens.delete()
 
     def cases_for_deletion(self, delete_option):
-        if delete_option == "three_years":
+        if delete_option == delete_option_three_years:
             return self.get_three_year_old_cases()
-        elif delete_option == "no_personal_details":
+        elif delete_option == delete_option_no_personal_details:
             return self.get_cases_without_personal_details()
         else:
             raise Exception("No method of deletion, no cases have been deleted")

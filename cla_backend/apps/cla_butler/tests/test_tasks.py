@@ -3,6 +3,7 @@ from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
+from cla_butler.constants import delete_option_three_years, delete_option_no_personal_details
 from cla_butler.tasks import DeleteOldData, get_pks
 from core.tests.mommy_utils import make_recipe
 from cla_auditlog.models import AuditLog
@@ -20,9 +21,6 @@ class TasksTestCase(TestCase):
     constraints such as M2M relationships and raise an IntegrityError and fail the test.
     The tests should at this point continue to pass.
     """
-
-    delete_option_three_years = "three_years"
-    no_personal_details = "no_personal_details"
 
     def setUp(self):
         super(TasksTestCase, self).setUp()
@@ -138,7 +136,7 @@ class TasksTestCase(TestCase):
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
-        self.data_deletion_check(pks, eods, 1, 0, self.delete_option_three_years)
+        self.data_deletion_check(pks, eods, 1, 0, delete_option_three_years)
 
     def test_delete_old_data_run_case_over_3_years_excluded_code_unsuccessful_delete(self):
         """
@@ -160,7 +158,7 @@ class TasksTestCase(TestCase):
             pks = get_pks(Case.objects.all())
             eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
-            self.data_deletion_check(pks, eods, count, count, self.delete_option_three_years)
+            self.data_deletion_check(pks, eods, count, count, delete_option_three_years)
 
     def test_delete_old_data_run_case_under_three_years_unsuccessful_delete(self):
         log = make_recipe("cla_auditlog.audit_log")
@@ -173,63 +171,33 @@ class TasksTestCase(TestCase):
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
-        self.data_deletion_check(pks, eods, 1, 1, self.delete_option_three_years)
+        self.data_deletion_check(pks, eods, 1, 1, delete_option_three_years)
 
     def test_delete_no_personal_details_success(self):
         """
         This tests a case with no personal details is removed successfully
         """
-        log = make_recipe("cla_auditlog.audit_log")
-
-        # Creating a case that's only one year old
-        freezer = freeze_time(timezone.now() + relativedelta(years=-1))
-        freezer.start()
-        # Personal details are automatically added, so we need to set it to none
-        case = make_recipe("legalaid.case", audit_log=[log], personal_details=None)
-        freezer.stop()
-
-        eod = make_recipe("legalaid.eod_details", case=case)
-        make_recipe("complaints.complaint", eod=eod, audit_log=[log])
+        self.setup_personal_details_test(1, True)
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
-        self.data_deletion_check(pks, eods, 1, 0, self.no_personal_details)
+        self.data_deletion_check(pks, eods, 1, 0, delete_option_no_personal_details)
 
     def test_delete_no_personal_details_unsuccessful(self):
         """
         This tests a case with personal details. Test should fail as there is nothing to delete.
         """
-        log = make_recipe("cla_auditlog.audit_log")
-
-        # Creating a case that's only one year old
-        freezer = freeze_time(timezone.now() + relativedelta(years=-1))
-        freezer.start()
-        # Personal details are automatically added
-        case = make_recipe("legalaid.case", audit_log=[log])
-        freezer.stop()
-
-        eod = make_recipe("legalaid.eod_details", case=case)
-        make_recipe("complaints.complaint", eod=eod, audit_log=[log])
+        self.setup_personal_details_test(1, False)
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
-        self.data_deletion_check(pks, eods, 1, 1, self.no_personal_details)
+        self.data_deletion_check(pks, eods, 1, 1, delete_option_no_personal_details)
 
     def test_delete_incorrect_delete_option_argument_passed(self):
         """
         This tests a case that passes an incorrect delete option argument.
         """
-        log = make_recipe("cla_auditlog.audit_log")
-
-        # Creating a case that's only one year old
-        freezer = freeze_time(timezone.now() + relativedelta(years=-4))
-        freezer.start()
-        # Personal details are automatically added
-        case = make_recipe("legalaid.case", audit_log=[log], personal_details=None)
-        freezer.stop()
-
-        eod = make_recipe("legalaid.eod_details", case=case)
-        make_recipe("complaints.complaint", eod=eod, audit_log=[log])
+        self.setup_personal_details_test(4, True)
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
@@ -237,3 +205,21 @@ class TasksTestCase(TestCase):
         with self.assertRaises(Exception):
             # pass foo as an incorrect argument
             self.data_deletion_check(pks, eods, 1, 1, "Foo")
+
+    def setup_personal_details_test(self, years, no_personal_data):
+        """
+        Method to set up recipes needed for no personal data tests
+        """
+        log = make_recipe("cla_auditlog.audit_log")
+        freezer = freeze_time(timezone.now() + relativedelta(years=-years))
+        freezer.start()
+
+        if no_personal_data:
+            # personal details are auto generated, so set to None to be empty
+            case = make_recipe("legalaid.case", audit_log=[log], personal_details=None)
+        else:
+            case = make_recipe("legalaid.case", audit_log=[log])
+
+        freezer.stop()
+        eod = make_recipe("legalaid.eod_details", case=case)
+        make_recipe("complaints.complaint", eod=eod, audit_log=[log])

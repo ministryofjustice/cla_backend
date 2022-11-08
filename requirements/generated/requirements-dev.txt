@@ -80,7 +80,7 @@ django-extended-choices==0.3.0
     #   cla-common
 django-extensions==1.4.9
     # via -r requirements/source/requirements-dev.in
-django-filter==0.9.2
+django-filter==2.4.0
     # via -r requirements/source/requirements-base.in
 django-ipware==0.1.0
     # via -r requirements/source/requirements-base.in

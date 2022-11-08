@@ -236,4 +236,4 @@ class TasksTestCase(TestCase):
         # Check that an exception was raised because of incorrect delete option argument
         with self.assertRaises(Exception):
             # pass foo as an incorrect argument
-            self.data_deletion_check(self.data_deletion_check(pks, eods, 1, 1, "Foo"))
+            self.data_deletion_check(pks, eods, 1, 1, "Foo")

@@ -119,7 +119,7 @@ class PropertySerializerBase(ClaModelSerializer):
 
 class TotalsModelSerializer(ClaModelSerializer):
     total_fields = set()
-    total = serializers.SerializerMethodField("get_total")
+    total = serializers.SerializerMethodField()
 
     def get_total(self, obj):
         total = 0
@@ -235,6 +235,20 @@ class PersonSerializerBase(ClaModelSerializer):
     savings = SavingsSerializerBase(required=False)
     deductions = DeductionsSerializerBase(required=False)
 
+    def update(self, instance, validated_data):
+        # need to check they exist
+        # income = validated_data.pop("income")
+        # savings = validated_data.pop("savings")
+        deductions_data = validated_data.pop("deductions", None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        deductions_instance = instance.deductions
+        for attr, value in deductions_data.items():
+            setattr(deductions_instance, attr, value)
+        deductions_instance.save()
+        return instance
+
     class Meta(object):
         model = Person
         fields = ()
@@ -302,11 +316,30 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 
     # from DRF 3.0 onwards, there is no allow_add_remove option
     # writable nested serialization must be handed explicitly
+    # needd to deal with you, partner, dusputed_savings, and partner
     def create(self, validated_data):
-        property_set_data = validated_data.pop("property_set")
-        eligibilitycheck = EligibilityCheck.objects.create(**property_set_data)
-        Property.objects.create(eligibilitycheck=eligibilitycheck, **property_set_data)
+        property_set_data = None
+        if "property_set" in validated_data:
+            property_set_data = validated_data.pop("property_set")
+        if "you" in validated_data or "partner" in validated_data or "disputed_savings" in validated_data:
+            raise NotImplementedError("you need to fix me")
+        eligibilitycheck = EligibilityCheck.objects.create(**validated_data)
+        if property_set_data:
+            Property.objects.create(eligibilitycheck=eligibilitycheck, **property_set_data)
         return eligibilitycheck
+
+    def update(self, instance, validated_data):
+        if "property_set" in validated_data or "partner" in validated_data or "disputed_savings" in validated_data:
+            raise NotImplementedError("you need to fix me")
+        you_data = validated_data.pop("you", None)
+        # update the base object
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        # Save any updated fields on "you"
+        if you_data:
+            PersonSerializerBase().update(instance.you, you_data)
+        return instance
 
     def validate_property_set(self, attrs, source):
         """
@@ -347,11 +380,19 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 
         return attrs
 
+    def __has_category_changed(self):
+        if not self.instance or self.instance.category is None:
+            return False
+        if "category" not in self.validated_data:
+            return False
+        return self.instance.category.name != self.validated_data["category"].name
+
     def save(self, **kwargs):
+        # need to check the category before saving the current instance
+        has_category_changed = self.__has_category_changed()
         obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
         obj.update_state()
-        diff = obj.diff
-        if "category" in diff:
+        if has_category_changed:
             # if the category has been updated then reset mattertype on
             # corresponding case
             obj.reset_matter_types()

@@ -13,6 +13,9 @@ class MoneyFieldDRF(Field):
             kwargs["validators"].append(validators.MinValueValidator(min_value))
         super(MoneyFieldDRF, self).__init__(*args, **kwargs)
 
+    def to_representation(self, obj):
+        return obj
+
 
 class MoneyField(models.BigIntegerField):
     """

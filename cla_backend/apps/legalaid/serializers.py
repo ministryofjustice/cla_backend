@@ -237,16 +237,23 @@ class PersonSerializerBase(ClaModelSerializer):
 
     def update(self, instance, validated_data):
         # need to check they exist
-        # income = validated_data.pop("income")
-        # savings = validated_data.pop("savings")
+        income_data = validated_data.pop("income", None)
+        savings_data = validated_data.pop("savings", None)
         deductions_data = validated_data.pop("deductions", None)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
-        deductions_instance = instance.deductions
-        for attr, value in deductions_data.items():
-            setattr(deductions_instance, attr, value)
-        deductions_instance.save()
+
+        # Save any updated fields on "income"
+        if income_data:
+            DeductionsSerializerBase().update(instance.income, income_data)
+        # Save any updated fields on "savings"
+        if savings_data:
+            DeductionsSerializerBase().update(instance.savings, savings_data)
+        # Save any updated fields on "deductions"
+        if deductions_data:
+            DeductionsSerializerBase().update(instance.deductions, deductions_data)
+
         return instance
 
     class Meta(object):
@@ -329,9 +336,10 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         return eligibilitycheck
 
     def update(self, instance, validated_data):
-        if "property_set" in validated_data or "partner" in validated_data or "disputed_savings" in validated_data:
+        if "property_set" in validated_data or "disputed_savings" in validated_data:
             raise NotImplementedError("you need to fix me")
         you_data = validated_data.pop("you", None)
+        partner_data = validated_data.pop("partner", None)
         # update the base object
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
@@ -339,6 +347,9 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         # Save any updated fields on "you"
         if you_data:
             PersonSerializerBase().update(instance.you, you_data)
+        # Save any updated fields on "partner"
+        if partner_data:
+            PersonSerializerBase().update(instance.partner, partner_data)
         return instance
 
     def validate_property_set(self, attrs, source):

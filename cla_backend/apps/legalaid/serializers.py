@@ -246,10 +246,10 @@ class PersonSerializerBase(ClaModelSerializer):
 
         # Save any updated fields on "income"
         if income_data:
-            DeductionsSerializerBase().update(instance.income, income_data)
+            IncomeSerializerBase().update(instance.income, income_data)
         # Save any updated fields on "savings"
         if savings_data:
-            DeductionsSerializerBase().update(instance.savings, savings_data)
+            SavingsSerializerBase().update(instance.savings, savings_data)
         # Save any updated fields on "deductions"
         if deductions_data:
             DeductionsSerializerBase().update(instance.deductions, deductions_data)
@@ -323,17 +323,18 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 
     # from DRF 3.0 onwards, there is no allow_add_remove option
     # writable nested serialization must be handed explicitly
-    # needd to deal with you, partner, dusputed_savings, and partner
+    # needd to deal with you, partner, disputed_savings, and partner
     def create(self, validated_data):
         property_set_data = None
         if "property_set" in validated_data:
             property_set_data = validated_data.pop("property_set")
         if "you" in validated_data or "partner" in validated_data or "disputed_savings" in validated_data:
             raise NotImplementedError("you need to fix me")
-        eligibilitycheck = EligibilityCheck.objects.create(**validated_data)
+        eligibility_check = EligibilityCheck.objects.create(**validated_data)
         if property_set_data:
-            Property.objects.create(eligibilitycheck=eligibilitycheck, **property_set_data)
-        return eligibilitycheck
+            for prop in property_set_data:
+                Property.objects.create(eligibility_check=eligibility_check, **prop)
+        return eligibility_check
 
     def update(self, instance, validated_data):
         if "property_set" in validated_data or "disputed_savings" in validated_data:
@@ -352,16 +353,14 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
             PersonSerializerBase().update(instance.partner, partner_data)
         return instance
 
-    def validate_property_set(self, attrs, source):
+    def validate_property_set(self, value):
         """
         Checks that only one main property is selected
         """
-        if source in attrs:
-            main_props = [prop for prop in attrs[source] if prop.main]
-
-            if len(main_props) > 1:
-                raise serializers.ValidationError("Only one main property allowed")
-        return attrs
+        main_props = [prop for prop in value if prop["main"]]
+        if len(main_props) > 1:
+            raise serializers.ValidationError("Only one main property allowed")
+        return value
 
     def validate_specific_benefits(self, attrs, source):
         if source in attrs:

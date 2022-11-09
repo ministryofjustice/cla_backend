@@ -175,9 +175,11 @@ class TasksTestCase(TestCase):
 
     def test_delete_no_personal_details_success(self):
         """
-        This tests a case with no personal details is removed successfully
+        This tests a case with no personal details is removed successfully.
+        There are no personal details, notes, or provider notes.
+        Conditions met to delete data.
         """
-        self.setup_personal_details_test(1, True)
+        self.setup_personal_details_test(3, True, "", "")
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
@@ -185,19 +187,62 @@ class TasksTestCase(TestCase):
 
     def test_delete_no_personal_details_unsuccessful(self):
         """
-        This tests a case with personal details. Test should fail as there is nothing to delete.
+        This test case is greater than 2 weeks old, but there is personal data.
+        Should not delete as there is personal data.
         """
-        self.setup_personal_details_test(1, False)
+        self.setup_personal_details_test(3, False, "foo", "bar")
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
         self.data_deletion_check(pks, eods, 1, 1, delete_option_no_personal_details)
 
+    def test_delete_no_personal_details_contains_notes_unsuccessful(self):
+        """
+        This test case is greater than 2 weeks old, but there is personal data.
+        However, the notes is not empty, so delete conditions are not met.
+        """
+        self.setup_personal_details_test(3, True, "foo", "")
+        pks = get_pks(Case.objects.all())
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+
+        self.data_deletion_check(pks, eods, 1, 1, delete_option_no_personal_details)
+
+    def test_delete_no_personal_details_contains_provider_notes_unsuccessful(self):
+        """
+        This test case is greater than 2 weeks old, but there is personal data.
+        However, the provider notes are not empty, so delete conditions are not met.
+        """
+        self.setup_personal_details_test(3, True, "", "foo")
+        pks = get_pks(Case.objects.all())
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+
+        self.data_deletion_check(pks, eods, 1, 1, delete_option_no_personal_details)
+
+    def test_delete_no_personal_details_2_weeks_old_unsuccessful(self):
+        """
+        This tests a case should be unsuccessful because it's only one week old data
+        """
+        self.setup_personal_details_test(1, True, "", "")
+        pks = get_pks(Case.objects.all())
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+
+        self.data_deletion_check(pks, eods, 1, 1, delete_option_no_personal_details)
+
+    def test_delete_no_personal_details_2_weeks_old_success(self):
+        """
+        This tests a case should be great that 2 weeks old and meets conditions to delete
+        """
+        self.setup_personal_details_test(3, True, "", "")
+        pks = get_pks(Case.objects.all())
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+
+        self.data_deletion_check(pks, eods, 1, 0, delete_option_no_personal_details)
+
     def test_delete_incorrect_delete_option_argument_passed(self):
         """
         This tests a case that passes an incorrect delete option argument.
         """
-        self.setup_personal_details_test(4, True)
+        self.setup_personal_details_test(3, True, "", "")
         pks = get_pks(Case.objects.all())
         eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
 
@@ -206,19 +251,22 @@ class TasksTestCase(TestCase):
             # pass foo as an incorrect argument
             self.data_deletion_check(pks, eods, 1, 1, "Foo")
 
-    def setup_personal_details_test(self, years, no_personal_data):
+    def setup_personal_details_test(self, weeks, no_personal_data, notes, provider_notes):
         """
         Method to set up recipes needed for no personal data tests
         """
         log = make_recipe("cla_auditlog.audit_log")
-        freezer = freeze_time(timezone.now() + relativedelta(years=-years))
+        freezer = freeze_time(timezone.now() + relativedelta(weeks=-weeks))
         freezer.start()
 
         if no_personal_data:
             # personal details are auto generated, so set to None to be empty
-            case = make_recipe("legalaid.case", audit_log=[log], personal_details=None)
+            case = make_recipe(
+                "legalaid.case", audit_log=[log], personal_details=None, notes=notes, provider_notes=provider_notes
+            )
         else:
-            case = make_recipe("legalaid.case", audit_log=[log])
+            # Personal details are already populated.
+            case = make_recipe("legalaid.case", audit_log=[log], notes=notes, provider_notes=provider_notes)
 
         freezer.stop()
         eod = make_recipe("legalaid.eod_details", case=case)

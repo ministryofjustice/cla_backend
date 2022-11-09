@@ -82,12 +82,15 @@ class DeleteOldData(Task):
 
     def get_cases_without_personal_details(self):
         """
-        Returns queryset of personal detail's id that are none
+        Returns data older than 2 weeks. Queryset of personal detail's id that are none
         and do not have notes and provider details
         """
 
+        two_weeks = self.now - relativedelta(weeks=2)
+
         return (
-            Case.objects.filter(personal_details_id__exact=None)
+            Case.objects.filter(modified__lte=two_weeks)
+            .filter(personal_details_id__exact=None)
             .filter(notes__exact=u"")
             .filter(provider_notes__exact=u"")
         )

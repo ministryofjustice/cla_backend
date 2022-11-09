@@ -440,6 +440,10 @@ CacheAdapter.set_adapter_factory(bank_holidays_cache_adapter_factory)
 
 MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# Session timeout in s (30mins).
+SESSION_COOKIE_AGE = 1800
+
 # .local.py overrides all the common settings.
 try:
     from .local import *

@@ -768,7 +768,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         """
         properties = make_recipe("legalaid.property", eligibility_check=self.resource, _quantity=4, disputed=False)
 
-        # making extra propertiesn not associated to this eligibility check
+        # making extra properties not associated to this eligibility check
         make_recipe("legalaid.property", _quantity=5)
 
         self.assertEqual(self.resource.property_set.count(), 4)
@@ -803,6 +803,8 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
         # checking the db just in case
         self.assertEqual(self.resource.property_set.count(), 2)
+        # make sure did not delete all properties by accident
+        self.assertEqual(Property.objects.all().count(), 7)
 
     def test_patch_with_finances(self):
         """

@@ -57,13 +57,6 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                 savings=make_recipe("legalaid.savings"),
                 deductions=make_recipe("legalaid.deductions"),
             ),
-            # added this in here as test_patch_with_finances failed as there were no partner details post DRF3.0
-            partner=make_recipe(
-                "legalaid.person",
-                income=make_recipe("legalaid.income"),
-                savings=make_recipe("legalaid.savings"),
-                deductions=make_recipe("legalaid.deductions"),
-            ),
         )
 
     def _update(self, ref, data):

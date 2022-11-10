@@ -198,7 +198,7 @@ class TasksTestCase(TestCase):
 
     def test_delete_no_personal_details_contains_notes_unsuccessful(self):
         """
-        This test case is greater than 2 weeks old, but there is personal data.
+        This test case is greater than 2 weeks old, but there is no personal data.
         However, the notes is not empty, so delete conditions are not met.
         """
         self.setup_personal_details_test(3, True, "foo", "")
@@ -209,7 +209,7 @@ class TasksTestCase(TestCase):
 
     def test_delete_no_personal_details_contains_provider_notes_unsuccessful(self):
         """
-        This test case is greater than 2 weeks old, but there is personal data.
+        This test case is greater than 2 weeks old, but there is no personal data.
         However, the provider notes are not empty, so delete conditions are not met.
         """
         self.setup_personal_details_test(3, True, "", "foo")
@@ -220,7 +220,7 @@ class TasksTestCase(TestCase):
 
     def test_delete_no_personal_details_2_weeks_old_unsuccessful(self):
         """
-        This tests a case should be unsuccessful because it's only one week old data
+        This tests a case should be not be deleted because it's only one week old.
         """
         self.setup_personal_details_test(1, True, "", "")
         pks = get_pks(Case.objects.all())
@@ -230,7 +230,8 @@ class TasksTestCase(TestCase):
 
     def test_delete_no_personal_details_2_weeks_old_success(self):
         """
-        This tests a case should be great that 2 weeks old and meets conditions to delete
+        This tests a case should be deleted when its greater that 2 weeks old 
+        and meets conditions to delete.
         """
         self.setup_personal_details_test(3, True, "", "")
         pks = get_pks(Case.objects.all())
@@ -240,7 +241,8 @@ class TasksTestCase(TestCase):
 
     def test_delete_incorrect_delete_option_argument_passed(self):
         """
-        This tests a case that passes an incorrect delete option argument.
+        This tests when an incorrect delete option has been passed 
+        then an exception is raised.
         """
         self.setup_personal_details_test(3, True, "", "")
         pks = get_pks(Case.objects.all())

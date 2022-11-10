@@ -337,7 +337,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     # writable nested serialization must be handed explicitly
     # needd to deal with you, partner, disputed_savings, and partner
     def create(self, validated_data):
-        property_set_data = None
+        property_set_data = validated_data.pop("property_set", None)
         if "property_set" in validated_data:
             property_set_data = validated_data.pop("property_set")
         if "you" in validated_data or "partner" in validated_data or "disputed_savings" in validated_data:
@@ -370,16 +370,23 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 
         # Save any updated fields on "property" or create new ones
         # if they are not new and updated then they should be deleted
+        # for i in self.initial_data["property_set"].items():
+        #     if "id" in i:
         if property_set_data:
-            for prop in property_set_data:
+            ids_to_keep = []
+            # validating loses the id of the property set:
+            for index, prop_data in enumerate(property_set_data):
                 # have to decide if this is an update or a create
-                if hasattr(prop, "id"):
-                    prop_to_update = Property.objects.get(pk=prop["id"])
-                    PropertySerializerBase().update(prop_to_update, prop)
-                    # remember the list of ids so can remove the rest?
+                initial_prop = self.initial_data["property_set"][index]
+                if "id" in initial_prop:
+                    property_instance = Property.objects.get(pk=initial_prop["id"])
+                    PropertySerializerBase().update(property_instance, prop_data)
                 else:
-                    # create the property and attach it to eligibility_check
-                    Property.objects.create(eligibility_check=instance, **prop)
+                    prop_data["eligibility_check"] = instance
+                    property_instance = PropertySerializerBase().create(prop_data)
+                ids_to_keep.append(property_instance.pk)
+            # now delete any property that wasn't included in the validated_data
+            instance.property_set.exclude(id__in=ids_to_keep).delete()
         return instance
 
     def validate_property_set(self, value):

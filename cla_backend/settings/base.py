@@ -442,6 +442,8 @@ MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 5
+# Extends the session timeout with each request.
+SESSION_SAVE_EVERY_REQUEST = True
 
 # .local.py overrides all the common settings.
 try:

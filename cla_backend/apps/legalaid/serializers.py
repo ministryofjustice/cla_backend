@@ -236,23 +236,35 @@ class PersonSerializerBase(ClaModelSerializer):
     deductions = DeductionsSerializerBase(required=False)
 
     def update(self, instance, validated_data):
-        # need to check they exist
+        # need to check they exist in validated_data and also in instance
         income_data = validated_data.pop("income", None)
         savings_data = validated_data.pop("savings", None)
         deductions_data = validated_data.pop("deductions", None)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-        instance.save()
 
         # Save any updated fields on "income"
         if income_data:
-            IncomeSerializerBase().update(instance.income, income_data)
+            if instance.income:
+                instance.income = IncomeSerializerBase().update(instance.income, income_data)
+            else:
+                instance.income = IncomeSerializerBase().create(income_data)
+
         # Save any updated fields on "savings"
         if savings_data:
-            SavingsSerializerBase().update(instance.savings, savings_data)
+            if instance.savings:
+                instance.savings = SavingsSerializerBase().update(instance.savings, savings_data)
+            else:
+                instance.savings = SavingsSerializerBase().create(savings_data)
+
         # Save any updated fields on "deductions"
         if deductions_data:
-            DeductionsSerializerBase().update(instance.deductions, deductions_data)
+            if instance.deductions:
+                instance.deductions = DeductionsSerializerBase().update(instance.deductions, deductions_data)
+            else:
+                instance.deductions = DeductionsSerializerBase().create(deductions_data)
+
+        instance.save()
 
         return instance
 
@@ -337,27 +349,45 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         return eligibility_check
 
     def update(self, instance, validated_data):
-        if "property_set" in validated_data or "disputed_savings" in validated_data:
+        if "disputed_savings" in validated_data:
             raise NotImplementedError("you need to fix me")
         you_data = validated_data.pop("you", None)
         partner_data = validated_data.pop("partner", None)
+        property_set_data = validated_data.pop("property_set", None)
+
         # update the base object
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
+
         # Save any updated fields on "you"
         if you_data:
             PersonSerializerBase().update(instance.you, you_data)
+
         # Save any updated fields on "partner"
         if partner_data:
             PersonSerializerBase().update(instance.partner, partner_data)
+
+        # Save any updated fields on "property" or create new ones
+        # if they are not new and updated then they should be deleted
+        if property_set_data:
+            for prop in property_set_data:
+                # have to decide if this is an update or a create
+                if hasattr(prop, "id"):
+                    prop_to_update = Property.objects.get(pk=prop["id"])
+                    PropertySerializerBase().update(prop_to_update, prop)
+                    # remember the list of ids so can remove the rest?
+                else:
+                    # create the property and attach it to eligibility_check
+                    Property.objects.create(eligibility_check=instance, **prop)
         return instance
 
     def validate_property_set(self, value):
         """
         Checks that only one main property is selected
         """
-        main_props = [prop for prop in value if prop["main"]]
+        # Must allow for cases where there is only a partial value and main not included
+        main_props = [prop for prop in value if prop.get("main")]
         if len(main_props) > 1:
             raise serializers.ValidationError("Only one main property allowed")
         return value

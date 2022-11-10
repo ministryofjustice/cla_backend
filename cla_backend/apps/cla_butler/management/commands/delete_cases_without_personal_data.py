@@ -5,7 +5,7 @@ from cla_butler.constants import delete_option_no_personal_details
 from cla_butler.tasks import DeleteOldData
 
 
-class DeleteCasesWithoutPersonalData(BaseCommand):
+class Command(BaseCommand):
 
     help = "Deleting cases containing no personal data"
 

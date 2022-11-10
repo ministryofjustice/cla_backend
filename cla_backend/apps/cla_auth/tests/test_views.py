@@ -226,9 +226,6 @@ class LoginTestCase(TestCase):
         self.client.get("/admin/auth/user")
         updated_session = Session.objects.get(pk=login_session.pk)
         self.assertGreaterEqual(updated_session.expire_date, login_session.expire_date)
-       
-
-
 
     def assert_unauthorised_response(self, data, expected_error):
         response = self.client.post(self.url, data=data)

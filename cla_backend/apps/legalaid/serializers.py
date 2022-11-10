@@ -423,11 +423,17 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         # validating loses the id of the property set:
         for index, prop_data in enumerate(property_set_data):
             # have to decide if this is an update or a create
+            property_instance = None
             initial_prop = self.initial_data["property_set"][index]
             if "id" in initial_prop:
-                property_instance = Property.objects.get(pk=initial_prop["id"])
-                PropertySerializerBase().update(property_instance, prop_data)
-            else:
+                # checks to see if property exists and is attached to current eligibility_check
+                property_instance = Property.objects.filter(
+                    pk=initial_prop["id"], eligibility_check_id=instance.id
+                ).first()
+                if property_instance:
+                    property_instance = PropertySerializerBase().update(property_instance, prop_data)
+            if property_instance is None:
+                #  this should be a creation - didn't find a property attached to this eligibility to update
                 prop_data["eligibility_check"] = instance
                 property_instance = PropertySerializerBase().create(prop_data)
             ids_to_keep.append(property_instance.pk)

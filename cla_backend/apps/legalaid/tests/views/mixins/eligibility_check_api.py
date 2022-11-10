@@ -467,7 +467,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             ["category", "your_problem_notes", "property_set", "dependants_young", "dependants_old", "you", "partner"],
         )
         self.assertEqual(errors["category"], [u"Object with code=-1 does not exist."])
-        self.assertEqual(errors["your_problem_notes"], [u"Ensure this value has at most 500 characters (it has 501)."])
+        self.assertEqual(errors["your_problem_notes"], [u"Ensure this field has no more than 500 characters."])
         self.assertItemsEqual(
             errors["property_set"],
             [

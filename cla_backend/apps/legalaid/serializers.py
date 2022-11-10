@@ -450,33 +450,27 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
             raise serializers.ValidationError("Only one main property allowed")
         return value
 
-    def validate_specific_benefits(self, attrs, source):
-        if source in attrs:
-            data_benefits = attrs[source]
-            if data_benefits:
-                extra_fields = set(data_benefits.keys()) - set(SPECIFIC_BENEFITS.CHOICES_DICT.keys())
-                if extra_fields:
-                    raise serializers.ValidationError("Fields %s not recognised" % ", ".join(list(extra_fields)))
+    def validate_specific_benefits(self, value):
+        data_benefits = value
+        if data_benefits:
+            extra_fields = set(data_benefits.keys()) - set(SPECIFIC_BENEFITS.CHOICES_DICT.keys())
+            if extra_fields:
+                raise serializers.ValidationError("Fields %s not recognised" % ", ".join(list(extra_fields)))
 
-                # translate into safer bool values
-                data_benefits = {k: bool(v) for k, v in data_benefits.items()}
-                attrs[source] = data_benefits
+            # translate into safer bool values
+            data_benefits = {k: bool(v) for k, v in data_benefits.items()}
+        return data_benefits
 
-        return attrs
+    def validate_disregards(self, value):
+        data_disregards = value
+        if data_disregards:
+            extra_fields = set(data_disregards.keys()) - set(DISREGARDS.CHOICES_DICT.keys())
+            if extra_fields:
+                raise serializers.ValidationError("Fields %s not recognised" % ", ".join(list(extra_fields)))
 
-    def validate_disregards(self, attrs, source):
-        if source in attrs:
-            data_disregards = attrs[source]
-            if data_disregards:
-                extra_fields = set(data_disregards.keys()) - set(DISREGARDS.CHOICES_DICT.keys())
-                if extra_fields:
-                    raise serializers.ValidationError("Fields %s not recognised" % ", ".join(list(extra_fields)))
-
-                # translate into safer bool values
-                data_disregards = {k: bool(v) for k, v in data_disregards.items()}
-                attrs[source] = data_disregards
-
-        return attrs
+            # translate into safer bool values
+            data_disregards = {k: bool(v) for k, v in data_disregards.items()}
+        return data_disregards
 
     def __has_category_changed(self):
         if not self.instance or self.instance.category is None:

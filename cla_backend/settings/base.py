@@ -441,7 +441,8 @@ CacheAdapter.set_adapter_factory(bank_holidays_cache_adapter_factory)
 MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 5
+# Set the session cookie timeout to 30mins.
+SESSION_COOKIE_AGE = 1800
 # Extends the session timeout with each request.
 SESSION_SAVE_EVERY_REQUEST = True
 

@@ -114,10 +114,10 @@ class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
 
 class EligibilityCheckViewSet(
     CallCentrePermissionsViewSetMixin,
-    ClaCreateModelMixin,
-    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     BaseNestedEligibilityCheckViewSet,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
 ):
     serializer_class = EligibilityCheckSerializer
 

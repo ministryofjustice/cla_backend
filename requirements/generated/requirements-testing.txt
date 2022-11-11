@@ -81,6 +81,8 @@ https://github.com/timmyomahony/django-pagedown/archive/refs/tags/v1.1.tar.gz
     # via -r requirements/source/requirements-base.in
 https://github.com/HassenPy/django-pdb/archive/refs/tags/0.3.2.tar.gz
     # via -r requirements/source/requirements-testing.in
+django-session-security==2.2.3
+    # via -r requirements/source/requirements-base.in
 django-storages==1.5.2
     # via -r requirements/source/requirements-base.in
 django-uuidfield==0.5.0
@@ -92,6 +94,7 @@ django==1.7.11
     #   django-moj-irat
     #   django-oauth-toolkit
     #   django-pagedown
+    #   django-session-security
     #   django-uuidfield
     #   jsonfield
     #   model-mommy

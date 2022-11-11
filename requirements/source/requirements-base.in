@@ -57,3 +57,4 @@ boto3>=1.5,<2
 
 uwsgi==2.0.18
 django-storages==1.5.2
+django-session-security==2.2.3

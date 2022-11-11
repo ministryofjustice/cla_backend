@@ -199,12 +199,14 @@ class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet
         kwargs = self.get_means_test_event_kwargs(kwargs)
         means_test_event.process(obj.case, **kwargs)
 
-    def post_save(self, obj, created=False, **kwargs):
-        super(BaseEligibilityCheckViewSet, self).post_save(obj, created=created)
-
-        self.create_means_test_log(obj, created=created)
-
+    def perform_create(self, serializer):
+        obj = super(BaseEligibilityCheckViewSet, self).perform_create(serializer)
+        self.create_means_test_log(obj, created=True)
         return obj
+
+    def perform_update(self, serializer):
+        super(BaseEligibilityCheckViewSet, self).perform_update(serializer)
+        self.create_means_test_log(serializer.instance, created=False)
 
 
 class BaseNestedEligibilityCheckViewSet(NestedGenericModelMixin, BaseEligibilityCheckViewSet):

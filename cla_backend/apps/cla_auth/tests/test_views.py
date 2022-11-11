@@ -1,15 +1,12 @@
 import datetime
 
 from django.contrib.auth.models import User
-from django.contrib.sessions.models import Session
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.test import TestCase
 from django.conf import settings
 from django.utils import timezone
-
 import mock
-import pytz
 
 from oauth2_provider.models import Application
 from core.tests.mommy_utils import make_recipe
@@ -206,26 +203,6 @@ class LoginTestCase(TestCase):
         data = self.get_provider_data(username="user-does-not-exist")
 
         self.assert_unauthorised_response(data, self.INVALID_CLIENT_ERROR)
-
-    def test_session_expiry_date_is_set(self):
-        # Clear all active sessions.
-        Session.objects.all().delete()
-
-        # Login and check a session is created.
-        self.client.login(username=self.op_user, password=self.op_password)
-        login_time = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
-        sessions = Session.objects.all()
-        login_session = sessions[0]
-        self.assertEqual(sessions.count(), 1)
-
-        # Calculate time until session expiry and compare to settings value.
-        time_to_session_expiry = login_session.expire_date - login_time
-        self.assertGreaterEqual(settings.SESSION_COOKIE_AGE, time_to_session_expiry.seconds)
-
-        # Trigger a session update by performing a request.
-        self.client.get("/admin/auth/user")
-        updated_session = Session.objects.get(pk=login_session.pk)
-        self.assertGreaterEqual(updated_session.expire_date, login_session.expire_date)
 
     def assert_unauthorised_response(self, data, expected_error):
         response = self.client.post(self.url, data=data)

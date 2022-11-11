@@ -271,6 +271,8 @@ workflows:
             branches:
               ignore:
                 - master
+                - /^dependabot\/.*/
+                - /^snyk-fix-.*/
           context:
            - laa-cla-backend
            - laa-cla-backend-live-uat

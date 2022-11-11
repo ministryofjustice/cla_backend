@@ -277,6 +277,26 @@ workflows:
            - laa-cla-backend
            - laa-cla-backend-live-uat
 
+      - deploy:
+          name: uat_deploy_live_optional
+          namespace: uat
+          dynamic_hostname: true
+          requires:
+            - live_uat_deploy_approval
+          filters:
+            branches:
+              only:
+                - /^dependabot\/.*/
+                - /^snyk-fix-.*/
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live-uat
+
+      - live_uat_deploy_approval:
+          type: approval
+          requires:
+            - build
+
       - static_uat_deploy_approval:
           type: approval
           requires:

@@ -252,7 +252,7 @@ class TasksTestCase(TestCase):
 
     def test_delete_incorrect_delete_option_argument_passed(self):
         """
-        This tests when an incorrect delete option has been passed 
+        This tests when an incorrect delete option has been passed
         then an exception is raised.
         """
         self.setup_personal_details_test(3, True, "", "")

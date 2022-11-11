@@ -1,43 +1,47 @@
-{% load staticfiles %}<!DOCTYPE html>
+{% load staticfiles %}
+<!DOCTYPE html>
 <html lang="en" ng-app>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <meta name="description" content="{% block description %}{% endblock %}" />
-    <meta name="keywords" content="{% block keywords %}{% endblock %}" />
-    <meta name="viewport" content="{% block viewport %}width=device-width"{% endblock %}>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>{% block title %}{{cookiecutter.project_name}}{% endblock title %}</title>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="description" content="{% block description %}{% endblock %}" />
+  <meta name="keywords" content="{% block keywords %}{% endblock %}" />
+  <meta name="viewport" content="{% block viewport %}width=device-width" {% endblock %}>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
+  <title>{% block title %}{{cookiecutter.project_name}}{% endblock title %}</title>
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <link rel="icon" type="image/gif" href="{% static 'img/favicon.gif' %}">
+  <link rel="icon" type="image/gif" href="{% static 'img/favicon.gif' %}">
 
-    {% block css %}
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-    {% endblock %}
+  {% block css %}
+  <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+  {% endblock %}
 
-  </head>
+</head>
 
-  <body>
-    <div class="container">
+<body>
+  <div class="container">
 
-      {% block content %}
-        <p>Use this document as a way to quick start any new project.</p>
-      {% endblock content %}
+    {% block content %}
+    <p>Use this document as a way to quick start any new project.</p>
+    {% endblock content %}
 
-    </div> <!-- /container -->
+  </div> <!-- /container -->
 
 
-    <!-- Le javascript
+  <!-- Le javascript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    {% block javascript %}
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-      <script src="{% static 'js/scripts.js' %}"></script>
-    {% endblock javascript %}
-  </body>
+  <!-- Placed at the end of the document so the pages load faster -->
+  {% block javascript %}
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="{% static 'js/scripts.js' %}"></script>
+  {% endblock javascript %}
+  {% include 'session_security/all.html' %}
+</body>
+
 </html>

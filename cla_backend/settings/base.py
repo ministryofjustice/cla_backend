@@ -184,6 +184,7 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "session_security.middleware.SessionSecurityMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "status.middleware.MaintenanceModeMiddleware",
@@ -439,6 +440,13 @@ def bank_holidays_cache_adapter_factory():
 CacheAdapter.set_adapter_factory(bank_holidays_cache_adapter_factory)
 
 MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
+
+# Settings for django-session-security.
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SECURITY_WARN_AFTER = 55
+SESSION_SECURITY_EXPIRE_AFTER = 60
+
+SESSION_SECURITY_PASSIVE_URLS = []
 
 # .local.py overrides all the common settings.
 try:

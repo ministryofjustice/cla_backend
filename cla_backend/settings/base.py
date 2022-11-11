@@ -206,6 +206,7 @@ INSTALLED_APPS = (
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "djorm_pgfulltext",
+    "session_security",
 )
 
 PROJECT_APPS = (
@@ -447,6 +448,10 @@ SESSION_SECURITY_WARN_AFTER = 55
 SESSION_SECURITY_EXPIRE_AFTER = 60
 
 SESSION_SECURITY_PASSIVE_URLS = []
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.request",
+)
 
 # .local.py overrides all the common settings.
 try:

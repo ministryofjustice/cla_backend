@@ -185,7 +185,7 @@ class TasksTestCase(TestCase):
 
         self.data_deletion_check(pks, eods, 1, 0, delete_option_no_personal_details)
 
-    def test_delete_no_personal_details_unsuccessful(self):
+    def test_delete_personal_details_unsuccessful(self):
         """
         This test case is greater than 2 weeks old, but there is personal data.
         Should not delete as there is personal data.
@@ -230,8 +230,19 @@ class TasksTestCase(TestCase):
 
     def test_delete_no_personal_details_2_weeks_old_success(self):
         """
-        This tests a case should be deleted when its greater that 2 weeks old 
+        This tests a case should be deleted when its greater that 2 weeks old
         and meets conditions to delete.
+        """
+        self.setup_personal_details_test(3, True, "", "")
+        pks = get_pks(Case.objects.all())
+        eods = EODDetails.objects.filter(case_id__in=pks).values_list("pk", flat=True)
+
+        self.data_deletion_check(pks, eods, 1, 0, delete_option_no_personal_details)
+
+    def test_delete_no_personal_details_no_notes_2_weeks_old_success(self):
+        """
+        This tests a case should be deleted when its greater that 2 weeks old
+        and meets conditions to delete - specifically no notes no provider details.
         """
         self.setup_personal_details_test(3, True, "", "")
         pks = get_pks(Case.objects.all())

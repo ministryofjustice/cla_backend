@@ -9,7 +9,7 @@ from cla_common.services import CacheAdapter
 from collections import defaultdict
 from kombu import transport
 from sentry_sdk.integrations.django import DjangoIntegration
-
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS 
 from cla_backend.sqs import CLASQSChannel
 
 
@@ -448,10 +448,7 @@ SESSION_SECURITY_WARN_AFTER = 55
 SESSION_SECURITY_EXPIRE_AFTER = 60
 
 SESSION_SECURITY_PASSIVE_URLS = []
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.request",
-)
+TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)
 
 # .local.py overrides all the common settings.
 try:

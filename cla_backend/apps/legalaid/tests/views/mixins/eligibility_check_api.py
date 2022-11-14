@@ -485,39 +485,35 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.maxDiff = None
         self.assertItemsEqual(
             errors["you"],
-            [
-                {
-                    "savings": [
-                        {
-                            "credit_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "asset_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "investment_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "bank_balance": [u"Ensure this value is greater than or equal to 0."],
-                        }
-                    ],
-                    "deductions": [
-                        {"criminal_legalaid_contributions": [u"Ensure this value is greater than or equal to 0."]}
-                    ],
-                }
-            ],
+            {
+                "savings": [
+                    {
+                        "credit_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "asset_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "investment_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "bank_balance": [u"Ensure this value is greater than or equal to 0."],
+                    }
+                ],
+                "deductions": [
+                    {"criminal_legalaid_contributions": [u"Ensure this value is greater than or equal to 0."]}
+                ],
+            },
         )
         self.assertItemsEqual(
             errors["partner"],
-            [
-                {
-                    "savings": [
-                        {
-                            "credit_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "asset_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "investment_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "bank_balance": [u"Ensure this value is greater than or equal to 0."],
-                        }
-                    ],
-                    "deductions": [
-                        {"criminal_legalaid_contributions": [u"Ensure this value is greater than or equal to 0."]}
-                    ],
-                }
-            ],
+            {
+                "savings": [
+                    {
+                        "credit_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "asset_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "investment_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "bank_balance": [u"Ensure this value is greater than or equal to 0."],
+                    }
+                ],
+                "deductions": [
+                    {"criminal_legalaid_contributions": [u"Ensure this value is greater than or equal to 0."]}
+                ],
+            },
         )
 
     @classmethod
@@ -541,26 +537,18 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         ERRORS_DATA = [
             {
                 "error": {
-                    "you": [
-                        {
-                            "income": [
-                                {
-                                    "earnings": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "self_employment_drawings": [
-                                        u"Ensure this value is less than or equal to 9999999999."
-                                    ],
-                                    "child_benefits": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "benefits": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "tax_credits": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "pension": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "maintenance_received": [
-                                        u"Ensure this value is less than or equal to 9999999999."
-                                    ],
-                                    "other_income": [u"Ensure this value is less than or equal to 9999999999."],
-                                }
-                            ]
+                    "you": {
+                        "income": {
+                            "earnings": [u"Ensure this value is less than or equal to 9999999999."],
+                            "self_employment_drawings": [u"Ensure this value is less than or equal to 9999999999."],
+                            "child_benefits": [u"Ensure this value is less than or equal to 9999999999."],
+                            "benefits": [u"Ensure this value is less than or equal to 9999999999."],
+                            "tax_credits": [u"Ensure this value is less than or equal to 9999999999."],
+                            "pension": [u"Ensure this value is less than or equal to 9999999999."],
+                            "maintenance_received": [u"Ensure this value is less than or equal to 9999999999."],
+                            "other_income": [u"Ensure this value is less than or equal to 9999999999."],
                         }
-                    ]
+                    }
                 },
                 "data": {
                     "you": {
@@ -585,25 +573,17 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             },
             {
                 "error": {
-                    "partner": [
-                        {
-                            "income": [
-                                {
-                                    "earnings": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "self_employment_drawings": [
-                                        u"Ensure this value is less than or equal to 9999999999."
-                                    ],
-                                    "benefits": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "tax_credits": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "pension": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "maintenance_received": [
-                                        u"Ensure this value is less than or equal to 9999999999."
-                                    ],
-                                    "other_income": [u"Ensure this value is less than or equal to 9999999999."],
-                                }
-                            ]
+                    "partner": {
+                        "income": {
+                            "earnings": [u"Ensure this value is less than or equal to 9999999999."],
+                            "self_employment_drawings": [u"Ensure this value is less than or equal to 9999999999."],
+                            "benefits": [u"Ensure this value is less than or equal to 9999999999."],
+                            "tax_credits": [u"Ensure this value is less than or equal to 9999999999."],
+                            "pension": [u"Ensure this value is less than or equal to 9999999999."],
+                            "maintenance_received": [u"Ensure this value is less than or equal to 9999999999."],
+                            "other_income": [u"Ensure this value is less than or equal to 9999999999."],
                         }
-                    ]
+                    }
                 },
                 "data": {
                     "partner": {
@@ -632,9 +612,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             for field_name in ["income_tax", "national_insurance", "maintenance", "childcare", "mortgage", "rent"]:
                 a = {
                     "error": {
-                        who: [
-                            {"deductions": [{field_name: [u"Ensure this value is less than or equal to 9999999999."]}]}
-                        ]
+                        who: {"deductions": {field_name: [u"Ensure this value is less than or equal to 9999999999."]}}
                     },
                     "data": {
                         who: {

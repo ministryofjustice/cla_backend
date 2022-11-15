@@ -7,7 +7,6 @@ from copy import deepcopy
 from decimal import Decimal, InvalidOperation
 
 from django.conf import settings
-from django.forms.util import ErrorList
 from rest_framework import serializers
 
 from legalaid.utils.csvupload.constants import (
@@ -350,14 +349,18 @@ class ProviderCSVValidator(object):
             return cleaned_value
 
         except serializers.ValidationError as ve:
-            ve.message = "Row: %s Field (%s / %s): %s - %s" % (
-                row_num + 1,
-                idx + 1,
-                excel_col_name(idx + 1),
-                field_name,
-                ve.message,
-            )
-            raise ve
+            # create new extended error message
+            messages = []
+            for detail in ve.detail:
+                message = "Row: %s Field (%s / %s): %s - %s" % (
+                    row_num + 1,
+                    idx + 1,
+                    excel_col_name(idx + 1),
+                    field_name,
+                    detail,
+                )
+                messages.append(message)
+            raise serializers.ValidationError(messages)
 
     @staticmethod
     def get_date_opened_index():
@@ -400,7 +403,7 @@ class ProviderCSVValidator(object):
         field spec (self._get_expected_fields_for_row(row))
         """
         cleaned_data = {}
-        errors = ErrorList()
+        errors = []
 
         for row_num, row in enumerate(self.rows):
             expected_fields = self._get_validators_for_row(row)
@@ -418,7 +421,8 @@ class ProviderCSVValidator(object):
                         field_name, field_value.strip(), idx, row_num, validators
                     )
                 except serializers.ValidationError as ve:
-                    errors.append(ve)
+                    # this will be a list not an individual error message
+                    errors.extend(ve.detail)
                 except (AssertionError, TypeError) as e:
                     errors.append(e)
             try:
@@ -426,7 +430,7 @@ class ProviderCSVValidator(object):
                 applicable_contract = self._get_applicable_contract_for_row(row)
                 self.cleaned_data.append(self._validate_data(cleaned_data, row_num, applicable_contract))
             except serializers.ValidationError as ve:
-                errors.extend(ve.error_list)
+                errors.extend(ve.detail)
 
         if len(errors):
             raise serializers.ValidationError(errors)
@@ -687,6 +691,9 @@ class ProviderCSVValidator(object):
     def format_message(s, row_num):
         return "Row: %s - %s" % (row_num + 1, s)
 
+    def create_errors_list(self, validator, row_num):
+        return [self.format_message(detail, row_num) for detail in validator.detail]
+
     def get_extra_validators_for_applicable_contract(self, applicable_contract):
         if settings.CONTRACT_2018_ENABLED:
             if applicable_contract in [CONTRACT_EIGHTEEN_DISCRIMINATION, CONTRACT_EIGHTEEN_EDUCATION]:
@@ -723,8 +730,7 @@ class ProviderCSVValidator(object):
         """
         Like django's clean method, use this to validate across fields
         """
-
-        errors = ErrorList()
+        errors = []
 
         validation_methods = [
             self._validate_open_closed_date,
@@ -747,18 +753,18 @@ class ProviderCSVValidator(object):
             try:
                 m(cleaned_data)
             except serializers.ValidationError as ve:
-                errors.append(self.format_message(ve.message, row_num))
+                errors.extend(self.create_errors_list(ve, row_num))
         try:
             category = self._validate_category_consistency(cleaned_data)
         except serializers.ValidationError as ve:
-            errors.append(self.format_message(ve.message, row_num))
+            errors.extend(self.create_errors_list(ve, row_num))
             raise serializers.ValidationError(errors)
 
         for m in validation_methods_depend_on_category:
             try:
                 m(cleaned_data, category)
             except serializers.ValidationError as ve:
-                errors.append(self.format_message(ve.message, row_num))
+                errors.extend(self.create_errors_list(ve, row_num))
 
         if len(errors):
             raise serializers.ValidationError(errors)

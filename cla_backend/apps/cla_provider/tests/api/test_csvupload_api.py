@@ -53,7 +53,11 @@ class CSVUploadTestCase(CSVUploadAPIMixin, CLAProviderAuthBaseApiTestMixin, APIT
         expiry_date = datetime.datetime.now() + datetime.timedelta(days=2)
         # Create an access token from wrong user
         self.wrong_staff_token = AccessToken.objects.create(
-            user=self.wrong_user, application=self.staff_api_client, token="wrong_stafF_token", scope=0, expires=expiry_date
+            user=self.wrong_user,
+            application=self.staff_api_client,
+            token="wrong_stafF_token",
+            scope=0,
+            expires=expiry_date,
         )
 
     def assertResponseKeys(self, response, detail=False, paginated=False):
@@ -740,7 +744,7 @@ class ProviderCSVValidatorTestCase(unittest.TestCase):
         try:
             validator.validate()
         except (serializers.ValidationError, Exception) as e:
-            if expected_error not in e.messages:
+            if expected_error not in e.detail:
                 self.fail("{}".format(e))
         else:
             self.fail("Expected error missing: {}".format(expected_error))

@@ -201,6 +201,8 @@ s3transfer==0.4.2
     # via boto3
 scandir==1.10.0
     # via pathlib2
+selenium==3.141.0
+    # via -r requirements/source/requirements-testing.in
 sentry-sdk==0.19.3
     # via -r requirements/source/requirements-base.in
 six==1.16.0
@@ -231,6 +233,7 @@ urllib3[secure]==1.26.11
     #   botocore
     #   coveralls
     #   requests
+    #   selenium
     #   sentry-sdk
 uwsgi==2.0.18
     # via -r requirements/source/requirements-base.in

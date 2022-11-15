@@ -79,7 +79,7 @@ class ThreePartDateField(serializers.Field):
         _('Date field has wrong format. Use { "day": 25, "month": 12, "year": 2012 }')
     }
 
-    def from_native(self, value):  # noqa: C901
+    def to_internal_value(self, value):  # noqa: C901
         """
         Parse json data and return a date object
         """

@@ -220,7 +220,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
 
 
 class LogSerializer(LogSerializerBase):
-    description = serializers.SerializerMethodField("get_description")
+    description = serializers.SerializerMethodField()
 
     class Meta(LogSerializerBase.Meta):
         fields = ("code", "created_by", "created", "notes", "type", "level", "timer", "patch", "description")

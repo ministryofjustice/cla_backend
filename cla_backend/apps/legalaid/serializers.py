@@ -611,28 +611,34 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
     created = serializers.DateTimeField(source="user.date_joined", read_only=True)
     user = UserSerializer()
 
-    def validate_password(self, attrs, source):
-        if len(attrs[source]) < 10:
+    def validate_password(self, password):
+        if len(password) < 10:
             raise serializers.ValidationError("Password must be at least 10 characters long.")
-        return attrs
+        return password
 
     def validate(self, attrs):
-        if User.objects.filter(username=attrs["user.username"]).exists():
+        if User.objects.filter(username=attrs["user"]["username"]).exists():
             raise serializers.ValidationError("An account with this username already exists.")
 
         return super(ExtendedUserSerializerBase, self).validate(attrs)
 
-    def restore_object(self, attrs, instance=None):
-        restored = super(ExtendedUserSerializerBase, self).restore_object(attrs, instance=instance)
-        user = User()
-        user.username = attrs["user.username"]
-        user.first_name = attrs["user.first_name"]
-        user.last_name = attrs["user.last_name"]
-        user.email = attrs["user.email"]
-        user.set_password(attrs["user.password"])
-        user.save()
-        restored.user = user
-        return restored
+    def create(self, validated_data):
+        user = self.create_and_update_user(validated_data)
+        return self.Meta.model.objects.create(user=user, **validated_data)
+
+    def create_and_update_user(self, validated_data):
+        user_details = validated_data.pop("user", None)
+
+        user = None
+        if user_details:
+            user = User()
+            user.username = user_details["username"]
+            user.first_name = user_details["first_name"]
+            user.last_name = user_details["last_name"]
+            user.email = user_details["email"]
+            user.set_password(user_details["password"])
+            user.save()
+        return user
 
     class Meta(object):
         fields = ()

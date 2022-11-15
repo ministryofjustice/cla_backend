@@ -357,7 +357,7 @@ class OutOfHoursRotaSerializer(OutOfHoursRotaSerializerBase):
 
 
 class OperatorSerializer(ExtendedUserSerializerBase):
-    is_cla_superuser = serializers.CharField(read_only=True)
+    is_cla_superuser = serializers.BooleanField(read_only=True)
 
     class Meta(object):
         model = Operator

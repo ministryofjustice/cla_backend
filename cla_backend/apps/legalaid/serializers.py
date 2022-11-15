@@ -335,10 +335,12 @@ class EODDetailsSerializerBase(serializers.ModelSerializer):
 
 class EligibilityCheckSerializerBase(ClaModelSerializer):
     property_set = PropertySerializerBase(many=True, required=False)
-    you = PersonSerializerBase(required=False)
-    partner = PersonSerializerBase(required=False)
-    category = serializers.SlugRelatedField(slug_field="code", required=False, queryset=Category.objects.all())
-    your_problem_notes = serializers.CharField(max_length=500, required=False)
+    you = PersonSerializerBase(required=False, allow_null=True)
+    partner = PersonSerializerBase(required=False, allow_null=True)
+    category = serializers.SlugRelatedField(
+        slug_field="code", required=False, queryset=Category.objects.all(), allow_null=True
+    )
+    your_problem_notes = serializers.CharField(max_length=500, required=False, allow_blank=True)
     notes = serializers.CharField(max_length=5000, required=False)
     specific_benefits = JSONField(required=False, allow_null=True)
     disregards = JSONField(required=False, allow_null=True)
@@ -482,9 +484,10 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     def __has_category_changed(self):
         if not self.instance or self.instance.category is None:
             return False
-        if "category" not in self.validated_data:
+        category = self.validated_data.get("category")
+        if not category:
             return False
-        return self.instance.category.name != self.validated_data["category"].name
+        return self.instance.category.name != category.name
 
     def save(self, **kwargs):
         # need to check the category before saving the current instance

@@ -1,5 +1,11 @@
 {% extends "admin/base.html" %}
+{% load static %}
 {% load i18n %}
+
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
+{% include 'session_security/all.html' %}
+{% endblock %}
 
 {% block title %}{{ title }} | {% trans 'Django site admin' %}{% endblock %}
 

@@ -5,6 +5,7 @@ import logging
 import time
 
 from celery import Task
+from cla_butler.constants import delete_option_three_years, delete_option_no_personal_details
 from django.contrib.sessions.models import Session
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
@@ -50,13 +51,14 @@ class DeleteOldData(Task):
     We also delete empty cases and data thet is not connected to anything in
     particular.
     """
+
     OUTCOME_CODES = ["COI", "MIS", "REOPEN", "SPOP"]
 
     def __init__(self, *args, **kwargs):
         self._setup()
 
-    def run(self, *args, **kwargs):
-        self.cleanup_cases()
+    def run(self, delete_option, *args, **kwargs):
+        self.cleanup_cases(delete_option)
         self.cleanup_diagnosis()
         self.cleanup_eligibility_check()
         self.cleanup_person()
@@ -69,7 +71,7 @@ class DeleteOldData(Task):
     def _setup(self):
         self.now = timezone.now()
 
-    def get_eligible_cases(self):
+    def get_three_year_old_cases(self):
         """
         This gets cases which are over three years old and have a specific
         outcome code indicating its closed.
@@ -77,6 +79,21 @@ class DeleteOldData(Task):
         three_years = self.now - relativedelta(years=3)
 
         return Case.objects.filter(modified__lte=three_years).exclude(outcome_code__in=self.OUTCOME_CODES)
+
+    def get_cases_without_personal_details(self):
+        """
+        Returns data older than 2 weeks. Queryset of personal detail's id that are none
+        and do not have notes and provider details
+        """
+
+        two_weeks = self.now - relativedelta(weeks=2)
+
+        return (
+            Case.objects.filter(modified__lte=two_weeks)
+            .filter(personal_details_id__exact=None)
+            .filter(notes__exact=u"")
+            .filter(provider_notes__exact=u"")
+        )
 
     def _delete_logs(self, qs):
         ct = ContentType.objects.get_for_model(qs.model)
@@ -110,8 +127,16 @@ class DeleteOldData(Task):
         tokens = AccessToken.objects.filter(expires__lte=self.now)
         tokens.delete()
 
-    def cleanup_cases(self):
-        cases = self.get_eligible_cases()
+    def cases_for_deletion(self, delete_option):
+        if delete_option == delete_option_three_years:
+            return self.get_three_year_old_cases()
+        elif delete_option == delete_option_no_personal_details:
+            return self.get_cases_without_personal_details()
+        else:
+            raise Exception("No method of deletion, no cases have been deleted")
+
+    def cleanup_cases(self, delete_option):
+        cases = self.cases_for_deletion(delete_option)
         pks = get_pks(cases)
         from_cases = Case.objects.filter(from_case_id__in=pks)
         fpks = get_pks(from_cases)

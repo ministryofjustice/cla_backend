@@ -57,3 +57,24 @@ spec:
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
           restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-delete-unused-cases
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "0 5 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: delete-unused-cases
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            command: ["python", "manage.py", "delete_cases_without_personal_data"]
+            env:
+              {{ include "cla-backend.app.vars" . | nindent 12 }}
+          restartPolicy: OnFailure
+---

@@ -191,10 +191,10 @@ class EODDetailsSerializer(EODDetailsSerializerBase):
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     property_set = PropertySerializer(many=True, required=False)
-    you = PersonSerializer(required=False)
-    partner = PartnerPersonSerializer(required=False)
+    you = PersonSerializer(required=False, allow_null=True)
+    partner = PartnerPersonSerializer(required=False, allow_null=True)
     notes = serializers.CharField(max_length=500, required=False, read_only=True)
-    disputed_savings = SavingsSerializer(required=False)
+    disputed_savings = SavingsSerializer(required=False, allow_null=True)
 
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (

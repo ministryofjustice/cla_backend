@@ -111,9 +111,9 @@ class PartnerPersonSerializer(PersonSerializer):
 
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
-    property_set = PropertySerializer(many=True, required=False)
-    you = PersonSerializer(required=False)
-    partner = PartnerPersonSerializer(required=False)
+    property_set = PropertySerializer(many=True, required=False, allow_null=True)
+    you = PersonSerializer(required=False, allow_null=True)
+    partner = PartnerPersonSerializer(required=False, allow_null=True)
     # TODO: DRF doesn't validate, fields that aren't REQ'd = True
     # we need to figure out a way to deal with it
 

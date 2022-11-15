@@ -151,9 +151,8 @@ class BaseUserViewSet(
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-        obj = super(BaseUserViewSet, self).create(request, *args, **kwargs)
-        self.check_object_permissions(request, obj)
-        return obj
+        self.check_object_permissions(request, None)
+        return super(BaseUserViewSet, self).create(request, *args, **kwargs)
 
 
 class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):

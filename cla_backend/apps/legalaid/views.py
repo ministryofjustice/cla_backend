@@ -370,6 +370,7 @@ class BaseCaseLogMixin(object):
             notes=self.get_log_notes(obj),
             context=self.get_log_context(obj),
         )
+        return obj
 
 
 class FullCaseViewSet(

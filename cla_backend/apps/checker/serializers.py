@@ -170,26 +170,6 @@ class CaseSerializer(CaseSerializerBase):
     requires_action_at = serializers.DateTimeField(required=False)
     callback_window_type = serializers.ChoiceField(choices=CALLBACK_WINDOW_TYPES, required=False)
 
-    def create_writeable_nested_fields(self, validated_data):
-        for writable_nested_field in self.Meta.writable_nested_fields:
-            save_to_instance = True
-            field_name = writable_nested_field
-            if type(writable_nested_field) in [list, tuple]:
-                field_name, save_to_instance = writable_nested_field
-            data = validated_data.pop(field_name, None)
-            if not data:
-                continue
-
-            field = self.fields.fields.get(field_name, None)
-            field_instance = field.create(data)
-            if save_to_instance:
-                validated_data[field_name] = field_instance
-
-    def create(self, validated_data):
-        self.create_writeable_nested_fields(validated_data)
-        model = self.Meta.model
-        return model.objects.create(**validated_data)
-
     class Meta(CaseSerializerBase.Meta):
         fields = (
             "eligibility_check",

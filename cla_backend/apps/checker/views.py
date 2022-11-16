@@ -126,25 +126,24 @@ class CaseViewSet(PublicAPIViewSetMixin, BaseCaseLogMixin, ClaCreateModelMixin, 
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
 
-    def pre_save(self, obj, *args, **kwargs):
-        super(CaseViewSet, self).pre_save(obj, *args, **kwargs)
+    def perform_create(self, serializer):
+        created_by = serializer.validated_data.get("created_by", None)
+        if not created_by:
+            serializer.validated_data["created_by"] = get_web_user()
+        serializer.validated_data["source"] = CASE_SOURCE.WEB
+        obj = super(CaseViewSet, self).perform_create(serializer)
 
-        if not obj.created_by:
-            obj.created_by = get_web_user()
-        obj.source = CASE_SOURCE.WEB
-
-    def get_log_notes(self, obj):
-        return "Case created digitally"
-
-    def post_save(self, obj, created=False):
-        super(CaseViewSet, self).post_save(obj, created=created)
-
-        if created and obj.requires_action_at:
+        if obj.requires_action_at:
             form = WebCallMeBackForm(case=obj, data={}, requires_action_at=obj.requires_action_at)
 
             if form.is_valid():
                 form.save(obj.created_by)
                 notify_callback_created(obj)
+
+        return obj
+
+    def get_log_notes(self, obj):
+        return "Case created digitally"
 
 
 class DiagnosisViewSet(

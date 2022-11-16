@@ -9,6 +9,7 @@ from core import fields
 from legalaid.fields import MoneyField, MoneyFieldDRF
 from cla_common.money_interval.fields import MoneyIntervalField
 from core.drf.fields import MoneyIntervalDRFField
+from django.db.models.fields import FieldDoesNotExist
 
 
 class MoneyIntervalModelSerializerMixin(object):
@@ -49,14 +50,21 @@ class ClaModelSerializer(
     MoneyIntervalModelSerializerMixin, NullBooleanModelSerializerMixin, MoneyFieldModelSerializerMixin, ModelSerializer
 ):
     def restore_instance_for_validation(self, serializer, attrs):
-        import copy
-
-        data = copy.deepcopy(attrs)
+        data = {}
         fields = serializer.fields
         model = serializer.Meta.model
         for field_name, field in fields.items():
+            if field_name not in data:
+                continue
+            try:
+                model._meta.get_field(field_name, many_to_many=False)
+            except FieldDoesNotExist:
+                # Don't include many-to-many fields
+                del data[field_name]
             if field_name in data and isinstance(field, serializers.ModelSerializer):
                 data[field_name] = self.restore_instance_for_validation(field, data[field_name])
+            else:
+                data[field_name] = attrs[field_name]
         return model(**data)
 
     def validate(self, attrs):

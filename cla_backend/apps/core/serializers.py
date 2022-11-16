@@ -48,7 +48,60 @@ class JSONField(serializers.Field):
 class ClaModelSerializer(
     MoneyIntervalModelSerializerMixin, NullBooleanModelSerializerMixin, MoneyFieldModelSerializerMixin, ModelSerializer
 ):
-    pass
+    def restore_instance_for_validation(self, serializer, attrs):
+        import copy
+
+        data = copy.deepcopy(attrs)
+        fields = serializer.fields
+        model = serializer.Meta.model
+        for field_name, field in fields.items():
+            if field_name in data and isinstance(field, serializers.ModelSerializer):
+                data[field_name] = self.restore_instance_for_validation(field, data[field_name])
+        return model(**data)
+
+    def validate(self, attrs):
+        instance = self.restore_instance_for_validation(self, attrs)
+        instance.full_clean(exclude=self.get_validation_exclusions(instance))
+        return super(ClaModelSerializer, self).validate(attrs)
+
+    def get_validation_exclusions(self, instance=None):
+        """
+        Return a list of field names to exclude from model validation.
+        """
+        opts = self.Meta.model._meta
+        exclusions = [field.name for field in opts.fields + opts.many_to_many]
+
+        for field_name, field in self.fields.items():
+            field_name = field.source or field_name
+            if (
+                field_name in exclusions
+                and not field.read_only
+                and (field.required or hasattr(instance, field_name))
+                and not isinstance(field, serializers.Serializer)
+            ):
+                exclusions.remove(field_name)
+        return exclusions
+
+    def create_writeable_nested_fields(self, validated_data):
+        fields = getattr(self.Meta, "writable_nested_fields", [])
+        for writable_nested_field in fields:
+            save_to_instance = True
+            field_name = writable_nested_field
+            if type(writable_nested_field) in [list, tuple]:
+                field_name, save_to_instance = writable_nested_field
+            data = validated_data.pop(field_name, None)
+            if not data:
+                continue
+
+            field = self.fields.fields.get(field_name, None)
+            field_instance = field.create(data)
+            if save_to_instance:
+                validated_data[field_name] = field_instance
+
+    def create(self, validated_data):
+        self.create_writeable_nested_fields(validated_data)
+        model = self.Meta.model
+        return model.objects.create(**validated_data)
 
 
 class PartialUpdateExcludeReadonlySerializerMixin(PartialUpdateSerializerMixin):

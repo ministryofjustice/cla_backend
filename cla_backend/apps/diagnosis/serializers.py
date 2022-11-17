@@ -140,7 +140,7 @@ class DiagnosisSerializer(ClaModelSerializer):
             validated_data["matter_type1"] = None
             validated_data["matter_type2"] = None
 
-    def process_obj(self, validated_data):
+    def process_obj(self, instance, validated_data):
         current_node_id = validated_data.get("current_node_id")
         if current_node_id:
             current_node = self.graph.node[current_node_id]
@@ -150,7 +150,10 @@ class DiagnosisSerializer(ClaModelSerializer):
 
             # delete all nodes after current_node_id and add current not
             nodes = []
-            current_nodes = validated_data.get("nodes", [])
+            if "nodes" in validated_data:
+                current_nodes = validated_data["nodes"]
+            else:
+                current_nodes = getattr(instance, "nodes", [])
             for node in current_nodes:
                 if node["id"] == current_node_id:
                     break
@@ -162,14 +165,14 @@ class DiagnosisSerializer(ClaModelSerializer):
             # if pre end node => process end node directly
             if is_pre_end_node(self.graph, current_node_id):
                 validated_data["current_node_id"] = self.graph.successors(current_node_id)[0]
-                self.process_obj(validated_data)
+                self.process_obj(instance, validated_data)
         else:
             validated_data["nodes"] = []
 
     def create(self, validated_data):
         validated_data["graph_version"] = self.graph.graph["version"]
         # if obj.current_node_id:
-        self.process_obj(validated_data)
+        self.process_obj(self.instance, validated_data)
         self._set_state(validated_data)
 
         return super(DiagnosisSerializer, self).create(validated_data)
@@ -177,8 +180,7 @@ class DiagnosisSerializer(ClaModelSerializer):
     def update(self, instance, validated_data):
         if not instance.graph_version:
             instance.graph_version = self.graph.graph["version"]
-        # if obj.current_node_id:
-        self.process_obj(validated_data)
+        self.process_obj(instance, validated_data)
         self._set_state(validated_data)
         return super(DiagnosisSerializer, self).update(instance, validated_data)
 
@@ -188,6 +190,7 @@ class DiagnosisSerializer(ClaModelSerializer):
         If there are no nodes, it raises ParseError.
         If current node is end node, it moves up 2 nodes
         """
+        validated_data = {}
         nodes = self.instance.nodes or []
         nodes_count = len(nodes)
 
@@ -196,7 +199,7 @@ class DiagnosisSerializer(ClaModelSerializer):
             raise ParseError("Cannot move up, no nodes found")
 
         if nodes_count == 1:  # root node => 'reset' the traversal
-            self.object.current_node_id = ""  # :-/
+            validated_data["current_node_id"] = ""  # :-/
         else:
             pre_node_id = nodes[-2]["id"]
 
@@ -204,9 +207,10 @@ class DiagnosisSerializer(ClaModelSerializer):
             if is_pre_end_node(self.graph, pre_node_id) and nodes_count > 2:
                 pre_node_id = nodes[-3]["id"]
 
-            self.instance.current_node_id = pre_node_id
+            validated_data["current_node_id"] = pre_node_id
 
         if self.is_valid():
+            self.validated_data.update(validated_data)
             self.save(force_update=True)
 
         return self.instance

@@ -62,27 +62,25 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
         }
 
         method_callable = getattr(self.client, method)
-        response = method_callable(url, data, HTTP_AUTHORIZATION=self.get_http_authorization())
+        response = method_callable(url, data, HTTP_AUTHORIZATION=self.get_http_authorization(), format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         expected_errors = {
-            "personal_details": [
-                {
-                    "full_name": [u"Ensure this value has at most 400 characters (it has 456)."],
-                    "home_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
-                    "mobile_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
-                    "postcode": [u"Ensure this value has at most 12 characters (it has 13)."],
-                    "street": [u"Ensure this value has at most 255 characters (it has 256)."],
-                    "title": [u"Ensure this value has at most 20 characters (it has 21)."],
-                }
-            ],
-            "reason": [u"Select a valid choice. XXXXXXXXX is not one of the available choices."],
-            "personal_relationship": [u"Select a valid choice. XXXXXXXXX is not one of the available choices."],
+            "personal_details": {
+                "full_name": [u"Ensure this field has no more than 400 characters."],
+                "home_phone": [u"Ensure this field has no more than 20 characters."],
+                "mobile_phone": [u"Ensure this field has no more than 20 characters."],
+                "postcode": [u"Ensure this field has no more than 12 characters."],
+                "street": [u"Ensure this field has no more than 255 characters."],
+                "title": [u"Ensure this field has no more than 20 characters."],
+            },
+            "reason": [u"`XXXXXXXXX` is not a valid choice."],
+            "personal_relationship": [u"`XXXXXXXXX` is not a valid choice."],
         }
 
         errors = response.data
         self.assertItemsEqual(errors.keys(), expected_errors.keys())
-        self.assertItemsEqual(errors, expected_errors)
+        self.assertDictEqual(errors, expected_errors)
 
     def assertThirdPartyDetailsEqual(self, data, obj):
         if data is None or obj is None:

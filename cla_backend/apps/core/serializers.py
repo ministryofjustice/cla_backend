@@ -95,7 +95,7 @@ class ClaModelSerializer(
                 exclusions.remove(field_name)
         return exclusions
 
-    def create_writeable_nested_fields(self, validated_data):
+    def create_writeable_nested_fields_one_to_many(self, validated_data):
         fields = getattr(self.Meta, "writable_nested_fields", [])
         for writable_nested_field in fields:
             save_to_instance = True
@@ -111,10 +111,35 @@ class ClaModelSerializer(
             if save_to_instance:
                 validated_data[field_name] = field_instance
 
+    def create_writeable_nested_fields_many_to_many(self, instance, m2m_data):
+        for field_name, data in m2m_data.items():
+            if not data:
+                continue
+            m2m_serializer = self.fields.fields.get(field_name, None)
+            for reason in data:
+                if instance.reasons_for_contacting:
+                    instance.reasons_for_contacting = m2m_serializer.update(instance.reasons_for_contacting, reason)
+                else:
+                    instance.reasons_for_contacting = m2m_serializer.create(reason)
+            instance.save
+
+    def filter_validated_data_m2m(self, validated_data):
+        # removes many to many data from validated_data and returns as dict
+        fields = getattr(self.Meta, "writable_nested_fields_m2m", [])
+        m2m_data = {}
+        for field in fields:
+            if field in validated_data:
+                m2m_data[field] = validated_data.pop(field)
+        return m2m_data
+
     def create(self, validated_data):
-        self.create_writeable_nested_fields(validated_data)
+        self.create_writeable_nested_fields_one_to_many(validated_data)
         model = self.Meta.model
-        return model.objects.create(**validated_data)
+        # todo move m2m fields in here
+        # m2m_validated_data = self.filter_validated_data_m2m(validated_data)
+        instance = model.objects.create(**validated_data)
+        # self.create_writeable_nested_fields_many_to_many(instance, m2m_validated_data)
+        return instance
 
 
 class PartialUpdateExcludeReadonlySerializerMixin(PartialUpdateSerializerMixin):

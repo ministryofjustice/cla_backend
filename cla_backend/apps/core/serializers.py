@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.core.exceptions import ValidationError as DjangoValidationError
+from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
@@ -70,7 +71,10 @@ class ClaModelSerializer(
 
     def validate(self, attrs):
         instance = self.restore_instance_for_validation(self, attrs)
-        instance.full_clean(exclude=self.get_validation_exclusions(instance))
+        try:
+            instance.full_clean(exclude=self.get_validation_exclusions(instance))
+        except DjangoValidationError as exc:
+            raise ValidationError(exc.message_dict)
         return super(ClaModelSerializer, self).validate(attrs)
 
     def get_validation_exclusions(self, instance=None):

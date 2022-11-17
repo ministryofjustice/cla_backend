@@ -51,18 +51,19 @@ class ClaModelSerializer(
 ):
     def restore_instance_for_validation(self, serializer, attrs):
         data = {}
-        fields = serializer.fields
+        serializer_fields = serializer.fields
         model = serializer.Meta.model
-        for field_name, field in fields.items():
-            if field_name not in data:
+        for field_name, field in serializer_fields.items():
+            if field_name not in attrs or not attrs[field_name]:
                 continue
             try:
                 model._meta.get_field(field_name, many_to_many=False)
             except FieldDoesNotExist:
                 # Don't include many-to-many fields
-                del data[field_name]
-            if field_name in data and isinstance(field, serializers.ModelSerializer):
-                data[field_name] = self.restore_instance_for_validation(field, data[field_name])
+                continue
+
+            if isinstance(field, serializers.ModelSerializer):
+                data[field_name] = self.restore_instance_for_validation(field, attrs[field_name])
             else:
                 data[field_name] = attrs[field_name]
         return model(**data)

@@ -191,7 +191,7 @@ class CaseTestCase(BaseCaseTestCase):
         serializer = CaseSerializer(data=data)
         self.assertFalse(serializer.is_valid())
         self.assertDictEqual(
-            serializer.errors, {"non_field_errors": [u"Case with this Eligibility check already exists."]}
+            serializer.errors, {"eligibility_check": [u"Case with this Eligibility check already exists."]}
         )
 
 

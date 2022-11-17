@@ -207,7 +207,10 @@ class ReasonForContactingSerializer(serializers.ModelSerializer):
     # from DRF 3.0 onwards, there is no allow_add_remove option
     # writable nested serialization must be handed explicitly
     def create(self, validated_data):
-        reasons_data = validated_data.pop("reasons")
-        reasons_for_contacting = ReasonForContactingCategory.objects.create(**reasons_data)
-        ReasonForContactingCategory.objects.create(reasons_for_contacting=reasons_for_contacting, **reasons_data)
-        return reasons_for_contacting
+        # remove the reasons data as this is nested
+        validated_data.pop("reasons")
+        # todo work out why we can't create the ReasonForContactingCategory object
+        # if reasons_data:
+        #     validated_data["reasons"] = ReasonForContactingCategorySerializer().create(reasons_data)
+        instance = ReasonForContacting.objects.create(**validated_data)
+        return instance

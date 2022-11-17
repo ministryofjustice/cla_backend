@@ -1,4 +1,3 @@
-from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -159,13 +158,6 @@ class DiagnosisViewSet(
 
     def get_current_user(self):
         return get_web_user()
-
-    def pre_save(self, obj, *args, **kwargs):
-        try:
-            self._original_obj = self.get_object()
-        except ImproperlyConfigured:
-            pass
-        return super(DiagnosisModelMixin, self).pre_save(obj, *args, **kwargs)
 
 
 class ReasonForContactingViewSet(

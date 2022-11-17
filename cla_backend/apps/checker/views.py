@@ -167,9 +167,7 @@ class ReasonForContactingViewSet(
     serializer_class = ReasonForContactingSerializer
     lookup_field = "reference"
 
-    def pre_save(self, obj):
-        # delete all existing reasons and use those from request as replacement set if provided
-        if obj.pk and "reasons" in self.request.DATA:
-            obj.reasons.all().delete()
-
-        super(ReasonForContactingViewSet, self).pre_save(obj)
+    def perform_update(self, serializer):
+        if "reasons" in serializer.validated_data:
+            serializer.instance.reasons.all().delete()
+        super(ReasonForContactingViewSet, self).perform_update(serializer)

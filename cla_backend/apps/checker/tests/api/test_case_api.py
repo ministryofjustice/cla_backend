@@ -147,17 +147,15 @@ class CaseTestCase(BaseCaseTestCase):
         errors = response.data
         self.assertItemsEqual(errors.keys(), ["eligibility_check", "personal_details"])
         self.assertEqual(errors["eligibility_check"], [u"Object with reference=%s does not exist." % invalid_uuid])
-        self.assertItemsEqual(
+        self.assertDictEqual(
             errors["personal_details"],
-            [
-                {
-                    "title": [u"Ensure this value has at most 20 characters (it has 21)."],
-                    "postcode": [u"Ensure this value has at most 12 characters (it has 13)."],
-                    "street": [u"Ensure this value has at most 255 characters (it has 256)."],
-                    "mobile_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
-                    "home_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
-                }
-            ],
+            {
+                "title": [u"Ensure this field has no more than 20 characters."],
+                "postcode": [u"Ensure this field has no more than 12 characters."],
+                "street": [u"Ensure this field has no more than 255 characters."],
+                "mobile_phone": [u"Ensure this field has no more than 20 characters."],
+                "home_phone": [u"Ensure this field has no more than 20 characters."],
+            },
         )
 
     def test_create_in_error(self):

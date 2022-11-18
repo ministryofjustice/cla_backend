@@ -114,7 +114,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         """Creates a test user for the admin portal.
         """
         ContentType.objects.clear_cache()
-        
+
         if not User.objects.filter(username=self.TEST_LOGIN_CREDS).exists():
             test_user = User.objects.create(username=self.TEST_LOGIN_CREDS)
             test_user.set_password(self.TEST_LOGIN_CREDS)

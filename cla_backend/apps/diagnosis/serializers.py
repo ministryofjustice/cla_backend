@@ -153,7 +153,7 @@ class DiagnosisSerializer(ClaModelSerializer):
             if "nodes" in validated_data:
                 current_nodes = validated_data["nodes"]
             else:
-                current_nodes = getattr(instance, "nodes", [])
+                current_nodes = getattr(instance, "nodes", []) or []
             for node in current_nodes:
                 if node["id"] == current_node_id:
                     break

@@ -119,16 +119,28 @@ class Staff(TimeStampedModel):
         self.chs_password = make_password(raw_password)
 
     class Meta(object):
-        unique_together = (("chs_organisation", "chs_user"),)
         verbose_name_plural = "staff"
 
     def __unicode__(self):
         return self.user.username
 
+    def is_unique_chs_user(self):
+        return not bool(
+            Staff.objects.filter(chs_organisation=self.chs_organisation, chs_user=self.chs_user)
+            .exclude(pk=self.pk)
+            .count()
+        )
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.chs_organisation = self.chs_organisation or random_uuid_str()
             self.chs_user = self.chs_user or random_uuid_str()
+
+        # You are probably wondering why we don't use Meta.unique_together?
+        # When DRF finds a model that has Meta.unique_together it will add a
+        # rest_framework.validators.UniqueTogetherValidator to the serializer and it will enforce that uniqueness
+        # even if user does not provide those fields(even when the field is marked as required=False)
+        assert self.is_unique_chs_user(), "chs_user and chs_organisation must be unique when combined"
         return super(Staff, self).save(*args, **kwargs)
 
 

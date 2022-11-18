@@ -2,6 +2,7 @@ import datetime
 import os
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains

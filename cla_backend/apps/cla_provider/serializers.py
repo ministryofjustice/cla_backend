@@ -293,7 +293,7 @@ class ProviderSerializer(ProviderSerializerBase):
 class StaffSerializer(ExtendedUserSerializerBase):
     provider = ProviderSerializer(read_only=True)
 
-    chs_username = serializers.CharField(required=False)
+    chs_user = serializers.CharField(required=False)
     chs_organisation = serializers.CharField(required=False)
     chs_password = serializers.CharField(required=False, write_only=True)
 

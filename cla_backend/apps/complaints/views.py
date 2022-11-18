@@ -125,6 +125,7 @@ class BaseComplaintViewSet(
             else:
                 serializer.validated_data["level"] = LOG_LEVELS.MINOR
 
+        owner_has_changed = self.has_owner_changed(serializer.instance, serializer.validated_data)
         obj = super(BaseComplaintViewSet, self).perform_create(serializer)
 
         description = u"Original expressions of dissatisfaction:\n%s\n\n%s" % (
@@ -138,28 +139,42 @@ class BaseComplaintViewSet(
         obj.eod.case.complaint_flag = True
         obj.eod.case.save()
 
+        if owner_has_changed:
+            self.create_owner_has_changed_event_log(obj)
+
         return obj
 
     def perform_update(self, serializer):
-        obj = serializer.instance
-        new_owner = serializer.validated_data.get("owner", None)
-        has_owner_changed = False
-        if obj.owner and new_owner and obj.owner.username != new_owner:
-            has_owner_changed = True
-        elif not obj.owner and new_owner:
-            has_owner_changed = True
-
+        owner_has_changed = self.has_owner_changed(serializer.instance, serializer.validated_data)
         super(BaseComplaintViewSet, self).perform_update(serializer)
 
-        if has_owner_changed:
-            event = event_registry.get_event("complaint")()
-            event.process(
-                obj.eod.case,
-                created_by=self.request.user,
-                notes=u"Complaint owner set to %s" % (obj.owner.get_full_name() or obj.owner.username),
-                complaint=obj,
-                code="OWNER_SET",
-            )
+        if owner_has_changed:
+            self.create_owner_has_changed_event_log(serializer.instance)
+
+    def has_owner_changed(self, obj, validated_data):
+        new_owner = validated_data.get("owner", None)
+        current_owner = getattr(obj, "owner", None)
+
+        if not current_owner and not new_owner:
+            return False
+
+        if not current_owner and new_owner:
+            return True
+
+        if current_owner.username != new_owner:
+            return True
+
+        return False
+
+    def create_owner_has_changed_event_log(self, obj):
+        event = event_registry.get_event("complaint")()
+        event.process(
+            obj.eod.case,
+            created_by=self.request.user,
+            notes=u"Complaint owner set to %s" % (obj.owner.get_full_name() or obj.owner.username),
+            complaint=obj,
+            code="OWNER_SET",
+        )
 
     @detail_route(methods=["post"])
     def add_event(self, request, pk):

@@ -130,9 +130,6 @@ class ClaModelSerializer(
         writable_nested_fields = getattr(self.Meta, "writable_nested_fields", [])
         m2m_data = {}
         for field_name in writable_nested_fields:
-            data = validated_data.pop(field_name, None)
-            if not data:
-                continue
             field = self.fields.fields.get(field_name, None)
             if not field:
                 continue
@@ -141,7 +138,7 @@ class ClaModelSerializer(
             if not is_many:
                 continue
 
-            if field_name not in validated_data:
+            if field_name in validated_data:
                 m2m_data[field_name] = validated_data.pop(field_name)
         return m2m_data
 

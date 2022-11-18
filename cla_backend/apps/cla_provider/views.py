@@ -253,8 +253,13 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
         qs = super(UserViewSet, self).get_queryset().filter(provider=this_provider)
         return qs
 
-    def pre_save(self, obj):
-        obj.provider = self.get_logged_in_user_model().provider
+    def perform_create(self, serializer):
+        serializer.validated_data["provider"] = self.get_logged_in_user_model().provider
+        super(UserViewSet, self).perform_create(serializer)
+
+    def perform_update(self, serializer):
+        serializer.validated_data["provider"] = self.get_logged_in_user_model().provider
+        super(UserViewSet, self).perform_update(serializer)
 
 
 class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin, FullPersonalDetailsViewSet):

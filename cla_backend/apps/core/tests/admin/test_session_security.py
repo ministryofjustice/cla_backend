@@ -26,7 +26,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
 
     WAIT = 5
     TOLERANCE = 2
-    TEST_LOGIN_CREDS = "test_cla_superuser"
+    TEST_LOGIN_CREDS = "test"
     TEST_SERVER = "localhost:5000"
 
     @classmethod

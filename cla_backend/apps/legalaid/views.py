@@ -19,6 +19,7 @@ from core.drf.mixins import (
     FormActionMixin,
     ClaCreateModelMixin,
     ClaUpdateModelMixin,
+    ClaRetrieveModelMixinWithSelfInstance,
 )
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from legalaid.permissions import IsManagerOrMePermission
@@ -376,7 +377,7 @@ class BaseCaseLogMixin(object):
 class FullCaseViewSet(
     DetailSerializerMixin,
     ClaUpdateModelMixin,
-    mixins.RetrieveModelMixin,
+    ClaRetrieveModelMixinWithSelfInstance,
     mixins.ListModelMixin,
     CaseFormActionMixin,
     viewsets.GenericViewSet,
@@ -551,7 +552,7 @@ class FullCaseViewSet(
         resp = super(FullCaseViewSet, self).retrieve(request, *args, **kwargs)
 
         event = event_registry.get_event("case")()
-        event.process(self.object, status="viewed", created_by=request.user, notes="Case viewed")
+        event.process(self.instance, status="viewed", created_by=request.user, notes="Case viewed")
 
         return resp
 

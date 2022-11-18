@@ -295,11 +295,10 @@ class FeedbackViewSet(CLAProviderPermissionViewSetMixin, BaseFeedbackViewSet, Cl
     filter_backends = (OrderingFilter,)
     ordering = ("-created",)
 
-    def pre_save(self, obj):
-        if not obj.pk:
-            obj.case = self.get_parent_object()
-            obj.created_by = Staff.objects.get(user=self.request.user)
-        super(FeedbackViewSet, self).pre_save(obj)
+    def perform_create(self, serializer):
+        serializer.validated_data["case"] = self.get_parent_object()
+        serializer.validated_data["created_by"] = Staff.objects.get(user=self.request.user)
+        super(FeedbackViewSet, self).perform_create(serializer)
 
 
 class CSVUploadViewSet(CLAProviderPermissionViewSetMixin, BaseCSVUploadViewSet):

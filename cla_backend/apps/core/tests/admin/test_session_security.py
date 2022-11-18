@@ -19,11 +19,14 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
     working as expected.
     """
 
-    WARN_AFTER_SECONDS = 5
-    EXPIRE_AFTER_SECONDS = 10
+    # These settings are made intentionally short in the circle CI settings file
+    # (5/10s respectively).
+    WARN_AFTER_SECONDS = settings.SESSION_SECURITY_WARN_AFTER
+    EXPIRE_AFTER_SECONDS = settings.SESSION_SECURITY_EXPIRE_AFTER
+
     WAIT = 5
     TOLERANCE = 2
-    TEST_LOGIN_CREDS = "test"
+    TEST_LOGIN_CREDS = "test_cla_superuser"
     TEST_SERVER = "localhost:5000"
 
     @classmethod
@@ -47,8 +50,6 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
 
     def setUp(self):
         super(SessionSecuritySeleniumTestCase, self).setUp()
-        settings.SESSION_SECURITY_WARN_AFTER = self.WARN_AFTER_SECONDS
-        settings.SESSION_SECURITY_EXPIRE_AFTER = self.EXPIRE_AFTER_SECONDS
         self.setup_admin_user()
 
     def test_inactivity_session_timeout_procedure(self):

@@ -14,7 +14,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 
 
 class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
-    """Integration tests to check the session security package is 
+    """Integration tests to check the session security package is
     working as expected.
     """
 
@@ -49,14 +49,14 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         settings.SESSION_SECURITY_WARN_AFTER = self.WARN_AFTER_SECONDS
         settings.SESSION_SECURITY_EXPIRE_AFTER = self.EXPIRE_AFTER_SECONDS
         self.setup_admin_user()
-        
+
     def test_inactivity_session_timeout_procedure(self):
-        """Tests that the session secuirty procedure works correctly by warning the user 
-        after a period of inactivity, then closing the session if there is no activity within a 
+        """Tests that the session secuirty procedure works correctly by warning the user
+        after a period of inactivity, then closing the session if there is no activity within a
         further time period.
         """
         self.login()
-        
+
         # Check the session warning message is hidden and then displayed after the
         # SESSION_SECURITY_WARN_AFTER period.
         self.check_session_warning_displayed()
@@ -65,22 +65,22 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         self.perform_keyboard_action()
         self.assert_warning_is_hidden()
 
-        # Check the session warning message is hidden and then displayed for a second time 
+        # Check the session warning message is hidden and then displayed for a second time
         # after the SESSION_SECURITY_WARN_AFTER period.
         self.check_session_warning_displayed()
 
         # Check that the session is logged out after the SESSION_SECURITY_EXPIRE_AFTER period
         # when no activity is detected.
         start = datetime.datetime.now()
-        
+
         expected_time_to_log_out = self.EXPIRE_AFTER_SECONDS - self.WARN_AFTER_SECONDS
         self.assert_logged_out(expected_time_to_log_out + self.TOLERANCE)
-        
+
         end = datetime.datetime.now()
         delta = end - start
 
         self.assertGreaterEqual(delta.seconds, expected_time_to_log_out - self.TOLERANCE)
-    
+
     def test_session_ends_on_browser_close(self):
         """Tests that the session is ended when the broswer is closed.
         """
@@ -93,9 +93,9 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         self.start_test_broswer()
         self.navigate_to_admin_page()
         self.assert_logged_out(self.WAIT)
-    
+
     def check_session_warning_displayed(self):
-        """Checks that the session security modal goes from hidden to visible within the 
+        """Checks that the session security modal goes from hidden to visible within the
         required timeframe.
         """
         start = datetime.datetime.now()
@@ -147,11 +147,10 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         try:
             WebDriverWait(self.browser, self.WAIT).until(
                 expected_conditions.presence_of_element_located((By.LINK_TEXT, "Log out")))
-        except:
+        except Exception:
             self.fail("Login was unsuccessful")
-        
-        self.assertIsNotNone(self.get_session_cookie(), "Session cookie not present after logging in.")
 
+        self.assertIsNotNone(self.get_session_cookie(), "Session cookie not present after logging in.")
 
     def assert_warning_element_visible(self, max_wait):
         """Checks that the session security modal is visible within a given time period.
@@ -162,7 +161,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         try:
             WebDriverWait(self.browser, max_wait).until(
                 expected_conditions.visibility_of_element_located((By.ID, "session_security_warning")))
-        except:
+        except Exception:
             self.fail("Warning message not displayed after %ds or inactivity" % (max_wait))
 
     def assert_warning_is_hidden(self):
@@ -171,7 +170,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         try:
             WebDriverWait(self.browser, self.WAIT).until(
                 expected_conditions.invisibility_of_element((By.ID, "session_security_warning")))
-        except:
+        except Exception:
             self.fail("Warning message present during active session")
 
     def assert_logged_out(self, delay):
@@ -184,7 +183,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         try:
             WebDriverWait(self.browser, delay).until(
                 expected_conditions.presence_of_element_located((By.ID, "id_password")))
-        except:
+        except Exception:
             self.fail("Sessions was not logged out after %ds" % (delay))
 
         self.assertIsNone(self.get_session_cookie(), "Session cookie present after logging out.")
@@ -197,7 +196,3 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         """
         cookies = (cookie for cookie in self.browser.get_cookies() if cookie["name"] == "sessionid")
         return next(cookies, None)
-
-
-
-

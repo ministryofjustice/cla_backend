@@ -258,7 +258,7 @@ class CaseViewSet(
 
     def retrieve(self, request, *args, **kwargs):
         response = super(CaseViewSet, self).retrieve(request, *args, **kwargs)
-        self.object.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
+        self.instance.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
         return response
 
     @list_route()

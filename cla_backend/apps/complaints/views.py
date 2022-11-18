@@ -244,4 +244,5 @@ class BaseComplaintLogViewset(
 
     def get_queryset(self):
         content_type = ContentType.objects.get_for_model(Complaint)
-        return self.model.objects.filter(object_id=self.kwargs.get("complaint_pk"), content_type=content_type)
+        model = self.get_serializer().Meta.model
+        return model.objects.filter(object_id=self.kwargs.get("complaint_pk"), content_type=content_type)

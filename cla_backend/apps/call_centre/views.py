@@ -713,7 +713,10 @@ class ComplaintViewSet(
     def get_case(self, validated_data, obj=None):
         # Cannot always depend on obj as it will be None when a new case is being created
         # when this method gets triggered in a perform_create before the instance is saved
-        return validated_data["eod"].case
+        if "eod" in validated_data:
+            return validated_data["eod"].case
+        else:
+            return obj.eod.case
 
     def retrieve(self, request, *args, **kwargs):
         response = super(ComplaintViewSet, self).retrieve(request, *args, **kwargs)

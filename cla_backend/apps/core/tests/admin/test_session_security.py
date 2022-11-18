@@ -3,6 +3,7 @@ import os
 
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -21,7 +22,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
     WARN_AFTER_SECONDS = 5
     EXPIRE_AFTER_SECONDS = 10
     WAIT = 5
-    TOLERANCE = 1
+    TOLERANCE = 2
     TEST_LOGIN_CREDS = "test"
     TEST_SERVER = "localhost:5000"
 
@@ -112,6 +113,8 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
     def setup_admin_user(self):
         """Creates a test user for the admin portal.
         """
+        ContentType.objects.clear_cache()
+        
         if not User.objects.filter(username=self.TEST_LOGIN_CREDS).exists():
             test_user = User.objects.create(username=self.TEST_LOGIN_CREDS)
             test_user.set_password(self.TEST_LOGIN_CREDS)

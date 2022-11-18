@@ -175,7 +175,7 @@ class DiagnosisSerializerTestCase(TestCase):
             current_node_id="3aa",
             nodes=[self.mocked_graph.get_node_dict("2a"), self.mocked_graph.get_node_dict("3aa")],
         )
-        serializer = DiagnosisSerializer(instance=traversal)
+        serializer = DiagnosisSerializer(instance=traversal, data={})
 
         serializer.move_up()
 
@@ -203,7 +203,7 @@ class DiagnosisSerializerTestCase(TestCase):
             matter_type2=self.matter_type2,
             state=DIAGNOSIS_SCOPE.INSCOPE,
         )
-        serializer = DiagnosisSerializer(instance=traversal)
+        serializer = DiagnosisSerializer(instance=traversal, data={})
 
         serializer.move_up()
 

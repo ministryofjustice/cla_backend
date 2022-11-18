@@ -717,7 +717,7 @@ class ComplaintViewSet(
 
     def retrieve(self, request, *args, **kwargs):
         response = super(ComplaintViewSet, self).retrieve(request, *args, **kwargs)
-        self.object.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
+        self.instance.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
         return response
 
 

@@ -95,50 +95,62 @@ class ClaModelSerializer(
                 exclusions.remove(field_name)
         return exclusions
 
-    def create_writeable_nested_fields_one_to_many(self, validated_data):
-        fields = getattr(self.Meta, "writable_nested_fields", [])
-        for writable_nested_field in fields:
-            save_to_instance = True
-            field_name = writable_nested_field
-            if type(writable_nested_field) in [list, tuple]:
-                field_name, save_to_instance = writable_nested_field
+    def create_writeable_nested_fields_one_to_one(self, validated_data):
+        writable_nested_fields = getattr(self.Meta, "writable_nested_fields", [])
+        for field_name in writable_nested_fields:
             data = validated_data.pop(field_name, None)
             if not data:
                 continue
 
             field = self.fields.fields.get(field_name, None)
-            field_instance = field.create(data)
-            if save_to_instance:
+            if not field:
+                continue
+            is_many = getattr(field, "many", False)
+            if not is_many:
+                field_instance = field.create(data)
                 validated_data[field_name] = field_instance
 
-    def create_writeable_nested_fields_many_to_many(self, instance, m2m_data):
+    def create_writeable_nested_fields_many_to_many(self, parent, m2m_data):
+        parent_model = type(parent)
         for field_name, data in m2m_data.items():
             if not data:
                 continue
             m2m_serializer = self.fields.fields.get(field_name, None)
-            for reason in data:
-                if instance.reasons_for_contacting:
-                    instance.reasons_for_contacting = m2m_serializer.update(instance.reasons_for_contacting, reason)
-                else:
-                    instance.reasons_for_contacting = m2m_serializer.create(reason)
-            instance.save
+            parent_model_field = getattr(parent_model, field_name, None)
+            if not parent_model_field:
+                continue
+            model_field_name = parent_model_field.related.field.name
+
+            for item in data:
+                item[model_field_name] = parent
+            m2m_serializer.create(data)
 
     def filter_validated_data_m2m(self, validated_data):
         # removes many to many data from validated_data and returns as dict
-        fields = getattr(self.Meta, "writable_nested_fields_m2m", [])
+        writable_nested_fields = getattr(self.Meta, "writable_nested_fields", [])
         m2m_data = {}
-        for field in fields:
-            if field in validated_data:
-                m2m_data[field] = validated_data.pop(field)
+        for field_name in writable_nested_fields:
+            data = validated_data.pop(field_name, None)
+            if not data:
+                continue
+            field = self.fields.fields.get(field_name, None)
+            if not field:
+                continue
+
+            is_many = getattr(field, "many", False)
+            if not is_many:
+                continue
+
+            if field_name not in validated_data:
+                m2m_data[field_name] = validated_data.pop(field_name)
         return m2m_data
 
     def create(self, validated_data):
-        self.create_writeable_nested_fields_one_to_many(validated_data)
+        self.create_writeable_nested_fields_one_to_one(validated_data)
         model = self.Meta.model
-        # todo move m2m fields in here
-        # m2m_validated_data = self.filter_validated_data_m2m(validated_data)
+        m2m_validated_data = self.filter_validated_data_m2m(validated_data)
         instance = model.objects.create(**validated_data)
-        # self.create_writeable_nested_fields_many_to_many(instance, m2m_validated_data)
+        self.create_writeable_nested_fields_many_to_many(instance, m2m_validated_data)
         return instance
 
 

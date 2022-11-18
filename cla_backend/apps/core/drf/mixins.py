@@ -182,6 +182,17 @@ class ClaCreateModelMixin(ClaPrePostSaveMixin, mixins.CreateModelMixin):
         return obj
 
 
+class ClaRetrieveModelMixinWithSelfInstance(mixins.RetrieveModelMixin):
+    """
+    Retrieve a model instance.
+    """
+
+    def retrieve(self, request, *args, **kwargs):
+        self.instance = self.get_object()
+        serializer = self.get_serializer(self.instance)
+        return DRFResponse(serializer.data)
+
+
 class ClaUpdateModelMixin(ClaPrePostSaveMixin, mixins.UpdateModelMixin):
     def perform_update(self, serializer):
         obj = self.get_object()

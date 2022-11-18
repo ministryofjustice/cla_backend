@@ -21,11 +21,9 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
     WARN_AFTER_SECONDS = 5
     EXPIRE_AFTER_SECONDS = 10
     WAIT = 5
-    TOLERANCE = 2
-    TEST_LOGIN_CREDS = "test_operator_manager"
+    TOLERANCE = 1
+    TEST_LOGIN_CREDS = "test"
     TEST_SERVER = "localhost:5000"
-
-    fixtures = ["initial_groups", "test_auth_clients"]
 
     @classmethod
     def setUpClass(cls):
@@ -50,6 +48,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         super(SessionSecuritySeleniumTestCase, self).setUp()
         settings.SESSION_SECURITY_WARN_AFTER = self.WARN_AFTER_SECONDS
         settings.SESSION_SECURITY_EXPIRE_AFTER = self.EXPIRE_AFTER_SECONDS
+        self.setup_admin_user()
 
     def test_inactivity_session_timeout_procedure(self):
         """Tests that the session secuirty procedure works correctly by warning the user
@@ -109,6 +108,15 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
 
         self.assertGreaterEqual(delta.seconds, self.WARN_AFTER_SECONDS)
         self.assertLessEqual(delta.seconds, self.EXPIRE_AFTER_SECONDS)
+
+    def setup_admin_user(self):
+        """Creates a test user for the admin portal.
+        """
+        if not User.objects.filter(username=self.TEST_LOGIN_CREDS).exists():
+            test_user = User.objects.create(username=self.TEST_LOGIN_CREDS)
+            test_user.set_password(self.TEST_LOGIN_CREDS)
+            test_user.is_staff = True
+            test_user.save()
 
     def login(self):
         """Performs admin portal login and confirms the presence of the session cookie.

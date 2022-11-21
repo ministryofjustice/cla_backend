@@ -158,6 +158,7 @@ class BaseUserViewSet(
 
 class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.all()
+    model = Category
     serializer_class = CategorySerializerBase
 
     lookup_field = "code"
@@ -165,6 +166,7 @@ class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet):
     queryset = EligibilityCheck.objects.all()
+    model = EligibilityCheck
     lookup_field = "reference"
 
     @detail_route()
@@ -222,6 +224,7 @@ class BaseNestedEligibilityCheckViewSet(NestedGenericModelMixin, BaseEligibility
 
 class BaseMatterTypeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = MatterType.objects.all()
+    model = MatterType
     serializer_class = MatterTypeSerializerBase
 
     filter_backends = (DjangoFilterBackend,)
@@ -230,6 +233,7 @@ class BaseMatterTypeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, vi
 
 class BaseMediaCodeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = MediaCode.objects.all()
+    model = MediaCode
     serializer_class = MediaCodeSerializerBase
 
     filter_backends = (DjangoFilterBackend,)
@@ -238,6 +242,7 @@ class BaseMediaCodeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, vie
 
 class BaseContactResearchMethodViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = ContactResearchMethod.objects.all()
+    model = ContactResearchMethod
     serializer_class = ContactResearchMethodSerializerBase
 
     filter_backends = (DjangoFilterBackend,)
@@ -252,6 +257,7 @@ class FullPersonalDetailsViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = PersonalDetails.objects.all()
+    model = PersonalDetails
     serializer_class = PersonalDetailsSerializerFull
     lookup_field = "reference"
 
@@ -266,6 +272,7 @@ class BaseThirdPartyDetailsViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = ThirdPartyDetails.objects.all()
+    model = ThirdPartyDetails
     serializer_class = ThirdPartyDetailsSerializerBase
     lookup_field = "reference"
     PARENT_FIELD = "thirdparty_details"
@@ -279,6 +286,7 @@ class BaseAdaptationDetailsViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = AdaptationDetails.objects.all()
+    model = AdaptationDetails
     serializer_class = AdaptationDetailsSerializerBase
     lookup_field = "reference"
     PARENT_FIELD = "adaptation_details"
@@ -286,6 +294,7 @@ class BaseAdaptationDetailsViewSet(
 
 class BaseAdaptationDetailsMetadataViewSet(ClaCreateModelMixin, viewsets.GenericViewSet):
     queryset = AdaptationDetails.objects.all()
+    model = AdaptationDetails
     serializer_class = AdaptationDetailsSerializerBase
 
     def create(self, request, *args, **kwargs):
@@ -300,6 +309,7 @@ class BaseEODDetailsViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = EODDetails.objects.all()
+    model = EODDetails
     serializer_class = EODDetailsSerializerBase
     lookup_field = "reference"
     PARENT_FIELD = "eod_details"
@@ -383,6 +393,7 @@ class FullCaseViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = Case.objects.all()
+    model = Case
     lookup_field = "reference"
     lookup_regex = r"[A-Z|\d]{2}-\d{4}-\d{4}"
 
@@ -590,6 +601,7 @@ class BaseFeedbackViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = Feedback.objects.all()
+    model = Feedback
     serializer_class = FeedbackSerializerBase
     PARENT_FIELD = "provider_feedback"
     lookup_field = "reference"
@@ -599,6 +611,7 @@ class BaseCSVUploadReadOnlyViewSet(
     DetailSerializerMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
 ):
     queryset = CSVUpload.objects.all()
+    model = CSVUpload
 
     serializer_class = CSVUploadSerializerBase
     serializer_detail_class = CSVUploadSerializerBase
@@ -615,6 +628,7 @@ class BaseCSVUploadViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = CSVUpload.objects.all()
+    model = CSVUpload
     serializer_class = CSVUploadSerializerBase
     serializer_detail_class = CSVUploadSerializerBase
 
@@ -658,6 +672,7 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
     lookup_field = "reference"
     serializer_class = CaseNotesHistorySerializerBase
     queryset = CaseNotesHistory.objects.all()
+    model = CaseNotesHistory
 
     pagination_serializer_class = RelativeUrlPaginationSerializer
     paginate_by = 5

@@ -52,6 +52,7 @@ class BaseLogViewSet(NestedGenericModelMixin, mixins.ListModelMixin, viewsets.Ge
     PARENT_FIELD = "log_set"
     lookup_field = "reference"
     serializer_class = LogSerializerBase
+    model = Log
     queryset = Log.objects.all()
 
     def get_queryset(self):

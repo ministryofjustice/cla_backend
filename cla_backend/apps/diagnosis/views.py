@@ -15,6 +15,7 @@ from cla_common.constants import DIAGNOSIS_SCOPE
 
 class DiagnosisModelMixin(object):
     serializer_class = DiagnosisSerializer
+    model = DiagnosisTraversal
     queryset = DiagnosisTraversal.objects.all()
     lookup_field = "reference"
 

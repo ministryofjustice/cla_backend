@@ -4,9 +4,9 @@ from .models import Article, ArticleCategoryMatrix, ArticleCategory, TelephoneNu
 
 
 class ArticleCategoryMatrixSerializer(serializers.ModelSerializer):
-    id = serializers.Field(source="article_category.pk")
-    name = serializers.Field(source="article_category.name")
-    preferred_signpost = serializers.Field()
+    id = serializers.IntegerField(source="article_category.pk")
+    name = serializers.CharField(source="article_category.name")
+    preferred_signpost = serializers.CharField()
 
     class Meta(object):
         model = ArticleCategoryMatrix

@@ -11,13 +11,15 @@ from cla_common.money_interval.fields import MoneyIntervalField
 class MoneyIntervalFieldMaxValidator(validators.MaxValueValidator):
     def __call__(self, obj):
         value = getattr(obj, "per_interval_value", None)
-        return super(MoneyIntervalFieldMaxValidator, self).__call__(value)
+        if value is not None:
+            return super(MoneyIntervalFieldMaxValidator, self).__call__(value)
 
 
 class MoneyIntervalFieldMinValidator(validators.MinValueValidator):
     def __call__(self, obj):
         value = getattr(obj, "per_interval_value", None)
-        return super(MoneyIntervalFieldMinValidator, self).__call__(value)
+        if value is not None:
+            return super(MoneyIntervalFieldMinValidator, self).__call__(value)
 
 
 class MoneyIntervalDRFField(serializers.Field):

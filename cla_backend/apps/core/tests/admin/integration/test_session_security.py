@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
@@ -151,7 +152,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         try:
             WebDriverWait(self.browser, self.WAIT).until(
                 expected_conditions.presence_of_element_located((By.LINK_TEXT, "Log out")))
-        except Exception:
+        except TimeoutException:
             self.fail("Login was unsuccessful")
 
         self.assertIsNotNone(self.get_session_cookie(), "Session cookie not present after logging in.")
@@ -165,7 +166,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         try:
             WebDriverWait(self.browser, max_wait).until(
                 expected_conditions.visibility_of_element_located((By.ID, "session_security_warning")))
-        except Exception:
+        except TimeoutException:
             self.fail("Warning message not displayed after %ds or inactivity" % (max_wait))
 
     def assert_warning_is_hidden(self):
@@ -174,7 +175,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         try:
             WebDriverWait(self.browser, self.WAIT).until(
                 expected_conditions.invisibility_of_element((By.ID, "session_security_warning")))
-        except Exception:
+        except TimeoutException:
             self.fail("Warning message present during active session")
 
     def assert_logged_out(self, delay):
@@ -187,7 +188,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         try:
             WebDriverWait(self.browser, delay).until(
                 expected_conditions.presence_of_element_located((By.ID, "id_password")))
-        except Exception:
+        except TimeoutException:
             self.fail("Sessions was not logged out after %ds" % (delay))
 
         self.assertIsNone(self.get_session_cookie(), "Session cookie present after logging out.")

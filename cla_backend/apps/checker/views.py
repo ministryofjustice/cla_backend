@@ -117,12 +117,14 @@ class PropertyViewSet(
     parent_model = EligibilityCheck
 
     queryset = Property.objects.all()
+    model = Property
     serializer_class = PropertySerializer
 
 
 class CaseViewSet(PublicAPIViewSetMixin, BaseCaseLogMixin, ClaCreateModelMixin, viewsets.GenericViewSet):
 
     queryset = Case.objects.all()
+    model = Case
     serializer_class = CaseSerializer
 
     def perform_create(self, serializer):
@@ -164,6 +166,7 @@ class ReasonForContactingViewSet(
     PublicAPIViewSetMixin, ClaCreateModelMixin, ClaUpdateModelMixin, viewsets.GenericViewSet
 ):
     queryset = ReasonForContacting.objects.all()
+    model = ReasonForContacting
     serializer_class = ReasonForContactingSerializer
     lookup_field = "reference"
 

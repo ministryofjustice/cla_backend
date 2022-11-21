@@ -39,6 +39,7 @@ class BaseComplaintViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = Complaint.objects.all()
+    model = Complaint
     serializer_class = ComplaintSerializerBase
 
     def get_queryset(self, dashboard=False, show_closed=False):
@@ -219,6 +220,7 @@ class BaseComplaintViewSet(
 
 class BaseComplaintCategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = Category.objects.all()
+    model = Category
     serializer_class = CategorySerializerBase
 
 
@@ -253,6 +255,7 @@ class BaseComplaintLogViewset(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, viewsets.GenericViewSet
 ):
     queryset = ComplaintLog.objects.all()
+    model = ComplaintLog
     serializer_class = ComplaintLogSerializerBase
     lookup_field = "pk"
     PARENT_FIELD = "logs"

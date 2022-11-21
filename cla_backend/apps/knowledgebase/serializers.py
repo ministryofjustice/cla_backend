@@ -6,7 +6,7 @@ from .models import Article, ArticleCategoryMatrix, ArticleCategory, TelephoneNu
 class ArticleCategoryMatrixSerializer(serializers.ModelSerializer):
     id = serializers.Field(source="article_category.pk")
     name = serializers.Field(source="article_category.name")
-    preferred_signpost = serializers.Field(source="preferred_signpost")
+    preferred_signpost = serializers.Field()
 
     class Meta(object):
         model = ArticleCategoryMatrix

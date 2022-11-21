@@ -10,12 +10,15 @@ class ArticleCategoryFilter(django_filters.FilterSet):
     article_category = django_filters.ModelMultipleChoiceFilter
 
     class Meta(object):
+        # Todo: is queryset needed
         queryset = Article.objects.all()
+        model = Article
         fields = ("article_category",)
 
 
 class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Article.objects.all()
+    model = Article
     serializer_class = ArticleSerializer
 
     paginate_by = 20
@@ -42,4 +45,5 @@ class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
 
 class BaseArticleCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ArticleCategory.objects.all()
+    model = ArticleCategory
     serializer_class = ArticleCategorySerializer

@@ -341,7 +341,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         slug_field="code", required=False, queryset=Category.objects.all(), allow_null=True
     )
     your_problem_notes = serializers.CharField(max_length=500, required=False, allow_blank=True)
-    notes = serializers.CharField(max_length=5000, required=False)
+    notes = serializers.CharField(max_length=5000, required=False, allow_blank=True)
     specific_benefits = JSONField(required=False, allow_null=True)
     disregards = JSONField(required=False, allow_null=True)
     # DRF 3.0 fails to determine that these fields are nullable when trying to map django model fields to DRF fields

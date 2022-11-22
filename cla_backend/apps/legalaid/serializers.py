@@ -529,16 +529,22 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     eligibility_check = UUIDSerializer(slug_field="reference", read_only=True)
     diagnosis = UUIDSerializer(slug_field="reference", required=False, read_only=True)
     personal_details = PersonalDetailsSerializerBase()
-    notes = serializers.CharField(max_length=10000, required=False)
+    notes = serializers.CharField(max_length=10000, required=False, allow_blank=True)
     provider_notes = serializers.CharField(max_length=5000, required=False)
     matter_type1 = serializers.SlugRelatedField(
-        slug_field="code", required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE)
+        slug_field="code",
+        required=False,
+        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE),
+        allow_null=True,
     )
     matter_type2 = serializers.SlugRelatedField(
-        slug_field="code", required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO)
+        slug_field="code",
+        required=False,
+        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO),
+        allow_null=True,
     )
     media_code = serializers.SlugRelatedField(slug_field="code", required=False, queryset=MediaCode.objects.all())
-    outcome_code = serializers.CharField(max_length=50, required=False)
+    outcome_code = serializers.CharField(max_length=50, required=False, allow_blank=True)
     outcome_description = serializers.SerializerMethodField("_get_outcome_description")
     call_started = serializers.SerializerMethodField("_call_started")
 

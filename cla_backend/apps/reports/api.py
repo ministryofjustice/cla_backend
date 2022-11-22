@@ -16,6 +16,7 @@ class ExportListView(generics.ListAPIView, generics.DestroyAPIView):
     authentication_classes = (SessionAuthentication,)
     page_size = 1000
     scheduled = False
+    queryset = Export.objects.all()
 
     def get_queryset(self):
         if self.scheduled:

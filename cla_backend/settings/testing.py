@@ -32,3 +32,6 @@ class DisableMigrations(object):
 
 
 MIGRATION_MODULES = DisableMigrations()
+
+SESSION_SECURITY_WARN_AFTER = 5
+SESSION_SECURITY_EXPIRE_AFTER = 10

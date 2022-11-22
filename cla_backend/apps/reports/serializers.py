@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 
 class ExportSerializer(serializers.ModelSerializer):
-    link = serializers.CharField(source="link")
+    link = serializers.CharField()
 
     class Meta:
         model = Export

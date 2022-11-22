@@ -302,10 +302,10 @@ class BaseAdaptationDetailsMetadataViewSet(ClaCreateModelMixin, viewsets.Generic
 
 
 class BaseEODDetailsViewSet(
-    NestedGenericModelMixin,
     ClaCreateModelMixin,
     ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
+    NestedGenericModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = EODDetails.objects.all()

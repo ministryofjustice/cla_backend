@@ -488,12 +488,12 @@ class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
 
 class OutOfHoursRotaViewSet(
     CallCentreManagerPermissionsViewSetMixin,
-    ClaCreateModelMixin,
-    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
 ):
     model = OutOfHoursRota
     serializer_class = OutOfHoursRotaSerializer

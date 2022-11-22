@@ -92,7 +92,7 @@ class PasswordResetForm(forms.Form):
 
 
 class BaseUserViewSet(
-    mixins.RetrieveModelMixin, mixins.ListModelMixin, ClaCreateModelMixin, CaseFormActionMixin, viewsets.GenericViewSet
+    mixins.RetrieveModelMixin, mixins.ListModelMixin, CaseFormActionMixin, viewsets.GenericViewSet, ClaCreateModelMixin
 ):
     permission_classes = (IsManagerOrMePermission,)
 
@@ -250,10 +250,10 @@ class BaseContactResearchMethodViewSet(mixins.RetrieveModelMixin, mixins.ListMod
 
 
 class FullPersonalDetailsViewSet(
+    NestedGenericModelMixin,
     ClaCreateModelMixin,
     ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
-    NestedGenericModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = PersonalDetails.objects.all()
@@ -265,10 +265,10 @@ class FullPersonalDetailsViewSet(
 
 
 class BaseThirdPartyDetailsViewSet(
+    NestedGenericModelMixin,
     ClaCreateModelMixin,
     ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
-    NestedGenericModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = ThirdPartyDetails.objects.all()
@@ -279,10 +279,10 @@ class BaseThirdPartyDetailsViewSet(
 
 
 class BaseAdaptationDetailsViewSet(
+    NestedGenericModelMixin,
     ClaCreateModelMixin,
     ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
-    NestedGenericModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = AdaptationDetails.objects.all()
@@ -302,10 +302,10 @@ class BaseAdaptationDetailsMetadataViewSet(ClaCreateModelMixin, viewsets.Generic
 
 
 class BaseEODDetailsViewSet(
+    NestedGenericModelMixin,
     ClaCreateModelMixin,
     ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
-    NestedGenericModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = EODDetails.objects.all()

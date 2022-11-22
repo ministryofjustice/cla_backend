@@ -331,7 +331,7 @@ class Migration(migrations.Migration):
                 ("adaptation_details", models.ForeignKey(blank=True, to="legalaid.AdaptationDetails", null=True)),
             ],
             options={"permissions": (("run_reports", "Can run reports"),)},
-            bases=(models.Model),
+            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name="CaseKnowledgebaseAssignment",
@@ -627,7 +627,7 @@ class Migration(migrations.Migration):
                 ("category", models.ForeignKey(blank=True, to="legalaid.Category", null=True)),
             ],
             options={"abstract": False, "ordering": ("-created",)},
-            bases=(models.Model),
+            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name="Income",

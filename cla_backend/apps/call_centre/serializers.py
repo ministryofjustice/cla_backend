@@ -338,7 +338,9 @@ class CreateCaseSerializer(CaseSerializer):
     No other fields can be used when creating a case atm.
     """
 
-    personal_details = UUIDSerializer(slug_field="reference", required=False, queryset=PersonalDetails.objects.all())
+    personal_details = UUIDSerializer(
+        slug_field="reference", required=False, queryset=PersonalDetails.objects.all(), allow_null=True
+    )
 
     class Meta(CaseSerializer.Meta):
         fields = tuple(set(CaseSerializer.Meta.fields) - {"complaint_count"})

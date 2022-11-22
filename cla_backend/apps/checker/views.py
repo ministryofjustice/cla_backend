@@ -151,8 +151,8 @@ class DiagnosisViewSet(
     PublicAPIViewSetMixin,
     DiagnosisModelMixin,
     ClaCreateModelMixin,
-    mixins.RetrieveModelMixin,
     ClaUpdateModelMixin,
+    mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):

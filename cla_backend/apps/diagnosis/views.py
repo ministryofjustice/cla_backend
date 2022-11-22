@@ -71,11 +71,11 @@ class DiagnosisModelMixin(object):
 
 class BaseDiagnosisViewSet(
     DiagnosisModelMixin,
-    ClaCreateModelMixin,
     mixins.RetrieveModelMixin,
-    ClaUpdateModelMixin,
     mixins.DestroyModelMixin,
     NestedGenericModelMixin,
     viewsets.GenericViewSet,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
 ):
     PARENT_FIELD = "diagnosis"

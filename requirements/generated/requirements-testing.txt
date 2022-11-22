@@ -93,7 +93,7 @@ django-storages==1.5.2
     # via -r requirements/source/requirements-base.in
 django-uuidfield==0.5.0
     # via -r requirements/source/requirements-base.in
-django==1.7.11
+django==3.2.15
     # via
     #   -r requirements/source/requirements-base.in
     #   django-model-utils

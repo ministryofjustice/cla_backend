@@ -29,6 +29,9 @@ checker_graph = SimpleLazyObject(lambda: get_graph(file_name=settings.CHECKER_DI
 
 
 class PropertySerializer(PropertySerializerBase):
+    disputed = serializers.NullBooleanField(default=None)
+    main = serializers.NullBooleanField(default=None)
+
     @property
     def errors(self):
         return super(PropertySerializer, self).errors

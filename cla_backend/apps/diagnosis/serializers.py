@@ -21,9 +21,13 @@ class DiagnosisSerializer(ClaModelSerializer):
     choices = SerializerMethodField()
     nodes = SerializerMethodField()
     current_node_id = CharField()
-    category = SlugRelatedField(slug_field="code", required=False, queryset=Category.objects.all())
-    matter_type1 = SlugRelatedField(slug_field="code", required=False, queryset=MatterType.objects.all())
-    matter_type2 = SlugRelatedField(slug_field="code", required=False, queryset=MatterType.objects.all())
+    category = SlugRelatedField(slug_field="code", required=False, queryset=Category.objects.all(), allow_null=True)
+    matter_type1 = SlugRelatedField(
+        slug_field="code", required=False, queryset=MatterType.objects.all(), allow_null=True
+    )
+    matter_type2 = SlugRelatedField(
+        slug_field="code", required=False, queryset=MatterType.objects.all(), allow_null=True
+    )
     version_in_conflict = SerializerMethodField("is_version_in_conflict")
 
     def __init__(self, *args, **kwargs):

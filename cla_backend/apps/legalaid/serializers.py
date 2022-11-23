@@ -93,18 +93,16 @@ class CSVUploadSerializerBase(serializers.ModelSerializer):
     def get_rows(self, obj):
         return len(obj.body)
 
-    def validate_month(self, attrs, source):
-        value = attrs[source]
+    def validate_month(self, value):
         validate_first_of_month(value)
-        return attrs
+        return value
 
-    def validate_body(self, attrs, source):
-        value = attrs[source]
-        if len(value) == 0:
+    def validate_body(self, body):
+        if len(body) == 0:
             raise serializers.ValidationError("No rows found.")
-        ProviderCSVValidator(value).validate()
+        ProviderCSVValidator(body).validate()
 
-        return attrs
+        return body
 
     class Meta(object):
         model = CSVUpload

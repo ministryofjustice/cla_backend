@@ -322,11 +322,18 @@ class CSVUploadViewSet(CLAProviderPermissionViewSetMixin, BaseCSVUploadViewSet):
         qs = super(CSVUploadViewSet, self).get_queryset(*args, **kwargs).filter(provider=this_provider)
         return qs
 
-    def pre_save(self, obj):
+    def set_provider_user(self, serializer):
         user = self.get_logged_in_user_model()
-        obj.provider = user.provider
-        obj.created_by = user
-        super(CSVUploadViewSet, self).pre_save(obj)
+        serializer.validated_data["provider"] = user.provider
+        serializer.validated_data["created_by"] = user
+
+    def perform_create(self, serializer):
+        self.set_provider_user(serializer)
+        return super(CSVUploadViewSet, self).perform_create(serializer)
+
+    def perform_update(self, serializer):
+        self.set_provider_user(serializer)
+        return super(CSVUploadViewSet, self).perform_update(serializer)
 
 
 class CaseNotesHistoryViewSet(CLAProviderPermissionViewSetMixin, BaseCaseNotesHistoryViewSet):

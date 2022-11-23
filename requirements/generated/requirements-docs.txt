@@ -72,8 +72,6 @@ https://github.com/timmyomahony/django-pagedown/archive/refs/tags/v1.1.tar.gz
     # via -r requirements/source/requirements-base.in
 django-rest-swagger==0.1.14
     # via -r requirements/source/requirements-docs.in
-django-session-security==2.2.3
-    # via -r requirements/source/requirements-base.in
 django-storages==1.5.2
     # via -r requirements/source/requirements-base.in
 django-uuidfield==0.5.0
@@ -86,7 +84,6 @@ django==1.7.11
     #   django-oauth-toolkit
     #   django-pagedown
     #   django-rest-swagger
-    #   django-session-security
     #   django-uuidfield
     #   jsonfield
 djangorestframework==2.4.8

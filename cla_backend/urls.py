@@ -26,7 +26,6 @@ if settings.ADMIN_ENABLED:
         url(r"^status/", include("status.urls", namespace="status")),
         url(r"^admin/", include(admin.site.urls)),
         url(r"^admin/reports/", include("reports.urls", namespace="reports")),
-        url(r'session_security/', include('session_security.urls')),
     )
 
 if settings.BACKEND_ENABLED:

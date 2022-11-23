@@ -122,9 +122,15 @@ class EligibilityCheckViewSet(
     serializer_class = EligibilityCheckSerializer
 
     # this is to fix a stupid thing in DRF where pre_save doesn't call super
-    def pre_save(self, obj):
+    def perform_create(self, serializer):
         original_obj = self.get_object()
         self.__pre_save__ = self.get_serializer_class()(original_obj).data
+        super(EligibilityCheckViewSet, self).perform_create(serializer)
+
+    def perform_update(self, serializer):
+        original_obj = self.get_object()
+        self.__pre_save__ = self.get_serializer_class()(original_obj).data
+        super(EligibilityCheckViewSet, self).perform_update(serializer)
 
 
 class MatterTypeViewSet(CallCentrePermissionsViewSetMixin, BaseMatterTypeViewSet):

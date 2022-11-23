@@ -1,6 +1,4 @@
 from django.http import Http404
-from django.shortcuts import get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import AllowAny
@@ -13,14 +11,13 @@ from diagnosis.views import DiagnosisModelMixin
 
 from knowledgebase.views import BaseArticleViewSet, ArticleCategoryFilter
 
-from legalaid.models import EligibilityCheck, Property, Case
+from legalaid.models import Case
 from legalaid.views import BaseCategoryViewSet, BaseEligibilityCheckViewSet, BaseCaseLogMixin
 from cla_common.constants import CASE_SOURCE
 
 from .models import ReasonForContacting
 from .serializers import (
     EligibilityCheckSerializer,
-    PropertySerializer,
     CaseSerializer,
     CheckerDiagnosisSerializer,
     ReasonForContactingSerializer,
@@ -77,48 +74,6 @@ class EligibilityCheckViewSet(
             return DRFResponse({"reference": self.get_object().case.reference})
         except AttributeError:
             raise Http404
-
-
-class NestedModelMixin(object):
-    parent_model = None
-    parent_lookup = None
-    nested_lookup = None
-
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        key = kwargs["{parent_lookup}__{lookup}".format(parent_lookup=self.parent_lookup, lookup=self.nested_lookup)]
-
-        self.parent_instance = get_object_or_404(self.parent_model, **{self.nested_lookup: key})
-
-        return super(NestedModelMixin, self).dispatch(request, *args, **kwargs)
-
-    def get_queryset(self):
-        qs = super(NestedModelMixin, self).get_queryset()
-        return qs.filter(**{self.parent_lookup: self.parent_instance})
-
-    def pre_save(self, obj):
-        setattr(obj, self.parent_lookup, self.parent_instance)
-        super(NestedModelMixin, self).pre_save(obj)
-
-
-class PropertyViewSet(
-    PublicAPIViewSetMixin,
-    NestedModelMixin,
-    ClaCreateModelMixin,
-    ClaUpdateModelMixin,
-    mixins.DestroyModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
-):
-
-    nested_lookup = "reference"
-    parent_lookup = "eligibility_check"
-    parent_model = EligibilityCheck
-
-    queryset = Property.objects.all()
-    model = Property
-    serializer_class = PropertySerializer
 
 
 class CaseViewSet(PublicAPIViewSetMixin, BaseCaseLogMixin, ClaCreateModelMixin, viewsets.GenericViewSet):

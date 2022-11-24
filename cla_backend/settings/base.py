@@ -448,7 +448,7 @@ SESSION_SECURITY_WARN_AFTER = 60 * 0.5
 SESSION_SECURITY_EXPIRE_AFTER = 60 * 1
 # Set all non-admin urls to passive. 
 # Session security for non-admin urls is handled in the calling applications.
-PASSIVE_URL_REGEX_LIST = ["^(?!\/admin\/).*"]
+PASSIVE_URL_REGEX_LIST = ["^(?!\/admin\/).*", "^(\/admin\/).*\/exports/$" ]
 
 SESSION_SECURITY_PASSIVE_URLS = []
 TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)

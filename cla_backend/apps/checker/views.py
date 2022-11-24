@@ -114,6 +114,24 @@ class DiagnosisViewSet(
 ):
     serializer_class = CheckerDiagnosisSerializer
 
+    def try_to_original_obj(self):
+        try:
+            self._original_obj = self.get_object()
+        except AssertionError:
+            pass
+
+    def perform_create(self, serializer):
+        self.try_to_original_obj()
+        # The use of DiagnosisModelMixin instead DiagnosisViewSet to call super is on purpose
+        # As the previous code was trying to bypass the DiagnosisModelMixin pre_save hooks
+        return super(DiagnosisModelMixin, self).perform_create(serializer)
+
+    def perform_update(self, serializer):
+        self.try_to_original_obj()
+        # The use of DiagnosisModelMixin instead DiagnosisViewSet to call super is on purpose
+        # As the previous code was trying to bypass the DiagnosisModelMixin pre_save hooks
+        super(DiagnosisModelMixin, self).perform_update(serializer)
+
     def get_current_user(self):
         return get_web_user()
 

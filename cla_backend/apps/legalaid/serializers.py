@@ -199,6 +199,7 @@ class ThirdPartyPersonalDetailsSerializerBase(PersonalDetailsSerializerBase):
 
 class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
     personal_details = ThirdPartyPersonalDetailsSerializerBase(required=True)
+    spoke_to = serializers.NullBooleanField(required=False, default=None)
 
     # from DRF 3.0 onwards, there is no allow_add_remove option
     # writable nested serialization must be handed explicitly
@@ -595,6 +596,8 @@ class CaseSerializerFull(CaseSerializerBase):
     date_of_birth = serializers.CharField(source="personal_details.date_of_birth", read_only=True)
     category = serializers.CharField(source="diagnosis.category.name", read_only=True)
 
+    exempt_user = serializers.NullBooleanField(required=False, default=None)
+
     class Meta(CaseSerializerBase.Meta):
         fields = ()
 
@@ -652,6 +655,8 @@ class CaseArchivedSerializerBase(serializers.ModelSerializer):
     date_of_birth = ThreePartDateField(required=False)
     date_specialist_referred = ThreePartDateField(required=False)
     date_specialist_closed = ThreePartDateField(required=False)
+    financially_eligible = serializers.NullBooleanField(required=False, default=None)
+    in_scope = serializers.NullBooleanField(required=False, default=None)
 
     class Meta(object):
         model = CaseArchived

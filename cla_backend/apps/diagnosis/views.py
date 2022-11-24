@@ -10,8 +10,6 @@ from legalaid.models import Case
 from diagnosis.models import DiagnosisTraversal
 from diagnosis.serializers import DiagnosisSerializer
 
-from cla_common.constants import DIAGNOSIS_SCOPE
-
 
 class DiagnosisModelMixin(object):
     serializer_class = DiagnosisSerializer
@@ -51,19 +49,19 @@ class DiagnosisModelMixin(object):
             self.create_diagnosis_log(instance, status="deleted")
 
     def perform_create(self, serializer):
-        previous_state = serializer.validated_data.get("state", DIAGNOSIS_SCOPE.UNKNOWN)
-        obj = super(DiagnosisModelMixin, self).perform_create(serializer)
-        self._post_save(obj, previous_state)
-        return obj
+        self._original_obj = self.get_object()
+        return super(DiagnosisModelMixin, self).perform_create(serializer)
 
     def perform_update(self, serializer):
-        previous_state = serializer.instance.state
+        self._original_obj = self.get_object()
         super(DiagnosisModelMixin, self).perform_update(serializer)
-        self._post_save(serializer.instance, previous_state)
 
-    def _post_save(self, obj, previous_state):
-        if not obj.is_state_unknown() and DiagnosisTraversal.is_state_unknown_cls(previous_state):
-            self.create_diagnosis_log(obj, status="created")
+    def post_save(self, obj, *args, **kwargs):
+        ret = super(DiagnosisModelMixin, self).post_save(obj, *args, **kwargs)
+        if not obj.is_state_unknown():
+            if not self._original_obj or self._original_obj.is_state_unknown():
+                self.create_diagnosis_log(obj, status="created")
+        return ret
 
     def get_current_user(self):
         return self.request.user

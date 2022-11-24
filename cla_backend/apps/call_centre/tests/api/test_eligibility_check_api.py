@@ -4,6 +4,9 @@ from rest_framework.test import APITestCase
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
 from legalaid.tests.views.mixins.eligibility_check_api import NestedEligibilityCheckAPIMixin
 
+from legalaid.models import EligibilityCheck, Person, Savings
+from cla_eventlog.models import Log
+
 
 class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilityCheckAPIMixin, APITestCase):
     LOOKUP_KEY = "case_reference"
@@ -80,3 +83,28 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilit
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {"warnings": {}})
+
+    def test_create_with_finances_and_check_log(self):
+        """
+        CREATE data with finances
+        """
+        data = self._get_valid_post_data()
+        response = self._create(data=data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Make sure the "MT_CREATED" log entry is created
+        self.assertEqual(Log.objects.count(), 1)
+        self.assertEqual(Log.objects.all().first().code, "MT_CREATED")
+
+        self.assertResponseKeys(response)
+        self.assertEligibilityCheckEqual(
+            response.data,
+            EligibilityCheck(
+                reference=response.data["reference"],
+                you=Person.from_dict(data["you"]),
+                partner=Person.from_dict(data["partner"]),
+                disputed_savings=Savings(
+                    bank_balance=1111, investment_balance=2222, asset_balance=3333, credit_balance=4444
+                ),
+            ),
+        )

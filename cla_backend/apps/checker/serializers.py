@@ -142,9 +142,6 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
 
 
 class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
-    contact_for_research = serializers.NullBooleanField(required=False, default=None)
-    vulnerable_user = serializers.NullBooleanField(required=False, default=None)
-
     class Meta(PersonalDetailsSerializerBase.Meta):
         fields = (
             "title",

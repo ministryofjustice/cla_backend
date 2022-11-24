@@ -66,22 +66,28 @@ class NestedGenericModelMixin(object):
 
         return super(NestedGenericModelMixin, self).get_queryset()
 
-    def perform_create(self, serializer):
+    def post_save(self, obj, created=False):
+        """
+        associates `obj` to the parent
+        :param kwargs: any kwargs needed to work out the parent
+        :return: parent_obj after saving it
+        """
         if not self.is_one_to_one_nested():
-            return super(NestedGenericModelMixin, self).perform_create(serializer)
+            return super(NestedGenericModelMixin, self).post_save(obj, created=created)
 
-        parent_obj = self.get_parent_object_or_none()
-        obj = super(NestedGenericModelMixin, self).perform_create(serializer)
-        if parent_obj:
-            if getattr(parent_obj, self.PARENT_FIELD):
-                raise MethodNotAllowed(
-                    "POST: %s already has a %s associated to it" % (parent_obj, obj.__class__.__name__)
-                )
-            else:
-                setattr(parent_obj, self.PARENT_FIELD, obj)
-                parent_obj.save(update_fields=[self.PARENT_FIELD])
+        if created:
+            parent_obj = self.get_parent_object_or_none()
 
-        return obj
+            if parent_obj:
+                if getattr(parent_obj, self.PARENT_FIELD):
+                    raise MethodNotAllowed(
+                        "POST: %s already has a %s associated to it" % (parent_obj, obj.__class__.__name__)
+                    )
+                else:
+                    setattr(parent_obj, self.PARENT_FIELD, obj)
+                    parent_obj.save(update_fields=[self.PARENT_FIELD])
+
+        super(NestedGenericModelMixin, self).post_save(obj, created=created)
 
 
 class JsonPatchViewSetMixin(object):
@@ -101,17 +107,18 @@ class JsonPatchViewSetMixin(object):
         original_obj = self.get_object()
         self.__pre_save__ = self.get_serializer_class()(original_obj).data
 
-        obj = super(JsonPatchViewSetMixin, self).perform_create(serializer)
-        self.__post_save__ = self.get_serializer_class()(obj).data
-
-        return obj
+        return super(JsonPatchViewSetMixin, self).perform_create(serializer)
 
     def perform_update(self, serializer):
         original_obj = self.get_object()
         self.__pre_save__ = self.get_serializer_class()(original_obj).data
+        super(JsonPatchViewSetMixin, self).perform_update(serializer)
 
-        obj = super(JsonPatchViewSetMixin, self).perform_update(serializer)
+    def post_save(self, obj, created=False, **kwargs):
+        super(JsonPatchViewSetMixin, self).post_save(obj, created=created)
         self.__post_save__ = self.get_serializer_class()(obj).data
+
+        return obj
 
 
 class FormActionMixin(object):
@@ -178,7 +185,7 @@ class ClaCreateModelMixin(ClaPrePostSaveMixin, mixins.CreateModelMixin):
     def perform_create(self, serializer):
         self.pre_save(serializer)
         obj = serializer.save()
-        self.post_save(obj, created=True)
+        self.post_save(serializer.instance, created=True)
         return obj
 
 
@@ -195,7 +202,9 @@ class ClaRetrieveModelMixinWithSelfInstance(mixins.RetrieveModelMixin):
 
 class ClaUpdateModelMixin(ClaPrePostSaveMixin, mixins.UpdateModelMixin):
     def perform_update(self, serializer):
-        obj = self.get_object()
-        self.pre_save(obj)
+        self.pre_save(serializer.instance)
         super(ClaUpdateModelMixin, self).perform_update(serializer)
-        self.post_save(obj, created=False)
+        self.post_save(serializer.instance, created=False)
+
+    def post_save(self, obj, created=False):
+        pass

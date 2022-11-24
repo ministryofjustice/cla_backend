@@ -150,7 +150,7 @@ class BaseComplaintViewSet(
             obj.eod.case.complaint_flag = True
             obj.eod.case.save()
 
-        if getattr(obj, "_update_owner", False):
+        if getattr(self, "_update_owner", False):
             event = event_registry.get_event("complaint")()
             event.process(
                 obj.eod.case,

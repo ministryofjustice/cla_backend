@@ -167,12 +167,14 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
 
 
 class CaseSerializer(CaseSerializerBase):
-    eligibility_check = UUIDSerializer(slug_field="reference", required=False, queryset=EligibilityCheck.objects.all())
-    adaptation_details = AdaptationDetailsSerializer(required=False)
+    eligibility_check = UUIDSerializer(
+        slug_field="reference", required=False, queryset=EligibilityCheck.objects.all(), allow_null=True
+    )
+    adaptation_details = AdaptationDetailsSerializer(required=False, allow_null=True)
     personal_details = PersonalDetailsSerializer()
-    thirdparty_details = ThirdPartyDetailsSerializer(required=False)
-    requires_action_at = serializers.DateTimeField(required=False)
-    callback_window_type = serializers.ChoiceField(choices=CALLBACK_WINDOW_TYPES, required=False)
+    thirdparty_details = ThirdPartyDetailsSerializer(required=False, allow_null=True)
+    requires_action_at = serializers.DateTimeField(required=False, allow_null=True)
+    callback_window_type = serializers.ChoiceField(choices=CALLBACK_WINDOW_TYPES, required=False, allow_null=True)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (

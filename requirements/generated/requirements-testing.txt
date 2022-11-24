@@ -33,8 +33,12 @@ chardet==4.0.0
     # via requests
 https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.16.tar.gz
     # via -r requirements/source/requirements-base.in
+colorama==0.4.6
+    # via crayons
 configparser==4.0.2
-    # via importlib-metadata
+    # via
+    #   importlib-metadata
+    #   webdriver-manager
 contextlib2==0.6.0.post1
     # via
     #   importlib-metadata
@@ -45,6 +49,8 @@ coverage==4.5.4
     #   coveralls
 coveralls==1.8.2
     # via -r requirements/source/requirements-testing.in
+crayons==0.4.0
+    # via webdriver-manager
 cryptography==3.3.2
     # via
     #   pyopenssl
@@ -81,6 +87,8 @@ https://github.com/timmyomahony/django-pagedown/archive/refs/tags/v1.1.tar.gz
     # via -r requirements/source/requirements-base.in
 https://github.com/HassenPy/django-pdb/archive/refs/tags/0.3.2.tar.gz
     # via -r requirements/source/requirements-testing.in
+django-session-security==2.2.3
+    # via -r requirements/source/requirements-base.in
 django-storages==1.5.2
     # via -r requirements/source/requirements-base.in
 django-uuidfield==0.5.0
@@ -92,6 +100,7 @@ django==1.7.11
     #   django-moj-irat
     #   django-oauth-toolkit
     #   django-pagedown
+    #   django-session-security
     #   django-uuidfield
     #   jsonfield
     #   model-mommy
@@ -194,10 +203,13 @@ requests==2.27.1
     #   cla-common
     #   coveralls
     #   django-moj-irat
+    #   webdriver-manager
 s3transfer==0.4.2
     # via boto3
 scandir==1.10.0
     # via pathlib2
+selenium==3.141.0
+    # via -r requirements/source/requirements-testing.in
 sentry-sdk==0.19.3
     # via -r requirements/source/requirements-base.in
 six==1.16.0
@@ -228,9 +240,12 @@ urllib3[secure]==1.26.11
     #   botocore
     #   coveralls
     #   requests
+    #   selenium
     #   sentry-sdk
 uwsgi==2.0.18
     # via -r requirements/source/requirements-base.in
+webdriver-manager==1.6.2
+    # via -r requirements/source/requirements-testing.in
 webencodings==0.5.1
     # via bleach
 xlrd==2.0.1

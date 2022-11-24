@@ -184,7 +184,7 @@ MIDDLEWARE_CLASSES = (
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "session_security.middleware.SessionSecurityMiddleware",
+    "core.admin.middleware.ClaSessionSecurityMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "status.middleware.MaintenanceModeMiddleware",
@@ -444,8 +444,11 @@ MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
 
 # Settings for django-session-security.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_SECURITY_WARN_AFTER = 60 * 56
-SESSION_SECURITY_EXPIRE_AFTER = 60 * 60
+SESSION_SECURITY_WARN_AFTER = 60 * 0.5
+SESSION_SECURITY_EXPIRE_AFTER = 60 * 1
+# Set all non-admin urls to passive. 
+# Session security for non-admin urls is handled in the calling applications.
+PASSIVE_URL_REGEX_LIST = ["^(?!\/admin\/).*"]
 
 SESSION_SECURITY_PASSIVE_URLS = []
 TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)

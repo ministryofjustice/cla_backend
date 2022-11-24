@@ -8,6 +8,7 @@ from oauth2_provider.ext.rest_framework import OAuth2Authentication
 from rest_framework.views import APIView
 
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin
+from cla_backend.urls import urlpatterns as base_patterns
 from oauth2_provider.models import Application, AccessToken
 from .. import permissions
 
@@ -25,7 +26,7 @@ class MockView(APIView):
         return HttpResponse({"a": 1, "b": 2, "c": 3})
 
 
-urlpatterns = patterns("", (r"^mock_view/$", MockView.as_view(authentication_classes=[OAuth2Authentication])))
+urlpatterns = base_patterns + patterns("", (r"^mock_view/$", MockView.as_view(authentication_classes=[OAuth2Authentication])))
 
 
 class CallCentreClientIDPermissionTestCase(CLAOperatorAuthBaseApiTestMixin, TestCase):

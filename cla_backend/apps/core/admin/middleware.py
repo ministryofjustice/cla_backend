@@ -1,7 +1,7 @@
 import re
 
 from django.conf import settings
-
+from django.core.urlresolvers import reverse
 from session_security.middleware import SessionSecurityMiddleware
 
 PASSIVE_URL_REGEX_LIST = getattr(settings, "PASSIVE_URL_REGEX_LIST", None)
@@ -17,7 +17,9 @@ class ClaSessionSecurityMiddleware(SessionSecurityMiddleware):
 
     def is_passive_request(self, request):
 
-        if any(re.search(url_check, request.path) for url_check in PASSIVE_URL_REGEX_LIST):
+        url_match_found = any(re.search(url_check, request.path) for url_check in PASSIVE_URL_REGEX_LIST)
+
+        if url_match_found and request.path == reverse('session_security_ping'):
             return True
 
         return False

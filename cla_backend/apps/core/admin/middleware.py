@@ -19,7 +19,7 @@ class ClaSessionSecurityMiddleware(SessionSecurityMiddleware):
 
         url_match_found = any(re.search(url_check, request.path) for url_check in PASSIVE_URL_REGEX_LIST)
 
-        if url_match_found and request.path == reverse('session_security_ping'):
+        if url_match_found and not request.path == reverse('session_security_ping'):
             return True
 
         return False

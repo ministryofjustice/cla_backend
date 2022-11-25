@@ -1,25 +1,29 @@
-FROM alpine:3.9
+FROM alpine:3.15.0
 
 RUN apk add --no-cache \
-      bash \
-      py2-pip \
-      tzdata \
-      gettext
+    bash \
+    curl \
+    tzdata \
+    gettext \
+    python2-dev \
+    libffi-dev
+
+RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+RUN python get-pip.py
 
 RUN adduser -D app && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
 # To install pip dependencies
 RUN apk add --no-cache \
-      build-base \
-      curl \
-      git \
-      libxml2-dev \
-      libxslt-dev \
-      linux-headers \
-      postgresql-dev \
-      python2-dev && \
-    pip install -U setuptools pip==18.1 wheel
+    build-base \
+    git \
+    libxml2-dev \
+    libxslt-dev \
+    linux-headers \
+    postgresql-dev
+
+RUN pip install -U setuptools pip wheel
 
 WORKDIR /home/app
 

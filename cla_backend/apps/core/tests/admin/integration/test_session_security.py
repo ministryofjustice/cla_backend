@@ -110,7 +110,7 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         self.login()
 
         # Navigate to the reports page.
-        self.browser.get('%s%s' % (self.live_server_url, 'admin/reports/mi-cb1-extract/'))
+        self.browser.get('%s%s' % (self.live_server_url, '/admin/reports/mi-cb1-extract/'))
 
         # Check that the session warning is displayed.
         self.check_session_warning_displayed()

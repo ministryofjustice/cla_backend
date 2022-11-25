@@ -2,7 +2,6 @@ import datetime
 import os
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import TimeoutException
@@ -20,6 +19,8 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
     working as expected.
     """
 
+    fixtures = ["initial_groups.json", "test_auth_clients.json"]
+
     # These settings are made intentionally short in the circle CI settings file
     # (5/10s respectively).
     WARN_AFTER_SECONDS = settings.SESSION_SECURITY_WARN_AFTER
@@ -27,11 +28,12 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
 
     WAIT = 5
     TOLERANCE = 2
-    TEST_LOGIN_CREDS = "test"
+    TEST_LOGIN_CREDS = "test_cla_superuser"
     TEST_SERVER = "localhost:5000"
 
     @classmethod
     def setUpClass(cls):
+        ContentType.objects.clear_cache()
         cls.start_test_broswer()
         os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = cls.TEST_SERVER
         super(StaticLiveServerTestCase, cls).setUpClass()
@@ -51,7 +53,6 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
 
     def setUp(self):
         super(SessionSecuritySeleniumTestCase, self).setUp()
-        self.setup_admin_user()
 
     def test_inactivity_session_timeout_procedure(self):
         """Tests that the session secuirty procedure works correctly by warning the user
@@ -129,17 +130,6 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
 
         self.assertGreaterEqual(delta.seconds, self.WARN_AFTER_SECONDS)
         self.assertLessEqual(delta.seconds, self.EXPIRE_AFTER_SECONDS)
-
-    def setup_admin_user(self):
-        """Creates a test user for the admin portal.
-        """
-        ContentType.objects.clear_cache()
-
-        if not User.objects.filter(username=self.TEST_LOGIN_CREDS).exists():
-            test_user = User.objects.create(username=self.TEST_LOGIN_CREDS)
-            test_user.set_password(self.TEST_LOGIN_CREDS)
-            test_user.is_staff = True
-            test_user.save()
 
     def login(self):
         """Performs admin portal login and confirms the presence of the session cookie.

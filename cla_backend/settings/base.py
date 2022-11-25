@@ -9,7 +9,7 @@ from cla_common.services import CacheAdapter
 from collections import defaultdict
 from kombu import transport
 from sentry_sdk.integrations.django import DjangoIntegration
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS 
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 from cla_backend.sqs import CLASQSChannel
 
 
@@ -444,11 +444,11 @@ MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
 
 # Settings for django-session-security.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_SECURITY_WARN_AFTER = 60 * 0.5
-SESSION_SECURITY_EXPIRE_AFTER = 60 * 1
-# Set all non-admin urls to passive. 
+SESSION_SECURITY_WARN_AFTER = 60 * 25
+SESSION_SECURITY_EXPIRE_AFTER = 60 * 30
+# Set all non-admin urls to passive.
 # Session security for non-admin urls is handled in the calling applications.
-PASSIVE_URL_REGEX_LIST = ["^(?!\/admin\/).*", "^(\/admin\/).*\/exports/$" ]
+PASSIVE_URL_REGEX_LIST = [r"^(?!\/admin\/).*", r"^(\/admin\/).*\/exports/$"]
 
 SESSION_SECURITY_PASSIVE_URLS = []
 TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)

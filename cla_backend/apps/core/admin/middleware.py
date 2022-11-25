@@ -4,8 +4,6 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from session_security.middleware import SessionSecurityMiddleware
 
-PASSIVE_URL_REGEX_LIST = getattr(settings, "PASSIVE_URL_REGEX_LIST", None)
-
 
 class ClaSessionSecurityMiddleware(SessionSecurityMiddleware):
     """
@@ -13,11 +11,12 @@ class ClaSessionSecurityMiddleware(SessionSecurityMiddleware):
     """
 
     def __init__(self):
+        self.PASSIVE_URL_REGEX_LIST = getattr(settings, "PASSIVE_URL_REGEX_LIST", [])
         super(ClaSessionSecurityMiddleware, self).__init__()
 
-    def is_passive_request(self, request):
+    def _is_passive_request(self, request):
 
-        url_match_found = any(re.search(url_check, request.path) for url_check in PASSIVE_URL_REGEX_LIST)
+        url_match_found = any(re.search(url_check, request.path) for url_check in self.PASSIVE_URL_REGEX_LIST)
 
         if url_match_found and not request.path == reverse('session_security_ping'):
             return True
@@ -26,7 +25,7 @@ class ClaSessionSecurityMiddleware(SessionSecurityMiddleware):
 
     def process_request(self, request):
 
-        if self.is_passive_request(request):
+        if self._is_passive_request(request):
             return
 
         super(ClaSessionSecurityMiddleware, self).process_request(request)

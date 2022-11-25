@@ -97,7 +97,6 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         self.navigate_to_admin_page()
         self.assert_logged_out(self.WAIT)
 
-
     def test_inactivity_session_time_with_passive_urls(self):
         """Tests that the session timeout handles passive urls correctly. In this scenario
         the report exports page is used as this page polls for new reports periodically so the

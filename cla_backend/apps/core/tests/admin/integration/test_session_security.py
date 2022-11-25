@@ -97,6 +97,25 @@ class SessionSecuritySeleniumTestCase(StaticLiveServerTestCase):
         self.navigate_to_admin_page()
         self.assert_logged_out(self.WAIT)
 
+
+    def test_inactivity_session_time_with_passive_urls(self):
+        """Tests that the session timeout handles passive urls correctly. In this scenario
+        the report exports page is used as this page polls for new reports periodically so the
+        page would never timeout if the url was not set to passive."""
+
+        # Check that the expec
+        self.assertTrue(
+            r"^(\/admin\/).*\/exports/$" in settings.PASSIVE_URL_REGEX_LIST, "exports urls are not set to passive.")
+
+        # Login
+        self.login()
+
+        # Navigate to the reports page.
+        self.browser.get('%s%s' % (self.live_server_url, 'admin/reports/mi-cb1-extract/'))
+
+        # Check that the session warning is displayed.
+        self.check_session_warning_displayed()
+
     def check_session_warning_displayed(self):
         """Checks that the session security modal goes from hidden to visible within the
         required timeframe.

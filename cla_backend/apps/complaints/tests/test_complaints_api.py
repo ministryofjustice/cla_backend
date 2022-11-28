@@ -77,6 +77,7 @@ class ComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin, Sim
         self.assertEqual(Complaint.objects.all().count(), complaint_count + 1)
 
         resource = Complaint.objects.get(pk=response.data["id"])
+        self.assertEqual(resource.created_by, self.user)
         self.assertSingleEventCreated(resource, "COMPLAINT_CREATED")
 
     def test_create_and_event_log(self):

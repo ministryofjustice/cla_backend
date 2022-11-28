@@ -254,6 +254,12 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
         # checking email
         self.assertEquals(len(mail.outbox), 1)
 
+        # Check that logs are created in order
+        first = Log.objects.order_by("-created").first()
+        self.assertEqual("CB1", first.code)
+        last = Log.objects.order_by("-created").last()
+        self.assertEqual("CASE_CREATED", last.code)
+
     def test_create_should_ignore_outcome_code(self):
         """
         Here only to check backward incompatibility

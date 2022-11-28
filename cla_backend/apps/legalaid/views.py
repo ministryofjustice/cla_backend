@@ -370,18 +370,18 @@ class BaseCaseLogMixin(object):
             context["eligibility_state"] = obj.eligibility_check.state
         return context
 
-    def perform_create(self, serializer):
-        obj = super(BaseCaseLogMixin, self).perform_create(serializer)
+    def post_save(self, obj, created=False):
+        super(BaseCaseLogMixin, self).post_save(obj, created=created)
 
-        event = event_registry.get_event("case")()
-        event.process(
-            obj,
-            status="created",
-            created_by=obj.created_by,
-            notes=self.get_log_notes(obj),
-            context=self.get_log_context(obj),
-        )
-        return obj
+        if created:
+            event = event_registry.get_event("case")()
+            event.process(
+                obj,
+                status="created",
+                created_by=obj.created_by,
+                notes=self.get_log_notes(obj),
+                context=self.get_log_context(obj),
+            )
 
 
 class FullCaseViewSet(

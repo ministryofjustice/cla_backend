@@ -210,14 +210,3 @@ class ReasonForContactingSerializer(ClaModelSerializer):
         model = ReasonForContacting
         fields = ("reference", "reasons", "other_reasons", "case", "referrer", "user_agent")
         writable_nested_fields = ["reasons"]
-
-    # from DRF 3.0 onwards, there is no allow_add_remove option
-    # writable nested serialization must be handed explicitly
-    # def create(self, validated_data):
-    #     # remove the reasons data as this is nested
-    #     validated_data.pop("reasons")
-    #     # todo work out why we can't create the ReasonForContactingCategory object
-    #     # if reasons_data:
-    #     #     validated_data["reasons"] = ReasonForContactingCategorySerializer().create(reasons_data)
-    #     instance = ReasonForContacting.objects.create(**validated_data)
-    #     return instance

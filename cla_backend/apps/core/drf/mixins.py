@@ -1,6 +1,4 @@
 import jsonpatch
-import inspect
-import warnings
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.fields.related import SingleRelatedObjectDescriptor, ReverseSingleRelatedObjectDescriptor
@@ -144,46 +142,8 @@ class FormActionMixin(object):
         return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)
 
 
-class ClaPrePostSaveMixin(object):
-    def pre_save(self, obj, created=False):
-        caller = inspect.stack()[1][3]
-        message = "pre_save has been removed in DRF 3.0"
-        if caller == "perform_update" or caller == "perform_create":
-            warnings.warn(message, DeprecationWarning)
-        else:
-            stack = []
-            for item in inspect.stack():
-                if item[3] == "pre_save":
-                    stack.append("{file} {function}:line {line}".format(file=item[1], function=item[3], line=item[2]))
-            message = "{message}\nReplace following with perform_create or perform_update:\n {stack}".format(
-                message=message, stack="\n".join(stack)
-            )
-            # raise NotImplementedError(message)
-            warnings.warn(message)
-            # raise NotImplementedError(message)
-            super(ClaPrePostSaveMixin, self).pre_save(obj, created)
-
-    def post_save(self, obj, created=False):
-        caller = inspect.stack()[1][3]
-        message = "post_save has been removed in DRF 3.0"
-        if caller == "perform_update" or caller == "perform_create":
-            warnings.warn(message, DeprecationWarning)
-        else:
-            stack = []
-            for item in inspect.stack():
-                if item[3] == "post_save":
-                    stack.append("{file}:{function}".format(file=item[1], function=item[3]))
-            message = "{message}\nReplace following with perform_create or perform_update:\n {stack}".format(
-                message=message, stack="\n".join(stack)
-            )
-            warnings.warn(message)
-            # raise NotImplementedError(message)
-            super(ClaPrePostSaveMixin, self).post_save(obj, created)
-
-
-class ClaCreateModelMixin(ClaPrePostSaveMixin, mixins.CreateModelMixin):
+class ClaCreateModelMixin(mixins.CreateModelMixin):
     def perform_create(self, serializer):
-        self.pre_save(serializer)
         obj = serializer.save()
         self.post_save(serializer.instance, created=True)
         return obj
@@ -203,9 +163,8 @@ class ClaRetrieveModelMixinWithSelfInstance(mixins.RetrieveModelMixin):
         return DRFResponse(serializer.data)
 
 
-class ClaUpdateModelMixin(ClaPrePostSaveMixin, mixins.UpdateModelMixin):
+class ClaUpdateModelMixin(mixins.UpdateModelMixin):
     def perform_update(self, serializer):
-        self.pre_save(serializer.instance)
         super(ClaUpdateModelMixin, self).perform_update(serializer)
         self.post_save(serializer.instance, created=False)
 

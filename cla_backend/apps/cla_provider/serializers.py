@@ -162,7 +162,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
     property_set = PropertySerializer(many=True, required=False, allow_null=True)
     you = PersonSerializer(required=False)
     partner = PartnerPersonSerializer(required=False, allow_null=True)
-    notes = serializers.CharField(max_length=500, required=False, read_only=True, allow_null=True)
+    notes = serializers.CharField(max_length=500, required=False, read_only=True)
     disputed_savings = SavingsSerializer(required=False, allow_null=True)
 
     class Meta(EligibilityCheckSerializerBase.Meta):
@@ -317,7 +317,7 @@ class StaffSerializer(ExtendedUserSerializerBase):
 
 class FeedbackSerializer(FeedbackSerializerBase):
     issue = serializers.ChoiceField(choices=FEEDBACK_ISSUE)
-    comment = serializers.CharField(max_length=5000, required=False)
+    comment = serializers.CharField(max_length=5000, required=False, allow_blank=True)
 
     class Meta(FeedbackSerializerBase.Meta):
         fields = (

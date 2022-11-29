@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from rest_framework_extensions.serializers import PartialUpdateSerializerMixin
+from rest_framework_extensions.serializers import get_fields_for_partial_update
 
 from core import fields
 from legalaid.fields import MoneyField, MoneyFieldDRF
@@ -152,7 +153,24 @@ class ClaModelSerializer(
 
 
 class PartialUpdateExcludeReadonlySerializerMixin(PartialUpdateSerializerMixin):
-    def _get_fields_for_partial_update(self):
-        update_fields = set(super(PartialUpdateExcludeReadonlySerializerMixin, self)._get_fields_for_partial_update())
-        exclude_fields = set([update_field for update_field in update_fields if self.fields[update_field].read_only])
-        return list(update_fields - exclude_fields)
+    def update(self, instance, validated_attrs):
+        for attr, value in validated_attrs.items():
+            setattr(instance, attr, value)
+        if self.partial and isinstance(instance, self.Meta.model):
+            instance.save(
+                update_fields=getattr(self, "_update_fields") or self._get_fields_for_partial_update(validated_attrs)
+            )
+        else:
+            instance.save()
+        return instance
+
+    def _get_fields_for_partial_update(self, validated_attrs):
+        init_data = self.get_initial()
+        init_data.update(validated_attrs)
+        return get_fields_for_partial_update(
+            opts=self.Meta,
+            # Add data coming from validated_attrs, this will be the same as self.get_initial() but
+            # include fields that our code has added
+            init_data=init_data,
+            fields=self.fields.fields,
+        )

@@ -249,13 +249,12 @@ class BaseComplaintConstantsView(rest_views.APIView):
 class BaseComplaintLogViewset(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, viewsets.GenericViewSet
 ):
-    queryset = ComplaintLog.objects.all()
     model = ComplaintLog
+    queryset = ComplaintLog.objects.all()
     serializer_class = ComplaintLogSerializerBase
     lookup_field = "pk"
     PARENT_FIELD = "logs"
 
     def get_queryset(self):
         content_type = ContentType.objects.get_for_model(Complaint)
-        model = self.get_serializer().Meta.model
-        return model.objects.filter(object_id=self.kwargs.get("complaint_pk"), content_type=content_type)
+        return self.model.objects.filter(object_id=self.kwargs.get("complaint_pk"), content_type=content_type)

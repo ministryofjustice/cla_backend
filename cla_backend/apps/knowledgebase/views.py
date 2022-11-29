@@ -10,8 +10,6 @@ class ArticleCategoryFilter(django_filters.FilterSet):
     article_category = django_filters.ModelMultipleChoiceFilter
 
     class Meta(object):
-        # Todo: is queryset needed
-        queryset = Article.objects.all()
         model = Article
         fields = ("article_category",)
 

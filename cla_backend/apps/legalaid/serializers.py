@@ -553,8 +553,8 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     def _get_outcome_description(self, case):
         return event_registry.event_registry.all().get(case.outcome_code, {}).get("description", "")
 
-    def _get_fields_for_partial_update(self):
-        fields = super(CaseSerializerBase, self)._get_fields_for_partial_update()
+    def _get_fields_for_partial_update(self, validated_attrs):
+        fields = super(CaseSerializerBase, self)._get_fields_for_partial_update(validated_attrs)
         fields.append("modified")
         return fields
 

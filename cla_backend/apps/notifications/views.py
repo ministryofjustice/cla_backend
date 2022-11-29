@@ -8,7 +8,6 @@ from .serializers import NotificationSerializer
 class BaseNotificationViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = NotificationSerializer
     model = Notification
-    queryset = Notification.objects.all()
 
     def get_queryset(self):
         return Notification.objects.live()

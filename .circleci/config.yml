@@ -135,7 +135,7 @@ jobs:
       - run:
           name: Setup Python environment
           command: |
-            sudo apt-get update && sudo apt-get install -y libpython2.7
+            sudo apt-get update && sudo apt-get install -y libpython2.7 firefox
             pip install virtualenv
             virtualenv env
             source env/bin/activate

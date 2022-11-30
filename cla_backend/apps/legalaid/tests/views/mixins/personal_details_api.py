@@ -81,7 +81,11 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             self.assertEqual(data, obj)
         else:
             for prop in ["title", "full_name", "postcode", "street", "mobile_phone", "home_phone"]:
-                self.assertEqual(unicode(getattr(obj, prop)), data[prop])
+                value = getattr(obj, prop)
+                if value is None:
+                    self.assertEqual(value, data[prop])
+                else:
+                    self.assertEqual(unicode(value), data[prop])
             self.assertEqual(data["has_diversity"], bool(obj.diversity))
 
     def test_methods_not_allowed(self):
@@ -148,3 +152,28 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         self.resource = self.resource.__class__.objects.get(pk=self.resource.pk)
         self.assertPersonalDetailsEqual(response.data, self.resource)
         self.assertEqual(response.data["has_diversity"], True)
+
+    def test_personal_details_patch(self):
+        data = {
+            "reference": self.resource.reference,
+            "title": None,
+            "full_name": "John Smith",
+            "postcode": "SW1H 9AJ",
+            "street": "102 Petty France",
+            "mobile_phone": "02033343555",
+            "home_phone": "",
+            "email": "test@digital.justice.gov.uk",
+            "dob": {"month": "11", "day": "11", "year": "1981"},
+            "ni_number": "PA102030C",
+            "contact_for_research": None,
+            "contact_for_research_methods": [],
+            "safe_to_contact": "SAFE",
+            "vulnerable_user": None,
+            "has_diversity": False,
+        }
+        response = self._patch(data)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        for key, value in data.items():
+            setattr(self.resource, key, value)
+        self.assertPersonalDetailsEqual(response.data, self.resource)
+        print(response)

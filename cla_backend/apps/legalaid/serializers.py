@@ -176,6 +176,9 @@ class DeductionsSerializerBase(TotalsModelSerializer):
 
 
 class PersonalDetailsSerializerBase(serializers.ModelSerializer):
+    contact_for_research = serializers.NullBooleanField(default=None)
+    vulnerable_user = serializers.NullBooleanField(default=None)
+
     class Meta(object):
         model = PersonalDetails
         fields = ()

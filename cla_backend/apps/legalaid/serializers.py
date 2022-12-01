@@ -416,8 +416,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 
         # Save any updated fields on "property" or create new ones
         # if they are not new and updated then they should be deleted
-        if property_set_data:
-            self.update_property_set_data(instance, property_set_data)
+        self.update_property_set_data(instance, property_set_data)
 
         instance.save()
         return instance
@@ -432,6 +431,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     def update_property_set_data(self, instance, property_set_data):
         ids_to_keep = []
         # validating loses the id of the property set:
+        property_set_data = property_set_data or []
         for index, prop_data in enumerate(property_set_data):
             # have to decide if this is an update or a create
             property_instance = None

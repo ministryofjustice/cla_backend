@@ -61,7 +61,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
     def _update(self, ref, data):
         url = self.get_detail_url(unicode(ref))
-        return self.client.patch(url, data=data, HTTP_AUTHORIZATION=self.get_http_authorization())
+        return self.client.patch(url, data=data, HTTP_AUTHORIZATION=self.get_http_authorization(), format="json")
 
     def get_reference_from_response(self, data):
         return data["reference"]
@@ -393,6 +393,28 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
                     bank_balance=1111, investment_balance=2222, asset_balance=3333, credit_balance=4444
                 ),
             ),
+        )
+
+    def test_patch_add_disputed_savings(self):
+        """
+        Patch data with finances
+        """
+        data = {
+            "reference": self.resource.reference,
+            "disputed_savings": {
+                "bank_balance": 1111,
+                "investment_balance": 2222,
+                "asset_balance": 3333,
+                "credit_balance": 4444,
+            },
+        }
+        response = self._update(ref=self.resource.case.reference, data=data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertResponseKeys(response)
+        self.assertSavingsEqual(
+            response.data["disputed_savings"],
+            Savings(bank_balance=1111, investment_balance=2222, asset_balance=3333, credit_balance=4444),
         )
 
     def _test_method_in_error(self, method, url):

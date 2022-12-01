@@ -185,7 +185,7 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
 
 
 class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
-    dob = ThreePartDateField(required=False, source="date_of_birth")
+    dob = ThreePartDateField(required=False, source="date_of_birth", allow_null=True)
     has_diversity = serializers.SerializerMethodField("diversity_bool")
 
     def diversity_bool(self, obj):
@@ -412,7 +412,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
                     instance.disputed_savings, disputed_savings_data
                 )
             else:
-                instance.disputed_savings = PersonSerializerBase().create(disputed_savings_data)
+                instance.disputed_savings = self.disputed_savings.create(disputed_savings_data)
 
         # Save any updated fields on "property" or create new ones
         # if they are not new and updated then they should be deleted
@@ -655,9 +655,9 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
 
 
 class CaseArchivedSerializerBase(serializers.ModelSerializer):
-    date_of_birth = ThreePartDateField(required=False)
-    date_specialist_referred = ThreePartDateField(required=False)
-    date_specialist_closed = ThreePartDateField(required=False)
+    date_of_birth = ThreePartDateField(required=False, allow_null=True)
+    date_specialist_referred = ThreePartDateField(required=False, allow_null=True)
+    date_specialist_closed = ThreePartDateField(required=False, allow_null=True)
     financially_eligible = serializers.NullBooleanField(required=False)
     in_scope = serializers.NullBooleanField(required=False)
 

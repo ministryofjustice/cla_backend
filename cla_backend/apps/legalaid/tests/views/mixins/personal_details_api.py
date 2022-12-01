@@ -177,3 +177,28 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             setattr(self.resource, key, value)
         self.assertPersonalDetailsEqual(response.data, self.resource)
         print(response)
+
+    def test_personal_details_patch_check_null_values(self):
+        data = {
+            "reference": self.resource.reference,
+            "title": None,
+            "full_name": None,
+            "postcode": None,
+            "street": None,
+            "mobile_phone": None,
+            "home_phone": "",
+            "email": "",
+            "dob": None,
+            "ni_number": None,
+            "contact_for_research": None,
+            "contact_for_research_methods": [],
+            "safe_to_contact": "SAFE",
+            "vulnerable_user": None,
+            "has_diversity": None,
+        }
+        response = self._patch(data)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        for key, value in data.items():
+            setattr(self.resource, key, value)
+        self.assertPersonalDetailsEqual(response.data, self.resource)
+        print(response)

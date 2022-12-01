@@ -406,13 +406,14 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
             instance.partner = self.update_or_create_person(getattr(instance, "partner"), partner_data)
 
         # Save any updated fields on "disputed_savings"
-        if disputed_savings_data:
+        disputed_savings_field = self.fields.get("disputed_savings", None)
+        if disputed_savings_data and disputed_savings_field:
             if instance.disputed_savings:
-                instance.disputed_savings = PersonSerializerBase().update(
+                instance.disputed_savings = disputed_savings_field.update(
                     instance.disputed_savings, disputed_savings_data
                 )
             else:
-                instance.disputed_savings = self.disputed_savings.create(disputed_savings_data)
+                instance.disputed_savings = disputed_savings_field.create(disputed_savings_data)
 
         # Save any updated fields on "property" or create new ones
         # if they are not new and updated then they should be deleted

@@ -784,6 +784,32 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         # make sure did not delete all properties by accident
         self.assertEqual(Property.objects.all().count(), 7)
 
+    def test_delete_all_properties(self):
+        """
+        PATCH should remove all properties.
+        """
+        make_recipe("legalaid.property", eligibility_check=self.resource, _quantity=4, disputed=False)
+
+        # making extra properties not associated to this eligibility check
+        make_recipe("legalaid.property", _quantity=5)
+
+        self.assertEqual(self.resource.property_set.count(), 4)
+        # remove all properties
+        data = {"property_set": []}
+        response = self.client.patch(
+            self.detail_url, data=data, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # nothing should have changed here
+        self.assertEligibilityCheckEqual(response.data, self.resource)
+
+        # check eligibility check has zero properties
+        self.assertEqual(EligibilityCheck.objects.get(pk=self.resource.pk).property_set.count(), 0)
+
+        # properties should have changed. Response should have no properties
+        self.assertEqual(len(response.data["property_set"]), 0)
+
     def test_patch_with_finances(self):
         """
         PATCH should change finances.

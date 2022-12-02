@@ -298,6 +298,7 @@ workflows:
             branches:
               only:
                 - master
+                - canary
 
       - deploy:
           name: staging_deploy_live

@@ -8,8 +8,24 @@ export DOCKER_REPOSITORY="$ECR_DOCKER_REPOSITORY"
 export safe_git_branch=${CIRCLE_BRANCH//\//-}
 export CLEANED_BRANCH_NAME=$(echo $CIRCLE_BRANCH | sed 's/^feature[-/]//' | sed 's:^\w*\/::' | tr -s ' _/[]().' '-' | tr '[:upper:]' '[:lower:]' | cut -c1-28 | sed 's/-$//')
 export short_sha="$(git rev-parse --short=7 $CIRCLE_SHA1)"
-export IMAGE_TAG="$CLEANED_BRANCH_NAME.$short_sha"
-export ECR_DEPLOY_IMAGE="$DOCKER_REPOSITORY:$IMAGE_TAG"
+if [ $CLEANED_BRANCH_NAME = "canary" -a $DYNAMIC_HOSTNAME = false ]; then
+  export IS_CANARY_DEPLOYMENT=true
+  echo "This is a canary deployment"
+  export CANARY_IMAGE_TAGE="$CLEANED_BRANCH_NAME.$short_sha"
+  export CANARY_ECR_DEPLOY_IMAGE="$DOCKER_REPOSITORY:$CANARY_IMAGE_TAGE"
+
+nl='
+'
+  # Exit if more than 1 image is used for
+  case "$IMAGE_TAG" in
+      *$nl*)  echo "Found more than 1 deployment...abandoning canary deployment";exit 1 ;;
+  esac
+else
+  export IS_CANARY_DEPLOYMENT=false
+  export IMAGE_TAG="$CLEANED_BRANCH_NAME.$short_sha"
+  export ECR_DEPLOY_IMAGE="$DOCKER_REPOSITORY:$IMAGE_TAG"
+  export ECR_DEPLOY_IMAGE_NO_SHA="$DOCKER_REPOSITORY:$CLEANED_BRANCH_NAME"
+fi
 
 if [ $DYNAMIC_HOSTNAME = true ]; then
   export RELEASE_NAME=${CLEANED_BRANCH_NAME}

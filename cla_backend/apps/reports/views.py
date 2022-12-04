@@ -27,6 +27,7 @@ from .forms import (
     MIProviderAllocationExtract,
     MIExtractCaseViewAuditLog,
     MIExtractComplaintViewAuditLog,
+    OutcomeCodeReport,
     AllKnowledgeBaseArticles,
 )
 from reports.models import Export
@@ -174,6 +175,12 @@ def mi_case_view_audit_log_extract(request):
 @permission_required("legalaid.run_reports")
 def mi_complaint_view_audit_log_extract(request):
     return report_view(request, MIExtractComplaintViewAuditLog, "MI Complaints Views Audit Log Extract")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def case_outcome_code_report(request):
+    return report_view(request, OutcomeCodeReport, "Case Outcome Code Report")
 
 
 @staff_member_required

@@ -616,7 +616,7 @@ class FeedbackViewSet(
 
     queryset = Feedback.objects.all().select_related("case", "created_by", "created_by__provider")
 
-    pagination_serializer_class = RelativeUrlPaginationSerializer
+    pagination_class = RelativeUrlPaginationSerializer
     paginate_by = 20
     paginate_by_param = "page_size"
     max_paginate_by = 100
@@ -646,7 +646,7 @@ class CaseArchivedViewSet(
     paginate_by = 20
     paginate_by_param = "page_size"
     max_paginate_by = 100
-    pagination_serializer_class = RelativeUrlPaginationSerializer
+    pagination_class = RelativeUrlPaginationSerializer
 
 
 class CaseNotesHistoryViewSet(CallCentrePermissionsViewSetMixin, BaseCaseNotesHistoryViewSet):

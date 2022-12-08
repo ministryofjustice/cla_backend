@@ -1,5 +1,5 @@
 from rest_framework.templatetags.rest_framework import replace_query_param
-from rest_framework.pagination import BasePaginationSerializer
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import serializers
 
 
@@ -23,7 +23,7 @@ class RelativePreviousPageField(serializers.ReadOnlyField):
         return replace_query_param("", self.page_field, page)
 
 
-class RelativeUrlPaginationSerializer(BasePaginationSerializer):
+class RelativeUrlPaginationSerializer(PageNumberPagination):
     count = serializers.ReadOnlyField(source="paginator.count")
     next = RelativeNextPageField(source="*")
     previous = RelativePreviousPageField(source="*")

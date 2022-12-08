@@ -388,7 +388,7 @@ class FullCaseViewSet(
     lookup_regex = r"[A-Z|\d]{2}-\d{4}-\d{4}"
 
     serializer_class = CaseSerializerBase
-    pagination_serializer_class = RelativeUrlPaginationSerializer
+    pagination_class = RelativeUrlPaginationSerializer
 
     filter_backends = (AscCaseOrderingFilter,)
 
@@ -671,7 +671,7 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
     queryset = CaseNotesHistory.objects.all()
     model = CaseNotesHistory
 
-    pagination_serializer_class = RelativeUrlPaginationSerializer
+    pagination_class = RelativeUrlPaginationSerializer
     paginate_by = 5
     paginate_by_param = "page_size"
     max_paginate_by = 100

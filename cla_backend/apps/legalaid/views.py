@@ -3,13 +3,13 @@ import json
 from core.drf.exceptions import ConflictException
 from django import forms
 from django.db import connection, transaction, IntegrityError
-from django.core.paginator import Paginator
 from django.utils.crypto import get_random_string
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import detail_route
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
 from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
@@ -640,7 +640,7 @@ class BaseCSVUploadViewSet(
         return super(BaseCSVUploadViewSet, self).update(request, *args, **kwargs)
 
 
-class PaginatorWithExtraItem(Paginator):
+class PaginatorWithExtraItem(PageNumberPagination):
     """
     Same as the Paginator but it will return one more item than expected.
     Used for endpoints that need to diff elements.
@@ -648,16 +648,8 @@ class PaginatorWithExtraItem(Paginator):
 
     extra_num = 1
 
-    def page(self, number):
-        """
-        Returns a Page object for the given 1-based page number.
-        """
-        number = self.validate_number(number)
-        bottom = (number - 1) * self.per_page
-        top = bottom + (self.per_page + self.extra_num)
-        if top + self.orphans >= self.count:
-            top = self.count
-        return self._get_page(self.object_list[bottom:top], number, self)
+    def get_page_size(self, request):
+        return super(PaginatorWithExtraItem, self).get_page_size(request) + 1
 
 
 class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin, CompatGenericViewSet):
@@ -673,7 +665,7 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
     max_paginate_by = 100
 
     @property
-    def paginator_class(self):
+    def pagination_class(self):
         """
         If with_extra query param is provided, the endpoint will return
         n+1 elements so that the frontend can build the diff from the
@@ -681,7 +673,7 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
         """
         if self.request.QUERY_PARAMS.get("with_extra", False):
             return PaginatorWithExtraItem
-        return Paginator
+        return super(BaseCaseNotesHistoryViewSet, self).pagination_class
 
     def get_queryset(self, **kwargs):
         qs = super(BaseCaseNotesHistoryViewSet, self).get_queryset(**kwargs)

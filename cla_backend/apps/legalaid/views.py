@@ -321,9 +321,7 @@ class BaseCaseOrderingFilter(OrderingFilter):
     default_modified = "modified"
 
     def filter_queryset(self, request, queryset, view):
-        ordering = self.get_ordering(request)
-        if not ordering:
-            ordering = self.get_default_ordering(view)
+        ordering = self.get_ordering(request, queryset, view)
 
         if isinstance(ordering, basestring):
             if "," in ordering:
@@ -336,8 +334,6 @@ class BaseCaseOrderingFilter(OrderingFilter):
 
         if "modified" not in ordering:
             ordering.append(self.default_modified)
-
-        ordering = self.remove_invalid_fields(queryset, ordering, view)
 
         return queryset.order_by(*ordering)
 

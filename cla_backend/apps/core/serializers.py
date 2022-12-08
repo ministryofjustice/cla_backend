@@ -17,14 +17,14 @@ from django.db.models.fields import FieldDoesNotExist
 class MoneyIntervalModelSerializerMixin(object):
     def __init__(self, *args, **kwargs):
         # add a model serializer which is used throughout this project
-        self._field_mapping[MoneyIntervalField] = MoneyIntervalDRFField
+        self.serializer_field_mapping[MoneyIntervalField] = MoneyIntervalDRFField
         super(MoneyIntervalModelSerializerMixin, self).__init__(*args, **kwargs)
 
 
 class MoneyFieldModelSerializerMixin(object):
     def __init__(self, *args, **kwargs):
         # add a model serializer which is used throughout this project
-        self._field_mapping[MoneyField] = MoneyFieldDRF
+        self.serializer_field_mapping[MoneyField] = MoneyFieldDRF
         super(MoneyFieldModelSerializerMixin, self).__init__(*args, **kwargs)
 
 
@@ -36,7 +36,7 @@ class UUIDSerializer(serializers.SlugRelatedField):
 class NullBooleanModelSerializerMixin(object):
     def __init__(self, *args, **kwargs):
         # add a model serializer which is used throughout this project
-        self._field_mapping[models.NullBooleanField] = fields.NullBooleanField
+        self.serializer_field_mapping[models.NullBooleanField] = fields.NullBooleanField
         super(NullBooleanModelSerializerMixin, self).__init__(*args, **kwargs)
 
 

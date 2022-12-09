@@ -126,7 +126,7 @@ class FormActionMixin(object):
         obj = self.get_object()
 
         _form_kwargs = form_kwargs.copy()
-        _form_kwargs["data"] = request.DATA
+        _form_kwargs["data"] = request.data
         _form_kwargs[self.FORM_ACTION_OBJ_PARAM] = obj
 
         form = Form(**_form_kwargs)

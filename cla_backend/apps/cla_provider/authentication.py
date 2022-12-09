@@ -13,9 +13,9 @@ class LegacyCHSAuthentication(BaseAuthentication):
         """
 
         userid, password, org = (
-            request.DATA.get("CHSUserName"),
-            request.DATA.get("CHSPassword"),
-            request.DATA.get("CHSOrganisationID", request.DATA.get("CHSOrgansationID")),
+            request.data.get("CHSUserName"),
+            request.data.get("CHSPassword"),
+            request.data.get("CHSOrganisationID", request.data.get("CHSOrgansationID")),
         )
 
         if not all([userid, password, org]):

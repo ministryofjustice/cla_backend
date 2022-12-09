@@ -74,8 +74,8 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
                 "street": [u"Ensure this field has no more than 255 characters."],
                 "title": [u"Ensure this field has no more than 20 characters."],
             },
-            "reason": [u"`XXXXXXXXX` is not a valid choice."],
-            "personal_relationship": [u"`XXXXXXXXX` is not a valid choice."],
+            "reason": [u'"XXXXXXXXX" is not a valid choice.'],
+            "personal_relationship": [u'"XXXXXXXXX" is not a valid choice.'],
         }
 
         errors = response.data

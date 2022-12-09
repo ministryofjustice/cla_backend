@@ -426,7 +426,7 @@ class FullCaseViewSet(
         Search terms are set by a ?search=... query parameter,
         and may be comma and/or whitespace delimited.
         """
-        params = self.request.QUERY_PARAMS.get("search", "")
+        params = self.request.query_params.get("search", "")
         return params.replace(",", " ").split()
 
     def get_temporary_view_name(self):
@@ -503,8 +503,8 @@ class FullCaseViewSet(
 
     def get_queryset(self, **kwargs):
         qs = super(FullCaseViewSet, self).get_queryset(**kwargs)
-        person_ref_param = self.request.QUERY_PARAMS.get("person_ref", None)
-        dashboard_param = self.request.QUERY_PARAMS.get("dashboard", None)
+        person_ref_param = self.request.query_params.get("person_ref", None)
+        dashboard_param = self.request.query_params.get("dashboard", None)
 
         if person_ref_param:
             qs = qs.filter(personal_details__reference=person_ref_param)
@@ -671,14 +671,14 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
         n+1 elements so that the frontend can build the diff from the
         current+prev element.
         """
-        if self.request.QUERY_PARAMS.get("with_extra", False):
+        if self.request.query_params.get("with_extra", False):
             return PaginatorWithExtraItem
         return super(BaseCaseNotesHistoryViewSet, self).pagination_class
 
     def get_queryset(self, **kwargs):
         qs = super(BaseCaseNotesHistoryViewSet, self).get_queryset(**kwargs)
-        type_param = self.request.QUERY_PARAMS.get("type", None)
-        summary = self.request.QUERY_PARAMS.get("summary", False)
+        type_param = self.request.query_params.get("type", None)
+        summary = self.request.query_params.get("summary", False)
 
         if type_param == "operator":
             qs = qs.filter(provider_notes__isnull=True)

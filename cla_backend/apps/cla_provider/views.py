@@ -146,7 +146,7 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
             super(CaseViewSet, self).get_queryset(**kwargs).filter(provider=this_provider).exclude(outcome_code="IRCB")
         )
 
-        only_param = self.request.QUERY_PARAMS.get("only")
+        only_param = self.request.query_params.get("only")
         if only_param == "new":
             qs = qs.filter(provider_viewed__isnull=True, provider_accepted__isnull=True, provider_closed__isnull=True)
         elif only_param == "opened":

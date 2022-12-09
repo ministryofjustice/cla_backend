@@ -150,8 +150,8 @@ class DateRangeFilter(BaseFilterBackend):
     def filter_queryset(self, request, qs, view):
 
         filter = {}
-        start_date = request.QUERY_PARAMS.get("start", None)
-        end_date = request.QUERY_PARAMS.get("end", None)
+        start_date = request.query_params.get("start", None)
+        end_date = request.query_params.get("end", None)
 
         if start_date is not None:
             filter["{field}__gte".format(field=view.date_range_field)] = parser.parse(start_date).replace(
@@ -210,7 +210,7 @@ class CaseViewSet(
         this_operator = get_object_or_404(Operator, user=self.request.user)
         qs = super(CaseViewSet, self).get_queryset(**kwargs)
 
-        only_param = self.request.QUERY_PARAMS.get("only")
+        only_param = self.request.query_params.get("only")
         if only_param == "my":
             qs = qs.filter(created_by=this_operator.user)
         elif only_param == "eod":
@@ -416,7 +416,7 @@ class CaseViewSet(
                 {"error": "This case is already linked to a Person"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        person_q = request.QUERY_PARAMS.get("person_q", "") or ""
+        person_q = request.query_params.get("person_q", "") or ""
         if len(person_q) >= 3:
             users = PersonalDetails.objects.filter(full_name__icontains=person_q).exclude(vulnerable_user=True)
         else:
@@ -715,8 +715,8 @@ class ComplaintViewSet(
     max_paginate_by = 100
 
     def get_queryset(self, **kwargs):
-        dashboard = self.request.QUERY_PARAMS.get("dashboard") == "True"
-        show_closed = self.request.QUERY_PARAMS.get("show_closed") == "True"
+        dashboard = self.request.query_params.get("dashboard") == "True"
+        show_closed = self.request.query_params.get("show_closed") == "True"
         return super(ComplaintViewSet, self).get_queryset(dashboard=dashboard, show_closed=show_closed)
 
     def get_case(self, validated_data, obj=None):

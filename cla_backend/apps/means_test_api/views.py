@@ -12,7 +12,7 @@ from eligibility_calculator.models import CaseData
 @api_view(["POST"])
 @permission_classes((AllowAny,))
 def eligibility_batch_check(request):
-    return Response(map(pass_fail, request.DATA))
+    return Response(map(pass_fail, request.data))
 
 
 def pass_fail(scenario):

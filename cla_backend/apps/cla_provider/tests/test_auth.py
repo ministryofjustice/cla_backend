@@ -19,7 +19,7 @@ class LegacyCHSAuthenticationTestCase(CLAProviderAuthBaseApiTestMixin, TestCase)
     def test_valid_login(self):
         authenticator = LegacyCHSAuthentication()
         mock_request = MagicMock(
-            DATA={
+            data={
                 "CHSOrganisationID": self.staff.chs_organisation,
                 "CHSPassword": "password",
                 "CHSUserName": self.staff.chs_user,
@@ -33,7 +33,7 @@ class LegacyCHSAuthenticationTestCase(CLAProviderAuthBaseApiTestMixin, TestCase)
         # CHSOrgansationID instead of CHSOrganisationID
         authenticator = LegacyCHSAuthentication()
         mock_request = MagicMock(
-            DATA={
+            data={
                 "CHSOrgansationID": self.staff.chs_organisation,
                 "CHSPassword": "password",
                 "CHSUserName": self.staff.chs_user,
@@ -49,7 +49,7 @@ class LegacyCHSAuthenticationTestCase(CLAProviderAuthBaseApiTestMixin, TestCase)
 
         authenticator = LegacyCHSAuthentication()
         mock_request = MagicMock(
-            DATA={
+            data={
                 "CHSOrganisationID": self.staff.chs_organisation,
                 "CHSPassword": "password",
                 "CHSUserName": self.staff.chs_user,
@@ -65,7 +65,7 @@ class LegacyCHSAuthenticationTestCase(CLAProviderAuthBaseApiTestMixin, TestCase)
 
         authenticator = LegacyCHSAuthentication()
         mock_request = MagicMock(
-            DATA={
+            data={
                 "CCHSOrganisationID": self.staff.chs_organisation,
                 "CCHSPassword": "password",
                 "CCHSUserName": self.staff.chs_user,
@@ -79,7 +79,7 @@ class LegacyCHSAuthenticationTestCase(CLAProviderAuthBaseApiTestMixin, TestCase)
 
         # bad pass
         mock_request = MagicMock(
-            DATA={
+            data={
                 "CHSOrganisationID": self.staff.chs_organisation,
                 "CHSPassword": "assword",
                 "CHSUserName": self.staff.chs_user,
@@ -91,7 +91,7 @@ class LegacyCHSAuthenticationTestCase(CLAProviderAuthBaseApiTestMixin, TestCase)
 
         # test bad org
         mock_request = MagicMock(
-            DATA={
+            data={
                 "CHSOrganisationID": self.staff.chs_organisation + "111",
                 "CHSPassword": "password",
                 "CHSUserName": self.staff.chs_user,
@@ -103,7 +103,7 @@ class LegacyCHSAuthenticationTestCase(CLAProviderAuthBaseApiTestMixin, TestCase)
 
         # test bad user
         mock_request = MagicMock(
-            DATA={
+            data={
                 "CHSOrganisationID": self.staff.chs_organisation,
                 "CHSPassword": "password",
                 "CHSUserName": self.staff.chs_user + "qq",

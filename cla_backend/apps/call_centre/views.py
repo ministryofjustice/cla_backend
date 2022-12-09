@@ -339,7 +339,7 @@ class CaseViewSet(
         # find given provider in suitable - avoid extra lookup and ensures
         # valid provider
         for sp in suitable_providers:
-            if sp.id == int(request.DATA["provider_id"]):
+            if sp.id == int(request.data["provider_id"]):
                 p = sp
                 break
         else:
@@ -348,7 +348,7 @@ class CaseViewSet(
         # if we're inside office hours then:
         # Randomly assign to provider who offers this category of service
         # else it should be the on duty provider
-        data = request.DATA.copy()
+        data = request.data.copy()
         data["provider"] = p.pk
         form = ProviderAllocationForm(case=obj, data=data, providers=suitable_providers)
 
@@ -367,7 +367,7 @@ class CaseViewSet(
     @detail_route(methods=["post"])
     def defer_assignment(self, request, **kwargs):
         obj = self.get_object()
-        form = DeferAssignmentCaseForm(case=obj, data=request.DATA)
+        form = DeferAssignmentCaseForm(case=obj, data=request.data)
         if form.is_valid():
             form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)
@@ -440,7 +440,7 @@ class CaseViewSet(
         obj = self.get_object()
 
         # check PARAM exists
-        pd_ref = request.DATA.get("personal_details", None)
+        pd_ref = request.data.get("personal_details", None)
         if not pd_ref:
             return error_response('Param "personal_details" required')
 
@@ -533,7 +533,7 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     def create(self, request, *args, **kwargs):
         operator = self.get_logged_in_user_model()
         if operator.organisation:
-            request.DATA["organisation"] = operator.organisation.id
+            request.data["organisation"] = operator.organisation.id
         return super(UserViewSet, self).create(request, *args, **kwargs)
 
 

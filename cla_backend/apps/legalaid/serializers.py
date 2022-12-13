@@ -308,7 +308,7 @@ class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
         fields = ("category", "is_major")
 
 
-class EODDetailsSerializerBase(serializers.ModelSerializer):
+class EODDetailsSerializerBase(ClaModelSerializer):
     notes = serializers.CharField(max_length=5000, required=False, allow_blank=True)
     categories = EODDetailsCategorySerializerBase(many=True, required=False)
 

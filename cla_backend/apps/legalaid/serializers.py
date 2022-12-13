@@ -315,24 +315,7 @@ class EODDetailsSerializerBase(serializers.ModelSerializer):
     class Meta(object):
         model = EODDetails
         fields = ()
-
-    # from DRF 3.0 onwards, there is no allow_add_remove option
-    # writable nested serialization must be handed explicitly
-    def create(self, validated_data):
-        eod_details_category_data = validated_data.pop("categories")
-        eoddetails = EODDetails.objects.create(**validated_data)
-        for category in eod_details_category_data:
-            EODDetailsCategory.objects.create(eod_details=eoddetails, **category)
-        return eoddetails
-
-    def update(self, instance, validated_data):
-        eod_details_category_data = validated_data.pop("categories")
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        instance.save()
-        for category in eod_details_category_data:
-            EODDetailsCategory.objects.create(eod_details=instance, **category)
-        return instance
+        writable_nested_fields = ["categories"]
 
 
 class EligibilityCheckSerializerBase(ClaModelSerializer):

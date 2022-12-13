@@ -99,15 +99,15 @@ class ClaModelSerializer(
     def create_writeable_nested_fields_one_to_one(self, validated_data):
         writable_nested_fields = getattr(self.Meta, "writable_nested_fields", [])
         for field_name in writable_nested_fields:
-            data = validated_data.pop(field_name, None)
-            if not data:
+            if not (field_name in validated_data):
                 continue
-
             field = self.fields.fields.get(field_name, None)
             if not field:
                 continue
             is_many = getattr(field, "many", False)
             if not is_many:
+                # only remove this field if it is one to many
+                data = validated_data.pop(field_name, None)
                 field_instance = field.create(data)
                 validated_data[field_name] = field_instance
 
@@ -150,6 +150,22 @@ class ClaModelSerializer(
         instance = model.objects.create(**validated_data)
         self.create_writeable_nested_fields_many_to_many(instance, m2m_validated_data)
         return instance
+
+    def update(self, instance, validated_data):
+        self.create_writeable_nested_fields_one_to_one(validated_data)
+        m2m_validated_data = self.filter_validated_data_m2m(validated_data)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        self.create_writeable_nested_fields_many_to_many(instance, m2m_validated_data)
+        return instance
+
+        # eod_details_category_data = validated_data.pop("categories")
+        # for attr, value in validated_data.items():
+        #     setattr(instance, attr, value)
+        # instance.save()
+        # EODDetailsSerializerBase.create_categories(instance, eod_details_category_data)
+        # return instance
 
 
 class PartialUpdateExcludeReadonlySerializerMixin(PartialUpdateSerializerMixin):

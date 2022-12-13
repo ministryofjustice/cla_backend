@@ -175,7 +175,6 @@ class DiagnosisSerializer(ClaModelSerializer):
 
     def create(self, validated_data):
         validated_data["graph_version"] = self.graph.graph["version"]
-        # if obj.current_node_id:
         self.process_obj(self.instance, validated_data)
         self._set_state(validated_data)
 

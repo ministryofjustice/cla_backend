@@ -124,6 +124,30 @@ class ThirdPartyDetailsApiMixin(NestedSimpleResourceAPIMixin):
 
         self.assertThirdPartyDetailsEqual(response.data, check)
 
+    def test_update_with_data(self):
+        """
+        check variables sent as same as those that return.
+        """
+        data = self._get_default_post_data()
+        data["reference"] = self.resource.reference
+        data["personal_details"]["postcode"] = "SW3H 9AJ"
+        data["pass_phrase"] = "banana"
+
+        check = self._get_default_post_data()
+        check["reference"] = self.resource.reference
+        check["personal_details"]["postcode"] = "SW3H 9AJ"
+        check["pass_phrase"] = "banana"
+
+        response = self.client.patch(
+            self.detail_url, data=data or {}, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+
+        # check state is correct
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertResponseKeys(response)
+        self.assertThirdPartyDetailsEqual(response.data, check)
+
     # GET
 
     def test_get(self):

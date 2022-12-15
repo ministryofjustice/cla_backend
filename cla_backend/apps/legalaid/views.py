@@ -309,6 +309,12 @@ class BaseEODDetailsViewSet(
         serializer.validated_data["case"] = Case.objects.get(reference=self.kwargs.get("case_reference"))
         return super(BaseEODDetailsViewSet, self).perform_create(serializer)
 
+    def post_save(self, obj, created=False):
+        # Putting back this terrible work around as we need more time to refactor
+        # core.drf.mixins.NestedGenericModelMixin.post_save not to throw a MethodNotAllowed if parent relationship is
+        # already set
+        return super(BaseEODDetailsViewSet, self).post_save(obj, False)
+
 
 class BaseCaseOrderingFilter(OrderingFilter):
 

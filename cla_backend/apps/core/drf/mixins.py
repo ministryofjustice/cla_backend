@@ -148,9 +148,6 @@ class ClaCreateModelMixin(mixins.CreateModelMixin):
         self.post_save(serializer.instance, created=True)
         return obj
 
-    def post_save(self, obj, created=False):
-        pass
-
 
 class ClaRetrieveModelMixinWithSelfInstance(mixins.RetrieveModelMixin):
     """
@@ -167,6 +164,3 @@ class ClaUpdateModelMixin(mixins.UpdateModelMixin):
     def perform_update(self, serializer):
         super(ClaUpdateModelMixin, self).perform_update(serializer)
         self.post_save(serializer.instance, created=False)
-
-    def post_save(self, obj, created=False):
-        pass

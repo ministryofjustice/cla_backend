@@ -2,7 +2,7 @@
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import capfirst, force_text
-from rest_framework import viewsets, mixins, status, views as rest_views
+from rest_framework import mixins, status, views as rest_views
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response as DRFResponse
 
@@ -17,7 +17,7 @@ from core.drf.mixins import (
     ClaUpdateModelMixin,
     ClaRetrieveModelMixinWithSelfInstance,
 )
-
+from core.drf.viewsets import CompatGenericViewSet
 from .models import Complaint, Category
 from .serializers import ComplaintSerializerBase, CategorySerializerBase, ComplaintLogSerializerBase
 
@@ -36,7 +36,7 @@ class BaseComplaintViewSet(
     ClaUpdateModelMixin,
     ClaRetrieveModelMixinWithSelfInstance,
     mixins.ListModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
     queryset = Complaint.objects.all()
     model = Complaint
@@ -213,7 +213,7 @@ class BaseComplaintViewSet(
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
 
-class BaseComplaintCategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class BaseComplaintCategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, CompatGenericViewSet):
     queryset = Category.objects.all()
     model = Category
     serializer_class = CategorySerializerBase
@@ -247,7 +247,7 @@ class BaseComplaintConstantsView(rest_views.APIView):
 
 
 class BaseComplaintLogViewset(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, viewsets.GenericViewSet
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, CompatGenericViewSet
 ):
     model = ComplaintLog
     queryset = ComplaintLog.objects.all()

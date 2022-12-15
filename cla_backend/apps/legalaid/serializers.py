@@ -238,56 +238,10 @@ class PersonSerializerBase(ClaModelSerializer):
     savings = SavingsSerializerBase(required=False)
     deductions = DeductionsSerializerBase(required=False)
 
-    def create(self, validated_data):
-        income_data = validated_data.pop("income", None)
-        savings_data = validated_data.pop("savings", None)
-        deductions_data = validated_data.pop("deductions", None)
-        # # create the person and then attach the nested values
-        if income_data:
-            validated_data["income"] = IncomeSerializerBase().create(income_data)
-        if savings_data:
-            validated_data["savings"] = SavingsSerializerBase().create(savings_data)
-        if deductions_data:
-            validated_data["deductions"] = DeductionsSerializerBase().create(deductions_data)
-        instance = Person.objects.create(**validated_data)
-        return instance
-
-    def update(self, instance, validated_data):
-        # need to check they exist in validated_data and also in instance
-        income_data = validated_data.pop("income", None)
-        savings_data = validated_data.pop("savings", None)
-        deductions_data = validated_data.pop("deductions", None)
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-
-        # Save any updated fields on "income"
-        if income_data:
-            if instance.income:
-                instance.income = IncomeSerializerBase().update(instance.income, income_data)
-            else:
-                instance.income = IncomeSerializerBase().create(income_data)
-
-        # Save any updated fields on "savings"
-        if savings_data:
-            if instance.savings:
-                instance.savings = SavingsSerializerBase().update(instance.savings, savings_data)
-            else:
-                instance.savings = SavingsSerializerBase().create(savings_data)
-
-        # Save any updated fields on "deductions"
-        if deductions_data:
-            if instance.deductions:
-                instance.deductions = DeductionsSerializerBase().update(instance.deductions, deductions_data)
-            else:
-                instance.deductions = DeductionsSerializerBase().create(deductions_data)
-
-        instance.save()
-
-        return instance
-
     class Meta(object):
         model = Person
         fields = ()
+        writable_nested_fields = ["income", "savings", "deductions"]
 
 
 class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
@@ -342,76 +296,14 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         model = EligibilityCheck
         fields = ()
 
-    # from DRF 3.0 onwards, there is no allow_add_remove option
-    # writable nested serialization must be handed explicitly
-    # needd to deal with you, partner, disputed_savings, and partner
-    def create(self, validated_data):
-        property_set_data = validated_data.pop("property_set", None)
-        you_data = validated_data.pop("you", None)
-        partner_data = validated_data.pop("partner", None)
-        disputed_savings_data = validated_data.pop("disputed_savings", None)
-
-        eligibility_check = EligibilityCheck.objects.create(**validated_data)
-        if property_set_data:
-            for prop in property_set_data:
-                Property.objects.create(eligibility_check=eligibility_check, **prop)
-
-        if you_data:
-            eligibility_check.you = self.update_or_create_person(getattr(eligibility_check, "you"), you_data)
-
-        if partner_data:
-            eligibility_check.partner = self.update_or_create_person(
-                getattr(eligibility_check, "partner"), partner_data
-            )
-
-        if disputed_savings_data:
-            eligibility_check.disputed_savings = SavingsSerializerBase().create(disputed_savings_data)
-
-        eligibility_check.save()
-
-        return eligibility_check
-
-    def update(self, instance, validated_data):
-        disputed_savings_data = validated_data.pop("disputed_savings", None)
-        you_data = validated_data.pop("you", None)
-        partner_data = validated_data.pop("partner", None)
-        property_set_data = validated_data.pop("property_set", None)
-
-        # update the base object
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        # Save any updated fields on "you"
-
-        if you_data:
-            instance.you = self.update_or_create_person(getattr(instance, "you"), you_data)
-
-        # Save any updated fields on "partner"
-        if partner_data:
-            instance.partner = self.update_or_create_person(getattr(instance, "partner"), partner_data)
-
-        # Save any updated fields on "disputed_savings"
-        disputed_savings_field = self.fields.get("disputed_savings", None)
-        if disputed_savings_data and disputed_savings_field:
-            if instance.disputed_savings:
-                instance.disputed_savings = disputed_savings_field.update(
-                    instance.disputed_savings, disputed_savings_data
-                )
-            else:
-                instance.disputed_savings = disputed_savings_field.create(disputed_savings_data)
-
+    def create_writable_nested_fields_many_to_many(self, instance, m2m_validated_data):
+        property_set_data = m2m_validated_data.pop("property_set", None)
         # Save any updated fields on "property" or create new ones
         # if they are not new and updated then they should be deleted
         self.update_property_set_data(instance, property_set_data)
-
-        instance.save()
-        return instance
-
-    def update_or_create_person(self, instance, person_data):
-        if instance:
-            person = PersonSerializerBase().update(instance, person_data)
-        else:
-            person = PersonSerializerBase().create(person_data)
-        return person
+        super(EligibilityCheckSerializerBase, self).create_writable_nested_fields_many_to_many(
+            instance, m2m_validated_data
+        )
 
     def update_property_set_data(self, instance, property_set_data):
         ids_to_keep = []

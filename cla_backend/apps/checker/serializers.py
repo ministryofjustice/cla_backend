@@ -139,6 +139,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "specific_benefits",
             "disregards",
         )
+        writable_nested_fields = ["you", "partner", "property_set"]
 
 
 class PersonalDetailsSerializer(PersonalDetailsSerializerBase):

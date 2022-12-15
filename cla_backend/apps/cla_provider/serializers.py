@@ -186,6 +186,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "disregards",
             "has_passported_proceedings_letter",
         )
+        writable_nested_fields = ["you", "partner", "property_set", "disputed_savings"]
 
 
 class ExtendedEligibilityCheckSerializer(EligibilityCheckSerializer):

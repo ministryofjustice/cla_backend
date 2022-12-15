@@ -25,6 +25,7 @@ from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.mixins import FormActionMixin, ClaCreateModelMixin, ClaUpdateModelMixin
+from core.drf.viewsets import CompatGenericViewSet
 from notifications.views import BaseNotificationViewSet
 
 from complaints.views import (
@@ -114,10 +115,10 @@ class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
 
 class EligibilityCheckViewSet(
     CallCentrePermissionsViewSetMixin,
-    mixins.RetrieveModelMixin,
-    BaseNestedEligibilityCheckViewSet,
     ClaCreateModelMixin,
     ClaUpdateModelMixin,
+    mixins.RetrieveModelMixin,
+    BaseNestedEligibilityCheckViewSet,
 ):
     serializer_class = EligibilityCheckSerializer
 
@@ -167,10 +168,10 @@ class DateRangeFilter(BaseFilterBackend):
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
+    ClaCreateModelMixin,
     BaseCaseLogMixin,
     CaseOrganisationAssignCurrentOrganisationMixin,
     FullCaseViewSet,
-    ClaCreateModelMixin,
 ):
     serializer_class = CaseListSerializer
     # using CreateCaseSerializer during creation
@@ -494,12 +495,12 @@ class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
 
 class OutOfHoursRotaViewSet(
     CallCentreManagerPermissionsViewSetMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-    ClaCreateModelMixin,
-    ClaUpdateModelMixin,
+    CompatGenericViewSet,
 ):
     model = OutOfHoursRota
     serializer_class = OutOfHoursRotaSerializer
@@ -602,7 +603,7 @@ class FeedbackViewSet(
     mixins.ListModelMixin,
     ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
     model = Feedback
     lookup_field = "reference"
@@ -631,7 +632,7 @@ class CaseArchivedSearchFilter(SearchFilter):
 
 
 class CaseArchivedViewSet(
-    CallCentrePermissionsViewSetMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    CallCentrePermissionsViewSetMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, CompatGenericViewSet
 ):
 
     lookup_field = "laa_reference"

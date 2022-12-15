@@ -21,6 +21,8 @@ from core.drf.mixins import (
     ClaUpdateModelMixin,
     ClaRetrieveModelMixinWithSelfInstance,
 )
+from core.drf.viewsets import CompatGenericViewSet
+
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
@@ -92,7 +94,7 @@ class PasswordResetForm(forms.Form):
 
 
 class BaseUserViewSet(
-    mixins.RetrieveModelMixin, mixins.ListModelMixin, CaseFormActionMixin, viewsets.GenericViewSet, ClaCreateModelMixin
+    mixins.RetrieveModelMixin, mixins.ListModelMixin, ClaCreateModelMixin, CaseFormActionMixin, CompatGenericViewSet
 ):
     permission_classes = (IsManagerOrMePermission,)
 
@@ -164,7 +166,7 @@ class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = "code"
 
 
-class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet):
+class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, CompatGenericViewSet):
     queryset = EligibilityCheck.objects.all()
     model = EligibilityCheck
     lookup_field = "reference"
@@ -220,7 +222,7 @@ class BaseNestedEligibilityCheckViewSet(NestedGenericModelMixin, BaseEligibility
         return kwargs
 
 
-class BaseMatterTypeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class BaseMatterTypeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, CompatGenericViewSet):
     queryset = MatterType.objects.all()
     model = MatterType
     serializer_class = MatterTypeSerializerBase
@@ -229,7 +231,7 @@ class BaseMatterTypeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, vi
     filter_fields = ("level", "category__code")
 
 
-class BaseMediaCodeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class BaseMediaCodeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, CompatGenericViewSet):
     queryset = MediaCode.objects.all()
     model = MediaCode
     serializer_class = MediaCodeSerializerBase
@@ -238,7 +240,7 @@ class BaseMediaCodeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, vie
     filter_fields = ("name", "group__name")
 
 
-class BaseContactResearchMethodViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class BaseContactResearchMethodViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, CompatGenericViewSet):
     queryset = ContactResearchMethod.objects.all()
     model = ContactResearchMethod
     serializer_class = ContactResearchMethodSerializerBase
@@ -248,11 +250,7 @@ class BaseContactResearchMethodViewSet(mixins.RetrieveModelMixin, mixins.ListMod
 
 
 class FullPersonalDetailsViewSet(
-    NestedGenericModelMixin,
-    ClaCreateModelMixin,
-    ClaUpdateModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
+    ClaCreateModelMixin, ClaUpdateModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, CompatGenericViewSet
 ):
     queryset = PersonalDetails.objects.all()
     model = PersonalDetails
@@ -263,11 +261,7 @@ class FullPersonalDetailsViewSet(
 
 
 class BaseThirdPartyDetailsViewSet(
-    NestedGenericModelMixin,
-    ClaCreateModelMixin,
-    ClaUpdateModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
+    ClaCreateModelMixin, ClaUpdateModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, CompatGenericViewSet
 ):
     queryset = ThirdPartyDetails.objects.all()
     model = ThirdPartyDetails
@@ -277,11 +271,7 @@ class BaseThirdPartyDetailsViewSet(
 
 
 class BaseAdaptationDetailsViewSet(
-    NestedGenericModelMixin,
-    ClaCreateModelMixin,
-    ClaUpdateModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
+    ClaCreateModelMixin, ClaUpdateModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, CompatGenericViewSet
 ):
     queryset = AdaptationDetails.objects.all()
     model = AdaptationDetails
@@ -290,7 +280,7 @@ class BaseAdaptationDetailsViewSet(
     PARENT_FIELD = "adaptation_details"
 
 
-class BaseAdaptationDetailsMetadataViewSet(ClaCreateModelMixin, viewsets.GenericViewSet):
+class BaseAdaptationDetailsMetadataViewSet(ClaCreateModelMixin, CompatGenericViewSet):
     queryset = AdaptationDetails.objects.all()
     model = AdaptationDetails
     serializer_class = AdaptationDetailsSerializerBase
@@ -300,11 +290,7 @@ class BaseAdaptationDetailsMetadataViewSet(ClaCreateModelMixin, viewsets.Generic
 
 
 class BaseEODDetailsViewSet(
-    ClaCreateModelMixin,
-    ClaUpdateModelMixin,
-    mixins.RetrieveModelMixin,
-    NestedGenericModelMixin,
-    viewsets.GenericViewSet,
+    ClaCreateModelMixin, ClaUpdateModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, CompatGenericViewSet
 ):
     queryset = EODDetails.objects.all()
     model = EODDetails
@@ -388,7 +374,7 @@ class FullCaseViewSet(
     ClaRetrieveModelMixinWithSelfInstance,
     mixins.ListModelMixin,
     CaseFormActionMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
     queryset = Case.objects.all()
     model = Case
@@ -596,7 +582,7 @@ class BaseFeedbackViewSet(
     mixins.ListModelMixin,
     ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
     queryset = Feedback.objects.all()
     model = Feedback
@@ -606,7 +592,7 @@ class BaseFeedbackViewSet(
 
 
 class BaseCSVUploadReadOnlyViewSet(
-    DetailSerializerMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    DetailSerializerMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, CompatGenericViewSet
 ):
     queryset = CSVUpload.objects.all()
     model = CSVUpload
@@ -623,7 +609,7 @@ class BaseCSVUploadViewSet(
     ClaCreateModelMixin,
     ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
     queryset = CSVUpload.objects.all()
     model = CSVUpload
@@ -665,7 +651,7 @@ class PaginatorWithExtraItem(Paginator):
         return self._get_page(self.object_list[bottom:top], number, self)
 
 
-class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin, CompatGenericViewSet):
     PARENT_FIELD = "casenoteshistory_set"
     lookup_field = "reference"
     serializer_class = CaseNotesHistorySerializerBase

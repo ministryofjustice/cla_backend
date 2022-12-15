@@ -1,11 +1,12 @@
 from django.http import Http404
-from rest_framework import viewsets, mixins
+from rest_framework import mixins
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response as DRFResponse
 
 from core.models import get_web_user
 from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
+from core.drf.viewsets import CompatGenericViewSet
 from checker.helpers import notify_callback_created
 from diagnosis.views import DiagnosisModelMixin
 
@@ -76,7 +77,7 @@ class EligibilityCheckViewSet(
             raise Http404
 
 
-class CaseViewSet(PublicAPIViewSetMixin, BaseCaseLogMixin, ClaCreateModelMixin, viewsets.GenericViewSet):
+class CaseViewSet(PublicAPIViewSetMixin, BaseCaseLogMixin, ClaCreateModelMixin, CompatGenericViewSet):
 
     queryset = Case.objects.all()
     model = Case
@@ -110,7 +111,7 @@ class DiagnosisViewSet(
     ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
     serializer_class = CheckerDiagnosisSerializer
 
@@ -137,7 +138,7 @@ class DiagnosisViewSet(
 
 
 class ReasonForContactingViewSet(
-    PublicAPIViewSetMixin, ClaCreateModelMixin, ClaUpdateModelMixin, viewsets.GenericViewSet
+    PublicAPIViewSetMixin, ClaCreateModelMixin, ClaUpdateModelMixin, CompatGenericViewSet
 ):
     queryset = ReasonForContacting.objects.all()
     model = ReasonForContacting

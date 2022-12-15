@@ -74,9 +74,9 @@ class CategoryViewSet(CLAProviderPermissionViewSetMixin, BaseCategoryViewSet):
 
 class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     BaseNestedEligibilityCheckViewSet,
-    ClaUpdateModelMixin,
 ):
     serializer_class = EligibilityCheckSerializer
 

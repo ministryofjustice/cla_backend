@@ -18,12 +18,12 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, SearchFilter, BaseFilterBackend
+from rest_framework.pagination import PageNumberPagination
 
 from cla_provider.models import Provider, OutOfHoursRota, Feedback, ProviderPreAllocation
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
-from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.mixins import FormActionMixin, ClaCreateModelMixin, ClaUpdateModelMixin
 from core.drf.viewsets import CompatGenericViewSet
 from notifications.views import BaseNotificationViewSet
@@ -616,7 +616,7 @@ class FeedbackViewSet(
 
     queryset = Feedback.objects.all().select_related("case", "created_by", "created_by__provider")
 
-    pagination_class = RelativeUrlPaginationSerializer
+    pagination_class = PageNumberPagination
     paginate_by = 20
     paginate_by_param = "page_size"
     max_paginate_by = 100
@@ -646,7 +646,7 @@ class CaseArchivedViewSet(
     paginate_by = 20
     paginate_by_param = "page_size"
     max_paginate_by = 100
-    pagination_class = RelativeUrlPaginationSerializer
+    pagination_class = PageNumberPagination
 
 
 class CaseNotesHistoryViewSet(CallCentrePermissionsViewSetMixin, BaseCaseNotesHistoryViewSet):

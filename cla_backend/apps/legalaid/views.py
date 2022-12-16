@@ -22,8 +22,6 @@ from core.drf.mixins import (
     ClaRetrieveModelMixinWithSelfInstance,
 )
 from core.drf.viewsets import CompatGenericViewSet
-
-from core.drf.pagination import RelativeUrlPaginationSerializer
 from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
 from cla_auth.models import AccessAttempt
@@ -384,7 +382,7 @@ class FullCaseViewSet(
     lookup_regex = r"[A-Z|\d]{2}-\d{4}-\d{4}"
 
     serializer_class = CaseSerializerBase
-    pagination_class = RelativeUrlPaginationSerializer
+    pagination_class = PageNumberPagination
 
     filter_backends = (AscCaseOrderingFilter,)
 
@@ -659,7 +657,7 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
     queryset = CaseNotesHistory.objects.all()
     model = CaseNotesHistory
 
-    pagination_class = RelativeUrlPaginationSerializer
+    pagination_class = PageNumberPagination
     paginate_by = 5
     paginate_by_param = "page_size"
     max_paginate_by = 100

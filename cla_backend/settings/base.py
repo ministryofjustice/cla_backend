@@ -335,6 +335,7 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {"login": "10/sec"},
     # DRF3.0 on provides a default date time format, used to be none
     "DATETIME_FORMAT": None,
+    "NON_FIELD_ERRORS_KEY": "__all__",
 }
 
 # the start number of the LAA reference, must be 7 digit number and must

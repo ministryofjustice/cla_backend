@@ -57,3 +57,7 @@ envVars:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-uat.svc.cluster.local"
   MIGRATE_OAUTH_DATA:
     value: "False"
+  PROFILING_ENABLED:
+    value: "True"
+  PROFILING_ONLY_STAFF:
+    value: "False"

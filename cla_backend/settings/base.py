@@ -465,3 +465,13 @@ except ImportError:
 # importing test settings file if necessary (TODO chould be done better)
 if len(sys.argv) > 1 and "test" == sys.argv[1]:
     from .testing import *
+
+
+def add_profiling():
+    global MIDDLEWARE_CLASSES, DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF
+    if os.environ.get("PROFILING_ENABLED", "FALSE").upper() == "TRUE":
+        MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + ("django_cprofile_middleware.middleware.ProfilerMiddleware",)
+        DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = os.environ.get("PROFILING_ONLY_STAFF", "TRUE").upper() == "TRUE"
+
+
+add_profiling()

@@ -425,6 +425,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
         model = Case
         fields = ()
         read_only_fields = ("exempt_user", "exempt_user_reason")
+        writable_nested_fields = ["personal_details"]
 
 
 class CaseSerializerFull(CaseSerializerBase):

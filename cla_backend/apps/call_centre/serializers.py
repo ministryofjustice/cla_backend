@@ -343,6 +343,7 @@ class CreateCaseSerializer(CaseSerializer):
 
     class Meta(CaseSerializer.Meta):
         fields = tuple(set(CaseSerializer.Meta.fields) - {"complaint_count"})
+        writable_nested_fields = []
 
 
 class ProviderSerializer(ProviderSerializerBase):

@@ -18,7 +18,7 @@ ingress:
 # Lists don't deep merge, so this list of envVars overrides anything defined in an earlier values file
 envVars:
   DEBUG:
-    value: "False"
+    value: "True"
   REPLICA_DB_HOST:
     secret:
       optional: true
@@ -38,3 +38,7 @@ envVars:
     value: "80"
   MIGRATE_OAUTH_DATA:
     value: "True"
+  PROFILING_ENABLED:
+    value: "True"
+  PROFILING_ONLY_STAFF:
+    value: "False"

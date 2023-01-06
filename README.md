@@ -9,10 +9,16 @@ Backend API for the Civil Legal Aid Tool.
 
 ## Dependencies
 
--  [Virtualenv](http://www.virtualenv.org/en/latest/)
--  Most recent version of pip
--  [Python 2.7](http://www.python.org/) (Can be installed with `brew install python2`)
--  [Postgres 9.4+](http://www.postgresql.org/)
+-  [Python 2.7](http://www.python.org/) 
+   - (Can be installed with `brew install python2`)
+- Most recent version of pip
+   - `python -m ensurepip --user --upgrade`
+-  [Virtualenv](http://www.virtualenv.org/en/latest/) 
+   - `python -m pip install --user virtualenv`
+   - `python -m virtualenv --help`
+-  [Postgres 11](http://www.postgresql.org/)
+   - `brew install postgresql@11`
+   - `brew link postgresql@11`
 
 ## Installation
 
@@ -23,7 +29,7 @@ Clone the repository:
 Next, create the environment and start it up:
 
     cd cla_backend
-    virtualenv -p python2.7 env --prompt=\(cla_be\)
+    python -m virtualenv -p python2.7 env --prompt=\(cla_be\)
 
     source env/bin/activate
 
@@ -31,9 +37,9 @@ Update pip to the latest version:
 
     pip install -U pip
 
-Install python dependencies:
+Switch back to the main project cla_backend `cd ..` and install python dependencies:
 
-    pip install -r requirements/dev.txt
+    pip install -r requirements/generated/requirements-dev.txt
 
 Create the database inside postgres. Make sure the postgres service is started. Type `psql -d template1` to enter postgres, then enter:
 
@@ -59,11 +65,13 @@ Create a `local.py` settings file from the example file:
 
     cp cla_backend/settings/.example.local.py cla_backend/settings/local.py
 
+Ensure you are in the higher cla_backend directory when running the following ./manage commands
+
 Sync and migrate the database (n.b. see [Troubleshooting](#troubleshooting) if the `postgres` role is missing):
 
     ./manage.py migrate
 
-Create an admin user by running the following command and specifying username == password == 'admin' (email choice not relevant):
+Create an admin user by running the following command. Set both username and password as 'admin' (email choice not relevant):
 
     ./manage.py createsuperuser
 
@@ -75,10 +83,11 @@ Start the server:
 
     ./manage.py runserver 8000
 
+On successful deployment, you will see a "Starting development server at ..." message with a link, you will have to append `/admin` to deploy the app
+
 See [Troubleshooting](#troubleshooting) if this fails because the DEBUG environment variable was not set:
 
 See the list of users in `/admin/auth/user/`. Passwords are the same as the usernames.
-
 
 ## Lint and pre-commit hooks
 
@@ -100,6 +109,7 @@ pre-commit run --all-files
 Each time you start a new terminal instance you will need to run the following commands to get the server running again:
 
     source env/bin/activate
+    pip install -r requirements/generated/requirements-dev.txt
     ./manage.py runserver 8000
 
 ## Translations

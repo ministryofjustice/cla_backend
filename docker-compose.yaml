@@ -1,30 +1,45 @@
-# NB: this is only used for *local development*
-# see Dockerfile for deployed version
+version: "3.9"
+services:
+  start_applications:
+    image: jwilder/dockerize
+    command: >
+      -wait tcp://cla_backend:8000
+      -wait-retry-interval 10s
+      -timeout 180s
+    depends_on:
+      - cla_backend
 
-db:
-  image: postgres
-  environment:
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: postgres
-    POSTGRES_DB: cla_backend
+  db:
+    image: postgres:10.21-alpine
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cla_backend
 
-django:
-  build: .
-  ports:
-    - "8000:80"
-  links:
-    - db
-  environment:
-    ENV: local
-    DEBUG: "True"
-    SECRET_KEY: CHANGE_ME
-    DB_NAME: cla_backend
-    DB_USER: postgres
-    DB_PASSWORD: postgres
-    DB_HOST: db
-    DB_PORT: 5432
-    BACKEND_ENABLED: "True"
-    LOAD_SEED_DATA: "True"
-    LOAD_TEST_DATA: "True"
-    ADMIN_PASSWORD: cla_admin
-    ALLOWED_HOSTS: "*"
+  cla_backend:
+    build: .
+    ports:
+      - "8010:8000"
+    volumes:
+      - .:/home/app
+    depends_on:
+      - db
+    environment:
+      ENV: local
+      DEBUG: "True"
+      SECRET_KEY: CHANGE_ME
+      DB_NAME: cla_backend
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      BACKEND_ENABLED: "True"
+      LOAD_SEED_DATA: "True"
+      LOAD_TEST_DATA: "True"
+      LOAD_END_TO_END_FIXTURES: "True"
+      ADMIN_USER: cla_admin
+      STATIC_FILES_BACKEND: local
+      ADMIN_PASSWORD: cla_admin
+      ALLOWED_HOSTS: "*"

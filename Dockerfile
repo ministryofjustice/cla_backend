@@ -1,3 +1,6 @@
+#################################################
+# BASE IMAGE USED BY ALL STAGES
+#################################################
 FROM alpine:3.9 as base
 
 RUN apk add --no-cache \
@@ -28,15 +31,22 @@ COPY ./requirements/generated/ ./requirements
 RUN chown -R app:app /home/app && \
     mkdir -p cla_backend/assets
 
+#################################################
+# DEVELOPMENT
+#################################################
+
 FROM base AS development
 
+# additional package required otherwise build of coveralls fails
 RUN apk add --no-cache libffi-dev
 RUN pip install -r ./requirements/requirements-dev.txt --no-cache-dir
 COPY . .
-USER 1000
 EXPOSE 8000
 CMD ["docker/run_dev.sh"]
 
+#################################################
+# PRODUCTION
+#################################################
 FROM base AS production
 
 RUN pip install -r ./requirements/requirements-production.txt --no-cache-dir

@@ -5,11 +5,11 @@ orbs:
 jobs:
   build:
     docker:
-      - image: docker:20.10-git
+      - image: docker:19.03-git
     steps:
       - checkout
       - setup_remote_docker:
-          version: "20.10.18"
+          version: "19.03.13"
           docker_layer_caching: true
       - run:
           name: Login to the ECR Docker registry

@@ -19,7 +19,9 @@ services:
       POSTGRES_DB: cla_backend
 
   cla_backend:
-    build: .
+    build:
+      context: .
+      target: "development"
     ports:
       - "8010:8000"
     volumes:

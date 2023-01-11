@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:3.9 as base
 
 RUN apk add --no-cache \
       bash \
@@ -6,9 +6,8 @@ RUN apk add --no-cache \
       tzdata \
       gettext
 
-RUN adduser -D app && \
-    cp /usr/share/zoneinfo/Europe/London /etc/localtime
-
+RUN adduser -D app
+RUN cp /usr/share/zoneinfo/Europe/London /etc/localtime
 # To install pip dependencies
 RUN apk add --no-cache \
       build-base \
@@ -24,17 +23,29 @@ RUN apk add --no-cache \
 WORKDIR /home/app
 
 COPY ./requirements/generated/ ./requirements
-RUN pip install -r ./requirements/requirements-production.txt --no-cache-dir
-
-COPY . .
 
 # Make sure static assets directory has correct permissions
 RUN chown -R app:app /home/app && \
     mkdir -p cla_backend/assets
 
-RUN python manage.py compilemessages
+FROM base AS development
 
+RUN apk add --no-cache libffi-dev
+RUN pip install -r ./requirements/requirements-dev.txt --no-cache-dir
+COPY . .
 USER 1000
 EXPOSE 8000
+CMD ["docker/run_dev.sh"]
 
+FROM base AS production
+
+RUN pip install -r ./requirements/requirements-production.txt --no-cache-dir
+
+COPY . .
+RUN python manage.py compilemessages
+USER 1000
+EXPOSE 8000
 CMD ["docker/run.sh"]
+
+
+

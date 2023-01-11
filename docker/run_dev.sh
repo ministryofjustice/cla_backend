@@ -5,5 +5,4 @@ set -e
 
 python manage.py collectstatic --noinput
 
-# Run server
-python manage.py runserver 8000
+./manage.py runserver 0.0.0.0:8000

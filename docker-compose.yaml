@@ -21,7 +21,7 @@ services:
   cla_backend:
     build:
       context: .
-      target: "development"
+      target: development
     ports:
       - "8010:8000"
     volumes:

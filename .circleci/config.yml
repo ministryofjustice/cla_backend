@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: "20.10.22"
+          version: "20.10.18"
           docker_layer_caching: true
       - run:
           name: Login to the ECR Docker registry
@@ -21,7 +21,8 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build --tag application:$CIRCLE_SHA1 --target production \
+            DOCKER_BUILDKIT=1 docker build --tag application:$CIRCLE_SHA1 \
+              --target production \
               --label build.git.sha=$CIRCLE_SHA1 \
               --label build.git.branch=$CIRCLE_BRANCH \
               --label build.url=$CIRCLE_BUILD_URL \

@@ -5,16 +5,16 @@ orbs:
 jobs:
   build:
     docker:
-      - image: docker:18.09-git
+      - image: docker:19.03-git
     steps:
       - checkout
       - setup_remote_docker:
-          version: "18.09.9"
+          version: "19.03.13"
           docker_layer_caching: true
       - run:
           name: Login to the ECR Docker registry
           command: |
-            apk add --no-cache --no-progress py2-pip
+            apk add --no-cache --no-progress py3-pip
             pip install awscli
             ecr_login="$(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)"
             ${ecr_login}

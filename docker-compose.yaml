@@ -21,7 +21,7 @@ services:
   cla_backend:
     build:
       context: .
-      target: development
+      target: ${ENVIRONMENT:-development}
     ports:
       - '8010:8000'
     stdin_open: true

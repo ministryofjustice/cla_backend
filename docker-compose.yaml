@@ -12,7 +12,7 @@ services:
   db:
     image: postgres:10.21-alpine
     ports:
-      - '5432:5432'
+      - '5432'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -23,7 +23,9 @@ services:
       context: .
       target: development
     ports:
-      - "8010:8000"
+      - '8010:8000'
+    stdin_open: true
+    tty: true
     volumes:
       - .:/home/app
     depends_on:

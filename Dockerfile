@@ -9,8 +9,9 @@ RUN apk add --no-cache \
       tzdata \
       gettext
 
-RUN adduser -D app
-RUN cp /usr/share/zoneinfo/Europe/London /etc/localtime
+RUN adduser -D app && \
+    cp /usr/share/zoneinfo/Europe/London /etc/localtime
+
 # To install pip dependencies
 RUN apk add --no-cache \
       build-base \

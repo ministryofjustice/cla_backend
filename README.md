@@ -42,9 +42,7 @@ Once you have created your docker development container as above.
 
 Add `import pdb` and `pdb.set_trace()` wherever you want to trigger the debugger in the codebase.
 
-You will then need to get the cla_backend docker container id from `docker ps`
-
-Now run `docker attach CONTAINERID` where CONTAINERID is taken from the previous step.
+Now run `docker attach cla_backend` 
 
 When pdb.set_trace() is reached, you will be able to debug from the command line.
 

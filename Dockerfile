@@ -43,6 +43,7 @@ COPY . .
 RUN chown -R app:app /home/app && \
     mkdir -p cla_backend/assets
 
+USER 1000
 EXPOSE 8000
 CMD ["docker/run_dev.sh"]
 
@@ -51,6 +52,7 @@ CMD ["docker/run_dev.sh"]
 #################################################
 FROM development AS test
 
+USER 1000
 CMD ["./manage.py", "test"]
 
 #################################################

@@ -2,6 +2,8 @@ version: "3.9"
 services:
   start_applications:
     image: jwilder/dockerize
+    security_opt:
+      - no-new-privileges:true
     command: >
       -wait tcp://cla_backend:8000
       -wait-retry-interval 10s
@@ -13,6 +15,10 @@ services:
     image: postgres:10.21-alpine
     ports:
       - '5432'
+    security_opt:
+      - no-new-privileges:true
+    container_name:
+      cla_backend_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -30,6 +36,8 @@ services:
       - .:/home/app
     depends_on:
       - db
+    container_name:
+      cla_backend
     environment:
       ENV: local
       DEBUG: "True"
@@ -47,3 +55,4 @@ services:
       STATIC_FILES_BACKEND: local
       ADMIN_PASSWORD: cla_admin
       ALLOWED_HOSTS: "*"
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS:-cla_backend.settings.base}

@@ -54,6 +54,10 @@ To run unit tests, this could be done from within the devlopment container or yo
 
     ./run_local.sh test
 
+If you wish to limit the tests that are run you can pass in a second argument, for example
+
+    `./run_local.sh test cla_backend.apps.call_centre.tests.api.test_personal_details_api.PersonalDetailsTestCase`
+
 ## Lint and pre-commit hooks
 
 To lint with Black and flake8, install pre-commit hooks:

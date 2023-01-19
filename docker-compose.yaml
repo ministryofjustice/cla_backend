@@ -12,7 +12,7 @@ services:
       - cla_backend
 
   db:
-    image: postgres:10.21-alpine
+    image: postgres:11.6-alpine
     ports:
       - '5432'
     security_opt:

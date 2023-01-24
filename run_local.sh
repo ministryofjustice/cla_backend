@@ -4,7 +4,6 @@ export ENVIRONMENT=${1:-development}
 export UNIT_TEST=${2:-""}
 echo "running environment $ENVIRONMENT"
 docker-compose down --remove-orphans
-docker-compose build cla_backend
 if [ $ENVIRONMENT = "test" ]; then
   export DJANGO_SETTINGS=cla_backend.settings.circle
   docker-compose build cla_backend --build-arg specific_test_input=$UNIT_TEST

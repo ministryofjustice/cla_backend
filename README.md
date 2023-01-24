@@ -48,15 +48,28 @@ When pdb.set_trace() is reached, you will be able to debug from the command line
 
 `https://docs.python.org/3/library/pdb.html`
 
-## Unit tests
+## Unit/integration tests
 
-To run unit tests, this could be done from within the devlopment container or you could run:
+If you wish to limit the tests that are run you should exec into the development container and run them locally
+    `docker exec -it cla_backend bash`
+
+Once you are in the development container, set the correct settings file for report tests to run and then choose your test, eg:
+    `python manage.py test cla_backend.apps.legalaid.tests.test_views.FullCaseViewSetTestCase --settings=cla_backend.settings.circle`
+
+Where an example of a test class would be 
+    `cla_backend.apps.legalaid.tests.test_views.FullCaseViewSetTestCase`
+Or one test
+    `cla_backend.apps.legalaid.tests.test_views.FullCaseViewSetTestCase.test_search_unicode:
+`
+
+To run all tests, this could be done from within the development container (as above) or you can run the test environment:
 
     ./run_local.sh test
 
-If you wish to limit the tests that are run you can pass in a second argument, for example
+Please note that if running all of the tests locally, the integration tests to check timeouts on cla_backend will fail.
 
-    `./run_local.sh test cla_backend.apps.call_centre.tests.api.test_personal_details_api.PersonalDetailsTestCase`
+These are the tests found in 
+`cla_backend.apps.core.tests.admin.integration.test_session_security.SessionSecuritySeleniumTestCase`
 
 ## Lint and pre-commit hooks
 

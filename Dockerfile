@@ -52,11 +52,8 @@ CMD ["docker/run_dev.sh"]
 #################################################
 FROM development AS test
 
-ARG specific_test_input=""
-ENV specific_test $specific_test_input
-
 USER 1000
-CMD ["sh", "-c", "./manage.py test $specific_test"]
+CMD ["./manage.py", "test"]
 
 
 #################################################

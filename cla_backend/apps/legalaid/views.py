@@ -561,13 +561,15 @@ class FullCaseViewSet(
         super(FullCaseViewSet, self).perform_update(serializer)
         obj = self.get_object()
         if obj.pk:
-            if "notes" in serializer.validated_data:
+            has_notes = serializer.validated_data.get("notes", None)
+            if has_notes:
                 cnh = CaseNotesHistory(case=obj)
                 cnh.operator_notes = obj.notes
                 cnh.created_by = self.request.user
                 cnh.save()
 
-            if "provider_notes" in serializer.validated_data:
+            has_provider_notes = serializer.validated_data.get("provider_notes", None)
+            if has_provider_notes:
                 cpnh = CaseNotesHistory(case=obj)
                 cpnh.provider_notes = obj.provider_notes
                 cpnh.created_by = self.request.user

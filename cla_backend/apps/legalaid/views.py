@@ -573,7 +573,8 @@ class FullCaseViewSet(
                 cpnh.created_by = self.request.user
                 cpnh.save()
 
-            if "complaint_flag" in serializer.validated_data:
+            complaint_flag = serializer.validated_data.get("complaint_flag", None)
+            if complaint_flag:
                 event = event_registry.get_event("case")()
                 event.process(
                     obj,

@@ -558,25 +558,29 @@ class FullCaseViewSet(
         return resp
 
     def perform_update(self, serializer):
+        previous_notes = serializer.instance.notes
+        previous_provider_notes = serializer.instance.provider_notes
+        previous_complaint_flag = serializer.instance.complaint_flag
+
         super(FullCaseViewSet, self).perform_update(serializer)
         obj = self.get_object()
         if obj.pk:
-            has_notes = serializer.validated_data.get("notes", None)
-            if has_notes:
+            notes = serializer.validated_data.get("notes", None)
+            if notes and notes != previous_notes:
                 cnh = CaseNotesHistory(case=obj)
                 cnh.operator_notes = obj.notes
                 cnh.created_by = self.request.user
                 cnh.save()
 
-            has_provider_notes = serializer.validated_data.get("provider_notes", None)
-            if has_provider_notes:
+            provider_notes = serializer.validated_data.get("provider_notes", None)
+            if provider_notes and provider_notes != previous_provider_notes:
                 cpnh = CaseNotesHistory(case=obj)
                 cpnh.provider_notes = obj.provider_notes
                 cpnh.created_by = self.request.user
                 cpnh.save()
 
             complaint_flag = serializer.validated_data.get("complaint_flag", None)
-            if complaint_flag:
+            if complaint_flag and complaint_flag != previous_complaint_flag:
                 event = event_registry.get_event("case")()
                 event.process(
                     obj,

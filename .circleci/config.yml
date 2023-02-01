@@ -5,23 +5,24 @@ orbs:
 jobs:
   build:
     docker:
-      - image: docker:17.03-git
+      - image: docker:19.03-git
     steps:
       - checkout
       - setup_remote_docker:
-          version: "18.09.3"
+          version: "19.03.13"
           docker_layer_caching: true
       - run:
           name: Login to the ECR Docker registry
           command: |
-            apk add --no-cache --no-progress py2-pip
+            apk add --no-cache --no-progress py3-pip
             pip install awscli
             ecr_login="$(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)"
             ${ecr_login}
       - run:
           name: Build Docker image
           command: |
-            docker build --tag application:$CIRCLE_SHA1 \
+            DOCKER_BUILDKIT=1 docker build --tag application:$CIRCLE_SHA1 \
+              --target production \
               --label build.git.sha=$CIRCLE_SHA1 \
               --label build.git.branch=$CIRCLE_BRANCH \
               --label build.url=$CIRCLE_BUILD_URL \

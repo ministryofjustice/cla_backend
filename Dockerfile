@@ -1,4 +1,7 @@
-FROM alpine:3.9
+#################################################
+# BASE IMAGE USED BY ALL STAGES
+#################################################
+FROM alpine:3.9 as base
 
 RUN apk add --no-cache \
       bash \
@@ -24,8 +27,42 @@ RUN apk add --no-cache \
 WORKDIR /home/app
 
 COPY ./requirements/generated/ ./requirements
-RUN pip install -r ./requirements/requirements-production.txt --no-cache-dir
 
+#################################################
+# DEVELOPMENT
+#################################################
+
+FROM base AS development
+
+# additional package required otherwise build of coveralls fails
+RUN apk add --no-cache libffi-dev firefox-esr
+RUN pip install -r ./requirements/requirements-dev.txt --no-cache-dir
+COPY . .
+
+# Make sure static assets directory has correct permissions
+RUN chown -R app:app /home/app && \
+    mkdir -p cla_backend/assets
+
+USER 1000
+EXPOSE 8000
+CMD ["docker/run_dev.sh"]
+
+#################################################
+# TEST
+#################################################
+FROM development AS test
+
+USER 1000
+CMD ["./manage.py", "test"]
+
+
+#################################################
+# PRODUCTION
+#################################################
+FROM base AS production
+
+# Make sure static assets directory has correct permissions
+RUN pip install -r ./requirements/requirements-production.txt --no-cache-dir
 COPY . .
 
 # Make sure static assets directory has correct permissions
@@ -33,8 +70,9 @@ RUN chown -R app:app /home/app && \
     mkdir -p cla_backend/assets
 
 RUN python manage.py compilemessages
-
 USER 1000
 EXPOSE 8000
-
 CMD ["docker/run.sh"]
+
+
+

@@ -80,3 +80,28 @@ class EligibilityCheckTestCase(CLAOperatorAuthBaseApiTestMixin, NestedEligibilit
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {"warnings": {}})
+
+    def test_check_validate_disregards(self):
+        """
+               Make sure that the disregards does not allow fields that have not been created
+               """
+        disregard_defined = {"disregards": {"criminal_injuries": "true"}}
+
+        disregard_not_defined = {"disregards": {"no_disregard_defined": "true"}}
+
+        response = self.client.patch(
+            self.detail_url, data=disregard_defined, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        # if you pass in  an expected disregards field then it should return the same data
+        expected_good = {"criminal_injuries": True}
+        self.assertEqual(response.data["disregards"], expected_good)
+
+        # if you pass in something other than an expected disregards field then it should fail
+        response = self.client.patch(
+            self.detail_url,
+            data=disregard_not_defined,
+            format="json",
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
+        )
+        expected_bad = {"disregards": [u"Fields no_disregard_defined not recognised"]}
+        self.assertEqual(response.data, expected_bad)

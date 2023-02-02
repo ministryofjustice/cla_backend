@@ -12,7 +12,7 @@ from cla_eventlog.models import Log
 from checker.serializers import CaseSerializer
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
-from legalaid.models import Case, PersonalDetails
+from legalaid.models import Case, PersonalDetails, ThirdPartyDetails
 from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
 from call_centre.tests.test_utils import CallCentreFixedOperatingHours
 
@@ -48,10 +48,20 @@ class BaseCaseTestCase(
             for prop in ["title", "full_name", "postcode", "street", "mobile_phone", "home_phone"]:
                 self.assertEqual(unicode(getattr(obj, prop)), data[prop])
 
+    def assertThirdPartyDetailsEqual(self, data, obj):
+        if data is None or obj is None:
+            self.assertEqual(data, obj)
+        else:
+            self.assertEqual(data["personal_relationship"], obj.personal_relationship)
+
+            for prop in ["full_name", "mobile_phone", "safe_to_contact"]:
+                self.assertEqual(unicode(getattr(obj.personal_details, prop)), data["personal_details"][prop])
+
     def assertCaseEqual(self, data, case):
         self.assertEqual(case.reference, data["reference"])
         self.assertEqual(unicode(case.eligibility_check.reference), data["eligibility_check"])
         self.assertPersonalDetailsEqual(data["personal_details"], case.personal_details)
+        self.assertThirdPartyDetailsEqual(data["thirdparty_details"], case.thirdparty_details)
 
         self.assertEqual(Case.objects.count(), 1)
         case = Case.objects.first()
@@ -65,6 +75,12 @@ class BaseCaseTestCase(
             "street": "102 Petty France",
             "mobile_phone": "0123456789",
             "home_phone": "9876543210",
+        }
+
+    def get_thirdparty_details_default_post_data(self):
+        return {
+            "personal_details": {"full_name": "Jo Bloggs", "mobile_phone": "02081234567", "safe_to_contact": "SAFE"},
+            "personal_relationship": "FAMILY_FRIEND",
         }
 
 
@@ -95,17 +111,23 @@ class CaseTestCase(BaseCaseTestCase):
         data = {
             "eligibility_check": unicode(check.reference),
             "personal_details": self.get_personal_details_default_post_data(),
+            "thirdparty_details": self.get_thirdparty_details_default_post_data(),
         }
         response = self.client.post(self.list_url, data=data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCaseResponseKeys(response)
 
+        # third party personal details needs to be converted to an object
+        data["thirdparty_details"]["personal_details"] = PersonalDetails(
+            **data["thirdparty_details"]["personal_details"]
+        )
         self.assertCaseEqual(
             response.data,
             Case(
                 reference=response.data["reference"],
                 eligibility_check=check,
                 personal_details=PersonalDetails(**data["personal_details"]),
+                thirdparty_details=ThirdPartyDetails(**data["thirdparty_details"]),
             ),
         )
 

@@ -17,4 +17,3 @@ class LogSerializerBase(ClaModelSerializer):
 
     class Meta(object):
         model = Log
-        fields = ()

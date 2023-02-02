@@ -80,7 +80,6 @@ class FeedbackSerializerBase(serializers.ModelSerializer):
 
     class Meta(object):
         model = Feedback
-        fields = ()
 
 
 class CSVUploadSerializerBase(serializers.ModelSerializer):
@@ -106,13 +105,11 @@ class CSVUploadSerializerBase(serializers.ModelSerializer):
 
     class Meta(object):
         model = CSVUpload
-        fields = ()
 
 
 class PropertySerializerBase(ClaModelSerializer):
     class Meta(object):
         model = Property
-        fields = ()
 
 
 class TotalsModelSerializer(ClaModelSerializer):
@@ -148,7 +145,6 @@ class IncomeSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Income
-        fields = ()
 
 
 class SavingsSerializerBase(TotalsModelSerializer):
@@ -156,7 +152,6 @@ class SavingsSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Savings
-        fields = ()
 
 
 class DeductionsSerializerBase(TotalsModelSerializer):
@@ -172,7 +167,6 @@ class DeductionsSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Deductions
-        fields = ()
 
 
 class PersonalDetailsSerializerBase(serializers.ModelSerializer):
@@ -181,7 +175,6 @@ class PersonalDetailsSerializerBase(serializers.ModelSerializer):
 
     class Meta(object):
         model = PersonalDetails
-        fields = ()
 
 
 class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
@@ -191,13 +184,9 @@ class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
     def diversity_bool(self, obj):
         return bool(obj.diversity)
 
-    class Meta(PersonalDetailsSerializerBase.Meta):
-        fields = ()
-
 
 class ThirdPartyPersonalDetailsSerializerBase(PersonalDetailsSerializerBase):
-    class Meta(PersonalDetailsSerializerBase.Meta):
-        fields = ()
+    pass
 
 
 class ThirdPartyDetailsSerializerBase(ClaModelSerializer):
@@ -206,7 +195,6 @@ class ThirdPartyDetailsSerializerBase(ClaModelSerializer):
 
     class Meta(object):
         model = ThirdPartyDetails
-        fields = ()
         writable_nested_fields = ["personal_details"]
 
 
@@ -217,7 +205,6 @@ class PersonSerializerBase(ClaModelSerializer):
 
     class Meta(object):
         model = Person
-        fields = ()
         writable_nested_fields = ["income", "savings", "deductions"]
 
 
@@ -231,7 +218,6 @@ class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
 
     class Meta(object):
         model = AdaptationDetails
-        fields = ()
 
 
 class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
@@ -246,7 +232,6 @@ class EODDetailsSerializerBase(ClaModelSerializer):
 
     class Meta(object):
         model = EODDetails
-        fields = ()
         writable_nested_fields = ["categories"]
 
 
@@ -271,7 +256,6 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
 
     class Meta(object):
         model = EligibilityCheck
-        fields = ()
 
     def create_writable_nested_fields_many_to_many(self, instance, m2m_validated_data):
         property_set_data = m2m_validated_data.pop("property_set", None)
@@ -423,7 +407,6 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
 
     class Meta(object):
         model = Case
-        fields = ()
         read_only_fields = ("exempt_user", "exempt_user_reason")
         writable_nested_fields = ["personal_details"]
 
@@ -455,9 +438,6 @@ class CaseSerializerFull(CaseSerializerBase):
     category = serializers.CharField(source="diagnosis.category.name", read_only=True)
 
     exempt_user = serializers.NullBooleanField(required=False)
-
-    class Meta(CaseSerializerBase.Meta):
-        fields = ()
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -506,7 +486,7 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
         return user
 
     class Meta(object):
-        fields = ()
+        pass
 
 
 class CaseArchivedSerializerBase(serializers.ModelSerializer):
@@ -518,7 +498,6 @@ class CaseArchivedSerializerBase(serializers.ModelSerializer):
 
     class Meta(object):
         model = CaseArchived
-        fields = ()
 
 
 class CaseNotesHistorySerializerBase(ClaModelSerializer):
@@ -535,4 +514,3 @@ class CaseNotesHistorySerializerBase(ClaModelSerializer):
 
     class Meta(object):
         model = CaseNotesHistory
-        fields = ()

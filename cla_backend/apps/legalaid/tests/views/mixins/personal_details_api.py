@@ -176,7 +176,6 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
         for key, value in data.items():
             setattr(self.resource, key, value)
         self.assertPersonalDetailsEqual(response.data, self.resource)
-        print(response)
 
     def test_personal_details_patch_check_null_values(self):
         data = {

@@ -141,7 +141,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     contact_for_research_via = models.CharField(
         max_length=10, default=RESEARCH_CONTACT_VIA.PHONE, choices=RESEARCH_CONTACT_VIA, blank=True, null=True
     )
-    contact_for_research_methods = models.ManyToManyField(ContactResearchMethod, null=True)
+    contact_for_research_methods = models.ManyToManyField(ContactResearchMethod, null=True, blank=True)
     vulnerable_user = models.NullBooleanField(blank=True, null=True)
     safe_to_contact = models.CharField(
         max_length=30, default=CONTACT_SAFETY.SAFE, choices=CONTACT_SAFETY, blank=True, null=True

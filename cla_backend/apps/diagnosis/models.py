@@ -48,7 +48,3 @@ class DiagnosisTraversal(TimeStampedModel):
 
     def is_state_unknown(self):
         return self.state == DIAGNOSIS_SCOPE.UNKNOWN
-
-    @classmethod
-    def is_state_unknown_cls(cls, state):
-        return state == DIAGNOSIS_SCOPE.UNKNOWN

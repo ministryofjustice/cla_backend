@@ -61,7 +61,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
     def _update(self, ref, data):
         url = self.get_detail_url(unicode(ref))
-        return self.client.patch(url, data=data, HTTP_AUTHORIZATION=self.get_http_authorization())
+        return self.client.patch(url, data=data, HTTP_AUTHORIZATION=self.get_http_authorization(), format="json")
 
     def get_reference_from_response(self, data):
         return data["reference"]
@@ -467,7 +467,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             ["category", "your_problem_notes", "property_set", "dependants_young", "dependants_old", "you", "partner"],
         )
         self.assertEqual(errors["category"], [u"Object with code=-1 does not exist."])
-        self.assertEqual(errors["your_problem_notes"], [u"Ensure this value has at most 500 characters (it has 501)."])
+        self.assertEqual(errors["your_problem_notes"], [u"Ensure this field has no more than 500 characters."])
         self.assertItemsEqual(
             errors["property_set"],
             [
@@ -485,39 +485,35 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.maxDiff = None
         self.assertItemsEqual(
             errors["you"],
-            [
-                {
-                    "savings": [
-                        {
-                            "credit_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "asset_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "investment_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "bank_balance": [u"Ensure this value is greater than or equal to 0."],
-                        }
-                    ],
-                    "deductions": [
-                        {"criminal_legalaid_contributions": [u"Ensure this value is greater than or equal to 0."]}
-                    ],
-                }
-            ],
+            {
+                "savings": [
+                    {
+                        "credit_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "asset_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "investment_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "bank_balance": [u"Ensure this value is greater than or equal to 0."],
+                    }
+                ],
+                "deductions": [
+                    {"criminal_legalaid_contributions": [u"Ensure this value is greater than or equal to 0."]}
+                ],
+            },
         )
         self.assertItemsEqual(
             errors["partner"],
-            [
-                {
-                    "savings": [
-                        {
-                            "credit_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "asset_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "investment_balance": [u"Ensure this value is greater than or equal to 0."],
-                            "bank_balance": [u"Ensure this value is greater than or equal to 0."],
-                        }
-                    ],
-                    "deductions": [
-                        {"criminal_legalaid_contributions": [u"Ensure this value is greater than or equal to 0."]}
-                    ],
-                }
-            ],
+            {
+                "savings": [
+                    {
+                        "credit_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "asset_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "investment_balance": [u"Ensure this value is greater than or equal to 0."],
+                        "bank_balance": [u"Ensure this value is greater than or equal to 0."],
+                    }
+                ],
+                "deductions": [
+                    {"criminal_legalaid_contributions": [u"Ensure this value is greater than or equal to 0."]}
+                ],
+            },
         )
 
     @classmethod
@@ -541,26 +537,18 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         ERRORS_DATA = [
             {
                 "error": {
-                    "you": [
-                        {
-                            "income": [
-                                {
-                                    "earnings": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "self_employment_drawings": [
-                                        u"Ensure this value is less than or equal to 9999999999."
-                                    ],
-                                    "child_benefits": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "benefits": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "tax_credits": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "pension": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "maintenance_received": [
-                                        u"Ensure this value is less than or equal to 9999999999."
-                                    ],
-                                    "other_income": [u"Ensure this value is less than or equal to 9999999999."],
-                                }
-                            ]
+                    "you": {
+                        "income": {
+                            "earnings": [u"Ensure this value is less than or equal to 9999999999."],
+                            "self_employment_drawings": [u"Ensure this value is less than or equal to 9999999999."],
+                            "child_benefits": [u"Ensure this value is less than or equal to 9999999999."],
+                            "benefits": [u"Ensure this value is less than or equal to 9999999999."],
+                            "tax_credits": [u"Ensure this value is less than or equal to 9999999999."],
+                            "pension": [u"Ensure this value is less than or equal to 9999999999."],
+                            "maintenance_received": [u"Ensure this value is less than or equal to 9999999999."],
+                            "other_income": [u"Ensure this value is less than or equal to 9999999999."],
                         }
-                    ]
+                    }
                 },
                 "data": {
                     "you": {
@@ -585,25 +573,17 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             },
             {
                 "error": {
-                    "partner": [
-                        {
-                            "income": [
-                                {
-                                    "earnings": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "self_employment_drawings": [
-                                        u"Ensure this value is less than or equal to 9999999999."
-                                    ],
-                                    "benefits": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "tax_credits": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "pension": [u"Ensure this value is less than or equal to 9999999999."],
-                                    "maintenance_received": [
-                                        u"Ensure this value is less than or equal to 9999999999."
-                                    ],
-                                    "other_income": [u"Ensure this value is less than or equal to 9999999999."],
-                                }
-                            ]
+                    "partner": {
+                        "income": {
+                            "earnings": [u"Ensure this value is less than or equal to 9999999999."],
+                            "self_employment_drawings": [u"Ensure this value is less than or equal to 9999999999."],
+                            "benefits": [u"Ensure this value is less than or equal to 9999999999."],
+                            "tax_credits": [u"Ensure this value is less than or equal to 9999999999."],
+                            "pension": [u"Ensure this value is less than or equal to 9999999999."],
+                            "maintenance_received": [u"Ensure this value is less than or equal to 9999999999."],
+                            "other_income": [u"Ensure this value is less than or equal to 9999999999."],
                         }
-                    ]
+                    }
                 },
                 "data": {
                     "partner": {
@@ -632,9 +612,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
             for field_name in ["income_tax", "national_insurance", "maintenance", "childcare", "mortgage", "rent"]:
                 a = {
                     "error": {
-                        who: [
-                            {"deductions": [{field_name: [u"Ensure this value is less than or equal to 9999999999."]}]}
-                        ]
+                        who: {"deductions": {field_name: [u"Ensure this value is less than or equal to 9999999999."]}}
                     },
                     "data": {
                         who: {
@@ -768,7 +746,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         """
         properties = make_recipe("legalaid.property", eligibility_check=self.resource, _quantity=4, disputed=False)
 
-        # making extra propertiesn not associated to this eligibility check
+        # making extra properties not associated to this eligibility check
         make_recipe("legalaid.property", _quantity=5)
 
         self.assertEqual(self.resource.property_set.count(), 4)
@@ -803,6 +781,34 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
         # checking the db just in case
         self.assertEqual(self.resource.property_set.count(), 2)
+        # make sure did not delete all properties by accident
+        self.assertEqual(Property.objects.all().count(), 7)
+
+    def test_delete_all_properties(self):
+        """
+        PATCH should remove all properties.
+        """
+        make_recipe("legalaid.property", eligibility_check=self.resource, _quantity=4, disputed=False)
+
+        # making extra properties not associated to this eligibility check
+        make_recipe("legalaid.property", _quantity=5)
+
+        self.assertEqual(self.resource.property_set.count(), 4)
+        # remove all properties
+        data = {"property_set": []}
+        response = self.client.patch(
+            self.detail_url, data=data, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # nothing should have changed here
+        self.assertEligibilityCheckEqual(response.data, self.resource)
+
+        # check eligibility check has zero properties
+        self.assertEqual(EligibilityCheck.objects.get(pk=self.resource.pk).property_set.count(), 0)
+
+        # properties should have changed. Response should have no properties
+        self.assertEqual(len(response.data["property_set"]), 0)
 
     def test_patch_with_finances(self):
         """

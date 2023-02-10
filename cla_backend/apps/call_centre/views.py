@@ -24,7 +24,8 @@ from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
 from core.drf.pagination import RelativeUrlPaginationSerializer
-from core.drf.mixins import FormActionMixin
+from core.drf.mixins import FormActionMixin, ClaCreateModelMixin, ClaUpdateModelMixin
+from core.drf.viewsets import CompatGenericViewSet
 from notifications.views import BaseNotificationViewSet
 
 from complaints.views import (
@@ -114,17 +115,23 @@ class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
 
 class EligibilityCheckViewSet(
     CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     BaseNestedEligibilityCheckViewSet,
 ):
     serializer_class = EligibilityCheckSerializer
 
     # this is to fix a stupid thing in DRF where pre_save doesn't call super
-    def pre_save(self, obj):
+    def perform_create(self, serializer):
         original_obj = self.get_object()
         self.__pre_save__ = self.get_serializer_class()(original_obj).data
+        super(EligibilityCheckViewSet, self).perform_create(serializer)
+
+    def perform_update(self, serializer):
+        original_obj = self.get_object()
+        self.__pre_save__ = self.get_serializer_class()(original_obj).data
+        super(EligibilityCheckViewSet, self).perform_update(serializer)
 
 
 class MatterTypeViewSet(CallCentrePermissionsViewSetMixin, BaseMatterTypeViewSet):
@@ -161,7 +168,7 @@ class DateRangeFilter(BaseFilterBackend):
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin,
+    ClaCreateModelMixin,
     BaseCaseLogMixin,
     CaseOrganisationAssignCurrentOrganisationMixin,
     FullCaseViewSet,
@@ -250,16 +257,15 @@ class CaseViewSet(
 
         return qs
 
-    def pre_save(self, obj, *args, **kwargs):
-        super(CaseViewSet, self).pre_save(obj, *args, **kwargs)
-
+    def perform_create(self, serializer):
         user = self.request.user
-        if not obj.pk and not isinstance(user, AnonymousUser):
-            obj.created_by = user
+        if not isinstance(user, AnonymousUser):
+            serializer.validated_data["created_by"] = user
+        return super(CaseViewSet, self).perform_create(serializer)
 
     def retrieve(self, request, *args, **kwargs):
         response = super(CaseViewSet, self).retrieve(request, *args, **kwargs)
-        self.object.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
+        self.instance.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
         return response
 
     @list_route()
@@ -353,7 +359,7 @@ class CaseViewSet(
             notify_case_assigned(provider, form.case)
 
             provider_serialised = ProviderSerializer(provider)
-            self.set_case_organisation(self.get_object(), save=True)
+            self.set_case_organisation(self.get_object())
             return DRFResponse(data=provider_serialised.data)
 
         return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)
@@ -453,19 +459,19 @@ class CaseViewSet(
         # link personal details to case
         obj.personal_details = personal_details
         obj.save(update_fields=["personal_details", "modified"])
-        self.set_case_organisation(self.get_object(), save=True)
+        self.set_case_organisation(self.get_object())
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
     @detail_route(methods=["post"])
     def call_me_back(self, request, reference=None, **kwargs):
         response = self._form_action(request, CallMeBackForm)
-        self.set_case_organisation(self.get_object(), save=True)
+        self.set_case_organisation(self.get_object())
         return response
 
     @detail_route(methods=["post"])
     def stop_call_me_back(self, request, reference=None, **kwargs):
         response = self._form_action(request, StopCallMeBackForm)
-        self.set_case_organisation(self.get_object(), save=True)
+        self.set_case_organisation(self.get_object())
         return response
 
     @detail_route(methods=["post"])
@@ -473,7 +479,7 @@ class CaseViewSet(
         obj = self.get_object()
         event = event_registry.get_event("case")()
         event.process(obj, status="call_started", created_by=request.user, notes="Call started")
-        self.set_case_organisation(obj, save=True)
+        self.set_case_organisation(obj)
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -489,20 +495,21 @@ class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
 
 class OutOfHoursRotaViewSet(
     CallCentreManagerPermissionsViewSetMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
-
-    serializer_class = OutOfHoursRotaSerializer
     model = OutOfHoursRota
+    serializer_class = OutOfHoursRotaSerializer
+    queryset = OutOfHoursRota.objects.all()
 
 
 class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     model = Operator
+    queryset = Operator.objects.all()
 
     permission_classes = (CallCentreClientIDPermission, IsManagerOrMePermission)
     serializer_class = OperatorSerializer
@@ -594,9 +601,9 @@ class LogViewSet(CallCentrePermissionsViewSetMixin, BaseLogViewSet):
 class FeedbackViewSet(
     CallCentreManagerPermissionsViewSetMixin,
     mixins.ListModelMixin,
-    mixins.UpdateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
     model = Feedback
     lookup_field = "reference"
@@ -625,11 +632,12 @@ class CaseArchivedSearchFilter(SearchFilter):
 
 
 class CaseArchivedViewSet(
-    CallCentrePermissionsViewSetMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    CallCentrePermissionsViewSetMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, CompatGenericViewSet
 ):
 
     lookup_field = "laa_reference"
     model = CaseArchived
+    queryset = CaseArchived.objects.all()
     serializer_class = CaseArchivedSerializer
 
     search_fields = ["search_field"]
@@ -711,12 +719,17 @@ class ComplaintViewSet(
         show_closed = self.request.QUERY_PARAMS.get("show_closed") == "True"
         return super(ComplaintViewSet, self).get_queryset(dashboard=dashboard, show_closed=show_closed)
 
-    def get_case(self, obj):
-        return obj.eod.case
+    def get_case(self, validated_data, obj=None):
+        # Cannot always depend on obj as it will be None when a new case is being created
+        # when this method gets triggered in a perform_create before the instance is saved
+        if "eod" in validated_data:
+            return validated_data["eod"].case
+        else:
+            return obj.eod.case
 
     def retrieve(self, request, *args, **kwargs):
         response = super(ComplaintViewSet, self).retrieve(request, *args, **kwargs)
-        self.object.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
+        self.instance.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
         return response
 
 

@@ -28,6 +28,7 @@ from legalaid.serializers import (
 )
 
 from .models import Operator
+from legalaid.models import PersonalDetails
 
 
 class PropertySerializer(PropertySerializerBase):
@@ -36,6 +37,8 @@ class PropertySerializer(PropertySerializerBase):
 
 
 class IncomeSerializer(IncomeSerializerBase):
+    self_employed = serializers.NullBooleanField(default=None)
+
     class Meta(IncomeSerializerBase.Meta):
         fields = (
             "earnings",
@@ -55,6 +58,8 @@ class PartnerIncomeSerializer(IncomeSerializerBase):
     """
     Like IncomeSerializer but without 'child_benefits'
     """
+
+    self_employed = serializers.NullBooleanField(default=None)
 
     class Meta(IncomeSerializerBase.Meta):
         fields = (
@@ -149,9 +154,9 @@ class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
 
 
 class PersonSerializer(PersonSerializerBase):
-    income = IncomeSerializer(required=False)
-    savings = SavingsSerializer(required=False)
-    deductions = DeductionsSerializer(required=False)
+    income = IncomeSerializer(required=False, allow_null=True)
+    savings = SavingsSerializer(required=False, allow_null=True)
+    deductions = DeductionsSerializer(required=False, allow_null=True)
 
     class Meta(PersonSerializerBase.Meta):
         fields = ("income", "savings", "deductions")
@@ -189,11 +194,11 @@ class EODDetailsSerializer(EODDetailsSerializerBase):
 
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
-    property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
-    you = PersonSerializer(required=False)
-    partner = PartnerPersonSerializer(required=False)
+    property_set = PropertySerializer(many=True, required=False)
+    you = PersonSerializer(required=False, allow_null=True)
+    partner = PartnerPersonSerializer(required=False, allow_null=True)
     notes = serializers.CharField(max_length=500, required=False, read_only=True)
-    disputed_savings = SavingsSerializer(required=False)
+    disputed_savings = SavingsSerializer(required=False, allow_null=True)
 
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
@@ -216,10 +221,11 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "disregards",
             "has_passported_proceedings_letter",
         )
+        writable_nested_fields = ["you", "partner", "property_set", "disputed_savings"]
 
 
 class LogSerializer(LogSerializerBase):
-    description = serializers.SerializerMethodField("get_description")
+    description = serializers.SerializerMethodField()
 
     class Meta(LogSerializerBase.Meta):
         fields = ("code", "created_by", "created", "notes", "type", "level", "timer", "patch", "description")
@@ -231,25 +237,24 @@ class LogSerializer(LogSerializerBase):
 class CaseSerializer(CaseSerializerFull):
     provider_notes = serializers.CharField(max_length=5000, required=False, read_only=True)
     organisation = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
-    organisation_name = serializers.RelatedField(source="organisation", read_only=True)
+    organisation_name = serializers.SerializerMethodField()
     billable_time = serializers.IntegerField(read_only=True)
     rejected = serializers.SerializerMethodField("is_rejected")
-    callback_time_string = serializers.Field(source="callback_time_string")
-    callback_time_string_short = serializers.Field(source="callback_time_string_short")
+    callback_time_string = serializers.ReadOnlyField()
 
-    complaint_count = serializers.IntegerField(source="complaint_count", read_only=True)
+    complaint_count = serializers.IntegerField(read_only=True)
+
+    def get_organisation_name(self, case):
+        if not case.organisation:
+            return
+
+        return case.organisation.name
 
     def is_rejected(self, case):
         try:
             return case.rejected == 1
         except Exception:
             return False
-
-    def _get_fields_for_partial_update(self):
-        update_fields = super(CaseSerializer, self)._get_fields_for_partial_update()
-        if self.object.organisation and "organisation" in self.object.changed_fields:
-            update_fields.append("organisation")
-        return update_fields
 
     class Meta(CaseSerializerFull.Meta):
         fields = (
@@ -332,10 +337,13 @@ class CreateCaseSerializer(CaseSerializer):
     No other fields can be used when creating a case atm.
     """
 
-    personal_details = UUIDSerializer(slug_field="reference", required=False)
+    personal_details = UUIDSerializer(
+        slug_field="reference", required=False, queryset=PersonalDetails.objects.all(), allow_null=True
+    )
 
     class Meta(CaseSerializer.Meta):
         fields = tuple(set(CaseSerializer.Meta.fields) - {"complaint_count"})
+        writable_nested_fields = []
 
 
 class ProviderSerializer(ProviderSerializerBase):
@@ -351,7 +359,7 @@ class OutOfHoursRotaSerializer(OutOfHoursRotaSerializerBase):
 
 
 class OperatorSerializer(ExtendedUserSerializerBase):
-    is_cla_superuser = serializers.CharField(read_only=True)
+    is_cla_superuser = serializers.BooleanField(read_only=True)
 
     class Meta(object):
         model = Operator

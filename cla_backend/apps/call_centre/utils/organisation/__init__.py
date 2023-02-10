@@ -4,8 +4,17 @@ from cla_eventlog import event_registry
 
 
 class CaseOrganisationAssignCurrentOrganisationMixin(object):
-    def get_case(self, obj):
-        if hasattr(obj, "case"):
+    def perform_create(self, serializer):
+        obj = super(CaseOrganisationAssignCurrentOrganisationMixin, self).perform_create(serializer)
+        self.save_organisation(serializer.validated_data)
+        return obj
+
+    def perform_update(self, serializer):
+        super(CaseOrganisationAssignCurrentOrganisationMixin, self).perform_update(serializer)
+        self.save_organisation(serializer.validated_data, self.get_object())
+
+    def get_case(self, validated_data, obj=None):
+        if obj and hasattr(obj, "case"):
             try:
                 return obj.case
             except Case.DoesNotExist:
@@ -18,7 +27,7 @@ class CaseOrganisationAssignCurrentOrganisationMixin(object):
         except Case.DoesNotExist:
             return None
 
-    def set_case_organisation(self, case, save=True):
+    def set_case_organisation(self, case):
         if case.organisation:
             return
 
@@ -32,26 +41,21 @@ class CaseOrganisationAssignCurrentOrganisationMixin(object):
             return
 
         case.organisation = organisation
-        if save:
-            case.save(update_fields=["organisation"])
+        case.save(update_fields=["organisation"])
 
         # Create event log if the case is being updated
-        if case.pk:
-            notes = u"Case organisation set to {organisation}".format(organisation=organisation)
-            event = event_registry.get_event("case")()
-            event.process(case, created_by=user, notes=notes, complaint=case, code="CASE_ORGANISATION_SET")
+        notes = u"Case organisation set to {organisation}".format(organisation=organisation)
+        event = event_registry.get_event("case")()
+        event.process(case, created_by=user, notes=notes, complaint=case, code="CASE_ORGANISATION_SET")
 
-    def pre_save(self, obj, **kwargs):
-        super(CaseOrganisationAssignCurrentOrganisationMixin, self).pre_save(obj, **kwargs)
+    def save_organisation(self, validated_data, obj=None):
+
         if isinstance(obj, Case):
             case = obj
         else:
-            case = self.get_case(obj)
+            case = self.get_case(validated_data, obj=obj)
 
         if not case:
             return
 
-        # When current object is a case then we don't need to save it as we are in its pre_save
-        # but have to explicitly save it for other objects
-        save = not isinstance(obj, Case)
-        self.set_case_organisation(case, save)
+        self.set_case_organisation(case)

@@ -13,7 +13,16 @@ from rest_framework.filters import OrderingFilter, DjangoFilterBackend
 from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
-from core.drf.mixins import NestedGenericModelMixin, JsonPatchViewSetMixin, FormActionMixin
+from core.drf.mixins import (
+    NestedGenericModelMixin,
+    JsonPatchViewSetMixin,
+    FormActionMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
+    ClaRetrieveModelMixinWithSelfInstance,
+)
+from core.drf.viewsets import CompatGenericViewSet
+
 from core.drf.pagination import RelativeUrlPaginationSerializer
 from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
@@ -85,11 +94,7 @@ class PasswordResetForm(forms.Form):
 
 
 class BaseUserViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    CaseFormActionMixin,
-    viewsets.GenericViewSet,
+    mixins.RetrieveModelMixin, mixins.ListModelMixin, ClaCreateModelMixin, CaseFormActionMixin, CompatGenericViewSet
 ):
     permission_classes = (IsManagerOrMePermission,)
 
@@ -149,19 +154,20 @@ class BaseUserViewSet(
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-        obj = super(BaseUserViewSet, self).create(request, *args, **kwargs)
-        self.check_object_permissions(request, obj)
-        return obj
+        self.check_object_permissions(request, None)
+        return super(BaseUserViewSet, self).create(request, *args, **kwargs)
 
 
 class BaseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Category.objects.all()
     model = Category
     serializer_class = CategorySerializerBase
 
     lookup_field = "code"
 
 
-class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, viewsets.GenericViewSet):
+class BaseEligibilityCheckViewSet(JsonPatchViewSetMixin, CompatGenericViewSet):
+    queryset = EligibilityCheck.objects.all()
     model = EligibilityCheck
     lookup_field = "reference"
 
@@ -216,7 +222,8 @@ class BaseNestedEligibilityCheckViewSet(NestedGenericModelMixin, BaseEligibility
         return kwargs
 
 
-class BaseMatterTypeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class BaseMatterTypeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, CompatGenericViewSet):
+    queryset = MatterType.objects.all()
     model = MatterType
     serializer_class = MatterTypeSerializerBase
 
@@ -224,7 +231,8 @@ class BaseMatterTypeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, vi
     filter_fields = ("level", "category__code")
 
 
-class BaseMediaCodeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class BaseMediaCodeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, CompatGenericViewSet):
+    queryset = MediaCode.objects.all()
     model = MediaCode
     serializer_class = MediaCodeSerializerBase
 
@@ -232,7 +240,8 @@ class BaseMediaCodeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, vie
     filter_fields = ("name", "group__name")
 
 
-class BaseContactResearchMethodViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class BaseContactResearchMethodViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, CompatGenericViewSet):
+    queryset = ContactResearchMethod.objects.all()
     model = ContactResearchMethod
     serializer_class = ContactResearchMethodSerializerBase
 
@@ -241,12 +250,9 @@ class BaseContactResearchMethodViewSet(mixins.RetrieveModelMixin, mixins.ListMod
 
 
 class FullPersonalDetailsViewSet(
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.RetrieveModelMixin,
-    NestedGenericModelMixin,
-    viewsets.GenericViewSet,
+    ClaCreateModelMixin, ClaUpdateModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, CompatGenericViewSet
 ):
+    queryset = PersonalDetails.objects.all()
     model = PersonalDetails
     serializer_class = PersonalDetailsSerializerFull
     lookup_field = "reference"
@@ -255,12 +261,9 @@ class FullPersonalDetailsViewSet(
 
 
 class BaseThirdPartyDetailsViewSet(
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.RetrieveModelMixin,
-    NestedGenericModelMixin,
-    viewsets.GenericViewSet,
+    ClaCreateModelMixin, ClaUpdateModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, CompatGenericViewSet
 ):
+    queryset = ThirdPartyDetails.objects.all()
     model = ThirdPartyDetails
     serializer_class = ThirdPartyDetailsSerializerBase
     lookup_field = "reference"
@@ -268,19 +271,17 @@ class BaseThirdPartyDetailsViewSet(
 
 
 class BaseAdaptationDetailsViewSet(
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.RetrieveModelMixin,
-    NestedGenericModelMixin,
-    viewsets.GenericViewSet,
+    ClaCreateModelMixin, ClaUpdateModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, CompatGenericViewSet
 ):
+    queryset = AdaptationDetails.objects.all()
     model = AdaptationDetails
     serializer_class = AdaptationDetailsSerializerBase
     lookup_field = "reference"
     PARENT_FIELD = "adaptation_details"
 
 
-class BaseAdaptationDetailsMetadataViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class BaseAdaptationDetailsMetadataViewSet(ClaCreateModelMixin, CompatGenericViewSet):
+    queryset = AdaptationDetails.objects.all()
     model = AdaptationDetails
     serializer_class = AdaptationDetailsSerializerBase
 
@@ -289,31 +290,34 @@ class BaseAdaptationDetailsMetadataViewSet(mixins.CreateModelMixin, viewsets.Gen
 
 
 class BaseEODDetailsViewSet(
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.RetrieveModelMixin,
-    NestedGenericModelMixin,
-    viewsets.GenericViewSet,
+    ClaCreateModelMixin, ClaUpdateModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, CompatGenericViewSet
 ):
+    queryset = EODDetails.objects.all()
     model = EODDetails
     serializer_class = EODDetailsSerializerBase
     lookup_field = "reference"
     PARENT_FIELD = "eod_details"
 
-    def pre_save(self, obj):
-        # delete all existing EOD categories and use those from request as replacement set
-        if isinstance(obj, EODDetails) and obj.pk:
-            obj.categories.all().delete()
+    def perform_update(self, serializer):
+        if isinstance(serializer.instance, EODDetails):
+            serializer.instance.categories.all().delete()
 
-        obj.case = Case.objects.get(reference=self.kwargs.get("case_reference"))
+        serializer.validated_data["case"] = Case.objects.get(reference=self.kwargs.get("case_reference"))
+        super(BaseEODDetailsViewSet, self).perform_update(serializer)
 
-        super(BaseEODDetailsViewSet, self).pre_save(obj)
+    def perform_create(self, serializer):
+        serializer.validated_data["case"] = Case.objects.get(reference=self.kwargs.get("case_reference"))
+        return super(BaseEODDetailsViewSet, self).perform_create(serializer)
 
     def post_save(self, obj, created=False):
+        # Putting back this terrible work around as we need more time to refactor
+        # core.drf.mixins.NestedGenericModelMixin.post_save not to throw a MethodNotAllowed if parent relationship is
+        # already set
         return super(BaseEODDetailsViewSet, self).post_save(obj, False)
 
 
 class BaseCaseOrderingFilter(OrderingFilter):
+
     default_modified = "modified"
 
     def filter_queryset(self, request, queryset, view):
@@ -372,12 +376,13 @@ class BaseCaseLogMixin(object):
 
 class FullCaseViewSet(
     DetailSerializerMixin,
-    mixins.UpdateModelMixin,
-    mixins.RetrieveModelMixin,
+    ClaUpdateModelMixin,
+    ClaRetrieveModelMixinWithSelfInstance,
     mixins.ListModelMixin,
     CaseFormActionMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
+    queryset = Case.objects.all()
     model = Case
     lookup_field = "reference"
     lookup_regex = r"[A-Z|\d]{2}-\d{4}-\d{4}"
@@ -535,7 +540,10 @@ class FullCaseViewSet(
                 "flagged_with_eod": self.FLAGGED_WITH_EOD_SQL,
             }
         )
-
+        # LGA-1773 can no longer pass queryset to get_object > drf 3.0,
+        # Check flag to allow select_related in parent viewset from NestedGenericModelMixin
+        if hasattr(self, "do_select_related") and self.do_select_related:
+            qs = qs.select_related(None)
         return qs
 
     def get_dashboard_qs(self, qs):
@@ -545,26 +553,34 @@ class FullCaseViewSet(
         resp = super(FullCaseViewSet, self).retrieve(request, *args, **kwargs)
 
         event = event_registry.get_event("case")()
-        event.process(self.object, status="viewed", created_by=request.user, notes="Case viewed")
+        event.process(self.instance, status="viewed", created_by=request.user, notes="Case viewed")
 
         return resp
 
-    def pre_save(self, obj):
-        super(FullCaseViewSet, self).pre_save(obj)
+    def perform_update(self, serializer):
+        previous_notes = serializer.instance.notes
+        previous_provider_notes = serializer.instance.provider_notes
+        previous_complaint_flag = serializer.instance.complaint_flag
+
+        super(FullCaseViewSet, self).perform_update(serializer)
+        obj = self.get_object()
         if obj.pk:
-            if "notes" in obj.changed_fields:
+            notes = serializer.validated_data.get("notes", None)
+            if notes and notes != previous_notes:
                 cnh = CaseNotesHistory(case=obj)
                 cnh.operator_notes = obj.notes
                 cnh.created_by = self.request.user
                 cnh.save()
 
-            if "provider_notes" in obj.changed_fields:
+            provider_notes = serializer.validated_data.get("provider_notes", None)
+            if provider_notes and provider_notes != previous_provider_notes:
                 cpnh = CaseNotesHistory(case=obj)
                 cpnh.provider_notes = obj.provider_notes
                 cpnh.created_by = self.request.user
                 cpnh.save()
 
-            if "complaint_flag" in obj.changed_fields:
+            complaint_flag = serializer.validated_data.get("complaint_flag", None)
+            if complaint_flag and complaint_flag != previous_complaint_flag:
                 event = event_registry.get_event("case")()
                 event.process(
                     obj,
@@ -573,19 +589,15 @@ class FullCaseViewSet(
                     notes="Complaint flag toggled: %s" % obj.complaint_flag,
                 )
 
-            # if we want to add more checks on changed fields then we should
-            # probably refactor this method to look at a list on the view
-            # called 'action_on_changed_fields' and enumerate that and perform
-            # the appropriate thing instead of adding more stuff here
-
 
 class BaseFeedbackViewSet(
     NestedGenericModelMixin,
     mixins.ListModelMixin,
-    mixins.UpdateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
+    queryset = Feedback.objects.all()
     model = Feedback
     serializer_class = FeedbackSerializerBase
     PARENT_FIELD = "provider_feedback"
@@ -593,8 +605,9 @@ class BaseFeedbackViewSet(
 
 
 class BaseCSVUploadReadOnlyViewSet(
-    DetailSerializerMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    DetailSerializerMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, CompatGenericViewSet
 ):
+    queryset = CSVUpload.objects.all()
     model = CSVUpload
 
     serializer_class = CSVUploadSerializerBase
@@ -606,11 +619,12 @@ class BaseCSVUploadReadOnlyViewSet(
 class BaseCSVUploadViewSet(
     DetailSerializerMixin,
     mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
+    queryset = CSVUpload.objects.all()
     model = CSVUpload
     serializer_class = CSVUploadSerializerBase
     serializer_detail_class = CSVUploadSerializerBase
@@ -650,10 +664,11 @@ class PaginatorWithExtraItem(Paginator):
         return self._get_page(self.object_list[bottom:top], number, self)
 
 
-class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin, CompatGenericViewSet):
     PARENT_FIELD = "casenoteshistory_set"
     lookup_field = "reference"
     serializer_class = CaseNotesHistorySerializerBase
+    queryset = CaseNotesHistory.objects.all()
     model = CaseNotesHistory
 
     pagination_serializer_class = RelativeUrlPaginationSerializer

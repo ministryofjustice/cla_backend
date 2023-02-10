@@ -15,6 +15,7 @@ class ArticleCategoryFilter(django_filters.FilterSet):
 
 
 class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Article.objects.all()
     model = Article
     serializer_class = ArticleSerializer
 
@@ -41,5 +42,6 @@ class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class BaseArticleCategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ArticleCategory.objects.all()
     model = ArticleCategory
     serializer_class = ArticleCategorySerializer

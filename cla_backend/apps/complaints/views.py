@@ -2,7 +2,7 @@
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import capfirst, force_text
-from rest_framework import viewsets, mixins, status, views as rest_views
+from rest_framework import mixins, status, views as rest_views
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response as DRFResponse
 
@@ -10,8 +10,14 @@ from cla_eventlog import event_registry
 from cla_eventlog.constants import LOG_LEVELS
 from cla_eventlog.models import ComplaintLog
 from complaints.forms import ComplaintLogForm
-from core.drf.mixins import FormActionMixin, NestedGenericModelMixin
-
+from core.drf.mixins import (
+    FormActionMixin,
+    NestedGenericModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
+    ClaRetrieveModelMixinWithSelfInstance,
+)
+from core.drf.viewsets import CompatGenericViewSet
 from .models import Complaint, Category
 from .serializers import ComplaintSerializerBase, CategorySerializerBase, ComplaintLogSerializerBase
 
@@ -26,12 +32,13 @@ class ComplaintFormActionMixin(FormActionMixin):
 
 class BaseComplaintViewSet(
     ComplaintFormActionMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.RetrieveModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
+    ClaRetrieveModelMixinWithSelfInstance,
     mixins.ListModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
+    queryset = Complaint.objects.all()
     model = Complaint
     serializer_class = ComplaintSerializerBase
 
@@ -106,26 +113,39 @@ class BaseComplaintViewSet(
             qs = qs.exclude(id__in=complaint_events)
         return qs
 
-    def pre_save(self, obj, *args, **kwargs):
-        super(BaseComplaintViewSet, self).pre_save(obj)
+    def has_owner_changed(self, obj, validated_data):
+        new_owner = validated_data.get("owner", None)
+        current_owner = getattr(obj, "owner", None)
 
+        if not current_owner and not new_owner:
+            return False
+
+        if not current_owner and new_owner:
+            return True
+
+        if current_owner.username != new_owner:
+            return True
+
+        return False
+
+    def perform_create(self, serializer):
+        # new complaint
+        self._update_owner = self.has_owner_changed(serializer.instance, serializer.validated_data)
         user = self.request.user
-        if not obj.pk:
-            # new complaint
-            if not isinstance(user, AnonymousUser):
-                obj.created_by = user
-            obj._update_owner = bool(obj.owner)
+        if not isinstance(user, AnonymousUser):
+            serializer.validated_data["created_by"] = user
 
-            if "level" not in self.request.DATA and obj.eod_id:
-                if obj.eod.is_major:
-                    obj.level = LOG_LEVELS.HIGH
-                else:
-                    obj.level = LOG_LEVELS.MINOR
+        if "level" not in self.request.data and "eod" in serializer.validated_data:
+            eod = serializer.validated_data["eod"]
+            if eod.is_major:
+                serializer.validated_data["level"] = LOG_LEVELS.HIGH
+            else:
+                serializer.validated_data["level"] = LOG_LEVELS.MINOR
+        return super(BaseComplaintViewSet, self).perform_create(serializer)
 
-        else:
-            # editing existing complaint
-            original_obj = self.model.objects.get(pk=obj.pk)
-            obj._update_owner = original_obj.owner_id != obj.owner_id
+    def perform_update(self, serializer):
+        self._update_owner = self.has_owner_changed(serializer.instance, serializer.validated_data)
+        super(BaseComplaintViewSet, self).perform_update(serializer)
 
     def post_save(self, obj, created=False):
         if created:
@@ -142,7 +162,7 @@ class BaseComplaintViewSet(
             obj.eod.case.complaint_flag = True
             obj.eod.case.save()
 
-        if getattr(obj, "_update_owner", False):
+        if getattr(self, "_update_owner", False):
             event = event_registry.get_event("complaint")()
             event.process(
                 obj.eod.case,
@@ -193,7 +213,8 @@ class BaseComplaintViewSet(
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
 
-class BaseComplaintCategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class BaseComplaintCategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, CompatGenericViewSet):
+    queryset = Category.objects.all()
     model = Category
     serializer_class = CategorySerializerBase
 
@@ -226,9 +247,10 @@ class BaseComplaintConstantsView(rest_views.APIView):
 
 
 class BaseComplaintLogViewset(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, viewsets.GenericViewSet
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, NestedGenericModelMixin, CompatGenericViewSet
 ):
     model = ComplaintLog
+    queryset = ComplaintLog.objects.all()
     serializer_class = ComplaintLogSerializerBase
     lookup_field = "pk"
     PARENT_FIELD = "logs"

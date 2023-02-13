@@ -175,7 +175,7 @@ class BaseComplaintViewSet(
     @detail_route(methods=["post"])
     def add_event(self, request, pk):
         obj = self.get_object()
-        form = ComplaintLogForm(complaint=obj, data=request.DATA)
+        form = ComplaintLogForm(complaint=obj, data=request.data)
         if form.is_valid():
             form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)

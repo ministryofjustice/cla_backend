@@ -18,12 +18,12 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, SearchFilter, BaseFilterBackend
+from rest_framework.pagination import PageNumberPagination
 
 from cla_provider.models import Provider, OutOfHoursRota, Feedback, ProviderPreAllocation
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
-from core.drf.pagination import RelativeUrlPaginationSerializer
 from core.drf.mixins import FormActionMixin, ClaCreateModelMixin, ClaUpdateModelMixin
 from core.drf.viewsets import CompatGenericViewSet
 from notifications.views import BaseNotificationViewSet
@@ -150,8 +150,8 @@ class DateRangeFilter(BaseFilterBackend):
     def filter_queryset(self, request, qs, view):
 
         filter = {}
-        start_date = request.QUERY_PARAMS.get("start", None)
-        end_date = request.QUERY_PARAMS.get("end", None)
+        start_date = request.query_params.get("start", None)
+        end_date = request.query_params.get("end", None)
 
         if start_date is not None:
             filter["{field}__gte".format(field=view.date_range_field)] = parser.parse(start_date).replace(
@@ -210,7 +210,7 @@ class CaseViewSet(
         this_operator = get_object_or_404(Operator, user=self.request.user)
         qs = super(CaseViewSet, self).get_queryset(**kwargs)
 
-        only_param = self.request.QUERY_PARAMS.get("only")
+        only_param = self.request.query_params.get("only")
         if only_param == "my":
             qs = qs.filter(created_by=this_operator.user)
         elif only_param == "eod":
@@ -339,7 +339,7 @@ class CaseViewSet(
         # find given provider in suitable - avoid extra lookup and ensures
         # valid provider
         for sp in suitable_providers:
-            if sp.id == int(request.DATA["provider_id"]):
+            if sp.id == int(request.data["provider_id"]):
                 p = sp
                 break
         else:
@@ -348,7 +348,7 @@ class CaseViewSet(
         # if we're inside office hours then:
         # Randomly assign to provider who offers this category of service
         # else it should be the on duty provider
-        data = request.DATA.copy()
+        data = request.data.copy()
         data["provider"] = p.pk
         form = ProviderAllocationForm(case=obj, data=data, providers=suitable_providers)
 
@@ -367,7 +367,7 @@ class CaseViewSet(
     @detail_route(methods=["post"])
     def defer_assignment(self, request, **kwargs):
         obj = self.get_object()
-        form = DeferAssignmentCaseForm(case=obj, data=request.DATA)
+        form = DeferAssignmentCaseForm(case=obj, data=request.data)
         if form.is_valid():
             form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)
@@ -416,7 +416,7 @@ class CaseViewSet(
                 {"error": "This case is already linked to a Person"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        person_q = request.QUERY_PARAMS.get("person_q", "") or ""
+        person_q = request.query_params.get("person_q", "") or ""
         if len(person_q) >= 3:
             users = PersonalDetails.objects.filter(full_name__icontains=person_q).exclude(vulnerable_user=True)
         else:
@@ -440,7 +440,7 @@ class CaseViewSet(
         obj = self.get_object()
 
         # check PARAM exists
-        pd_ref = request.DATA.get("personal_details", None)
+        pd_ref = request.data.get("personal_details", None)
         if not pd_ref:
             return error_response('Param "personal_details" required')
 
@@ -533,7 +533,7 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     def create(self, request, *args, **kwargs):
         operator = self.get_logged_in_user_model()
         if operator.organisation:
-            request.DATA["organisation"] = operator.organisation.id
+            request.data["organisation"] = operator.organisation.id
         return super(UserViewSet, self).create(request, *args, **kwargs)
 
 
@@ -616,7 +616,7 @@ class FeedbackViewSet(
 
     queryset = Feedback.objects.all().select_related("case", "created_by", "created_by__provider")
 
-    pagination_serializer_class = RelativeUrlPaginationSerializer
+    pagination_class = PageNumberPagination
     paginate_by = 20
     paginate_by_param = "page_size"
     max_paginate_by = 100
@@ -646,7 +646,7 @@ class CaseArchivedViewSet(
     paginate_by = 20
     paginate_by_param = "page_size"
     max_paginate_by = 100
-    pagination_serializer_class = RelativeUrlPaginationSerializer
+    pagination_class = PageNumberPagination
 
 
 class CaseNotesHistoryViewSet(CallCentrePermissionsViewSetMixin, BaseCaseNotesHistoryViewSet):
@@ -715,8 +715,8 @@ class ComplaintViewSet(
     max_paginate_by = 100
 
     def get_queryset(self, **kwargs):
-        dashboard = self.request.QUERY_PARAMS.get("dashboard") == "True"
-        show_closed = self.request.QUERY_PARAMS.get("show_closed") == "True"
+        dashboard = self.request.query_params.get("dashboard") == "True"
+        show_closed = self.request.query_params.get("show_closed") == "True"
         return super(ComplaintViewSet, self).get_queryset(dashboard=dashboard, show_closed=show_closed)
 
     def get_case(self, validated_data, obj=None):

@@ -3,13 +3,13 @@ import json
 from core.drf.exceptions import ConflictException
 from django import forms
 from django.db import connection, transaction, IntegrityError
-from django.core.paginator import Paginator
 from django.utils.crypto import get_random_string
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import detail_route
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
 from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
@@ -22,8 +22,6 @@ from core.drf.mixins import (
     ClaRetrieveModelMixinWithSelfInstance,
 )
 from core.drf.viewsets import CompatGenericViewSet
-
-from core.drf.pagination import RelativeUrlPaginationSerializer
 from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
 from cla_auth.models import AccessAttempt
@@ -321,9 +319,7 @@ class BaseCaseOrderingFilter(OrderingFilter):
     default_modified = "modified"
 
     def filter_queryset(self, request, queryset, view):
-        ordering = self.get_ordering(request)
-        if not ordering:
-            ordering = self.get_default_ordering(view)
+        ordering = self.get_ordering(request, queryset, view)
 
         if isinstance(ordering, basestring):
             if "," in ordering:
@@ -336,8 +332,6 @@ class BaseCaseOrderingFilter(OrderingFilter):
 
         if "modified" not in ordering:
             ordering.append(self.default_modified)
-
-        ordering = self.remove_invalid_fields(queryset, ordering, view)
 
         return queryset.order_by(*ordering)
 
@@ -388,7 +382,7 @@ class FullCaseViewSet(
     lookup_regex = r"[A-Z|\d]{2}-\d{4}-\d{4}"
 
     serializer_class = CaseSerializerBase
-    pagination_serializer_class = RelativeUrlPaginationSerializer
+    pagination_class = PageNumberPagination
 
     filter_backends = (AscCaseOrderingFilter,)
 
@@ -430,7 +424,7 @@ class FullCaseViewSet(
         Search terms are set by a ?search=... query parameter,
         and may be comma and/or whitespace delimited.
         """
-        params = self.request.QUERY_PARAMS.get("search", "")
+        params = self.request.query_params.get("search", "")
         return params.replace(",", " ").split()
 
     def get_temporary_view_name(self):
@@ -507,8 +501,8 @@ class FullCaseViewSet(
 
     def get_queryset(self, **kwargs):
         qs = super(FullCaseViewSet, self).get_queryset(**kwargs)
-        person_ref_param = self.request.QUERY_PARAMS.get("person_ref", None)
-        dashboard_param = self.request.QUERY_PARAMS.get("dashboard", None)
+        person_ref_param = self.request.query_params.get("person_ref", None)
+        dashboard_param = self.request.query_params.get("dashboard", None)
 
         if person_ref_param:
             qs = qs.filter(personal_details__reference=person_ref_param)
@@ -644,7 +638,7 @@ class BaseCSVUploadViewSet(
         return super(BaseCSVUploadViewSet, self).update(request, *args, **kwargs)
 
 
-class PaginatorWithExtraItem(Paginator):
+class PaginatorWithExtraItem(PageNumberPagination):
     """
     Same as the Paginator but it will return one more item than expected.
     Used for endpoints that need to diff elements.
@@ -652,16 +646,8 @@ class PaginatorWithExtraItem(Paginator):
 
     extra_num = 1
 
-    def page(self, number):
-        """
-        Returns a Page object for the given 1-based page number.
-        """
-        number = self.validate_number(number)
-        bottom = (number - 1) * self.per_page
-        top = bottom + (self.per_page + self.extra_num)
-        if top + self.orphans >= self.count:
-            top = self.count
-        return self._get_page(self.object_list[bottom:top], number, self)
+    def get_page_size(self, request):
+        return super(PaginatorWithExtraItem, self).get_page_size(request) + 1
 
 
 class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin, CompatGenericViewSet):
@@ -671,26 +657,26 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
     queryset = CaseNotesHistory.objects.all()
     model = CaseNotesHistory
 
-    pagination_serializer_class = RelativeUrlPaginationSerializer
+    pagination_class = PageNumberPagination
     paginate_by = 5
     paginate_by_param = "page_size"
     max_paginate_by = 100
 
     @property
-    def paginator_class(self):
+    def pagination_class(self):
         """
         If with_extra query param is provided, the endpoint will return
         n+1 elements so that the frontend can build the diff from the
         current+prev element.
         """
-        if self.request.QUERY_PARAMS.get("with_extra", False):
+        if self.request.query_params.get("with_extra", False):
             return PaginatorWithExtraItem
-        return Paginator
+        return super(BaseCaseNotesHistoryViewSet, self).pagination_class
 
     def get_queryset(self, **kwargs):
         qs = super(BaseCaseNotesHistoryViewSet, self).get_queryset(**kwargs)
-        type_param = self.request.QUERY_PARAMS.get("type", None)
-        summary = self.request.QUERY_PARAMS.get("summary", False)
+        type_param = self.request.query_params.get("type", None)
+        summary = self.request.query_params.get("summary", False)
 
         if type_param == "operator":
             qs = qs.filter(provider_notes__isnull=True)

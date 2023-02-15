@@ -304,7 +304,7 @@ webdriver-manager==1.6.2
     # via -r requirements/source/requirements-testing.in
 webencodings==0.5.1
     # via bleach
-werkzeug==0.15.3
+werkzeug==2.2.3
     # via -r requirements/source/requirements-dev.in
 xlrd==2.0.1
     # via csvkit

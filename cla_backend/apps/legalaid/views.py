@@ -9,8 +9,6 @@ from rest_framework.decorators import detail_route
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend
-
-# from rest_framework.pagination import PageNumberPagination
 from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
@@ -402,10 +400,6 @@ class FullCaseViewSet(
     )
     ordering = ["-priority"]
 
-    # page_size = 20
-    # page_size_query_param = "page_size"
-    # max_page_size = 100
-
     FLAGGED_WITH_EOD_SQL = """
     SELECT COUNT(id) > 0 FROM legalaid_eoddetails
     WHERE legalaid_case.id = legalaid_eoddetails.case_id
@@ -660,9 +654,6 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
     model = CaseNotesHistory
 
     pagination_class = CaseNotesHistoryResultsSetPagination
-    # paginate_by = 5
-    # paginate_by_param = "page_size"
-    # max_paginate_by = 100
 
     @property
     def pagination_class(self):

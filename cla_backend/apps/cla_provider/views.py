@@ -4,6 +4,7 @@ from cla_provider.forms import ProviderExtractForm
 from cla_provider.helpers import ProviderExtractFormatter
 from core.permissions import IsProviderPermission
 from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
+from core.drf.paginator import StandardResultsSetPagination
 
 from django.shortcuts import get_object_or_404
 from legalaid.permissions import IsManagerOrMePermission
@@ -318,10 +319,7 @@ class CSVUploadViewSet(CLAProviderPermissionViewSetMixin, BaseCSVUploadViewSet):
     serializer_detail_class = CSVUploadDetailSerializer
 
     ordering = ("-month",)
-
-    paginate_by = 20
-    paginate_by_param = "page_size"
-    max_paginate_by = 100
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self, *args, **kwargs):
         this_provider = get_object_or_404(Staff, user=self.request.user).provider

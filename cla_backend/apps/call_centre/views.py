@@ -19,8 +19,6 @@ from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, SearchFilter, BaseFilterBackend
 
-# from rest_framework.pagination import PageNumberPagination
-
 from cla_provider.models import Provider, OutOfHoursRota, Feedback, ProviderPreAllocation
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
@@ -619,9 +617,6 @@ class FeedbackViewSet(
     queryset = Feedback.objects.all().select_related("case", "created_by", "created_by__provider")
 
     pagination_class = StandardResultsSetPagination
-    # paginate_by = 20
-    # paginate_by_param = "page_size"
-    # max_paginate_by = 100
 
 
 class CaseArchivedSearchFilter(SearchFilter):
@@ -645,9 +640,6 @@ class CaseArchivedViewSet(
     search_fields = ["search_field"]
 
     filter_backends = (CaseArchivedSearchFilter,)
-    # paginate_by = 20
-    # paginate_by_param = "page_size"
-    # max_paginate_by = 100
     pagination_class = StandardResultsSetPagination
 
 
@@ -665,9 +657,6 @@ class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin, BaseCSVUploadRe
     filter_fields = ("month", "provider_id")
 
     pagination_class = StandardResultsSetPagination
-    # paginate_by = 20
-    # paginate_by_param = "page_size"
-    # max_paginate_by = 100
 
     def get_queryset(self, *args, **kwargs):
         # only return last 18 months worth
@@ -713,9 +702,6 @@ class ComplaintViewSet(
     )
     ordering = ("-created",)
     pagination_class = StandardResultsSetPagination
-    # paginate_by = 20
-    # paginate_by_param = "page_size"
-    # max_paginate_by = 100
 
     def get_queryset(self, **kwargs):
         dashboard = self.request.query_params.get("dashboard") == "True"

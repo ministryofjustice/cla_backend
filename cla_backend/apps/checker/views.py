@@ -6,6 +6,7 @@ from rest_framework.response import Response as DRFResponse
 
 from core.models import get_web_user
 from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
+from core.drf.paginator import StandardResultsSetPagination
 from core.drf.viewsets import CompatGenericViewSet
 from checker.helpers import notify_callback_created
 from diagnosis.views import DiagnosisModelMixin
@@ -44,8 +45,7 @@ class ArticleCategoryNameFilter(ArticleCategoryFilter):
 
 
 class ArticleViewSet(PublicAPIViewSetMixin, BaseArticleViewSet):
-    paginate_by_param = "page_size"
-    max_paginate_by = 100
+    pagination_class = StandardResultsSetPagination
 
     filter_class = ArticleCategoryNameFilter
 

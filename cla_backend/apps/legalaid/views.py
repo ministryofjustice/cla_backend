@@ -653,8 +653,6 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
     queryset = CaseNotesHistory.objects.all()
     model = CaseNotesHistory
 
-    pagination_class = CaseNotesHistoryResultsSetPagination
-
     @property
     def pagination_class(self):
         """
@@ -664,7 +662,7 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
         """
         if self.request.query_params.get("with_extra", False):
             return PaginatorWithExtraItem
-        return super(BaseCaseNotesHistoryViewSet, self).pagination_class
+        return CaseNotesHistoryResultsSetPagination
 
     def get_queryset(self, **kwargs):
         qs = super(BaseCaseNotesHistoryViewSet, self).get_queryset(**kwargs)

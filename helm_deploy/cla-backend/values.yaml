@@ -162,6 +162,10 @@ envVars:
     secret:
       name: diversity-keys
       key: private
+  PREVIOUS_DIVERSITY_PRIVATE_KEY:
+    secret:
+      name: previous-diversity-keys
+      key: private
   ADMIN_ENABLED:
     value: "True"
   BACKEND_ENABLED:

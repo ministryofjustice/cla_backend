@@ -11,7 +11,6 @@ from .models import Export
 
 class ExportListView(generics.ListAPIView, generics.DestroyAPIView):
     serializer_class = ExportSerializer
-    pagination_class = ExportResultsSetPagination
     model = Export
     permission_classes = (IsAdminUser,)
     authentication_classes = (SessionAuthentication,)

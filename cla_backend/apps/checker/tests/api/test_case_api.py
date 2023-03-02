@@ -11,7 +11,7 @@ from cla_eventlog.models import Log
 from checker.serializers import CaseSerializer
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
-from legalaid.models import Case, PersonalDetails, ThirdPartyDetails
+from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, AdaptationDetails
 from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
 from call_centre.tests.test_utils import CallCentreFixedOperatingHours
 from cla_provider.tests.test_notify import MockGovNotifyMailBox
@@ -57,7 +57,6 @@ class BaseCaseTestCase(
             self.assertEqual(data, obj)
         else:
             self.assertEqual(data["personal_relationship"], obj.personal_relationship)
-
             for prop in ["full_name", "mobile_phone", "safe_to_contact"]:
                 self.assertEqual(unicode(getattr(obj.personal_details, prop)), data["personal_details"][prop])
 
@@ -66,10 +65,18 @@ class BaseCaseTestCase(
         self.assertEqual(unicode(case.eligibility_check.reference), data["eligibility_check"])
         self.assertPersonalDetailsEqual(data["personal_details"], case.personal_details)
         self.assertThirdPartyDetailsEqual(data["thirdparty_details"], case.thirdparty_details)
+        self.assertAdaptationDetailsEqual(data["adaptation_details"], case.adaptation_details)
 
         self.assertEqual(Case.objects.count(), 1)
         case = Case.objects.first()
         self.assertEqual(case.source, CASE_SOURCE.WEB)
+
+    def assertAdaptationDetailsEqual(self, data, obj):
+        if data is None or obj is None:
+            self.assertEqual(data, obj)
+        else:
+            for prop in ["language"]:
+                self.assertEqual(unicode(getattr(obj, prop)), data[prop])
 
     def get_personal_details_default_post_data(self):
         return {
@@ -109,6 +116,12 @@ class CaseTestCase(BaseCaseTestCase):
 
         self.assertEqual(Case.objects.count(), 0)
 
+    def test_adaptation_details_empty_string(self):
+        pass
+
+    def test_adaptation_details_language_missing(self):
+        pass
+
     def test_create_with_data(self):
         check = make_recipe("legalaid.eligibility_check")
 
@@ -116,6 +129,13 @@ class CaseTestCase(BaseCaseTestCase):
             "eligibility_check": unicode(check.reference),
             "personal_details": self.get_personal_details_default_post_data(),
             "thirdparty_details": self.get_thirdparty_details_default_post_data(),
+            "adaptation_details": {
+                "text_relay": False,
+                "notes": "",
+                "bsl_webcam": False,
+                "language": u"",
+                "minicom": False,
+            },
         }
         response = self.client.post(self.list_url, data=data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -132,6 +152,7 @@ class CaseTestCase(BaseCaseTestCase):
                 eligibility_check=check,
                 personal_details=PersonalDetails(**data["personal_details"]),
                 thirdparty_details=ThirdPartyDetails(**data["thirdparty_details"]),
+                adaptation_details=AdaptationDetails(**data["adaptation_details"]),
             ),
         )
 

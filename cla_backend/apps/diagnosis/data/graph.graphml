@@ -6331,6 +6331,11 @@ A financial assessment will need to be completed.]]></data>
     <node id="n349">
       <data key="d3" xml:space="preserve"><![CDATA[Foster carer or potential adoptive parent of a child making an application to the first tier tribunal in a SEND case]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Foster carer or potential adoptive parent]]></data>
+      <data key="d6">
+        <context xmlns="" xml:space="preserve">
+<finance xml:space="preserve">passported</finance>
+</context>
+      </data>
       <data key="d7" xml:space="preserve">1</data>
       <data key="d10" xml:space="preserve"><![CDATA[n349]]></data>
       <data key="d13">

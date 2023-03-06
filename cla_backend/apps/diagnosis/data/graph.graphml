@@ -6331,13 +6331,16 @@ A financial assessment will need to be completed.]]></data>
     <node id="n349">
       <data key="d3" xml:space="preserve"><![CDATA[Foster carer or potential adoptive parent of a child making an application to the first tier tribunal in a SEND case]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Foster carer or potential adoptive parent]]></data>
-      <data key="d6">
+      <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
 <finance xml:space="preserve">passported</finance>
 </context>
       </data>
       <data key="d7" xml:space="preserve">1</data>
       <data key="d10" xml:space="preserve"><![CDATA[n349]]></data>
+      <data key="d12" xml:space="preserve"><![CDATA[**Foster carer or potential adoptive parent of a child making an application to the first tier tribunal in a SEND case.**
+
+No financial assessment is required.]]></data>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="13419.141269841271" y="81.5"/>
@@ -12027,7 +12030,6 @@ A financial assessment will need to be completed.]]></data>
       </data>
     </edge>
     <edge id="e473" source="n0" target="n349">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="52.62873355303236" sy="-14.969871616395636" tx="-61.44190136760335" ty="14.9765625"/>
@@ -12038,7 +12040,6 @@ A financial assessment will need to be completed.]]></data>
       </data>
     </edge>
     <edge id="e474" source="n349" target="n350">
-      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

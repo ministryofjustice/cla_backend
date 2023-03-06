@@ -3165,13 +3165,16 @@ A financial assessment will need to be completed.</data>
     <node id="n349">
       <data key="d3" xml:space="preserve">{% trans "Foster carer or potential adoptive parent of a child making an application to the first tier tribunal in a SEND case" %}</data>
       <data key="d4" xml:space="preserve">Foster carer or potential adoptive parent</data>
-      <data key="d6">
+      <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
 <finance xml:space="preserve">passported</finance>
 </context>
       </data>
       <data key="d7" xml:space="preserve">1</data>
       <data key="d10" xml:space="preserve">n349</data>
+      <data key="d12" xml:space="preserve">**Foster carer or potential adoptive parent of a child making an application to the first tier tribunal in a SEND case.**
+
+No financial assessment is required.</data>
       </node>
     <node id="n350">
       <data key="d3" xml:space="preserve">INSCOPE</data>
@@ -4130,10 +4133,8 @@ A financial assessment will need to be completed.</data>
     <edge id="e472" source="n348" target="n95">
       </edge>
     <edge id="e473" source="n0" target="n349">
-      <data key="d16"/>
       </edge>
     <edge id="e474" source="n349" target="n350">
-      <data key="d16"/>
       </edge>
   </graph>
   <data key="d14">

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-06 10:38+0000\n"
+"POT-Creation-Date: 2021-10-06 11:23+0100\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -29,12 +29,12 @@ msgstr "Categori mater math 1: rhaid i {category1} gyd-fynd â chategori mater m
 msgid "Category of Matter Types: {category1}, {category2} must match category of case: {case_category}"
 msgstr "Categori mathau o faterion: rhaid i {category1} a {category2} gyd-fynd â chategori'r achos: {case_category}"
 
-#: apps/cla_provider/models.py:179
+#: apps/cla_provider/models.py:167
 #, python-brace-format
 msgid "Provider {provider} doesn't offer help for {category}"
 msgstr "Nid yw'r darparwr {provider} yn cynnig help ar gyfer {category}"
 
-#: apps/cla_provider/models.py:191
+#: apps/cla_provider/models.py:179
 msgid "Overlapping rota allocation not allowed"
 msgstr "Ni chaniateir dyrannu rota sy'n gwrthdaro"
 
@@ -94,7 +94,7 @@ msgid "Change password: %s"
 msgstr "Newid cyfrinair: %s"
 
 #. Translators: '{ "day": 25, "month": 12, "year": 2012 }' should be left in as-is
-#: apps/core/drf/fields.py:81
+#: apps/core/drf/fields.py:27
 msgid "Date field has wrong format. Use { \"day\": 25, \"month\": 12, \"year\": 2012 }"
 msgstr "Mae fformat anghywir yn y maes dyddiad. Defnyddiwch { \"day\": 25, \"month\": 12, \"year\": 2012 }"
 
@@ -2284,10 +2284,6 @@ msgstr "Unrhyw fater arall"
 msgid "Date to attend court"
 msgstr ""
 
-#: apps/diagnosis/data/graph.graphml.tpl:3166
-msgid "Foster carer or potential adoptive parent of a child making an application to the first tier tribunal in a SEND case"
-msgstr ""
-
 #: apps/timer/models.py:54
 msgid "created"
 msgstr ""
@@ -2296,11 +2292,11 @@ msgstr ""
 msgid "modified"
 msgstr ""
 
-#: templates/admin/base_site.html:9
+#: templates/admin/base_site.html:4
 msgid "Django site admin"
 msgstr "Adran weinyddol safle Django"
 
-#: templates/admin/base_site.html:12
+#: templates/admin/base_site.html:7
 msgid "Civil Legal Advice"
 msgstr "Cyngor Cyfreithiol Sifil"
 

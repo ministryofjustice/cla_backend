@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-06 11:23+0100\n"
+"POT-Creation-Date: 2023-03-06 10:38+0000\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -29,12 +29,12 @@ msgstr ""
 msgid "Category of Matter Types: {category1}, {category2} must match category of case: {case_category}"
 msgstr ""
 
-#: apps/cla_provider/models.py:167
+#: apps/cla_provider/models.py:179
 #, python-brace-format
 msgid "Provider {provider} doesn't offer help for {category}"
 msgstr ""
 
-#: apps/cla_provider/models.py:179
+#: apps/cla_provider/models.py:191
 msgid "Overlapping rota allocation not allowed"
 msgstr ""
 
@@ -94,7 +94,7 @@ msgid "Change password: %s"
 msgstr ""
 
 #. Translators: '{ "day": 25, "month": 12, "year": 2012 }' should be left in as-is
-#: apps/core/drf/fields.py:27
+#: apps/core/drf/fields.py:81
 msgid "Date field has wrong format. Use { \"day\": 25, \"month\": 12, \"year\": 2012 }"
 msgstr ""
 
@@ -2020,6 +2020,10 @@ msgstr ""
 msgid "Date to attend court"
 msgstr ""
 
+#: apps/diagnosis/data/graph.graphml.tpl:3166
+msgid "Foster carer or potential adoptive parent of a child making an application to the first tier tribunal in a SEND case"
+msgstr ""
+
 #: apps/timer/models.py:54
 msgid "created"
 msgstr ""
@@ -2028,11 +2032,11 @@ msgstr ""
 msgid "modified"
 msgstr ""
 
-#: templates/admin/base_site.html:4
+#: templates/admin/base_site.html:9
 msgid "Django site admin"
 msgstr ""
 
-#: templates/admin/base_site.html:7
+#: templates/admin/base_site.html:12
 msgid "Civil Legal Advice"
 msgstr ""
 

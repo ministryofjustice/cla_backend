@@ -299,6 +299,7 @@ workflows:
             branches:
               only:
                 - master
+                - django-upgrade
 
       - deploy:
           name: staging_deploy_live
@@ -309,6 +310,15 @@ workflows:
           context:
            - laa-cla-backend
            - laa-cla-backend-live-staging
+
+      - training_deploy_approval:
+          requires:
+            - staging_deploy_live
+          type: approval
+          filters:
+            branches:
+              only:
+                - django-upgrade
 
       - production_deploy_approval:
           requires:
@@ -324,7 +334,7 @@ workflows:
           namespace: training
           dynamic_hostname: false
           requires:
-            - production_deploy_approval
+            - training_deploy_approval
           context:
            - laa-cla-backend
            - laa-cla-backend-live-training

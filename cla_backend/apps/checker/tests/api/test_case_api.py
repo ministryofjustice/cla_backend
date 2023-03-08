@@ -12,7 +12,7 @@ from cla_eventlog.models import Log
 from checker.serializers import CaseSerializer
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
-from legalaid.models import Case, PersonalDetails, ThirdPartyDetails
+from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, AdaptationDetails
 from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
 from call_centre.tests.test_utils import CallCentreFixedOperatingHours
 
@@ -53,7 +53,6 @@ class BaseCaseTestCase(
             self.assertEqual(data, obj)
         else:
             self.assertEqual(data["personal_relationship"], obj.personal_relationship)
-
             for prop in ["full_name", "mobile_phone", "safe_to_contact"]:
                 self.assertEqual(unicode(getattr(obj.personal_details, prop)), data["personal_details"][prop])
 
@@ -213,6 +212,55 @@ class CaseTestCase(BaseCaseTestCase):
         self.assertDictEqual(
             serializer.errors, {"eligibility_check": [u"Case with this Eligibility check already exists."]}
         )
+
+
+class AdaptationCaseTestCase(BaseCaseTestCase):
+    def set_case_data(self, language, eligibility_check=None):
+        if eligibility_check is None:
+            eligibility_check = make_recipe("legalaid.eligibility_check")
+        # for checker, language is not always passed so have option of no language key at all
+        data = {
+            "eligibility_check": unicode(eligibility_check.reference),
+            "personal_details": self.get_personal_details_default_post_data(),
+            "adaptation_details": {"text_relay": False, "notes": "", "bsl_webcam": False, "minicom": False},
+        }
+        if language is not None:
+            data["adaptation_details"]["language"] = language
+        return data
+
+    def test_all_adaption_details(self):
+        check = make_recipe("legalaid.eligibility_check")
+        # this covers the case that a language is passed into adaptations
+        data = self.set_case_data(language="ARABIC", eligibility_check=check)
+        response = self.client.post(self.list_url, data=data, format="json")
+        case = Case(
+            reference=response.data["reference"],
+            eligibility_check=check,
+            personal_details=PersonalDetails(**data["personal_details"]),
+            adaptation_details=AdaptationDetails(**data["adaptation_details"]),
+        )
+        self.assertAdaptationDetailsEqual(data["adaptation_details"], case.adaptation_details)
+
+    def assertAdaptationDetailsEqual(self, data, obj):
+        if data is None or obj is None:
+            self.assertEqual(data, obj)
+        else:
+            for prop in data.keys():
+                self.assertEqual(unicode(getattr(obj, prop)), unicode(data[prop]))
+
+    def test_adaptations_language(self, language=None):
+        data = self.set_case_data(language)
+        response = self.client.post(self.list_url, data=data, format="json")
+        if language is not None:
+            self.assertEqual(response.data["adaptation_details"]["language"], language)
+        else:
+            self.assertIsNone(response.data["adaptation_details"]["language"])
+
+    def test_adaptation_details_empty_string(self):
+        self.test_adaptations_language(u"")
+
+    def test_adaptation_details_language_missing(self):
+        self.test_adaptations_language()
 
 
 class CallMeBackCaseTestCase(BaseCaseTestCase):

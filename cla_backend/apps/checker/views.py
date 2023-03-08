@@ -44,8 +44,6 @@ class ArticleCategoryNameFilter(ArticleCategoryFilter):
 
 
 class ArticleViewSet(PublicAPIViewSetMixin, BaseArticleViewSet):
-    paginate_by_param = "page_size"
-    max_paginate_by = 100
 
     filter_class = ArticleCategoryNameFilter
 

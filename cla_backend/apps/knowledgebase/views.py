@@ -4,6 +4,7 @@ from rest_framework import filters
 
 from .models import Article, ArticleCategory
 from .serializers import ArticleSerializer, ArticleCategorySerializer
+from core.drf.paginator import StandardResultsSetPagination
 
 
 class ArticleCategoryFilter(django_filters.FilterSet):
@@ -18,10 +19,7 @@ class BaseArticleViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Article.objects.all()
     model = Article
     serializer_class = ArticleSerializer
-
-    paginate_by = 20
-    paginate_by_param = "page_size"
-    max_paginate_by = 100
+    pagination_class = StandardResultsSetPagination
 
     filter_backends = (filters.SearchFilter, filters.DjangoFilterBackend, filters.OrderingFilter)
 

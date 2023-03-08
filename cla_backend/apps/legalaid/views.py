@@ -9,7 +9,6 @@ from rest_framework.decorators import detail_route
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend
-from rest_framework.pagination import PageNumberPagination
 from rest_framework_extensions.mixins import DetailSerializerMixin
 
 from core.utils import format_patch
@@ -22,6 +21,7 @@ from core.drf.mixins import (
     ClaRetrieveModelMixinWithSelfInstance,
 )
 from core.drf.viewsets import CompatGenericViewSet
+from core.drf.paginator import StandardResultsSetPagination, CaseNotesHistoryResultsSetPagination
 from legalaid.permissions import IsManagerOrMePermission
 from cla_eventlog import event_registry
 from cla_auth.models import AccessAttempt
@@ -382,7 +382,7 @@ class FullCaseViewSet(
     lookup_regex = r"[A-Z|\d]{2}-\d{4}-\d{4}"
 
     serializer_class = CaseSerializerBase
-    pagination_class = PageNumberPagination
+    pagination_class = StandardResultsSetPagination
 
     filter_backends = (AscCaseOrderingFilter,)
 
@@ -399,10 +399,6 @@ class FullCaseViewSet(
         "organisation__name",
     )
     ordering = ["-priority"]
-
-    paginate_by = 20
-    paginate_by_param = "page_size"
-    max_paginate_by = 100
 
     FLAGGED_WITH_EOD_SQL = """
     SELECT COUNT(id) > 0 FROM legalaid_eoddetails
@@ -638,7 +634,7 @@ class BaseCSVUploadViewSet(
         return super(BaseCSVUploadViewSet, self).update(request, *args, **kwargs)
 
 
-class PaginatorWithExtraItem(PageNumberPagination):
+class PaginatorWithExtraItem(CaseNotesHistoryResultsSetPagination):
     """
     Same as the Paginator but it will return one more item than expected.
     Used for endpoints that need to diff elements.
@@ -657,11 +653,6 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
     queryset = CaseNotesHistory.objects.all()
     model = CaseNotesHistory
 
-    pagination_class = PageNumberPagination
-    paginate_by = 5
-    paginate_by_param = "page_size"
-    max_paginate_by = 100
-
     @property
     def pagination_class(self):
         """
@@ -671,7 +662,7 @@ class BaseCaseNotesHistoryViewSet(NestedGenericModelMixin, mixins.ListModelMixin
         """
         if self.request.query_params.get("with_extra", False):
             return PaginatorWithExtraItem
-        return super(BaseCaseNotesHistoryViewSet, self).pagination_class
+        return CaseNotesHistoryResultsSetPagination
 
     def get_queryset(self, **kwargs):
         qs = super(BaseCaseNotesHistoryViewSet, self).get_queryset(**kwargs)

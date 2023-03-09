@@ -5,14 +5,13 @@ import random
 from itertools import groupby
 from operator import itemgetter
 
+from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
-from django.template import Context
-from django.template.loader import get_template
+from django.template.loader import render_to_string, get_template
 from django.utils import timezone
 from django.conf import settings
 from django.db.models import Count
 
-from govuk_notify.api import GovUkNotify
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, ProviderPreAllocation
 from legalaid.models import Case
 
@@ -214,44 +213,35 @@ class ProviderAllocationHelper(object):
 
 
 def notify_case_assigned(provider, case):
-    if not provider.email_address:
-        return
-    case_url = "https://{0}/provider/{1}/"
-    now = datetime.datetime.now()
-    personalisation = {
-        "reference": case.reference,
-        "provider": provider.name,
-        "eligibility_check_category": case.eligibility_check.category.name,
-        "is_SPOR": case.outcome_code == "SPOR",
-        "time": now.strftime("%H:%M"),
-        "date": now.strftime("%D"),
-        "case_url": case_url.format(settings.FRONTEND_HOST_NAME, case.reference),
-    }
-    email = GovUkNotify()
-    email.send_email(
-        email_address=provider.email_address,
-        template_id=settings.GOVUK_NOTIFY_TEMPLATES["PROVIDER_CASE_ASSIGNED"],
-        personalisation=personalisation,
+    _notify_case_sent_to_provider(
+        provider, case, subject="CLA Case {ref} has been assigned to {provider}", template_name="assigned"
     )
 
 
 def notify_case_RDSPed(provider, case):
+    _notify_case_sent_to_provider(
+        provider, case, subject="CLA Case {ref} needs actioning - RDSP", template_name="RDSPed"
+    )
+
+
+def _notify_case_sent_to_provider(provider, case, subject, template_name):
     if not provider.email_address:
         return
+    from_address = "no-reply@digital.justice.gov.uk"
+    subject = subject.format(**{"ref": case.reference, "provider": provider.name})
     case_url = "https://{0}/provider/{1}/"
-    now = datetime.datetime.now()
-    personalisation = {
-        "reference": case.reference,
-        "time": now.strftime("%H:%M"),
-        "date": now.strftime("%D"),
-        "case_url": case_url.format(settings.FRONTEND_HOST_NAME, case.reference),
+    template_params = {
+        "provider": provider,
+        "now": datetime.datetime.now(),
+        "case_url": case_url.format(settings.SITE_HOSTNAME, case.reference),
+        "case": case,
     }
-    email = GovUkNotify()
-    email.send_email(
-        email_address=provider.email_address,
-        template_id=settings.GOVUK_NOTIFY_TEMPLATES["PROVIDER_CASE_RDSP"],
-        personalisation=personalisation,
-    )
+    template = "cla_provider/email/{0}.{1}"
+    text = render_to_string(template.format(template_name, "txt"), template_params)
+    html = render_to_string(template.format(template_name, "html"), template_params)
+    email = EmailMultiAlternatives(subject, text, from_address, [provider.email_address])
+    email.attach_alternative(html, "text/html")
+    email.send()
 
 
 class ProviderExtractFormatter(object):
@@ -261,6 +251,6 @@ class ProviderExtractFormatter(object):
     def format(self):
         ctx = {"case": self.case}
         template = get_template("provider/case.xml")
-        resp = HttpResponse(template.render(Context(ctx)), content_type="text/xml")
+        resp = HttpResponse(template.render(ctx), content_type="text/xml")
         resp["Access-Control-Allow-Origin"] = "*"
         return resp

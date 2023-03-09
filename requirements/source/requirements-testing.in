@@ -4,7 +4,7 @@ coverage==4.5.4
 coveralls==1.8.2
 freezegun==0.3.14
 mock==1.0.1
-model-mommy==1.2.3
+model-mommy==1.2.4
 unittest-xml-reporting==2.5.1
 https://github.com/HassenPy/django-pdb/archive/refs/tags/0.3.2.tar.gz
 selenium==3.141.0

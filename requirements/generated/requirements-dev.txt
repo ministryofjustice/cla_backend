@@ -177,7 +177,7 @@ jsonfield==0.9.22
     # via -r requirements/source/requirements-base.in
 jsonpatch==1.9
     # via -r requirements/source/requirements-base.in
-jsonpointer==2.3
+jsonpointer==2.4
     # via jsonpatch
 kombu==3.0.37
     # via celery
@@ -189,7 +189,7 @@ markdown==2.5.2
     # via -r requirements/source/requirements-base.in
 mock==1.0.1
     # via -r requirements/source/requirements-testing.in
-model-mommy==1.2.3
+model-mommy==1.2.4
     # via -r requirements/source/requirements-testing.in
 monotonic==1.6
     # via notifications-python-client

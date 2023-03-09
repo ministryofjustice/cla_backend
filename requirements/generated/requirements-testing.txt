@@ -150,7 +150,7 @@ jsonfield==0.9.22
     # via -r requirements/source/requirements-base.in
 jsonpatch==1.9
     # via -r requirements/source/requirements-base.in
-jsonpointer==2.3
+jsonpointer==2.4
     # via jsonpatch
 kombu==3.0.37
     # via celery
@@ -162,7 +162,7 @@ markdown==2.5.2
     # via -r requirements/source/requirements-base.in
 mock==1.0.1
     # via -r requirements/source/requirements-testing.in
-model-mommy==1.2.3
+model-mommy==1.2.4
     # via -r requirements/source/requirements-testing.in
 monotonic==1.6
     # via notifications-python-client
@@ -237,7 +237,7 @@ six==1.16.0
     #   unittest-xml-reporting
 speaklater==1.3
     # via cla-common
-sqlalchemy==1.4.46
+sqlalchemy==1.4.48
     # via csvkit
 transifex-client==0.11b3
     # via -r requirements/source/requirements-base.in
@@ -247,7 +247,7 @@ unittest-xml-reporting==2.5.1
     # via -r requirements/source/requirements-testing.in
 urllib3-secure-extra==0.1.0
     # via urllib3
-urllib3[secure]==1.26.14
+urllib3[secure]==1.26.16
     # via
     #   botocore
     #   coveralls

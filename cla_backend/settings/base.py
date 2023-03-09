@@ -461,7 +461,6 @@ SESSION_SECURITY_EXPIRE_AFTER = 60 * 30
 PASSIVE_URL_REGEX_LIST = [r"^(?!\/admin\/).*", r"^(\/admin\/).*\/exports/$"]
 
 SESSION_SECURITY_PASSIVE_URLS = []
-TEMPLATE_CONTEXT_PROCESSORS += ("django.core.context_processors.request",)
 
 # .local.py overrides all the common settings.
 try:

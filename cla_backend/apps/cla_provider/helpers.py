@@ -7,7 +7,6 @@ from operator import itemgetter
 
 from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
-from django.template import Context
 from django.template.loader import render_to_string, get_template
 from django.utils import timezone
 from django.conf import settings
@@ -252,6 +251,6 @@ class ProviderExtractFormatter(object):
     def format(self):
         ctx = {"case": self.case}
         template = get_template("provider/case.xml")
-        resp = HttpResponse(template.render(Context(ctx)), content_type="text/xml")
+        resp = HttpResponse(template.render(ctx), content_type="text/xml")
         resp["Access-Control-Allow-Origin"] = "*"
         return resp

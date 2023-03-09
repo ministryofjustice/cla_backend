@@ -9,7 +9,6 @@ from cla_common.services import CacheAdapter
 from collections import defaultdict
 from kombu import transport
 from sentry_sdk.integrations.django import DjangoIntegration
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 from cla_backend.sqs import CLASQSChannel
 
 
@@ -172,11 +171,6 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = os.environ.get("SECRET_KEY", "iia425u_J_pwntnEyqBuI1xBDqOX8nZ4uC73epGce_w")
 
-# List of callables that know how to import templates from various sources.
-# TEMPLATE_LOADERS = (
-#     'django.template.loaders.filesystem.Loader',
-#     'django.template.loaders.app_directories.Loader',
-# )
 
 MIDDLEWARE_CLASSES = (
     "django.middleware.locale.LocaleMiddleware",
@@ -195,7 +189,26 @@ ROOT_URLCONF = "cla_backend.urls"
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = "cla_backend.wsgi.application"
 
-TEMPLATE_DIRS = (root("templates"),)
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [root("templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
+                "django.template.context_processors.request",
+                "django.contrib.messages.context_processors.messages",
+            ]
+        },
+    }
+]
+
 
 BACKEND_ENABLED = os.environ.get("BACKEND_ENABLED", "True") == "True"
 ADMIN_ENABLED = os.environ.get("ADMIN_ENABLED", "True") == "True"
@@ -454,7 +467,6 @@ SESSION_SECURITY_EXPIRE_AFTER = 60 * 30
 PASSIVE_URL_REGEX_LIST = [r"^(?!\/admin\/).*", r"^(\/admin\/).*\/exports/$"]
 
 SESSION_SECURITY_PASSIVE_URLS = []
-TEMPLATE_CONTEXT_PROCESSORS += ("django.core.context_processors.request",)
 
 # .local.py overrides all the common settings.
 try:

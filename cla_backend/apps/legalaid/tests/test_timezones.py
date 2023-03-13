@@ -57,7 +57,7 @@ class TestBSTAssignedOutOfHoursTestCase(BaseAssignedOutOfHours, TestCase):
 class TestCommandDateArgument(TestCase):
     def test_requires_date(self):
         with self.assertRaisesMessage(CommandError, "A start date is required"):
-            call_command("recalculate_assigned_out_of_hours")
+            call_command("recalculate_assigned_out_of_hours", "")
 
     def test_date_must_be_a_date_string(self):
         with self.assertRaisesMessage(CommandError, "The start date should be a valid datetime in yyyy-mm-dd format"):

@@ -7,17 +7,20 @@ from legalaid.models import Case
 
 class Command(BaseCommand):
     help = "Recalculate case.assigned_out_of_hours since a given date"
+    unchanged = []
+    change_to_true = []
+    change_to_false = []
 
     def add_arguments(self, parser):
         parser.add_argument("args")
 
     def handle(self, *args, **options):
         try:
-            date_string = args[0]
+            args[0]
         except IndexError:
             raise CommandError("A start date is required")
-
         try:
+            date_string = "".join(args)
             dt = timezone.datetime.strptime(date_string, "%Y-%m-%d")
         except ValueError:
             raise CommandError("The start date should be a valid datetime in yyyy-mm-dd format")

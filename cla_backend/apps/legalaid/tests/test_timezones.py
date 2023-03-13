@@ -78,7 +78,7 @@ class TestRecalculateAssignedOutOfHours(TestCase):
     def setUp(self, *args, **kwargs):
         self.provider = make_recipe("cla_provider.provider")
         self.category = make_recipe("legalaid.category", code="education")
-        super(TestRecalculateAssignedOutOfHours, self).setUp()
+        # super(TestRecalculateAssignedOutOfHours, self).setUp()
 
     def create(self, year, month, day, hour, minute, out_of_hours):
         assigned_at = timezone.datetime(year, month, day, hour, minute)

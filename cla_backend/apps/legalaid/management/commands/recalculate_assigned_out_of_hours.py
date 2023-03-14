@@ -12,15 +12,14 @@ class Command(BaseCommand):
     change_to_false = []
 
     def add_arguments(self, parser):
-        parser.add_argument("args")
+        parser.add_argument("date_string", nargs="?")
+        parser.add_argument("commit", nargs="?")
 
     def handle(self, *args, **options):
-        try:
-            args[0]
-        except IndexError:
+        if options["date_string"] is None:
             raise CommandError("A start date is required")
         try:
-            date_string = "".join(args)
+            date_string = options["date_string"]
             dt = timezone.datetime.strptime(date_string, "%Y-%m-%d")
         except ValueError:
             raise CommandError("The start date should be a valid datetime in yyyy-mm-dd format")

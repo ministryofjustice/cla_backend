@@ -3163,8 +3163,8 @@ No financial assessment is required.</data>
 A financial assessment will need to be completed.</data>
       </node>
     <node id="n349">
-      <data key="d3" xml:space="preserve">{% trans "Foster carer or potential adoptive parent of a child making an application to the first tier tribunal in a SEND case" %}</data>
-      <data key="d4" xml:space="preserve">Foster carer or potential adoptive parent</data>
+      <data key="d3" xml:space="preserve">{% trans "Parent is a foster carer or an approved prospective adoptive parent  or for a former foster parent of a young person who continues to reside with their former foster carer making an application to the first tier tribunal in a SEND case" %}</data>
+      <data key="d4" xml:space="preserve">Parent is a foster carer or</data>
       <data key="d6" xml:space="preserve">
         <context xmlns="" xml:space="preserve">
 <finance xml:space="preserve">passported</finance>
@@ -3172,7 +3172,7 @@ A financial assessment will need to be completed.</data>
       </data>
       <data key="d7" xml:space="preserve">1</data>
       <data key="d10" xml:space="preserve">n349</data>
-      <data key="d12" xml:space="preserve">**Foster carer or potential adoptive parent of a child making an application to the first tier tribunal in a SEND case.**
+      <data key="d12" xml:space="preserve">**Parent is a foster carer or an approved prospective adoptive parent  or for a former foster parent of a young person who continues to reside with their former foster carer making an application to the first tier tribunal in a SEND case.**
 
 No financial assessment is required.</data>
       </node>

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-06 12:31+0000\n"
+"POT-Creation-Date: 2023-03-14 10:34+0000\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -2285,7 +2285,7 @@ msgid "Date to attend court"
 msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:3166
-msgid "Foster carer or potential adoptive parent of a child making an application to the first tier tribunal in a SEND case"
+msgid "Parent is a foster carer or an approved prospective adoptive parent  or for a former foster parent of a young person who continues to reside with their former foster carer making an application to the first tier tribunal in a SEND case"
 msgstr ""
 
 #: apps/timer/models.py:54

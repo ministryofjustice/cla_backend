@@ -42,7 +42,7 @@ PING_JSON_KEYS = {
 }
 
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
-TEMPLATE_DEBUG = DEBUG
+
 
 ADMINS = ()
 
@@ -129,6 +129,8 @@ AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STATIC_FILES_STORAGE_BUCKET_NAME")
 
 AWS_DELETED_OBJECTS_BUCKET_NAME = os.environ.get("AWS_DELETED_OBJECTS_BUCKET_NAME")
 
+SITE_HOSTNAME = os.environ.get("SITE_HOSTNAME", "cla.local:8000")
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split()
@@ -188,11 +190,6 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = os.environ.get("SECRET_KEY", "iia425u_J_pwntnEyqBuI1xBDqOX8nZ4uC73epGce_w")
 
-# List of callables that know how to import templates from various sources.
-# TEMPLATE_LOADERS = (
-#     'django.template.loaders.filesystem.Loader',
-#     'django.template.loaders.app_directories.Loader',
-# )
 
 MIDDLEWARE_CLASSES = (
     "django.middleware.locale.LocaleMiddleware",
@@ -211,7 +208,25 @@ ROOT_URLCONF = "cla_backend.urls"
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = "cla_backend.wsgi.application"
 
-TEMPLATE_DIRS = (root("templates"),)
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [root("templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
+                "django.template.context_processors.request",
+                "django.contrib.messages.context_processors.messages",
+            ]
+        },
+    }
+]
 
 BACKEND_ENABLED = os.environ.get("BACKEND_ENABLED", "True") == "True"
 ADMIN_ENABLED = os.environ.get("ADMIN_ENABLED", "True") == "True"

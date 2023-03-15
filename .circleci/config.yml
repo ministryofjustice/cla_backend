@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  slack: circleci/slack@4.11.0
+  slack: circleci/slack@4.5.2
   cla-end-to-end-tests: ministryofjustice/cla-end-to-end-tests@volatile
 jobs:
   build:

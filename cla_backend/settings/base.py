@@ -41,7 +41,7 @@ PING_JSON_KEYS = {
 }
 
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
-TEMPLATE_DEBUG = DEBUG
+
 
 ADMINS = ()
 
@@ -208,7 +208,6 @@ TEMPLATES = [
         },
     }
 ]
-
 
 BACKEND_ENABLED = os.environ.get("BACKEND_ENABLED", "True") == "True"
 ADMIN_ENABLED = os.environ.get("ADMIN_ENABLED", "True") == "True"

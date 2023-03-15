@@ -1,22 +1,25 @@
 from django.conf import settings
 from django.core.management import BaseCommand, CommandError
 from django.utils import timezone
-
+from argparse import SUPPRESS
 from legalaid.models import Case
 
 
 class Command(BaseCommand):
     help = "Recalculate case.assigned_out_of_hours since a given date"
-    unchanged = []
-    change_to_true = []
-    change_to_false = []
+
+    def __init__(self, *args, **kwargs):
+        self.unchanged = []
+        self.change_to_true = []
+        self.change_to_false = []
+        super(Command, self).__init__(*args, **kwargs)
 
     def add_arguments(self, parser):
-        parser.add_argument("date_string", nargs="?")
-        parser.add_argument("commit", nargs="?")
+        parser.add_argument("date_string", nargs="?", default=SUPPRESS)
+        parser.add_argument("commit", nargs="?", default=SUPPRESS)
 
     def handle(self, *args, **options):
-        if options["date_string"] is None:
+        if "date_string" not in options:
             raise CommandError("A start date is required")
         try:
             date_string = options["date_string"]
@@ -38,8 +41,8 @@ class Command(BaseCommand):
         self.stdout.write(u"{count} cases will be changed to `False`.".format(count=len(self.change_to_false)))
 
         try:
-            commit = args[1] == "commit"
-        except IndexError:
+            commit = options["commit"] == "commit"
+        except KeyError:
             commit = False
 
         if commit:

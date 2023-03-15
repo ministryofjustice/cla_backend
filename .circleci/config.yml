@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  slack: circleci/slack@4.12.1
+  slack: circleci/slack@4.11.0
   cla-end-to-end-tests: ministryofjustice/cla-end-to-end-tests@volatile
 jobs:
   build:
@@ -204,18 +204,7 @@ jobs:
             echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV
       - slack/notify:
           event: pass
-          custom: |
-            {
-              "blocks": [
-                  {
-                      "type": "section",
-                      "text": {
-                          "type": "mrkdwn",
-                          "text": "This is a test"
-                      }
-                  }
-              ]
-            }
+          template: basic_success_1
 
   cleanup_merged:
     docker:

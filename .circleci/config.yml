@@ -176,7 +176,7 @@ jobs:
       dynamic_hostname:
         type: boolean
     docker:
-      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+      - image: ministryofjustice/cloud-platform-tools:2.1
     shell: /bin/sh -leo pipefail
     environment:
       BASH_ENV: /etc/profile
@@ -209,7 +209,7 @@ jobs:
 
   cleanup_merged:
     docker:
-      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+      - image: ministryofjustice/cloud-platform-tools:2.1
     steps:
       - checkout
       - run:

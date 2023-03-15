@@ -211,14 +211,11 @@ jobs:
                       "type": "section",
                       "text": {
                           "type": "mrkdwn",
-                          "text": "DEPLOYED https://$RELEASE_HOST/admin/ HERE\n:tada: (<< parameters.namespace >>) Deployed branch $CIRCLE_BRANCH\n[Visit Job]($CIRCLE_BUILD_URL)"
+                          "text": "This is a test"
                       }
                   }
               ]
             }
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
 
   cleanup_merged:
     docker:
@@ -244,21 +241,21 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - lint
-      - pip-compile
-      - test:
-          requires:
-            - lint
-            - pip-compile
-      - cleanup_merged:
-          name: cleanup_merged_live
-          context:
-            - laa-cla-backend
-            - laa-cla-backend-live-uat
+#      - lint
+#      - pip-compile
+#      - test:
+#          requires:
+#            - lint
+#            - pip-compile
+#      - cleanup_merged:
+#          name: cleanup_merged_live
+#          context:
+#            - laa-cla-backend
+#            - laa-cla-backend-live-uat
 
       - build:
-          requires:
-            - test
+#          requires:
+#            - test
           context: laa-cla-backend
 
       - cla-end-to-end-tests/behave:

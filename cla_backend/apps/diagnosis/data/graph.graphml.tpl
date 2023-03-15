@@ -1,6 +1,6 @@
 {% load i18n %}<?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
-  <!--Created by yEd 3.19.1.1-->
+  <!--Created by yEd 3.22-->
   <key for="port" id="d0" yfiles.type="portgraphics"/>
   <key for="port" id="d1" yfiles.type="portgeometry"/>
   <key for="port" id="d2" yfiles.type="portuserdata"/>
@@ -3162,6 +3162,30 @@ No financial assessment is required.</data>
 
 A financial assessment will need to be completed.</data>
       </node>
+    <node id="n349">
+      <data key="d3" xml:space="preserve">{% trans "Parent is a foster carer or an approved prospective adoptive parent  or for a former foster parent of a young person who continues to reside with their former foster carer making an application to the first tier tribunal in a SEND case" %}</data>
+      <data key="d4" xml:space="preserve">Parent is a foster carer or</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+<finance xml:space="preserve">passported</finance>
+</context>
+      </data>
+      <data key="d7" xml:space="preserve">1</data>
+      <data key="d10" xml:space="preserve">n349</data>
+      <data key="d12" xml:space="preserve">**Parent is a foster carer or an approved prospective adoptive parent  or for a former foster parent of a young person who continues to reside with their former foster carer making an application to the first tier tribunal in a SEND case.**
+
+No financial assessment is required.</data>
+      </node>
+    <node id="n350">
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">education</category>
+</context>
+      </data>
+      <data key="d10" xml:space="preserve">n350</data>
+      </node>
     <edge id="e0" source="n1" target="n2">
       </edge>
     <edge id="e1" source="n2" target="n3">
@@ -4107,6 +4131,10 @@ A financial assessment will need to be completed.</data>
     <edge id="e471" source="n347" target="n95">
       </edge>
     <edge id="e472" source="n348" target="n95">
+      </edge>
+    <edge id="e473" source="n0" target="n349">
+      </edge>
+    <edge id="e474" source="n349" target="n350">
       </edge>
   </graph>
   <data key="d14">

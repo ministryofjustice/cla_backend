@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-06 11:23+0100\n"
+"POT-Creation-Date: 2023-03-14 10:34+0000\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -2284,6 +2284,10 @@ msgstr "Unrhyw fater arall"
 msgid "Date to attend court"
 msgstr ""
 
+#: apps/diagnosis/data/graph.graphml.tpl:3166
+msgid "Parent is a foster carer or an approved prospective adoptive parent  or for a former foster parent of a young person who continues to reside with their former foster carer making an application to the first tier tribunal in a SEND case"
+msgstr ""
+
 #: apps/timer/models.py:54
 msgid "created"
 msgstr ""
@@ -2292,11 +2296,11 @@ msgstr ""
 msgid "modified"
 msgstr ""
 
-#: templates/admin/base_site.html:4
+#: templates/admin/base_site.html:9
 msgid "Django site admin"
 msgstr "Adran weinyddol safle Django"
 
-#: templates/admin/base_site.html:7
+#: templates/admin/base_site.html:12
 msgid "Civil Legal Advice"
 msgstr "Cyngor Cyfreithiol Sifil"
 

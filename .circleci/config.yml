@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  slack: circleci/slack@3.4.2
+  slack: circleci/slack@4.12.1
   cla-end-to-end-tests: ministryofjustice/cla-end-to-end-tests@volatile
 jobs:
   build:
@@ -203,9 +203,22 @@ jobs:
             ./bin/<< parameters.namespace >>_deploy.sh << parameters.dynamic_hostname >>
             echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV
       - slack/notify:
-          message: ':tada: (<< parameters.namespace >>) Deployed branch $CIRCLE_BRANCH'
-          title: '$RELEASE_HOST'
-          title_link: 'https://$RELEASE_HOST/admin/'
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                  {
+                      "type": "section",
+                      "text": {
+                          "type": "mrkdwn",
+                          "text": "DEPLOYED https://$RELEASE_HOST/admin/ HERE\n:tada: (<< parameters.namespace >>) Deployed branch $CIRCLE_BRANCH\n[Visit Job]($CIRCLE_BUILD_URL)"
+                      }
+                  }
+              ]
+            }
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
 
   cleanup_merged:
     docker:

@@ -43,19 +43,19 @@ def report_view(request, form_class, title, template="case_report", success_task
     else:
         filename = file_name
     tmpl = "admin/reports/{0}.html".format(template)
-
+    has_permission = request.user.is_active and request.user.is_staff
     form = form_class()
     if valid_submit(request, form):
         success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(request.POST))
         messages.info(request, u"Your export is being processed. It will show up in the downloads tab shortly.")
 
-    return render(request, tmpl, {"title": title, "form": form})
+    return render(request, tmpl, {'has_permission': has_permission, "title": title, "form": form})
 
 
 def scheduled_report_view(request, form_class, title):
     tmpl = "admin/reports/case_report.html"
-
-    return render(request, tmpl, {"title": title})
+    has_permission = request.user.is_active and request.user.is_staff
+    return render(request, tmpl, {"title": title, 'has_permission': has_permission})
 
 
 def valid_submit(request, form):

@@ -1,0 +1,22 @@
+#!/bin/sh -e
+NAMESPACE=$1
+MAINTENANCE_MODE=$2
+BACKEND_NAMESPACE="laa-cla-backend-$NAMESPACE"
+FRONTEND_NAMESPACE="laa-cla-frontend-$NAMESPACE"
+PUBLIC_NAMESPACE="laa-cla-public-$NAMESPACE"
+
+echo "This will put the namespaces $BACKEND_NAMESPACE, $FRONTEND_NAMESPACE and $PUBLIC_NAMESPACE into maintenance mode"
+read -p "Are you sure(y\n)" confirm
+if [[ $confirm != "y" ]]; then
+  exit
+fi
+
+kubectl -n $PUBLIC_NAMESPACE create configmap maintenance-mode --from-literal=value=$MAINTENANCE_MODE --dry-run -o yaml | kubectl apply -f -
+kubectl -n $PUBLIC_NAMESPACE rollout restart deployment cla-public-app
+
+kubectl -n $FRONTEND_NAMESPACE create configmap maintenance-mode --from-literal=value=$MAINTENANCE_MODE --dry-run -o yaml | kubectl apply -f -
+kubectl -n $FRONTEND_NAMESPACE rollout restart deployment cla-frontend-app cla-frontend-socket-server
+
+kubectl -n $BACKEND_NAMESPACE create configmap maintenance-mode --from-literal=value=$MAINTENANCE_MODE --dry-run -o yaml | kubectl apply -f -
+kubectl -n $BACKEND_NAMESPACE rollout restart deployment cla-backend-app cla-backend-worker
+

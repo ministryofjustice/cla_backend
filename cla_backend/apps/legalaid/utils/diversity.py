@@ -1,7 +1,7 @@
 import json
 import os
 
-from django.db import connection
+from django.db import connection, transaction
 from django.utils import timezone
 
 from legalaid.models import PersonalDetails
@@ -53,3 +53,15 @@ def load_diversity_data(personal_details_pk, passphrase):
     cursor.execute(sql, [get_private_key(), passphrase, personal_details_pk])
     row = cursor.fetchone()[0]
     return json.loads(row)
+
+
+@transaction.atomic
+def reencrypt(previous_private_key, previous_passphrase):
+    cursor = connection.cursor()
+    sql = """UPDATE {table_name} SET diversity = pgp_pub_encrypt(
+    pgp_pub_decrypt(diversity, dearmor(%s), %s),
+    dearmor(%s))
+    """.format(
+        table_name=PersonalDetails._meta.db_table
+    )
+    cursor.execute(sql, [previous_private_key, previous_passphrase, get_public_key()])

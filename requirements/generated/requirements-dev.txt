@@ -251,7 +251,7 @@ scandir==1.10.0
     # via pathlib2
 selenium==3.141.0
     # via -r requirements/source/requirements-testing.in
-sentry-sdk==0.19.3
+sentry-sdk==1.14.0
     # via -r requirements/source/requirements-base.in
 singledispatch==3.7.0
     # via importlib-resources

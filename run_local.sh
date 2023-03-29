@@ -7,7 +7,9 @@ docker-compose build cla_backend
 if [ $ENVIRONMENT = "test" ]; then
   export DJANGO_SETTINGS=cla_backend.settings.circle
   docker-compose run cla_backend
+  docker-compose exec db psql -U postgres -d cla_backend -c "create extension pgcrypto;"
 else
   docker-compose run start_applications
+  docker-compose exec db psql -U postgres -d cla_backend -c "create extension pgcrypto;"
   docker-compose exec cla_backend bin/create_db.sh
 fi

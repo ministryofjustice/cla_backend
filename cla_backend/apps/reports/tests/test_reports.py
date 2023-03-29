@@ -277,7 +277,8 @@ class OBIEEExportOutputsZipTestCase(TestCase):
 
 
 class TestKnowledgeBaseArticlesExport(TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpTestData(self):
         article_1, article_2, article_3, article4 = make_recipe("knowledgebase.article", _quantity=4)
         make_recipe("knowledgebase.telephone_number", article=article_1, number=123)
         make_recipe("knowledgebase.telephone_number", article=article_1, number=456, name="special")

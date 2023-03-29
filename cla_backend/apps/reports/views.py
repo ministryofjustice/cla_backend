@@ -2,6 +2,7 @@ import json
 import re
 import os
 from django.contrib import messages
+from django.contrib.admin import AdminSite
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse, Http404
@@ -35,26 +36,27 @@ from reports.utils import get_s3_connection
 
 
 def report_view(request, form_class, title, template="case_report", success_task=ExportTask, file_name=None):
+
+    admin_site_instance = AdminSite()
     slug = re.sub("[^0-9a-zA-Z]+", "_", title.lower()).strip("_")
     if not file_name:
         filename = "{0}.csv".format(slug)
     else:
         filename = file_name
     tmpl = "admin/reports/{0}.html".format(template)
-    has_permission = request.user.is_active and request.user.is_staff
     form = form_class()
     if valid_submit(request, form):
         success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(request.POST))
 
         messages.info(request, u"Your export is being processed. It will show up in the downloads tab shortly.")
 
-    return render(request, tmpl, {'has_permission': has_permission, "title": title, "form": form})
+    return render(request, tmpl, {'has_permission': admin_site_instance.has_permission(request), "title": title, "form": form})
 
 
-def scheduled_report_view(request, form_class, title):
+def scheduled_report_view(request, title):
     tmpl = "admin/reports/case_report.html"
-    has_permission = request.user.is_active and request.user.is_staff
-    return render(request, tmpl, {"title": title, 'has_permission': has_permission})
+    admin_site_instance = AdminSite()
+    return render(request, tmpl, {"title": title, 'has_permission': admin_site_instance.has_permission(request)})
 
 
 def valid_submit(request, form):
@@ -111,7 +113,7 @@ def mi_survey_extract(request):
 @permission_required("legalaid.run_reports")
 def mi_cb1_extract(request):
     if settings.SHOW_NEW_CB1:
-        return scheduled_report_view(request, MICB1Extract, "MI CB1 Extract")
+        return scheduled_report_view(request, "MI CB1 Extract")
     else:
         return report_view(request, MICB1Extract, "MI CB1 Extract")
 

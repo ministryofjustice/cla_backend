@@ -10,6 +10,13 @@ services:
       -timeout 180s
     depends_on:
       - cla_backend
+      - rabbitmq
+      - cla_backend_worker
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672:5672'
 
   db:
     image: postgres:11.6-alpine
@@ -56,3 +63,38 @@ services:
       ADMIN_PASSWORD: cla_admin
       ALLOWED_HOSTS: "*"
       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS:-cla_backend.settings.base}
+      CELERY_BROKER_URL: "amqp://rabbitmq"
+
+  cla_backend_worker:
+    build:
+      context: .
+      target: ${ENVIRONMENT:-development}
+    command:
+      - "docker/run_worker.sh"
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/home/app
+    depends_on:
+      - cla_backend
+    container_name:
+      cla_backend_worker
+    environment:
+      ENV: local
+      DEBUG: "True"
+      SECRET_KEY: CHANGE_ME
+      DB_NAME: cla_backend
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      BACKEND_ENABLED: "True"
+      LOAD_SEED_DATA: "True"
+      LOAD_TEST_DATA: "True"
+      LOAD_END_TO_END_FIXTURES: "True"
+      ADMIN_USER: cla_admin
+      STATIC_FILES_BACKEND: local
+      ADMIN_PASSWORD: cla_admin
+      ALLOWED_HOSTS: "*"
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS:-cla_backend.settings.base}
+      CELERY_BROKER_URL: "amqp://rabbitmq"

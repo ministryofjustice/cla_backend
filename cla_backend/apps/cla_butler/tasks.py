@@ -35,6 +35,8 @@ from legalaid.models import (
     Property,
 )
 from timer.models import Timer
+from legalaid.utils import diversity
+from cla_butler.models import DiversityDataCheck
 
 
 logger = logging.getLogger(__name__)
@@ -219,3 +221,17 @@ class DeleteOldData(Task):
         case_complaints = Complaint.objects.filter(eod_id__in=eods).values_list("pk", flat=True)
         audit_logs = AuditLog.objects.filter(complaint__in=case_complaints)
         audit_logs.delete()
+
+
+class DiversityDataCheckTask(Task):
+    def run(self, passphrase, pd_ids, description, *args, **kwargs):
+        logger.info(description)
+        for pd_id in pd_ids:
+            try:
+                diversity.load_diversity_data(pd_id, passphrase)
+                status = "OK"
+                detail = None
+            except Exception as e:
+                status = "FAIL"
+                detail = e.message
+            DiversityDataCheck.objects.create(personal_details_id=pd_id, detail=detail, action="check", status=status)

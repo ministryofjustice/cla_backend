@@ -36,7 +36,7 @@ from legalaid.models import (
 )
 from timer.models import Timer
 from legalaid.utils import diversity
-from cla_butler.models import DiversityDataCheck
+from cla_butler.models import DiversityDataCheck, ACTION, STATUS
 
 
 logger = logging.getLogger(__name__)
@@ -229,9 +229,9 @@ class DiversityDataCheckTask(Task):
         for pd_id in pd_ids:
             try:
                 diversity.load_diversity_data(pd_id, passphrase)
-                status = "OK"
+                status = STATUS.OK
                 detail = None
             except Exception as e:
-                status = "FAIL"
-                detail = e.message
-            DiversityDataCheck.objects.create(personal_details_id=pd_id, detail=detail, action="check", status=status)
+                status = STATUS.FAIL
+                detail = str(e)
+            DiversityDataCheck.objects.create(personal_details_id=pd_id, detail=detail, action=ACTION.CHECK, status=status)

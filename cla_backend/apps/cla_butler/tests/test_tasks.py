@@ -4,11 +4,19 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from cla_butler.constants import delete_option_three_years, delete_option_no_personal_details
-from cla_butler.tasks import DeleteOldData, get_pks
+from cla_butler.tasks import DeleteOldData, get_pks, DiversityDataCheckTask
 from core.tests.mommy_utils import make_recipe
 from cla_auditlog.models import AuditLog
 from complaints.models import Complaint
 from legalaid.models import Case, EODDetails, PersonalDetails
+from legalaid.utils import diversity
+from cla_butler.models import DiversityDataCheck, ACTION, STATUS
+import mock
+
+
+def mock_load_diversity_data(personal_details_pk, passphrase):
+    if personal_details_pk % 2 == 0:
+        raise ValueError("Something went wrong")
 
 
 class TasksTestCase(TestCase):
@@ -284,3 +292,22 @@ class TasksTestCase(TestCase):
         freezer.stop()
         eod = make_recipe("legalaid.eod_details", case=case)
         make_recipe("complaints.complaint", eod=eod, audit_log=[log])
+
+
+class DiversityDataCheckTaskTestCase(TestCase):
+
+
+    @mock.patch("legalaid.utils.diversity.load_diversity_data", mock_load_diversity_data)
+    def test_run(self):
+        DiversityDataCheckTask().run("cla", self.pd_records_ids, description="")
+        success_count = DiversityDataCheck.objects.filter(action=ACTION.CHECK, status=STATUS.OK).count()
+        failure_count = DiversityDataCheck.objects.filter(action=ACTION.CHECK, status=STATUS.FAIL).count()
+        failure_messages = list(DiversityDataCheck.objects.filter(action=ACTION.CHECK, status=STATUS.FAIL).values_list(
+            "detail",
+            flat=True
+        ))
+        expected_failure_messages = [u"Something went wrong"] * 5
+        self.assertEqual(success_count, 5)
+        self.assertEqual(failure_count, 5)
+        self.assertEqual(failure_messages, expected_failure_messages)
+

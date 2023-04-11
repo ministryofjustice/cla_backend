@@ -13,8 +13,9 @@ STATUS = Choices(
 
 ACTION = Choices(
     # constant, db_id, friendly string
-    ("CHECK", "check", "Check"),
+    ("CHECK", "check", "Check")
 )
+
 
 class DiversityDataCheck(TimeStampedModel):
     personal_details = models.OneToOneField(PersonalDetails)
@@ -24,6 +25,10 @@ class DiversityDataCheck(TimeStampedModel):
 
     @classmethod
     def get_unprocessed_personal_data_qs(cls, action):
-        return PersonalDetails.objects.prefetch_related('diversitydatacheck').filter(
-            Q(diversitydatacheck__pk__isnull=True) | ~Q(diversitydatacheck__action=action), diversity__isnull=False
-        ).order_by('created')
+        return (
+            PersonalDetails.objects.prefetch_related("diversitydatacheck")
+            .filter(
+                Q(diversitydatacheck__pk__isnull=True) | ~Q(diversitydatacheck__action=action), diversity__isnull=False
+            )
+            .order_by("created")
+        )

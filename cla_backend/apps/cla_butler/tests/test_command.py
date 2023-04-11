@@ -17,5 +17,3 @@ class DiversityCheckCommandTestCase(CreateSampleDiversityData, TestCase):
         mock_apply_async.side_effect = apply_async
         management.call_command("diversity_data_check")
         self.assertEqual(apply_async_result["pd_ids"], self.pd_records_ids)
-
-

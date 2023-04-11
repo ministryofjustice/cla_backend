@@ -1,3 +1,4 @@
+import mock
 from django.test import TestCase
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
@@ -9,9 +10,8 @@ from core.tests.mommy_utils import make_recipe
 from cla_auditlog.models import AuditLog
 from complaints.models import Complaint
 from legalaid.models import Case, EODDetails, PersonalDetails
-from legalaid.utils import diversity
 from cla_butler.models import DiversityDataCheck, ACTION, STATUS
-import mock
+from cla_butler.tests.mixins import CreateSampleDiversityData
 
 
 def mock_load_diversity_data(personal_details_pk, passphrase):
@@ -294,20 +294,16 @@ class TasksTestCase(TestCase):
         make_recipe("complaints.complaint", eod=eod, audit_log=[log])
 
 
-class DiversityDataCheckTaskTestCase(TestCase):
-
-
+class DiversityDataCheckTaskTestCase(CreateSampleDiversityData, TestCase):
     @mock.patch("legalaid.utils.diversity.load_diversity_data", mock_load_diversity_data)
     def test_run(self):
         DiversityDataCheckTask().run("cla", self.pd_records_ids, description="")
         success_count = DiversityDataCheck.objects.filter(action=ACTION.CHECK, status=STATUS.OK).count()
         failure_count = DiversityDataCheck.objects.filter(action=ACTION.CHECK, status=STATUS.FAIL).count()
-        failure_messages = list(DiversityDataCheck.objects.filter(action=ACTION.CHECK, status=STATUS.FAIL).values_list(
-            "detail",
-            flat=True
-        ))
+        failure_messages = list(
+            DiversityDataCheck.objects.filter(action=ACTION.CHECK, status=STATUS.FAIL).values_list("detail", flat=True)
+        )
         expected_failure_messages = [u"Something went wrong"] * 5
         self.assertEqual(success_count, 5)
         self.assertEqual(failure_count, 5)
         self.assertEqual(failure_messages, expected_failure_messages)
-

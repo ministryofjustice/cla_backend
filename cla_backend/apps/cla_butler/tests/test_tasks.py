@@ -297,7 +297,7 @@ class TasksTestCase(TestCase):
 class DiversityDataCheckTaskTestCase(CreateSampleDiversityData, TestCase):
     @mock.patch("legalaid.utils.diversity.load_diversity_data", mock_load_diversity_data)
     def test_run(self):
-        DiversityDataCheckTask().run("cla", self.pd_records_ids, description="")
+        DiversityDataCheckTask().run("cla", 0, 1000, description="")
         success_count = DiversityDataCheck.objects.filter(action=ACTION.CHECK, status=STATUS.OK).count()
         failure_count = DiversityDataCheck.objects.filter(action=ACTION.CHECK, status=STATUS.FAIL).count()
         failure_messages = list(

@@ -224,14 +224,17 @@ class DeleteOldData(Task):
 
 
 class DiversityDataCheckTask(Task):
-    def run(self, passphrase, pd_ids, description, *args, **kwargs):
+    def run(self, passphrase, start, end, description, *args, **kwargs):
+        items = DiversityDataCheck.get_personal_details_with_diversity_data()[start:end]
         logger.info(description)
-        for pd_id in pd_ids:
+        for item in items:
             try:
-                diversity.load_diversity_data(pd_id, passphrase)
+                diversity.load_diversity_data(item.pk, passphrase)
                 status = STATUS.OK
                 detail = None
             except Exception as e:
                 status = STATUS.FAIL
                 detail = str(e)
-            DiversityDataCheck.objects.create(personal_details_id=pd_id, detail=detail, action=ACTION.CHECK, status=status)
+            DiversityDataCheck.objects.create(
+                personal_details_id=item.pk, detail=detail, action=ACTION.CHECK, status=status
+            )

@@ -25,10 +25,11 @@ class DiversityDataCheck(TimeStampedModel):
 
     @classmethod
     def get_unprocessed_personal_data_qs(cls, action):
-        return (
-            PersonalDetails.objects.prefetch_related("diversitydatacheck")
-            .filter(
-                Q(diversitydatacheck__pk__isnull=True) | ~Q(diversitydatacheck__action=action), diversity__isnull=False
-            )
-            .order_by("created")
+        qs = cls.get_personal_details_with_diversity_data()
+        return qs.prefetch_related("diversitydatacheck").filter(
+            Q(diversitydatacheck__pk__isnull=True) | ~Q(diversitydatacheck__action=action)
         )
+
+    @classmethod
+    def get_personal_details_with_diversity_data(cls):
+        return PersonalDetails.objects.filter(diversity__isnull=False).order_by("created")

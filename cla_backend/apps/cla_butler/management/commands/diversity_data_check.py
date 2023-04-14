@@ -2,7 +2,6 @@
 from django.core.management.base import BaseCommand
 from cla_butler.tasks import DiversityDataCheckTask
 from cla_butler.models import DiversityDataCheck, ACTION
-from legalaid.utils import diversity
 
 
 class Command(BaseCommand):
@@ -17,12 +16,7 @@ class Command(BaseCommand):
         qs = DiversityDataCheck.get_unprocessed_personal_data_qs(ACTION.CHECK)
         self.stdout.write("Personal data with diversity not null is: {}".format(qs.count()))
         passphrase = self.get_passphrase()
-        try:
-            diversity.load_diversity_data(qs[0].pk, passphrase)
-        except Exception as e:
-            self.stderr.write("Could not decrypt data using passphrase: {error}".format(error=str(e)))
-        else:
-            self.schedule_tasks(qs, 1000, passphrase)
+        self.schedule_tasks(qs, 1000, passphrase)
 
     def schedule_tasks(self, qs, chunk_size, passphrase):
         total_records = qs.count()

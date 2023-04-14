@@ -235,6 +235,6 @@ class DiversityDataCheckTask(Task):
             except Exception as e:
                 status = STATUS.FAIL
                 detail = str(e)
-            DiversityDataCheck.objects.create(
-                personal_details_id=item.pk, detail=detail, action=ACTION.CHECK, status=status
+            DiversityDataCheck.objects.get_or_create(
+                personal_details_id=item.pk, action=ACTION.CHECK, defaults={"detail": detail, "status": status}
             )

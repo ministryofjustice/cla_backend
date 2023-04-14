@@ -32,4 +32,4 @@ class DiversityDataCheck(TimeStampedModel):
 
     @classmethod
     def get_personal_details_with_diversity_data(cls):
-        return PersonalDetails.objects.filter(diversity__isnull=False).order_by("created")
+        return PersonalDetails.objects.filter(diversity__isnull=False).order_by("-created")

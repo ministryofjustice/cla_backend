@@ -13,12 +13,13 @@ STATUS = Choices(
 
 ACTION = Choices(
     # constant, db_id, friendly string
-    ("CHECK", "check", "Check")
+    ("CHECK", "check", "Check"),
+    ("REENCRYPT", "reencrypt", "Re-encrypt"),
 )
 
 
 class DiversityDataCheck(TimeStampedModel):
-    personal_details = models.OneToOneField(PersonalDetails)
+    personal_details = models.ForeignKey(PersonalDetails)
     detail = models.TextField(null=True, blank=True)
     action = models.CharField(max_length=20, choices=ACTION)
     status = models.CharField(max_length=10, choices=STATUS)

@@ -238,3 +238,20 @@ class DiversityDataCheckTask(Task):
             DiversityDataCheck.objects.get_or_create(
                 personal_details_id=item.pk, action=ACTION.CHECK, defaults={"detail": detail, "status": status}
             )
+
+
+class DiversityDataReencryptTask(Task):
+    def run(self, passphrase_old, passphrase_key, start, end, description, *args, **kwargs):
+        items = DiversityDataCheck.get_personal_details_with_diversity_data()[start:end]
+        logger.info(description)
+        for item in items:
+            try:
+                diversity.reencrypt(item.pk, passphrase_old, passphrase_key)
+                status = STATUS.OK
+                detail = None
+            except Exception as e:
+                status = STATUS.FAIL
+                detail = str(e)
+            DiversityDataCheck.objects.get_or_create(
+                personal_details_id=item.pk, action=ACTION.CHECK, defaults={"detail": detail, "status": status}
+            )

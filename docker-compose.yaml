@@ -21,7 +21,7 @@ services:
   db:
     image: postgres:11.6-alpine
     ports:
-      - '5432'
+      - ${DOCKER_DATABASE_PORT_MAPPING:-5433:5432}
     security_opt:
       - no-new-privileges:true
     container_name:
@@ -45,7 +45,7 @@ services:
       - db
     container_name:
       cla_backend
-    environment:
+    environment: &cla_backend_environment
       ENV: local
       DEBUG: "True"
       SECRET_KEY: CHANGE_ME
@@ -65,6 +65,7 @@ services:
       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS:-cla_backend.settings.base}
       CELERY_BROKER_URL: "amqp://rabbitmq"
       GOVUK_NOTIFY_API_KEY: ${GOVUK_NOTIFY_API_KEY:-}
+      PREVIOUS_DIVERSITY_PRIVATE_KEY: ${PREVIOUS_DIVERSITY_PRIVATE_KEY:-}
 
   cla_backend_worker:
     <<: *cla_backend
@@ -75,3 +76,8 @@ services:
       - cla_backend
     container_name:
       cla_backend_worker
+    environment:
+      <<: *cla_backend_environment
+      DIVERSITY_PRIVATE_KEY_PATH: ${DIVERSITY_PRIVATE_KEY_PATH:-}
+      DIVERSITY_PUBLIC_KEY_PATH: ${DIVERSITY_PUBLIC_KEY_PATH:-}
+      PREVIOUS_DIVERSITY_PRIVATE_KEY: ${PREVIOUS_DIVERSITY_PRIVATE_KEY:-}

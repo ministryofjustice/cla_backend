@@ -56,6 +56,7 @@ def load_diversity_data(personal_details_pk, passphrase):
 
 
 def reencrypt(personal_details_pk, previous_private_key, previous_passphrase):
+    previous_private_key = previous_private_key.replace("\\n", "\n")
     cursor = connection.cursor()
     sql = """UPDATE {table_name} SET diversity = pgp_pub_encrypt(
     pgp_pub_decrypt(diversity, dearmor(%s), %s),

@@ -1,5 +1,7 @@
 # coding=utf-8
 import datetime
+import os
+
 from dateutil.relativedelta import relativedelta
 import logging
 import time
@@ -241,17 +243,20 @@ class DiversityDataCheckTask(Task):
 
 
 class DiversityDataReencryptTask(Task):
-    def run(self, passphrase_old, passphrase_key, start, end, description, *args, **kwargs):
+    def run(self, passphrase_old, start, end, description, *args, **kwargs):
+        previous_key = os.environ["PREVIOUS_DIVERSITY_PRIVATE_KEY"]
         items = DiversityDataCheck.get_personal_details_with_diversity_data()[start:end]
         logger.info(description)
         for item in items:
             try:
-                diversity.reencrypt(item.pk, passphrase_old, passphrase_key)
+                logger.info("Re-encrypting {}".format(item.pk))
+                diversity.reencrypt(item.pk, previous_key, passphrase_old)
                 status = STATUS.OK
                 detail = None
             except Exception as e:
                 status = STATUS.FAIL
                 detail = str(e)
+            logger.info("{} - {}".format(status, detail))
             DiversityDataCheck.objects.get_or_create(
-                personal_details_id=item.pk, action=ACTION.CHECK, defaults={"detail": detail, "status": status}
+                personal_details_id=item.pk, action=ACTION.REENCRYPT, defaults={"detail": detail, "status": status}
             )

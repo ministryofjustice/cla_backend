@@ -16,16 +16,16 @@ class Command(BaseCommand):
 
         qs = DiversityDataCheck.get_unprocessed_personal_data_qs(ACTION.REENCRYPT)
         self.stdout.write("Personal data with diversity not null is: {}".format(qs.count()))
-        self.schedule_tasks(qs, 1000, passphrase_old, previous_key)
+        self.schedule_tasks(qs, 1000, passphrase_old)
 
-    def schedule_tasks(self, qs, chunk_size, passphrase_old, previous_key):
+    def schedule_tasks(self, qs, chunk_size, passphrase_old):
         total_records = qs.count()
         counter = 1
         for start in range(0, total_records, chunk_size):
             end = start + chunk_size
             description = "{index} - {start}:{end}".format(index=counter, start=start, end=end)
             self.stdout.write(description)
-            DiversityDataReencryptTask().delay(passphrase_old, previous_key, start, end, description)
+            DiversityDataReencryptTask().delay(passphrase_old, start, end, description)
             counter += 1
 
     def get_old_key_passphrase(self):

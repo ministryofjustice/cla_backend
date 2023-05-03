@@ -243,14 +243,12 @@ class DiversityDataCheckTask(Task):
 
 
 class DiversityDataReencryptTask(Task):
-    def run(self, passphrase_old, start, end, description, *args, **kwargs):
+    def run(self, passphrase_old, ids):
         previous_key = os.environ["PREVIOUS_DIVERSITY_PRIVATE_KEY"]
-        items = DiversityDataCheck.get_personal_details_with_diversity_data()[start:end]
-        logger.info(description)
-        for item in items:
+        for item in ids:
             try:
-                logger.info("Re-encrypting {}".format(item.pk))
-                diversity.reencrypt(item.pk, previous_key, passphrase_old)
+                logger.info("Re-encrypting {}".format(item))
+                diversity.reencrypt(item, previous_key, passphrase_old)
                 status = STATUS.OK
                 detail = None
             except Exception as e:
@@ -258,5 +256,5 @@ class DiversityDataReencryptTask(Task):
                 detail = str(e)
             logger.info("{} - {}".format(status, detail))
             DiversityDataCheck.objects.get_or_create(
-                personal_details_id=item.pk, action=ACTION.REENCRYPT, defaults={"detail": detail, "status": status}
+                personal_details_id=item, action=ACTION.REENCRYPT, defaults={"detail": detail, "status": status}
             )

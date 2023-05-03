@@ -20,13 +20,14 @@ class Command(BaseCommand):
 
     def schedule_tasks(self, qs, chunk_size, passphrase_old):
         total_records = qs.count()
-        counter = 1
+        tasks = []
         for start in range(0, total_records, chunk_size):
             end = start + chunk_size
-            description = "{index} - {start}:{end}".format(index=counter, start=start, end=end)
-            self.stdout.write(description)
-            DiversityDataReencryptTask().delay(passphrase_old, start, end, description)
-            counter += 1
+            tasks.append(qs[start:end].values_list("id", flat=True))
+        self.stdout.write("Processing the number of tasks: {}".format(len(tasks)))
+
+        for ids in tasks:
+            DiversityDataReencryptTask().delay(passphrase_old, list(ids))
 
     def get_old_key_passphrase(self):
         return raw_input("Please enter the passphrase for the PREVIOUS private key:")

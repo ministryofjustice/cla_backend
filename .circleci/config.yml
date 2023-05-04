@@ -123,7 +123,7 @@ jobs:
           DB_NAME: circle_test
           DB_USER: root
           DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
-      - image: circleci/postgres:11.6-alpine
+      - image: cimg/postgres:14.7
         environment:
           POSTGRES_USER: root
           POSTGRES_DB: circle_test

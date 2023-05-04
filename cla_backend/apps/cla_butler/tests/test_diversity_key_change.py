@@ -45,3 +45,27 @@ class DiversityReencryptTestCase(TestCase):
         diversity_data = diversity.load_diversity_data(case.personal_details.pk, "cla")
         self.assertEqual(expected_diversity_data, diversity_data)
         mocker.stop()
+
+    def test_diversity_single_record_reencrypt(self):
+        expected_diversity_data = {"my key": "my value"}
+        case_1 = make_recipe("legalaid.case")
+        case_2 = make_recipe("legalaid.case")
+        diversity.save_diversity_data(case_1.personal_details.pk, expected_diversity_data)
+        diversity.save_diversity_data(case_2.personal_details.pk, expected_diversity_data)
+
+        mock_keys = {
+            "DIVERSITY_PRIVATE_KEY": self.get__key("diversity_dev_reencrypt_private.key"),
+            "DIVERSITY_PUBLIC_KEY": self.get__key("diversity_dev_reencrypt_public.key"),
+        }
+        mocker = mock.patch.dict(os.environ, mock_keys)
+
+        mocker.start()
+        # Case_2 = reencrypt the diversity data using the new key
+        diversity.reencrypt(case_2.personal_details.pk, self.get__key("diversity_dev_private.key"), "cla")
+        diversity_data = diversity.load_diversity_data(case_2.personal_details.pk, "cla")
+        self.assertEqual(expected_diversity_data, diversity_data)
+        mocker.stop()
+
+        # Case_1 = load the diversity data using the old key
+        diversity_data = diversity.load_diversity_data(case_1.personal_details.pk, "cla")
+        self.assertEqual(expected_diversity_data, diversity_data)

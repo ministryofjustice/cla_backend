@@ -7,7 +7,7 @@ from legalaid.utils import diversity
 from legalaid.models import Case
 
 
-class FullCaseViewSetTestCase(TestCase):
+class DiversityReencryptTestCase(TestCase):
     def get__key(self, key_name):
         file_path = os.path.join(os.path.dirname(diversity.__file__), "keys", key_name)
         with open(file_path) as f:
@@ -30,7 +30,9 @@ class FullCaseViewSetTestCase(TestCase):
 
         # decrypt using old key and re-encrypt using the new key BUT with WRONG passphrase for previous key
         with self.assertRaises(InternalError):
-            diversity.reencrypt(self.get__key("diversity_dev_private.key"), "wrong passphrase")
+            diversity.reencrypt(
+                case.personal_details.pk, self.get__key("diversity_dev_private.key"), "wrong passphrase"
+            )
         mocker.stop()
         # Confirm we can still load our diversity data
         diversity_data = diversity.load_diversity_data(case.personal_details.pk, "cla")
@@ -38,7 +40,7 @@ class FullCaseViewSetTestCase(TestCase):
 
         # decrypt using old key and re-encrypt using the new key BUT with CORRECT passphrase for previous key
         mocker.start()
-        diversity.reencrypt(self.get__key("diversity_dev_private.key"), "cla")
+        diversity.reencrypt(case.personal_details.pk, self.get__key("diversity_dev_private.key"), "cla")
         case = Case.objects.get(pk=case.pk)
         diversity_data = diversity.load_diversity_data(case.personal_details.pk, "cla")
         self.assertEqual(expected_diversity_data, diversity_data)

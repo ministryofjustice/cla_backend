@@ -1,7 +1,5 @@
 import mock
-import os
 from django.test import TestCase
-from django.test import override_settings
 from django.core import management
 from cla_butler.tests.mixins import CreateSampleDiversityData
 from cla_butler.management.commands.diversity_reencrypt import Command as ClaButlerDiversityReencryptCommand
@@ -26,7 +24,9 @@ class DiversityCheckCommandTestCase(CreateSampleDiversityData, TestCase):
 
 
 class DiversityReencryptCommandTestCase(CreateSampleDiversityData, TestCase):
-    @mock.patch("cla_butler.management.commands.diversity_reencrypt.Command.get_old_key_passphrase", return_value="cla")
+    @mock.patch(
+        "cla_butler.management.commands.diversity_reencrypt.Command.get_old_key_passphrase", return_value="cla"
+    )
     @mock.patch("cla_butler.management.commands.diversity_reencrypt.Command.schedule_tasks")
     @mock.patch.dict("os.environ", {"PREVIOUS_DIVERSITY_PRIVATE_KEY": "I am not empty"})
     def test_create_tasks_all(self, mock_schedule_tasks, get_old_key_passphrase):
@@ -40,21 +40,25 @@ class DiversityReencryptCommandTestCase(CreateSampleDiversityData, TestCase):
         management.call_command("diversity_reencrypt")
         self.assertTrue(mock_schedule_tasks.called)
 
-
-    @mock.patch("cla_butler.management.commands.diversity_reencrypt.Command.get_old_key_passphrase", return_value="cla")
+    @mock.patch(
+        "cla_butler.management.commands.diversity_reencrypt.Command.get_old_key_passphrase", return_value="cla"
+    )
     @mock.patch("cla_butler.management.commands.diversity_reencrypt.Command.schedule_tasks")
     @mock.patch.dict("os.environ", {"PREVIOUS_DIVERSITY_PRIVATE_KEY": "I am not empty"})
     def test_create_tasks_some(self, mock_schedule_tasks, get_old_key_passphrase):
         ClaButlerDiversityReencryptCommand.chunk_size = 2
         # Mark the first record as processed so that we can test that diversity_reencrypt process does not attempt to
         # reencrypt this record
-        DiversityDataCheck.objects.create(personal_details_id=self.pd_records_ids[0], action=ACTION.REENCRYPT, status=STATUS.OK)
+        DiversityDataCheck.objects.create(
+            personal_details_id=self.pd_records_ids[0], action=ACTION.REENCRYPT, status=STATUS.OK
+        )
 
         def schedule_tasks(tasks, passphrase_old, **kwargs):
             # (count divided by chunk size) plus (count mod chunk size) - Required for when you have a count that is not
             # divisible by the chunk size
-            tasks_count = (len(self.pd_records_ids) / ClaButlerDiversityReencryptCommand.chunk_size) + \
-                          (len(self.pd_records_ids) % ClaButlerDiversityReencryptCommand.chunk_size)
+            tasks_count = (len(self.pd_records_ids) / ClaButlerDiversityReencryptCommand.chunk_size) + (
+                len(self.pd_records_ids) % ClaButlerDiversityReencryptCommand.chunk_size
+            )
             self.assertEqual(len(tasks), tasks_count)
 
             # Make sure that the first record is not included

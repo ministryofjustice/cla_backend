@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from cla_butler.constants import delete_option_three_years, delete_option_no_personal_details
-from cla_butler.tasks import DeleteOldData, get_pks, DiversityDataCheckTask
+from cla_butler.tasks import DeleteOldData, get_pks, DiversityDataCheckTask, DiversityDataReencryptTask
 from core.tests.mommy_utils import make_recipe
 from cla_auditlog.models import AuditLog
 from complaints.models import Complaint
@@ -307,3 +307,12 @@ class DiversityDataCheckTaskTestCase(CreateSampleDiversityData, TestCase):
         self.assertEqual(success_count, 5)
         self.assertEqual(failure_count, 5)
         self.assertEqual(failure_messages, expected_failure_messages)
+
+
+class DiversityDataReencryptTaskTestCase(CreateSampleDiversityData, TestCase):
+    def test_run(self):
+        ids_to_reencrypt = self.pd_records_ids[0:5]
+        DiversityDataReencryptTask().run("cla", ids_to_reencrypt)
+        qs = DiversityDataCheck.objects.filter(action=ACTION.CHECK, status=STATUS.OK)
+        reencrypted_items = qs.values_list('ids', flat=True)
+        self.assertListEqual(ids_to_reencrypt, reencrypted_items)

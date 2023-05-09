@@ -6,6 +6,8 @@ from cla_butler.models import DiversityDataCheck, ACTION
 
 class Command(BaseCommand):
     help = "Re-encrypt diversity data"
+    # Number of records processed by each celery task
+    chunk_size = 1000
 
     def handle(self, *args, **options):
         previous_key = os.environ.get("PREVIOUS_DIVERSITY_PRIVATE_KEY", None)
@@ -16,18 +18,22 @@ class Command(BaseCommand):
 
         qs = DiversityDataCheck.get_unprocessed_personal_data_qs(ACTION.REENCRYPT)
         self.stdout.write("Personal data with diversity not null is: {}".format(qs.count()))
-        self.schedule_tasks(qs, 1000, passphrase_old)
+        self.create_tasks(qs, passphrase_old)
 
-    def schedule_tasks(self, qs, chunk_size, passphrase_old):
+    def create_tasks(self, qs, passphrase_old):
         total_records = qs.count()
         tasks = []
-        for start in range(0, total_records, chunk_size):
-            end = start + chunk_size
-            tasks.append(qs[start:end].values_list("id", flat=True))
+        for start in range(0, total_records, self.chunk_size):
+            end = start + self.chunk_size
+            tasks.append(list(qs[start:end].values_list("id", flat=True)))
         self.stdout.write("Processing the number of tasks: {}".format(len(tasks)))
+        self.schedule_tasks(tasks, passphrase_old)
 
+    @staticmethod
+    def schedule_tasks(tasks, passphrase_old):
         for ids in tasks:
-            DiversityDataReencryptTask().delay(passphrase_old, list(ids))
+            DiversityDataReencryptTask().delay(passphrase_old, ids)
 
-    def get_old_key_passphrase(self):
+    @staticmethod
+    def get_old_key_passphrase():
         return raw_input("Please enter the passphrase for the PREVIOUS private key:")

@@ -4,16 +4,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.utils.timezone import now, localtime
 from django.utils.formats import date_format
+from govuk_notify.api import GovUkNotify
 
 logger = logging.getLogger(__name__)
-
-email_template = u"""
-Operator user {0} at {1}:
-
-Username: {2}
-Is manager: {3}
-Is CLA Superuser: {4}
-"""
 
 
 def log_operator_created(sender, instance, created, **kwargs):
@@ -26,22 +19,22 @@ def log_operator_created(sender, instance, created, **kwargs):
                 "IS_CLA_SUPERUSER": unicode(instance.is_cla_superuser),
             },
         )
-
-        message = email_template.format(
-            "created",
-            date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
-            instance.user.username,
-            unicode(instance.is_manager),
-            unicode(instance.is_cla_superuser),
-        )
-        send_mail(
-            "Operator user added",
-            message,
-            settings.EMAIL_FROM_ADDRESS,
-            settings.OPERATOR_USER_ALERT_EMAILS,
-            fail_silently=True,
-        )
-
+        try:
+            email = GovUkNotify()
+            for address in settings.OPERATOR_USER_ALERT_EMAILS:
+                email.send_email(
+                    email_address=address,
+                    template_id="48ce3539-48f3-4b2d-9931-2a57f89a521f",
+                    personalisation={
+                        'added_or_modified': 'added',
+                        'datetime': date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
+                        'username': instance.user.username,
+                        'is_manager': unicode(instance.is_manager),
+                        'is_cla_superuser': unicode(instance.is_cla_superuser)
+                    },
+                )
+        except:
+            pass
 
 def log_operator_modified(sender, instance, **kwargs):
     try:
@@ -57,18 +50,19 @@ def log_operator_modified(sender, instance, **kwargs):
             "IS_CLA_SUPERUSER": unicode(instance.is_cla_superuser),
         },
     )
-
-    message = email_template.format(
-        "modified",
-        date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
-        instance.user.username,
-        unicode(instance.is_manager),
-        unicode(instance.is_cla_superuser),
-    )
-    send_mail(
-        "Operator user modified",
-        message,
-        settings.EMAIL_FROM_ADDRESS,
-        settings.OPERATOR_USER_ALERT_EMAILS,
-        fail_silently=True,
-    )
+    try:
+        email = GovUkNotify()
+        for address in settings.OPERATOR_USER_ALERT_EMAILS:
+            email.send_email(
+                email_address=address,
+                template_id="48ce3539-48f3-4b2d-9931-2a57f89a521f",
+                personalisation={
+                    'added_or_modified': 'modified',
+                    'datetime': date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
+                    'username': instance.user.username,
+                    'is_manager': unicode(instance.is_manager),
+                    'is_cla_superuser': unicode(instance.is_cla_superuser)
+                },
+            )
+    except:
+        pass

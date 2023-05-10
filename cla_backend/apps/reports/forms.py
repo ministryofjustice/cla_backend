@@ -596,9 +596,17 @@ class MIExtractComplaintViewAuditLog(SQLFileDateRangeReport):
 
 
 class ReasonsForContactingReport(DateRangeReportForm):
+    # initialise the dataset here and pass in the referrer...
+    top_referrer = None
+
+    def get_data_set(self, referrer=top_referrer):
+        from_date, to_date = self.date_range
+        return ReasonForContacting.get_category_stats(start_date=from_date, end_date=to_date, referrer=referrer)[
+            "categories"
+        ]
+
     def get_rows(self):
-        for reason in ReasonForContacting.get_category_stats()["categories"]:
-            print(reason)
+        for reason in self.get_data_set():
             yield [reason["description"], reason["percentage"]]
 
     def get_headers(self):

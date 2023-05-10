@@ -32,7 +32,7 @@ from .forms import (
 )
 
 from reports.models import Export
-from .tasks import ExportTask, OBIEEExportTask
+from .tasks import ExportTask, OBIEEExportTask, ReasonForContactingExportTask
 from reports.utils import get_s3_connection
 
 
@@ -186,7 +186,13 @@ def all_knowledgebase_articles(request):
 @staff_member_required
 @permission_required("legalaid.run_reports")
 def reasons_for_contacting(request):
-    return report_view(request, ReasonsForContactingReport, "Reasons for Contacting Export")
+    return report_view(
+        request,
+        ReasonsForContactingReport,
+        "Reasons for Contacting Export",
+        file_name="cla_reasonforcontacting.zip",
+        success_task=ReasonForContactingExportTask,
+    )
 
 
 @staff_member_required

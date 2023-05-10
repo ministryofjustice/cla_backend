@@ -125,7 +125,8 @@ jobs:
           DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
       - image: postgres:12.14-bullseye
         environment:
-          POSTGRES_USER: root
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: circle_test
     steps:
       - checkout

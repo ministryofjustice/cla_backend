@@ -17,15 +17,41 @@ class ReasonForContacting(TimeStampedModel):
         verbose_name_plural = "reasons for contacting"
         ordering = ("-created",)
 
+
     @classmethod
-    def get_category_stats(cls):
-        total_count = cls.objects.count()
-        # count categories
-        data = (
-            ReasonForContactingCategory.objects.values_list("category")
-            .annotate(count=models.Count("category"))
-            .order_by()
-        )
+    def get_category_stats(cls, start_date_str=None, end_date_str=None, top_referrer=None):
+        # 18 April 2022 to 18 April 2023
+        from datetime import datetime
+        from django.db import models as dmodels
+        DATE_FORMAT = "%d/%m/%y"
+        filters_count = None
+        filters_data = None
+        if start_date_str and end_date_str:
+            start_date = datetime.strptime(start_date_str, DATE_FORMAT).date()
+            end_date = datetime.strptime(end_date_str, DATE_FORMAT).date()
+            filters_count = dmodels.Q(created__gte=start_date) & dmodels.Q(created__lte=end_date)
+            filters_data = dmodels.Q(reason_for_contacting__created__lte=end_date,
+                                     reason_for_contacting__created__gte=start_date)
+            if top_referrer:
+                filters_count &= dmodels.Q(referrer__endswith=top_referrer)
+                filters_data &= dmodels.Q(reason_for_contacting__referrer__endswith=top_referrer)
+        if filters_count:
+            print(filters_count)
+            total_count = cls.objects.filter(filters_count).count()
+        else:
+            total_count = cls.objects.count()
+
+        if filters_data:
+            # import pdb
+            # pdb.set_trace()
+            data = (
+                ReasonForContactingCategory.objects.filter(filters_data).values_list("category")
+                .annotate(count=models.Count("category")).order_by())
+        else:
+            data = (
+                ReasonForContactingCategory.objects.values_list("category")
+                .annotate(count=models.Count("category")).order_by())
+
         data = dict(data)
         # known categories, preserving order
         categories = [
@@ -43,6 +69,15 @@ class ReasonForContacting(TimeStampedModel):
         return dict(categories=categories, total_count=total_count)
 
     @classmethod
+    def get_category_stats_with_year(cls):
+        return cls.get_category_stats("18/04/22", "18/05/23")
+
+    @classmethod
+    def get_category_stats_by_referrer(cls):
+        referrer = "scope/diagnosis/"
+        return cls.get_category_stats("18/04/22", "18/05/23", referrer)
+
+    @classmethod
     def get_top_referrers(cls, count=8):
         total_count = cls.objects.count()
         percentage_total = 100.0 / total_count if total_count else 0.0
@@ -50,6 +85,16 @@ class ReasonForContacting(TimeStampedModel):
         return [
             {"referrer": item["referrer"], "percentage": item["count"] * percentage_total} for item in data[:count]
         ]
+    #
+    # @classmethod
+    # def get_stats_per_referrers(cls, count=8):
+    #     total_count = cls.objects.count()
+    #     percentage_total = 100.0 / total_count if total_count else 0.0
+    #     data = cls.objects.values("referrer").annotate(count=models.Count("referrer")).order_by("-count", "referrer")
+    #     return [
+    #         {"referrer": item["referrer"], "percentage": item["count"] * percentage_total} for item in data[:count]
+    #     ]
+
 
     @property
     def reason_categories(self):

@@ -3,6 +3,9 @@ import os
 import json
 import shutil
 import time
+import glob
+import pyminizip
+import tempfile
 from contextlib import closing
 from django.contrib.auth.models import User
 import csvkit as csv
@@ -18,7 +21,8 @@ from django.conf import settings
 from .utils import OBIEEExporter, get_s3_connection
 from .models import Export
 from .constants import EXPORT_STATUS
-
+from core.utils import remember_cwd
+from checker.models import ReasonForContacting
 
 logger = logging.getLogger(__name__)
 
@@ -148,3 +152,49 @@ class OBIEEExportTask(ExportTaskBase):
                 raise
             finally:
                 pass
+
+
+class ReasonForContactingExportTask(ExportTaskBase):
+    def run(self, user_id, filename, form_class_name, post_data, *args, **kwargs):
+        """
+        Export csv files for each of the referrers from reason for contacting
+        """
+        self.user = User.objects.get(pk=user_id)
+        self._create_export()
+        self._set_up_form(form_class_name, post_data)
+        # A task is not instantiated for every request. So unless we reset this message it will contain incorrect value
+        # https://docs.celeryproject.org/en/3.0/userguide/tasks.html#instantiation
+        self.message = ""
+        # zip_filepath = self._filepath(filename)
+        # loop through the referrers
+        for referrer in ReasonForContacting.get_top_referrers():
+            #   get the results we want
+            self.export_csv(referrer["referrer"])
+        self.generate_zip()
+        self.send_to_s3()
+
+    def export_csv(self, referrer):
+        try:
+            file_name = ".".join(referrer[6:], "csv")
+            one_file_path = self.full_path(file_name)
+            self.form.top_referrer = referrer
+            csv_data = self.form.get_output()
+            csv_file = open(one_file_path, "w")
+            with csv_writer(csv_file) as writer:
+                map(writer.writerow, csv_data)
+            csv_file.close()
+        except InternalError as error:
+            self.message = error
+
+    def full_path(self, file_name):
+        return os.path.join(settings.TEMP_DIR, file_name)
+
+    def generate_zip(self):
+        tmp_export_path = tempfile.mkdtemp()
+        with remember_cwd():
+            try:
+                os.chdir(tmp_export_path)
+                pyminizip.compress_multiple(glob.glob("*.csv"), [], self.filename, "password", 9)
+                shutil.move("%s/%s" % (tmp_export_path, self.filename), "%s/%s" % (settings.TEMP_DIR, self.filename))
+            finally:
+                shutil.rmtree(tmp_export_path)

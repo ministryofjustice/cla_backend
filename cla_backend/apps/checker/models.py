@@ -18,17 +18,12 @@ class ReasonForContacting(TimeStampedModel):
         ordering = ("-created",)
 
     @classmethod
-    def get_category_stats(cls, start_date_str=None, end_date_str=None, top_referrer=None):
-        # 18 April 2022 to 18 April 2023
-        from datetime import datetime
+    def get_category_stats(cls, start_date=None, end_date=None, top_referrer=None):
         from django.db import models as dmodels
 
-        DATE_FORMAT = "%d/%m/%y"
         filters_count = None
         filters_data = None
-        if start_date_str and end_date_str:
-            start_date = datetime.strptime(start_date_str, DATE_FORMAT).date()
-            end_date = datetime.strptime(end_date_str, DATE_FORMAT).date()
+        if start_date and end_date:
             filters_count = dmodels.Q(created__gte=start_date) & dmodels.Q(created__lte=end_date)
             filters_data = dmodels.Q(
                 reason_for_contacting__created__lte=end_date, reason_for_contacting__created__gte=start_date
@@ -72,15 +67,6 @@ class ReasonForContacting(TimeStampedModel):
         return dict(categories=categories, total_count=total_count)
 
     @classmethod
-    def get_category_stats_with_year(cls):
-        return cls.get_category_stats("18/04/22", "18/05/23")
-
-    @classmethod
-    def get_category_stats_by_referrer(cls):
-        referrer = "scope/diagnosis/"
-        return cls.get_category_stats("18/04/22", "18/05/23", referrer)
-
-    @classmethod
     def get_top_referrers(cls, count=8):
         total_count = cls.objects.count()
         percentage_total = 100.0 / total_count if total_count else 0.0
@@ -88,16 +74,6 @@ class ReasonForContacting(TimeStampedModel):
         return [
             {"referrer": item["referrer"], "percentage": item["count"] * percentage_total} for item in data[:count]
         ]
-
-    #
-    # @classmethod
-    # def get_stats_per_referrers(cls, count=8):
-    #     total_count = cls.objects.count()
-    #     percentage_total = 100.0 / total_count if total_count else 0.0
-    #     data = cls.objects.values("referrer").annotate(count=models.Count("referrer")).order_by("-count", "referrer")
-    #     return [
-    #         {"referrer": item["referrer"], "percentage": item["count"] * percentage_total} for item in data[:count]
-    #     ]
 
     @property
     def reason_categories(self):

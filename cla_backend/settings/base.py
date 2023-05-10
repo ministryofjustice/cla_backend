@@ -50,6 +50,7 @@ MANAGERS = ADMINS
 
 EMAIL_FROM_ADDRESS = "no-reply@civillegaladvice.service.gov.uk"
 DEFAULT_EMAIL_TO = "cla-alerts@digital.justice.gov.uk"
+GOVUK_NOTIFY_API_KEY = os.environ.get("GOVUK_NOTIFY_API_KEY")
 
 
 OPERATOR_USER_ALERT_EMAILS = []

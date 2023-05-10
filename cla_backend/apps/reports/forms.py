@@ -15,6 +15,7 @@ from cla_eventlog import event_registry
 from complaints.constants import SLA_DAYS
 from knowledgebase.models import Article
 from reports.widgets import MonthYearWidget
+from checker.models import ReasonForContacting
 
 from . import sql
 from .utils import get_reports_cursor, set_local_time_for_query
@@ -592,6 +593,16 @@ class MIExtractComplaintViewAuditLog(SQLFileDateRangeReport):
 
     def get_headers(self):
         return ["Case", "Complaint Id", "Action", "Operator", "Organisation", "Date"]
+
+
+class ReasonsForContactingReport(DateRangeReportForm):
+    def get_rows(self):
+        for reason in ReasonForContacting.get_category_stats()["categories"]:
+            print(reason)
+            yield [reason["description"], reason["percentage"]]
+
+    def get_headers(self):
+        return ["Description", "Percentage"]
 
 
 class AllKnowledgeBaseArticles(ReportForm):

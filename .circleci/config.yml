@@ -124,7 +124,7 @@ jobs:
           DB_USER: postgres
           DB_PASSWORD: postgres
           DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
-      - image: postgres:12.14-bullseye
+      - image: postgres:14.7-bullseye
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres

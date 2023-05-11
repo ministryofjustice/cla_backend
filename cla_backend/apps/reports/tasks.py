@@ -3,8 +3,6 @@ import os
 import json
 import shutil
 import time
-import glob
-import pyminizip
 import tempfile
 from contextlib import closing
 from django.contrib.auth.models import User
@@ -166,23 +164,36 @@ class ReasonForContactingExportTask(ExportTaskBase):
         # A task is not instantiated for every request. So unless we reset this message it will contain incorrect value
         # https://docs.celeryproject.org/en/3.0/userguide/tasks.html#instantiation
         self.message = ""
-        # zip_filepath = self._filepath(filename)
-        # pone file that does everything
-        # ----------
-        # loop through the referrers
-        for referrer in ReasonForContacting.get_top_referrers():
-            #   get the results we want
-            self.export_csv(referrer["referrer"])
-        self.generate_zip()
-        self.send_to_s3()
-
-    def export_csv(self, referrer_url):
+        self.filepath = self._filepath(filename)
         try:
+            # one file that does everything
+            self.export_rfc_csv()
+            # loop through the referrers
+            for referrer in ReasonForContacting.get_top_referrers():
+                #   get the results we want
+                self.export_rfc_csv(referrer["referrer"])
+            self.generate_rfc_zip()
+            if settings.AWS_REPORTS_STORAGE_BUCKET_NAME:
+                self.send_to_s3()
+        except Exception as e:
+            message = getattr(e, "message", "") or getattr(e, "strerror", "")
+            message = text_type(message).strip()
+            self.message = u"An error occurred creating the zip file: {message}".format(message=message)
+            raise
+        finally:
+            pass
+
+    def export_rfc_csv(self, referrer_url=None):
+        if referrer_url is not None:
             self.form.top_referrer = urlparse(referrer_url)[2]
             url_relative_path = urlparse(referrer_url)[2].replace("/", "_").strip("_")
             file_name = ".".join(["".join(["rfc_", url_relative_path]), "csv"])
+            file_path = self.full_path(file_name)
+        else:
+            file_path = ".".join([self._filepath("rfc_all_referrers"), "csv"])
+        try:
             csv_data = self.form.get_output()
-            csv_file = open(self.full_path(file_name), "w")
+            csv_file = open(file_path, "w")
             with csv_writer(csv_file) as writer:
                 map(writer.writerow, csv_data)
             csv_file.close()
@@ -193,12 +204,18 @@ class ReasonForContactingExportTask(ExportTaskBase):
     def full_path(self, file_name):
         return os.path.join(settings.TEMP_DIR, file_name)
 
-    def generate_zip(self):
+    def generate_rfc_zip(self):
+        filename = "cla_rfc"
         tmp_export_path = tempfile.mkdtemp()
+        # import pdb
+        # pdb.set_trace()
+        print(settings.TEMP_DIR)
         with remember_cwd():
             try:
                 os.chdir(tmp_export_path)
-                pyminizip.compress_multiple(glob.glob("*.csv"), [], self.filename, "password", 9)
-                shutil.move("%s/%s" % (tmp_export_path, self.filename), "%s/%s" % (settings.TEMP_DIR, self.filename))
+                zip_filepath = os.path.join(tmp_export_path, filename)
+                zip_created = shutil.make_archive(base_name=zip_filepath, format="zip", root_dir=settings.TEMP_DIR)
+                print(zip_created)
+                shutil.move("%s/%s" % (tmp_export_path, zip_filepath), "%s/%s" % (settings.TEMP_DIR, filename))
             finally:
                 shutil.rmtree(tmp_export_path)

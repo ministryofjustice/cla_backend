@@ -23,6 +23,7 @@ from .models import Export
 from .constants import EXPORT_STATUS
 from core.utils import remember_cwd
 from checker.models import ReasonForContacting
+from urlparse import urlparse
 
 logger = logging.getLogger(__name__)
 
@@ -166,6 +167,8 @@ class ReasonForContactingExportTask(ExportTaskBase):
         # https://docs.celeryproject.org/en/3.0/userguide/tasks.html#instantiation
         self.message = ""
         # zip_filepath = self._filepath(filename)
+        # pone file that does everything
+        # ----------
         # loop through the referrers
         for referrer in ReasonForContacting.get_top_referrers():
             #   get the results we want
@@ -173,18 +176,19 @@ class ReasonForContactingExportTask(ExportTaskBase):
         self.generate_zip()
         self.send_to_s3()
 
-    def export_csv(self, referrer):
+    def export_csv(self, referrer_url):
         try:
-            file_name = ".".join(referrer[6:], "csv")
-            one_file_path = self.full_path(file_name)
-            self.form.top_referrer = referrer
+            self.form.top_referrer = urlparse(referrer_url)[2]
+            url_relative_path = urlparse(referrer_url)[2].replace("/", "_").strip("_")
+            file_name = ".".join(["".join(["rfc_", url_relative_path]), "csv"])
             csv_data = self.form.get_output()
-            csv_file = open(one_file_path, "w")
+            csv_file = open(self.full_path(file_name), "w")
             with csv_writer(csv_file) as writer:
                 map(writer.writerow, csv_data)
             csv_file.close()
         except InternalError as error:
             self.message = error
+            raise
 
     def full_path(self, file_name):
         return os.path.join(settings.TEMP_DIR, file_name)

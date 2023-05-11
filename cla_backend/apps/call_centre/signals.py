@@ -10,27 +10,7 @@ logger = logging.getLogger(__name__)
 
 def log_operator_created(sender, instance, created, **kwargs):
     if created:
-        logger.info(
-            "Operator user created",
-            extra={
-                "USERNAME": instance.user.username,
-                "IS_MANAGER": unicode(instance.is_manager),
-                "IS_CLA_SUPERUSER": unicode(instance.is_cla_superuser),
-            },
-        )
-        email = GovUkNotify()
-        for address in settings.OPERATOR_USER_ALERT_EMAILS:
-            email.send_email(
-                email_address=address,
-                template_id="48ce3539-48f3-4b2d-9931-2a57f89a521f",
-                personalisation={
-                    "added_or_modified": "added",
-                    "datetime": date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
-                    "username": instance.user.username,
-                    "is_manager": unicode(instance.is_manager),
-                    "is_cla_superuser": unicode(instance.is_cla_superuser),
-                },
-            )
+        log_operator_action("added", instance)
 
 
 def log_operator_modified(sender, instance, **kwargs):
@@ -38,9 +18,12 @@ def log_operator_modified(sender, instance, **kwargs):
         sender.objects.get(pk=instance.pk)
     except sender.DoesNotExist:
         return
+    log_operator_action("modified", instance)
 
+
+def log_operator_action(action, instance):
     logger.info(
-        "Operator user modified",
+        "Operator user {}".format(action),
         extra={
             "USERNAME": instance.user.username,
             "IS_MANAGER": unicode(instance.is_manager),
@@ -54,7 +37,7 @@ def log_operator_modified(sender, instance, **kwargs):
             email_address=address,
             template_id="48ce3539-48f3-4b2d-9931-2a57f89a521f",
             personalisation={
-                "added_or_modified": "modified",
+                "added_or_modified": action,
                 "datetime": date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
                 "username": instance.user.username,
                 "is_manager": unicode(instance.is_manager),

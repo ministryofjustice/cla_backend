@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.db.models import Count
 
+from govuk_notify.api import GovUkNotify
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, ProviderPreAllocation
 from legalaid.models import Case
 
@@ -214,8 +215,22 @@ class ProviderAllocationHelper(object):
 
 
 def notify_case_assigned(provider, case):
-    _notify_case_sent_to_provider(
-        provider, case, subject="CLA Case {ref} has been assigned to {provider}", template_name="assigned"
+    if not provider.email_address:
+        return
+    now = datetime.datetime.now()
+    personalisation = {
+        "reference": case.reference,
+        "provider": provider.name,
+        "eligibility_check_category": case.eligibility_check.category,
+        "is_SPOR": case.outcome_code == 'SPOR',
+        "time": now.strftime("H:i"),
+        "date": now.strftime("D d M Y")
+    }
+    email = GovUkNotify()
+    email.send_email(
+        email_address=provider.email_address,
+        template_id="ea19f5f7-ff65-40a1-9f01-4be5deda1079",
+        personalisation=personalisation
     )
 
 

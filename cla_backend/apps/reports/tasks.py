@@ -211,11 +211,14 @@ class ReasonForContactingExportTask(ExportTaskBase):
         # pdb.set_trace()
         print(settings.TEMP_DIR)
         with remember_cwd():
+            import pdb
+
+            pdb.set_trace()
             try:
                 os.chdir(tmp_export_path)
                 zip_filepath = os.path.join(tmp_export_path, filename)
                 zip_created = shutil.make_archive(base_name=zip_filepath, format="zip", root_dir=settings.TEMP_DIR)
                 print(zip_created)
-                shutil.move("%s/%s" % (tmp_export_path, zip_filepath), "%s/%s" % (settings.TEMP_DIR, filename))
+                shutil.move(zip_filepath, "%s/%s.%s"(settings.TEMP_DIR, filename, "zip"))
             finally:
                 shutil.rmtree(tmp_export_path)

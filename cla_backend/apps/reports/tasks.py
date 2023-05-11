@@ -205,20 +205,12 @@ class ReasonForContactingExportTask(ExportTaskBase):
         return os.path.join(settings.TEMP_DIR, file_name)
 
     def generate_rfc_zip(self):
-        filename = "cla_rfc"
         tmp_export_path = tempfile.mkdtemp()
-        # import pdb
-        # pdb.set_trace()
-        print(settings.TEMP_DIR)
         with remember_cwd():
-            import pdb
-
-            pdb.set_trace()
             try:
                 os.chdir(tmp_export_path)
-                zip_filepath = os.path.join(tmp_export_path, filename)
+                zip_filepath = os.path.join(tmp_export_path, "temp_rfc_zip")
                 zip_created = shutil.make_archive(base_name=zip_filepath, format="zip", root_dir=settings.TEMP_DIR)
-                print(zip_created)
-                shutil.move(zip_filepath, "%s/%s.%s"(settings.TEMP_DIR, filename, "zip"))
+                shutil.move(zip_created, self.filepath)
             finally:
                 shutil.rmtree(tmp_export_path)

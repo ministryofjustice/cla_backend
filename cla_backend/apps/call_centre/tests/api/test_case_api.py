@@ -3,11 +3,11 @@ import datetime
 from dateutil.parser import parse
 from django.core.urlresolvers import reverse
 from django.utils import timezone
-from django.core import mail
 import mock
 from rest_framework.test import APITestCase
 from rest_framework import status
 from cla_provider.helpers import ProviderAllocationHelper
+from cla_provider.tests.test_notify import MockGovNotifyMailBox
 
 from legalaid.models import Case, CaseNotesHistory
 from legalaid.tests.views.mixins.case_api import (
@@ -507,7 +507,7 @@ class DeclineHelpTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         return reverse("call_centre:case-decline-help", args=(), kwargs={"reference": reference})
 
 
-class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
+class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, MockGovNotifyMailBox, BaseCaseTestCase):
     def get_event_code(self):
         form = SuspendCaseForm(case=mock.MagicMock())
         return form.fields["event_code"].choices[0][0]
@@ -532,8 +532,7 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         self.assertEqual(Log.objects.count(), 0)
 
     def test_RDSP_successful(self):
-        mail.outbox = []
-        self.assertEquals(len(mail.outbox), 0)
+        self.assertEquals(len(self.mailbox), 0)
 
         # assign case to provider
         provider = make_recipe("cla_provider.provider", active=True, email_address="example@example.com")
@@ -554,7 +553,7 @@ class SuspendCaseTestCase(ExplicitEventCodeViewTestCaseMixin, BaseCaseTestCase):
         self.assertEqual(log.notes, self.get_expected_notes(data))
         self.assertEqual(log.created_by, self.user)
 
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(len(self.mailbox), 1)
 
     def test_SAME_fails_if_case_hasnt_received_alternative_help(self):
         self.assertEqual(Log.objects.count(), 0)

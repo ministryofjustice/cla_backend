@@ -8,27 +8,32 @@ from govuk_notify.api import GovUkNotify
 from cla_provider.helpers import notify_case_assigned, notify_case_RDSPed
 
 
-class NotifyTestCase(TestCase):
+class MockGovNotifyMailBox(object):
     def setUp(self):
-        self.email = {}
-        self.case = make_recipe("legalaid.case", outcome_code="SPOR")
-        self.provider = make_recipe("cla_provider.provider", email_address="test@digital.justice.gov.uk", active=True)
+        super(MockGovNotifyMailBox, self).setUp()
+        self.mailbox = []
         self.mock_send_email = mock.patch.object(GovUkNotify, "send_email", self.send_email)
         self.mock_send_email.start()
 
     def tearDown(self):
-        super(NotifyTestCase, self).tearDown()
+        super(MockGovNotifyMailBox, self).tearDown()
         self.mock_send_email.stop()
 
     def send_email(self, email_address, template_id, personalisation):
-        self.email["to"] = email_address
-        self.email["template_id"] = template_id
-        self.email["personalisation"] = personalisation
+        self.mailbox.append({"to": email_address, "template_id": template_id, "personalisation": personalisation})
 
-    def assert_email(self, expected_email_address, expected_template_id, expected_personalisation):
-        self.assertEqual(self.email["to"], expected_email_address)
-        self.assertEqual(self.email["template_id"], expected_template_id)
-        self.assertDictEqual(self.email["personalisation"], expected_personalisation)
+    def assert_last_email(self, expected_email_address, expected_template_id, expected_personalisation):
+        email = self.mailbox[-1]
+        self.assertEqual(email["to"], expected_email_address)
+        self.assertEqual(email["template_id"], expected_template_id)
+        self.assertDictEqual(email["personalisation"], expected_personalisation)
+
+
+class NotifyTestCase(MockGovNotifyMailBox, TestCase):
+    def setUp(self):
+        super(NotifyTestCase, self).setUp()
+        self.case = make_recipe("legalaid.case", outcome_code="SPOR")
+        self.provider = make_recipe("cla_provider.provider", email_address="test@digital.justice.gov.uk", active=True)
 
     def test_notify_case_assigned_success(self):
         template_id = "ea19f5f7-ff65-40a1-9f01-4be5deda1079"
@@ -44,7 +49,7 @@ class NotifyTestCase(TestCase):
             "case_url": case_url,
         }
         notify_case_assigned(self.provider, self.case)
-        self.assert_email(self.provider.email_address, template_id, personalisation)
+        self.assert_last_email(self.provider.email_address, template_id, personalisation)
 
     def test_notify_case_RDSPed(self):
         template_id = "3f78ce41-020f-47f9-888c-f3fe568fed22"
@@ -57,4 +62,4 @@ class NotifyTestCase(TestCase):
             "case_url": case_url,
         }
         notify_case_RDSPed(self.provider, self.case)
-        self.assert_email(self.provider.email_address, template_id, personalisation)
+        self.assert_last_email(self.provider.email_address, template_id, personalisation)

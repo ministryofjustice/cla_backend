@@ -239,6 +239,10 @@ envVars:
       optional: true
   MIGRATE_OAUTH_DATA:
     value: "True"
+  GOVUK_NOTIFY_API_KEY:
+    secret:
+      name: gov-uk-notify
+      key: secret_api_key
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

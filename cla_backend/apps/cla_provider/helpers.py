@@ -217,14 +217,16 @@ class ProviderAllocationHelper(object):
 def notify_case_assigned(provider, case):
     if not provider.email_address:
         return
+    case_url = "https://{0}/provider/{1}/"
     now = datetime.datetime.now()
     personalisation = {
         "reference": case.reference,
         "provider": provider.name,
-        "eligibility_check_category": case.eligibility_check.category,
+        "eligibility_check_category": case.eligibility_check.category.name,
         "is_SPOR": case.outcome_code == 'SPOR',
-        "time": now.strftime("H:i"),
-        "date": now.strftime("D d M Y")
+        "time": now.strftime("%H:%M"),
+        "date": now.strftime("%D"),
+        "case_url": case_url.format(settings.SITE_HOSTNAME, case.reference),
     }
     email = GovUkNotify()
     email.send_email(

@@ -5,10 +5,9 @@ import random
 from itertools import groupby
 from operator import itemgetter
 
-from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
 from django.template import Context
-from django.template.loader import render_to_string, get_template
+from django.template.loader import get_template
 from django.utils import timezone
 from django.conf import settings
 from django.db.models import Count
@@ -223,7 +222,7 @@ def notify_case_assigned(provider, case):
         "reference": case.reference,
         "provider": provider.name,
         "eligibility_check_category": case.eligibility_check.category.name,
-        "is_SPOR": case.outcome_code == 'SPOR',
+        "is_SPOR": case.outcome_code == "SPOR",
         "time": now.strftime("%H:%M"),
         "date": now.strftime("%D"),
         "case_url": case_url.format(settings.SITE_HOSTNAME, case.reference),
@@ -232,34 +231,27 @@ def notify_case_assigned(provider, case):
     email.send_email(
         email_address=provider.email_address,
         template_id="ea19f5f7-ff65-40a1-9f01-4be5deda1079",
-        personalisation=personalisation
+        personalisation=personalisation,
     )
 
 
 def notify_case_RDSPed(provider, case):
-    _notify_case_sent_to_provider(
-        provider, case, subject="CLA Case {ref} needs actioning - RDSP", template_name="RDSPed"
-    )
-
-
-def _notify_case_sent_to_provider(provider, case, subject, template_name):
     if not provider.email_address:
         return
-    from_address = "no-reply@digital.justice.gov.uk"
-    subject = subject.format(**{"ref": case.reference, "provider": provider.name})
     case_url = "https://{0}/provider/{1}/"
-    template_params = {
-        "provider": provider,
-        "now": datetime.datetime.now(),
+    now = datetime.datetime.now()
+    personalisation = {
+        "reference": case.reference,
+        "time": now.strftime("%H:%M"),
+        "date": now.strftime("%D"),
         "case_url": case_url.format(settings.SITE_HOSTNAME, case.reference),
-        "case": case,
     }
-    template = "cla_provider/email/{0}.{1}"
-    text = render_to_string(template.format(template_name, "txt"), template_params)
-    html = render_to_string(template.format(template_name, "html"), template_params)
-    email = EmailMultiAlternatives(subject, text, from_address, [provider.email_address])
-    email.attach_alternative(html, "text/html")
-    email.send()
+    email = GovUkNotify()
+    email.send_email(
+        email_address=provider.email_address,
+        template_id="3f78ce41-020f-47f9-888c-f3fe568fed22",
+        personalisation=personalisation,
+    )
 
 
 class ProviderExtractFormatter(object):

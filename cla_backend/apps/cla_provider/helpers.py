@@ -230,7 +230,7 @@ def notify_case_assigned(provider, case):
     email = GovUkNotify()
     email.send_email(
         email_address=provider.email_address,
-        template_id="ea19f5f7-ff65-40a1-9f01-4be5deda1079",
+        template_id=settings.GOVUK_NOTIFY_TEMPLATES["PROVIDER_CASE_ASSIGNED"],
         personalisation=personalisation,
     )
 
@@ -249,7 +249,7 @@ def notify_case_RDSPed(provider, case):
     email = GovUkNotify()
     email.send_email(
         email_address=provider.email_address,
-        template_id="3f78ce41-020f-47f9-888c-f3fe568fed22",
+        template_id=settings.GOVUK_NOTIFY_TEMPLATES["PROVIDER_CASE_RDSP"],
         personalisation=personalisation,
     )
 

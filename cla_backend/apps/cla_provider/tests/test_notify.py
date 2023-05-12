@@ -36,7 +36,7 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
         self.provider = make_recipe("cla_provider.provider", email_address="test@digital.justice.gov.uk", active=True)
 
     def test_notify_case_assigned_success(self):
-        template_id = "ea19f5f7-ff65-40a1-9f01-4be5deda1079"
+        template_id = settings.GOVUK_NOTIFY_TEMPLATES["PROVIDER_CASE_ASSIGNED"]
         now = datetime.now()
         case_url = "https://{}/provider/{}/".format(settings.SITE_HOSTNAME, self.case.reference)
         personalisation = {
@@ -52,9 +52,9 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
         self.assert_last_email(self.provider.email_address, template_id, personalisation)
 
     def test_notify_case_RDSPed(self):
-        template_id = "3f78ce41-020f-47f9-888c-f3fe568fed22"
         now = datetime.now()
         case_url = "https://{}/provider/{}/".format(settings.SITE_HOSTNAME, self.case.reference)
+        template_id = settings.GOVUK_NOTIFY_TEMPLATES["PROVIDER_CASE_RDSP"]
         personalisation = {
             "reference": self.case.reference,
             "time": now.strftime("%H:%M"),

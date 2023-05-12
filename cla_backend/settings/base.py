@@ -51,6 +51,17 @@ MANAGERS = ADMINS
 EMAIL_FROM_ADDRESS = "no-reply@civillegaladvice.service.gov.uk"
 DEFAULT_EMAIL_TO = "cla-alerts@digital.justice.gov.uk"
 GOVUK_NOTIFY_API_KEY = os.environ.get("GOVUK_NOTIFY_API_KEY")
+GOVUK_NOTIFY_TEMPLATES = {
+    "LOG_OPERATOR_ACTION": os.environ.get(
+        "GOVUK_NOTIFY_TEMPLATE_LOG_OPERATOR_ACTION", "48ce3539-48f3-4b2d-9931-2a57f89a521f"
+    ),
+    "PROVIDER_CASE_ASSIGNED": os.environ.get(
+        "GOVUK_NOTIFY_TEMPLATE_PROVIDER_CASE_ASSIGNED", "ea19f5f7-ff65-40a1-9f01-4be5deda1079"
+    ),
+    "PROVIDER_CASE_RDSP": os.environ.get(
+        "GOVUK_NOTIFY_TEMPLATE_PROVIDER_CASE_RDSP", "3f78ce41-020f-47f9-888c-f3fe568fed22"
+    ),
+}
 
 
 OPERATOR_USER_ALERT_EMAILS = []
@@ -236,7 +247,7 @@ if BACKEND_ENABLED:
 if ADMIN_ENABLED:
     INSTALLED_APPS += ("django.contrib.admin", "pagedown", "reports")
 
-OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
+OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
 
 INSTALLED_APPS += PROJECT_APPS
 
@@ -452,7 +463,7 @@ SESSION_SECURITY_EXPIRE_AFTER = 60 * 30
 PASSIVE_URL_REGEX_LIST = [r"^(?!\/admin\/).*", r"^(\/admin\/).*\/exports/$"]
 
 SESSION_SECURITY_PASSIVE_URLS = []
-TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)
+TEMPLATE_CONTEXT_PROCESSORS += ("django.core.context_processors.request",)
 
 # .local.py overrides all the common settings.
 try:

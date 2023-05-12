@@ -35,7 +35,7 @@ def log_operator_action(action, instance):
     for address in settings.OPERATOR_USER_ALERT_EMAILS:
         email.send_email(
             email_address=address,
-            template_id="48ce3539-48f3-4b2d-9931-2a57f89a521f",
+            template_id=settings.GOVUK_NOTIFY_TEMPLATES["LOG_OPERATOR_ACTION"],
             personalisation={
                 "added_or_modified": action,
                 "datetime": date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),

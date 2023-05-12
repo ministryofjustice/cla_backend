@@ -1,23 +1,35 @@
-import datetime
-
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
 from django.conf import settings
+from govuk_notify.api import GovUkNotify
 
 
 def notify_callback_created(case):
     to = settings.CALL_CENTRE_NOTIFY_EMAIL_ADDRESS
     if not to:
         return
-    from_address = "no-reply@digital.justice.gov.uk"
-    subject = "Callback for CLA Case {ref} has been requested".format(ref=case.reference)
+
     case_url = "https://{0}/call_centre/{1}/"
-    template_params = {
-        "now": datetime.datetime.now(),
+    contact_third_party = bool(case.thirdparty_details and case.thirdparty_details.personal_details)
+    template_id = settings.GOVUK_NOTIFY_TEMPLATES["CALLBACK_CREATED_PERSONAL"]
+    if contact_third_party:
+        template_id = settings.GOVUK_NOTIFY_TEMPLATES["CALLBACK_CREATED_THIRD_PARTY"]
+
+    personalisation = {
+        "reference": case.reference,
+        "contact_third_party": contact_third_party,
+        "contact_personal": not contact_third_party,
+        "personal_full_name": case.personal_details.full_name,
         "case_url": case_url.format(settings.SITE_HOSTNAME, case.reference),
-        "case": case,
+        "callback_time_string": case.callback_time_string,
     }
-    template = "call_centre/email/case_cb1_created.{0}"
-    text = render_to_string(template.format("txt"), template_params)
-    email = EmailMultiAlternatives(subject, text, from_address, [to])
-    email.send()
+    if personalisation["contact_third_party"]:
+        personalisation.update(
+            {
+                "third_party_full_name": case.thirdparty_details.personal_details.full_name,
+                "third_party_phone": case.thirdparty_details.personal_details.mobile_phone,
+            }
+        )
+    else:
+        personalisation.update({"personal_mobile_phone": case.personal_details.mobile_phone})
+
+    email = GovUkNotify()
+    email.send_email(email_address=to, template_id=template_id, personalisation=personalisation)

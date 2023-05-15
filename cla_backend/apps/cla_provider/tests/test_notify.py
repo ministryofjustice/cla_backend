@@ -1,6 +1,8 @@
 import mock
 from datetime import datetime
-from django.test import TestCase
+from django.test import TestCase, override_settings
+from django.utils.timezone import now, localtime
+from django.utils.formats import date_format
 from django.conf import settings
 from core.tests.mommy_utils import make_recipe
 from govuk_notify.api import GovUkNotify
@@ -27,6 +29,9 @@ class MockGovNotifyMailBox(object):
         self.assertEqual(email["to"], expected_email_address)
         self.assertEqual(email["template_id"], expected_template_id)
         self.assertDictEqual(email["personalisation"], expected_personalisation)
+
+    def reset_mailbox(self):
+        self.mailbox = []
 
 
 class NotifyTestCase(MockGovNotifyMailBox, TestCase):
@@ -63,3 +68,41 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
         }
         notify_case_RDSPed(self.provider, self.case)
         self.assert_last_email(self.provider.email_address, template_id, personalisation)
+
+    @override_settings(
+        OPERATOR_USER_ALERT_EMAILS=["test1@digital.justice.gov.uk", "test2@digital.justice.gov.uk"]
+    )
+    def test_notify_log_staff_created(self):
+        staff = make_recipe("cla_provider.staff")
+        template_id = settings.GOVUK_NOTIFY_TEMPLATES["LOG_SPECIALIST_ACTION"]
+        personalisation = {
+            "action": "created",
+            "datetime": date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
+            "username": staff.user.username,
+            "provider": staff.provider.name,
+            "is_manager": unicode(False)
+        }
+        self.assert_last_email(expected_email_address=settings.OPERATOR_USER_ALERT_EMAILS[-1],
+                               expected_template_id=template_id,
+                               expected_personalisation=personalisation)
+        self.assertEqual(len(self.mailbox), 2)
+
+    @override_settings(
+        OPERATOR_USER_ALERT_EMAILS=["test3@digital.justice.gov.uk", "test4@digital.justice.gov.uk"]
+    )
+    def test_notify_log_staff_modified(self):
+        staff = make_recipe("cla_provider.staff")
+        self.reset_mailbox()
+        staff.save()
+        template_id = settings.GOVUK_NOTIFY_TEMPLATES["LOG_SPECIALIST_ACTION"]
+        personalisation = {
+            "action": "modified",
+            "datetime": date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
+            "username": staff.user.username,
+            "provider": staff.provider.name,
+            "is_manager": unicode(False)
+        }
+        self.assert_last_email(expected_email_address=settings.OPERATOR_USER_ALERT_EMAILS[-1],
+                               expected_template_id=template_id,
+                               expected_personalisation=personalisation)
+        self.assertEqual(len(self.mailbox), 2)

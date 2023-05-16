@@ -89,9 +89,9 @@ queueWorkers:
   enabled: true
 
 envVars:
-  SITE_HOSTNAME:
-    value: "cla-frontend-socket-server.laa-cla-frontend-production.svc.cluster.local"
   FRONTEND_HOST_NAME:
+    value: "cases.civillegaladvice.service.gov.uk"
+  EXPRESS_SERVER_HOST:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-production.svc.cluster.local"
   EXPRESS_SERVER_PORT:
     value: "80"

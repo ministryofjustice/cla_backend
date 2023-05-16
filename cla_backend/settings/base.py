@@ -132,8 +132,6 @@ AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STATIC_FILES_STORAGE_BUCKET_NAME")
 
 AWS_DELETED_OBJECTS_BUCKET_NAME = os.environ.get("AWS_DELETED_OBJECTS_BUCKET_NAME")
 
-SITE_HOSTNAME = os.environ.get("SITE_HOSTNAME", "cla.local:8000")
-
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split()
@@ -264,9 +262,10 @@ INSTALLED_APPS += PROJECT_APPS
 DIAGNOSIS_FILE_NAME = "graph.graphml"
 CHECKER_DIAGNOSIS_FILE_NAME = "checker-graph.graphml"
 DIAGNOSES_USE_TEMPLATES = True
-
-# Address of server to send notifications to frontend
+# This is used in places where we want to refer to the front end externally like in emails
 FRONTEND_HOST_NAME = os.environ.get("FRONTEND_HOST_NAME", "http://127.0.0.1")
+# Address of server to send notifications to frontend - used when contacting frontend internally
+EXPRESS_SERVER_HOST = os.environ.get("EXPRESS_SERVER_HOST", "http://127.0.0.1")
 EXPRESS_SERVER_PORT = os.environ.get("EXPRESS_SERVER_PORT", 8005)
 
 # A sample logging configuration. The only tangible logging

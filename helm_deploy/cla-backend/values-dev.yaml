@@ -44,8 +44,6 @@ envVars:
   REPLICA_DB_HOST:
     secret:
       optional: true
-  SITE_HOSTNAME:
-    value: ~
   FRONTEND_HOST_NAME:
     value: ~
   MIGRATE_OAUTH_DATA:

@@ -18,7 +18,7 @@ def notify_callback_created(case):
         "contact_third_party": contact_third_party,
         "contact_personal": not contact_third_party,
         "personal_full_name": case.personal_details.full_name,
-        "case_url": case_url.format(settings.SITE_HOSTNAME, case.reference),
+        "case_url": case_url.format(settings.FRONTEND_HOST_NAME, case.reference),
         "callback_time_string": case.callback_time_string,
     }
     if personalisation["contact_third_party"]:

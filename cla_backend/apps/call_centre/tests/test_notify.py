@@ -27,7 +27,7 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
             "third_party_full_name": self.case_third_party.thirdparty_details.personal_details.full_name,
             "third_party_phone": self.case_third_party.thirdparty_details.personal_details.mobile_phone,
             "personal_full_name": self.case_third_party.personal_details.full_name,
-            "case_url": case_url.format(settings.SITE_HOSTNAME, self.case_third_party.reference),
+            "case_url": case_url.format(settings.FRONTEND_HOST_NAME, self.case_third_party.reference),
             "callback_time_string": self.case_third_party.callback_time_string,
         }
         notify_callback_created(self.case_third_party)
@@ -45,7 +45,7 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
             "contact_personal": True,
             "personal_mobile_phone": self.case_personal.personal_details.mobile_phone,
             "personal_full_name": self.case_personal.personal_details.full_name,
-            "case_url": case_url.format(settings.SITE_HOSTNAME, self.case_personal.reference),
+            "case_url": case_url.format(settings.FRONTEND_HOST_NAME, self.case_personal.reference),
             "callback_time_string": self.case_personal.callback_time_string,
         }
         notify_callback_created(self.case_personal)

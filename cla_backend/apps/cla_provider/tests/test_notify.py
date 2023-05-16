@@ -43,7 +43,7 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
     def test_notify_case_assigned_success(self):
         template_id = settings.GOVUK_NOTIFY_TEMPLATES["PROVIDER_CASE_ASSIGNED"]
         now = datetime.now()
-        case_url = "https://{}/provider/{}/".format(settings.SITE_HOSTNAME, self.case.reference)
+        case_url = "https://{}/provider/{}/".format(settings.FRONTEND_HOST_NAME, self.case.reference)
         personalisation = {
             "reference": self.case.reference,
             "provider": self.provider.name,
@@ -58,7 +58,7 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
 
     def test_notify_case_RDSPed(self):
         now = datetime.now()
-        case_url = "https://{}/provider/{}/".format(settings.SITE_HOSTNAME, self.case.reference)
+        case_url = "https://{}/provider/{}/".format(settings.FRONTEND_HOST_NAME, self.case.reference)
         template_id = settings.GOVUK_NOTIFY_TEMPLATES["PROVIDER_CASE_RDSP"]
         personalisation = {
             "reference": self.case.reference,
@@ -69,9 +69,7 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
         notify_case_RDSPed(self.provider, self.case)
         self.assert_last_email(self.provider.email_address, template_id, personalisation)
 
-    @override_settings(
-        OPERATOR_USER_ALERT_EMAILS=["test1@digital.justice.gov.uk", "test2@digital.justice.gov.uk"]
-    )
+    @override_settings(OPERATOR_USER_ALERT_EMAILS=["test1@digital.justice.gov.uk", "test2@digital.justice.gov.uk"])
     def test_notify_log_staff_created(self):
         staff = make_recipe("cla_provider.staff")
         template_id = settings.GOVUK_NOTIFY_TEMPLATES["LOG_SPECIALIST_ACTION"]
@@ -80,16 +78,16 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
             "datetime": date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
             "username": staff.user.username,
             "provider": staff.provider.name,
-            "is_manager": unicode(False)
+            "is_manager": unicode(False),
         }
-        self.assert_last_email(expected_email_address=settings.OPERATOR_USER_ALERT_EMAILS[-1],
-                               expected_template_id=template_id,
-                               expected_personalisation=personalisation)
+        self.assert_last_email(
+            expected_email_address=settings.OPERATOR_USER_ALERT_EMAILS[-1],
+            expected_template_id=template_id,
+            expected_personalisation=personalisation,
+        )
         self.assertEqual(len(self.mailbox), 2)
 
-    @override_settings(
-        OPERATOR_USER_ALERT_EMAILS=["test3@digital.justice.gov.uk", "test4@digital.justice.gov.uk"]
-    )
+    @override_settings(OPERATOR_USER_ALERT_EMAILS=["test3@digital.justice.gov.uk", "test4@digital.justice.gov.uk"])
     def test_notify_log_staff_modified(self):
         staff = make_recipe("cla_provider.staff")
         self.reset_mailbox()
@@ -100,9 +98,11 @@ class NotifyTestCase(MockGovNotifyMailBox, TestCase):
             "datetime": date_format(localtime(now()), "SHORT_DATETIME_FORMAT"),
             "username": staff.user.username,
             "provider": staff.provider.name,
-            "is_manager": unicode(False)
+            "is_manager": unicode(False),
         }
-        self.assert_last_email(expected_email_address=settings.OPERATOR_USER_ALERT_EMAILS[-1],
-                               expected_template_id=template_id,
-                               expected_personalisation=personalisation)
+        self.assert_last_email(
+            expected_email_address=settings.OPERATOR_USER_ALERT_EMAILS[-1],
+            expected_template_id=template_id,
+            expected_personalisation=personalisation,
+        )
         self.assertEqual(len(self.mailbox), 2)

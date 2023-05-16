@@ -225,7 +225,7 @@ def notify_case_assigned(provider, case):
         "is_SPOR": case.outcome_code == "SPOR",
         "time": now.strftime("%H:%M"),
         "date": now.strftime("%D"),
-        "case_url": case_url.format(settings.SITE_HOSTNAME, case.reference),
+        "case_url": case_url.format(settings.FRONTEND_HOST_NAME, case.reference),
     }
     email = GovUkNotify()
     email.send_email(
@@ -244,7 +244,7 @@ def notify_case_RDSPed(provider, case):
         "reference": case.reference,
         "time": now.strftime("%H:%M"),
         "date": now.strftime("%D"),
-        "case_url": case_url.format(settings.SITE_HOSTNAME, case.reference),
+        "case_url": case_url.format(settings.FRONTEND_HOST_NAME, case.reference),
     }
     email = GovUkNotify()
     email.send_email(

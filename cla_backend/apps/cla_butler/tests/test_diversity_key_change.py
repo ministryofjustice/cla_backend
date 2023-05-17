@@ -1,5 +1,6 @@
 import os
 import mock
+from django.db import transaction
 from django.test import TestCase
 from django.db.utils import InternalError
 from core.tests.mommy_utils import make_recipe
@@ -30,9 +31,13 @@ class DiversityReencryptTestCase(TestCase):
 
         # decrypt using old key and re-encrypt using the new key BUT with WRONG passphrase for previous key
         with self.assertRaises(InternalError):
-            diversity.reencrypt(
-                case.personal_details.pk, self.get__key("diversity_dev_private.key"), "wrong passphrase"
-            )
+            # The expected error would cause the current transaction to be aborted and further sql commands tp be
+            # ignored, the actual error if this not wrapped transaction.atomic() is:
+            # InternalError: current transaction is aborted, commands ignored until end of transaction block
+            with transaction.atomic():
+                diversity.reencrypt(
+                    case.personal_details.pk, self.get__key("diversity_dev_private.key"), "wrong passphrase"
+                )
         mocker.stop()
         # Confirm we can still load our diversity data
         diversity_data = diversity.load_diversity_data(case.personal_details.pk, "cla")

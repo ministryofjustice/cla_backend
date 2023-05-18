@@ -134,18 +134,6 @@ envVars:
     secret:
       name: admin
       key: password
-  SMTP_USER:
-    secret:
-      name: smtp
-      key: user
-  SMTP_PASSWORD:
-    secret:
-      name: smtp
-      key: password
-  SMTP_HOST:
-    secret:
-      name: smtp
-      key: host
   SENTRY_DSN:
     secret:
       name: sentry

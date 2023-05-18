@@ -20,7 +20,7 @@ class GovUkNotify(object):
         if not self.notifications_client:
             return
         try:
-            response = self.notifications_client.send_email_notification(
+            self.notifications_client.send_email_notification(
                 email_address=email_address,  # required string
                 template_id=template_id,  # required UUID string
                 personalisation=personalisation,
@@ -28,4 +28,3 @@ class GovUkNotify(object):
         except HTTPError as error:
             logger.error("GovUkNotify error: {msg}".format(msg=str(error)))
             raise error
-        return response

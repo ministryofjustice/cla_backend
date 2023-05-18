@@ -27,15 +27,6 @@ envVars:
     secret:
       name: database-11
       key: replica_host
-  SMTP_USER:
-    secret:
-      optional: true
-  SMTP_PASSWORD:
-    secret:
-      optional: true
-  SMTP_HOST:
-    secret:
-      optional: true
   FRONTEND_HOST_NAME:
     value: "training.cases.civillegaladvice.service.gov.uk"
   EXPRESS_SERVER_HOST:

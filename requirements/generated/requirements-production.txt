@@ -145,7 +145,7 @@ polib==1.0.6
     # via -r requirements/source/requirements-base.in
 psycopg2==2.7.5
     # via -r requirements/source/requirements-base.in
-pyjwt==1.7.1
+pyjwt==2.4.0
     # via notifications-python-client
 pyminizip==0.2.3
     # via -r requirements/source/requirements-base.in

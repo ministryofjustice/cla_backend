@@ -50,6 +50,27 @@ MANAGERS = ADMINS
 
 EMAIL_FROM_ADDRESS = "no-reply@civillegaladvice.service.gov.uk"
 DEFAULT_EMAIL_TO = "cla-alerts@digital.justice.gov.uk"
+GOVUK_NOTIFY_API_KEY = os.environ.get("GOVUK_NOTIFY_API_KEY")
+GOVUK_NOTIFY_TEMPLATES = {
+    "LOG_OPERATOR_ACTION": os.environ.get(
+        "GOVUK_NOTIFY_TEMPLATE_LOG_OPERATOR_ACTION", "48ce3539-48f3-4b2d-9931-2a57f89a521f"
+    ),
+    "LOG_SPECIALIST_ACTION": os.environ.get(
+        "GOVUK_NOTIFY_TEMPLATE_LOG_SPECIALIST_ACTION", "53c79e67-b2ae-4412-9f6f-4d2423fe96e6"
+    ),
+    "PROVIDER_CASE_ASSIGNED": os.environ.get(
+        "GOVUK_NOTIFY_TEMPLATE_PROVIDER_CASE_ASSIGNED", "ea19f5f7-ff65-40a1-9f01-4be5deda1079"
+    ),
+    "PROVIDER_CASE_RDSP": os.environ.get(
+        "GOVUK_NOTIFY_TEMPLATE_PROVIDER_CASE_RDSP", "3f78ce41-020f-47f9-888c-f3fe568fed22"
+    ),
+    "CALLBACK_CREATED_THIRD_PARTY": os.environ.get(
+        "GOVUK_NOTIFY_TEMPLATE_CALLBACK_CREATED", "d07bb321-bd1d-4fc1-8b23-80eb0f1e59a1"
+    ),
+    "CALLBACK_CREATED_PERSONAL": os.environ.get(
+        "GOVUK_NOTIFY_TEMPLATE_CALLBACK_CREATED", "85bb13ed-2f1f-4a44-b198-e1ad22fcafc6"
+    ),
+}
 
 
 OPERATOR_USER_ALERT_EMAILS = []
@@ -110,8 +131,6 @@ AWS_REPORTS_STORAGE_BUCKET_NAME = os.environ.get("AWS_REPORTS_STORAGE_BUCKET_NAM
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STATIC_FILES_STORAGE_BUCKET_NAME")
 
 AWS_DELETED_OBJECTS_BUCKET_NAME = os.environ.get("AWS_DELETED_OBJECTS_BUCKET_NAME")
-
-SITE_HOSTNAME = os.environ.get("SITE_HOSTNAME", "cla.local:8000")
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -235,7 +254,7 @@ if BACKEND_ENABLED:
 if ADMIN_ENABLED:
     INSTALLED_APPS += ("django.contrib.admin", "pagedown", "reports")
 
-OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
+OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
 
 INSTALLED_APPS += PROJECT_APPS
 
@@ -243,9 +262,10 @@ INSTALLED_APPS += PROJECT_APPS
 DIAGNOSIS_FILE_NAME = "graph.graphml"
 CHECKER_DIAGNOSIS_FILE_NAME = "checker-graph.graphml"
 DIAGNOSES_USE_TEMPLATES = True
-
-# Address of server to send notifications to frontend
+# This is used in places where we want to refer to the front end externally like in emails
 FRONTEND_HOST_NAME = os.environ.get("FRONTEND_HOST_NAME", "http://127.0.0.1")
+# Address of server to send notifications to frontend - used when contacting frontend internally
+EXPRESS_SERVER_HOST = os.environ.get("EXPRESS_SERVER_HOST", "http://127.0.0.1")
 EXPRESS_SERVER_PORT = os.environ.get("EXPRESS_SERVER_PORT", 8005)
 
 # A sample logging configuration. The only tangible logging
@@ -322,15 +342,7 @@ TEST_MODE = False
 
 EMAIL_TIMEOUT = 10
 
-if all([os.environ.get("SMTP_USER"), os.environ.get("SMTP_PASSWORD"), os.environ.get("SMTP_HOST")]):
-    EMAIL_BACKEND = "cla_backend.apps.core.mail.backends.TimeoutEmailBackend"
-    EMAIL_HOST = os.environ.get("SMTP_HOST")
-    EMAIL_HOST_USER = os.environ.get("SMTP_USER")
-    EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASSWORD")
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-else:
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get("CALL_CENTRE_NOTIFY_EMAIL_ADDRESS", DEFAULT_EMAIL_TO)
 
@@ -451,7 +463,7 @@ SESSION_SECURITY_EXPIRE_AFTER = 60 * 30
 PASSIVE_URL_REGEX_LIST = [r"^(?!\/admin\/).*", r"^(\/admin\/).*\/exports/$"]
 
 SESSION_SECURITY_PASSIVE_URLS = []
-TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)
+TEMPLATE_CONTEXT_PROCESSORS += ("django.core.context_processors.request",)
 
 # .local.py overrides all the common settings.
 try:

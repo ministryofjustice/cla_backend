@@ -89,9 +89,9 @@ queueWorkers:
   enabled: true
 
 envVars:
-  SITE_HOSTNAME:
-    value: "cla-frontend-socket-server.laa-cla-frontend-production.svc.cluster.local"
   FRONTEND_HOST_NAME:
+    value: "cases.civillegaladvice.service.gov.uk"
+  EXPRESS_SERVER_HOST:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-production.svc.cluster.local"
   EXPRESS_SERVER_PORT:
     value: "80"
@@ -134,18 +134,6 @@ envVars:
     secret:
       name: admin
       key: password
-  SMTP_USER:
-    secret:
-      name: smtp
-      key: user
-  SMTP_PASSWORD:
-    secret:
-      name: smtp
-      key: password
-  SMTP_HOST:
-    secret:
-      name: smtp
-      key: host
   SENTRY_DSN:
     secret:
       name: sentry
@@ -239,6 +227,10 @@ envVars:
       optional: true
   MIGRATE_OAUTH_DATA:
     value: "True"
+  GOVUK_NOTIFY_API_KEY:
+    secret:
+      name: gov-uk-notify
+      key: secret_api_key
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

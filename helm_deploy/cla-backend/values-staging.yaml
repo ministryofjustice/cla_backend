@@ -25,9 +25,9 @@ envVars:
     value: "True"
   LOAD_END_TO_END_FIXTURES:
     value: "False"
-  SITE_HOSTNAME:
-    value: "cla-frontend-socket-server.laa-cla-frontend-staging.svc.cluster.local"
   FRONTEND_HOST_NAME:
+    value: "staging.cases.civillegaladvice.service.gov.uk"
+  EXPRESS_SERVER_HOST:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-staging.svc.cluster.local"
   EXPRESS_SERVER_PORT:
     value: "80"

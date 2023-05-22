@@ -64,6 +64,7 @@ services:
       ALLOWED_HOSTS: "*"
       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS:-cla_backend.settings.base}
       CELERY_BROKER_URL: "amqp://rabbitmq"
+      GOVUK_NOTIFY_API_KEY: ${GOVUK_NOTIFY_API_KEY:-}
 
   cla_backend_worker:
     <<: *cla_backend

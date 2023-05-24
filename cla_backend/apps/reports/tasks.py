@@ -2,6 +2,8 @@ import contextlib
 import os
 import json
 import shutil
+from zipfile import ZipFile
+import glob
 import time
 import tempfile
 from contextlib import closing
@@ -189,18 +191,14 @@ class ReasonForContactingExportTask(ExportTaskBase):
             self.message = u"An error occurred creating the zip file: {message}".format(message=message)
             raise
         finally:
-            pass
+            shutil.rmtree(self.tmp_export_path)
 
     def export_rfc_csv(self, referrer_url=None):
-        try:
-            csv_data = self.form.get_output()
-            csv_file = open(self.full_csv_filepath(referrer_url), "w")
-            with csv_writer(csv_file) as writer:
-                map(writer.writerow, csv_data)
-            csv_file.close()
-        except InternalError as error:
-            self.message = error
-            raise
+        csv_data = self.form.get_output()
+        csv_file = open(self.full_csv_filepath(referrer_url), "w")
+        with csv_writer(csv_file) as writer:
+            map(writer.writerow, csv_data)
+        csv_file.close()
 
     def full_csv_filepath(self, referrer_url=None):
         # create a unique filepath for csv
@@ -217,13 +215,8 @@ class ReasonForContactingExportTask(ExportTaskBase):
         return os.path.join(self.tmp_export_path, file_name)
 
     def generate_rfc_zip(self):
-        tmp_export_path = tempfile.mkdtemp()
         with remember_cwd():
-            try:
-                os.chdir(self.tmp_export_path)
-                zip_filepath = os.path.join(tmp_export_path, "temp_rfc_zip")
-                zip_created = shutil.make_archive(base_name=zip_filepath, format="zip", root_dir=self.tmp_export_path)
-                shutil.move(zip_created, self.filepath)
-            finally:
-                shutil.rmtree(tmp_export_path)
-                shutil.rmtree(self.tmp_export_path)
+            os.chdir(self.tmp_export_path)
+            with ZipFile(self.filepath, "w") as refer_zip:
+                for csv_file in glob.glob("*.csv"):
+                    refer_zip.write(csv_file)

@@ -57,6 +57,9 @@ class ExportTaskBase(Task):
             raise Exception(self.message)
 
     def _filepath(self, filename):
+        # this creates a unique filepath for each report
+        # uniqueness is from user pk and datetime
+        # file will be in settings.TEMP_DIR
         file_name, file_ext = os.path.splitext(filename)
         user_datetime = "%s-%s" % (self.user.pk, time.strftime("%Y-%m-%d-%H%M%S"))
         filename = "%s-%s%s" % (file_name, user_datetime, file_ext)
@@ -158,20 +161,25 @@ class ReasonForContactingExportTask(ExportTaskBase):
         """
         Export csv files for each of the referrers from reason for contacting
         """
+        self.tmp_export_path = tempfile.mkdtemp()
         self.user = User.objects.get(pk=user_id)
         self._create_export()
         self._set_up_form(form_class_name, post_data)
         # A task is not instantiated for every request. So unless we reset this message it will contain incorrect value
         # https://docs.celeryproject.org/en/3.0/userguide/tasks.html#instantiation
         self.message = ""
+        # this is the filepath that will be used to send to aws bucket/displayed on report page
         self.filepath = self._filepath(filename)
+        # make the files and then put them in zip and delete temp folder
         try:
-            # one file that does everything
+            # first file that contains all reasons for contacting
             self.export_rfc_csv()
-            # loop through the referrers
+            # loop through each individual referrer file
             for referrer in ReasonForContacting.get_top_referrers():
-                #   get the results we want
-                self.export_rfc_csv(referrer["referrer"])
+                #   get the results for that individual stage in the journey
+                referrer_url = referrer["referrer"]
+                self.form.referrer = urlparse(referrer_url)[2]
+                self.export_rfc_csv(referrer_url)
             self.generate_rfc_zip()
             if settings.AWS_REPORTS_STORAGE_BUCKET_NAME:
                 self.send_to_s3()
@@ -184,16 +192,9 @@ class ReasonForContactingExportTask(ExportTaskBase):
             pass
 
     def export_rfc_csv(self, referrer_url=None):
-        if referrer_url is not None:
-            self.form.top_referrer = urlparse(referrer_url)[2]
-            url_relative_path = urlparse(referrer_url)[2].replace("/", "_").strip("_")
-            file_name = ".".join(["".join(["rfc_", url_relative_path]), "csv"])
-            file_path = self.full_path(file_name)
-        else:
-            file_path = ".".join([self._filepath("rfc_all_referrers"), "csv"])
         try:
             csv_data = self.form.get_output()
-            csv_file = open(file_path, "w")
+            csv_file = open(self.full_csv_filepath(referrer_url), "w")
             with csv_writer(csv_file) as writer:
                 map(writer.writerow, csv_data)
             csv_file.close()
@@ -201,16 +202,28 @@ class ReasonForContactingExportTask(ExportTaskBase):
             self.message = error
             raise
 
-    def full_path(self, file_name):
-        return os.path.join(settings.TEMP_DIR, file_name)
+    def full_csv_filepath(self, referrer_url=None):
+        # create a unique filepath for csv
+        user_datetime = "%s-%s" % (self.user.pk, time.strftime("%Y-%m-%d-%H%M%S"))
+        file_ext = ".csv"
+        if referrer_url is not None:
+            # this is the csv for one referrer
+            self.form.top_referrer = urlparse(referrer_url)[2]
+            url_relative_path = urlparse(referrer_url)[2].replace("/", "_").strip("_")
+            file_name = "%s-%s%s" % ("".join(["rfc_", url_relative_path]), user_datetime, file_ext)
+        else:
+            # this is the csv with all the results
+            file_name = "%s-%s%s" % ("rfc_all_referrers", user_datetime, file_ext)
+        return os.path.join(self.tmp_export_path, file_name)
 
     def generate_rfc_zip(self):
         tmp_export_path = tempfile.mkdtemp()
         with remember_cwd():
             try:
-                os.chdir(tmp_export_path)
+                os.chdir(self.tmp_export_path)
                 zip_filepath = os.path.join(tmp_export_path, "temp_rfc_zip")
-                zip_created = shutil.make_archive(base_name=zip_filepath, format="zip", root_dir=settings.TEMP_DIR)
+                zip_created = shutil.make_archive(base_name=zip_filepath, format="zip", root_dir=self.tmp_export_path)
                 shutil.move(zip_created, self.filepath)
             finally:
                 shutil.rmtree(tmp_export_path)
+                shutil.rmtree(self.tmp_export_path)

@@ -44,18 +44,16 @@ class ReasonForContacting(TimeStampedModel):
 
     @classmethod
     def get_report_category_stats(cls, start_date=None, end_date=None, referrer=None):
-        from django.db import models as dmodels
-
         filters_count = None
         filters_data = None
         if start_date and end_date:
-            filters_count = dmodels.Q(created__gte=start_date) & dmodels.Q(created__lte=end_date)
-            filters_data = dmodels.Q(
+            filters_count = models.Q(created__gte=start_date) & models.Q(created__lte=end_date)
+            filters_data = models.Q(
                 reason_for_contacting__created__lte=end_date, reason_for_contacting__created__gte=start_date
             )
             if referrer:
-                filters_count &= dmodels.Q(referrer__endswith=referrer)
-                filters_data &= dmodels.Q(reason_for_contacting__referrer__endswith=referrer)
+                filters_count &= models.Q(referrer__endswith=referrer)
+                filters_data &= models.Q(reason_for_contacting__referrer__endswith=referrer)
         if filters_count:
             total_count = cls.objects.filter(filters_count).count()
         else:

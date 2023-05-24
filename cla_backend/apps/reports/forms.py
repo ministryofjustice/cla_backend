@@ -604,9 +604,9 @@ class ReasonsForContactingReport(DateRangeReportForm):
 
     def get_data_set(self):
         from_date, to_date = self.date_range
-        return ReasonForContacting.get_report_category_stats(
-            start_date=from_date, end_date=to_date, referrer=self.referrer
-        )["categories"]
+        return ReasonForContacting.get_category_stats(start_date=from_date, end_date=to_date, referrer=self.referrer)[
+            "categories"
+        ]
 
     def get_rows(self):
         for reason in self.get_data_set():

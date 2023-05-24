@@ -18,32 +18,7 @@ class ReasonForContacting(TimeStampedModel):
         ordering = ("-created",)
 
     @classmethod
-    def get_category_stats(cls):
-        total_count = cls.objects.count()
-        # count categories
-        data = (
-            ReasonForContactingCategory.objects.values_list("category")
-            .annotate(count=models.Count("category"))
-            .order_by()
-        )
-        data = dict(data)
-        # known categories, preserving order
-        categories = [
-            {"key": choice[0], "description": choice[1], "percentage": data[choice[0]] if choice[0] in data else 0}
-            for choice in REASONS_FOR_CONTACTING.CHOICES
-        ]
-        # unknown categories (perhaps have been removed)
-        for category, count in data.iteritems():
-            if category not in REASONS_FOR_CONTACTING.CHOICES_DICT:
-                categories.append({"key": category, "description": category, "percentage": count})
-        # calculate percentage of all responses that chose each option
-        percentage_total = 100.0 / total_count if total_count else 0.0
-        for category in categories:
-            category["percentage"] *= percentage_total
-        return dict(categories=categories, total_count=total_count)
-
-    @classmethod
-    def get_report_category_stats(cls, start_date=None, end_date=None, referrer=None):
+    def get_category_stats(cls, start_date=None, end_date=None, referrer=None):
         filters_count = None
         filters_data = None
         if start_date and end_date:

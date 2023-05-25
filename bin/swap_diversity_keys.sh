@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+# This script does the following:
+#   - Copies the current secret in diversity-keys to a previous-diversity-keys secret
+#   - Puts the site into maintenance mode
+#   - Removes the diversity-keys secret
+#   - Re-creates the diversity-keys secret from the contents of the private and public key passed to it as arguments
+
+# usage: <environment(uat,staging,training,production)> <path to private key file> <path to public key file>
+
 set -e
 echoerr() { echo "$@" 1>&2;exit; }
 
@@ -7,6 +15,20 @@ PRIVATE_KEY_FILE=${2?param missing - private key file}
 PUBLIC_KEY_FILE=${3?param missing public key file}
 SECRET_NAME="diversity-keys"
 BACKUP_SECRET_NAME="previous-diversity-keys"
+
+if [ "$ENVIRONMENT" == "uat" ]; then
+  NAMESPACE="laa-cla-backend-uat"
+elif [ "$ENVIRONMENT" == "staging" ]; then
+  NAMESPACE="laa-cla-backend-staging"
+elif [ "$ENVIRONMENT" == "training" ]; then
+  NAMESPACE="laa-cla-backend-training"
+elif [ "$ENVIRONMENT" == "production" ]; then
+  NAMESPACE="laa-cla-backend-production"
+else
+  echoerr "Invalid environment provided: $ENVIRONMENT"
+  exit
+fi
+
 if [ "$ENVIRONMENT" == "production" ]; then
     echo "WARNING: YOU HAVE SELECTED A PRODUCTION NAMESPACE"
     read -p "ARE YOU SURE YOU WANT TO CONTINUE(YES/NO)" CONFIRM
@@ -20,14 +42,6 @@ if [ "$ENVIRONMENT" == "production" ]; then
             exit
         fi
     fi
-fi
-
-if [ "$ENVIRONMENT" == "uat" ]; then
-  NAMESPACE="laa-cla-backend-uat"
-elif [ "$ENVIRONMENT" == "staging" ]; then
-  NAMESPACE="laa-cla-backend-staging"
-elif [ "$ENVIRONMENT" == "training" ]; then
-  NAMESPACE="laa-cla-backend-training"
 fi
 
 if [ ! -f "$PRIVATE_KEY_FILE" ]; then

@@ -68,7 +68,7 @@ dbf==0.94.003
     # via csvkit
 decorator==4.4.2
     # via networkx
-distlib==0.3.5
+distlib==0.3.6
     # via virtualenv
 dj-database-url==0.3.0
     # via -r requirements/source/requirements-base.in
@@ -129,6 +129,7 @@ docopt==0.6.2
     # via
     #   coveralls
     #   django-docopt-command
+    #   notifications-python-client
 drf-extensions==0.2.5
     # via -r requirements/source/requirements-base.in
 drf-nested-routers==0.9.0
@@ -141,7 +142,9 @@ filelock==3.2.1
     # via virtualenv
 freezegun==0.3.14
     # via -r requirements/source/requirements-testing.in
-futures==3.3.0
+future==0.18.3
+    # via notifications-python-client
+futures==3.4.0
     # via
     #   pre-commit
     #   s3transfer
@@ -188,10 +191,14 @@ mock==1.0.1
     # via -r requirements/source/requirements-testing.in
 model-mommy==1.2.3
     # via -r requirements/source/requirements-testing.in
+monotonic==1.6
+    # via notifications-python-client
 networkx==1.9.1
     # via -r requirements/source/requirements-base.in
 nodeenv==1.7.0
     # via pre-commit
+notifications-python-client==6.0.0
+    # via -r requirements/source/requirements-base.in
 oauthlib==1.1.2
     # via django-oauth-toolkit
 openpyxl==2.6.4
@@ -215,6 +222,8 @@ psycopg2==2.7.5
     # via -r requirements/source/requirements-base.in
 pycparser==2.21
     # via cffi
+pyjwt==1.7.1
+    # via notifications-python-client
 pyminizip==0.2.3
     # via -r requirements/source/requirements-base.in
 pyopenssl==21.0.0
@@ -244,6 +253,7 @@ requests==2.27.1
     #   cla-common
     #   coveralls
     #   django-moj-irat
+    #   notifications-python-client
     #   webdriver-manager
 s3transfer==0.4.2
     # via boto3
@@ -275,7 +285,7 @@ six==1.16.0
     #   virtualenv
 speaklater==1.3
     # via cla-common
-sqlalchemy==1.4.40
+sqlalchemy==1.4.48
     # via csvkit
 sqlparse==0.3.1
     # via django-debug-toolbar
@@ -289,7 +299,9 @@ typing==3.10.0.0
     #   pathlib2
 unittest-xml-reporting==2.5.1
     # via -r requirements/source/requirements-testing.in
-urllib3[secure]==1.26.11
+urllib3-secure-extra==0.1.0
+    # via urllib3
+urllib3[secure]==1.26.15
     # via
     #   botocore
     #   coveralls

@@ -3,7 +3,6 @@ import uuid
 
 import mock
 from django.utils import timezone
-from django.core import mail
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -15,10 +14,15 @@ from core.tests.test_base import SimpleResourceAPIMixin
 from legalaid.models import Case, PersonalDetails
 from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
 from call_centre.tests.test_utils import CallCentreFixedOperatingHours
+from cla_provider.tests.test_notify import MockGovNotifyMailBox
 
 
 class BaseCaseTestCase(
-    CLACheckerAuthBaseApiTestMixin, CallCentreFixedOperatingHours, SimpleResourceAPIMixin, APITestCase
+    MockGovNotifyMailBox,
+    CLACheckerAuthBaseApiTestMixin,
+    CallCentreFixedOperatingHours,
+    SimpleResourceAPIMixin,
+    APITestCase,
 ):
     LOOKUP_KEY = "reference"
     API_URL_BASE_NAME = "case"
@@ -120,7 +124,7 @@ class CaseTestCase(BaseCaseTestCase):
         self.assertEqual(log.created_by.username, "web")
 
         # no email sent
-        self.assertEquals(len(mail.outbox), 0)
+        self.assertEquals(len(self.mailbox), 0)
 
     def _test_method_in_error(self, method, url):
         """
@@ -203,7 +207,7 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
         return self.__default_dt
 
     def test_create_with_callmeback(self):
-        self.assertEquals(len(mail.outbox), 0)
+        self.assertEquals(len(self.mailbox), 0)
 
         check = make_recipe("legalaid.eligibility_check")
 
@@ -254,7 +258,7 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
         )
 
         # checking email
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(len(self.mailbox), 1)
 
     def test_create_should_ignore_outcome_code(self):
         """

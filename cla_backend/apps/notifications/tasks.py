@@ -14,7 +14,7 @@ def send_notifications():
     data = {"notifications": NotificationSerializer(Notification.objects.live(), many=True).data}
 
     response = requests.post(
-        "%s:%s/admin/notifications/" % (settings.FRONTEND_HOST_NAME, settings.EXPRESS_SERVER_PORT),
+        "%s:%s/admin/notifications/" % (settings.EXPRESS_SERVER_HOST, settings.EXPRESS_SERVER_PORT),
         data=json.dumps(data, cls=DjangoJSONEncoder),
         headers={"content-type": "application/json"},
     )

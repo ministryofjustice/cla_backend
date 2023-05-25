@@ -5,6 +5,8 @@ import shutil
 from zipfile import ZipFile
 import glob
 import time
+from datetime import time as dtt, datetime
+from django.utils import timezone
 import tempfile
 from contextlib import closing
 from django.contrib.auth.models import User
@@ -129,7 +131,6 @@ class OBIEEExportTask(ExportTaskBase):
         # A task is not instantiated for every request. So unless we reset this message it will contain incorrect value
         # https://docs.celeryproject.org/en/3.0/userguide/tasks.html#instantiation
         self.message = ""
-
         diversity_keyphrase = self.form.cleaned_data["passphrase"]
         start = self.form.month
         end = self.form.month + relativedelta(months=1)
@@ -170,14 +171,18 @@ class ReasonForContactingExportTask(ExportTaskBase):
         # A task is not instantiated for every request. So unless we reset this message it will contain incorrect value
         # https://docs.celeryproject.org/en/3.0/userguide/tasks.html#instantiation
         self.message = ""
-        # this is the filepath that will be used to send to aws bucket/displayed on report page
-        self.filepath = self._filepath(filename)
-        # make the files and then put them in zip and delete temp folder
         try:
+            if not ("date_from" in self.form.cleaned_data and "date_to" in self.form.cleaned_data):
+                raise ValueError("No dates in form")
+            start_date = self._convert_datetime(self.form.cleaned_data["date_from"])
+            end_date = self._convert_datetime(self.form.cleaned_data["date_to"])
+            # this is the filepath that will be used to send to aws bucket/displayed on report page
+            self.filepath = self._filepath(filename)
+            # make the files and then put them in zip and delete temp folder
             # first file that contains all reasons for contacting
             self.export_rfc_csv()
             # loop through each individual referrer file
-            for referrer in ReasonForContacting.get_top_referrers():
+            for referrer in ReasonForContacting.get_top_report_referrers(start_date, end_date):
                 #   get the results for that individual stage in the journey
                 referrer_url = referrer["referrer"]
                 self.form.referrer = urlparse(referrer_url)[2]
@@ -192,6 +197,9 @@ class ReasonForContactingExportTask(ExportTaskBase):
             raise
         finally:
             shutil.rmtree(self.tmp_export_path)
+
+    def _convert_datetime(self, d):
+        return timezone.make_aware(datetime.combine(d, dtt(hour=0, minute=0)), timezone.get_current_timezone())
 
     def export_rfc_csv(self, referrer_url=None):
         csv_data = self.form.get_output()

@@ -94,6 +94,23 @@ class ReasonForContacting(TimeStampedModel):
             {"referrer": item["referrer"], "percentage": item["count"] * percentage_total} for item in data[:count]
         ]
 
+    @classmethod
+    def get_top_report_referrers(cls, start_date, end_date, count=8):
+        # how many objects in this time range?
+        print("in top referrers")
+        filter_date = models.Q(created__gte=start_date) & models.Q(created__lte=end_date)
+        total_count = cls.objects.filter(filter_date).count()
+        percentage_total = 100.0 / total_count if total_count else 0.0
+        data = (
+            cls.objects.filter(filter_date)
+            .values("referrer")
+            .annotate(count=models.Count("referrer"))
+            .order_by("-count", "referrer")
+        )
+        return [
+            {"referrer": item["referrer"], "percentage": item["count"] * percentage_total} for item in data[:count]
+        ]
+
     @property
     def reason_categories(self):
         if self.reasons.count():

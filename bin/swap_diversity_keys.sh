@@ -77,12 +77,6 @@ if [ "$BACKUP_SECRET_EXISTS" != "" ]; then
      echoerr "There is already a secret with the name $BACKUP_SECRET_NAME"
     exit
 fi
-echo "Backing up current key to file..."
-CURRENT_KEY_FILENAME="diversity-current-key-$(date '+%Y-%m-%dT%H:%M:%S').key"
-if [ -f $CURRENT_KEY_FILENAME ]; then
-    echoerr "backup file already exists $CURRENT_KEY_FILENAME"
-    exit
-fi
 CURRENT_KEY_FILENAME="diversity-current-key-$(date '+%Y-%m-%dT%H:%M:%S').key"
 if [ -f $CURRENT_KEY_FILENAME ]; then
     echoerr "backup file already exists $CURRENT_KEY_FILENAME"

@@ -57,14 +57,24 @@ class DateRangeReportForm(ReportForm):
 
     def clean(self):
         cleaned_data = super(DateRangeReportForm, self).clean()
-        if self.max_date_range and "date_from" in self.cleaned_data and "date_to" in self.cleaned_data:
-            from_, to = self.date_range
-            delta = to - from_
-            if delta > timedelta(days=self.max_date_range, hours=12):
+        if "date_from" in self.cleaned_data and "date_to" in self.cleaned_data:
+            # date_range will add an extra day onto to than that which is displayed,
+            # use the values from the user
+            from_input = self._convert_date(self.cleaned_data["date_from"])
+            to_input = self._convert_date(self.cleaned_data["date_to"])
+            if from_input > to_input:
                 raise forms.ValidationError(
-                    "The date range (%s) should span "
-                    "no more than %s working days" % (delta, str(self.max_date_range))
+                    "'Date from' (%s) should be before or equal to 'Date to' (%s)"
+                    % (from_input.strftime("%d/%m/%Y"), to_input.strftime("%d/%m/%Y"))
                 )
+            if self.max_date_range:
+                from_, to = self.date_range
+                delta = to - from_
+                if delta > timedelta(days=self.max_date_range, hours=12):
+                    raise forms.ValidationError(
+                        "The date range (%s) should span "
+                        "no more than %s working days" % (delta, str(self.max_date_range))
+                    )
         return cleaned_data  # can be removed in django 1.7
 
     @property
@@ -604,9 +614,9 @@ class ReasonsForContactingReport(DateRangeReportForm):
 
     def get_data_set(self):
         from_date, to_date = self.date_range
-        return ReasonForContacting.get_category_stats(start_date=from_date, end_date=to_date, referrer=self.referrer)[
-            "categories"
-        ]
+        return ReasonForContacting.get_report_category_stats(
+            start_date=from_date, end_date=to_date, referrer=self.referrer
+        )["categories"]
 
     def get_rows(self):
         for reason in self.get_data_set():

@@ -156,6 +156,22 @@ class ReportsDateRangeValidationWorks(TestCase):
             ],
         )
 
+    def test_end_date_before_start_date(self):
+        class T(reports.forms.DateRangeReportForm):
+            max_date_range = 5
+
+        from_ = datetime.datetime.now()
+        to = from_ - datetime.timedelta(days=3)
+        i = T(data={"date_from": from_, "date_to": to})
+        self.assertFalse(i.is_valid())
+        self.assertEqual(i.errors.keys(), ["__all__"])
+        self.assertEqual(len(i.errors["__all__"]), 1)
+        error_string = "'Date from' (%s) should be before or equal to 'Date to' (%s)" % (
+            from_.strftime("%d/%m/%Y"),
+            to.strftime("%d/%m/%Y"),
+        )
+        self.assertEqual(str(i.errors[u"__all__"][0]), error_string)
+
     def test_valid_date_range_clocks_going_forward(self):
         class T(reports.forms.DateRangeReportForm):
             max_date_range = 5

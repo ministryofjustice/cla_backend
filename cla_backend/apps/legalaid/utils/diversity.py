@@ -44,13 +44,14 @@ def save_diversity_data(personal_details_pk, data):
     cursor.execute(sql, [json_data, get_public_key(), timezone.now(), personal_details_pk])
 
 
-def load_diversity_data(personal_details_pk, passphrase):
+def load_diversity_data(personal_details_pk, passphrase, private_key_override=None):
+    private_key = private_key_override or get_private_key()
     sql = "SELECT pgp_pub_decrypt(diversity, dearmor(%s), %s) FROM {table_name} WHERE id = %s".format(
         table_name=PersonalDetails._meta.db_table
     )
 
     cursor = connection.cursor()
-    cursor.execute(sql, [get_private_key(), passphrase, personal_details_pk])
+    cursor.execute(sql, [private_key, passphrase, personal_details_pk])
     row = cursor.fetchone()[0]
     return json.loads(row)
 

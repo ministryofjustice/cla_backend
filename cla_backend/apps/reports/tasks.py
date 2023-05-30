@@ -182,7 +182,7 @@ class ReasonForContactingExportTask(ExportTaskBase):
             for referrer in ReasonForContacting.get_top_report_referrers(start_date, end_date):
                 #   get the results for that individual stage in the journey
                 referrer_url = referrer["referrer"]
-                self.form.referrer = urlparse(referrer_url)[2]
+                self.form.referrer = referrer_url
                 self.export_rfc_csv(referrer_url)
             self.generate_rfc_zip()
             if settings.AWS_REPORTS_STORAGE_BUCKET_NAME:
@@ -208,8 +208,11 @@ class ReasonForContactingExportTask(ExportTaskBase):
         file_ext = ".csv"
         if referrer_url is not None:
             # this is the csv for one referrer
-            self.form.top_referrer = urlparse(referrer_url)[2]
-            url_relative_path = urlparse(referrer_url)[2].replace("/", "_").strip("_")
+            self.form.top_referrer = referrer_url
+            parse_url = urlparse(referrer_url)
+            url_relative_path = parse_url.path.replace("/", "_").strip("_")
+            if parse_url.query:
+                url_relative_path = "".join([url_relative_path, "_", parse_url.query.replace("=", "_").strip("_")])
             file_name = "%s-%s%s" % ("".join(["rfc_", url_relative_path]), user_datetime, file_ext)
         else:
             # this is the csv with all the results

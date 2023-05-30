@@ -5,8 +5,6 @@ import shutil
 from zipfile import ZipFile
 import glob
 import time
-from datetime import time as dtt, datetime
-from django.utils import timezone
 import tempfile
 from contextlib import closing
 from django.contrib.auth.models import User
@@ -174,8 +172,7 @@ class ReasonForContactingExportTask(ExportTaskBase):
         try:
             if not ("date_from" in self.form.cleaned_data and "date_to" in self.form.cleaned_data):
                 raise ValueError("No dates in form")
-            start_date = self._convert_datetime(self.form.cleaned_data["date_from"])
-            end_date = self._convert_datetime(self.form.cleaned_data["date_to"])
+            start_date, end_date = self.form.date_range
             # this is the filepath that will be used to send to aws bucket/displayed on report page
             self.filepath = self._filepath(filename)
             # make the files and then put them in zip and delete temp folder
@@ -197,9 +194,6 @@ class ReasonForContactingExportTask(ExportTaskBase):
             raise
         finally:
             shutil.rmtree(self.tmp_export_path)
-
-    def _convert_datetime(self, d):
-        return timezone.make_aware(datetime.combine(d, dtt(hour=0, minute=0)), timezone.get_current_timezone())
 
     def export_rfc_csv(self, referrer_url=None):
         csv_data = self.form.get_output()

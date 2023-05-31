@@ -295,10 +295,10 @@ workflows:
           type: approval
           requires:
             - build
-#          filters:
-#            branches:
-#              only:
-#                - master
+          filters:
+            branches:
+              only:
+                - master
 
       - deploy:
           name: staging_deploy_live

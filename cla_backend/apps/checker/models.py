@@ -21,12 +21,11 @@ class ReasonForContacting(TimeStampedModel):
     def get_category_stats(cls):
         # this is the method used by the checker admin page
         # refactored so can be used by the new reports method
-        total_count = cls.objects.count()
-        data = cls.get_all_category_stats()
-        return cls.get_category_split(data, total_count)
+        total_count, data = cls.get_all_categories()
+        return cls.calc_category_stats(data, total_count)
 
     @classmethod
-    def get_category_split(cls, category_data, reasons_for_contacting_count):
+    def calc_category_stats(cls, category_data, reasons_for_contacting_count):
         # known categories, preserving order
         categories = [
             {
@@ -47,18 +46,18 @@ class ReasonForContacting(TimeStampedModel):
         return dict(categories=categories, total_count=reasons_for_contacting_count)
 
     @classmethod
-    def get_all_category_stats(cls):
+    def get_all_categories(cls):
         data = (
             ReasonForContactingCategory.objects.values_list("category")
             .annotate(count=models.Count("category"))
             .order_by()
         )
-
         data = dict(data)
-        return data
+        total_count = cls.objects.count()
+        return total_count, data
 
     @classmethod
-    def get_restricted_category_stats(cls, start_date, end_date, referrer=None):
+    def get_filtered_categories(cls, start_date, end_date, referrer=None):
         # there must be a start date and an end date
         if not start_date and end_date:
             raise ValueError("Must provide a start date and an end date")
@@ -82,8 +81,8 @@ class ReasonForContacting(TimeStampedModel):
     @classmethod
     def get_report_category_stats(cls, start_date=None, end_date=None, referrer=None):
         # this returns limited results that can be downloaded as a report
-        total_count, data = cls.get_restricted_category_stats(start_date, end_date, referrer)
-        return cls.get_category_split(data, total_count)
+        total_count, data = cls.get_filtered_categories(start_date, end_date, referrer)
+        return cls.calc_category_stats(data, total_count)
 
     @classmethod
     def get_top_referrers(cls, count=8):

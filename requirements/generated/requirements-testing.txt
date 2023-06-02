@@ -31,7 +31,7 @@ cffi==1.15.1
     # via cryptography
 chardet==4.0.0
     # via requests
-https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.19.tar.gz
+https://github.com/ministryofjustice/cla_common/archive/refs/heads/feature/LGA-1773-cla-common.zip
     # via -r requirements/source/requirements-base.in
 colorama==0.4.6
     # via crayons
@@ -104,7 +104,7 @@ django==1.7.11
     #   django-uuidfield
     #   jsonfield
     #   model-mommy
-djangorestframework==2.4.8
+djangorestframework==3.3.3
     # via
     #   -r requirements/source/requirements-base.in
     #   drf-extensions
@@ -116,7 +116,7 @@ docopt==0.6.2
     #   coveralls
     #   django-docopt-command
     #   notifications-python-client
-drf-extensions==0.2.5
+drf-extensions==0.2.8
     # via -r requirements/source/requirements-base.in
 drf-nested-routers==0.9.0
     # via -r requirements/source/requirements-base.in

@@ -1,3 +1,5 @@
+import datetime
+from itertools import cycle
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -17,6 +19,15 @@ class ReasonsForContactingTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApi
         super(ReasonsForContactingTestCase, self).setUp()
         # give it a category as it's not auto-generated
         make_recipe("checker.reasonforcontacting_category", reason_for_contacting=self.resource)
+        self.date_from = datetime.datetime.now() - datetime.timedelta(days=1)
+        self.date_to = datetime.datetime.now() + datetime.timedelta(days=1)
+        self.referrers = [
+            "Unknown",
+            "https://localhost/scope/diagnosis",
+            "https://localhost/scope/diagnosis/n131",
+            "https://localhost/scope/diagnosis?category=check",
+            "https://localhost/scope/diagnosis",
+        ]
 
     def test_retrieval_disallowed(self):
         self._test_get_not_allowed(self.list_url)
@@ -57,3 +68,30 @@ class ReasonsForContactingTestCase(SimpleResourceAPIMixin, CLACheckerAuthBaseApi
         categories = dict((stat["key"], stat["percentage"]) for stat in stats["categories"])
 
         self.assertDictEqual(categories, ideal_categories)
+
+    def test_report_stats_referrer(self):
+        resources = make_recipe("checker.reasonforcontacting", referrer=cycle(self.referrers), _quantity=5)
+        # create the associated categories and check number of results returned
+        for resource in resources:
+            make_recipe("checker.reasonforcontacting_category", reason_for_contacting=resource)
+            ref = resource.referrer
+            stats = ReasonForContacting.get_report_category_stats(
+                start_date=self.date_from, end_date=self.date_to, referrer=ref
+            )
+            self.assertEqual(stats["total_count"], self.referrers.count(ref))
+
+    def test_report_stats_dates_with_no_results(self):
+        # all created resources will have today's date
+        past_date_from = datetime.datetime.now() - datetime.timedelta(days=5)
+        past_date_to = datetime.datetime.now() - datetime.timedelta(days=4)
+        stats = ReasonForContacting.get_report_category_stats(start_date=past_date_from, end_date=past_date_to)
+        self.assertEqual(stats["total_count"], 0)
+
+    def test_report_stats_dates_with_results(self):
+        # don't forget about the one original resource from setup
+        resources = make_recipe("checker.reasonforcontacting", referrer=cycle(self.referrers), _quantity=5)
+        # create the associated categories and check number of results returned
+        for resource in resources:
+            make_recipe("checker.reasonforcontacting_category", reason_for_contacting=resource)
+        stats = ReasonForContacting.get_report_category_stats(start_date=self.date_from, end_date=self.date_to)
+        self.assertEqual(stats["total_count"], 6)

@@ -28,9 +28,11 @@ from .forms import (
     MIExtractCaseViewAuditLog,
     MIExtractComplaintViewAuditLog,
     AllKnowledgeBaseArticles,
+    ReasonsForContactingReport,
 )
+
 from reports.models import Export
-from .tasks import ExportTask, OBIEEExportTask
+from .tasks import ExportTask, OBIEEExportTask, ReasonForContactingExportTask
 from reports.utils import get_s3_connection
 
 
@@ -45,7 +47,6 @@ def report_view(request, form_class, title, template="case_report", success_task
     form = form_class()
     if valid_submit(request, form):
         success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(request.POST))
-
         messages.info(request, u"Your export is being processed. It will show up in the downloads tab shortly.")
 
     return render(request, tmpl, {"title": title, "form": form})
@@ -180,6 +181,18 @@ def mi_complaint_view_audit_log_extract(request):
 @permission_required("legalaid.run_reports")
 def all_knowledgebase_articles(request):
     return report_view(request, AllKnowledgeBaseArticles, "Knowledge Base Articles")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def reasons_for_contacting(request):
+    return report_view(
+        request,
+        ReasonsForContactingReport,
+        "Reasons for Contacting Export",
+        file_name="cla_reasonforcontacting.zip",
+        success_task=ReasonForContactingExportTask,
+    )
 
 
 @staff_member_required

@@ -2,7 +2,10 @@ import contextlib
 import os
 import json
 import shutil
+from zipfile import ZipFile
+import glob
 import time
+import tempfile
 from contextlib import closing
 from django.contrib.auth.models import User
 import csvkit as csv
@@ -18,7 +21,9 @@ from django.conf import settings
 from .utils import OBIEEExporter, get_s3_connection
 from .models import Export
 from .constants import EXPORT_STATUS
-
+from core.utils import remember_cwd
+from checker.models import ReasonForContacting
+from urlparse import urlparse
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +59,9 @@ class ExportTaskBase(Task):
             raise Exception(self.message)
 
     def _filepath(self, filename):
+        # this creates a unique filepath for each report
+        # uniqueness is from user pk and datetime
+        # file will be in settings.TEMP_DIR
         file_name, file_ext = os.path.splitext(filename)
         user_datetime = "%s-%s" % (self.user.pk, time.strftime("%Y-%m-%d-%H%M%S"))
         filename = "%s-%s%s" % (file_name, user_datetime, file_ext)
@@ -121,7 +129,6 @@ class OBIEEExportTask(ExportTaskBase):
         # A task is not instantiated for every request. So unless we reset this message it will contain incorrect value
         # https://docs.celeryproject.org/en/3.0/userguide/tasks.html#instantiation
         self.message = ""
-
         diversity_keyphrase = self.form.cleaned_data["passphrase"]
         start = self.form.month
         end = self.form.month + relativedelta(months=1)
@@ -148,3 +155,77 @@ class OBIEEExportTask(ExportTaskBase):
                 raise
             finally:
                 pass
+
+
+class ReasonForContactingExportTask(ExportTaskBase):
+    def run(self, user_id, filename, form_class_name, post_data, *args, **kwargs):
+        """
+        Export csv files for each of the referrers from reason for contacting
+        """
+        self.tmp_export_path = tempfile.mkdtemp()
+        self.user = User.objects.get(pk=user_id)
+        self._create_export()
+        self._set_up_form(form_class_name, post_data)
+        # A task is not instantiated for every request. So unless we reset this message it will contain incorrect value
+        # https://docs.celeryproject.org/en/3.0/userguide/tasks.html#instantiation
+        self.message = ""
+        try:
+            if not ("date_from" in self.form.cleaned_data and "date_to" in self.form.cleaned_data):
+                raise ValueError("No dates in form")
+            start_date, end_date = self.form.date_range
+            # this is the filepath that will be used to send to aws bucket/displayed on report page
+            self.filepath = self._filepath(filename)
+            # make the files and then put them in zip and delete temp folder
+            # first file that contains all reasons for contacting
+            self.export_rfc_csv()
+            # loop through each individual referrer file
+            for referrer in ReasonForContacting.get_top_report_referrers(start_date, end_date):
+                #   get the results for that individual stage in the journey
+                referrer_url = referrer["referrer"]
+                self.form.referrer = referrer_url
+                self.export_rfc_csv(referrer_url)
+            self.generate_rfc_zip()
+            if settings.AWS_REPORTS_STORAGE_BUCKET_NAME:
+                self.send_to_s3()
+        except Exception as e:
+            message = getattr(e, "message", "") or getattr(e, "strerror", "")
+            message = text_type(message).strip()
+            self.message = u"An error occurred creating the zip file: {message}".format(message=message)
+            raise
+        finally:
+            shutil.rmtree(self.tmp_export_path)
+
+    def export_rfc_csv(self, referrer_url=None):
+        csv_data = self.form.get_output()
+        csv_file = open(self.full_csv_filepath(referrer_url), "w")
+        with csv_writer(csv_file) as writer:
+            map(writer.writerow, csv_data)
+        csv_file.close()
+
+    def full_csv_filepath(self, referrer_url=None):
+        # create a unique filepath for csv
+        user_datetime = "%s-%s" % (self.user.pk, time.strftime("%Y-%m-%d-%H%M%S"))
+        file_ext = ".csv"
+        if referrer_url is not None:
+            # this is the csv for one referrer
+            self.form.top_referrer = referrer_url
+            parse_url = urlparse(referrer_url)
+            url_relative_path = "".join(
+                [
+                    parse_url.hostname.replace(".", "_"),
+                    parse_url.path.replace("/", "_"),
+                    parse_url.query.replace("=", "_"),
+                ]
+            ).strip("_")
+            file_name = "%s-%s%s" % ("".join(["rfc_", url_relative_path]), user_datetime, file_ext)
+        else:
+            # this is the csv with all the results
+            file_name = "%s-%s%s" % ("rfc_all_referrers", user_datetime, file_ext)
+        return os.path.join(self.tmp_export_path, file_name)
+
+    def generate_rfc_zip(self):
+        with remember_cwd():
+            os.chdir(self.tmp_export_path)
+            with ZipFile(self.filepath, "w") as refer_zip:
+                for csv_file in glob.glob("*.csv"):
+                    refer_zip.write(csv_file)

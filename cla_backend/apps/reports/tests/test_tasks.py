@@ -4,7 +4,7 @@ import json
 from psycopg2 import InternalError
 from django.test import TestCase
 from django.conf import settings
-from reports.tasks import ExportTask, OBIEEExportTask
+from reports.tasks import ExportTask, OBIEEExportTask, ReasonForContactingExportTask
 from core.tests.mommy_utils import make_user, make_recipe
 from legalaid.utils.diversity import save_diversity_data
 
@@ -66,3 +66,20 @@ class MICB1ExportTaskTestCase(TestCase):
         settings.AWS_REPORTS_STORAGE_BUCKET_NAME = False
         self.run_task()
         assert not self.task.send_to_s3.called
+
+
+class RFCTaskTestCase(TestCase):
+    def setUp(self):
+        self.task = ReasonForContactingExportTask()
+        self.task._create_export = mock.MagicMock()
+        self.task.send_to_s3 = mock.MagicMock()
+        self.user = make_user()
+
+    def run_task(self):
+        date_from = datetime.datetime.now() - datetime.timedelta(days=1)
+        date_to = datetime.datetime.now() + datetime.timedelta(days=1)
+        file_name = "cla_reasonforcontacting.zip"
+        post_data = {"action": "Export", "date_from": date_from, "date_to": date_to}
+        post_data = json.dumps(post_data)
+        form_class_name = "ReasonsForContactingReport"
+        self.task.run(user_id=self.user.id, form_class_name=form_class_name, post_data=post_data, filename=file_name)

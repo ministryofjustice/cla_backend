@@ -1,3 +1,5 @@
+default_language_version:
+    python: python2.7
 repos:
 -   repo: https://github.com/ambv/black
     rev: 18.9b0

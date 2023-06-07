@@ -7,7 +7,6 @@ from rest_framework.response import Response as DRFResponse
 from core.models import get_web_user
 from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
 from core.drf.viewsets import CompatGenericViewSet
-from checker.helpers import notify_callback_created
 from diagnosis.views import DiagnosisModelMixin
 
 from knowledgebase.views import BaseArticleViewSet, ArticleCategoryFilter
@@ -96,7 +95,6 @@ class CaseViewSet(PublicAPIViewSetMixin, BaseCaseLogMixin, ClaCreateModelMixin, 
 
             if form.is_valid():
                 form.save(obj.created_by)
-                notify_callback_created(obj)
 
     def get_log_notes(self, obj):
         return "Case created digitally"

@@ -347,8 +347,6 @@ EMAIL_TIMEOUT = 10
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get("CALL_CENTRE_NOTIFY_EMAIL_ADDRESS", DEFAULT_EMAIL_TO)
-
 # LGA-2236 Set rota hours start and end times using environment variables so can change without updating the code.
 # Want to alter start and end times via environment variables.
 # In case these are not set, default values are set here

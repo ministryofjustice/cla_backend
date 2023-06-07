@@ -138,10 +138,6 @@ envVars:
     secret:
       name: sentry
       key: dsn
-  CALL_CENTRE_NOTIFY_EMAIL_ADDRESS:
-    secret:
-      name: call-centre
-      key: notify_email
   DIVERSITY_PUBLIC_KEY:
     secret:
       name: diversity-keys

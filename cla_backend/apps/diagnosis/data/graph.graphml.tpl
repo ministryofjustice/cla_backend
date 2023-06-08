@@ -1,6 +1,6 @@
 {% load i18n %}<?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
-  <!--Created by yEd 3.22-->
+  <!--Created by yEd 3.23.1-->
   <key for="port" id="d0" yfiles.type="portgraphics"/>
   <key for="port" id="d1" yfiles.type="portgeometry"/>
   <key for="port" id="d2" yfiles.type="portuserdata"/>
@@ -3186,6 +3186,34 @@ No financial assessment is required.</data>
       </data>
       <data key="d10" xml:space="preserve">n350</data>
       </node>
+    <node id="n351">
+      <data key="d3" xml:space="preserve">{% trans "Special Guardianship Order" %}</data>
+      <data key="d4" xml:space="preserve">Special Guardianship Order</data>
+      <data key="d10" xml:space="preserve">n410</data>
+      </node>
+    <node id="n352">
+      <data key="d3" xml:space="preserve">{% trans "Parent, or person with parental responsibility, opposing or seeking to discharge a Special Guardianship Order" %}</data>
+      <data key="d4" xml:space="preserve">Parent</data>
+      <data key="d6">
+        <context xmlns="" xml:space="preserve">   <finance xml:space="preserve">passported</finance> </context>
+      </data>
+      <data key="d10" xml:space="preserve">n411</data>
+      </node>
+    <node id="n353">
+      <data key="d3" xml:space="preserve">{% trans "Any other person seeking a Special Guardianship Order, or seeking to discharge an order" %}</data>
+      <data key="d4" xml:space="preserve">Other person</data>
+      <data key="d10" xml:space="preserve">n412</data>
+      </node>
+    <node id="n354">
+      <data key="d3" xml:space="preserve">INSCOPE</data>
+      <data key="d4" xml:space="preserve">INSCOPE</data>
+      <data key="d6" xml:space="preserve">
+        <context xmlns="" xml:space="preserve">
+	<category xml:space="preserve">family</category>
+</context>
+      </data>
+      <data key="d10" xml:space="preserve">n413</data>
+      </node>
     <edge id="e0" source="n1" target="n2">
       </edge>
     <edge id="e1" source="n2" target="n3">
@@ -4135,6 +4163,21 @@ No financial assessment is required.</data>
     <edge id="e473" source="n0" target="n349">
       </edge>
     <edge id="e474" source="n349" target="n350">
+      </edge>
+    <edge id="e475" source="n89" target="n351">
+      <data key="d16"/>
+      </edge>
+    <edge id="e476" source="n351" target="n353">
+      <data key="d16"/>
+      </edge>
+    <edge id="e477" source="n351" target="n352">
+      <data key="d16"/>
+      </edge>
+    <edge id="e478" source="n352" target="n354">
+      <data key="d16"/>
+      </edge>
+    <edge id="e479" source="n353" target="n354">
+      <data key="d16"/>
       </edge>
   </graph>
   <data key="d14">

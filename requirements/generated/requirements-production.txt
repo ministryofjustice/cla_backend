@@ -28,7 +28,7 @@ certifi==2021.10.8
     #   sentry-sdk
 chardet==4.0.0
     # via requests
-https://github.com/ministryofjustice/cla_common/archive/refs/heads/feature/LGA-1773-cla-common.zip
+https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.20.tar.gz
     # via -r requirements/source/requirements-base.in
 configparser==4.0.2
     # via importlib-metadata

@@ -72,10 +72,6 @@ GOVUK_NOTIFY_TEMPLATES = {
     ),
 }
 
-
-OPERATOR_USER_ALERT_EMAILS = []
-SPECIALIST_USER_ALERT_EMAILS = []
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",

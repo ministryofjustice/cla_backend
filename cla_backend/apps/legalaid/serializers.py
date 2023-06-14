@@ -49,8 +49,17 @@ class ProviderSerializerBase(serializers.HyperlinkedModelSerializer):
 
 
 class OutOfHoursRotaSerializerBase(ClaModelSerializer):
-    category = serializers.SlugRelatedField(slug_field="code")
-    provider = serializers.PrimaryKeyRelatedField()
+    category = serializers.SlugRelatedField(slug_field="code", queryset=Category.objects.all())
+    provider = serializers.PrimaryKeyRelatedField(queryset=Provider.objects.all())
+
+    def validate(self, attrs):
+        # if this is for a patch rather than a post then an instance already exists
+        if self.instance is not None:
+            instance = self.instance
+        else:
+            instance = OutOfHoursRota(**attrs)
+        instance.clean()
+        return attrs
 
     class Meta(object):
         model = OutOfHoursRota
@@ -64,19 +73,18 @@ class FeedbackSerializerBase(serializers.ModelSerializer):
 
     justified = serializers.BooleanField(read_only=True)
     resolved = serializers.BooleanField(read_only=True)
-    provider = serializers.SerializerMethodField("get_provider")
+    provider = serializers.SerializerMethodField()
 
     def get_provider(self, obj):
-        return obj.created_by.provider
+        return obj.created_by.provider.name
 
     class Meta(object):
         model = Feedback
-        fields = ()
 
 
 class CSVUploadSerializerBase(serializers.ModelSerializer):
 
-    rows = serializers.SerializerMethodField("get_rows")
+    rows = serializers.SerializerMethodField()
     provider = serializers.CharField(read_only=True, source="provider.name")
     created_by = serializers.CharField(read_only=True, source="created_by.user.username")
     body = JSONField()
@@ -84,33 +92,29 @@ class CSVUploadSerializerBase(serializers.ModelSerializer):
     def get_rows(self, obj):
         return len(obj.body)
 
-    def validate_month(self, attrs, source):
-        value = attrs[source]
+    def validate_month(self, value):
         validate_first_of_month(value)
-        return attrs
+        return value
 
-    def validate_body(self, attrs, source):
-        value = attrs[source]
-        if len(value) == 0:
+    def validate_body(self, body):
+        if len(body) == 0:
             raise serializers.ValidationError("No rows found.")
-        ProviderCSVValidator(value).validate()
+        ProviderCSVValidator(body).validate()
 
-        return attrs
+        return body
 
     class Meta(object):
         model = CSVUpload
-        fields = ()
 
 
 class PropertySerializerBase(ClaModelSerializer):
     class Meta(object):
         model = Property
-        fields = ()
 
 
 class TotalsModelSerializer(ClaModelSerializer):
     total_fields = set()
-    total = serializers.SerializerMethodField("get_total")
+    total = serializers.SerializerMethodField()
 
     def get_total(self, obj):
         total = 0
@@ -141,7 +145,6 @@ class IncomeSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Income
-        fields = ()
 
 
 class SavingsSerializerBase(TotalsModelSerializer):
@@ -149,7 +152,6 @@ class SavingsSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Savings
-        fields = ()
 
 
 class DeductionsSerializerBase(TotalsModelSerializer):
@@ -165,37 +167,35 @@ class DeductionsSerializerBase(TotalsModelSerializer):
 
     class Meta(object):
         model = Deductions
-        fields = ()
 
 
 class PersonalDetailsSerializerBase(serializers.ModelSerializer):
+    contact_for_research = serializers.NullBooleanField(required=False)
+    vulnerable_user = serializers.NullBooleanField(required=False)
+
     class Meta(object):
         model = PersonalDetails
-        fields = ()
 
 
 class PersonalDetailsSerializerFull(PersonalDetailsSerializerBase):
-    dob = ThreePartDateField(required=False, source="date_of_birth")
+    dob = ThreePartDateField(required=False, source="date_of_birth", allow_null=True)
     has_diversity = serializers.SerializerMethodField("diversity_bool")
 
     def diversity_bool(self, obj):
         return bool(obj.diversity)
 
-    class Meta(PersonalDetailsSerializerBase.Meta):
-        fields = ()
-
 
 class ThirdPartyPersonalDetailsSerializerBase(PersonalDetailsSerializerBase):
-    class Meta(PersonalDetailsSerializerBase.Meta):
-        fields = ()
+    pass
 
 
-class ThirdPartyDetailsSerializerBase(serializers.ModelSerializer):
+class ThirdPartyDetailsSerializerBase(ClaModelSerializer):
     personal_details = ThirdPartyPersonalDetailsSerializerBase(required=True)
+    spoke_to = serializers.NullBooleanField(required=False)
 
     class Meta(object):
         model = ThirdPartyDetails
-        fields = ()
+        writable_nested_fields = ["personal_details"]
 
 
 class PersonSerializerBase(ClaModelSerializer):
@@ -205,7 +205,7 @@ class PersonSerializerBase(ClaModelSerializer):
 
     class Meta(object):
         model = Person
-        fields = ()
+        writable_nested_fields = ["income", "savings", "deductions"]
 
 
 class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
@@ -218,7 +218,6 @@ class AdaptationDetailsSerializerBase(serializers.ModelSerializer):
 
     class Meta(object):
         model = AdaptationDetails
-        fields = ()
 
 
 class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
@@ -227,73 +226,115 @@ class EODDetailsCategorySerializerBase(serializers.ModelSerializer):
         fields = ("category", "is_major")
 
 
-class EODDetailsSerializerBase(serializers.ModelSerializer):
-    notes = serializers.CharField(max_length=5000, required=False)
-    categories = EODDetailsCategorySerializerBase(many=True, allow_add_remove=True, required=False)
+class EODDetailsSerializerBase(ClaModelSerializer):
+    notes = serializers.CharField(max_length=5000, required=False, allow_blank=True)
+    categories = EODDetailsCategorySerializerBase(many=True, required=False)
 
     class Meta(object):
         model = EODDetails
-        fields = ()
+        writable_nested_fields = ["categories"]
 
 
 class EligibilityCheckSerializerBase(ClaModelSerializer):
-    property_set = PropertySerializerBase(allow_add_remove=True, many=True, required=False)
-    you = PersonSerializerBase(required=False)
-    partner = PersonSerializerBase(required=False)
-    category = serializers.SlugRelatedField(slug_field="code", required=False)
-    your_problem_notes = serializers.CharField(max_length=500, required=False)
-    notes = serializers.CharField(max_length=5000, required=False)
-    specific_benefits = JSONField(required=False)
-    disregards = JSONField(required=False)
+    property_set = PropertySerializerBase(many=True, required=False)
+    you = PersonSerializerBase(required=False, allow_null=True)
+    partner = PersonSerializerBase(required=False, allow_null=True)
+    category = serializers.SlugRelatedField(
+        slug_field="code", required=False, queryset=Category.objects.all(), allow_null=True
+    )
+    your_problem_notes = serializers.CharField(max_length=500, required=False, allow_blank=True)
+    notes = serializers.CharField(max_length=5000, required=False, allow_blank=True)
+    specific_benefits = JSONField(required=False, allow_null=True)
+    disregards = JSONField(required=False, allow_null=True)
+    # DRF 3.0 fails to determine that these fields are nullable when trying to map django model fields to DRF fields
+    # So we are setting here explicitly so that DRF doesn't try guessing if it's nullable
+    is_you_or_your_partner_over_60 = serializers.NullBooleanField(default=None)
+    on_passported_benefits = serializers.NullBooleanField(default=None)
+    has_passported_proceedings_letter = serializers.NullBooleanField(default=None)
+    on_nass_benefits = serializers.NullBooleanField(default=None)
+    has_partner = serializers.NullBooleanField(default=None)
 
     class Meta(object):
         model = EligibilityCheck
-        fields = ()
 
-    def validate_property_set(self, attrs, source):
+    def create_writable_nested_fields_many_to_many(self, instance, m2m_validated_data):
+        property_set_data = m2m_validated_data.pop("property_set", None)
+        # Save any updated fields on "property" or create new ones
+        # if they are not new and updated then they should be deleted
+        self.update_property_set_data(instance, property_set_data)
+        super(EligibilityCheckSerializerBase, self).create_writable_nested_fields_many_to_many(
+            instance, m2m_validated_data
+        )
+
+    def update_property_set_data(self, instance, property_set_data):
+        ids_to_keep = []
+        # validating loses the id of the property set:
+        property_set_data = property_set_data or []
+        for index, prop_data in enumerate(property_set_data):
+            # have to decide if this is an update or a create
+            property_instance = None
+            initial_prop = self.initial_data["property_set"][index]
+            if "id" in initial_prop:
+                # checks to see if property exists and is attached to current eligibility_check
+                property_instance = Property.objects.filter(
+                    pk=initial_prop["id"], eligibility_check_id=instance.id
+                ).first()
+                if property_instance:
+                    property_instance = PropertySerializerBase().update(property_instance, prop_data)
+            if property_instance is None:
+                #  this should be a creation - didn't find a property attached to this eligibility to update
+                prop_data["eligibility_check"] = instance
+                property_instance = PropertySerializerBase().create(prop_data)
+            ids_to_keep.append(property_instance.pk)
+        # now delete any property that wasn't included in the validated_data
+        instance.property_set.exclude(id__in=ids_to_keep).delete()
+
+    def validate_property_set(self, value):
         """
         Checks that only one main property is selected
         """
-        if source in attrs:
-            main_props = [prop for prop in attrs[source] if prop.main]
+        # Must allow for cases where there is only a partial value and main not included
+        main_props = [prop for prop in value if prop.get("main")]
+        if len(main_props) > 1:
+            raise serializers.ValidationError("Only one main property allowed")
+        return value
 
-            if len(main_props) > 1:
-                raise serializers.ValidationError("Only one main property allowed")
-        return attrs
+    def validate_specific_benefits(self, value):
+        data_benefits = value
+        if data_benefits:
+            extra_fields = set(data_benefits.keys()) - set(SPECIFIC_BENEFITS.CHOICES_DICT.keys())
+            if extra_fields:
+                raise serializers.ValidationError("Fields %s not recognised" % ", ".join(list(extra_fields)))
 
-    def validate_specific_benefits(self, attrs, source):
-        if source in attrs:
-            data_benefits = attrs[source]
-            if data_benefits:
-                extra_fields = set(data_benefits.keys()) - set(SPECIFIC_BENEFITS.CHOICES_DICT.keys())
-                if extra_fields:
-                    raise serializers.ValidationError("Fields %s not recognised" % ", ".join(list(extra_fields)))
+            # translate into safer bool values
+            data_benefits = {k: bool(v) for k, v in data_benefits.items()}
+        return data_benefits
 
-                # translate into safer bool values
-                data_benefits = {k: bool(v) for k, v in data_benefits.items()}
-                attrs[source] = data_benefits
+    def validate_disregards(self, value):
+        data_disregards = value
+        if data_disregards:
+            extra_fields = set(data_disregards.keys()) - set(DISREGARDS.CHOICES_DICT.keys())
+            if extra_fields:
+                raise serializers.ValidationError("Fields %s not recognised" % ", ".join(list(extra_fields)))
 
-        return attrs
+            # translate into safer bool values
+            data_disregards = {k: bool(v) for k, v in data_disregards.items()}
+        return data_disregards
 
-    def validate_disregards(self, attrs, source):
-        if source in attrs:
-            data_disregards = attrs[source]
-            if data_disregards:
-                extra_fields = set(data_disregards.keys()) - set(DISREGARDS.CHOICES_DICT.keys())
-                if extra_fields:
-                    raise serializers.ValidationError("Fields %s not recognised" % ", ".join(list(extra_fields)))
-
-                # translate into safer bool values
-                data_disregards = {k: bool(v) for k, v in data_disregards.items()}
-                attrs[source] = data_disregards
-
-        return attrs
+    def __has_category_changed(self):
+        if not self.instance or self.instance.category is None:
+            return False
+        category = self.validated_data.get("category")
+        if not category:
+            return False
+        return self.instance.category.name != category.name
 
     def save(self, **kwargs):
+        # need to check the category before saving the current instance
+        has_category_changed = self.__has_category_changed()
         obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
         obj.update_state()
-        diff = obj.diff
-        if "category" in diff:
+        if has_category_changed:
             # if the category has been updated then reset mattertype on
             # corresponding case
             obj.reset_matter_types()
@@ -317,8 +358,6 @@ class MediaCodeSerializerBase(ClaModelSerializer):
 
 
 class ContactResearchMethodSerializerBase(ClaModelSerializer):
-    group = serializers.SlugRelatedField(slug_field="method", read_only=True)
-
     class Meta(object):
         model = ContactResearchMethod
         fields = ("method", "id")
@@ -328,16 +367,22 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     eligibility_check = UUIDSerializer(slug_field="reference", read_only=True)
     diagnosis = UUIDSerializer(slug_field="reference", required=False, read_only=True)
     personal_details = PersonalDetailsSerializerBase()
-    notes = serializers.CharField(max_length=10000, required=False)
-    provider_notes = serializers.CharField(max_length=5000, required=False)
+    notes = serializers.CharField(max_length=10000, required=False, allow_blank=True)
+    provider_notes = serializers.CharField(max_length=5000, required=False, allow_blank=True)
     matter_type1 = serializers.SlugRelatedField(
-        slug_field="code", required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE)
+        slug_field="code",
+        required=False,
+        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.ONE),
+        allow_null=True,
     )
     matter_type2 = serializers.SlugRelatedField(
-        slug_field="code", required=False, queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO)
+        slug_field="code",
+        required=False,
+        queryset=MatterType.objects.filter(level=MATTER_TYPE_LEVELS.TWO),
+        allow_null=True,
     )
-    media_code = serializers.SlugRelatedField(slug_field="code", required=False)
-    outcome_code = serializers.CharField(max_length=50, required=False)
+    media_code = serializers.SlugRelatedField(slug_field="code", required=False, queryset=MediaCode.objects.all())
+    outcome_code = serializers.CharField(max_length=50, required=False, allow_blank=True)
     outcome_description = serializers.SerializerMethodField("_get_outcome_description")
     call_started = serializers.SerializerMethodField("_call_started")
 
@@ -347,8 +392,8 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     def _get_outcome_description(self, case):
         return event_registry.event_registry.all().get(case.outcome_code, {}).get("description", "")
 
-    def _get_fields_for_partial_update(self):
-        fields = super(CaseSerializerBase, self)._get_fields_for_partial_update()
+    def _get_fields_for_partial_update(self, validated_attrs):
+        fields = super(CaseSerializerBase, self)._get_fields_for_partial_update(validated_attrs)
         fields.append("modified")
         return fields
 
@@ -360,9 +405,8 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
 
     class Meta(object):
         model = Case
-        fields = ()
-        exclude = ("audit_log",)
         read_only_fields = ("exempt_user", "exempt_user_reason")
+        writable_nested_fields = ["personal_details"]
 
 
 class CaseSerializerFull(CaseSerializerBase):
@@ -377,7 +421,7 @@ class CaseSerializerFull(CaseSerializerBase):
     adaptation_details = UUIDSerializer(required=False, slug_field="reference", read_only=True)
 
     eod_details = UUIDSerializer(required=False, slug_field="reference", read_only=True)
-    flagged_with_eod = serializers.BooleanField(source="flagged_with_eod", read_only=True)
+    flagged_with_eod = serializers.BooleanField(read_only=True)
 
     created = serializers.DateTimeField(read_only=True)
     modified = serializers.DateTimeField(read_only=True)
@@ -391,8 +435,7 @@ class CaseSerializerFull(CaseSerializerBase):
     date_of_birth = serializers.CharField(source="personal_details.date_of_birth", read_only=True)
     category = serializers.CharField(source="diagnosis.category.name", read_only=True)
 
-    class Meta(CaseSerializerBase.Meta):
-        fields = ()
+    exempt_user = serializers.NullBooleanField(required=False)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -411,41 +454,48 @@ class ExtendedUserSerializerBase(serializers.ModelSerializer):
     created = serializers.DateTimeField(source="user.date_joined", read_only=True)
     user = UserSerializer()
 
-    def validate_password(self, attrs, source):
-        if len(attrs[source]) < 10:
+    def validate_password(self, password):
+        if len(password) < 10:
             raise serializers.ValidationError("Password must be at least 10 characters long.")
-        return attrs
+        return password
 
     def validate(self, attrs):
-        if User.objects.filter(username=attrs["user.username"]).exists():
+        if User.objects.filter(username=attrs["user"]["username"]).exists():
             raise serializers.ValidationError("An account with this username already exists.")
 
         return super(ExtendedUserSerializerBase, self).validate(attrs)
 
-    def restore_object(self, attrs, instance=None):
-        restored = super(ExtendedUserSerializerBase, self).restore_object(attrs, instance=instance)
-        user = User()
-        user.username = attrs["user.username"]
-        user.first_name = attrs["user.first_name"]
-        user.last_name = attrs["user.last_name"]
-        user.email = attrs["user.email"]
-        user.set_password(attrs["user.password"])
-        user.save()
-        restored.user = user
-        return restored
+    def create(self, validated_data):
+        user = self.create_and_update_user(validated_data)
+        return self.Meta.model.objects.create(user=user, **validated_data)
+
+    def create_and_update_user(self, validated_data):
+        user_details = validated_data.pop("user", None)
+
+        user = None
+        if user_details:
+            user = User()
+            user.username = user_details["username"]
+            user.first_name = user_details["first_name"]
+            user.last_name = user_details["last_name"]
+            user.email = user_details["email"]
+            user.set_password(user_details["password"])
+            user.save()
+        return user
 
     class Meta(object):
-        fields = ()
+        pass
 
 
 class CaseArchivedSerializerBase(serializers.ModelSerializer):
-    date_of_birth = ThreePartDateField(required=False)
-    date_specialist_referred = ThreePartDateField(required=False)
-    date_specialist_closed = ThreePartDateField(required=False)
+    date_of_birth = ThreePartDateField(required=False, allow_null=True)
+    date_specialist_referred = ThreePartDateField(required=False, allow_null=True)
+    date_specialist_closed = ThreePartDateField(required=False, allow_null=True)
+    financially_eligible = serializers.NullBooleanField(required=False)
+    in_scope = serializers.NullBooleanField(required=False)
 
     class Meta(object):
         model = CaseArchived
-        fields = ()
 
 
 class CaseNotesHistorySerializerBase(ClaModelSerializer):
@@ -453,7 +503,7 @@ class CaseNotesHistorySerializerBase(ClaModelSerializer):
     created = serializers.DateTimeField(read_only=True)
     operator_notes = serializers.CharField(read_only=True)
     provider_notes = serializers.CharField(read_only=True)
-    type_notes = serializers.SerializerMethodField("get_type_notes")
+    type_notes = serializers.SerializerMethodField()
 
     def get_type_notes(self, obj):
         if obj.provider_notes is not None:
@@ -462,4 +512,3 @@ class CaseNotesHistorySerializerBase(ClaModelSerializer):
 
     class Meta(object):
         model = CaseNotesHistory
-        fields = ()

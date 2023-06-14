@@ -32,7 +32,7 @@ certifi==2021.10.8
     #   sentry-sdk
 chardet==4.0.0
     # via requests
-https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.19.tar.gz
+https://github.com/ministryofjustice/cla_common/archive/refs/tags/0.3.20.tar.gz
     # via -r requirements/source/requirements-base.in
 configparser==4.0.2
     # via importlib-metadata
@@ -89,7 +89,7 @@ django==1.7.11
     #   django-session-security
     #   django-uuidfield
     #   jsonfield
-djangorestframework==2.4.8
+djangorestframework==3.3.3
     # via
     #   -r requirements/source/requirements-base.in
     #   django-rest-swagger
@@ -103,7 +103,7 @@ docopt==0.6.2
     #   notifications-python-client
 docutils==0.17.1
     # via sphinx
-drf-extensions==0.2.5
+drf-extensions==0.2.8
     # via -r requirements/source/requirements-base.in
 drf-nested-routers==0.9.0
     # via -r requirements/source/requirements-base.in
@@ -111,7 +111,7 @@ et-xmlfile==1.0.1
     # via openpyxl
 future==0.18.3
     # via notifications-python-client
-futures==3.3.0
+futures==3.4.0
     # via s3transfer
 idna==2.10
     # via requests
@@ -217,7 +217,7 @@ sphinx==1.8.6
     # via sphinx-rtd-theme
 sphinxcontrib-websupport==1.1.2
     # via sphinx
-sqlalchemy==1.4.40
+sqlalchemy==1.4.46
     # via csvkit
 transifex-client==0.11b3
     # via -r requirements/source/requirements-base.in
@@ -225,7 +225,7 @@ typing==3.10.0.0
     # via
     #   pathlib2
     #   sphinx
-urllib3==1.26.11
+urllib3==1.26.14
     # via
     #   botocore
     #   requests

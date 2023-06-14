@@ -159,11 +159,11 @@ class PartnerPersonSerializer(PersonSerializer):
 
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
-    property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
+    property_set = PropertySerializer(many=True, required=False, allow_null=True)
     you = PersonSerializer(required=False)
-    partner = PartnerPersonSerializer(required=False)
+    partner = PartnerPersonSerializer(required=False, allow_null=True)
     notes = serializers.CharField(max_length=500, required=False, read_only=True)
-    disputed_savings = SavingsSerializer(required=False)
+    disputed_savings = SavingsSerializer(required=False, allow_null=True)
 
     class Meta(EligibilityCheckSerializerBase.Meta):
         fields = (
@@ -186,6 +186,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "disregards",
             "has_passported_proceedings_letter",
         )
+        writable_nested_fields = ["you", "partner", "property_set", "disputed_savings"]
 
 
 class ExtendedEligibilityCheckSerializer(EligibilityCheckSerializer):
@@ -293,7 +294,7 @@ class ProviderSerializer(ProviderSerializerBase):
 class StaffSerializer(ExtendedUserSerializerBase):
     provider = ProviderSerializer(read_only=True)
 
-    chs_username = serializers.CharField(required=False)
+    chs_user = serializers.CharField(required=False)
     chs_organisation = serializers.CharField(required=False)
     chs_password = serializers.CharField(required=False, write_only=True)
 
@@ -317,7 +318,7 @@ class StaffSerializer(ExtendedUserSerializerBase):
 
 class FeedbackSerializer(FeedbackSerializerBase):
     issue = serializers.ChoiceField(choices=FEEDBACK_ISSUE)
-    comment = serializers.CharField(max_length=5000, required=False)
+    comment = serializers.CharField(max_length=5000, required=False, allow_blank=True)
 
     class Meta(FeedbackSerializerBase.Meta):
         fields = (

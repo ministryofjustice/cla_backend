@@ -25,7 +25,6 @@ from eligibility_calculator.exceptions import PropertyExpectedException
 
 from diagnosis.models import DiagnosisTraversal
 
-from cla_common.db.mixins import ModelDiffMixin
 from cla_common.money_interval.fields import MoneyIntervalField
 from cla_common.money_interval.models import MoneyInterval
 from cla_common.constants import (
@@ -142,7 +141,7 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     contact_for_research_via = models.CharField(
         max_length=10, default=RESEARCH_CONTACT_VIA.PHONE, choices=RESEARCH_CONTACT_VIA, blank=True, null=True
     )
-    contact_for_research_methods = models.ManyToManyField(ContactResearchMethod, null=True)
+    contact_for_research_methods = models.ManyToManyField(ContactResearchMethod, null=True, blank=True)
     vulnerable_user = models.NullBooleanField(blank=True, null=True)
     safe_to_contact = models.CharField(
         max_length=30, default=CONTACT_SAFETY.SAFE, choices=CONTACT_SAFETY, blank=True, null=True
@@ -370,7 +369,7 @@ class ValidateModelMixin(models.Model):
         return {"warnings": warnings}
 
 
-class EligibilityCheck(TimeStampedModel, ValidateModelMixin, ModelDiffMixin):
+class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     reference = UUIDField(auto=True, unique=True)
 
     category = models.ForeignKey(Category, blank=True, null=True)
@@ -636,7 +635,7 @@ class MediaCode(TimeStampedModel):
     code = models.CharField(max_length=20)
 
 
-class Case(TimeStampedModel, ModelDiffMixin):
+class Case(TimeStampedModel):
     reference = models.CharField(max_length=128, unique=True, editable=False)
     eligibility_check = models.OneToOneField(EligibilityCheck, null=True, blank=True)
     diagnosis = models.OneToOneField("diagnosis.DiagnosisTraversal", null=True, blank=True, on_delete=SET_NULL)

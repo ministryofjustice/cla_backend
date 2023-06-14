@@ -153,7 +153,7 @@ class UserAPIMixin(object):
         response2 = self.client.post(
             self.list_url, data, HTTP_AUTHORIZATION=self.get_http_authorization(token=self.manager_token)
         )
-        self.assertEqual(response2.data["non_field_errors"], ["An account with this username already exists."])
+        self.assertEqual(response2.data["__all__"], ["An account with this username already exists."])
 
     # reset password
 

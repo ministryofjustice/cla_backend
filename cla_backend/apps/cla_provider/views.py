@@ -3,6 +3,8 @@ from cla_provider.authentication import LegacyCHSAuthentication
 from cla_provider.forms import ProviderExtractForm
 from cla_provider.helpers import ProviderExtractFormatter
 from core.permissions import IsProviderPermission
+from core.drf.mixins import ClaCreateModelMixin, ClaUpdateModelMixin
+from core.drf.paginator import StandardResultsSetPagination
 
 from django.shortcuts import get_object_or_404
 from legalaid.permissions import IsManagerOrMePermission
@@ -73,16 +75,22 @@ class CategoryViewSet(CLAProviderPermissionViewSetMixin, BaseCategoryViewSet):
 
 class EligibilityCheckViewSet(
     CLAProviderPermissionViewSetMixin,
-    mixins.UpdateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     BaseNestedEligibilityCheckViewSet,
 ):
     serializer_class = EligibilityCheckSerializer
 
     # this is to fix a stupid thing in DRF where pre_save doesn't call super
-    def pre_save(self, obj):
+    def perform_create(self, serializer):
         original_obj = self.get_object()
         self.__pre_save__ = self.get_serializer_class()(original_obj).data
+        super(EligibilityCheckViewSet, self).perform_create(serializer)
+
+    def perform_update(self, serializer):
+        original_obj = self.get_object()
+        self.__pre_save__ = self.get_serializer_class()(original_obj).data
+        super(EligibilityCheckViewSet, self).perform_update(serializer)
 
 
 class MatterTypeViewSet(CLAProviderPermissionViewSetMixin, BaseMatterTypeViewSet):
@@ -139,7 +147,7 @@ class CaseViewSet(CLAProviderPermissionViewSetMixin, FullCaseViewSet):
             super(CaseViewSet, self).get_queryset(**kwargs).filter(provider=this_provider).exclude(outcome_code="IRCB")
         )
 
-        only_param = self.request.QUERY_PARAMS.get("only")
+        only_param = self.request.query_params.get("only")
         if only_param == "new":
             qs = qs.filter(provider_viewed__isnull=True, provider_accepted__isnull=True, provider_closed__isnull=True)
         elif only_param == "opened":
@@ -242,6 +250,7 @@ class ProviderExtract(APIView):
 
 
 class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
+    queryset = Staff.objects.all()
     model = Staff
     serializer_class = StaffSerializer
 
@@ -252,8 +261,13 @@ class UserViewSet(CLAProviderPermissionViewSetMixin, BaseUserViewSet):
         qs = super(UserViewSet, self).get_queryset().filter(provider=this_provider)
         return qs
 
-    def pre_save(self, obj):
-        obj.provider = self.get_logged_in_user_model().provider
+    def perform_create(self, serializer):
+        serializer.validated_data["provider"] = self.get_logged_in_user_model().provider
+        super(UserViewSet, self).perform_create(serializer)
+
+    def perform_update(self, serializer):
+        serializer.validated_data["provider"] = self.get_logged_in_user_model().provider
+        super(UserViewSet, self).perform_update(serializer)
 
 
 class PersonalDetailsViewSet(CLAProviderPermissionViewSetMixin, FullPersonalDetailsViewSet):
@@ -288,17 +302,16 @@ class LogViewSet(CLAProviderPermissionViewSetMixin, BaseLogViewSet):
     serializer_class = LogSerializer
 
 
-class FeedbackViewSet(CLAProviderPermissionViewSetMixin, BaseFeedbackViewSet, mixins.CreateModelMixin):
+class FeedbackViewSet(CLAProviderPermissionViewSetMixin, BaseFeedbackViewSet, ClaCreateModelMixin):
     serializer_class = FeedbackSerializer
 
     filter_backends = (OrderingFilter,)
     ordering = ("-created",)
 
-    def pre_save(self, obj):
-        if not obj.pk:
-            obj.case = self.get_parent_object()
-            obj.created_by = Staff.objects.get(user=self.request.user)
-        super(FeedbackViewSet, self).pre_save(obj)
+    def perform_create(self, serializer):
+        serializer.validated_data["case"] = self.get_parent_object()
+        serializer.validated_data["created_by"] = Staff.objects.get(user=self.request.user)
+        super(FeedbackViewSet, self).perform_create(serializer)
 
 
 class CSVUploadViewSet(CLAProviderPermissionViewSetMixin, BaseCSVUploadViewSet):
@@ -306,21 +319,25 @@ class CSVUploadViewSet(CLAProviderPermissionViewSetMixin, BaseCSVUploadViewSet):
     serializer_detail_class = CSVUploadDetailSerializer
 
     ordering = ("-month",)
-
-    paginate_by = 20
-    paginate_by_param = "page_size"
-    max_paginate_by = 100
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self, *args, **kwargs):
         this_provider = get_object_or_404(Staff, user=self.request.user).provider
         qs = super(CSVUploadViewSet, self).get_queryset(*args, **kwargs).filter(provider=this_provider)
         return qs
 
-    def pre_save(self, obj):
+    def set_provider_user(self, serializer):
         user = self.get_logged_in_user_model()
-        obj.provider = user.provider
-        obj.created_by = user
-        super(CSVUploadViewSet, self).pre_save(obj)
+        serializer.validated_data["provider"] = user.provider
+        serializer.validated_data["created_by"] = user
+
+    def perform_create(self, serializer):
+        self.set_provider_user(serializer)
+        return super(CSVUploadViewSet, self).perform_create(serializer)
+
+    def perform_update(self, serializer):
+        self.set_provider_user(serializer)
+        return super(CSVUploadViewSet, self).perform_update(serializer)
 
 
 class CaseNotesHistoryViewSet(CLAProviderPermissionViewSetMixin, BaseCaseNotesHistoryViewSet):

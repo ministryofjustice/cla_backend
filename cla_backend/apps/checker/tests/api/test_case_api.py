@@ -11,7 +11,7 @@ from cla_eventlog.models import Log
 from checker.serializers import CaseSerializer
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
-from legalaid.models import Case, PersonalDetails
+from legalaid.models import Case, PersonalDetails, ThirdPartyDetails, AdaptationDetails
 from legalaid.tests.views.test_base import CLACheckerAuthBaseApiTestMixin
 from call_centre.tests.test_utils import CallCentreFixedOperatingHours
 from cla_provider.tests.test_notify import MockGovNotifyMailBox
@@ -52,10 +52,19 @@ class BaseCaseTestCase(
             for prop in ["title", "full_name", "postcode", "street", "mobile_phone", "home_phone"]:
                 self.assertEqual(unicode(getattr(obj, prop)), data[prop])
 
+    def assertThirdPartyDetailsEqual(self, data, obj):
+        if data is None or obj is None:
+            self.assertEqual(data, obj)
+        else:
+            self.assertEqual(data["personal_relationship"], obj.personal_relationship)
+            for prop in ["full_name", "mobile_phone", "safe_to_contact"]:
+                self.assertEqual(unicode(getattr(obj.personal_details, prop)), data["personal_details"][prop])
+
     def assertCaseEqual(self, data, case):
         self.assertEqual(case.reference, data["reference"])
         self.assertEqual(unicode(case.eligibility_check.reference), data["eligibility_check"])
         self.assertPersonalDetailsEqual(data["personal_details"], case.personal_details)
+        self.assertThirdPartyDetailsEqual(data["thirdparty_details"], case.thirdparty_details)
 
         self.assertEqual(Case.objects.count(), 1)
         case = Case.objects.first()
@@ -69,6 +78,12 @@ class BaseCaseTestCase(
             "street": "102 Petty France",
             "mobile_phone": "0123456789",
             "home_phone": "9876543210",
+        }
+
+    def get_thirdparty_details_default_post_data(self):
+        return {
+            "personal_details": {"full_name": "Jo Bloggs", "mobile_phone": "02081234567", "safe_to_contact": "SAFE"},
+            "personal_relationship": "FAMILY_FRIEND",
         }
 
 
@@ -99,17 +114,23 @@ class CaseTestCase(BaseCaseTestCase):
         data = {
             "eligibility_check": unicode(check.reference),
             "personal_details": self.get_personal_details_default_post_data(),
+            "thirdparty_details": self.get_thirdparty_details_default_post_data(),
         }
         response = self.client.post(self.list_url, data=data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertCaseResponseKeys(response)
 
+        # third party personal details needs to be converted to an object
+        data["thirdparty_details"]["personal_details"] = PersonalDetails(
+            **data["thirdparty_details"]["personal_details"]
+        )
         self.assertCaseEqual(
             response.data,
             Case(
                 reference=response.data["reference"],
                 eligibility_check=check,
                 personal_details=PersonalDetails(**data["personal_details"]),
+                thirdparty_details=ThirdPartyDetails(**data["thirdparty_details"]),
             ),
         )
 
@@ -151,17 +172,15 @@ class CaseTestCase(BaseCaseTestCase):
         errors = response.data
         self.assertItemsEqual(errors.keys(), ["eligibility_check", "personal_details"])
         self.assertEqual(errors["eligibility_check"], [u"Object with reference=%s does not exist." % invalid_uuid])
-        self.assertItemsEqual(
+        self.assertDictEqual(
             errors["personal_details"],
-            [
-                {
-                    "title": [u"Ensure this value has at most 20 characters (it has 21)."],
-                    "postcode": [u"Ensure this value has at most 12 characters (it has 13)."],
-                    "street": [u"Ensure this value has at most 255 characters (it has 256)."],
-                    "mobile_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
-                    "home_phone": [u"Ensure this value has at most 20 characters (it has 21)."],
-                }
-            ],
+            {
+                "title": [u"Ensure this field has no more than 20 characters."],
+                "postcode": [u"Ensure this field has no more than 12 characters."],
+                "street": [u"Ensure this field has no more than 255 characters."],
+                "mobile_phone": [u"Ensure this field has no more than 20 characters."],
+                "home_phone": [u"Ensure this field has no more than 20 characters."],
+            },
         )
 
     def test_create_in_error(self):
@@ -197,6 +216,55 @@ class CaseTestCase(BaseCaseTestCase):
         self.assertDictEqual(
             serializer.errors, {"eligibility_check": [u"Case with this Eligibility check already exists."]}
         )
+
+
+class AdaptationCaseTestCase(BaseCaseTestCase):
+    def set_case_data(self, language, eligibility_check=None):
+        if eligibility_check is None:
+            eligibility_check = make_recipe("legalaid.eligibility_check")
+        # for checker, language is not always passed so have option of no language key at all
+        data = {
+            "eligibility_check": unicode(eligibility_check.reference),
+            "personal_details": self.get_personal_details_default_post_data(),
+            "adaptation_details": {"text_relay": False, "notes": "", "bsl_webcam": False, "minicom": False},
+        }
+        if language is not None:
+            data["adaptation_details"]["language"] = language
+        return data
+
+    def test_all_adaption_details(self):
+        check = make_recipe("legalaid.eligibility_check")
+        # this covers the case that a language is passed into adaptations
+        data = self.set_case_data(language="ARABIC", eligibility_check=check)
+        response = self.client.post(self.list_url, data=data, format="json")
+        case = Case(
+            reference=response.data["reference"],
+            eligibility_check=check,
+            personal_details=PersonalDetails(**data["personal_details"]),
+            adaptation_details=AdaptationDetails(**data["adaptation_details"]),
+        )
+        self.assertAdaptationDetailsEqual(data["adaptation_details"], case.adaptation_details)
+
+    def assertAdaptationDetailsEqual(self, data, obj):
+        if data is None or obj is None:
+            self.assertEqual(data, obj)
+        else:
+            for prop in data.keys():
+                self.assertEqual(unicode(getattr(obj, prop)), unicode(data[prop]))
+
+    def test_adaptations_language(self, language=None):
+        data = self.set_case_data(language)
+        response = self.client.post(self.list_url, data=data, format="json")
+        if language is not None:
+            self.assertEqual(response.data["adaptation_details"]["language"], language)
+        else:
+            self.assertIsNone(response.data["adaptation_details"]["language"])
+
+    def test_adaptation_details_empty_string(self):
+        self.test_adaptations_language(u"")
+
+    def test_adaptation_details_language_missing(self):
+        self.test_adaptations_language()
 
 
 class CallMeBackCaseTestCase(BaseCaseTestCase):
@@ -259,6 +327,12 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
 
         # checking email
         self.assertEquals(len(self.mailbox), 1)
+
+        # Check that logs are created in order
+        first = Log.objects.order_by("-created").first()
+        self.assertEqual("CB1", first.code)
+        last = Log.objects.order_by("-created").last()
+        self.assertEqual("CASE_CREATED", last.code)
 
     def test_create_should_ignore_outcome_code(self):
         """

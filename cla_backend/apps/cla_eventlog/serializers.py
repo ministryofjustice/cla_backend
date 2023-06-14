@@ -13,8 +13,7 @@ class LogSerializerBase(ClaModelSerializer):
     type = serializers.CharField(read_only=True)
     timer_id = serializers.IntegerField(read_only=True)
     notes = serializers.CharField(read_only=True)
-    patch = JSONField(read_only=True)
+    patch = JSONField()
 
     class Meta(object):
         model = Log
-        fields = ()

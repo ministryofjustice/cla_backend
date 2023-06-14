@@ -20,12 +20,18 @@ from legalaid.serializers import (
     ThirdPartyDetailsSerializerBase,
 )
 
+from legalaid.models import Case, EligibilityCheck
+
 from checker.models import ReasonForContacting, ReasonForContactingCategory
+from core.serializers import ClaModelSerializer
 
 checker_graph = SimpleLazyObject(lambda: get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME))
 
 
 class PropertySerializer(PropertySerializerBase):
+    disputed = serializers.NullBooleanField(default=None)
+    main = serializers.NullBooleanField(default=None)
+
     @property
     def errors(self):
         return super(PropertySerializer, self).errors
@@ -109,9 +115,9 @@ class PartnerPersonSerializer(PersonSerializer):
 
 
 class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
-    property_set = PropertySerializer(allow_add_remove=True, many=True, required=False)
-    you = PersonSerializer(required=False)
-    partner = PartnerPersonSerializer(required=False)
+    property_set = PropertySerializer(many=True, required=False, allow_null=True)
+    you = PersonSerializer(required=False, allow_null=True)
+    partner = PartnerPersonSerializer(required=False, allow_null=True)
     # TODO: DRF doesn't validate, fields that aren't REQ'd = True
     # we need to figure out a way to deal with it
 
@@ -133,6 +139,7 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "specific_benefits",
             "disregards",
         )
+        writable_nested_fields = ["you", "partner", "property_set"]
 
 
 class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
@@ -161,12 +168,14 @@ class AdaptationDetailsSerializer(AdaptationDetailsSerializerBase):
 
 
 class CaseSerializer(CaseSerializerBase):
-    eligibility_check = UUIDSerializer(slug_field="reference", required=False)
-    adaptation_details = AdaptationDetailsSerializer(required=False)
+    eligibility_check = UUIDSerializer(
+        slug_field="reference", required=False, queryset=EligibilityCheck.objects.all(), allow_null=True
+    )
+    adaptation_details = AdaptationDetailsSerializer(required=False, allow_null=True)
     personal_details = PersonalDetailsSerializer()
-    thirdparty_details = ThirdPartyDetailsSerializer(required=False)
-    requires_action_at = serializers.DateTimeField(required=False)
-    callback_window_type = serializers.ChoiceField(choices=CALLBACK_WINDOW_TYPES, required=False)
+    thirdparty_details = ThirdPartyDetailsSerializer(required=False, allow_null=True)
+    requires_action_at = serializers.DateTimeField(required=False, allow_null=True)
+    callback_window_type = serializers.ChoiceField(choices=CALLBACK_WINDOW_TYPES, required=False, allow_null=True)
 
     class Meta(CaseSerializerBase.Meta):
         fields = (
@@ -178,6 +187,7 @@ class CaseSerializer(CaseSerializerBase):
             "adaptation_details",
             "thirdparty_details",
         )
+        writable_nested_fields = ["adaptation_details", "personal_details", "thirdparty_details"]
 
 
 class CheckerDiagnosisSerializer(DiagnosisSerializer):
@@ -191,10 +201,13 @@ class ReasonForContactingCategorySerializer(serializers.ModelSerializer):
         fields = ("category",)
 
 
-class ReasonForContactingSerializer(serializers.ModelSerializer):
-    reasons = ReasonForContactingCategorySerializer(many=True, allow_add_remove=True, required=False)
-    case = serializers.SlugRelatedField(slug_field="reference", read_only=False, required=False)
+class ReasonForContactingSerializer(ClaModelSerializer):
+    reasons = ReasonForContactingCategorySerializer(many=True, required=False)
+    case = serializers.SlugRelatedField(
+        slug_field="reference", read_only=False, required=False, queryset=Case.objects.all()
+    )
 
     class Meta(object):
         model = ReasonForContacting
         fields = ("reference", "reasons", "other_reasons", "case", "referrer", "user_agent")
+        writable_nested_fields = ["reasons"]

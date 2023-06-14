@@ -23,8 +23,9 @@ from cla_provider.models import Provider, OutOfHoursRota, Feedback, ProviderPreA
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
 from cla_provider.helpers import ProviderAllocationHelper, notify_case_assigned
 
-from core.drf.pagination import RelativeUrlPaginationSerializer
-from core.drf.mixins import FormActionMixin
+from core.drf.mixins import FormActionMixin, ClaCreateModelMixin, ClaUpdateModelMixin
+from core.drf.viewsets import CompatGenericViewSet
+from core.drf.paginator import StandardResultsSetPagination
 from notifications.views import BaseNotificationViewSet
 
 from complaints.views import (
@@ -114,17 +115,23 @@ class CategoryViewSet(CallCentrePermissionsViewSetMixin, BaseCategoryViewSet):
 
 class EligibilityCheckViewSet(
     CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     BaseNestedEligibilityCheckViewSet,
 ):
     serializer_class = EligibilityCheckSerializer
 
     # this is to fix a stupid thing in DRF where pre_save doesn't call super
-    def pre_save(self, obj):
+    def perform_create(self, serializer):
         original_obj = self.get_object()
         self.__pre_save__ = self.get_serializer_class()(original_obj).data
+        super(EligibilityCheckViewSet, self).perform_create(serializer)
+
+    def perform_update(self, serializer):
+        original_obj = self.get_object()
+        self.__pre_save__ = self.get_serializer_class()(original_obj).data
+        super(EligibilityCheckViewSet, self).perform_update(serializer)
 
 
 class MatterTypeViewSet(CallCentrePermissionsViewSetMixin, BaseMatterTypeViewSet):
@@ -143,8 +150,8 @@ class DateRangeFilter(BaseFilterBackend):
     def filter_queryset(self, request, qs, view):
 
         filter = {}
-        start_date = request.QUERY_PARAMS.get("start", None)
-        end_date = request.QUERY_PARAMS.get("end", None)
+        start_date = request.query_params.get("start", None)
+        end_date = request.query_params.get("end", None)
 
         if start_date is not None:
             filter["{field}__gte".format(field=view.date_range_field)] = parser.parse(start_date).replace(
@@ -161,7 +168,7 @@ class DateRangeFilter(BaseFilterBackend):
 
 class CaseViewSet(
     CallCentrePermissionsViewSetMixin,
-    mixins.CreateModelMixin,
+    ClaCreateModelMixin,
     BaseCaseLogMixin,
     CaseOrganisationAssignCurrentOrganisationMixin,
     FullCaseViewSet,
@@ -203,7 +210,7 @@ class CaseViewSet(
         this_operator = get_object_or_404(Operator, user=self.request.user)
         qs = super(CaseViewSet, self).get_queryset(**kwargs)
 
-        only_param = self.request.QUERY_PARAMS.get("only")
+        only_param = self.request.query_params.get("only")
         if only_param == "my":
             qs = qs.filter(created_by=this_operator.user)
         elif only_param == "eod":
@@ -250,16 +257,15 @@ class CaseViewSet(
 
         return qs
 
-    def pre_save(self, obj, *args, **kwargs):
-        super(CaseViewSet, self).pre_save(obj, *args, **kwargs)
-
+    def perform_create(self, serializer):
         user = self.request.user
-        if not obj.pk and not isinstance(user, AnonymousUser):
-            obj.created_by = user
+        if not isinstance(user, AnonymousUser):
+            serializer.validated_data["created_by"] = user
+        return super(CaseViewSet, self).perform_create(serializer)
 
     def retrieve(self, request, *args, **kwargs):
         response = super(CaseViewSet, self).retrieve(request, *args, **kwargs)
-        self.object.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
+        self.instance.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
         return response
 
     @list_route()
@@ -333,7 +339,7 @@ class CaseViewSet(
         # find given provider in suitable - avoid extra lookup and ensures
         # valid provider
         for sp in suitable_providers:
-            if sp.id == int(request.DATA["provider_id"]):
+            if sp.id == int(request.data["provider_id"]):
                 p = sp
                 break
         else:
@@ -342,7 +348,7 @@ class CaseViewSet(
         # if we're inside office hours then:
         # Randomly assign to provider who offers this category of service
         # else it should be the on duty provider
-        data = request.DATA.copy()
+        data = request.data.copy()
         data["provider"] = p.pk
         form = ProviderAllocationForm(case=obj, data=data, providers=suitable_providers)
 
@@ -353,7 +359,7 @@ class CaseViewSet(
             notify_case_assigned(provider, form.case)
 
             provider_serialised = ProviderSerializer(provider)
-            self.set_case_organisation(self.get_object(), save=True)
+            self.set_case_organisation(self.get_object())
             return DRFResponse(data=provider_serialised.data)
 
         return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)
@@ -361,7 +367,7 @@ class CaseViewSet(
     @detail_route(methods=["post"])
     def defer_assignment(self, request, **kwargs):
         obj = self.get_object()
-        form = DeferAssignmentCaseForm(case=obj, data=request.DATA)
+        form = DeferAssignmentCaseForm(case=obj, data=request.data)
         if form.is_valid():
             form.save(request.user)
             return DRFResponse(status=status.HTTP_204_NO_CONTENT)
@@ -410,7 +416,7 @@ class CaseViewSet(
                 {"error": "This case is already linked to a Person"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        person_q = request.QUERY_PARAMS.get("person_q", "") or ""
+        person_q = request.query_params.get("person_q", "") or ""
         if len(person_q) >= 3:
             users = PersonalDetails.objects.filter(full_name__icontains=person_q).exclude(vulnerable_user=True)
         else:
@@ -434,7 +440,7 @@ class CaseViewSet(
         obj = self.get_object()
 
         # check PARAM exists
-        pd_ref = request.DATA.get("personal_details", None)
+        pd_ref = request.data.get("personal_details", None)
         if not pd_ref:
             return error_response('Param "personal_details" required')
 
@@ -453,19 +459,19 @@ class CaseViewSet(
         # link personal details to case
         obj.personal_details = personal_details
         obj.save(update_fields=["personal_details", "modified"])
-        self.set_case_organisation(self.get_object(), save=True)
+        self.set_case_organisation(self.get_object())
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
     @detail_route(methods=["post"])
     def call_me_back(self, request, reference=None, **kwargs):
         response = self._form_action(request, CallMeBackForm)
-        self.set_case_organisation(self.get_object(), save=True)
+        self.set_case_organisation(self.get_object())
         return response
 
     @detail_route(methods=["post"])
     def stop_call_me_back(self, request, reference=None, **kwargs):
         response = self._form_action(request, StopCallMeBackForm)
-        self.set_case_organisation(self.get_object(), save=True)
+        self.set_case_organisation(self.get_object())
         return response
 
     @detail_route(methods=["post"])
@@ -473,7 +479,7 @@ class CaseViewSet(
         obj = self.get_object()
         event = event_registry.get_event("case")()
         event.process(obj, status="call_started", created_by=request.user, notes="Call started")
-        self.set_case_organisation(obj, save=True)
+        self.set_case_organisation(obj)
         return DRFResponse(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -489,20 +495,21 @@ class ProviderViewSet(CallCentrePermissionsViewSetMixin, viewsets.ReadOnlyModelV
 
 class OutOfHoursRotaViewSet(
     CallCentreManagerPermissionsViewSetMixin,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    ClaCreateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     mixins.ListModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
-
-    serializer_class = OutOfHoursRotaSerializer
     model = OutOfHoursRota
+    serializer_class = OutOfHoursRotaSerializer
+    queryset = OutOfHoursRota.objects.all()
 
 
 class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     model = Operator
+    queryset = Operator.objects.all()
 
     permission_classes = (CallCentreClientIDPermission, IsManagerOrMePermission)
     serializer_class = OperatorSerializer
@@ -526,7 +533,7 @@ class UserViewSet(CallCentrePermissionsViewSetMixin, BaseUserViewSet):
     def create(self, request, *args, **kwargs):
         operator = self.get_logged_in_user_model()
         if operator.organisation:
-            request.DATA["organisation"] = operator.organisation.id
+            request.data["organisation"] = operator.organisation.id
         return super(UserViewSet, self).create(request, *args, **kwargs)
 
 
@@ -594,9 +601,9 @@ class LogViewSet(CallCentrePermissionsViewSetMixin, BaseLogViewSet):
 class FeedbackViewSet(
     CallCentreManagerPermissionsViewSetMixin,
     mixins.ListModelMixin,
-    mixins.UpdateModelMixin,
+    ClaUpdateModelMixin,
     mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet,
+    CompatGenericViewSet,
 ):
     model = Feedback
     lookup_field = "reference"
@@ -609,10 +616,7 @@ class FeedbackViewSet(
 
     queryset = Feedback.objects.all().select_related("case", "created_by", "created_by__provider")
 
-    pagination_serializer_class = RelativeUrlPaginationSerializer
-    paginate_by = 20
-    paginate_by_param = "page_size"
-    max_paginate_by = 100
+    pagination_class = StandardResultsSetPagination
 
 
 class CaseArchivedSearchFilter(SearchFilter):
@@ -625,20 +629,18 @@ class CaseArchivedSearchFilter(SearchFilter):
 
 
 class CaseArchivedViewSet(
-    CallCentrePermissionsViewSetMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    CallCentrePermissionsViewSetMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, CompatGenericViewSet
 ):
 
     lookup_field = "laa_reference"
     model = CaseArchived
+    queryset = CaseArchived.objects.all()
     serializer_class = CaseArchivedSerializer
 
     search_fields = ["search_field"]
 
     filter_backends = (CaseArchivedSearchFilter,)
-    paginate_by = 20
-    paginate_by_param = "page_size"
-    max_paginate_by = 100
-    pagination_serializer_class = RelativeUrlPaginationSerializer
+    pagination_class = StandardResultsSetPagination
 
 
 class CaseNotesHistoryViewSet(CallCentrePermissionsViewSetMixin, BaseCaseNotesHistoryViewSet):
@@ -654,9 +656,7 @@ class CSVUploadViewSet(CallCentreManagerPermissionsViewSetMixin, BaseCSVUploadRe
     ordering = ("-month",)
     filter_fields = ("month", "provider_id")
 
-    paginate_by = 20
-    paginate_by_param = "page_size"
-    max_paginate_by = 100
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self, *args, **kwargs):
         # only return last 18 months worth
@@ -701,22 +701,24 @@ class ComplaintViewSet(
         "eod__case__personal_details__full_name",
     )
     ordering = ("-created",)
-
-    paginate_by = 20
-    paginate_by_param = "page_size"
-    max_paginate_by = 100
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self, **kwargs):
-        dashboard = self.request.QUERY_PARAMS.get("dashboard") == "True"
-        show_closed = self.request.QUERY_PARAMS.get("show_closed") == "True"
+        dashboard = self.request.query_params.get("dashboard") == "True"
+        show_closed = self.request.query_params.get("show_closed") == "True"
         return super(ComplaintViewSet, self).get_queryset(dashboard=dashboard, show_closed=show_closed)
 
-    def get_case(self, obj):
-        return obj.eod.case
+    def get_case(self, validated_data, obj=None):
+        # Cannot always depend on obj as it will be None when a new case is being created
+        # when this method gets triggered in a perform_create before the instance is saved
+        if "eod" in validated_data:
+            return validated_data["eod"].case
+        else:
+            return obj.eod.case
 
     def retrieve(self, request, *args, **kwargs):
         response = super(ComplaintViewSet, self).retrieve(request, *args, **kwargs)
-        self.object.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
+        self.instance.audit_log.add(AuditLog.objects.create(user=request.user, action=AuditLog.ACTIONS.VIEWED))
         return response
 
 

@@ -4,7 +4,6 @@ from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 
 from core.models import get_web_user
-
 from .serializers import ExportSerializer
 from .models import Export
 
@@ -14,8 +13,8 @@ class ExportListView(generics.ListAPIView, generics.DestroyAPIView):
     model = Export
     permission_classes = (IsAdminUser,)
     authentication_classes = (SessionAuthentication,)
-    page_size = 1000
     scheduled = False
+    queryset = Export.objects.all()
 
     def get_queryset(self):
         if self.scheduled:

@@ -7,6 +7,7 @@ from django.http import Http404
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.response import Response as DRFResponse
 from rest_framework import status
+from rest_framework import mixins
 
 
 class NoParentReferenceException(BaseException):
@@ -25,9 +26,9 @@ class NestedGenericModelMixin(object):
         if not parent_key:
             raise NoParentReferenceException("Trying to do a nested lookup on a non-nested viewset")
         parent_viewset_instance = self.parent(request=self.request, kwargs={self.lookup_field: parent_key})
-        parent_obj = parent_viewset_instance.get_object(
-            queryset=parent_viewset_instance.get_queryset().select_related(None)
-        )
+        # LGA-1773 can no longer pass queryset to get_object > drf 3.0, set flag to allow select_related in parent viewset
+        parent_viewset_instance.do_select_related = True
+        parent_obj = parent_viewset_instance.get_object()
         return parent_obj
 
     def get_parent_object_or_none(self):
@@ -100,9 +101,16 @@ class JsonPatchViewSetMixin(object):
             "forwards": forwards.patch,
         }
 
-    def pre_save(self, obj):
+    def perform_create(self, serializer):
         original_obj = self.get_object()
         self.__pre_save__ = self.get_serializer_class()(original_obj).data
+
+        return super(JsonPatchViewSetMixin, self).perform_create(serializer)
+
+    def perform_update(self, serializer):
+        original_obj = self.get_object()
+        self.__pre_save__ = self.get_serializer_class()(original_obj).data
+        super(JsonPatchViewSetMixin, self).perform_update(serializer)
 
     def post_save(self, obj, created=False, **kwargs):
         super(JsonPatchViewSetMixin, self).post_save(obj, created=created)
@@ -118,7 +126,7 @@ class FormActionMixin(object):
         obj = self.get_object()
 
         _form_kwargs = form_kwargs.copy()
-        _form_kwargs["data"] = request.DATA
+        _form_kwargs["data"] = request.data
         _form_kwargs[self.FORM_ACTION_OBJ_PARAM] = obj
 
         form = Form(**_form_kwargs)
@@ -132,3 +140,27 @@ class FormActionMixin(object):
                 return DRFResponse(serializer.data, status=status.HTTP_200_OK)
 
         return DRFResponse(dict(form.errors), status=status.HTTP_400_BAD_REQUEST)
+
+
+class ClaCreateModelMixin(mixins.CreateModelMixin):
+    def perform_create(self, serializer):
+        obj = serializer.save()
+        self.post_save(serializer.instance, created=True)
+        return obj
+
+
+class ClaRetrieveModelMixinWithSelfInstance(mixins.RetrieveModelMixin):
+    """
+    Retrieve a model instance.
+    """
+
+    def retrieve(self, request, *args, **kwargs):
+        self.instance = self.get_object()
+        serializer = self.get_serializer(self.instance)
+        return DRFResponse(serializer.data)
+
+
+class ClaUpdateModelMixin(mixins.UpdateModelMixin):
+    def perform_update(self, serializer):
+        super(ClaUpdateModelMixin, self).perform_update(serializer)
+        self.post_save(serializer.instance, created=False)

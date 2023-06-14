@@ -1,11 +1,13 @@
 # coding=utf-8
-from rest_framework import mixins, viewsets
+from rest_framework import mixins
+
+from core.drf.viewsets import CompatGenericViewSet
 
 from .models import Notification
 from .serializers import NotificationSerializer
 
 
-class BaseNotificationViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class BaseNotificationViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, CompatGenericViewSet):
     serializer_class = NotificationSerializer
     model = Notification
 

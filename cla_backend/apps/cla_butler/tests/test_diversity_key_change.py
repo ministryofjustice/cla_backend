@@ -46,7 +46,9 @@ class DiversityReencryptTestCase(TestCase):
         diversity.save_diversity_data(case2.personal_details.pk, self.expected_diversity_data)
         # reencrypt the diversity data using the new key only for new case
         self._test_diversity_key_change(case2, "cla")
-
         # Load the diversity data using the old key
         diversity_data = diversity.load_diversity_data(self.case.personal_details.pk, "cla")
         self.assertEqual(self.expected_diversity_data, diversity_data)
+        # Attempt to load re-enecrypted data using old keys
+        with self.assertRaises(InternalError):
+            diversity.load_diversity_data(case2.personal_details.pk, "cla")

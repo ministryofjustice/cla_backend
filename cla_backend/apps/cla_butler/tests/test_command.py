@@ -31,11 +31,11 @@ class DiversityReencryptCommandTestCase(CreateSampleDiversityData, TestCase):
 
     def mock_schedule_tasks(self, tasks, passphrase_old, **kwargs):
         self.scheduled_tasks = tasks
-        # (count divided by chunk size) plus (count mod chunk size) - Required for when you have a count that is not
-        # divisible by the chunk size
-        tasks_count = (len(self.pd_records_ids) / ClaButlerDiversityReencryptCommand.chunk_size) + (
-            len(self.pd_records_ids) % ClaButlerDiversityReencryptCommand.chunk_size
-        )
+        records_count = len(self.pd_records_ids)
+        chunk_size = ClaButlerDiversityReencryptCommand.chunk_size
+
+        remainder = 1 if records_count % chunk_size else 0
+        tasks_count = int((records_count / chunk_size) + remainder)
         self.assertEqual(len(tasks), tasks_count)
 
     @mock.patch(

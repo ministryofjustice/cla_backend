@@ -1,3 +1,5 @@
+import os
+
 import mock
 from django.test import TestCase
 from django.utils import timezone
@@ -5,13 +7,14 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from cla_butler.constants import delete_option_three_years, delete_option_no_personal_details
-from cla_butler.tasks import DeleteOldData, get_pks, DiversityDataCheckTask
+from cla_butler.tasks import DeleteOldData, get_pks, DiversityDataCheckTask, DiversityDataReencryptTask
 from core.tests.mommy_utils import make_recipe
 from cla_auditlog.models import AuditLog
 from complaints.models import Complaint
 from legalaid.models import Case, EODDetails, PersonalDetails
 from cla_butler.models import DiversityDataCheck, ACTION, STATUS
 from cla_butler.tests.mixins import CreateSampleDiversityData
+from legalaid.utils import diversity
 
 
 def mock_load_diversity_data(personal_details_pk, passphrase):
@@ -307,3 +310,24 @@ class DiversityDataCheckTaskTestCase(CreateSampleDiversityData, TestCase):
         self.assertEqual(success_count, 5)
         self.assertEqual(failure_count, 5)
         self.assertEqual(failure_messages, expected_failure_messages)
+
+
+class DiversityDataReencryptTaskTestCase(CreateSampleDiversityData, TestCase):
+    def get__key(self, key_name):
+        file_path = os.path.join(os.path.dirname(diversity.__file__), "keys", key_name)
+        with open(file_path) as f:
+            return f.read()
+
+    def test_run(self):
+        previous_key = diversity.get_private_key()
+        mock_keys = {
+            "PREVIOUS_DIVERSITY_PRIVATE_KEY": previous_key,
+            "DIVERSITY_PRIVATE_KEY": self.get__key("diversity_dev_reencrypt_private.key"),
+            "DIVERSITY_PUBLIC_KEY": self.get__key("diversity_dev_reencrypt_public.key"),
+        }
+        with mock.patch.dict(os.environ, mock_keys):
+            ids_to_reencrypt = self.pd_records_ids[0:5]
+            DiversityDataReencryptTask().run("cla", ids_to_reencrypt)
+            qs = DiversityDataCheck.objects.filter(action=ACTION.REENCRYPT, status=STATUS.OK)
+            reencrypted_items = list(qs.values_list("personal_details_id", flat=True))
+            self.assertListEqual(ids_to_reencrypt, reencrypted_items)

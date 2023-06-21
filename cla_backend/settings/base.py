@@ -67,9 +67,6 @@ GOVUK_NOTIFY_TEMPLATES = {
     "CALLBACK_CREATED_THIRD_PARTY": os.environ.get(
         "GOVUK_NOTIFY_TEMPLATE_CALLBACK_CREATED", "d07bb321-bd1d-4fc1-8b23-80eb0f1e59a1"
     ),
-    "CALLBACK_CREATED_PERSONAL": os.environ.get(
-        "GOVUK_NOTIFY_TEMPLATE_CALLBACK_CREATED", "85bb13ed-2f1f-4a44-b198-e1ad22fcafc6"
-    ),
 }
 
 
@@ -346,8 +343,6 @@ TEST_MODE = False
 EMAIL_TIMEOUT = 10
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
-CALL_CENTRE_NOTIFY_EMAIL_ADDRESS = os.environ.get("CALL_CENTRE_NOTIFY_EMAIL_ADDRESS", DEFAULT_EMAIL_TO)
 
 # LGA-2236 Set rota hours start and end times using environment variables so can change without updating the code.
 # Want to alter start and end times via environment variables.

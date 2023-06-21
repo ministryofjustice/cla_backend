@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-14 10:34+0000\n"
+"POT-Creation-Date: 2023-06-08 10:57+0100\n"
 "PO-Revision-Date: 2015-05-20 12:59+0000\n"
 "Last-Translator: Igor U\n"
 "Language-Team: English (http://www.transifex.com/projects/p/cla-backend/language/en/)\n"
@@ -2022,6 +2022,18 @@ msgstr ""
 
 #: apps/diagnosis/data/graph.graphml.tpl:3166
 msgid "Parent is a foster carer or an approved prospective adoptive parent  or for a former foster parent of a young person who continues to reside with their former foster carer making an application to the first tier tribunal in a SEND case"
+msgstr ""
+
+#: apps/diagnosis/data/graph.graphml.tpl:3190
+msgid "Special Guardianship Order"
+msgstr ""
+
+#: apps/diagnosis/data/graph.graphml.tpl:3195
+msgid "Parent, or person with parental responsibility, opposing or seeking to discharge a Special Guardianship Order"
+msgstr ""
+
+#: apps/diagnosis/data/graph.graphml.tpl:3203
+msgid "Any other person seeking a Special Guardianship Order, or seeking to discharge an order"
 msgstr ""
 
 #: apps/timer/models.py:54

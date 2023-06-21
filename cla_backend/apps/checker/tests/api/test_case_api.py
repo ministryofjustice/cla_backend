@@ -324,9 +324,8 @@ class CallMeBackCaseTestCase(BaseCaseTestCase):
                 "sla_72h": timezone.make_aware(expected_sla_72h, _dt.tzinfo).isoformat(),
             },
         )
-
         # checking email
-        self.assertEquals(len(self.mailbox), 1)
+        self.assertEquals(len(self.mailbox), 0)
 
         # Check that logs are created in order
         first = Log.objects.order_by("-created").first()

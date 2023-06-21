@@ -319,6 +319,7 @@ workflows:
             branches:
               only:
                 - django-upgrade
+                - master
 
       - production_deploy_approval:
           requires:

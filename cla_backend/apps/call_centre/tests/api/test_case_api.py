@@ -296,7 +296,7 @@ class SuggestProviderTestCase(BaseCaseTestCase):
     #     #  ...]}
 
     @classmethod
-    def setUpClass(cls):
+    def setUpTestData(cls):
         cls.suggested_cat_providers = None
         cls.suggested_category = None
         cls.cat_eligibility_check = None

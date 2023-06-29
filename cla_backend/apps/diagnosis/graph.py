@@ -4,7 +4,7 @@ from os.path import join, abspath, dirname
 import re
 
 from django.conf import settings
-from django.template import engines
+from django.template.loader import get_template_from_string, Context
 from django.utils import translation
 from django.utils.encoding import force_text
 from django.utils.functional import lazy, SimpleLazyObject
@@ -140,11 +140,11 @@ class GraphImporter(object):
     @staticmethod
     def _get_text(a_node, is_templated, translate=True):
         if is_templated and a_node.text and "{%" in a_node.text:
-            tpl = engines["django"].from_string(u"{%% load i18n %%}%s" % a_node.text)
+            tpl = get_template_from_string(u"{%% load i18n %%}%s" % a_node.text)
             if translate:
-                return lazy(lambda: tpl.render({}), text_type)()
+                return lazy(lambda: tpl.render(Context()), text_type)()
             with translation.override("en"):
-                return tpl.render({})
+                return tpl.render(Context())
         return a_node.text
 
     @staticmethod

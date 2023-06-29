@@ -24,6 +24,7 @@ class ComplaintManager(models.Manager):
                 "eod__case__eligibility_check",
                 "eod__case__eligibility_check__category",
                 "category",
+                "logs",
             )
             .prefetch_related("eod__categories")
         )

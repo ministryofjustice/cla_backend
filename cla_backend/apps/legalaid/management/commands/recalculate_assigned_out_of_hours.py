@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.management import BaseCommand, CommandError
 from django.utils import timezone
-from argparse import SUPPRESS
+
 from legalaid.models import Case
 
 
@@ -14,15 +14,13 @@ class Command(BaseCommand):
         self.change_to_false = []
         super(Command, self).__init__(*args, **kwargs)
 
-    def add_arguments(self, parser):
-        parser.add_argument("date_string", nargs="?", default=SUPPRESS)
-        parser.add_argument("commit", nargs="?", default=SUPPRESS)
-
     def handle(self, *args, **options):
-        if "date_string" not in options:
-            raise CommandError("A start date is required")
         try:
-            date_string = options["date_string"]
+            date_string = args[0]
+        except IndexError:
+            raise CommandError("A start date is required")
+
+        try:
             dt = timezone.datetime.strptime(date_string, "%Y-%m-%d")
         except ValueError:
             raise CommandError("The start date should be a valid datetime in yyyy-mm-dd format")
@@ -41,8 +39,8 @@ class Command(BaseCommand):
         self.stdout.write(u"{count} cases will be changed to `False`.".format(count=len(self.change_to_false)))
 
         try:
-            commit = options["commit"] == "commit"
-        except KeyError:
+            commit = args[1] == "commit"
+        except IndexError:
             commit = False
 
         if commit:

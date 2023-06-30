@@ -1,4 +1,4 @@
-{
+[{
     "pk": 72, 
     "model": "legalaid.MediaCode", 
     "fields": {
@@ -6,4 +6,4 @@
         "group": 3, 
         "name": "Shelter Housing Advice line VM"
     }
-}
+}]

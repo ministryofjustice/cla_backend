@@ -300,6 +300,7 @@ workflows:
               only:
                 - master
                 - django-upgrade
+                - /^feature/LGA-2506.*/
 
       - deploy:
           name: staging_deploy_live

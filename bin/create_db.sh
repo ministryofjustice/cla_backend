@@ -8,6 +8,7 @@ migrations() {
     python manage.py loaddata initial_category.json
     python manage.py loaddata initial_mattertype.json
     python manage.py loaddata initial_media_codes.json
+    python manage.py loaddata new_media_codes.json
     python manage.py loaddata initial_complaint_categories.json
     python manage.py loaddata initial_guidance_notes.json
 }

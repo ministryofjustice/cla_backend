@@ -121,11 +121,12 @@ jobs:
       - image: cimg/python:2.7
         environment:
           DB_NAME: circle_test
-          DB_USER: root
+          DB_USER: postgres
           DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
-      - image: circleci/postgres:11.6-alpine
+      - image: postgres:14.7-bullseye
         environment:
-          POSTGRES_USER: root
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: circle_test
     steps:
       - checkout

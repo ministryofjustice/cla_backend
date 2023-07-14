@@ -6,6 +6,7 @@ MAINTENANCE_MODE=${2:-True}
 function apply_maintenance_mode() {
   NAMESPACE=$1
   DEPLOYMENTS=$2
+  URL=$3
   echo "---------------------------------------------------------------------------------------------------------------"
   echo "NAMESPACE $NAMESPACE"
   echo "MAINTENANCE MODE $MAINTENANCE_MODE"
@@ -13,11 +14,7 @@ function apply_maintenance_mode() {
 
   kubectl -n $NAMESPACE create configmap maintenance-mode --from-literal=value=$MAINTENANCE_MODE --dry-run -o yaml | kubectl apply -f -
   kubectl -n $NAMESPACE rollout restart deployment $DEPLOYMENTS
-  echo "---------------------------------------------------------------------------------------------------------------"
-}
 
-function confirm_maintenance_mode() {
-  URL=$1
   echo "Checking $URL is in maintenance mode..."
   STATUS=$(curl -L --silent --output /dev/null --write-out "%{http_code}" $URL)
   while [ "$STATUS" != "$EXPECTED_STATUS" ]; do
@@ -26,8 +23,9 @@ function confirm_maintenance_mode() {
       STATUS=$(curl -L --silent --output /dev/null --write-out "%{http_code}" $URL)
   done
   echo "DONE $EXPECTED_STATUS got $STATUS"
-}
 
+  echo "---------------------------------------------------------------------------------------------------------------"
+}
 
 if [ "$ENVIRONMENT" == "uat" ]; then
   BACKEND_NAMESPACE="laa-cla-backend-uat"
@@ -66,14 +64,10 @@ else
   exit 1
 fi
 
-apply_maintenance_mode $BACKEND_NAMESPACE "cla-backend-app cla-backend-worker"
-apply_maintenance_mode $FRONTEND_NAMESPACE "cla-frontend-app cla-frontend-socket-server"
-if [ "$ENVIRONMENT" != "uat" ]; then
-  apply_maintenance_mode $PUBLIC_NAMESPACE "cla-public-app"
-fi
 
-confirm_maintenance_mode $BACKEND_URL
-confirm_maintenance_mode $FRONTEND_URL
 if [ "$ENVIRONMENT" != "uat" ]; then
-  confirm_maintenance_mode $PUBLIC_URL
+  apply_maintenance_mode $PUBLIC_NAMESPACE "cla-public-app" $PUBLIC_URL
 fi
+apply_maintenance_mode $FRONTEND_NAMESPACE "cla-frontend-app cla-frontend-socket-server" $FRONTEND_URL
+apply_maintenance_mode $BACKEND_NAMESPACE "cla-backend-app cla-backend-worker" $BACKEND_URL
+

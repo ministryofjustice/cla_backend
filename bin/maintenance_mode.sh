@@ -12,7 +12,7 @@ function apply_maintenance_mode() {
   echo "MAINTENANCE MODE $MAINTENANCE_MODE"
   echo "EXPECTED_STATUS $EXPECTED_STATUS"
 
-  kubectl -n $NAMESPACE create configmap maintenance-mode --from-literal=value=$MAINTENANCE_MODE --dry-run -o yaml | kubectl apply -f -
+  kubectl -n $NAMESPACE create configmap maintenance-mode --from-literal=value=$MAINTENANCE_MODE --dry-run -o yaml | kubectl -n $NAMESPACE apply -f -
   kubectl -n $NAMESPACE rollout restart deployment $DEPLOYMENTS
 
   echo "Checking $URL is in maintenance mode..."

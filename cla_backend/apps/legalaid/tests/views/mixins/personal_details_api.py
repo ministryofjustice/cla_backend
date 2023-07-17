@@ -138,6 +138,13 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
 
         self.assertPersonalDetailsEqual(response.data, check)
 
+    def test_invalid_dob(self):
+        data = self._get_default_post_data()
+
+        data["dob"] = {"year": 1988, "month": 13, "day": 10}
+        response = self._create(data=data)
+        self.assertEqual(response.data["dob"], ["month must be in 1..12"])
+
     # GET
 
     def test_get(self):

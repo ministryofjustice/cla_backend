@@ -333,6 +333,9 @@ class EligibilityChecker(object):
         if self.case_data.facts.has_passported_proceedings_letter:
             return True
 
+        if self.case_data.facts.under_18_passported:
+            return True
+
         if self.case_data.facts.on_nass_benefits and self.should_passport_nass():
             return True
 

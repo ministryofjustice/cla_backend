@@ -139,9 +139,9 @@ class ThirdPartyDetailsSerializer(ThirdPartyDetailsSerializerBase):
 
 
 class PersonSerializer(PersonSerializerBase):
-    income = IncomeSerializer(required=False)
-    savings = SavingsSerializer(required=False)
-    deductions = DeductionsSerializer(required=False)
+    income = IncomeSerializer(required=False, allow_null=True)
+    savings = SavingsSerializer(required=False, allow_null=True)
+    deductions = DeductionsSerializer(required=False, allow_null=True)
 
     class Meta(PersonSerializerBase.Meta):
         fields = ("income", "savings", "deductions")

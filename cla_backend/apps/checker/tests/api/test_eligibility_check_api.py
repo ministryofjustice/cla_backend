@@ -50,3 +50,7 @@ class EligibilityCheckTestCase(EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTe
         response = self.client.get(case_ref_url, HTTP_AUTHORIZATION=self.get_http_authorization())
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    # Checker doesn't send updates for partner financial details
+    def test_patch_with_no_partner_finances(self):
+        pass

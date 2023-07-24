@@ -1,36 +1,17 @@
 [
   {
+    "model": "complaints.complaint",
+    "pk": 1,
     "fields": {
-      "id": 6,
-      "eod": "0d8384af987849598d40a8bb460d27a9",
-      "owner": null,
-      "created_by": {
-        "username": "test_operator_manager",
-        "first_name": "",
-        "last_name": ""
-      },
-      "category_name": null,
-      "full_name": "Jo Smith",
-      "category_of_law": "Discrimination, disability and other issues",
-      "case_reference": "TC-0001-0002",
-      "closed": null,
-      "voided": null,
-      "holding_letter": null,
-      "full_letter": null,
-      "out_of_sla": false,
-      "holding_letter_out_of_sla": false,
-      "status_label": "received",
-      "requires_action_at": "2023-07-25T09:56:59.967Z",
-      "created": "2023-07-24T09:56:59.967Z",
-      "modified": "2023-07-24T09:56:59.968Z",
-      "description": "Unhappy",
-      "source": "",
-      "level": 11,
-      "justified": null,
-      "resolved": null,
-      "category": null
-    },
-      "model": "complaints.complaint",
-      "pk": 1
+        "eod": 1,
+        "owner": null,
+        "created_by": 6,
+        "description": "Unhappy",
+        "source": "",
+        "level": 11,
+        "justified": null,
+        "resolved": null,
+        "category": null
+    }
   }
 ]

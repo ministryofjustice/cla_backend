@@ -1,12 +1,16 @@
 [
-    {
-        "categories": [
-            {
-                "category": "scope",
-                "is_major": false
-            }
-        ],
-        "notes": "Unhappy",
-        "reference": "0d8384af987849598d40a8bb460d27a9"
-    }
+  {
+    "fields": {
+      "categories": [
+        {
+          "category": "scope",
+          "is_major": false
+        }
+      ],
+      "notes": "Unhappy",
+      "reference": "0d8384af987849598d40a8bb460d27a9"
+    },
+    "model": "legalaid.eod_details",
+    "pk": 1
+  }
 ]

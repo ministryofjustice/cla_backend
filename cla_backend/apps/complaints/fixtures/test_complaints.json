@@ -1,7 +1,5 @@
 [
   {
-    "model": "complaints.complaint",
-    "pk": 1,
     "fields": {
         "eod": 1,
         "owner": null,
@@ -12,6 +10,8 @@
         "justified": null,
         "resolved": null,
         "category": null
-    }
+    },
+    "model": "complaints.complaint",
+    "pk": 1
   }
 ]

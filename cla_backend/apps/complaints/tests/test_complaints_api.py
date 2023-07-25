@@ -15,6 +15,7 @@ from complaints.models import Complaint
 from core.tests.mommy_utils import make_recipe
 from core.tests.test_base import SimpleResourceAPIMixin
 from legalaid.tests.views.test_base import CLAOperatorAuthBaseApiTestMixin, CLAProviderAuthBaseApiTestMixin
+from django.core.urlresolvers import reverse
 
 utc = pytz.utc
 
@@ -22,6 +23,100 @@ utc = pytz.utc
 class ComplaintTestMixin(object):
     API_URL_BASE_NAME = "complaints"
     RESOURCE_RECIPE = "complaints.complaint"
+
+
+class SearchComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase):
+    """
+    Tests to check the search functionality for complaints
+    """
+    API_URL_BASE_NAME = "complaints"
+    RESOURCE_RECIPE = "complaints.complaint"
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.case_1 = make_recipe("legalaid.case", reference="ref1",
+                             personal_details=make_recipe("legalaid.personal_details", full_name="abc"))
+        cls.case_2 = make_recipe("legalaid.case", reference="ref2",
+                             personal_details=make_recipe("legalaid.personal_details", full_name="xyz"))
+        cls.eod_1 = make_recipe("legalaid.eod_details", notes="EOD notes 1", case=cls.case_1)
+        cls.eod_2 = make_recipe("legalaid.eod_details", notes="EOD notes 2", case=cls.case_2)
+        cls.complaint_cat = make_recipe("complaints.category")
+
+    def setUp(self):
+        super(CLAOperatorAuthBaseApiTestMixin, self).setUp()
+        self.list_dashboard_url = u"%s?dashboard=True&page_size=20" % reverse(
+            "%s:%s-list" % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME))
+        self.complaints = [
+            self._create(
+                {
+                    "category": self.complaint_cat.pk,
+                    "eod": unicode(self.eod_1.reference),
+                    "description": "TEST DESCRIPTION",
+                    "source": "EMAIL",
+                    "level": LOG_LEVELS.MINOR,
+                    "justified": True}),
+            self._create(
+                {
+                    "category": self.complaint_cat.pk,
+                    "eod": unicode(self.eod_1.reference),
+                    "description": "TEST DESCRIPTION_2",
+                    "source": "EMAIL",
+                    "level": LOG_LEVELS.MINOR,
+                    "justified": True}),
+            self._create(
+                {
+                    "category": self.complaint_cat.pk,
+                    "eod": unicode(self.eod_2.reference),
+                    "description": "TEST DESCRIPTION_3",
+                    "source": "EMAIL",
+                    "level": LOG_LEVELS.MINOR,
+                    "justified": True}),
+        ]
+
+    def test_list_with_dashboard_param(self):
+        """
+        Testing that list dashboard returns all results
+        """
+        # remove the complaint that is created by the mixin as we don't need it
+        self.resource.delete()
+        response = self.client.get(
+            self.list_dashboard_url, HTTP_AUTHORIZATION="Bearer %s" % self.operator_manager_token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(3, len(response.data["results"]))
+        self.assertEqual([case["case_reference"] for case in response.data["results"]], ["ref2", "ref1", "ref1"])
+
+    def test_search_find_one_result_by_case_ref(self):
+        """
+        GET search by case reference should work
+        """
+        response = self.client.get(
+            self.list_dashboard_url + "&search=ref2", HTTP_AUTHORIZATION="Bearer %s" % self.operator_manager_token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(1, len(response.data["results"]))
+        self.assertEqual(response.data["results"][0]['case_reference'], "ref2")
+
+    def test_search_find_multiple_results_by_person_name(self):
+        # """
+        # GET search by name should work
+        # """
+        response = self.client.get(
+            self.list_dashboard_url + "&search=abc", HTTP_AUTHORIZATION="Bearer %s" % self.operator_manager_token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(2, len(response.data["results"]))
+        self.assertEqual(response.data["results"][0]['full_name'], "abc")
+
+    def test_search_find_zero_result_by_case_ref(self):
+        """
+        GET search by value that returns zero results
+        """
+        response = self.client.get(
+            self.list_dashboard_url + "&search=ref3", HTTP_AUTHORIZATION="Bearer %s" % self.operator_manager_token
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(0, len(response.data["results"]))
 
 
 class ComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase):

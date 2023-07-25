@@ -25,19 +25,28 @@ class ComplaintTestMixin(object):
     RESOURCE_RECIPE = "complaints.complaint"
 
 
-class SearchComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase):
+class SearchComplaintTestCase(
+    ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixin, SimpleResourceAPIMixin, APITestCase
+):
     """
     Tests to check the search functionality for complaints
     """
+
     API_URL_BASE_NAME = "complaints"
     RESOURCE_RECIPE = "complaints.complaint"
 
     @classmethod
     def setUpTestData(cls):
-        cls.case_1 = make_recipe("legalaid.case", reference="ref1",
-                             personal_details=make_recipe("legalaid.personal_details", full_name="abc"))
-        cls.case_2 = make_recipe("legalaid.case", reference="ref2",
-                             personal_details=make_recipe("legalaid.personal_details", full_name="xyz"))
+        cls.case_1 = make_recipe(
+            "legalaid.case",
+            reference="ref1",
+            personal_details=make_recipe("legalaid.personal_details", full_name="abc"),
+        )
+        cls.case_2 = make_recipe(
+            "legalaid.case",
+            reference="ref2",
+            personal_details=make_recipe("legalaid.personal_details", full_name="xyz"),
+        )
         cls.eod_1 = make_recipe("legalaid.eod_details", notes="EOD notes 1", case=cls.case_1)
         cls.eod_2 = make_recipe("legalaid.eod_details", notes="EOD notes 2", case=cls.case_2)
         cls.complaint_cat = make_recipe("complaints.category")
@@ -45,7 +54,8 @@ class SearchComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixi
     def setUp(self):
         super(CLAOperatorAuthBaseApiTestMixin, self).setUp()
         self.list_dashboard_url = u"%s?dashboard=True&page_size=20" % reverse(
-            "%s:%s-list" % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME))
+            "%s:%s-list" % (self.API_URL_NAMESPACE, self.API_URL_BASE_NAME)
+        )
         self.complaints = [
             self._create(
                 {
@@ -54,7 +64,9 @@ class SearchComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixi
                     "description": "TEST DESCRIPTION",
                     "source": "EMAIL",
                     "level": LOG_LEVELS.MINOR,
-                    "justified": True}),
+                    "justified": True,
+                }
+            ),
             self._create(
                 {
                     "category": self.complaint_cat.pk,
@@ -62,7 +74,9 @@ class SearchComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixi
                     "description": "TEST DESCRIPTION_2",
                     "source": "EMAIL",
                     "level": LOG_LEVELS.MINOR,
-                    "justified": True}),
+                    "justified": True,
+                }
+            ),
             self._create(
                 {
                     "category": self.complaint_cat.pk,
@@ -70,7 +84,9 @@ class SearchComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixi
                     "description": "TEST DESCRIPTION_3",
                     "source": "EMAIL",
                     "level": LOG_LEVELS.MINOR,
-                    "justified": True}),
+                    "justified": True,
+                }
+            ),
         ]
 
     def test_list_with_dashboard_param(self):
@@ -95,7 +111,7 @@ class SearchComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixi
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, len(response.data["results"]))
-        self.assertEqual(response.data["results"][0]['case_reference'], "ref2")
+        self.assertEqual(response.data["results"][0]["case_reference"], "ref2")
 
     def test_search_find_multiple_results_by_person_name(self):
         # """
@@ -106,7 +122,7 @@ class SearchComplaintTestCase(ComplaintTestMixin, CLAOperatorAuthBaseApiTestMixi
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(2, len(response.data["results"]))
-        self.assertEqual(response.data["results"][0]['full_name'], "abc")
+        self.assertEqual(response.data["results"][0]["full_name"], "abc")
 
     def test_search_find_zero_result_by_case_ref(self):
         """

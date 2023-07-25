@@ -167,7 +167,7 @@ class PartnerPersonSerializer(PersonSerializer):
         Like PersonSerializer but without child_benefits
     """
 
-    income = PartnerIncomeSerializer(required=False)
+    income = PartnerIncomeSerializer(required=False, allow_null=True)
 
     class Meta(PersonSerializer.Meta):
         pass

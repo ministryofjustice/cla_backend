@@ -939,6 +939,60 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
 
         self.assertEligibilityCheckEqual(response.data, self.resource)
 
+    def test_patch_with_no_partner_finances(self):
+        """
+        PATCH should change finances.
+        """
+        data = {
+            "you": {
+                "income": {
+                    "earnings": mi_dict_generator(500),
+                    "self_employment_drawings": mi_dict_generator(501),
+                    "child_benefits": mi_dict_generator(502),
+                    "benefits": mi_dict_generator(503),
+                    "tax_credits": mi_dict_generator(504),
+                    "maintenance_received": mi_dict_generator(505),
+                    "pension": mi_dict_generator(506),
+                    "other_income": mi_dict_generator(600),
+                    "self_employed": True,
+                },
+                "savings": {
+                    "bank_balance": 100,
+                    "investment_balance": 200,
+                    "asset_balance": 300,
+                    "credit_balance": 400,
+                },
+                "deductions": {
+                    "income_tax": mi_dict_generator(600),
+                    "national_insurance": mi_dict_generator(100),
+                    "maintenance": mi_dict_generator(710),
+                    "childcare": mi_dict_generator(7150),
+                    "mortgage": mi_dict_generator(700),
+                    "rent": mi_dict_generator(100),
+                    "criminal_legalaid_contributions": 730,
+                },
+            },
+            "partner": {
+                "income": {
+                    "earnings": mi_dict_generator(5000),
+                    "self_employment_drawings": mi_dict_generator(5001),
+                    "child_benefits": mi_dict_generator(5002),
+                    "benefits": mi_dict_generator(5003),
+                    "tax_credits": mi_dict_generator(5004),
+                    "maintenance_received": mi_dict_generator(5005),
+                    "pension": mi_dict_generator(5006),
+                    "other_income": mi_dict_generator(6000),
+                    "self_employed": False,
+                },
+                "savings": None,
+                "deductions": None,
+            },
+        }
+        response = self.client.patch(
+            self.detail_url, data, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_patch_in_error(self):
         self._test_method_in_error("patch", self.detail_url)
 

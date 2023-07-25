@@ -48,7 +48,7 @@ class EligibilityCheckTestCase(CLAProviderAuthBaseApiTestMixin, NestedEligibilit
         # CREATE NOT ALLOWED
         self._test_post_not_allowed(list_url)
 
-    # CREATE
+    # CREATE - These are commented out so that the test methods in super class for this role
 
     def test_create_no_data(self):
         pass

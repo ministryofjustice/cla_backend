@@ -23,10 +23,6 @@ envVars:
     value: "True"
   LOAD_END_TO_END_FIXTURES:
     value: "False"
-  REPLICA_DB_HOST:
-    secret:
-      name: database-11
-      key: replica_host
   FRONTEND_HOST_NAME:
     value: "training.cases.civillegaladvice.service.gov.uk"
   EXPRESS_SERVER_HOST:
@@ -35,3 +31,28 @@ envVars:
     value: "80"
   MIGRATE_OAUTH_DATA:
     value: "True"
+  DB_HOST:
+    secret:
+      name: database-14
+      key: host
+  DB_PORT:
+    secret:
+      name: database-14
+      key: port
+      optional: true
+  DB_NAME:
+    secret:
+      name: database-14
+      key: name
+  DB_USER:
+    secret:
+      name: database-14
+      key: user
+  DB_PASSWORD:
+    secret:
+      name: database-14
+      key: password
+  REPLICA_DB_HOST:
+    secret:
+      name: database-14
+      key: replica_host

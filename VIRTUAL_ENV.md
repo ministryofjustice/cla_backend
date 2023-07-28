@@ -25,8 +25,8 @@ Install python dependencies:
 
 Create the database inside postgres. Make sure the postgres service is started. Type `psql -d template1` to enter postgres, then enter:
 
-    CREATE DATABASE cla_backend_current WITH ENCODING 'UTF-8';
-    \c cla_backend_current
+    CREATE DATABASE cla_backend WITH ENCODING 'UTF-8';
+    \c cla_backend
     create extension pgcrypto;
 
 You should see a message saying `CREATE EXTENSION`. If you get an error instead, if means that you don't have the related lib installed. This is a rare case as `postgresql-contrib` gets installed automatically by homebrew and postgresapp. In linux, you can install it using `sudo apt-get install postgresql-contrib`

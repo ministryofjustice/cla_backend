@@ -113,8 +113,6 @@ if os.environ.get("STATIC_FILES_BACKEND") == "s3":
     STATICFILES_STORAGE = "cla_backend.libs.aws.s3.StaticS3Storage"
 
 AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME", "eu-west-1")
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
 

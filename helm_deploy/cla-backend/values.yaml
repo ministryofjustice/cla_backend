@@ -182,14 +182,6 @@ envVars:
     secret:
       name: s3
       key: static_files_bucket_name
-  AWS_ACCESS_KEY_ID:
-    secret:
-      name: s3
-      key: access_key_id
-  AWS_SECRET_ACCESS_KEY:
-    secret:
-      name: s3
-      key: secret_access_key
   AWS_DELETED_OBJECTS_BUCKET_NAME:
     secret:
       name: s3

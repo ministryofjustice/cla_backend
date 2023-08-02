@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.db import transaction
-from django.utils import timezone
+from django.utils import six, timezone
 from django.shortcuts import get_object_or_404
 
 from cla_eventlog import event_registry
@@ -18,6 +18,9 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response as DRFResponse
 from rest_framework.filters import OrderingFilter, DjangoFilterBackend, SearchFilter, BaseFilterBackend
+import operator
+from django.db import models
+
 
 from cla_provider.models import Provider, OutOfHoursRota, Feedback, ProviderPreAllocation
 from cla_eventlog.views import BaseEventViewSet, BaseLogViewSet
@@ -674,10 +677,36 @@ class NotificationViewSet(CallCentrePermissionsViewSetMixin, BaseNotificationVie
     pass
 
 
+class ComplaintSearchFilter(SearchFilter):
+    # LGA-2568 addition of select DISTINCT from DRF 3.0.5 onwards - see release-notes introduced because of this bug
+    # https://github.com/encode/django-rest-framework/pull/2535
+    # Later versions of DRF change this functionality so will need updating
+    def filter_queryset(self, request, queryset, view):
+        search_fields = getattr(view, 'search_fields', None)
+
+        search_terms = self.get_search_terms(request)
+
+        if not search_fields or not search_terms:
+            return queryset
+
+        orm_lookups = [
+            self.construct_search(six.text_type(search_field))
+            for search_field in search_fields
+        ]
+
+        for search_term in search_terms:
+            queries = [
+                models.Q(**{orm_lookup: search_term})
+                for orm_lookup in orm_lookups
+            ]
+            queryset = queryset.filter(reduce(operator.or_, queries))
+        return queryset
+
+
 class ComplaintViewSet(
     CallCentrePermissionsViewSetMixin, CaseOrganisationAssignCurrentOrganisationMixin, BaseComplaintViewSet
 ):
-    filter_backends = (DjangoFilterBackend, OrderingFilter, SearchFilter)
+    filter_backends = (DjangoFilterBackend, OrderingFilter, ComplaintSearchFilter)
     filter_fields = ("justified", "level", "category", "owner", "created_by")
 
     search_fields = (

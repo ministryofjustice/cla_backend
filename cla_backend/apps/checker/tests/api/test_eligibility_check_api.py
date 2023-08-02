@@ -54,3 +54,6 @@ class EligibilityCheckTestCase(EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTe
     # Checker doesn't send updates for partner financial details
     def test_patch_with_no_partner_finances(self):
         pass
+
+    def test_patch_with_no_partner_income(self):
+        pass

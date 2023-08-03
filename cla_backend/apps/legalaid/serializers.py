@@ -253,6 +253,10 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
     has_passported_proceedings_letter = serializers.NullBooleanField(default=None)
     on_nass_benefits = serializers.NullBooleanField(default=None)
     has_partner = serializers.NullBooleanField(default=None)
+    under_18_passported = serializers.NullBooleanField(default=None)
+    is_you_under_18 = serializers.NullBooleanField(default=None)
+    under_18_receive_regular_payment = serializers.NullBooleanField(default=None)
+    under_18_has_valuables = serializers.NullBooleanField(default=None)
 
     class Meta(object):
         model = EligibilityCheck

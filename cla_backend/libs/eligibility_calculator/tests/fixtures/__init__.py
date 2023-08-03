@@ -10,6 +10,10 @@ case_data_dict = {
         "is_partner_opponent": False,
         "dependants_young": 0,
         "dependants_old": 0,
+        "under_18_passported": None,
+        "is_you_under_18": None,
+        "under_18_receive_regular_payment": None,
+        "under_18_has_valuables": None,
     },
     "you": {
         "income": {

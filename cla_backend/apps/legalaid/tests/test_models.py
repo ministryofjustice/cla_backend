@@ -65,6 +65,10 @@ def get_full_case(matter_type1, matter_type2, provider=None):
         disregards={"criminal_injuries": True},
         on_nass_benefits=True,
         is_you_or_your_partner_over_60=True,
+        under_18_passported=False,
+        is_you_under_18=False,
+        under_18_receive_regular_payment=False,
+        under_18_has_valuables=False,
         has_partner=True,
         calculations={"disposable_income": 1000},
         has_passported_proceedings_letter=False,
@@ -188,6 +192,10 @@ class EligibilityCheckTestCase(TestCase):
             on_passported_benefits=True,
             on_nass_benefits=False,
             has_partner=False,
+            under_18_passported=False,
+            is_you_under_18=False,
+            under_18_receive_regular_payment=False,
+            under_18_has_valuables=False,
         )
 
         case_data = check.to_case_data()
@@ -203,6 +211,10 @@ class EligibilityCheckTestCase(TestCase):
                     "on_nass_benefits": False,
                     "has_partner": False,
                     "is_partner_opponent": False,
+                    "under_18_passported": False,
+                    "is_you_under_18": False,
+                    "under_18_receive_regular_payment": False,
+                    "under_18_has_valuables": False,
                 },
                 you={
                     "savings": {
@@ -311,6 +323,10 @@ class EligibilityCheckTestCase(TestCase):
             on_passported_benefits=True,
             on_nass_benefits=False,
             has_partner=True,
+            under_18_passported=False,
+            is_you_under_18=False,
+            under_18_receive_regular_payment=False,
+            under_18_has_valuables=False,
         )
 
         case_data = check.to_case_data()
@@ -326,6 +342,10 @@ class EligibilityCheckTestCase(TestCase):
                     "on_nass_benefits": False,
                     "has_partner": True,
                     "is_partner_opponent": False,
+                    "under_18_passported": False,
+                    "is_you_under_18": False,
+                    "under_18_receive_regular_payment": False,
+                    "under_18_has_valuables": False,
                 },
                 you={
                     "savings": {
@@ -461,6 +481,10 @@ class EligibilityCheckTestCase(TestCase):
             on_passported_benefits=True,
             on_nass_benefits=False,
             has_partner=True,
+            under_18_passported=False,
+            is_you_under_18=False,
+            under_18_receive_regular_payment=False,
+            under_18_has_valuables=False,
         )
 
         case_data = check.to_case_data()
@@ -476,6 +500,10 @@ class EligibilityCheckTestCase(TestCase):
                     "on_nass_benefits": False,
                     "has_partner": True,
                     "is_partner_opponent": False,
+                    "under_18_passported": False,
+                    "is_you_under_18": False,
+                    "under_18_receive_regular_payment": False,
+                    "under_18_has_valuables": False,
                 },
                 you={
                     "savings": {
@@ -1247,6 +1275,10 @@ class SplitCaseTestCase(CloneModelsTestCaseMixin, TestCase):
                 "on_passported_benefits",
                 "on_nass_benefits",
                 "is_you_or_your_partner_over_60",
+                "under_18_passported",
+                "is_you_under_18",
+                "under_18_receive_regular_payment",
+                "under_18_has_valuables",
                 "has_partner",
                 "calculations",
                 "specific_benefits",

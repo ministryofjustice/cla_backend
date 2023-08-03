@@ -57,3 +57,7 @@ class EligibilityCheckTestCase(EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTe
 
     def test_patch_with_no_partner_income(self):
         pass
+
+    # Checker doesn't passport under 18s
+    def test_eligibility_check_under_18(self):
+        pass

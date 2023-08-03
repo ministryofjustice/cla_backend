@@ -185,6 +185,10 @@ class EligibilityCheckSerializer(EligibilityCheckSerializerBase):
             "specific_benefits",
             "disregards",
             "has_passported_proceedings_letter",
+            "under_18_passported",
+            "is_you_under_18",
+            "under_18_receive_regular_payment",
+            "under_18_has_valuables",
         )
         writable_nested_fields = ["you", "partner", "property_set", "disputed_savings"]
 

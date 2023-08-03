@@ -388,6 +388,10 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     on_passported_benefits = models.NullBooleanField(default=None)
     has_passported_proceedings_letter = models.NullBooleanField(default=None)
     on_nass_benefits = models.NullBooleanField(default=None)
+    under_18_passported = models.NullBooleanField(default=None)
+    is_you_under_18 = models.NullBooleanField(default=None)
+    under_18_receive_regular_payment = models.NullBooleanField(default=None)
+    under_18_has_valuables = models.NullBooleanField(default=None)
     specific_benefits = JSONField(null=True, blank=True)
     disregards = JSONField(null=True, blank=True)
 
@@ -491,6 +495,11 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         d["facts"]["on_passported_benefits"] = self.on_passported_benefits
         d["facts"]["has_passported_proceedings_letter"] = self.has_passported_proceedings_letter
         d["facts"]["on_nass_benefits"] = self.on_nass_benefits
+
+        d["facts"]["under_18_passported"] = self.under_18_passported
+        d["facts"]["is_you_under_18"] = self.is_you_under_18
+        d["facts"]["under_18_receive_regular_payment"] = self.under_18_receive_regular_payment
+        d["facts"]["under_18_has_valuables"] = self.under_18_has_valuables
 
         if self.you:
             you_props = {

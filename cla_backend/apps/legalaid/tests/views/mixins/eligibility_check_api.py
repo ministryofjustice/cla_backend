@@ -1122,6 +1122,17 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["is_eligible"], "unknown")
 
+    def test_eligibility_check_under_18(self):
+        from cla_common.constants import ELIGIBILITY_STATES
+
+        state, ec, reasons = self.resource.get_eligibility_state()
+        self.assertEqual(state, ELIGIBILITY_STATES.UNKNOWN)
+        data = {"under_18_passported": True}
+        response = self.client.patch(
+            self.detail_url, data=data, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+        )
+        self.assertEqual(response.data["state"], ELIGIBILITY_STATES.YES)
+
 
 class NestedEligibilityCheckAPIMixin(NestedSimpleResourceAPIMixin, EligibilityCheckAPIMixin):
     LOOKUP_KEY = "case_reference"

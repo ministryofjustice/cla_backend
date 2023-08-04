@@ -3,7 +3,6 @@ import logging
 from datetime import datetime, time
 from itertools import groupby
 
-import boto
 from django.conf import settings
 from django.core import serializers
 from django.core.management.base import BaseCommand
@@ -12,7 +11,7 @@ from pytz import UTC
 
 from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_eventlog.models import Log
-from cla_backend.libs.aws.s3 import ReportsS3
+from cla_backend.libs.aws.s3 import ReportsS3, ClientError
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +74,7 @@ class Command(BaseCommand):
             dupes_to_remove = Log.objects.filter(id__in=same_day_consecutive_outcome_log_ids)
             try:
                 self.write_queryset_to_s3(dupes_to_remove)
-            except boto.exception.S3ResponseError as e:
+            except ClientError as e:
                 logger.error(
                     "LGA-125: Could not get bucket {}: {}".format(settings.AWS_DELETED_OBJECTS_BUCKET_NAME, e)
                 )

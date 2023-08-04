@@ -14,8 +14,6 @@ bleach==3.3.0
     # via -r requirements/source/requirements-base.in
 boto3==1.17.112
     # via -r requirements/source/requirements-base.in
-boto==2.39.0
-    # via -r requirements/source/requirements-base.in
 botocore==1.20.112
     # via
     #   boto3

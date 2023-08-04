@@ -3,13 +3,11 @@ import sys
 import os
 
 import sentry_sdk
-from boto.s3.connection import NoHostProvided
 from cla_common.call_centre_availability import OpeningHours
 from cla_common.services import CacheAdapter
 from collections import defaultdict
 from kombu import transport
 from sentry_sdk.integrations.django import DjangoIntegration
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 from cla_backend.sqs import CLASQSChannel
 
 
@@ -115,10 +113,6 @@ if os.environ.get("STATIC_FILES_BACKEND") == "s3":
 AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME", "eu-west-1")
 AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
-
-# Annoyingly the host parameter boto.s3.connection.S3Connection needs to be host string if it's not the default
-# value of boto.s3.connection.NoHostProvided class reference and not None
-AWS_S3_HOST = os.environ.get("AWS_S3_HOST", NoHostProvided)
 
 # This bucket needs to a private bucket as it will contain sensitive reports
 AWS_REPORTS_STORAGE_BUCKET_NAME = os.environ.get("AWS_REPORTS_STORAGE_BUCKET_NAME")
@@ -400,24 +394,11 @@ OBIEE_IP_PERMISSIONS = ("*",)
 OBIEE_EMAIL_TO = os.environ.get("OBIEE_EMAIL_TO", DEFAULT_EMAIL_TO)
 OBIEE_ZIP_PASSWORD = os.environ.get("OBIEE_ZIP_PASSWORD")
 
-# celery
-if all([env_var_truthy_intention("SQS_ACCESS_KEY"), env_var_truthy_intention("SQS_SECRET_KEY")]):
-    import urllib
-
-    BROKER_URL = "sqs://{access_key}:{secret_key}@".format(
-        access_key=urllib.quote(os.environ.get("SQS_ACCESS_KEY"), safe=""),
-        secret_key=urllib.quote(os.environ.get("SQS_SECRET_KEY"), safe=""),
-    )
-else:
-    # if no BROKER_URL specified then don't try to use celery
-    # because it'll just cause errors
-    CELERY_ALWAYS_EAGER = True
-
 CLA_ENV = os.environ.get("CLA_ENV", "local")
 
 BROKER_TRANSPORT_OPTIONS = {
     "polling_interval": 10,
-    "region": os.environ.get("SQS_REGION", "eu-west-1"),
+    "region": os.environ.get("SQS_REGION", "eu-west-2"),
     "wait_time_seconds": 20,
 }
 
@@ -426,11 +407,15 @@ if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):
     # This is to stop actions such as ListQueues being triggered
     # which we do not have on the cloud platform environments
     transport.SQS.Transport.Channel = CLASQSChannel
+    BROKER_URL = "sqs://"
 
     predefined_queue_url = os.environ.get("CELERY_PREDEFINED_QUEUE_URL")
     CELERY_DEFAULT_QUEUE = predefined_queue_url.split("/")[-1]
     BROKER_TRANSPORT_OPTIONS["predefined_queue_url"] = predefined_queue_url
 else:
+    # if no BROKER_URL specified then don't try to use celery
+    # because it'll just cause errors
+    CELERY_ALWAYS_EAGER = True
     BROKER_TRANSPORT_OPTIONS["queue_name_prefix"] = "env-%(env)s-" % {"env": CLA_ENV}
 
 CELERY_ACCEPT_CONTENT = ["yaml"]  # because json serializer doesn't support dates

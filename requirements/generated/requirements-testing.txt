@@ -4,11 +4,9 @@
 #
 #    pip-compile --output-file=requirements/generated/requirements-testing.txt requirements/source/requirements-testing.in
 #
-amqp==1.4.9
+amqp==2.6.1
     # via kombu
-anyjson==0.3.3
-    # via kombu
-billiard==3.3.0.23
+billiard==3.5.0.5
     # via celery
 bleach==3.3.0
     # via -r requirements/source/requirements-base.in
@@ -18,7 +16,7 @@ botocore==1.20.112
     # via
     #   boto3
     #   s3transfer
-celery==3.1.18
+celery==4.0.2
     # via -r requirements/source/requirements-base.in
 certifi==2021.10.8
     # via
@@ -133,7 +131,9 @@ idna==2.10
     #   requests
     #   urllib3
 importlib-metadata==2.1.3
-    # via sqlalchemy
+    # via
+    #   kombu
+    #   sqlalchemy
 ipaddress==1.0.23
     # via
     #   cryptography
@@ -150,7 +150,7 @@ jsonpatch==1.9
     # via -r requirements/source/requirements-base.in
 jsonpointer==2.3
     # via jsonpatch
-kombu==3.0.37
+kombu==4.6.11
     # via celery
 logstash-formatter==0.5.9
     # via -r requirements/source/requirements-base.in
@@ -254,6 +254,8 @@ urllib3[secure]==1.26.14
     #   sentry-sdk
 uwsgi==2.0.18
     # via -r requirements/source/requirements-base.in
+vine==1.3.0
+    # via amqp
 webdriver-manager==1.6.2
     # via -r requirements/source/requirements-testing.in
 webencodings==0.5.1

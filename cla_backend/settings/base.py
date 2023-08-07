@@ -401,6 +401,7 @@ BROKER_TRANSPORT_OPTIONS = {
 }
 
 if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):
+    BROKER_URL = "sqs://"
     predefined_queue_url = os.environ.get("CELERY_PREDEFINED_QUEUE_URL")
     CELERY_DEFAULT_QUEUE = predefined_queue_url.split("/")[-1]
     BROKER_TRANSPORT_OPTIONS["predefined_queues"] = {CELERY_DEFAULT_QUEUE: {"url": predefined_queue_url}}
@@ -422,6 +423,7 @@ CELERY_ENABLE_REMOTE_CONTROL = False  # doesn't work well under docker
 CELERY_TIMEZONE = "UTC"
 # apps with celery tasks
 CELERY_IMPORTS = ["reports.tasks", "notifications.tasks"]
+CELERY_TASK_PROTOCOL = 1
 
 CONTRACT_2018_ENABLED = os.environ.get("CONTRACT_2018_ENABLED", "True") == "True"
 PING_JSON_KEYS["CONTRACT_2018_ENABLED_key"] = "CONTRACT_2018_ENABLED"

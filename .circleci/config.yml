@@ -324,7 +324,7 @@ workflows:
 
       - production_deploy_approval:
           requires:
-            - staging_deploy_live
+            - training_deploy_live
           type: approval
           filters:
             branches:

@@ -1,3 +1,4 @@
+from tempfile import NamedTemporaryFile
 from storages.backends.s3boto3 import S3Boto3Storage
 from botocore.exceptions import ClientError
 
@@ -13,16 +14,17 @@ class StaticS3Storage(S3Boto3Storage):
 class ReportsS3:
     @classmethod
     def get_s3_connection(cls, bucket_name):
-        return StaticS3Storage(bucket=bucket_name)
+        return S3Boto3Storage(bucket=bucket_name)
 
     @classmethod
     def download_file(cls, bucket_name, key):
         try:
-            response = cls.get_s3_connection(bucket_name).bucket.Object(key).get()
+            obj = cls.get_s3_connection(bucket_name).bucket.Object(key.strip("/"))
+            data = NamedTemporaryFile()
+            obj.download_fileobj(data)
+            return {"headers": {"Content-Type": obj.content_type}, "body": data}
         except ClientError:
             return None
-
-        return {"headers": {"Content-Type": response["ContentType"]}, "body": response["Body"]}
 
     @classmethod
     def save_file(cls, bucket_name, key, path):

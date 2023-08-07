@@ -112,6 +112,8 @@ class ExportTask(ExportTaskBase):
 
 
 class OBIEEExportTask(ExportTaskBase):
+    name = "obieeexporttask"
+
     def run(self, user_id, filename, form_class_name, post_data, *args, **kwargs):
         """
         Export a full dump of the db for OBIEE export and make it available

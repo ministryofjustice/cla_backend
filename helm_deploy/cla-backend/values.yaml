@@ -156,14 +156,6 @@ envVars:
     value: "True"
   SQS_REGION:
     value: "eu-west-2"
-  SQS_ACCESS_KEY:
-    secret:
-      name: sqs
-      key: access_key_id
-  SQS_SECRET_KEY:
-    secret:
-      name: sqs
-      key: secret_access_key
   OBIEE_EMAIL_TO:
     secret:
       name: obiee

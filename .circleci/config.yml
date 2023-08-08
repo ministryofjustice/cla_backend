@@ -97,6 +97,9 @@ jobs:
       - run:
           name: Setup Python environment
           command: |
+            echo "Installing ibcurl4-gnutls-dev because it is required for pycurl"
+            sudo apt-get update
+            sudo apt-get install -y libcurl4-gnutls-dev
             pip install virtualenv
             virtualenv pip-compile-env
       - restore_cache:
@@ -137,6 +140,9 @@ jobs:
       - run:
           name: Setup Python environment
           command: |
+            echo "Installing ibcurl4-gnutls-dev because it is required for pycurl"
+            sudo apt-get update
+            sudo apt-get install -y libcurl4-gnutls-dev
             sudo apt-get update && sudo apt-get install -y libpython2.7 firefox
             pip install virtualenv
             virtualenv env

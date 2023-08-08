@@ -19,16 +19,17 @@ class ReportsS3:
     @classmethod
     def download_file(cls, bucket_name, key):
         try:
-            obj = cls.get_s3_connection(bucket_name).bucket.Object(key.strip("/"))
+            obj = cls.get_s3_connection(bucket_name).bucket.Object(key)
             data = NamedTemporaryFile()
             obj.download_fileobj(data)
+            data.seek(0)
             return {"headers": {"Content-Type": obj.content_type}, "body": data}
         except ClientError:
             return None
 
     @classmethod
     def save_file(cls, bucket_name, key, path):
-        cls.get_s3_connection(bucket_name).save(key, open(path, "rb"))
+        cls.get_s3_connection(bucket_name).bucket.Object(key).upload_file(path)
 
     @classmethod
     def delete_file(cls, bucket_name, key):

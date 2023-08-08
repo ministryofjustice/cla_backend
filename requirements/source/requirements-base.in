@@ -42,7 +42,7 @@ polib==1.0.6
 https://github.com/ministryofjustice/djorm-ext-pgfulltext/archive/refs/tags/0.1.0.tar.gz
 celery[sqs]==4.0.2
 kombu==4.1.0
-PyYAML==5.3.1
+PyYAML==5.4
 pyminizip==0.2.3
 
 #Irat healthcheck and ping package

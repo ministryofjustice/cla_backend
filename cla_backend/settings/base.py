@@ -7,6 +7,8 @@ from cla_common.call_centre_availability import OpeningHours
 from cla_common.services import CacheAdapter
 from collections import defaultdict
 from sentry_sdk.integrations.django import DjangoIntegration
+from kombu import transport
+from cla_backend.sqs import CLASQSChannel
 
 
 def env_var_truthy_intention(name):
@@ -401,10 +403,14 @@ BROKER_TRANSPORT_OPTIONS = {
 }
 
 if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):
+    # Monkey patch the SQS transport channel to use our channel
+    # This is to stop actions such as ListQueues being triggered
+    # which we do not have on the cloud platform environments
+    transport.SQS.Transport.Channel = CLASQSChannel
     BROKER_URL = "sqs://"
     predefined_queue_url = os.environ.get("CELERY_PREDEFINED_QUEUE_URL")
     CELERY_DEFAULT_QUEUE = predefined_queue_url.split("/")[-1]
-    BROKER_TRANSPORT_OPTIONS["predefined_queues"] = {CELERY_DEFAULT_QUEUE: {"url": predefined_queue_url}}
+    BROKER_TRANSPORT_OPTIONS["predefined_queue_url"] = predefined_queue_url
 else:
     # if no BROKER_URL specified then don't try to use celery
     # because it'll just cause errors

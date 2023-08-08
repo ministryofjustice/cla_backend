@@ -14,11 +14,13 @@ bleach==3.3.0
     # via -r requirements/source/requirements-base.in
 boto3==1.17.112
     # via -r requirements/source/requirements-base.in
+boto==2.49.0
+    # via celery
 botocore==1.20.112
     # via
     #   boto3
     #   s3transfer
-celery==4.0.2
+celery[sqs]==4.0.2
     # via -r requirements/source/requirements-base.in
 certifi==2021.10.8
     # via
@@ -220,6 +222,8 @@ psycopg2==2.7.5
     # via -r requirements/source/requirements-base.in
 pycparser==2.21
     # via cffi
+pycurl==7.43.0.5
+    # via celery
 pyjwt==1.7.1
     # via notifications-python-client
 pyminizip==0.2.3

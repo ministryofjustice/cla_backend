@@ -41,7 +41,7 @@ FROM base AS development
 # additional package required otherwise build of coveralls fails
 RUN apk add --no-cache libffi-dev firefox-esr \
 
-RUN pip install -r ./requirements/requirements-dev.txt --no-cache-dir
+RUN PIP_CONSTRAINT=/tmp/constraint.txt pip install -r ./requirements/requirements-dev.txt --no-cache-dir
 COPY . .
 
 # Make sure static assets directory has correct permissions
@@ -67,7 +67,7 @@ CMD ["./manage.py", "test"]
 FROM base AS production
 
 # Make sure static assets directory has correct permissions
-RUN pip install -r ./requirements/requirements-production.txt --no-cache-dir
+RUN PIP_CONSTRAINT=/tmp/constraint.txt pip install -r ./requirements/requirements-production.txt --no-cache-dir
 COPY . .
 
 # Make sure static assets directory has correct permissions

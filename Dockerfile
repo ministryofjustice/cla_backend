@@ -28,6 +28,10 @@ WORKDIR /home/app
 
 COPY ./requirements/generated/ ./requirements
 
+# cython pyyaml bug requires fixing cython to <3.0 otherwise pyyaml won't build
+RUN echo 'Cython < 3.0' > /tmp/constraint.txt
+RUN PIP_CONSTRAINT=/tmp/constraint.txt pip install 'PyYAML==5.4.1'
+
 #################################################
 # DEVELOPMENT
 #################################################
@@ -35,8 +39,9 @@ COPY ./requirements/generated/ ./requirements
 FROM base AS development
 
 # additional package required otherwise build of coveralls fails
-RUN apk add --no-cache libffi-dev firefox-esr
-RUN pip install -r ./requirements/requirements-dev.txt --no-cache-dir
+RUN apk add --no-cache libffi-dev firefox-esr \
+
+RUN PIP_CONSTRAINT=/tmp/constraint.txt pip install -r ./requirements/requirements-dev.txt --no-cache-dir
 COPY . .
 
 # Make sure static assets directory has correct permissions
@@ -62,7 +67,7 @@ CMD ["./manage.py", "test"]
 FROM base AS production
 
 # Make sure static assets directory has correct permissions
-RUN pip install -r ./requirements/requirements-production.txt --no-cache-dir
+RUN PIP_CONSTRAINT=/tmp/constraint.txt pip install -r ./requirements/requirements-production.txt --no-cache-dir
 COPY . .
 
 # Make sure static assets directory has correct permissions

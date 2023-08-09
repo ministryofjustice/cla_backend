@@ -87,6 +87,8 @@ class ExportTaskBase(Task):
 
 
 class ExportTask(ExportTaskBase):
+    name = "exporttask"
+
     def run(self, user_id, filename, form_class_name, post_data, *args, **kwargs):
         self.user = User.objects.get(pk=user_id)
         self._create_export()
@@ -151,12 +153,6 @@ class OBIEEExportTask(ExportTaskBase):
                 raise
             finally:
                 pass
-
-
-# The Task base class no longer automatically register tasks
-# https://docs.celeryq.dev/en/v4.0.0/whatsnew-4.0.html#the-task-base-class-no-longer-automatically-register-tasks
-# https://github.com/celery/celery/issues/5992
-app.tasks.register(OBIEEExportTask())
 
 
 class ReasonForContactingExportTask(ExportTaskBase):
@@ -238,4 +234,6 @@ class ReasonForContactingExportTask(ExportTaskBase):
 # The Task base class no longer automatically register tasks
 # https://docs.celeryq.dev/en/v4.0.0/whatsnew-4.0.html#the-task-base-class-no-longer-automatically-register-tasks
 # https://github.com/celery/celery/issues/5992
-app.tasks.register(ReasonForContactingExportTask())
+tasks = [ExportTask, OBIEEExportTask(), ReasonForContactingExportTask()]
+for task in tasks:
+    app.tasks.register(task)

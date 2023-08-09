@@ -153,10 +153,15 @@ class OBIEEExportTask(ExportTaskBase):
                 pass
 
 
+# The Task base class no longer automatically register tasks
+# https://docs.celeryq.dev/en/v4.0.0/whatsnew-4.0.html#the-task-base-class-no-longer-automatically-register-tasks
+# https://github.com/celery/celery/issues/5992
 app.tasks.register(OBIEEExportTask())
 
 
 class ReasonForContactingExportTask(ExportTaskBase):
+    name = "reasonforcontactingexport"
+
     def run(self, user_id, filename, form_class_name, post_data, *args, **kwargs):
         """
         Export csv files for each of the referrers from reason for contacting
@@ -228,3 +233,9 @@ class ReasonForContactingExportTask(ExportTaskBase):
             with ZipFile(self.filepath, "w") as refer_zip:
                 for csv_file in glob.glob("*.csv"):
                     refer_zip.write(csv_file)
+
+
+# The Task base class no longer automatically register tasks
+# https://docs.celeryq.dev/en/v4.0.0/whatsnew-4.0.html#the-task-base-class-no-longer-automatically-register-tasks
+# https://github.com/celery/celery/issues/5992
+app.tasks.register(ReasonForContactingExportTask())

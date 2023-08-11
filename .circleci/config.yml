@@ -5,6 +5,42 @@ orbs:
   aws-cli: circleci/aws-cli@4.0.0 # use v4 of this orb
   aws-ecr: circleci/aws-ecr@9.0.0 # this orb doesn't support OIDC v2, so we use aws-cli to authenticate
 
+
+# ------------------
+# EXECUTORS
+# these are ones we use rather than from the orb
+# ------------------
+
+executors:
+  cloud-platform-executor:
+    docker:
+      - image: ministryofjustice/cloud-platform-tools:2.1
+  python2-executor:
+    docker:
+      - image: cimg/python:2.7
+  python3-executor:
+    docker:
+      - image: cimg/python:3.7
+  test-executor:
+    docker:
+      - image: cimg/python:2.7
+        environment:
+          DB_NAME: circle_test
+          DB_USER: postgres
+          DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
+      - image: postgres:14.7-bullseye
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: circle_test
+
+
+# ------------------
+#
+# REUSABLE YAML
+#
+# ------------------
+
 #jobs:
 #  # TODO add in build push and tag for migration
 #      # Check python version
@@ -72,6 +108,12 @@ orbs:
         tag: $TARGET_TAGS
         repo: $ECR_REPOSITORY
 
+
+# ------------------
+# JOBS
+#
+# ------------------
+
 jobs:
   build:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
@@ -117,8 +159,7 @@ jobs:
           name: Tag and push Docker images
           command: .circleci/tag_and_push_docker_image application:$CIRCLE_SHA1
   lint:
-    docker:
-      - image: cimg/python:2.7
+    executor: python2-executor
     steps:
       - checkout
       - run:
@@ -144,8 +185,7 @@ jobs:
             source lint-env/bin/activate
             flake8 cla_backend
   formatting:
-    docker:
-      - image: cimg/python:3.7
+    executor: python3-executor
     steps:
       - checkout
       - run:
@@ -171,8 +211,7 @@ jobs:
             source lint-env/bin/activate
             black --check cla_backend
   pip-compile:
-    docker:
-      - image: cimg/python:2.7
+    executor: python2-executor
     steps:
       - checkout
       - run:
@@ -201,17 +240,7 @@ jobs:
             source pip-compile-env/bin/activate
             ls requirements/source/* | xargs pre-commit run pip-compile --files
   test:
-    docker:
-      - image: cimg/python:2.7
-        environment:
-          DB_NAME: circle_test
-          DB_USER: postgres
-          DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
-      - image: postgres:14.7-bullseye
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: circle_test
+    executor: test-executor
     steps:
       - checkout
       - run:
@@ -263,8 +292,7 @@ jobs:
         type: string
       dynamic_hostname:
         type: boolean
-    docker:
-      - image: ministryofjustice/cloud-platform-tools:2.1
+    executor: cloud-platform-executor
     shell: /bin/sh -leo pipefail
     environment:
       BASH_ENV: /etc/profile
@@ -298,8 +326,7 @@ jobs:
           title_link: 'https://$RELEASE_HOST/admin/'
 
   cleanup_merged:
-    docker:
-      - image: ministryofjustice/cloud-platform-tools:2.1
+    executor: cloud-platform-executor
     steps:
       - checkout
       - run:
@@ -316,6 +343,12 @@ jobs:
           name: Delete uat release
           command: |
             ./bin/delete_uat_release.sh
+
+# ------------------
+#
+#WORKFLOWS
+#
+# ------------------
 
 workflows:
   version: 2

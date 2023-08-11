@@ -67,6 +67,9 @@ references:
 #  add in datamigration build
   build_docker_image: &build_docker_image
       aws-ecr/build_and_push_image:
+        auth:
+          - aws-cli/setup:
+              role_arn: $ECR_ROLE_TO_ASSUME
         remote_docker_version: docker:19.03-git
         remote_docker_layer_caching: true
         push_image: false

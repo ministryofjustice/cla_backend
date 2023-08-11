@@ -44,7 +44,6 @@ orbs:
     run: |
       aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
 
-
   configure_source_tag: &configure_source_tag
       run:
         name: Create build tag for main application image
@@ -95,11 +94,6 @@ orbs:
 jobs:
   build_new:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
-    parameters:
-      target_required:
-        type: boolean
-      docker_target:
-        type: string
     steps:
       - *configure_source_tag
       - *configure_target_tags
@@ -356,7 +350,7 @@ workflows:
           context:
             - laa-cla-backend
             - laa-cla-backend-live-uat
-      - build:
+      - build_new:
           requires:
             - test
           context: laa-cla-backend

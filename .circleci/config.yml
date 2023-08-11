@@ -21,19 +21,6 @@ executors:
   python3-executor:
     docker:
       - image: cimg/python:3.7
-  test-executor:
-    docker:
-      - image: cimg/python:2.7
-        environment:
-          DB_NAME: circle_test
-          DB_USER: postgres
-          DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
-      - image: postgres:14.7-bullseye
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: circle_test
-
 
 # ------------------
 #
@@ -73,7 +60,7 @@ executors:
 #    TODO make this a comma separated list including latest if branch is main/master could even be a script
 #          echo "export TARGET_TAGS=$target_tag_include_sha, $target_tag_no_sha" >> $BASH_ENV
       run:
-        name: Create build target tag for main application image
+        name: Create target tag for main application image
         command: |
           source .circleci/define_build_environment_variables
           target_tag_include_sha=$ECR_DOCKER_REPOSITORY:$CLEANED_BRANCH_NAME.$short_sha
@@ -240,7 +227,17 @@ jobs:
             source pip-compile-env/bin/activate
             ls requirements/source/* | xargs pre-commit run pip-compile --files
   test:
-    executor: test-executor
+    docker:
+      - image: cimg/python:2.7
+        environment:
+          DB_NAME: circle_test
+          DB_USER: postgres
+          DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
+      - image: postgres:14.7-bullseye
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: circle_test
     steps:
       - checkout
       - run:

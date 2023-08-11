@@ -30,14 +30,8 @@ executors:
 
 #jobs:
 #  # TODO add in build push and tag for migration
-#      # Check python version
-#      - run:
-#          name: Validate Python version
-#          command: |
-#            docker run --rm --tty --interactive $BUILD_TAG python --version | grep "2.7"
 
-
-#reusable yaml pieces not a command or a job at this point
+references:
   aws_cli_setup: &aws_cli_setup
     aws-cli/setup:
       role_arn: $ECR_ROLE_TO_ASSUME # this will use the env var
@@ -96,6 +90,11 @@ executors:
         repo: $ECR_REPOSITORY
 
 
+#      # Check python version
+#      - run:
+#          name: Validate Python version
+#          command: |
+#            docker run --rm --tty --interactive $BUILD_TAG python --version | grep "2.7"
 # ------------------
 # JOBS
 #

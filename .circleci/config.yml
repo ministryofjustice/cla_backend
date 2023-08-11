@@ -7,31 +7,12 @@ orbs:
 
 #jobs:
 #  # TODO add in build push and tag for migration
-#  build_new:
-#    executor: aws-ecr/default
-#    steps:
-#      - # Checkout your repository
-#      - checkout
-#      # Authenticate to AWS using OIDC v2 with the AWS CLI
-#      - aws-cli/setup:
-#          role_arn: $ECR_ROLE_TO_ASSUME # this will use the env var
-#          region: $ECR_REGION # this will use the env var
-#      # Authenticate to the ECR repository using the standard command
-#      - run: |
-#          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
-#      - build_docker_image:
-#          target_required: true
-#          docker_target: production
 #      # Check python version
 #      - run:
 #          name: Validate Python version
 #          command: |
 #            docker run --rm --tty --interactive $BUILD_TAG python --version | grep "2.7"
-##     # these commands should replace tag_and_push_docker_image script
-#      - tag_and_push_image:
-#          add_short_sha: true
-#      - tag_and_push_image:
-#          add_short_sha: false
+
 
 #reusable yaml pieces not a command or a job at this point
   aws_cli_setup: &aws_cli_setup
@@ -92,7 +73,7 @@ orbs:
         repo: $ECR_REPOSITORY
 
 jobs:
-  build_new:
+  build:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     steps:
       - *configure_source_tag
@@ -102,7 +83,7 @@ jobs:
       - *build_docker_image
       - *tag_images
       - *push_images
-  build:
+  build_old:
     docker:
       - image: docker:19.03-git
     steps:
@@ -350,7 +331,7 @@ workflows:
           context:
             - laa-cla-backend
             - laa-cla-backend-live-uat
-      - build_new:
+      - build:
           requires:
             - test
           context: laa-cla-backend

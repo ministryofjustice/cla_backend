@@ -59,7 +59,7 @@ references:
           source .circleci/define_build_environment_variables
           target_tag_include_sha=$ECR_DOCKER_REPOSITORY:$CLEANED_BRANCH_NAME.$short_sha
           target_tag_no_sha=$ECR_DOCKER_REPOSITORY:$CLEANED_BRANCH_NAME
-          echo "export TARGET_TAGS=test1, test2" >> $BASH_ENV
+          echo "export TARGET_TAGS=$target_tag_include_sha, $target_tag_no_sha" >> $BASH_ENV
           source $BASH_ENV
 
   # Build the Docker image
@@ -89,13 +89,15 @@ references:
         tag: $TARGET_TAGS
         repo: $ECR_REPOSITORY
 
+  # Check python version
+  check_python: &check_python
+      run:
+        name: Validate Python version
+        command: |
+          docker run --rm --tty --interactive $BUILD_TAG python --version | grep "2.7"
 
-#      # Check python version
-#      - run:
-#          name: Validate Python version
-#          command: |
-#            docker run --rm --tty --interactive $BUILD_TAG python --version | grep "2.7"
 # ------------------
+#
 # JOBS
 #
 # ------------------
@@ -110,8 +112,10 @@ jobs:
       - *aws_cli_setup
       - *aws_login
       - *build_docker_image
+      - *check_python
       - *tag_images
       - *push_images
+
   build_old:
     docker:
       - image: docker:19.03-git

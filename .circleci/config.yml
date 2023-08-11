@@ -72,7 +72,7 @@ orbs:
         tag: $BUILD_TAG
         region: $ECR_REGION # this will use the env var
         repo: $ECR_REPOSITORY # this will use the env var
-        extra-build-args: |
+        extra_build_args: |
           --build-arg target=production \
           --build-arg label build.git.sha=$CIRCLE_SHA1 \
           --build-arg label build.git.branch=$CIRCLE_BRANCH \

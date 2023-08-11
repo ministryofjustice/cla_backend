@@ -76,6 +76,7 @@ jobs:
   build:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     steps:
+      - checkout
       - *configure_source_tag
       - *configure_target_tags
       - *aws_cli_setup

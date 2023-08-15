@@ -18,3 +18,9 @@ else
   export RELEASE_NAME=cla-backend
   export RELEASE_HOST=${HOST}
 fi
+
+if [ "$CIRCLE_BRANCH" == "master" ]; then
+  export TARGET_TAGS=$CLEANED_BRANCH_NAME.$short_sha,$CLEANED_BRANCH_NAME,"latest"
+else
+  export TARGET_TAGS=$CLEANED_BRANCH_NAME.$short_sha,$CLEANED_BRANCH_NAME
+fi

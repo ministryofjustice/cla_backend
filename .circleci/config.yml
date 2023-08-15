@@ -60,11 +60,6 @@ references:
         name: Create target tag for main application image
         command: |
           source .circleci/define_build_environment_variables
-          target_tag_include_sha=$CLEANED_BRANCH_NAME.$short_sha
-          echo "Created tag $target_tag_include_sha"
-          target_tag_no_sha=$CLEANED_BRANCH_NAME
-          echo "Created tag $target_tag_no_sha..."
-          echo "export TARGET_TAGS=$target_tag_include_sha,$target_tag_no_sha" >> $BASH_ENV
 
   # Build the Docker image
   # TODO make target conditional

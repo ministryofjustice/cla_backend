@@ -87,8 +87,7 @@ references:
       run:
         name: Confirm all the environment variables for next stage
         command: |
-          echo "tag is $BUILD_TAG..."
-          echo "repo is $ECR_REPOSITORY..."
+          echo ${BUILD_TAG}
 
   # Tag Docker images
   tag_images: &tag_images

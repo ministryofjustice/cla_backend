@@ -12,6 +12,9 @@ orbs:
 # ------------------
 
 executors:
+  build-executor:
+    docker:
+      - image: docker:19.03-git
   cloud-platform-executor:
     docker:
       - image: ministryofjustice/cloud-platform-tools:2.1
@@ -112,7 +115,7 @@ references:
 
 jobs:
   build:
-    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
+    executor: build-executor
     steps:
       - checkout
       - *configure_source_tag

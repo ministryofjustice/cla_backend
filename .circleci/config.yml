@@ -62,6 +62,7 @@ jobs:
       - aws-ecr/build-image:
           push-image: true
           path: bin/database-migration
+          build-path: bin/database-migration
           tag: database-migration
           region: $ECR_REGION # this will use the env var
           repo: $ECR_REPOSITORY # this will use the env var

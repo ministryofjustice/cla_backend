@@ -51,6 +51,7 @@ references:
         command: |
           build_tag=application:$CIRCLE_SHA1
           echo "export BUILD_TAG=$build_tag" >> $BASH_ENV
+          source $BASH_ENV
 
   configure_target_tags: &configure_target_tags
 #    TODO make this a comma separated list including latest if branch is main/master could even be a script
@@ -64,6 +65,7 @@ references:
           target_tag_no_sha=$ECR_DOCKER_REPOSITORY:$CLEANED_BRANCH_NAME
           echo "Created tag $target_tag_no_sha..."
           echo "export TARGET_TAGS=$target_tag_no_sha,target_tag_no_sha" >> $BASH_ENV
+          source $BASH_ENV
 
   # Build the Docker image
   # TODO make target conditional

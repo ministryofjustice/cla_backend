@@ -20,8 +20,8 @@ else
 fi
 
 if [ "$CIRCLE_BRANCH" == "master" ]; then
-  export TARGET_TAGS=$CLEANED_BRANCH_NAME.$short_sha,$CLEANED_BRANCH_NAME,"latest"
+  export TARGET_TAGS=$IMAGE_TAG,$CLEANED_BRANCH_NAME,"latest"
 else
-  export TARGET_TAGS=$CLEANED_BRANCH_NAME.$short_sha,$CLEANED_BRANCH_NAME
+  export TARGET_TAGS=$IMAGE_TAG,$CLEANED_BRANCH_NAME
 fi
 

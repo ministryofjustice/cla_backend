@@ -65,7 +65,7 @@ jobs:
       - run:
           name: Validate Python version
           command: |
-            docker run --rm --tty --interactive $IMAGE_TAG python --version | grep "2.7"
+            docker run --rm --tty --interactive $ECR_REPOSITORY:$IMAGE_TAG python --version | grep "2.7"
 
   lint:
     executor: python2-executor

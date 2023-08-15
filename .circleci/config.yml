@@ -48,6 +48,7 @@ jobs:
           name: Create target tag for main application image
           command: |
             source .circleci/define_build_environment_variables
+            source .circleci/define_docker_build_parameters
             echo "Created tags $TARGET_TAGS"
             echo "export BUILD_TAGS=$TARGET_TAGS" >> $BASH_ENV
             echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV

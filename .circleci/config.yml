@@ -74,7 +74,6 @@ references:
           - aws-cli/setup:
               role_arn: $ECR_ROLE_TO_ASSUME
         setup_remote_docker: true
-        remote_docker_version: docker:19.03-git
         remote_docker_layer_caching: true
         push_image: false
         account_id: $AWS_ECR_REGISTRY_ID

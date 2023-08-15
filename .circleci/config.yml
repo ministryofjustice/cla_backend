@@ -3,18 +3,15 @@ orbs:
   slack: circleci/slack@3.4.2
   cla-end-to-end-tests: ministryofjustice/cla-end-to-end-tests@volatile
   aws-cli: circleci/aws-cli@4.0.0 # use v4 of this orb
-  aws-ecr: circleci/aws-ecr@9.0.0 # this orb doesn't support OIDC v2, so we use aws-cli to authenticate
+  aws-ecr: circleci/aws-ecr@8.2.1 # this orb doesn't support OIDC v2, so we use aws-cli to authenticate
 
 
 # ------------------
 # EXECUTORS
-# these are ones we use rather than from the orb
+# these are ones we use rather than one from rom the orb
 # ------------------
 
 executors:
-  build-executor:
-    docker:
-      - image: docker:19.03-git
   cloud-platform-executor:
     docker:
       - image: ministryofjustice/cloud-platform-tools:2.1
@@ -25,145 +22,48 @@ executors:
     docker:
       - image: cimg/python:3.7
 
-# ------------------
-#
-# REUSABLE YAML
-#
-# ------------------
-
-#jobs:
-#  # TODO add in build push and tag for migration
-
-references:
-  aws_cli_setup: &aws_cli_setup
-    aws-cli/setup:
-      role_arn: $ECR_ROLE_TO_ASSUME # this will use the env var
-      region: $ECR_REGION # this will use the env var
-      # Authenticate to the ECR repository using the standard command
-
-  aws_login: &aws_login
-    run: |
-      aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
-
-  configure_source_tag: &configure_source_tag
-      run:
-        name: Create build tag for main application image
-        command: |
-          build_tag=application:$CIRCLE_SHA1
-          echo "export BUILD_TAG=$build_tag" >> $BASH_ENV
-          source $BASH_ENV
-
-  configure_target_tags: &configure_target_tags
-#    TODO make this a comma separated list including latest if branch is main/master could even be a script
-#          echo "export TARGET_TAGS=$target_tag_include_sha, $target_tag_no_sha" >> $BASH_ENV
-      run:
-        name: Create target tag for main application image
-        command: |
-          source .circleci/define_build_environment_variables
-          target_tag_include_sha=$ECR_DOCKER_REPOSITORY:$CLEANED_BRANCH_NAME.$short_sha
-          echo "Created tag $target_tag_include_sha..."
-          target_tag_no_sha=$ECR_DOCKER_REPOSITORY:$CLEANED_BRANCH_NAME
-          echo "Created tag $target_tag_no_sha..."
-          echo "export TARGET_TAGS=$target_tag_no_sha,target_tag_no_sha" >> $BASH_ENV
-          source $BASH_ENV
-
-  # Build the Docker image
-  # TODO make target conditional
-#  add in datamigration build
-  build_docker_image: &build_docker_image
-      aws-ecr/build_and_push_image:
-        auth:
-          - aws-cli/setup:
-              role_arn: $ECR_ROLE_TO_ASSUME
-        setup_remote_docker: true
-        remote_docker_layer_caching: true
-        push_image: false
-        account_id: $AWS_ECR_REGISTRY_ID
-        tag: $BUILD_TAG
-        region: $ECR_REGION # this will use the env var
-        repo: $ECR_REPOSITORY # this will use the env var
-
-  confirm_all_environment_variables: &confirm_all_environment_variables
-      run:
-        name: Confirm all the environment variables for next stage
-        command: |
-          echo ${BUILD_TAG}
-
-  # Tag Docker images
-  tag_images: &tag_images
-      aws-ecr/tag_image:
-        source_tag: $BUILD_TAG
-        target_tag: $TARGET_TAGS
-        repo: $ECR_REPOSITORY # this will use the env var
-
-  # push the Docker image
-  push_images: &push_images
-      aws-ecr/push_image:
-        tag: $TARGET_TAGS
-        repo: $ECR_REPOSITORY
-
-  # Check python version
-  check_python: &check_python
-      run:
-        name: Validate Python version
-        command: |
-          docker run --rm --tty --interactive $BUILD_TAG python --version | grep "2.7"
-
-
 
 # ------------------
 #
 # JOBS
 #
 # ------------------
-
+# TODO make docker target conditional
+#  add in data migration build
 jobs:
   build:
-    executor: build-executor
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     steps:
+      # Checkout your repository
       - checkout
-      - *configure_source_tag
-      - *configure_target_tags
-      - *aws_cli_setup
-      - *aws_login
-      - *confirm_all_environment_variables
-      - *build_docker_image
-      - *check_python
-      - *tag_images
-      - *push_images
-
-  build_old:
-    docker:
-      - image: docker:19.03-git
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: "19.03.13"
-          docker_layer_caching: true
+      # Authenticate to AWS using OIDC v2 with the AWS CLI
+      - aws-cli/setup:
+          role_arn: $ECR_ROLE_TO_ASSUME # this will use the env var
+          region: $ECR_REGION # this will use the env var
+      # Authenticate to the ECR repository using the standard command
+      - run: |
+          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
+      # Build and push your Docker image
       - run:
-          name: Login to the ECR Docker registry
+          name: Create target tag for main application image
           command: |
-            apk add --no-cache --no-progress py3-pip
-            pip install awscli
-            ecr_login="$(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)"
-            ${ecr_login}
-      - run:
-          name: Build Docker image
-          command: |
-            DOCKER_BUILDKIT=1 docker build --tag application:$CIRCLE_SHA1 \
-              --target production \
-              --label build.git.sha=$CIRCLE_SHA1 \
-              --label build.git.branch=$CIRCLE_BRANCH \
-              --label build.url=$CIRCLE_BUILD_URL \
-              .
-            docker build --tag database-migration bin/database-migration
+            source .circleci/define_build_environment_variables
+            echo "Created tags $TARGET_TAGS"
+            echo "export BUILD_TAGS=$TARGET_TAGS" >> $BASH_ENV
+            echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
+      - aws-ecr/build-image:
+          push-image: true
+          tag: $BUILD_TAGS
+          region: $ECR_REGION # this will use the env var
+          repo: $ECR_REPOSITORY # this will use the env var
+          extra-build-args: |
+            --build-arg target=production
+      # Validate the python version as 2.7
       - run:
           name: Validate Python version
           command: |
-            docker run --rm --tty --interactive application:$CIRCLE_SHA1 python --version | grep "2.7"
-      - run:
-          name: Tag and push Docker images
-          command: .circleci/tag_and_push_docker_image application:$CIRCLE_SHA1
+            docker run --rm --tty --interactive ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG python --version | grep "2.7"
+
   lint:
     executor: python2-executor
     steps:
@@ -321,7 +221,6 @@ jobs:
             wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
             tar -zxvf helm-v3.2.4-linux-amd64.tar.gz
             mv linux-amd64/helm /usr/local/bin/helm
-    #todo check to see if this needs updating to short lived credentials and replace with reused command
       - run:
           name: Authenticate with cluster
           command: |

@@ -54,6 +54,7 @@ jobs:
             source .circleci/define_build_environment_variables
             echo "Created tags $TARGET_TAGS"
             echo "export BUILD_TAGS=$TARGET_TAGS" >> $BASH_ENV
+            echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
       - aws-ecr/build-image:
           push-image: true
           tag: $BUILD_TAGS
@@ -64,7 +65,7 @@ jobs:
       - run:
           name: Validate Python version
           command: |
-            docker run --rm --tty --interactive $CIRCLE_SHA1 python --version | grep "2.7"
+            docker run --rm --tty --interactive $IMAGE_TAG python --version | grep "2.7"
 
   lint:
     executor: python2-executor

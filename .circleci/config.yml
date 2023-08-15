@@ -61,44 +61,8 @@ jobs:
           repo: $ECR_REPOSITORY # this will use the env var
           extra-build-args: |
             --build-arg target=production
-      - run:
-        name: Validate Python version
-        command: |
-          docker run --rm --tty --interactive $CIRCLE_SHA1 python --version | grep "2.7"
 
 
-  build_old:
-    docker:
-      - image: docker:19.03-git
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: "19.03.13"
-          docker_layer_caching: true
-      - run:
-          name: Login to the ECR Docker registry
-          command: |
-            apk add --no-cache --no-progress py3-pip
-            pip install awscli
-            ecr_login="$(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)"
-            ${ecr_login}
-      - run:
-          name: Build Docker image
-          command: |
-            DOCKER_BUILDKIT=1 docker build --tag application:$CIRCLE_SHA1 \
-              --target production \
-              --label build.git.sha=$CIRCLE_SHA1 \
-              --label build.git.branch=$CIRCLE_BRANCH \
-              --label build.url=$CIRCLE_BUILD_URL \
-              .
-            docker build --tag database-migration bin/database-migration
-      - run:
-          name: Validate Python version
-          command: |
-            docker run --rm --tty --interactive application:$CIRCLE_SHA1 python --version | grep "2.7"
-      - run:
-          name: Tag and push Docker images
-          command: .circleci/tag_and_push_docker_image application:$CIRCLE_SHA1
   lint:
     executor: python2-executor
     steps:

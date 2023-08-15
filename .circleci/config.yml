@@ -60,6 +60,7 @@ references:
         name: Create target tag for main application image
         command: |
           source .circleci/define_build_environment_variables
+          source $BASH_ENV
 
   # Build the Docker image
   # TODO make target conditional

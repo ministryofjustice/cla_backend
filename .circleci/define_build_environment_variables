@@ -24,3 +24,4 @@ if [ "$CIRCLE_BRANCH" == "master" ]; then
 else
   export TARGET_TAGS=$CLEANED_BRANCH_NAME.$short_sha,$CLEANED_BRANCH_NAME
 fi
+

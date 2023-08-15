@@ -64,8 +64,7 @@ references:
           echo "Created tag $target_tag_include_sha..."
           target_tag_no_sha=$ECR_DOCKER_REPOSITORY:$CLEANED_BRANCH_NAME
           echo "Created tag $target_tag_no_sha..."
-          echo "export TARGET_TAGS=$target_tag_no_sha,target_tag_no_sha" >> $BASH_ENV
-          source $BASH_ENV
+          echo "export TARGET_TAGS=$target_tag_include_sha,target_tag_no_sha" >> $BASH_ENV
 
   # Build the Docker image
   # TODO make target conditional
@@ -131,9 +130,10 @@ jobs:
       - run: |
           aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
       # Build and push your Docker image
+      - *configure_target_tags
       - aws-ecr/build-image:
           push-image: true
-          tag: ${CIRCLE_SHA1}
+          tag: ${TARGET_TAGS}
           region: $ECR_REGION # this will use the env var
           repo: $ECR_REPOSITORY # this will use the env var
 

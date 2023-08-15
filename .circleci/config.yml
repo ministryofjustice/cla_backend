@@ -61,7 +61,10 @@ jobs:
           repo: $ECR_REPOSITORY # this will use the env var
           extra-build-args: |
             --build-arg target=production
-
+      - run:
+          name: Validate Python version
+          command: |
+            docker run --rm --tty --interactive $CIRCLE_SHA1 python --version | grep "2.7"
 
   lint:
     executor: python2-executor

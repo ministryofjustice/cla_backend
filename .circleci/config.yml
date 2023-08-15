@@ -8,13 +8,10 @@ orbs:
 
 # ------------------
 # EXECUTORS
-# these are ones we use rather than from the orb
+# these are ones we use rather than one from rom the orb
 # ------------------
 
 executors:
-  build-executor:
-    docker:
-      - image: docker:19.03-git
   cloud-platform-executor:
     docker:
       - image: ministryofjustice/cloud-platform-tools:2.1
@@ -31,9 +28,8 @@ executors:
 # JOBS
 #
 # ------------------
-  # Build the Docker image
-  # TODO make target conditional
-#  add in datamigration build
+# TODO make docker target conditional
+#  add in data migration build
 jobs:
   build:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
@@ -62,6 +58,7 @@ jobs:
           repo: $ECR_REPOSITORY # this will use the env var
           extra-build-args: |
             --build-arg target=production
+      # Validate the python version as 2.7
       - run:
           name: Validate Python version
           command: |
@@ -218,7 +215,6 @@ jobs:
             wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
             tar -zxvf helm-v3.2.4-linux-amd64.tar.gz
             mv linux-amd64/helm /usr/local/bin/helm
-    #todo check to see if this needs updating to short lived credentials and replace with reused command
       - run:
           name: Authenticate with cluster
           command: |

@@ -59,7 +59,9 @@ references:
       run:
         name: Create target tag for main application image
         command: |
-          source .circleci/define_build_environment_variables >> $BASH_ENV
+          source .circleci/define_build_environment_variables
+          echo "Created tags $TARGET_TAGS"
+          echo "export BUILD_TAGS=$TARGET_TAGS" >> $BASH_ENV
 
   # Build the Docker image
   # TODO make target conditional
@@ -128,7 +130,7 @@ jobs:
       - *configure_target_tags
       - aws-ecr/build-image:
           push-image: true
-          tag: ${TARGET_TAGS}
+          tag: $BUILD_TAGS
           region: $ECR_REGION # this will use the env var
           repo: $ECR_REPOSITORY # this will use the env var
           extra-build-args: |

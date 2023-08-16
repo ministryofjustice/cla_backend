@@ -43,10 +43,12 @@ references:
 # JOBS
 #
 # ------------------
-#  add in data migration build
 jobs:
   build:
     executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
+    parameters:
+      image:
+        type: string
     steps:
       # Checkout your repository
       - checkout
@@ -57,33 +59,42 @@ jobs:
       # Authenticate to the ECR repository using the standard command
       - run: |
           aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
-      # Build and push your Docker image
-      - run:
-          name: Create target tag for main application image
-          command: |
-            source .circleci/define_build_environment_variables
-            echo "Created tags $TARGET_TAGS"
-            echo "export BUILD_TAGS=$TARGET_TAGS" >> $BASH_ENV
-            echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
-      - aws-ecr/build-image:
-          push-image: true
-          path: bin/database-migration
-          build-path: bin/database-migration
-          tag: database-migration
-          region: $ECR_REGION # this will use the env var
-          repo: $ECR_REPOSITORY # this will use the env var
-      - aws-ecr/build-image:
-          push-image: true
-          tag: $BUILD_TAGS
-          region: $ECR_REGION # this will use the env var
-          repo: $ECR_REPOSITORY # this will use the env var
-          extra-build-args: |
-            --build-arg target=production
-      # Validate the python version as 2.7
-      - run:
-          name: Validate Python version
-          command: |
-            docker run --rm --tty --interactive ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG python --version | grep "2.7"
+      - when:
+          condition:
+            equal: [ "app", << parameters.image >> ]
+          steps:
+            # Build and push main application Docker image
+            - run:
+                name: Create target tags
+                command: |
+                  source .circleci/define_build_environment_variables
+                  echo "Created tags $TARGET_TAGS"
+                  echo "export BUILD_TAGS=$TARGET_TAGS" >> $BASH_ENV
+                  echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
+            - aws-ecr/build-image:
+                push-image: true
+                tag: $BUILD_TAGS
+                region: $ECR_REGION # this will use the env var
+                repo: $ECR_REPOSITORY # this will use the env var
+                extra-build-args: |
+                  --build-arg target=production
+            # Validate the python version as 2.7
+            - run:
+                name: Validate Python version
+                command: |
+                  docker run --rm --tty --interactive ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG python --version | grep "2.7"
+      - when:
+          condition:
+            equal: ["database-migration", << parameters.image >>]
+          # Build and push database migration Docker image
+          steps:
+            - aws-ecr/build-image:
+                push-image: true
+                path: bin/database-migration
+                build-path: bin/database-migration
+                tag: database-migration
+                region: $ECR_REGION # this will use the env var
+                repo: $ECR_REPOSITORY # this will use the env var
 
   lint:
     executor: python2-executor
@@ -290,15 +301,22 @@ workflows:
           context:
             - laa-cla-backend
             - laa-cla-backend-live-uat
-
       - build:
+          name: build_push_application
+          image: app
           requires:
             - test
           context: laa-cla-backend
-
+      - build:
+          name: build_push_database_migration
+          image: database-migration
+          requires:
+            - test
+          context: laa-cla-backend
       - cla-end-to-end-tests/behave:
           requires:
-            - build
+            - build_push_application
+            - build_push_database_migration
           context: laa-cla-backend
           pre-steps:
             - checkout:
@@ -315,7 +333,8 @@ workflows:
           namespace: uat
           dynamic_hostname: true
           requires:
-            - build
+            - build_push_application
+            - build_push_database_migration
           filters:
             branches:
               ignore:
@@ -327,7 +346,8 @@ workflows:
       - static_uat_deploy_approval:
           type: approval
           requires:
-            - build
+            - build_push_application
+            - build_push_database_migration
 
       - deploy:
           name: static_uat_deploy_live
@@ -342,7 +362,8 @@ workflows:
       - staging_deploy_approval:
           type: approval
           requires:
-            - build
+            - build_push_application
+            - build_push_database_migration
           filters:
             branches:
               only:

@@ -25,10 +25,24 @@ executors:
 
 # ------------------
 #
+# REFERENCES
+#
+# ------------------
+
+references:
+  install_helm: &install_helm
+      run:
+        name: Install helm v3
+        command: |
+          wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
+          tar -zxvf helm-v3.2.4-linux-amd64.tar.gz
+          mv linux-amd64/helm /usr/local/bin/helm
+
+# ------------------
+#
 # JOBS
 #
 # ------------------
-# TODO make docker target conditional
 #  add in data migration build
 jobs:
   build:
@@ -222,13 +236,7 @@ jobs:
       BASH_ENV: /etc/profile
     steps:
       - checkout
-      - run:
-          # todo make this step reusable command here and below
-          name: Install helm v3
-          command: |
-            wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
-            tar -zxvf helm-v3.2.4-linux-amd64.tar.gz
-            mv linux-amd64/helm /usr/local/bin/helm
+      - *install_helm
       - run:
           name: Authenticate with cluster
           command: |
@@ -252,12 +260,7 @@ jobs:
     executor: cloud-platform-executor
     steps:
       - checkout
-      - run:
-          name: Install helm v3
-          command: |
-            wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
-            tar -zxvf helm-v3.2.4-linux-amd64.tar.gz
-            mv linux-amd64/helm /usr/local/bin/helm
+      - *install_helm
       - run:
           name: Authenticate with cluster
           command: |

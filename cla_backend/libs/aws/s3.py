@@ -26,6 +26,8 @@ class ReportsS3:
             obj = cls.get_s3_connection(bucket_name).bucket.Object(cls.clean_name(key))
             data = NamedTemporaryFile()
             obj.download_fileobj(data)
+            # This required otherwise any file reads will start at the end  which
+            # leads to an empty file being downloaded (zero bytes)
             data.seek(0)
             return {"headers": {"Content-Type": obj.content_type}, "body": data}
         except ClientError:

@@ -13,6 +13,7 @@ spec:
       labels:
         app: {{ include "cla-backend.fullname" . }}-worker
     spec:
+      serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
       containers:
         - name: {{ include "cla-backend.fullname" . }}-worker
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

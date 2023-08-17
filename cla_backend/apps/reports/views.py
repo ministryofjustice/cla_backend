@@ -34,7 +34,7 @@ from .forms import (
 
 from reports.models import Export
 from .tasks import ExportTask, OBIEEExportTask, ReasonForContactingExportTask
-from reports.utils import get_s3_connection
+from cla_backend.libs.aws.s3 import ReportsS3
 
 
 def report_view(request, form_class, title, template="case_report", success_task=ExportTask, file_name=None):
@@ -51,13 +51,15 @@ def report_view(request, form_class, title, template="case_report", success_task
         success_task().delay(request.user.pk, filename, form_class.__name__, json.dumps(request.POST))
         messages.info(request, u"Your export is being processed. It will show up in the downloads tab shortly.")
 
-    return render(request, tmpl, {'has_permission': admin_site_instance.has_permission(request), "title": title, "form": form})
+    return render(
+        request, tmpl, {"has_permission": admin_site_instance.has_permission(request), "title": title, "form": form}
+    )
 
 
 def scheduled_report_view(request, title):
     tmpl = "admin/reports/case_report.html"
     admin_site_instance = AdminSite()
-    return render(request, tmpl, {"title": title, 'has_permission': admin_site_instance.has_permission(request)})
+    return render(request, tmpl, {"title": title, "has_permission": admin_site_instance.has_permission(request)})
 
 
 def valid_submit(request, form):
@@ -201,18 +203,16 @@ def reasons_for_contacting(request):
 def download_file(request, file_name="", *args, **kwargs):
     # check if there is a connection to aws, otherwise download from local TEMP_DIR
     if settings.AWS_REPORTS_STORAGE_BUCKET_NAME:
-        conn = get_s3_connection()
-        bucket = conn.lookup(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
-        k = bucket.get_key(settings.EXPORT_DIR + file_name)
+        bucket_name = settings.AWS_REPORTS_STORAGE_BUCKET_NAME
+        key = settings.EXPORT_DIR + file_name
+        obj = ReportsS3.download_file(bucket_name, key)
 
-        if k is None:
+        if obj is None:
             raise Http404("Export does not exist")
 
-        k.open_read()
-        headers = dict(k.resp.getheaders())
-        response = HttpResponse(k)
+        response = HttpResponse(obj["body"])
 
-        for key, val in headers.items():
+        for key, val in obj["headers"].items():
             response[key] = val
     else:
         # only do this locally if debugging

@@ -18,12 +18,14 @@ from django.utils.six import text_type
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 
-from .utils import OBIEEExporter, get_s3_connection
+from .utils import OBIEEExporter
+from cla_backend.libs.aws.s3 import ReportsS3
 from .models import Export
 from .constants import EXPORT_STATUS
 from core.utils import remember_cwd
 from checker.models import ReasonForContacting
 from urlparse import urlparse
+from cla_backend.celery import app
 
 logger = logging.getLogger(__name__)
 
@@ -79,20 +81,14 @@ class ExportTaskBase(Task):
         self.export.save()
 
     def send_to_s3(self):
-        conn = get_s3_connection()
-        try:
-            bucket = conn.get_bucket(settings.AWS_REPORTS_STORAGE_BUCKET_NAME)
-        except Exception as e:
-            logger.error(
-                "Reports bucket couldn't be fetched. Ensure s3 credentials set. You may need the S3_USE_SIGV4 env var"
-            )
-            raise e
-        k = bucket.new_key(settings.EXPORT_DIR + os.path.basename(self.filepath))
-        k.set_contents_from_filename(self.filepath)
+        key = settings.EXPORT_DIR + os.path.basename(self.filepath)
+        ReportsS3.save_file(settings.AWS_REPORTS_STORAGE_BUCKET_NAME, key, self.filepath)
         shutil.rmtree(self.filepath, ignore_errors=True)
 
 
 class ExportTask(ExportTaskBase):
+    name = "exporttask"
+
     def run(self, user_id, filename, form_class_name, post_data, *args, **kwargs):
         self.user = User.objects.get(pk=user_id)
         self._create_export()
@@ -118,6 +114,8 @@ class ExportTask(ExportTaskBase):
 
 
 class OBIEEExportTask(ExportTaskBase):
+    name = "obieeexporttask"
+
     def run(self, user_id, filename, form_class_name, post_data, *args, **kwargs):
         """
         Export a full dump of the db for OBIEE export and make it available
@@ -158,6 +156,8 @@ class OBIEEExportTask(ExportTaskBase):
 
 
 class ReasonForContactingExportTask(ExportTaskBase):
+    name = "reasonforcontactingexport"
+
     def run(self, user_id, filename, form_class_name, post_data, *args, **kwargs):
         """
         Export csv files for each of the referrers from reason for contacting
@@ -229,3 +229,11 @@ class ReasonForContactingExportTask(ExportTaskBase):
             with ZipFile(self.filepath, "w") as refer_zip:
                 for csv_file in glob.glob("*.csv"):
                     refer_zip.write(csv_file)
+
+
+# The Task base class no longer automatically register tasks
+# https://docs.celeryq.dev/en/v4.0.0/whatsnew-4.0.html#the-task-base-class-no-longer-automatically-register-tasks
+# https://github.com/celery/celery/issues/5992
+tasks = [ExportTask, OBIEEExportTask(), ReasonForContactingExportTask()]
+for task in tasks:
+    app.tasks.register(task)

@@ -39,7 +39,7 @@ RUN PIP_CONSTRAINT=/tmp/constraint.txt pip install 'PyYAML==5.4.1'
 FROM base AS development
 
 # additional package required otherwise build of coveralls fails
-RUN apk add --no-cache libffi-dev firefox-esr \
+RUN apk add --no-cache libffi-dev firefox-esr
 
 RUN PIP_CONSTRAINT=/tmp/constraint.txt pip install -r ./requirements/requirements-dev.txt --no-cache-dir
 COPY . .

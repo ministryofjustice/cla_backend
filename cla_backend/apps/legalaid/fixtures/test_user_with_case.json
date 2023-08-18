@@ -38,6 +38,18 @@
         "pk": 10
     },
     {
+      "fields": {
+        "created": "2022-03-29T19:15:32.454Z",
+        "credit_balance": 0,
+        "asset_balance": 0,
+        "modified": "2022-03-29T19:15:32.479Z",
+        "investment_balance": 0,
+        "bank_balance": 0
+      },
+      "model": "legalaid.savings",
+      "pk": 14
+    },
+    {
         "fields": {
             "maintenance_received_interval_period": "per_month",
             "tax_credits": 0,
@@ -183,7 +195,7 @@
     },
     {
       "fields": {
-        "savings": null,
+        "savings": 14,
         "income": 10,
         "deductions": 10,
         "modified": "2022-03-29T18:11:44.160Z",

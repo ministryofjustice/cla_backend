@@ -3,7 +3,7 @@ NAMESPACE=$1
 DYNAMIC_HOSTNAME=$2
 
 # These variables are required in multiple places such as
-# tag_and_push_docker_image as well as the bin/<NAMESPACE>_deploy.sh scripts
+# the bin/<NAMESPACE>_deploy.sh scripts
 export DOCKER_REPOSITORY="$ECR_DOCKER_REPOSITORY"
 export safe_git_branch=${CIRCLE_BRANCH//\//-}
 export CLEANED_BRANCH_NAME=$(echo $CIRCLE_BRANCH | sed 's/^feature[-/]//' | sed 's:^\w*\/::' | tr -s ' _/[]().' '-' | tr '[:upper:]' '[:lower:]' | cut -c1-28 | sed 's/-$//')
@@ -17,4 +17,10 @@ if [ $DYNAMIC_HOSTNAME = true ]; then
 else
   export RELEASE_NAME=cla-backend
   export RELEASE_HOST=${HOST}
+fi
+
+if [ "$CIRCLE_BRANCH" == "master" ]; then
+  export TARGET_TAGS=$IMAGE_TAG,$CLEANED_BRANCH_NAME,"latest"
+else
+  export TARGET_TAGS=$IMAGE_TAG,$CLEANED_BRANCH_NAME
 fi

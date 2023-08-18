@@ -2,42 +2,102 @@ version: 2.1
 orbs:
   slack: circleci/slack@3.4.2
   cla-end-to-end-tests: ministryofjustice/cla-end-to-end-tests@volatile
-jobs:
-  build:
+  aws-cli: circleci/aws-cli@4.0.0 # use v4 of this orb
+  aws-ecr: circleci/aws-ecr@8.2.1 # this orb doesn't support OIDC v2, so we use aws-cli to authenticate
+
+
+# ------------------
+# EXECUTORS
+# these are ones we use rather than one from rom the orb
+# ------------------
+
+executors:
+  cloud-platform-executor:
     docker:
-      - image: docker:19.03-git
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: "19.03.13"
-          docker_layer_caching: true
-      - run:
-          name: Login to the ECR Docker registry
-          command: |
-            apk add --no-cache --no-progress py3-pip
-            pip install awscli
-            ecr_login="$(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)"
-            ${ecr_login}
-      - run:
-          name: Build Docker image
-          command: |
-            DOCKER_BUILDKIT=1 docker build --tag application:$CIRCLE_SHA1 \
-              --target production \
-              --label build.git.sha=$CIRCLE_SHA1 \
-              --label build.git.branch=$CIRCLE_BRANCH \
-              --label build.url=$CIRCLE_BUILD_URL \
-              .
-            docker build --tag database-migration bin/database-migration
-      - run:
-          name: Validate Python version
-          command: |
-            docker run --rm --tty --interactive application:$CIRCLE_SHA1 python --version | grep "2.7"
-      - run:
-          name: Tag and push Docker images
-          command: .circleci/tag_and_push_docker_image application:$CIRCLE_SHA1
-  lint:
+      - image: ministryofjustice/cloud-platform-tools:2.1
+  python2-executor:
     docker:
       - image: cimg/python:2.7
+  python3-executor:
+    docker:
+      - image: cimg/python:3.7
+
+
+# ------------------
+#
+# REFERENCES
+#
+# ------------------
+
+references:
+  install_helm: &install_helm
+      run:
+        name: Install helm v3
+        command: |
+          wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
+          tar -zxvf helm-v3.2.4-linux-amd64.tar.gz
+          mv linux-amd64/helm /usr/local/bin/helm
+
+# ------------------
+#
+# JOBS
+#
+# ------------------
+jobs:
+  build:
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
+    parameters:
+      image:
+        type: string
+    steps:
+      # Checkout your repository
+      - checkout
+      # Authenticate to AWS using OIDC v2 with the AWS CLI
+      - aws-cli/setup:
+          role_arn: $ECR_ROLE_TO_ASSUME # this will use the env var
+          region: $ECR_REGION # this will use the env var
+      # Authenticate to the ECR repository using the standard command
+      - run: |
+          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
+      - when:
+          condition:
+            equal: [ "app", << parameters.image >> ]
+          steps:
+            # Build and push main application Docker image
+            - run:
+                name: Create target tags
+                command: |
+                  source .circleci/define_build_environment_variables
+                  echo "Created tags $TARGET_TAGS"
+                  echo "export BUILD_TAGS=$TARGET_TAGS" >> $BASH_ENV
+                  echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
+            - aws-ecr/build-image:
+                push-image: true
+                tag: $BUILD_TAGS
+                region: $ECR_REGION # this will use the env var
+                repo: $ECR_REPOSITORY # this will use the env var
+                extra-build-args: |
+                  --build-arg target=production
+            # Validate the python version as 2.7
+            - run:
+                name: Validate Python version
+                command: |
+                  docker run --rm --tty --interactive ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG python --version | grep "2.7"
+      - when:
+          condition:
+            equal: ["database-migration", << parameters.image >>]
+          # Build and push database migration Docker image
+          steps:
+            - aws-ecr/build-image:
+                push-image: true
+                path: bin/database-migration
+                build-path: bin/database-migration
+                tag: database-migration
+                region: $ECR_REGION # this will use the env var
+                repo: $ECR_REPOSITORY # this will use the env var
+
+  lint:
+    executor: python2-executor
     steps:
       - checkout
       - run:
@@ -63,8 +123,7 @@ jobs:
             source lint-env/bin/activate
             flake8 cla_backend
   formatting:
-    docker:
-      - image: cimg/python:3.7
+    executor: python3-executor
     steps:
       - checkout
       - run:
@@ -90,8 +149,7 @@ jobs:
             source lint-env/bin/activate
             black --check cla_backend
   pip-compile:
-    docker:
-      - image: cimg/python:2.7
+    executor: python2-executor
     steps:
       - checkout
       - run:
@@ -182,19 +240,13 @@ jobs:
         type: string
       dynamic_hostname:
         type: boolean
-    docker:
-      - image: ministryofjustice/cloud-platform-tools:2.1
+    executor: cloud-platform-executor
     shell: /bin/sh -leo pipefail
     environment:
       BASH_ENV: /etc/profile
     steps:
       - checkout
-      - run:
-          name: Install helm v3
-          command: |
-            wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
-            tar -zxvf helm-v3.2.4-linux-amd64.tar.gz
-            mv linux-amd64/helm /usr/local/bin/helm
+      - *install_helm
       - run:
           name: Authenticate with cluster
           command: |
@@ -215,16 +267,10 @@ jobs:
           title_link: 'https://$RELEASE_HOST/admin/'
 
   cleanup_merged:
-    docker:
-      - image: ministryofjustice/cloud-platform-tools:2.1
+    executor: cloud-platform-executor
     steps:
       - checkout
-      - run:
-          name: Install helm v3
-          command: |
-            wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
-            tar -zxvf helm-v3.2.4-linux-amd64.tar.gz
-            mv linux-amd64/helm /usr/local/bin/helm
+      - *install_helm
       - run:
           name: Authenticate with cluster
           command: |
@@ -233,6 +279,12 @@ jobs:
           name: Delete uat release
           command: |
             ./bin/delete_uat_release.sh
+
+# ------------------
+#
+#WORKFLOWS
+#
+# ------------------
 
 workflows:
   version: 2
@@ -249,15 +301,22 @@ workflows:
           context:
             - laa-cla-backend
             - laa-cla-backend-live-uat
-
       - build:
+          name: build_push_application
+          image: app
           requires:
             - test
           context: laa-cla-backend
-
+      - build:
+          name: build_push_database_migration
+          image: database-migration
+          requires:
+            - test
+          context: laa-cla-backend
       - cla-end-to-end-tests/behave:
           requires:
-            - build
+            - build_push_application
+            - build_push_database_migration
           context: laa-cla-backend
           pre-steps:
             - checkout:
@@ -274,7 +333,8 @@ workflows:
           namespace: uat
           dynamic_hostname: true
           requires:
-            - build
+            - build_push_application
+            - build_push_database_migration
           filters:
             branches:
               ignore:
@@ -286,7 +346,8 @@ workflows:
       - static_uat_deploy_approval:
           type: approval
           requires:
-            - build
+            - build_push_application
+            - build_push_database_migration
 
       - deploy:
           name: static_uat_deploy_live
@@ -301,7 +362,8 @@ workflows:
       - staging_deploy_approval:
           type: approval
           requires:
-            - build
+            - build_push_application
+            - build_push_database_migration
           filters:
             branches:
               only:

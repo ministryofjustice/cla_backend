@@ -50,6 +50,18 @@
       "pk": 14
     },
     {
+      "fields": {
+        "created": "2022-03-29T19:15:32.454Z",
+        "credit_balance": 0,
+        "asset_balance": 0,
+        "modified": "2022-03-29T19:15:32.479Z",
+        "investment_balance": 0,
+        "bank_balance": 0
+      },
+      "model": "legalaid.savings",
+      "pk": 15
+    },
+    {
         "fields": {
             "maintenance_received_interval_period": "per_month",
             "tax_credits": 0,
@@ -83,6 +95,39 @@
         "pk": 10
     },
     {
+      "fields": {
+        "maintenance_received_interval_period": "per_month",
+        "tax_credits": 0,
+        "other_income_interval_period": "per_month",
+        "maintenance_received": 0,
+        "pension_per_interval_value": 0,
+        "earnings_per_interval_value": 0,
+        "self_employment_drawings": 0,
+        "maintenance_received_per_interval_value": 0,
+        "child_benefits_interval_period": "per_month",
+        "tax_credits_per_interval_value": 0,
+        "self_employment_drawings_interval_period": "per_month",
+        "earnings": 0,
+        "child_benefits": 0,
+        "other_income": 0,
+        "pension_interval_period": "per_month",
+        "earnings_interval_period": "per_month",
+        "child_benefits_per_interval_value": 0,
+        "self_employment_drawings_per_interval_value": 0,
+        "tax_credits_interval_period": "per_month",
+        "benefits_per_interval_value": 0,
+        "benefits": 0,
+        "created": "2022-03-29T18:11:44.144Z",
+        "benefits_interval_period": "per_month",
+        "self_employed": false,
+        "modified": "2022-03-29T18:11:44.159Z",
+        "other_income_per_interval_value": 0,
+        "pension": 0
+      },
+      "model": "legalaid.income",
+      "pk": 15
+    },
+    {
         "fields": {
             "childcare_interval_period": "per_month",
             "income_tax": 0,
@@ -108,6 +153,33 @@
         },
         "model": "legalaid.deductions",
         "pk": 10
+    },
+    {
+      "fields": {
+        "childcare_interval_period": "per_month",
+        "income_tax": 0,
+        "national_insurance_per_interval_value": 0,
+        "childcare_per_interval_value": 0,
+        "mortgage": 0,
+        "created": "2022-03-29T18:11:44.146Z",
+        "maintenance_interval_period": "per_month",
+        "rent_interval_period": "per_month",
+        "rent_per_interval_value": 0,
+        "maintenance_per_interval_value": 0,
+        "modified": "2022-03-29T18:11:44.155Z",
+        "income_tax_per_interval_value": 0,
+        "national_insurance": 0,
+        "income_tax_interval_period": "per_month",
+        "childcare": 0,
+        "rent": 0,
+        "maintenance": 0,
+        "mortgage_per_interval_value": 0,
+        "criminal_legalaid_contributions": 0,
+        "national_insurance_interval_period": "per_month",
+        "mortgage_interval_period": "per_month"
+      },
+      "model": "legalaid.deductions",
+      "pk": 15
     },
     {
         "fields": {
@@ -203,6 +275,17 @@
       },
       "model": "legalaid.person",
       "pk": 14
+    },
+    {
+      "fields": {
+        "savings": 15,
+        "income": 15,
+        "deductions": 15,
+        "modified": "2022-03-29T18:11:44.160Z",
+        "created": "2022-03-29T18:11:44.146Z"
+      },
+      "model": "legalaid.person",
+      "pk": 16
     },
     {
         "fields": {
@@ -398,7 +481,7 @@
         "specific_benefits": "{\"pension_credit\":false,\"job_seekers_allowance\":false,\"employment_support\":false,\"universal_credit\":true,\"income_support\":false}",
         "your_problem_notes": "",
         "dependants_old": 0,
-        "partner": null,
+        "partner": 16,
         "you": 14,
         "dependants_young": 0,
         "on_nass_benefits": false

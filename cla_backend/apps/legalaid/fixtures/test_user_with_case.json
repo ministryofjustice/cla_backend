@@ -38,6 +38,30 @@
         "pk": 10
     },
     {
+      "fields": {
+        "created": "2022-03-29T19:15:32.454Z",
+        "credit_balance": 0,
+        "asset_balance": 0,
+        "modified": "2022-03-29T19:15:32.479Z",
+        "investment_balance": 0,
+        "bank_balance": 0
+      },
+      "model": "legalaid.savings",
+      "pk": 14
+    },
+    {
+      "fields": {
+        "created": "2022-03-29T19:15:32.454Z",
+        "credit_balance": 0,
+        "asset_balance": 0,
+        "modified": "2022-03-29T19:15:32.479Z",
+        "investment_balance": 0,
+        "bank_balance": 0
+      },
+      "model": "legalaid.savings",
+      "pk": 15
+    },
+    {
         "fields": {
             "maintenance_received_interval_period": "per_month",
             "tax_credits": 0,
@@ -71,6 +95,39 @@
         "pk": 10
     },
     {
+      "fields": {
+        "maintenance_received_interval_period": "per_month",
+        "tax_credits": 0,
+        "other_income_interval_period": "per_month",
+        "maintenance_received": 0,
+        "pension_per_interval_value": 0,
+        "earnings_per_interval_value": 0,
+        "self_employment_drawings": 0,
+        "maintenance_received_per_interval_value": 0,
+        "child_benefits_interval_period": "per_month",
+        "tax_credits_per_interval_value": 0,
+        "self_employment_drawings_interval_period": "per_month",
+        "earnings": 0,
+        "child_benefits": 0,
+        "other_income": 0,
+        "pension_interval_period": "per_month",
+        "earnings_interval_period": "per_month",
+        "child_benefits_per_interval_value": 0,
+        "self_employment_drawings_per_interval_value": 0,
+        "tax_credits_interval_period": "per_month",
+        "benefits_per_interval_value": 0,
+        "benefits": 0,
+        "created": "2022-03-29T18:11:44.144Z",
+        "benefits_interval_period": "per_month",
+        "self_employed": false,
+        "modified": "2022-03-29T18:11:44.159Z",
+        "other_income_per_interval_value": 0,
+        "pension": 0
+      },
+      "model": "legalaid.income",
+      "pk": 15
+    },
+    {
         "fields": {
             "childcare_interval_period": "per_month",
             "income_tax": 0,
@@ -96,6 +153,33 @@
         },
         "model": "legalaid.deductions",
         "pk": 10
+    },
+    {
+      "fields": {
+        "childcare_interval_period": "per_month",
+        "income_tax": 0,
+        "national_insurance_per_interval_value": 0,
+        "childcare_per_interval_value": 0,
+        "mortgage": 0,
+        "created": "2022-03-29T18:11:44.146Z",
+        "maintenance_interval_period": "per_month",
+        "rent_interval_period": "per_month",
+        "rent_per_interval_value": 0,
+        "maintenance_per_interval_value": 0,
+        "modified": "2022-03-29T18:11:44.155Z",
+        "income_tax_per_interval_value": 0,
+        "national_insurance": 0,
+        "income_tax_interval_period": "per_month",
+        "childcare": 0,
+        "rent": 0,
+        "maintenance": 0,
+        "mortgage_per_interval_value": 0,
+        "criminal_legalaid_contributions": 0,
+        "national_insurance_interval_period": "per_month",
+        "mortgage_interval_period": "per_month"
+      },
+      "model": "legalaid.deductions",
+      "pk": 15
     },
     {
         "fields": {
@@ -126,6 +210,34 @@
         "pk": 10
     },
     {
+      "fields": {
+        "reference": "2dd196e7163e4598b00401139da8103b",
+        "vulnerable_user": false,
+        "street": "Green Hills",
+        "postcode": "TW8 9BW",
+        "full_name": "Sonic The Hedgehog",
+        "case_count": 1,
+        "ni_number": "SO199101K",
+        "search_field": "###TW89BW###2003-01-01###01/01/2003###01/01/03###01/1/2003###01/1/03###1/01/2003###1/01/03###1/1/2003###1/1/03###018651111234",
+        "safe_to_email": "SAFE",
+        "contact_for_research": false,
+        "title": null,
+        "date_of_birth": "2003-01-01",
+        "home_phone": "",
+        "email": "",
+        "mobile_phone": "01865 111 1234",
+        "diversity": "wcBMA08rV3ehUgNdAQf/RK+Vy56qNj/v8KH70LltuI10TD5dKVBYsPJQKJ34Af4DB9tq/Eun2p3XNKmxoa/u/LjwxUuWR3dZQVKmPQaBns2L/69W35AvXzEmaFqHPmdbKv6OVvnES8Iu2IYvc4qNcez72c/PDbNdFFhUIeH9wnyvzcxcJorfFLickPK8HtQXwnVNDzKsxGaQnF9OCgY0+2QIO4aBh/Axdsm7wS8SmipIic6UHwHueuORzlQab+6KTdkeG9E5qxn3GAj/khgI9l/2F7mj49EKZlM6VLd/fzP2xwviL9hccJEInMagkUzWtexWNCOWJOKbTO4IsMRXenurzasIKc//Jp1B0355wtLAJwHmlmWCCr8KxRl0NxM12MZ3Kh3zrNPUhlwkuwUFJ9K+L4DxyxjujN24O6n85s6CiaVbN4OV9ISoS0mbyc+SleCaaG8Y33h+96XGVdmOX1EWVh/idn4zLPzwYwzYfKwlK0VYEAldj3UrZ2HjBb+DOShIt2WR73wGZCJfZiUgLZGc7TKEGN9Lq7rNxcLKD7cgK096in+zuVF+1EPfsR2vyN2jW0KCFKjX7oH+cvhTK/nh9EfqIpwO1yr1v6e6eCbO0Ty8MkHe7mcS0bMFHSl5pUWfvU3DECoN1t9uYZ2U2+cvG6FUD280cw==",
+        "contact_for_research_via": "PHONE",
+        "contact_for_research_methods": [],
+        "safe_to_contact": "SAFE",
+        "created": "2022-03-29T18:10:53.107Z",
+        "modified": "2022-03-29T18:12:30.691Z",
+        "diversity_modified": "2022-03-29T18:11:57.327Z"
+      },
+      "model": "legalaid.personaldetails",
+      "pk": 14
+    },
+    {
         "fields": {
             "text_relay": false,
             "skype_webcam": false,
@@ -152,6 +264,28 @@
         },
         "model": "legalaid.person",
         "pk": 10
+    },
+    {
+      "fields": {
+        "savings": 14,
+        "income": 10,
+        "deductions": 10,
+        "modified": "2022-03-29T18:11:44.160Z",
+        "created": "2022-03-29T18:11:44.146Z"
+      },
+      "model": "legalaid.person",
+      "pk": 14
+    },
+    {
+      "fields": {
+        "savings": 15,
+        "income": 15,
+        "deductions": 15,
+        "modified": "2022-03-29T18:11:44.160Z",
+        "created": "2022-03-29T18:11:44.146Z"
+      },
+      "model": "legalaid.person",
+      "pk": 16
     },
     {
         "fields": {
@@ -246,7 +380,7 @@
             "reference": "ED-0001-0002",
             "outcome_code": "MANALC",
             "outcome_code_id": 4,
-            "provider_viewed": "2022-03-29T18:13:31.628Z",
+            "provider_viewed": "2022-03-28T18:13:31.628Z",
             "locked_at": null,
             "search_field": "ED00010002",
             "adaptation_details": 1,
@@ -254,31 +388,31 @@
             "organisation": null,
             "ecf_statement": null,
             "created_by": 2,
-            "personal_details": 10,
+            "personal_details": 14,
             "requires_action_at": null,
             "callback_window_type": "HALF_HOUR_WINDOW",
             "provider": null,
             "provider_closed": null,
             "assigned_out_of_hours": true,
             "media_code": 4,
-            "provider_assigned_at": "2022-03-29T18:12:40.378Z",
+            "provider_assigned_at": "2022-03-28T18:12:40.378Z",
             "callback_attempt": 0,
             "laa_reference": 4000011,
             "exempt_user": null,
             "level": 29,
             "thirdparty_details": null,
-            "created": "2022-03-29T18:08:59.007Z",
+            "created": "2022-03-29T18:08:58.007Z",
             "notes": "case created for operator to edit",
             "locked_by": null,
             "provider_accepted": null,
-            "modified": "2022-03-29T18:12:40.402Z",
+            "modified": "2022-03-29T18:12:39.402Z",
             "exempt_user_reason": null,
             "matter_type2": 16,
             "requires_action_by": "operator",
             "complaint_flag": false,
             "matter_type1": 8,
             "diagnosis": 11,
-            "eligibility_check": 11,
+            "eligibility_check": 14,
             "billable_time": 0,
             "is_urgent": false,
             "from_case": null,
@@ -328,5 +462,31 @@
         },
         "model": "legalaid.eligibilitycheck",
         "pk": 11
+    },
+    {
+      "fields": {
+        "category": 8,
+        "on_passported_benefits": true,
+        "disputed_savings": null,
+        "calculations": "{\"pensioner_disregard\":0,\"disposable_capital_assets\":0,\"property_equities\":[],\"property_capital\":0,\"liquid_capital\":0}",
+        "reference": "431b946d029d466590257de4a45afba3",
+        "created": "2022-03-29T18:11:44.146Z",
+        "disregards": null,
+        "notes": "",
+        "modified": "2022-03-29T18:11:44.172Z",
+        "is_you_or_your_partner_over_60": false,
+        "has_partner": false,
+        "state": "yes",
+        "has_passported_proceedings_letter": null,
+        "specific_benefits": "{\"pension_credit\":false,\"job_seekers_allowance\":false,\"employment_support\":false,\"universal_credit\":true,\"income_support\":false}",
+        "your_problem_notes": "",
+        "dependants_old": 0,
+        "partner": 16,
+        "you": 14,
+        "dependants_young": 0,
+        "on_nass_benefits": false
+      },
+      "model": "legalaid.eligibilitycheck",
+      "pk": 14
     }
 ]

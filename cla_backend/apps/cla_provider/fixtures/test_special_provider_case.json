@@ -24,6 +24,30 @@
         "pk": 2
     },
     {
+      "fields": {
+        "created": "2022-03-29T19:15:32.454Z",
+        "credit_balance": 0,
+        "asset_balance": 0,
+        "modified": "2022-03-29T19:15:32.479Z",
+        "investment_balance": 0,
+        "bank_balance": 0
+      },
+      "model": "legalaid.savings",
+      "pk": 13
+    },
+    {
+      "fields": {
+        "created": "2022-03-29T19:15:32.454Z",
+        "credit_balance": 0,
+        "asset_balance": 0,
+        "modified": "2022-03-29T19:15:32.479Z",
+        "investment_balance": 0,
+        "bank_balance": 0
+      },
+      "model": "legalaid.savings",
+      "pk": 16
+    },
+    {
         "fields": {
             "maintenance_received_interval_period": "per_month",
             "tax_credits": 0,
@@ -156,6 +180,72 @@
         "pk": 4
     },
     {
+      "fields": {
+        "maintenance_received_interval_period": "per_month",
+        "tax_credits": 0,
+        "other_income_interval_period": "per_month",
+        "maintenance_received": 0,
+        "pension_per_interval_value": 0,
+        "earnings_per_interval_value": 0,
+        "self_employment_drawings": 0,
+        "maintenance_received_per_interval_value": 0,
+        "child_benefits_interval_period": "per_month",
+        "tax_credits_per_interval_value": 0,
+        "self_employment_drawings_interval_period": "per_month",
+        "earnings": 0,
+        "child_benefits": 0,
+        "other_income": 0,
+        "pension_interval_period": "per_month",
+        "earnings_interval_period": "per_month",
+        "child_benefits_per_interval_value": 0,
+        "self_employment_drawings_per_interval_value": 0,
+        "tax_credits_interval_period": "per_month",
+        "benefits_per_interval_value": 0,
+        "benefits": 0,
+        "created": "2022-03-29T18:15:32.453Z",
+        "benefits_interval_period": "per_month",
+        "self_employed": false,
+        "modified": "2022-03-29T18:15:32.482Z",
+        "other_income_per_interval_value": 0,
+        "pension": 0
+      },
+      "model": "legalaid.income",
+      "pk": 13
+    },
+  {
+      "fields": {
+        "maintenance_received_interval_period": "per_month",
+        "tax_credits": 0,
+        "other_income_interval_period": "per_month",
+        "maintenance_received": 0,
+        "pension_per_interval_value": 0,
+        "earnings_per_interval_value": 0,
+        "self_employment_drawings": 0,
+        "maintenance_received_per_interval_value": 0,
+        "child_benefits_interval_period": "per_month",
+        "tax_credits_per_interval_value": 0,
+        "self_employment_drawings_interval_period": "per_month",
+        "earnings": 0,
+        "child_benefits": 0,
+        "other_income": 0,
+        "pension_interval_period": "per_month",
+        "earnings_interval_period": "per_month",
+        "child_benefits_per_interval_value": 0,
+        "self_employment_drawings_per_interval_value": 0,
+        "tax_credits_interval_period": "per_month",
+        "benefits_per_interval_value": 0,
+        "benefits": 0,
+        "created": "2022-03-29T18:15:32.453Z",
+        "benefits_interval_period": "per_month",
+        "self_employed": false,
+        "modified": "2022-03-29T18:15:32.482Z",
+        "other_income_per_interval_value": 0,
+        "pension": 0
+      },
+      "model": "legalaid.income",
+      "pk": 16
+    },
+    {
         "fields": {
             "childcare_interval_period": "per_month",
             "income_tax": 0,
@@ -263,6 +353,60 @@
         "model": "legalaid.deductions",
         "pk": 4
     },
+      {
+        "fields": {
+          "childcare_interval_period": "per_month",
+          "income_tax": 0,
+          "national_insurance_per_interval_value": 0,
+          "childcare_per_interval_value": 0,
+          "mortgage": 0,
+          "created": "2022-03-29T18:15:32.456Z",
+          "maintenance_interval_period": "per_month",
+          "rent_interval_period": "per_month",
+          "rent_per_interval_value": 0,
+          "maintenance_per_interval_value": 0,
+          "modified": "2022-03-29T18:15:32.481Z",
+          "income_tax_per_interval_value": 0,
+          "national_insurance": 0,
+          "income_tax_interval_period": "per_month",
+          "childcare": 0,
+          "rent": 0,
+          "maintenance": 0,
+          "mortgage_per_interval_value": 0,
+          "criminal_legalaid_contributions": 0,
+          "national_insurance_interval_period": "per_month",
+          "mortgage_interval_period": "per_month"
+        },
+        "model": "legalaid.deductions",
+        "pk": 13
+      },
+      {
+        "fields": {
+          "childcare_interval_period": "per_month",
+          "income_tax": 0,
+          "national_insurance_per_interval_value": 0,
+          "childcare_per_interval_value": 0,
+          "mortgage": 0,
+          "created": "2022-03-29T18:15:32.456Z",
+          "maintenance_interval_period": "per_month",
+          "rent_interval_period": "per_month",
+          "rent_per_interval_value": 0,
+          "maintenance_per_interval_value": 0,
+          "modified": "2022-03-29T18:15:32.481Z",
+          "income_tax_per_interval_value": 0,
+          "national_insurance": 0,
+          "income_tax_interval_period": "per_month",
+          "childcare": 0,
+          "rent": 0,
+          "maintenance": 0,
+          "mortgage_per_interval_value": 0,
+          "criminal_legalaid_contributions": 0,
+          "national_insurance_interval_period": "per_month",
+          "mortgage_interval_period": "per_month"
+        },
+        "model": "legalaid.deductions",
+        "pk": 16
+      },
     {
         "fields": {
             "reference": "8f05a732876b4c54a9bfaf71a6e0f633",
@@ -292,32 +436,60 @@
         "pk": 1
     },
     {
-        "fields": {
-            "reference": "95e85bc7406c429e8fd655562406f6b2",
-            "vulnerable_user": null,
-            "street": "11 electric avenue",
-            "postcode": "OX2 0LD",
-            "full_name": "Nathan Drake",
-            "case_count": 1,
-            "ni_number": "NW117431B",
-            "search_field": "###OX20LD###2003-02-01###01/02/2003###01/02/03###01/2/2003###01/2/03###1/02/2003###1/02/03###1/2/2003###1/2/03###018651111234",
-            "safe_to_email": "SAFE",
-            "contact_for_research": null,
-            "title": null,
-            "date_of_birth": "2003-02-01",
-            "home_phone": "",
-            "email": "",
-            "mobile_phone": "01865 111 1234",
-            "diversity": "wcBMA08rV3ehUgNdAQf/WsYE/7YpcPiNXiXka7e3mn87DzvbfE/pP0Or6bCcLOqfYZq127e/DyDxZ/WANnV9xIseJY2qznSFuvvG/51FZCfWVdRSd2EIj+KSRf5Hx1iDi2BugdUY17X+An7LAZ1OuLYhd9Y4D56QzYtZ+h7cYsiVNenAGel/oh0xMA2lMfMbxS5eF7LVRGjg9goiciu1V6w6Te8MaycLqS3bLe6hSoHESpTYB2Wx+aImEERHKDG2Wn0+uRYMkWGsjUz5VqbNe93G3Q9u0L+YobXvllA5OGl9GWyBZR5grAuKdV8RJ7K+iw8umUpPlm1IqA9g9xzUKQtECKkwwN51fa5RDPUBR9LAJwE5furrDV4ldDtokAGElqGs0/9GuDozYbchezgwpc49RXKXDz9PNnOFMH2V8t098tSvN4H3pizlSQugWiCkCRPU11XgvWkYRBV9AtQk8MuV3wUmK/aEmRYrIvy1NRtJT2q00ulQtUdMuIV1EaSdm/RgaLVHE2QOUQvCCbL7cPnJGNj5QkcAR1FwAJdaUaAqGyxScF7RE7aa5s+LHCijGjacTKacKOwaU6kteNs2zuzBzdnz/GEJCIEMxVFAlNeynmhWXlLsjZgdmNNJ/M2/gHw4jh/vi5LqNCPRK9PcFowqKmUdyw0o1w==",
-            "contact_for_research_via": "PHONE",
-            "contact_for_research_methods": [],
-            "safe_to_contact": "SAFE",
-            "created": "2022-03-29T18:14:51.273Z",
-            "modified": "2022-03-29T18:14:51.278Z",
-            "diversity_modified": "2022-03-29T18:15:46.060Z"
-        },
-        "model": "legalaid.personaldetails",
-        "pk": 2
+      "fields": {
+        "reference": "95e85bc7406c429e8fd655562406f6b2",
+        "vulnerable_user": null,
+        "street": "11 electric avenue",
+        "postcode": "OX2 0LD",
+        "full_name": "Nathan Drake",
+        "case_count": 1,
+        "ni_number": "NW117431B",
+        "search_field": "###OX20LD###2003-02-01###01/02/2003###01/02/03###01/2/2003###01/2/03###1/02/2003###1/02/03###1/2/2003###1/2/03###018651111234",
+        "safe_to_email": "SAFE",
+        "contact_for_research": null,
+        "title": null,
+        "date_of_birth": "2003-02-01",
+        "home_phone": "",
+        "email": "",
+        "mobile_phone": "01865 111 1234",
+        "diversity": "wcBMA08rV3ehUgNdAQf/WsYE/7YpcPiNXiXka7e3mn87DzvbfE/pP0Or6bCcLOqfYZq127e/DyDxZ/WANnV9xIseJY2qznSFuvvG/51FZCfWVdRSd2EIj+KSRf5Hx1iDi2BugdUY17X+An7LAZ1OuLYhd9Y4D56QzYtZ+h7cYsiVNenAGel/oh0xMA2lMfMbxS5eF7LVRGjg9goiciu1V6w6Te8MaycLqS3bLe6hSoHESpTYB2Wx+aImEERHKDG2Wn0+uRYMkWGsjUz5VqbNe93G3Q9u0L+YobXvllA5OGl9GWyBZR5grAuKdV8RJ7K+iw8umUpPlm1IqA9g9xzUKQtECKkwwN51fa5RDPUBR9LAJwE5furrDV4ldDtokAGElqGs0/9GuDozYbchezgwpc49RXKXDz9PNnOFMH2V8t098tSvN4H3pizlSQugWiCkCRPU11XgvWkYRBV9AtQk8MuV3wUmK/aEmRYrIvy1NRtJT2q00ulQtUdMuIV1EaSdm/RgaLVHE2QOUQvCCbL7cPnJGNj5QkcAR1FwAJdaUaAqGyxScF7RE7aa5s+LHCijGjacTKacKOwaU6kteNs2zuzBzdnz/GEJCIEMxVFAlNeynmhWXlLsjZgdmNNJ/M2/gHw4jh/vi5LqNCPRK9PcFowqKmUdyw0o1w==",
+        "contact_for_research_via": "PHONE",
+        "contact_for_research_methods": [],
+        "safe_to_contact": "SAFE",
+        "created": "2022-03-29T18:14:51.273Z",
+        "modified": "2022-03-29T18:14:51.278Z",
+        "diversity_modified": "2022-03-29T18:15:46.060Z"
+      },
+      "model": "legalaid.personaldetails",
+      "pk": 2
+    },
+    {
+      "fields": {
+        "reference": "d358b0dc9ccc4e09b9a15188a8a58dea",
+        "vulnerable_user": null,
+        "street": "Buckland Abby",
+        "postcode": "PL20 6EY",
+        "full_name": "Elena Drake",
+        "case_count": 1,
+        "ni_number": "UN117431B",
+        "search_field": "###PL206EY###2003-02-01###01/02/2003###01/02/03###01/2/2003###01/2/03###1/02/2003###1/02/03###1/2/2003###1/2/03###018651111234",
+        "safe_to_email": "SAFE",
+        "contact_for_research": null,
+        "title": null,
+        "date_of_birth": "2003-02-01",
+        "home_phone": "",
+        "email": "",
+        "mobile_phone": "01865 111 1234",
+        "diversity": "wcBMA08rV3ehUgNdAQf/WsYE/7YpcPiNXiXka7e3mn87DzvbfE/pP0Or6bCcLOqfYZq127e/DyDxZ/WANnV9xIseJY2qznSFuvvG/51FZCfWVdRSd2EIj+KSRf5Hx1iDi2BugdUY17X+An7LAZ1OuLYhd9Y4D56QzYtZ+h7cYsiVNenAGel/oh0xMA2lMfMbxS5eF7LVRGjg9goiciu1V6w6Te8MaycLqS3bLe6hSoHESpTYB2Wx+aImEERHKDG2Wn0+uRYMkWGsjUz5VqbNe93G3Q9u0L+YobXvllA5OGl9GWyBZR5grAuKdV8RJ7K+iw8umUpPlm1IqA9g9xzUKQtECKkwwN51fa5RDPUBR9LAJwE5furrDV4ldDtokAGElqGs0/9GuDozYbchezgwpc49RXKXDz9PNnOFMH2V8t098tSvN4H3pizlSQugWiCkCRPU11XgvWkYRBV9AtQk8MuV3wUmK/aEmRYrIvy1NRtJT2q00ulQtUdMuIV1EaSdm/RgaLVHE2QOUQvCCbL7cPnJGNj5QkcAR1FwAJdaUaAqGyxScF7RE7aa5s+LHCijGjacTKacKOwaU6kteNs2zuzBzdnz/GEJCIEMxVFAlNeynmhWXlLsjZgdmNNJ/M2/gHw4jh/vi5LqNCPRK9PcFowqKmUdyw0o1w==",
+        "contact_for_research_via": "PHONE",
+        "contact_for_research_methods": [],
+        "safe_to_contact": "SAFE",
+        "created": "2022-03-28T18:14:52.273Z",
+        "modified": "2022-03-28T18:14:52.278Z",
+        "diversity_modified": "2022-03-28T18:15:46.060Z"
+      },
+      "model": "legalaid.personaldetails",
+      "pk": 13
     },
     {
         "fields": {
@@ -352,6 +524,23 @@
         },
         "model": "legalaid.adaptationdetails",
         "pk": 2
+    },
+    {
+      "fields": {
+        "text_relay": false,
+        "skype_webcam": false,
+        "bsl_webcam": false,
+        "reference": "8f6b148495d74616a2e28a559e6dc365",
+        "language": null,
+        "created": "2022-03-29T18:14:51.271Z",
+        "no_adaptations_required": true,
+        "notes": "",
+        "minicom": false,
+        "modified": "2022-03-29T18:14:51.276Z",
+        "callback_preference": false
+      },
+      "model": "legalaid.adaptationdetails",
+      "pk": 13
     },
     {
         "fields": {
@@ -398,16 +587,38 @@
         "pk": 4
     },
     {
+      "fields": {
+        "savings": 13,
+        "income": 13,
+        "deductions": 13,
+        "modified": "2022-03-29T18:15:32.484Z",
+        "created": "2022-03-29T18:15:32.456Z"
+      },
+      "model": "legalaid.person",
+      "pk": 13
+    },
+    {
+      "fields": {
+        "savings": 16,
+        "income": 16,
+        "deductions": 16,
+        "modified": "2022-03-29T18:15:32.484Z",
+        "created": "2022-03-29T18:15:32.456Z"
+      },
+      "model": "legalaid.person",
+      "pk": 15
+    },
+    {
         "fields": {
             "category": 8,
             "on_passported_benefits": true,
             "disputed_savings": null,
             "calculations": "{\"pensioner_disregard\":0,\"disposable_capital_assets\":0,\"property_equities\":[],\"property_capital\":0,\"liquid_capital\":0}",
             "reference": "d107aeb44c584b69af71354202cc8617",
-            "created": "2022-03-29T18:11:44.146Z",
+            "created": "2022-03-28T18:11:44.146Z",
             "disregards": null,
             "notes": "",
-            "modified": "2022-03-29T18:11:44.172Z",
+            "modified": "2022-03-28T18:11:44.172Z",
             "is_you_or_your_partner_over_60": false,
             "has_partner": false,
             "state": "yes",
@@ -476,20 +687,20 @@
       "pk": 3
     },
     {
-        "fields": {
-            "category": 8,
-            "graph_version": "c5aec84ff6d5ce512d4fba489309d479",
-            "reference": "0da25d170576407f94d006cfd1725fa2",
-            "created": "2022-03-29T18:10:54.608Z",
-            "modified": "2022-03-29T18:11:06.666Z",
-            "matter_type2": null,
-            "state": "INSCOPE",
-            "matter_type1": null,
-            "current_node_id": "n111",
-            "nodes": "[{\"context\":null,\"key\":\"Discrimination\",\"title\":\"Discrimination\",\"id\":\"n106\",\"label\":\"<p>Discrimination</p>\",\"data_safety\":null,\"help_text\":\"<p>The discrimination category covers advice on cases that contravene the Equalities Act 2010.</p>\\n<p>It is against the law to discriminate against anyone because of:</p>\\n<ul>\\n<li>age</li>\\n<li>gender reassignment</li>\\n<li>being married or in a civil partnership</li>\\n<li>being pregnant or having recently given birth</li>\\n<li>disability</li>\\n<li>race including colour, nationality, ethnic or national origin</li>\\n<li>religion, belief or lack of religion or belief</li>\\n<li>sex</li>\\n<li>sexual orientation</li>\\n</ul>\\n<p>These are called 'protected characteristics'. To find out more, search the guidance for 'protected characteristics'.</p>\\n<p>The client's problem could start in another category (eg housing) but the client will believe that thay have been discriminated against, harassed or victimised.</p>\",\"heading\":null,\"order\":5,\"description\":null},{\"context\":null,\"key\":\"The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else\\u2019s discrimination claim\\n\\nIt is against the law to discriminate against anyone because of:\\n\\n* age\\n* gender reassignment\\n* being married or in a civil partnership\\n* being pregnant or having recently given birth\\n* disability\\n* race including colour, nationality, ethnic or national origin\\n* religion, belief or lack of religion or belief\\n* sex\\n* sexual orientation\",\"title\":\"Has the client been \",\"label\":\"<p>The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else\\u2019s discrimination claim</p>\\n<p>It is against the law to discriminate against anyone because of:</p>\\n<ul>\\n<li>age</li>\\n<li>gender reassignment</li>\\n<li>being married or in a civil partnership</li>\\n<li>being pregnant or having recently given birth</li>\\n<li>disability</li>\\n<li>race including colour, nationality, ethnic or national origin</li>\\n<li>religion, belief or lack of religion or belief</li>\\n<li>sex</li>\\n<li>sexual orientation</li>\\n</ul>\",\"data_safety\":null,\"help_text\":null,\"order\":9999,\"heading\":\"Select the type of discrimination that applies\",\"id\":\"n107\",\"description\":null},{\"context\":null,\"key\":\"Direct discrimination\",\"title\":\"Direct discriminatio\",\"id\":\"n108\",\"label\":\"<p>Direct discrimination</p>\",\"data_safety\":null,\"help_text\":\"<p>Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result.</p>\",\"heading\":\"On what basis has the client been discriminated against?\\nGive details in the operator notes, especially if more than one option applies.\",\"order\":1,\"description\":null},{\"context\":null,\"key\":\"Disability\",\"title\":\"Disability Pregnancy\",\"label\":\"<p>Disability</p>\",\"data_safety\":null,\"help_text\":\"<p>Disability is defined as a physical or mental impairment, which has a substantial and long term adverse effect on a person's ability to carry out normal day-to-day activities.</p>\\n<p>People with cancer or who are HIV+ are classed as having a disability.</p>\\n<p>The disability does not have to have a name or a diagnosis to meet this definition.</p>\",\"order\":5,\"heading\":\"Where did the discrimination occur?\",\"id\":\"n109\",\"description\":null},{\"context\":null,\"key\":\"Work\",\"title\":\"Work\",\"id\":\"n110\",\"label\":\"<p>Work</p>\",\"data_safety\":null,\"help_text\":null,\"heading\":null,\"order\":1,\"description\":null},{\"context\":{\"category\":\"discrimination\"},\"key\":\"INSCOPE\",\"title\":\"DISCRIMINATION INSCO\",\"id\":\"n111\",\"label\":\"<p>INSCOPE</p>\",\"data_safety\":null,\"help_text\":null,\"heading\":null,\"order\":9999,\"description\":null}]"
-        },
-        "model": "diagnosis.diagnosistraversal",
-        "pk": 1
+      "fields": {
+        "category": 8,
+        "graph_version": "c5aec84ff6d5ce512d4fba489309d479",
+        "reference": "0da25d170576407f94d006cfd1725fa2",
+        "created": "2022-03-29T18:10:54.608Z",
+        "modified": "2022-03-29T18:11:06.666Z",
+        "matter_type2": null,
+        "state": "INSCOPE",
+        "matter_type1": null,
+        "current_node_id": "n111",
+        "nodes": "[{\"context\":null,\"key\":\"Discrimination\",\"title\":\"Discrimination\",\"id\":\"n106\",\"label\":\"<p>Discrimination</p>\",\"data_safety\":null,\"help_text\":\"<p>The discrimination category covers advice on cases that contravene the Equalities Act 2010.</p>\\n<p>It is against the law to discriminate against anyone because of:</p>\\n<ul>\\n<li>age</li>\\n<li>gender reassignment</li>\\n<li>being married or in a civil partnership</li>\\n<li>being pregnant or having recently given birth</li>\\n<li>disability</li>\\n<li>race including colour, nationality, ethnic or national origin</li>\\n<li>religion, belief or lack of religion or belief</li>\\n<li>sex</li>\\n<li>sexual orientation</li>\\n</ul>\\n<p>These are called 'protected characteristics'. To find out more, search the guidance for 'protected characteristics'.</p>\\n<p>The client's problem could start in another category (eg housing) but the client will believe that thay have been discriminated against, harassed or victimised.</p>\",\"heading\":null,\"order\":5,\"description\":null},{\"context\":null,\"key\":\"The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else\\u2019s discrimination claim\\n\\nIt is against the law to discriminate against anyone because of:\\n\\n* age\\n* gender reassignment\\n* being married or in a civil partnership\\n* being pregnant or having recently given birth\\n* disability\\n* race including colour, nationality, ethnic or national origin\\n* religion, belief or lack of religion or belief\\n* sex\\n* sexual orientation\",\"title\":\"Has the client been \",\"label\":\"<p>The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else\\u2019s discrimination claim</p>\\n<p>It is against the law to discriminate against anyone because of:</p>\\n<ul>\\n<li>age</li>\\n<li>gender reassignment</li>\\n<li>being married or in a civil partnership</li>\\n<li>being pregnant or having recently given birth</li>\\n<li>disability</li>\\n<li>race including colour, nationality, ethnic or national origin</li>\\n<li>religion, belief or lack of religion or belief</li>\\n<li>sex</li>\\n<li>sexual orientation</li>\\n</ul>\",\"data_safety\":null,\"help_text\":null,\"order\":9999,\"heading\":\"Select the type of discrimination that applies\",\"id\":\"n107\",\"description\":null},{\"context\":null,\"key\":\"Direct discrimination\",\"title\":\"Direct discriminatio\",\"id\":\"n108\",\"label\":\"<p>Direct discrimination</p>\",\"data_safety\":null,\"help_text\":\"<p>Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result.</p>\",\"heading\":\"On what basis has the client been discriminated against?\\nGive details in the operator notes, especially if more than one option applies.\",\"order\":1,\"description\":null},{\"context\":null,\"key\":\"Disability\",\"title\":\"Disability Pregnancy\",\"label\":\"<p>Disability</p>\",\"data_safety\":null,\"help_text\":\"<p>Disability is defined as a physical or mental impairment, which has a substantial and long term adverse effect on a person's ability to carry out normal day-to-day activities.</p>\\n<p>People with cancer or who are HIV+ are classed as having a disability.</p>\\n<p>The disability does not have to have a name or a diagnosis to meet this definition.</p>\",\"order\":5,\"heading\":\"Where did the discrimination occur?\",\"id\":\"n109\",\"description\":null},{\"context\":null,\"key\":\"Work\",\"title\":\"Work\",\"id\":\"n110\",\"label\":\"<p>Work</p>\",\"data_safety\":null,\"help_text\":null,\"heading\":null,\"order\":1,\"description\":null},{\"context\":{\"category\":\"discrimination\"},\"key\":\"INSCOPE\",\"title\":\"DISCRIMINATION INSCO\",\"id\":\"n111\",\"label\":\"<p>INSCOPE</p>\",\"data_safety\":null,\"help_text\":null,\"heading\":null,\"order\":9999,\"description\":null}]"
+      },
+      "model": "diagnosis.diagnosistraversal",
+      "pk": 1
     },
     {
         "fields": {
@@ -538,6 +749,22 @@
         },
         "model": "diagnosis.diagnosistraversal",
         "pk": 4
+    },
+  {
+      "fields": {
+        "category": 8,
+        "graph_version": "c5aec84ff6d5ce512d4fba489309d479",
+        "reference": "7a632c6de9fe480caa16e3f337ae3991",
+        "created": "2022-03-29T18:10:54.608Z",
+        "modified": "2022-03-29T18:11:06.666Z",
+        "matter_type2": null,
+        "state": "INSCOPE",
+        "matter_type1": null,
+        "current_node_id": "n111",
+        "nodes": "[{\"context\":null,\"key\":\"Discrimination\",\"title\":\"Discrimination\",\"id\":\"n106\",\"label\":\"<p>Discrimination</p>\",\"data_safety\":null,\"help_text\":\"<p>The discrimination category covers advice on cases that contravene the Equalities Act 2010.</p>\\n<p>It is against the law to discriminate against anyone because of:</p>\\n<ul>\\n<li>age</li>\\n<li>gender reassignment</li>\\n<li>being married or in a civil partnership</li>\\n<li>being pregnant or having recently given birth</li>\\n<li>disability</li>\\n<li>race including colour, nationality, ethnic or national origin</li>\\n<li>religion, belief or lack of religion or belief</li>\\n<li>sex</li>\\n<li>sexual orientation</li>\\n</ul>\\n<p>These are called 'protected characteristics'. To find out more, search the guidance for 'protected characteristics'.</p>\\n<p>The client's problem could start in another category (eg housing) but the client will believe that thay have been discriminated against, harassed or victimised.</p>\",\"heading\":null,\"order\":5,\"description\":null},{\"context\":null,\"key\":\"The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else\\u2019s discrimination claim\\n\\nIt is against the law to discriminate against anyone because of:\\n\\n* age\\n* gender reassignment\\n* being married or in a civil partnership\\n* being pregnant or having recently given birth\\n* disability\\n* race including colour, nationality, ethnic or national origin\\n* religion, belief or lack of religion or belief\\n* sex\\n* sexual orientation\",\"title\":\"Has the client been \",\"label\":\"<p>The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else\\u2019s discrimination claim</p>\\n<p>It is against the law to discriminate against anyone because of:</p>\\n<ul>\\n<li>age</li>\\n<li>gender reassignment</li>\\n<li>being married or in a civil partnership</li>\\n<li>being pregnant or having recently given birth</li>\\n<li>disability</li>\\n<li>race including colour, nationality, ethnic or national origin</li>\\n<li>religion, belief or lack of religion or belief</li>\\n<li>sex</li>\\n<li>sexual orientation</li>\\n</ul>\",\"data_safety\":null,\"help_text\":null,\"order\":9999,\"heading\":\"Select the type of discrimination that applies\",\"id\":\"n107\",\"description\":null},{\"context\":null,\"key\":\"Direct discrimination\",\"title\":\"Direct discriminatio\",\"id\":\"n108\",\"label\":\"<p>Direct discrimination</p>\",\"data_safety\":null,\"help_text\":\"<p>Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result.</p>\",\"heading\":\"On what basis has the client been discriminated against?\\nGive details in the operator notes, especially if more than one option applies.\",\"order\":1,\"description\":null},{\"context\":null,\"key\":\"Disability\",\"title\":\"Disability Pregnancy\",\"label\":\"<p>Disability</p>\",\"data_safety\":null,\"help_text\":\"<p>Disability is defined as a physical or mental impairment, which has a substantial and long term adverse effect on a person's ability to carry out normal day-to-day activities.</p>\\n<p>People with cancer or who are HIV+ are classed as having a disability.</p>\\n<p>The disability does not have to have a name or a diagnosis to meet this definition.</p>\",\"order\":5,\"heading\":\"Where did the discrimination occur?\",\"id\":\"n109\",\"description\":null},{\"context\":null,\"key\":\"Work\",\"title\":\"Work\",\"id\":\"n110\",\"label\":\"<p>Work</p>\",\"data_safety\":null,\"help_text\":null,\"heading\":null,\"order\":1,\"description\":null},{\"context\":{\"category\":\"discrimination\"},\"key\":\"INSCOPE\",\"title\":\"DISCRIMINATION INSCO\",\"id\":\"n111\",\"label\":\"<p>INSCOPE</p>\",\"data_safety\":null,\"help_text\":null,\"heading\":null,\"order\":9999,\"description\":null}]"
+      },
+      "model": "diagnosis.diagnosistraversal",
+      "pk": 13
     },
     {
         "fields": {
@@ -677,92 +904,76 @@
         "model": "legalaid.case",
         "pk": 3
     },
-      {
-        "fields": {
-            "reference": "ED-0001-0001",
-            "outcome_code": "MANALC",
-            "outcome_code_id": 11,
-            "provider_viewed": null,
-            "locked_at": null,
-            "search_field": "ED00010001",
-            "adaptation_details": 2,
-            "source": "PHONE",
-            "organisation": null,
-            "ecf_statement": null,
-            "created_by": 2,
-            "personal_details": 2,
-            "requires_action_at": null,
-            "callback_window_type": "HALF_HOUR_WINDOW",
-            "provider": 11,
-            "provider_closed": null,
-            "assigned_out_of_hours": true,
-            "media_code": 4,
-            "provider_assigned_at": "2022-03-29T18:15:56.762Z",
-            "callback_attempt": 0,
-            "laa_reference": 3000004,
-            "exempt_user": null,
-            "level": 29,
-            "thirdparty_details": null,
-            "created": "2022-03-29T18:13:50.596Z",
-            "notes": "case to edit by specialist provider",
-            "locked_by": null,
-            "provider_accepted": null,
-            "modified": "2022-03-29T18:15:56.782Z",
-            "exempt_user_reason": null,
-            "matter_type2": 16,
-            "requires_action_by": "1_provider_review",
-            "complaint_flag": false,
-            "matter_type1": 8,
-            "diagnosis": 13,
-            "eligibility_check": 13,
-            "billable_time": 127,
-            "is_urgent": false,
-            "from_case": null,
-            "provider_notes": "case to edit by specialist provider"
-        },
-        "model": "legalaid.case",
-        "pk": 13
+    {
+      "fields": {
+        "reference": "ED-0001-0001",
+        "outcome_code": "MANALC",
+        "outcome_code_id": 11,
+        "provider_viewed": null,
+        "locked_at": null,
+        "search_field": "ED00010001",
+        "adaptation_details": 13,
+        "source": "PHONE",
+        "organisation": null,
+        "ecf_statement": null,
+        "created_by": 2,
+        "personal_details": 13,
+        "requires_action_at": null,
+        "callback_window_type": "HALF_HOUR_WINDOW",
+        "provider": 11,
+        "provider_closed": null,
+        "assigned_out_of_hours": true,
+        "media_code": 4,
+        "provider_assigned_at": "2022-03-29T18:15:56.762Z",
+        "callback_attempt": 0,
+        "laa_reference": 3000004,
+        "exempt_user": null,
+        "level": 29,
+        "thirdparty_details": null,
+        "created": "2022-03-29T18:13:50.596Z",
+        "notes": "case to edit by specialist provider",
+        "locked_by": null,
+        "provider_accepted": null,
+        "modified": "2022-03-29T18:15:56.782Z",
+        "exempt_user_reason": null,
+        "matter_type2": 16,
+        "requires_action_by": "1_provider_review",
+        "complaint_flag": false,
+        "matter_type1": 8,
+        "diagnosis": 13,
+        "eligibility_check": 13,
+        "billable_time": 127,
+        "is_urgent": false,
+        "from_case": null,
+        "provider_notes": "case to edit by specialist provider"
+      },
+      "model": "legalaid.case",
+      "pk": 13
     },
-  {
-        "fields": {
-            "category": 8,
-            "graph_version": "c5aec84ff6d5ce512d4fba489309d479",
-            "reference": "7a632c6de9fe480caa16e3f337ae3991",
-            "created": "2022-03-29T18:10:54.608Z",
-            "modified": "2022-03-29T18:11:06.666Z",
-            "matter_type2": null,
-            "state": "INSCOPE",
-            "matter_type1": null,
-            "current_node_id": "n111",
-            "nodes": "[{\"context\":null,\"key\":\"Discrimination\",\"title\":\"Discrimination\",\"id\":\"n106\",\"label\":\"<p>Discrimination</p>\",\"data_safety\":null,\"help_text\":\"<p>The discrimination category covers advice on cases that contravene the Equalities Act 2010.</p>\\n<p>It is against the law to discriminate against anyone because of:</p>\\n<ul>\\n<li>age</li>\\n<li>gender reassignment</li>\\n<li>being married or in a civil partnership</li>\\n<li>being pregnant or having recently given birth</li>\\n<li>disability</li>\\n<li>race including colour, nationality, ethnic or national origin</li>\\n<li>religion, belief or lack of religion or belief</li>\\n<li>sex</li>\\n<li>sexual orientation</li>\\n</ul>\\n<p>These are called 'protected characteristics'. To find out more, search the guidance for 'protected characteristics'.</p>\\n<p>The client's problem could start in another category (eg housing) but the client will believe that thay have been discriminated against, harassed or victimised.</p>\",\"heading\":null,\"order\":5,\"description\":null},{\"context\":null,\"key\":\"The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else\\u2019s discrimination claim\\n\\nIt is against the law to discriminate against anyone because of:\\n\\n* age\\n* gender reassignment\\n* being married or in a civil partnership\\n* being pregnant or having recently given birth\\n* disability\\n* race including colour, nationality, ethnic or national origin\\n* religion, belief or lack of religion or belief\\n* sex\\n* sexual orientation\",\"title\":\"Has the client been \",\"label\":\"<p>The client has been discriminated against, or they've been treated badly because they complained about discrimination or supported someone else\\u2019s discrimination claim</p>\\n<p>It is against the law to discriminate against anyone because of:</p>\\n<ul>\\n<li>age</li>\\n<li>gender reassignment</li>\\n<li>being married or in a civil partnership</li>\\n<li>being pregnant or having recently given birth</li>\\n<li>disability</li>\\n<li>race including colour, nationality, ethnic or national origin</li>\\n<li>religion, belief or lack of religion or belief</li>\\n<li>sex</li>\\n<li>sexual orientation</li>\\n</ul>\",\"data_safety\":null,\"help_text\":null,\"order\":9999,\"heading\":\"Select the type of discrimination that applies\",\"id\":\"n107\",\"description\":null},{\"context\":null,\"key\":\"Direct discrimination\",\"title\":\"Direct discriminatio\",\"id\":\"n108\",\"label\":\"<p>Direct discrimination</p>\",\"data_safety\":null,\"help_text\":\"<p>Direct discrimination means being treated less favourably than someone else in similar circumstances due to a protected characteristic (eg the client thinks that they've been singled out for worse treatment or disadvantaged in some way compared to someone else). This includes situations where clients are linked to a person with a protected characteristic and suffer less favourable treatment as a result.</p>\",\"heading\":\"On what basis has the client been discriminated against?\\nGive details in the operator notes, especially if more than one option applies.\",\"order\":1,\"description\":null},{\"context\":null,\"key\":\"Disability\",\"title\":\"Disability Pregnancy\",\"label\":\"<p>Disability</p>\",\"data_safety\":null,\"help_text\":\"<p>Disability is defined as a physical or mental impairment, which has a substantial and long term adverse effect on a person's ability to carry out normal day-to-day activities.</p>\\n<p>People with cancer or who are HIV+ are classed as having a disability.</p>\\n<p>The disability does not have to have a name or a diagnosis to meet this definition.</p>\",\"order\":5,\"heading\":\"Where did the discrimination occur?\",\"id\":\"n109\",\"description\":null},{\"context\":null,\"key\":\"Work\",\"title\":\"Work\",\"id\":\"n110\",\"label\":\"<p>Work</p>\",\"data_safety\":null,\"help_text\":null,\"heading\":null,\"order\":1,\"description\":null},{\"context\":{\"category\":\"discrimination\"},\"key\":\"INSCOPE\",\"title\":\"DISCRIMINATION INSCO\",\"id\":\"n111\",\"label\":\"<p>INSCOPE</p>\",\"data_safety\":null,\"help_text\":null,\"heading\":null,\"order\":9999,\"description\":null}]"
-        },
-        "model": "diagnosis.diagnosistraversal",
-        "pk": 13
-    },
-      {
-        "fields": {
-            "category": 8,
-            "on_passported_benefits": true,
-            "disputed_savings": null,
-            "calculations": "{\"pensioner_disregard\":0,\"disposable_capital_assets\":0,\"property_equities\":[],\"property_capital\":0,\"liquid_capital\":0}",
-            "reference": "e328bc67a5134d128293e89db4c7cde4",
-            "created": "2022-03-29T18:11:44.146Z",
-            "disregards": null,
-            "notes": "",
-            "modified": "2022-03-29T18:11:44.172Z",
-            "is_you_or_your_partner_over_60": false,
-            "has_partner": false,
-            "state": "yes",
-            "has_passported_proceedings_letter": null,
-            "specific_benefits": "{\"pension_credit\":false,\"job_seekers_allowance\":false,\"employment_support\":false,\"universal_credit\":true,\"income_support\":false}",
-            "your_problem_notes": "",
-            "dependants_old": 0,
-            "partner": 1,
-            "you": 2,
-            "dependants_young": 0,
-            "on_nass_benefits": false
-        },
-        "model": "legalaid.eligibilitycheck",
-        "pk": 13
+    {
+      "fields": {
+        "category": 8,
+        "on_passported_benefits": true,
+        "disputed_savings": null,
+        "calculations": "{\"pensioner_disregard\":0,\"disposable_capital_assets\":0,\"property_equities\":[],\"property_capital\":0,\"liquid_capital\":0}",
+        "reference": "e328bc67a5134d128293e89db4c7cde4",
+        "created": "2022-03-29T18:11:44.146Z",
+        "disregards": null,
+        "notes": "",
+        "modified": "2022-03-29T18:11:44.172Z",
+        "is_you_or_your_partner_over_60": false,
+        "has_partner": false,
+        "state": "yes",
+        "has_passported_proceedings_letter": null,
+        "specific_benefits": "{\"pension_credit\":false,\"job_seekers_allowance\":false,\"employment_support\":false,\"universal_credit\":true,\"income_support\":false}",
+        "your_problem_notes": "",
+        "dependants_old": 0,
+        "partner": 15,
+        "you": 13,
+        "dependants_young": 0,
+        "on_nass_benefits": false
+      },
+      "model": "legalaid.eligibilitycheck",
+      "pk": 13
     }
 ]

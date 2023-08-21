@@ -3,7 +3,6 @@ import logging
 from datetime import datetime, time
 from itertools import groupby
 
-import boto
 from django.conf import settings
 from django.core import serializers
 from django.core.management.base import BaseCommand
@@ -12,7 +11,7 @@ from pytz import UTC
 
 from cla_eventlog.constants import LOG_LEVELS, LOG_TYPES
 from cla_eventlog.models import Log
-from reports.utils import get_s3_connection
+from cla_backend.libs.aws.s3 import ReportsS3, ClientError
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +74,7 @@ class Command(BaseCommand):
             dupes_to_remove = Log.objects.filter(id__in=same_day_consecutive_outcome_log_ids)
             try:
                 self.write_queryset_to_s3(dupes_to_remove)
-            except boto.exception.S3ResponseError as e:
+            except ClientError as e:
                 logger.error(
                     "LGA-125: Could not get bucket {}: {}".format(settings.AWS_DELETED_OBJECTS_BUCKET_NAME, e)
                 )
@@ -86,20 +85,7 @@ class Command(BaseCommand):
             logger.info("LGA-125: No dupe logs to remove")
 
     def write_queryset_to_s3(self, queryset):
-        bucket = self.get_or_create_s3_bucket()
-        key = bucket.new_key("deleted-log-objects-{}".format(now().isoformat()))
-        serialized_queryset = serializers.serialize("json", queryset)
-        key.set_contents_from_string(serialized_queryset)
-        # Restore with:
-        # for restored_log_object in serializers.deserialize('json', serialized_queryset):
-        #     restored_log_object.save()
-
-    @staticmethod
-    def get_or_create_s3_bucket():
-        conn = get_s3_connection()
         bucket_name = settings.AWS_DELETED_OBJECTS_BUCKET_NAME
-        try:
-            return conn.get_bucket(bucket_name)
-        except boto.exception.S3ResponseError:
-            conn.create_bucket(bucket_name, location=settings.AWS_S3_REGION_NAME)
-            return conn.get_bucket(bucket_name)
+        key = "deleted-log-objects-{}".format(now().isoformat())
+        serialized_queryset = serializers.serialize("json", queryset)
+        ReportsS3.save_data_to_bucket(bucket_name, key, serialized_queryset)

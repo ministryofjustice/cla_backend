@@ -20,7 +20,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name:
+  name: irsa-sevice-account
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -156,14 +156,6 @@ envVars:
     value: "True"
   SQS_REGION:
     value: "eu-west-2"
-  SQS_ACCESS_KEY:
-    secret:
-      name: sqs
-      key: access_key_id
-  SQS_SECRET_KEY:
-    secret:
-      name: sqs
-      key: secret_access_key
   OBIEE_EMAIL_TO:
     secret:
       name: obiee
@@ -182,14 +174,6 @@ envVars:
     secret:
       name: s3
       key: static_files_bucket_name
-  AWS_ACCESS_KEY_ID:
-    secret:
-      name: s3
-      key: access_key_id
-  AWS_SECRET_ACCESS_KEY:
-    secret:
-      name: s3
-      key: secret_access_key
   AWS_DELETED_OBJECTS_BUCKET_NAME:
     secret:
       name: s3

@@ -4,7 +4,6 @@ import shutil
 import tempfile
 from datetime import date, datetime, time, timedelta
 
-import boto
 import pyminizip
 from django.core.exceptions import ImproperlyConfigured as DjangoImproperlyConfigured
 from django.conf import settings
@@ -159,7 +158,3 @@ class OBIEEExporter(object):
             os.remove(self.full_path)
         if os.path.exists(self.tmp_export_path):
             shutil.rmtree(self.tmp_export_path)
-
-
-def get_s3_connection():
-    return boto.connect_s3(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, host=settings.AWS_S3_HOST)

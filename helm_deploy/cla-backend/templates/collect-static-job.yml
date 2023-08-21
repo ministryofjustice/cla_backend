@@ -20,6 +20,7 @@ spec:
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
       restartPolicy: Never
+      serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
       containers:
         - name: collect-static
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

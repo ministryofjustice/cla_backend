@@ -6,7 +6,7 @@ from django.conf import settings
 
 
 class DownloadFileTestCase(TestCase):
-    @patch("reports.views.get_s3_connection")
+    @patch("cla_backend.libs.aws.s3.ReportsS3.get_s3_connection")
     def test_download_no_aws(self, mock_s3):
         # mock pythons open()
         with patch("__builtin__.open", mock_open(read_data="data")) as mock_file:
@@ -24,7 +24,7 @@ class DownloadFileTestCase(TestCase):
         # built in Open method is called in views.py
         mock_file.assert_called_with(file_path, "r")
 
-    @patch("reports.views.get_s3_connection", return_value=MagicMock())
+    @patch("cla_backend.libs.aws.s3.ReportsS3.get_s3_connection", return_value=MagicMock())
     def test_download_with_aws(self, mock_s3):
         mock_request = MagicMock()
         # if file_name contains string "schedule"

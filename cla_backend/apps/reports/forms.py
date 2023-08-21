@@ -368,7 +368,9 @@ class MISurveyExtract(SQLFileDateRangeReport):
 
 
 class MICB1Extract(SQLFileDateRangeReport):
-    QUERY_FILE = "MICB1sSLA.sql"
+    # This now only returns the information needed for SLA1, SLA2 is calculated slightly differently
+    # so we split it out.
+    QUERY_FILE = "MICB1sSLA1.sql"
 
     # currently sunday to sunday
     max_date_range = 8
@@ -399,6 +401,49 @@ class MICB1Extract(SQLFileDateRangeReport):
             "callback_window_start",
             "callback_window_end",
             "missed_sla_1",
+            "missed_sla_2",
+            "Source",
+            "Code",
+            "Organisation",
+        ]
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date, "now": self.get_now()}
+
+
+class MICB1ExtractSLA2(SQLFileDateRangeReport):
+    # This only returns the information needed for SLA2, this has been copied from the original
+    # MICB1Extract and had SLA1 removed.
+    QUERY_FILE = "MICB1sSLA2.sql"
+
+    max_date_range = 8
+
+    def get_now(self):
+        return timezone.now()
+
+    def get_headers(self):
+        return [
+            "LAA_Reference",
+            "Hash_ID_personal_details_captured",
+            "Case_ID",
+            "Provider_ID_if_allocated",
+            "Law_Category_Name",
+            "Date_Case_Created",
+            "Last_Modified_Date",
+            "Outcome_Code_Child",
+            "Matter_Type_1",
+            "Matter_Type_2",
+            "created_by_id",
+            "Scope_Status",
+            "Eligibility_Status",
+            "Outcome_Created_At",
+            "Username",
+            "operator_first_view_after_cb1__created",
+            "operator_first_log_after_cb1__created",
+            "Next_Outcome",
+            "callback_window_start",
+            "callback_window_end",
             "missed_sla_2",
             "Source",
             "Code",

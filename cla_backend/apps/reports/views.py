@@ -17,6 +17,7 @@ from .forms import (
     MIAlternativeHelpExtract,
     MISurveyExtract,
     MICB1Extract,
+    MICB1ExtractSLA2,
     MICB1ExtractAgilisys,
     MIVoiceReport,
     MIEODReport,
@@ -119,6 +120,12 @@ def mi_cb1_extract(request):
         return scheduled_report_view(request, "MI CB1 Extract")
     else:
         return report_view(request, MICB1Extract, "MI CB1 Extract")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def mi_cb1_extract_sla_2(request):
+    return report_view(request, MICB1ExtractSLA2, "MI CB1 Extract SLA 2")
 
 
 @staff_member_required

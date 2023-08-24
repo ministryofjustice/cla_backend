@@ -401,7 +401,6 @@ class MICB1Extract(SQLFileDateRangeReport):
             "callback_window_start",
             "callback_window_end",
             "missed_sla_1",
-            "missed_sla_2",
             "Source",
             "Code",
             "Organisation",

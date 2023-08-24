@@ -74,6 +74,12 @@ class MiSlaTestCaseBase(CallCentreFixedOperatingHours):
     def move_time_forward_minutes_after_sla1(self, minutes):
         return self._move_time_forward(self.get_sla1_datetime(), minutes)
 
+    def move_time_forward_minutes_before_sla2(self, minutes):
+        return self._move_time_forward(self.get_sla2_datetime(), -minutes)
+
+    def move_time_forward_minutes_after_sla2(self, minutes):
+        return self._move_time_forward(self.get_sla2_datetime(), minutes)
+
     def _move_time_forward(self, dt, minutes_forward):
         self.now = dt + datetime.timedelta(minutes=minutes_forward)
         self.timezone_mock.return_value = self.now

@@ -344,6 +344,9 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase, TestCase):
 
     def get_sla1_datetime(self):
         return self.get_requires_action_at() + datetime.timedelta(minutes=30)
+    
+    def get_sla2_datetime(self):
+        return _make_datetime(year=2020, month=9, day=15, hour=12, minute=30)
 
     def test_current_time_before_requires_action_at(self):
         case = self.make_case(self.now, created=self.now)
@@ -425,6 +428,9 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase, TestCase):
 
     def get_sla1_datetime(self):
         return _make_datetime(year=2020, month=9, day=7, hour=11, minute=0)
+
+    def get_sla2_datetime(self):
+        return _make_datetime(year=2020, month=9, day=7, hour=17, minute=0)
 
 
 class MiSlaTestCaseVoiceMail(MiSlaTestCaseSMS):

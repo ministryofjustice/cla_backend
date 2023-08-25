@@ -68,6 +68,9 @@ class MiSlaTestCaseBase(CallCentreFixedOperatingHours):
     def get_sla1_datetime(self):
         raise NotImplementedError()
 
+    def get_sla2_datetime(self):
+        raise NotImplementedError()    
+
     def move_time_forward_minutes_before_sla1(self, minutes):
         return self._move_time_forward(self.get_sla1_datetime(), -minutes)
 

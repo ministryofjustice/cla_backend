@@ -127,18 +127,6 @@ select
    -- User has been contacted and contact time is after the SLA1 window for SMS and VOICE MAIL
    ELSE source IN ('SMS', 'VOICEMAIL') AND cs_created > sla_120
    END as missed_sla_1
-  ,CASE
-   -- User not contacted and current time is after SLA 2
-   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NULL AND %(now)s > sla_72h THEN TRUE
-   -- User contacted and contact time is after SLA 2
-   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NOT NULL AND operator_first_log_after_cb1__created > sla_72h  THEN TRUE
-   -- Everything else that is a web / phone case is False
-   WHEN source IN ('WEB', 'PHONE') THEN FALSE
-   -- User has NOT been contacted and current time is after the SLA2 window for SMS and VOICE MAIL
-   WHEN source IN ('SMS', 'VOICEMAIL') AND cs_created IS NULL THEN %(now)s  > sla_480
-   -- User has been contacted and contact time is after the SLA2 window for SMS and VOICE MAIL
-   ELSE source IN ('SMS', 'VOICEMAIL') AND cs_created > sla_480
-   END as missed_sla_2
   ,source
   ,code
   ,organisation

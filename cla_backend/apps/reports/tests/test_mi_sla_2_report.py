@@ -12,7 +12,7 @@ from core.tests.mommy_utils import make_recipe, make_user
 from cla_eventlog import event_registry
 from cla_eventlog.models import Log
 from legalaid.forms import get_sla_time
-from reports.forms import MICB1Extract
+from reports.forms import MICB1ExtractSLA2
 from call_centre.tests.test_utils import CallCentreFixedOperatingHours
 
 
@@ -124,8 +124,8 @@ class MiSlaTestCaseBase(CallCentreFixedOperatingHours):
             event.process(case, status="call_started", created_by=user, notes="Call started")
 
     def get_report(self, date_range):
-        with mock.patch("reports.forms.MICB1Extract.date_range", date_range):
-            report = MICB1Extract()
+        with mock.patch("reports.forms.MICB1ExtractSLA2.date_range", date_range):
+            report = MICB1ExtractSLA2()
 
             qs = report.get_queryset()
             headers = report.get_headers()
@@ -162,14 +162,14 @@ class MiSlaTestCaseBase(CallCentreFixedOperatingHours):
         # Generate report without a callback
         date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
         # Start a call
         self.start_call(case, user, now_tz)
         # Generate report with a successful callback
         date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
     def test_current_time_after_sla1(self):
         case = self.make_case(self.now, created=self.now)
@@ -185,14 +185,14 @@ class MiSlaTestCaseBase(CallCentreFixedOperatingHours):
         # Generate report without a callback
         date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
         # Start a call
         self.start_call(case, user, now_tz)
         # Generate report with a successful callback
         date_range = (now_tz - datetime.timedelta(days=2), now_tz + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
     def test_current_time_before_sla2(self):
         case = self.make_case(self.now, created=self.now)
@@ -208,14 +208,36 @@ class MiSlaTestCaseBase(CallCentreFixedOperatingHours):
         # Generate report without a callback
         date_range = (case.created, self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
         # Start a call
         self.start_call(case, user, self.now)
         # Generate report with a successful callback
         date_range = (case.created, self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    def test_current_time_after_sla2(self):
+        case = self.make_case(self.now, created=self.now)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+        # Create a callback that is due now
+        self.schedule_callback(case, user, created=self.now, requires_action_at=self.get_requires_action_at())
+
+        # Move current time to 1 minute after SLA2
+        now_tz = self.move_time_forward_minutes_after_sla2(minutes=1)
+
+        # Generate report without a callback
+        date_range = (case.created, self.now + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_2"])
+
+        # Start a call
+        self.start_call(case, user, now_tz)
+        # Generate report with a successful callback
+        date_range = (case.created, self.now + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_2"])
 
     def test_cb2_current_time_within_sla1(self):
         case = self.make_case(self.now, created=self.now)
@@ -231,14 +253,14 @@ class MiSlaTestCaseBase(CallCentreFixedOperatingHours):
         # Generate report without a successful callback
         date_range = (case.created, self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
         # Start a call
         self.start_call(case, user, self.now)
         # Generate report with a successful callback
         date_range = (case.created, self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
     def test_cb2_current_time_after_sla1(self):
         case = self.make_case(self.now, created=self.now)
@@ -254,14 +276,61 @@ class MiSlaTestCaseBase(CallCentreFixedOperatingHours):
         # Generate report without a successful callback
         date_range = (case.created, self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
         # Start a call
         self.start_call(case, user, now_tz)
         # Generate report with a successful callback
         date_range = (case.created, self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
+
+    def test_cb2_current_time_before_sla2(self):
+        case = self.make_case(self.now, created=self.now)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+        # Create CB1
+        self.schedule_callback(case, user, created=self.now, requires_action_at=self.get_requires_action_at())
+        # Move current time 1 minute before SLA2
+        self.move_time_forward_minutes_before_sla2(minutes=1)
+        # Create  CB2
+        self.schedule_callback(case, user, created=self.now, requires_action_at=self.get_requires_action_at())
+
+        # Generate report without a successful callback
+        date_range = (case.created, self.now + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertFalse(values["missed_sla_2"])
+
+        # Start a call
+        self.start_call(case, user, self.now)
+        # Generate report with a successful callback
+        date_range = (case.created, self.now + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertFalse(values["missed_sla_2"])
+
+    def test_cb2_current_time_after_sla2(self):
+        case = self.make_case(self.now, created=self.now)
+        user = make_user()
+        make_recipe("call_centre.operator", user=user)
+
+        # Create CB1
+        self.schedule_callback(case, user, created=self.now, requires_action_at=self.get_requires_action_at())
+        # Move current time 1 minute after SLA2
+        self.move_time_forward_minutes_after_sla2(minutes=1)
+        # Create  CB2
+        self.schedule_callback(case, user, created=self.now, requires_action_at=self.get_requires_action_at())
+
+        # Generate report without a successful callback
+        date_range = (case.created, self.now + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_2"])
+
+        # Start a call
+        self.start_call(case, user, self.now)
+        # Generate report with a successful callback
+        date_range = (case.created, self.now + datetime.timedelta(days=2))
+        values = self.get_report(date_range)
+        self.assertTrue(values["missed_sla_2"])
 
     def test_cb3_current_time_within_sla1(self):
         case = self.make_case(self.now, created=self.now)
@@ -283,14 +352,14 @@ class MiSlaTestCaseBase(CallCentreFixedOperatingHours):
         # Generate report without a successful callback
         date_range = (case.created, self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
         # Start a call
         self.start_call(case, user, self.now)
         # Generate report with a successful callback
         date_range = (case.created, self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
 
 class MiSlaTestCaseWeb(MiSlaTestCaseBase, TestCase):
@@ -305,7 +374,7 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase, TestCase):
     |              | Call answered                 | Call answered                               | AND                            |
     |              | Within 30m window             | before 30m window                           | current time within 72h window |
     +--------------+-------------------------------+---------------------------------------------+--------------------------------+
-    | SLA 1 missed |             FALSE             |                     TRUE                    |              TRUE              |
+    | SLA 2 missed |             FALSE             |                    FALSE                    |              FALSE             |
     +--------------+-------------------------------+---------------------------------------------+--------------------------------+
     | test         | test_current_time_within_sla1 | test_current_time_before_requires_action_at | test_current_time_after_sla1   |
     +--------------+-------------------------------+---------------------------------------------+--------------------------------+
@@ -317,7 +386,7 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase, TestCase):
     |              | AND                               | AND                                             | AND                              | AND                              |                                  | AND                               |
     |              | current time within 72h window    | current time within 72h window                  | current time within 72h window   | current time after 72h window    |                                  | call answered within 72 window    |
     +--------------+-----------------------------------+-------------------------------------------------+----------------------------------+----------------------------------+----------------------------------+-----------------------------------+
-    | SLA 1 missed |               FALSE               |                       TRUE                      |               TRUE               |               TRUE               |               TRUE               |               FALSE               |
+    | SLA 2 missed |               FALSE               |                      FALSE                      |               FALSE              |               TRUE               |               TRUE               |               FALSE               |
     +--------------+-----------------------------------+-------------------------------------------------+----------------------------------+----------------------------------+----------------------------------+-----------------------------------+
     | test         | test_cb2_current_time_within_sla1 | test_cb2_current_time_before_requires_action_at | test_cb2_current_time_after_sla1 | test_cb2_current_time_after_sla2 | test_cb2_current_time_after_sla2 | test_cb2_current_time_within_sla1 |
     +--------------+-----------------------------------+-------------------------------------------------+----------------------------------+----------------------------------+----------------------------------+-----------------------------------+
@@ -329,7 +398,7 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase, TestCase):
     |              | AND                               |
     |              | call answered within 72 window    |
     +--------------+-----------------------------------+
-    | SLA 1 missed |               FALSE               |
+    | SLA 2 missed |               FALSE               |
     +--------------+-----------------------------------+
     | test         | test_cb3_current_time_within_sla1 |
     +--------------+-----------------------------------+
@@ -362,7 +431,7 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase, TestCase):
         # Generate report without a callback
         date_range = (self.now - datetime.timedelta(days=2), self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertFalse(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
         # Start a call
         self.start_call(case, user, self.now)
@@ -370,7 +439,7 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase, TestCase):
         date_range = (self.now - datetime.timedelta(days=2), self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
         # Contacting customer before the requires_action_at will result in a failure to meet SLA
-        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
     def test_cb2_current_time_before_requires_action_at(self):
         case = self.make_case(self.now, created=self.now)
@@ -389,14 +458,14 @@ class MiSlaTestCaseWeb(MiSlaTestCaseBase, TestCase):
         # Generate report without a successful callback
         date_range = (case.created, self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
         # Start a call
         self.start_call(case, user, self.now)
         # Generate report with a successful callback
         date_range = (case.created, self.now + datetime.timedelta(days=2))
         values = self.get_report(date_range)
-        self.assertTrue(values["missed_sla_1"])
+        self.assertFalse(values["missed_sla_2"])
 
 
 class MiSlaTestCasePhone(MiSlaTestCaseWeb):
@@ -408,14 +477,14 @@ class MiSlaTestCaseSMS(MiSlaTestCaseBase, TestCase):
 
     # fmt: off
     """
-    Rules used to determine if SLA1 was missed
+    Rules used to determine if SLA1/SLA2 was missed
     Note: A callback attempt is when the operator has clicked the start call button after successfully contacting the user
     +-----------+--------------+-----------------------------------+--------------------------------------------------------------------+-------------------------------------------------------------------+
     |           |              | Callback attempted within 2 hours | Callback attempted after 2 hours AND current time within 8h window | Callback attempted after 2 hours AND current time after 8h window |
     +-----------+--------------+-----------------------------------+--------------------------------------------------------------------+-------------------------------------------------------------------+
-    | SMS       | SLA 1 missed | FALSE                             | TRUE                                                               | TRUE                                                              |
+    |           | SLA 2 missed | FALSE                             | FALSE                                                              | TRUE                                                              |
     +-----------+--------------+-----------------------------------+--------------------------------------------------------------------+-------------------------------------------------------------------+
-    | Voicemail | SLA 1 missed | FALSE                             | TRUE                                                               | TRUE                                                              |
+    |           | SLA 2 missed | FALSE                             | FALSE                                                              | TRUE                                                              |
     +-----------+--------------+-----------------------------------+--------------------------------------------------------------------+-------------------------------------------------------------------+
     """
     # fmt: on

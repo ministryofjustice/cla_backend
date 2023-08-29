@@ -1,7 +1,7 @@
 WITH
     operator_first_view_after_cb1 as (
       SELECT
-         o.id as o_id
+        o.id as o_id
         ,no.id as no_id
         ,no.code as code
         ,log_call_started.code as cs_code
@@ -10,28 +10,27 @@ WITH
         ,row_number() over (PARTITION BY o.id order by no.id asc) as rn
       from cla_eventlog_log o
         JOIN cla_eventlog_log no on
-                                   o.case_id = no.case_id
-                                   and no.id > o.id
+                                  o.case_id = no.case_id
+                                  and no.id > o.id
         LEFT JOIN cla_eventlog_log log_call_started on
-                                   log_call_started.case_id = no.case_id
-                                   and log_call_started.id > o.id
-                                   and log_call_started.code = 'CALL_STARTED'
+                                  log_call_started.case_id = no.case_id
+                                  and log_call_started.id > o.id
+                                  and log_call_started.code IN ('TERM', 'ABND', 'PCB', 'COPE', 'DUPL', 'INSUF', 'IRCB', 'NCOE', 'DESP', 'DECL', 'IRKB', 'MRCC', 'NRES', 'SAME', 'COSPF', 'SPFM', 'SPFN', 'CBSP', 'MANALC', 'MANREF', 'RDSP', 'REFSP', 'SPOR', 'WROF', 'REFDPA', 'RELBD', 'RSTR', 'NOLA')
         JOIN call_centre_operator AS op ON no.created_by_id = op.user_id
       order by no.id asc
-
   ),
 
     operator_first_log_after_cb1 as (
       SELECT
-         o.id as o_id
+        o.id as o_id
         ,no.id as no_id
         ,no.code as code
         ,no.created
         ,row_number() over (PARTITION BY o.id order by no.id asc) as rn
       from cla_eventlog_log o
         JOIN cla_eventlog_log no on
-                                   o.case_id = no.case_id
-                                   and no.id > o.id
+                                  o.case_id = no.case_id
+                                  and no.id > o.id
         JOIN call_centre_operator AS op ON no.created_by_id = op.user_id
       WHERE no.level >= 29 and no.type in ('outcome', 'event')
       order by no.id asc
@@ -39,7 +38,7 @@ WITH
   ),
     all_rows as (
       select
-         log.id as log_id
+        log.id as log_id
         ,c.id
         ,c.laa_reference as "LAA_Reference"
         ,md5(lower(regexp_replace((pd.full_name||pd.postcode)::text, '\s', '', 'ig'))) as "Hash_ID_personal_details_captured"
@@ -55,15 +54,15 @@ WITH
         ,cs_code
         ,cs_created
         ,CASE diagnosis.state
-         when 'INSCOPE' then 'PASS'
-         when 'OUTOFSCOPE' then 'FAIL'
-         else 'UNKNOWN'
-         END as "Scope_Status"
+        when 'INSCOPE' then 'PASS'
+        when 'OUTOFSCOPE' then 'FAIL'
+        else 'UNKNOWN'
+        END as "Scope_Status"
         ,CASE ec.state
-         when 'yes' then 'PASS'
-         when 'no' then 'FAIL'
-         else 'UNKNOWN'
-         END as "Eligibility_Status"
+        when 'yes' then 'PASS'
+        when 'no' then 'FAIL'
+        else 'UNKNOWN'
+        END as "Eligibility_Status"
         ,log.created as "Outcome_Created_At"
         ,u.username as "Username"
         ,operator_first_log_after_cb1.created as operator_first_log_after_cb1__created
@@ -119,26 +118,17 @@ select
   ,callback_window_start
   ,callback_window_end
   ,CASE
-   WHEN source IN ('WEB', 'PHONE') AND operator_first_log_after_cb1__created IS NULL AND %(now)s < callback_window_start THEN FALSE
-   WHEN source IN ('WEB', 'PHONE') AND operator_first_log_after_cb1__created IS NULL THEN %(now)s  NOT BETWEEN callback_window_start AND callback_window_end
-   WHEN source IN ('WEB', 'PHONE') THEN operator_first_log_after_cb1__created NOT BETWEEN callback_window_start AND callback_window_end
-   -- User has NOT been contacted and current time is after the SLA1 window for SMS and VOICE MAIL
-   WHEN source IN ('SMS', 'VOICEMAIL') AND cs_created IS NULL THEN %(now)s  > sla_120
-   -- User has been contacted and contact time is after the SLA1 window for SMS and VOICE MAIL
-   ELSE source IN ('SMS', 'VOICEMAIL') AND cs_created > sla_120
-   END as missed_sla_1
-  ,CASE
-   -- User not contacted and current time is after SLA 2
-   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NULL AND %(now)s > sla_72h THEN TRUE
-   -- User contacted and contact time is after SLA 2
-   WHEN source IN ('WEB', 'PHONE') AND cs_code IS NOT NULL AND operator_first_log_after_cb1__created > sla_72h  THEN TRUE
-   -- Everything else that is a web / phone case is False
-   WHEN source IN ('WEB', 'PHONE') THEN FALSE
-   -- User has NOT been contacted and current time is after the SLA2 window for SMS and VOICE MAIL
-   WHEN source IN ('SMS', 'VOICEMAIL') AND cs_created IS NULL THEN %(now)s  > sla_480
-   -- User has been contacted and contact time is after the SLA2 window for SMS and VOICE MAIL
-   ELSE source IN ('SMS', 'VOICEMAIL') AND cs_created > sla_480
-   END as missed_sla_2
+  -- User not contacted and current time is after SLA 2
+  WHEN source IN ('WEB', 'PHONE') AND cs_code IS NULL AND %(now)s > sla_72h THEN TRUE
+  -- User contacted and contact time is after SLA 2
+  WHEN source IN ('WEB', 'PHONE') AND cs_code IS NOT NULL AND operator_first_log_after_cb1__created > sla_72h  THEN TRUE
+  -- Everything else that is a web / phone case is False
+  WHEN source IN ('WEB', 'PHONE') THEN FALSE
+  -- User has NOT been contacted and current time is after the SLA2 window for SMS and VOICE MAIL
+  WHEN source IN ('SMS', 'VOICEMAIL') AND cs_created IS NULL THEN %(now)s  > sla_480
+  -- User has been contacted and contact time is after the SLA2 window for SMS and VOICE MAIL
+  ELSE source IN ('SMS', 'VOICEMAIL') AND cs_created > sla_480
+  END as missed_sla_2
   ,source
   ,code
   ,organisation

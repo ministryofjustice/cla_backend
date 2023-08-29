@@ -280,6 +280,18 @@ jobs:
           command: |
             ./bin/delete_uat_release.sh
 
+  behave:
+    executor: aws-ecr/default
+    steps:
+      - checkout:
+          path: cla_backend
+      - run: |
+          cd cla_backend
+          source .circleci/define_build_environment_variables
+          echo "export CLA_BACKEND_IMAGE=$ECR_DEPLOY_IMAGE" >> $BASH_ENV
+          echo "Setting BACKEND image $CLA_BACKEND_IMAGE"
+      - cla-end-to-end-tests/behave
+
 # ------------------
 #
 #WORKFLOWS
@@ -313,20 +325,11 @@ workflows:
           requires:
             - test
           context: laa-cla-backend
-      - cla-end-to-end-tests/behave:
+      - behave:
           requires:
             - build_push_application
             - build_push_database_migration
           context: laa-cla-backend
-          pre-steps:
-            - checkout:
-                path: cla_backend
-            - run:
-                command: |
-                  cd cla_backend
-                  source .circleci/define_build_environment_variables testing
-                  echo "export CLA_BACKEND_IMAGE=$ECR_DEPLOY_IMAGE" >> $BASH_ENV
-                  echo "Setting CLA Backend image $ECR_DEPLOY_IMAGE"
 
       - deploy:
           name: uat_deploy_live

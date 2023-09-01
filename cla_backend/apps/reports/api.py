@@ -22,4 +22,4 @@ class ExportListView(generics.ListAPIView, generics.DestroyAPIView):
         else:
             user = self.request.user
 
-        return super(ExportListView, self).get_queryset().filter(user=user)
+        return super(ExportListView, self).get_queryset().filter(user=user).order_by("created")

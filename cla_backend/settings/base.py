@@ -400,6 +400,7 @@ BROKER_TRANSPORT_OPTIONS = {
     "polling_interval": 10,
     "region": os.environ.get("SQS_REGION", "eu-west-2"),
     "wait_time_seconds": 20,
+    "visibility_timeout": 1800,
 }
 
 if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):

@@ -9,7 +9,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 from .models import Notification
 from .serializers import NotificationSerializer
 
-
 logger = get_task_logger(__name__)
 
 

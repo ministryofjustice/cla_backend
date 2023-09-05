@@ -14,6 +14,10 @@ class NotificationManager(models.Manager):
         now = timezone.now()
         return self.get_queryset().filter(start_time__lt=now, end_time__gt=now)
 
+    def upcoming(self):
+        now = timezone.now()
+        return self.get_queryset().filter(end_time__gt=now)
+
 
 class Notification(TimeStampedModel):
     type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES, default="notification")

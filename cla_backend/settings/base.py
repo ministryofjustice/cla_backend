@@ -228,6 +228,7 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "djorm_pgfulltext",
     "session_security",
+    "django_celery_beat",
 )
 
 PROJECT_APPS = (
@@ -431,6 +432,7 @@ CELERY_TIMEZONE = "UTC"
 # apps with celery tasks
 CELERY_IMPORTS = ["reports.tasks", "notifications.tasks"]
 CELERY_TASK_PROTOCOL = 1
+DJANGO_CELERY_BEAT_TZ_AWARE = False
 
 CONTRACT_2018_ENABLED = os.environ.get("CONTRACT_2018_ENABLED", "True") == "True"
 PING_JSON_KEYS["CONTRACT_2018_ENABLED_key"] = "CONTRACT_2018_ENABLED"

@@ -416,7 +416,6 @@ if os.environ.get("CELERY_PREDEFINED_QUEUE_URL"):
 else:
     # if no BROKER_URL specified then don't try to use celery
     # because it'll just cause errors
-    CELERY_ALWAYS_EAGER = True
     BROKER_TRANSPORT_OPTIONS["queue_name_prefix"] = "env-%(env)s-" % {"env": CLA_ENV}
 
 CELERY_ACCEPT_CONTENT = ["yaml"]  # because json serializer doesn't support dates
@@ -433,6 +432,7 @@ CELERY_TIMEZONE = "UTC"
 CELERY_IMPORTS = ["reports.tasks", "notifications.tasks"]
 CELERY_TASK_PROTOCOL = 1
 DJANGO_CELERY_BEAT_TZ_AWARE = False
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 CONTRACT_2018_ENABLED = os.environ.get("CONTRACT_2018_ENABLED", "True") == "True"
 PING_JSON_KEYS["CONTRACT_2018_ENABLED_key"] = "CONTRACT_2018_ENABLED"

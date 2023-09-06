@@ -64,3 +64,4 @@ notifications-python-client==6.0.0
 python-crontab==2.3.4
 django-celery-beat==1.4.0
 django-timezone-field==2.0
+# update generated

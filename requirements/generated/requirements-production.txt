@@ -19,7 +19,9 @@ botocore==1.20.112
     #   boto3
     #   s3transfer
 celery[sqs]==4.0.2
-    # via -r requirements/source/requirements-base.in
+    # via
+    #   -r requirements/source/requirements-base.in
+    #   django-celery-beat
 certifi==2021.10.8
     # via
     #   requests
@@ -46,6 +48,8 @@ django-braces==1.8.1
     # via
     #   -r requirements/source/requirements-base.in
     #   django-oauth-toolkit
+django-celery-beat==1.4.0
+    # via -r requirements/source/requirements-base.in
 django-docopt-command==0.2.0
     # via -r requirements/source/requirements-base.in
 django-extended-choices==0.3.0
@@ -68,6 +72,10 @@ django-session-security==2.2.3
     # via -r requirements/source/requirements-base.in
 django-storages==1.5.2
     # via -r requirements/source/requirements-base.in
+django-timezone-field==2.0
+    # via
+    #   -r requirements/source/requirements-base.in
+    #   django-celery-beat
 django-uuidfield==0.5.0
     # via -r requirements/source/requirements-base.in
 django==1.8.19
@@ -78,6 +86,7 @@ django==1.8.19
     #   django-oauth-toolkit
     #   django-pagedown
     #   django-session-security
+    #   django-timezone-field
     #   django-uuidfield
     #   jsonfield
 djangorestframework==3.3.3
@@ -153,17 +162,23 @@ pyminizip==0.2.3
     # via -r requirements/source/requirements-base.in
 pyparsing==2.4.7
     # via packaging
+python-crontab==2.3.4
+    # via
+    #   -r requirements/source/requirements-base.in
+    #   django-celery-beat
 python-dateutil==2.2
     # via
     #   -r requirements/source/requirements-base.in
     #   botocore
     #   cla-common
     #   csvkit
+    #   python-crontab
 pytz==2021.1
     # via
     #   -r requirements/source/requirements-base.in
     #   celery
     #   cla-common
+    #   django-timezone-field
 pyyaml==5.4
     # via -r requirements/source/requirements-base.in
 requests==2.27.1

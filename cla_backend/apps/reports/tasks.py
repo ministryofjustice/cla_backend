@@ -210,13 +210,15 @@ class ReasonForContactingExportTask(ExportTaskBase):
             # this is the csv for one referrer
             self.form.top_referrer = referrer_url
             parse_url = urlparse(referrer_url)
-            url_relative_path = "".join(
-                [
-                    parse_url.hostname.replace(".", "_"),
-                    parse_url.path.replace("/", "_"),
-                    parse_url.query.replace("=", "_"),
-                ]
-            ).strip("_")
+            parts = []
+            if parse_url.hostname:
+                parts.append(parse_url.hostname.replace(".", "_"))
+            if parse_url.path:
+                parts.append(parse_url.path.replace("/", "_"),)
+            if parse_url.query:
+                parts.append(parse_url.query.replace("=", "_"))
+
+            url_relative_path = "".join(parts).strip("_")
             file_name = "%s-%s%s" % ("".join(["rfc_", url_relative_path]), user_datetime, file_ext)
         else:
             # this is the csv with all the results

@@ -52,6 +52,8 @@ class PartnerIncomeSerializer(IncomeSerializerBase):
     Like IncomeSerializer but without 'child_benefits'
     """
 
+    self_employed = serializers.NullBooleanField(default=None)
+
     class Meta(IncomeSerializerBase.Meta):
         fields = (
             "earnings",
@@ -152,7 +154,7 @@ class PartnerPersonSerializer(PersonSerializer):
         Like PersonSerializer but without child_benefits
     """
 
-    income = PartnerIncomeSerializer(required=False)
+    income = PartnerIncomeSerializer(required=False, allow_null=True)
 
     class Meta(PersonSerializer.Meta):
         pass

@@ -2,7 +2,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_delete
 from model_utils.models import TimeStampedModel
 
 from .constants import NOTIFICATION_TYPES
@@ -27,5 +27,4 @@ class Notification(TimeStampedModel):
     objects = NotificationManager()
 
 
-post_save.connect(send_notifications_to_users, sender=Notification)
 post_delete.connect(send_notifications_to_users, sender=Notification)

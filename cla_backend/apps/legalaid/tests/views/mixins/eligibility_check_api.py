@@ -1047,7 +1047,6 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-
     def test_with_null_partner_self_employed(self):
         """
         The elegibility check should still return 200 even when the partner object has

@@ -61,3 +61,7 @@ class EligibilityCheckTestCase(EligibilityCheckAPIMixin, CLACheckerAuthBaseApiTe
     # Checker doesn't passport under 18s
     def test_eligibility_check_under_18(self):
         pass
+
+    # Checker doesn't send updates for partner financial details
+    def test_with_null_partner_self_employed(self):
+        pass

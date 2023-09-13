@@ -19,11 +19,9 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
                 ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, verbose_name='modified', editable=False)),
-                ('due', models.DateTimeField()),
                 ('retried', models.IntegerField(default=0)),
                 ('status', models.CharField(default=b'scheduled', max_length=20)),
                 ('completed', models.BooleanField(default=False)),
-                ('is_end', models.BooleanField(default=False)),
                 ('notification', models.ForeignKey(to='notifications.Notification')),
             ],
             options={

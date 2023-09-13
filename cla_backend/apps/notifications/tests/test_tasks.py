@@ -24,11 +24,12 @@ class NotificationsScheduleTestCase(TestCase):
     def test_push_notifications(self):
         now = timezone.now()
         start_time = now - datetime.timedelta(minutes=10)
-        notification = Notification.objects.create(start_time=start_time, end_time=now, created_by=make_user())
+        end_time = now + datetime.timedelta(minutes=20)
+        notification = Notification.objects.create(start_time=start_time, end_time=end_time, created_by=make_user())
         push_notifications.apply()
         self.assertTrue(self.mock_send_notifications_called)
         self.assertEqual(len(self.notifications), 1)
-        schedule = Schedule.objects.get(notification=notification, is_end=False)
+        schedule = Schedule.objects.get(notification=notification)
         self.assertTrue(schedule.completed)
 
     def test_push_notifications_in_the_future(self):
@@ -39,10 +40,18 @@ class NotificationsScheduleTestCase(TestCase):
         push_notifications.apply()
         self.assertFalse(self.mock_send_notifications_called)
 
-    def test_push_notifications_all_completed(self):
+    def test_push_notifications_in_the_past(self):
         now = timezone.now()
         start_time = now - datetime.timedelta(minutes=10)
         end_time = now - datetime.timedelta(minutes=20)
+        Notification.objects.create(start_time=start_time, end_time=end_time, created_by=make_user())
+        push_notifications.apply()
+        self.assertFalse(self.mock_send_notifications_called)
+
+    def test_push_notifications_all_completed(self):
+        now = timezone.now()
+        start_time = now - datetime.timedelta(minutes=10)
+        end_time = now + datetime.timedelta(minutes=20)
         notification = Notification.objects.create(start_time=start_time, end_time=end_time, created_by=make_user())
         Schedule.objects.filter(notification=notification).update(completed=True)
         push_notifications.apply()

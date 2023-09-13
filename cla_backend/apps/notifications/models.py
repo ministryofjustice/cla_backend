@@ -20,7 +20,11 @@ class NotificationManager(models.Manager):
 class ScheduleManager(models.Manager):
     def live(self):
         now = timezone.now()
-        return self.get_queryset().filter(due__lt=now, completed=False, retried__lt=MAX_NOTIFICATION_RETRIES)
+        return self.get_queryset().filter(
+            notification__start_time__lt=now,
+            notification__end_time__gt=now,
+            completed=False, retried__lt=MAX_NOTIFICATION_RETRIES
+        )
 
 
 class Notification(TimeStampedModel):
@@ -37,8 +41,6 @@ class Notification(TimeStampedModel):
 
 class Schedule(TimeStampedModel):
     notification = models.ForeignKey(Notification)
-    is_end = models.BooleanField(default=False)
-    due = models.DateTimeField()
     retried = models.IntegerField(default=0)
     status = models.CharField(max_length=20, default="scheduled")
     completed = models.BooleanField(default=False)

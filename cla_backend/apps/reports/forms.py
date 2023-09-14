@@ -296,6 +296,106 @@ class MICaseExtract(SQLFileDateRangeReport):
         sql = self.query.format(diversity_expression=diversity_expression)
         sql_args = [passphrase] + list(self.date_range)
         return self.execute_query(sql, sql_args)
+    
+    
+class MICaseExtractExtended(SQLFileDateRangeReport):
+    QUERY_FILE = "MIExtractByOutcomeExtended.sql"
+
+    passphrase = forms.CharField(
+        required=False, help_text="Optional. If not provided, the report will not include diversity data"
+    )
+
+    def get_headers(self):
+        return [
+            "LAA_Reference",
+            "Hash_ID",
+            "Case_ID",
+            "Split_Check",
+            "Split_Link_Case",
+            "Provider_ID",
+            "Category_Name",
+            "Date_Case_Created",
+            "Last_Modified_Date",
+            "Outcome_Code_Child",
+            "Billable_Time",
+            "Cumulative_Time",
+            "Matter_Type_1",
+            "Matter_Type_2",
+            "User_ID",
+            "Scope_Status",
+            "Eligibility_Status",
+            "Adjustments_BSL",
+            "Adjustments_LLI",
+            "Adjustments_MIN",
+            "Adjustments_TYP",
+            "Adjustments_CallbackPreferred",
+            "Adjustments_Skype",
+            "Gender",
+            "Ethnicity",
+            "Age(Range)",
+            "Religion",
+            "Sexual_Orientation",
+            "Disability",
+            "Time_of_Day",
+            "Reject_Reason",
+            "Media_Code",
+            "Contact_Type",
+            "Call_Back_Request_Time",
+            "Call_Back_Actioned_Time",
+            "Time_to_OS_Access",
+            "Time_to_SP_Access",
+            "Residency_Test",
+            "Repeat_Contact",
+            "Referral_Agencies",
+            "Complaint_Type",
+            "Complaint_Date",
+            "Complaint_Owner",
+            "Complaint_Target",
+            "Complaint_Subject",
+            "Complaint_Classification",
+            "Complaint_Outcome",
+            "Agree_Feedback",
+            "Exempt_Client",
+            "Welsh",
+            "Language",
+            "Outcome_Created_At",
+            "Username",
+            "Has_Third_Party",
+            "Time_to_OS_Action",
+            "Organisation",
+            "Notes",
+            "Provider Notes",
+        ]
+
+    def get_rows(self):
+        for row in self.get_queryset():
+            full_row = list(row)
+            diversity_json = full_row.pop() or {}
+
+            def insert_value(key, val):
+                index = self.get_headers().index(key)
+                full_row.insert(index, val)
+
+            insert_value("Gender", diversity_json.get("gender"))
+            insert_value("Ethnicity", diversity_json.get("ethnicity"))
+            insert_value("Religion", diversity_json.get("religion"))
+            insert_value("Sexual_Orientation", diversity_json.get("sexual_orientation"))
+            insert_value("Disability", diversity_json.get("disability"))
+            yield full_row
+
+    def get_queryset(self):
+        passphrase = self.cleaned_data.get("passphrase")
+
+        if passphrase:
+            diversity_expression = "pgp_pub_decrypt(pd.diversity, dearmor('{key}'), %s)::json".format(
+                key=diversity.get_private_key()
+            )
+        else:
+            diversity_expression = "%s as placeholder, '{}'::json"
+
+        sql = self.query.format(diversity_expression=diversity_expression)
+        sql_args = [passphrase] + list(self.date_range)
+        return self.execute_query(sql, sql_args)
 
 
 class MIFeedbackExtract(SQLFileDateRangeReport):

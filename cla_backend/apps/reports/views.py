@@ -86,7 +86,7 @@ def mi_case_extract(request):
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-def mi_case_extract(request):
+def mi_case_extract_extended(request):
     return report_view(request, MICaseExtractExtended, "MI Case Extract Extended")
 
 

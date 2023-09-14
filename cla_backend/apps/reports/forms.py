@@ -296,8 +296,8 @@ class MICaseExtract(SQLFileDateRangeReport):
         sql = self.query.format(diversity_expression=diversity_expression)
         sql_args = [passphrase] + list(self.date_range)
         return self.execute_query(sql, sql_args)
-    
-    
+
+
 class MICaseExtractExtended(SQLFileDateRangeReport):
     QUERY_FILE = "MIExtractByOutcomeExtended.sql"
 

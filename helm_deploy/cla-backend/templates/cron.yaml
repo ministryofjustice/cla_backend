@@ -45,7 +45,7 @@ metadata:
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}
 spec:
-  schedule: "0 5 * * 0" 
+  schedule: "0 5 * * 0"
   jobTemplate:
     spec:
       template:
@@ -76,5 +76,25 @@ spec:
             command: ["python", "manage.py", "delete_cases_without_personal_data"]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-fix-missing-outcome-codes
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "0 5 4 * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: fix-missing-outcome-codes
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              command: ["python", "manage.py", "re_denormalize_outcome_codes_to_cases"]
+              env:
+                {{ include "cla-backend.app.vars" . | nindent 12 }}
           restartPolicy: OnFailure
 ---

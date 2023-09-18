@@ -16,6 +16,7 @@ urlpatterns = patterns(
         name="mi_provider_allocation_extract",
     ),
     url(r"^mi-case-extract/$", views.mi_case_extract, name="mi_case_extract"),
+    url(r"^mi-case-extract-extended/$", views.mi_case_extract_extended, name="mi_case_extract_extended"),
     url(
         r"^mi-case-view-audit-log-extract/$",
         views.mi_case_view_audit_log_extract,

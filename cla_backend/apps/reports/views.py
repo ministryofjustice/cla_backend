@@ -12,6 +12,7 @@ from django.conf import settings
 
 from .forms import (
     MICaseExtract,
+    MICaseExtractExtended,
     MIFeedbackExtract,
     MIContactsPerCaseByCategoryExtract,
     MIAlternativeHelpExtract,
@@ -81,6 +82,12 @@ def mi_provider_allocation_extract(request):
 @permission_required("legalaid.run_reports")
 def mi_case_extract(request):
     return report_view(request, MICaseExtract, "MI Case Extract")
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def mi_case_extract_extended(request):
+    return report_view(request, MICaseExtractExtended, "MI Case Extract Extended")
 
 
 @staff_member_required

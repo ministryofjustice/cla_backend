@@ -93,7 +93,7 @@ spec:
           containers:
             - name: fix-missing-outcome-codes
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-              command: ["python", "manage.py", "re_denormalize_outcome_codes_to_cases"]
+              command: ["python", "manage.py", "fix_missing_outcome_codes.py"]
               env:
                 {{ include "cla-backend.app.vars" . | nindent 12 }}
           restartPolicy: OnFailure

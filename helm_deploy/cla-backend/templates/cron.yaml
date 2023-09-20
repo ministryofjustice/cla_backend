@@ -85,7 +85,7 @@ metadata:
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}
 spec:
-  schedule: "0 5 4 * *"
+  schedule: "0 5 3 * *"
   jobTemplate:
     spec:
       template:

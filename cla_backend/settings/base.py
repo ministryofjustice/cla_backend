@@ -449,9 +449,13 @@ CacheAdapter.set_adapter_factory(bank_holidays_cache_adapter_factory)
 MAINTENANCE_MODE = os.environ.get("MAINTENANCE_MODE", "False") == "True"
 
 # Settings for django-session-security.
+DEFAULT_SESSION_SECURITY_WARN_AFTER = 60 * 25
+DEFAULT_SESSION_SECURITY_EXPIRE_AFTER = 60 * 30
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_SECURITY_WARN_AFTER = 60 * 25
-SESSION_SECURITY_EXPIRE_AFTER = 60 * 30
+SESSION_SECURITY_WARN_AFTER = int(os.environ.get("SESSION_SECURITY_WARN_AFTER", DEFAULT_SESSION_SECURITY_WARN_AFTER))
+SESSION_SECURITY_EXPIRE_AFTER = int(
+    os.environ.get("SESSION_SECURITY_EXPIRE_AFTER", DEFAULT_SESSION_SECURITY_EXPIRE_AFTER)
+)
 # Set all non-admin urls to passive.
 # Session security for non-admin urls is handled in the calling applications.
 PASSIVE_URL_REGEX_LIST = [r"^(?!\/admin\/).*", r"^(\/admin\/).*\/exports/$"]

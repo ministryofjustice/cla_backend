@@ -1,11 +1,10 @@
 #################################################
 # BASE IMAGE USED BY ALL STAGES
 #################################################
-FROM alpine:3.9 as base
+FROM alpine:3.15 as base
 
 RUN apk add --no-cache \
       bash \
-      py2-pip \
       tzdata \
       gettext
 
@@ -13,6 +12,8 @@ RUN adduser -D app && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime
 
 # To install pip dependencies
+# python -m ensurepip --upgrade -- installs pip version 19
+#  pip install -U setuptools pip==18.1 wheel -- ensures pip is at version 18
 RUN apk add --no-cache \
       build-base \
       curl curl-dev \
@@ -22,7 +23,8 @@ RUN apk add --no-cache \
       linux-headers \
       postgresql-dev \
       python2-dev && \
-    pip install -U setuptools pip==18.1 wheel
+      python -m ensurepip --upgrade && \
+      pip install -U setuptools pip==18.1 wheel
 
 WORKDIR /home/app
 

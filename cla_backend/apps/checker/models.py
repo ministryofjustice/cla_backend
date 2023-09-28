@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from model_utils.models import TimeStampedModel
 from uuidfield import UUIDField
 
@@ -31,18 +32,31 @@ class ReasonForContacting(TimeStampedModel):
             {
                 "key": choice[0],
                 "description": choice[1],
-                "percentage": category_data[choice[0]] if choice[0] in category_data else 0,
+                "count": category_data[choice[0]] if choice[0] in category_data else 0,
             }
             for choice in REASONS_FOR_CONTACTING.CHOICES
         ]
         # unknown categories (perhaps have been removed)
         for category, count in category_data.iteritems():
             if category not in REASONS_FOR_CONTACTING.CHOICES_DICT:
-                categories.append({"key": category, "description": category, "percentage": count})
+                categories.append({"key": category, "description": category, "count": count})
         # calculate percentage of all responses that chose each option
         percentage_total = 100.0 / reasons_for_contacting_count if reasons_for_contacting_count else 0.0
+        from django.db.models import Count
+        qs = ReasonForContactingCategory.objects.filter(
+            reason_for_contacting__case__isnull=False
+        ).values("category").annotate(count=Count("*"))
+        categories_with_cases = {rfc_category["category"]: rfc_category["count"] for rfc_category in qs}
+
+        qs = ReasonForContactingCategory.objects.filter(
+            reason_for_contacting__case__isnull=True
+        ).values("category").annotate(count=Count("*"))
+        categories_without_cases = {rfc_category["category"]: rfc_category["count"] for rfc_category in qs}
+
         for category in categories:
-            category["percentage"] *= percentage_total
+            category["with_cases"] = categories_with_cases[category["key"]] if category["key"] in categories_with_cases else 0
+            category["without_cases"] = categories_without_cases[category["key"]] if category["key"] in categories_without_cases else 0
+            category["percentage"] = category["count"] * percentage_total
         return dict(categories=categories, total_count=reasons_for_contacting_count)
 
     @classmethod

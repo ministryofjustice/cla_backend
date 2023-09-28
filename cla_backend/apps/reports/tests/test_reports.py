@@ -3,17 +3,19 @@ import datetime
 import os
 import shutil
 import tempfile
+from itertools import cycle
 
 from django.test import TestCase
 from psycopg2 import InternalError
 
-from cla_common.constants import CONTACT_SAFETY
+from cla_common.constants import CONTACT_SAFETY, REASONS_FOR_CONTACTING
 from core.tests.mommy_utils import make_recipe
 from legalaid.utils.diversity import save_diversity_data
 import reports.forms
 from reports.utils import OBIEEExporter
 
 from cla_auditlog.models import AuditLog
+from checker.models import ReasonForContacting
 
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
@@ -306,3 +308,77 @@ class TestKnowledgeBaseArticlesExport(TestCase):
         self.assertEqual(output[2][19:25], ["", "789", "", "", "", ""])
         # category name; article is not preferred signpost; second category name; article is preferred signpost; no third category
         self.assertEqual(output[1][27:33], ["a category", False, "another category", True, "", ""])
+
+
+class ReasonForContactingReportTestCase(TestCase):
+    def test_rfc(self):
+        referrers = [
+            "Unknown",
+            "https://localhost/scope/diagnosis",
+            "https://localhost/scope/diagnosis/n131",
+            "https://localhost/scope/diagnosis?category=check",
+            "https://localhost/scope/diagnosis",
+        ]
+
+        categories = [
+            REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
+            REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
+            REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE,
+            REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS,
+            REASONS_FOR_CONTACTING.PNS,
+        ]
+
+        cases = [
+            make_recipe("legalaid.case"),
+            make_recipe("legalaid.case"),
+            make_recipe("legalaid.case"),
+            None,
+            None,
+        ]
+        resources = make_recipe(
+            "checker.reasonforcontacting",
+            referrer=cycle(referrers),
+            case=cycle(cases),
+            _quantity=5
+        )
+
+        make_recipe("checker.reasonforcontacting_category", reason_for_contacting=cycle(resources), category=cycle(categories), _quantity=5)
+        make_recipe("checker.reasonforcontacting_category", reason_for_contacting=resources[-1], category=REASONS_FOR_CONTACTING.PNS)
+
+        stats = ReasonForContacting.get_report_category_stats(datetime.datetime.now() - datetime.timedelta(hours=1), datetime.datetime.now())
+        expected_stats = {
+            REASONS_FOR_CONTACTING.MISSING_PAPERWORK: {
+                "count": 2,
+                "with_cases": 2,
+                "without_cases": 0
+            },
+            REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE: {
+                "count": 1,
+                "with_cases": 1,
+                "without_cases": 0
+            },
+            REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS: {
+                "count": 1,
+                "with_cases": 0,
+                "without_cases": 1
+            },
+            REASONS_FOR_CONTACTING.PNS: {
+                "count": 2,
+                "with_cases": 0,
+                "without_cases": 2,
+            },
+        }
+        expected_others = {
+            "count": 0,
+            "with_cases": 0,
+            "without_cases": 0,
+        }
+        for stat in stats["categories"]:
+            expected = expected_stats[stat["key"]] if stat["key"] in expected_stats else expected_others
+            actual = {
+                "count": stat["count"],
+                "with_cases": stat["with_cases"],
+                "without_cases": stat["without_cases"],
+            }
+            self.assertDictEqual(expected, actual)
+

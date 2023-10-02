@@ -14,6 +14,8 @@ from legalaid.utils.diversity import save_diversity_data
 import reports.forms
 from reports.utils import OBIEEExporter
 
+from freezegun import freeze_time
+
 from cla_auditlog.models import AuditLog
 from checker.models import ReasonForContacting
 
@@ -328,56 +330,49 @@ class ReasonForContactingReportTestCase(TestCase):
             REASONS_FOR_CONTACTING.PNS,
         ]
 
-        cases = [
-            make_recipe("legalaid.case"),
-            make_recipe("legalaid.case"),
-            make_recipe("legalaid.case"),
-            None,
-            None,
-        ]
+        cases = [make_recipe("legalaid.case"), make_recipe("legalaid.case"), make_recipe("legalaid.case"), None, None]
         resources = make_recipe(
-            "checker.reasonforcontacting",
-            referrer=cycle(referrers),
-            case=cycle(cases),
-            _quantity=5
+            "checker.reasonforcontacting", referrer=cycle(referrers), case=cycle(cases), _quantity=5
         )
 
-        make_recipe("checker.reasonforcontacting_category", reason_for_contacting=cycle(resources), category=cycle(categories), _quantity=5)
-        make_recipe("checker.reasonforcontacting_category", reason_for_contacting=resources[-1], category=REASONS_FOR_CONTACTING.PNS)
+        make_recipe(
+            "checker.reasonforcontacting_category",
+            reason_for_contacting=cycle(resources),
+            category=cycle(categories),
+            _quantity=5,
+        )
+        make_recipe(
+            "checker.reasonforcontacting_category",
+            reason_for_contacting=resources[-1],
+            category=REASONS_FOR_CONTACTING.PNS,
+        )
 
-        stats = ReasonForContacting.get_report_category_stats(datetime.datetime.now() - datetime.timedelta(hours=1), datetime.datetime.now())
+        # Make a few categories that were created in the distant paste
+        freezer = freeze_time("2023-10-01 11:00")
+        freezer.start()
+        day_ago_resources = make_recipe(
+            "checker.reasonforcontacting", referrer=cycle(referrers), case=cycle(cases), _quantity=5
+        )
+        make_recipe(
+            "checker.reasonforcontacting_category",
+            reason_for_contacting=cycle(day_ago_resources),
+            category=cycle(categories),
+            _quantity=5,
+        )
+        freezer.stop()
+
+        # Generate report with date range
+        stats = ReasonForContacting.get_report_category_stats(
+            datetime.datetime.now() - datetime.timedelta(hours=1), datetime.datetime.now()
+        )
         expected_stats = {
-            REASONS_FOR_CONTACTING.MISSING_PAPERWORK: {
-                "count": 2,
-                "with_cases": 2,
-                "without_cases": 0
-            },
-            REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE: {
-                "count": 1,
-                "with_cases": 1,
-                "without_cases": 0
-            },
-            REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS: {
-                "count": 1,
-                "with_cases": 0,
-                "without_cases": 1
-            },
-            REASONS_FOR_CONTACTING.PNS: {
-                "count": 2,
-                "with_cases": 0,
-                "without_cases": 2,
-            },
+            REASONS_FOR_CONTACTING.MISSING_PAPERWORK: {"count": 2, "with_cases": 2, "without_cases": 0},
+            REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE: {"count": 1, "with_cases": 1, "without_cases": 0},
+            REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS: {"count": 1, "with_cases": 0, "without_cases": 1},
+            REASONS_FOR_CONTACTING.PNS: {"count": 2, "with_cases": 0, "without_cases": 2},
         }
-        expected_others = {
-            "count": 0,
-            "with_cases": 0,
-            "without_cases": 0,
-        }
+        expected_others = {"count": 0, "with_cases": 0, "without_cases": 0}
         for stat in stats["categories"]:
             expected = expected_stats[stat["key"]] if stat["key"] in expected_stats else expected_others
-            actual = {
-                "count": stat["count"],
-                "with_cases": stat["with_cases"],
-                "without_cases": stat["without_cases"],
-            }
+            actual = {"count": stat["count"], "with_cases": stat["with_cases"], "without_cases": stat["without_cases"]}
             self.assertDictEqual(expected, actual)

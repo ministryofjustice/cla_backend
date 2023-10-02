@@ -26,7 +26,7 @@ class ReasonForContacting(TimeStampedModel):
         return cls.calc_category_stats(data, total_count)
 
     @classmethod
-    def calc_category_stats(cls, category_data, reasons_for_contacting_count):
+    def calc_category_stats(cls, category_data, reasons_for_contacting_count, start_date=None, end_date=None):
         # known categories, preserving order
         categories = [
             {
@@ -42,19 +42,38 @@ class ReasonForContacting(TimeStampedModel):
                 categories.append({"key": category, "description": category, "count": count})
         # calculate percentage of all responses that chose each option
         percentage_total = 100.0 / reasons_for_contacting_count if reasons_for_contacting_count else 0.0
-        qs = ReasonForContactingCategory.objects.filter(
-            reason_for_contacting__case__isnull=False
-        ).values("category").annotate(count=Count("*"))
+
+        filters = None
+        if start_date and end_date:
+            filters = models.Q(reason_for_contacting__created__gte=start_date) & models.Q(
+                reason_for_contacting__created__lte=end_date
+            )
+
+        qs = (
+            ReasonForContactingCategory.objects.filter(reason_for_contacting__case__isnull=False)
+            .values("category")
+            .annotate(count=Count("*"))
+        )
+        if filters:
+            qs = qs.filter(filters)
         categories_with_cases = {rfc_category["category"]: rfc_category["count"] for rfc_category in qs}
 
-        qs = ReasonForContactingCategory.objects.filter(
-            reason_for_contacting__case__isnull=True
-        ).values("category").annotate(count=Count("*"))
+        qs = (
+            ReasonForContactingCategory.objects.filter(reason_for_contacting__case__isnull=True)
+            .values("category")
+            .annotate(count=Count("*"))
+        )
+        if filters:
+            qs = qs.filter(filters)
         categories_without_cases = {rfc_category["category"]: rfc_category["count"] for rfc_category in qs}
 
         for category in categories:
-            category["with_cases"] = categories_with_cases[category["key"]] if category["key"] in categories_with_cases else 0
-            category["without_cases"] = categories_without_cases[category["key"]] if category["key"] in categories_without_cases else 0
+            category["with_cases"] = (
+                categories_with_cases[category["key"]] if category["key"] in categories_with_cases else 0
+            )
+            category["without_cases"] = (
+                categories_without_cases[category["key"]] if category["key"] in categories_without_cases else 0
+            )
             category["percentage"] = category["count"] * percentage_total
         return dict(categories=categories, total_count=reasons_for_contacting_count)
 
@@ -95,7 +114,7 @@ class ReasonForContacting(TimeStampedModel):
     def get_report_category_stats(cls, start_date=None, end_date=None, referrer=None):
         # this returns limited results that can be downloaded as a report
         total_count, data = cls.get_filtered_categories(start_date, end_date, referrer)
-        return cls.calc_category_stats(data, total_count)
+        return cls.calc_category_stats(data, total_count, start_date, end_date)
 
     @classmethod
     def get_top_referrers(cls, count=8):

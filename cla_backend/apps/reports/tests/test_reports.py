@@ -381,4 +381,3 @@ class ReasonForContactingReportTestCase(TestCase):
                 "without_cases": stat["without_cases"],
             }
             self.assertDictEqual(expected, actual)
-

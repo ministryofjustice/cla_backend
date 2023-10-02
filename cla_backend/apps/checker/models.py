@@ -42,7 +42,6 @@ class ReasonForContacting(TimeStampedModel):
                 categories.append({"key": category, "description": category, "count": count})
         # calculate percentage of all responses that chose each option
         percentage_total = 100.0 / reasons_for_contacting_count if reasons_for_contacting_count else 0.0
-        from django.db.models import Count
         qs = ReasonForContactingCategory.objects.filter(
             reason_for_contacting__case__isnull=False
         ).values("category").annotate(count=Count("*"))

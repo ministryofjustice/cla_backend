@@ -93,12 +93,13 @@ select
   ,COALESCE(adapt.callback_preference, false)::bool as "Adjustments_CallbackPreferred"
   ,COALESCE(adapt.skype_webcam, false)::bool as "Adjustments_Skype"
   ,CASE
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 20 THEN 'A'
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 30 THEN 'B'
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 40 THEN 'C'
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 50 THEN 'D'
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 60 THEN 'E'
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 70 THEN 'F'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 24 THEN 'A'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 29 THEN 'B'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 39 THEN 'C'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 49 THEN 'D'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 59 THEN 'E'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 79 THEN 'F'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) >= 80 THEN 'G'
       WHEN pd.date_of_birth IS NULL THEN 'U'
       ELSE 'G'
       END as "Age(Range)"

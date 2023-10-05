@@ -32,6 +32,7 @@ from .forms import (
     MIExtractComplaintViewAuditLog,
     AllKnowledgeBaseArticles,
     ReasonsForContactingReport,
+    CaseDemographicsReport,
 )
 
 from reports.models import Export
@@ -247,6 +248,12 @@ def download_file(request, file_name="", *args, **kwargs):
         delete_record(request.user.pk, file_name)
 
     return response
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def mi_case_extract_extended(request):
+    return report_view(request, CaseDemographicsReport, "Case Demographic Report")
 
 
 def delete_record(user_id, file_name):

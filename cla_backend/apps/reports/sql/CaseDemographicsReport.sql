@@ -55,93 +55,69 @@ select
   c.laa_reference as "LAA_Reference"
   ,md5(lower(regexp_replace((pd.full_name||pd.postcode)::text, '\s', '', 'ig'))) as "Hash_ID"
   ,c.reference as "Case_ID"
-  -- SPLIT FIELDS. --
-  ,c.from_case_id::boolean as "Split_Check"
-  ,split_case.laa_reference as "Split_Link_Case"
-  -- /SPLIT FIELDS. --
   ,COALESCE(assigned_provider.name, trim((log.context->'provider')::text, '"'), provider.name) as "Provider_ID" -- need to convert to LAA provider ID
   ,category.code as "Category_Name"
   ,c.created as "Date_Case_Created"
-  ,c.modified as "Last_Modified_Date"
-  ,log.code as "Outcome_Code_Child"
-  ,CASE WHEN log.code = 'NCOE' THEN 0 ELSE ceil(EXTRACT(EPOCH FROM (timer.stopped - timer.created))) END as "Billable_Time"
-  ,CASE WHEN latest_outcome.id = log.id THEN c.billable_time ELSE null END as "Cumulative_Time"
   ,mt1.code as "Matter_Type_1"
   ,mt2.code as "Matter_Type_2"
-  ,CASE WHEN op.id IS NOT NULL THEN 'OS:'||log.created_by_id::text
-        WHEN staff.id IS NOT NULL THEN 'SP:'||log.created_by_id::text
-   END as "User_ID"
   ,CASE diagnosis.state
       when 'INSCOPE' then 'PASS'
       when 'OUTOFSCOPE' then 'FAIL'
       else 'UNKNOWN'
-   END as "Scope_Status"
+  END as "Scope_Status"
   ,CASE ec.state
       when 'yes' then 'PASS'
       when 'no' then 'FAIL'
       else 'UNKNOWN'
-   END as "Eligibility_Status"
+  END as "Eligibility_Status"
   ,COALESCE(adapt.bsl_webcam, false)::bool as "Adjustments_BSL"
   ,CASE upper(COALESCE(adapt.language, ''))
       WHEN upper('English') THEN false
       WHEN upper('Welsh') THEN false
       WHEN '' THEN false
       ELSE true
-   END as "Adjustments_LLI"
+  END as "Adjustments_LLI"
   ,COALESCE(adapt.minicom, false)::bool as "Adjustments_MIN"
   ,COALESCE(adapt.text_relay, false)::bool as "Adjustments_TYP"
   ,COALESCE(adapt.callback_preference, false)::bool as "Adjustments_CallbackPreferred"
   ,COALESCE(adapt.skype_webcam, false)::bool as "Adjustments_Skype"
   ,CASE
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 20 THEN 'A'
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 30 THEN 'B'
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 40 THEN 'C'
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 50 THEN 'D'
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 60 THEN 'E'
-      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 70 THEN 'F'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 24 THEN 'A'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 29 THEN 'B'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 39 THEN 'C'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 49 THEN 'D'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 59 THEN 'E'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) <= 79 THEN 'F'
+      WHEN EXTRACT(YEAR from age(now(), pd.date_of_birth)) >= 80 THEN 'G'
       WHEN pd.date_of_birth IS NULL THEN 'U'
-      ELSE 'G'
       END as "Age(Range)"
-  ,CASE
-    when EXTRACT(DOW from c.created at time zone 'Europe/London') = 5 and EXTRACT(HOUR from c.created at time zone 'Europe/London') >= 20 then 'WKEND' -- after 20:00 on friday
-    when EXTRACT(DOW from c.created at time zone 'Europe/London') = 6 and (EXTRACT(HOUR from c.created at time zone 'Europe/London') < 12 OR (EXTRACT(HOUR from c.created at time zone 'Europe/London') = 12 AND EXTRACT(MINUTE from c.created at time zone 'Europe/London') < 30))  then 'WKEND' -- saturday before 12:30
-    when EXTRACT(DOW from c.created at time zone 'Europe/London') = 6 and (EXTRACT(HOUR from c.created at time zone 'Europe/London') > 12 OR (EXTRACT(HOUR from c.created at time zone 'Europe/London') = 12 AND EXTRACT(MINUTE from c.created at time zone 'Europe/London') < 30))  then '9TO5' -- saturday after 12:30
-    when EXTRACT(HOUR from c.created at time zone 'Europe/London') between 0 and 16 then '9TO5' -- weekday normal hours
-    when EXTRACT(HOUR from c.created at time zone 'Europe/London')  between 17 and 19 and not EXTRACT(DOW from c.created at time zone 'Europe/London') in (6,0)  then '5TO8' -- weekday out of hours
-    when EXTRACT(HOUR from c.created at time zone 'Europe/London') >= 20 and not EXTRACT(DOW from c.created at time zone 'Europe/London') = 5 then '9TO5' -- weekday after 20:00
-    ELSE '9TO5'
-   END as "Time_of_Day"
-  ,CASE
-     WHEN log.code = 'COI' OR strpos(log.code, 'MIS') = 1 THEN log.code
-     ELSE null
-   END as "Reject_Reason"
   ,mc.code as "Media_Code"
   ,c.source as "Contact_Type"
-  ,null as "Call_Back_Request_Time"
-  ,null as "Call_Back_Actioned_Time"
-  ,ceil(EXTRACT(EPOCH FROM operator_first_access.created-c.created)) as "Time_to_OS_Access"
-  ,ceil(EXTRACT(EPOCH FROM provider_first_view.created-provider_first_assign.created))  as "Time_to_SP_Access"
-  ,'PASS' as "Residency_Test"
-  ,null as "Repeat_Contact"
   ,null as "Referral_Agencies"
-  ,null as "Complaint_Type"
-  ,null as "Complaint_Date"
-  ,null as "Complaint_Owner"
-  ,null as "Complaint_Target"
-  ,null as "Complaint_Subject"
-  ,null as "Complaint_Classification"
-  ,null as "Complaint_Outcome"
-  ,pd.contact_for_research as "Agree_Feedback"
   ,c.exempt_user_reason as "Exempt_Client"
-  ,CASE upper(adapt.language) WHEN upper('Welsh') THEN true ELSE false END as "Has_Language"
+  ,CASE upper(adapt.language) 
+    WHEN upper('Welsh') THEN true 
+    ELSE false 
+  END as "Welsh"
   ,adapt.language as "Language"
   ,log.created as "Outcome_Created_At"
-  ,u.username as "Username"
   ,c.thirdparty_details_id::bool as "Has_Third_Party"
-  ,ceil(EXTRACT(EPOCH FROM operator_first_action.created-c.created)) as "Time_to_OS_Action"
-  ,cc_org.name as organisation
+  ,cc_org.name as "Organisation"
   ,c.notes as "Notes"
   ,c.provider_notes as "Provider Notes"
+  ,adapt.notes as "Adaptation Notes"
+  ,CASE 
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('DE', 'DN', 'LE', 'LN', 'NG', 'S') THEN 'East Midlands'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('AL', 'CB', 'CM', 'CO', 'HP', 'IP', 'LU', 'NR', 'SG', 'SS') THEN 'East of England'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('BR', 'CR', 'DA', 'E', 'EC', 'EN', 'HA', 'IG', 'KT', 'N', 'NW', 'RM', 'SE', 'SM', 'SW', 'TW', 'UB', 'W', 'WC', 'WD') THEN 'Greater London'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('DH', 'DL', 'HG', 'HU', 'LS', 'NE', 'SR', 'TS', 'WF', 'YO') THEN 'North East'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('BB', 'BD', 'BL', 'CA', 'CH', 'CW', 'FY', 'HD', 'HX', 'L', 'LA', 'M', 'OL', 'PR', 'SK', 'WA', 'WN') THEN 'North West'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('BN', 'CT', 'GU', 'ME', 'MK', 'OX', 'PO', 'RG', 'RH', 'SL', 'SO', 'TN') THEN 'South East'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('BA', 'BH', 'BS', 'DT', 'EX', 'GL', 'PL', 'SN', 'SP', 'TA', 'TQ', 'TR') THEN 'South West'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('CF', 'LD', 'LL', 'NP', 'SA', 'SY') THEN 'Wales'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('B', 'CV', 'DY', 'HR', 'NN', 'ST', 'TF', 'WR', 'WS', 'WV') THEN 'West Midlands'
+    ELSE 'NA'
+  END as "Geographical_region"
   -- diversity fields --
   ,{diversity_expression} as diversity_json
 from cla_eventlog_log as log

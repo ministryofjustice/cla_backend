@@ -252,7 +252,7 @@ def download_file(request, file_name="", *args, **kwargs):
 
 @staff_member_required
 @permission_required("legalaid.run_reports")
-def mi_case_extract_extended(request):
+def case_demographic_report(request):
     return report_view(request, CaseDemographicsReport, "Case Demographic Report")
 
 

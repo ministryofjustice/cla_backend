@@ -106,12 +106,14 @@ select
   ,c.notes as "Notes"
   ,c.provider_notes as "Provider Notes"
   ,adapt.notes as "Adaptation Notes"
+  ,pd.vulnerable_user as "Vulnerable User"
   ,CASE 
-    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('DE', 'DN', 'LE', 'LN', 'NG', 'S') THEN 'East Midlands'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('DE', 'LE', 'LN', 'NG') THEN 'East Midlands'
     WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('AL', 'CB', 'CM', 'CO', 'HP', 'IP', 'LU', 'NR', 'SG', 'SS') THEN 'East of England'
     WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('BR', 'CR', 'DA', 'E', 'EC', 'EN', 'HA', 'IG', 'KT', 'N', 'NW', 'RM', 'SE', 'SM', 'SW', 'TW', 'UB', 'W', 'WC', 'WD') THEN 'Greater London'
-    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('DH', 'DL', 'HG', 'HU', 'LS', 'NE', 'SR', 'TS', 'WF', 'YO') THEN 'North East'
-    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('BB', 'BD', 'BL', 'CA', 'CH', 'CW', 'FY', 'HD', 'HX', 'L', 'LA', 'M', 'OL', 'PR', 'SK', 'WA', 'WN') THEN 'North West'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('DH', 'DL', 'NE', 'SR', 'TS') THEN 'North East'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('BB', 'BD', 'BL', 'CA', 'CH', 'CW', 'FY', 'HD', 'L', 'LA', 'M', 'OL', 'PR', 'SK', 'WA', 'WN') THEN 'North West'
+    WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('DN', 'HD', 'HG', 'HU', 'HX', 'LS', 'S', 'WF', 'YO') THEN 'Yorkshire and Humber'
     WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('BN', 'CT', 'GU', 'ME', 'MK', 'OX', 'PO', 'RG', 'RH', 'SL', 'SO', 'TN') THEN 'South East'
     WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('BA', 'BH', 'BS', 'DT', 'EX', 'GL', 'PL', 'SN', 'SP', 'TA', 'TQ', 'TR') THEN 'South West'
     WHEN TRIM('123456789' FROM SUBSTRING(pd.postcode, 1, 2)) IN ('CF', 'LD', 'LL', 'NP', 'SA', 'SY') THEN 'Wales'

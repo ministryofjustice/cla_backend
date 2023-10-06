@@ -441,6 +441,7 @@ class CaseDemographicsReport(SQLFileDateRangeReport):
             "Notes",
             "Provider Notes",
             "Adaptation Notes",
+            "Vulnerable User",
             "Geographical_region",
         ]
 

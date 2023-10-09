@@ -100,7 +100,8 @@ select
     ELSE false 
   END as "Welsh"
   ,CASE upper(adapt.language)
-    WHEN 'ENGLISH' OR 'WELSH' THEN 'English'
+    WHEN 'ENGLISH' THEN 'English'
+    WHEN 'WELSH' THEN 'ENGLISH'
     WHEN '' THEN 'Null'
     ELSE 'Non-English'
     END as "Language"

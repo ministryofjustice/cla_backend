@@ -255,23 +255,43 @@ class FilteredSearchCaseTestCase(BaseCaseTestCase):
 class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
     def test_patch_provider_notes_allowed(self):
         """
-        Test that provider can post provider notes
+        Test that provider can post provider notes up to max character limit
         """
         self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
 
+        max_character_limit = "A" * 10000
+
         response = self.client.patch(
             self.detail_url,
-            data={"provider_notes": "abc123"},
+            data={"provider_notes": max_character_limit},
             format="json",
             HTTP_AUTHORIZATION=self.get_http_authorization(),
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["provider_notes"], "abc123")
+        self.assertEqual(response.data["provider_notes"], max_character_limit)
 
         self.assertEqual(CaseNotesHistory.objects.all().count(), 1)
         case_history = CaseNotesHistory.objects.last()
-        self.assertEqual(case_history.provider_notes, "abc123")
+        self.assertEqual(case_history.provider_notes, max_character_limit)
         self.assertEqual(case_history.created_by, self.user)
+
+    def test_patch_provider_notes_not_allowed_max_limit_hit(self):
+        """
+        Test that bad request is made when user hit max character limit.
+        """
+        self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
+
+        over_max_character_limit = "A" * 10001
+
+        response = self.client.patch(
+            self.detail_url,
+            data={"provider_notes": over_max_character_limit},
+            format="json",
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertNotEqual(response.data["provider_notes"], over_max_character_limit)
+        self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
 
     def test_patch_operator_notes_not_allowed(self):
         """

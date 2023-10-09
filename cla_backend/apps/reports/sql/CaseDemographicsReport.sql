@@ -101,7 +101,7 @@ select
   END as "Welsh"
   ,CASE upper(adapt.language)
     WHEN 'ENGLISH' THEN 'English'
-    WHEN 'WELSH' THEN 'ENGLISH'
+    WHEN 'WELSH' THEN 'English'
     WHEN '' THEN 'Null'
     ELSE 'Non-English'
     END as "Language"
@@ -154,4 +154,3 @@ where
   log.type = 'outcome'
   and log.created >= %s
   and log.created < %s
-GROUP BY "Geographical_region"

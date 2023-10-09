@@ -99,7 +99,11 @@ select
     WHEN upper('Welsh') THEN true 
     ELSE false 
   END as "Welsh"
-  ,adapt.language as "Language"
+  ,CASE upper(adapt.language)
+    WHEN 'ENGLISH' OR 'WELSH' THEN 'English'
+    WHEN '' THEN 'Null'
+    ELSE 'Non-English'
+    END as "Language"
   ,log.created as "Outcome_Created_At"
   ,c.thirdparty_details_id::bool as "Has_Third_Party"
   ,cc_org.name as "Organisation"
@@ -149,3 +153,4 @@ where
   log.type = 'outcome'
   and log.created >= %s
   and log.created < %s
+GROUP BY "Geographical_region"

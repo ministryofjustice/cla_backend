@@ -372,7 +372,7 @@ class CaseSerializerBase(PartialUpdateExcludeReadonlySerializerMixin, ClaModelSe
     diagnosis = UUIDSerializer(slug_field="reference", required=False, read_only=True)
     personal_details = PersonalDetailsSerializerBase()
     notes = serializers.CharField(max_length=10000, required=False, allow_blank=True)
-    provider_notes = serializers.CharField(max_length=5000, required=False, allow_blank=True)
+    provider_notes = serializers.CharField(max_length=10000, required=False, allow_blank=True)
     matter_type1 = serializers.SlugRelatedField(
         slug_field="code",
         required=False,

@@ -259,7 +259,7 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
         """
         self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
 
-        max_character_limit = "A" * 10000
+        max_character_limit = "A" * CaseSerializer.provider_notes.max_length
 
         response = self.client.patch(
             self.detail_url,
@@ -281,7 +281,7 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
         """
         self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
 
-        over_max_character_limit = "A" * 10001
+        over_max_character_limit = "A" * CaseSerializer.provider_notes.max_length + 1
 
         response = self.client.patch(
             self.detail_url,

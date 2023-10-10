@@ -257,19 +257,43 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
 
     def test_patch_operator_notes_allowed(self):
         """
-        Test that provider cannot post provider notes
+        Test that operator can post provider notes at max limit
         """
         self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
+
+        max_character_limit = "A" * 10000
+
         response = self.client.patch(
-            self.detail_url, data={"notes": "abc123"}, format="json", HTTP_AUTHORIZATION=self.get_http_authorization()
+            self.detail_url,
+            data={"notes": max_character_limit},
+            format="json",
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["notes"], "abc123")
+        self.assertEqual(response.data["notes"], max_character_limit)
 
         self.assertEqual(CaseNotesHistory.objects.all().count(), 1)
         case_history = CaseNotesHistory.objects.last()
-        self.assertEqual(case_history.operator_notes, "abc123")
+        self.assertEqual(case_history.operator_notes, max_character_limit)
         self.assertEqual(case_history.created_by, self.user)
+
+    def test_patch_operator_notes_not_allowed_max_limit_hit(self):
+        """
+        Test that a bad request is made when user is over max character limit.
+        """
+        self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
+
+        over_max_character_limit = "A" * 10001
+
+        response = self.client.patch(
+            self.detail_url,
+            data={"notes": over_max_character_limit},
+            format="json",
+            HTTP_AUTHORIZATION=self.get_http_authorization(),
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertNotEqual(response.data["notes"], over_max_character_limit)
+        self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
 
     def test_patch_provider_notes_not_allowed(self):
         """

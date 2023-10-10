@@ -277,7 +277,7 @@ class UpdateCaseTestCase(BaseUpdateCaseTestCase, BaseCaseTestCase):
 
     def test_patch_provider_notes_not_allowed_max_limit_hit(self):
         """
-        Test that bad request is made when user hit max character limit.
+        Test that a bad request is made when user is over max character limit.
         """
         self.assertEqual(CaseNotesHistory.objects.all().count(), 0)
 

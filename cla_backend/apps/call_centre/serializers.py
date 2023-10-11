@@ -239,7 +239,7 @@ class LogSerializer(LogSerializerBase):
 
 
 class CaseSerializer(CaseSerializerFull):
-    provider_notes = serializers.CharField(max_length=5000, required=False, read_only=True)
+    provider_notes = serializers.CharField(max_length=10000, required=False, read_only=True)
     organisation = serializers.PrimaryKeyRelatedField(required=False, read_only=True)
     organisation_name = serializers.SerializerMethodField()
     billable_time = serializers.IntegerField(read_only=True)

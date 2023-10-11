@@ -3,17 +3,21 @@ import datetime
 import os
 import shutil
 import tempfile
+import unittest
 
 from django.test import TestCase
 from psycopg2 import InternalError
+from freezegun import freeze_time
 
 from cla_common.constants import CONTACT_SAFETY
-from core.tests.mommy_utils import make_recipe
+from core.tests.mommy_utils import make_recipe, make_user
 from legalaid.utils.diversity import save_diversity_data
 import reports.forms
 from reports.utils import OBIEEExporter
-
+from cla_eventlog import event_registry
 from cla_auditlog.models import AuditLog
+from cla_provider.helpers import ProviderAllocationHelper
+from call_centre.forms import ProviderAllocationForm
 
 
 class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
@@ -306,3 +310,60 @@ class TestKnowledgeBaseArticlesExport(TestCase):
         self.assertEqual(output[2][19:25], ["", "789", "", "", "", ""])
         # category name; article is not preferred signpost; second category name; article is preferred signpost; no third category
         self.assertEqual(output[1][27:33], ["a category", False, "another category", True, "", ""])
+
+
+class MiCaseExtractTestCase(TestCase):
+    dt = datetime.datetime(year=2020, month=4, day=1, hour=13)
+
+    def get_report(self, date_from, date_to):
+        report = reports.forms.MICaseExtract(data={"date_from": date_from, "date_to": date_to})
+        self.assertTrue(report.is_valid())
+        row = next(report.get_rows())
+        headers = report.get_headers()
+
+        return {k: v for k, v in zip(headers, row)}
+
+    # Remove expected failure once logic for Time_to_SP_Access is working as expected
+    # https://dsdmoj.atlassian.net/browse/LGA-1697
+    @unittest.expectedFailure
+    @freeze_time(dt, as_arg=True)
+    def test_time_to_sp_access(freezer, self):
+
+        # Case created on a Thursday
+        case = make_recipe("legalaid.case")
+        category = case.eligibility_check.category
+        case.matter_type1 = make_recipe("legalaid.matter_type1", category=category)
+        case.matter_type2 = make_recipe("legalaid.matter_type2", category=category)
+        case.save()
+        user = make_user()
+        provider = make_recipe("cla_provider.provider", active=True)
+        staff = make_recipe("cla_provider.staff", provider=provider)
+        make_recipe(
+            "cla_provider.provider_allocation", weighted_distribution=0.5, provider=provider, category=category
+        )
+
+        # Case assigned to provider on a Thursday
+        helper = ProviderAllocationHelper()
+        form = ProviderAllocationForm(
+            case=case,
+            data={"provider": helper.get_suggested_provider(category).pk},
+            providers=helper.get_qualifying_providers(category),
+        )
+
+        self.assertTrue(form.is_valid())
+        form.save(user)
+
+        # Case viewed by a provider on Tuesday
+        freezer.tick(datetime.timedelta(days=5))
+        event = event_registry.get_event("case")()
+        event.process(case, status="viewed", created_by=staff.user, notes="Case viewed")
+
+        report = self.get_report(self.dt, freezer.time_to_freeze)
+        # 2021-04-01 case was created and assigned to provider
+        # 2021-04-02 was a bank holiday
+        # 2021-04-03-2021-04-04 are weekends
+        # 2021-04-05 was a bank holiday
+        # 2021-04-06 was the start of the working week
+        # So only one working day has elapsed from when the provider was assigned the case to when they first saw it
+        expected_days_in_seconds = 86400
+        self.assertEqual(report["Time_to_SP_Access"], expected_days_in_seconds)

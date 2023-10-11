@@ -43,4 +43,5 @@ urlpatterns = patterns(
     url(r"^metrics-report/$", views.metrics_report, name="metrics_report"),
     url(r"^all-knowledgebase-articles/$", views.all_knowledgebase_articles, name="all_knowledgebase_articles"),
     url(r"^reasons-for-contacting/$", views.reasons_for_contacting, name="reasons_for_contacting"),
+    url(r"^case-demographic-report/$", views.case_demographic_report, name="case_demographic_report"),
 )

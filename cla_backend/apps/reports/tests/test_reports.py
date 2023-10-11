@@ -33,7 +33,7 @@ class ReportsSQLColumnsMatchHeadersTestCase(TestCase):
                 inst.get_queryset()
                 len_desc = len(inst.description)
                 len_headers = len(inst.get_headers())
-                if inst.__class__.__name__ in ["MICaseExtract", "MICaseExtractExtended"]:
+                if inst.__class__.__name__ in ["MICaseExtract", "MICaseExtractExtended", "CaseDemographicsReport"]:
                     # this is due to getting multiple fields as 1 json field in sql
                     len_headers = len_headers - 3
                 self.assertEqual(

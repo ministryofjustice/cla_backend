@@ -74,7 +74,7 @@ class ReasonForContacting(TimeStampedModel):
             category["without_cases"] = (
                 categories_without_cases[category["key"]] if category["key"] in categories_without_cases else 0
             )
-            category["percentage"] = category["count"] * percentage_total
+            category["percentage"] = round(category["count"] * percentage_total, 2)
         return dict(categories=categories, total_count=reasons_for_contacting_count)
 
     @classmethod

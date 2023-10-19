@@ -842,10 +842,10 @@ class ReasonsForContactingReport(DateRangeReportForm):
 
     def get_rows(self):
         for reason in self.get_data_set():
-            yield [reason["description"], reason["percentage"]]
+            yield [reason["description"], reason["percentage"], reason["count"], reason["with_cases"], reason["without_cases"]]
 
     def get_headers(self):
-        return ["Description", "Percentage"]
+        return ["Description", "Percentage", "Count", "With cases", "Without cases"]
 
 
 class AllKnowledgeBaseArticles(ReportForm):

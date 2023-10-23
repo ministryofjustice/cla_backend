@@ -1,4 +1,4 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ .Release.Name }}-house-keeping
@@ -18,7 +18,7 @@ spec:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
           restartPolicy: OnFailure
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ .Release.Name }}-missing-codes
@@ -38,7 +38,7 @@ spec:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
           restartPolicy: OnFailure
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ .Release.Name }}-mi-cb1-report
@@ -58,7 +58,7 @@ spec:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
           restartPolicy: OnFailure
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ .Release.Name }}-delete-unused-cases
@@ -78,7 +78,7 @@ spec:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
           restartPolicy: OnFailure
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ .Release.Name }}-fix-outcome-codes

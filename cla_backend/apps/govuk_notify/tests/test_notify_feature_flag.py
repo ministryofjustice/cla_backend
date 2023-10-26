@@ -1,6 +1,5 @@
 from cla_backend.apps.govuk_notify.api import GovUkNotify, NotifyEmailOrchestrator
 from django.test import TestCase, override_settings
-from cla_backend import settings
 
 
 class TestNotifyFeatureFlagEnabled(TestCase):
@@ -11,6 +10,7 @@ class TestNotifyFeatureFlagEnabled(TestCase):
         client = GovUkNotify()
         assert isinstance(client, NotifyEmailOrchestrator)
         assert not isinstance(client, GovUkNotify)
+
 
 class TestNotifyFeatureFlagDisabled(TestCase):
 

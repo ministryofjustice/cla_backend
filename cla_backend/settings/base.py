@@ -462,6 +462,10 @@ PASSIVE_URL_REGEX_LIST = [r"^(?!\/admin\/).*", r"^(\/admin\/).*\/exports/$"]
 
 SESSION_SECURITY_PASSIVE_URLS = []
 
+EMAIL_ORCHESTRATOR_URL = os.environ.get("EMAIL_ORCHESTRATOR_URL", "Not set")
+
+USE_EMAIL_ORCHESTRATOR_FLAG = os.environ.get("EMAIL_ORCHESTRATOR_FLAG", "False") == "True"
+
 # .local.py overrides all the common settings.
 try:
     from .local import *

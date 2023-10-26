@@ -5,7 +5,7 @@ from django.test import TestCase, override_settings
 class TestNotifyFeatureFlagEnabled(TestCase):
 
     @override_settings(USE_EMAIL_ORCHESTRATOR_FLAG=True)
-    @override_settings(EMAIL_ORCHESTRATOR_URL="http://a-url.com")
+    @override_settings(EMAIL_ORCHESTRATOR_URL="https://a-url.com")
     def test_feature_flag_enabled(self):
         client = GovUkNotify()
         assert isinstance(client, NotifyEmailOrchestrator)
@@ -15,7 +15,7 @@ class TestNotifyFeatureFlagEnabled(TestCase):
 class TestNotifyFeatureFlagDisabled(TestCase):
 
     @override_settings(USE_EMAIL_ORCHESTRATOR_FLAG=False)
-    @override_settings(EMAIL_ORCHESTRATOR_URL="http://a-url.com")
+    @override_settings(EMAIL_ORCHESTRATOR_URL="https://a-url.com")
     def test_feature_flag_disabled(self):
         client = GovUkNotify()
         assert isinstance(client, GovUkNotify)

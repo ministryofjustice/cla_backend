@@ -38,7 +38,7 @@ class GovUkNotify(object):
         except HTTPError as error:
             logger.error("GovUkNotify error: {msg}".format(msg=str(error)))
             raise error
-        
+
 
 class NotifyEmailOrchestrator(object):
     def __init__(self):
@@ -51,7 +51,7 @@ class NotifyEmailOrchestrator(object):
         base_url = self.base_url if self.base_url.endswith("/") else self.base_url + "/"
 
         return base_url + self.endpoint
-    
+
     def send_email(self, email_address, template_id, personalisation=None):
         data = {
             'email_address': email_address,

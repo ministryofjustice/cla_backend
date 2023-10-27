@@ -462,7 +462,7 @@ PASSIVE_URL_REGEX_LIST = [r"^(?!\/admin\/).*", r"^(\/admin\/).*\/exports/$"]
 
 SESSION_SECURITY_PASSIVE_URLS = []
 
-EMAIL_ORCHESTRATOR_URL = os.environ.get("EMAIL_ORCHESTRATOR_URL", "Not set")
+EMAIL_ORCHESTRATOR_URL = os.environ.get("EMAIL_ORCHESTRATOR_URL")
 
 USE_EMAIL_ORCHESTRATOR_FLAG = os.environ.get("USE_EMAIL_ORCHESTRATOR_FLAG", "False") == "True"
 

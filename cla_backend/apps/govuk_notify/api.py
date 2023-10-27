@@ -1,9 +1,8 @@
 import logging
 from notifications_python_client.notifications import NotificationsAPIClient
 from notifications_python_client.errors import HTTPError
-import requests
-
 from django.conf import settings
+import requests
 
 
 logger = logging.getLogger(__name__)
@@ -43,7 +42,8 @@ class GovUkNotify(object):
 class NotifyEmailOrchestrator(object):
     def __init__(self):
         if not settings.EMAIL_ORCHESTRATOR_URL:
-            raise EnvironmentError("EMAIL_ORCHESTRATOR_URL is not set.")
+            if not settings.TEST_MODE and not settings.DEBUG:
+                raise EnvironmentError("EMAIL_ORCHESTRATOR_URL is not set.")
         self.base_url = settings.EMAIL_ORCHESTRATOR_URL
         self.endpoint = "email"
 
@@ -53,6 +53,8 @@ class NotifyEmailOrchestrator(object):
         return base_url + self.endpoint
 
     def send_email(self, email_address, template_id, personalisation=None):
+        if not self.base_url:
+            return
         data = {
             'email_address': email_address,
             'template_id': template_id,
@@ -60,7 +62,7 @@ class NotifyEmailOrchestrator(object):
         if personalisation:
             data["personalisation"] = personalisation
 
-        response = requests.post(self.url(), data)
+        response = requests.post(self.url(), json=data)
 
         if response.status_code != 201:
             raise HTTPError(response)

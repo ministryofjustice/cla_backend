@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CLA Backend\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-08 10:57+0100\n"
+"POT-Creation-Date: 2023-11-02 08:35+0000\n"
 "PO-Revision-Date: 2016-04-12 15:07+0000\n"
 "Last-Translator: Welsh Language Unit <welsh.language.unit.manager@hmcts.gsi.gov.uk>\n"
 "Language-Team: Welsh (http://www.transifex.com/ministry-of-justice/cla-backend/language/cy/)\n"
@@ -14,89 +14,6 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;\n"
 "X-Language: cy\n"
 "X-Source-Language: en_GB\n"
-
-#: apps/call_centre/forms.py:61
-msgid "There is no provider specified in the system to handle cases of this law category."
-msgstr "Nid oes darparwr penodol ar y system i ddelio ag achosion yn y categori hwn o'r gyfraith."
-
-#: apps/call_centre/forms.py:69
-#, python-brace-format
-msgid "Category of matter type 1: {category1} must match category of matter type 2: {category2}"
-msgstr "Categori mater math 1: rhaid i {category1} gyd-fynd â chategori mater math 2: {category2}"
-
-#: apps/call_centre/forms.py:83
-#, python-brace-format
-msgid "Category of Matter Types: {category1}, {category2} must match category of case: {case_category}"
-msgstr "Categori mathau o faterion: rhaid i {category1} a {category2} gyd-fynd â chategori'r achos: {case_category}"
-
-#: apps/cla_provider/models.py:167
-#, python-brace-format
-msgid "Provider {provider} doesn't offer help for {category}"
-msgstr "Nid yw'r darparwr {provider} yn cynnig help ar gyfer {category}"
-
-#: apps/cla_provider/models.py:179
-msgid "Overlapping rota allocation not allowed"
-msgstr "Ni chaniateir dyrannu rota sy'n gwrthdaro"
-
-#: apps/core/admin/fields.py:52
-msgid "One or more tags not allowed. Allowed tags: "
-msgstr "Ni chaniateir un neu fwy o dagiau. Tagiau a ganiateir: "
-
-#: apps/core/admin/forms.py:10
-msgid "A user with that username already exists."
-msgstr "Mae defnyddiwr gyda'r enw defnyddiwr hwn yn bodoli'n barod."
-
-#: apps/core/admin/forms.py:11
-msgid "The two password fields didn't match."
-msgstr "Nid oedd y ddau faes cyfrinair yr un fath."
-
-#: apps/core/admin/forms.py:14
-msgid "Username"
-msgstr "Enw defnyddiwr"
-
-#: apps/core/admin/forms.py:17
-msgid "Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only."
-msgstr "Gofynnol. 30 nod neu lai. Llythrennau, rhifau a @/./+/-/_ yn unig."
-
-#: apps/core/admin/forms.py:18
-msgid "This value may contain only letters, numbers and @/./+/-/_ characters."
-msgstr "Dim ond llythrennau, rhifau a nodau @/./+/-/_ y gellir eu cynnwys yn y gwerth hwn."
-
-#: apps/core/admin/forms.py:24 apps/core/admin/forms.py:28
-#: apps/core/admin/forms.py:37 apps/core/forms.py:12
-msgid "Password"
-msgstr "Cyfrinair"
-
-#: apps/core/admin/forms.py:25 apps/core/admin/forms.py:30
-#: apps/core/admin/forms.py:44
-msgid "Password confirmation"
-msgstr "Cadarnhau'r cyfrinair"
-
-#: apps/core/admin/forms.py:32
-msgid "Enter the same password as above, for verification."
-msgstr "Rhowch yr un cyfrinair ag uchod, er mwyn ei wirio."
-
-#: apps/core/admin/forms.py:39
-msgid "Raw passwords are not stored, so there is no way to see this user's password, but you can change the password using <a href=\"password/\">this form</a>."
-msgstr "Nid yw cyfrineiriau crai yn cael eu storio, felly nid oes modd gweld cyfrinair y defnyddiwr hwn, ond gallwch newid y cyfrinair gan ddefnyddio <a href=\"password/\"> y ffurflen hon </a>."
-
-#: apps/core/admin/modeladmin.py:84
-msgid "Account unlocked successfully."
-msgstr "Mae'r cyfrif wedi'i ddatgloi yn llwyddiannus."
-
-#: apps/core/admin/modeladmin.py:100
-msgid "Password changed successfully."
-msgstr "Newidiwyd y cyfrinair yn llwyddiannus."
-
-#: apps/core/admin/modeladmin.py:110
-#, python-format
-msgid "Change password: %s"
-msgstr "Newid cyfrinair: %s"
-
-#. Translators: '{ "day": 25, "month": 12, "year": 2012 }' should be left in as-is
-#: apps/core/drf/fields.py:27
-msgid "Date field has wrong format. Use { \"day\": 25, \"month\": 12, \"year\": 2012 }"
-msgstr "Mae fformat anghywir yn y maes dyddiad. Defnyddiwch { \"day\": 25, \"month\": 12, \"year\": 2012 }"
 
 #: apps/diagnosis/data/checker-graph.graphml.tpl:48
 #: apps/diagnosis/data/graph.graphml.tpl:1551
@@ -2300,14 +2217,6 @@ msgstr ""
 msgid "Any other person seeking a Special Guardianship Order, or seeking to discharge an order"
 msgstr ""
 
-#: apps/timer/models.py:54
-msgid "created"
-msgstr ""
-
-#: apps/timer/models.py:55
-msgid "modified"
-msgstr ""
-
 #: templates/admin/base_site.html:9
 msgid "Django site admin"
 msgstr "Adran weinyddol safle Django"
@@ -2365,6 +2274,67 @@ msgstr "Hafan"
 #: templates/admin/reports/base.html:42
 msgid "Reports"
 msgstr "Adroddiadau"
+
+#~ msgid "There is no provider specified in the system to handle cases of this law category."
+#~ msgstr "Nid oes darparwr penodol ar y system i ddelio ag achosion yn y categori hwn o'r gyfraith."
+
+#, python-brace-format
+#~ msgid "Category of matter type 1: {category1} must match category of matter type 2: {category2}"
+#~ msgstr "Categori mater math 1: rhaid i {category1} gyd-fynd â chategori mater math 2: {category2}"
+
+#, python-brace-format
+#~ msgid "Category of Matter Types: {category1}, {category2} must match category of case: {case_category}"
+#~ msgstr "Categori mathau o faterion: rhaid i {category1} a {category2} gyd-fynd â chategori'r achos: {case_category}"
+
+#, python-brace-format
+#~ msgid "Provider {provider} doesn't offer help for {category}"
+#~ msgstr "Nid yw'r darparwr {provider} yn cynnig help ar gyfer {category}"
+
+#~ msgid "Overlapping rota allocation not allowed"
+#~ msgstr "Ni chaniateir dyrannu rota sy'n gwrthdaro"
+
+#~ msgid "One or more tags not allowed. Allowed tags: "
+#~ msgstr "Ni chaniateir un neu fwy o dagiau. Tagiau a ganiateir: "
+
+#~ msgid "A user with that username already exists."
+#~ msgstr "Mae defnyddiwr gyda'r enw defnyddiwr hwn yn bodoli'n barod."
+
+#~ msgid "The two password fields didn't match."
+#~ msgstr "Nid oedd y ddau faes cyfrinair yr un fath."
+
+#~ msgid "Username"
+#~ msgstr "Enw defnyddiwr"
+
+#~ msgid "Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only."
+#~ msgstr "Gofynnol. 30 nod neu lai. Llythrennau, rhifau a @/./+/-/_ yn unig."
+
+#~ msgid "This value may contain only letters, numbers and @/./+/-/_ characters."
+#~ msgstr "Dim ond llythrennau, rhifau a nodau @/./+/-/_ y gellir eu cynnwys yn y gwerth hwn."
+
+#~ msgid "Password"
+#~ msgstr "Cyfrinair"
+
+#~ msgid "Password confirmation"
+#~ msgstr "Cadarnhau'r cyfrinair"
+
+#~ msgid "Enter the same password as above, for verification."
+#~ msgstr "Rhowch yr un cyfrinair ag uchod, er mwyn ei wirio."
+
+#~ msgid "Raw passwords are not stored, so there is no way to see this user's password, but you can change the password using <a href=\"password/\">this form</a>."
+#~ msgstr "Nid yw cyfrineiriau crai yn cael eu storio, felly nid oes modd gweld cyfrinair y defnyddiwr hwn, ond gallwch newid y cyfrinair gan ddefnyddio <a href=\"password/\"> y ffurflen hon </a>."
+
+#~ msgid "Account unlocked successfully."
+#~ msgstr "Mae'r cyfrif wedi'i ddatgloi yn llwyddiannus."
+
+#~ msgid "Password changed successfully."
+#~ msgstr "Newidiwyd y cyfrinair yn llwyddiannus."
+
+#, python-format
+#~ msgid "Change password: %s"
+#~ msgstr "Newid cyfrinair: %s"
+
+#~ msgid "Date field has wrong format. Use { \"day\": 25, \"month\": 12, \"year\": 2012 }"
+#~ msgstr "Mae fformat anghywir yn y maes dyddiad. Defnyddiwch { \"day\": 25, \"month\": 12, \"year\": 2012 }"
 
 #~ msgid "Can't assign to specialist provider without setting matter_type1 and matter_type2"
 #~ msgstr "Ni ellir aseinio i ddarparwr arbenigol heb nodi matter_type1 a matter_type2"

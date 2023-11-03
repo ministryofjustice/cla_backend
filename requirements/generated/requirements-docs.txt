@@ -227,7 +227,7 @@ typing==3.10.0.0
     # via
     #   pathlib2
     #   sphinx
-urllib3==1.26.14
+urllib3==1.26.17
     # via
     #   botocore
     #   requests

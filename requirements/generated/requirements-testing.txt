@@ -43,7 +43,7 @@ coverage==4.5.4
     #   coveralls
 coveralls==1.8.2
     # via -r requirements/source/requirements-testing.in
-cryptography==3.3.2
+cryptography==41.0.4
     # via
     #   pyopenssl
     #   urllib3

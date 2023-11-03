@@ -68,7 +68,8 @@ class Command(LabelCommand):
         # internationalise all graphml files
         graphml_paths = [("data", settings.DIAGNOSIS_FILE_NAME), ("data", settings.CHECKER_DIAGNOSIS_FILE_NAME)]
         graphml_files = map(graphml_file_map, graphml_paths)
-        call_command("internationalise_graphs", *graphml_files, **self.standard_options)
+        for i in graphml_files:
+            call_command("internationalise_graphs", i, **self.standard_options)
 
         # make and compile messages
         self._messages()

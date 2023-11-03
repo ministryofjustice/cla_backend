@@ -3212,7 +3212,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 	<category xml:space="preserve">immigration</category>
 </context>
       </data>
-      <data key="d10" xml:space="preserve"><![CDATA[n190]]></data>
+      <data key="d10" xml:space="preserve"><![CDATA[n189]]></data>
       <data key="d11" xml:space="preserve"/>
       <data key="d13">
         <y:ShapeNode>
@@ -3228,7 +3228,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
       <data key="d3" xml:space="preserve"><![CDATA[The client is losing their home due to the Border Force refusing to support them or withdrawing their support]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Client is losing hom]]></data>
       <data key="d7" xml:space="preserve">1</data>
-      <data key="d10" xml:space="preserve"><![CDATA[n191]]></data>
+      <data key="d10" xml:space="preserve"><![CDATA[n421]]></data>
       <data key="d11" xml:space="preserve"/>
       <data key="d13">
         <y:ShapeNode>
@@ -3248,7 +3248,7 @@ Generally, only cases that relate to infants with a brain injury are in scope fo
 	<category xml:space="preserve">housing</category>
 </context>
       </data>
-      <data key="d10" xml:space="preserve"><![CDATA[n192]]></data>
+      <data key="d10" xml:space="preserve"><![CDATA[N422]]></data>
       <data key="d11" xml:space="preserve"/>
       <data key="d13">
         <y:ShapeNode>
@@ -5329,6 +5329,7 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Public Law]]></data>
       <data key="d7" xml:space="preserve">11</data>
       <data key="d10" xml:space="preserve"><![CDATA[n303]]></data>
+      <data key="d11" xml:space="preserve"/>
       <data key="d13">
         <y:ShapeNode>
           <y:Geometry height="30.0" width="150.0" x="10244.070634920636" y="471.0"/>
@@ -6443,7 +6444,7 @@ No financial assessment is required.]]></data>
     <node id="n355">
       <data key="d3" xml:space="preserve"><![CDATA[The client came to CLA through any other route]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Client not subject t]]></data>
-      <data key="d10" xml:space="preserve"><![CDATA[n189]]></data>
+      <data key="d10" xml:space="preserve"><![CDATA[n188]]></data>
       <data key="d11" xml:space="preserve"/>
       <data key="d13">
         <y:ShapeNode>
@@ -6460,45 +6461,37 @@ No financial assessment is required.]]></data>
 
 *Based on the information you have provided the issue you are calling about isn’t something CLA can provide advice on. However we can provide alternative contact details of organisations who may be able to assist you.
 
-We can provide helplines, websites or a Legal Aid provider  outside of the South West of England who may be able to assist you over the telephone. However please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
+We can provide helplines, websites or a Legal Aid provider outside of the South West of England who may be able to assist you over the telephone. However please be aware that you may have to pay for that service. Do you have any preference on the alternative help we provide today?
 
 [Discussion on best options, paid v free, website calls, national services, local services, read from websites etc. Give details of organisations.
 
 Remember to record details of the conversation in your CHS notes.]*]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Public Law]]></data>
       <data key="d7" xml:space="preserve">11</data>
-      <data key="d10" xml:space="preserve"><![CDATA[n361]]></data>
+      <data key="d10" xml:space="preserve"><![CDATA[n351]]></data>
       <data key="d11" xml:space="preserve"/>
       <data key="d13">
         <y:ShapeNode>
-          <y:Geometry height="30.0" width="82.88755391963423" x="11121.17145217765" y="501.0"/>
+          <y:Geometry height="30.0" width="82.88755391963423" x="11087.615229137467" y="531.0"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="dashed" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="249.876953125" x="-83.49469960268289" xml:space="preserve" y="5.93359375">NON CLA Disclaimer With Knowledge Base<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="191.078125" x="-54.095285540182886" xml:space="preserve" y="5.93359375">NON CLA Disclaimer South West<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
     </node>
     <node id="n357">
-      <data key="d3" xml:space="preserve"><![CDATA[The client was referred to CLA by a provider or agency in the South West of England who could not assist them (South West of England consists of the counties of Cornwall (including the Isles of Scilly), Dorset, Devon, Gloucestershire, Somerset and Wiltshire)]]></data>
+      <data key="d3" xml:space="preserve"><![CDATA[The client was referred to CLA by a provider or agency in the South West of England who could not assist them]]></data>
       <data key="d4" xml:space="preserve"><![CDATA[Client not subject t]]></data>
-      <data key="d10" xml:space="preserve"><![CDATA[n188
-]]></data>
+      <data key="d8" xml:space="preserve"><![CDATA[South West of England consists of the counties of Cornwall (including the Isles of Scilly), Dorset, Devon, Gloucestershire, Somerset and Wiltshire]]></data>
+      <data key="d10" xml:space="preserve"><![CDATA[n190]]></data>
       <data key="d11" xml:space="preserve"/>
       <data key="d13">
         <y:ShapeNode>
-          <y:Geometry height="30.0" width="150.0" x="11054.059006097285" y="349.1570513666987"/>
+          <y:Geometry height="30.0" width="64.66574267079886" x="11134.739149579038" y="349.1570513666987"/>
           <y:Fill color="#CCFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="169.416015625" x="-9.7080078125" xml:space="preserve" y="5.93359375">South West Could Not Assist<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="114.14711749342132" y="11.773299088855424">
-            <y:LabelModel>
-              <y:SmartNodeLabelModel distance="4.0"/>
-            </y:LabelModel>
-            <y:ModelParameter>
-              <y:SmartNodeLabelModelParameter labelRatioX="0.5" labelRatioY="0.0" nodeRatioX="0.2876474499561421" nodeRatioY="-0.040890030371485864" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
-            </y:ModelParameter>
-          </y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="68.5703125" x="-1.9522849145996588" xml:space="preserve" y="5.93359375">South West<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -12224,7 +12217,7 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e478" source="n179" target="n355">
+    <edge id="e478" source="n355" target="n293">
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12234,7 +12227,7 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e479" source="n179" target="n357">
+    <edge id="e479" source="n293" target="n180">
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12244,7 +12237,7 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e480" source="n355" target="n293">
+    <edge id="e480" source="n356" target="n180">
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12254,7 +12247,8 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e481" source="n357" target="n356">
+    <edge id="e481" source="n179" target="n355">
+      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12264,7 +12258,8 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e482" source="n356" target="n180">
+    <edge id="e482" source="n179" target="n357">
+      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -12274,7 +12269,8 @@ Remember to record details of the conversation in your CHS notes.]*]]></data>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e483" source="n293" target="n180">
+    <edge id="e483" source="n357" target="n356">
+      <data key="d16"/>
       <data key="d17">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

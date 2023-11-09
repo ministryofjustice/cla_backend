@@ -98,3 +98,22 @@ spec:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
           restartPolicy: OnFailure
 ---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-remove-expired-reports
+  labels:
+    {{- include "cla-backend.labels" . | nindent 4 }}
+spec:
+  schedule: "0 5 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: remove-expired-reports
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            command: ["python", "manage.py", "remove_expired_reports"]
+            env:
+              {{ include "cla-backend.app.vars" . | nindent 12 }}
+          restartPolicy: OnFailure

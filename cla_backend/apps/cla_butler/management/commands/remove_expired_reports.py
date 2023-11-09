@@ -1,11 +1,10 @@
 # coding=utf-8
 import logging
 from django.core.management.base import BaseCommand
-
 from reports.models import Export
+from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 
-
-MAX_REPORT_AGE_DAYS = 730
 
 logger = logging.getLogger(__name__)
 
@@ -16,17 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.remove_expired_reports()
 
-
     @staticmethod
     def remove_expired_reports():
-
-        # Loop through local database to get m1 report name / time.
-        for report in Export.objects.all():
-            print(report.path)
-        # Take name / time and search s3 bucket to see if it exists.
-        # If yes:
-            # Check age:
-                # If old than two years old: Delete
-        # If no:
-            # Clean up
-        
+        for report in Export.objects.filter(created__gte=timezone.now() - relativedelta(years=2)):
+            report.delete()

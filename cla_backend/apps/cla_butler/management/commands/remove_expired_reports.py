@@ -17,5 +17,5 @@ class Command(BaseCommand):
 
     @staticmethod
     def remove_expired_reports():
-        for report in Export.objects.filter(created__gte=timezone.now() - relativedelta(years=2)):
+        for report in Export.objects.filter(created__lte=timezone.now() - relativedelta(years=2)):
             report.delete()

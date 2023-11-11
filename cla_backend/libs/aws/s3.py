@@ -44,7 +44,3 @@ class ReportsS3:
     @classmethod
     def save_data_to_bucket(cls, bucket_name, key, content):
         cls.get_s3_connection(bucket_name).bucket.Object(key).put(Body=content)
-
-    @classmethod
-    def get_last_modified_time(cls, bucket_name, key):
-        cls.get_s3_connection(bucket_name).get_modified_time(key)

@@ -98,6 +98,7 @@ spec:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
           restartPolicy: OnFailure
 ---
+# Removes all extract reports that were created over two years ago.
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -105,7 +106,7 @@ metadata:
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}
 spec:
-  schedule: "0 0 * * *"
+  schedule: "0 0 * * *"  # Every day at midnight
   jobTemplate:
     spec:
       template:

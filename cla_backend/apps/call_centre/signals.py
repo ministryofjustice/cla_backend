@@ -3,7 +3,7 @@ import logging
 from django.conf import settings
 from django.utils.timezone import now, localtime
 from django.utils.formats import date_format
-from govuk_notify.api import GovUkNotify
+from govuk_notify.api import NotifyEmailOrchestrator
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ def log_operator_action(action, instance):
         },
     )
 
-    email = GovUkNotify()
+    email = NotifyEmailOrchestrator()
     for address in settings.OPERATOR_USER_ALERT_EMAILS:
         email.send_email(
             email_address=address,

@@ -842,10 +842,40 @@ class ReasonsForContactingReport(DateRangeReportForm):
 
     def get_rows(self):
         for reason in self.get_data_set():
-            yield [reason["description"], reason["percentage"], reason["count"], reason["with_cases"], reason["without_cases"]]
+            yield [
+                reason["description"],
+                reason["percentage"],
+                reason["count"],
+                reason["with_cases"],
+                reason["without_cases"],
+            ]
 
     def get_headers(self):
         return ["Description", "Percentage", "Count", "With cases", "Without cases"]
+
+
+class ReasonsForContactingDisaggregated(SQLFileDateRangeReport):
+    QUERY_FILE = "ReasonsForContactingReportDisaggregated.sql"
+
+    def get_sql_params(self):
+        from_date, to_date = self.date_range
+        return {"from_date": from_date, "to_date": to_date}
+
+    def get_headers(self):
+        return [
+            "RFC ID",
+            "Case ID",
+            "Contact Option",
+            "Contact Reason/s",
+            "Problem Notes",
+            "BSL or Webcam",
+            "Minicom",
+            "Text Relay",
+            "Skype/Webcam",
+            "Language",
+            "Other Communication Needs",
+            "RFC Date",
+        ]
 
 
 class AllKnowledgeBaseArticles(ReportForm):

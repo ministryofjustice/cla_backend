@@ -5,7 +5,7 @@ from django.utils.timezone import now, localtime
 from django.utils.formats import date_format
 from django.conf import settings
 from core.tests.mommy_utils import make_recipe
-from govuk_notify.api import GovUkNotify
+from govuk_notify.api import NotifyEmailOrchestrator
 
 from cla_provider.helpers import notify_case_assigned, notify_case_RDSPed
 
@@ -14,7 +14,7 @@ class MockGovNotifyMailBox(object):
     def setUp(self):
         super(MockGovNotifyMailBox, self).setUp()
         self.mailbox = []
-        self.mock_send_email = mock.patch.object(GovUkNotify, "send_email", self.send_email)
+        self.mock_send_email = mock.patch.object(NotifyEmailOrchestrator, "send_email", self.send_email)
         self.mock_send_email.start()
 
     def tearDown(self):

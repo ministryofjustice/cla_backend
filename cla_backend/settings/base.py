@@ -48,7 +48,6 @@ MANAGERS = ADMINS
 
 EMAIL_FROM_ADDRESS = "no-reply@civillegaladvice.service.gov.uk"
 DEFAULT_EMAIL_TO = "cla-alerts@digital.justice.gov.uk"
-GOVUK_NOTIFY_API_KEY = os.environ.get("GOVUK_NOTIFY_API_KEY")
 GOVUK_NOTIFY_TEMPLATES = {
     "LOG_OPERATOR_ACTION": os.environ.get(
         "GOVUK_NOTIFY_TEMPLATE_LOG_OPERATOR_ACTION", "48ce3539-48f3-4b2d-9931-2a57f89a521f"
@@ -463,8 +462,6 @@ PASSIVE_URL_REGEX_LIST = [r"^(?!\/admin\/).*", r"^(\/admin\/).*\/exports/$"]
 SESSION_SECURITY_PASSIVE_URLS = []
 
 EMAIL_ORCHESTRATOR_URL = os.environ.get("EMAIL_ORCHESTRATOR_URL")
-
-USE_EMAIL_ORCHESTRATOR_FLAG = os.environ.get("USE_EMAIL_ORCHESTRATOR_FLAG", "False") == "True"
 
 # .local.py overrides all the common settings.
 try:

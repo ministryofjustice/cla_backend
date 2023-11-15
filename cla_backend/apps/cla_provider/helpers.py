@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.db.models import Count
 
-from govuk_notify.api import GovUkNotify
+from govuk_notify.api import NotifyEmailOrchestrator
 from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, ProviderPreAllocation
 from legalaid.models import Case
 
@@ -226,7 +226,7 @@ def notify_case_assigned(provider, case):
         "date": now.strftime("%D"),
         "case_url": case_url.format(settings.FRONTEND_HOST_NAME, case.reference),
     }
-    email = GovUkNotify()
+    email = NotifyEmailOrchestrator()
     email.send_email(
         email_address=provider.email_address,
         template_id=settings.GOVUK_NOTIFY_TEMPLATES["PROVIDER_CASE_ASSIGNED"],
@@ -245,7 +245,7 @@ def notify_case_RDSPed(provider, case):
         "date": now.strftime("%D"),
         "case_url": case_url.format(settings.FRONTEND_HOST_NAME, case.reference),
     }
-    email = GovUkNotify()
+    email = NotifyEmailOrchestrator()
     email.send_email(
         email_address=provider.email_address,
         template_id=settings.GOVUK_NOTIFY_TEMPLATES["PROVIDER_CASE_RDSP"],

@@ -1,5 +1,4 @@
 import logging
-from notifications_python_client.notifications import NotificationsAPIClient
 from notifications_python_client.errors import HTTPError
 from django.conf import settings
 import requests
@@ -8,43 +7,13 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-class GovUkNotify(object):
-    def __new__(cls):
-        """
-        If this feature flag is set rather than creating a GovUkNotify object
-        a NotifyEmailOrchestrator object will be created instead, overloading the send_email method.
-        """
-        if settings.USE_EMAIL_ORCHESTRATOR_FLAG:
-            return NotifyEmailOrchestrator()
-        return super(GovUkNotify, cls).__new__(cls)
-
-    def __init__(self):
-        self.notifications_client = None
-        if settings.GOVUK_NOTIFY_API_KEY:
-            self.notifications_client = NotificationsAPIClient(settings.GOVUK_NOTIFY_API_KEY)
-        elif not settings.TEST_MODE and not settings.DEBUG:
-            raise ValueError("Missing API Key for GOVUK Notify")
-
-    def send_email(self, email_address, template_id, personalisation):
-        if not self.notifications_client:
-            return
-        try:
-            self.notifications_client.send_email_notification(
-                email_address=email_address,  # required string
-                template_id=template_id,  # required UUID string
-                personalisation=personalisation,
-            )
-        except HTTPError as error:
-            logger.error("GovUkNotify error: {msg}".format(msg=str(error)))
-            raise error
-
-
 class NotifyEmailOrchestrator(object):
     def __init__(self):
-        if not settings.EMAIL_ORCHESTRATOR_URL:
-            if not settings.TEST_MODE and not settings.DEBUG:
-                raise EnvironmentError("EMAIL_ORCHESTRATOR_URL is not set.")
-        self.base_url = settings.EMAIL_ORCHESTRATOR_URL
+        self.base_url = None
+        if settings.EMAIL_ORCHESTRATOR_URL:
+            self.base_url = settings.EMAIL_ORCHESTRATOR_URL
+        elif not settings.TEST_MODE and not settings.DEBUG:
+            raise EnvironmentError("EMAIL_ORCHESTRATOR_URL is not set.")
         self.endpoint = "email"
 
     def url(self):
@@ -53,12 +22,22 @@ class NotifyEmailOrchestrator(object):
         return base_url + self.endpoint
 
     def send_email(self, email_address, template_id, personalisation=None):
+        """
+        :param email_address: (str) - Email address of the receiver
+        :param template_id: (str) - The GOV.UK Notify template id
+        :param personalisation: (optional, dictionary) - The personalisation dictionary
+        :return: send_api_request (bool) - Was the request sent, will return True if the request was made successfully
+                                          will return False if the EMAIL_ORCHESTRATOR_URL is not set or
+                                          the application is in TEST_MODE or DEBUG mode
+        """
+        if settings.TEST_MODE or settings.DEBUG:
+            logger.info("Application is in TESTING mode, will not send the request")
+            return False
+
         if not self.base_url:
-            return
-        data = {
-            'email_address': email_address,
-            'template_id': template_id,
-        }
+            logger.error("EMAIL_ORCHESTRATOR_URL is not set, unable to send email")
+            return False
+        data = {"email_address": email_address, "template_id": template_id}
         if personalisation:
             data["personalisation"] = personalisation
 
@@ -66,3 +45,4 @@ class NotifyEmailOrchestrator(object):
 
         if response.status_code != 201:
             raise HTTPError(response)
+        return True

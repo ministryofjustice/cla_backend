@@ -16,6 +16,7 @@ spec:
             command: ["python", "manage.py", "housekeeping"]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
+          serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
           restartPolicy: OnFailure
 ---
 apiVersion: batch/v1
@@ -36,6 +37,7 @@ spec:
             command: ["python", "manage.py", "monitor_missing_outcome_codes"]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
+          serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
           restartPolicy: OnFailure
 ---
 apiVersion: batch/v1
@@ -56,6 +58,7 @@ spec:
             command: ["python", "manage.py", "mi_cb1_report"]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
+          serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
           restartPolicy: OnFailure
 ---
 apiVersion: batch/v1
@@ -76,6 +79,7 @@ spec:
             command: ["python", "manage.py", "delete_cases_without_personal_data"]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
+          serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
           restartPolicy: OnFailure
 ---
 apiVersion: batch/v1
@@ -96,6 +100,7 @@ spec:
             command: ["python", "manage.py", "fix_missing_outcome_codes"]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
+          serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
           restartPolicy: OnFailure
 ---
 # Removes all extract reports that were created over two years ago.
@@ -117,4 +122,5 @@ spec:
             command: ["python", "manage.py", "remove_expired_reports"]
             env:
               {{ include "cla-backend.app.vars" . | nindent 12 }}
+          serviceAccountName: {{ include "cla-backend.serviceAccountName" . }}
           restartPolicy: OnFailure

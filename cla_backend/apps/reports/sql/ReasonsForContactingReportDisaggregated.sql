@@ -1,8 +1,8 @@
-select cr.id as rfc_id, lc.id as case_id, (case when lc.thirdparty_details_id is not null then 'Call someone else instead of me' 
+select cr.id, lc.id, (case when lc.thirdparty_details_id is not null then 'Call someone else instead of me' 
 when string_agg(cel.code,',') like '%CB1%' then 'Call me back' when string_agg(cel.code,',') like 'CASE_CREATED%' then 'I will call CLA back'
-else 'Not submitted' end), string_agg(cr2.category, ', ') as contact_reason,
-le.notes as problem_notes, la.bsl_webcam, la.minicom, la.text_relay, la.skype_webcam, 
-la."language", la.notes as other_comm_notes, cr.created as contact_date
+else 'Not submitted' end), string_agg(cr2.category, ', '),
+le.notes, la.bsl_webcam, la.minicom, la.text_relay, la.skype_webcam, 
+la."language", la.notes, cr.created
 from legalaid_case lc 
 left join cla_eventlog_log cel on cel.case_id = lc.id
 left join legalaid_eligibilitycheck le on lc.eligibility_check_id = le.id 

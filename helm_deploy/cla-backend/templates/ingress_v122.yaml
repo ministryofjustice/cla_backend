@@ -29,6 +29,11 @@ spec:
       {{- if .Values.secretName }}
       secretName: {{ .Values.secretName }}
       {{- end }}
+    - hosts:
+       - "dashboard.{{ .Values.host }}"
+      {{- if .Values.secretName }}
+      secretName: {{ .Values.secretName }}
+      {{- end }}
   rules:
     - host: "{{ .Values.host }}"
       http:
@@ -40,4 +45,14 @@ spec:
                 name: {{ $fullName }}-app
                 port:
                   number: {{ $svcPort }}
+  - host: "dashboard.{{ .Values.host }}"
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ include "cla-backend.fullname" . }}-metabase
+            port:
+              number: 80
 {{- end }}

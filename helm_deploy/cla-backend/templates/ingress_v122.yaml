@@ -45,14 +45,14 @@ spec:
                 name: {{ $fullName }}-app
                 port:
                   number: {{ $svcPort }}
-  - host: "dashboard.{{ .Values.host }}"
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: {{ include "cla-backend.fullname" . }}-metabase
-            port:
-              number: 80
+    - host: "dashboard.{{ .Values.host }}"
+      http:
+        paths:
+        - path: "/"
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: {{ $fullName }}-metabase
+              port:
+                number: 80
 {{- end }}

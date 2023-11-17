@@ -163,3 +163,9 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 10000
           runAsGroup: 10000
+        env:
+          - name: MB_DB_CONNECTION_URI
+            valueFrom:
+              secretKeyRef:
+                name: metabase
+                key: jdbc_url

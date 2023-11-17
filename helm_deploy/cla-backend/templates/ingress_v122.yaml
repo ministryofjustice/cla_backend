@@ -30,7 +30,7 @@ spec:
       secretName: {{ .Values.secretName }}
       {{- end }}
     - hosts:
-       - "dashboard.{{ .Values.host }}"
+       - "metabase-{{ .Values.host }}"
       {{- if .Values.secretName }}
       secretName: {{ .Values.secretName }}
       {{- end }}
@@ -45,14 +45,14 @@ spec:
                 name: {{ $fullName }}-app
                 port:
                   number: {{ $svcPort }}
-    - host: "dashboard.{{ .Values.host }}"
+    - host: "metabase-{{ .Values.host }}"
       http:
         paths:
-        - path: "/"
-          pathType: ImplementationSpecific
-          backend:
-            service:
-              name: {{ $fullName }}-metabase
-              port:
-                number: 80
+          - path: "/"
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}-metabase
+                port:
+                  number: 80
 {{- end }}

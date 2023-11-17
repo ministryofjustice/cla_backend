@@ -32,6 +32,7 @@ from .forms import (
     MIExtractComplaintViewAuditLog,
     AllKnowledgeBaseArticles,
     ReasonsForContactingReport,
+    ReasonsForContactingDisaggregated,
     CaseDemographicsReport,
 )
 
@@ -212,6 +213,12 @@ def reasons_for_contacting(request):
         file_name="cla_reasonforcontacting.zip",
         success_task=ReasonForContactingExportTask,
     )
+
+
+@staff_member_required
+@permission_required("legalaid.run_reports")
+def reasons_for_contacting_disaggregated(request):
+    return report_view(request, ReasonsForContactingDisaggregated, "Reasons For Contacting Disaggregated")
 
 
 @staff_member_required

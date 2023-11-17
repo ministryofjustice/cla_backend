@@ -163,15 +163,3 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 10000
           runAsGroup: 10000
-        readinessProbe:
-          httpGet:
-            path: /api/health
-            port: 3000
-          initialDelaySeconds: 60
-          periodSeconds: 15
-        livenessProbe:
-          httpGet:
-            path: /api/health
-            port: 3000
-          initialDelaySeconds: 90
-          periodSeconds: 30

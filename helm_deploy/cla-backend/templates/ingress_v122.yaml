@@ -31,7 +31,7 @@ spec:
       {{- end }}
     {{- if .Values.metabase.enabled }}
     - hosts:
-       - "metabase-cla-backend-{{ .Values.envionment }}.apps.live-1.cloud-platform.service.justice.gov.uk"
+       - "metabase-cla-backend-{{ .Values.environment }}.apps.live-1.cloud-platform.service.justice.gov.uk"
     {{- end }}
   rules:
     - host: "{{ .Values.host }}"

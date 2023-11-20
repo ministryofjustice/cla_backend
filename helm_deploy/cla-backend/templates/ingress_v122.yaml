@@ -52,7 +52,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ $fullName }}-metabase
+                name: "metabase-cla-backend-{{ .Values.environment }}.apps.live-1.cloud-platform.service.justice.gov.uk"
                 port:
                   number: 80
     {{- end}}

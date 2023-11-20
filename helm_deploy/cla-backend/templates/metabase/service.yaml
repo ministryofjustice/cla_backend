@@ -1,3 +1,4 @@
+{{- if .Values.metabase.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,3 +10,4 @@ spec:
     targetPort: 3000
   selector:
     app: {{ include "cla-backend.fullname" . }}-metabase
+{{- end }}

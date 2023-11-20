@@ -11,7 +11,7 @@ localPostgres:
   enabled: false
 
 metabase:
-  enabled: false
+  enabled: true
 
 ingress:
   enabled: true

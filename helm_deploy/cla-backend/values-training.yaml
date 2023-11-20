@@ -10,6 +10,9 @@ replicaCount: 2
 localPostgres:
   enabled: false
 
+metabase:
+  enabled: false
+
 ingress:
   enabled: true
   whitelist_additional:

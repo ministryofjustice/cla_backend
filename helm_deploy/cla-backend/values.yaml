@@ -85,6 +85,9 @@ ingress:
 localPostgres:
   enabled: false
 
+metabase:
+  enabled: false
+
 queueWorkers:
   enabled: true
 

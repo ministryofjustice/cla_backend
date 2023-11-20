@@ -29,11 +29,10 @@ spec:
       {{- if .Values.secretName }}
       secretName: {{ .Values.secretName }}
       {{- end }}
+    {- if eq .Values.metabase.enabled  -}
     - hosts:
-       - "metabase-{{ .Values.host }}"
-      {{- if .Values.secretName }}
-      secretName: {{ .Values.secretName }}
-      {{- end }}
+       - "metabase-cla-backend-{{ .Values.envionment }}.apps.live-1.cloud-platform.service.justice.gov.uk"
+    {{- end }}
   rules:
     - host: "{{ .Values.host }}"
       http:

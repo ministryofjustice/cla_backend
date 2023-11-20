@@ -208,6 +208,12 @@ class DeleteOldData(Task):
         PersonalDetails.contact_for_research_methods.through.objects.filter(
             personaldetails_id__in=pds.values_list("pk", flat=True)
         ).delete()
+
+        # This deletes any DiversityDataCheck entries which have the PersonalDetails ID as a foreign key,
+        # failing to delete these entries first results in an IntegrityError as DiversityDataCheck would contain
+        # a non-existant PersonalDetails foreign key.
+        DiversityDataCheck.objects.filter(personaldetails_id__in=pds.values_list("pk", flat=True)).delete()
+
         self._delete_objects(pds)
 
     def cleanup_adaptation_details(self):

@@ -385,13 +385,8 @@ workflows:
 
       - training_deploy_approval:
           requires:
-            - staging_deploy_live
+            - static_uat_deploy_live
           type: approval
-          filters:
-            branches:
-              only:
-                - django-upgrade
-                - master
 
       - production_deploy_approval:
           requires:

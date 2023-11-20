@@ -31,7 +31,7 @@ spec:
       {{- end }}
     {{- if .Values.metabase.enabled }}
     - hosts:
-       - "metabase-cla-backend-{{ .Values.environment }}.apps.live-1.cloud-platform.service.justice.gov.uk"
+       - "cla-dashboard-{{ .Values.environment }}.apps.live-1.cloud-platform.service.justice.gov.uk"
     {{- end }}
   rules:
     - host: "{{ .Values.host }}"
@@ -52,7 +52,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: "metabase-cla-backend-{{ .Values.environment }}.apps.live-1.cloud-platform.service.justice.gov.uk"
+                name: "cla-dashboard-{{ .Values.environment }}.apps.live-1.cloud-platform.service.justice.gov.uk"
                 port:
                   number: 80
     {{- end}}

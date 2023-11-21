@@ -111,7 +111,7 @@ metadata:
   labels:
     {{- include "cla-backend.labels" . | nindent 4 }}
 spec:
-  schedule: "0 0 * * *"  # Every day at midnight
+  schedule: "0 1 * * *"  # Every day at midnight
   jobTemplate:
     spec:
       template:

@@ -91,7 +91,6 @@ class TasksTestCase(TestCase):
 
         self.assertEqual(len(EODDetails.objects.all()), 0)
 
-
     def test_cleanup_personal_details_delete_diversity_data_check(self):
         pd = make_recipe("legalaid.personal_details")
 

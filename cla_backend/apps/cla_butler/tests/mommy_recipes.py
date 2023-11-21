@@ -1,6 +1,5 @@
 # coding=utf-8
-from legalaid.tests.mommy_recipes import eod_details
-from model_mommy.recipe import Recipe, foreign_key
+from model_mommy.recipe import Recipe
 
 from ..models import DiversityDataCheck
 

@@ -209,10 +209,11 @@ class DeleteOldData(Task):
             personaldetails_id__in=pds.values_list("pk", flat=True)
         ).delete()
 
+
         # This deletes any DiversityDataCheck entries which have the PersonalDetails ID as a foreign key,
         # failing to delete these entries first results in an IntegrityError as DiversityDataCheck would contain
         # a non-existant PersonalDetails foreign key.
-        DiversityDataCheck.objects.filter(personaldetails_id__in=pds.values_list("pk", flat=True)).delete()
+        DiversityDataCheck.objects.filter(personal_details_id__in=pds.values_list("pk", flat=True)).delete()
 
         self._delete_objects(pds)
 

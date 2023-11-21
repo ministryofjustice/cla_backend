@@ -91,6 +91,31 @@ class TasksTestCase(TestCase):
 
         self.assertEqual(len(EODDetails.objects.all()), 0)
 
+    def test_cleanup_personal_details_delete_diversity_data_check(self):
+        contact_method = make_recipe("legalaid.contact_research_method")
+        pd = make_recipe("legalaid.personal_details")
+
+        make_recipe("cla_butler.diversitydatacheck", personal_details=pd)
+
+        self.assertEqual(len(DiversityDataCheck.objects.all()), 1)
+
+        self.delete_old_data.cleanup_personal_details()
+
+        self.assertEqual(len(DiversityDataCheck.objects.all()), 0)
+
+    def test_cleanup_personal_details_keep_diversity_data_check(self):
+        contact_method = make_recipe("legalaid.contact_research_method")
+        pd = make_recipe("legalaid.personal_details")
+
+        case = make_recipe("legalaid.case", personal_details=pd)
+        make_recipe("cla_butler.diversitydatacheck", personal_details=pd)
+
+        self.assertEqual(len(DiversityDataCheck.objects.all()), 1)
+
+        self.delete_old_data.cleanup_personal_details()
+
+        self.assertEqual(len(DiversityDataCheck.objects.all()), 1)
+
     def test_cleanup_personal_details_no_case_attached_successful(self):
         contact_method = make_recipe("legalaid.contact_research_method")
         make_recipe("legalaid.personal_details", contact_for_research_methods=[contact_method])

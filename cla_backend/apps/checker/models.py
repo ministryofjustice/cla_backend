@@ -26,7 +26,9 @@ class ReasonForContacting(TimeStampedModel):
         return cls.calc_category_stats(data, total_count)
 
     @classmethod
-    def calc_category_stats(cls, category_data, reasons_for_contacting_count, start_date=None, end_date=None):
+    def calc_category_stats(
+        cls, category_data, reasons_for_contacting_count, start_date=None, end_date=None, referrer=None
+    ):
         # known categories, preserving order
         categories = [
             {
@@ -48,6 +50,8 @@ class ReasonForContacting(TimeStampedModel):
             filters = models.Q(reason_for_contacting__created__gte=start_date) & models.Q(
                 reason_for_contacting__created__lte=end_date
             )
+        if referrer:
+            filters = filters & models.Q(reason_for_contacting__referrer__endswith=referrer)
 
         qs = (
             ReasonForContactingCategory.objects.filter(reason_for_contacting__case__isnull=False)
@@ -114,7 +118,7 @@ class ReasonForContacting(TimeStampedModel):
     def get_report_category_stats(cls, start_date=None, end_date=None, referrer=None):
         # this returns limited results that can be downloaded as a report
         total_count, data = cls.get_filtered_categories(start_date, end_date, referrer)
-        return cls.calc_category_stats(data, total_count, start_date, end_date)
+        return cls.calc_category_stats(data, total_count, start_date, end_date, referrer)
 
     @classmethod
     def get_top_referrers(cls, count=8):

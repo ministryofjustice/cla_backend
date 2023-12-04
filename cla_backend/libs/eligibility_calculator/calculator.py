@@ -1,3 +1,4 @@
+import requests
 from django.conf import settings
 from django.utils import timezone
 
@@ -330,6 +331,35 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
+        cfe_request_dict = self.__translate_case()
+
+        # this line fails the lint check as we're ignoring the response
+        # cfe_response = requests.post(settings.CFE_URL, json = cfe_request_dict)
+        requests.post(settings.CFE_URL, json=cfe_request_dict)
+
+        return self.__legacy_check()
+
+    def __translate_case(self):
+        # produce the simplest possible plain request to CFE to prove the route
+        return {
+            "assessment": {
+                "submission_date": "2022-05-19",
+                "level_of_help": "certificated"
+            },
+            "applicant": {
+                "date_of_birth": "1992-07-25",
+                "receives_qualifying_benefit": False,
+                "receives_asylum_support": False,
+            },
+            "proceeding_types": [
+                {
+                    "ccms_code": "SE013",
+                    "client_involvement_type": "A"
+                }
+            ]
+        }
+
+    def __legacy_check(self):
         if self.case_data.facts.has_passported_proceedings_letter:
             return True
 

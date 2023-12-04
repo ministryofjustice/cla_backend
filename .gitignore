@@ -63,3 +63,6 @@ cla_backend/static/
 
 # PyCharm
 .idea
+
+# pyenv
+.python-version

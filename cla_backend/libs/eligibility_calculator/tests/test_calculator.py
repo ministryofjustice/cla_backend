@@ -1779,6 +1779,12 @@ class IsEligibleTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
+    def checker_with_income(self, income):
+        cd = fixtures.get_default_case_data()
+        cd['you'].update({'income': dict(earnings=income, self_employed=False)})
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
     def test_cfe_request_with_no_assets(self):
         cfe_result = self.checker_with_assets(0)._make_cfe_request()
         self.assertEqual('eligible', cfe_result)
@@ -1789,6 +1795,10 @@ class IsEligibleTestCase(unittest.TestCase):
 
     def test_cfe_request_with_too_much_savings(self):
         cfe_result = self.checker_with_assets(10000)._make_cfe_request()
+        self.assertEqual('ineligible', cfe_result)
+
+    def test_cfe_request_with_large_gross_income(self):
+        cfe_result = self.checker_with_income(10000)._make_cfe_request()
         self.assertEqual('ineligible', cfe_result)
 
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_income_is_above_limit(self):

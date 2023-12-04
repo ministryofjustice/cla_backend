@@ -6,7 +6,8 @@ from django.utils import timezone
 
 from . import constants
 from . import exceptions
-from .cfe_civil.savings import translate_savings
+from cfe_civil import translate_savings
+from .cfe_civil.income import translate_income
 
 
 class cached_calcs_property(object):
@@ -368,6 +369,7 @@ class EligibilityChecker(object):
             ]
         }
         default_request_data.update(translate_savings(self.case_data.you.savings))
+        default_request_data.update(translate_income(self.case_data.you.income, self.case_data.you.deductions))
         return default_request_data
 
     def _legacy_check(self):

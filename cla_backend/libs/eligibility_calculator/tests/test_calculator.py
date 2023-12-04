@@ -1795,8 +1795,11 @@ class IsEligibleTestCase(unittest.TestCase):
 
 
 class DoCfeCivilCheckTestCase(unittest.TestCase):
-    def checker_with_assets(self, assets):
-        cd = fixtures.get_default_case_data()
+    def checker_with_assets(self, assets, facts=None):
+        if facts is None:
+            cd = fixtures.get_default_case_data()
+        else:
+            cd = fixtures.get_default_case_data(facts=facts)
         cd['you'].update({'savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0)})
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
@@ -1846,3 +1849,13 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
     def test_cfe_request_with_large_gross_income(self):
         cfe_result = self.checker_with_income(1000000, 500)._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_result.overall_result())
+
+    def test_under_60_with_capital(self):
+        facts = dict(is_you_or_your_partner_over_60=False,is_you_under_18=False)
+        cfe_result = self.checker_with_assets(20000 * 100, facts)._do_cfe_civil_check()
+        self.assertEqual('ineligible', cfe_result.overall_result())
+
+    def test_over_60_with_capital(self):
+        facts = dict(is_you_or_your_partner_over_60=True,is_you_under_18=False)
+        cfe_result = self.checker_with_assets(20000 * 100, facts)._do_cfe_civil_check()
+        self.assertEqual('eligible', cfe_result.overall_result())

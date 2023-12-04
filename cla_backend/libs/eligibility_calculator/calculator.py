@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from . import constants
 from . import exceptions
+from .cfe_civil.age import translate_age
 from .cfe_civil.savings import translate_savings
 from .cfe_civil.employment import translate_employment
 from .cfe_civil.cfe_response import CfeResponse
@@ -373,6 +374,8 @@ class EligibilityChecker(object):
             request_data.update(translate_property(self.case_data.property_data))
         if hasattr(self.case_data.you, "income") and hasattr(self.case_data.you, "deductions"):
             request_data.update(translate_employment(self.case_data.you.income, self.case_data.you.deductions))
+        if hasattr(self.case_data, "facts"):
+            request_data.update(translate_age(submission_date, self.case_data.facts))
         return request_data
 
     def _legacy_check(self):

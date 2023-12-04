@@ -1,9 +1,12 @@
+import json
+
 import requests
 from django.conf import settings
 from django.utils import timezone
 
 from . import constants
 from . import exceptions
+from cfe_civil import translate_savings
 
 
 class cached_calcs_property(object):
@@ -331,17 +334,23 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
-        cfe_request_dict = self.__translate_case()
-
         # this line fails the lint check as we're ignoring the response
-        # cfe_response = requests.post(settings.CFE_URL, json = cfe_request_dict)
-        requests.post(settings.CFE_URL, json=cfe_request_dict)
+        # cfe_result = self._make_cfe_request()
+        self._make_cfe_request()
 
         return self.__legacy_check()
 
+    def _make_cfe_request(self):
+        cfe_request_dict = self.__translate_case()
+
+        cfe_civil_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
+        cfe_data = json.loads(cfe_civil_response.content)
+        cfe_result = cfe_data['result_summary']['overall_result']['result']
+        return cfe_result
+
     def __translate_case(self):
         # produce the simplest possible plain request to CFE to prove the route
-        return {
+        default_request_data = {
             "assessment": {
                 "submission_date": "2022-05-19",
                 "level_of_help": "certificated"
@@ -358,6 +367,8 @@ class EligibilityChecker(object):
                 }
             ]
         }
+        default_request_data.update(translate_savings(self.case_data.you.savings))
+        return default_request_data
 
     def __legacy_check(self):
         if self.case_data.facts.has_passported_proceedings_letter:

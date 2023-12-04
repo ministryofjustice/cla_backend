@@ -1773,6 +1773,24 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
+    def checker_with_assets(self, assets):
+        cd = fixtures.get_default_case_data()
+        cd['you'].update({'savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0)})
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
+    def test_cfe_request_with_no_assets(self):
+        cfe_result = self.checker_with_assets(0)._make_cfe_request()
+        self.assertEqual('eligible', cfe_result)
+
+    def test_cfe_request_with_some_savings(self):
+        cfe_result = self.checker_with_assets(4000)._make_cfe_request()
+        self.assertEqual('contribution_required', cfe_result)
+
+    def test_cfe_request_with_too_much_savings(self):
+        cfe_result = self.checker_with_assets(10000)._make_cfe_request()
+        self.assertEqual('ineligible', cfe_result)
+
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_income_is_above_limit(self):
         """
         TEST:  If a citizen is not in the category immigration or considered in any category in this instance,

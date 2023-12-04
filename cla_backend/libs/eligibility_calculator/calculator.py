@@ -331,15 +331,15 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
-        cfe_request_dict = self.__translate_case()
+        cfe_request_dict = self._translate_case()
 
         # this line fails the lint check as we're ignoring the response
         # cfe_response = requests.post(settings.CFE_URL, json = cfe_request_dict)
         requests.post(settings.CFE_URL, json=cfe_request_dict)
 
-        return self.__legacy_check()
+        return self._legacy_check()
 
-    def __translate_case(self):
+    def _translate_case(self):
         # produce the simplest possible plain request to CFE to prove the route
         return {
             "assessment": {
@@ -359,7 +359,7 @@ class EligibilityChecker(object):
             ]
         }
 
-    def __legacy_check(self):
+    def _legacy_check(self):
         if self.case_data.facts.has_passported_proceedings_letter:
             return True
 

@@ -587,7 +587,9 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         # Fake
         d["facts"]["is_partner_opponent"] = False
 
-        return CaseData(**d)
+        cd = CaseData(**d)
+        print(cd.to_dict())
+        return cd
 
     def reset_matter_types(self):
         case = None

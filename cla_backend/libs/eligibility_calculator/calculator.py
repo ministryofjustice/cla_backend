@@ -341,7 +341,7 @@ class EligibilityChecker(object):
         return self._legacy_check()
 
     def _make_cfe_request(self):
-        cfe_request_dict = self.__translate_case()
+        cfe_request_dict = self._translate_case()
 
         cfe_civil_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
         cfe_data = json.loads(cfe_civil_response.content)

@@ -367,7 +367,8 @@ class EligibilityChecker(object):
                 }
             ]
         }
-        default_request_data.update(translate_savings(self.case_data.you.savings))
+        if hasattr(self.case_data.you, "savings"):
+            default_request_data.update(translate_savings(self.case_data.you.savings))
         return default_request_data
 
     def _legacy_check(self):

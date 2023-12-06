@@ -3,6 +3,7 @@ from unittest import TestCase
 from cla_backend.libs.eligibility_calculator.cfe_civil.income import translate_income
 from cla_backend.libs.eligibility_calculator.models import Income, Deductions
 
+
 class TestCfeIncome(TestCase):
     def test_employment(self):
         income = Income(earnings=250000, self_employed=False)

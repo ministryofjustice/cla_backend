@@ -1651,7 +1651,7 @@ class IsEligibleTestCase(unittest.TestCase):
         Set their disposable income to True (they are eligible), False (they are not eligible), or default to None.
         Set their disposable capital to True (they are eligible), False (they are not eligible), or default to None.
         """
-        case_data = mock.MagicMock()
+        case_data = CaseData(**fixtures.get_default_case_data())
         case_data.category = is_category
         case_data.facts = mock.MagicMock()
         case_data.facts.has_passported_proceedings_letter = has_passported_proceedings_letter

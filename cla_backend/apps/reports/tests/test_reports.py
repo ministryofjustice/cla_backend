@@ -313,8 +313,8 @@ class TestKnowledgeBaseArticlesExport(TestCase):
 
 
 class ReasonForContactingReportTestCase(TestCase):
-    def test_rfc(self):
-        referrers = [
+    def setUp(self):
+        self.referrers = [
             "Unknown",
             "https://localhost/scope/diagnosis",
             "https://localhost/scope/diagnosis/n131",
@@ -322,6 +322,7 @@ class ReasonForContactingReportTestCase(TestCase):
             "https://localhost/scope/diagnosis",
         ]
 
+    def test_rfc(self):
         categories = [
             REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
             REASONS_FOR_CONTACTING.MISSING_PAPERWORK,
@@ -332,7 +333,7 @@ class ReasonForContactingReportTestCase(TestCase):
 
         cases = [make_recipe("legalaid.case"), make_recipe("legalaid.case"), make_recipe("legalaid.case"), None, None]
         resources = make_recipe(
-            "checker.reasonforcontacting", referrer=cycle(referrers), case=cycle(cases), _quantity=5
+            "checker.reasonforcontacting", referrer=cycle(self.referrers), case=cycle(cases), _quantity=5
         )
 
         make_recipe(
@@ -351,7 +352,7 @@ class ReasonForContactingReportTestCase(TestCase):
         freezer = freeze_time("2023-10-01 11:00")
         freezer.start()
         day_ago_resources = make_recipe(
-            "checker.reasonforcontacting", referrer=cycle(referrers), case=cycle(cases), _quantity=5
+            "checker.reasonforcontacting", referrer=cycle(self.referrers), case=cycle(cases), _quantity=5
         )
         make_recipe(
             "checker.reasonforcontacting_category",
@@ -376,3 +377,56 @@ class ReasonForContactingReportTestCase(TestCase):
             expected = expected_stats[stat["key"]] if stat["key"] in expected_stats else expected_others
             actual = {"count": stat["count"], "with_cases": stat["with_cases"], "without_cases": stat["without_cases"]}
             self.assertDictEqual(expected, actual)
+
+    def test_report_stats_cases_referrer(self):
+        # Make a few reason for contacting records that were created in the distant paste
+        freezer = freeze_time("2023-10-01 10:00")
+        freezer.start()
+        categories = [
+            REASONS_FOR_CONTACTING.PNS,
+            REASONS_FOR_CONTACTING.AREA_NOT_COVERED,
+            REASONS_FOR_CONTACTING.HOW_SERVICE_HELPS,
+            REASONS_FOR_CONTACTING.DIFFICULTY_ONLINE,
+            REASONS_FOR_CONTACTING.PREFER_SPEAKING,
+        ]
+        # Create reason for contacting records that we don't care about, for noise purpose
+        resources = make_recipe("checker.reasonforcontacting", referrer=cycle(self.referrers), _quantity=5)
+        make_recipe(
+            "checker.reasonforcontacting_category",
+            reason_for_contacting=cycle(resources),
+            category=cycle(categories),
+            _quantity=5,
+        )
+
+        # Create records with our test referrer that we are interested in
+        test_referrer = "https://i.am.referrer"
+        categories = [
+            REASONS_FOR_CONTACTING.CANT_ANSWER,
+            REASONS_FOR_CONTACTING.CANT_ANSWER,
+            REASONS_FOR_CONTACTING.CANT_ANSWER,
+        ]
+        cases = [make_recipe("legalaid.case"), make_recipe("legalaid.case"), None]
+        resources = make_recipe("checker.reasonforcontacting", case=cycle(cases), referrer=test_referrer, _quantity=3)
+        make_recipe(
+            "checker.reasonforcontacting_category",
+            reason_for_contacting=cycle(resources),
+            category=cycle(categories),
+            _quantity=3,
+        )
+        date_from = datetime.datetime.now() - datetime.timedelta(hours=1)
+        date_to = date_from + datetime.timedelta(hours=2)
+        freezer.stop()
+
+        stats = ReasonForContacting.get_report_category_stats(
+            start_date=date_from, end_date=date_to, referrer=test_referrer
+        )
+        cant_answer_stats = {}
+        for stat in stats["categories"]:
+            if stat["key"] == REASONS_FOR_CONTACTING.CANT_ANSWER:
+                cant_answer_stats = stat
+                break
+
+        self.assertTrue(cant_answer_stats, "Could not find expected category")
+        self.assertEqual(stats["total_count"], 3)
+        self.assertEqual(cant_answer_stats["with_cases"], 2)
+        self.assertEqual(cant_answer_stats["without_cases"], 1)

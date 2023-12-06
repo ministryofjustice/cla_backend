@@ -6,7 +6,7 @@ def translate_savings(savings_data):
         liquid_capital.append(
             {
                 "value": savings_data.bank_balance / 100,
-                "description": "Savings Account",
+                "description": "Savings",
                 "subject_matter_of_dispute": False
             })
     if savings_data.investment_balance > 0:

@@ -12,7 +12,7 @@ class TestTranslateSavings(TestCase):
             "bank_accounts": [
                 {
                     "value": 2700,
-                    "description": "Savings Account",
+                    "description": "Savings",
                     "subject_matter_of_dispute": False
                 },
                 {

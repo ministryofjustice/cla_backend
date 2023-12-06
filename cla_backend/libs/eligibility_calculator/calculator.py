@@ -334,13 +334,11 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
-        # this line fails the lint check as we're ignoring the response
-        # cfe_result = self._make_cfe_request()
-        self._make_cfe_request()
+        self._do_cfe_civil_check()
 
         return self._legacy_check()
 
-    def _make_cfe_request(self):
+    def _do_cfe_civil_check(self):
         cfe_request_dict = self._translate_case()
 
         cfe_civil_response = requests.post(settings.CFE_URL, json=cfe_request_dict)

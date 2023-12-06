@@ -1,4 +1,4 @@
-from django.test import TestCase
+from unittest import TestCase
 
 from cla_backend.libs.eligibility_calculator.cfe_civil.income import translate_income
 from cla_backend.libs.eligibility_calculator.models import Income, Deductions
@@ -16,8 +16,8 @@ class TestCfeIncome(TestCase):
                         "frequency": "monthly",
                         "gross": 2500,
                         "benefits_in_kind": 0,
-                        "tax": 400,
-                        "national_insurance": 65,
+                        "tax": -400,
+                        "national_insurance": -65,
                         "prisoner_levy": 0,
                         "student_debt_repayment": 0
                     }
@@ -36,8 +36,8 @@ class TestCfeIncome(TestCase):
                     "income": {
                         "frequency": "monthly",
                         "gross": 2500,
-                        "tax": 400,
-                        "national_insurance": 65,
+                        "tax": -400,
+                        "national_insurance": -65,
                         "prisoner_levy": 0,
                         "student_debt_repayment": 0
                     }

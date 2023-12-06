@@ -1773,24 +1773,27 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
-    def checker_with_income(self, income, self_employed=False):
+    def checker_with_income(self, income, tax, ni=600, self_employed=False):
         cd = fixtures.get_default_case_data()
-        cd['you'].update({'income': dict(earnings=income, self_employed=self_employed)})
+        cd['you'].update({
+            'income': dict(earnings=income, self_employed=self_employed),
+            'deductions': dict(income_tax=tax, national_insurance=ni)
+        })
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
     def test_cfe_request_with_small_gross_income(self):
         # income is in pence
-        cfe_result = self.checker_with_income(10000)._make_cfe_request()
+        cfe_result = self.checker_with_income(10000, 100)._make_cfe_request()
         self.assertEqual('eligible', cfe_result)
 
     def test_cfe_request_self_employed(self):
         # income is in pence
-        cfe_result = self.checker_with_income(10000, self_employed=True)._make_cfe_request()
+        cfe_result = self.checker_with_income(10000, 100, self_employed=True)._make_cfe_request()
         self.assertEqual('eligible', cfe_result)
 
     def test_cfe_request_with_large_gross_income(self):
-        cfe_result = self.checker_with_income(1000000)._make_cfe_request()
+        cfe_result = self.checker_with_income(1000000, 500)._make_cfe_request()
         self.assertEqual('ineligible', cfe_result)
 
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_income_is_above_limit(self):

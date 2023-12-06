@@ -6,8 +6,8 @@ def translate_income(income, deductions):
                     "income": {
                         "frequency": "monthly",
                         "gross": income.earnings / 100,
-                        "tax": deductions.income_tax / 100,
-                        "national_insurance": deductions.national_insurance / 100,
+                        "tax": -deductions.income_tax / 100,
+                        "national_insurance": -deductions.national_insurance / 100,
                         "prisoner_levy": 0,
                         "student_debt_repayment": 0
                     }
@@ -23,8 +23,8 @@ def translate_income(income, deductions):
                         "frequency": "monthly",
                         "gross": income.earnings / 100,
                         "benefits_in_kind": 0,
-                        "tax": deductions.income_tax / 100,
-                        "national_insurance": deductions.national_insurance / 100,
+                        "tax": -deductions.income_tax / 100,
+                        "national_insurance": -deductions.national_insurance / 100,
                         "prisoner_levy": 0,
                         "student_debt_repayment": 0
                     }}

@@ -1,6 +1,6 @@
 def translate_income(income, deductions):
-    if income.self_employed:
-        return {
+    if hasattr(income, "self_employed") and income.self_employed:
+        result = {
             "self_employment_details": [
                 {
                     "income": {
@@ -15,7 +15,7 @@ def translate_income(income, deductions):
             ]
         }
     else:
-        return {
+        result = {
             "employment_details": [
                 {
                     "income": {
@@ -30,3 +30,4 @@ def translate_income(income, deductions):
                     }}
             ]
         }
+    return result

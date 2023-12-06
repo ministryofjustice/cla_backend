@@ -344,7 +344,7 @@ class EligibilityChecker(object):
         return {
             "assessment": {
                 "submission_date": "2022-05-19",
-                "level_of_help": "certificated"
+                "level_of_help": "controlled"  # CLA is for 'advice' only, so always controlled
             },
             "applicant": {
                 "date_of_birth": "1992-07-25",

@@ -1,6 +1,3 @@
-# translate bank_balance, investment_balance and asset_balance from CLA into CFE format
-# credit_balance isn't captured (and sounds like a credit card balance) which is not part of eligibility calculations
-
 
 def translate_savings(savings_data):
     liquid_capital = []

@@ -1651,7 +1651,7 @@ class IsEligibleTestCase(unittest.TestCase):
         Set their disposable income to True (they are eligible), False (they are not eligible), or default to None.
         Set their disposable capital to True (they are eligible), False (they are not eligible), or default to None.
         """
-        case_data = mock.MagicMock()
+        case_data = CaseData(**fixtures.get_default_case_data())
         case_data.category = is_category
         case_data.facts = mock.MagicMock()
         case_data.facts.has_passported_proceedings_letter = has_passported_proceedings_letter
@@ -1773,32 +1773,24 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
-    def checker_with_assets(self, assets):
+    def checker_with_income(self, income, self_employed=False):
         cd = fixtures.get_default_case_data()
-        cd['you'].update({'savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0)})
+        cd['you'].update({'income': dict(earnings=income, self_employed=self_employed)})
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
-    def checker_with_income(self, income):
-        cd = fixtures.get_default_case_data()
-        cd['you'].update({'income': dict(earnings=income, self_employed=False)})
-        case_data = CaseData(**cd)
-        return EligibilityChecker(case_data=case_data)
-
-    def test_cfe_request_with_no_assets(self):
-        cfe_result = self.checker_with_assets(0)._make_cfe_request()
+    def test_cfe_request_with_small_gross_income(self):
+        # income is in pence
+        cfe_result = self.checker_with_income(10000)._make_cfe_request()
         self.assertEqual('eligible', cfe_result)
 
-    def test_cfe_request_with_some_savings(self):
-        cfe_result = self.checker_with_assets(4000)._make_cfe_request()
-        self.assertEqual('contribution_required', cfe_result)
-
-    def test_cfe_request_with_too_much_savings(self):
-        cfe_result = self.checker_with_assets(10000)._make_cfe_request()
-        self.assertEqual('ineligible', cfe_result)
+    def test_cfe_request_self_employed(self):
+        # income is in pence
+        cfe_result = self.checker_with_income(10000, self_employed=True)._make_cfe_request()
+        self.assertEqual('eligible', cfe_result)
 
     def test_cfe_request_with_large_gross_income(self):
-        cfe_result = self.checker_with_income(10000)._make_cfe_request()
+        cfe_result = self.checker_with_income(1000000)._make_cfe_request()
         self.assertEqual('ineligible', cfe_result)
 
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_income_is_above_limit(self):

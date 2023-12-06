@@ -6,7 +6,7 @@ from cla_backend.libs.eligibility_calculator.models import Savings
 
 class TestTranslateSavings(TestCase):
     def test_bank_balance_and_investments(self):
-        savings = Savings(bank_balance=2700, investment_balance=1000, asset_balance=0)
+        savings = Savings(bank_balance=270000, investment_balance=100000, asset_balance=0)
         output = translate_savings(savings)
         expected = {"capitals": {
             "bank_accounts": [
@@ -26,7 +26,7 @@ class TestTranslateSavings(TestCase):
         self.assertEqual(expected, output)
 
     def test_assets(self):
-        savings = Savings(bank_balance=0, investment_balance=0, asset_balance=800)
+        savings = Savings(bank_balance=0, investment_balance=0, asset_balance=80000)
         output = translate_savings(savings)
         expected = {"capitals": {
             "bank_accounts": [],

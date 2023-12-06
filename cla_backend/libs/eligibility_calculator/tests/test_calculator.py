@@ -1784,11 +1784,11 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertEqual('eligible', cfe_result)
 
     def test_cfe_request_with_some_savings(self):
-        cfe_result = self.checker_with_assets(4000)._make_cfe_request()
+        cfe_result = self.checker_with_assets(400000)._make_cfe_request()
         self.assertEqual('contribution_required', cfe_result)
 
     def test_cfe_request_with_too_much_savings(self):
-        cfe_result = self.checker_with_assets(10000)._make_cfe_request()
+        cfe_result = self.checker_with_assets(1000000)._make_cfe_request()
         self.assertEqual('ineligible', cfe_result)
 
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_income_is_above_limit(self):

@@ -1784,17 +1784,16 @@ class IsEligibleTestCase(unittest.TestCase):
 
     def test_cfe_request_with_small_gross_income(self):
         # income is in pence
-        cfe_result = self.checker_with_income(10000, 100)._make_cfe_request()
-        self.assertEqual('eligible', cfe_result)
+        cfe_result = self.checker_with_income(10000, 100)._do_cfe_civil_check()
+        self.assertEqual(45.0, cfe_result.employment_allowance())
 
     def test_cfe_request_self_employed(self):
-        # income is in pence
-        cfe_result = self.checker_with_income(10000, 100, self_employed=True)._make_cfe_request()
-        self.assertEqual('eligible', cfe_result)
+        cfe_result = self.checker_with_income(10000, 100, self_employed=True)._do_cfe_civil_check()
+        self.assertEqual(0.0, cfe_result.employment_allowance())
 
     def test_cfe_request_with_large_gross_income(self):
-        cfe_result = self.checker_with_income(1000000, 500)._make_cfe_request()
-        self.assertEqual('ineligible', cfe_result)
+        cfe_result = self.checker_with_income(1000000, 500)._do_cfe_civil_check()
+        self.assertEqual('ineligible', cfe_result.overall_result())
 
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_income_is_above_limit(self):
         """

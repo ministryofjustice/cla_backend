@@ -23,9 +23,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       SecRuleEngine On
-      SecRule REQUEST_URI ".*\.pdf$" phase:1,allow
       SecRule REQUEST_URI ".*\.csv$" phase:1,allow
-      SecRule REQUEST_URI ".*\.zip$" phase:1,allow
 spec:
   ingressClassName: "modsec"
   tls:

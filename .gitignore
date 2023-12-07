@@ -66,3 +66,6 @@ cla_backend/static/
 
 # pyenv
 .python-version
+/celerybeat-schedule.dir
+/celerybeat-schedule.pag
+/cla_backend/apps/knowledgebase/fixtures/kb_from_spreadsheet.json

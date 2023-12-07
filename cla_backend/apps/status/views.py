@@ -1,3 +1,4 @@
+import logging
 from django.db import connection, DatabaseError
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -6,6 +7,9 @@ from django.views.generic import TemplateView
 
 from cla_common.smoketest import smoketest
 from moj_irat.views import PingJsonView as BasePingJsonView
+
+
+logger = logging.getLogger(__name__)
 
 
 class JSONResponse(HttpResponse):
@@ -28,6 +32,7 @@ def status(request):
             return JSONResponse({"db": {"ready": db_ready, "message": message}})
         except DatabaseError as e:
             message = str(e)
+            logger.error(message)
         finally:
             if c:
                 c.close()

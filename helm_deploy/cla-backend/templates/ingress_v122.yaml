@@ -23,6 +23,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       SecRuleEngine On
+      SecRule REQUEST_URI "^/reports"
 spec:
   ingressClassName: "modsec"
   tls:

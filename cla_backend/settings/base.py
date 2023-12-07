@@ -81,7 +81,7 @@ DATABASES = {
     }
 }
 
-if os.environ.get("REPLICA_DB_HOST", ""):
+if os.environ.get("REPLICA_DB_HOST", "") and os.environ.get("DB_HOST", "") != os.environ.get("REPLICA_DB_HOST", ""):
     DATABASES["reports"] = {
         "ENGINE": "cla_backend.apps.reports.db.backend",
         "NAME": os.environ.get("DB_NAME", "cla_backend"),

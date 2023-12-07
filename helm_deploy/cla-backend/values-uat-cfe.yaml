@@ -44,6 +44,7 @@ envVars:
       name: eligibility-integration-database-14
       key: password
   REPLICA_DB_HOST:
+    secret:
       name: eligibility-integration-database-14
       key: host
   LOAD_SEED_DATA:

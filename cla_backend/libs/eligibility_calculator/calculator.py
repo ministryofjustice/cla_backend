@@ -7,10 +7,12 @@ from django.utils import timezone
 
 from . import constants
 from . import exceptions
+
 from .cfe_civil.savings import translate_savings
 from .cfe_civil.employment import translate_employment
 from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.property import translate_property
+from .cfe_civil.income import translate_income
 
 logger = __import__("logging").getLogger(__name__)
 

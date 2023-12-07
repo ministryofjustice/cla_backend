@@ -1,13 +1,13 @@
 
 def translate_income(income_data):
-    cash_transactions = {"income": []} # pension, maintenance_received, benefits
+    cash_transactions = {"income": []}   # pension, maintenance_received, benefits
     employment_income = [{"payments": []}]
     irregular_incomes = {"payments": []}
-    other_incomes = [{"payments": []}] # pension, maintenance_received, benefits
-    regular_transactions = [] # pension, maintenance_received, benefits
-    state_benefits = [{"payments": []}] # benefits
-    employment_details = [{"income": {}}] # earnings
-    self_employment_details = [{"income": {}}] # self_employment_drawings
+    other_incomes = [{"payments": []}]   # pension, maintenance_received, benefits
+    regular_transactions = []   # pension, maintenance_received, benefits
+    state_benefits = [{"payments": []}]   # benefits
+    employment_details = [{"income": {}}]   # earnings
+    self_employment_details = [{"income": {}}]   # self_employment_drawings
 
     if not(income_data.self_employed) and (income_data.earnings > 0):
         print("employment_income, employment_details")

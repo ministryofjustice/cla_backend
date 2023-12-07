@@ -1,3 +1,5 @@
+from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds
+
 
 def translate_savings(savings_data):
     liquid_capital = []
@@ -5,21 +7,21 @@ def translate_savings(savings_data):
     if savings_data.bank_balance > 0:
         liquid_capital.append(
             {
-                "value": savings_data.bank_balance / 100,
+                "value": pence_to_pounds(savings_data.bank_balance),
                 "description": "Savings",
                 "subject_matter_of_dispute": False
             })
     if savings_data.investment_balance > 0:
         liquid_capital.append(
             {
-                "value": savings_data.investment_balance / 100,
+                "value": pence_to_pounds(savings_data.investment_balance),
                 "description": "Investment",
                 "subject_matter_of_dispute": False
             })
     if savings_data.asset_balance > 0:
         non_liquid_capital.append(
             {
-                "value": savings_data.asset_balance / 100,
+                "value": pence_to_pounds(savings_data.asset_balance),
                 "description": "Asset",
                 "subject_matter_of_dispute": False
             })

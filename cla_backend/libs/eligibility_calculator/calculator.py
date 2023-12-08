@@ -349,7 +349,7 @@ class EligibilityChecker(object):
     def _translate_case(self):
         submission_date = datetime.date(2022, 5, 19)
         # produce the simplest possible plain request to CFE to prove the route
-        default_request_data = {
+        request_data = {
             "assessment": {
                 "submission_date": str(submission_date),
                 "level_of_help": "controlled"  # CLA is for 'advice' only, so always controlled
@@ -367,10 +367,10 @@ class EligibilityChecker(object):
             ]
         }
         if hasattr(self.case_data.you, "savings"):
-            default_request_data.update(translate_savings(self.case_data.you.savings))
+            request_data.update(translate_savings(self.case_data.you.savings))
         if hasattr(self.case_data.you, "income") and hasattr(self.case_data.you, "deductions"):
-            default_request_data.update(translate_employment(self.case_data.you.income, self.case_data.you.deductions))
-        return default_request_data
+            request_data.update(translate_employment(self.case_data.you.income, self.case_data.you.deductions))
+        return request_data
 
     def _legacy_check(self):
         if self.case_data.facts.has_passported_proceedings_letter:

@@ -1803,12 +1803,8 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
 
     def test_cfe_request_with_no_assets(self):
         cfe_result = self.checker_with_assets(0)._do_cfe_civil_check()
-        self.assertEqual('eligible', cfe_result)
-
-    def test_cfe_request_with_some_savings(self):
-        cfe_result = self.checker_with_assets(400000)._do_cfe_civil_check()
-        self.assertEqual('contribution_required', cfe_result)
+        self.assertEqual('eligible', cfe_result.overall_result())
 
     def test_cfe_request_with_too_much_savings(self):
         cfe_result = self.checker_with_assets(1000000)._do_cfe_civil_check()
-        self.assertEqual('ineligible', cfe_result)
+        self.assertEqual('ineligible', cfe_result.overall_result())

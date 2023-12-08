@@ -1651,7 +1651,7 @@ class IsEligibleTestCase(unittest.TestCase):
         Set their disposable income to True (they are eligible), False (they are not eligible), or default to None.
         Set their disposable capital to True (they are eligible), False (they are not eligible), or default to None.
         """
-        case_data = mock.MagicMock()
+        case_data = CaseData(**fixtures.get_default_case_data())
         case_data.category = is_category
         case_data.facts = mock.MagicMock()
         case_data.facts.has_passported_proceedings_letter = has_passported_proceedings_letter
@@ -1792,3 +1792,23 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertTrue(ec.is_gross_income_eligible.called)
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
+
+
+class DoCfeCivilCheckTestCase(unittest.TestCase):
+    def checker_with_assets(self, assets):
+        cd = fixtures.get_default_case_data()
+        cd['you'].update({'savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0)})
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
+    def test_cfe_request_with_no_assets(self):
+        cfe_result = self.checker_with_assets(0)._do_cfe_civil_check()
+        self.assertEqual('eligible', cfe_result)
+
+    def test_cfe_request_with_some_savings(self):
+        cfe_result = self.checker_with_assets(400000)._do_cfe_civil_check()
+        self.assertEqual('contribution_required', cfe_result)
+
+    def test_cfe_request_with_too_much_savings(self):
+        cfe_result = self.checker_with_assets(1000000)._do_cfe_civil_check()
+        self.assertEqual('ineligible', cfe_result)

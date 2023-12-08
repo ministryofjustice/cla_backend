@@ -1,5 +1,3 @@
-import json
-
 import requests
 from django.conf import settings
 from django.utils import timezone
@@ -342,7 +340,7 @@ class EligibilityChecker(object):
         cfe_request_dict = self._translate_case()
 
         cfe_civil_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
-        cfe_data = json.loads(cfe_civil_response.content)
+        cfe_data = cfe_civil_response.json()
         cfe_result = cfe_data['result_summary']['overall_result']['result']
         return cfe_result
 

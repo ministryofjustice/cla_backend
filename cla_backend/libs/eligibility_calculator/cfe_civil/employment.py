@@ -1,4 +1,4 @@
-def translate_income(income, deductions):
+def translate_employment(income, deductions):
     if hasattr(income, "self_employed") and income.self_employed:
         result = {
             "self_employment_details": [

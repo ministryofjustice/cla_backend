@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from . import constants
 from . import exceptions
+from .cfe_civil.savings import translate_savings
 from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.employment import translate_employment
 
@@ -365,6 +366,8 @@ class EligibilityChecker(object):
                 }
             ]
         }
+        if hasattr(self.case_data.you, "savings"):
+            default_request_data.update(translate_savings(self.case_data.you.savings))
         if hasattr(self.case_data.you, "income") and hasattr(self.case_data.you, "deductions"):
             default_request_data.update(translate_employment(self.case_data.you.income, self.case_data.you.deductions))
         return default_request_data

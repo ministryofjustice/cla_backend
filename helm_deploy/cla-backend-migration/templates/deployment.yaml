@@ -23,40 +23,40 @@ spec:
             - name: TARGET_DB_HOST
               valueFrom:
                 secretKeyRef:
-                  name: database-14
+                  name: eligibility-integration-database-14
                   key: host
             - name: TARGET_DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: database-14
+                  name: eligibility-integration-database-14
                   key: name
             - name: TARGET_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: database-14
+                  name: eligibility-integration-database-14
                   key: user
             - name: TARGET_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: database-14
+                  name: eligibility-integration-database-14
                   key: password
             - name: SOURCE_DB_HOST
               valueFrom:
                 secretKeyRef:
-                  name: database-11
+                  name: database-14
                   key: host
             - name: SOURCE_DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: database-11
+                  name: database-14
                   key: name
             - name: SOURCE_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: database-11
+                  name: database-14
                   key: user
             - name: SOURCE_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: database-11
+                  name: database-14
                   key: password

@@ -46,6 +46,8 @@ envVars:
   REPLICA_DB_HOST:
     secret:
       optional: true
+      name: eligibility-integration-database-14
+      key: replica_host
   LOAD_SEED_DATA:
     value: "True"
   LOAD_TEST_DATA:

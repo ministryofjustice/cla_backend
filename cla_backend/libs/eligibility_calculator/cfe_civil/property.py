@@ -1,5 +1,6 @@
 from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds
 
+
 def convert_house(house_data):
     return {
         "value": pence_to_pounds(house_data['value']),
@@ -9,9 +10,10 @@ def convert_house(house_data):
         "subject_matter_of_dispute": house_data['disputed']
     }
 
+
 def translate_property(property_data):
-    main_homes = [x for x in property_data if x['main'] == True]
-    non_mains = [x for x in property_data if x['main'] == False]
+    main_homes = [x for x in property_data if x['main']]
+    non_mains = [x for x in property_data if not x['main']]
     if (len(main_homes) > 0):
         main_home_data = main_homes[0]
         main_home = convert_house(main_home_data)

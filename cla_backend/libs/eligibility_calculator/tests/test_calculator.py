@@ -1774,7 +1774,7 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertTrue(mocked_on_nass_benefits.called)
 
     def checker_with_property(self, value):
-        property_data=[{"value": value * 100, "mortgage_left": 0, "share": 100, "disputed": False, "main": True}]
+        property_data = [{"value": value * 100, "mortgage_left": 0, "share": 100, "disputed": False, "main": True}]
         cd = fixtures.get_default_case_data(property_data=property_data)
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)

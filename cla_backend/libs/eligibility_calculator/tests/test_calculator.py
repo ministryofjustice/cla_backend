@@ -1793,6 +1793,7 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
+
 class DoCfeCivilCheckTestCase(unittest.TestCase):
     def checker_with_assets(self, assets):
         cd = fixtures.get_default_case_data()

@@ -1830,4 +1830,3 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
     def test_cfe_request_with_large_gross_income(self):
         cfe_result = self.checker_with_income(1000000, 500)._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_result.overall_result())
-

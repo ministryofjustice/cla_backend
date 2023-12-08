@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from . import constants
 from . import exceptions
+from .cfe_civil.savings import translate_savings
 from .cfe_civil.cfe_response import CfeResponse
 
 
@@ -364,6 +365,8 @@ class EligibilityChecker(object):
                 }
             ]
         }
+        if hasattr(self.case_data.you, "savings"):
+            default_request_data.update(translate_savings(self.case_data.you.savings))
         return default_request_data
 
     def _legacy_check(self):

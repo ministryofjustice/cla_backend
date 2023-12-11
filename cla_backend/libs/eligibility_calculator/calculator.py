@@ -347,15 +347,39 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
-        cfe_result, cfe_detail = self._do_cfe_civil_check()
+        cfe_result, cfe_response = self._do_cfe_civil_check()
 
-        if self.case_data.facts.on_nass_benefits and self.case_data.category == "immigration":
+        # temp: start doing just non-partner passported checks through CFE
+        if self._is_non_means_tested(self.case_data) or self._is_passported_without_partner(self.case_data):
+            self.calcs = {
+                "pensioner_disregard": int(cfe_response.pensioner_disregard * 100),
+                "disposable_capital_assets": int(cfe_response.disposable_capital_assets * 100),
+                "property_equities": [int(x * 100) for x in cfe_response.property_equities],
+                "property_capital": int(cfe_response.property_capital * 100),
+                "liquid_capital": int(cfe_response.liquid_capital * 100),
+                "gross_income": 0,
+                "partner_allowance": 0,
+                "disposable_income": 0,
+                "dependants_allowance": 0,
+                "employment_allowance": 0,
+                "partner_employment_allowance": 0,
+            }
+
             return cfe_result
         else:
             legacy_result = self._legacy_check()
             logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
             return legacy_result
+
+    @staticmethod
+    def _is_passported_without_partner(case_data):
+        return case_data.facts.on_passported_benefits and hasattr(case_data.facts,
+                                                                  "has_partner") and not case_data.facts.has_partner
+
+    @staticmethod
+    def _is_non_means_tested(case_data):
+        return case_data.facts.on_nass_benefits and case_data.category == "immigration"
 
     def _do_cfe_civil_check(self):
         cfe_request_dict = self._translate_case(self.case_data)
@@ -410,14 +434,14 @@ class EligibilityChecker(object):
             request_data['assessment']['section_capital'] = 'incomplete'
 
         if hasattr(case_data, "you"):
-            request_data.update(EligibilityChecker._income_data(case_data.you))
+            request_data.update(EligibilityChecker._translate_income_data(case_data.you))
         if not EligibilityChecker._complete_cfe_income_data(request_data):
             request_data['assessment']['section_gross_income'] = 'incomplete'
 
         return request_data
 
     @staticmethod
-    def _income_data(person):
+    def _translate_income_data(person):
         request_data = {}
         if hasattr(person, "income"):
             regular_income = translate_income(person.income)

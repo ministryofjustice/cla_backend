@@ -856,6 +856,12 @@ class TestApplicantOnBenefitsCalculator(CalculatorTestBase):
                 "property_equities": [],
                 "property_capital": 0,
                 "liquid_capital": 0,
+                'disposable_income': 0,
+                'employment_allowance': 0,
+                'gross_income': 0,
+                'partner_allowance': 0,
+                'dependants_allowance': 0,
+                'partner_employment_allowance': 0,
             },
         )
 
@@ -877,6 +883,12 @@ class TestApplicantOnBenefitsCalculator(CalculatorTestBase):
                 "property_equities": [800000],
                 "property_capital": 800000,
                 "liquid_capital": 0,
+                "gross_income": 0,
+                "partner_allowance": 0,
+                "disposable_income": 0,
+                "dependants_allowance": 0,
+                "employment_allowance": 0,
+                "partner_employment_allowance": 0,
             },
         )
 
@@ -931,7 +943,7 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
             "dependants_allowance": 0,
             "employment_allowance": 0,
             "partner_employment_allowance": 0,
-            "liquid_capital": 79999,
+            "liquid_capital": 0,
         }
         expected_property_results = {
             "pre_mortgage_cap_removal": {
@@ -964,7 +976,7 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
             "dependants_allowance": 0,
             "employment_allowance": 0,
             "partner_employment_allowance": 0,
-            "liquid_capital": 79999,
+            "liquid_capital": 0,
         }
         expected_property_results = {
             "pre_mortgage_cap_removal": {

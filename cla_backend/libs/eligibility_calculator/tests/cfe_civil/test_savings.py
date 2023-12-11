@@ -43,7 +43,8 @@ class TestTranslateSavings(TestCase):
                     "description": "Valuable items worth over 500 pounds",
                     "subject_matter_of_dispute": False
                 },
-            ]
+
+            ],
         }}
         self.assertEqual(expected, output)
 

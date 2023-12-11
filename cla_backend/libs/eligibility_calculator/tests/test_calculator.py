@@ -1834,6 +1834,23 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
+    def checker_with_income_without_earnings(self, maintenance_received, child_benefits, earnings=0, self_employed=False, tax_credits=0, pension=0, benefits=0, other_income=0):
+        cd = fixtures.get_default_case_data()
+        cd['you'].update({
+            'income': dict(
+                earnings=earnings,
+                maintenance_received=maintenance_received,
+                child_benefits=child_benefits,
+                self_employed=self_employed,
+                tax_credits=tax_credits,
+                pension=pension,
+                benefits=benefits,
+                other_income=other_income
+            )
+        })
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
     def test_cfe_request_with_small_gross_income(self):
         # income is in pence
         cfe_result = self.checker_with_income(10000, 100)._do_cfe_civil_check()
@@ -1845,4 +1862,8 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
 
     def test_cfe_request_with_large_gross_income(self):
         cfe_result = self.checker_with_income(1000000, 500)._do_cfe_civil_check()
+        self.assertEqual('ineligible', cfe_result.overall_result())
+
+    def test_cfe_request_with_income_without_earnings(self):
+        cfe_result = self.checker_with_income_without_earnings(1000000, 500)._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_result.overall_result())

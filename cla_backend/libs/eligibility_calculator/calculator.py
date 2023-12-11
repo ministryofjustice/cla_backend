@@ -387,6 +387,8 @@ class EligibilityChecker(object):
             request_data.update(translate_property(self.case_data.property_data))
         if hasattr(self.case_data.you, "income") and hasattr(self.case_data.you, "deductions"):
             request_data.update(translate_employment(self.case_data.you.income, self.case_data.you.deductions))
+        if hasattr(self.case_data.you, "income"):
+            request_data.update(translate_income(self.case_data.you.income))
         return request_data
 
     def _legacy_check(self):

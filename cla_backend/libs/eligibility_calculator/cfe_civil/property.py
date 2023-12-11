@@ -13,10 +13,10 @@ def convert_house(house_data):
 
 def valid_house(house_data):
     return 'main' in house_data and \
-       'value' in house_data and \
-       'mortgage_left' in house_data and \
-       'share' in house_data and \
-       'disputed' in house_data
+        'value' in house_data and \
+        'mortgage_left' in house_data and \
+        'share' in house_data and \
+        'disputed' in house_data
 
 
 def translate_property(possible_property_data):

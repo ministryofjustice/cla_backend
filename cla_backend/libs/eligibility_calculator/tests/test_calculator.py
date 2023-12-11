@@ -1828,7 +1828,15 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
     def checker_with_income(self, income, tax, ni=600, self_employed=False):
         cd = fixtures.get_default_case_data()
         cd['you'].update({
-            'income': dict(earnings=income, self_employed=self_employed),
+            'income': dict(earnings=income,
+                           self_employed=self_employed,
+                           maintenance_received=0,
+                           child_benefits=0,
+                           tax_credits=0,
+                           pension=0,
+                           benefits=0,
+                           other_income=0
+                           ),
             'deductions': dict(income_tax=tax, national_insurance=ni)
         })
         case_data = CaseData(**cd)
@@ -1839,9 +1847,9 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         cd['you'].update({
             'income': dict(
                 earnings=earnings,
+                self_employed=self_employed,
                 maintenance_received=maintenance_received,
                 child_benefits=child_benefits,
-                self_employed=self_employed,
                 tax_credits=tax_credits,
                 pension=pension,
                 benefits=benefits,

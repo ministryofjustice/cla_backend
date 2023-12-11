@@ -11,7 +11,16 @@ def convert_house(house_data):
     }
 
 
-def translate_property(property_data):
+def valid_house(house_data):
+   return house_data.has_key('main') and \
+       house_data.has_key('value') and \
+       house_data.has_key('mortgage_left') and \
+       house_data.has_key('share') and \
+       house_data.has_key('disputed')
+
+
+def translate_property(possible_property_data):
+    property_data = [house for house in possible_property_data if valid_house(house)]
     main_homes = [x for x in property_data if x['main']]
     non_mains = [x for x in property_data if not x['main']]
     if (len(main_homes) > 0):

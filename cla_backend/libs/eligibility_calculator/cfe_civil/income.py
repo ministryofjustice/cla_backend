@@ -1,4 +1,4 @@
-from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds
+from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds, none_filter
 
 
 INCOME_CATEGORY_TO_REGULAR_TRANSACTION = {
@@ -16,7 +16,7 @@ def translate_income(income_data):
 
     for income_category in INCOME_CATEGORY_TO_REGULAR_TRANSACTION:
         if hasattr(income_data, income_category):
-            amount_pence = getattr(income_data, income_category, None)
+            amount_pence = getattr(income_data, income_category)
             if amount_pence:
                 regular_transactions.append(
                     {

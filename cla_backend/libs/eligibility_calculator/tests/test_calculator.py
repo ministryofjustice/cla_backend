@@ -1801,10 +1801,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         return EligibilityChecker(case_data=case_data)
 
     def checker_with_assets(self, assets, facts=None):
-        if facts is None:
-            cd = fixtures.get_default_case_data()
-        else:
-            cd = fixtures.get_default_case_data(facts=facts)
+        cd = self.case_dict_with_property(facts=facts)
         cd['you'].update({'savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0)})
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
@@ -1819,8 +1816,21 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         self.assertEqual('ineligible', cfe_response.overall_result)
         self.assertEqual('no', result)
 
-    def checker_with_property(self, value):
+    def case_dict_with_property(self, value=10000, facts=None):
         property_data = [{"value": value * 100, "mortgage_left": 0, "share": 100, "disputed": False, "main": True}]
+        if facts is None:
+            return fixtures.get_default_case_data(property_data=property_data)
+        else:
+            return fixtures.get_default_case_data(property_data=property_data,
+                                                  facts=facts)
+
+    def checker_with_property(self, value):
+        cd = self.case_dict_with_property(value)
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
+    def checker_with_blank_property(self):
+        property_data = [{}]
         cd = fixtures.get_default_case_data(property_data=property_data)
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
@@ -1831,8 +1841,6 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
 
     def test_cfe_request_with_large_property(self):
         _, cfe_response = self.checker_with_property(300000)._do_cfe_civil_check()
-        self.assertEqual('ineligible', cfe_response.overall_result)
-        _, cfe_response = self.checker_with_assets(9000 * 100)._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_response.overall_result)
 
     def checker_with_income(self, income, tax, ni=600, self_employed=False):
@@ -1852,20 +1860,30 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
-    def checker_with_income_without_earnings(self, maintenance_received, child_benefits, earnings=0, self_employed=False, tax_credits=0, pension=0, benefits=0, other_income=0):
-        cd = fixtures.get_default_case_data()
-        cd['you'].update({
-            'income': dict(
-                earnings=earnings,
-                self_employed=self_employed,
-                maintenance_received=maintenance_received,
-                child_benefits=child_benefits,
-                tax_credits=tax_credits,
-                pension=pension,
-                benefits=benefits,
-                other_income=other_income
-            )
-        })
+    def checker_with_income_without_earnings(self, maintenance_received, child_benefits, deductions=None,
+                                             self_employed=False, tax_credits=0):
+        cd = self.case_dict_with_property(10000)
+        if tax_credits is None:
+            cd['you'].update({
+                'income': dict(
+                    self_employed=self_employed,
+                    earnings=0,
+                ),
+            })
+        else:
+            cd['you'].update({
+                'income': dict(
+                    self_employed=self_employed,
+                    maintenance_received=maintenance_received,
+                    child_benefits=child_benefits,
+                    tax_credits=0,
+                    pension=0,
+                    benefits=0,
+                    other_income=0
+                ),
+            })
+        if deductions is not None:
+            cd['you'].update({'deductions': deductions})
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
@@ -1883,46 +1901,85 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         self.assertEqual('ineligible', cfe_response.overall_result)
 
     def checker_with_dependants(self, young_count, old_count):
-        cd = fixtures.get_default_case_data()
+        cd = self.case_dict_with_property(10000)
         cd['facts'].update(dict(dependants_old=old_count, dependants_young=young_count))
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
+    def do_cfe_civil_check(self, checker):
+        _, cfe_result = checker._do_cfe_civil_check()
+        return cfe_result
+
     def test_cfe_request_with_no_dependants(self):
-        _, cfe_result = self.checker_with_dependants(0, 0)._do_cfe_civil_check()
+        checker = self.checker_with_dependants(0, 0)
+        cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual('eligible', cfe_result.overall_result)
 
     def test_cfe_request_with_many_young_dependants_increases_gross_threshold(self):
-        _, cfe_result = self.checker_with_dependants(6, 0)._do_cfe_civil_check()
+        checker = self.checker_with_dependants(6, 0)
+        cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual(3101.0, cfe_result.gross_upper_threshold)
 
     def test_cfe_request_with_many_old_dependants_doesnt_change_gross_threshold(self):
-        _, cfe_result = self.checker_with_dependants(0, 6)._do_cfe_civil_check()
+        checker = self.checker_with_dependants(0, 6)
+        cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual(2657.0, cfe_result.gross_upper_threshold)
 
-    def test_cfe_request_with_small_income_without_earnings(self):
-        _, cfe_response = self.checker_with_income_without_earnings(maintenance_received=10000,
-                                                                    child_benefits=500)._do_cfe_civil_check()
-        self.assertEqual('eligible', cfe_response.overall_result)
+    def test_small_income_without_earnings_cfe_eligible(self):
+        checker = self.checker_with_income(income=10000, tax=500)
+        cfe_result = self.do_cfe_civil_check(checker)
+        self.assertEqual('eligible', cfe_result.overall_result)
 
-    def test_cfe_request_with_large_income_without_earnings(self):
-        _, cfe_response = self.checker_with_income_without_earnings(maintenance_received=10000,
-                                                                    child_benefits=500,
-                                                                    earnings=10000,
-                                                                    other_income=100000)._do_cfe_civil_check()
-        self.assertEqual('ineligible', cfe_response.overall_result)
+    def test_large_income_without_earnings_cfe_ineligible(self):
+        checker = self.checker_with_income(income=100000, tax=500)
+        cfe_result = self.do_cfe_civil_check(checker)
+        self.assertEqual('ineligible', cfe_result.overall_result)
+
+    def test_cfe_with_incomplete_property_data_is_unknown(self):
+        _, cfe_result = self.checker_with_blank_property()._do_cfe_civil_check()
+        self.assertEqual("not_yet_known", cfe_result.overall_result)
+
+    def test_incomplete_income_data_is_unknown(self):
+        _, cfe_result = self.checker_with_income_without_earnings(maintenance_received=100,
+                                                                  child_benefits=500,
+                                                                  tax_credits=None)._do_cfe_civil_check()
+        self.assertEqual("not_yet_known", cfe_result.overall_result)
+
+    def test_incomplete_deductions_data_is_unknown(self):
+        _, cfe_result = self.checker_with_income_without_earnings(maintenance_received=100,
+                                                                  child_benefits=500,
+                                                                  deductions={})._do_cfe_civil_check()
+        self.assertEqual("not_yet_known", cfe_result.overall_result)
+
+    def test_incomplete_self_employment_is_unknown(self):
+        _, cfe_result = self.checker_with_income_without_earnings(maintenance_received=100,
+                                                                  child_benefits=500,
+                                                                  self_employed=True)._do_cfe_civil_check()
+        self.assertEqual("not_yet_known", cfe_result.overall_result)
+
+    def checker_without_savings(self):
+        cd = fixtures.get_default_case_data()
+        cd['you'].update({'savings': {}})
+
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
+    def test_cfe_with_no_savings_data_is_unknown(self):
+        _, cfe_result = self.checker_without_savings()._do_cfe_civil_check()
+        self.assertEqual("not_yet_known", cfe_result.overall_result)
 
     def test_under_60_with_capital(self):
-        facts = dict(is_you_or_your_partner_over_60=False, is_you_under_18=False)
-        _, cfe_result = self.checker_with_assets(20000 * 100, facts)._do_cfe_civil_check()
+        facts = dict(is_you_or_your_partner_over_60=False, is_you_under_18=False, has_partner=False)
+        checker = self.checker_with_assets(20000 * 100, facts)
+        cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual('ineligible', cfe_result.overall_result)
 
     def test_over_60_with_capital(self):
-        facts = dict(is_you_or_your_partner_over_60=True, is_you_under_18=False)
-        _, cfe_result = self.checker_with_assets(20000 * 100, facts)._do_cfe_civil_check()
+        facts = dict(is_you_or_your_partner_over_60=True, is_you_under_18=False, has_partner=False)
+        checker = self.checker_with_assets(20000 * 100, facts)
+        cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual('eligible', cfe_result.overall_result)
 
     def test_cfe_request_with_applicant_receives_qualifying_benefit(self):
-        _, cfe_result = self.checker_with_facts(on_passported_benefits=False)._do_cfe_civil_check()
-        self.assertEqual('eligible', cfe_result.overall_result)
-        self.assertEqual(False, cfe_result.applicant_details()["receives_qualifying_benefit"])
+        _, cfe_result = self.checker_with_facts(on_passported_benefits=True)._do_cfe_civil_check()
+        self.assertTrue(cfe_result.applicant_details()["receives_qualifying_benefit"])

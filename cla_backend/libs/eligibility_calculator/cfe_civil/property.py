@@ -39,9 +39,11 @@ def translate_property(possible_property_data):
                 "additional_properties": additional_houses
             }
         }
-    else:
+    elif len(possible_property_data) == len(property_data):
         return {
             "properties": {
                 "additional_properties": additional_houses
             }
         }
+    else:
+        return {}

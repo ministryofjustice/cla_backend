@@ -1806,6 +1806,22 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         self.assertEqual('eligible', cfe_result.overall_result())
 
     def test_cfe_request_with_too_much_savings(self):
+        cfe_result = self.checker_with_assets(1000000)._do_cfe_civil_check()
+        self.assertEqual('ineligible', cfe_result.overall_result())
+
+    def checker_with_property(self, value):
+        property_data = [{"value": value * 100, "mortgage_left": 0, "share": 100, "disputed": False, "main": True}]
+        cd = fixtures.get_default_case_data(property_data=property_data)
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
+    def test_cfe_request_with_small_property(self):
+        cfe_result = self.checker_with_property(100000)._do_cfe_civil_check()
+        self.assertEqual('eligible', cfe_result.overall_result())
+
+    def test_cfe_request_with_large_property(self):
+        cfe_result = self.checker_with_property(300000)._do_cfe_civil_check()
+        self.assertEqual('ineligible', cfe_result.overall_result())
         cfe_result = self.checker_with_assets(9000 * 100)._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_result.overall_result())
 

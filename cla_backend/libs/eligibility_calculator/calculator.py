@@ -7,8 +7,9 @@ from django.utils import timezone
 from . import constants
 from . import exceptions
 from .cfe_civil.savings import translate_savings
-from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.employment import translate_employment
+from .cfe_civil.cfe_response import CfeResponse
+from .cfe_civil.property import translate_property
 
 
 class cached_calcs_property(object):
@@ -368,6 +369,8 @@ class EligibilityChecker(object):
         }
         if hasattr(self.case_data.you, "savings"):
             request_data.update(translate_savings(self.case_data.you.savings))
+        if hasattr(self.case_data, "property_data"):
+            request_data.update(translate_property(self.case_data.property_data))
         if hasattr(self.case_data.you, "income") and hasattr(self.case_data.you, "deductions"):
             request_data.update(translate_employment(self.case_data.you.income, self.case_data.you.deductions))
         return request_data

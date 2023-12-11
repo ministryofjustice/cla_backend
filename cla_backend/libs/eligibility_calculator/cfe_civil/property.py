@@ -12,11 +12,11 @@ def convert_house(house_data):
 
 
 def valid_house(house_data):
-   return house_data.has_key('main') and \
-       house_data.has_key('value') and \
-       house_data.has_key('mortgage_left') and \
-       house_data.has_key('share') and \
-       house_data.has_key('disputed')
+    return 'main' in house_data and \
+       'value' in house_data and \
+       'mortgage_left' in house_data and \
+       'share' in house_data and \
+       'disputed' in house_data
 
 
 def translate_property(possible_property_data):

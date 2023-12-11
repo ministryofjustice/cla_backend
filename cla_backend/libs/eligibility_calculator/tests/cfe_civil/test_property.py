@@ -9,13 +9,13 @@ class TestTranslateProperty(TestCase):
             {'disputed': False,
              'main': True,
              'share': 80,
-             'value': 100 * 1000 * 100,
-             'mortgage_left': 50 * 1000 * 100},
+             'value': 100000 * 100,
+             'mortgage_left': 50000 * 100},
             {'disputed': False,
              'main': False,
              'share': 50,
-             'value': 500 * 1000 * 100,
-             'mortgage_left': 200 * 1000 * 100
+             'value': 500000 * 100,
+             'mortgage_left': 200000 * 100
              }
         ]
 
@@ -45,8 +45,8 @@ class TestTranslateProperty(TestCase):
             {'disputed': True,
              'main': False,
              'share': 50,
-             'value': 500 * 1000 * 100,
-             'mortgage_left': 200 * 1000 * 100
+             'value': 500000 * 100,
+             'mortgage_left': 200000 * 100
              }
         ]
 
@@ -69,14 +69,14 @@ class TestTranslateProperty(TestCase):
             {'disputed': True,
              'main': True,
              'share': 50,
-             'value': 500 * 1000 * 100,
-             'mortgage_left': 200 * 1000 * 100
+             'value': 500000 * 100,
+             'mortgage_left': 200000 * 100
              },
             {'disputed': False,
              'main': True,
              'share': 40,
-             'value': 400 * 1000 * 100,
-             'mortgage_left': 100 * 1000 * 100
+             'value': 400000 * 100,
+             'mortgage_left': 100000 * 100
              }
         ]
 

@@ -11,6 +11,7 @@ def _savings_value(value, description):
     else:
         return None
 
+
 def translate_savings(savings_data):
     liquid_capital = []
     non_liquid_capital = []

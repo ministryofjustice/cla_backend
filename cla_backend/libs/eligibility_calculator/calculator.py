@@ -1,4 +1,5 @@
 import datetime
+import json
 
 import requests
 from django.conf import settings
@@ -10,6 +11,8 @@ from .cfe_civil.savings import translate_savings
 from .cfe_civil.employment import translate_employment
 from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.property import translate_property
+
+logger = __import__("logging").getLogger(__name__)
 
 
 class cached_calcs_property(object):
@@ -339,15 +342,24 @@ class EligibilityChecker(object):
     def is_eligible(self):
         self._do_cfe_civil_check()
 
-        return self._legacy_check()
+        legacy_result = self._legacy_check()
+        logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
+
+        return legacy_result
 
     def _do_cfe_civil_check(self):
         cfe_request_dict = self._translate_case()
 
-        cfe_civil_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
-        return CfeResponse(cfe_civil_response.content)
+        cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
+        logger.info("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
+        cfe_response = CfeResponse(cfe_raw_response.content)
+
+        logger.info("Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
+
+        return cfe_response
 
     def _translate_case(self):
+        '''Translates CLA's CaseData to CFE-Civil request JSON'''
         submission_date = datetime.date(2022, 5, 19)
         # produce the simplest possible plain request to CFE to prove the route
         request_data = {

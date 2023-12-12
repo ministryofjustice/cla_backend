@@ -1795,7 +1795,7 @@ class IsEligibleTestCase(unittest.TestCase):
 
 
 class DoCfeCivilCheckTestCase(unittest.TestCase):
-    def checker_with_facts(self, on_passported_benefits=True):
+    def checker_with_facts(self, on_passported_benefits=False):
         cd = fixtures.get_default_case_data()
         cd["facts"].update({
             "on_passported_benefits": on_passported_benefits

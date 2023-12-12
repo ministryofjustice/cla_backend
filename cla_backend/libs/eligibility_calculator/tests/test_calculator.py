@@ -1873,9 +1873,12 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         self.assertEqual('ineligible', cfe_result.overall_result())
 
     def test_cfe_request_with_small_income_without_earnings(self):
-        cfe_result = self.checker_with_income_without_earnings(10000, 500)._do_cfe_civil_check()
+        cfe_result = self.checker_with_income_without_earnings(maintenance_received=10000,
+                                                               child_benefits=500)._do_cfe_civil_check()
         self.assertEqual('eligible', cfe_result.overall_result())
 
     def test_cfe_request_with_large_income_without_earnings(self):
-        cfe_result = self.checker_with_income_without_earnings(10000, 500, 10000, False, 10000, 10000, 10000, 100000)._do_cfe_civil_check()
+        cfe_result = self.checker_with_income_without_earnings(maintenance_received=10000, child_benefits=500,
+                                                               earnings=10000,
+                                                               other_income=100000)._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_result.overall_result())

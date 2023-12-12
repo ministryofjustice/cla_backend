@@ -13,6 +13,7 @@ from .cfe_civil.employment import translate_employment
 from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.property import translate_property
 from .cfe_civil.income import translate_income
+from .cfe_civil.applicant import translate_applicant
 
 logger = __import__("logging").getLogger(__name__)
 
@@ -376,11 +377,6 @@ class EligibilityChecker(object):
                 "submission_date": str(submission_date),
                 "level_of_help": "controlled"  # CLA is for 'advice' only, so always controlled
             },
-            "applicant": {
-                "date_of_birth": "1992-07-25",
-                "receives_qualifying_benefit": False,
-                "receives_asylum_support": False,
-            },
             "proceeding_types": [
                 {
                     "ccms_code": "SE013",
@@ -388,6 +384,8 @@ class EligibilityChecker(object):
                 }
             ]
         }
+        if hasattr(self.case_data, "facts"):
+            request_data.update(translate_applicant(self.case_data.facts))
         if hasattr(self.case_data.you, "savings"):
             request_data.update(translate_savings(self.case_data.you.savings))
         if hasattr(self.case_data, "property_data"):

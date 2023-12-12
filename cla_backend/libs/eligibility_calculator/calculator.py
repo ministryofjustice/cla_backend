@@ -352,7 +352,7 @@ class EligibilityChecker(object):
 
         cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
         logger.info("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
-        cfe_response = CfeResponse(cfe_raw_response.json())
+        cfe_response = CfeResponse(cfe_raw_response.content)
 
         logger.info("Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
 

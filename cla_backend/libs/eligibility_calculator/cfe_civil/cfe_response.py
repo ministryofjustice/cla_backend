@@ -1,6 +1,3 @@
-import json
-
-
 class CfeResponse(object):
     def __init__(self, cfe_response_dict):
         self._cfe_data = cfe_response_dict

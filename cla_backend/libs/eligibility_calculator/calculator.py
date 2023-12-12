@@ -1,4 +1,5 @@
 import datetime
+import json
 
 import requests
 from django.conf import settings
@@ -341,14 +342,20 @@ class EligibilityChecker(object):
     def is_eligible(self):
         self._do_cfe_civil_check()
 
-        return self._legacy_check()
+        legacy_result = self._legacy_check()
+        logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
+
+        return legacy_result
 
     def _do_cfe_civil_check(self):
         cfe_request_dict = self._translate_case()
 
         cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
+        logger.info("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
+
         cfe_response = CfeResponse(cfe_raw_response.json())
         result = self._translate_response(cfe_response)
+        logger.info("Eligibility result (CFE): %s %s" % (result, json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
 
         return result, cfe_response
 

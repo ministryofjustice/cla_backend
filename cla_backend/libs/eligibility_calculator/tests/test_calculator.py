@@ -1802,12 +1802,14 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         return EligibilityChecker(case_data=case_data)
 
     def test_cfe_request_with_no_assets(self):
-        cfe_result = self.checker_with_assets(0)._do_cfe_civil_check()
-        self.assertEqual('eligible', cfe_result.overall_result())
+        result, cfe_response = self.checker_with_assets(0)._do_cfe_civil_check()
+        self.assertEqual('eligible', cfe_response.overall_result)
+        self.assertEqual(True, result)
 
     def test_cfe_request_with_too_much_savings(self):
-        cfe_result = self.checker_with_assets(1000000)._do_cfe_civil_check()
-        self.assertEqual('ineligible', cfe_result.overall_result())
+        result, cfe_response = self.checker_with_assets(1000000)._do_cfe_civil_check()
+        self.assertEqual('ineligible', cfe_response.overall_result)
+        self.assertEqual(False, result)
 
     def checker_with_property(self, value):
         property_data = [{"value": value * 100, "mortgage_left": 0, "share": 100, "disputed": False, "main": True}]
@@ -1816,14 +1818,14 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         return EligibilityChecker(case_data=case_data)
 
     def test_cfe_request_with_small_property(self):
-        cfe_result = self.checker_with_property(100000)._do_cfe_civil_check()
-        self.assertEqual('eligible', cfe_result.overall_result())
+        _, cfe_response = self.checker_with_property(100000)._do_cfe_civil_check()
+        self.assertEqual('eligible', cfe_response.overall_result)
 
     def test_cfe_request_with_large_property(self):
-        cfe_result = self.checker_with_property(300000)._do_cfe_civil_check()
-        self.assertEqual('ineligible', cfe_result.overall_result())
-        cfe_result = self.checker_with_assets(9000 * 100)._do_cfe_civil_check()
-        self.assertEqual('ineligible', cfe_result.overall_result())
+        _, cfe_response = self.checker_with_property(300000)._do_cfe_civil_check()
+        self.assertEqual('ineligible', cfe_response.overall_result)
+        _, cfe_response = self.checker_with_assets(9000 * 100)._do_cfe_civil_check()
+        self.assertEqual('ineligible', cfe_response.overall_result)
 
     def checker_with_income(self, income, tax, ni=600, self_employed=False):
         cd = fixtures.get_default_case_data()
@@ -1836,13 +1838,13 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
 
     def test_cfe_request_with_small_gross_income(self):
         # income is in pence
-        cfe_result = self.checker_with_income(10000, 100)._do_cfe_civil_check()
-        self.assertEqual(45.0, cfe_result.employment_allowance())
+        _, cfe_response = self.checker_with_income(10000, 100)._do_cfe_civil_check()
+        self.assertEqual(45.0, cfe_response.employment_allowance)
 
     def test_cfe_request_self_employed(self):
-        cfe_result = self.checker_with_income(10000, 100, self_employed=True)._do_cfe_civil_check()
-        self.assertEqual(0.0, cfe_result.employment_allowance())
+        _, cfe_response = self.checker_with_income(10000, 100, self_employed=True)._do_cfe_civil_check()
+        self.assertEqual(0.0, cfe_response.employment_allowance)
 
     def test_cfe_request_with_large_gross_income(self):
-        cfe_result = self.checker_with_income(1000000, 500)._do_cfe_civil_check()
-        self.assertEqual('ineligible', cfe_result.overall_result())
+        _, cfe_response = self.checker_with_income(1000000, 500)._do_cfe_civil_check()
+        self.assertEqual('ineligible', cfe_response.overall_result)

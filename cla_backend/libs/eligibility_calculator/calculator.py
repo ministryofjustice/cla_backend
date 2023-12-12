@@ -11,6 +11,8 @@ from .cfe_civil.employment import translate_employment
 from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.property import translate_property
 
+logger = __import__("logging").getLogger(__name__)
+
 
 class cached_calcs_property(object):
     def __init__(self, func):
@@ -344,10 +346,14 @@ class EligibilityChecker(object):
     def _do_cfe_civil_check(self):
         cfe_request_dict = self._translate_case()
 
-        cfe_civil_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
-        return CfeResponse(cfe_civil_response.content)
+        cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
+        cfe_response = CfeResponse(cfe_raw_response.json())
+        result = self._translate_response(cfe_response)
+
+        return result, cfe_response
 
     def _translate_case(self):
+        '''Translates CLA's CaseData to CFE-Civil request JSON'''
         submission_date = datetime.date(2022, 5, 19)
         # produce the simplest possible plain request to CFE to prove the route
         request_data = {
@@ -374,6 +380,16 @@ class EligibilityChecker(object):
         if hasattr(self.case_data.you, "income") and hasattr(self.case_data.you, "deductions"):
             request_data.update(translate_employment(self.case_data.you.income, self.case_data.you.deductions))
         return request_data
+
+    def _translate_response(self, cfe_response):
+        '''Translates CFE-Civil's response to similar to what EligibilityChecker.is_eligible() has always returned'''
+        if cfe_response.overall_result in ('eligible', 'contribution_required'):
+            return True
+        elif cfe_response.overall_result == 'ineligible':
+            return False
+        elif cfe_response.overall_result == 'not_yet_known':
+            return 'unknown'
+        logger.error('cfe_response.overall_result not recognised: %s' % cfe_response.overall_result)
 
     def _legacy_check(self):
         if self.case_data.facts.has_passported_proceedings_letter:

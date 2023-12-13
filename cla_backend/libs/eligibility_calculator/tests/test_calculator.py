@@ -1830,8 +1830,33 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
     def checker_with_income(self, income, tax, ni=600, self_employed=False):
         cd = fixtures.get_default_case_data()
         cd['you'].update({
-            'income': dict(earnings=income, self_employed=self_employed),
+            'income': dict(earnings=income,
+                           self_employed=self_employed,
+                           maintenance_received=0,
+                           child_benefits=0,
+                           tax_credits=0,
+                           pension=0,
+                           benefits=0,
+                           other_income=0
+                           ),
             'deductions': dict(income_tax=tax, national_insurance=ni)
+        })
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
+    def checker_with_income_without_earnings(self, maintenance_received, child_benefits, earnings=0, self_employed=False, tax_credits=0, pension=0, benefits=0, other_income=0):
+        cd = fixtures.get_default_case_data()
+        cd['you'].update({
+            'income': dict(
+                earnings=earnings,
+                self_employed=self_employed,
+                maintenance_received=maintenance_received,
+                child_benefits=child_benefits,
+                tax_credits=tax_credits,
+                pension=pension,
+                benefits=benefits,
+                other_income=other_income
+            )
         })
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
@@ -1847,4 +1872,15 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
 
     def test_cfe_request_with_large_gross_income(self):
         _, cfe_response = self.checker_with_income(1000000, 500)._do_cfe_civil_check()
+        self.assertEqual('ineligible', cfe_response.overall_result)
+
+    def test_cfe_request_with_small_income_without_earnings(self):
+        _, cfe_response = self.checker_with_income_without_earnings(maintenance_received=10000,
+                                                               child_benefits=500)._do_cfe_civil_check()
+        self.assertEqual('eligible', cfe_response.overall_result)
+
+    def test_cfe_request_with_large_income_without_earnings(self):
+        _, cfe_response = self.checker_with_income_without_earnings(maintenance_received=10000, child_benefits=500,
+                                                               earnings=10000,
+                                                               other_income=100000)._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_response.overall_result)

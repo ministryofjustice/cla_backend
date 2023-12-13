@@ -7,10 +7,12 @@ from django.utils import timezone
 
 from . import constants
 from . import exceptions
+
 from .cfe_civil.savings import translate_savings
 from .cfe_civil.employment import translate_employment
 from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.property import translate_property
+from .cfe_civil.income import translate_income
 
 logger = __import__("logging").getLogger(__name__)
 
@@ -386,6 +388,8 @@ class EligibilityChecker(object):
             request_data.update(translate_property(self.case_data.property_data))
         if hasattr(self.case_data.you, "income") and hasattr(self.case_data.you, "deductions"):
             request_data.update(translate_employment(self.case_data.you.income, self.case_data.you.deductions))
+        if hasattr(self.case_data.you, "income"):
+            request_data.update(translate_income(self.case_data.you.income))
         return request_data
 
     def _translate_response(self, cfe_response):

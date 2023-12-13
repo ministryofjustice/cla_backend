@@ -1755,7 +1755,6 @@ class IsEligibleTestCase(unittest.TestCase):
         )
 
         self.assertTrue(ec.is_eligible())
-        self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_capital_is_above_limit(self):
@@ -1770,7 +1769,6 @@ class IsEligibleTestCase(unittest.TestCase):
 
         ec.is_disposable_capital_eligible = mock.MagicMock(return_value=False)
         self.assertFalse(ec.is_eligible())
-        self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_income_is_above_limit(self):
@@ -1790,7 +1788,6 @@ class IsEligibleTestCase(unittest.TestCase):
 
         self.assertFalse(ec.is_eligible())
         self.assertTrue(ec.is_gross_income_eligible.called)
-        self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
 

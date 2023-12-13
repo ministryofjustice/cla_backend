@@ -19,6 +19,6 @@ class TestTranslateApplicant(TestCase):
         applicant_facts = Facts(on_passported_benefits=True)
         output = translate_applicant(applicant_facts)
         expected = {
-                "receives_qualifying_benefit": True,
+            "receives_qualifying_benefit": True,
         }
         self.assertEqual(expected, output)

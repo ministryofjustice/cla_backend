@@ -129,6 +129,26 @@ class CaseData(ModelMixin, object):
         "disputed_savings": Savings,
     }
 
+    def to_dict(self):
+        from django.db.models.query import ValuesQuerySet
+
+        def dump_object(obj):
+            props = {}
+            for key in obj.PROPERTY_META.keys():
+                try:
+                    value = getattr(obj, key)
+                except Exception:
+                    value = None
+                if isinstance(value, ModelMixin):
+                    value = dump_object(value)
+                elif isinstance(value, ValuesQuerySet):
+                    value = list(value)
+                props[key] = value
+            return props
+
+        data = dump_object(self)
+        return data
+
     @property
     def non_disputed_liquid_capital(self):
         # total capital not including properties

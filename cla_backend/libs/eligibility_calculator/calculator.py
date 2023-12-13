@@ -344,7 +344,13 @@ class EligibilityChecker(object):
     def is_eligible(self):
         self._do_cfe_civil_check()
 
-        legacy_result = self._legacy_check()
+        try:
+            legacy_result = self._legacy_check()
+        except Exception as exc:
+            # e.g. PropertyExpectedException 'Facts' requires attribute 'has_partner'
+            # This is the "unknown" result - not enough info to give a definitive calculation result
+            logger.info("Eligibility result (legacy): %s %s", exc.__class__.__name__, exc)
+            raise
         logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
         return legacy_result
@@ -355,8 +361,8 @@ class EligibilityChecker(object):
         cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
         logger.info("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
         cfe_response = CfeResponse(cfe_raw_response.content)
-
-        logger.info("Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
+        logger.info("Eligibility result (CFE): %s" % cfe_response.overall_result)
+        logger.debug("Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
 
         return cfe_response
 

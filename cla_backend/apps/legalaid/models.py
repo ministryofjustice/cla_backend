@@ -1,3 +1,4 @@
+import json
 import logging
 import datetime
 import re
@@ -422,6 +423,8 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         that we don't have enough data to determine the state so we set the
         `state` property to UNKNOWN.
         """
+        case_data = self.to_case_data()
+        logger.debug('CaseData %s' % json.dumps(case_data.to_dict(), indent=4, sort_keys=True))
         ec = EligibilityChecker(self.to_case_data())
 
         try:

@@ -354,11 +354,12 @@ class EligibilityChecker(object):
 
         cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
         logger.info("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
-        cfe_response = CfeResponse(cfe_raw_response.content)
 
-        logger.info("Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
+        cfe_response = CfeResponse(cfe_raw_response.json())
+        result = self._translate_response(cfe_response)
+        logger.info("Eligibility result (CFE): %s %s" % (result, json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
 
-        return cfe_response
+        return result, cfe_response
 
     def _translate_case(self):
         '''Translates CLA's CaseData to CFE-Civil request JSON'''
@@ -390,6 +391,16 @@ class EligibilityChecker(object):
         if hasattr(self.case_data.you, "income"):
             request_data.update(translate_income(self.case_data.you.income))
         return request_data
+
+    def _translate_response(self, cfe_response):
+        '''Translates CFE-Civil's response to similar to what EligibilityChecker.is_eligible() has always returned'''
+        if cfe_response.overall_result in ('eligible', 'contribution_required'):
+            return True
+        elif cfe_response.overall_result == 'ineligible':
+            return False
+        elif cfe_response.overall_result == 'not_yet_known':
+            return 'unknown'
+        logger.error('cfe_response.overall_result not recognised: %s' % cfe_response.overall_result)
 
     def _legacy_check(self):
         if self.case_data.facts.has_passported_proceedings_letter:

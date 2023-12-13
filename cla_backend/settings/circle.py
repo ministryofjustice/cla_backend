@@ -1,5 +1,6 @@
 import os
 from .testing import *
+from .testing import LOGGING
 
 ADMINS = (("CLA", "cla-alerts@digital.justice.gov.uk"),)
 
@@ -17,3 +18,5 @@ DATABASES = {
 }
 
 TEST_OUTPUT_DIR = "test-reports"
+
+LOGGING['handlers']['console']['level'] = 'WARN'

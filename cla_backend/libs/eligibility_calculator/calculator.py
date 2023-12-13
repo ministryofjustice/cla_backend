@@ -377,6 +377,11 @@ class EligibilityChecker(object):
                 "submission_date": str(submission_date),
                 "level_of_help": "controlled"  # CLA is for 'advice' only, so always controlled
             },
+            "applicant": {
+                "date_of_birth": "1992-07-25",
+                "receives_qualifying_benefit": False,
+                "receives_asylum_support": False,
+            },
             "proceeding_types": [
                 {
                     "ccms_code": "SE013",

@@ -1,27 +1,28 @@
 from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds
 
 
+INCOME_CATEGORY_TO_REGULAR_TRANSACTION = {
+    "tax_credits": "benefits",
+    "maintenance_received": "maintenance_in",
+    "pension": "pension",
+    "benefits": "benefits",
+    "child_benefits": "benefits",
+    "other_income": "friends_or_family",
+}
+
+
 def translate_income(income_data):
-    regular_transactions = [
-        _regular_transaction("benefits", income_data, "tax_credits"),
-        _regular_transaction("maintenance_in", income_data, "maintenance_received"),
-        _regular_transaction("pension", income_data, "pension"),
-        _regular_transaction("benefits", income_data, "benefits"),
-        _regular_transaction("benefits", income_data, "child_benefits"),
-        _regular_transaction("friends_or_family", income_data, "other_income")
-    ]
+    regular_transactions = []
 
-    value = dict(
-        regular_transactions=[x for x in regular_transactions if x is not None]
-    )
-    return value
-
-
-def _regular_transaction(cfe_category, income_data, attr_name):
-    if hasattr(income_data, attr_name) and getattr(income_data, attr_name) > 0:
-        return {
-            "category": cfe_category,
-            "operation": "credit",
-            "frequency": "monthly",
-            "amount": pence_to_pounds(getattr(income_data, attr_name))
-        }
+    for income_category in INCOME_CATEGORY_TO_REGULAR_TRANSACTION:
+        amount_pence = getattr(income_data, income_category, None)
+        if amount_pence:
+            regular_transactions.append(
+                {
+                    "category": INCOME_CATEGORY_TO_REGULAR_TRANSACTION[income_category],
+                    "operation": "credit",
+                    "frequency": "monthly",
+                    "amount": pence_to_pounds(amount_pence)
+                }
+            )
+    return {"regular_transactions": regular_transactions} if regular_transactions else {}

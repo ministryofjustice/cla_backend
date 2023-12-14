@@ -361,9 +361,10 @@ class EligibilityChecker(object):
 
         return result, cfe_response
 
-    def _translate_case(self):
+    def _translate_case(self, submission_date=None):
         '''Translates CLA's CaseData to CFE-Civil request JSON'''
-        submission_date = datetime.date(2022, 5, 19)
+        if not submission_date:
+            submission_date = datetime.date.today()
         # produce the simplest possible plain request to CFE to prove the route
         request_data = {
             "assessment": {

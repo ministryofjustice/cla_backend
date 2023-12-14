@@ -1882,6 +1882,24 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         _, cfe_response = self.checker_with_income(1000000, 500)._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_response.overall_result)
 
+    def checker_with_dependants(self, young_count, old_count):
+        cd = fixtures.get_default_case_data()
+        cd['facts'].update(dict(dependants_old=old_count, dependants_young=young_count))
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
+    def test_cfe_request_with_no_dependants(self):
+        _, cfe_result = self.checker_with_dependants(0, 0)._do_cfe_civil_check()
+        self.assertEqual('eligible', cfe_result.overall_result)
+
+    def test_cfe_request_with_many_young_dependants_increases_gross_threshold(self):
+        _, cfe_result = self.checker_with_dependants(6, 0)._do_cfe_civil_check()
+        self.assertEqual(3101.0, cfe_result.gross_upper_threshold)
+
+    def test_cfe_request_with_many_old_dependants_doesnt_change_gross_threshold(self):
+        _, cfe_result = self.checker_with_dependants(0, 6)._do_cfe_civil_check()
+        self.assertEqual(2657.0, cfe_result.gross_upper_threshold)
+
     def test_cfe_request_with_small_income_without_earnings(self):
         _, cfe_response = self.checker_with_income_without_earnings(maintenance_received=10000,
                                                                     child_benefits=500)._do_cfe_civil_check()

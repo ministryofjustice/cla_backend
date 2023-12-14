@@ -426,14 +426,13 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
         case_data = self.to_case_data()
         logger.debug('CaseData %s' % json.dumps(case_data.to_dict(), indent=4, sort_keys=True))
         ec = EligibilityChecker(self.to_case_data())
+        eligibility_state = ec.is_eligible()
 
-        try:
-            if ec.is_eligible():
-                return ELIGIBILITY_STATES.YES, ec, []
-            else:
-                return ELIGIBILITY_STATES.NO, ec, self.get_ineligible_reason(ec)
-        except PropertyExpectedException:
-            return ELIGIBILITY_STATES.UNKNOWN, ec, []
+        if eligibility_state == ELIGIBILITY_STATES.NO:
+            reasons = self.get_ineligible_reason(ec)
+        else:
+            reasons = []
+        return eligibility_state, ec, reasons
 
     def get_ineligible_reason(self, ec=None):
         ec = ec or EligibilityChecker(self.to_case_data())

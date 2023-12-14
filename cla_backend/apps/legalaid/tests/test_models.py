@@ -7,7 +7,6 @@ from django.test import SimpleTestCase, TestCase
 from django.utils import timezone
 
 from eligibility_calculator.models import CaseData, ModelMixin
-from eligibility_calculator.exceptions import PropertyExpectedException
 
 from cla_common.constants import (
     ELIGIBILITY_STATES,
@@ -634,20 +633,20 @@ class EligibilityCheckTestCase(TestCase):
     @mock.patch("legalaid.models.EligibilityChecker")
     def test_update_state(self, MockedEligibilityChecker):
         """
-        calling .is_eligible() sequencially will:
+        calling .is_eligible() sequentially will:
 
-        1. through PropertyExpectedException
-        2. return True
-        3. return False
-        4. through PropertyExpectedException again
+        1. return "unknown"
+        2. return "yes"
+        3. return "no"
+        4. return "unknown" again
         """
         mocked_checker = MockedEligibilityChecker()
         mocked_checker.calcs = {}
         mocked_checker.is_eligible.side_effect = [
-            PropertyExpectedException(),
-            True,
-            False,
-            PropertyExpectedException(),
+            "unknown",
+            "yes",
+            "no",
+            "unknown",
         ]
 
         # 1. PropertyExpectedException => UNKNOWN

@@ -6,8 +6,6 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import status
 
-from eligibility_calculator.exceptions import PropertyExpectedException
-
 from legalaid.models import Category, EligibilityCheck, Property, Person, Income, Savings
 
 from core.tests.test_base import SimpleResourceAPIMixin, NestedSimpleResourceAPIMixin
@@ -1141,7 +1139,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
     @mock.patch("legalaid.models.EligibilityChecker")
     def test_eligibility_check_is_eligible_pass(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
-        v.is_eligible.return_value = True
+        v.is_eligible.return_value = "yes"
         response = self.client.post(
             self.get_is_eligible_url(self.resource_lookup_value),
             data={},
@@ -1154,7 +1152,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
     @mock.patch("legalaid.models.EligibilityChecker")
     def test_eligibility_check_is_eligible_fail(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
-        v.is_eligible.return_value = False
+        v.is_eligible.return_value = "no"
         response = self.client.post(
             self.get_is_eligible_url(self.resource_lookup_value),
             data={},
@@ -1167,7 +1165,7 @@ class EligibilityCheckAPIMixin(SimpleResourceAPIMixin):
     @mock.patch("legalaid.models.EligibilityChecker")
     def test_eligibility_check_is_eligible_unknown(self, mocked_eligibility_checker):
         v = mocked_eligibility_checker()
-        v.is_eligible.side_effect = PropertyExpectedException
+        v.is_eligible.return_value = "unknown"
         response = self.client.post(
             self.get_is_eligible_url(self.resource_lookup_value),
             data={},

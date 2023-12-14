@@ -1042,7 +1042,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
         }
         expected_results.update(expected_property_results[self.expected_results_key])
 
-        self.assertFalse(is_elig)
+        self.assertEqual('no', is_elig)
         self.assertDictEqual(checker.calcs, expected_results)
 
     def test_pensioner_limit_10k_diregard_fail(self):
@@ -1060,7 +1060,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
 
         is_elig, checker = self._test_pensioner(case_data)
 
-        self.assertFalse(is_elig)
+        self.assertEqual('no', is_elig)
         self.assertDictEqual(
             checker.calcs,
             {
@@ -1676,7 +1676,7 @@ class IsEligibleTestCase(unittest.TestCase):
             is_passported=False, is_nass_benefits=False, is_disposable_capital=False
         )
 
-        self.assertFalse(ec.is_eligible())
+        self.assertEqual('no', ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
         self.assertFalse(ec.is_gross_income_eligible.called)
         self.assertFalse(ec.is_disposable_income_eligible.called)
@@ -1696,7 +1696,7 @@ class IsEligibleTestCase(unittest.TestCase):
         )
 
         self.assertFalse(mocked_on_passported_benefits.called)
-        self.assertFalse(ec.is_eligible())
+        self.assertEqual('no', ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
         ec.is_gross_income_eligible.assert_called_once_with()
         self.assertFalse(ec.is_disposable_income_eligible.called)
@@ -1718,7 +1718,7 @@ class IsEligibleTestCase(unittest.TestCase):
         )
 
         self.assertFalse(mocked_on_passported_benefits.called)
-        self.assertFalse(ec.is_eligible())
+        self.assertEqual('no', ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
         ec.is_gross_income_eligible.assert_called_once_with()
         ec.is_disposable_capital_eligible.assert_called_once_with()
@@ -1768,7 +1768,7 @@ class IsEligibleTestCase(unittest.TestCase):
         )
 
         ec.is_disposable_capital_eligible = mock.MagicMock(return_value=False)
-        self.assertFalse(ec.is_eligible())
+        self.assertEqual('no', ec.is_eligible())
         self.assertTrue(mocked_on_nass_benefits.called)
 
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_income_is_above_limit(self):
@@ -1786,7 +1786,7 @@ class IsEligibleTestCase(unittest.TestCase):
             is_disposable_income=False,
         )
 
-        self.assertFalse(ec.is_eligible())
+        self.assertEqual('no', ec.is_eligible())
         self.assertTrue(ec.is_gross_income_eligible.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
@@ -1812,12 +1812,12 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
     def test_cfe_request_with_no_assets(self):
         result, cfe_response = self.checker_with_assets(0)._do_cfe_civil_check()
         self.assertEqual('eligible', cfe_response.overall_result)
-        self.assertEqual(True, result)
+        self.assertEqual('yes', result)
 
     def test_cfe_request_with_too_much_savings(self):
         result, cfe_response = self.checker_with_assets(1000000)._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_response.overall_result)
-        self.assertEqual(False, result)
+        self.assertEqual('no', result)
 
     def checker_with_property(self, value):
         property_data = [{"value": value * 100, "mortgage_left": 0, "share": 100, "disputed": False, "main": True}]
@@ -1881,6 +1881,24 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
     def test_cfe_request_with_large_gross_income(self):
         _, cfe_response = self.checker_with_income(1000000, 500)._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_response.overall_result)
+
+    def checker_with_dependants(self, young_count, old_count):
+        cd = fixtures.get_default_case_data()
+        cd['facts'].update(dict(dependants_old=old_count, dependants_young=young_count))
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
+    def test_cfe_request_with_no_dependants(self):
+        _, cfe_result = self.checker_with_dependants(0, 0)._do_cfe_civil_check()
+        self.assertEqual('eligible', cfe_result.overall_result)
+
+    def test_cfe_request_with_many_young_dependants_increases_gross_threshold(self):
+        _, cfe_result = self.checker_with_dependants(6, 0)._do_cfe_civil_check()
+        self.assertEqual(3101.0, cfe_result.gross_upper_threshold)
+
+    def test_cfe_request_with_many_old_dependants_doesnt_change_gross_threshold(self):
+        _, cfe_result = self.checker_with_dependants(0, 6)._do_cfe_civil_check()
+        self.assertEqual(2657.0, cfe_result.gross_upper_threshold)
 
     def test_cfe_request_with_small_income_without_earnings(self):
         _, cfe_response = self.checker_with_income_without_earnings(maintenance_received=10000,

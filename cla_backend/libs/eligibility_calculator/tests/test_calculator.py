@@ -1755,7 +1755,6 @@ class IsEligibleTestCase(unittest.TestCase):
         )
 
         self.assertTrue(ec.is_eligible())
-        self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_capital_is_above_limit(self):
@@ -1770,7 +1769,6 @@ class IsEligibleTestCase(unittest.TestCase):
 
         ec.is_disposable_capital_eligible = mock.MagicMock(return_value=False)
         self.assertFalse(ec.is_eligible())
-        self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_income_is_above_limit(self):
@@ -1790,11 +1788,18 @@ class IsEligibleTestCase(unittest.TestCase):
 
         self.assertFalse(ec.is_eligible())
         self.assertTrue(ec.is_gross_income_eligible.called)
-        self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
 
 class DoCfeCivilCheckTestCase(unittest.TestCase):
+    def checker_with_facts(self, on_passported_benefits=False):
+        cd = fixtures.get_default_case_data()
+        cd["facts"].update({
+            "on_passported_benefits": on_passported_benefits
+        })
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
     def checker_with_assets(self, assets, facts=None):
         if facts is None:
             cd = fixtures.get_default_case_data()
@@ -1898,3 +1903,8 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         facts = dict(is_you_or_your_partner_over_60=True, is_you_under_18=False)
         _, cfe_result = self.checker_with_assets(20000 * 100, facts)._do_cfe_civil_check()
         self.assertEqual('eligible', cfe_result.overall_result)
+
+    def test_cfe_request_with_applicant_receives_qualifying_benefit(self):
+        _, cfe_result = self.checker_with_facts(on_passported_benefits=False)._do_cfe_civil_check()
+        self.assertEqual('eligible', cfe_result.overall_result)
+        self.assertEqual(False, cfe_result.applicant_details()["receives_qualifying_benefit"])

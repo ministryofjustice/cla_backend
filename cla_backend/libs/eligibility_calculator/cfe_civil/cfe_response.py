@@ -17,3 +17,6 @@ class CfeResponse(object):
     @property
     def gross_upper_threshold(self):
         return self._cfe_data['result_summary']['gross_income']['proceeding_types'][0]['upper_threshold']
+
+    def applicant_details(self):
+        return self._cfe_data['assessment']['applicant']

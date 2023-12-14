@@ -13,6 +13,7 @@ from .cfe_civil.employment import translate_employment
 from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.property import translate_property
 from .cfe_civil.income import translate_income
+from .cfe_civil.applicant import translate_applicant
 
 logger = __import__("logging").getLogger(__name__)
 
@@ -388,6 +389,8 @@ class EligibilityChecker(object):
                 }
             ]
         }
+        if hasattr(self.case_data, "facts"):
+            request_data['applicant'].update(translate_applicant(self.case_data.facts))
         if hasattr(self.case_data.you, "savings"):
             request_data.update(translate_savings(self.case_data.you.savings))
         if hasattr(self.case_data, "property_data"):

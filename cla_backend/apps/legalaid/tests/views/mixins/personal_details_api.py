@@ -42,6 +42,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             "street": "102 Petty France",
             "mobile_phone": "0123456789",
             "home_phone": "9876543210",
+            "announce_call": "False"
         }
 
     def _test_method_in_error(self, method, url):

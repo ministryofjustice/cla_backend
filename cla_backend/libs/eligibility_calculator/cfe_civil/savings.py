@@ -1,25 +1,32 @@
-from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds, none_filter
+from collections import defaultdict
+
+from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds
 
 
-def _savings_value(value, description):
-    if value > 0:
+def translate_savings(savings_data):
+
+    def _savings_value(value_pence, description):
         return {
-            "value": pence_to_pounds(value),
+            "value": pence_to_pounds(value_pence),
             "description": description,
             "subject_matter_of_dispute": False
         }
 
+    capitals = defaultdict(list)  # A convenience - a new key has defaults value of [], ready to append to
 
-def translate_savings(savings_data):
-    liquid_capital = [
-        _savings_value(savings_data.bank_balance, "Savings"),
-        _savings_value(savings_data.investment_balance, "Investment")
-    ]
-    non_liquid_capital = [
-        _savings_value(savings_data.asset_balance, "Asset")
-    ]
+    if hasattr(savings_data, "bank_balance") and savings_data.bank_balance > 0:
+        capitals["bank_accounts"].append(
+            _savings_value(savings_data.bank_balance, "Bank balance")
+        )
 
-    return dict(capitals={
-        "bank_accounts": none_filter(liquid_capital),
-        "non_liquid_capital": none_filter(non_liquid_capital)
-    })
+    if hasattr(savings_data, "investment_balance") and savings_data.investment_balance > 0:
+        capitals["bank_accounts"].append(
+            _savings_value(savings_data.investment_balance, "Investment")
+        )
+
+    if hasattr(savings_data, "asset_balance") and savings_data.asset_balance > 0:
+        capitals["non_liquid_capital"].append(
+            _savings_value(savings_data.asset_balance, "Asset")
+        )
+
+    return {"capitals": capitals} if capitals else {}

@@ -15,6 +15,7 @@ from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.property import translate_property
 from .cfe_civil.income import translate_income
 from .cfe_civil.applicant import translate_applicant
+from .cfe_civil.proceeding_types import translate_proceeding_types
 from cla_common.constants import ELIGIBILITY_STATES
 
 logger = __import__("logging").getLogger(__name__)
@@ -386,6 +387,8 @@ class EligibilityChecker(object):
                 }
             ]
         }
+        if hasattr(self.case_data, "category"):
+            request_data.update(translate_proceeding_types(self.case_data.category))
         if hasattr(self.case_data, "facts"):
             request_data['applicant'].update(translate_applicant(self.case_data.facts))
         if hasattr(self.case_data, "facts"):

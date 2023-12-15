@@ -384,6 +384,7 @@ class EligibilityChecker(object):
                 DEFAULT_PROCEEDING_TYPE
             ]
         }
+
         if hasattr(self.case_data, "category"):
             request_data["proceeding_types"] = translate_proceeding_types(self.case_data.category)
         if hasattr(self.case_data, "facts"):

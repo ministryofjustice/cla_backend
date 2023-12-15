@@ -346,12 +346,15 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
-        self._do_cfe_civil_check()
+        cfe_result, cfe_detail = self._do_cfe_civil_check()
 
-        legacy_result = self._legacy_check()
-        logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
+        if self.case_data.facts.on_nass_benefits and self.case_data.category == "immigration":
+            return cfe_result
+        else:
+            legacy_result = self._legacy_check()
+            logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
-        return legacy_result
+            return legacy_result
 
     def _do_cfe_civil_check(self):
         cfe_request_dict = self._translate_case()

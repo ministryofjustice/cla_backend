@@ -158,6 +158,8 @@ class PersonalDetails(CloneModelMixin, TimeStampedModel):
     # only normalised version of post code for now
     search_field = models.TextField(null=True, blank=True, db_index=True)
 
+    announce_call = models.BooleanField(blank=False, default=False)
+
     cloning_config = {"excludes": ["reference", "created", "modified", "case_count", "search_field"]}
 
     class Meta(object):

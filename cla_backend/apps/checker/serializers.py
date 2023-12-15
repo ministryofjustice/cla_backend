@@ -156,6 +156,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerBase):
             "email",
             "safe_to_contact",
             "safe_to_email",
+            "announce_call"
         )
 
 

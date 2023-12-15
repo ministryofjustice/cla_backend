@@ -1792,10 +1792,11 @@ class IsEligibleTestCase(unittest.TestCase):
 
 
 class DoCfeCivilCheckTestCase(unittest.TestCase):
-    def checker_with_facts(self, on_passported_benefits=False):
+    def checker_with_facts(self, on_passported_benefits=False, on_nass_benefits=False):
         cd = fixtures.get_default_case_data()
         cd["facts"].update({
-            "on_passported_benefits": on_passported_benefits
+            "on_passported_benefits": on_passported_benefits,
+            "on_nass_benefits": on_nass_benefits,
         })
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
@@ -1926,3 +1927,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         _, cfe_result = self.checker_with_facts(on_passported_benefits=False)._do_cfe_civil_check()
         self.assertEqual('eligible', cfe_result.overall_result)
         self.assertEqual(False, cfe_result.applicant_details()["receives_qualifying_benefit"])
+
+    def test_cfe_request_with_applicant_receives_asylum_support(self):
+        _, cfe_result = self.checker_with_facts(on_nass_benefits=False)._do_cfe_civil_check()
+        self.assertEqual('eligible', cfe_result.overall_result)

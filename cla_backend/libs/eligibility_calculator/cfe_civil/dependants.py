@@ -1,5 +1,7 @@
 import datetime
 
+DEPENDANTS_KEY = "dependants"
+
 
 def translate_dependants(todays_date, facts):
     dependants = []
@@ -21,4 +23,4 @@ def translate_dependants(todays_date, facts):
                      income=dict(frequency="weekly", amount=0),
                      assets_value=0),
             )
-    return {"dependants": dependants}
+    return {DEPENDANTS_KEY: dependants}

@@ -8,12 +8,12 @@ from django.utils import timezone
 from . import constants
 from . import exceptions
 from .cfe_civil.age import translate_age
-from .cfe_civil.dependants import translate_dependants
-from .cfe_civil.savings import translate_savings
-from .cfe_civil.employment import translate_employment
+from .cfe_civil.dependants import translate_dependants, DEPENDANTS_KEY
+from .cfe_civil.savings import translate_savings, CFE_SAVINGS_KEY
+from .cfe_civil.employment import translate_employment, has_employment_key
 from .cfe_civil.cfe_response import CfeResponse
-from .cfe_civil.property import translate_property
-from .cfe_civil.income import translate_income
+from .cfe_civil.property import translate_property, CFE_PROPERTY_KEY
+from .cfe_civil.income import translate_income, CFE_INCOME_KEY
 from .cfe_civil.applicant import translate_applicant
 from cla_common.constants import ELIGIBILITY_STATES
 
@@ -402,19 +402,20 @@ class EligibilityChecker(object):
         if not EligibilityChecker._complete_cfe_capital_data(request_data):
             request_data['assessment']['section_capital'] = 'incomplete'
 
-        request_data.update(EligibilityChecker._income_data(case_data))
+        if hasattr(case_data, "you"):
+            request_data.update(EligibilityChecker._income_data(case_data.you))
         if not EligibilityChecker._complete_cfe_income_data(request_data):
             request_data['assessment']['section_gross_income'] = 'incomplete'
 
         return request_data
 
     @staticmethod
-    def _income_data(case_data):
+    def _income_data(person):
         request_data = {}
-        if hasattr(case_data.you, "income") and hasattr(case_data.you, "deductions"):
-            request_data.update(translate_employment(case_data.you.income, case_data.you.deductions))
-        if hasattr(case_data.you, "income"):
-            request_data.update(translate_income(case_data.you.income))
+        if hasattr(person, "income") and hasattr(person, "deductions"):
+            request_data.update(translate_employment(person.income, person.deductions))
+        if hasattr(person, "income"):
+            request_data.update(translate_income(person.income))
         return request_data
 
     @staticmethod
@@ -428,7 +429,7 @@ class EligibilityChecker(object):
     @staticmethod
     def _capital_data(case_data):
         request_data = {}
-        if hasattr(case_data.you, "savings"):
+        if hasattr(case_data, "you") and hasattr(case_data.you, "savings"):
             request_data.update(translate_savings(case_data.you.savings))
 
         if hasattr(case_data, "property_data"):
@@ -437,17 +438,15 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _complete_applicant_data(request_data, facts):
-        return "dependants" in request_data and hasattr(facts, "has_partner")
+        return DEPENDANTS_KEY in request_data and hasattr(facts, "has_partner")
 
     @staticmethod
     def _complete_cfe_income_data(request_data):
-        employment_data = "employment_details" in request_data or "self_employment_details" in request_data
-        income_data = "regular_transactions" in request_data
-        return employment_data and income_data
+        return has_employment_key(request_data) and CFE_INCOME_KEY in request_data
 
     @staticmethod
     def _complete_cfe_capital_data(request_data):
-        return "properties" in request_data and "capitals" in request_data
+        return CFE_PROPERTY_KEY in request_data and CFE_SAVINGS_KEY in request_data
 
     def _translate_response(self, cfe_response):
         '''Translates CFE-Civil's response to something similar that EligibilityChecker.is_eligible() has always returned'''

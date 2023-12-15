@@ -10,6 +10,9 @@ def _savings_value(savings_data, attr, description):
         }
 
 
+CFE_SAVINGS_KEY = "capitals"
+
+
 def translate_savings(savings_data):
     liquid = [
         _savings_value(savings_data, "bank_balance", "Savings"),
@@ -24,7 +27,9 @@ def translate_savings(savings_data):
     if len(liquid_capital) + len(non_liquid_capital) < 3:
         return {}
     else:
-        return dict(capitals={
-            "bank_accounts": liquid_capital,
-            "non_liquid_capital": non_liquid_capital
-        })
+        return {
+            CFE_SAVINGS_KEY: {
+                "bank_accounts": liquid_capital,
+                "non_liquid_capital": non_liquid_capital
+            }
+        }

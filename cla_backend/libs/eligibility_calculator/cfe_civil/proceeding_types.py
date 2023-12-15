@@ -21,4 +21,3 @@ def translate_proceeding_types(category):
     else:
         proceeding_types.append(DEFAULT_PROCEEDING_TYPE)
     return proceeding_types
-

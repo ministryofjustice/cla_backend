@@ -15,6 +15,7 @@ from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.property import translate_property
 from .cfe_civil.income import translate_income
 from .cfe_civil.applicant import translate_applicant
+from cla_common.constants import ELIGIBILITY_STATES
 
 logger = __import__("logging").getLogger(__name__)
 
@@ -346,13 +347,7 @@ class EligibilityChecker(object):
     def is_eligible(self):
         self._do_cfe_civil_check()
 
-        try:
-            legacy_result = self._legacy_check()
-        except Exception as exc:
-            # e.g. PropertyExpectedException 'Facts' requires attribute 'has_partner'
-            # This is the "unknown" result - not enough info to give a definitive calculation result
-            logger.info("Eligibility result (legacy): %s %s", exc.__class__.__name__, exc)
-            raise
+        legacy_result = self._legacy_check()
         logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
         return legacy_result
@@ -395,13 +390,13 @@ class EligibilityChecker(object):
             request_data['applicant'].update(translate_applicant(self.case_data.facts))
         if hasattr(self.case_data, "facts"):
             request_data.update(translate_dependants(submission_date, self.case_data.facts))
-        if hasattr(self.case_data.you, "savings"):
+        if hasattr(self.case_data, "you") and hasattr(self.case_data.you, "savings"):
             request_data.update(translate_savings(self.case_data.you.savings))
         if hasattr(self.case_data, "property_data"):
             request_data.update(translate_property(self.case_data.property_data))
-        if hasattr(self.case_data.you, "income") and hasattr(self.case_data.you, "deductions"):
+        if hasattr(self.case_data, "you") and hasattr(self.case_data.you, "income") and hasattr(self.case_data.you, "deductions"):
             request_data.update(translate_employment(self.case_data.you.income, self.case_data.you.deductions))
-        if hasattr(self.case_data.you, "income"):
+        if hasattr(self.case_data, "you") and hasattr(self.case_data.you, "income"):
             request_data.update(translate_income(self.case_data.you.income))
         if hasattr(self.case_data, "facts"):
             request_data['applicant'].update(translate_age(submission_date, self.case_data.facts))
@@ -410,33 +405,41 @@ class EligibilityChecker(object):
     def _translate_response(self, cfe_response):
         '''Translates CFE-Civil's response to similar to what EligibilityChecker.is_eligible() has always returned'''
         if cfe_response.overall_result in ('eligible', 'contribution_required'):
-            return True
+            return ELIGIBILITY_STATES.YES
         elif cfe_response.overall_result == 'ineligible':
-            return False
+            return ELIGIBILITY_STATES.NO
         elif cfe_response.overall_result == 'not_yet_known':
-            return 'unknown'
+            return ELIGIBILITY_STATES.UNKNOWN
         logger.error('cfe_response.overall_result not recognised: %s' % cfe_response.overall_result)
 
     def _legacy_check(self):
-        if self.case_data.facts.has_passported_proceedings_letter:
-            return True
+        try:
 
-        if self.case_data.facts.under_18_passported:
-            return True
+            if self.case_data.facts.has_passported_proceedings_letter:
+                return ELIGIBILITY_STATES.YES
 
-        if self.case_data.facts.on_nass_benefits and self.should_passport_nass():
-            return True
+            if self.case_data.facts.under_18_passported:
+                return ELIGIBILITY_STATES.YES
 
-        if not self.is_disposable_capital_eligible():
-            return False
+            if self.case_data.facts.on_nass_benefits and self.should_passport_nass():
+                return ELIGIBILITY_STATES.YES
 
-        if not self.is_gross_income_eligible():
-            return False
+            if not self.is_disposable_capital_eligible():
+                return ELIGIBILITY_STATES.NO
 
-        if not self.is_disposable_income_eligible():
-            return False
+            if not self.is_gross_income_eligible():
+                return ELIGIBILITY_STATES.NO
 
-        return True
+            if not self.is_disposable_income_eligible():
+                return ELIGIBILITY_STATES.NO
+
+            return ELIGIBILITY_STATES.YES
+
+        except exceptions.PropertyExpectedException as exc:
+            # e.g. 'Facts' requires attribute 'has_partner'
+            # This occurs when there's not enough info in self.case_data to give a definitive calculation result
+            logger.info("Eligibility result (legacy) unknown: %s %s" % (exc.__class__.__name__, exc))
+            return ELIGIBILITY_STATES.UNKNOWN
 
     def should_passport_nass(self):
         return self.case_data.category and self.case_data.category == "immigration"

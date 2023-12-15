@@ -32,6 +32,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             "safe_to_contact",
             "vulnerable_user",
             "has_diversity",
+            "announce_call"
         ]
 
     def _get_default_post_data(self):

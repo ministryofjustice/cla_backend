@@ -1,8 +1,23 @@
-def translate_proceeding_types(case_data):
+CATEGORY_TO_PROCEEDING_TYPE = {
+    "immigration": {
+        "ccms_code": "IM030",
+        "client_involvement_type": "A"
+    }
+}
+
+DEFAULT_PROCEEDING_TYPE = {
+    "ccms_code": "SE013",
+    "client_involvement_type": "A"
+}
+
+
+def translate_proceeding_types(category):
     proceeding_types = []
 
-    if hasattr(case_data, 'category') and getattr(case_data, 'category') == "immigration":
+    if category == "immigration":
         proceeding_types.append(
-            dict(ccms_code="IM030", client_involvement_type="A")
+            dict(CATEGORY_TO_PROCEEDING_TYPE["immigration"])
         )
-    return {"proceeding_types": proceeding_types}
+    else:
+        proceeding_types.append(DEFAULT_PROCEEDING_TYPE)
+    return proceeding_types

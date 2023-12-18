@@ -6,7 +6,7 @@ from cla_backend.libs.eligibility_calculator.models import Savings
 
 class TestTranslateSavings(TestCase):
     def test_bank_balance_and_investments(self):
-        savings = Savings(bank_balance=270010, investment_balance=100010, asset_balance=200)
+        savings = Savings(bank_balance=270010, investment_balance=100010, asset_balance=200000)
         output = translate_savings(savings)
         expected = {"capitals": {
             "bank_accounts": [
@@ -23,7 +23,7 @@ class TestTranslateSavings(TestCase):
             ],
             "non_liquid_capital": [
                 {
-                    "value": 2,
+                    "value": 2000,
                     "description": "Valuable items worth over 500 pounds",
                     "subject_matter_of_dispute": False
                 },

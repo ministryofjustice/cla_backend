@@ -355,6 +355,8 @@ class EligibilityChecker(object):
     def _do_cfe_civil_check(self):
         cfe_request_dict = self._translate_case(self.case_data)
 
+        # if we don't have basic information, we can't tell CFE its missing (dependants and partner)
+        # so it has to be bounced here otherwise CFE may/will give an incorrect answer based on missing information
         if self._complete_applicant_data(cfe_request_dict, self.case_data.facts):
             cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
             logger.info("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))

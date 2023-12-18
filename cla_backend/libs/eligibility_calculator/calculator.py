@@ -397,7 +397,6 @@ class EligibilityChecker(object):
         }
         if hasattr(case_data, "facts"):
             request_data['applicant'].update(EligibilityChecker._applicant_data(submission_date, case_data.facts))
-        if hasattr(case_data, "facts"):
             request_data.update(translate_dependants(submission_date, case_data.facts))
 
         request_data.update(EligibilityChecker._capital_data(case_data))

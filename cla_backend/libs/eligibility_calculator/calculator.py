@@ -8,6 +8,7 @@ from django.utils import timezone
 from . import constants
 from . import exceptions
 from .cfe_civil.age import translate_age
+from .cfe_civil.deductions import translate_deductions
 from .cfe_civil.dependants import translate_dependants
 from .cfe_civil.savings import translate_savings
 from .cfe_civil.employment import translate_employment
@@ -357,7 +358,7 @@ class EligibilityChecker(object):
             return legacy_result
 
     def _do_cfe_civil_check(self):
-        cfe_request_dict = self._translate_case()
+        cfe_request_dict = self._translate_case(self.case_data)
 
         cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
         logger.debug("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
@@ -368,7 +369,8 @@ class EligibilityChecker(object):
 
         return result, cfe_response
 
-    def _translate_case(self, submission_date=None):
+    @staticmethod
+    def _translate_case(case_data, submission_date=None):
         '''Translates CLA's CaseData to CFE-Civil request JSON'''
         if not submission_date:
             submission_date = datetime.date.today()
@@ -388,22 +390,61 @@ class EligibilityChecker(object):
             ]
         }
 
-        if hasattr(self.case_data, "category"):
-            request_data["proceeding_types"] = translate_proceeding_types(self.case_data.category)
-        if hasattr(self.case_data, "facts"):
-            request_data['applicant'].update(translate_applicant(self.case_data.facts))
-        if hasattr(self.case_data, "facts"):
-            request_data.update(translate_dependants(submission_date, self.case_data.facts))
-        if hasattr(self.case_data, "you") and hasattr(self.case_data.you, "savings"):
-            request_data.update(translate_savings(self.case_data.you.savings))
-        if hasattr(self.case_data, "property_data"):
-            request_data.update(translate_property(self.case_data.property_data))
-        if hasattr(self.case_data, "you") and hasattr(self.case_data.you, "income") and hasattr(self.case_data.you, "deductions"):
-            request_data.update(translate_employment(self.case_data.you.income, self.case_data.you.deductions))
-        if hasattr(self.case_data, "you") and hasattr(self.case_data.you, "income"):
-            request_data.update(translate_income(self.case_data.you.income))
-        if hasattr(self.case_data, "facts"):
-            request_data['applicant'].update(translate_age(submission_date, self.case_data.facts))
+        if hasattr(case_data, "category"):
+            request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
+        if hasattr(case_data, "facts"):
+            request_data['applicant'].update(EligibilityChecker._applicant_data(submission_date, case_data.facts))
+            request_data.update(translate_dependants(submission_date, case_data.facts))
+
+        request_data.update(EligibilityChecker._capital_data(case_data))
+
+        if hasattr(case_data, "you"):
+            request_data.update(EligibilityChecker._income_data(case_data.you))
+
+        return request_data
+
+    @staticmethod
+    def _income_data(person):
+        request_data = {}
+        if hasattr(person, "income"):
+            regular_income = translate_income(person.income)
+            if hasattr(person, "deductions"):
+                request_data.update(translate_employment(person.income, person.deductions))
+                regular_outgoings = translate_deductions(person.deductions)
+                request_data.update(
+                    EligibilityChecker._merge_regular_transaction_data(regular_income, regular_outgoings))
+            else:
+                request_data.update(regular_income)
+
+        return request_data
+
+    @staticmethod
+    def _merge_regular_transaction_data(regular_income, regular_outgoings):
+        if "regular_transactions" in regular_outgoings:
+            if "regular_transactions" in regular_income:
+                return dict(regular_transactions=regular_income["regular_transactions"] + regular_outgoings[
+                    "regular_transactions"])
+            else:
+                return regular_outgoings
+        else:
+            return regular_income
+
+    @staticmethod
+    def _applicant_data(submission_date, facts):
+        request_data = {}
+        request_data.update(translate_age(submission_date, facts))
+        request_data.update(translate_applicant(facts))
+
+        return request_data
+
+    @staticmethod
+    def _capital_data(case_data):
+        request_data = {}
+        if hasattr(case_data, "you") and hasattr(case_data.you, "savings"):
+            request_data.update(translate_savings(case_data.you.savings))
+
+        if hasattr(case_data, "property_data"):
+            request_data.update(translate_property(case_data.property_data))
         return request_data
 
     def _translate_response(self, cfe_response):

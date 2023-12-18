@@ -1859,6 +1859,23 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
+    def checker_with_deductions(self, income, deductions):
+        cd = fixtures.get_default_case_data()
+        cd['you'].update({
+            'income': dict(earnings=income,
+                           self_employed=False,
+                           maintenance_received=0,
+                           child_benefits=0,
+                           tax_credits=0,
+                           pension=0,
+                           benefits=0,
+                           other_income=0
+                           ),
+            'deductions': deductions
+        })
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
     def checker_with_income_without_earnings(self, maintenance_received, child_benefits, earnings=0, self_employed=False, tax_credits=0, pension=0, benefits=0, other_income=0):
         cd = fixtures.get_default_case_data()
         cd['you'].update({
@@ -1941,3 +1958,11 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
     def test_cfe_request_with_proceeding_types(self):
         _, cfe_result = self.checker_with_category(category='immigration')._do_cfe_civil_check()
         self.assertEqual('eligible', cfe_result.overall_result)
+
+    def test_enough_deductions_creates_eligible_cfe_request(self):
+        deductions = dict(income_tax=0, national_insurance=0, maintenance=454500, childcare=3737, mortgage=4242,
+                          rent=5757,
+                          criminal_legalaid_contributions=2424)
+        _, cfe_response = self.checker_with_deductions(income=2000 * 100,
+                                                       deductions=deductions)._do_cfe_civil_check()
+        self.assertEqual('eligible', cfe_response.overall_result)

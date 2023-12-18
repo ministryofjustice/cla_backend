@@ -31,3 +31,11 @@ class TestTranslateSavings(TestCase):
             ],
         }}
         self.assertEqual(expected, output)
+
+    def test_empty_savings_generates_empty_dict(self):
+        savings = Savings()
+
+        output = translate_savings(savings)
+
+        expected = {}
+        self.assertEqual(expected, output)

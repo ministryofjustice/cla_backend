@@ -23,7 +23,7 @@ def translate_savings(savings_data):
         _savings_value(savings_data, "investment_balance", "Investment")
     ]
     non_liquid = [
-        _savings_value(savings_data, "asset_balance", "Asset")
+        _savings_value(savings_data, "asset_balance", "Valuable items worth over 500 pounds")
     ]
     liquid_capital = none_filter(liquid)
     non_liquid_capital = none_filter(non_liquid)

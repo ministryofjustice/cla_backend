@@ -398,7 +398,7 @@ class EligibilityChecker(object):
         }
 
         if hasattr(case_data, "category"):
-            request_data["proceeding_types"] = translate_proceeding_types(self.case_data.category)
+            request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
         if hasattr(case_data, "facts"):
             request_data['applicant'].update(
                 EligibilityChecker._translate_applicant_data(submission_date, case_data.facts))

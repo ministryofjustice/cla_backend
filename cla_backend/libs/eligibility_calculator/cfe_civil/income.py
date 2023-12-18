@@ -10,7 +10,11 @@ INCOME_CATEGORY_TO_REGULAR_TRANSACTION = {
     "other_income": "friends_or_family",
 }
 
-CFE_INCOME_KEY = "regular_transactions"
+_CFE_INCOME_KEY = "regular_transactions"
+
+
+def has_income_key(dict):
+    return _CFE_INCOME_KEY in dict
 
 
 def translate_income(income_data):
@@ -29,5 +33,5 @@ def translate_income(income_data):
             )
     non_zero_transactions = [x for x in regular_transactions if x['amount'] > 0]
     # All attributes need to be present, otherwise value isn't valid
-    return {CFE_INCOME_KEY: non_zero_transactions} if len(regular_transactions) == len(
+    return {_CFE_INCOME_KEY: non_zero_transactions} if len(regular_transactions) == len(
         INCOME_CATEGORY_TO_REGULAR_TRANSACTION) else {}

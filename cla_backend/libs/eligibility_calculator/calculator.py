@@ -8,12 +8,12 @@ from django.utils import timezone
 from . import constants
 from . import exceptions
 from .cfe_civil.age import translate_age
-from .cfe_civil.dependants import translate_dependants, DEPENDANTS_KEY
-from .cfe_civil.savings import translate_savings, CFE_SAVINGS_KEY
+from .cfe_civil.dependants import translate_dependants, has_dependants_key
+from .cfe_civil.savings import translate_savings, has_savings_key
 from .cfe_civil.employment import translate_employment, has_employment_key
 from .cfe_civil.cfe_response import CfeResponse
-from .cfe_civil.property import translate_property, CFE_PROPERTY_KEY
-from .cfe_civil.income import translate_income, CFE_INCOME_KEY
+from .cfe_civil.property import translate_property, has_property_key
+from .cfe_civil.income import translate_income, has_income_key
 from .cfe_civil.applicant import translate_applicant
 from cla_common.constants import ELIGIBILITY_STATES
 
@@ -438,15 +438,15 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _complete_applicant_data(request_data, facts):
-        return DEPENDANTS_KEY in request_data and hasattr(facts, "has_partner")
+        return has_dependants_key(request_data) and hasattr(facts, "has_partner")
 
     @staticmethod
     def _complete_cfe_income_data(request_data):
-        return has_employment_key(request_data) and CFE_INCOME_KEY in request_data
+        return has_employment_key(request_data) and has_income_key(request_data)
 
     @staticmethod
     def _complete_cfe_capital_data(request_data):
-        return CFE_PROPERTY_KEY in request_data and CFE_SAVINGS_KEY in request_data
+        return has_property_key(request_data) and has_savings_key(request_data)
 
     def _translate_response(self, cfe_response):
         '''Translates CFE-Civil's response to something similar that EligibilityChecker.is_eligible() has always returned'''

@@ -10,7 +10,11 @@ def _savings_value(savings_data, attr, description):
         }
 
 
-CFE_SAVINGS_KEY = "capitals"
+_CFE_SAVINGS_KEY = "capitals"
+
+
+def has_savings_key(request_data):
+    return _CFE_SAVINGS_KEY in request_data
 
 
 def translate_savings(savings_data):
@@ -28,7 +32,7 @@ def translate_savings(savings_data):
         return {}
     else:
         return {
-            CFE_SAVINGS_KEY: {
+            _CFE_SAVINGS_KEY: {
                 "bank_accounts": liquid_capital,
                 "non_liquid_capital": non_liquid_capital
             }

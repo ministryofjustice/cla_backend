@@ -350,7 +350,7 @@ class EligibilityChecker(object):
         cfe_result, cfe_response = self._do_cfe_civil_check()
 
         # temp: start doing just non-partner passported checks through CFE
-        if self._is_non_means_tested(self.case_data) or self._is_passported_without_partner(self.case_data):
+        if self._is_non_means_tested(self.case_data) or self._without_partner(self.case_data):
             legacy_result = self._legacy_check()
             logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
@@ -378,9 +378,8 @@ class EligibilityChecker(object):
             return legacy_result
 
     @staticmethod
-    def _is_passported_without_partner(case_data):
-        return case_data.facts.on_passported_benefits and hasattr(case_data.facts,
-                                                                  "has_partner") and not case_data.facts.has_partner
+    def _without_partner(case_data):
+        return hasattr(case_data.facts, "has_partner") and not case_data.facts.has_partner
 
     @staticmethod
     def _is_non_means_tested(case_data):

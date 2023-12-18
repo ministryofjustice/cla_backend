@@ -366,7 +366,7 @@ class EligibilityChecker(object):
 
             return result, cfe_response
         else:
-            result = 'unknown'
+            result = ELIGIBILITY_STATES.UNKNOWN
             logger.info("Eligibility result (CFE): %s %s" % (result, "couldnt call CFE"))
             return result, None
 

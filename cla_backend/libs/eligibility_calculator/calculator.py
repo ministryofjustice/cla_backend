@@ -15,6 +15,7 @@ from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.property import translate_property, has_property_key
 from .cfe_civil.income import translate_income, has_income_key
 from .cfe_civil.applicant import translate_applicant
+from .cfe_civil.proceeding_types import translate_proceeding_types, DEFAULT_PROCEEDING_TYPE
 from cla_common.constants import ELIGIBILITY_STATES
 
 logger = __import__("logging").getLogger(__name__)
@@ -345,12 +346,15 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
-        self._do_cfe_civil_check()
+        cfe_result, cfe_detail = self._do_cfe_civil_check()
 
-        legacy_result = self._legacy_check()
-        logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
+        if self.case_data.facts.on_nass_benefits and self.case_data.category == "immigration":
+            return cfe_result
+        else:
+            legacy_result = self._legacy_check()
+            logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
-        return legacy_result
+            return legacy_result
 
     def _do_cfe_civil_check(self):
         cfe_request_dict = self._translate_case(self.case_data)
@@ -389,12 +393,12 @@ class EligibilityChecker(object):
                 "receives_asylum_support": False,
             },
             "proceeding_types": [
-                {
-                    "ccms_code": "SE013",
-                    "client_involvement_type": "A"
-                }
+                DEFAULT_PROCEEDING_TYPE
             ]
         }
+
+        if hasattr(case_data, "category"):
+            request_data["proceeding_types"] = translate_proceeding_types(self.case_data.category)
         if hasattr(case_data, "facts"):
             request_data['applicant'].update(
                 EligibilityChecker._translate_applicant_data(submission_date, case_data.facts))

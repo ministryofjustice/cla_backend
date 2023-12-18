@@ -24,7 +24,7 @@ class TestTranslateSavings(TestCase):
             "non_liquid_capital": [
                 {
                     "value": 2,
-                    "description": "Asset",
+                    "description": "Valuable items worth over 500 pounds",
                     "subject_matter_of_dispute": False
                 },
 

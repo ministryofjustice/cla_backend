@@ -28,7 +28,8 @@ def translate_savings(savings_data):
     liquid_capital = none_filter(liquid)
     non_liquid_capital = none_filter(non_liquid)
 
-    if len(liquid_capital) + len(non_liquid_capital) < 3:
+    # all fields have to be set
+    if len(liquid_capital) + len(non_liquid_capital) < len(liquid) + len(non_liquid):
         return {}
     else:
         return {

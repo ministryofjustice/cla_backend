@@ -356,7 +356,7 @@ class EligibilityChecker(object):
         cfe_request_dict = self._translate_case()
 
         cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
-        logger.info("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
+        logger.debug("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
         cfe_response = CfeResponse(cfe_raw_response.json())
         result = self._translate_response(cfe_response)
         logger.info("Eligibility result (CFE): %s %s" % (result, cfe_response.overall_result))

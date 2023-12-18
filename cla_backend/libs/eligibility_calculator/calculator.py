@@ -374,14 +374,15 @@ class EligibilityChecker(object):
         '''Translates CLA's CaseData to CFE-Civil request JSON'''
         if not submission_date:
             submission_date = datetime.date.today()
-        # produce the simplest possible plain request to CFE to prove the route
+        # default DOB to 'nothing special' 40 years old rules-wise
+        default_dob = str(datetime.date(submission_date.year - 40, submission_date.month, submission_date.day))
         request_data = {
             "assessment": {
                 "submission_date": str(submission_date),
                 "level_of_help": "controlled"  # CLA is for 'advice' only, so always controlled
             },
             "applicant": {
-                "date_of_birth": "1992-07-25",
+                "date_of_birth": default_dob,
                 "receives_qualifying_benefit": False,
                 "receives_asylum_support": False,
             },
@@ -395,11 +396,27 @@ class EligibilityChecker(object):
         if hasattr(case_data, "facts"):
             request_data['applicant'].update(EligibilityChecker._applicant_data(submission_date, case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
+            if hasattr(case_data, "partner") and case_data.facts.should_aggregate_partner:
+                request_data['partner'] = EligibilityChecker._partner_data(case_data.partner, default_dob)
 
-        request_data.update(EligibilityChecker._capital_data(case_data))
+        if hasattr(case_data, "you"):
+            property_data = getattr(case_data, "property_data", None)
+            request_data.update(EligibilityChecker._capital_data(case_data.you, property_data))
 
         if hasattr(case_data, "you"):
             request_data.update(EligibilityChecker._income_data(case_data.you))
+
+        return request_data
+
+    @staticmethod
+    def _partner_data(partner, default_dob):
+        request_data = {
+            "partner": {
+                "date_of_birth": default_dob
+            }
+        }
+        request_data.update(EligibilityChecker._capital_data(partner, None))
+        request_data.update(EligibilityChecker._income_data(partner))
 
         return request_data
 
@@ -422,8 +439,8 @@ class EligibilityChecker(object):
     def _merge_regular_transaction_data(regular_income, regular_outgoings):
         if "regular_transactions" in regular_outgoings:
             if "regular_transactions" in regular_income:
-                return dict(regular_transactions=regular_income["regular_transactions"] + regular_outgoings[
-                    "regular_transactions"])
+                transactions = regular_income["regular_transactions"] + regular_outgoings["regular_transactions"]
+                return dict(regular_transactions=transactions)
             else:
                 return regular_outgoings
         else:
@@ -438,13 +455,13 @@ class EligibilityChecker(object):
         return request_data
 
     @staticmethod
-    def _capital_data(case_data):
+    def _capital_data(person, property_data):
         request_data = {}
-        if hasattr(case_data, "you") and hasattr(case_data.you, "savings"):
-            request_data.update(translate_savings(case_data.you.savings))
+        if hasattr(person, "savings"):
+            request_data.update(translate_savings(person.savings))
 
-        if hasattr(case_data, "property_data"):
-            request_data.update(translate_property(case_data.property_data))
+        if property_data:
+            request_data.update(translate_property(property_data))
         return request_data
 
     def _translate_response(self, cfe_response):

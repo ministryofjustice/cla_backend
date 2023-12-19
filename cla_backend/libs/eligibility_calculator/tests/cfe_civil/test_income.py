@@ -72,11 +72,11 @@ class TestTranslateIncome(TestCase):
         }
         self.assertEqual(expected, output)
 
-    def test_no_income(self):
+    def test_zero_income_produces_empty_cfe_array(self):
         income = Income(benefits=0, tax_credits=0, child_benefits=0,
                         maintenance_received=0, pension=0, other_income=0)
-
         output = translate_income(income)
-
-        expected = {}
+        expected = {
+            "regular_transactions": [],
+        }
         self.assertEqual(expected, output)

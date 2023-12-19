@@ -64,6 +64,10 @@ class TestTranslateProperty(TestCase):
         }}
         self.assertEqual(expected, output)
 
+    def test_invalid_property_returns_no_results(self):
+        houses = [{}]
+        self.assertEqual({}, translate_property(houses))
+
     def test_properties_two_main_homes(self):
         houses = [
             {'disputed': True,

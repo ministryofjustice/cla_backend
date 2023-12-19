@@ -9,12 +9,12 @@ from . import constants
 from . import exceptions
 from .cfe_civil.age import translate_age
 from .cfe_civil.deductions import translate_deductions
-from .cfe_civil.dependants import translate_dependants
-from .cfe_civil.savings import translate_savings
-from .cfe_civil.employment import translate_employment
+from .cfe_civil.dependants import translate_dependants, has_dependants_key
+from .cfe_civil.savings import translate_savings, has_savings_key
+from .cfe_civil.employment import translate_employment, has_employment_key
 from .cfe_civil.cfe_response import CfeResponse
-from .cfe_civil.property import translate_property
-from .cfe_civil.income import translate_income
+from .cfe_civil.property import translate_property, has_property_key
+from .cfe_civil.income import translate_income, has_income_key
 from .cfe_civil.applicant import translate_applicant
 from .cfe_civil.proceeding_types import translate_proceeding_types, DEFAULT_PROCEEDING_TYPE
 from cla_common.constants import ELIGIBILITY_STATES
@@ -360,14 +360,22 @@ class EligibilityChecker(object):
     def _do_cfe_civil_check(self):
         cfe_request_dict = self._translate_case(self.case_data)
 
-        cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
-        logger.debug("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
-        cfe_response = CfeResponse(cfe_raw_response.json())
-        result = self._translate_response(cfe_response)
-        logger.info("Eligibility result (CFE): %s %s" % (result, cfe_response.overall_result))
-        logger.debug("Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
+        # if we don't have basic information, we can't tell CFE its missing (dependants and partner)
+        # so it has to be bounced here otherwise CFE may/will give an incorrect answer based on missing information
+        if self._complete_applicant_data(cfe_request_dict, self.case_data.facts):
+            cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
+            logger.debug("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
+            cfe_response = CfeResponse(cfe_raw_response.json())
+            result = self._translate_response(cfe_response)
+            logger.info("Eligibility result (CFE): %s %s" % (result, cfe_response.overall_result))
+            logger.debug(
+                "Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
 
-        return result, cfe_response
+            return result, cfe_response
+        else:
+            result = ELIGIBILITY_STATES.UNKNOWN
+            logger.info("Eligibility result (CFE): %s %s" % (result, "couldnt call CFE"))
+            return result, None
 
     @staticmethod
     def _translate_case(case_data, submission_date=None):
@@ -393,13 +401,18 @@ class EligibilityChecker(object):
         if hasattr(case_data, "category"):
             request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
         if hasattr(case_data, "facts"):
-            request_data['applicant'].update(EligibilityChecker._applicant_data(submission_date, case_data.facts))
+            request_data['applicant'].update(
+                EligibilityChecker._translate_applicant_data(submission_date, case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
 
-        request_data.update(EligibilityChecker._capital_data(case_data))
+        request_data.update(EligibilityChecker._translate_capital_data(case_data))
+        if not EligibilityChecker._complete_cfe_capital_data(request_data):
+            request_data['assessment']['section_capital'] = 'incomplete'
 
         if hasattr(case_data, "you"):
             request_data.update(EligibilityChecker._income_data(case_data.you))
+        if not EligibilityChecker._complete_cfe_income_data(request_data):
+            request_data['assessment']['section_gross_income'] = 'incomplete'
 
         return request_data
 
@@ -430,7 +443,7 @@ class EligibilityChecker(object):
             return regular_income
 
     @staticmethod
-    def _applicant_data(submission_date, facts):
+    def _translate_applicant_data(submission_date, facts):
         request_data = {}
         request_data.update(translate_age(submission_date, facts))
         request_data.update(translate_applicant(facts))
@@ -438,7 +451,7 @@ class EligibilityChecker(object):
         return request_data
 
     @staticmethod
-    def _capital_data(case_data):
+    def _translate_capital_data(case_data):
         request_data = {}
         if hasattr(case_data, "you") and hasattr(case_data.you, "savings"):
             request_data.update(translate_savings(case_data.you.savings))
@@ -447,8 +460,20 @@ class EligibilityChecker(object):
             request_data.update(translate_property(case_data.property_data))
         return request_data
 
+    @staticmethod
+    def _complete_applicant_data(request_data, facts):
+        return has_dependants_key(request_data) and hasattr(facts, "has_partner")
+
+    @staticmethod
+    def _complete_cfe_income_data(request_data):
+        return has_employment_key(request_data) and has_income_key(request_data)
+
+    @staticmethod
+    def _complete_cfe_capital_data(request_data):
+        return has_property_key(request_data) and has_savings_key(request_data)
+
     def _translate_response(self, cfe_response):
-        '''Translates CFE-Civil's response to similar to what EligibilityChecker.is_eligible() has always returned'''
+        '''Translates CFE-Civil's response to something similar that EligibilityChecker.is_eligible() has always returned'''
         if cfe_response.overall_result in ('eligible', 'contribution_required'):
             return ELIGIBILITY_STATES.YES
         elif cfe_response.overall_result == 'ineligible':

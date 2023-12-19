@@ -401,10 +401,11 @@ class EligibilityChecker(object):
         if hasattr(case_data, "category"):
             request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
         if hasattr(case_data, "facts"):
-            request_data['applicant'].update(EligibilityChecker._applicant_data(submission_date, case_data.facts))
+            request_data['applicant'].update(
+                EligibilityChecker._translate_applicant_data(submission_date, case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
 
-        request_data.update(EligibilityChecker._capital_data(case_data))
+        request_data.update(EligibilityChecker._translate_capital_data(case_data))
         if not EligibilityChecker._complete_cfe_capital_data(request_data):
             request_data['assessment']['section_capital'] = 'incomplete'
 
@@ -440,24 +441,6 @@ class EligibilityChecker(object):
                 return regular_outgoings
         else:
             return regular_income
-
-    @staticmethod
-    def _applicant_data(submission_date, facts):
-        request_data = {}
-        request_data.update(translate_age(submission_date, facts))
-        request_data.update(translate_applicant(facts))
-
-        return request_data
-
-    @staticmethod
-    def _capital_data(case_data):
-        request_data = {}
-        if hasattr(case_data, "you") and hasattr(case_data.you, "savings"):
-            request_data.update(translate_savings(case_data.you.savings))
-
-        if hasattr(case_data, "property_data"):
-            request_data.update(translate_property(case_data.property_data))
-        return request_data
 
     @staticmethod
     def _translate_applicant_data(submission_date, facts):

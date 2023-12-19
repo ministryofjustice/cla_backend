@@ -1,10 +1,11 @@
-from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds, none_filter
+from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds, none_filter, \
+    has_all_attributes
 
 
-def _savings_value(savings_data, attr, description):
-    if hasattr(savings_data, attr):
+def _savings_value(value, description):
+    if value > 0:
         return {
-            "value": pence_to_pounds(getattr(savings_data, attr)),
+            "value": pence_to_pounds(value),
             "description": description,
             "subject_matter_of_dispute": False
         }
@@ -18,23 +19,20 @@ def has_savings_key(request_data):
 
 
 def translate_savings(savings_data):
-    liquid = [
-        _savings_value(savings_data, "bank_balance", "Savings"),
-        _savings_value(savings_data, "investment_balance", "Investment")
-    ]
-    non_liquid = [
-        _savings_value(savings_data, "asset_balance", "Valuable items worth over 500 pounds")
-    ]
-    liquid_capital = none_filter(liquid)
-    non_liquid_capital = none_filter(non_liquid)
+    if has_all_attributes(savings_data, ["bank_balance", "investment_balance", "asset_balance"]):
+        liquid_capital = [
+            _savings_value(savings_data.bank_balance, "Savings"),
+            _savings_value(savings_data.investment_balance, "Investment")
+        ]
+        non_liquid_capital = [
+            _savings_value(savings_data.asset_balance, "Valuable items worth over 500 pounds")
+        ]
 
-    # all fields have to be set
-    if len(liquid_capital) + len(non_liquid_capital) < len(liquid) + len(non_liquid):
-        return {}
-    else:
         return {
             _CFE_SAVINGS_KEY: {
-                "bank_accounts": liquid_capital,
-                "non_liquid_capital": non_liquid_capital
+                "bank_accounts": none_filter(liquid_capital),
+                "non_liquid_capital": none_filter(non_liquid_capital)
             }
         }
+    else:
+        return {}

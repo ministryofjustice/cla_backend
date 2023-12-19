@@ -405,9 +405,13 @@ class EligibilityChecker(object):
             request_data.update(translate_dependants(submission_date, case_data.facts))
 
         request_data.update(EligibilityChecker._capital_data(case_data))
+        if not EligibilityChecker._complete_cfe_capital_data(request_data):
+            request_data['assessment']['section_capital'] = 'incomplete'
 
         if hasattr(case_data, "you"):
             request_data.update(EligibilityChecker._income_data(case_data.you))
+        if not EligibilityChecker._complete_cfe_income_data(request_data):
+            request_data['assessment']['section_gross_income'] = 'incomplete'
 
         return request_data
 

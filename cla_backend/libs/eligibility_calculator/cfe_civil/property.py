@@ -22,35 +22,36 @@ def _valid_house(house_data):
 _CFE_PROPERTY_KEY = "properties"
 
 
-def has_property_key(dict):
-    return _CFE_PROPERTY_KEY in dict
+class PropertyTranslator(object):
+    def __init__(self, possible_property_data):
+        self._possible_property_data = possible_property_data
+        self._property_data = [house for house in self._possible_property_data if _valid_house(house)]
 
+    def is_complete(self):
+        return len(self._possible_property_data) == len(self._property_data)
 
-def translate_property(possible_property_data):
-    property_data = [house for house in possible_property_data if _valid_house(house)]
-    main_homes = [x for x in property_data if x['main']]
-    non_mains = [x for x in property_data if not x['main']]
-    if (len(main_homes) > 0):
-        main_home_data = main_homes[0]
-        main_home = _convert_house(main_home_data)
-        # all main homes after the first are additional properties
-        non_mains = non_mains + main_homes[1:]
-    else:
-        main_home = None
-    additional_houses = map(_convert_house, non_mains)
+    def translate(self):
+        main_homes = [x for x in self._property_data if x['main']]
+        non_mains = [x for x in self._property_data if not x['main']]
+        if (len(main_homes) > 0):
+            main_home_data = main_homes[0]
+            main_home = _convert_house(main_home_data)
+            # all main homes after the first are additional properties
+            non_mains = non_mains + main_homes[1:]
+        else:
+            main_home = None
+        additional_houses = map(_convert_house, non_mains)
 
-    if main_home:
-        return {
-            _CFE_PROPERTY_KEY: {
-                "main_home": main_home,
-                "additional_properties": additional_houses
+        if main_home:
+            return {
+                _CFE_PROPERTY_KEY: {
+                    "main_home": main_home,
+                    "additional_properties": additional_houses
+                }
             }
-        }
-    elif len(possible_property_data) == len(property_data):
-        return {
-            _CFE_PROPERTY_KEY: {
-                "additional_properties": additional_houses
+        else:
+            return {
+                _CFE_PROPERTY_KEY: {
+                    "additional_properties": additional_houses
+                }
             }
-        }
-    else:
-        return {}

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from cla_backend.libs.eligibility_calculator.cfe_civil.deductions import translate_deductions
+from cla_backend.libs.eligibility_calculator.cfe_civil.deductions import DeductionsTranslator
 from cla_backend.libs.eligibility_calculator.models import Deductions
 
 
@@ -42,9 +42,13 @@ class TestTranslateDeductions(TestCase):
         }
         deductions = Deductions(maintenance=4545, childcare=3737, mortgage=4242, rent=5757,
                                 criminal_legalaid_contributions=2424)
+        translator = DeductionsTranslator(deductions)
+
+        self.assertTrue(translator.is_complete())
         # assert list equality w/o respect to ordering
-        self.assertEqual(set(expected), set(translate_deductions(deductions)))
+        self.assertEqual(set(expected), set(translator.translate()))
 
     def test_missing_field_gives_no_outgoings(self):
         deductions = Deductions(maintenance=4545, childcare=3737, mortgage=4242, rent=5757)
-        self.assertEqual({}, translate_deductions(deductions))
+        translator = DeductionsTranslator(deductions)
+        self.assertFalse(translator.is_complete())

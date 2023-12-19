@@ -1,13 +1,13 @@
 from unittest import TestCase
 
-from cla_backend.libs.eligibility_calculator.cfe_civil.savings import translate_savings
+from cla_backend.libs.eligibility_calculator.cfe_civil.savings import SavingsTranslator
 from cla_backend.libs.eligibility_calculator.models import Savings
 
 
 class TestTranslateSavings(TestCase):
     def test_bank_balance_and_investments(self):
         savings = Savings(bank_balance=270010, investment_balance=100010, asset_balance=200000)
-        output = translate_savings(savings)
+        translator = SavingsTranslator(savings)
         expected = {"capitals": {
             "bank_accounts": [
                 {
@@ -30,11 +30,12 @@ class TestTranslateSavings(TestCase):
 
             ],
         }}
-        self.assertEqual(expected, output)
+        self.assertTrue(translator.is_complete())
+        self.assertEqual(expected, translator.translate())
 
     def test_assets(self):
         savings = Savings(bank_balance=0, investment_balance=0, asset_balance=80011)
-        output = translate_savings(savings)
+        translator = SavingsTranslator(savings)
         expected = {"capitals": {
             "bank_accounts": [],
             "non_liquid_capital": [
@@ -46,12 +47,10 @@ class TestTranslateSavings(TestCase):
 
             ],
         }}
-        self.assertEqual(expected, output)
+        self.assertTrue(translator.is_complete())
+        self.assertEqual(expected, translator.translate())
 
     def test_empty_savings_generates_empty_dict(self):
         savings = Savings()
-
-        output = translate_savings(savings)
-
-        expected = {}
-        self.assertEqual(expected, output)
+        translator = SavingsTranslator(savings)
+        self.assertFalse(translator.is_complete())

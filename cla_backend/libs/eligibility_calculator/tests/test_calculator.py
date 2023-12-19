@@ -1862,7 +1862,12 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         _, cfe_response = self.checker_with_property(300000)._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_response.overall_result)
 
-    def checker_with_income(self, income, tax, ni=600, self_employed=False):
+    def deductions_dict_with(self, tax, ni=600, rent=0):
+        return dict(income_tax=tax, national_insurance=ni,
+                    maintenance=0, childcare=0, mortgage=0, rent=rent,
+                    criminal_legalaid_contributions=0)
+
+    def checker_with_income(self, income, deductions, self_employed=False):
         cd = fixtures.get_default_case_data()
         cd['you'].update({
             'income': dict(earnings=income,
@@ -1874,7 +1879,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
                            benefits=0,
                            other_income=0
                            ),
-            'deductions': dict(income_tax=tax, national_insurance=ni)
+            'deductions': deductions
         })
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
@@ -1925,15 +1930,18 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
 
     def test_cfe_request_with_small_gross_income(self):
         # income is in pence
-        _, cfe_response = self.checker_with_income(10000, 100)._do_cfe_civil_check()
+        _, cfe_response = self.checker_with_income(10000,
+                                                   deductions=self.deductions_dict_with(tax=100))._do_cfe_civil_check()
         self.assertEqual(45.0, cfe_response.employment_allowance)
 
     def test_cfe_request_self_employed(self):
-        _, cfe_response = self.checker_with_income(10000, 100, self_employed=True)._do_cfe_civil_check()
+        _, cfe_response = self.checker_with_income(10000, deductions=self.deductions_dict_with(tax=100),
+                                                   self_employed=True)._do_cfe_civil_check()
         self.assertEqual(0.0, cfe_response.employment_allowance)
 
     def test_cfe_request_with_large_gross_income(self):
-        _, cfe_response = self.checker_with_income(1000000, 500)._do_cfe_civil_check()
+        _, cfe_response = self.checker_with_income(1000000,
+                                                   deductions=self.deductions_dict_with(tax=500))._do_cfe_civil_check()
         self.assertEqual('ineligible', cfe_response.overall_result)
 
     def checker_with_dependants(self, young_count, old_count):
@@ -1962,12 +1970,12 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         self.assertEqual(2657.0, cfe_result.gross_upper_threshold)
 
     def test_small_income_without_earnings_cfe_eligible(self):
-        checker = self.checker_with_income(income=10000, tax=500)
+        checker = self.checker_with_income(income=10000, deductions=self.deductions_dict_with(tax=500))
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual('eligible', cfe_result.overall_result)
 
     def test_large_income_without_earnings_cfe_ineligible(self):
-        checker = self.checker_with_income(income=100000, tax=500)
+        checker = self.checker_with_income(income=100000, deductions=self.deductions_dict_with(tax=500))
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual('ineligible', cfe_result.overall_result)
 
@@ -1981,11 +1989,23 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
                                                                   tax_credits=None)._do_cfe_civil_check()
         self.assertEqual("not_yet_known", cfe_result.overall_result)
 
-    def test_incomplete_deductions_data_is_unknown(self):
-        _, cfe_result = self.checker_with_income_without_earnings(maintenance_received=100,
-                                                                  child_benefits=500,
-                                                                  deductions={})._do_cfe_civil_check()
+    def test_incomplete_deductions_data_over_di_threshold_is_unknown(self):
+        deductions = dict(income_tax=60 * 100, national_insurance=0,
+                          maintenance=0, childcare=0, mortgage=0,
+                          criminal_legalaid_contributions=0)
+
+        checker = self.checker_with_income(income=1000 * 100, deductions=deductions)
+        cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual("not_yet_known", cfe_result.overall_result)
+
+    def test_enough_deductions_data_is_eligible(self):
+        deductions = dict(income_tax=60 * 100, national_insurance=0,
+                          maintenance=0, childcare=0, mortgage=0,
+                          criminal_legalaid_contributions=0, rent=800 * 100)
+
+        checker = self.checker_with_income(income=1000 * 100, deductions=deductions)
+        cfe_result = self.do_cfe_civil_check(checker)
+        self.assertEqual("eligible", cfe_result.overall_result)
 
     def test_incomplete_self_employment_is_unknown(self):
         _, cfe_result = self.checker_with_income_without_earnings(maintenance_received=100,

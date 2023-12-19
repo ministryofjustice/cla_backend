@@ -8,13 +8,11 @@ from django.utils import timezone
 from . import constants
 from . import exceptions
 from .cfe_civil.age import translate_age
-from .cfe_civil.deductions import translate_deductions
+from .cfe_civil.capital import CapitalTranslator
+from .cfe_civil.deductions import DeductionsTranslator
 from .cfe_civil.dependants import translate_dependants, has_dependants_key
-from .cfe_civil.savings import translate_savings, has_savings_key
-from .cfe_civil.employment import translate_employment, has_employment_key
 from .cfe_civil.cfe_response import CfeResponse
-from .cfe_civil.property import translate_property, has_property_key
-from .cfe_civil.income import translate_income, has_income_key
+from .cfe_civil.gross_income import GrossIncomeTranslator
 from .cfe_civil.applicant import translate_applicant
 from .cfe_civil.proceeding_types import translate_proceeding_types, DEFAULT_PROCEEDING_TYPE
 from cla_common.constants import ELIGIBILITY_STATES
@@ -352,7 +350,7 @@ class EligibilityChecker(object):
         # temp: start doing just non-partner passported checks through CFE
         if self._is_non_means_tested(self.case_data) or self._is_passported_without_partner(self.case_data):
             legacy_result = self._legacy_check()
-            logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
+            logger.info("(unused) Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
             # update calcs with our version - legecy check sets these with side effects
             # so they would be correct even if cfe_civil_check() had errors
@@ -434,29 +432,32 @@ class EligibilityChecker(object):
                 EligibilityChecker._translate_applicant_data(submission_date, case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
 
-        request_data.update(EligibilityChecker._translate_capital_data(case_data))
-        if not EligibilityChecker._complete_cfe_capital_data(request_data):
+        # getattr(case_data, "you", None) doesn't work with these attributes
+        if hasattr(case_data, "you"):
+            person = case_data.you
+        else:
+            person = None
+        capital_translator = CapitalTranslator(case_data, person)
+        if not capital_translator.is_complete():
             request_data['assessment']['section_capital'] = 'incomplete'
+        request_data.update(capital_translator.translate())
 
         if hasattr(case_data, "you"):
-            request_data.update(EligibilityChecker._translate_income_data(case_data.you))
-        if not EligibilityChecker._complete_cfe_income_data(request_data):
+            gross_income_translator = GrossIncomeTranslator(case_data.you)
+            if not gross_income_translator.is_complete():
+                request_data['assessment']['section_gross_income'] = 'incomplete'
+            request_data.update(gross_income_translator.translate())
+        else:
             request_data['assessment']['section_gross_income'] = 'incomplete'
 
-        return request_data
-
-    @staticmethod
-    def _translate_income_data(person):
-        request_data = {}
-        if hasattr(person, "income"):
-            regular_income = translate_income(person.income)
-            if hasattr(person, "deductions"):
-                request_data.update(translate_employment(person.income, person.deductions))
-                regular_outgoings = translate_deductions(person.deductions)
-                request_data.update(
-                    EligibilityChecker._merge_regular_transaction_data(regular_income, regular_outgoings))
-            else:
-                request_data.update(regular_income)
+        if hasattr(case_data, "you") and hasattr(case_data.you, "deductions"):
+            deductions_translator = DeductionsTranslator(case_data.you.deductions)
+            if not deductions_translator.is_complete():
+                request_data['assessment']['section_disposable_income'] = 'incomplete'
+            regular_outgoings = deductions_translator.translate()
+            request_data.update(EligibilityChecker._merge_regular_transaction_data(request_data, regular_outgoings))
+        else:
+            request_data['assessment']['section_disposable_income'] = 'incomplete'
 
         return request_data
 
@@ -480,26 +481,8 @@ class EligibilityChecker(object):
         return request_data
 
     @staticmethod
-    def _translate_capital_data(case_data):
-        request_data = {}
-        if hasattr(case_data, "you") and hasattr(case_data.you, "savings"):
-            request_data.update(translate_savings(case_data.you.savings))
-
-        if hasattr(case_data, "property_data"):
-            request_data.update(translate_property(case_data.property_data))
-        return request_data
-
-    @staticmethod
     def _complete_applicant_data(request_data, facts):
         return has_dependants_key(request_data) and hasattr(facts, "has_partner")
-
-    @staticmethod
-    def _complete_cfe_income_data(request_data):
-        return has_employment_key(request_data) and has_income_key(request_data)
-
-    @staticmethod
-    def _complete_cfe_capital_data(request_data):
-        return has_property_key(request_data) and has_savings_key(request_data)
 
     def _translate_response(self, cfe_response):
         '''Translates CFE-Civil's response to something similar that EligibilityChecker.is_eligible() has always returned'''

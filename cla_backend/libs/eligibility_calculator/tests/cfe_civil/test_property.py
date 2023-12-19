@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from cla_backend.libs.eligibility_calculator.cfe_civil.property import translate_property
+from cla_backend.libs.eligibility_calculator.cfe_civil.property import PropertyTranslator
 
 
 class TestTranslateProperty(TestCase):
@@ -19,7 +19,7 @@ class TestTranslateProperty(TestCase):
              }
         ]
 
-        output = translate_property(houses)
+        translator = PropertyTranslator(houses)
         expected = {"properties": {
             "main_home": {
                 "value": 100000,
@@ -38,7 +38,8 @@ class TestTranslateProperty(TestCase):
                 }
             ]
         }}
-        self.assertEqual(expected, output)
+        self.assertTrue(expected, translator.is_complete())
+        self.assertEqual(expected, translator.translate())
 
     def test_properties_no_main_home(self):
         houses = [
@@ -50,7 +51,7 @@ class TestTranslateProperty(TestCase):
              }
         ]
 
-        output = translate_property(houses)
+        translator = PropertyTranslator(houses)
         expected = {"properties": {
             "additional_properties": [
                 {
@@ -62,11 +63,12 @@ class TestTranslateProperty(TestCase):
                 }
             ]
         }}
-        self.assertEqual(expected, output)
+        self.assertTrue(expected, translator.is_complete())
+        self.assertEqual(expected, translator.translate())
 
     def test_invalid_property_returns_no_results(self):
         houses = [{}]
-        self.assertEqual({}, translate_property(houses))
+        self.assertFalse(PropertyTranslator(houses).is_complete())
 
     def test_properties_two_main_homes(self):
         houses = [
@@ -84,7 +86,7 @@ class TestTranslateProperty(TestCase):
              }
         ]
 
-        output = translate_property(houses)
+        translator = PropertyTranslator(houses)
         expected = {"properties": {
             "main_home": {
                 "value": 500000,
@@ -103,4 +105,5 @@ class TestTranslateProperty(TestCase):
                 }
             ]
         }}
-        self.assertEqual(expected, output)
+        self.assertTrue(expected, translator.is_complete())
+        self.assertEqual(expected, translator.translate())

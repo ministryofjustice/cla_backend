@@ -11,28 +11,25 @@ def _savings_value(value, description):
         }
 
 
-_CFE_SAVINGS_KEY = "capitals"
+class SavingsTranslator(object):
+    def __init__(self, savings_data):
+        self._savings_data = savings_data
 
+    def is_complete(self):
+        return has_all_attributes(self._savings_data, ["bank_balance", "investment_balance", "asset_balance"])
 
-def has_savings_key(request_data):
-    return _CFE_SAVINGS_KEY in request_data
-
-
-def translate_savings(savings_data):
-    if has_all_attributes(savings_data, ["bank_balance", "investment_balance", "asset_balance"]):
+    def translate(self):
         liquid_capital = [
-            _savings_value(savings_data.bank_balance, "Savings"),
-            _savings_value(savings_data.investment_balance, "Investment")
+            _savings_value(self._savings_data.bank_balance, "Savings"),
+            _savings_value(self._savings_data.investment_balance, "Investment")
         ]
         non_liquid_capital = [
-            _savings_value(savings_data.asset_balance, "Valuable items worth over 500 pounds")
+            _savings_value(self._savings_data.asset_balance, "Valuable items worth over 500 pounds")
         ]
 
         return {
-            _CFE_SAVINGS_KEY: {
+            "capitals": {
                 "bank_accounts": none_filter(liquid_capital),
                 "non_liquid_capital": none_filter(non_liquid_capital)
             }
         }
-    else:
-        return {}

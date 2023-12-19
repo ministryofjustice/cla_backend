@@ -24,14 +24,17 @@ _EMPLOYMENT_KEY = "employment_details"
 _SELF_EMPLOYMENT_KEY = "self_employment_details"
 
 
-def has_employment_key(dict):
-    return _EMPLOYMENT_KEY in dict or _SELF_EMPLOYMENT_KEY in dict
+class EmploymentTranslator(object):
+    def __init__(self, income, deductions):
+        self._income = income
+        self._deductions = deductions
 
+    def is_complete(self):
+        return _all_income_fields(self._income) and _all_deductions_fields(self._deductions)
 
-def translate_employment(income, deductions):
-    if _all_income_fields(income) and _all_deductions_fields(deductions):
-        fields = _common_income_fields(income, deductions)
-        if income.self_employed:
+    def translate(self):
+        fields = _common_income_fields(self._income, self._deductions)
+        if self._income.self_employed:
             return {
                 _SELF_EMPLOYMENT_KEY: [
                     {
@@ -51,5 +54,3 @@ def translate_employment(income, deductions):
                     }
                 ]
             }
-    else:
-        return {}

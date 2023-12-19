@@ -372,6 +372,7 @@ workflows:
               only:
                 - master
                 - django-upgrade
+                - feature/LGA-2799-Annouce-we-are-calling-from-cla
 
       - deploy:
           name: staging_deploy_live

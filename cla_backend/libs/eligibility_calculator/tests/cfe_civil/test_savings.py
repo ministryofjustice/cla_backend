@@ -32,6 +32,21 @@ class TestTranslateSavings(TestCase):
         }}
         self.assertEqual(expected, output)
 
+    def test_assets(self):
+        savings = Savings(bank_balance=0, investment_balance=0, asset_balance=80011)
+        output = translate_savings(savings)
+        expected = {"capitals": {
+            "bank_accounts": [],
+            "non_liquid_capital": [
+                {
+                    "value": 800.11,
+                    "description": "Valuable items worth over 500 pounds",
+                    "subject_matter_of_dispute": False
+                },
+            ]
+        }}
+        self.assertEqual(expected, output)
+
     def test_empty_savings_generates_empty_dict(self):
         savings = Savings()
 

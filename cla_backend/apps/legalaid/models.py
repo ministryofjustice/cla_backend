@@ -419,13 +419,13 @@ class EligibilityCheck(TimeStampedModel, ValidateModelMixin):
     def get_eligibility_state(self):
         """
         Returns one of the ELIGIBILITY_STATES values depending on if the model
-        is eligible or not. If PropertyExpectedException is raised, it means
-        that we don't have enough data to determine the state so we set the
-        `state` property to UNKNOWN.
+        is eligible or not, or UNKNOWN if there isn't enough data (yet) to determine.
         """
         case_data = self.to_case_data()
-        logger.debug('CaseData %s' % json.dumps(case_data.to_dict(), indent=4, sort_keys=True))
-        ec = EligibilityChecker(self.to_case_data())
+        case_data_dict, case_data_dict_missing = case_data.to_dict()
+        logger.debug('CaseData %s' % json.dumps(case_data_dict, indent=4, sort_keys=True))
+        logger.debug('CaseData is missing: %s' % json.dumps(case_data_dict_missing, indent=4, sort_keys=True))
+        ec = EligibilityChecker(case_data)
         eligibility_state = ec.is_eligible()
 
         if eligibility_state == ELIGIBILITY_STATES.NO:

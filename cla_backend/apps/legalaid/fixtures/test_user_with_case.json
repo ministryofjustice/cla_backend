@@ -202,7 +202,7 @@
             "contact_for_research_via": "PHONE",
             "contact_for_research_methods": [],
             "safe_to_contact": "SAFE",
-            "announce_call": true,
+            "announce_call": false,
             "created": "2022-03-29T18:10:53.107Z",
             "modified": "2022-03-29T18:12:30.691Z",
             "diversity_modified": "2022-03-29T18:11:57.327Z"
@@ -231,7 +231,7 @@
         "contact_for_research_via": "PHONE",
         "contact_for_research_methods": [],
         "safe_to_contact": "SAFE",
-        "announce_call": true,
+        "announce_call": false,
         "created": "2022-03-29T18:10:53.107Z",
         "modified": "2022-03-29T18:12:30.691Z",
         "diversity_modified": "2022-03-29T18:11:57.327Z"

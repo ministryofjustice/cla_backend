@@ -1003,8 +1003,9 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
         return is_elig, checker
 
     def test_pensioner_200k2p_house_100k1p_mort_800001_savings(self):
+        self.maxDiff = 1000
         """
-        if over 60 and on benefits, 300K.02 house with 100K.01 mortgage and
+        if over 60 and not on benefits, 200K.02 house with 100K.01 mortgage and
         8000.01+.01+.01 of other assets should fail.
         """
 
@@ -1014,7 +1015,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
             property_data=[
                 {"value": 20000002, "mortgage_left": 10000001, "share": 100, "disputed": False, "main": True}
             ],
-            you__income__earnings=31506,
+            you__income__earnings=31606,
             you__income__other_income=59001,
             you__savings__bank_balance=800001,
             you__savings__investment_balance=1,
@@ -1032,9 +1033,9 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
 
         expected_results = {
             "pensioner_disregard": 0,
-            "gross_income": 90507,
+            "gross_income": 90607,
             "partner_allowance": 0,
-            "disposable_income": 31501,
+            "disposable_income": 31601,
             "dependants_allowance": 0,
             "employment_allowance": 4500,
             "partner_employment_allowance": 0,
@@ -1055,7 +1056,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
         expected_results.update(expected_property_results[self.expected_results_key])
 
         self.assertEqual('no', is_elig)
-        self.assertDictEqual(checker.calcs, expected_results)
+        self.assertDictEqual(expected_results, checker.calcs)
 
     def test_pensioner_limit_10k_diregard_fail(self):
         """

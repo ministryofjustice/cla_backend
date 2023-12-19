@@ -357,16 +357,16 @@ class EligibilityChecker(object):
             # update calcs with our version - legecy check sets these with side effects
             # so they would be correct even if cfe_civil_check() had errors
             self.calcs = {
-                "pensioner_disregard": int(cfe_response.pensioner_disregard * 100),
-                "disposable_capital_assets": int(cfe_response.disposable_capital_assets * 100),
-                "property_equities": [int(x * 100) for x in cfe_response.property_equities],
-                "property_capital": int(cfe_response.property_capital * 100),
-                "liquid_capital": int((cfe_response.liquid_capital + cfe_response.non_liquid_capital + cfe_response.vehicle_capital) * 100),
-                "gross_income": 0,
+                "pensioner_disregard": self._pounds_to_pence(cfe_response.pensioner_disregard),
+                "disposable_capital_assets": self._pounds_to_pence(cfe_response.disposable_capital_assets),
+                "property_equities": [self._pounds_to_pence(x) for x in cfe_response.property_equities],
+                "property_capital": self._pounds_to_pence(cfe_response.property_capital),
+                "liquid_capital": self._pounds_to_pence(cfe_response.liquid_capital),
+                "gross_income": self._pounds_to_pence(cfe_response.gross_income),
                 "partner_allowance": 0,
-                "disposable_income": 0,
+                "disposable_income": self._pounds_to_pence(cfe_response.disposable_income),
                 "dependants_allowance": 0,
-                "employment_allowance": 0,
+                "employment_allowance": self._pounds_to_pence(cfe_response.employment_allowance),
                 "partner_employment_allowance": 0,
             }
 
@@ -376,6 +376,11 @@ class EligibilityChecker(object):
             logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
             return legacy_result
+
+    @staticmethod
+    def _pounds_to_pence(value):
+        # deal with rounding error by adding a small amount before truncating
+        return  int(value * 100 + 0.1)
 
     @staticmethod
     def _without_partner(case_data):

@@ -7,24 +7,21 @@ def has_dependants_key(dict):
     return _DEPENDANTS_KEY in dict
 
 
+def _dependant_aged(todays_date, age, relationship):
+    return dict(date_of_birth=str(datetime.date(todays_date.year - age, todays_date.month, todays_date.day)),
+                in_full_time_education=False,
+                relationship=relationship,
+                income=dict(frequency="weekly", amount=0),
+                assets_value=0)
+
+
 def translate_dependants(todays_date, facts):
-    dependants = []
     if hasattr(facts, "dependants_young"):
-        for child in range(facts.dependants_young):
-            dependants.append(
-                dict(date_of_birth=str(datetime.date(todays_date.year - 15, todays_date.month, todays_date.day)),
-                     in_full_time_education=False,
-                     relationship="child_relative",
-                     income=dict(frequency="weekly", amount=0),
-                     assets_value=0),
-            )
+        children = [_dependant_aged(todays_date, 15, "child_relative") for _ in range(facts.dependants_young)]
+    else:
+        children = []
     if hasattr(facts, "dependants_old"):
-        for adult in range(facts.dependants_old):
-            dependants.append(
-                dict(date_of_birth=str(datetime.date(todays_date.year - 17, todays_date.month, todays_date.day)),
-                     in_full_time_education=False,
-                     relationship="adult_relative",
-                     income=dict(frequency="weekly", amount=0),
-                     assets_value=0),
-            )
-    return {_DEPENDANTS_KEY: dependants}
+        adults = [_dependant_aged(todays_date, 17, "adult_relative") for _ in range(facts.dependants_old)]
+    else:
+        adults = []
+    return {_DEPENDANTS_KEY: children + adults}

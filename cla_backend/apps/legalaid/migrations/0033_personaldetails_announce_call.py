@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='personaldetails',
             name='announce_call',
-            field=models.BooleanField(default=False),
+            field=models.NullBooleanField(),
         ),
     ]

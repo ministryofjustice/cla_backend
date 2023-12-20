@@ -7,11 +7,11 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('legalaid', '0035_auto_20231215_0958'),
+        ('legalaid', '0032_auto_20230719_1449'),
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name='personaldetails',
             name='announce_call',
             field=models.BooleanField(default=False),

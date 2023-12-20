@@ -23,8 +23,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       SecRuleEngine On
-      SecDefaultAction "phase:2,pass,log,tag:github_team=laa-get-access"
-      SecRuleRemoveById 949110
+      SecDefaultAction "phase:2,pass,log,tag:github_team=laa-get-access,setvar:'tx.allowed_methods=GET HEAD POST OPTIONS DELETE'"
 spec:
   ingressClassName: "modsec"
   tls:

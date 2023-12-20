@@ -45,6 +45,14 @@ class CfeResponse(object):
         return self._cfe_data['result_summary']['capital']['total_liquid']
 
     @property
+    def non_liquid_capital(self):
+        return self._cfe_data['result_summary']['capital']['total_non_liquid']
+
+    @property
+    def vehicle_capital(self):
+        return self._cfe_data['result_summary']['capital']['total_vehicle']
+
+    @property
     def gross_income(self):
         return self._cfe_data['result_summary']['gross_income']['combined_total_gross_income']
 

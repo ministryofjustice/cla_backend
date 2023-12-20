@@ -130,7 +130,7 @@
             "category": 8,
             "on_passported_benefits": true,
             "disputed_savings": null,
-            "calculations": "{\"pensioner_disregard\":0,\"disposable_capital_assets\":0,\"property_equities\":[],\"property_capital\":0,\"liquid_capital\":0}",
+            "calculations": "{\"pensioner_disregard\":0,\"disposable_capital_assets\":0,\"property_equities\":[],\"property_capital\":0,\"non_property_capital\":0}",
             "reference": "9e48176cf35b40029aa95c42f8f705a3",
             "created": "2022-03-29T18:11:44.146Z",
             "disregards": null,

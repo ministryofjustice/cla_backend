@@ -114,6 +114,9 @@ class SearchComplaintTestCase(
         self.assertEqual(response.data["results"][0]["case_reference"], "ref2")
 
     def test_search_find_multiple_results_by_person_name(self):
+        # remove the complaint that is created by the mixin as we don't need it
+        self.resource.delete()
+
         # """
         # GET search by name should work
         # """

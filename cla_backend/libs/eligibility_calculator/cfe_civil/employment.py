@@ -53,6 +53,6 @@ def translate_employment(income, deductions):
                     ]
                 }
         else:
-            return { _EMPLOYMENT_KEY: [] }
+            return {_EMPLOYMENT_KEY: []}
     else:
         return {}

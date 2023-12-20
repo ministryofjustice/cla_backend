@@ -380,7 +380,7 @@ class EligibilityChecker(object):
     @staticmethod
     def _pounds_to_pence(value):
         # deal with rounding error by adding a small amount before truncating
-        return  int(value * 100 + 0.1)
+        return int(value * 100 + 0.1)
 
     @staticmethod
     def _without_partner(case_data):

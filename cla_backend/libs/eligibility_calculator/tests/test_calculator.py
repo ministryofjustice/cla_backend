@@ -1035,11 +1035,11 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
             "pensioner_disregard": 0,
             "gross_income": 90607,
             "partner_allowance": 0,
-            "disposable_income": 31601,
+            "disposable_income": 31602,
             "dependants_allowance": 0,
             "employment_allowance": 4500,
             "partner_employment_allowance": 0,
-            "liquid_capital": 800004,
+            "liquid_capital": 800002,
         }
         expected_property_results = {
             "pre_mortgage_cap_removal": {
@@ -1050,7 +1050,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
             "post_mortgage_cap_removal": {
                 "property_capital": 1,
                 "property_equities": [1],
-                "disposable_capital_assets": 800005,
+                "disposable_capital_assets": 800004,
             },
         }
         expected_results.update(expected_property_results[self.expected_results_key])

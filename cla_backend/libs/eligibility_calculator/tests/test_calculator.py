@@ -943,7 +943,7 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
             "dependants_allowance": 0,
             "employment_allowance": 0,
             "partner_employment_allowance": 0,
-            "liquid_capital": 0,
+            "liquid_capital": 79999,
         }
         expected_property_results = {
             "pre_mortgage_cap_removal": {
@@ -976,7 +976,7 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
             "dependants_allowance": 0,
             "employment_allowance": 0,
             "partner_employment_allowance": 0,
-            "liquid_capital": 0,
+            "liquid_capital": 79999,
         }
         expected_property_results = {
             "pre_mortgage_cap_removal": {

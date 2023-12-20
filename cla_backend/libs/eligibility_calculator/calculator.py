@@ -361,7 +361,7 @@ class EligibilityChecker(object):
                 "disposable_capital_assets": int(cfe_response.disposable_capital_assets * 100),
                 "property_equities": [int(x * 100) for x in cfe_response.property_equities],
                 "property_capital": int(cfe_response.property_capital * 100),
-                "liquid_capital": int(cfe_response.liquid_capital * 100),
+                "liquid_capital": int((cfe_response.liquid_capital + cfe_response.non_liquid_capital + cfe_response.vehicle_capital) * 100),
                 "gross_income": 0,
                 "partner_allowance": 0,
                 "disposable_income": 0,

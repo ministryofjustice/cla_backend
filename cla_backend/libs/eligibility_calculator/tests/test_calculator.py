@@ -1003,7 +1003,6 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
         return is_elig, checker
 
     def test_pensioner_200k2p_house_100k1p_mort_800001_savings(self):
-        self.maxDiff = 1000
         """
         if over 60 and not on benefits, 200K.02 house with 100K.01 mortgage and
         8000.01+.01+.01 of other assets should fail.
@@ -1015,7 +1014,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
             property_data=[
                 {"value": 20000002, "mortgage_left": 10000001, "share": 100, "disputed": False, "main": True}
             ],
-            you__income__earnings=31606,
+            you__income__earnings=31606,  # Increased value by 100 pence because of the bug in CFE's pensioner capital disregards threshold (https://dsdmoj.atlassian.net/browse/LEP-462)
             you__income__other_income=59001,
             you__savings__bank_balance=800001,
             you__savings__investment_balance=1,
@@ -1035,11 +1034,11 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
             "pensioner_disregard": 0,
             "gross_income": 90607,
             "partner_allowance": 0,
-            "disposable_income": 31602,
+            "disposable_income": 31602,  # Value updated because "childcare" should be deducted from gross_income only if dependants are present. Currently, dependant count check is missing in CLA while deducting childcare
             "dependants_allowance": 0,
             "employment_allowance": 4500,
             "partner_employment_allowance": 0,
-            "liquid_capital": 800002,
+            "liquid_capital": 800002,  # Value updated because of liquid capital discrepancy. "asset_balance" and "credit_balance(not supported by CFE)" is not considered in "liquid_capital"
         }
         expected_property_results = {
             "pre_mortgage_cap_removal": {
@@ -1050,7 +1049,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
             "post_mortgage_cap_removal": {
                 "property_capital": 1,
                 "property_equities": [1],
-                "disposable_capital_assets": 800004,
+                "disposable_capital_assets": 800004,  # Value updated because of Liquid Capital Bug(https://mojdt.slack.com/archives/C04AW468PU4/p1703072344843969)
             },
         }
         expected_results.update(expected_property_results[self.expected_results_key])

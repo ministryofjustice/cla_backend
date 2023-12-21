@@ -427,6 +427,7 @@ class EligibilityChecker(object):
             ]
         }
 
+        EligibilityChecker._translate_sections_complete(case_data, request_data)
         if hasattr(case_data, "category"):
             request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
         if hasattr(case_data, "facts"):
@@ -444,6 +445,45 @@ class EligibilityChecker(object):
             request_data['assessment']['section_gross_income'] = 'incomplete'
 
         return request_data
+
+    @staticmethod
+    def _translate_sections_complete(case_data, request_data):
+        """
+        Determine if the questions for the 3 sections of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
+
+        # Gross Income questions
+        has_completed_gross_income_questions = (
+            hasattr(case_data.you, "income") and
+            hasattr(case_data.you.income, "maintenance_received")
+            )
+        if not has_completed_gross_income_questions:
+            request_data['assessment']['section_gross_income'] = 'incomplete'
+
+        # Disposable Income questions
+        if not (hasattr(case_data.you, "deductions") and hasattr(case_data.you.deductions, "maintenance")):
+            request_data['assessment']['section_disposable_income'] = 'incomplete'
+
+        # Capital questions
+        has_completed_capital_questions = (
+            has_completed_gross_income_questions
+            or case_data.facts.on_passported_benefits is True)
+        # Whilst there is a "correct" way to determine if all the capital quesions are complete from the
+        # case_data, it is rather complicated and brittle, so we avoid that.
+        # Instead we can simply say that capital is complete if the income is complete, or the person is
+        # passported - that's simpler and less likely to break due to front-end or model changes.
+        # That logic is good enough, because all we need is: at the end of the capital section of the form,
+        # if the total capital is over the threshold, for CFE to give `overall_result: ineligible``, causing
+        # the front-end to skip to the end of the questions. This happens whether we tell CFE that section_capital
+        # is complete or not.
+        # The key thing is that at the time all the questions are asked, `section_capital != incomplete`,
+        # otherwise CFE will give `overall_result: not_yet_known` instead of `eligible`.
+        # (The even simpler way to do this would be to never say capital is `incomplete`, but that might confuse
+        # even more when someone looks at the average CFE request.)
+        if not has_completed_capital_questions:
+            request_data['assessment']['section_capital'] = 'incomplete'
+
 
     @staticmethod
     def _translate_income_data(person):

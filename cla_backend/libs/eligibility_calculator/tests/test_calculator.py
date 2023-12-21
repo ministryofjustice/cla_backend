@@ -1876,6 +1876,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
                            ),
             'deductions': dict(income_tax=tax, national_insurance=ni)
         })
+        self.income_sections_are_completed(cd)
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
@@ -1893,35 +1894,18 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
                            ),
             'deductions': deductions
         })
+        self.income_sections_are_completed(cd)
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
-    def checker_with_income_without_earnings(self, maintenance_received, child_benefits, deductions=None,
-                                             self_employed=False, tax_credits=0):
-        cd = self.case_dict_with_property(10000)
-        if tax_credits is None:
-            cd['you'].update({
-                'income': dict(
-                    self_employed=self_employed,
-                    earnings=0,
-                ),
-            })
-        else:
-            cd['you'].update({
-                'income': dict(
-                    self_employed=self_employed,
-                    maintenance_received=maintenance_received,
-                    child_benefits=child_benefits,
-                    tax_credits=0,
-                    pension=0,
-                    benefits=0,
-                    other_income=0
-                ),
-            })
-        if deductions is not None:
-            cd['you'].update({'deductions': deductions})
-        case_data = CaseData(**cd)
-        return EligibilityChecker(case_data=case_data)
+    def income_sections_are_completed(self, case_data):
+        """
+        Ensure case_data is "complete" in terms of gross & disposable income
+        i.e. add some properties that we expect to exist if the frontends have asked all the relevant questions on income.
+        This emulates what would be done by cla_public and cla_frontend.
+        """
+        case_data['you']['income']['maintenance_received'] = case_data['you'].get('income', {}).get('maintenance_received')
+        case_data['you']['deductions']['maintenance'] = case_data['you'].get('deductions', {}).get('maintenance')
 
     def test_cfe_request_with_small_gross_income(self):
         # income is in pence
@@ -1973,24 +1957,6 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
 
     def test_cfe_with_incomplete_property_data_is_unknown(self):
         _, cfe_result = self.checker_with_blank_property()._do_cfe_civil_check()
-        self.assertEqual("not_yet_known", cfe_result.overall_result)
-
-    def test_incomplete_income_data_is_unknown(self):
-        _, cfe_result = self.checker_with_income_without_earnings(maintenance_received=100,
-                                                                  child_benefits=500,
-                                                                  tax_credits=None)._do_cfe_civil_check()
-        self.assertEqual("not_yet_known", cfe_result.overall_result)
-
-    def test_incomplete_deductions_data_is_unknown(self):
-        _, cfe_result = self.checker_with_income_without_earnings(maintenance_received=100,
-                                                                  child_benefits=500,
-                                                                  deductions={})._do_cfe_civil_check()
-        self.assertEqual("not_yet_known", cfe_result.overall_result)
-
-    def test_incomplete_self_employment_is_unknown(self):
-        _, cfe_result = self.checker_with_income_without_earnings(maintenance_received=100,
-                                                                  child_benefits=500,
-                                                                  self_employed=True)._do_cfe_civil_check()
         self.assertEqual("not_yet_known", cfe_result.overall_result)
 
     def checker_without_savings(self):

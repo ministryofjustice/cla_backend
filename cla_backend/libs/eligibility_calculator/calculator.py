@@ -480,37 +480,34 @@ class EligibilityChecker(object):
             request_data['assessment']['section_disposable_income'] = 'incomplete'
 
     @staticmethod
+    def is_property_complete(property_data):
+        if len(property_data) == 0:
+            return True
+        for key, value in property_data[0].iteritems():
+            if value is not None:
+                return True
+        return False
+
+    @staticmethod
+    def is_savings_complete(case_data):
+        try:
+            savings = case_data.you.savings
+            for key in savings.PROPERTY_META:
+                if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
+                    return False
+        except exceptions.PropertyExpectedException:
+            return False
+        return True
+
+    @staticmethod
     def _translate_section_capital(case_data, request_data):
         """
         Determine if the questions for capital section of the test have been completed by the user yet,
         and put this in the CFE request.
         """
-        def is_property_complete(property_data):
-            if len(property_data) == 0:
-                return True
-            first_property = property_data[0]
-            for key, value in first_property.iteritems():
-                if value is not None:
-                    return True
-            return False
-
-        def is_savings_complete(case_data):
-            if not hasattr(case_data, "you"):
-                return False
-            person = case_data.you
-            if not hasattr(person, "savings"):
-                return False
-            savings = person.savings
-            for key in savings.PROPERTY_META:
-                if not hasattr(savings, key):
-                    return False
-                if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
-                    return False
-            return True
-
         has_completed_capital_questions = (
-            is_property_complete(case_data.property_data)
-            and is_savings_complete(case_data)
+            EligibilityChecker.is_property_complete(case_data.property_data)
+            and EligibilityChecker.is_savings_complete(case_data)
         )
 
         # This capital logic is a bit complicated, and dependent on how cla_backend's clients set the CaseData.

@@ -2,12 +2,12 @@ from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_
     has_all_attributes
 
 
-def _savings_value(value, description):
+def _savings_value(value, description, subject_matter_of_dispute):
     if value > 0:
         return {
             "value": pence_to_pounds(value),
             "description": description,
-            "subject_matter_of_dispute": False
+            "subject_matter_of_dispute": subject_matter_of_dispute
         }
 
 
@@ -18,15 +18,16 @@ def has_savings_key(request_data):
     return _CFE_SAVINGS_KEY in request_data
 
 
-def translate_savings(savings_data):
+def translate_savings(savings_data, subject_matter_of_dispute=False):
     if has_all_attributes(savings_data, ["bank_balance", "investment_balance", "asset_balance", "credit_balance"]):
         liquid_capital = [
-            _savings_value(savings_data.bank_balance, "Savings"),
-            _savings_value(savings_data.investment_balance, "Investment")
+            _savings_value(savings_data.bank_balance, "Savings", subject_matter_of_dispute),
+            _savings_value(savings_data.investment_balance, "Investment", subject_matter_of_dispute)
         ]
         non_liquid_capital = [
-            _savings_value(savings_data.asset_balance, "Valuable items worth over 500 pounds"),
-            _savings_value(savings_data.credit_balance, "Credit balance")
+            _savings_value(savings_data.asset_balance, "Valuable items worth over 500 pounds",
+                           subject_matter_of_dispute),
+            _savings_value(savings_data.credit_balance, "Credit balance", subject_matter_of_dispute)
         ]
 
         return {

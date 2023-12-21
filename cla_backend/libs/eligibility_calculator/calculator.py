@@ -479,7 +479,7 @@ class EligibilityChecker(object):
 
         # Capital questions
         def is_property_complete(property_data):
-            if property_data == []:
+            if len(property_data) == 0:
                 return True
             first_property = property_data[0]
             for key, value in first_property.iteritems():
@@ -490,7 +490,7 @@ class EligibilityChecker(object):
             for key in savings.PROPERTY_META:
                 if not hasattr(savings, key):
                     return False
-                if not isinstance(getattr(savings, key), types.IntType):
+                if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
                     return False
             return True
 

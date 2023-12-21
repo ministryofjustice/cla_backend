@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 from historic.models import CaseArchived
 from legalaid.utils.csvupload.validators import ProviderCSVValidator
+import requests
 from rest_framework import serializers
 
 from core.drf.fields import ThreePartDateField
@@ -172,6 +173,7 @@ class DeductionsSerializerBase(TotalsModelSerializer):
 class PersonalDetailsSerializerBase(serializers.ModelSerializer):
     contact_for_research = serializers.NullBooleanField(required=False)
     vulnerable_user = serializers.NullBooleanField(required=False)
+    announce_call = serializers.NullBooleanField(required=False)
 
     class Meta(object):
         model = PersonalDetails

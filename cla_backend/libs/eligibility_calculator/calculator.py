@@ -443,16 +443,19 @@ class EligibilityChecker(object):
         Determine if the questions for gross income section of the test have been completed by the user yet,
         and put this in the CFE request.
         """
-        def is_gross_income_complete(person):
+        def is_gross_income_complete(case_data):
+            if not hasattr(case_data, "you"):
+                return False
+            person = case_data.you
             if not hasattr(person, "income"):
                 return False
-            income = case_data.you.income
+            income = person.income
             for key in income.PROPERTY_META:
                 if not hasattr(income, key):
                     return False
             return True
 
-        if not is_gross_income_complete(case_data.you):
+        if not is_gross_income_complete(case_data):
             request_data['assessment']['section_gross_income'] = 'incomplete'
 
     @staticmethod
@@ -461,7 +464,10 @@ class EligibilityChecker(object):
         Determine if the questions for disposable income section of the test have been completed by the user yet,
         and put this in the CFE request.
         """
-        def is_disposable_income_complete(person):
+        def is_disposable_income_complete(case_data):
+            if not hasattr(case_data, "you"):
+                return False
+            person = case_data.you
             if not hasattr(person, "deductions"):
                 return False
             deductions = case_data.you.deductions
@@ -470,7 +476,7 @@ class EligibilityChecker(object):
                     return False
             return True
 
-        if not is_disposable_income_complete(case_data.you):
+        if not is_disposable_income_complete(case_data):
             request_data['assessment']['section_disposable_income'] = 'incomplete'
 
     @staticmethod
@@ -488,7 +494,13 @@ class EligibilityChecker(object):
                     return True
             return False
 
-        def is_savings_complete(savings):
+        def is_savings_complete(case_data):
+            if not hasattr(case_data, "you"):
+                return False
+            person = case_data.you
+            if not hasattr(person, "savings"):
+                return False
+            savings = person.savings
             for key in savings.PROPERTY_META:
                 if not hasattr(savings, key):
                     return False
@@ -498,7 +510,7 @@ class EligibilityChecker(object):
 
         has_completed_capital_questions = (
             is_property_complete(case_data.property_data)
-            and is_savings_complete(case_data.you.savings)
+            and is_savings_complete(case_data)
         )
 
         # This capital logic is a bit complicated, and dependent on how cla_backend's clients set the CaseData.

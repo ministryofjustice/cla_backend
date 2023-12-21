@@ -498,6 +498,7 @@ class EligibilityChecker(object):
             for key, value in first_property.iteritems():
                 if value is not None:
                     return True
+            return False
 
         def is_savings_complete(savings):
             for key in savings.PROPERTY_META:

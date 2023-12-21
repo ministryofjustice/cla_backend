@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 
 from historic.models import CaseArchived
 from legalaid.utils.csvupload.validators import ProviderCSVValidator
-import requests
 from rest_framework import serializers
 
 from core.drf.fields import ThreePartDateField

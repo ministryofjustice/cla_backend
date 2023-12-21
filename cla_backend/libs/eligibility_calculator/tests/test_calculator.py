@@ -1038,7 +1038,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
             "dependants_allowance": 0,
             "employment_allowance": 4500,
             "partner_employment_allowance": 0,
-            "liquid_capital": 800002,  # Value updated because of liquid capital discrepancy. "asset_balance" and "credit_balance(not supported by CFE)" is not considered in "liquid_capital"
+            "liquid_capital": 800004,  # "liquid_capital" is defined as "non property capital", so should include "asset_balance" and "credit_balance" (i.e non_liquid_capital)
         }
         expected_property_results = {
             "pre_mortgage_cap_removal": {
@@ -1049,7 +1049,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
             "post_mortgage_cap_removal": {
                 "property_capital": 1,
                 "property_equities": [1],
-                "disposable_capital_assets": 800004,  # Value updated because of Liquid Capital Bug(https://mojdt.slack.com/archives/C04AW468PU4/p1703072344843969)
+                "disposable_capital_assets": 800005,
             },
         }
         expected_results.update(expected_property_results[self.expected_results_key])
@@ -1821,7 +1821,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
 
     def checker_with_assets(self, assets, facts=None):
         cd = self.case_dict_with_property(facts=facts)
-        cd['you'].update({'savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0)})
+        cd['you'].update({'savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0, credit_balance=0)})
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 

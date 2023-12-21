@@ -1,5 +1,6 @@
 import datetime
 import json
+import types
 
 import requests
 from django.conf import settings
@@ -415,6 +416,9 @@ class EligibilityChecker(object):
             ]
         }
 
+        EligibilityChecker._translate_section_gross_income(case_data, request_data)
+        EligibilityChecker._translate_section_disposable_income(case_data, request_data)
+        EligibilityChecker._translate_section_capital(case_data, request_data)
         if hasattr(case_data, "category"):
             request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
         if hasattr(case_data, "facts"):
@@ -432,6 +436,85 @@ class EligibilityChecker(object):
             request_data['assessment']['section_gross_income'] = 'incomplete'
 
         return request_data
+
+    @staticmethod
+    def _translate_section_gross_income(case_data, request_data):
+        """
+        Determine if the questions for gross income section of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
+        def is_gross_income_complete(person):
+            if not hasattr(person, "income"):
+                return False
+            income = case_data.you.income
+            for key in income.PROPERTY_META:
+                if not hasattr(income, key):
+                    return False
+            return True
+
+        if not is_gross_income_complete(case_data.you):
+            request_data['assessment']['section_gross_income'] = 'incomplete'
+
+    @staticmethod
+    def _translate_section_disposable_income(case_data, request_data):
+        """
+        Determine if the questions for disposable income section of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
+        def is_disposable_income_complete(person):
+            if not hasattr(person, "deductions"):
+                return False
+            deductions = case_data.you.deductions
+            for key in deductions.PROPERTY_META:
+                if not hasattr(deductions, key):
+                    return False
+            return True
+
+        if not is_disposable_income_complete(case_data.you):
+            request_data['assessment']['section_disposable_income'] = 'incomplete'
+
+    @staticmethod
+    def _translate_section_capital(case_data, request_data):
+        """
+        Determine if the questions for capital section of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
+        def is_property_complete(property_data):
+            if len(property_data) == 0:
+                return True
+            first_property = property_data[0]
+            for key, value in first_property.iteritems():
+                if value is not None:
+                    return True
+            return False
+
+        def is_savings_complete(savings):
+            for key in savings.PROPERTY_META:
+                if not hasattr(savings, key):
+                    return False
+                if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
+                    return False
+            return True
+
+        has_completed_capital_questions = (
+            is_property_complete(case_data.property_data)
+            and is_savings_complete(case_data.you.savings)
+        )
+
+        # This capital logic is a bit complicated, and dependent on how cla_backend's clients set the CaseData.
+        # If we wanted to simplify this logic, here are the concerns:
+        # 1. At the start of the flow, `section_capital` can be anything, because we rely on the fact that
+        #    `section_disposable_income = incomplete` to force CFE to give `overall_result: not_yet_known`
+        # 2. At the end of the capital section of the form, if the total capital is over the threshold, we need CFE
+        #    to give `overall_result: ineligible`, causing the front-end to skip to the end of the questions. This
+        #    happens whether we tell CFE that `section_capital` is complete or not, so again it doesn't matter.
+        # 3. At the time the forms are complete - all the relevant questions have been asked - then we need
+        #    `section_capital = complete`, otherwise CFE will give `overall_result: not_yet_known` instead of
+        #    `eligible`.
+        # So the really simple way to do this is to always set `section_capital = complete`, but that might confuse
+        # a dev who looks at the CFE requests before the capital section is in reality complete.
+        if not has_completed_capital_questions:
+            request_data['assessment']['section_capital'] = 'incomplete'
 
     @staticmethod
     def _translate_income_data(person):

@@ -7,7 +7,7 @@ from . import fixtures
 from .. import constants
 from ..calculator import EligibilityChecker, CapitalCalculator
 from ..exceptions import PropertyExpectedException
-from ..models import CaseData, Facts
+from ..models import CaseData, Facts, Income, Deductions
 
 
 class MortgageCapRemovalMixin(object):
@@ -1876,6 +1876,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
                            ),
             'deductions': dict(income_tax=tax, national_insurance=ni)
         })
+        self.income_sections_are_completed(cd)
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
@@ -1893,35 +1894,22 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
                            ),
             'deductions': deductions
         })
+        self.income_sections_are_completed(cd)
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
-    def checker_with_income_without_earnings(self, maintenance_received, child_benefits, deductions=None,
-                                             self_employed=False, tax_credits=0):
-        cd = self.case_dict_with_property(10000)
-        if tax_credits is None:
-            cd['you'].update({
-                'income': dict(
-                    self_employed=self_employed,
-                    earnings=0,
-                ),
-            })
-        else:
-            cd['you'].update({
-                'income': dict(
-                    self_employed=self_employed,
-                    maintenance_received=maintenance_received,
-                    child_benefits=child_benefits,
-                    tax_credits=0,
-                    pension=0,
-                    benefits=0,
-                    other_income=0
-                ),
-            })
-        if deductions is not None:
-            cd['you'].update({'deductions': deductions})
-        case_data = CaseData(**cd)
-        return EligibilityChecker(case_data=case_data)
+    def income_sections_are_completed(self, case_data):
+        """
+        Ensure case_data is "complete" in terms of gross & disposable income
+        i.e. add some properties that we expect to exist if the frontends have asked all the relevant questions on income.
+        This emulates what would be done by cla_public and cla_frontend.
+        """
+        for key in Income.PROPERTY_META:
+            if key not in case_data['you']['income']:
+                case_data['you']['income'][key] = 0
+        for key in Deductions.PROPERTY_META:
+            if key not in case_data['you']['deductions']:
+                case_data['you']['deductions'][key] = 0
 
     def test_cfe_request_with_small_gross_income(self):
         # income is in pence

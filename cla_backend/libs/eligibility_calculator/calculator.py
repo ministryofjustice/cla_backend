@@ -515,7 +515,6 @@ class EligibilityChecker(object):
         }
         return result, calcs
 
-
     def _legacy_check(self):
         try:
 

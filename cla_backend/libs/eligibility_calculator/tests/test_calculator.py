@@ -1977,8 +1977,8 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
 
     def test_incomplete_income_data_is_unknown(self):
         _, _, cfe_result = self.checker_with_income_without_earnings(maintenance_received=100,
-                                                                    child_benefits=500,
-                                                                    tax_credits=None)._do_cfe_civil_check()
+                                                                     child_benefits=500,
+                                                                     tax_credits=None)._do_cfe_civil_check()
         self.assertEqual("not_yet_known", cfe_result.overall_result)
 
     def test_incomplete_deductions_data_is_unknown(self):

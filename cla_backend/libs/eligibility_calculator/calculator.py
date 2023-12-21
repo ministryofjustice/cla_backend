@@ -428,7 +428,9 @@ class EligibilityChecker(object):
             ]
         }
 
-        EligibilityChecker._translate_sections_complete(case_data, request_data)
+        EligibilityChecker._translate_section_gross_income(case_data, request_data)
+        EligibilityChecker._translate_section_disposable_income(case_data, request_data)
+        EligibilityChecker._translate_section_capital(case_data, request_data)
         if hasattr(case_data, "category"):
             request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
         if hasattr(case_data, "facts"):
@@ -448,13 +450,11 @@ class EligibilityChecker(object):
         return request_data
 
     @staticmethod
-    def _translate_sections_complete(case_data, request_data):
+    def _translate_section_gross_income(case_data, request_data):
         """
-        Determine if the questions for the 3 sections of the test have been completed by the user yet,
+        Determine if the questions for gross income section of the test have been completed by the user yet,
         and put this in the CFE request.
         """
-
-        # Gross Income questions
         def is_gross_income_complete(person):
             if not hasattr(person, "income"):
                 return False
@@ -467,7 +467,12 @@ class EligibilityChecker(object):
         if not is_gross_income_complete(case_data.you):
             request_data['assessment']['section_gross_income'] = 'incomplete'
 
-        # Disposable Income questions
+    @staticmethod
+    def _translate_section_disposable_income(case_data, request_data):
+        """
+        Determine if the questions for disposable income section of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
         def is_disposable_income_complete(person):
             if not hasattr(person, "deductions"):
                 return False
@@ -480,8 +485,12 @@ class EligibilityChecker(object):
         if not is_disposable_income_complete(case_data.you):
             request_data['assessment']['section_disposable_income'] = 'incomplete'
 
-
-        # Capital questions
+    @staticmethod
+    def _translate_section_capital(case_data, request_data):
+        """
+        Determine if the questions for capital section of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
         def is_property_complete(property_data):
             if len(property_data) == 0:
                 return True
@@ -499,9 +508,9 @@ class EligibilityChecker(object):
             return True
 
         has_completed_capital_questions = (
-            (is_property_complete(case_data.property_data)) and
-             is_savings_complete(case_data.you.savings)
-            )
+            is_property_complete(case_data.property_data)
+            and is_savings_complete(case_data.you.savings)
+        )
 
         # This capital logic is a bit complicated, and dependent on how cla_backend's clients set the CaseData.
         # If we wanted to simplify this logic, here are the concerns:
@@ -517,7 +526,6 @@ class EligibilityChecker(object):
         # a dev who looks at the CFE requests before the capital section is in reality complete.
         if not has_completed_capital_questions:
             request_data['assessment']['section_capital'] = 'incomplete'
-
 
     @staticmethod
     def _translate_income_data(person):

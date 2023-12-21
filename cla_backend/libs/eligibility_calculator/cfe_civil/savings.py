@@ -19,13 +19,14 @@ def has_savings_key(request_data):
 
 
 def translate_savings(savings_data):
-    if has_all_attributes(savings_data, ["bank_balance", "investment_balance", "asset_balance"]):
+    if has_all_attributes(savings_data, ["bank_balance", "investment_balance", "asset_balance", "credit_balance"]):
         liquid_capital = [
             _savings_value(savings_data.bank_balance, "Savings"),
             _savings_value(savings_data.investment_balance, "Investment")
         ]
         non_liquid_capital = [
-            _savings_value(savings_data.asset_balance, "Valuable items worth over 500 pounds")
+            _savings_value(savings_data.asset_balance, "Valuable items worth over 500 pounds"),
+            _savings_value(savings_data.credit_balance, "Credit balance")
         ]
 
         return {

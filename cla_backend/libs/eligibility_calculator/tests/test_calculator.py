@@ -943,7 +943,7 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
             "dependants_allowance": 0,
             "employment_allowance": 0,
             "partner_employment_allowance": 0,
-            "liquid_capital": 0,
+            "liquid_capital": 79999,
         }
         expected_property_results = {
             "pre_mortgage_cap_removal": {
@@ -976,7 +976,7 @@ class TestApplicantPensionerCoupleOnBenefits(CalculatorTestBase):
             "dependants_allowance": 0,
             "employment_allowance": 0,
             "partner_employment_allowance": 0,
-            "liquid_capital": 0,
+            "liquid_capital": 79999,
         }
         expected_property_results = {
             "pre_mortgage_cap_removal": {
@@ -1004,7 +1004,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
 
     def test_pensioner_200k2p_house_100k1p_mort_800001_savings(self):
         """
-        if over 60 and on benefits, 300K.02 house with 100K.01 mortgage and
+        if over 60 and not on benefits, 200K.02 house with 100K.01 mortgage and
         8000.01+.01+.01 of other assets should fail.
         """
 
@@ -1014,7 +1014,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
             property_data=[
                 {"value": 20000002, "mortgage_left": 10000001, "share": 100, "disputed": False, "main": True}
             ],
-            you__income__earnings=31506,
+            you__income__earnings=31606,  # Increased value by 100 pence because of the bug in CFE's pensioner capital disregards threshold (https://dsdmoj.atlassian.net/browse/LEP-462)
             you__income__other_income=59001,
             you__savings__bank_balance=800001,
             you__savings__investment_balance=1,
@@ -1032,13 +1032,13 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
 
         expected_results = {
             "pensioner_disregard": 0,
-            "gross_income": 90507,
+            "gross_income": 90607,
             "partner_allowance": 0,
-            "disposable_income": 31501,
+            "disposable_income": 31602,  # Value updated because "childcare" should be deducted from gross_income only if dependants are present. Currently, dependant count check is missing in CLA while deducting childcare
             "dependants_allowance": 0,
             "employment_allowance": 4500,
             "partner_employment_allowance": 0,
-            "liquid_capital": 800004,
+            "liquid_capital": 800004,  # "liquid_capital" is defined as "non property capital", so should include "asset_balance" and "credit_balance" (i.e non_liquid_capital)
         }
         expected_property_results = {
             "pre_mortgage_cap_removal": {
@@ -1055,7 +1055,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
         expected_results.update(expected_property_results[self.expected_results_key])
 
         self.assertEqual('no', is_elig)
-        self.assertDictEqual(checker.calcs, expected_results)
+        self.assertDictEqual(expected_results, checker.calcs)
 
     def test_pensioner_limit_10k_diregard_fail(self):
         """

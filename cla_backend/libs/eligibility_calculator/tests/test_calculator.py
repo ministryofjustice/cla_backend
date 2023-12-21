@@ -7,7 +7,7 @@ from . import fixtures
 from .. import constants
 from ..calculator import EligibilityChecker, CapitalCalculator
 from ..exceptions import PropertyExpectedException
-from ..models import CaseData, Facts
+from ..models import CaseData, Facts, Income, Deductions
 
 
 class MortgageCapRemovalMixin(object):
@@ -1821,7 +1821,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
 
     def checker_with_assets(self, assets, facts=None):
         cd = self.case_dict_with_property(facts=facts)
-        cd['you'].update({'savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0)})
+        cd['you'].update({'savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0, credit_balance=0)})
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
@@ -1904,8 +1904,12 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         i.e. add some properties that we expect to exist if the frontends have asked all the relevant questions on income.
         This emulates what would be done by cla_public and cla_frontend.
         """
-        case_data['you']['income']['maintenance_received'] = case_data['you'].get('income', {}).get('maintenance_received')
-        case_data['you']['deductions']['maintenance'] = case_data['you'].get('deductions', {}).get('maintenance')
+        for key in Income.PROPERTY_META:
+            if key not in case_data['you']['income']:
+                case_data['you']['income'][key] = 0
+        for key in Deductions.PROPERTY_META:
+            if key not in case_data['you']['deductions']:
+                case_data['you']['deductions'][key] = 0
 
     def test_cfe_request_with_small_gross_income(self):
         # income is in pence

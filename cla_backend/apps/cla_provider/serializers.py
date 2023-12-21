@@ -105,6 +105,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             "vulnerable_user",
             "has_diversity",
             "contact_for_research_methods",
+            "announce_call"
         )
 
 

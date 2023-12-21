@@ -32,6 +32,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             "safe_to_contact",
             "vulnerable_user",
             "has_diversity",
+            "announce_call"
         ]
 
     def _get_default_post_data(self):
@@ -42,6 +43,7 @@ class PersonalDetailsAPIMixin(NestedSimpleResourceAPIMixin):
             "street": "102 Petty France",
             "mobile_phone": "0123456789",
             "home_phone": "9876543210",
+            "announce_call": "False"
         }
 
     def _test_method_in_error(self, method, url):

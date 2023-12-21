@@ -1880,6 +1880,35 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
+    def checker_with_income_without_earnings(self, maintenance_received, child_benefits, deductions=None,
+                                             self_employed=False, tax_credits=0):
+        # NB this doesn't 'complete' the case with a call self.income_sections_are_completed(),
+        # so is likely to return an 'unknown' result
+        cd = self.case_dict_with_property(10000)
+        if tax_credits is None:
+            cd['you'].update({
+                'income': dict(
+                    self_employed=self_employed,
+                    earnings=0,
+                ),
+            })
+        else:
+            cd['you'].update({
+                'income': dict(
+                    self_employed=self_employed,
+                    maintenance_received=maintenance_received,
+                    child_benefits=child_benefits,
+                    tax_credits=0,
+                    pension=0,
+                    benefits=0,
+                    other_income=0
+                ),
+            })
+        if deductions is not None:
+            cd['you'].update({'deductions': deductions})
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
     def checker_with_deductions(self, income, deductions):
         cd = fixtures.get_default_case_data()
         cd['you'].update({

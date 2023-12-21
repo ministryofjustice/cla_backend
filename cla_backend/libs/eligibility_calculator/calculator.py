@@ -349,14 +349,13 @@ class EligibilityChecker(object):
 
     def is_eligible(self):
         cfe_result, cfe_response = self._do_cfe_civil_check()
+        legacy_result = self._legacy_check()
+        logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
-        # temp: start doing just non-partner passported checks through CFE
+        # Gradual cut-over from using legacy_result to cfe_result
         if self._is_non_means_tested(self.case_data) or self._is_passported_without_partner(self.case_data):
-            legacy_result = self._legacy_check()
-            logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
-            # update calcs with our version - legecy check sets these with side effects
-            # so they would be correct even if cfe_civil_check() had errors
+            # Calcs updated from CFE's result
             self.calcs = {
                 "pensioner_disregard": int(cfe_response.pensioner_disregard * 100),
                 "disposable_capital_assets": int(cfe_response.disposable_capital_assets * 100),
@@ -373,9 +372,6 @@ class EligibilityChecker(object):
 
             return cfe_result
         else:
-            legacy_result = self._legacy_check()
-            logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
-
             return legacy_result
 
     @staticmethod

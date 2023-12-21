@@ -14,13 +14,13 @@ orbs:
 executors:
   cloud-platform-executor:
     docker:
-    - image: ministryofjustice/cloud-platform-tools:2.1
+      - image: ministryofjustice/cloud-platform-tools:2.1
   python2-executor:
     docker:
-    - image: cimg/python:2.7
+      - image: cimg/python:2.7
   python3-executor:
     docker:
-    - image: cimg/python:3.7
+      - image: cimg/python:3.7
 
 
 # ------------------
@@ -31,12 +31,12 @@ executors:
 
 references:
   install_helm: &install_helm
-    run:
-      name: Install helm v3
-      command: |
-        wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
-        tar -zxvf helm-v3.2.4-linux-amd64.tar.gz
-        mv linux-amd64/helm /usr/local/bin/helm
+      run:
+        name: Install helm v3
+        command: |
+          wget https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
+          tar -zxvf helm-v3.2.4-linux-amd64.tar.gz
+          mv linux-amd64/helm /usr/local/bin/helm
 
 # ------------------
 #
@@ -50,189 +50,189 @@ jobs:
       image:
         type: string
     steps:
-    # Checkout your repository
-    - checkout
-    # Authenticate to AWS using OIDC v2 with the AWS CLI
-    - aws-cli/setup:
-        role_arn: $ECR_ROLE_TO_ASSUME # this will use the env var
-        region: $ECR_REGION # this will use the env var
-    # Authenticate to the ECR repository using the standard command
-    - run: |
-        aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
-    - when:
-        condition:
-          equal: ["app", << parameters.image >>]
-        steps:
-        # Build and push main application Docker image
-        - run:
-            name: Create target tags
-            command: |
-              source .circleci/define_build_environment_variables
-              echo "Created tags $TARGET_TAGS"
-              echo "export BUILD_TAGS=$TARGET_TAGS" >> $BASH_ENV
-              echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
-        - aws-ecr/build-image:
-            push-image: true
-            tag: $BUILD_TAGS
-            region: $ECR_REGION # this will use the env var
-            repo: $ECR_REPOSITORY # this will use the env var
-            extra-build-args: |
-              --build-arg target=production
-        # Validate the python version as 2.7
-        - run:
-            name: Validate Python version
-            command: |
-              docker run --rm --tty --interactive ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG python --version | grep "2.7"
-    - when:
-        condition:
-          equal: ["database-migration", << parameters.image >>]
-        # Build and push database migration Docker image
-        steps:
-        - aws-ecr/build-image:
-            push-image: true
-            path: bin/database-migration
-            build-path: bin/database-migration
-            tag: database-migration
-            region: $ECR_REGION # this will use the env var
-            repo: $ECR_REPOSITORY # this will use the env var
+      # Checkout your repository
+      - checkout
+      # Authenticate to AWS using OIDC v2 with the AWS CLI
+      - aws-cli/setup:
+          role_arn: $ECR_ROLE_TO_ASSUME # this will use the env var
+          region: $ECR_REGION # this will use the env var
+      # Authenticate to the ECR repository using the standard command
+      - run: |
+          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
+      - when:
+          condition:
+            equal: [ "app", << parameters.image >> ]
+          steps:
+            # Build and push main application Docker image
+            - run:
+                name: Create target tags
+                command: |
+                  source .circleci/define_build_environment_variables
+                  echo "Created tags $TARGET_TAGS"
+                  echo "export BUILD_TAGS=$TARGET_TAGS" >> $BASH_ENV
+                  echo "export IMAGE_TAG=$IMAGE_TAG" >> $BASH_ENV
+            - aws-ecr/build-image:
+                push-image: true
+                tag: $BUILD_TAGS
+                region: $ECR_REGION # this will use the env var
+                repo: $ECR_REPOSITORY # this will use the env var
+                extra-build-args: |
+                  --build-arg target=production
+            # Validate the python version as 2.7
+            - run:
+                name: Validate Python version
+                command: |
+                  docker run --rm --tty --interactive ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG python --version | grep "2.7"
+      - when:
+          condition:
+            equal: ["database-migration", << parameters.image >>]
+          # Build and push database migration Docker image
+          steps:
+            - aws-ecr/build-image:
+                push-image: true
+                path: bin/database-migration
+                build-path: bin/database-migration
+                tag: database-migration
+                region: $ECR_REGION # this will use the env var
+                repo: $ECR_REPOSITORY # this will use the env var
 
   lint:
     executor: python2-executor
     steps:
-    - checkout
-    - run:
-        name: Setup Python environment
-        command: |
-          pip install virtualenv
-          virtualenv lint-env
-    - restore_cache:
-        keys:
-        - pip-v1-{{ checksum "requirements/generated/requirements-lint.txt" }}
-    - run:
-        name: Install dependencies
-        command: |
-          source lint-env/bin/activate
-          pip install --requirement requirements/generated/requirements-lint.txt
-    - save_cache:
-        key: pip-v1-{{ checksum "requirements/generated/requirements-lint.txt" }}
-        paths:
-        - "~/.cache/pip"
-    - run:
-        name: Lint with flake8 (warnings only)
-        command: |
-          source lint-env/bin/activate
-          flake8 cla_backend
+      - checkout
+      - run:
+          name: Setup Python environment
+          command: |
+            pip install virtualenv
+            virtualenv lint-env
+      - restore_cache:
+          keys:
+            - pip-v1-{{ checksum "requirements/generated/requirements-lint.txt" }}
+      - run:
+          name: Install dependencies
+          command: |
+            source lint-env/bin/activate
+            pip install --requirement requirements/generated/requirements-lint.txt
+      - save_cache:
+          key: pip-v1-{{ checksum "requirements/generated/requirements-lint.txt" }}
+          paths:
+            - "~/.cache/pip"
+      - run:
+          name: Lint with flake8 (warnings only)
+          command: |
+            source lint-env/bin/activate
+            flake8 cla_backend
   formatting:
     executor: python3-executor
     steps:
-    - checkout
-    - run:
-        name: Setup Python environment
-        command: |
-          pip install virtualenv
-          virtualenv formatting-env
-    - restore_cache:
-        keys:
-        - pip-v1-black-18.9b0
-    - run:
-        name: Install dependencies
-        command: |
-          source formatting-env/bin/activate
-          pip install black>=18.9b0
-    - save_cache:
-        key: pip-v1-black-18.9b0
-        paths:
-        - "~/.cache/pip"
-    - run:
-        name: Check formatting with Black
-        command: |
-          source lint-env/bin/activate
-          black --check cla_backend
+      - checkout
+      - run:
+          name: Setup Python environment
+          command: |
+            pip install virtualenv
+            virtualenv formatting-env
+      - restore_cache:
+          keys:
+            - pip-v1-black-18.9b0
+      - run:
+          name: Install dependencies
+          command: |
+            source formatting-env/bin/activate
+            pip install black>=18.9b0
+      - save_cache:
+          key: pip-v1-black-18.9b0
+          paths:
+            - "~/.cache/pip"
+      - run:
+          name: Check formatting with Black
+          command: |
+            source lint-env/bin/activate
+            black --check cla_backend
   pip-compile:
     executor: python2-executor
     steps:
-    - checkout
-    - run:
-        name: Setup Python environment
-        command: |
-          echo "Installing ibcurl4-gnutls-dev because it is required for pycurl"
-          sudo apt-get update
-          sudo apt-get install -y libcurl4-gnutls-dev
-          pip install virtualenv
-          virtualenv pip-compile-env
-    - restore_cache:
-        keys:
-        - pip-v1-pip-compile
-    - run:
-        name: Install dependencies
-        command: |
-          source pip-compile-env/bin/activate
-          pip install pre-commit==1.14.2
-    - save_cache:
-        key: pip-v1-pip-compile
-        paths:
-        - "~/.cache/pip"
-    - run:
-        name: Check for changes with pip-compile
-        command: |
-          source pip-compile-env/bin/activate
-          ls requirements/source/* | xargs pre-commit run pip-compile --files
+      - checkout
+      - run:
+          name: Setup Python environment
+          command: |
+            echo "Installing ibcurl4-gnutls-dev because it is required for pycurl"
+            sudo apt-get update
+            sudo apt-get install -y libcurl4-gnutls-dev
+            pip install virtualenv
+            virtualenv pip-compile-env
+      - restore_cache:
+          keys:
+            - pip-v1-pip-compile
+      - run:
+          name: Install dependencies
+          command: |
+            source pip-compile-env/bin/activate
+            pip install pre-commit==1.14.2
+      - save_cache:
+          key: pip-v1-pip-compile
+          paths:
+            - "~/.cache/pip"
+      - run:
+          name: Check for changes with pip-compile
+          command: |
+            source pip-compile-env/bin/activate
+            ls requirements/source/* | xargs pre-commit run pip-compile --files
   test:
     docker:
-    - image: cimg/python:2.7
-      environment:
-        DB_NAME: circle_test
-        DB_USER: postgres
-        DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
-    - image: postgres:14.7-bullseye
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_DB: circle_test
+      - image: cimg/python:2.7
+        environment:
+          DB_NAME: circle_test
+          DB_USER: postgres
+          DJANGO_SETTINGS_MODULE: cla_backend.settings.circle
+      - image: postgres:14.7-bullseye
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: circle_test
     steps:
-    - checkout
-    - run:
-        name: Setup Postgres
-        command: |
-          dockerize -wait tcp://localhost:5432 -timeout 1m
-    - run:
-        name: Setup Python environment
-        command: |
-          echo "Installing ibcurl4-gnutls-dev because it is required for pycurl"
-          sudo apt-get update
-          sudo apt-get install -y libcurl4-gnutls-dev
-          sudo apt-get update && sudo apt-get install -y libpython2.7 firefox
-          pip install virtualenv
-          virtualenv env
-          source env/bin/activate
-          pip install pip==18.1
-    - restore_cache:
-        keys:
-        - pip-v2-{{ checksum "requirements/generated/requirements-testing.txt" }}
-    - run:
-        name: Install dependencies
-        command: |
-          source env/bin/activate
-          pip install --requirement requirements/generated/requirements-testing.txt
-    - save_cache:
-        key: pip-v2-{{ checksum "requirements/generated/requirements-testing.txt" }}
-        paths:
-        - "~/.cache/pip"
-    - run:
-        name: Run tests with coverage
-        command: |
-          source env/bin/activate
-          coverage run manage.py test --verbosity=2
-          coverage report -m
-          coverage html
-          coveralls
-    - store_artifacts:
-        path: htmlcov
-        destination: coverage
-    - store_test_results:
-        path: test-reports
-    - store_artifacts:
-        path: test-reports
+      - checkout
+      - run:
+          name: Setup Postgres
+          command: |
+            dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Setup Python environment
+          command: |
+            echo "Installing ibcurl4-gnutls-dev because it is required for pycurl"
+            sudo apt-get update
+            sudo apt-get install -y libcurl4-gnutls-dev
+            sudo apt-get update && sudo apt-get install -y libpython2.7 firefox
+            pip install virtualenv
+            virtualenv env
+            source env/bin/activate
+            pip install pip==18.1
+      - restore_cache:
+          keys:
+            - pip-v2-{{ checksum "requirements/generated/requirements-testing.txt" }}
+      - run:
+          name: Install dependencies
+          command: |
+            source env/bin/activate
+            pip install --requirement requirements/generated/requirements-testing.txt
+      - save_cache:
+          key: pip-v2-{{ checksum "requirements/generated/requirements-testing.txt" }}
+          paths:
+            - "~/.cache/pip"
+      - run:
+          name: Run tests with coverage
+          command: |
+            source env/bin/activate
+            coverage run manage.py test --verbosity=2
+            coverage report -m
+            coverage html
+            coveralls
+      - store_artifacts:
+          path: htmlcov
+          destination: coverage
+      - store_test_results:
+          path: test-reports
+      - store_artifacts:
+          path: test-reports
 
   deploy:
     parameters:
@@ -245,52 +245,52 @@ jobs:
     environment:
       BASH_ENV: /etc/profile
     steps:
-    - checkout
-    - *install_helm
-    - run:
-        name: Authenticate with cluster
-        command: |
-          .circleci/authenticate_with_kubernetes_cluster
-    - deploy:
-        name: Deploy to << parameters.namespace >>
-        command: |
-          export INGRESS_CLUSTER_NAME=`kubectl get configmap ingress-cluster -o jsonpath='{.data.name}'`
-          export INGRESS_CLUSTER_WEIGHT=`kubectl get configmap ingress-cluster -o jsonpath='{.data.weight}'`
-          source .circleci/define_build_environment_variables << parameters.namespace >> << parameters.dynamic_hostname >>
-          pip3 install requests
-          export PINGDOM_IPS=`python3 bin/pingdom_ips.py`
-          ./bin/<< parameters.namespace >>_deploy.sh << parameters.dynamic_hostname >>
-          echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV
-    - slack/notify:
-        message: ':tada: (<< parameters.namespace >>) Deployed branch $CIRCLE_BRANCH'
-        title: '$RELEASE_HOST'
-        title_link: 'https://$RELEASE_HOST/admin/'
+      - checkout
+      - *install_helm
+      - run:
+          name: Authenticate with cluster
+          command: |
+            .circleci/authenticate_with_kubernetes_cluster
+      - deploy:
+          name: Deploy to << parameters.namespace >>
+          command: |
+            export INGRESS_CLUSTER_NAME=`kubectl get configmap ingress-cluster -o jsonpath='{.data.name}'`
+            export INGRESS_CLUSTER_WEIGHT=`kubectl get configmap ingress-cluster -o jsonpath='{.data.weight}'`
+            source .circleci/define_build_environment_variables << parameters.namespace >> << parameters.dynamic_hostname >>
+            pip3 install requests
+            export PINGDOM_IPS=`python3 bin/pingdom_ips.py`
+            ./bin/<< parameters.namespace >>_deploy.sh << parameters.dynamic_hostname >>
+            echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV
+      - slack/notify:
+          message: ':tada: (<< parameters.namespace >>) Deployed branch $CIRCLE_BRANCH'
+          title: '$RELEASE_HOST'
+          title_link: 'https://$RELEASE_HOST/admin/'
 
   cleanup_merged:
     executor: cloud-platform-executor
     steps:
-    - checkout
-    - *install_helm
-    - run:
-        name: Authenticate with cluster
-        command: |
-          .circleci/authenticate_with_kubernetes_cluster
-    - run:
-        name: Delete uat release
-        command: |
-          ./bin/delete_uat_release.sh
+      - checkout
+      - *install_helm
+      - run:
+          name: Authenticate with cluster
+          command: |
+            .circleci/authenticate_with_kubernetes_cluster
+      - run:
+          name: Delete uat release
+          command: |
+            ./bin/delete_uat_release.sh
 
   behave:
     executor: aws-ecr/default
     steps:
-    - checkout:
-        path: cla_backend
-    - run: |
-        cd cla_backend
-        source .circleci/define_build_environment_variables
-        echo "export CLA_BACKEND_IMAGE=$ECR_DEPLOY_IMAGE" >> $BASH_ENV
-        echo "Setting BACKEND image $CLA_BACKEND_IMAGE"
-    - cla-end-to-end-tests/behave
+      - checkout:
+          path: cla_backend
+      - run: |
+          cd cla_backend
+          source .circleci/define_build_environment_variables
+          echo "export CLA_BACKEND_IMAGE=$ECR_DEPLOY_IMAGE" >> $BASH_ENV
+          echo "Setting BACKEND image $CLA_BACKEND_IMAGE"
+      - cla-end-to-end-tests/behave
 
 # ------------------
 #
@@ -302,123 +302,122 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-    - lint
-    - pip-compile
-    - test:
-        requires:
-        - lint
-        - pip-compile
-    - cleanup_merged:
-        name: cleanup_merged_live
-        context:
-        - laa-cla-backend
-        - laa-cla-backend-live-uat
-    - build:
-        name: build_push_application
-        image: app
-        requires:
-        - test
-        context: laa-cla-backend
-    - build:
-        name: build_push_database_migration
-        image: database-migration
-        requires:
-        - test
-        context: laa-cla-backend
-    - behave:
-        requires:
-        - build_push_application
-        - build_push_database_migration
-        context: laa-cla-backend
+      - lint
+      - pip-compile
+      - test:
+          requires:
+            - lint
+            - pip-compile
+      - cleanup_merged:
+          name: cleanup_merged_live
+          context:
+            - laa-cla-backend
+            - laa-cla-backend-live-uat
+      - build:
+          name: build_push_application
+          image: app
+          requires:
+            - test
+          context: laa-cla-backend
+      - build:
+          name: build_push_database_migration
+          image: database-migration
+          requires:
+            - test
+          context: laa-cla-backend
+      - behave:
+          requires:
+            - build_push_application
+            - build_push_database_migration
+          context: laa-cla-backend
 
-    - deploy:
-        name: uat_deploy_live
-        namespace: uat
-        dynamic_hostname: true
-        requires:
-        - build_push_application
-        - build_push_database_migration
-        filters:
-          branches:
-            ignore:
-            - master
-        context:
-        - laa-cla-backend
-        - laa-cla-backend-live-uat
+      - deploy:
+          name: uat_deploy_live
+          namespace: uat
+          dynamic_hostname: true
+          requires:
+            - build_push_application
+            - build_push_database_migration
+          filters:
+            branches:
+              ignore:
+                - master
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live-uat
 
-    - static_uat_deploy_approval:
-        type: approval
-        requires:
-        - build_push_application
-        - build_push_database_migration
+      - static_uat_deploy_approval:
+          type: approval
+          requires:
+            - build_push_application
+            - build_push_database_migration
 
-    - deploy:
-        name: static_uat_deploy_live
-        namespace: uat
-        dynamic_hostname: false
-        requires:
-        - static_uat_deploy_approval
-        context:
-        - laa-cla-backend
-        - laa-cla-backend-live-uat
+      - deploy:
+          name: static_uat_deploy_live
+          namespace: uat
+          dynamic_hostname: false
+          requires:
+            - static_uat_deploy_approval
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live-uat
 
-    - staging_deploy_approval:
-        type: approval
-        requires:
-        - build_push_application
-        - build_push_database_migration
-        filters:
-          branches:
-            only:
-            - master
-            - django-upgrade
-            - feature/LGA-2799-Annouce-we-are-calling-from-cla
+      - staging_deploy_approval:
+          type: approval
+          requires:
+            - build_push_application
+            - build_push_database_migration
+          filters:
+            branches:
+              only:
+                - master
+                - django-upgrade
 
-    - deploy:
-        name: staging_deploy_live
-        namespace: staging
-        dynamic_hostname: false
-        requires:
-        - staging_deploy_approval
-        context:
-        - laa-cla-backend
-        - laa-cla-backend-live-staging
+      - deploy:
+          name: staging_deploy_live
+          namespace: staging
+          dynamic_hostname: false
+          requires:
+            - staging_deploy_approval
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live-staging
 
-    - training_deploy_approval:
-        requires:
-        - staging_deploy_live
-        type: approval
-        filters:
-          branches:
-            only:
-            - django-upgrade
-            - master
+      - training_deploy_approval:
+          requires:
+            - staging_deploy_live
+          type: approval
+          filters:
+            branches:
+              only:
+                - django-upgrade
+                - master
 
-    - production_deploy_approval:
-        requires:
-        - training_deploy_live
-        type: approval
-        filters:
-          branches:
-            only:
-            - master
+      - production_deploy_approval:
+          requires:
+            - training_deploy_live
+          type: approval
+          filters:
+            branches:
+              only:
+                - master
 
-    - deploy:
-        name: training_deploy_live
-        namespace: training
-        dynamic_hostname: false
-        requires:
-        - training_deploy_approval
-        context:
-        - laa-cla-backend
-        - laa-cla-backend-live-training
+      - deploy:
+          name: training_deploy_live
+          namespace: training
+          dynamic_hostname: false
+          requires:
+            - training_deploy_approval
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live-training
 
-    - deploy:
-        name: production_deploy_live
-        namespace: production
-        dynamic_hostname: false
-        requires:
-        - production_deploy_approval
-        context:
-        - laa-cla-backend
-        - laa-cla-backend-live-production
+      - deploy:
+          name: production_deploy_live
+          namespace: production
+          dynamic_hostname: false
+          requires:
+            - production_deploy_approval
+          context:
+           - laa-cla-backend
+           - laa-cla-backend-live-production

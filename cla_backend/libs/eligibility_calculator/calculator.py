@@ -347,7 +347,7 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
-        cfe_result, cfe_response = self._do_cfe_civil_check()
+        cfe_result, cfe_calcs, cfe_response = self._do_cfe_civil_check()
         legacy_result = self._legacy_check()
         logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
@@ -355,19 +355,7 @@ class EligibilityChecker(object):
         if self._is_non_means_tested(self.case_data) or self._without_partner(self.case_data):
 
             # Calcs updated from CFE's result
-            self.calcs = {
-                "pensioner_disregard": self._pounds_to_pence(cfe_response.pensioner_disregard),
-                "disposable_capital_assets": self._pounds_to_pence(cfe_response.disposable_capital_assets),
-                "property_equities": [self._pounds_to_pence(x) for x in cfe_response.property_equities],
-                "property_capital": self._pounds_to_pence(cfe_response.property_capital),
-                "liquid_capital": self._pounds_to_pence(cfe_response.liquid_capital + cfe_response.non_liquid_capital + cfe_response.vehicle_capital),
-                "gross_income": self._pounds_to_pence(cfe_response.gross_income),
-                "partner_allowance": 0,
-                "disposable_income": self._pounds_to_pence(cfe_response.disposable_income),
-                "dependants_allowance": 0,
-                "employment_allowance": self._pounds_to_pence(cfe_response.employment_allowance),
-                "partner_employment_allowance": 0,
-            }
+            self.calcs = cfe_calcs
 
             return cfe_result
         else:
@@ -395,16 +383,16 @@ class EligibilityChecker(object):
             cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
             logger.debug("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
             cfe_response = CfeResponse(cfe_raw_response.json())
-            result = self._translate_response(cfe_response)
+            result, calcs = self._translate_response(cfe_response)
             logger.info("Eligibility result (CFE): %s %s" % (result, cfe_response.overall_result))
             logger.debug(
                 "Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
 
-            return result, cfe_response
+            return result, calcs, cfe_response
         else:
             result = ELIGIBILITY_STATES.UNKNOWN
             logger.info("Eligibility result (CFE): %s %s" % (result, "couldnt call CFE"))
-            return result, None
+            return result, None, None
 
     @staticmethod
     def _translate_case(case_data, submission_date=None):
@@ -502,14 +490,31 @@ class EligibilityChecker(object):
         return has_property_key(request_data) and has_savings_key(request_data)
 
     def _translate_response(self, cfe_response):
-        '''Translates CFE-Civil's response to something similar that EligibilityChecker.is_eligible() has always returned'''
+        '''Translates CFE-Civil's response to ELIGIBILITY_STATES and calcs'''
         if cfe_response.overall_result in ('eligible', 'contribution_required'):
-            return ELIGIBILITY_STATES.YES
+            result = ELIGIBILITY_STATES.YES
         elif cfe_response.overall_result == 'ineligible':
-            return ELIGIBILITY_STATES.NO
+            result = ELIGIBILITY_STATES.NO
         elif cfe_response.overall_result == 'not_yet_known':
-            return ELIGIBILITY_STATES.UNKNOWN
-        logger.error('cfe_response.overall_result not recognised: %s' % cfe_response.overall_result)
+            result = ELIGIBILITY_STATES.UNKNOWN
+        else:
+            logger.error('cfe_response.overall_result not recognised: %s' % cfe_response.overall_result)
+
+        calcs = {
+            "pensioner_disregard": self._pounds_to_pence(cfe_response.pensioner_disregard),
+            "disposable_capital_assets": self._pounds_to_pence(cfe_response.disposable_capital_assets),
+            "property_equities": [self._pounds_to_pence(x) for x in cfe_response.property_equities],
+            "property_capital": self._pounds_to_pence(cfe_response.property_capital),
+            "liquid_capital": self._pounds_to_pence(cfe_response.liquid_capital + cfe_response.non_liquid_capital + cfe_response.vehicle_capital),
+            "gross_income": self._pounds_to_pence(cfe_response.gross_income),
+            "partner_allowance": 0,
+            "disposable_income": self._pounds_to_pence(cfe_response.disposable_income),
+            "dependants_allowance": 0,
+            "employment_allowance": self._pounds_to_pence(cfe_response.employment_allowance),
+            "partner_employment_allowance": 0,
+        }
+        return result, calcs
+
 
     def _legacy_check(self):
         try:

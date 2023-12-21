@@ -5,7 +5,16 @@ from cla_backend.libs.eligibility_calculator.models import Income, Deductions
 
 
 class TestCfeIncome(TestCase):
-    def test_employment(self):
+    def test_no_earnings_returns_no_employments(self):
+        income = Income(earnings=0, self_employed=False)
+        deductions = Deductions(income_tax=0, national_insurance=0)
+        output = translate_employment(income, deductions)
+        expected = {
+            "employment_details": [],
+        }
+        self.assertEqual(expected, output)
+
+    def test_employment_returns_employment_details(self):
         income = Income(earnings=250000, self_employed=False)
         deductions = Deductions(income_tax=40000, national_insurance=6500)
         output = translate_employment(income, deductions)

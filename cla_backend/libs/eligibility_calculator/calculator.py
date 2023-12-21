@@ -351,11 +351,14 @@ class EligibilityChecker(object):
         cfe_result, cfe_calcs, cfe_response = self._do_cfe_civil_check()
         legacy_result = self._legacy_check()
 
+        # Compare CFE and Legacy responses. To delete in LEP-457
         if cfe_response:
             def filter_out_zeros(dict_):
                 return dict((k, v) for k, v in dict_.iteritems() if v)
+
             def filter_to_keys(dict_, keys):
                 return dict((k, v) for k, v in dict_.iteritems() if k in keys)
+
             if cfe_result != legacy_result:
                 logger.error("CFE and legacy_check() results disgree! %s %s" % (cfe_result, legacy_result))
             if filter_to_keys(cfe_calcs, self.calcs) != self.calcs:

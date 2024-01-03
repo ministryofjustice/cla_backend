@@ -28,11 +28,12 @@ class StaffAdmin(OneToOneUserAdmin):
 class ProviderAllocationInline(admin.TabularInline):
     model = ProviderAllocation
     formset = ProviderAllocationInlineFormset
-    
+
 
 class ProviderWorkingDaysInline(admin.TabularInline):
     model = WorkingDays
     formset = WorkingDaysInlineFormset
+
 
 class ProviderAdmin(admin.ModelAdmin):
     actions = None

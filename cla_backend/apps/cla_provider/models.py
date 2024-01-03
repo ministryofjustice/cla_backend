@@ -1,5 +1,4 @@
 from datetime import timedelta
-import model_utils.fields
 import uuid
 
 from django.contrib.auth.hashers import make_password
@@ -17,7 +16,6 @@ from uuidfield import UUIDField
 from core.validators import validate_first_of_month
 from cla_common.constants import FEEDBACK_ISSUE
 from .signals import log_staff_created, log_staff_modified
-
 
 
 def random_uuid_str():
@@ -44,26 +42,25 @@ class Provider(TimeStampedModel):
 
     def __unicode__(self):
         return u"%s" % self.name
-    
-    
+
+
 class WorkingDays(models.Model):
     """
     This model represents the working days for Education specialist providers, to align with the changes required as part of LGA-2904.
     """
     class Meta:
-         verbose_name = 'Working Days'
-         verbose_name_plural = 'Working Days - Education only'
-         
+        verbose_name = 'Working Days'
+        verbose_name_plural = 'Working Days - Education only'
+
     def __unicode__(self):
         return ""
-    
+
     provider = models.OneToOneField(Provider)
     monday = models.BooleanField(default=True)
     tuesday = models.BooleanField(default=True)
     wednesday = models.BooleanField(default=True)
     thursday = models.BooleanField(default=True)
     friday = models.BooleanField(default=True)
-    
 
 
 class ProviderAllocationManager(models.Manager):

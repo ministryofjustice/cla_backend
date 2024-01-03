@@ -2,10 +2,10 @@ from django.contrib import admin
 
 from core.admin.modeladmin import OneToOneUserAdmin
 
-from ..models import Provider, ProviderAllocation, Staff, OutOfHoursRota
+from ..models import Provider, ProviderAllocation, Staff, OutOfHoursRota, WorkingDays
 
 from .forms import StaffAdminForm
-from .formsets import ProviderAllocationInlineFormset
+from .formsets import ProviderAllocationInlineFormset, WorkingDaysInlineFormset
 
 
 class StaffAdmin(OneToOneUserAdmin):
@@ -28,11 +28,15 @@ class StaffAdmin(OneToOneUserAdmin):
 class ProviderAllocationInline(admin.TabularInline):
     model = ProviderAllocation
     formset = ProviderAllocationInlineFormset
+    
 
+class ProviderWorkingDaysInline(admin.TabularInline):
+    model = WorkingDays
+    formset = WorkingDaysInlineFormset
 
 class ProviderAdmin(admin.ModelAdmin):
     actions = None
-    inlines = [ProviderAllocationInline]
+    inlines = [ProviderWorkingDaysInline, ProviderAllocationInline]
 
     fields = ("name", "short_code", "telephone_frontdoor", "telephone_backdoor", "email_address", "active")
     list_display = ["name", "law_categories", "active"]

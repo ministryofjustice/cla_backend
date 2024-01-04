@@ -2041,7 +2041,8 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         self.assertEqual('eligible', cfe_result.overall_result)
 
     def test_cfe_request_with_applicant_receives_qualifying_benefit(self):
-        _, _, cfe_result = self.checker_with_facts(on_passported_benefits=True)._do_cfe_civil_check()
+        checker = self.checker_with_facts(on_passported_benefits=True)
+        cfe_result = self.do_cfe_civil_check(checker)
         self.assertTrue(cfe_result.applicant_details()["receives_qualifying_benefit"])
 
     def test_cfe_request_with_applicant_receives_asylum_support(self):

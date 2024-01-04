@@ -373,6 +373,7 @@ class EligibilityChecker(object):
         if (
             self._is_non_means_tested(self.case_data)
             or self._without_partner(self.case_data)
+            or self._with_partner(self.case_data)
             or self._under_18_passported(self.case_data)
         ):
             # Calcs updated from CFE's result
@@ -392,6 +393,10 @@ class EligibilityChecker(object):
     @staticmethod
     def _without_partner(case_data):
         return hasattr(case_data.facts, "has_partner") and not case_data.facts.has_partner
+
+    @staticmethod
+    def _with_partner(case_data):
+        return hasattr(case_data.facts, "has_partner") and case_data.facts.has_partner
 
     @staticmethod
     def _under_18_passported(case_data):
@@ -448,7 +453,8 @@ class EligibilityChecker(object):
         """Translates CLA's CaseData to CFE-Civil request JSON"""
         if not submission_date:
             submission_date = datetime.date.today()
-        # produce the simplest possible plain request to CFE to prove the route
+        # default DOB to 'nothing special' 40 years old rules-wise
+        default_dob = str(datetime.date(submission_date.year - 40, submission_date.month, submission_date.day))
         request_data = {
             "assessment": {
                 "submission_date": str(submission_date),
@@ -467,6 +473,8 @@ class EligibilityChecker(object):
             request_data["applicant"] = EligibilityChecker._translate_applicant_data(submission_date, case_data.facts)
             request_data["assessment"].update(translate_under_18_passported(case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
+            if hasattr(case_data, "partner") and case_data.facts.should_aggregate_partner:
+                request_data["partner"] = EligibilityChecker._translate_partner_data(case_data.partner, default_dob)
 
         request_data.update(EligibilityChecker._translate_capital_data(case_data))
 
@@ -592,6 +600,16 @@ class EligibilityChecker(object):
             request_data["assessment"]["section_capital"] = "incomplete"
 
     @staticmethod
+    def _translate_partner_data(partner, default_dob):
+        request_data = {"partner": {"date_of_birth": default_dob}}
+        if hasattr(partner, "savings"):
+            request_data.update(translate_savings(partner.savings))
+
+        request_data.update(EligibilityChecker._translate_income_data(partner))
+
+        return request_data
+
+    @staticmethod
     def _translate_income_data(person):
         request_data = {}
         if hasattr(person, "income"):
@@ -668,9 +686,9 @@ class EligibilityChecker(object):
                 cfe_response.liquid_capital + cfe_response.non_liquid_capital + cfe_response.vehicle_capital
             ),
             "gross_income": self._pounds_to_pence(cfe_response.gross_income),
-            "partner_allowance": 0,
+            "partner_allowance": self._pounds_to_pence(cfe_response.partner_allowance),
             "disposable_income": self._pounds_to_pence(cfe_response.disposable_income),
-            "dependants_allowance": 0,
+            "dependants_allowance": self._pounds_to_pence(cfe_response.dependants_allowance),
             "employment_allowance": self._pounds_to_pence(cfe_response.employment_allowance),
             "partner_employment_allowance": 0,
         }

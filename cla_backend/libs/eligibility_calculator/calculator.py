@@ -17,6 +17,7 @@ from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.property import translate_property
 from .cfe_civil.income import translate_income
 from .cfe_civil.applicant import translate_applicant
+from .cfe_civil.assessment import translate_assessment
 from .cfe_civil.proceeding_types import translate_proceeding_types, DEFAULT_PROCEEDING_TYPE
 from cla_common.constants import ELIGIBILITY_STATES
 
@@ -441,6 +442,7 @@ class EligibilityChecker(object):
         if hasattr(case_data, "facts"):
             request_data['applicant'].update(
                 EligibilityChecker._translate_applicant_data(submission_date, case_data.facts))
+            request_data["assessment"].update(translate_assessment(case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
 
         request_data.update(EligibilityChecker._translate_capital_data(case_data))

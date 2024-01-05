@@ -1819,11 +1819,13 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
-    def checker_with_facts(self, on_passported_benefits=False, on_nass_benefits=False):
+    def checker_with_facts(self, on_passported_benefits=False, on_nass_benefits=False, under_18_passported=True, is_you_under_18=True):
         cd = fixtures.get_default_case_data()
         cd["facts"].update({
             "on_passported_benefits": on_passported_benefits,
             "on_nass_benefits": on_nass_benefits,
+            "under_18_passported": under_18_passported,
+            "is_you_under_18": is_you_under_18
         })
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)

@@ -212,6 +212,8 @@ envVars:
       name: notify-orchestrator
       key: url
       optional: true
+  CFE_HOST:
+    value: "http://cfe-civil.cfe-civil-production.svc.cluster.local"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

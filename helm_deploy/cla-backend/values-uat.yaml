@@ -57,3 +57,5 @@ envVars:
     value: "http://cla-frontend-socket-server.laa-cla-frontend-uat.svc.cluster.local"
   MIGRATE_OAUTH_DATA:
     value: "False"
+  CFE_HOST:
+    value: "http://cfe-civil.cfe-civil-staging.svc.cluster.local"

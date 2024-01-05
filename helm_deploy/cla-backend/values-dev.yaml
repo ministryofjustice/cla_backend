@@ -48,3 +48,5 @@ envVars:
     value: ~
   MIGRATE_OAUTH_DATA:
     value: "False"
+  CFE_HOST:
+    value: "http://cfe-civil.cfe-civil-staging.svc.cluster.local"

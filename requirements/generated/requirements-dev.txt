@@ -43,6 +43,7 @@ contextlib2==0.6.0.post1
     # via
     #   importlib-metadata
     #   importlib-resources
+    #   vcrpy
     #   zipp
 coverage==4.5.4
     # via
@@ -182,7 +183,9 @@ lxml==4.9.1
 markdown==2.5.2
     # via -r requirements/source/requirements-base.in
 mock==1.0.1
-    # via -r requirements/source/requirements-testing.in
+    # via
+    #   -r requirements/source/requirements-testing.in
+    #   vcrpy
 model-mommy==1.2.4
     # via -r requirements/source/requirements-testing.in
 monotonic==1.6
@@ -243,6 +246,7 @@ pyyaml==5.4
     #   -r requirements/source/requirements-base.in
     #   aspy.yaml
     #   pre-commit
+    #   vcrpy
 requests==2.27.1
     # via
     #   -r requirements/source/requirements-base.in
@@ -275,6 +279,7 @@ six==1.16.0
     #   python-dateutil
     #   singledispatch
     #   unittest-xml-reporting
+    #   vcrpy
     #   virtualenv
 speaklater==1.3
     # via cla-common
@@ -302,6 +307,8 @@ urllib3[secure]==1.26.14
     #   sentry-sdk
 uwsgi==2.0.18
     # via -r requirements/source/requirements-base.in
+vcrpy==3.0.0
+    # via -r requirements/source/requirements-testing.in
 vine==1.3.0
     # via amqp
 virtualenv==20.15.1
@@ -310,6 +317,8 @@ webencodings==0.5.1
     # via bleach
 werkzeug==0.15.3
     # via -r requirements/source/requirements-dev.in
+wrapt==1.15.0
+    # via vcrpy
 xlrd==2.0.1
     # via csvkit
 zipp==1.2.0

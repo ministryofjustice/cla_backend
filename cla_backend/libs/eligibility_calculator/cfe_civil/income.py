@@ -32,6 +32,4 @@ def translate_income(income_data):
                 }
             )
     non_zero_transactions = [x for x in regular_transactions if x['amount'] > 0]
-    # All attributes need to be present, otherwise value isn't valid
-    return {_CFE_INCOME_KEY: non_zero_transactions} if len(regular_transactions) == len(
-        INCOME_CATEGORY_TO_REGULAR_TRANSACTION) else {}
+    return {_CFE_INCOME_KEY: non_zero_transactions}

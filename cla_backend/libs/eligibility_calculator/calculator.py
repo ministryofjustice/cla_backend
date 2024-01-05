@@ -373,6 +373,10 @@ class EligibilityChecker(object):
 
             logger.info("Eligibility result (using CFE): %s", cfe_result)
             return cfe_result
+        elif self._under_18_passported(self.case_data):
+            self.calcs = cfe_calcs
+
+            return cfe_result
         else:
             logger.info("Eligibility result (using legacy): %s", legacy_result)
             return legacy_result
@@ -385,6 +389,10 @@ class EligibilityChecker(object):
     @staticmethod
     def _without_partner(case_data):
         return hasattr(case_data.facts, "has_partner") and not case_data.facts.has_partner
+
+    @staticmethod
+    def _under_18_passported(case_data):
+        return (hasattr(case_data.facts, "under_18_passported") and case_data.facts.under_18_passported) and (hasattr(case_data.facts, "is_you_under_18") and case_data.facts.is_you_under_18)
 
     @staticmethod
     def _is_non_means_tested(case_data):

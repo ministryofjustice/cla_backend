@@ -42,10 +42,10 @@ class cached_calcs_property(object):
 
 
 class CapitalCalculator(object):
-    def __init__(self, properties=[], non_disputed_liquid_capital=0, disputed_liquid_capital=0, calcs={}):
+    def __init__(self, properties=[], non_disputed_non_property_capital=0, disputed_non_property_capital=0, calcs={}):
         self.properties = self._parse_props(properties)
-        self.non_disputed_liquid_capital = non_disputed_liquid_capital
-        self.disputed_liquid_capital = disputed_liquid_capital
+        self.non_disputed_non_property_capital = non_disputed_non_property_capital
+        self.disputed_non_property_capital = disputed_non_property_capital
         self.calcs = calcs
 
     def _parse_props(self, props):
@@ -192,19 +192,19 @@ class CapitalCalculator(object):
         return property_capital
 
     @cached_calcs_property
-    def liquid_capital(self):
-        SMOD_disregard = min(self.disputed_liquid_capital, self.SMOD_disregard_available)
+    def non_property_capital(self):
+        SMOD_disregard = min(self.disputed_non_property_capital, self.SMOD_disregard_available)
 
-        capital = max(self.disputed_liquid_capital - SMOD_disregard, 0)
+        capital = max(self.disputed_non_property_capital - SMOD_disregard, 0)
 
-        capital += self.non_disputed_liquid_capital
+        capital += self.non_disputed_non_property_capital
 
         return capital
 
     def calculate_capital(self):
         self._reset_state()
 
-        res = self.property_capital + self.liquid_capital
+        res = self.property_capital + self.non_property_capital
 
         self.calcs["property_equities"] = [prop.get("equity", 0) for prop in self.properties]
 
@@ -316,8 +316,8 @@ class EligibilityChecker(object):
 
             capital_calc = CapitalCalculator(
                 properties=self.case_data.property_data,
-                non_disputed_liquid_capital=self.case_data.non_disputed_liquid_capital,
-                disputed_liquid_capital=self.case_data.disputed_liquid_capital,
+                non_disputed_non_property_capital=self.case_data.non_disputed_non_property_capital,
+                disputed_non_property_capital=self.case_data.disputed_non_property_capital,
                 calcs=self.calcs,
             )
             disposable_capital = capital_calc.calculate_capital()

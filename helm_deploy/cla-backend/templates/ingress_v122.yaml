@@ -21,6 +21,10 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      SecRuleEngine On
+      SecDefaultAction "phase:2,pass,log,tag:github_team=laa-get-access"
+      SecRule REQUEST_METHOD "DELETE" "phase:1,id:1000,nolog,allow"
 spec:
   ingressClassName: "modsec"
   tls:

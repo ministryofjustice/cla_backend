@@ -56,6 +56,7 @@ class WorkingDays(models.Model):
     def __unicode__(self):
         return ""
 
+    provider = models.ForeignKey(Provider, null=True)
     monday = models.BooleanField(default=True)
     tuesday = models.BooleanField(default=True)
     wednesday = models.BooleanField(default=True)
@@ -75,7 +76,7 @@ class ProviderAllocation(TimeStampedModel):
     provider = models.ForeignKey(Provider)
     category = models.ForeignKey("legalaid.Category")
     weighted_distribution = models.FloatField()  # see XXXXXXXXXXXX
-    workday_days = models.ForeignKey(WorkingDays, null=True)
+    working_days = models.ForeignKey(WorkingDays, null=True)
 
     objects = ProviderAllocationManager()
 

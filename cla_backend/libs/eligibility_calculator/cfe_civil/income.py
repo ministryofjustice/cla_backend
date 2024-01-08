@@ -10,12 +10,6 @@ INCOME_CATEGORY_TO_REGULAR_TRANSACTION = {
     "other_income": "friends_or_family",
 }
 
-_CFE_INCOME_KEY = "regular_transactions"
-
-
-def has_income_key(dict):
-    return _CFE_INCOME_KEY in dict
-
 
 def translate_income(income_data):
     regular_transactions = []
@@ -32,4 +26,4 @@ def translate_income(income_data):
                 }
             )
     non_zero_transactions = [x for x in regular_transactions if x['amount'] > 0]
-    return {_CFE_INCOME_KEY: non_zero_transactions}
+    return {"regular_transactions": non_zero_transactions}

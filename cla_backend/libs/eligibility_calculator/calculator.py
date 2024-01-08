@@ -450,7 +450,11 @@ class EligibilityChecker(object):
             if not hasattr(person, "income"):
                 return False
             income = person.income
-            for key in income.PROPERTY_META:
+            income_keys_if_complete = set(income.PROPERTY_META.keys())
+            # cla_public doesn't explicitly ask about child benefit, but it removes the key from CaseDict if you say
+            # you get "Any other benefits"! So this key is not required for income to be considered complete
+            income_keys_if_complete.remove("child_benefits")
+            for key in income_keys_if_complete:
                 if not hasattr(income, key):
                     return False
             return True

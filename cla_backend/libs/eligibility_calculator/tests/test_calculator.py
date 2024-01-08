@@ -2029,13 +2029,15 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         self.assertEqual("not_yet_known", cfe_result.overall_result)
 
     def test_under_60_with_capital(self):
-        facts = dict(is_you_or_your_partner_over_60=False, is_you_under_18=False, has_partner=False)
+        facts = dict(is_you_or_your_partner_over_60=False, is_you_under_18=False, has_partner=False,
+                     dependants_young=0, dependants_old=0)
         checker = self.checker_with_assets(20000 * 100, facts)
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual('ineligible', cfe_result.overall_result)
 
     def test_over_60_with_capital(self):
-        facts = dict(is_you_or_your_partner_over_60=True, is_you_under_18=False, has_partner=False)
+        facts = dict(is_you_or_your_partner_over_60=True, is_you_under_18=False, has_partner=False,
+                     dependants_young=0, dependants_old=0)
         checker = self.checker_with_assets(20000 * 100, facts)
         cfe_result = self.do_cfe_civil_check(checker)
         self.assertEqual('eligible', cfe_result.overall_result)

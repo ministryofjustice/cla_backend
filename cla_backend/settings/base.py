@@ -465,8 +465,7 @@ EMAIL_ORCHESTRATOR_URL = os.environ.get("EMAIL_ORCHESTRATOR_URL")
 
 # This should eventually come from the environment, but we can hard-code it to main UAT for now
 # CFE_URL = os.environ.get("CFE_URL")
-# CFE_URL = "https://main-cfe-civil-uat.cloud-platform.service.justice.gov.uk/v6/assessments"
-CFE_URL = "https://lep-456-controller-w-cfe-civil-uat.cloud-platform.service.justice.gov.uk/v6/assessments"
+CFE_URL = "https://main-cfe-civil-uat.cloud-platform.service.justice.gov.uk/v6/assessments"
 
 # .local.py overrides all the common settings.
 try:

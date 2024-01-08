@@ -156,7 +156,7 @@ class TestCaseData(unittest.TestCase):
         cd = CaseData(**cdd)
         self.assertFalse(cd.facts.has_disputed_partner)
 
-    def test_get_non_disputed_liquid_capital(self):
+    def test_get_non_disputed_non_property_capital(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=0,
             you__savings__credit_balance=0,
@@ -168,9 +168,9 @@ class TestCaseData(unittest.TestCase):
             partner__savings__investment_balance=0,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(0, cd.non_disputed_liquid_capital)
+        self.assertEqual(0, cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_only(self):
+    def test_get_non_disputed_non_property_capital_savings_only(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=10000,
             you__savings__credit_balance=0,
@@ -182,9 +182,9 @@ class TestCaseData(unittest.TestCase):
             partner__savings__investment_balance=0,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10000, cd.non_disputed_liquid_capital)
+        self.assertEqual(10000, cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_credit_balance(self):
+    def test_get_non_disputed_non_property_capital_savings_credit_balance(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=10000,
             you__savings__credit_balance=10,
@@ -196,9 +196,9 @@ class TestCaseData(unittest.TestCase):
             partner__savings__investment_balance=0,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10010, cd.non_disputed_liquid_capital)
+        self.assertEqual(10010, cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_valuable(self):
+    def test_get_non_disputed_non_property_capital_savings_valuable(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=10000,
             you__savings__credit_balance=0,
@@ -210,9 +210,9 @@ class TestCaseData(unittest.TestCase):
             partner__savings__investment_balance=0,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(11000, cd.non_disputed_liquid_capital)
+        self.assertEqual(11000, cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_investment_balance(self):
+    def test_get_non_disputed_non_property_capital_savings_investment_balance(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=10000,
             you__savings__credit_balance=0,
@@ -224,7 +224,7 @@ class TestCaseData(unittest.TestCase):
             partner__savings__investment_balance=0,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(15000, cd.non_disputed_liquid_capital)
+        self.assertEqual(15000, cd.non_disputed_non_property_capital)
 
     # TODO: Fix invalid state check
     # def test_inconsistent_state(self):
@@ -242,7 +242,7 @@ class TestCaseData(unittest.TestCase):
     #     with self.assertRaises(InvalidStateException):
     #         cd = CaseData(**cdd)
 
-    def test_get_non_disputed_liquid_capital_savings_with_partner(self):
+    def test_get_non_disputed_non_property_capital_savings_with_partner(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=10000,
             you__savings__credit_balance=0,
@@ -255,9 +255,9 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10001, cd.non_disputed_liquid_capital)
+        self.assertEqual(10001, cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_with_partner_credit_balance(self):
+    def test_get_non_disputed_non_property_capital_savings_with_partner_credit_balance(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=10000,
             you__savings__credit_balance=00,
@@ -270,9 +270,9 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10020, cd.non_disputed_liquid_capital)
+        self.assertEqual(10020, cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_with_partner_savings(self):
+    def test_get_non_disputed_non_property_capital_savings_with_partner_savings(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=10000,
             you__savings__credit_balance=00,
@@ -285,9 +285,9 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10010, cd.non_disputed_liquid_capital)
+        self.assertEqual(10010, cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_with_partner_valuables(self):
+    def test_get_non_disputed_non_property_capital_savings_with_partner_valuables(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=10000,
             you__savings__credit_balance=00,
@@ -300,9 +300,9 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(15000, cd.non_disputed_liquid_capital)
+        self.assertEqual(15000, cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_with_partner_investment_balance(self):
+    def test_get_non_disputed_non_property_capital_savings_with_partner_investment_balance(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=10000,
             you__savings__credit_balance=00,
@@ -315,9 +315,9 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(10100, cd.non_disputed_liquid_capital)
+        self.assertEqual(10100, cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_only_partner_savings(self):
+    def test_get_non_disputed_non_property_capital_savings_only_partner_savings(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=0,
             you__savings__credit_balance=0,
@@ -330,9 +330,9 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(100, cd.non_disputed_liquid_capital)
+        self.assertEqual(100, cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_only_partner_credit_balance(self):
+    def test_get_non_disputed_non_property_capital_savings_only_partner_credit_balance(self):
         cdd = get_default_case_data(
             you__savings__bank_balance=0,
             you__savings__credit_balance=200,
@@ -345,9 +345,9 @@ class TestCaseData(unittest.TestCase):
             facts__has_partner=True,
         )
         cd = CaseData(**cdd)
-        self.assertEqual(200, cd.non_disputed_liquid_capital)
+        self.assertEqual(200, cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_random_values_no_partner(self):
+    def test_get_non_disputed_non_property_capital_savings_random_values_no_partner(self):
         for i in range(0, 500):
             # ghetto quick-check
             steps = [random.randint(0, 50000)]
@@ -362,9 +362,9 @@ class TestCaseData(unittest.TestCase):
                 you__savings__investment_balance=steps[3],
             )
             cd = CaseData(**cdd)
-            self.assertEqual(sum(steps), cd.non_disputed_liquid_capital)
+            self.assertEqual(sum(steps), cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_random_values_with_partner(self):
+    def test_get_non_disputed_non_property_capital_savings_random_values_with_partner(self):
         for i in range(0, 500):
             # ghetto quick-check
             steps = [random.randint(0, 50000)]
@@ -384,9 +384,9 @@ class TestCaseData(unittest.TestCase):
                 facts__has_partner=True,
             )
             cd = CaseData(**cdd)
-            self.assertEqual(sum(steps), cd.non_disputed_liquid_capital)
+            self.assertEqual(sum(steps), cd.non_disputed_non_property_capital)
 
-    def test_get_non_disputed_liquid_capital_savings_random_values_only_partner(self):
+    def test_get_non_disputed_non_property_capital_savings_random_values_only_partner(self):
         for i in range(0, 500):
             # ghetto quick-check
             steps = [random.randint(0, 50000)]
@@ -406,4 +406,4 @@ class TestCaseData(unittest.TestCase):
                 facts__has_partner=True,
             )
             cd = CaseData(**cdd)
-            self.assertEqual(sum(steps), cd.non_disputed_liquid_capital)
+            self.assertEqual(sum(steps), cd.non_disputed_non_property_capital)

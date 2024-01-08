@@ -117,6 +117,7 @@ class PersonalDetailsSerializer(PersonalDetailsSerializerFull):
             "safe_to_contact",
             "vulnerable_user",
             "has_diversity",
+            "announce_call"
         )
 
 

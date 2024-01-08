@@ -1,5 +1,6 @@
 import datetime
 import json
+import types
 
 import requests
 from django.conf import settings
@@ -41,10 +42,10 @@ class cached_calcs_property(object):
 
 
 class CapitalCalculator(object):
-    def __init__(self, properties=[], non_disputed_liquid_capital=0, disputed_liquid_capital=0, calcs={}):
+    def __init__(self, properties=[], non_disputed_non_property_capital=0, disputed_non_property_capital=0, calcs={}):
         self.properties = self._parse_props(properties)
-        self.non_disputed_liquid_capital = non_disputed_liquid_capital
-        self.disputed_liquid_capital = disputed_liquid_capital
+        self.non_disputed_non_property_capital = non_disputed_non_property_capital
+        self.disputed_non_property_capital = disputed_non_property_capital
         self.calcs = calcs
 
     def _parse_props(self, props):
@@ -191,19 +192,19 @@ class CapitalCalculator(object):
         return property_capital
 
     @cached_calcs_property
-    def liquid_capital(self):
-        SMOD_disregard = min(self.disputed_liquid_capital, self.SMOD_disregard_available)
+    def non_property_capital(self):
+        SMOD_disregard = min(self.disputed_non_property_capital, self.SMOD_disregard_available)
 
-        capital = max(self.disputed_liquid_capital - SMOD_disregard, 0)
+        capital = max(self.disputed_non_property_capital - SMOD_disregard, 0)
 
-        capital += self.non_disputed_liquid_capital
+        capital += self.non_disputed_non_property_capital
 
         return capital
 
     def calculate_capital(self):
         self._reset_state()
 
-        res = self.property_capital + self.liquid_capital
+        res = self.property_capital + self.non_property_capital
 
         self.calcs["property_equities"] = [prop.get("equity", 0) for prop in self.properties]
 
@@ -315,8 +316,8 @@ class EligibilityChecker(object):
 
             capital_calc = CapitalCalculator(
                 properties=self.case_data.property_data,
-                non_disputed_liquid_capital=self.case_data.non_disputed_liquid_capital,
-                disputed_liquid_capital=self.case_data.disputed_liquid_capital,
+                non_disputed_non_property_capital=self.case_data.non_disputed_non_property_capital,
+                disputed_non_property_capital=self.case_data.disputed_non_property_capital,
                 calcs=self.calcs,
             )
             disposable_capital = capital_calc.calculate_capital()
@@ -347,15 +348,32 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
-        cfe_result, cfe_detail = self._do_cfe_civil_check()
+        cfe_result, cfe_calcs, cfe_response = self._do_cfe_civil_check()
+        legacy_result = self._legacy_check()
+        logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
 
-        if self.case_data.facts.on_nass_benefits and self.case_data.category == "immigration":
+        # Gradual cut-over from using legacy_result to cfe_result
+        if self._is_non_means_tested(self.case_data) or self._without_partner(self.case_data):
+
+            # Calcs updated from CFE's result
+            self.calcs = cfe_calcs
+
             return cfe_result
         else:
-            legacy_result = self._legacy_check()
-            logger.info("Eligibility result (legacy): %s %s" % (legacy_result, self.calcs))
-
             return legacy_result
+
+    @staticmethod
+    def _pounds_to_pence(value):
+        # deal with rounding error by adding a small amount before truncating
+        return int(value * 100 + 0.1)
+
+    @staticmethod
+    def _without_partner(case_data):
+        return hasattr(case_data.facts, "has_partner") and not case_data.facts.has_partner
+
+    @staticmethod
+    def _is_non_means_tested(case_data):
+        return case_data.facts.on_nass_benefits and case_data.category == "immigration"
 
     def _do_cfe_civil_check(self):
         cfe_request_dict = self._translate_case(self.case_data)
@@ -366,16 +384,16 @@ class EligibilityChecker(object):
             cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
             logger.debug("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
             cfe_response = CfeResponse(cfe_raw_response.json())
-            result = self._translate_response(cfe_response)
+            result, calcs = self._translate_response(cfe_response)
             logger.info("Eligibility result (CFE): %s %s" % (result, cfe_response.overall_result))
             logger.debug(
                 "Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
 
-            return result, cfe_response
+            return result, calcs, cfe_response
         else:
             result = ELIGIBILITY_STATES.UNKNOWN
             logger.info("Eligibility result (CFE): %s %s" % (result, "couldnt call CFE"))
-            return result, None
+            return result, None, None
 
     @staticmethod
     def _translate_case(case_data, submission_date=None):
@@ -398,6 +416,9 @@ class EligibilityChecker(object):
             ]
         }
 
+        EligibilityChecker._translate_section_gross_income(case_data, request_data)
+        EligibilityChecker._translate_section_disposable_income(case_data, request_data)
+        EligibilityChecker._translate_section_capital(case_data, request_data)
         if hasattr(case_data, "category"):
             request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
         if hasattr(case_data, "facts"):
@@ -410,14 +431,102 @@ class EligibilityChecker(object):
             request_data['assessment']['section_capital'] = 'incomplete'
 
         if hasattr(case_data, "you"):
-            request_data.update(EligibilityChecker._income_data(case_data.you))
+            request_data.update(EligibilityChecker._translate_income_data(case_data.you))
         if not EligibilityChecker._complete_cfe_income_data(request_data):
             request_data['assessment']['section_gross_income'] = 'incomplete'
 
         return request_data
 
     @staticmethod
-    def _income_data(person):
+    def _translate_section_gross_income(case_data, request_data):
+        """
+        Determine if the questions for gross income section of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
+        def is_gross_income_complete(case_data):
+            if not hasattr(case_data, "you"):
+                return False
+            person = case_data.you
+            if not hasattr(person, "income"):
+                return False
+            income = person.income
+            for key in income.PROPERTY_META:
+                if not hasattr(income, key):
+                    return False
+            return True
+
+        if not is_gross_income_complete(case_data):
+            request_data['assessment']['section_gross_income'] = 'incomplete'
+
+    @staticmethod
+    def _translate_section_disposable_income(case_data, request_data):
+        """
+        Determine if the questions for disposable income section of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
+        def is_disposable_income_complete(case_data):
+            if not hasattr(case_data, "you"):
+                return False
+            person = case_data.you
+            if not hasattr(person, "deductions"):
+                return False
+            deductions = case_data.you.deductions
+            for key in deductions.PROPERTY_META:
+                if not hasattr(deductions, key):
+                    return False
+            return True
+
+        if not is_disposable_income_complete(case_data):
+            request_data['assessment']['section_disposable_income'] = 'incomplete'
+
+    @staticmethod
+    def is_property_complete(property_data):
+        if len(property_data) == 0:
+            return True
+        for key, value in property_data[0].iteritems():
+            if value is not None:
+                return True
+        return False
+
+    @staticmethod
+    def is_savings_complete(case_data):
+        try:
+            savings = case_data.you.savings
+            for key in savings.PROPERTY_META:
+                if not isinstance(getattr(savings, key), (types.IntType, types.LongType)):
+                    return False
+        except exceptions.PropertyExpectedException:
+            return False
+        return True
+
+    @staticmethod
+    def _translate_section_capital(case_data, request_data):
+        """
+        Determine if the questions for capital section of the test have been completed by the user yet,
+        and put this in the CFE request.
+        """
+        has_completed_capital_questions = (
+            EligibilityChecker.is_property_complete(case_data.property_data)
+            and EligibilityChecker.is_savings_complete(case_data)
+        )
+
+        # This capital logic is a bit complicated, and dependent on how cla_backend's clients set the CaseData.
+        # If we wanted to simplify this logic, here are the concerns:
+        # 1. At the start of the flow, `section_capital` can be anything, because we rely on the fact that
+        #    `section_disposable_income = incomplete` to force CFE to give `overall_result: not_yet_known`
+        # 2. At the end of the capital section of the form, if the total capital is over the threshold, we need CFE
+        #    to give `overall_result: ineligible`, causing the front-end to skip to the end of the questions. This
+        #    happens whether we tell CFE that `section_capital` is complete or not, so again it doesn't matter.
+        # 3. At the time the forms are complete - all the relevant questions have been asked - then we need
+        #    `section_capital = complete`, otherwise CFE will give `overall_result: not_yet_known` instead of
+        #    `eligible`.
+        # So the really simple way to do this is to always set `section_capital = complete`, but that might confuse
+        # a dev who looks at the CFE requests before the capital section is in reality complete.
+        if not has_completed_capital_questions:
+            request_data['assessment']['section_capital'] = 'incomplete'
+
+    @staticmethod
+    def _translate_income_data(person):
         request_data = {}
         if hasattr(person, "income"):
             regular_income = translate_income(person.income)
@@ -458,6 +567,9 @@ class EligibilityChecker(object):
 
         if hasattr(case_data, "property_data"):
             request_data.update(translate_property(case_data.property_data))
+
+        if hasattr(case_data, "disputed_savings"):
+            request_data.update(translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True))
         return request_data
 
     @staticmethod
@@ -473,14 +585,30 @@ class EligibilityChecker(object):
         return has_property_key(request_data) and has_savings_key(request_data)
 
     def _translate_response(self, cfe_response):
-        '''Translates CFE-Civil's response to something similar that EligibilityChecker.is_eligible() has always returned'''
+        '''Translates CFE-Civil's response to ELIGIBILITY_STATES and calcs'''
         if cfe_response.overall_result in ('eligible', 'contribution_required'):
-            return ELIGIBILITY_STATES.YES
+            result = ELIGIBILITY_STATES.YES
         elif cfe_response.overall_result == 'ineligible':
-            return ELIGIBILITY_STATES.NO
+            result = ELIGIBILITY_STATES.NO
         elif cfe_response.overall_result == 'not_yet_known':
-            return ELIGIBILITY_STATES.UNKNOWN
-        logger.error('cfe_response.overall_result not recognised: %s' % cfe_response.overall_result)
+            result = ELIGIBILITY_STATES.UNKNOWN
+        else:
+            logger.error('cfe_response.overall_result not recognised: %s' % cfe_response.overall_result)
+
+        calcs = {
+            "pensioner_disregard": self._pounds_to_pence(cfe_response.pensioner_disregard),
+            "disposable_capital_assets": self._pounds_to_pence(cfe_response.disposable_capital_assets),
+            "property_equities": [self._pounds_to_pence(x) for x in cfe_response.property_equities],
+            "property_capital": self._pounds_to_pence(cfe_response.property_capital),
+            "non_property_capital": self._pounds_to_pence(cfe_response.liquid_capital + cfe_response.non_liquid_capital + cfe_response.vehicle_capital),
+            "gross_income": self._pounds_to_pence(cfe_response.gross_income),
+            "partner_allowance": 0,
+            "disposable_income": self._pounds_to_pence(cfe_response.disposable_income),
+            "dependants_allowance": 0,
+            "employment_allowance": self._pounds_to_pence(cfe_response.employment_allowance),
+            "partner_employment_allowance": 0,
+        }
+        return result, calcs
 
     def _legacy_check(self):
         try:

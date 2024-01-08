@@ -85,6 +85,13 @@ class GraphTestCase(TestCase):
         node = checker_graph.node["n43n2"]
         self.assertEqual(node["heading"], u"Choose the option that best describes your debt problem")
 
+    def test_checker_hlpas(self):
+        checker_graph = get_graph(file_name=settings.CHECKER_DIAGNOSIS_FILE_NAME)
+        node_ids = ["n70", "n71", "n1", "n0", "n83"]
+        for node_id in node_ids:
+            node = checker_graph.node[node_id]
+            self.assertDictContainsSubset(node["context"], {"hlpas": "true"})
+
     def test_nodes_have_subheading(self):
         _graph = get_graph(file_name=settings.DIAGNOSIS_FILE_NAME)
         node = _graph.node["n97"]

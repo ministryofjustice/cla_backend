@@ -1139,6 +1139,7 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
                 vulnerable_user=True,
                 safe_to_contact=CONTACT_SAFETY.SAFE,
                 case_count=2,
+                announce_call=False
             ),
             non_equal_fields=["id", "created", "modified", "reference", "case_count"],
             equal_fields=[
@@ -1159,6 +1160,7 @@ class CloneModelsTestCase(CloneModelsTestCaseMixin, TestCase):
                 "diversity_modified",
                 "search_field",
                 "contact_for_research_via",
+                "announce_call"
             ],
         )
 

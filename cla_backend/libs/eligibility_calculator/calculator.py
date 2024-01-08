@@ -567,6 +567,9 @@ class EligibilityChecker(object):
 
         if hasattr(case_data, "property_data"):
             request_data.update(translate_property(case_data.property_data))
+
+        if hasattr(case_data, "disputed_savings"):
+            request_data.update(translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True))
         return request_data
 
     @staticmethod

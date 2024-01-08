@@ -1825,6 +1825,13 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
+    def checker_with_disputed_assets(self, assets):
+        cd = self.case_dict_with_property()
+        cd.update(
+            {'disputed_savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0, credit_balance=0)})
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
     def test_cfe_request_with_no_assets(self):
         result, _, cfe_response = self.checker_with_assets(0)._do_cfe_civil_check()
         self.assertEqual('eligible', cfe_response.overall_result)
@@ -2034,7 +2041,8 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         self.assertEqual('eligible', cfe_result.overall_result)
 
     def test_cfe_request_with_applicant_receives_qualifying_benefit(self):
-        _, _, cfe_result = self.checker_with_facts(on_passported_benefits=True)._do_cfe_civil_check()
+        checker = self.checker_with_facts(on_passported_benefits=True)
+        cfe_result = self.do_cfe_civil_check(checker)
         self.assertTrue(cfe_result.applicant_details()["receives_qualifying_benefit"])
 
     def test_cfe_request_with_applicant_receives_asylum_support(self):
@@ -2052,3 +2060,13 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         _, _, cfe_response = self.checker_with_deductions(income=2000 * 100,
                                                           deductions=deductions)._do_cfe_civil_check()
         self.assertEqual('eligible', cfe_response.overall_result)
+
+    def test_smod_capital_below_limit_is_ignored(self):
+        checker = self.checker_with_disputed_assets(50000 * 100)
+        cfe_response = self.do_cfe_civil_check(checker)
+        self.assertEqual('eligible', cfe_response.overall_result)
+
+    def test_smod_capital_above_limit_is_not_ignored(self):
+        checker = self.checker_with_disputed_assets(150000 * 100)
+        cfe_response = self.do_cfe_civil_check(checker)
+        self.assertEqual('ineligible', cfe_response.overall_result)

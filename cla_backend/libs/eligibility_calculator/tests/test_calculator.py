@@ -2158,5 +2158,3 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         checker = self.checker_with_facts_and_income(under_18_passported=False, is_you_under_18=True, income=2000000)
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual('ineligible', cfe_response.overall_result)
-
-

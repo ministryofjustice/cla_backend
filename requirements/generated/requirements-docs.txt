@@ -64,6 +64,8 @@ django-model-utils==2.2
     # via -r requirements/source/requirements-base.in
 https://github.com/said-moj/django-moj-irat/archive/refs/tags/0.3.1.tar.gz
     # via -r requirements/source/requirements-base.in
+django-nested-admin==3.2.4
+    # via -r requirements/source/requirements-base.in
 django-oauth-toolkit==0.11.0
     # via -r requirements/source/requirements-base.in
 https://github.com/timmyomahony/django-pagedown/archive/refs/tags/v1.1.tar.gz
@@ -179,6 +181,8 @@ python-dateutil==2.2
     #   botocore
     #   cla-common
     #   csvkit
+python-monkey-business==1.0.0
+    # via django-nested-admin
 pytz==2021.1
     # via
     #   -r requirements/source/requirements-base.in
@@ -205,9 +209,11 @@ six==1.16.0
     #   bleach
     #   csvkit
     #   django-braces
+    #   django-nested-admin
     #   django-oauth-toolkit
     #   pathlib2
     #   python-dateutil
+    #   python-monkey-business
     #   sphinx
 snowballstemmer==2.2.0
     # via sphinx

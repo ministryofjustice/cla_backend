@@ -1833,6 +1833,29 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
     def savings_dict(self, assets, bank=0):
         return dict(bank_balance=bank, asset_balance=assets, investment_balance=0, credit_balance=0)
 
+    def checker_with_facts_and_income(self, on_passported_benefits=False, on_nass_benefits=False, under_18_passported=True, is_you_under_18=True, income=0):
+        cd = fixtures.get_default_case_data()
+        cd["facts"].update({
+            "on_passported_benefits": on_passported_benefits,
+            "on_nass_benefits": on_nass_benefits,
+            "under_18_passported": under_18_passported,
+            "is_you_under_18": is_you_under_18
+        })
+        cd['you'].update({
+            'income': dict(earnings=income,
+                           self_employed=False,
+                           maintenance_received=0,
+                           child_benefits=0,
+                           tax_credits=0,
+                           pension=0,
+                           benefits=0,
+                           other_income=0
+                           ),
+            'deductions': dict(income_tax=500, national_insurance=200)
+        })
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
     def checker_with_assets(self, assets, facts=None):
         cd = self.case_dict_with_property(facts=facts)
         cd['you'].update({'savings': self.savings_dict(assets)})
@@ -2116,3 +2139,22 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
             ]
         }
         self.assertEqual(expected, checker._translate_capital_data(checker.case_data)['capitals'])
+    def test_cfe_request_assessment_with_not_aggregated_no_income_low_capital_for_under_18(self):
+        checker = self.checker_with_facts(under_18_passported=True, is_you_under_18=True)
+        cfe_response = self.do_cfe_civil_check(checker)
+        self.assertEqual('eligible', cfe_response.overall_result)
+
+    def test_assessment_attribute_not_aggregated_no_income_low_capital_for_over_18_low_income(self):
+        checker = self.checker_with_facts_and_income(under_18_passported=False, is_you_under_18=False, income=10000)
+        cfe_response = self.do_cfe_civil_check(checker)
+        self.assertEqual('not_yet_known', cfe_response.overall_result)
+
+    def test_assessment_attribute_not_aggregated_no_income_low_capital_for_over_18_high_income(self):
+        checker = self.checker_with_facts_and_income(under_18_passported=False, is_you_under_18=False, income=2000000)
+        cfe_response = self.do_cfe_civil_check(checker)
+        self.assertEqual('ineligible', cfe_response.overall_result)
+
+    def test_assessment_attribute_not_aggregated_no_income_low_capital_for_under_18_high_income(self):
+        checker = self.checker_with_facts_and_income(under_18_passported=False, is_you_under_18=True, income=2000000)
+        cfe_response = self.do_cfe_civil_check(checker)
+        self.assertEqual('ineligible', cfe_response.overall_result)

@@ -360,9 +360,9 @@ class EligibilityChecker(object):
                 return dict((k, v) for k, v in dict_.iteritems() if k in keys)
 
             if cfe_result != legacy_result:
-                logger.error("CFE and legacy_check() results disgree! %s %s" % (cfe_result, legacy_result))
+                logger.error("CFE and legacy_check() results disagree! %s %s" % (cfe_result, legacy_result))
             if filter_to_keys(cfe_calcs, self.calcs) != self.calcs:
-                logger.error("CFE and legacy_check() calcs disgree! %s %s" % (filter_out_zeros(cfe_calcs), filter_out_zeros(self.calcs)))
+                logger.error("CFE and legacy_check() calcs disagree!\nCFE:    %s\nLegacy: %s" % (filter_out_zeros(cfe_calcs), filter_out_zeros(self.calcs)))
 
         # Gradual cut-over from using legacy_result to cfe_result
         if self._is_non_means_tested(self.case_data) or self._without_partner(self.case_data):
@@ -393,18 +393,18 @@ class EligibilityChecker(object):
         if not EligibilityChecker._is_applicant_detail_section_complete(self.case_data):
             # data is so incomplete that we can't even call CFE sensibly
             result = ELIGIBILITY_STATES.UNKNOWN
-            logger.info("Eligibility result (using CFE): %s %s" % (result, "couldn't call CFE"))
+            logger.info("Eligibility result (CFE): %s %s" % (result, "couldn't call CFE"))
             return result, None, None
 
         cfe_request_dict = self._translate_case(self.case_data)
 
         cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
-        logger.debug("Eligibility request (using CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
+        logger.debug("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
 
         cfe_response = CfeResponse(cfe_raw_response.json())
         result, calcs = self._translate_response(cfe_response)
         logger.debug(
-            "Eligibility result (using CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
+            "Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
 
         return result, calcs, cfe_response
 
@@ -642,7 +642,7 @@ class EligibilityChecker(object):
         except exceptions.PropertyExpectedException as exc:
             # e.g. 'Facts' requires attribute 'has_partner'
             # This occurs when there's not enough info in self.case_data to give a definitive calculation result
-            logger.info("Eligibility result (using legacy): unknown %s %s" % (exc.__class__.__name__, exc))
+            logger.info("Eligibility result (legacy): unknown %s %s" % (exc.__class__.__name__, exc))
             return ELIGIBILITY_STATES.UNKNOWN
 
     def should_passport_nass(self):

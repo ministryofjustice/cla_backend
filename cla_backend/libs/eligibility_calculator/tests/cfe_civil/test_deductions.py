@@ -48,3 +48,18 @@ class TestTranslateDeductions(TestCase):
     def test_missing_field_gives_no_outgoings(self):
         deductions = Deductions(maintenance=4545, childcare=3737, mortgage=4242, rent=5757)
         self.assertEqual({}, translate_deductions(deductions))
+
+    def test_some_fields_zero(self):
+        expected = {
+            "regular_transactions": [
+                {
+                    "category": "rent_or_mortgage",
+                    "operation": "debit",
+                    "frequency": "monthly",
+                    "amount": 42.42
+                }
+            ],
+        }
+        deductions = Deductions(maintenance=0, childcare=0, mortgage=0, rent=4242,
+                                criminal_legalaid_contributions=0)
+        self.assertEqual(expected, translate_deductions(deductions))

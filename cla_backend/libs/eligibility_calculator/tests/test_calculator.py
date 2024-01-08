@@ -2159,3 +2159,12 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual('ineligible', cfe_response.overall_result)
 
+    def test_smod_capital_below_limit_is_ignored(self):
+        checker = self.checker_with_disputed_assets(50000 * 100)
+        cfe_response = self.do_cfe_civil_check(checker)
+        self.assertEqual('eligible', cfe_response.overall_result)
+
+    def test_smod_capital_above_limit_is_not_ignored(self):
+        checker = self.checker_with_disputed_assets(150000 * 100)
+        cfe_response = self.do_cfe_civil_check(checker)
+        self.assertEqual('ineligible', cfe_response.overall_result)

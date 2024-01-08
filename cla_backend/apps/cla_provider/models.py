@@ -48,14 +48,14 @@ class WorkingDays(models.Model):
     """
     This model represents the working days for Education specialist providers, to align with the changes required as part of LGA-2904.
     """
+
     class Meta:
-        verbose_name = 'Working Days'
-        verbose_name_plural = 'Working Days - Education only'
+        verbose_name = "Working Days"
+        verbose_name_plural = "Working Days - Education only"
 
     def __unicode__(self):
         return ""
 
-    provider = models.OneToOneField(Provider)
     monday = models.BooleanField(default=True)
     tuesday = models.BooleanField(default=True)
     wednesday = models.BooleanField(default=True)
@@ -75,6 +75,7 @@ class ProviderAllocation(TimeStampedModel):
     provider = models.ForeignKey(Provider)
     category = models.ForeignKey("legalaid.Category")
     weighted_distribution = models.FloatField()  # see XXXXXXXXXXXX
+    workday_days = models.ForeignKey(WorkingDays, null=True)
 
     objects = ProviderAllocationManager()
 

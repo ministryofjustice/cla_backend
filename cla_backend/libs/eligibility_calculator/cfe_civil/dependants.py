@@ -1,11 +1,5 @@
 import datetime
 
-_DEPENDANTS_KEY = "dependants"
-
-
-def has_dependants_key(dict):
-    return _DEPENDANTS_KEY in dict
-
 
 def _dependant_aged(todays_date, age, relationship):
     return dict(date_of_birth=str(datetime.date(todays_date.year - age, todays_date.month, todays_date.day)),
@@ -24,4 +18,4 @@ def translate_dependants(todays_date, facts):
         adults = [_dependant_aged(todays_date, 17, "adult_relative") for _ in range(facts.dependants_old)]
     else:
         adults = []
-    return {_DEPENDANTS_KEY: children + adults}
+    return {"dependants": children + adults}

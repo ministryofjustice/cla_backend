@@ -11,13 +11,6 @@ def _savings_value(value, description, subject_matter_of_dispute):
         }
 
 
-_CFE_SAVINGS_KEY = "capitals"
-
-
-def has_savings_key(request_data):
-    return _CFE_SAVINGS_KEY in request_data
-
-
 def translate_savings(savings_data, subject_matter_of_dispute=False):
     if has_all_attributes(savings_data, ["bank_balance", "investment_balance", "asset_balance", "credit_balance"]):
         liquid_capital = [
@@ -31,7 +24,7 @@ def translate_savings(savings_data, subject_matter_of_dispute=False):
         ]
 
         return {
-            _CFE_SAVINGS_KEY: {
+            "capitals": {
                 "bank_accounts": none_filter(liquid_capital),
                 "non_liquid_capital": none_filter(non_liquid_capital)
             }

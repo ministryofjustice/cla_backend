@@ -20,21 +20,13 @@ def _common_income_fields(income, deductions):
     }
 
 
-_EMPLOYMENT_KEY = "employment_details"
-_SELF_EMPLOYMENT_KEY = "self_employment_details"
-
-
-def has_employment_key(dict):
-    return _EMPLOYMENT_KEY in dict or _SELF_EMPLOYMENT_KEY in dict
-
-
 def translate_employment(income, deductions):
     if _all_income_fields(income) and _all_deductions_fields(deductions):
         if income.earnings > 0:
             fields = _common_income_fields(income, deductions)
             if income.self_employed:
                 return {
-                    _SELF_EMPLOYMENT_KEY: [
+                    "self_employment_details": [
                         {
                             "income": fields
                         }
@@ -46,13 +38,13 @@ def translate_employment(income, deductions):
                     "benefits_in_kind": 0,
                 })
                 return {
-                    _EMPLOYMENT_KEY: [
+                    "employment_details": [
                         {
                             "income": fields
                         }
                     ]
                 }
         else:
-            return {_EMPLOYMENT_KEY: []}
+            return {"employment_details": []}
     else:
         return {}

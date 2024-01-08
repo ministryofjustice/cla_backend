@@ -19,13 +19,6 @@ def _valid_house(house_data):
         'disputed' in house_data
 
 
-_CFE_PROPERTY_KEY = "properties"
-
-
-def has_property_key(dict):
-    return _CFE_PROPERTY_KEY in dict
-
-
 def translate_property(possible_property_data):
     property_data = [house for house in possible_property_data if _valid_house(house)]
     main_homes = [x for x in property_data if x['main']]
@@ -41,14 +34,14 @@ def translate_property(possible_property_data):
 
     if main_home:
         return {
-            _CFE_PROPERTY_KEY: {
+            "properties": {
                 "main_home": main_home,
                 "additional_properties": additional_houses
             }
         }
     elif len(possible_property_data) == len(property_data):
         return {
-            _CFE_PROPERTY_KEY: {
+            "properties": {
                 "additional_properties": additional_houses
             }
         }

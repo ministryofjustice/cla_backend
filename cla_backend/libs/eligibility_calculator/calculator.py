@@ -420,7 +420,7 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _is_applicant_detail_section_complete(case_data):
-        return hasattr(case_data.facts, "dependants_young") and hasattr(case_data.facts, "has_partner")
+        return case_data.facts.is_you_under_18 or (hasattr(case_data.facts, "dependants_young") and hasattr(case_data.facts, "has_partner"))
 
     @staticmethod
     def _translate_case(case_data, submission_date=None):

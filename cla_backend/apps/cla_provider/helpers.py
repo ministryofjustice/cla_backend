@@ -4,6 +4,7 @@ import os
 import random
 from itertools import groupby
 from operator import itemgetter
+import logging
 
 from django.http import HttpResponse
 from django.template.loader import get_template
@@ -12,7 +13,7 @@ from django.conf import settings
 from django.db.models import Count
 
 from govuk_notify.api import NotifyEmailOrchestrator
-from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, ProviderPreAllocation
+from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, ProviderPreAllocation, WorkingDays
 from legalaid.models import Case
 
 
@@ -84,8 +85,17 @@ class ProviderAllocationHelper(object):
         """
         @return: list
         """
+        logging.log(900, self._providers_in_category)
+
         if not self._providers_in_category:
             self._providers_in_category = ProviderAllocation.objects.filter(category=category, provider__active=True)
+
+        if category.name == "Education":
+            logging.log(900, "start")
+            day_index = datetime.datetime.today().weekday()
+            week = ["monday", "tuesday", "wednesday", "thursday", " friday", "saturday", "sunday"]
+            for provider in self._providers_in_category:
+                logging.log(800, provider.workingdays.is_proivder_working_today())
 
         return self._providers_in_category
 
@@ -122,6 +132,7 @@ class ProviderAllocationHelper(object):
 
         def calculate_winner():
             allocations = self.get_qualifying_providers_allocation(category)
+            logging.log(category)
             if limit_choices_to:
                 allocations = allocations.filter(provider__id__in=limit_choices_to)
             if not allocations:

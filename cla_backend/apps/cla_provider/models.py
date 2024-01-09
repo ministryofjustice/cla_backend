@@ -53,8 +53,8 @@ class WorkingDays(models.Model):
         verbose_name = "Working Days"
         verbose_name_plural = "Working Days"
 
-    def __unicode__(self):
-        return ""
+    def is_proivder_working_today(self):
+        return self.tuesday
 
     provider_allocation = models.OneToOneField("ProviderAllocation", null=True)
     monday = models.BooleanField(default=True)

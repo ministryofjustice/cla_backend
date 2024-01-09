@@ -1,12 +1,15 @@
 from django.contrib import admin
 import nested_admin
 
+import logging
+
 from core.admin.modeladmin import OneToOneUserAdmin
+from django.contrib.admin.options import InlineModelAdmin
 
 from ..models import Provider, ProviderAllocation, Staff, OutOfHoursRota, WorkingDays
 
 from .forms import StaffAdminForm
-from .formsets import ProviderAllocationInlineFormset
+from .formsets import ProviderAllocationInlineFormset, WorkingDaysInlineFormset
 
 
 class StaffAdmin(OneToOneUserAdmin):
@@ -24,19 +27,23 @@ class StaffAdmin(OneToOneUserAdmin):
         "is_manager",
     )
     search_fields = ["user__username", "user__first_name", "user__last_name", "user__email"]
+ 
 
-
-class WorkingDaysInline(nested_admin.NestedTabularInline):
+class WorkingDaysInline(admin.TabularInline):
     model = WorkingDays
+    formset = WorkingDaysInlineFormset
+    template = 'admin/cla_provider/allocations/working_days_tabular_inline.html'
 
 
 class ProviderAllocationInline(nested_admin.NestedTabularInline):
     model = ProviderAllocation
-    formset = [ProviderAllocationInlineFormset]
+    formset = ProviderAllocationInlineFormset
     inlines = [WorkingDaysInline]
+    template = 'admin/cla_provider/allocations/provider_allocation_tabular_inline.html'
+        
 
 
-class ProviderAdmin(admin.ModelAdmin):
+class ProviderAdmin(nested_admin.NestedModelAdmin):
     actions = None
     inlines = [ProviderAllocationInline]
 

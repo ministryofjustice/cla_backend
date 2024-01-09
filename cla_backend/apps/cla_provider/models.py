@@ -51,17 +51,19 @@ class WorkingDays(models.Model):
 
     class Meta:
         verbose_name = "Working Days"
-        verbose_name_plural = "Working Days - Education only"
+        verbose_name_plural = "Working Days"
 
     def __unicode__(self):
         return ""
 
-    provider = models.ForeignKey(Provider, null=True)
+    provider_allocation = models.OneToOneField("ProviderAllocation", null=True)
     monday = models.BooleanField(default=True)
     tuesday = models.BooleanField(default=True)
     wednesday = models.BooleanField(default=True)
     thursday = models.BooleanField(default=True)
     friday = models.BooleanField(default=True)
+    saturday = models.BooleanField(default=False)
+    sunday = models.BooleanField(default=False)
 
 
 class ProviderAllocationManager(models.Manager):
@@ -76,7 +78,6 @@ class ProviderAllocation(TimeStampedModel):
     provider = models.ForeignKey(Provider)
     category = models.ForeignKey("legalaid.Category")
     weighted_distribution = models.FloatField()  # see XXXXXXXXXXXX
-    working_days = models.ForeignKey(WorkingDays, null=True)
 
     objects = ProviderAllocationManager()
 

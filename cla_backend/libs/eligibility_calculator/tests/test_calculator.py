@@ -4,6 +4,7 @@ import unittest
 
 import mock
 from . import fixtures
+from .test_util import log_only_critical
 from .. import constants
 from ..calculator import EligibilityChecker, CapitalCalculator
 from ..exceptions import PropertyExpectedException
@@ -1002,6 +1003,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
         is_elig = checker.is_eligible()
         return is_elig, checker
 
+    @log_only_critical
     def test_pensioner_200k2p_house_100k1p_mort_800001_savings(self):
         """
         if over 60 and not on benefits, 200K.02 house with 100K.01 mortgage and
@@ -1678,6 +1680,7 @@ class IsEligibleTestCase(unittest.TestCase):
         ec.is_disposable_capital_eligible = mock.MagicMock(return_value=is_disposable_capital)
         return ec, mocked_on_passported_benefits, mocked_on_nass_benefits
 
+    @log_only_critical
     def test_is_disposable_capital_not_eligible(self):
         """
         TEST: with mocked is_disposable_capital_eligible = False
@@ -1693,6 +1696,7 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertFalse(ec.is_gross_income_eligible.called)
         self.assertFalse(ec.is_disposable_income_eligible.called)
 
+    @log_only_critical
     def test_is_gross_income_not_eligible(self):
         """
         TEST: with mocked:
@@ -1713,6 +1717,7 @@ class IsEligibleTestCase(unittest.TestCase):
         ec.is_gross_income_eligible.assert_called_once_with()
         self.assertFalse(ec.is_disposable_income_eligible.called)
 
+    @log_only_critical
     def test_is_disposable_income_not_eligible(self):
         """
         TEST: with mocked:
@@ -1735,6 +1740,7 @@ class IsEligibleTestCase(unittest.TestCase):
         ec.is_gross_income_eligible.assert_called_once_with()
         ec.is_disposable_capital_eligible.assert_called_once_with()
 
+    @log_only_critical
     def test_is_disposable_income_eligible(self):
         """
         TEST: with mocked:
@@ -1757,6 +1763,7 @@ class IsEligibleTestCase(unittest.TestCase):
         ec.is_gross_income_eligible.assert_called_once_with()
         ec.is_disposable_capital_eligible.assert_called_once_with()
 
+    @log_only_critical
     def test_nass_benefit_is_eligible_only_if_is_category_is_immigration(self):
         """
         TEST: if citizen is on NASS benefit income and capital are not
@@ -1769,6 +1776,7 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertTrue(ec.is_eligible())
         self.assertTrue(mocked_on_nass_benefits.called)
 
+    @log_only_critical
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_capital_is_above_limit(self):
         """
         TEST: If a citizen is not in the category immigration or considered in any category in this instance,
@@ -1783,6 +1791,7 @@ class IsEligibleTestCase(unittest.TestCase):
         self.assertEqual('no', ec.is_eligible())
         self.assertTrue(mocked_on_nass_benefits.called)
 
+    @log_only_critical
     def test_nass_benefit_is_not_eligible_and_category_isnt_immigration_and_disposable_income_is_above_limit(self):
         """
         TEST:  If a citizen is not in the category immigration or considered in any category in this instance,

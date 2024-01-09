@@ -13,3 +13,9 @@ def none_filter(array):
 def has_all_attributes(object, attr_list):
     present = [hasattr(object, attr) for attr in attr_list]
     return len([x for x in present if x is False]) == 0
+
+
+def missing_attributes(object, expected_attributes):
+    for attr in expected_attributes:
+        if not hasattr(object, attr):
+            return attr

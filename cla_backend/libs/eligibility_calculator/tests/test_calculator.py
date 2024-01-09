@@ -2041,6 +2041,17 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
                                                                      self_employed=True)._do_cfe_civil_check()
         self.assertEqual("not_yet_known", cfe_result.overall_result)
 
+    def checker_without_savings(self):
+        cd = fixtures.get_default_case_data()
+        cd['you'].update({'savings': {}})
+
+        case_data = CaseData(**cd)
+        return EligibilityChecker(case_data=case_data)
+
+    def test_cfe_with_no_savings_data_is_unknown(self):
+        _, _, cfe_result = self.checker_without_savings()._do_cfe_civil_check()
+        self.assertEqual("not_yet_known", cfe_result.overall_result)
+
     def test_under_60_with_capital(self):
         facts = dict(is_you_or_your_partner_over_60=False, is_you_under_18=False, has_partner=False,
                      dependants_young=0, dependants_old=0)

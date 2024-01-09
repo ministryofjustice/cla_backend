@@ -27,9 +27,5 @@ def translate_deductions(deductions):
                         "amount": pence_to_pounds(amount_pence)
                     }
                 )
-        else:
-            # missing key indicates data is incomplete
-            logger.error("Expected deduction key: %s. Ignoring deductions data!" % outgoing_category)
-            return {}
     else:
         return {"regular_transactions": regular_transactions}

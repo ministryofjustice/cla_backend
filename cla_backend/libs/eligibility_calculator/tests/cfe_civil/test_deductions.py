@@ -45,9 +45,19 @@ class TestTranslateDeductions(TestCase):
         # assert list equality w/o respect to ordering
         self.assertEqual(set(expected), set(translate_deductions(deductions)))
 
-    def test_missing_field_gives_no_outgoings(self):
-        deductions = Deductions(maintenance=4545, childcare=3737, mortgage=4242, rent=5757)
-        self.assertEqual({}, translate_deductions(deductions))
+    def test_missing_field(self):
+        expected = {
+            "regular_transactions": [
+                {
+                    "amount": 45.45,
+                    "category": "maintenance_out",
+                    "frequency": "monthly",
+                    "operation": "debit"
+                 }
+            ]
+        }
+        deductions = Deductions(maintenance=4545)
+        self.assertEqual(expected, translate_deductions(deductions))
 
     def test_some_fields_zero(self):
         expected = {

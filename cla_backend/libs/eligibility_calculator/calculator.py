@@ -366,14 +366,9 @@ class EligibilityChecker(object):
                 logger.error("CFE and legacy_check() calcs disagree!\nCFE:    %s\nLegacy: %s" % (filter_out_zeros(cfe_calcs), filter_out_zeros(self.calcs)))
 
         # Gradual cut-over from using legacy_result to cfe_result
-        if self._is_non_means_tested(self.case_data) or self._without_partner(self.case_data):
+        if self._is_non_means_tested(self.case_data) or self._without_partner(self.case_data) or self._under_18_passported(self.case_data):
 
             # Calcs updated from CFE's result
-            self.calcs = cfe_calcs
-
-            logger.info("Eligibility result (using CFE): %s", cfe_result)
-            return cfe_result
-        elif self._under_18_passported(self.case_data):
             self.calcs = cfe_calcs
 
             logger.info("Eligibility result (using CFE): %s", cfe_result)

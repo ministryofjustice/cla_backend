@@ -1,5 +1,4 @@
-from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds, none_filter, \
-    has_all_attributes
+from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import pence_to_pounds, none_filter
 
 
 def _savings_value(value, description, subject_matter_of_dispute):

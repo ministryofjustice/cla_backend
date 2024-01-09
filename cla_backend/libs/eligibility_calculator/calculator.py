@@ -583,7 +583,7 @@ class EligibilityChecker(object):
 
         if hasattr(case_data, "disputed_savings"):
             disputed_savings = translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True)
-            if request_data.has_key('capitals'):
+            if 'capitals' in request_data:
                 capitals = request_data['capitals']
                 disputed_capitals = disputed_savings['capitals']
                 for key in capitals.keys():

@@ -2069,13 +2069,18 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
 
     def test_translate_capital_data_merges_savings(self):
         checker = self.checker_with_disputed_assets(60000, savings=self.savings_dict(150000))
-        expected = {'bank_accounts': [],
-                    'non_liquid_capital': [
-                        {'description': 'Valuable items worth over 500 pounds',
-                                            'subject_matter_of_dispute': False,
-                                            'value': 1500.0},
-                        {'description': 'Valuable items worth over 500 pounds',
-                                            'subject_matter_of_dispute': True,
-                                            'value': 600.0}
-                    ]}
+        expected = {
+            'bank_accounts': [],
+            'non_liquid_capital': [
+                {
+                    'description': 'Valuable items worth over 500 pounds',
+                    'subject_matter_of_dispute': False,
+                    'value': 1500.0},
+                {
+                    'description': 'Valuable items worth over 500 pounds',
+                    'subject_matter_of_dispute': True,
+                    'value': 600.0
+                }
+            ]
+        }
         self.assertEqual(expected, checker._translate_capital_data(checker.case_data)['capitals'])

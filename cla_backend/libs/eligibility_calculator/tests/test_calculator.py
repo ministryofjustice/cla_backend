@@ -1819,16 +1819,21 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
+    def savings_dict(self, assets, bank=0):
+        return dict(bank_balance=bank, asset_balance=assets, investment_balance=0, credit_balance=0)
+
     def checker_with_assets(self, assets, facts=None):
         cd = self.case_dict_with_property(facts=facts)
-        cd['you'].update({'savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0, credit_balance=0)})
+        cd['you'].update({'savings': self.savings_dict(assets)})
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
-    def checker_with_disputed_assets(self, assets):
+    def checker_with_disputed_assets(self, assets, savings=None):
         cd = self.case_dict_with_property()
         cd.update(
-            {'disputed_savings': dict(bank_balance=0, asset_balance=assets, investment_balance=0, credit_balance=0)})
+            {'disputed_savings': self.savings_dict(assets)})
+        if savings is not None:
+            cd['you'].update({'savings': savings})
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
@@ -2017,17 +2022,6 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
                                                                      self_employed=True)._do_cfe_civil_check()
         self.assertEqual("not_yet_known", cfe_result.overall_result)
 
-    def checker_without_savings(self):
-        cd = fixtures.get_default_case_data()
-        cd['you'].update({'savings': {}})
-
-        case_data = CaseData(**cd)
-        return EligibilityChecker(case_data=case_data)
-
-    def test_cfe_with_no_savings_data_is_unknown(self):
-        _, _, cfe_result = self.checker_without_savings()._do_cfe_civil_check()
-        self.assertEqual("not_yet_known", cfe_result.overall_result)
-
     def test_under_60_with_capital(self):
         facts = dict(is_you_or_your_partner_over_60=False, is_you_under_18=False, has_partner=False,
                      dependants_young=0, dependants_old=0)
@@ -2072,3 +2066,21 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         checker = self.checker_with_disputed_assets(150000 * 100)
         cfe_response = self.do_cfe_civil_check(checker)
         self.assertEqual('ineligible', cfe_response.overall_result)
+
+    def test_translate_capital_data_merges_savings(self):
+        checker = self.checker_with_disputed_assets(60000, savings=self.savings_dict(150000))
+        expected = {
+            'bank_accounts': [],
+            'non_liquid_capital': [
+                {
+                    'description': 'Valuable items worth over 500 pounds',
+                    'subject_matter_of_dispute': False,
+                    'value': 1500.0},
+                {
+                    'description': 'Valuable items worth over 500 pounds',
+                    'subject_matter_of_dispute': True,
+                    'value': 600.0
+                }
+            ]
+        }
+        self.assertEqual(expected, checker._translate_capital_data(checker.case_data)['capitals'])

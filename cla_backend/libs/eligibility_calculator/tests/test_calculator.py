@@ -2139,6 +2139,7 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
             ]
         }
         self.assertEqual(expected, checker._translate_capital_data(checker.case_data)['capitals'])
+
     def test_assessment_attribute_not_aggregated_no_income_low_capital_for_under_18_no_income(self):
         checker = self.checker_with_facts(under_18_passported=True, is_you_under_18=True)
         cfe_response = self.do_cfe_civil_check(checker)

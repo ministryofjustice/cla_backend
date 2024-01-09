@@ -55,3 +55,43 @@ class TestCfeIncome(TestCase):
             ],
         }
         self.assertEqual(expected, output)
+
+    def test_self_employment_drawings(self):
+        income = Income(earnings=0, self_employed=True, self_employment_drawings=20000)
+        deductions = Deductions(income_tax=0, national_insurance=0)
+        output = translate_employment(income, deductions)
+        expected = {
+            "self_employment_details": [
+                {
+                    "income": {
+                        "frequency": "monthly",
+                        "gross": 200,
+                        "tax": 0,
+                        "national_insurance": 0,
+                        "prisoner_levy": 0,
+                        "student_debt_repayment": 0
+                    }
+                }
+            ],
+        }
+        self.assertEqual(expected, output)
+
+    def test_self_employment_earnings_and_drawings(self):
+        income = Income(earnings=10000, self_employed=True, self_employment_drawings=20000)
+        deductions = Deductions(income_tax=0, national_insurance=0)
+        output = translate_employment(income, deductions)
+        expected = {
+            "self_employment_details": [
+                {
+                    "income": {
+                        "frequency": "monthly",
+                        "gross": 300,
+                        "tax": 0,
+                        "national_insurance": 0,
+                        "prisoner_levy": 0,
+                        "student_debt_repayment": 0
+                    }
+                }
+            ],
+        }
+        self.assertEqual(expected, output)

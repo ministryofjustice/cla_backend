@@ -1,17 +1,28 @@
-from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import has_all_attributes, pence_to_pounds
+from cla_backend.libs.eligibility_calculator.cfe_civil.conversions import missing_attributes, pence_to_pounds
+
+logger = __import__("logging").getLogger(__name__)
 
 
-def _all_deductions_fields(deductions):
-    return has_all_attributes(deductions, ["income_tax", "national_insurance"])
+def _are_there_missing_deductions_fields(deductions):
+    missing_attr = missing_attributes(deductions, ["income_tax", "national_insurance"])
+    if missing_attr:
+        logger.error("Missing field in deductions: '%s'. Ignoring all (self) employment income and deductions!"
+                     % missing_attr)
+        return True
 
 
-def _all_income_fields(incomes):
-    return has_all_attributes(incomes, ["earnings", "self_employed"])
+def _are_there_missing_income_fields(incomes):
+    missing_attr = missing_attributes(incomes, ["earnings", "self_employed"])
+    if missing_attr:
+        logger.error("Missing field in incomes: '%s'. Ignoring all (self) employment income and deductions!"
+                     % missing_attr)
+        return True
 
 
-def _common_income_fields(income, deductions):
+# fields in both CFE's employment_details and self_employment_details sections
+def _common_income_fields(gross, deductions):
     return {
-        "gross": pence_to_pounds(income.earnings),
+        "gross": gross,
         "tax": -pence_to_pounds(deductions.income_tax),
         "frequency": "monthly",
         "prisoner_levy": 0,
@@ -21,30 +32,34 @@ def _common_income_fields(income, deductions):
 
 
 def translate_employment(income, deductions):
-    if _all_income_fields(income) and _all_deductions_fields(deductions):
-        if income.earnings > 0:
-            fields = _common_income_fields(income, deductions)
-            if income.self_employed:
-                return {
-                    "self_employment_details": [
-                        {
-                            "income": fields
-                        }
-                    ]
-                }
-            else:
-                fields.update({
-                    "receiving_only_statutory_sick_or_maternity_pay": False,
-                    "benefits_in_kind": 0,
-                })
-                return {
-                    "employment_details": [
-                        {
-                            "income": fields
-                        }
-                    ]
-                }
-        else:
-            return {"employment_details": []}
-    else:
+    if _are_there_missing_income_fields(income) or _are_there_missing_deductions_fields(deductions):
         return {}
+
+    gross = pence_to_pounds(income.earnings)
+    if hasattr(income, "self_employment_drawings"):
+        gross += pence_to_pounds(income.self_employment_drawings)
+
+    if gross == 0 and deductions.income_tax == 0 and deductions.national_insurance == 0:
+        return {"employment_details": []}
+
+    fields = _common_income_fields(gross, deductions)
+    if income.self_employed:
+        return {
+            "self_employment_details": [
+                {
+                    "income": fields
+                }
+            ]
+        }
+    else:
+        fields.update({
+            "receiving_only_statutory_sick_or_maternity_pay": False,
+            "benefits_in_kind": 0,
+        })
+        return {
+            "employment_details": [
+                {
+                    "income": fields
+                }
+            ]
+        }

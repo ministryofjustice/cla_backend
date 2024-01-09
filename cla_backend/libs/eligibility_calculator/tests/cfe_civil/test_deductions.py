@@ -53,7 +53,7 @@ class TestTranslateDeductions(TestCase):
                     "category": "maintenance_out",
                     "frequency": "monthly",
                     "operation": "debit"
-                 }
+                }
             ]
         }
         deductions = Deductions(maintenance=4545)

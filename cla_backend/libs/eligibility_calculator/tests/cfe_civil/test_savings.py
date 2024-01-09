@@ -55,3 +55,11 @@ class TestTranslateSavings(TestCase):
             ],
         }}
         self.assertEqual(expected, output)
+
+    def test_empty_savings(self):
+        savings = Savings()
+
+        output = translate_savings(savings)
+
+        expected = {'capitals': {'bank_accounts': [], 'non_liquid_capital': []}}
+        self.assertEqual(expected, output)

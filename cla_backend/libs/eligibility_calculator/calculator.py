@@ -3,6 +3,9 @@ from django.utils import timezone
 
 from . import constants
 from . import exceptions
+from cla_common.constants import ELIGIBILITY_STATES
+
+logger = __import__("logging").getLogger(__name__)
 
 
 class cached_calcs_property(object):
@@ -330,25 +333,34 @@ class EligibilityChecker(object):
         return self.disposable_capital_assets <= limit
 
     def is_eligible(self):
-        if self.case_data.facts.has_passported_proceedings_letter:
-            return True
 
-        if self.case_data.facts.under_18_passported:
-            return True
+        try:
 
-        if self.case_data.facts.on_nass_benefits and self.should_passport_nass():
-            return True
+            if self.case_data.facts.has_passported_proceedings_letter:
+                return ELIGIBILITY_STATES.YES
 
-        if not self.is_disposable_capital_eligible():
-            return False
+            if self.case_data.facts.under_18_passported:
+                return ELIGIBILITY_STATES.YES
 
-        if not self.is_gross_income_eligible():
-            return False
+            if self.case_data.facts.on_nass_benefits and self.should_passport_nass():
+                return ELIGIBILITY_STATES.YES
 
-        if not self.is_disposable_income_eligible():
-            return False
+            if not self.is_disposable_capital_eligible():
+                return ELIGIBILITY_STATES.NO
 
-        return True
+            if not self.is_gross_income_eligible():
+                return ELIGIBILITY_STATES.NO
+
+            if not self.is_disposable_income_eligible():
+                return ELIGIBILITY_STATES.NO
+
+            return ELIGIBILITY_STATES.YES
+
+        except exceptions.PropertyExpectedException as exc:
+            # e.g. 'Facts' requires attribute 'has_partner'
+            # This occurs when there's not enough info in self.case_data to give a definitive calculation result
+            logger.info("Eligibility result (legacy) unknown: %s %s" % (exc.__class__.__name__, exc))
+            return ELIGIBILITY_STATES.UNKNOWN
 
     def should_passport_nass(self):
         return self.case_data.category and self.case_data.category == "immigration"

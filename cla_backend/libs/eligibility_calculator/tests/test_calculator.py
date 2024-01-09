@@ -1042,7 +1042,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
         }
         expected_results.update(expected_property_results[self.expected_results_key])
 
-        self.assertFalse(is_elig)
+        self.assertEqual('no', is_elig)
         self.assertDictEqual(checker.calcs, expected_results)
 
     def test_pensioner_limit_10k_diregard_fail(self):
@@ -1060,7 +1060,7 @@ class TestApplicantSinglePensionerNotOnBenefits(CalculatorTestBase):
 
         is_elig, checker = self._test_pensioner(case_data)
 
-        self.assertFalse(is_elig)
+        self.assertEqual('no', is_elig)
         self.assertDictEqual(
             checker.calcs,
             {
@@ -1676,7 +1676,7 @@ class IsEligibleTestCase(unittest.TestCase):
             is_passported=False, is_nass_benefits=False, is_disposable_capital=False
         )
 
-        self.assertFalse(ec.is_eligible())
+        self.assertEqual('no', ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
         self.assertFalse(ec.is_gross_income_eligible.called)
         self.assertFalse(ec.is_disposable_income_eligible.called)
@@ -1696,7 +1696,7 @@ class IsEligibleTestCase(unittest.TestCase):
         )
 
         self.assertFalse(mocked_on_passported_benefits.called)
-        self.assertFalse(ec.is_eligible())
+        self.assertEqual('no', ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
         ec.is_gross_income_eligible.assert_called_once_with()
         self.assertFalse(ec.is_disposable_income_eligible.called)
@@ -1718,7 +1718,7 @@ class IsEligibleTestCase(unittest.TestCase):
         )
 
         self.assertFalse(mocked_on_passported_benefits.called)
-        self.assertFalse(ec.is_eligible())
+        self.assertEqual('no', ec.is_eligible())
         ec.is_disposable_capital_eligible.assert_called_once_with()
         ec.is_gross_income_eligible.assert_called_once_with()
         ec.is_disposable_capital_eligible.assert_called_once_with()
@@ -1769,7 +1769,7 @@ class IsEligibleTestCase(unittest.TestCase):
         )
 
         ec.is_disposable_capital_eligible = mock.MagicMock(return_value=False)
-        self.assertFalse(ec.is_eligible())
+        self.assertEqual('no', ec.is_eligible())
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)
 
@@ -1788,7 +1788,7 @@ class IsEligibleTestCase(unittest.TestCase):
             is_disposable_income=False,
         )
 
-        self.assertFalse(ec.is_eligible())
+        self.assertEqual('no', ec.is_eligible())
         self.assertTrue(ec.is_gross_income_eligible.called)
         self.assertFalse(mocked_on_passported_benefits.called)
         self.assertTrue(mocked_on_nass_benefits.called)

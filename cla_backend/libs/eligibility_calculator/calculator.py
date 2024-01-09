@@ -587,7 +587,14 @@ class EligibilityChecker(object):
             request_data.update(translate_property(case_data.property_data))
 
         if hasattr(case_data, "disputed_savings"):
-            request_data.update(translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True))
+            disputed_savings = translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True)
+            if 'capitals' in request_data:
+                capitals = request_data['capitals']
+                disputed_capitals = disputed_savings['capitals']
+                for key in capitals.keys():
+                    capitals[key] += disputed_capitals[key]
+            else:
+                request_data.update(disputed_savings)
         return request_data
 
     def _translate_response(self, cfe_response):

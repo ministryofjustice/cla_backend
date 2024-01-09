@@ -31,14 +31,18 @@ class CfeResponse(object):
 
     @property
     def property_equities(self):
-        if self.property_capital > 0:
-            return [self.property_capital]
-        else:
-            return []
+        properties = []
+        cfe_properties = self._cfe_data['assessment']['capital']['capital_items']['properties']
+        if cfe_properties['main_home']:
+            properties.append(cfe_properties['main_home'])
+        if cfe_properties['additional_properties']:
+            properties.extend(cfe_properties['additional_properties'])
+        return [property['assessed_equity'] for property in properties
+                if property['assessed_equity'] > 0]
 
     @property
     def property_capital(self):
-        return self._cfe_data['assessment']['capital']['capital_items']['properties']['main_home']['assessed_equity']
+        return sum(self.property_equities)
 
     @property
     def liquid_capital(self):

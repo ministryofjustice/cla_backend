@@ -1916,6 +1916,16 @@ class DoCfeCivilCheckTestCase(unittest.TestCase):
         case_data = CaseData(**cd)
         return EligibilityChecker(case_data=case_data)
 
+    def test_income_complete_without_child_benefit(self):
+        # Tests the circumstance, of child_benefit field is removed, but should still be considered complete.
+        # This is encountered in cla_public, if you say yes to benefits but don't check "child benefit" checkbox.
+        cd = fixtures.get_default_case_data()
+        del cd['you']['income']['child_benefits']
+        # Deliberately not calling self.income_sections_are_completed(cd)
+        case_data = CaseData(**cd)
+        cfe_result, _, _ = EligibilityChecker(case_data=case_data)._do_cfe_civil_check()
+        self.assertEqual('yes', cfe_result)
+
     def checker_with_deductions(self, income, deductions):
         cd = fixtures.get_default_case_data()
         cd['you'].update({

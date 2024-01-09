@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -x
 
 ROOT=$(dirname "$0")
 DYNAMIC_HOSTNAME=$1

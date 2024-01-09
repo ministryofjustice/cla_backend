@@ -257,7 +257,7 @@ jobs:
             export INGRESS_CLUSTER_NAME=`kubectl get configmap ingress-cluster -o jsonpath='{.data.name}'`
             export INGRESS_CLUSTER_WEIGHT=`kubectl get configmap ingress-cluster -o jsonpath='{.data.weight}'`
             source .circleci/define_build_environment_variables << parameters.namespace >> << parameters.dynamic_hostname >>
-            pip3 install requests
+            pip3 install --disable-pip-version-check requests
             export PINGDOM_IPS=`python3 bin/pingdom_ips.py`
             ./bin/<< parameters.namespace >>_deploy.sh << parameters.dynamic_hostname >>
             echo "export RELEASE_HOST=$RELEASE_HOST" >> $BASH_ENV

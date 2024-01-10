@@ -22,8 +22,8 @@ def translate_income(income_data):
                     "category": INCOME_CATEGORY_TO_REGULAR_TRANSACTION[income_category],
                     "operation": "credit",
                     "frequency": "monthly",
-                    "amount": pence_to_pounds(amount_pence)
+                    "amount": pence_to_pounds(amount_pence),
                 }
             )
-    non_zero_transactions = [x for x in regular_transactions if x['amount'] > 0]
+    non_zero_transactions = [x for x in regular_transactions if x["amount"] > 0]
     return {"regular_transactions": non_zero_transactions}

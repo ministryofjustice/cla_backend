@@ -2,11 +2,13 @@ import datetime
 
 
 def _dependant_aged(todays_date, age, relationship):
-    return dict(date_of_birth=str(datetime.date(todays_date.year - age, todays_date.month, todays_date.day)),
-                in_full_time_education=False,
-                relationship=relationship,
-                income=dict(frequency="weekly", amount=0),
-                assets_value=0)
+    return dict(
+        date_of_birth=str(datetime.date(todays_date.year - age, todays_date.month, todays_date.day)),
+        in_full_time_education=False,
+        relationship=relationship,
+        income=dict(frequency="weekly", amount=0),
+        assets_value=0,
+    )
 
 
 def translate_dependants(todays_date, facts):

@@ -24,7 +24,7 @@ def translate_deductions(deductions):
                         "category": cfe_category,
                         "operation": "debit",
                         "frequency": "monthly",
-                        "amount": pence_to_pounds(amount_pence)
+                        "amount": pence_to_pounds(amount_pence),
                     }
                 )
     else:

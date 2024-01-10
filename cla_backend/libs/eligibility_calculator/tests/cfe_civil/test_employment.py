@@ -29,7 +29,7 @@ class TestCfeIncome(TestCase):
                         "tax": -400,
                         "national_insurance": -65,
                         "prisoner_levy": 0,
-                        "student_debt_repayment": 0
+                        "student_debt_repayment": 0,
                     }
                 }
             ],
@@ -49,7 +49,7 @@ class TestCfeIncome(TestCase):
                         "tax": -400,
                         "national_insurance": -65,
                         "prisoner_levy": 0,
-                        "student_debt_repayment": 0
+                        "student_debt_repayment": 0,
                     }
                 }
             ],
@@ -69,7 +69,7 @@ class TestCfeIncome(TestCase):
                         "tax": 0,
                         "national_insurance": 0,
                         "prisoner_levy": 0,
-                        "student_debt_repayment": 0
+                        "student_debt_repayment": 0,
                     }
                 }
             ],
@@ -89,7 +89,7 @@ class TestCfeIncome(TestCase):
                         "tax": 0,
                         "national_insurance": 0,
                         "prisoner_levy": 0,
-                        "student_debt_repayment": 0
+                        "student_debt_repayment": 0,
                     }
                 }
             ],

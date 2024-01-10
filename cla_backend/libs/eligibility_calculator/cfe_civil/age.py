@@ -12,4 +12,4 @@ def translate_age(today, facts):
     else:
         age = 50
     date_of_birth = datetime.date(today.year - age, today.month, today.day)
-    return {'date_of_birth': str(date_of_birth)}
+    return {"date_of_birth": str(date_of_birth)}

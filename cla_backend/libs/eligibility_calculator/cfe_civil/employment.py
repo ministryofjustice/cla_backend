@@ -6,16 +6,18 @@ logger = __import__("logging").getLogger(__name__)
 def _are_there_missing_deductions_fields(deductions):
     missing_attr = missing_attributes(deductions, ["income_tax", "national_insurance"])
     if missing_attr:
-        logger.error("Missing field in deductions: '%s'. Ignoring all (self) employment income and deductions!"
-                     % missing_attr)
+        logger.error(
+            "Missing field in deductions: '%s'. Ignoring all (self) employment income and deductions!" % missing_attr
+        )
         return True
 
 
 def _are_there_missing_income_fields(incomes):
     missing_attr = missing_attributes(incomes, ["earnings", "self_employed"])
     if missing_attr:
-        logger.error("Missing field in incomes: '%s'. Ignoring all (self) employment income and deductions!"
-                     % missing_attr)
+        logger.error(
+            "Missing field in incomes: '%s'. Ignoring all (self) employment income and deductions!" % missing_attr
+        )
         return True
 
 
@@ -27,7 +29,7 @@ def _common_income_fields(gross, deductions):
         "frequency": "monthly",
         "prisoner_levy": 0,
         "student_debt_repayment": 0,
-        "national_insurance": -pence_to_pounds(deductions.national_insurance)
+        "national_insurance": -pence_to_pounds(deductions.national_insurance),
     }
 
 
@@ -44,22 +46,12 @@ def translate_employment(income, deductions):
 
     fields = _common_income_fields(gross, deductions)
     if income.self_employed:
-        return {
-            "self_employment_details": [
-                {
-                    "income": fields
-                }
-            ]
-        }
+        return {"self_employment_details": [{"income": fields}]}
     else:
-        fields.update({
-            "receiving_only_statutory_sick_or_maternity_pay": False,
-            "benefits_in_kind": 0,
-        })
-        return {
-            "employment_details": [
-                {
-                    "income": fields
-                }
-            ]
-        }
+        fields.update(
+            {
+                "receiving_only_statutory_sick_or_maternity_pay": False,
+                "benefits_in_kind": 0,
+            }
+        )
+        return {"employment_details": [{"income": fields}]}

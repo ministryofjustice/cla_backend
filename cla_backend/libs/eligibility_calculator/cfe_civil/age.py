@@ -1,4 +1,4 @@
-import datetime
+from dateutil.relativedelta import relativedelta
 
 
 def translate_age(today, facts):
@@ -11,5 +11,5 @@ def translate_age(today, facts):
         age = 17
     else:
         age = 50
-    date_of_birth = datetime.date(today.year - age, today.month, today.day)
+    date_of_birth = today - relativedelta(years=age)
     return {"date_of_birth": str(date_of_birth)}

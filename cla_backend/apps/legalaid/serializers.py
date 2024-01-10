@@ -340,7 +340,7 @@ class EligibilityCheckSerializerBase(ClaModelSerializer):
         # need to check the category before saving the current instance
         has_category_changed = self.__has_category_changed()
         obj = super(EligibilityCheckSerializerBase, self).save(**kwargs)
-        logger.info("Eligibility check - save form %s" % kwargs)
+        logger.debug("Eligibility check - save form %s" % kwargs)
         obj.update_state()
         if has_category_changed:
             # if the category has been updated then reset mattertype on

@@ -1,12 +1,12 @@
-import datetime
+from dateutil.relativedelta import relativedelta
 
 
 def _dependant_aged(todays_date, age, relationship):
     return dict(
-        date_of_birth=str(datetime.date(todays_date.year - age, todays_date.month, todays_date.day)),
+        date_of_birth=str(todays_date - relativedelta(years=age)),
         in_full_time_education=False,
         relationship=relationship,
-        income=dict(frequency="weekly", amount=0),
+        income=dict(amount=0, frequency="weekly"),  # assume the dependant has no income
         assets_value=0,
     )
 

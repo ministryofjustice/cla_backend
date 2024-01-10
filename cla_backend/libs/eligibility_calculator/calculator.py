@@ -428,11 +428,6 @@ class EligibilityChecker(object):
                 "submission_date": str(submission_date),
                 "level_of_help": "controlled"  # CLA is for 'advice' only, so always controlled
             },
-            "applicant": {
-                "date_of_birth": "1992-07-25",
-                "receives_qualifying_benefit": False,
-                "receives_asylum_support": False,
-            },
             "proceeding_types": [
                 DEFAULT_PROCEEDING_TYPE
             ]
@@ -441,11 +436,11 @@ class EligibilityChecker(object):
         EligibilityChecker._translate_section_gross_income(case_data, request_data)
         EligibilityChecker._translate_section_disposable_income(case_data, request_data)
         EligibilityChecker._translate_section_capital(case_data, request_data)
+
         if hasattr(case_data, "category"):
             request_data["proceeding_types"] = translate_proceeding_types(case_data.category)
         if hasattr(case_data, "facts"):
-            request_data['applicant'].update(
-                EligibilityChecker._translate_applicant_data(submission_date, case_data.facts))
+            request_data['applicant'] = EligibilityChecker._translate_applicant_data(submission_date, case_data.facts)
             request_data["assessment"].update(translate_under_18_passported(case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
 

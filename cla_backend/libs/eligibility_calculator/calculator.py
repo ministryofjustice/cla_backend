@@ -395,7 +395,7 @@ class EligibilityChecker(object):
         return case_data.facts.on_nass_benefits and case_data.category == "immigration"
 
     def _do_cfe_civil_check(self):
-        if not EligibilityChecker._is_applicant_detail_section_complete(self.case_data):
+        if not EligibilityChecker._is_data_complete_enough_to_call_cfe(self.case_data):
             # data is so incomplete that we can't even call CFE sensibly
             result = ELIGIBILITY_STATES.UNKNOWN
             logger.info("Eligibility result (CFE): %s %s" % (result, "couldn't call CFE"))
@@ -414,8 +414,25 @@ class EligibilityChecker(object):
         return result, calcs, cfe_response
 
     @staticmethod
-    def _is_applicant_detail_section_complete(case_data):
-        return case_data.facts.is_you_under_18 or (hasattr(case_data.facts, "dependants_young") and hasattr(case_data.facts, "has_partner"))
+    def _is_data_complete_enough_to_call_cfe(case_data):
+        if not hasattr(case_data, "facts"):
+            # facts section is at the root of everything, so we require it call CFE
+            return False
+        if EligibilityChecker._under_18_passported(case_data):
+            # no more info needed
+            return True
+        if (
+            not hasattr(case_data.facts, "dependants_young")
+            and not (hasattr(case_data.facts, "on_passported_benefits") and case_data.facts.on_passported_benefits)
+        ):
+            # the gross income threshold may increase, depending on the number of child dependants,
+            # so we can't do gross income section - even if we tell CFE it is incomplete, if the gross income
+            # is over the threshold it will give 'ineligible'.
+            # Therefore to run CFE, we need to know dependants_young, or if they are passported (because the
+            # gross income check doesn't come into play)
+            logger.info("Eligibility check: CFE can't be called because dependants_young not known (and not passported)")
+            return False
+        return True
 
     @staticmethod
     def _translate_case(case_data, submission_date=None):
@@ -464,6 +481,7 @@ class EligibilityChecker(object):
             if not hasattr(person, "income"):
                 return False
             income = person.income
+
             income_keys_if_complete = set(income.PROPERTY_META.keys())
             # cla_public will remove the `income.child_benefits` key from CaseDict if you submit /benefits without
             # checking the child benefit checkbox (which doesn't even appear if dependants_young=0). So this key is not
@@ -472,6 +490,12 @@ class EligibilityChecker(object):
             for key in income_keys_if_complete:
                 if not hasattr(income, key):
                     return False
+
+            if not hasattr(case_data.facts, "has_partner"):
+                # If they have a partner then their deductions can lower the disposable income further,
+                # so this section is not complete until we know the partners' figures
+                return False
+
             return True
 
         if not is_gross_income_complete(case_data):
@@ -493,22 +517,37 @@ class EligibilityChecker(object):
             for key in deductions.PROPERTY_META:
                 if not hasattr(deductions, key):
                     return False
+
+            if not hasattr(case_data.facts, "has_partner"):
+                # If they have a partner then their deductions can lower the disposable income further,
+                # so this section is not complete until we know the partners' figures
+                return False
             return True
 
         if not is_disposable_income_complete(case_data):
             request_data['assessment']['section_disposable_income'] = 'incomplete'
 
     @staticmethod
-    def is_property_complete(property_data):
-        if len(property_data) == 0:
+    def is_property_complete(case_data):
+        if not hasattr(case_data.facts, "has_partner"):
+            # If they have a partner then that may increase assets that they need to delare, so
+            # this section is not complete until we clear up if there is a partner
+            return False
+
+        if len(case_data.property_data) == 0:
             return True
-        for key, value in property_data[0].iteritems():
+        for key, value in case_data.property_data[0].iteritems():
             if value is not None:
                 return True
         return False
 
     @staticmethod
     def is_savings_complete(case_data):
+        if not hasattr(case_data.facts, "has_partner"):
+            # If they have a partner then that may increase assets that they need to delare, so
+            # this section is not complete until we clear up if there is a partner
+            return False
+
         try:
             savings = case_data.you.savings
             for key in savings.PROPERTY_META:
@@ -525,7 +564,7 @@ class EligibilityChecker(object):
         and put this in the CFE request.
         """
         has_completed_capital_questions = (
-            EligibilityChecker.is_property_complete(case_data.property_data)
+            EligibilityChecker.is_property_complete(case_data)
             and EligibilityChecker.is_savings_complete(case_data)
         )
 

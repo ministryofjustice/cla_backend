@@ -17,6 +17,7 @@ from .cfe_civil.cfe_response import CfeResponse
 from .cfe_civil.property import translate_property
 from .cfe_civil.income import translate_income
 from .cfe_civil.applicant import translate_applicant
+from .cfe_civil.under_18_passported import translate_under_18_passported
 from .cfe_civil.proceeding_types import translate_proceeding_types, DEFAULT_PROCEEDING_TYPE
 from cla_common.constants import ELIGIBILITY_STATES
 
@@ -365,7 +366,7 @@ class EligibilityChecker(object):
                 logger.error("CFE and legacy_check() calcs disagree!\nCFE:    %s\nLegacy: %s" % (filter_out_zeros(cfe_calcs), filter_out_zeros(self.calcs)))
 
         # Gradual cut-over from using legacy_result to cfe_result
-        if self._is_non_means_tested(self.case_data) or self._without_partner(self.case_data):
+        if self._is_non_means_tested(self.case_data) or self._without_partner(self.case_data) or self._under_18_passported(self.case_data):
 
             # Calcs updated from CFE's result
             self.calcs = cfe_calcs
@@ -384,6 +385,10 @@ class EligibilityChecker(object):
     @staticmethod
     def _without_partner(case_data):
         return hasattr(case_data.facts, "has_partner") and not case_data.facts.has_partner
+
+    @staticmethod
+    def _under_18_passported(case_data):
+        return (hasattr(case_data.facts, "under_18_passported") and case_data.facts.under_18_passported) and (hasattr(case_data.facts, "is_you_under_18") and case_data.facts.is_you_under_18)
 
     @staticmethod
     def _is_non_means_tested(case_data):
@@ -410,7 +415,7 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _is_applicant_detail_section_complete(case_data):
-        return hasattr(case_data.facts, "dependants_young") and hasattr(case_data.facts, "has_partner")
+        return case_data.facts.is_you_under_18 or (hasattr(case_data.facts, "dependants_young") and hasattr(case_data.facts, "has_partner"))
 
     @staticmethod
     def _translate_case(case_data, submission_date=None):
@@ -441,6 +446,7 @@ class EligibilityChecker(object):
         if hasattr(case_data, "facts"):
             request_data['applicant'].update(
                 EligibilityChecker._translate_applicant_data(submission_date, case_data.facts))
+            request_data["assessment"].update(translate_under_18_passported(case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
 
         request_data.update(EligibilityChecker._translate_capital_data(case_data))

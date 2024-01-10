@@ -30,7 +30,7 @@ def translate_employment(income, deductions):
         return {"employment_details": []}
 
     fields = _common_income_fields(gross, deductions)
-    if income.self_employed:
+    if hasattr(income, "self_employed") and income.self_employed:
         return {"self_employment_details": [{"income": fields}]}
     else:
         fields.update(

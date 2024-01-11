@@ -53,8 +53,11 @@ class WorkingDays(models.Model):
         verbose_name = "Working Days"
         verbose_name_plural = "Working Days"
 
-    def is_proivder_working_today(self):
-        return self.tuesday
+    def is_provider_working_today(self):
+        day_index = timezone.now().weekday()
+        week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        weekday = week[day_index]
+        return self.__getattribute__(weekday)
 
     provider_allocation = models.OneToOneField("ProviderAllocation", null=True)
     monday = models.BooleanField(default=True)
@@ -78,6 +81,20 @@ class ProviderAllocation(TimeStampedModel):
     provider = models.ForeignKey(Provider)
     category = models.ForeignKey("legalaid.Category")
     weighted_distribution = models.FloatField()  # see XXXXXXXXXXXX
+
+    @property
+    def is_working_today(self):
+        return self.workingdays.is_provider_working_today()
+
+    @property
+    def working_days(self):
+        week = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+        working_days = []
+        for day in week:
+            if self.workingdays.__getattribute__(day):
+                working_days.append(day)
+        return working_days
 
     objects = ProviderAllocationManager()
 

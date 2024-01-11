@@ -4,7 +4,6 @@ import os
 import random
 from itertools import groupby
 from operator import itemgetter
-import logging
 
 from django.http import HttpResponse
 from django.template.loader import get_template
@@ -13,7 +12,7 @@ from django.conf import settings
 from django.db.models import Count
 
 from govuk_notify.api import NotifyEmailOrchestrator
-from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, ProviderPreAllocation, WorkingDays
+from cla_provider.models import Provider, ProviderAllocation, OutOfHoursRota, ProviderPreAllocation
 from legalaid.models import Case
 
 
@@ -85,17 +84,15 @@ class ProviderAllocationHelper(object):
         """
         @return: list
         """
-        logging.log(900, self._providers_in_category)
 
         if not self._providers_in_category:
             self._providers_in_category = ProviderAllocation.objects.filter(category=category, provider__active=True)
 
         if category.name == "Education":
-            logging.log(900, "start")
-            day_index = datetime.datetime.today().weekday()
-            week = ["monday", "tuesday", "wednesday", "thursday", " friday", "saturday", "sunday"]
-            for provider in self._providers_in_category:
-                logging.log(800, provider.workingdays.is_proivder_working_today())
+            self._providers_in_category = self._get_working_providers()
+            self._providers_in_category = self._remove_providers_above_allocation(
+                category, self._providers_in_category
+            )
 
         return self._providers_in_category
 
@@ -132,7 +129,6 @@ class ProviderAllocationHelper(object):
 
         def calculate_winner():
             allocations = self.get_qualifying_providers_allocation(category)
-            logging.log(category)
             if limit_choices_to:
                 allocations = allocations.filter(provider__id__in=limit_choices_to)
             if not allocations:
@@ -213,6 +209,38 @@ class ProviderAllocationHelper(object):
 
         # else everyone doesn't have any allocation so just pick randomly
         return self._get_random_provider(category)
+
+    def _get_working_providers(self):
+        """
+        Gets providers which are currently working today according to their
+        WorkingDays object. This is currently only used for Education providers.
+        """
+
+        valid_education_providers = []
+        for provider in self._providers_in_category:
+            if provider.workingdays.is_provider_working_today():
+                valid_education_providers.append(provider)
+        return valid_education_providers
+
+    def _remove_providers_above_allocation(self, category, provider_allocations):
+        """
+        Takes in a list of ProviderAllocation objects and returns an
+        amended list with providers above their allocated contracted weighting removed.
+        """
+        current_distribution = self.distribution.get_distribution(category, include_pre_allocations=True)
+        total_current_cases = sum(current_distribution.values())
+
+        valid_providers = []
+        for provider_id, provider_current_num_cases in current_distribution.iteritems():
+            provider = Provider.objects.get(pk=provider_id)
+            provider_allocation = provider.providerallocation_set.filter(category=category)[0]
+
+            if provider_allocation.weighted_distribution < (provider_current_num_cases / total_current_cases):
+                # They have been allocated too many cases
+                if provider_allocation in provider_allocations:
+                    valid_providers.append(provider_allocation)
+
+        return valid_providers
 
     def get_suggested_provider(self, category):
         non_rota_hours = settings.NON_ROTA_OPENING_HOURS[getattr(category, "code")]

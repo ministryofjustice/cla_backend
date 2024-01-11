@@ -3,6 +3,7 @@ import json
 import types
 
 import requests
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.utils import timezone
 
@@ -369,29 +370,16 @@ class EligibilityChecker(object):
                     % (filter_out_zeros(cfe_calcs), filter_out_zeros(self.calcs))
                 )
 
-        # Gradual cut-over from using legacy_result to cfe_result
-        if (
-            self._is_non_means_tested(self.case_data)
-            or self._without_partner(self.case_data)
-            or self._under_18_passported(self.case_data)
-        ):
-            # Calcs updated from CFE's result
-            self.calcs = cfe_calcs
+        # Calcs updated from CFE's result
+        self.calcs = cfe_calcs
 
-            logger.info("Eligibility result (using CFE): %s", cfe_result)
-            return cfe_result
-        else:
-            logger.info("Eligibility result (using legacy): %s", legacy_result)
-            return legacy_result
+        logger.info("Eligibility result (using CFE): %s", cfe_result)
+        return cfe_result
 
     @staticmethod
     def _pounds_to_pence(value):
         # deal with rounding error by adding a small amount before truncating
         return int(value * 100 + 0.1)
-
-    @staticmethod
-    def _without_partner(case_data):
-        return hasattr(case_data.facts, "has_partner") and not case_data.facts.has_partner
 
     @staticmethod
     def _under_18_passported(case_data):
@@ -404,6 +392,11 @@ class EligibilityChecker(object):
         return case_data.facts.on_nass_benefits and case_data.category == "immigration"
 
     def _do_cfe_civil_check(self):
+        # This property is not used by clients, but we support it while it's in the API.
+        # CFE doesn't know how to handle this scenario, so just code it here.
+        if self.case_data.facts.has_passported_proceedings_letter:
+            return ELIGIBILITY_STATES.YES, None, None
+
         if not EligibilityChecker._is_data_complete_enough_to_call_cfe(self.case_data):
             # data is so incomplete that we can't even call CFE sensibly
             result = ELIGIBILITY_STATES.UNKNOWN
@@ -448,7 +441,6 @@ class EligibilityChecker(object):
         """Translates CLA's CaseData to CFE-Civil request JSON"""
         if not submission_date:
             submission_date = datetime.date.today()
-        # produce the simplest possible plain request to CFE to prove the route
         request_data = {
             "assessment": {
                 "submission_date": str(submission_date),
@@ -467,6 +459,8 @@ class EligibilityChecker(object):
             request_data["applicant"] = EligibilityChecker._translate_applicant_data(submission_date, case_data.facts)
             request_data["assessment"].update(translate_under_18_passported(case_data.facts))
             request_data.update(translate_dependants(submission_date, case_data.facts))
+            if hasattr(case_data, "partner") and case_data.facts.should_aggregate_partner:
+                request_data["partner"] = EligibilityChecker._translate_partner_data(case_data.partner, submission_date)
 
         request_data.update(EligibilityChecker._translate_capital_data(case_data))
 
@@ -592,6 +586,20 @@ class EligibilityChecker(object):
             request_data["assessment"]["section_capital"] = "incomplete"
 
     @staticmethod
+    def _translate_partner_data(partner, submission_date):
+        # default DOB to 'nothing special' 40 years old rules-wise
+        # as all we have is you/partner over 60 - so we don't know or care
+        # how old the partner is
+        partner_dob = str(submission_date - relativedelta(years=40))
+        request_data = {"partner": {"date_of_birth": partner_dob}}
+        if hasattr(partner, "savings"):
+            request_data.update(translate_savings(partner.savings))
+
+        request_data.update(EligibilityChecker._translate_income_data(partner))
+
+        return request_data
+
+    @staticmethod
     def _translate_income_data(person):
         request_data = {}
         if hasattr(person, "income"):
@@ -668,9 +676,9 @@ class EligibilityChecker(object):
                 cfe_response.liquid_capital + cfe_response.non_liquid_capital + cfe_response.vehicle_capital
             ),
             "gross_income": self._pounds_to_pence(cfe_response.gross_income),
-            "partner_allowance": 0,
+            "partner_allowance": self._pounds_to_pence(cfe_response.partner_allowance),
             "disposable_income": self._pounds_to_pence(cfe_response.disposable_income),
-            "dependants_allowance": 0,
+            "dependants_allowance": self._pounds_to_pence(cfe_response.dependants_allowance),
             "employment_allowance": self._pounds_to_pence(cfe_response.employment_allowance),
             "partner_employment_allowance": 0,
         }

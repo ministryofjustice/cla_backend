@@ -53,17 +53,17 @@ class CfeResponse(object):
 
     @property
     def liquid_capital(self):
-        return self._capital_total("total_liquid")
+        return self._result_capital_aggregated("total_liquid")
 
     @property
     def non_liquid_capital(self):
-        return self._capital_total("total_non_liquid")
+        return self._result_capital_aggregated("total_non_liquid")
 
     @property
     def vehicle_capital(self):
-        return self._capital_total("total_vehicle")
+        return self._result_capital_aggregated("total_vehicle")
 
-    def _capital_total(self, key):
+    def _result_capital_aggregated(self, key):
         return self._result_capital[key] + self._result_partner_capital[key]
 
     @property

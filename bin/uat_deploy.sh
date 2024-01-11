@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 set -e
-set -x
 
 ROOT=$(dirname "$0")
 DYNAMIC_HOSTNAME=$1
 HELM_DIR="$ROOT/../helm_deploy/cla-backend/"
 VALUES="values-uat-static.yaml"
-if [ $CIRCLE_BRANCH = "cfe-integration" ]; then
-  VALUES="values-uat-cfe.yaml"
-elif [ $DYNAMIC_HOSTNAME = true ]; then
+if [ $DYNAMIC_HOSTNAME = true ]; then
   VALUES="values-uat.yaml"
 fi
 

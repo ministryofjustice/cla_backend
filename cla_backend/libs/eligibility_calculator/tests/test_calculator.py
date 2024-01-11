@@ -881,6 +881,117 @@ class TestCalculator(CalculatorTestBase):
         self.assertTrue(checker.is_gross_income_eligible())
         self.assertDictEqual(checker.calcs, {"gross_income": too_much_money})
 
+    def test_full_case(self):
+        # yes it will be brittle, but let's have *one* complete case tested
+        case_data_dict = case_data_dict = {
+            "category": "family",
+            "facts": {
+                "is_you_or_your_partner_over_60": False,
+                "on_passported_benefits": False,
+                "on_nass_benefits": False,
+                "has_partner": True,
+                "is_partner_opponent": False,
+                "dependants_young": 1,
+                "dependants_old": 1,
+                "under_18_passported": False,
+                "is_you_under_18": False,
+                "under_18_receive_regular_payment": False,
+                "under_18_has_valuables": False,
+            },
+            "you": {
+                "income": {
+                    "earnings": 90000,
+                    "self_employment_drawings": 5,
+                    "benefits": 7,
+                    "tax_credits": 11,
+                    "child_benefits": 13,
+                    "maintenance_received": 19,
+                    "pension": 23,
+                    "other_income": 29,
+                    "self_employed": False,
+                },
+                "savings": {"bank_balance": 3, "investment_balance": 5, "credit_balance": 7, "asset_balance": 9},
+                "deductions": {
+                    "income_tax": 1,
+                    "national_insurance": 2,
+                    "maintenance": 3,
+                    "mortgage": 4,
+                    "rent": 5,
+                    "childcare": 6,
+                    "criminal_legalaid_contributions": 7,
+                },
+            },
+            "partner": {
+                "income": {
+                    "earnings": 13,
+                    "self_employment_drawings": 15,
+                    "benefits": 17,
+                    "tax_credits": 21,
+                    "child_benefits": 23,
+                    "maintenance_received": 29,
+                    "pension": 33,
+                    "other_income": 39,
+                    "self_employed": False,
+                },
+                "savings": {"bank_balance": 13, "investment_balance": 15, "credit_balance": 17, "asset_balance": 19},
+                "deductions": {
+                    "income_tax": 11,
+                    "national_insurance": 12,
+                    "maintenance": 13,
+                    "mortgage": 14,
+                    "rent": 15,
+                    "childcare": 16,
+                    "criminal_legalaid_contributions": 17,
+                },
+            },
+            "property_data": [
+                {"disputed": False, "main": True, "value": 20000000, "mortgage_left": 5000000, "share": 50},
+            ],
+        }
+        case_data = CaseData(**case_data_dict)
+        checker = EligibilityChecker(case_data=case_data)
+
+        result, calcs, cfe_response = checker._do_cfe_civil_check()
+
+        self.assertEqual("yes", result)
+        # the calcs are a bit contrived, so instead we check the CFE key totals
+        response_data = cfe_response._cfe_data
+
+        # gross income
+        expected_gross_income = 90000 + 5 + 7 + 11 + 13 + 19 + 23 + 29 + 13 + 15 + 17 + 21 + 23 + 29 + 33 + 39
+        self.assertEqual(
+            expected_gross_income, response_data["result_summary"]["gross_income"]["combined_total_gross_income"] * 100
+        )
+
+        # disposable income
+        # CFE's calculation will change over time, so try to use constants supplied by CFE as much as possible to avoid test breaking
+        expected_disposable_income = expected_gross_income
+        expected_disposable_income -= 1 + 2 + 3 + 4 + 5 + 6 + 7 + 11 + 12 + 13 + 14 + 15 + 16 + 17  # deductions
+        expected_disposable_income -= calcs["employment_allowance"] * 2  # £45 for both client and partner
+        expected_disposable_income -= calcs["partner_allowance"]  # value may change over time
+        dependant_allowances_applied = response_data["result_summary"]["disposable_income"]["dependant_allowance"]
+        assert dependant_allowances_applied > 0
+        expected_disposable_income -= dependant_allowances_applied * 100
+        self.assertEqual(
+            expected_disposable_income,
+            response_data["result_summary"]["disposable_income"]["combined_total_disposable_income"] * 100,
+        )
+
+        # capital
+        property_capital = (20000000 - 5000000) * 0.5
+        # property is all disregarded
+        self.assertEqual(
+            property_capital,
+            response_data["assessment"]["capital"]["capital_items"]["properties"]["main_home"][
+                "main_home_equity_disregard"
+            ]
+            * 100,
+        )
+        expected_capital = 3 + 5 + 7 + 9 + 13 + 15 + 17 + 19  # savings
+        self.assertEqual(
+            expected_capital, response_data["result_summary"]["capital"]["combined_assessed_capital"] * 100
+        )
+
 
 class TestApplicantOnBenefitsCalculator(CalculatorTestBase):
     """

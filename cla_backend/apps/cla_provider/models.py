@@ -96,7 +96,7 @@ class WorkingDays(models.Model):
 
         return working_days
 
-    provider_allocation = models.OneToOneField("ProviderAllocation", null=True)
+    provider_allocation = models.OneToOneField("ProviderAllocation")
     monday = models.BooleanField(default=DEFAULT_WORKING_DAYS['monday'])
     tuesday = models.BooleanField(default=DEFAULT_WORKING_DAYS['tuesday'])
     wednesday = models.BooleanField(default=DEFAULT_WORKING_DAYS['wednesday'])

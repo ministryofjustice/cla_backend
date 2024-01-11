@@ -381,14 +381,6 @@ class EligibilityChecker(object):
         return int(value * 100 + 0.1)
 
     @staticmethod
-    def _without_partner(case_data):
-        return hasattr(case_data.facts, "has_partner") and not case_data.facts.has_partner
-
-    @staticmethod
-    def _with_partner(case_data):
-        return hasattr(case_data.facts, "has_partner") and case_data.facts.has_partner
-
-    @staticmethod
     def _under_18_passported(case_data):
         return (hasattr(case_data.facts, "under_18_passported") and case_data.facts.under_18_passported) and (
             hasattr(case_data.facts, "is_you_under_18") and case_data.facts.is_you_under_18

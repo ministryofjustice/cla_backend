@@ -354,6 +354,7 @@ class EligibilityChecker(object):
 
         # Compare CFE and Legacy responses. To delete in LEP-457
         if cfe_response:
+
             def filter_out_zeros(dict_):
                 return dict((k, v) for k, v in dict_.iteritems() if v)
 
@@ -363,11 +364,17 @@ class EligibilityChecker(object):
             if cfe_result != legacy_result:
                 logger.error("CFE and legacy_check() results disagree! %s %s" % (cfe_result, legacy_result))
             if filter_to_keys(cfe_calcs, self.calcs) != self.calcs:
-                logger.error("CFE and legacy_check() calcs disagree!\nCFE:    %s\nLegacy: %s" % (filter_out_zeros(cfe_calcs), filter_out_zeros(self.calcs)))
+                logger.error(
+                    "CFE and legacy_check() calcs disagree!\nCFE:    %s\nLegacy: %s"
+                    % (filter_out_zeros(cfe_calcs), filter_out_zeros(self.calcs))
+                )
 
         # Gradual cut-over from using legacy_result to cfe_result
-        if self._is_non_means_tested(self.case_data) or self._without_partner(self.case_data) or self._under_18_passported(self.case_data):
-
+        if (
+            self._is_non_means_tested(self.case_data)
+            or self._without_partner(self.case_data)
+            or self._under_18_passported(self.case_data)
+        ):
             # Calcs updated from CFE's result
             self.calcs = cfe_calcs
 
@@ -388,7 +395,9 @@ class EligibilityChecker(object):
 
     @staticmethod
     def _under_18_passported(case_data):
-        return (hasattr(case_data.facts, "under_18_passported") and case_data.facts.under_18_passported) and (hasattr(case_data.facts, "is_you_under_18") and case_data.facts.is_you_under_18)
+        return (hasattr(case_data.facts, "under_18_passported") and case_data.facts.under_18_passported) and (
+            hasattr(case_data.facts, "is_you_under_18") and case_data.facts.is_you_under_18
+        )
 
     @staticmethod
     def _is_non_means_tested(case_data):
@@ -408,8 +417,7 @@ class EligibilityChecker(object):
 
         cfe_response = CfeResponse(cfe_raw_response.json())
         result, calcs = self._translate_response(cfe_response)
-        logger.debug(
-            "Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
+        logger.debug("Eligibility result (CFE): %s" % (json.dumps(cfe_response._cfe_data, indent=4, sort_keys=True)))
 
         return result, calcs, cfe_response
 
@@ -421,33 +429,32 @@ class EligibilityChecker(object):
         if EligibilityChecker._under_18_passported(case_data):
             # no more info needed
             return True
-        if (
-            not hasattr(case_data.facts, "dependants_young")
-            and not (hasattr(case_data.facts, "on_passported_benefits") and case_data.facts.on_passported_benefits)
+        if not hasattr(case_data.facts, "dependants_young") and not (
+            hasattr(case_data.facts, "on_passported_benefits") and case_data.facts.on_passported_benefits
         ):
             # the gross income threshold may increase, depending on the number of child dependants,
             # so we can't do gross income section - even if we tell CFE it is incomplete, if the gross income
             # is over the threshold it will give 'ineligible'.
             # Therefore to run CFE, we need to know dependants_young, or if they are passported (because the
             # gross income check doesn't come into play)
-            logger.info("Eligibility check: CFE can't be called because dependants_young not known (and not passported)")
+            logger.info(
+                "Eligibility check: CFE can't be called because dependants_young not known (and not passported)"
+            )
             return False
         return True
 
     @staticmethod
     def _translate_case(case_data, submission_date=None):
-        '''Translates CLA's CaseData to CFE-Civil request JSON'''
+        """Translates CLA's CaseData to CFE-Civil request JSON"""
         if not submission_date:
             submission_date = datetime.date.today()
         # produce the simplest possible plain request to CFE to prove the route
         request_data = {
             "assessment": {
                 "submission_date": str(submission_date),
-                "level_of_help": "controlled"  # CLA is for 'advice' only, so always controlled
+                "level_of_help": "controlled",  # CLA is for 'advice' only, so always controlled
             },
-            "proceeding_types": [
-                DEFAULT_PROCEEDING_TYPE
-            ]
+            "proceeding_types": [DEFAULT_PROCEEDING_TYPE],
         }
 
         EligibilityChecker._translate_section_gross_income(case_data, request_data)
@@ -474,6 +481,7 @@ class EligibilityChecker(object):
         Determine if the questions for gross income section of the test have been completed by the user yet,
         and put this in the CFE request.
         """
+
         def is_gross_income_complete(case_data):
             if not hasattr(case_data, "you"):
                 return False
@@ -499,7 +507,7 @@ class EligibilityChecker(object):
             return True
 
         if not is_gross_income_complete(case_data):
-            request_data['assessment']['section_gross_income'] = 'incomplete'
+            request_data["assessment"]["section_gross_income"] = "incomplete"
 
     @staticmethod
     def _translate_section_disposable_income(case_data, request_data):
@@ -507,6 +515,7 @@ class EligibilityChecker(object):
         Determine if the questions for disposable income section of the test have been completed by the user yet,
         and put this in the CFE request.
         """
+
         def is_disposable_income_complete(case_data):
             if not hasattr(case_data, "you"):
                 return False
@@ -525,7 +534,7 @@ class EligibilityChecker(object):
             return True
 
         if not is_disposable_income_complete(case_data):
-            request_data['assessment']['section_disposable_income'] = 'incomplete'
+            request_data["assessment"]["section_disposable_income"] = "incomplete"
 
     @staticmethod
     def is_property_complete(case_data):
@@ -563,10 +572,9 @@ class EligibilityChecker(object):
         Determine if the questions for capital section of the test have been completed by the user yet,
         and put this in the CFE request.
         """
-        has_completed_capital_questions = (
-            EligibilityChecker.is_property_complete(case_data)
-            and EligibilityChecker.is_savings_complete(case_data)
-        )
+        has_completed_capital_questions = EligibilityChecker.is_property_complete(
+            case_data
+        ) and EligibilityChecker.is_savings_complete(case_data)
 
         # This capital logic is a bit complicated, and dependent on how cla_backend's clients set the CaseData.
         # If we wanted to simplify this logic, here are the concerns:
@@ -581,7 +589,7 @@ class EligibilityChecker(object):
         # So the really simple way to do this is to always set `section_capital = complete`, but that might confuse
         # a dev who looks at the CFE requests before the capital section is in reality complete.
         if not has_completed_capital_questions:
-            request_data['assessment']['section_capital'] = 'incomplete'
+            request_data["assessment"]["section_capital"] = "incomplete"
 
     @staticmethod
     def _translate_income_data(person):
@@ -592,7 +600,8 @@ class EligibilityChecker(object):
                 request_data.update(translate_employment(person.income, person.deductions))
                 regular_outgoings = translate_deductions(person.deductions)
                 request_data.update(
-                    EligibilityChecker._merge_regular_transaction_data(regular_income, regular_outgoings))
+                    EligibilityChecker._merge_regular_transaction_data(regular_income, regular_outgoings)
+                )
             else:
                 request_data.update(regular_income)
 
@@ -602,8 +611,10 @@ class EligibilityChecker(object):
     def _merge_regular_transaction_data(regular_income, regular_outgoings):
         if "regular_transactions" in regular_outgoings:
             if "regular_transactions" in regular_income:
-                return dict(regular_transactions=regular_income["regular_transactions"] + regular_outgoings[
-                    "regular_transactions"])
+                return dict(
+                    regular_transactions=regular_income["regular_transactions"]
+                    + regular_outgoings["regular_transactions"]
+                )
             else:
                 return regular_outgoings
         else:
@@ -628,9 +639,9 @@ class EligibilityChecker(object):
 
         if hasattr(case_data, "disputed_savings"):
             disputed_savings = translate_savings(case_data.disputed_savings, subject_matter_of_dispute=True)
-            if 'capitals' in request_data:
-                capitals = request_data['capitals']
-                disputed_capitals = disputed_savings['capitals']
+            if "capitals" in request_data:
+                capitals = request_data["capitals"]
+                disputed_capitals = disputed_savings["capitals"]
                 for key in capitals.keys():
                     capitals[key] += disputed_capitals[key]
             else:
@@ -638,22 +649,24 @@ class EligibilityChecker(object):
         return request_data
 
     def _translate_response(self, cfe_response):
-        '''Translates CFE-Civil's response to ELIGIBILITY_STATES and calcs'''
-        if cfe_response.overall_result in ('eligible', 'contribution_required'):
+        """Translates CFE-Civil's response to ELIGIBILITY_STATES and calcs"""
+        if cfe_response.overall_result in ("eligible", "contribution_required"):
             result = ELIGIBILITY_STATES.YES
-        elif cfe_response.overall_result == 'ineligible':
+        elif cfe_response.overall_result == "ineligible":
             result = ELIGIBILITY_STATES.NO
-        elif cfe_response.overall_result == 'not_yet_known':
+        elif cfe_response.overall_result == "not_yet_known":
             result = ELIGIBILITY_STATES.UNKNOWN
         else:
-            logger.error('cfe_response.overall_result not recognised: %s' % cfe_response.overall_result)
+            logger.error("cfe_response.overall_result not recognised: %s" % cfe_response.overall_result)
 
         calcs = {
             "pensioner_disregard": self._pounds_to_pence(cfe_response.pensioner_disregard),
             "disposable_capital_assets": self._pounds_to_pence(cfe_response.disposable_capital_assets),
             "property_equities": [self._pounds_to_pence(x) for x in cfe_response.property_equities],
             "property_capital": self._pounds_to_pence(cfe_response.property_capital),
-            "non_property_capital": self._pounds_to_pence(cfe_response.liquid_capital + cfe_response.non_liquid_capital + cfe_response.vehicle_capital),
+            "non_property_capital": self._pounds_to_pence(
+                cfe_response.liquid_capital + cfe_response.non_liquid_capital + cfe_response.vehicle_capital
+            ),
             "gross_income": self._pounds_to_pence(cfe_response.gross_income),
             "partner_allowance": 0,
             "disposable_income": self._pounds_to_pence(cfe_response.disposable_income),
@@ -665,7 +678,6 @@ class EligibilityChecker(object):
 
     def _legacy_check(self):
         try:
-
             if self.case_data.facts.has_passported_proceedings_letter:
                 return ELIGIBILITY_STATES.YES
 

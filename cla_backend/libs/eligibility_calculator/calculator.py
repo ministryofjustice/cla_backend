@@ -405,7 +405,8 @@ class EligibilityChecker(object):
 
         cfe_request_dict = self._translate_case(self.case_data)
 
-        cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict)
+        user_agent = "cla_backend/1 (%s)" % settings.CLA_ENV
+        cfe_raw_response = requests.post(settings.CFE_URL, json=cfe_request_dict, headers={"User-Agent": user_agent})
         logger.debug("Eligibility request (CFE): %s" % json.dumps(cfe_request_dict, indent=4, sort_keys=True))
 
         cfe_response = CfeResponse(cfe_raw_response.json())
